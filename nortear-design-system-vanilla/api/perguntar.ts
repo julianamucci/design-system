@@ -30,6 +30,7 @@
  * quando este arquivo saiu da Anthropic para o Google.
  */
 
+import type { IncomingMessage, ServerResponse } from 'node:http';
 import { GoogleGenAI, ApiError } from '@google/genai';
 import {
   RETRIEVAL_FLOOR,
@@ -205,7 +206,14 @@ function sse(event: string, data: unknown): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
 }
 
-export default async function handler(request: Request): Promise<Response> {
+/**
+ * O núcleo, no padrão Web: recebe `Request`, devolve `Response`.
+ *
+ * Fica exportado à parte porque é ele que dá para exercitar sem servidor — a
+ * sonda chama esta função direto e mede os estados. O `export default` abaixo é
+ * só a casca que traduz para a forma que o runtime da Vercel entrega.
+ */
+export async function responder(request: Request): Promise<Response> {
   if (request.method !== 'POST') {
     return jsonError(405, 'metodo', 'Use POST.');
   }
@@ -373,4 +381,75 @@ export default async function handler(request: Request): Promise<Response> {
       connection: 'keep-alive',
     },
   });
+}
+
+/* ── A casca que o runtime da Vercel espera ────────────────────────────────── */
+
+/**
+ * POR QUE ESTA CASCA EXISTE
+ *
+ * `runtime: 'nodejs'` entrega `(req, res)` do Node — `IncomingMessage` e
+ * `ServerResponse` —, e não o par `Request`/`Response` da Web. Escrito no padrão
+ * Web, o handler quebrava na primeira linha que lia cabeçalho:
+ * `request.headers.get is not a function`.
+ *
+ * O runtime `edge` entregaria `Request` e dispensaria esta casca. Não serve
+ * aqui: `corpus.ts` lê `docs/shared/content/` do disco com `node:fs`, e o edge
+ * não tem sistema de arquivos. Entre reescrever a leitura do corpus e traduzir
+ * a borda, traduzir a borda é o trabalho menor — e mantém o núcleo testável sem
+ * servidor nenhum.
+ */
+/** O corpo inteiro, como texto. Já limitado por `MAX_QUESTION_LENGTH` adiante. */
+function lerCorpo(req: IncomingMessage): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const pedacos: Buffer[] = [];
+    req.on('data', (pedaco: Buffer) => pedacos.push(pedaco));
+    req.on('end', () => resolve(Buffer.concat(pedacos).toString('utf8')));
+    req.on('error', reject);
+  });
+}
+
+export default async function handler(
+  req: IncomingMessage,
+  res: ServerResponse,
+): Promise<void> {
+  const metodo = req.method ?? 'GET';
+  const cabecalhos = new Headers();
+  for (const [nome, valor] of Object.entries(req.headers)) {
+    if (valor === undefined) continue;
+    cabecalhos.set(nome, Array.isArray(valor) ? valor.join(', ') : valor);
+  }
+
+  // A URL precisa ser absoluta para o construtor de `Request`. O host não é
+  // usado por nada aqui — só o método, os cabeçalhos e o corpo.
+  const request = new Request(`http://local${req.url ?? '/'}`, {
+    method: metodo,
+    headers: cabecalhos,
+    body: metodo === 'GET' || metodo === 'HEAD' ? undefined : await lerCorpo(req),
+  });
+
+  const response = await responder(request);
+
+  res.writeHead(response.status, Object.fromEntries(response.headers));
+  // Cabeçalho na frente do primeiro byte: sem isto o Node segura tudo até o
+  // primeiro `write` grande, e o SSE — que existe justamente para chegar aos
+  // poucos — só apareceria no fim. Streaming que só entrega no fim é o mesmo
+  // que não ter streaming.
+  res.flushHeaders();
+
+  if (!response.body) {
+    res.end();
+    return;
+  }
+
+  const leitor = response.body.getReader();
+  try {
+    for (;;) {
+      const { done, value } = await leitor.read();
+      if (done) break;
+      res.write(value);
+    }
+  } finally {
+    res.end();
+  }
 }
