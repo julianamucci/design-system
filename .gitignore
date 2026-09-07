@@ -82,3 +82,6 @@ scratch/
 # nortear-design-system-vanilla/vite.chat-docs.config.ts e servido pelo
 # staticDirs do manager. Artefato de build, nunca versionado.
 nortear-design-system-vanilla/.storybook/public/
+
+.vercel
+.env*
