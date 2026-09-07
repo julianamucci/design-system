@@ -18,7 +18,7 @@ const meta: Meta = {
       source: { transform: dropdownMenuSource },
       description: {
         component:
-          'DropdownMenu construído sobre bits-ui. Menu suspenso com items, checkbox-items, radio-group, submenus, separators e shortcuts em popup acessível com role=menu, focus trap e navegação por teclado.',
+          'DropdownMenu construído sobre bits-ui. Menu suspenso com items, checkbox-items, radio-group, submenus, separators e shortcuts em popup acessível com role=menu e navegação por teclado — o menu recebe o foco ao abrir e Tab o fecha, sem prender.',
       },
     },
   },

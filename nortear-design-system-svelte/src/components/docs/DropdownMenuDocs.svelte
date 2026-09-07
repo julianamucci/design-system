@@ -4,6 +4,8 @@
     DropdownMenu,
     DropdownMenuTrigger,
     DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuGroupHeading,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
@@ -207,6 +209,8 @@
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuGroupHeading,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -298,9 +302,17 @@ interface DropdownMenuRadioGroupProps {
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuLabel>Conta</DropdownMenuLabel>
-          <DropdownMenuItem onSelect={() => trackMenuItemSelect('acoes', 'perfil')}>Perfil</DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => trackMenuItemSelect('acoes', 'configuracoes')}>Configurações</DropdownMenuItem>
+          <!--
+            `Group` + `GroupHeading` é a dupla que dá NOME ao agrupamento: o
+            heading vira o `aria-labelledby` do grupo, que é o que a ficha de
+            `Com Label` promete a quem lê. Um `Label` solto rotula visualmente e
+            não nomeia nada.
+          -->
+          <DropdownMenuGroup>
+            <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
+            <DropdownMenuItem onSelect={() => trackMenuItemSelect('acoes', 'perfil')}>Perfil</DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => trackMenuItemSelect('acoes', 'configuracoes')}>Configurações</DropdownMenuItem>
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive" onSelect={() => trackMenuItemSelect('acoes', 'sair')}>Sair</DropdownMenuItem>
         </DropdownMenuContent>
@@ -315,21 +327,28 @@ interface DropdownMenuRadioGroupProps {
         <DropdownMenuContent side="bottom" align="start">
           <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
           <DropdownMenuSeparator />
+          <!--
+            O identificador do item é o da COLUNA, não o rótulo traduzido:
+            "Função"/"Role"/"Rol" partiriam o mesmo evento em três no GA4.
+          -->
           <DropdownMenuCheckboxItem
             checked={demoShowName}
             onCheckedChange={(v) => (demoShowName = v)}
+            onSelect={() => trackMenuItemSelect('colunas', 'nome')}
           >
             Nome
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={demoShowEmail}
             onCheckedChange={(v) => (demoShowEmail = v)}
+            onSelect={() => trackMenuItemSelect('colunas', 'email')}
           >
             E-mail
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
             checked={demoShowRole}
             onCheckedChange={(v) => (demoShowRole = v)}
+            onSelect={() => trackMenuItemSelect('colunas', 'funcao')}
           >
             Função
           </DropdownMenuCheckboxItem>
@@ -346,9 +365,24 @@ interface DropdownMenuRadioGroupProps {
           <DropdownMenuLabel>Aparência</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup bind:value={demoTheme}>
-            <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem
+              value="light"
+              onSelect={() => trackMenuItemSelect('tema', 'light')}
+            >
+              Claro
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem
+              value="dark"
+              onSelect={() => trackMenuItemSelect('tema', 'dark')}
+            >
+              Escuro
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem
+              value="system"
+              onSelect={() => trackMenuItemSelect('tema', 'system')}
+            >
+              Sistema
+            </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -360,7 +394,7 @@ interface DropdownMenuRadioGroupProps {
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'salvar')}>Salvar</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'renomear')}>Renomear</DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
@@ -486,13 +520,17 @@ interface DropdownMenuRadioGroupProps {
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuLabel>Conta</DropdownMenuLabel>
-          <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configurações</DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
+            <DropdownMenuItem>Perfil</DropdownMenuItem>
+            <DropdownMenuItem>Configurações</DropdownMenuItem>
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuLabel>Equipe</DropdownMenuLabel>
-          <DropdownMenuItem>Convidar</DropdownMenuItem>
-          <DropdownMenuItem>Membros</DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuGroupHeading>Equipe</DropdownMenuGroupHeading>
+            <DropdownMenuItem>Convidar</DropdownMenuItem>
+            <DropdownMenuItem>Membros</DropdownMenuItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -506,12 +544,20 @@ interface DropdownMenuRadioGroupProps {
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <!--
+            Dez itens planos, que é o número da legenda: com seis a lista ainda
+            parece curta, e o "vira lista de scroll" não aparece.
+          -->
           <DropdownMenuItem>Perfil</DropdownMenuItem>
           <DropdownMenuItem>Configurações</DropdownMenuItem>
           <DropdownMenuItem>Convidar</DropdownMenuItem>
           <DropdownMenuItem>Membros</DropdownMenuItem>
           <DropdownMenuItem>Faturas</DropdownMenuItem>
+          <DropdownMenuItem>Assinatura</DropdownMenuItem>
+          <DropdownMenuItem>Notificações</DropdownMenuItem>
+          <DropdownMenuItem>Integrações</DropdownMenuItem>
           <DropdownMenuItem>Suporte</DropdownMenuItem>
+          <DropdownMenuItem>Sair</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -576,13 +622,17 @@ interface DropdownMenuRadioGroupProps {
     {/snippet}
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Conta</DropdownMenuLabel>
-    <DropdownMenuItem>Perfil</DropdownMenuItem>
-    <DropdownMenuItem>Configurações</DropdownMenuItem>
+    <DropdownMenuGroup>
+      <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
+      <DropdownMenuItem>Perfil</DropdownMenuItem>
+      <DropdownMenuItem>Configurações</DropdownMenuItem>
+    </DropdownMenuGroup>
     <DropdownMenuSeparator />
-    <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-    <DropdownMenuItem>Documentação</DropdownMenuItem>
-    <DropdownMenuItem>Sair</DropdownMenuItem>
+    <DropdownMenuGroup>
+      <DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>
+      <DropdownMenuItem>Documentação</DropdownMenuItem>
+      <DropdownMenuItem>Sair</DropdownMenuItem>
+    </DropdownMenuGroup>
   </DropdownMenuContent>
 </DropdownMenu>`,
         preview: variantWithLabel,
@@ -600,6 +650,7 @@ interface DropdownMenuRadioGroupProps {
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+    <DropdownMenuSeparator />
     <DropdownMenuCheckboxItem bind:checked={showName}>Nome</DropdownMenuCheckboxItem>
     <DropdownMenuCheckboxItem bind:checked={showEmail}>E-mail</DropdownMenuCheckboxItem>
     <DropdownMenuCheckboxItem bind:checked={showRole}>Função</DropdownMenuCheckboxItem>
@@ -620,6 +671,7 @@ interface DropdownMenuRadioGroupProps {
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+    <DropdownMenuSeparator />
     <DropdownMenuRadioGroup bind:value={theme}>
       <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
@@ -646,14 +698,10 @@ interface DropdownMenuRadioGroupProps {
       <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>
-      Refazer
-      <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>
       Copiar
       <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
     </DropdownMenuItem>
+    <DropdownMenuSeparator />
     <DropdownMenuItem>
       Colar
       <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
@@ -707,13 +755,17 @@ interface DropdownMenuRadioGroupProps {
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuLabel>Conta</DropdownMenuLabel>
-          <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configurações</DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
+            <DropdownMenuItem>Perfil</DropdownMenuItem>
+            <DropdownMenuItem>Configurações</DropdownMenuItem>
+          </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-          <DropdownMenuItem>Documentação</DropdownMenuItem>
-          <DropdownMenuItem>Sair</DropdownMenuItem>
+          <DropdownMenuGroup>
+            <DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>
+            <DropdownMenuItem>Documentação</DropdownMenuItem>
+            <DropdownMenuItem>Sair</DropdownMenuItem>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -729,6 +781,7 @@ interface DropdownMenuRadioGroupProps {
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
           <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuCheckboxItem
             checked={compShowName}
             onCheckedChange={(v) => (compShowName = v)}
@@ -762,6 +815,7 @@ interface DropdownMenuRadioGroupProps {
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
           <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuRadioGroup bind:value={compTheme}>
             <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
@@ -786,14 +840,10 @@ interface DropdownMenuRadioGroupProps {
             <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            Refazer
-            <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
             Copiar
             <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem>
             Colar
             <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>

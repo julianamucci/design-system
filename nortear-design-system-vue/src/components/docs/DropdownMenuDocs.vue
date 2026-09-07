@@ -8,6 +8,7 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuRadioGroup,
@@ -311,13 +312,17 @@ const codeCompWithLabel = `<DropdownMenu>
     <Button variant="outline">Conta</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Conta</DropdownMenuLabel>
-    <DropdownMenuItem>Perfil</DropdownMenuItem>
-    <DropdownMenuItem>Configurações</DropdownMenuItem>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>Conta</DropdownMenuLabel>
+      <DropdownMenuItem>Perfil</DropdownMenuItem>
+      <DropdownMenuItem>Configurações</DropdownMenuItem>
+    </DropdownMenuGroup>
     <DropdownMenuSeparator />
-    <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-    <DropdownMenuItem>Documentação</DropdownMenuItem>
-    <DropdownMenuItem>Sair</DropdownMenuItem>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+      <DropdownMenuItem>Documentação</DropdownMenuItem>
+      <DropdownMenuItem>Sair</DropdownMenuItem>
+    </DropdownMenuGroup>
   </DropdownMenuContent>
 </DropdownMenu>`;
 
@@ -326,10 +331,12 @@ const codeCompCheckbox = `<DropdownMenu>
     <Button variant="outline">Colunas</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-    <DropdownMenuCheckboxItem v-model="showName">Nome</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem v-model="showEmail">E-mail</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem v-model="showRole">Função</DropdownMenuCheckboxItem>
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+      <DropdownMenuCheckboxItem v-model="showName">Nome</DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem v-model="showEmail">E-mail</DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem v-model="showRole">Função</DropdownMenuCheckboxItem>
+    </DropdownMenuGroup>
   </DropdownMenuContent>
 </DropdownMenu>`;
 
@@ -338,8 +345,8 @@ const codeCompRadio = `<DropdownMenu>
     <Button variant="outline">Tema</Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Aparência</DropdownMenuLabel>
     <DropdownMenuRadioGroup v-model="theme">
+      <DropdownMenuLabel>Aparência</DropdownMenuLabel>
       <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
       <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
@@ -356,12 +363,9 @@ const codeCompShortcuts = `<DropdownMenu>
       Desfazer <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>
-      Refazer <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>
       Copiar <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
     </DropdownMenuItem>
+    <DropdownMenuSeparator />
     <DropdownMenuItem>
       Colar <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
     </DropdownMenuItem>
@@ -527,13 +531,21 @@ const a11yCritCols = computed(() => ({
             side="bottom"
             align="start"
           >
-            <DropdownMenuLabel>Conta</DropdownMenuLabel>
-            <DropdownMenuItem @select="trackMenuItemSelect('acoes', 'perfil')">
-              Perfil
-            </DropdownMenuItem>
-            <DropdownMenuItem @select="trackMenuItemSelect('acoes', 'configuracoes')">
-              Configurações
-            </DropdownMenuItem>
+            <!--
+              `Group` em volta do rótulo é o que faz o rótulo NOMEAR o bloco: o
+              primitivo liga o `aria-labelledby` do grupo ao texto do `Label`, e
+              é isso que a ficha de `Com Label` promete a quem lê. Um `Label`
+              solto rotula visualmente e não nomeia nada.
+            -->
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Conta</DropdownMenuLabel>
+              <DropdownMenuItem @select="trackMenuItemSelect('acoes', 'perfil')">
+                Perfil
+              </DropdownMenuItem>
+              <DropdownMenuItem @select="trackMenuItemSelect('acoes', 'configuracoes')">
+                Configurações
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               variant="destructive"
@@ -554,16 +566,31 @@ const a11yCritCols = computed(() => ({
             side="bottom"
             align="start"
           >
-            <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-            <DropdownMenuCheckboxItem v-model="demoShowName">
-              Nome
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem v-model="demoShowEmail">
-              E-mail
-            </DropdownMenuCheckboxItem>
-            <DropdownMenuCheckboxItem v-model="demoShowRole">
-              Função
-            </DropdownMenuCheckboxItem>
+            <!--
+              O identificador do item é o da COLUNA, não o rótulo traduzido:
+              "Função"/"Role"/"Rol" partiriam o mesmo evento em três no GA4.
+            -->
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+              <DropdownMenuCheckboxItem
+                v-model="demoShowName"
+                @select="trackMenuItemSelect('colunas', 'nome')"
+              >
+                Nome
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                v-model="demoShowEmail"
+                @select="trackMenuItemSelect('colunas', 'email')"
+              >
+                E-mail
+              </DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem
+                v-model="demoShowRole"
+                @select="trackMenuItemSelect('colunas', 'funcao')"
+              >
+                Função
+              </DropdownMenuCheckboxItem>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -577,15 +604,29 @@ const a11yCritCols = computed(() => ({
             side="bottom"
             align="start"
           >
-            <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+            <!--
+              O rótulo mora DENTRO do grupo de escolha única, que é onde a story
+              e o snippet do painel Code o colocam: fora dele o grupo fica sem
+              nome acessível e o rótulo vira texto solto no meio do menu.
+            -->
             <DropdownMenuRadioGroup v-model="demoTheme">
-              <DropdownMenuRadioItem value="light">
+              <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+              <DropdownMenuRadioItem
+                value="light"
+                @select="trackMenuItemSelect('tema', 'light')"
+              >
                 Claro
               </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="dark">
+              <DropdownMenuRadioItem
+                value="dark"
+                @select="trackMenuItemSelect('tema', 'dark')"
+              >
                 Escuro
               </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="system">
+              <DropdownMenuRadioItem
+                value="system"
+                @select="trackMenuItemSelect('tema', 'system')"
+              >
                 Sistema
               </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
@@ -718,12 +759,16 @@ const a11yCritCols = computed(() => ({
               side="bottom"
               align="start"
             >
-              <DropdownMenuLabel>Conta</DropdownMenuLabel>
-              <DropdownMenuItem>Perfil</DropdownMenuItem>
-              <DropdownMenuItem>Configurações</DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Conta</DropdownMenuLabel>
+                <DropdownMenuItem>Perfil</DropdownMenuItem>
+                <DropdownMenuItem>Configurações</DropdownMenuItem>
+              </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>Workspace</DropdownMenuLabel>
-              <DropdownMenuItem>Convidar</DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Workspace</DropdownMenuLabel>
+                <DropdownMenuItem>Convidar</DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -746,13 +791,20 @@ const a11yCritCols = computed(() => ({
               side="bottom"
               align="start"
             >
-              <DropdownMenuItem>Item 1</DropdownMenuItem>
-              <DropdownMenuItem>Item 2</DropdownMenuItem>
-              <DropdownMenuItem>Item 3</DropdownMenuItem>
-              <DropdownMenuItem>Item 4</DropdownMenuItem>
-              <DropdownMenuItem>Item 5</DropdownMenuItem>
-              <DropdownMenuItem>Item 6</DropdownMenuItem>
-              <DropdownMenuItem>Item 7</DropdownMenuItem>
+              <!--
+                Dez itens planos, que é o número da legenda: com sete a lista
+                ainda parece curta, e o "vira lista de scroll" não aparece.
+              -->
+              <DropdownMenuItem>Perfil</DropdownMenuItem>
+              <DropdownMenuItem>Configurações</DropdownMenuItem>
+              <DropdownMenuItem>Convidar</DropdownMenuItem>
+              <DropdownMenuItem>Membros</DropdownMenuItem>
+              <DropdownMenuItem>Faturas</DropdownMenuItem>
+              <DropdownMenuItem>Assinatura</DropdownMenuItem>
+              <DropdownMenuItem>Notificações</DropdownMenuItem>
+              <DropdownMenuItem>Integrações</DropdownMenuItem>
+              <DropdownMenuItem>Suporte</DropdownMenuItem>
+              <DropdownMenuItem>Sair</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -894,13 +946,17 @@ const a11yCritCols = computed(() => ({
               side="bottom"
               align="start"
             >
-              <DropdownMenuLabel>Conta</DropdownMenuLabel>
-              <DropdownMenuItem>Perfil</DropdownMenuItem>
-              <DropdownMenuItem>Configurações</DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Conta</DropdownMenuLabel>
+                <DropdownMenuItem>Perfil</DropdownMenuItem>
+                <DropdownMenuItem>Configurações</DropdownMenuItem>
+              </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-              <DropdownMenuItem>Documentação</DropdownMenuItem>
-              <DropdownMenuItem>Sair</DropdownMenuItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Suporte</DropdownMenuLabel>
+                <DropdownMenuItem>Documentação</DropdownMenuItem>
+                <DropdownMenuItem>Sair</DropdownMenuItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -923,16 +979,18 @@ const a11yCritCols = computed(() => ({
               side="bottom"
               align="start"
             >
-              <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-              <DropdownMenuCheckboxItem v-model="compShowName">
-                Nome
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem v-model="compShowEmail">
-                E-mail
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem v-model="compShowRole">
-                Função
-              </DropdownMenuCheckboxItem>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+                <DropdownMenuCheckboxItem v-model="compShowName">
+                  Nome
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem v-model="compShowEmail">
+                  E-mail
+                </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem v-model="compShowRole">
+                  Função
+                </DropdownMenuCheckboxItem>
+              </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -955,8 +1013,8 @@ const a11yCritCols = computed(() => ({
               side="bottom"
               align="start"
             >
-              <DropdownMenuLabel>Aparência</DropdownMenuLabel>
               <DropdownMenuRadioGroup v-model="compTheme">
+                <DropdownMenuLabel>Aparência</DropdownMenuLabel>
                 <DropdownMenuRadioItem value="light">
                   Claro
                 </DropdownMenuRadioItem>
@@ -994,14 +1052,10 @@ const a11yCritCols = computed(() => ({
                 <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                Refazer
-                <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
                 Copiar
                 <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
               </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem>
                 Colar
                 <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
