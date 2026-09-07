@@ -108,5 +108,19 @@ Começando pela categoria Overlay, na ordem em que a revisão serial fechou cada
 O ContextMenu **não terá PRD próprio**: ele não tem folha, e o componente inteiro
 é montado com as classes do DropdownMenu — está registrado como decisão D9 lá.
 
-Dialog, Drawer, AlertDialog e Command ainda não passaram pela revisão serial — o
-PRD deles descreveria um estado que a revisão vai mudar, e por isso esperam.
+### Escritos ANTES da revisão serial
+
+| componente | PRD |
+|---|---|
+| Dialog | [dialog.md](dialog.md) |
+| AlertDialog | [alert-dialog.md](alert-dialog.md) |
+| Command | [command.md](command.md) |
+
+Estes três descrevem o estado atual de componentes que a revisão ainda vai
+atravessar, e o cabeçalho de cada um diz isso. A diferença não é de rigor — as
+decisões são medidas do mesmo jeito — e sim de expectativa: aqui é normal que uma
+linha mude, e a forma de mudar é a mesma de sempre, movendo-a para o histórico
+com a nova data e a nova medição.
+
+O Drawer fica de fora por ora: ele está sendo tocado enquanto isto é escrito, e
+PRD de árvore em movimento registra a medição, não o trabalho.
