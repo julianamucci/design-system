@@ -207,7 +207,56 @@ function systemPrompt(locale: Locale, weak: boolean, catalogo: string[]): string
   ].join('\n');
 }
 
-/** Os documentos vencedores, inteiros, um bloco por slug. */
+/**
+ * ── O RECORTE DO CONTEXTO, e por que ele é OPÇÃO e não substituição ──
+ *
+ * MEDIDO: mandar os documentos INTEIROS custa ~33 mil tokens de entrada por
+ * pergunta. Isso não é só fatura — é o que fecha a porta de quase todo plano
+ * gratuito de provedor compatível com OpenAI (Groq dá 6 mil tokens/min;
+ * Cerebras, 30 mil). Nenhum dos dois cabe um documento inteiro.
+ *
+ * As seções abaixo são as de ALTO SINAL para responder pergunta de
+ * documentação: o que o componente é, como se compõe, quando usar, que
+ * variantes e estados tem, que props aceita e o que a acessibilidade exige.
+ * Ficam de fora `testes`, `analytics`, `seo`, `tokens`, `demonstration`,
+ * `notes`, `doDont`, `related` e `import` — texto que existe para a docs page,
+ * não para a resposta.
+ *
+ * **O padrão continua sendo o documento inteiro.** Trocar o padrão é decisão de
+ * produto, e ela só se toma com número: `src/lib/chat-eval/` é o banco que mede
+ * as duas configurações lado a lado. Aqui só existe a chave que liga.
+ *
+ * A variável é lida NA CHAMADA, e não na carga do módulo, pelo mesmo motivo de
+ * `modelo()`: o avaliador roda as duas configurações no mesmo processo.
+ */
+export const SECOES_DE_ALTO_SINAL = [
+  'description',
+  'category',
+  'type',
+  'anatomy',
+  'usage',
+  'variants',
+  'states',
+  'props',
+  'accessibility',
+] as const;
+
+export function contextoRecortado(): boolean {
+  return process.env.CHAT_DOCS_CONTEXTO === 'recortado';
+}
+
+/** Só as seções de alto sinal. Seção que o slug não tem simplesmente não entra. */
+export function recortarDocumento(documento: unknown): unknown {
+  if (!documento || typeof documento !== 'object' || Array.isArray(documento)) return documento;
+  const origem = documento as Record<string, unknown>;
+  const saida: Record<string, unknown> = {};
+  for (const secao of SECOES_DE_ALTO_SINAL) {
+    if (origem[secao] !== undefined) saida[secao] = origem[secao];
+  }
+  return saida;
+}
+
+/** Os documentos vencedores, um bloco por slug — inteiros ou recortados. */
 /**
  * Siglas que não viram Palavra Capitalizada ao derivar o nome do menu.
  *
@@ -231,7 +280,7 @@ const SIGLAS: Record<string, string> = { otp: 'OTP' };
  * voz alta" aparecem no texto do `composer-voice` como alternativas descritas,
  * e voltaram na resposta como se fossem peças do sistema.
  */
-function nomeDeMenu(slug: string): string {
+export function nomeDeMenu(slug: string): string {
   return slug
     .split('-')
     .map((parte) => SIGLAS[parte] ?? parte.charAt(0).toUpperCase() + parte.slice(1))
@@ -242,9 +291,11 @@ function buildContext(
   hits: DocsIndexHit[],
   documents: Map<string, unknown>,
 ): string {
+  const recortar = contextoRecortado();
   return hits
     .map((hit) => {
-      const document = documents.get(hit.slug);
+      const bruto = documents.get(hit.slug);
+      const document = recortar ? recortarDocumento(bruto) : bruto;
       return [
         // O nome do menu entra no cabeçalho do documento: é o que o modelo tem
         // de usar para se referir ao componente, e precisa estar à vista.
@@ -381,6 +432,175 @@ function chaveDoAmbiente(): string | null {
   return chaveMemoizada;
 }
 
+/* ── PONTO DE EXTENSÃO: O PROVEDOR ───────────────────────────────────────── */
+
+/**
+ * ── COMO LIGAR OUTRO PROVEDOR ──
+ *
+ * Groq, Cerebras, OpenRouter, Together e praticamente todo servidor local
+ * (Ollama, llama.cpp, vLLM, LM Studio) falam o MESMO protocolo: `POST` em
+ * `/v1/chat/completions` com `stream: true`, no corpo da OpenAI. Ou seja: UM
+ * adaptador serve para todos eles, e o que muda de um para o outro é a URL
+ * base, o nome do modelo e a variável que guarda a chave.
+ *
+ * Ligar um é duas coisas, e nenhuma delas toca o cliente:
+ *
+ * 1. Escrever um `Provedor` — as quatro funções abaixo.
+ * 2. Registrar em `PROVEDORES` e apontar `CHAT_DOCS_PROVEDOR` para ele.
+ *
+ * O adaptador compatível com OpenAI NÃO existe aqui de propósito: não há chave
+ * de nenhum desses serviços neste repositório, e código de integração que
+ * ninguém consegue exercitar é código que nasce quebrado e passa verde no
+ * portão — exatamente o defeito que a regra "portão só vale depois de saber o
+ * que ele cobre" descreve.
+ *
+ * O que a interface garante, e é por isso que ela existe: nem a recuperação,
+ * nem a montagem do contexto, nem a instrução de sistema, nem o contrato SSE
+ * (`sources`, `delta`, `done`, `error`) sabem qual provedor respondeu. Foi
+ * assim que este arquivo saiu da Anthropic para o Google sem o cliente mudar
+ * uma linha.
+ *
+ * **O recorte de contexto é o que torna a troca viável de verdade.** Groq
+ * entrega 6 mil tokens por minuto no plano gratuito e Cerebras entrega 30 mil:
+ * com documento inteiro (~33 mil), UMA pergunta já estoura a cota dos dois. Por
+ * isso o adaptador vem junto de `CHAT_DOCS_CONTEXTO=recortado`, e não antes.
+ */
+
+/** O que o núcleo pede ao provedor. Nada aqui é específico de um SDK. */
+export interface PedidoAoProvedor {
+  /** A instrução de sistema já montada, com catálogo e regra de idioma. */
+  sistema: string;
+  /** Os turnos anteriores, do mais antigo para o mais recente. */
+  historico: readonly Turno[];
+  /** A última mensagem do usuário — trechos recuperados + pergunta. */
+  mensagem: string;
+  maxTokens: number;
+  temperatura: number;
+}
+
+/** O que o provedor devolve, pedaço a pedaço. Só o último traz `uso`. */
+export interface PedacoDoProvedor {
+  texto?: string;
+  parada?: string | null;
+  uso?: { input: number | null; output: number | null };
+}
+
+/** Os códigos que o cliente já trata. Trocar de provedor não pode inventar outro. */
+export type CodigoDeFalha =
+  | 'modelo_indisponivel'
+  | 'chave_invalida'
+  | 'limite_do_modelo'
+  | 'falha_do_modelo';
+
+export interface Provedor {
+  /** Só para leitura humana. Não vai para o cliente. */
+  nome: string;
+  /**
+   * A credencial, ou `null` quando não há.
+   *
+   * NUNCA registre o valor — nem em log de depuração. O repositório é público.
+   */
+  chave(): string | null;
+  /** O streaming. É a ÚNICA função que conhece SDK, URL ou `fetch`. */
+  stream(pedido: PedidoAoProvedor, chave: string): AsyncIterable<PedacoDoProvedor>;
+  /** Traduz o erro do provedor para um código que o cliente já sabe mostrar. */
+  classificarFalha(erro: unknown): CodigoDeFalha;
+}
+
+/**
+ * O adaptador do Google — hoje o único, e o único com chave neste repositório.
+ *
+ * Repare no que ele NÃO faz: não monta prompt, não decide quantos documentos
+ * entram, não escreve SSE. Só traduz `PedidoAoProvedor` para o SDK, e o
+ * streaming do SDK de volta para `PedacoDoProvedor`.
+ */
+const provedorGemini: Provedor = {
+  nome: 'gemini',
+  chave: () => chaveDoAmbiente(),
+  async *stream(pedido, chave) {
+    const client = new GoogleGenAI({ apiKey: chave });
+    const modelStream = await client.models.generateContentStream({
+      model: modelo(),
+      contents: [
+        // Os turnos anteriores primeiro: é o que faz "desse" ter a que se
+        // referir. Os trechos recuperados vão sempre na ÚLTIMA mensagem,
+        // porque é a pergunta atual que eles respondem.
+        ...pedido.historico.map((turno) => ({
+          role: turno.papel,
+          parts: [{ text: turno.texto }],
+        })),
+        { role: 'user', parts: [{ text: pedido.mensagem }] },
+      ],
+      config: {
+        systemInstruction: pedido.sistema,
+        maxOutputTokens: pedido.maxTokens,
+        // Temperatura baixa porque a resposta precisa ficar colada nos
+        // trechos: aqui invenção não é criatividade, é defeito.
+        temperature: pedido.temperatura,
+        // Raciocínio no piso. A tarefa é ler trecho e responder; pensamento
+        // longo aqui só adiciona custo e latência.
+        //
+        // `thinkingLevel`, e não `thinkingBudget`. O orçamento numérico é da
+        // geração anterior: `thinkingBudget: 0` faz o modelo atual recusar a
+        // requisição inteira com "Request contains an invalid argument" —
+        // mensagem que não diz qual argumento, e que custa uma bissecção
+        // para achar. E não há como desligar: `low` é o mínimo.
+        // MEDIDO: MINIMAL devolve zero token de pensamento e responde em
+        // 1,25s; LOW gasta 189 tokens e leva 1,94s na mesma pergunta.
+        thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
+      },
+    });
+
+    // O uso vem no ÚLTIMO pedaço, e não num objeto final separado: quem
+    // quiser contabilizar precisa guardar o que passou, porque depois do
+    // laço não há mais nada para consultar.
+    let ultimo: Awaited<ReturnType<typeof modelStream.next>>['value'] | undefined;
+    for await (const chunk of modelStream) {
+      ultimo = chunk;
+      if (chunk.text) yield { texto: chunk.text };
+    }
+    yield {
+      parada: ultimo?.candidates?.[0]?.finishReason ?? null,
+      uso: {
+        input: ultimo?.usageMetadata?.promptTokenCount ?? null,
+        output: ultimo?.usageMetadata?.candidatesTokenCount ?? null,
+      },
+    };
+  },
+  classificarFalha(erro) {
+    // O SDK do Google traz o código HTTP no erro, e não uma classe por
+    // categoria. O mapa abaixo foi calibrado apanhando:
+    //
+    // - **404 é modelo, não rota.** `gemini-2.5-flash` deixou de ser servido
+    //   a contas novas e a API respondeu 404 dizendo isso por escrito.
+    //   Classificado como `falha_do_modelo`, virava "tente de novo" —
+    //   conselho inútil para um nome que nunca mais vai funcionar.
+    // - **400 costuma ser argumento, não chave.** `thinkingBudget: 0` é da
+    //   geração anterior e faz o modelo atual recusar com "Request contains
+    //   an invalid argument", sem dizer QUAL. Some com a chave errada, então
+    //   o rótulo manda conferir as duas coisas.
+    // - 401 e 403 são credencial; 429 é limite.
+    const status = erro instanceof ApiError ? erro.status : 0;
+    if (status === 404) return 'modelo_indisponivel';
+    if (status === 401 || status === 403 || status === 400) return 'chave_invalida';
+    if (status === 429) return 'limite_do_modelo';
+    return 'falha_do_modelo';
+  },
+};
+
+/**
+ * O registro. Um adaptador novo entra aqui, e em nenhum outro lugar.
+ *
+ * Nome desconhecido cai no Gemini de propósito: derrubar a função porque
+ * alguém digitou errado uma variável de ambiente troca um defeito de
+ * configuração por uma indisponibilidade.
+ */
+const PROVEDORES: Record<string, Provedor> = { gemini: provedorGemini };
+
+function provedorAtual(): Provedor {
+  return PROVEDORES[process.env.CHAT_DOCS_PROVEDOR ?? 'gemini'] ?? provedorGemini;
+}
+
 /**
  * O núcleo, no padrão Web: recebe `Request`, devolve `Response`.
  *
@@ -462,7 +682,8 @@ export async function responder(request: Request): Promise<Response> {
 
   // A chave é lida AQUI, e nunca sai daqui: não vai para o log, não vai para o
   // corpo, não vai para o cliente.
-  const apiKey = chaveDoAmbiente();
+  const provedor = provedorAtual();
+  const apiKey = provedor.chave();
   if (!apiKey) {
     return jsonError(
       503,
@@ -471,7 +692,6 @@ export async function responder(request: Request): Promise<Response> {
     );
   }
 
-  const client = new GoogleGenAI({ apiKey });
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream<Uint8Array>({
@@ -488,98 +708,38 @@ export async function responder(request: Request): Promise<Response> {
       });
 
       try {
-        const modelStream = await client.models.generateContentStream({
-          model: modelo(),
-          contents: [
-            // Os turnos anteriores primeiro: é o que faz "desse" ter a que se
-            // referir. Os trechos recuperados vão sempre na ÚLTIMA mensagem,
-            // porque é a pergunta atual que eles respondem.
-            ...historico.map((turno) => ({
-              role: turno.papel,
-              parts: [{ text: turno.texto }],
-            })),
-            {
-              role: 'user',
-              parts: [
-                {
-                  text: [
-                    'Trechos da documentação recuperados para esta pergunta:',
-                    '',
-                    buildContext(selected, corpus.documents),
-                    '',
-                    'Pergunta:',
-                    question,
-                  ].join('\n'),
-                },
-              ],
-            },
-          ],
-          config: {
-            systemInstruction: systemPrompt(locale, weak, catalogo),
-            maxOutputTokens: MAX_TOKENS,
-            // Temperatura baixa porque a resposta precisa ficar colada nos
-            // trechos: aqui invenção não é criatividade, é defeito.
-            temperature: 0.2,
-            // Raciocínio no piso. A tarefa é ler trecho e responder; pensamento
-            // longo aqui só adiciona custo e latência.
-            //
-            // `thinkingLevel`, e não `thinkingBudget`. O orçamento numérico é da
-            // geração anterior: `thinkingBudget: 0` faz o modelo atual recusar a
-            // requisição inteira com "Request contains an invalid argument" —
-            // mensagem que não diz qual argumento, e que custa uma bissecção
-            // para achar. E não há como desligar: `low` é o mínimo.
-            // MEDIDO: MINIMAL devolve zero token de pensamento e responde em
-            // 1,25s; LOW gasta 189 tokens e leva 1,94s na mesma pergunta. A
-            // tarefa é extrair de um trecho que já está no prompt — deliberar
-            // não acrescenta nada aqui.
-            thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
+        // Daqui para baixo o núcleo NÃO sabe qual provedor respondeu: só o
+        // contrato de pedaços. É o que permite ligar um servidor compatível
+        // com OpenAI escrevendo o adaptador e nada mais.
+        for await (const pedaco of provedor.stream(
+          {
+            sistema: systemPrompt(locale, weak, catalogo),
+            historico,
+            mensagem: [
+              'Trechos da documentação recuperados para esta pergunta:',
+              '',
+              buildContext(selected, corpus.documents),
+              '',
+              'Pergunta:',
+              question,
+            ].join('\n'),
+            maxTokens: MAX_TOKENS,
+            temperatura: 0.2,
           },
-        });
-
-        // O uso vem no ÚLTIMO pedaço, e não num objeto final separado: quem
-        // quiser contabilizar precisa guardar o que passou, porque depois do
-        // laço não há mais nada para consultar.
-        let ultimo: Awaited<ReturnType<typeof modelStream.next>>['value'] | undefined;
-
-        for await (const chunk of modelStream) {
-          ultimo = chunk;
-          const texto = chunk.text;
-          if (texto) send('delta', { text: texto });
+          apiKey,
+        )) {
+          if (pedaco.texto) send('delta', { text: pedaco.texto });
+          // O pedaço final é o que traz `uso`. Ele fecha o SSE com `done`, que
+          // é onde o avaliador de custo lê os tokens de entrada e de saída.
+          if (pedaco.uso) {
+            send('done', { stopReason: pedaco.parada ?? null, usage: pedaco.uso });
+          }
         }
-
-        send('done', {
-          stopReason: ultimo?.candidates?.[0]?.finishReason ?? null,
-          usage: {
-            input: ultimo?.usageMetadata?.promptTokenCount ?? null,
-            output: ultimo?.usageMetadata?.candidatesTokenCount ?? null,
-          },
-        });
       } catch (error) {
         // O texto do erro da API pode carregar detalhe de conta. O cliente
         // recebe a categoria; o detalhe fica no log do servidor.
         console.error('[perguntar] falha ao chamar a API', error);
-        // O SDK do Google traz o código HTTP no erro, e não uma classe por
-        // categoria. O mapa abaixo foi calibrado apanhando:
-        //
-        // - **404 é modelo, não rota.** `gemini-2.5-flash` deixou de ser
-        //   servido a contas novas e a API respondeu 404 dizendo isso por
-        //   escrito. Classificado como `falha_do_modelo`, virava "tente de
-        //   novo" — conselho inútil para um nome que nunca mais vai funcionar.
-        // - **400 costuma ser argumento, não chave.** `thinkingBudget: 0` é da
-        //   geração anterior e faz o modelo atual recusar com "Request contains
-        //   an invalid argument", sem dizer QUAL. Some com a chave errada, então
-        //   o rótulo manda conferir as duas coisas.
-        // - 401 e 403 são credencial; 429 é limite.
-        const status = error instanceof ApiError ? error.status : 0;
-        const code =
-          status === 404
-            ? 'modelo_indisponivel'
-            : status === 401 || status === 403 || status === 400
-              ? 'chave_invalida'
-              : status === 429
-                ? 'limite_do_modelo'
-                : 'falha_do_modelo';
-        send('error', { code });
+        send('error', { code: provedor.classificarFalha(error) });
       } finally {
         controller.close();
       }
