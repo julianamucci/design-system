@@ -101,10 +101,12 @@ Começando pela categoria Overlay, na ordem em que a revisão serial fechou cada
 |---|---|---|
 | Popover | [popover.md](popover.md) | 2026-09-06 |
 | HoverCard | [hover-card.md](hover-card.md) | 2026-09-06 |
-| Tooltip | — | 2026-09-06 |
-| Sheet | — | 2026-09-06 |
-| DropdownMenu | — | 2026-09-07 |
+| Tooltip | [tooltip.md](tooltip.md) | 2026-09-06 |
+| Sheet | [sheet.md](sheet.md) | 2026-09-06 |
+| DropdownMenu | [dropdown-menu.md](dropdown-menu.md) | 2026-09-07 |
 
-O ContextMenu está em revisão neste momento e entra quando ela fechar. Dialog,
-Drawer, AlertDialog e Command ainda não passaram pela revisão serial — o PRD
-deles descreveria um estado que a revisão vai mudar, e por isso esperam.
+O ContextMenu **não terá PRD próprio**: ele não tem folha, e o componente inteiro
+é montado com as classes do DropdownMenu — está registrado como decisão D9 lá.
+
+Dialog, Drawer, AlertDialog e Command ainda não passaram pela revisão serial — o
+PRD deles descreveria um estado que a revisão vai mudar, e por isso esperam.
