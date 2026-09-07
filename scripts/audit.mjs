@@ -2441,10 +2441,28 @@ function auditDoDontPreview(slug) {
     for (const file of docs) {
       const content = readFile(file);
       if (!content) continue;
+      // Linha DENTRO de literal de template é código EXIBIDO ao leitor, não
+      // código que roda: o snippet de Importação da página traz
+      // `createContextMenu({` no meio de uma crase, e a janela do preview
+      // alcançava aquilo e dava o `<div>` desenhado à mão por vivo. Medido no
+      // context-menu do vanilla, DEPOIS de eu apertar o teto da janela — o
+      // aperto fechou um dos dois caminhos e eu não replantei o defeito para
+      // achar o outro. É a mesma máscara que o `inline_style_design_value` usa,
+      // aqui em granularidade de linha.
+      const mask = snippetMask(content);
       const linhas = content.split('\n');
+      const emSnippet = [];
+      for (let i = 0, pos = 0; i < linhas.length; i++) {
+        const len = linhas[i].length;
+        let mascarados = 0;
+        for (let c = 0; c < len; c++) if (mask[pos + c]) mascarados++;
+        emSnippet.push(len > 0 && mascarados > len / 2);
+        pos += len + 1;
+      }
+
       const marcas = [];
       for (let i = 0; i < linhas.length; i++) {
-        if (MARCADOR_DODONT[stack].test(linhas[i])) marcas.push(i);
+        if (!emSnippet[i] && MARCADOR_DODONT[stack].test(linhas[i])) marcas.push(i);
       }
       // Um nível de INDIREÇÃO: o preview costuma chamar um helper local em vez
       // de instanciar na própria linha (`buildDoDont(...)` no vanilla). Sem
@@ -2474,8 +2492,11 @@ function auditDoDontPreview(slug) {
         const ate = Math.min(marcas[k + 1] ?? linhas.length, inicio + teto);
         const janela = linhas.slice(inicio, ate);
         total += 1;
-        const viva = janela.some((l) => l.includes(token))
-          || janela.some((l) => [...fabricas].some((f) => l.includes(f + '(')));
+        // A janela ignora linha de snippet pelo mesmo motivo: instanciação
+        // EXIBIDA ao leitor não prova que o preview instancia.
+        const janelaViva = janela.filter((_, i) => !emSnippet[inicio + i]);
+        const viva = janelaViva.some((l) => l.includes(token))
+          || janelaViva.some((l) => [...fabricas].some((f) => l.includes(f + '(')));
         if (viva) vivos += 1;
       }
     }
