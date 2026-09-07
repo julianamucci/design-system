@@ -6197,6 +6197,57 @@ function auditQuality(slug) {
     }
   }
 
+  // 0b. Token que o PRD nomeia e a folha do componente não lê.
+  //
+  // O PRD (`docs/shared/prd/<slug>.md`) descreve o que o componente É hoje, e a
+  // tabela de geometria dele nomeia os tokens. Sem portão, esse documento
+  // apodrece como as guidelines que ele existe para consertar — foi a pergunta
+  // que a dona fez no dia em que os dois primeiros nasceram, e a resposta era
+  // "nada dispara".
+  //
+  // Esta é a metade que mede VERDADE. A outra metade — abrir o PRD no momento
+  // em que o componente muda — é do `.husky/pre-commit`, que enxerga o commit e
+  // este script não.
+  //
+  // O caso que ela pega é exatamente o do popover: o gap do cabeçalho saiu de
+  // `--spacing-0-5` para `--spacing-1-5` em 2026-09-05, e um PRD escrito antes
+  // continuaria nomeando um token que a folha não lê mais.
+  //
+  // EXCLUSÃO DECLARADA: o sentido contrário — token que a folha lê e o PRD não
+  // cita — fica de fora. Ali entram os fallbacks das libs (`--reka-…`,
+  // `--bits-…`), os tokens de movimento e os de camada, e a tabela de geometria
+  // não se propõe a listar todos. Cobrir aquele sentido é outra medida.
+  const prdFile = join(ROOT, 'docs', 'shared', 'prd', `${slug}.md`);
+  const folhaFile = join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`);
+  if (existsSync(prdFile) && existsSync(folhaFile)) {
+    const prd = readFile(prdFile) || '';
+    const folha = readFile(folhaFile) || '';
+    // Só a seção de geometria: o resto do PRD cita token em prosa comparativa
+    // ("a sombra é `md`, não a `xl` do Tooltip"), e cobrar ali reprovaria a
+    // comparação, que é justamente o que dá utilidade ao documento.
+    const secao = prd.split(/^## /m).find((s) => /^\d+\.\s+Geometria/.test(s));
+    if (secao) {
+      // `--[a-z]` e não `--[a-z0-9-]`: sem a letra, o `---` que separa cabeçalho
+      // de corpo em toda tabela markdown entraria como token.
+      const tokens = [...new Set(secao.match(/--[a-z][a-z0-9-]*/g) ?? [])];
+      for (const token of tokens) {
+        // Fronteira nos dois lados: `--radius` não pode ser dado por lastreado
+        // porque a folha lê `--radius-md`. São pontos de customização
+        // diferentes, e confundi-los é o defeito que a tabela de tokens das
+        // docs pages já pagou.
+        const lastro = new RegExp(`(^|[^a-z0-9-])${token}([^a-z0-9-]|$)`, 'm');
+        if (lastro.test(folha)) continue;
+        violations.push({
+          category: 'quality', severity: 'high', slug, stack: 'shared',
+          file: relative(ROOT, prdFile), rule: 'prd_token_sem_lastro',
+          message:
+            `a tabela de geometria nomeia ${token} e ${slug}.css não lê esse token — ` +
+            `ou a folha mudou e o PRD ficou para trás, ou o token está errado desde que foi escrito`,
+        });
+      }
+    }
+  }
+
   for (const stack of STACKS) {
     const { ui, docs } = filesForSlug(slug, stack);
 
@@ -6335,11 +6386,23 @@ function auditQuality(slug) {
           // reprovar — o ChartDocs do vanilla mostrava 6 de 11 critérios
           // funcionais, o SwitchDocs do angular 3 de 5 notas. A regra existia,
           // a intenção estava escrita, e um caractere a desligava.
-          if (new RegExp(`${p}\\.item\\$\\{i\\}`).test(content)) {
-            const lista = content.match(new RegExp(`\\[([\\d,\\s]+)\\][\\s\\S]{0,200}${p}`, 's'));
-            if (lista) {
+          if (new RegExp(`${p}\\.item\\$\\{i\\}`).test(semComentario)) {
+            // O array é amarrado ao PRÓPRIO `.map(` — e essa amarração é o que
+            // faltava. Procurar "um array literal a até 200 caracteres do
+            // caminho" pega o array da lista ANTERIOR quando duas listas são
+            // vizinhas, que é o arranjo normal de uma docs page.
+            //
+            // Medido em 2026-09-07 no `PopoverDocs.ts` do vanilla: as
+            // guidelines são `[1, 2, 3, 4]` e os cenários, oito linhas abaixo,
+            // são `[1, 2, 3, 4, 5, 6]`. A janela alcançava a primeira, e a
+            // regra reportou "renderiza 4" sobre uma página que renderiza seis
+            // — achado `high` num arquivo correto.
+            for (const mapa of semComentario.matchAll(/\[([\d,\s]+)\]\s*\.map\(/g)) {
+              const janela = semComentario.slice(mapa.index, mapa.index + 400);
+              if (!new RegExp(`${p}\\.item\\$\\{i\\}`).test(janela)) continue;
               renderizado = Math.max(
-                ...lista[1].split(',').map((n) => Number(n.trim())).filter(Number.isFinite),
+                renderizado,
+                ...mapa[1].split(',').map((n) => Number(n.trim())).filter(Number.isFinite),
               );
             }
           } else {

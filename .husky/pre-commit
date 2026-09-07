@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
-# Pre-commit hook — bloqueia padrões que escondem testes quebrados.
+# Pre-commit hook — dois guardas:
+#   1. padrão que esconde teste quebrado (skip, todo, a11y.disable);
+#   2. PRD que ficou para trás quando o componente mudou.
 # Política do projeto: bugs no primitivo devem ser corrigidos, nunca silenciados.
 # Ver CLAUDE.md (raiz) seção "Conventions To Respect".
 
@@ -7,7 +9,64 @@ set -e
 
 FORBIDDEN_PATTERNS='it\.skip|test\.skip|it\.todo|test\.todo|xit\(|xtest\(|xdescribe\(|describe\.skip|expect\.soft|parameters\.a11y\.disable|parameters\.test\.disable'
 
-STAGED=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(stories|test|spec)\.(ts|tsx|js|jsx|vue|svelte)$' || true)
+ALL_STAGED=$(git diff --cached --name-only --diff-filter=ACM || true)
+
+STAGED=$(printf '%s\n' "$ALL_STAGED" | grep -E '\.(stories|test|spec)\.(ts|tsx|js|jsx|vue|svelte)$' || true)
+
+# ─── PRD que ficou para trás ─────────────────────────────────────────────────
+#
+# `docs/shared/prd/<slug>.md` descreve o que o componente É hoje, com as
+# decisões e a medição de cada uma. Sem gatilho, esse documento apodrece como as
+# guidelines que ele existe para consertar — e a única metade que um script
+# consegue medir sozinho (token nomeado no PRD que a folha não lê mais) está no
+# `audit.mjs`, na regra `prd_token_sem_lastro`.
+#
+# Esta metade é a outra: o COMMIT é o único momento em que quem editou ainda tem
+# o contexto na cabeça. Se o commit mexe na folha, no primitivo ou no conteúdo
+# de um componente que tem PRD, o PRD entra junto.
+#
+# O que este guarda NÃO sabe: se a edição do PRD foi correta. Ele mede atenção,
+# não verdade. Um espaço em branco passa — e a defesa contra isso é a seção de
+# decisões, que fica ilegível se ninguém a mantiver.
+#
+# Story, fixture, snippet e teste ficam de fora: eles mudam como o componente é
+# DEMONSTRADO, não o que ele é.
+#
+# Vem ANTES do retorno antecipado do outro guarda de propósito: commit que só
+# mexe em CSS não tem arquivo de teste staged e sairia ali, sem passar por aqui.
+if [ "$PRD_SKIP" != "1" ]; then
+  PRD_PENDENTES=""
+  for PRD in docs/shared/prd/*.md; do
+    [ -f "$PRD" ] || continue
+    SLUG=$(basename "$PRD" .md)
+    if [ "$SLUG" = "README" ]; then continue; fi
+    if printf '%s\n' "$ALL_STAGED" | grep -qx "$PRD"; then continue; fi
+
+    DESCRITOS=$(printf '%s\n' "$ALL_STAGED" \
+      | grep -E "^(docs/shared/styles/nds/${SLUG}\.css|docs/shared/content/${SLUG}/|nortear-design-system-[a-z]+/src/components/ui/${SLUG}[./-])" \
+      | grep -vE '\.(stories|fixtures|source|test|spec)\.' || true)
+
+    if [ -n "$DESCRITOS" ]; then
+      LISTA=$(printf '%s' "$DESCRITOS" | sed 's/^/      /')
+      PRD_PENDENTES="$PRD_PENDENTES\n  \033[1m$SLUG\033[0m — $PRD não entrou, e estes entraram:\n$LISTA\n"
+    fi
+  done
+
+  if [ -n "$PRD_PENDENTES" ]; then
+    printf '\n\033[31m✗ Pre-commit blocked: componente mudou e o PRD ficou para trás\033[0m\n'
+    printf '%b' "$PRD_PENDENTES"
+    printf '\n\033[33mAntes de commitar, responda as três:\033[0m\n'
+    printf '  1. alguma afirmação do CONTRATO mudou? → atualize a linha e o portão que a cobre\n'
+    printf '  2. alguma DECISÃO fixada foi revertida? → se de propósito, mova a linha para o\n'
+    printf '     histórico com a nova data e a nova medição; se sem querer, é defeito\n'
+    printf '  3. algum valor da tabela de TOKENS mudou? → node scripts/tabela-tokens.mjs <slug>\n'
+    printf '\nSe a mudança não altera nada do que o PRD afirma (renomear variável interna,\n'
+    printf 'corrigir typo de comentário), siga com \033[36mPRD_SKIP=1 git commit …\033[0m — que\n'
+    printf 'pula SÓ este guarda. \033[36m--no-verify\033[0m desliga também o de teste silenciado,\n'
+    printf 'e não é o caminho para isto.\n\n'
+    exit 1
+  fi
+fi
 
 if [ -z "$STAGED" ]; then
   exit 0

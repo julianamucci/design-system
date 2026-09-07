@@ -25,13 +25,13 @@ submit — em touch não há caminho acessível até eles.
 | # | o contrato | portão |
 |---|---|---|
 | C1 | Abre no hover do gatilho, depois da espera de abertura | play, nas cinco |
-| C2 | Abre TAMBÉM no foco por Tab, sem exigir ponteiro | `accessibility.item1` — é o que WCAG 1.4.13 pede |
-| C3 | Permanece aberto enquanto o ponteiro estiver sobre o CARTÃO: dá para o cursor viajar do gatilho até ele | `accessibility.item2` |
-| C4 | `Escape` fecha | `accessibility.item3` — cláusula "dismissable" da 1.4.13 |
-| C5 | O gatilho é DESCRITO pelo cartão via `aria-describedby`, e só enquanto o cartão existe | `accessibility.item5` |
+| C2 | Abre TAMBÉM no foco por Tab, sem exigir ponteiro | `accessibility.items.item1` — é o que WCAG 1.4.13 pede |
+| C3 | Permanece aberto enquanto o ponteiro estiver sobre o CARTÃO: dá para o cursor viajar do gatilho até ele | `accessibility.items.item2` |
+| C4 | `Escape` fecha | `accessibility.items.item3` — cláusula "dismissable" da 1.4.13 |
+| C5 | O gatilho é DESCRITO pelo cartão via `aria-describedby`, e só enquanto o cartão existe | `accessibility.items.item5` |
 | C6 | Renderiza em portal, fora da raiz da página | `notes.item2` |
 | C7 | Sem espaço no `side` pedido, vira para o lado oposto | story de posicionamento |
-| C8 | O conteúdo do cartão NÃO é o único caminho para a informação | `accessibility.item4` — julgamento, sem portão automático |
+| C8 | O conteúdo do cartão NÃO é o único caminho para a informação | `accessibility.items.item4` — julgamento, sem portão automático |
 
 ## 3. Decisões fixadas
 

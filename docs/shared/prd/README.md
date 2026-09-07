@@ -69,6 +69,30 @@ Ao tocar um componente que tem PRD, a rodada fecha respondendo três perguntas:
 3. algum valor da tabela de tokens mudou? → `node scripts/tabela-tokens.mjs <slug>`
    cruza a tabela das docs pages com as folhas, e serve para conferir esta também.
 
+### E dois gatilhos, porque instrução sozinha não dispara
+
+As três perguntas acima já existiam quando este diretório nasceu, e uma instrução
+sem portão não é gatilho — foi essa a lição do `varra TODAS as chaves`, que
+estava escrito na skill `quality` e não impediu a página do popover de se
+contradizer. Então:
+
+| gatilho | onde | o que mede |
+|---|---|---|
+| commit que mexe na folha, no primitivo ou no conteúdo de um componente com PRD exige o PRD no mesmo commit | `.husky/pre-commit` | **atenção**, no único momento em que quem editou tem o contexto na cabeça |
+| token nomeado na tabela de geometria que a folha do componente não lê | `prd_token_sem_lastro`, em `scripts/audit.mjs` | **verdade** de uma parte factual |
+
+Os dois são metades. O hook não sabe se a edição do PRD foi correta — um espaço
+em branco passa. A regra não sabe que uma decisão mudou — ela só sabe que um
+token sumiu da folha. E **nenhum dos dois pega o defeito que motivou o
+diretório**: decisão revertida com o código e o PRD mudando juntos só aparece
+para quem ler a linha. O que os gatilhos compram é que o documento seja aberto na
+hora certa e que as tabelas factuais não possam derivar em silêncio.
+
+Story, fixture, snippet e teste não disparam o hook: eles mudam como o componente
+é DEMONSTRADO, não o que ele é. Para mudança que de fato não altera nada do que o
+PRD afirma, `PRD_SKIP=1 git commit …` pula só esse guarda — `--no-verify`
+desligaria também o de teste silenciado, e não é o caminho.
+
 ## Índice
 
 Começando pela categoria Overlay, na ordem em que a revisão serial fechou cada um.
