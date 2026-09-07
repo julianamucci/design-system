@@ -6255,7 +6255,18 @@ function auditQuality(slug) {
           // `stringsFromDict` faltava nesta lista, e é a que o tooltip do angular
           // usa. Helper derivado do dicionário que não esteja nomeado aqui some do
           // radar, e a página passa a ser medida como se citasse item por item.
-          if (new RegExp(`(itemsFromDict|listFromDict|stringsFromDict)\\([^)]*['"\`]${p}['"\`]`).test(semComentario)) continue;
+          // `numberedItems` entrou em 2026-09-07, e o motivo importa mais que o
+          // nome: ele estava INVISÍVEL para esta regra, e o que o salvava era
+          // acidente. Sem estar na lista, a página cai no ramo de citação
+          // literal, não acha nenhuma, e `renderizado` fica 0 — e `0` faz a
+          // regra PULAR, não acusar. Zero achado por ausência de mecanismo
+          // conhecido é indistinguível de "conferido, tudo certo", que é a
+          // mesma leitura que já custou caro nesta casa em check de presença.
+          //
+          // Ele está copiado em 12 docs pages do angular, cada uma com a sua
+          // definição local, e varre `item{i}` até faltar — exatamente o que
+          // esta regra quer premiar.
+          if (new RegExp(`(itemsFromDict|listFromDict|stringsFromDict|numberedItems)\\([^)]*['"\`]${p}['"\`]`).test(semComentario)) continue;
 
           let renderizado = 0;
           // Interpolada: `${caminho}.item${i}` alimentada por um array literal.
@@ -6564,6 +6575,63 @@ function auditQuality(slug) {
  * varredura `--all` os 220 assustam, mas na revisão componente a componente são
  * no máximo cinco achados por vez, um por stack.
  */
+/**
+ * Arquivo de story sem NENHUM `transform` no painel Code.
+ *
+ * Sem ele o painel publica o template como ele é escrito para o Storybook:
+ * `args.`, `{{ interpolação }}`, `(evento)="handler($event)"`, andaime de
+ * captura, e binding do renderer que não existe em componente nenhum. Quem
+ * copia dali copia o andaime — e o painel Code é a única parte da docs page
+ * feita para ser copiada.
+ *
+ * Medido quatro vezes numa campanha só, sempre no angular e sempre na mesma
+ * proporção: tooltip 1 de 13, sheet 1 de 12, dropdown-menu 1 de 13,
+ * context-menu 1 de 11. Não é descuido pontual — é como componente nasce
+ * naquela stack.
+ *
+ * O repositório em 2026-09-07, antes desta regra existir:
+ *
+ *   react    858/917 (94%)   0 arquivos sem nenhuma
+ *   vue      861/911 (95%)   0
+ *   svelte   773/920 (84%)   0
+ *   vanilla  870/952 (91%)   5   (páginas de fundamento, sem componente)
+ *   angular  343/833 (41%)   124
+ *
+ * A regra é de ARQUIVO e não de story, de propósito. O `transform` do `meta`
+ * serve todas as stories do arquivo, e cobrar uma por uma acusaria as que estão
+ * corretamente cobertas pelo meta. Arquivo sem nenhuma é o caso em que ninguém
+ * pensou no painel — que é o que se quer pegar.
+ */
+function auditStoryFileSemTransform(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    // `filesForSlug` devolve `{ ui, docs, all }` — NÃO existe chave `stories`.
+    // A primeira versão desta regra desestruturava `{ stories }`, percorria
+    // `undefined || []` e reportava zero em todo componente: um portão que não
+    // olha nada é indistinguível de um portão que não acha nada. Só apareceu
+    // porque havia medição independente dizendo 124 arquivos no angular.
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui.filter((f) => /\.stories\.(ts|tsx)$/.test(f))) {
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const content = stripComments(bruto);
+
+      const exportadas = (content.match(/^export const [A-Z][\w]*\s*[:=]/gm) || []).length;
+      if (!exportadas) continue;
+      if (/transform\s*:/.test(content)) continue;
+
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: relative(ROOT, file), line: 0, rule: 'story_file_sem_transform',
+        message:
+          `${exportadas} stories e nenhum \`transform\` no painel Code — ele publica o template da story ` +
+          `(\`args.\`, andaime de captura, binding do renderer), e o painel é a única parte da página feita para ser COPIADA`,
+      });
+    }
+  }
+  return violations;
+}
+
 function auditSourceSemTeste(slug) {
   const violations = [];
   for (const stack of STACKS) {
@@ -6938,6 +7006,7 @@ function runAudit(slug, category) {
       ...auditCodigoTraduzidoEmSnippet(alvo),
       ...auditIdentificadorPtEmSnippet(alvo),
       ...auditSourceSemTeste(alvo),
+      ...auditStoryFileSemTransform(alvo),
     ],
     seo: auditSeo,
   };
@@ -6957,6 +7026,7 @@ function runAudit(slug, category) {
     ...auditCodigoTraduzidoEmSnippet(slug),
     ...auditIdentificadorPtEmSnippet(slug),
     ...auditSourceSemTeste(slug),
+    ...auditStoryFileSemTransform(slug),
     ...auditLarguraFluidaSobCentered(slug),
     ...auditHostInlineComLargura(slug),
     ...auditSnippetSemLastro(slug),
