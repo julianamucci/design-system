@@ -419,8 +419,8 @@ interface DropdownMenuItemProps {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={trackMenuItemSelect("submenu", "salvar")}>
-                  Salvar
+                <DropdownMenuItem onClick={trackMenuItemSelect("submenu", "renomear")}>
+                  Renomear
                 </DropdownMenuItem>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
@@ -833,12 +833,9 @@ interface DropdownMenuItemProps {
       Desfazer <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
     </DropdownMenuItem>
     <DropdownMenuItem>
-      Refazer <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>
       Copiar <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
     </DropdownMenuItem>
+    <DropdownMenuSeparator />
     <DropdownMenuItem>
       Colar <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
     </DropdownMenuItem>
@@ -851,16 +848,17 @@ interface DropdownMenuItemProps {
                     <Button variant="outline" size="sm">Editar</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="bottom" align="start">
+                    {/* Três itens e um separador — o mesmo conjunto da story
+                        `WithShortcuts` e do snippet do painel Code. A ficha
+                        trazia um quarto item ("Refazer") que não existia em
+                        nenhuma das duas outras superfícies. */}
                     <DropdownMenuItem>
                       Desfazer <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      Refazer <DropdownMenuShortcut>Ctrl+Shift+Z</DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
                       Copiar <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
                     </DropdownMenuItem>
+                    <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       Colar <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
                     </DropdownMenuItem>

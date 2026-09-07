@@ -294,11 +294,13 @@ const CODE_WITH_LABEL = `<ng-template ndsDropdownMenuContent>
   <div ndsDropdownMenuGroup>
     <div ndsDropdownMenuLabel>Conta</div>
     <div ndsDropdownMenuItem>Perfil</div>
+    <div ndsDropdownMenuItem>Configurações</div>
   </div>
   <div ndsDropdownMenuSeparator></div>
   <div ndsDropdownMenuGroup>
     <div ndsDropdownMenuLabel>Suporte</div>
     <div ndsDropdownMenuItem>Documentação</div>
+    <div ndsDropdownMenuItem>Sair</div>
   </div>
 </ng-template>`;
 
@@ -322,7 +324,14 @@ const CODE_WITH_RADIO = `<ng-template ndsDropdownMenuContent>
 
 const CODE_WITH_SHORTCUTS = `<ng-template ndsDropdownMenuContent>
   <div ndsDropdownMenuItem>
+    Desfazer <span ndsDropdownMenuShortcut>Ctrl+Z</span>
+  </div>
+  <div ndsDropdownMenuItem>
     Copiar <span ndsDropdownMenuShortcut>Ctrl+C</span>
+  </div>
+  <div ndsDropdownMenuSeparator></div>
+  <div ndsDropdownMenuItem>
+    Colar <span ndsDropdownMenuShortcut>Ctrl+V</span>
   </div>
 </ng-template>`;
 
@@ -433,11 +442,13 @@ const ITEMS_DEMO = [
           <div ndsDropdownMenuGroup>
             <div ndsDropdownMenuLabel>Conta</div>
             <div ndsDropdownMenuItem>Perfil</div>
+            <div ndsDropdownMenuItem>Configurações</div>
           </div>
           <div ndsDropdownMenuSeparator></div>
           <div ndsDropdownMenuGroup>
             <div ndsDropdownMenuLabel>Suporte</div>
             <div ndsDropdownMenuItem>Documentação</div>
+            <div ndsDropdownMenuItem>Sair</div>
           </div>
         </ng-template>
       </nds-dropdown-menu>
@@ -473,7 +484,14 @@ const ITEMS_DEMO = [
         <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Editar</button>
         <ng-template ndsDropdownMenuContent>
           <div ndsDropdownMenuItem>
+            Desfazer <span ndsDropdownMenuShortcut>Ctrl+Z</span>
+          </div>
+          <div ndsDropdownMenuItem>
             Copiar <span ndsDropdownMenuShortcut>Ctrl+C</span>
+          </div>
+          <div ndsDropdownMenuSeparator></div>
+          <div ndsDropdownMenuItem>
+            Colar <span ndsDropdownMenuShortcut>Ctrl+V</span>
           </div>
         </ng-template>
       </nds-dropdown-menu>
@@ -527,9 +545,33 @@ const ITEMS_DEMO = [
               <ng-template ndsDropdownMenuContent>
                 <div ndsDropdownMenuGroup>
                   <div ndsDropdownMenuLabel>Colunas visíveis</div>
-                  <div ndsDropdownMenuCheckboxItem [(checked)]="showName">Nome</div>
-                  <div ndsDropdownMenuCheckboxItem [(checked)]="showEmail">E-mail</div>
-                  <div ndsDropdownMenuCheckboxItem [(checked)]="showRole">Função</div>
+                  <!--
+                    A ligação de mão dupla vem ABERTA aqui de propósito: a
+                    forma com banana-em-caixa já consome o evento de mudança, e
+                    a marcação também precisa avisar o analytics. Quem guarda o
+                    estado é o handler, que faz as duas coisas.
+                  -->
+                  <div
+                    ndsDropdownMenuCheckboxItem
+                    [checked]="showName()"
+                    (checkedChange)="onColumnToggle('nome', $event)"
+                  >
+                    Nome
+                  </div>
+                  <div
+                    ndsDropdownMenuCheckboxItem
+                    [checked]="showEmail()"
+                    (checkedChange)="onColumnToggle('email', $event)"
+                  >
+                    E-mail
+                  </div>
+                  <div
+                    ndsDropdownMenuCheckboxItem
+                    [checked]="showRole()"
+                    (checkedChange)="onColumnToggle('funcao', $event)"
+                  >
+                    Função
+                  </div>
                 </div>
               </ng-template>
             </nds-dropdown-menu>
@@ -541,9 +583,27 @@ const ITEMS_DEMO = [
               <ng-template ndsDropdownMenuContent>
                 <div ndsDropdownMenuRadioGroup [(value)]="theme">
                   <div ndsDropdownMenuLabel>Aparência</div>
-                  <div ndsDropdownMenuRadioItem value="light">Claro</div>
-                  <div ndsDropdownMenuRadioItem value="dark">Escuro</div>
-                  <div ndsDropdownMenuRadioItem value="system">Sistema</div>
+                  <div
+                    ndsDropdownMenuRadioItem
+                    value="light"
+                    (onSelect)="onSelect('tema', 'light')"
+                  >
+                    Claro
+                  </div>
+                  <div
+                    ndsDropdownMenuRadioItem
+                    value="dark"
+                    (onSelect)="onSelect('tema', 'dark')"
+                  >
+                    Escuro
+                  </div>
+                  <div
+                    ndsDropdownMenuRadioItem
+                    value="system"
+                    (onSelect)="onSelect('tema', 'system')"
+                  >
+                    Sistema
+                  </div>
                 </div>
               </ng-template>
             </nds-dropdown-menu>
@@ -720,6 +780,23 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
       menu,
       location: 'docs_demo',
     });
+  }
+
+  /**
+   * Marcar uma coluna é escolher um item, e por isso dispara o mesmo
+   * `dropdown_menu_item_select` que o item simples — era o único tipo de item
+   * da demonstração que não avisava nada. O identificador é o do item, não o
+   * rótulo traduzido, e não muda quando a marcação vai de ligada a desligada:
+   * o evento diz que a pessoa escolheu, e o estado resultante é outra pergunta.
+   *
+   * O estado misto não chega por aqui (nenhum destes itens é tri-valorado); a
+   * comparação com `true` é o que estreita o tipo do primitivo para o boolean
+   * que estes três sinais guardam.
+   */
+  protected onColumnToggle(coluna: 'nome' | 'email' | 'funcao', checked: boolean | 'indeterminate'): void {
+    const sinais = { nome: this.showName, email: this.showEmail, funcao: this.showRole };
+    sinais[coluna].set(checked === true);
+    this.onSelect('colunas', coluna);
   }
 
   protected readonly navGroups = computed(() => {

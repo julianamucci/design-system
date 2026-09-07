@@ -728,25 +728,26 @@ const menu = createDropdownMenu({
   trigger,
   items: [
     { type: 'item', label: 'Desfazer', value: 'undo',  shortcut: 'Ctrl+Z'  },
-    { type: 'item', label: 'Refazer',  value: 'redo',  shortcut: 'Ctrl+Shift+Z' },
-    { type: 'separator' },
     { type: 'item', label: 'Copiar',   value: 'copy',  shortcut: 'Ctrl+C'  },
+    { type: 'separator' },
     { type: 'item', label: 'Colar',    value: 'paste', shortcut: 'Ctrl+V'  },
   ],
 });
 // O atalho integra o nome acessível do item, para que quem usa leitor de tela
 // também saiba que a tecla existe. Registrar a tecla real é do consumidor.`,
-              // A prévia mostra exatamente o que o snippet acima ensina. Antes
-              // divergia nos dois eixos — o snippet trazia três itens com
-              // `Ctrl`, a prévia trazia cinco com o glifo de macOS — e nenhum portão liga os
-              // dois: a guarda de snippet do auditor isenta de propósito o que
-              // está dentro de template literal.
+              // A prévia mostra exatamente o que o snippet acima ensina, e os
+              // dois mostram o que a story `WithShortcuts` monta: três itens e
+              // um separador antes de "Colar". Antes divergia nos dois eixos —
+              // o snippet trazia três itens com `Ctrl`, a prévia trazia cinco
+              // com o glifo de macOS — e depois os dois passaram a trazer
+              // quatro, contra os três da story. Nenhum portão liga as
+              // superfícies: a guarda de snippet do auditor isenta de propósito
+              // o que está dentro de template literal.
               previewFactory: () => makeStaticMenuPanel((ul) => {
                 ul.append(
                   makeItem('Desfazer', 'Ctrl+Z'),
-                  makeItem('Refazer', 'Ctrl+Shift+Z'),
-                  makeSeparator(),
                   makeItem('Copiar', 'Ctrl+C'),
+                  makeSeparator(),
                   makeItem('Colar', 'Ctrl+V'),
                 );
               }),
