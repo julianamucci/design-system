@@ -139,15 +139,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: rotulos,\n});",
-        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
-        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"rotulos\" />",
-        "svelte": "<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
-        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"rotulos\"></p>"
+        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: labels,\n});",
+        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={labels} />",
+        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"labels\" />",
+        "svelte": "<CostMeter amount={quantia} budget={teto} labels={labels} />",
+        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"labels\"></p>"
       },
       "withLabels": "O dinheiro escrito, e o teto",
       "withLabelsCode": {
-        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst rotulos = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
+        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst labels = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
       }
     },
     "states": {
@@ -631,15 +631,15 @@
       "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
-        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: rotulos,\n});",
-        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
-        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"rotulos\" />",
-        "svelte": "<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
-        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"rotulos\"></p>"
+        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: labels,\n});",
+        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={labels} />",
+        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"labels\" />",
+        "svelte": "<CostMeter amount={quantia} budget={teto} labels={labels} />",
+        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"labels\"></p>"
       },
       "withLabels": "The written money, and the cap",
       "withLabelsCode": {
-        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst rotulos = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
+        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst labels = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
       }
     },
     "states": {
@@ -1123,15 +1123,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: rotulos,\n});",
-        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
-        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"rotulos\" />",
-        "svelte": "<CostMeter amount={quantia} budget={teto} labels={rotulos} />",
-        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"rotulos\"></p>"
+        "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: labels,\n});",
+        "react": "import { CostMeter } from \"@/components/ui/cost-meter\";\n\n<CostMeter amount={quantia} budget={teto} labels={labels} />",
+        "vue": "<CostMeter :amount=\"quantia\" :budget=\"teto\" :labels=\"labels\" />",
+        "svelte": "<CostMeter amount={quantia} budget={teto} labels={labels} />",
+        "angular": "<p ndsCostMeter [amount]=\"quantia\" [budget]=\"teto\" [labels]=\"labels\"></p>"
       },
       "withLabels": "El dinero escrito, y el tope",
       "withLabelsCode": {
-        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst rotulos = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
+        "web": "// O DINHEIRO CHEGA ESCRITO. Símbolo, posição do símbolo, separador de milhar,\n// separador decimal e número de casas variam por idioma E por moeda — a mesma\n// quantia sai `US$ 0,84`, `$0.84` ou `0,84 US$` conforme quem lê. Quem sabe\n// disso é quem escolheu a moeda.\nconst money = new Intl.NumberFormat('pt-BR', {\n  style: 'currency',\n  currency: 'USD',\n});\n\nconst quantia = money.format(0.84);\n\n// O teto anda em par: a quantia ESCRITA e a fração JÁ CALCULADA. A fração é\n// número puro — não tem moeda nem idioma —, e é ela que entra na conta.\n// Sem teto declarado, a fração sai como ausência e o par inteiro não é passado.\nconst teto = { amount: money.format(1), fraction: spentFraction(0.84, 1) };\n\n// E o texto da peça: o nome da medida, a palavra de cada nível, a ligação\n// entre a fração e o teto, e o que dizer quando não há teto.\nconst labels = {\n  title: 'Custo desta execução',\n  level: { normal: 'Com folga', warning: 'Perto do teto', critical: 'No teto' },\n  of: 'de',\n  unbounded: 'Sem teto declarado',\n};"
       }
     },
     "states": {

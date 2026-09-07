@@ -149,15 +149,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: rotulos,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
-        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
-        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"rotulos\"\n  @action=\"aoPedir\"\n/>",
-        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
-        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"rotulos\"\n  (action)=\"aoPedir($event)\"\n></p>"
+        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: labels,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
+        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={labels}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
+        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"labels\"\n  @action=\"aoPedir\"\n/>",
+        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={labels}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
+        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"labels\"\n  (action)=\"aoPedir($event)\"\n></p>"
       },
       "withLabels": "Os rótulos",
       "withLabelsCode": {
-        "web": "// A palavra de cada um dos cinco estados, e o rótulo da ação onde ela existe.\n//\n// Em espera e concluída ficam sem ação de propósito: começar uma execução é do\n// campo de mensagem, e sobre uma resposta pronta não há o que fazer aqui.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Respondendo',\n    stopped: 'Interrompida',\n    complete: 'Concluída',\n    failed: 'Falhou',\n  },\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
+        "web": "// A palavra de cada um dos cinco estados, e o rótulo da ação onde ela existe.\n//\n// Em espera e concluída ficam sem ação de propósito: começar uma execução é do\n// campo de mensagem, e sobre uma resposta pronta não há o que fazer aqui.\nconst labels = {\n  status: {\n    idle: 'Em espera',\n    running: 'Respondendo',\n    stopped: 'Interrompida',\n    complete: 'Concluída',\n    failed: 'Falhou',\n  },\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
       }
     },
     "states": {
@@ -621,15 +621,15 @@
       "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
-        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: rotulos,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
-        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
-        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"rotulos\"\n  @action=\"aoPedir\"\n/>",
-        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
-        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"rotulos\"\n  (action)=\"aoPedir($event)\"\n></p>"
+        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: labels,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
+        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={labels}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
+        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"labels\"\n  @action=\"aoPedir\"\n/>",
+        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={labels}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
+        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"labels\"\n  (action)=\"aoPedir($event)\"\n></p>"
       },
       "withLabels": "The labels",
       "withLabelsCode": {
-        "web": "// The word for each of the five states, and the action label where one exists.\n//\n// Idle and done are left without an action on purpose: starting a run belongs\n// to the message field, and there is nothing to do here about a finished answer.\nconst rotulos = {\n  status: {\n    idle: 'Idle',\n    running: 'Answering',\n    stopped: 'Stopped',\n    complete: 'Done',\n    failed: 'Failed',\n  },\n  action: {\n    running: 'Stop',\n    stopped: 'Resume',\n    failed: 'Try again',\n  },\n};"
+        "web": "// The word for each of the five states, and the action label where one exists.\n//\n// Idle and done are left without an action on purpose: starting a run belongs\n// to the message field, and there is nothing to do here about a finished answer.\nconst labels = {\n  status: {\n    idle: 'Idle',\n    running: 'Answering',\n    stopped: 'Stopped',\n    complete: 'Done',\n    failed: 'Failed',\n  },\n  action: {\n    running: 'Stop',\n    stopped: 'Resume',\n    failed: 'Try again',\n  },\n};"
       }
     },
     "states": {
@@ -1093,15 +1093,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: rotulos,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
-        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
-        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"rotulos\"\n  @action=\"aoPedir\"\n/>",
-        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={rotulos}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
-        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"rotulos\"\n  (action)=\"aoPedir($event)\"\n></p>"
+        "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: labels,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
+        "react": "import { AgentStatus } from \"@/components/ui/agent-status\";\n\n<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={labels}\n  onAction={(intent) => (intent === \"stop\" ? parar() : comecar())}\n/>",
+        "vue": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  :labels=\"labels\"\n  @action=\"aoPedir\"\n/>",
+        "svelte": "<AgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  labels={labels}\n  onAction={(intent) => (intent === 'stop' ? parar() : comecar())}\n/>",
+        "angular": "<p\n  ndsAgentStatus\n  status=\"running\"\n  elapsed=\"1:04\"\n  [labels]=\"labels\"\n  (action)=\"aoPedir($event)\"\n></p>"
       },
       "withLabels": "Los rótulos",
       "withLabelsCode": {
-        "web": "// La palabra de cada uno de los cinco estados, y el rótulo de la acción donde\n// existe.\n//\n// En espera y completada quedan sin acción a propósito: empezar una ejecución\n// es del campo de mensaje, y sobre una respuesta lista no hay nada que hacer\n// aquí.\nconst rotulos = {\n  status: {\n    idle: 'En espera',\n    running: 'Respondiendo',\n    stopped: 'Detenida',\n    complete: 'Completada',\n    failed: 'Falló',\n  },\n  action: {\n    running: 'Detener',\n    stopped: 'Reanudar',\n    failed: 'Intentar de nuevo',\n  },\n};"
+        "web": "// La palabra de cada uno de los cinco estados, y el rótulo de la acción donde\n// existe.\n//\n// En espera y completada quedan sin acción a propósito: empezar una ejecución\n// es del campo de mensaje, y sobre una respuesta lista no hay nada que hacer\n// aquí.\nconst labels = {\n  status: {\n    idle: 'En espera',\n    running: 'Respondiendo',\n    stopped: 'Detenida',\n    complete: 'Completada',\n    failed: 'Falló',\n  },\n  action: {\n    running: 'Detener',\n    stopped: 'Reanudar',\n    failed: 'Intentar de nuevo',\n  },\n};"
       }
     },
     "states": {

@@ -32,7 +32,7 @@
         "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- Label externo -->\n    Aceito os termos\n  </label>\n</div>",
         "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <Label for=\"termos\">            <!-- Label externo -->\n    Aceito os termos\n  </Label>\n</div>",
         "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <Label for=\"termos\">            <!-- Label externo -->\n    Aceito os termos\n  </Label>\n</div>",
-        "vanilla": "const caixa = createCheckbox({          // Root + Indicator\n  id: 'termos',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst rotulo = createLabel({            // Label externo\n  htmlFor: 'termos',\n  text: 'Aceito os termos',\n});"
+        "vanilla": "const box = createCheckbox({          // Root + Indicator\n  id: 'termos',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst label = createLabel({            // Label externo\n  htmlFor: 'termos',\n  text: 'Aceito os termos',\n});"
       }
     },
     "usage": {
@@ -428,7 +428,7 @@
         "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- External label -->\n    Aceito os termos\n  </label>\n</div>",
         "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"terms\" />         <!-- Root + Indicator -->\n  <Label for=\"terms\">             <!-- External label -->\n    I accept the terms\n  </Label>\n</div>",
         "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"terms\" />         <!-- Root + Indicator -->\n  <Label for=\"terms\">             <!-- External label -->\n    I accept the terms\n  </Label>\n</div>",
-        "vanilla": "const caixa = createCheckbox({          // Root + Indicator\n  id: 'terms',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst rotulo = createLabel({            // External label\n  htmlFor: 'terms',\n  text: 'I accept the terms',\n});"
+        "vanilla": "const box = createCheckbox({          // Root + Indicator\n  id: 'terms',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst label = createLabel({            // External label\n  htmlFor: 'terms',\n  text: 'I accept the terms',\n});"
       }
     },
     "usage": {
@@ -824,7 +824,7 @@
         "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- Label externo -->\n    Aceito os termos\n  </label>\n</div>",
         "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"terminos\" />      <!-- Root + Indicator -->\n  <Label for=\"terminos\">          <!-- Label externo -->\n    Acepto los términos\n  </Label>\n</div>",
         "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"terminos\" />      <!-- Root + Indicator -->\n  <Label for=\"terminos\">          <!-- Label externo -->\n    Acepto los términos\n  </Label>\n</div>",
-        "vanilla": "const caixa = createCheckbox({          // Root + Indicator\n  id: 'terminos',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst rotulo = createLabel({            // Label externo\n  htmlFor: 'terminos',\n  text: 'Acepto los términos',\n});"
+        "vanilla": "const box = createCheckbox({          // Root + Indicator\n  id: 'terminos',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst label = createLabel({            // Label externo\n  htmlFor: 'terminos',\n  text: 'Acepto los términos',\n});"
       }
     },
     "usage": {

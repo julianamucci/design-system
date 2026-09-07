@@ -153,15 +153,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: rotulos,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
-        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
-        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"rotulos\"\n  @open-change=\"registrar\"\n/>",
-        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
-        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"rotulos\"\n  (openChange)=\"registrar($event)\"\n></details>"
+        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: labels,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
+        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={labels}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"labels\"\n  @open-change=\"registrar\"\n/>",
+        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={labels}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"labels\"\n  (openChange)=\"registrar($event)\"\n></details>"
       },
       "withLabels": "Os rótulos",
       "withLabelsCode": {
-        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst rotulos = {\n  title: (quantas) => (quantas === 1 ? '1 ferramenta' : `${quantas} ferramentas`),\n  summary: {\n    pending: 'Espera por você',\n    running: 'Em curso',\n    done: 'Concluído',\n    failed: 'Algo falhou',\n  },\n  call: {\n    pending: 'Esperando você',\n    running: 'Em curso',\n    done: 'Concluída',\n    failed: 'Falhou',\n  },\n};"
+        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst labels = {\n  title: (quantas) => (quantas === 1 ? '1 ferramenta' : `${quantas} ferramentas`),\n  summary: {\n    pending: 'Espera por você',\n    running: 'Em curso',\n    done: 'Concluído',\n    failed: 'Algo falhou',\n  },\n  call: {\n    pending: 'Esperando você',\n    running: 'Em curso',\n    done: 'Concluída',\n    failed: 'Falhou',\n  },\n};"
       }
     },
     "states": {
@@ -636,15 +636,15 @@
       "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
-        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: rotulos,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
-        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
-        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"rotulos\"\n  @open-change=\"registrar\"\n/>",
-        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
-        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"rotulos\"\n  (openChange)=\"registrar($event)\"\n></details>"
+        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: labels,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
+        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={labels}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"labels\"\n  @open-change=\"registrar\"\n/>",
+        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={labels}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"labels\"\n  (openChange)=\"registrar($event)\"\n></details>"
       },
       "withLabels": "The labels",
       "withLabelsCode": {
-        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst rotulos = {\n  title: (quantas) => (quantas === 1 ? '1 tool' : `${quantas} tools`),\n  summary: {\n    pending: 'Waiting on you',\n    running: 'Running',\n    done: 'All done',\n    failed: 'Something failed',\n  },\n  call: {\n    pending: 'Waiting on you',\n    running: 'Running',\n    done: 'Done',\n    failed: 'Failed',\n  },\n};"
+        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst labels = {\n  title: (quantas) => (quantas === 1 ? '1 tool' : `${quantas} tools`),\n  summary: {\n    pending: 'Waiting on you',\n    running: 'Running',\n    done: 'All done',\n    failed: 'Something failed',\n  },\n  call: {\n    pending: 'Waiting on you',\n    running: 'Running',\n    done: 'Done',\n    failed: 'Failed',\n  },\n};"
       }
     },
     "states": {
@@ -1119,15 +1119,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: rotulos,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
-        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
-        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"rotulos\"\n  @open-change=\"registrar\"\n/>",
-        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={rotulos}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
-        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"rotulos\"\n  (openChange)=\"registrar($event)\"\n></details>"
+        "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: labels,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
+        "react": "import { ToolGroup } from \"@/components/ui/tool-group\";\n\n<ToolGroup\n  calls={chamadas}\n  labels={labels}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "vue": "<ToolGroup\n  :calls=\"chamadas\"\n  :labels=\"labels\"\n  @open-change=\"registrar\"\n/>",
+        "svelte": "<ToolGroup\n  calls={chamadas}\n  labels={labels}\n  onOpenChange={(aberto) => registrar(aberto)}\n/>",
+        "angular": "<details\n  ndsToolGroup\n  [calls]=\"chamadas\"\n  [labels]=\"labels\"\n  (openChange)=\"registrar($event)\"\n></details>"
       },
       "withLabels": "Las etiquetas",
       "withLabelsCode": {
-        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst rotulos = {\n  title: (quantas) => (quantas === 1 ? '1 herramienta' : `${quantas} herramientas`),\n  summary: {\n    pending: 'Te espera',\n    running: 'En curso',\n    done: 'Todo listo',\n    failed: 'Algo falló',\n  },\n  call: {\n    pending: 'Esperándote',\n    running: 'En curso',\n    done: 'Hecha',\n    failed: 'Falló',\n  },\n};"
+        "web": "// O título é FUNÇÃO porque plural é decisão de idioma: um componente que\n// escolhesse entre singular e plural escolheria por cinco idiomas de uma vez.\n//\n// Os dois mapas têm as mesmas quatro chaves de propósito. O de cima fala do\n// CONJUNTO, o de baixo fala de cada linha.\nconst labels = {\n  title: (quantas) => (quantas === 1 ? '1 herramienta' : `${quantas} herramientas`),\n  summary: {\n    pending: 'Te espera',\n    running: 'En curso',\n    done: 'Todo listo',\n    failed: 'Algo falló',\n  },\n  call: {\n    pending: 'Esperándote',\n    running: 'En curso',\n    done: 'Hecha',\n    failed: 'Falló',\n  },\n};"
       }
     },
     "states": {

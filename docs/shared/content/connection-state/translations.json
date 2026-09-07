@@ -145,15 +145,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'em 5 s',\n  labels: rotulos,\n  onRetry: () => religar(),\n});",
-        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
-        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  :labels=\"rotulos\"\n  @retry=\"religar\"\n/>",
-        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
-        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  [labels]=\"rotulos\"\n  (retry)=\"religar()\"\n></p>"
+        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'em 5 s',\n  labels: labels,\n  onRetry: () => religar(),\n});",
+        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  labels={labels}\n  onRetry={() => religar()}\n/>",
+        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  :labels=\"labels\"\n  @retry=\"religar\"\n/>",
+        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  labels={labels}\n  onRetry={() => religar()}\n/>",
+        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"em 5 s\"\n  [labels]=\"labels\"\n  (retry)=\"religar()\"\n></p>"
       },
       "withLabels": "Os rótulos",
       "withLabelsCode": {
-        "web": "// A palavra de cada um dos três estados, e o rótulo da ação onde ela existe.\n//\n// Ligado fica sem ação de propósito: sobre uma ligação de pé não há o que\n// fazer aqui. Os outros dois têm nomes diferentes porque fazem coisas\n// diferentes — um apressa a tentativa que já está marcada, o outro começa uma.\nconst rotulos = {\n  state: {\n    connected: 'Ligado',\n    reconnecting: 'Reconectando',\n    disconnected: 'Sem ligação',\n  },\n  action: {\n    reconnecting: 'Tentar agora',\n    disconnected: 'Reconectar',\n  },\n};"
+        "web": "// A palavra de cada um dos três estados, e o rótulo da ação onde ela existe.\n//\n// Ligado fica sem ação de propósito: sobre uma ligação de pé não há o que\n// fazer aqui. Os outros dois têm nomes diferentes porque fazem coisas\n// diferentes — um apressa a tentativa que já está marcada, o outro começa uma.\nconst labels = {\n  state: {\n    connected: 'Ligado',\n    reconnecting: 'Reconectando',\n    disconnected: 'Sem ligação',\n  },\n  action: {\n    reconnecting: 'Tentar agora',\n    disconnected: 'Reconectar',\n  },\n};"
       }
     },
     "states": {
@@ -603,15 +603,15 @@
       "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
-        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'in 5s',\n  labels: rotulos,\n  onRetry: () => religar(),\n});",
-        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
-        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  :labels=\"rotulos\"\n  @retry=\"religar\"\n/>",
-        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
-        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  [labels]=\"rotulos\"\n  (retry)=\"religar()\"\n></p>"
+        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'in 5s',\n  labels: labels,\n  onRetry: () => religar(),\n});",
+        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  labels={labels}\n  onRetry={() => religar()}\n/>",
+        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  :labels=\"labels\"\n  @retry=\"religar\"\n/>",
+        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  labels={labels}\n  onRetry={() => religar()}\n/>",
+        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"in 5s\"\n  [labels]=\"labels\"\n  (retry)=\"religar()\"\n></p>"
       },
       "withLabels": "The labels",
       "withLabelsCode": {
-        "web": "// The word for each of the three states, and the action label where it exists.\n//\n// Online is deliberately left without an action: there is nothing to do here\n// about a link that is up. The other two have different names because they do\n// different things — one hurries an attempt that is already scheduled, the\n// other starts one.\nconst rotulos = {\n  state: {\n    connected: 'Online',\n    reconnecting: 'Reconnecting',\n    disconnected: 'Offline',\n  },\n  action: {\n    reconnecting: 'Try now',\n    disconnected: 'Reconnect',\n  },\n};"
+        "web": "// The word for each of the three states, and the action label where it exists.\n//\n// Online is deliberately left without an action: there is nothing to do here\n// about a link that is up. The other two have different names because they do\n// different things — one hurries an attempt that is already scheduled, the\n// other starts one.\nconst labels = {\n  state: {\n    connected: 'Online',\n    reconnecting: 'Reconnecting',\n    disconnected: 'Offline',\n  },\n  action: {\n    reconnecting: 'Try now',\n    disconnected: 'Reconnect',\n  },\n};"
       }
     },
     "states": {
@@ -1061,15 +1061,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'en 5 s',\n  labels: rotulos,\n  onRetry: () => religar(),\n});",
-        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
-        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  :labels=\"rotulos\"\n  @retry=\"religar\"\n/>",
-        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  labels={rotulos}\n  onRetry={() => religar()}\n/>",
-        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  [labels]=\"rotulos\"\n  (retry)=\"religar()\"\n></p>"
+        "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'en 5 s',\n  labels: labels,\n  onRetry: () => religar(),\n});",
+        "react": "import { ConnectionState } from \"@/components/ui/connection-state\";\n\n<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  labels={labels}\n  onRetry={() => religar()}\n/>",
+        "vue": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  :labels=\"labels\"\n  @retry=\"religar\"\n/>",
+        "svelte": "<ConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  labels={labels}\n  onRetry={() => religar()}\n/>",
+        "angular": "<p\n  ndsConnectionState\n  state=\"reconnecting\"\n  countdown=\"en 5 s\"\n  [labels]=\"labels\"\n  (retry)=\"religar()\"\n></p>"
       },
       "withLabels": "Las etiquetas",
       "withLabelsCode": {
-        "web": "// La palabra de cada uno de los tres estados, y la etiqueta de la acción donde\n// existe.\n//\n// Conectado queda sin acción a propósito: sobre una conexión en pie no hay nada\n// que hacer aquí. Los otros dos tienen nombres distintos porque hacen cosas\n// distintas — uno apura el intento ya agendado, el otro empieza uno.\nconst rotulos = {\n  state: {\n    connected: 'Conectado',\n    reconnecting: 'Reconectando',\n    disconnected: 'Sin conexión',\n  },\n  action: {\n    reconnecting: 'Intentar ahora',\n    disconnected: 'Reconectar',\n  },\n};"
+        "web": "// La palabra de cada uno de los tres estados, y la etiqueta de la acción donde\n// existe.\n//\n// Conectado queda sin acción a propósito: sobre una conexión en pie no hay nada\n// que hacer aquí. Los otros dos tienen nombres distintos porque hacen cosas\n// distintas — uno apura el intento ya agendado, el otro empieza uno.\nconst labels = {\n  state: {\n    connected: 'Conectado',\n    reconnecting: 'Reconectando',\n    disconnected: 'Sin conexión',\n  },\n  action: {\n    reconnecting: 'Intentar ahora',\n    disconnected: 'Reconectar',\n  },\n};"
       }
     },
     "states": {

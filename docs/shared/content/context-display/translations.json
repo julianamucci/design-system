@@ -146,15 +146,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: rotulos,\n});",
-        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
-        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"rotulos\"\n/>",
-        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
-        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"rotulos\"\n></p>"
+        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: labels,\n});",
+        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={labels}\n/>",
+        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={labels}\n/>",
+        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"labels\"\n></p>"
       },
       "withLabels": "Os rótulos",
       "withLabelsCode": {
-        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst rotulos = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
+        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst labels = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
       }
     },
     "variants": {
@@ -674,15 +674,15 @@
       "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
-        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: rotulos,\n});",
-        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
-        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"rotulos\"\n/>",
-        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
-        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"rotulos\"\n></p>"
+        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: labels,\n});",
+        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={labels}\n/>",
+        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={labels}\n/>",
+        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"labels\"\n></p>"
       },
       "withLabels": "The labels",
       "withLabelsCode": {
-        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst rotulos = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
+        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst labels = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
       }
     },
     "variants": {
@@ -1202,15 +1202,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: rotulos,\n});",
-        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
-        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"rotulos\"\n/>",
-        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={rotulos}\n/>",
-        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"rotulos\"\n></p>"
+        "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: labels,\n});",
+        "react": "import { ContextDisplay } from \"@/components/ui/context-display\";\n\n<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={labels}\n/>",
+        "vue": "<ContextDisplay\n  :usage=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<ContextDisplay\n  usage={{ input: 18000, output: 7000, limit: 32000 }}\n  form=\"ring\"\n  labels={labels}\n/>",
+        "angular": "<p\n  ndsContextDisplay\n  [usage]=\"{ input: 18000, output: 7000, limit: 32000 }\"\n  form=\"ring\"\n  [labels]=\"labels\"\n></p>"
       },
       "withLabels": "Las etiquetas",
       "withLabelsCode": {
-        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst rotulos = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
+        "web": "// O nome da medida, a palavra de cada nível, a unidade contada, e o que dizer\n// quando o teto não é conhecido.\n//\n// A palavra do nível aparece SEMPRE que há teto, inclusive com folga: uma peça\n// que só falasse quando a notícia é ruim deixaria a boa notícia indistinguível\n// de uma medição que não chegou.\nconst labels = {\n  title: 'Uso da janela de contexto',\n  level: {\n    normal: 'Com folga',\n    warning: 'Perto do limite',\n    critical: 'No limite',\n  },\n  of: 'de',\n  unit: 'tokens',\n  unbounded: 'Sem teto conhecido',\n};"
       }
     },
     "variants": {

@@ -145,15 +145,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: rotulos,\n});",
-        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
-        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"rotulos\"\n/>",
-        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
-        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"rotulos\"\n></div>"
+        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: labels,\n});",
+        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={labels}\n/>",
+        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={labels}\n/>",
+        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"labels\"\n></div>"
       },
       "withLabels": "Os rótulos",
       "withLabelsCode": {
-        "web": "// A palavra de cada um dos cinco estados e o molde do código de saída.\n//\n// Os cinco existem porque um comando passa por todos: fica na fila, corre, é\n// interrompido por quem lê, termina ou quebra. Interrompido não é falha — é o\n// Ctrl-C —, e por isso as duas palavras são diferentes.\n//\n// O molde é molde porque a palavra que apresenta o número é do idioma, e o\n// número é dado. Ele não julga o número: há comando que devolve um sem ter\n// falhado.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  exitCode: 'código de saída {code}',\n};"
+        "web": "// A palavra de cada um dos cinco estados e o molde do código de saída.\n//\n// Os cinco existem porque um comando passa por todos: fica na fila, corre, é\n// interrompido por quem lê, termina ou quebra. Interrompido não é falha — é o\n// Ctrl-C —, e por isso as duas palavras são diferentes.\n//\n// O molde é molde porque a palavra que apresenta o número é do idioma, e o\n// número é dado. Ele não julga o número: há comando que devolve um sem ter\n// falhado.\nconst labels = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  exitCode: 'código de saída {code}',\n};"
       }
     },
     "states": {
@@ -692,15 +692,15 @@
       "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
-        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: rotulos,\n});",
-        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
-        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"rotulos\"\n/>",
-        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
-        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"rotulos\"\n></div>"
+        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: labels,\n});",
+        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={labels}\n/>",
+        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={labels}\n/>",
+        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"labels\"\n></div>"
       },
       "withLabels": "The labels",
       "withLabelsCode": {
-        "web": "// The word for each of the five states, and the exit code template.\n//\n// All five exist because a command goes through all of them: it queues, runs,\n// gets interrupted by the reader, finishes or breaks. Stopped is not a\n// failure — it is Ctrl-C — and that is why the two words are different.\n//\n// The template is a template because the word that introduces the number\n// belongs to the language, and the number is data. It does not judge the\n// number: some commands return one without having failed.\nconst rotulos = {\n  status: {\n    idle: 'Queued',\n    running: 'Running',\n    stopped: 'Stopped',\n    complete: 'Finished',\n    failed: 'Failed',\n  },\n  exitCode: 'exit code {code}',\n};"
+        "web": "// The word for each of the five states, and the exit code template.\n//\n// All five exist because a command goes through all of them: it queues, runs,\n// gets interrupted by the reader, finishes or breaks. Stopped is not a\n// failure — it is Ctrl-C — and that is why the two words are different.\n//\n// The template is a template because the word that introduces the number\n// belongs to the language, and the number is data. It does not judge the\n// number: some commands return one without having failed.\nconst labels = {\n  status: {\n    idle: 'Queued',\n    running: 'Running',\n    stopped: 'Stopped',\n    complete: 'Finished',\n    failed: 'Failed',\n  },\n  exitCode: 'exit code {code}',\n};"
       }
     },
     "states": {
@@ -1239,15 +1239,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: rotulos,\n});",
-        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
-        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"rotulos\"\n/>",
-        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={rotulos}\n/>",
-        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"rotulos\"\n></div>"
+        "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: labels,\n});",
+        "react": "import { TerminalBlock } from \"@/components/ui/terminal-block\";\n\n<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={labels}\n/>",
+        "vue": "<TerminalBlock\n  command=\"npm run build\"\n  :lines=\"saida\"\n  status=\"complete\"\n  :exit-code=\"0\"\n  :labels=\"labels\"\n/>",
+        "svelte": "<TerminalBlock\n  command=\"npm run build\"\n  lines={saida}\n  status=\"complete\"\n  exitCode={0}\n  labels={labels}\n/>",
+        "angular": "<div\n  ndsTerminalBlock\n  command=\"npm run build\"\n  [lines]=\"saida\"\n  status=\"complete\"\n  [exitCode]=\"0\"\n  [labels]=\"labels\"\n></div>"
       },
       "withLabels": "Las etiquetas",
       "withLabelsCode": {
-        "web": "// La palabra de cada uno de los cinco estados y la plantilla del código de\n// salida.\n//\n// Los cinco existen porque un comando pasa por todos: espera en la cola, corre,\n// es interrumpido por quien lee, termina o se rompe. Interrumpido no es fallo —\n// es el Ctrl-C —, y por eso las dos palabras son distintas.\n//\n// La plantilla es plantilla porque la palabra que presenta el número es del\n// idioma, y el número es dato. No juzga el número: hay comandos que devuelven\n// uno sin haber fallado.\nconst rotulos = {\n  status: {\n    idle: 'En espera',\n    running: 'En curso',\n    stopped: 'Interrumpido',\n    complete: 'Terminado',\n    failed: 'Falló',\n  },\n  exitCode: 'código de salida {code}',\n};"
+        "web": "// La palabra de cada uno de los cinco estados y la plantilla del código de\n// salida.\n//\n// Los cinco existen porque un comando pasa por todos: espera en la cola, corre,\n// es interrumpido por quien lee, termina o se rompe. Interrumpido no es fallo —\n// es el Ctrl-C —, y por eso las dos palabras son distintas.\n//\n// La plantilla es plantilla porque la palabra que presenta el número es del\n// idioma, y el número es dato. No juzga el número: hay comandos que devuelven\n// uno sin haber fallado.\nconst labels = {\n  status: {\n    idle: 'En espera',\n    running: 'En curso',\n    stopped: 'Interrumpido',\n    complete: 'Terminado',\n    failed: 'Falló',\n  },\n  exitCode: 'código de salida {code}',\n};"
       }
     },
     "states": {

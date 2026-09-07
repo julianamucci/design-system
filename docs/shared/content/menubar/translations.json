@@ -253,7 +253,7 @@
         "react": "// Menu controlado, sem dar a volta do último gatilho para o primeiro\n<Menubar loopFocus={false}>\n  <MenubarMenu open={aberto} onOpenChange={setAberto}>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "vue": "<!-- Menu controlado, sem dar a volta do último gatilho para o primeiro -->\n<Menubar v-model=\"menuAtivo\" :loop=\"false\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "svelte": "<!-- Menu controlado, sem dar a volta do último gatilho para o primeiro -->\n<Menubar bind:value={menuAtivo} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "vanilla": "// Menu aberto ao montar, sem dar a volta do último gatilho para o primeiro\nconst barra = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
+        "vanilla": "// Menu aberto ao montar, sem dar a volta do último gatilho para o primeiro\nconst bar = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
         "angular": "<!-- Menu controlado, sem dar a volta do último gatilho para o primeiro -->\n<nds-menubar [loopFocus]=\"false\">\n  <nds-menubar-menu [open]=\"aberto\" (openChange)=\"aberto = $event\">\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent side=\"bottom\" align=\"start\">...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
       }
     },
@@ -306,7 +306,7 @@
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Override de cor da barra */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+        "web": "/* Override de cor da bar */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
       }
     },
     "accessibility": {
@@ -760,7 +760,7 @@
         "react": "// Controlled menu, no wrap from the last trigger back to the first\n<Menubar loopFocus={false}>\n  <MenubarMenu open={aberto} onOpenChange={setAberto}>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "vue": "<!-- Controlled menu, no wrap from the last trigger back to the first -->\n<Menubar v-model=\"menuAtivo\" :loop=\"false\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "svelte": "<!-- Controlled menu, no wrap from the last trigger back to the first -->\n<Menubar bind:value={menuAtivo} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "vanilla": "// Menu open on mount, no wrap from the last trigger back to the first\nconst barra = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
+        "vanilla": "// Menu open on mount, no wrap from the last trigger back to the first\nconst bar = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
         "angular": "<!-- Controlled menu, no wrap from the last trigger back to the first -->\n<nds-menubar [loopFocus]=\"false\">\n  <nds-menubar-menu [open]=\"aberto\" (openChange)=\"aberto = $event\">\n    <button ndsMenubarTrigger>File</button>\n    <ng-template ndsMenubarContent side=\"bottom\" align=\"start\">...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
       }
     },
@@ -1267,7 +1267,7 @@
         "react": "// Menú controlado, sin volver del último disparador al primero\n<Menubar loopFocus={false}>\n  <MenubarMenu open={aberto} onOpenChange={setAberto}>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "vue": "<!-- Menú controlado, sin volver del último disparador al primero -->\n<Menubar v-model=\"menuAtivo\" :loop=\"false\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "svelte": "<!-- Menú controlado, sin volver del último disparador al primero -->\n<Menubar bind:value={menuAtivo} loop={false}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent side=\"bottom\" align=\"start\">...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "vanilla": "// Menú abierto al montar, sin volver del último disparador al primero\nconst barra = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
+        "vanilla": "// Menú abierto al montar, sin volver del último disparador al primero\nconst bar = createMenubar(menus, {\n  loop: false,\n  defaultOpen: 0,\n  side: 'bottom',\n  align: 'start',\n});",
         "angular": "<!-- Menú controlado, sin volver del último disparador al primero -->\n<nds-menubar [loopFocus]=\"false\">\n  <nds-menubar-menu [open]=\"aberto\" (openChange)=\"aberto = $event\">\n    <button ndsMenubarTrigger>Archivo</button>\n    <ng-template ndsMenubarContent side=\"bottom\" align=\"start\">...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>"
       }
     },
@@ -1320,7 +1320,7 @@
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Override de color de la barra */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
+        "web": "/* Override de color de la bar */\n[data-slot='menubar'] {\n  background-color: hsl(var(--card));\n  border-bottom: 1px solid hsl(var(--border));\n}"
       }
     },
     "accessibility": {

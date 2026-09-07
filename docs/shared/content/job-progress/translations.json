@@ -158,15 +158,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: rotulos,\n  onAction: (intent) => aplicar(intent),\n});",
-        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
-        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"rotulos\"\n  @action=\"aplicar\"\n/>",
-        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
-        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"rotulos\"\n  (action)=\"aplicar($event)\"\n></div>"
+        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: labels,\n  onAction: (intent) => aplicar(intent),\n});",
+        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={labels}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"labels\"\n  @action=\"aplicar\"\n/>",
+        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={labels}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"labels\"\n  (action)=\"aplicar($event)\"\n></div>"
       },
       "withLabels": "Os rótulos",
       "withLabelsCode": {
-        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
+        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst labels = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
       }
     },
     "states": {
@@ -696,15 +696,15 @@
       "title": "Import",
       "basic": "Basic use",
       "basicCode": {
-        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: rotulos,\n  onAction: (intent) => aplicar(intent),\n});",
-        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
-        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"rotulos\"\n  @action=\"aplicar\"\n/>",
-        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
-        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"rotulos\"\n  (action)=\"aplicar($event)\"\n></div>"
+        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: labels,\n  onAction: (intent) => aplicar(intent),\n});",
+        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={labels}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"labels\"\n  @action=\"aplicar\"\n/>",
+        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={labels}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"labels\"\n  (action)=\"aplicar($event)\"\n></div>"
       },
       "withLabels": "The labels",
       "withLabelsCode": {
-        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
+        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst labels = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
       }
     },
     "states": {
@@ -1234,15 +1234,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: rotulos,\n  onAction: (intent) => aplicar(intent),\n});",
-        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
-        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"rotulos\"\n  @action=\"aplicar\"\n/>",
-        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={rotulos}\n  onAction={(intent) => aplicar(intent)}\n/>",
-        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"rotulos\"\n  (action)=\"aplicar($event)\"\n></div>"
+        "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: labels,\n  onAction: (intent) => aplicar(intent),\n});",
+        "react": "import { JobProgress } from \"@/components/ui/job-progress\";\n\n<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={labels}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "vue": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  :count=\"{ done: 1240, total: 5000 }\"\n  :labels=\"labels\"\n  @action=\"aplicar\"\n/>",
+        "svelte": "<JobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  count={{ done: 1240, total: 5000 }}\n  labels={labels}\n  onAction={(intent) => aplicar(intent)}\n/>",
+        "angular": "<div\n  ndsJobProgress\n  label=\"Indexando o repositório\"\n  status=\"running\"\n  [count]=\"{ done: 1240, total: 5000 }\"\n  [labels]=\"labels\"\n  (action)=\"aplicar($event)\"\n></div>"
       },
       "withLabels": "Las etiquetas",
       "withLabelsCode": {
-        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst rotulos = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
+        "web": "// A palavra de cada um dos cinco estados, os dois moldes da conta e o rótulo\n// da ação onde ela existe.\n//\n// Em espera e concluído ficam sem ação de propósito: disparar o trabalho é de\n// quem o enfileirou, e sobre um trabalho pronto não há o que fazer aqui. Os\n// outros três têm nomes diferentes porque fazem coisas diferentes.\n//\n// Os DOIS moldes são obrigatórios, e é decisão: ficar sem total é caso real, e\n// um molde só deixaria \"de \" pendurado no fim da frase.\nconst labels = {\n  status: {\n    idle: 'Em espera',\n    running: 'Em andamento',\n    stopped: 'Interrompido',\n    complete: 'Concluído',\n    failed: 'Falhou',\n  },\n  count: '{done} de {total}',\n  countWithoutTotal: '{done} até agora',\n  action: {\n    running: 'Parar',\n    stopped: 'Retomar',\n    failed: 'Tentar de novo',\n  },\n};"
       }
     },
     "states": {

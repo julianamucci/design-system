@@ -139,15 +139,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: rotulos,\n});",
-        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={rotulos} />",
-        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"rotulos\" />",
-        "svelte": "<ContextBreakdown parts={parcelas} labels={rotulos} />",
-        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"rotulos\"></div>"
+        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: labels,\n});",
+        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={labels} />",
+        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"labels\" />",
+        "svelte": "<ContextBreakdown parts={parcelas} labels={labels} />",
+        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"labels\"></div>"
       },
       "withLabels": "As parcelas e os rótulos",
       "withLabelsCode": {
-        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst rotulos = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
+        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst labels = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
       }
     },
     "states": {
@@ -631,15 +631,15 @@
       "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
-        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: rotulos,\n});",
-        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={rotulos} />",
-        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"rotulos\" />",
-        "svelte": "<ContextBreakdown parts={parcelas} labels={rotulos} />",
-        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"rotulos\"></div>"
+        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: labels,\n});",
+        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={labels} />",
+        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"labels\" />",
+        "svelte": "<ContextBreakdown parts={parcelas} labels={labels} />",
+        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"labels\"></div>"
       },
       "withLabels": "The shares and the labels",
       "withLabelsCode": {
-        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst rotulos = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
+        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst labels = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
       }
     },
     "states": {
@@ -1123,15 +1123,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: rotulos,\n});",
-        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={rotulos} />",
-        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"rotulos\" />",
-        "svelte": "<ContextBreakdown parts={parcelas} labels={rotulos} />",
-        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"rotulos\"></div>"
+        "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: labels,\n});",
+        "react": "import { ContextBreakdown } from \"@/components/ui/context-breakdown\";\n\n<ContextBreakdown parts={parcelas} labels={labels} />",
+        "vue": "<ContextBreakdown :parts=\"parcelas\" :labels=\"labels\" />",
+        "svelte": "<ContextBreakdown parts={parcelas} labels={labels} />",
+        "angular": "<div ndsContextBreakdown [parts]=\"parcelas\" [labels]=\"labels\"></div>"
       },
       "withLabels": "Las partes y las etiquetas",
       "withLabelsCode": {
-        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst rotulos = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
+        "web": "// O que está sendo repartido, o que está sendo contado, e a palavra de cada\n// origem — por ENDEREÇO, porque o endereço é o que a medição carrega e a\n// palavra é interface.\n//\n// Origem sem palavra não some da lista: a linha mostra o próprio endereço, para\n// que a cor nunca fique sozinha dizendo de qual parcela se trata.\nconst labels = {\n  title: 'De onde veio o contexto',\n  unit: 'tokens',\n  parts: {\n    system: 'Instruções do sistema',\n    history: 'Histórico da conversa',\n    attachments: 'Anexos',\n    tools: 'Resultados de ferramenta',\n  },\n};"
       }
     },
     "states": {

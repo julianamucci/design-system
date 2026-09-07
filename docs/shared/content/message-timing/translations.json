@@ -146,15 +146,15 @@
       "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: rotulos,\n});",
-        "react": "import { MessageTiming } from \"@/components/ui/message-timing\";\n\n<MessageTiming stats={medidas} streaming={false} labels={rotulos} />",
-        "vue": "<MessageTiming :stats=\"medidas\" :streaming=\"false\" :labels=\"rotulos\" />",
-        "svelte": "<MessageTiming stats={medidas} streaming={false} labels={rotulos} />",
-        "angular": "<div\n  ndsMessageTiming\n  [stats]=\"medidas\"\n  [streaming]=\"false\"\n  [labels]=\"rotulos\"\n></div>"
+        "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: labels,\n});",
+        "react": "import { MessageTiming } from \"@/components/ui/message-timing\";\n\n<MessageTiming stats={medidas} streaming={false} labels={labels} />",
+        "vue": "<MessageTiming :stats=\"medidas\" :streaming=\"false\" :labels=\"labels\" />",
+        "svelte": "<MessageTiming stats={medidas} streaming={false} labels={labels} />",
+        "angular": "<div\n  ndsMessageTiming\n  [stats]=\"medidas\"\n  [streaming]=\"false\"\n  [labels]=\"labels\"\n></div>"
       },
       "withLabels": "As medidas escritas, e o texto da peça",
       "withLabelsCode": {
-        "web": "// TUDO CHEGA ESCRITO. Separador decimal, abreviatura de unidade e ordem das\n// partes são decisão de idioma e de lugar — quem sabe disso é quem mediu, e\n// não um componente que decidiria idioma em cinco lugares.\nconst duracao = (valor, unidade) =>\n  new Intl.NumberFormat('pt-BR', {\n    style: 'unit',\n    unit: unidade,\n    unitDisplay: 'short',\n    maximumFractionDigits: 2,\n  }).format(valor);\n\n// A unidade vem de quem mediu, e não de um limiar do componente: quem\n// cronometrou já sabe em que unidade a medida faz sentido.\nconst medidas = [\n  { label: 'Primeiro token', value: duracao(420, 'millisecond') },\n  { label: 'Total', value: duracao(1.24, 'second') },\n  { label: 'Velocidade', value: '38,4 tok/s' },\n  { label: 'Pedaços', value: '42' },\n];\n\n// E o texto da peça: de que medição se trata, e a palavra que avisa que ela\n// ainda não acabou.\nconst rotulos = {\n  title: 'Tempo desta resposta',\n  measuring: 'Medindo',\n};"
+        "web": "// TUDO CHEGA ESCRITO. Separador decimal, abreviatura de unidade e ordem das\n// partes são decisão de idioma e de lugar — quem sabe disso é quem mediu, e\n// não um componente que decidiria idioma em cinco lugares.\nconst duration = (valor, unidade) =>\n  new Intl.NumberFormat('pt-BR', {\n    style: 'unit',\n    unit: unidade,\n    unitDisplay: 'short',\n    maximumFractionDigits: 2,\n  }).format(valor);\n\n// A unidade vem de quem mediu, e não de um limiar do componente: quem\n// cronometrou já sabe em que unidade a medida faz sentido.\nconst medidas = [\n  { label: 'Primeiro token', value: duration(420, 'millisecond') },\n  { label: 'Total', value: duration(1.24, 'second') },\n  { label: 'Velocidade', value: '38,4 tok/s' },\n  { label: 'Pedaços', value: '42' },\n];\n\n// E o texto da peça: de que medição se trata, e a palavra que avisa que ela\n// ainda não acabou.\nconst labels = {\n  title: 'Tempo desta resposta',\n  measuring: 'Medindo',\n};"
       }
     },
     "states": {
@@ -615,15 +615,15 @@
       "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
-        "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: rotulos,\n});",
-        "react": "import { MessageTiming } from \"@/components/ui/message-timing\";\n\n<MessageTiming stats={medidas} streaming={false} labels={rotulos} />",
-        "vue": "<MessageTiming :stats=\"medidas\" :streaming=\"false\" :labels=\"rotulos\" />",
-        "svelte": "<MessageTiming stats={medidas} streaming={false} labels={rotulos} />",
-        "angular": "<div\n  ndsMessageTiming\n  [stats]=\"medidas\"\n  [streaming]=\"false\"\n  [labels]=\"rotulos\"\n></div>"
+        "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: labels,\n});",
+        "react": "import { MessageTiming } from \"@/components/ui/message-timing\";\n\n<MessageTiming stats={medidas} streaming={false} labels={labels} />",
+        "vue": "<MessageTiming :stats=\"medidas\" :streaming=\"false\" :labels=\"labels\" />",
+        "svelte": "<MessageTiming stats={medidas} streaming={false} labels={labels} />",
+        "angular": "<div\n  ndsMessageTiming\n  [stats]=\"medidas\"\n  [streaming]=\"false\"\n  [labels]=\"labels\"\n></div>"
       },
       "withLabels": "The measures written, and the text of the piece",
       "withLabelsCode": {
-        "web": "// EVERYTHING ARRIVES WRITTEN. Decimal separator, unit abbreviation and part\n// order are decisions of language and place — whoever measured knows them, not\n// a component that would decide language in five places at once.\nconst duracao = (valor, unidade) =>\n  new Intl.NumberFormat('en', {\n    style: 'unit',\n    unit: unidade,\n    unitDisplay: 'short',\n    maximumFractionDigits: 2,\n  }).format(valor);\n\n// The unit comes from whoever measured, not from a threshold in the component:\n// whoever timed it already knows which unit makes the measure readable.\nconst medidas = [\n  { label: 'First token', value: duracao(420, 'millisecond') },\n  { label: 'Total', value: duracao(1.24, 'second') },\n  { label: 'Speed', value: '38.4 tok/s' },\n  { label: 'Chunks', value: '42' },\n];\n\n// And the text of the piece: which measurement it is, and the word that warns\n// it is not done yet.\nconst rotulos = {\n  title: 'Timing for this response',\n  measuring: 'Measuring',\n};"
+        "web": "// EVERYTHING ARRIVES WRITTEN. Decimal separator, unit abbreviation and part\n// order are decisions of language and place — whoever measured knows them, not\n// a component that would decide language in five places at once.\nconst duration = (valor, unidade) =>\n  new Intl.NumberFormat('en', {\n    style: 'unit',\n    unit: unidade,\n    unitDisplay: 'short',\n    maximumFractionDigits: 2,\n  }).format(valor);\n\n// The unit comes from whoever measured, not from a threshold in the component:\n// whoever timed it already knows which unit makes the measure readable.\nconst medidas = [\n  { label: 'First token', value: duration(420, 'millisecond') },\n  { label: 'Total', value: duration(1.24, 'second') },\n  { label: 'Speed', value: '38.4 tok/s' },\n  { label: 'Chunks', value: '42' },\n];\n\n// And the text of the piece: which measurement it is, and the word that warns\n// it is not done yet.\nconst labels = {\n  title: 'Timing for this response',\n  measuring: 'Measuring',\n};"
       }
     },
     "states": {
@@ -1084,15 +1084,15 @@
       "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
-        "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: rotulos,\n});",
-        "react": "import { MessageTiming } from \"@/components/ui/message-timing\";\n\n<MessageTiming stats={medidas} streaming={false} labels={rotulos} />",
-        "vue": "<MessageTiming :stats=\"medidas\" :streaming=\"false\" :labels=\"rotulos\" />",
-        "svelte": "<MessageTiming stats={medidas} streaming={false} labels={rotulos} />",
-        "angular": "<div\n  ndsMessageTiming\n  [stats]=\"medidas\"\n  [streaming]=\"false\"\n  [labels]=\"rotulos\"\n></div>"
+        "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: labels,\n});",
+        "react": "import { MessageTiming } from \"@/components/ui/message-timing\";\n\n<MessageTiming stats={medidas} streaming={false} labels={labels} />",
+        "vue": "<MessageTiming :stats=\"medidas\" :streaming=\"false\" :labels=\"labels\" />",
+        "svelte": "<MessageTiming stats={medidas} streaming={false} labels={labels} />",
+        "angular": "<div\n  ndsMessageTiming\n  [stats]=\"medidas\"\n  [streaming]=\"false\"\n  [labels]=\"labels\"\n></div>"
       },
       "withLabels": "Las medidas escritas, y el texto de la pieza",
       "withLabelsCode": {
-        "web": "// TODO LLEGA ESCRITO. Separador decimal, abreviatura de unidad y orden de las\n// partes son decisiones de idioma y de lugar — quien lo sabe es quien midió, y\n// no un componente que decidiría idioma en cinco lugares.\nconst duracao = (valor, unidade) =>\n  new Intl.NumberFormat('es', {\n    style: 'unit',\n    unit: unidade,\n    unitDisplay: 'short',\n    maximumFractionDigits: 2,\n  }).format(valor);\n\n// La unidad viene de quien midió, y no de un umbral del componente: quien\n// cronometró ya sabe en qué unidad la medida se entiende.\nconst medidas = [\n  { label: 'Primer token', value: duracao(420, 'millisecond') },\n  { label: 'Total', value: duracao(1.24, 'second') },\n  { label: 'Velocidad', value: '38,4 tok/s' },\n  { label: 'Trozos', value: '42' },\n];\n\n// Y el texto de la pieza: de qué medición se trata, y la palabra que avisa que\n// todavía no terminó.\nconst rotulos = {\n  title: 'Tiempo de esta respuesta',\n  measuring: 'Midiendo',\n};"
+        "web": "// TODO LLEGA ESCRITO. Separador decimal, abreviatura de unidad y orden de las\n// partes son decisiones de idioma y de lugar — quien lo sabe es quien midió, y\n// no un componente que decidiría idioma en cinco lugares.\nconst duration = (valor, unidade) =>\n  new Intl.NumberFormat('es', {\n    style: 'unit',\n    unit: unidade,\n    unitDisplay: 'short',\n    maximumFractionDigits: 2,\n  }).format(valor);\n\n// La unidad viene de quien midió, y no de un umbral del componente: quien\n// cronometró ya sabe en qué unidad la medida se entiende.\nconst medidas = [\n  { label: 'Primer token', value: duration(420, 'millisecond') },\n  { label: 'Total', value: duration(1.24, 'second') },\n  { label: 'Velocidad', value: '38,4 tok/s' },\n  { label: 'Trozos', value: '42' },\n];\n\n// Y el texto de la pieza: de qué medición se trata, y la palabra que avisa que\n// todavía no terminó.\nconst labels = {\n  title: 'Tiempo de esta respuesta',\n  measuring: 'Midiendo',\n};"
       }
     },
     "states": {
