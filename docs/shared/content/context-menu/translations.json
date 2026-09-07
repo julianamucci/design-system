@@ -21,7 +21,8 @@
         "shareLink": "Por link",
         "delete": "Excluir",
         "editShortcut": "Ctrl+E",
-        "deleteShortcut": "Delete"
+        "deleteShortcut": "Delete",
+        "areaNoHint": "(sem dica visual)"
       }
     },
     "anatomy": {
@@ -469,7 +470,8 @@
         "shareLink": "By link",
         "delete": "Delete",
         "editShortcut": "Ctrl+E",
-        "deleteShortcut": "Delete"
+        "deleteShortcut": "Delete",
+        "areaNoHint": "(no visual hint)"
       }
     },
     "anatomy": {
@@ -917,7 +919,8 @@
         "shareLink": "Por enlace",
         "delete": "Eliminar",
         "editShortcut": "Ctrl+E",
-        "deleteShortcut": "Delete"
+        "deleteShortcut": "Delete",
+        "areaNoHint": "(sin pista visual)"
       }
     },
     "anatomy": {
