@@ -26,8 +26,16 @@
  * atrasada: foi assim que o calendar acumulou dois vocabulários paralelos.
  *
  * O que sobra neste arquivo é o que só o menubar tem: a barra, o gatilho na
- * barra e a ANCORAGEM do painel — porque a stack sem lib headless posiciona o
- * painel por CSS, e não por um positioner em JavaScript.
+ * barra e a ancoragem do painel de TOPO, que a stack sem lib headless posiciona
+ * por CSS a partir de `data-side`/`data-align`.
+ *
+ * O SUBMENU não é mais assunto deste arquivo, e a mudança é de 2026-09-07. Ele
+ * nascia aninhado dentro de `.nds-menubar-menu` e era posicionado por
+ * `left: 100%`, o que não sabe recuar quando não cabe: perto da borda da janela
+ * o painel filho saía da tela, e o `overflow: visible` daqui o deixava escapar
+ * em vez de recortá-lo. Hoje ele é criado por abertura, anexado ao `body` e
+ * posicionado com medida pelo auxiliar de submenu da stack. As regras de
+ * `[data-side]` abaixo continuam válidas — só perderam esse consumidor.
  *
  * Tokens: --background, --accent, --accent-foreground, --border, --radius,
  *         --radius-sm, --spacing-*, --text-control, --z-popover
@@ -52,7 +60,9 @@
 }
 
 /* ── Menu (wrapper de cada gatilho + painel) ─────────────────────────────── */
-/* Também embrulha sub-gatilho + subpainel: é o bloco de referência da âncora. */
+/* Bloco de referência do painel de TOPO. Ele embrulhava também o sub-gatilho
+ * e o subpainel, e deixou de embrulhar em 2026-09-07: o submenu passou a ser
+ * anexado ao body e posicionado com medida — ver o cabeçalho. */
 .nds-menubar-menu {
   position: relative;
 }
@@ -134,14 +144,20 @@
 }
 
 /*
- * O painel do menubar HOSPEDA o submenu dentro de si.
+ * A razão ORIGINAL desta regra acabou, e ela fica por outra.
  *
- * Nas stacks com lib headless o submenu vai para um portal; aqui a ancoragem é
- * relativa, então o subpainel nasce como filho absoluto DESTE painel e sai da
- * caixa dele. O `overflow-y: auto` que o painel de menu herda transforma isso
- * em região rolável — e o axe reprova com `scrollable-region-focusable`, uma
- * área que rola e cujos itens não são alcançáveis pelo Tab. Além do relatório,
- * o submenu ficaria RECORTADO.
+ * Ela existia porque o painel do menubar hospedava o submenu dentro de si: o
+ * subpainel nascia como filho absoluto e saía da caixa, o `overflow-y: auto`
+ * herdado o transformava em região rolável, o axe reprovava com
+ * `scrollable-region-focusable` e o submenu ainda ficava RECORTADO. Desde
+ * 2026-09-07 o submenu vai para o body, e nada disso se aplica.
+ *
+ * NÃO foi removida, e a escolha é declarada: sem ela o painel volta a ter
+ * `overflow-y: auto`, e um menu longo vira região rolável cujos itens se
+ * alcançam por SETA e não por Tab — que é a condição exata do
+ * `scrollable-region-focusable`. Removê-la pode reintroduzir o achado por um
+ * caminho novo, e isso precisa ser MEDIDO com um menu longo, não deduzido.
+ * Enquanto não for medido, a regra fica.
  *
  * Duas classes no seletor de propósito: a regra precisa vencer a de
  * `dropdown-menu.css` independentemente da ordem em que as folhas entram.
