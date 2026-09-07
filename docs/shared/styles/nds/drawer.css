@@ -177,12 +177,38 @@
   }
 }
 
+/*
+ * O rodapé segue a regra transversal de grupos de botões, que a guideline
+ * `04-padroes-design-sistema.md` §"Alinhamento de Grupos de Botões" nomeia para
+ * cards, formulários, dialogs, DRAWERS, sheets e footers de seção: primário à
+ * direita no horizontal, primário em cima no empilhamento vertical.
+ *
+ * Uma ordem de DOM serve os dois eixos, e é por isso que o `-reverse` está aqui
+ * e não na marcação: escreve-se secundário primeiro — `Cancelar`, depois
+ * `Salvar` —, o `column-reverse` põe o primário em cima quando empilha, e o
+ * `row` com `justify-end` o põe à direita quando cabe lado a lado. A marcação
+ * fica igual nas cinco stacks e o eixo é decisão da folha.
+ *
+ * Isto era `flex-direction: column` puro, sozinho entre as quatro folhas com
+ * rodapé de par — alert-dialog, dialog e sheet já faziam `column-reverse` mais
+ * o ponto de quebra. O efeito era o primário embaixo, ao contrário da regra, e
+ * o rodapé nunca virava horizontal. O vanilla contornava embrulhando o rodapé
+ * num `.nds-cluster[data-justify=end]`: contorno que existia para suprir a
+ * folha, e que pode sair agora.
+ */
 .nds-drawer-footer {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   gap: var(--spacing-2);
   margin-top: auto;
   padding: var(--spacing-4);
+}
+
+@media (min-width: 40rem) {
+  .nds-drawer-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 }
 
 /*
