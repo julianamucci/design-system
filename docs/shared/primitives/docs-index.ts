@@ -197,18 +197,104 @@ function compactosDoCorpus(corpus: readonly DocsIndexEntry[]): Map<string, strin
 }
 
 /**
+ * Distância de edição, com corte cedo.
+ *
+ * O teto sai por parâmetro e a conta abandona a linha assim que TODA ela passa
+ * do teto: comparar um termo contra cem tokens de slug precisa ser barato, e a
+ * maioria das comparações morre na primeira ou segunda letra.
+ */
+function distanciaDeEdicao(a: string, b: string, teto: number): number {
+  if (Math.abs(a.length - b.length) > teto) return teto + 1;
+  let anterior = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i += 1) {
+    const atual = [i];
+    let melhorDaLinha = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const custo = a[i - 1] === b[j - 1] ? 0 : 1;
+      const valor = Math.min(anterior[j] + 1, atual[j - 1] + 1, anterior[j - 1] + custo);
+      atual.push(valor);
+      if (valor < melhorDaLinha) melhorDaLinha = valor;
+    }
+    if (melhorDaLinha > teto) return teto + 1;
+    anterior = atual;
+  }
+  return anterior[b.length];
+}
+
+/**
+ * Conserta erro de digitação em NOME DE COMPONENTE, e só nele.
+ *
+ * "quais os casos de uso do compute user?" recuperava media-player com 0,25 —
+ * o piso pegava, o chat dizia que não sabia, e a pessoa ficava sem resposta
+ * por causa de um "r".
+ *
+ * Três guardas, e cada uma existe para não inventar correção:
+ *
+ * 1. **Só o que o corpus DESCONHECE.** Termo presente no vocabulário — as 6.169
+ *    palavras que aparecem em algum documento — nunca é corrigido. MEDIDO: sem
+ *    esta guarda, 105 palavras reais do conteúdo virariam nome de componente, e
+ *    várias mudam de sentido no caminho — `content` viraria `context`, `forma`
+ *    viraria `form`, `medida` viraria `media`, `termina` viraria `terminal`.
+ *    Quem digitou uma palavra que existe quis dizer aquela palavra.
+ * 2. **Só contra TOKEN DE SLUG**, que são cem, e não contra o vocabulário
+ *    inteiro. Nome de componente é o que a pessoa erra ao digitar de memória;
+ *    palavra comum errada não deve puxar componente nenhum.
+ * 3. **Empate não corrige.** Dois candidatos à mesma distância significam que
+ *    não dá para saber, e chutar aqui é pior que não corrigir. Medido: com os
+ *    cem tokens de slug de hoje NÃO existe empate possível, então esta guarda é
+ *    inalcançável e nenhum teste a cobre. Fica porque o corpus cresce, e ela é
+ *    invariante de três linhas — não porque esteja provada.
+ *
+ * Termo curto fica de fora: com menos de cinco letras, uma edição muda a
+ * palavra inteira.
+ */
+function corrigirNomeErrado(
+  token: string,
+  vocabulario: ReadonlySet<string>,
+  tokensDeSlug: ReadonlySet<string>,
+): string | null {
+  if (token.length < 5 || vocabulario.has(token)) return null;
+  const teto = token.length >= 8 ? 2 : 1;
+  let melhor: string | null = null;
+  let melhorDistancia = teto + 1;
+  let empatado = false;
+  for (const alvo of tokensDeSlug) {
+    const distancia = distanciaDeEdicao(token, alvo, teto);
+    if (distancia > teto) continue;
+    if (distancia < melhorDistancia) {
+      melhorDistancia = distancia;
+      melhor = alvo;
+      empatado = false;
+    } else if (distancia === melhorDistancia) {
+      empatado = true;
+    }
+  }
+  return empatado ? null : melhor;
+}
+
+/**
  * Os tokens da pergunta com a forma compacta já expandida.
  *
  * Sem tirar palavra vazia e sem deduplicar: esta é a lista que o bônus de
  * sequência lê, e ele depende de ADJACÊNCIA. Remover uma palavra no meio
  * juntaria termos que não estavam juntos.
  */
-function expandirTokens(question: string, compactos?: Map<string, string[]>): string[] {
+function expandirTokens(
+  question: string,
+  compactos?: Map<string, string[]>,
+  vocabulario?: ReadonlySet<string>,
+  tokensDeSlug?: ReadonlySet<string>,
+): string[] {
   const saida: string[] = [];
   for (const token of tokenize(question)) {
     const partes = compactos?.get(token);
-    if (partes) saida.push(...partes);
-    else saida.push(token);
+    if (partes) {
+      saida.push(...partes);
+      continue;
+    }
+    const corrigido =
+      vocabulario && tokensDeSlug ? corrigirNomeErrado(token, vocabulario, tokensDeSlug) : null;
+    saida.push(corrigido ?? token);
   }
   return saida;
 }
@@ -227,10 +313,15 @@ function expandirTokens(question: string, compactos?: Map<string, string[]>): st
  * pergunta. Nenhum teste conseguia distinguir as duas versões, que é o sinal de
  * que a complexidade não estava carregando peso.
  */
-function queryTerms(question: string, compactos?: Map<string, string[]>): string[] {
+function queryTerms(
+  question: string,
+  compactos?: Map<string, string[]>,
+  vocabulario?: ReadonlySet<string>,
+  tokensDeSlug?: ReadonlySet<string>,
+): string[] {
   const seen = new Set<string>();
   const terms: string[] = [];
-  for (const token of expandirTokens(question, compactos)) {
+  for (const token of expandirTokens(question, compactos, vocabulario, tokensDeSlug)) {
     if (seen.has(token) || STOPWORDS.has(token)) continue;
     seen.add(token);
     terms.push(token);
@@ -329,12 +420,21 @@ export function searchDocs(
   const limit = options.limit ?? 5;
   if (corpus.length === 0) return [];
 
-  const compactos = compactosDoCorpus(corpus);
-  const terms = queryTerms(question, compactos);
-  if (terms.length === 0) return [];
-
+  // `prepare` não depende da pergunta, e vem primeiro porque o vocabulário —
+  // que a correção de digitação consulta — sai justamente do `allTerms` dele.
   const prepared = corpus.map(prepare);
   const total = prepared.length;
+
+  const vocabulario = new Set<string>();
+  const tokensDeSlug = new Set<string>();
+  for (const doc of prepared) {
+    for (const termo of doc.allTerms) vocabulario.add(termo);
+    for (const termo of doc.slugTokens) tokensDeSlug.add(termo);
+  }
+
+  const compactos = compactosDoCorpus(corpus);
+  const terms = queryTerms(question, compactos, vocabulario, tokensDeSlug);
+  if (terms.length === 0) return [];
 
   // Frequência documental, só dos termos que a pergunta usa: varrer o
   // vocabulário inteiro custaria mais e não mudaria uma nota.
@@ -354,7 +454,7 @@ export function searchDocs(
   // A lista COMPLETA, com a forma compacta expandida e sem tirar nada: o bônus
   // de sequência lê adjacência, e uma remoção no meio juntaria termos que não
   // estavam juntos.
-  const questionTokens = expandirTokens(question, compactos);
+  const questionTokens = expandirTokens(question, compactos, vocabulario, tokensDeSlug);
 
   const hits: DocsIndexHit[] = prepared.map((doc) => {
     let weighted = 0;

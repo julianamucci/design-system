@@ -172,6 +172,41 @@ describe('pergunta que cita o componente pelo nome', () => {
   });
 });
 
+describe('erro de digitação no nome do componente', () => {
+  it.each([
+    // O caso que veio de uso real: falta um "r" e a busca não achava nada.
+    ['quais os casos de uso do compute user?', 'computer-use'],
+    ['como funciona o acordion?', 'accordion'],
+    ['o popver fecha com escape?', 'popover'],
+  ])('%s → %s', (pergunta, slug) => {
+    expect(melhor(CORPUS_PT, pergunta)).toBe(slug);
+    expect(nota(CORPUS_PT, pergunta)).toBeGreaterThan(RETRIEVAL_FLOOR);
+  });
+
+  it('não corrige o que o corpus CONHECE — a palavra existe, quem digitou quis aquilo', () => {
+    // `chart` está a uma edição de `chat`, e as duas são componentes. Corrigir
+    // aqui trocaria a pergunta da pessoa por outra.
+    expect(melhor(CORPUS_PT, 'o chart aceita legenda?')).toBe('chart');
+  });
+
+  it('palavra portuguesa comum não vira nome de componente', () => {
+    // Sem a guarda do vocabulário, 105 palavras do próprio conteúdo virariam
+    // nome de componente: `forma` → `form`, `content` → `context`, `medida` →
+    // `media`. Aqui a pergunta é sobre o dialog, e `forma` é só português.
+    const hits = searchDocs(CORPUS_PT, 'qual a melhor forma de fechar o dialog?');
+    expect(hits[0].slug).toBe('dialog');
+    expect(hits.map((hit) => hit.slug)).not.toContain('form');
+  });
+
+  it('não inventa correção para palavra que não é deste mundo', () => {
+    // Nenhum token de slug está perto o bastante, e a pergunta continua sem
+    // resposta — que é a resposta certa.
+    expect(nota(CORPUS_PT, 'como configuro um cluster de kubernetes?')).toBeLessThan(
+      RETRIEVAL_FLOOR,
+    );
+  });
+});
+
 describe('pergunta que cita só um conceito, sem nome nenhum', () => {
   it.each([
     ['como anuncio erro de formulario para leitor de tela', ['form', 'label', 'input']],
