@@ -348,7 +348,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>hover_card_open</code> e <code>hover_card_close</code>. Útil para medir engajamento com previews. Payload obrigatório: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (texto do trigger). Disparar via callback de mudança no consumidor — evite trackear em hover de baixa intenção (use openDelay como filtro natural)."
+      "description": "Eventos relevantes: <code>hover_card_open</code> e <code>hover_card_close</code>. Útil para medir engajamento com previews. Payload obrigatório: <code>component='hover-card'</code>, <code>location</code>, <code>trigger_label</code> (id estável em kebab-case, nunca o texto traduzido). Disparar via callback de mudança no consumidor — evite trackear em hover de baixa intenção (use openDelay como filtro natural)."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -793,7 +793,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>hover_card_open</code> and <code>hover_card_close</code>. Useful to measure preview engagement. Required payload: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (trigger text). Dispatch via the change callback in the consumer — avoid tracking low-intent hovers (use openDelay as natural filter)."
+      "description": "Relevant events: <code>hover_card_open</code> and <code>hover_card_close</code>. Useful to measure preview engagement. Required payload: <code>component='hover-card'</code>, <code>location</code>, <code>trigger_label</code> (a stable kebab-case id, never the translated text). Dispatch via the change callback in the consumer — avoid tracking low-intent hovers (use openDelay as natural filter)."
     },
     "testes": {
       "title": "Test Criteria",
@@ -1238,7 +1238,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>hover_card_open</code> y <code>hover_card_close</code>. Útil para medir engagement con previews. Payload obligatorio: <code>component='hover-card'</code>, <code>location</code>, <code>label</code> (texto del trigger). Dispara vía el callback de cambio en el consumidor — evita trackear hover de baja intención (usa openDelay como filtro natural)."
+      "description": "Eventos relevantes: <code>hover_card_open</code> y <code>hover_card_close</code>. Útil para medir engagement con previews. Payload obligatorio: <code>component='hover-card'</code>, <code>location</code>, <code>trigger_label</code> (id estable en kebab-case, nunca el texto traducido). Dispara vía el callback de cambio en el consumidor — evita trackear hover de baja intención (usa openDelay como filtro natural)."
     },
     "testes": {
       "title": "Criterios de Test",

@@ -583,6 +583,25 @@ function auditAnalytics(slug) {
   if (trContent) {
     const eventsInTr = new Set();
     const EVENT_RX = /^[a-z]+_[a-z_]+$/;
+
+    // CAMPO de payload não é NOME de evento, e o sublinhado não separa os dois.
+    //
+    // A coleta abaixo lê tudo que está dentro de `<code>` e trata como evento o
+    // que tiver sublinhado. O comentário original apostava em duas premissas, e
+    // as duas são falsas: que campo aparece sem `<code>` (o próprio hover-card
+    // escreve `<code>location</code>`) e que campo não tem sublinhado
+    // (`trigger_label` tem). O que segurava a regra era só a segunda, e ela caiu
+    // no dia em que a prosa do hover-card passou a nomear o campo certo — o
+    // portão acusou `trigger_label` como evento não tipado nas CINCO stacks,
+    // com o campo tipado e correto em todas.
+    //
+    // Exclusão DECLARADA, como manda a regra da casa: são os campos de payload
+    // que o vocabulário deste projeto usa. Campo novo entra aqui; o que não
+    // estiver declarado continua sendo cobrado como evento.
+    const CAMPOS_DE_PAYLOAD = new Set([
+      'trigger_label', 'field_name', 'section_id', 'component_name',
+      'page_title', 'track_id', 'item_id',
+    ]);
     try {
       const json = JSON.parse(trContent);
       for (const locale of Object.keys(json)) {
@@ -590,8 +609,9 @@ function auditAnalytics(slug) {
         const table = analytics?.table ?? analytics;
         if (!table || typeof table !== 'object') continue;
         for (const [key, val] of Object.entries(table)) {
-          if (typeof val === 'string' && EVENT_RX.test(val)) eventsInTr.add(val);
-          else if (val && typeof val === 'object' && EVENT_RX.test(key)) eventsInTr.add(key);
+          const ehEvento = (nome) => EVENT_RX.test(nome) && !CAMPOS_DE_PAYLOAD.has(nome);
+          if (typeof val === 'string' && ehEvento(val)) eventsInTr.add(val);
+          else if (val && typeof val === 'object' && ehEvento(key)) eventsInTr.add(key);
           // Evento anunciado em PROSA, dentro de `<code>`.
           //
           // A coleta acima só via valor exato ou chave, e por isso seis
@@ -602,12 +622,13 @@ function auditAnalytics(slug) {
           // `AnalyticsEvents`. Documentação de evento que ninguém dispara e que
           // o tipo não conhece, com o portão verde o tempo todo.
           //
-          // O `<code>` é a marca: prosa cita `location` e `label` sem ele, e o
-          // `EVENT_RX` exige o sublinhado, então nome de campo não entra.
+          // O `<code>` é a marca. Ele NÃO separa evento de campo — a prosa
+          // marca os dois —, então quem separa é a lista `CAMPOS_DE_PAYLOAD`
+          // declarada acima.
           if (typeof val === 'string') {
             for (const m of val.matchAll(/<code>([^<]+)<\/code>/g)) {
               const dentro = m[1].trim();
-              if (EVENT_RX.test(dentro)) eventsInTr.add(dentro);
+              if (ehEvento(dentro)) eventsInTr.add(dentro);
             }
           }
         }
