@@ -6735,6 +6735,78 @@ function auditCodigoTraduzidoEmSnippet(slug) {
   return violations;
 }
 
+/**
+ * Identificador em PORTUGUÊS dentro de snippet, uniforme nos três idiomas.
+ *
+ * É o vão entre dois portões, e ele existe por construção. O
+ * `codigo_traduzido_em_snippet` COMPARA os idiomas: pega `cabecalho`/`header`/
+ * `encabezado`, e deixa passar `corpo` quando os três dizem `corpo`. O
+ * `identificador_pt` tem o vocabulário, mas itera as STACKS e lê `src/` — nunca
+ * abre conteúdo. Um snippet uniformemente em português não é visto por
+ * nenhum dos dois.
+ *
+ * A correção de 2026-09-06 também não alcançou: ela alinhou pt-BR e es ao
+ * INGLÊS, e onde o próprio inglês estava em português a operação foi no-op. A
+ * varredura fechou em "zero chaves divergentes", que era verdade e não dizia
+ * nada sobre esta classe.
+ *
+ * Aqui não há comparação possível, então é LISTA e não morfologia. Medido em
+ * 2026-09-06, antes de ligar: a lista dá 29 identificadores em 23 componentes,
+ * e a morfologia acrescenta 2. Em `src/` a mesma morfologia dava 1178 contra
+ * 168 declarados, e foi por isso que a casa a desligou lá — a diferença é a
+ * população: snippet é código curto e escrito à mão.
+ */
+const IDENTIFICADORES_PT_EM_SNIPPET = new Set([
+  'corpo', 'rodape', 'cabecalho', 'painel', 'rotulo', 'rotulos', 'botao', 'botoes',
+  'campo', 'campos', 'lista', 'listas', 'conteudo', 'titulo', 'linha', 'linhas',
+  'coluna', 'colunas', 'valor', 'valores', 'estado', 'aberto', 'fechado', 'gatilho',
+  'balao', 'grupo', 'texto', 'entrada', 'saida', 'acao', 'acoes', 'dados', 'numero',
+  'tamanho', 'largura', 'altura', 'cores', 'icone', 'imagem', 'arquivo', 'pagina',
+  'secao', 'secoes', 'janela', 'caixa', 'aba', 'abas', 'barra', 'borda', 'fundo',
+  'topo', 'esquerda', 'direita', 'primeiro', 'primeira', 'ultimo', 'proximo',
+  'anterior', 'resultado', 'resposta', 'pedido', 'erro', 'aviso', 'sucesso', 'falha',
+  'espera', 'atraso', 'inicio', 'fim', 'passo', 'etapa', 'nivel', 'ordem', 'filtro',
+  'busca', 'chave', 'senha', 'usuario', 'perfil', 'conta', 'hora', 'dia', 'mes',
+  'ano', 'acordeao', 'selecionado', 'marcado', 'itens', 'formulario', 'duracao',
+]);
+
+function auditIdentificadorPtEmSnippet(slug) {
+  const violations = [];
+  const contentFile = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const raw = readFile(contentFile);
+  if (!raw) return violations;
+  let json = null;
+  try { json = JSON.parse(raw); } catch { return violations; }
+  if (!json || !json['pt-BR']) return violations;
+
+  const rel = relative(ROOT, contentFile).split('\\').join('/');
+  const vistos = new Set();
+
+  const walk = (obj, prefixo) => {
+    for (const chave of Object.keys(obj || {})) {
+      const valor = obj[chave];
+      const caminho = prefixo ? `${prefixo}.${chave}` : chave;
+      if (valor && typeof valor === 'object') { walk(valor, caminho); continue; }
+      if (typeof valor !== 'string' || !caminho.includes('Code')) continue;
+      // Comentário fora: ele É para estar em português, e portão que casa
+      // palavra solta mede prosa — já reprovou um "let the item grow".
+      for (const m of stripComments(valor).matchAll(/\b(?:const|let|var|function)\s+([A-Za-z_$][\w$]*)/g)) {
+        const nome = m[1];
+        if (!IDENTIFICADORES_PT_EM_SNIPPET.has(nome.toLowerCase())) continue;
+        if (vistos.has(nome)) continue;
+        vistos.add(nome);
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack: 'shared',
+          file: rel, line: 0, rule: 'identificador_pt_em_snippet',
+          message: `o snippet declara \`${nome}\` — código se escreve em inglês, e o snippet é o código que o leitor COPIA. Comentário e texto de tela continuam traduzidos; nome de variável não`,
+        });
+      }
+    }
+  };
+  walk(json['pt-BR'], '');
+  return violations;
+}
+
 function auditSeo(slug) {
   const violations = [];
 
@@ -6840,6 +6912,7 @@ function runAudit(slug, category) {
       ...auditTraducaoRecortada(alvo),
       ...auditSnippetEmSlotDeProsa(alvo),
       ...auditCodigoTraduzidoEmSnippet(alvo),
+      ...auditIdentificadorPtEmSnippet(alvo),
       ...auditSourceSemTeste(alvo),
     ],
     seo: auditSeo,
@@ -6858,6 +6931,7 @@ function runAudit(slug, category) {
     ...auditTraducaoRecortada(slug),
     ...auditSnippetEmSlotDeProsa(slug),
     ...auditCodigoTraduzidoEmSnippet(slug),
+    ...auditIdentificadorPtEmSnippet(slug),
     ...auditSourceSemTeste(slug),
     ...auditLarguraFluidaSobCentered(slug),
     ...auditHostInlineComLargura(slug),
