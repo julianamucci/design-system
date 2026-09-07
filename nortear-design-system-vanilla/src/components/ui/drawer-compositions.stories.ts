@@ -132,6 +132,7 @@ export const WithConfirmation: Story = {
             { label: 'Cancelar', variant: 'outline', close: true },
             { label: 'Remover', variant: 'destructive' },
           ],
+          initialFocusOnCloser: true,
         }),
       },
       description: {
@@ -147,12 +148,21 @@ export const WithConfirmation: Story = {
     body.className = 'nds-text-body nds-text-muted-foreground';
     body.textContent = 'O anexo sai desta mensagem e continua na biblioteca.';
 
+    // Aqui a decisão É a tela, e por isso o foco entra no cancelar — a mesma
+    // escolha do `alert-dialog` desta stack: o Enter por reflexo tem de cair na
+    // saída segura, nunca na ação que consuma. Sem isto o foco iria para o corpo
+    // rolável, que é o primeiro focável do painel. Na `WithForm` o padrão FICA:
+    // ali o assunto é editar, e cobrar um Tab a mais de quem só quer editar é o
+    // custo que esta regra não paga.
+    const footerActions = buildDrawerFooter('Cancelar', 'Remover', true);
+
     const drawer = createDrawer({
       trigger,
       title: 'Remover anexo?',
       description: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
       content: body,
-      footer: buildDrawerFooter('Cancelar', 'Remover', true),
+      footer: footerActions,
+      initialFocus: footerActions[0],
     });
     return buildDrawerWrapper(drawer);
   },
@@ -170,6 +180,14 @@ export const WithConfirmation: Story = {
       await expect(destrutivo).toHaveClass('nds-button-destructive');
       const cancelar = inside.getByRole('button', { name: /Cancelar/i });
       await expect(cancelar).toHaveClass('nds-button-outline');
+    });
+
+    // O ELEMENTO, não a mera presença de foco: um painel que foca a si mesmo, ou
+    // o corpo rolável, também tem foco dentro — e é justamente o que esta story
+    // recusa.
+    await step('O foco abre no cancelar, que é a saída segura', async () => {
+      const cancelar = inside.getByRole('button', { name: /^Cancelar$/i });
+      await expect(cancelar).toHaveFocus();
     });
   },
 };

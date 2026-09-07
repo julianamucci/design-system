@@ -124,10 +124,10 @@ export const Playground: Story = {
             Conteúdo do drawer.
           </DrawerBody>
           <DrawerFooter>
-            <Button>{LABEL.confirmar}</Button>
             <DrawerClose asChild>
               <Button variant="outline">{LABEL.cancelar}</Button>
             </DrawerClose>
+            <Button>{LABEL.confirmar}</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

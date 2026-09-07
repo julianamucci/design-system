@@ -2,6 +2,7 @@
 import type { DialogContentEmits, DialogContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { nextTick, ref, watch } from 'vue'
+import { reactiveOmit } from '@vueuse/core'
 import { useForwardPropsEmits } from 'reka-ui'
 import { DrawerContent, DrawerPortal } from 'vaul-vue'
 import { cn } from '@/lib/utils'
@@ -26,16 +27,39 @@ defineOptions({
  * entrou no painel" enquanto as outras quatro stacks passavam.
  */
 const props = withDefaults(
-  defineProps<DialogContentProps & { class?: HTMLAttributes['class'] }>(),
+  defineProps<
+    DialogContentProps & {
+      class?: HTMLAttributes['class']
+      /**
+       * Onde o foco entra na abertura.
+       *
+       * `panel` é o padrão, e é o certo para o painel que serve a uma edição: o
+       * leitor de tela anuncia o diálogo antes de qualquer campo, e quem só quer
+       * editar não paga um Tab a mais.
+       *
+       * `close` é para o painel cuja decisão É a tela — a confirmação. Ali o
+       * foco vai para o fechador do rodapé, que é a saída segura, como o
+       * AlertDialog faz: o Enter por reflexo não pode cair na ação que consuma.
+       *
+       * Isto é prop, e não um gancho da lib, porque a lib desta stack CANCELA o
+       * foco automático do diálogo (ver o bloco de `moveFocusInside` abaixo) e
+       * não repassa o evento — quem escolhe o alvo aqui é este componente.
+       */
+      initialFocus?: 'panel' | 'close'
+    }
+  >(),
   {
     forceMount: undefined,
     disableOutsidePointerEvents: undefined,
     asChild: undefined,
+    initialFocus: 'panel',
   },
 )
 const emits = defineEmits<DialogContentEmits>()
 
-const forwarded = useForwardPropsEmits(props, emits)
+// `initialFocus` é decisão DESTE componente: repassado, viraria atributo solto
+// no painel.
+const forwarded = useForwardPropsEmits(reactiveOmit(props, 'initialFocus'), emits)
 
 /**
  * `aria-modal` acompanha o modo REAL da raiz.
@@ -67,9 +91,13 @@ const modal = useDrawerModal()
  * quatro stacks levam o foco para dentro, e a referência do projeto é uma
  * delas. Então o foco é movido aqui, uma vez por abertura.
  *
- * O alvo é o próprio painel (o primitivo já lhe dá `tabindex="-1"`), e não o
- * primeiro focável: focar direto um campo faria o leitor de tela anunciar o
- * campo sem antes anunciar o nome do diálogo.
+ * O alvo padrão é o próprio painel (o primitivo já lhe dá `tabindex="-1"`), e
+ * não o primeiro focável: focar direto um campo faria o leitor de tela anunciar
+ * o campo sem antes anunciar o nome do diálogo.
+ *
+ * Com `initial-focus="close"` o alvo passa a ser o fechador do rodapé — só no
+ * painel cuja decisão É a tela. Se ele não estiver lá, o painel continua sendo
+ * o alvo: um diálogo aberto sem foco dentro é pior que um Tab a mais.
  */
 const panel = ref<{ $el?: unknown } | null>(null)
 
@@ -96,7 +124,11 @@ async function moveFocusInside(instancia: { $el?: unknown }) {
     if (!el.isConnected) return
     if (el.getAttribute('data-state') !== 'open') continue
     if (el.contains(document.activeElement)) return
-    el.focus()
+    const target =
+      props.initialFocus === 'close'
+        ? (el.querySelector<HTMLElement>('[data-slot="drawer-close"]') ?? el)
+        : el
+    target.focus()
   }
 }
 

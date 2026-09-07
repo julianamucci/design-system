@@ -167,6 +167,12 @@ const CONSTRUCTORS: Array<{
   noFooter?: true;
   /** Os dois snippets com estado próprio: sinal na classe, ponta ligada. */
   stateful?: true;
+  /**
+   * O único snippet com MÉTODO na classe: a confirmação escolhe o alvo do foco
+   * inicial, e o gancho do primitivo pede um handler. Exceção declarada, não
+   * silenciosa — o caso abaixo cobra a premissa nos outros onze.
+   */
+  comMetodo?: true;
 }> = [
   { name: 'drawerPlaygroundSource', story: 'Playground', build: drawerPlaygroundSource },
   { name: 'drawerBottomSource', story: 'Variants/Bottom', build: drawerBottomSource },
@@ -207,6 +213,7 @@ const CONSTRUCTORS: Array<{
     name: 'drawerWithConfirmationSource',
     story: 'Compositions/WithConfirmation',
     build: drawerWithConfirmationSource,
+    comMetodo: true,
   },
 ];
 
@@ -219,7 +226,7 @@ describe('cobertura das quatro stories', () => {
     expect(exported).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
   });
 
-  for (const { name, story, build, noTrigger, noFooter, stateful } of CONSTRUCTORS) {
+  for (const { name, story, build, noTrigger, noFooter, stateful, comMetodo } of CONSTRUCTORS) {
     it(`${name} (${story}) publica o componente, não o andaime da story`, () => {
       const code = build();
 
@@ -295,9 +302,21 @@ describe('cobertura das quatro stories', () => {
       // inventar um sinal ali pediria estado que a story não tem.
       if (stateful) {
         expect(code).toContain('  readonly ');
+      } else if (comMetodo) {
+        expect(code).not.toContain('readonly ');
+        expect(code).toContain('  protected focusSafeExit(event: Event): void {');
       } else {
         expect(code).toContain('export class Exemplo {}');
         expect(code).not.toContain('readonly ');
+      }
+
+      // A premissa da exceção, cobrada nos dois sentidos: o gancho de foco é do
+      // painel de CONFIRMAÇÃO e de mais nenhum. No painel de formulário o foco
+      // segue no primeiro campo, e é isso que o não-conter prova.
+      if (comMetodo) {
+        expect(code).toContain('(openAutoFocus)="focusSafeExit($event)"');
+      } else {
+        expect(code).not.toContain('openAutoFocus');
       }
     });
   }

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { NDS_DRAWER } from './drawer';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
@@ -148,9 +148,27 @@ export const WithConfirmation: Story = {
       descricaoPainel: LABEL.aviso(),
       rotuloFechar: LABEL.close(),
       rotuloDestruir: LABEL.destruir(),
+      // Aqui a decisão É a tela, e por isso o foco entra no cancelar — a mesma
+      // escolha do AlertDialog: o Enter por reflexo tem de cair na saída segura,
+      // nunca na ação que consuma. Na WithForm o padrão FICA (primeiro tabbável,
+      // que é o primeiro campo), porque ali o assunto é editar.
+      //
+      // A busca é pelo ATRIBUTO DA DIRETIVA, e não por `data-slot`: nesta stack
+      // o `data-slot` do botão é disputado entre host bindings, e o seletor da
+      // diretiva continua no DOM sem disputa nenhuma.
+      focusSafeExit: (event: Event) => {
+        const panelEl = event.target;
+        if (!(panelEl instanceof HTMLElement)) return;
+        const safeExit = panelEl.querySelector<HTMLElement>('[ndsDrawerClose]');
+        // Sem saída no rodapé não há alvo, e aí o padrão do primitivo é melhor
+        // que um diálogo aberto sem foco nenhum dentro.
+        if (!safeExit) return;
+        event.preventDefault();
+        safeExit.focus();
+      },
     },
     template: `
-      <nds-drawer [defaultOpen]="true">
+      <nds-drawer [defaultOpen]="true" (openAutoFocus)="focusSafeExit($event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
 
         <ng-template ndsDrawerContent>
@@ -185,6 +203,16 @@ export const WithConfirmation: Story = {
     await step('Cancelar continua sendo a saída de menor risco', async () => {
       const cancelar = inside.getByRole('button', { name: LABEL.close() });
       await expect(cancelar).toHaveClass(/nds-button-outline/);
+    });
+
+    await step('O foco abre no cancelar, não na ação destrutiva', async () => {
+      // O ELEMENTO, não a mera presença de foco: o painel também recebe foco
+      // quando o escopo não acha candidato, e é justamente o que esta story
+      // recusa.
+      const cancelar = inside.getByRole('button', { name: LABEL.close() });
+      const destrutivo = inside.getByRole('button', { name: LABEL.destruir() });
+      await waitFor(() => expect(cancelar).toHaveFocus());
+      await expect(destrutivo).not.toHaveFocus();
     });
   },
 };

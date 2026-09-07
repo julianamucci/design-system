@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { untrack } from 'svelte';
+  import { tick, untrack } from 'svelte';
   import {
     Drawer,
     DrawerBody,
@@ -179,6 +179,27 @@
     return rows;
   }
 
+  /**
+   * Foco inicial na saída segura — só na composição de confirmação.
+   *
+   * Onde a decisão É a tela, o Enter por reflexo tem de cair no cancelar, nunca
+   * na ação que consuma; é a mesma escolha do AlertDialog. Na composição de
+   * formulário o padrão FICA, porque ali o assunto é editar.
+   *
+   * `onOpenAutoFocus` é o que o primitivo desta stack oferece para escolher o
+   * alvo. O `tick()` espera o commit pendente: a lib de baixo é a mesma do
+   * AlertDialog, e lá foi medido que o rodapé ainda NÃO está no DOM quando este
+   * evento dispara.
+   */
+  async function focusSafeExit(event: Event) {
+    const panelEl = event.target;
+    if (!(panelEl instanceof HTMLElement)) return;
+    event.preventDefault();
+    await tick();
+    const safeExit = panelEl.querySelector<HTMLElement>('[data-slot="drawer-close"]');
+    (safeExit ?? panelEl).focus();
+  }
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import {
@@ -204,12 +225,12 @@
       <DrawerDescription>Atualize seus dados.</DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
-      <Button>Salvar</Button>
       <DrawerClose>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>Cancelar</Button>
         {/snippet}
       </DrawerClose>
+      <Button>Salvar</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`;
@@ -284,12 +305,12 @@ interface TriggerProps {
             <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>OK</Button>
             <DrawerClose>
               {#snippet child({ props })}
                 <Button variant="outline" {...props}>Cancelar</Button>
               {/snippet}
             </DrawerClose>
+            <Button>OK</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -306,12 +327,12 @@ interface TriggerProps {
             <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>OK</Button>
             <DrawerClose>
               {#snippet child({ props })}
                 <Button variant="outline" {...props}>Cancelar</Button>
               {/snippet}
             </DrawerClose>
+            <Button>OK</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -328,12 +349,12 @@ interface TriggerProps {
             <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>OK</Button>
             <DrawerClose>
               {#snippet child({ props })}
                 <Button variant="outline" {...props}>Cancelar</Button>
               {/snippet}
             </DrawerClose>
+            <Button>OK</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -350,12 +371,12 @@ interface TriggerProps {
             <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>OK</Button>
             <DrawerClose>
               {#snippet child({ props })}
                 <Button variant="outline" {...props}>Cancelar</Button>
               {/snippet}
             </DrawerClose>
+            <Button>OK</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -446,10 +467,10 @@ interface TriggerProps {
             <DrawerDescription>Atualize seus dados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>Salvar</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button>Salvar</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -484,10 +505,10 @@ interface TriggerProps {
             <DrawerDescription>Refine os resultados.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>Aplicar</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button>Aplicar</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -556,10 +577,10 @@ interface TriggerProps {
       {/each}
     </DrawerBody>
     <DrawerFooter>
-      <Button>Aceitar termos</Button>
       <DrawerClose>
         {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
       </DrawerClose>
+      <Button>Aceitar termos</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -580,10 +601,10 @@ interface TriggerProps {
             <DrawerDescription>Drawer mobile padrão com handle de drag.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>OK</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button>OK</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -601,10 +622,10 @@ interface TriggerProps {
             <DrawerDescription>Drawer entra por cima.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>OK</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button>OK</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -622,10 +643,10 @@ interface TriggerProps {
             <DrawerDescription>Painel lateral à esquerda.</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>OK</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button>OK</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -643,10 +664,10 @@ interface TriggerProps {
             <DrawerDescription>Painel lateral à direita (padrão desktop).</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button>OK</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button>OK</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -674,10 +695,10 @@ interface TriggerProps {
             {/each}
           </DrawerBody>
           <DrawerFooter>
-            <Button>Aceitar termos</Button>
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
+            <Button>Aceitar termos</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -733,13 +754,28 @@ interface TriggerProps {
         name: $tStore('variants.compositions.withConfirmation.name'),
         description: $tStore('variants.compositions.withConfirmation.description'),
         useWhen: $tStore('variants.compositions.withConfirmation.use'),
-        code: `<Drawer>
+        code: `<script lang="ts">
+  import { tick } from "svelte";
+
+  // A decisão É a tela: o foco entra na saída segura, e não no corpo. O tick()
+  // espera o commit pendente — sem ele o rodapé ainda não está no DOM aqui.
+  async function focusSafeExit(event: Event) {
+    const panelEl = event.target;
+    if (!(panelEl instanceof HTMLElement)) return;
+    event.preventDefault();
+    await tick();
+    const safeExit = panelEl.querySelector<HTMLElement>('[data-slot="drawer-close"]');
+    (safeExit ?? panelEl).focus();
+  }
+<\/script>
+
+<Drawer>
   <DrawerTrigger>
     {#snippet child({ props })}
       <Button variant="outline" {...props}>Remover item</Button>
     {/snippet}
   </DrawerTrigger>
-  <DrawerContent>
+  <DrawerContent onOpenAutoFocus={focusSafeExit}>
     <DrawerHeader>
       <DrawerTitle>Remover item da lista?</DrawerTitle>
       <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
@@ -796,7 +832,8 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>Remover item</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <!-- A decisão É a tela: o foco entra na saída segura, e não no corpo. -->
+        <DrawerContent onOpenAutoFocus={focusSafeExit}>
           <DrawerHeader>
             <DrawerTitle>Remover item da lista?</DrawerTitle>
             <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, within } from "storybook/test";
+import { expect, waitFor, within } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
 import {
   Drawer,
@@ -88,10 +88,10 @@ export const WithForm: Story = {
             </form>
           </DrawerBody>
           <DrawerFooter>
-            <Button>Confirmar</Button>
             <DrawerClose asChild>
               <Button variant="outline">Cancelar</Button>
             </DrawerClose>
+            <Button>Confirmar</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -138,7 +138,26 @@ export const WithConfirmation: Story = {
         <DrawerTrigger asChild>
           <Button variant="outline">Remover anexo</Button>
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent
+          onOpenAutoFocus={(event) => {
+            // Aqui a decisão É a tela, e por isso o foco entra no cancelar —
+            // a mesma escolha do AlertDialog: o Enter por reflexo tem de cair
+            // na saída segura, nunca na ação que consuma. Na WithForm o padrão
+            // FICA: ali o assunto é editar, e forçar o Cancelar cobraria um Tab
+            // a mais de quem só quer editar.
+            //
+            // `onOpenAutoFocus` é o que esta stack oferece para escolher o alvo:
+            // sem `preventDefault()` o primitivo foca o primeiro tabbable e
+            // desfaz a escolha logo em seguida.
+            const panelEl = event.target as HTMLElement | null;
+            const safeExit = panelEl?.querySelector<HTMLElement>('[data-slot="drawer-close"]');
+            // Sem saída marcada no rodapé não há alvo, e aí o padrão do primitivo
+            // é melhor que um diálogo aberto sem foco nenhum dentro.
+            if (!safeExit) return;
+            event.preventDefault();
+            safeExit.focus();
+          }}
+        >
           <DrawerHeader>
             <DrawerTitle>Remover anexo?</DrawerTitle>
             <DrawerDescription>
@@ -146,10 +165,10 @@ export const WithConfirmation: Story = {
             </DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
-            <Button variant="destructive">Remover</Button>
             <DrawerClose asChild>
               <Button variant="outline">Cancelar</Button>
             </DrawerClose>
+            <Button variant="destructive">Remover</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -169,6 +188,15 @@ export const WithConfirmation: Story = {
       await expect(destrutivo).toHaveClass(/nds-button-destructive/);
       const cancelar = inside.getByRole("button", { name: /Cancelar/i });
       await expect(cancelar).toHaveClass(/nds-button-outline/);
+    });
+
+    await step("O foco abre no cancelar, não na ação destrutiva", async () => {
+      // O ELEMENTO, não a mera presença de foco: um painel que foca a si mesmo
+      // também tem foco dentro, e é justamente o que esta story recusa.
+      const cancelar = inside.getByRole("button", { name: /^Cancelar$/i });
+      const destrutivo = inside.getByRole("button", { name: /^Remover$/i });
+      await waitFor(() => expect(cancelar).toHaveFocus());
+      await expect(destrutivo).not.toHaveFocus();
     });
   },
 };

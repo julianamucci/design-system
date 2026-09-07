@@ -86,8 +86,13 @@ function trigger(label: string): string {
 </DrawerTrigger>`;
 }
 
-function panel(propsRaiz: string, miolo: string, withTrigger: string): string {
-  const partes = [withTrigger, `<DrawerContent>\n${indentar(miolo)}\n</DrawerContent>`]
+function panel(
+  propsRaiz: string,
+  miolo: string,
+  withTrigger: string,
+  propsContent = '',
+): string {
+  const partes = [withTrigger, `<DrawerContent${propsContent}>\n${indentar(miolo)}\n</DrawerContent>`]
     .filter(Boolean)
     .join('\n');
   return `<Drawer${propsRaiz}>
@@ -117,10 +122,10 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
   Conteúdo do drawer.
 </DrawerBody>`,
     `<DrawerFooter>
-  <Button>Confirmar</Button>
   <DrawerClose asChild>
     <Button variant="outline">Cancelar</Button>
   </DrawerClose>
+  <Button>Confirmar</Button>
 </DrawerFooter>`,
   ].join('\n');
 
@@ -277,10 +282,10 @@ export function drawerWithFormSource(): string {
   </form>
 </DrawerBody>`,
     `<DrawerFooter>
-  <Button>Confirmar</Button>
   <DrawerClose asChild>
     <Button variant="outline">Cancelar</Button>
   </DrawerClose>
+  <Button>Confirmar</Button>
 </DrawerFooter>`,
   ].join('\n');
 
@@ -293,9 +298,32 @@ import { Label } from "@/components/ui/label";`,
 }
 
 /**
+ * Foco inicial no fechador — a saída segura.
+ *
+ * Só no painel cuja decisão É a tela. `onOpenAutoFocus` é o que esta stack
+ * oferece para escolher o alvo, e sem `preventDefault()` o primitivo foca o
+ * primeiro tabbable logo depois, desfazendo a escolha.
+ */
+const SAFE_EXIT_FOCUS = `
+  onOpenAutoFocus={(event) => {
+    const panelEl = event.target as HTMLElement | null;
+    const safeExit = panelEl?.querySelector<HTMLElement>('[data-slot="drawer-close"]');
+    // Sem saída marcada no rodapé não há alvo, e aí o padrão do primitivo
+    // é melhor que um diálogo aberto sem foco nenhum dentro.
+    if (!safeExit) return;
+    event.preventDefault();
+    safeExit.focus();
+  }}
+`;
+
+/**
  * Confirmação reversível: consequência escrita na descrição e a ação principal
  * na variante destrutiva. Se a ação for realmente bloqueante, o componente é
  * outro — o AlertDialog.
+ *
+ * O foco entra no cancelar, como no AlertDialog: o Enter por reflexo tem de cair
+ * na saída segura. No painel de formulário isso NÃO vale — ali o assunto é
+ * editar, e o foco continua indo para o primeiro campo.
  */
 export function drawerWithConfirmSource(): string {
   const miolo = [
@@ -304,14 +332,14 @@ export function drawerWithConfirmSource(): string {
       'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
     ),
     `<DrawerFooter>
-  <Button variant="destructive">Remover</Button>
   <DrawerClose asChild>
     <Button variant="outline">Cancelar</Button>
   </DrawerClose>
+  <Button variant="destructive">Remover</Button>
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT_NO_BODY, panel('', miolo, trigger('Remover anexo')));
+  return jsxSnippet(IMPORT_NO_BODY, panel('', miolo, trigger('Remover anexo'), SAFE_EXIT_FOCUS));
 }
 
 /**

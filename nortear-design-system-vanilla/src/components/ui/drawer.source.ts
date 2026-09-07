@@ -45,6 +45,12 @@ export type DrawerSnippetOptions = {
    * ligado, o snippet mostra `gaveta.open()`, que é a API real.
    */
   defaultOpen?: boolean;
+  /**
+   * Painel de confirmação: o foco entra no primeiro botão do rodapé, que é o de
+   * saída. Só onde a decisão É a tela — no painel de formulário o foco continua
+   * indo para o primeiro campo.
+   */
+  initialFocusOnCloser?: boolean;
   /** Corpo do callback de mudança de estado, quando a story o exercita. */
   onOpenChange?: string;
   /** Atalho do control do Playground — rótulo da ação que fecha. */
@@ -81,7 +87,8 @@ function actionsOf(o: DrawerSnippetOptions): DrawerSnippetAction[] {
 /**
  * O bloco que monta o rodapé.
  *
- * A gaveta recebe UM elemento de rodapé, e é ele que arruma as ações. O botão de
+ * A gaveta recebe a LISTA de ações, na ordem do DOM — saída primeiro, ação
+ * principal depois —, e quem empilha e alinha é `.nds-drawer-footer`. O botão de
  * saída ganha `data-slot="drawer-close"`: é por esse atributo que a fábrica liga
  * o clique ao fechamento — sem ele o "Cancelar" é um botão inerte.
  */
@@ -108,13 +115,7 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
     .map(({ acao, name }) => (acao.close ? name : button(acao)))
     .join(', ');
 
-  lines.push(
-    `const rodape = document.createElement('div');`,
-    `rodape.className = 'nds-cluster';`,
-    `rodape.dataset.justify = 'end';`,
-    `rodape.dataset.spacing = 'md';`,
-    `rodape.append(${args});`,
-  );
+  lines.push(`const rodape = [${args}];`);
 
   return lines.join('\n');
 }
@@ -131,6 +132,7 @@ function linesComuns(o: DrawerSnippetOptions, content: string, temRodape: boolea
     ['content', content],
     ['bodyLabel', o.bodyLabel ? text(o.bodyLabel) : undefined],
     ['footer', temRodape ? 'rodape' : undefined],
+    ['initialFocus', temRodape && o.initialFocusOnCloser ? 'rodape[0]' : undefined],
     ['direction', o.direction && o.direction !== 'bottom' ? text(o.direction) : undefined],
     ['dismissible', o.dismissible === false ? 'false' : undefined],
     ['modal', o.modal === false ? 'false' : undefined],
@@ -149,8 +151,8 @@ function codeAbertura(o: DrawerSnippetOptions): string | undefined {
 /**
  * A chamada real de `createDrawer` com um corpo de texto.
  *
- * Corpo e rodapé são elementos que quem consome constrói — a fábrica não os
- * inventa. O rodapé é UM elemento, e é ele quem arruma as ações.
+ * Corpo e ações são o que quem consome constrói — a fábrica não os inventa. O
+ * rodapé recebe a LISTA de ações; quem empilha e alinha é a folha.
  */
 export function drawerSnippet(o: DrawerSnippetOptions = {}): string {
   const footer = footerBlock(actionsOf(o));

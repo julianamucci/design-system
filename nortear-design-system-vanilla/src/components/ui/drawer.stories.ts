@@ -107,11 +107,7 @@ function buildDrawerEl(args: DrawerArgs): HTMLElement {
   const cancel = createButton({ variant: 'outline', label: args.cancelLabel });
   cancel.dataset.slot = 'drawer-close';
 
-  const footer = document.createElement('div');
-  footer.className = 'nds-cluster';
-  footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'md';
-  footer.append(cancel, createButton({ variant: 'default', label: args.actionLabel }));
+  const footer = [cancel, createButton({ variant: 'default', label: args.actionLabel })];
 
   return createDrawer({
     trigger,

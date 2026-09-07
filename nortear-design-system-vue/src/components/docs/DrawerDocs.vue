@@ -344,10 +344,10 @@ const codeCompWithForm = `<Drawer>
       </Label>
     </form>
     <DrawerFooter>
-      <Button>Salvar alterações</Button>
       <DrawerClose as-child>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
+      <Button>Salvar alterações</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`;
@@ -361,7 +361,8 @@ const codeCompWithConfirmation = `<Drawer>
   <DrawerTrigger as-child>
     <Button variant="outline">Remover anexo</Button>
   </DrawerTrigger>
-  <DrawerContent>
+  <!-- A decisão É a tela: o foco entra na saída segura, e não no painel. -->
+  <DrawerContent initial-focus="close">
     <DrawerHeader>
       <DrawerTitle>Remover anexo?</DrawerTitle>
       <DrawerDescription>
@@ -369,10 +370,10 @@ const codeCompWithConfirmation = `<Drawer>
       </DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
-      <Button variant="destructive">Remover</Button>
       <DrawerClose as-child>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
+      <Button variant="destructive">Remover</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`;
@@ -394,10 +395,10 @@ const codeCompWithScroll = `<Drawer>
       <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos longos para garantir scroll interno.</p>
     </DrawerBody>
     <DrawerFooter>
-      <Button>Aceitar termos</Button>
       <DrawerClose as-child>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
+      <Button>Aceitar termos</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`;
@@ -930,12 +931,12 @@ const a11yCritCols = computed(() => ({
                 </p>
               </DrawerBody>
               <DrawerFooter>
-                <Button>Aceitar termos</Button>
                 <DrawerClose as-child>
                   <Button variant="outline">
                     Cancelar
                   </Button>
                 </DrawerClose>
+                <Button>Aceitar termos</Button>
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
@@ -989,12 +990,12 @@ const a11yCritCols = computed(() => ({
                 </Label>
               </form>
               <DrawerFooter>
-                <Button>Salvar alterações</Button>
                 <DrawerClose as-child>
                   <Button variant="outline">
                     Cancelar
                   </Button>
                 </DrawerClose>
+                <Button>Salvar alterações</Button>
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
@@ -1011,20 +1012,21 @@ const a11yCritCols = computed(() => ({
                 Remover anexo
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <!-- A decisão É a tela: o foco entra na saída segura, e não no painel. -->
+            <DrawerContent initial-focus="close">
               <DrawerHeader>
                 <DrawerTitle>Remover anexo?</DrawerTitle>
                 <DrawerDescription>O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.</DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
-                <Button variant="destructive">
-                  Remover
-                </Button>
                 <DrawerClose as-child>
                   <Button variant="outline">
                     Cancelar
                   </Button>
                 </DrawerClose>
+                <Button variant="destructive">
+                  Remover
+                </Button>
               </DrawerFooter>
             </DrawerContent>
           </Drawer>

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 import {
   drawerWithConfirmSource,
@@ -107,6 +107,15 @@ export const WithConfirmation: Story = {
       const cancelar = inside.getByRole('button', { name: /Cancelar/i });
       await expect(cancelar).toHaveClass('nds-button-outline');
       await expect(inside.getByRole('button', { name: /^Remover$/i })).toBeVisible();
+    });
+
+    await step('O foco abre no cancelar, não na ação principal', async () => {
+      // O ELEMENTO, não a mera presença de foco: sem a escolha explícita o foco
+      // cairia no corpo rolável, que também fica dentro do painel.
+      const cancelar = inside.getByRole('button', { name: /^Cancelar$/i });
+      const acao = inside.getByRole('button', { name: /^Remover$/i });
+      await waitFor(() => expect(cancelar).toHaveFocus());
+      await expect(acao).not.toHaveFocus();
     });
   },
 };

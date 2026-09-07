@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import {
   Drawer,
   DrawerBody,
@@ -89,10 +89,10 @@ export const WithForm: Story = {
               </form>
             </DrawerBody>
             <DrawerFooter>
-              <Button type="submit">Confirmar</Button>
               <DrawerClose as-child>
                 <Button variant="outline">Cancelar</Button>
               </DrawerClose>
+              <Button type="submit">Confirmar</Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
@@ -139,16 +139,25 @@ export const WithConfirmation: Story = {
     template: `
       <div style="contain: layout">
         <Drawer :default-open="true" direction="bottom">
-          <DrawerContent>
+          <!--
+            A decisão É a tela: o painel abre com o foco no fechador do rodapé,
+            como o AlertDialog faz — o Enter por reflexo tem de cair na saída
+            segura, nunca na ação que consuma. Na WithForm o padrão FICA, porque
+            ali o assunto é editar.
+
+            É prop, e não gancho da lib: a lib desta stack cancela o foco
+            automático do diálogo e não repassa o evento. Ver DrawerContent.vue.
+          -->
+          <DrawerContent initial-focus="close">
             <DrawerHeader>
               <DrawerTitle>Remover anexo?</DrawerTitle>
               <DrawerDescription>O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.</DrawerDescription>
             </DrawerHeader>
             <DrawerFooter>
-              <Button variant="destructive">Remover</Button>
               <DrawerClose as-child>
                 <Button variant="outline">Cancelar</Button>
               </DrawerClose>
+              <Button variant="destructive">Remover</Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
@@ -169,6 +178,16 @@ export const WithConfirmation: Story = {
       await expect(destrutivo).toHaveClass('nds-button-destructive');
       const cancelar = inside.getByRole('button', { name: /Cancelar/i });
       await expect(cancelar).toHaveClass('nds-button-outline');
+    });
+
+    await step('O foco abre no cancelar, não na ação destrutiva', async () => {
+      // O ELEMENTO, não a mera presença de foco: o padrão desta stack é focar o
+      // PAINEL, e painel focado também tem foco dentro — é justamente o que esta
+      // story recusa.
+      const cancelar = inside.getByRole('button', { name: /^Cancelar$/i });
+      const destrutivo = inside.getByRole('button', { name: /^Remover$/i });
+      await waitFor(() => expect(cancelar).toHaveFocus());
+      await expect(destrutivo).not.toHaveFocus();
     });
   },
 };

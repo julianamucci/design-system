@@ -613,10 +613,10 @@ interface DrawerProps {
       ))}
     </DrawerBody>
     <DrawerFooter>
-      <Button>Aceitar termos</Button>
       <DrawerClose asChild>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
+      <Button>Aceitar termos</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -642,10 +642,10 @@ interface DrawerProps {
                     ))}
                   </DrawerBody>
                   <DrawerFooter>
-                    <Button>Aceitar termos</Button>
                     <DrawerClose asChild>
                       <Button variant="outline">Cancelar</Button>
                     </DrawerClose>
+                    <Button>Aceitar termos</Button>
                   </DrawerFooter>
                 </DrawerContent>
               </Drawer>
@@ -691,10 +691,10 @@ interface DrawerProps {
       </form>
     </DrawerBody>
     <DrawerFooter>
-      <Button>Salvar alterações</Button>
       <DrawerClose asChild>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
+      <Button>Salvar alterações</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -721,10 +721,10 @@ interface DrawerProps {
                     </form>
                   </DrawerBody>
                   <DrawerFooter>
-                    <Button>Salvar alterações</Button>
                     <DrawerClose asChild>
                       <Button variant="outline">Cancelar</Button>
                     </DrawerClose>
+                    <Button>Salvar alterações</Button>
                   </DrawerFooter>
                 </DrawerContent>
               </Drawer>
@@ -744,7 +744,19 @@ interface DrawerProps {
   <DrawerTrigger asChild>
     <Button variant="outline">Remover anexo</Button>
   </DrawerTrigger>
-  <DrawerContent>
+  <DrawerContent
+    onOpenAutoFocus={(event) => {
+      // A decisão É a tela: o foco vai para a saída segura, e não para o
+      // primeiro tabbable. O Enter por reflexo não pode cair no que consuma.
+      const panelEl = event.target as HTMLElement | null;
+      const safeExit = panelEl?.querySelector<HTMLElement>('[data-slot="drawer-close"]');
+      // Sem saída marcada no rodapé não há alvo, e aí o padrão do primitivo
+      // é melhor que um diálogo aberto sem foco nenhum dentro.
+      if (!safeExit) return;
+      event.preventDefault();
+      safeExit.focus();
+    }}
+  >
     <DrawerHeader>
       <DrawerTitle>Remover anexo?</DrawerTitle>
       <DrawerDescription>
@@ -752,10 +764,10 @@ interface DrawerProps {
       </DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
-      <Button variant="destructive">Remover</Button>
       <DrawerClose asChild>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
+      <Button variant="destructive">Remover</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -764,7 +776,20 @@ interface DrawerProps {
                 <DrawerTrigger asChild>
                   <Button variant="outline">Remover anexo</Button>
                 </DrawerTrigger>
-                <DrawerContent>
+                <DrawerContent
+                  onOpenAutoFocus={(event) => {
+                    // A decisão É a tela: o foco vai para a saída segura, e não
+                    // para o primeiro tabbável. O Enter por reflexo não pode
+                    // cair no botão que consuma.
+                    const panelEl = event.target as HTMLElement | null;
+                    const safeExit = panelEl?.querySelector<HTMLElement>('[data-slot="drawer-close"]');
+                    // Sem saída marcada no rodapé não há alvo, e aí o padrão do primitivo
+                    // é melhor que um diálogo aberto sem foco nenhum dentro.
+                    if (!safeExit) return;
+                    event.preventDefault();
+                    safeExit.focus();
+                  }}
+                >
                   <DrawerHeader>
                     <DrawerTitle>Remover anexo?</DrawerTitle>
                     <DrawerDescription>
@@ -772,10 +797,10 @@ interface DrawerProps {
                     </DrawerDescription>
                   </DrawerHeader>
                   <DrawerFooter>
-                    <Button variant="destructive">Remover</Button>
                     <DrawerClose asChild>
                       <Button variant="outline">Cancelar</Button>
                     </DrawerClose>
+                    <Button variant="destructive">Remover</Button>
                   </DrawerFooter>
                 </DrawerContent>
               </Drawer>

@@ -307,6 +307,7 @@ export class NdsDrawerSwipe {
           [ndsDrawerSwipe]="direction()"
           [ndsDrawerSwipeDismissible]="swipeEnabled()"
           (swipeDismiss)="dismissBySwipe()"
+          (openAutoFocus)="openAutoFocus.emit($event)"
         >
           <!-- Alça: pura afordância. O CSS só a mostra na direção de baixo, e
                ela não recebe foco nem nome — o arraste vale no painel inteiro,
@@ -327,6 +328,23 @@ export class NdsDrawer {
   private readonly root = inject(RdxDialogRoot);
 
   readonly direction = input<DrawerDirection>('bottom');
+
+  /**
+   * Antes de o foco entrar no painel — o gancho que esta stack oferece para
+   * escolher o alvo do foco inicial.
+   *
+   * Chega do `rdxDialogPopup`, que o publica a partir do escopo de foco. Sem
+   * ouvinte, o padrão continua sendo o primeiro tabbável do painel: no painel de
+   * edição isso é o primeiro campo, e é o que se quer ali. Com ouvinte,
+   * `preventDefault()` cancela essa escolha e quem compõe aponta o alvo — é o que
+   * o painel de CONFIRMAÇÃO faz, mandando o foco para o cancelar, como o
+   * AlertDialog.
+   *
+   * O evento é repassado daqui porque o painel nasce dentro do portal deste
+   * componente: quem compõe escreve o conteúdo num `<ng-template>` e não alcança
+   * a diretiva do primitivo.
+   */
+  readonly openAutoFocus = output<Event>();
 
   protected readonly content = contentChild(NdsDrawerContent, { descendants: true });
 

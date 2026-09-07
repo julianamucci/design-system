@@ -128,10 +128,10 @@ export const Open: Story = {
               <DrawerDescription>Atualize seus dados pessoais. As mudanças são salvas ao confirmar.</DrawerDescription>
             </DrawerHeader>
             <DrawerFooter>
-              <Button>Confirmar</Button>
               <DrawerClose as-child>
                 <Button variant="outline">Cancelar</Button>
               </DrawerClose>
+              <Button>Confirmar</Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
@@ -260,10 +260,10 @@ export const NotDismissible: Story = {
               <DrawerDescription>Você precisa aceitar os termos para continuar.</DrawerDescription>
             </DrawerHeader>
             <DrawerFooter>
-              <Button>Aceitar</Button>
               <DrawerClose as-child>
                 <Button variant="outline">Recusar</Button>
               </DrawerClose>
+              <Button>Aceitar</Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

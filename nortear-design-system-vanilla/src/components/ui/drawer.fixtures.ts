@@ -44,12 +44,16 @@ export async function openPeloTrigger(
  * referência quebrada num deles. O `data-slot="drawer-close"` é o que faz a
  * factory ligar o fechamento ao botão — o equivalente desta stack ao
  * componente `DrawerClose` das outras.
+ *
+ * Devolve a LISTA de botões, na ordem do DOM — secundário primeiro. Quem
+ * empilha e alinha é `.nds-drawer-footer`, e por isso não há mais embrulho de
+ * `.nds-cluster` aqui.
  */
 export function buildDrawerFooter(
   cancelLabel: string,
   actionLabel: string,
   destrutivo = false,
-): HTMLElement {
+): HTMLElement[] {
   const cancel = createButton({ variant: 'outline', label: cancelLabel });
   cancel.dataset.slot = 'drawer-close';
   const action = createButton({
@@ -57,11 +61,7 @@ export function buildDrawerFooter(
     label: actionLabel,
   });
 
-  const footer = document.createElement('div');
-  footer.className = 'nds-cluster';
-  footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'md';
-  footer.append(cancel, action);
+  const footer = [cancel, action];
   return footer;
 }
 

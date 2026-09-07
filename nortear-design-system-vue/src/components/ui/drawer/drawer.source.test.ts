@@ -46,10 +46,10 @@ import { Button } from '@/components/ui/button'
         Conteúdo do drawer.
       </DrawerBody>
       <DrawerFooter>
-        <Button>Confirmar</Button>
         <DrawerClose as-child>
           <Button variant="outline">Cancelar</Button>
         </DrawerClose>
+        <Button>Confirmar</Button>
       </DrawerFooter>
     </DrawerContent>
   </Drawer>
@@ -146,14 +146,21 @@ describe('transforms das stories de estado', () => {
 });
 
 describe('transforms das stories de composição', () => {
-  it('a ação primária do drawer vem PRIMEIRO no rodapé', () => {
-    // É o inverso do Dialog, e de propósito: o rodapé empilha em coluna na tela
-    // estreita, e a ação principal fica no alto da pilha.
+  it('a saída vem PRIMEIRO no rodapé, e a ação primária depois', () => {
+    // Regra transversal, a mesma do Dialog, do AlertDialog e do Sheet. Quem
+    // resolve os dois eixos é a folha: abaixo de 40rem `.nds-drawer-footer`
+    // empilha com `column-reverse` e a ação principal aparece no ALTO da pilha;
+    // de 40rem para cima ela vira linha alinhada à direita, com a ação à
+    // direita. A ordem de leitura e de tabulação continua sendo saída antes de
+    // ação.
+    //
+    // Este caso já cobrou o contrário, quando a folha era `column` puro: ali o
+    // primário no DOM primeiro era o que o punha embaixo na tela.
     const saida = drawerWithFormSource();
     const confirmar = saida.indexOf('Confirmar');
     const cancelar = saida.indexOf('Cancelar');
-    expect(confirmar).toBeGreaterThan(-1);
-    expect(confirmar).toBeLessThan(cancelar);
+    expect(cancelar).toBeGreaterThan(-1);
+    expect(cancelar).toBeLessThan(confirmar);
   });
 
   it('o formulário liga rótulo e campo pelo par for/id', () => {

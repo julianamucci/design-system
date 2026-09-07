@@ -492,11 +492,27 @@ export function drawerWithFormSource(): string {
 export function drawerWithConfirmationSource(): string {
   return example({
     template: panel({
+      root: ' (openAutoFocus)="focusSafeExit($event)"',
       title: stripHtml(t('variants.compositions.withConfirmation.name')),
       description: LABEL.destroyMessage(),
       footer: footerWithClose(
         `          <button ndsButton variant="destructive">${LABEL.destroy()}</button>`,
       ),
     }),
+    body: `  // A decisão É a tela: o foco entra na saída segura, e não no primeiro
+  // tabbável. O Enter por reflexo não pode cair na ação que consuma. No painel
+  // de formulário isto NÃO vale — ali o assunto é editar, e o padrão do
+  // primitivo (primeiro tabbável, que é o primeiro campo) é o certo.
+  //
+  // A busca é pelo ATRIBUTO DA DIRETIVA: nesta stack o data-slot do botão é
+  // disputado entre host bindings, e o seletor da diretiva não tem disputa.
+  protected focusSafeExit(event: Event): void {
+    const panelEl = event.target;
+    if (!(panelEl instanceof HTMLElement)) return;
+    const safeExit = panelEl.querySelector<HTMLElement>('[ndsDrawerClose]');
+    if (!safeExit) return;
+    event.preventDefault();
+    safeExit.focus();
+  }`,
   });
 }

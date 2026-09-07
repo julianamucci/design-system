@@ -103,6 +103,11 @@ type DrawerDemoOptions = {
   destructive?: boolean;
   side?: 'bottom' | 'top' | 'left' | 'right';
   bodyText?: string;
+  /**
+   * Painel de confirmação: o foco entra no cancelar, como no `alert-dialog`.
+   * Só onde a decisão É a tela — o painel de edição mantém o foco no corpo.
+   */
+  focusOnCloser?: boolean;
 };
 
 function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
@@ -114,11 +119,7 @@ function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
     variant: opts.destructive ? 'destructive' : 'default',
     label: opts.actionLabel,
   });
-  const footer = document.createElement('div');
-  footer.className = 'nds-cluster';
-  footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'md';
-  footer.append(cancel, action);
+  const footer = [cancel, action];
 
   const body = document.createElement('div');
   body.className = 'nds-text-body nds-text-muted-foreground';
@@ -135,6 +136,7 @@ function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
     description: opts.description,
     content: body,
     footer,
+    initialFocus: opts.focusOnCloser ? cancel : undefined,
   });
 }
 
@@ -500,11 +502,7 @@ const drawer = createDrawer({
                 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
                 cancel.dataset.slot = 'drawer-close';
                 const action = createButton({ variant: 'default', label: 'Aceitar termos' });
-                const footer = document.createElement('div');
-                footer.className = 'nds-cluster';
-                footer.dataset.justify = 'end';
-                footer.dataset.spacing = 'md';
-                footer.append(cancel, action);
+                const footer = [cancel, action];
                 const el = createDrawer({
                   trigger,
                   title: 'Termos de uso',
@@ -582,11 +580,7 @@ form.append(
 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
 cancel.dataset.slot = 'drawer-close';
 const action = createButton({ variant: 'default', label: 'Salvar alterações' });
-const footer = document.createElement('div');
-footer.className = 'nds-cluster';
-footer.dataset.justify = 'end';
-footer.dataset.spacing = 'md';
-footer.append(cancel, action);
+const footer = [cancel, action];
 
 const drawer = createDrawer({
   trigger,
@@ -607,18 +601,17 @@ body.textContent = 'Você poderá adicioná-lo novamente a qualquer momento.';
 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
 cancel.dataset.slot = 'drawer-close';
 const action = createButton({ variant: 'destructive', label: 'Remover' });
-const footer = document.createElement('div');
-footer.className = 'nds-cluster';
-footer.dataset.justify = 'end';
-footer.dataset.spacing = 'md';
-footer.append(cancel, action);
+const footer = [cancel, action];
 
+// A decisão É a tela: o foco entra no cancelar, e não no corpo. O Enter por
+// reflexo tem de cair na saída segura, nunca na ação que consuma.
 const drawer = createDrawer({
   trigger,
   title: 'Remover item da lista?',
   description: 'Você poderá adicioná-lo novamente a qualquer momento.',
   content: body,
   footer,
+  initialFocus: cancel,
 });`;
 
         return createDocsCompositions({
@@ -647,11 +640,7 @@ form.dataset.spacing = 'sm';
                 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
                 cancel.dataset.slot = 'drawer-close';
                 const action = createButton({ variant: 'default', label: 'Salvar alterações' });
-                const footer = document.createElement('div');
-                footer.className = 'nds-cluster';
-                footer.dataset.justify = 'end';
-                footer.dataset.spacing = 'md';
-                footer.append(cancel, action);
+                const footer = [cancel, action];
                 const el = createDrawer({
                   trigger,
                   title: 'Editar perfil',
@@ -677,6 +666,7 @@ form.dataset.spacing = 'sm';
                 destructive: true,
                 bodyText: 'Esta ação remove o item desta lista.',
                 side: 'bottom',
+                focusOnCloser: true,
               }),
             },
           ],
@@ -706,7 +696,8 @@ export type DrawerOptions = {
   title?: string;
   description?: string;
   content: HTMLElement;
-  footer?: HTMLElement;
+  footer?: HTMLElement | HTMLElement[];
+  initialFocus?: HTMLElement;
   dismissible?: boolean;
   modal?: boolean;
   onOpenChange?: (open: boolean) => void;

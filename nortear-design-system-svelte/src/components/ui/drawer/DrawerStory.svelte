@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { tick } from 'svelte';
   import {
     Drawer,
     DrawerBody,
@@ -51,6 +52,28 @@
     onAction,
     onCancel,
   }: Props = $props();
+
+  /**
+   * Foco inicial na saída segura — só no painel de confirmação.
+   *
+   * Onde a decisão É a tela, o Enter por reflexo tem de cair no cancelar, nunca
+   * na ação que consuma; é a mesma escolha do AlertDialog. Na variante de
+   * formulário o padrão FICA: ali o assunto é editar, e forçar o Cancelar
+   * cobraria um Tab a mais de quem só quer editar.
+   *
+   * O `tick()` não é cautela: a lib de baixo é a mesma do AlertDialog, e lá foi
+   * medido que o rodapé ainda NÃO está no DOM quando este evento dispara. Sem
+   * esperar o commit pendente, a busca não acha o fechador e o foco fica no
+   * painel.
+   */
+  async function focusSafeExit(event: Event) {
+    const panelEl = event.target;
+    if (!(panelEl instanceof HTMLElement)) return;
+    event.preventDefault();
+    await tick();
+    const safeExit = panelEl.querySelector<HTMLElement>('[data-slot="drawer-close"]');
+    (safeExit ?? panelEl).focus();
+  }
 </script>
 
 <div style="contain: layout">
@@ -61,7 +84,9 @@
             <Button variant="outline" {...props}>{triggerLabel}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent
+          onOpenAutoFocus={variant === 'withConfirmation' ? focusSafeExit : undefined}
+        >
           <DrawerHeader>
             <DrawerTitle>{title}</DrawerTitle>
             <DrawerDescription>{description}</DrawerDescription>
@@ -100,7 +125,6 @@
           {/if}
 
           <DrawerFooter>
-            <Button onclick={onAction}>{actionLabel}</Button>
             <DrawerClose>
               {#snippet child({ props })}
                 <!--
@@ -122,6 +146,7 @@
               </Button>
               {/snippet}
             </DrawerClose>
+            <Button onclick={onAction}>{actionLabel}</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

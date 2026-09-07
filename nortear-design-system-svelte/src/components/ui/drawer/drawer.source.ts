@@ -61,7 +61,29 @@ type Frame = {
   body?: string;
   actionLabel: string;
   cancelLabel: string;
+  /**
+   * Painel de confirmação: o foco entra no fechador do rodapé, a saída segura.
+   * Só onde a decisão É a tela — no painel de formulário o padrão fica.
+   */
+  focusOnSafeExit?: boolean;
 };
+
+/**
+ * O gancho de foco desta stack, tal como a story o escreve.
+ *
+ * `onOpenAutoFocus` é o que o primitivo oferece para escolher o alvo. O `tick()`
+ * não é cautela: a lib de baixo é a mesma do AlertDialog, e lá foi medido que o
+ * rodapé ainda NÃO está no DOM quando este evento dispara.
+ */
+const FOCUS_SCRIPT = `
+async function focusSafeExit(event: Event) {
+  const panelEl = event.target;
+  if (!(panelEl instanceof HTMLElement)) return;
+  event.preventDefault();
+  await tick();
+  const safeExit = panelEl.querySelector<HTMLElement>('[data-slot="drawer-close"]');
+  (safeExit ?? panelEl).focus();
+}`;
 
 /**
  * Estrutura comum a todas as composições: raiz com estado ligado, gatilho,
@@ -78,35 +100,38 @@ function panel({
   body = '',
   actionLabel,
   cancelLabel,
+  focusOnSafeExit = false,
 }: Frame): string {
   const rootProps = attrs(
     direction === 'bottom' ? '' : `direction="${direction}"`,
     dismissible ? '' : 'dismissible={false}',
   );
   const miolo = body ? `\n${body}` : '';
+  const importTick = focusOnSafeExit ? `import { tick } from "svelte";\n` : '';
+  const contentProps = focusOnSafeExit ? ' onOpenAutoFocus={focusSafeExit}' : '';
 
   return svelteSnippet(
-    `${imports}
+    `${importTick}${imports}
 
-let open = $state(${isOpen});`,
+let open = $state(${isOpen});${focusOnSafeExit ? `\n${FOCUS_SCRIPT}` : ''}`,
     `<Drawer bind:open${rootProps}>
   <DrawerTrigger>
     {#snippet child({ props })}
       <Button variant="outline" {...props}>${triggerLabel}</Button>
     {/snippet}
   </DrawerTrigger>
-  <DrawerContent>
+  <DrawerContent${contentProps}>
     <DrawerHeader>
       <DrawerTitle>${title}</DrawerTitle>
       <DrawerDescription>${description}</DrawerDescription>
     </DrawerHeader>${miolo}
     <DrawerFooter>
-      <Button>${actionLabel}</Button>
       <DrawerClose>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>${cancelLabel}</Button>
         {/snippet}
       </DrawerClose>
+      <Button>${actionLabel}</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -165,9 +190,16 @@ export function drawerWithFormSource(): string {
   });
 }
 
-/** Composição de confirmação reversível: mensagem curta e par de ações. */
+/**
+ * Composição de confirmação reversível: mensagem curta e par de ações.
+ *
+ * Aqui a decisão É a tela, e por isso o painel abre com o foco no cancelar —
+ * a mesma escolha do AlertDialog. No painel de formulário isso NÃO vale: ali o
+ * assunto é editar, e o foco continua indo para o primeiro campo.
+ */
 export function drawerWithConfirmSource(): string {
   return panel({
+    focusOnSafeExit: true,
     imports: IMPORT_WITH_BODY,
     isOpen: true,
     triggerLabel: 'Remover anexo',

@@ -37,12 +37,12 @@ describe('drawerSource', () => {
       <DrawerDescription>Atualize seus dados pessoais e foto.</DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
-      <Button>Confirmar</Button>
       <DrawerClose>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>Cancelar</Button>
         {/snippet}
       </DrawerClose>
+      <Button>Confirmar</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,

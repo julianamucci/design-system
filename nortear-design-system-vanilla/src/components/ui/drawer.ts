@@ -116,7 +116,20 @@ export type DrawerOptions = {
   title?: string;
   description?: string;
   content: HTMLElement;
-  footer?: HTMLElement;
+  /**
+   * Ações do rodapé, na ordem do DOM: secundário primeiro, primário depois.
+   *
+   * Aceita LISTA porque os botões são filhos diretos de `.nds-drawer-footer` —
+   * é a folha compartilhada que os empilha em tela estreita (com o primário em
+   * cima) e os alinha à direita a partir de 40rem. Um elemento só continua
+   * valendo para quem tem rodapé de peça única.
+   *
+   * Havia um embrulho aqui: quem compunha passava um `.nds-cluster` com
+   * `data-justify="end"`, porque a folha era `flex-direction: column` puro e não
+   * alinhava nada. Com a folha corrigida o embrulho VENCIA o alinhamento dela —
+   * o rodapé passava a ter um filho só, e quem distribuía era o cluster.
+   */
+  footer?: HTMLElement | HTMLElement[];
   /**
    * Nome acessível do CORPO que rola. Sem padrão, de propósito.
    *
@@ -145,6 +158,19 @@ export type DrawerOptions = {
    * trava de rolagem. O foco continua preso enquanto o painel existe.
    */
   modal?: boolean;
+  /**
+   * Elemento que recebe o foco na abertura, no lugar do primeiro focável.
+   *
+   * Sem ele o foco entra no corpo rolável, que é o primeiro focável do painel —
+   * ele tem `tabindex="0"` por ser área de rolagem (WCAG 2.1.1). Isso está certo
+   * no painel que serve a uma edição: quem abriu quer o formulário, e forçar o
+   * Cancelar ali cobraria um Tab a mais de quem só quer editar.
+   *
+   * Onde a decisão É a tela — o painel de confirmação —, o alvo é o botão de
+   * cancelar, pela mesma razão que o `alert-dialog` desta stack o faz: o Enter
+   * por reflexo tem de cair na saída segura, nunca na ação que consuma.
+   */
+  initialFocus?: HTMLElement;
   onOpenChange?: (open: boolean) => void;
   /** Chamado no fechamento com o caminho que o causou (espelha o Sheet). */
   onClose?: (reason: DrawerCloseReason) => void;
@@ -174,6 +200,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
     content,
     footer,
     bodyLabel,
+    initialFocus,
     dismissible = true,
     modal = true,
     onOpenChange,
@@ -298,7 +325,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
       const footerEl = document.createElement('div');
       footerEl.className = 'nds-drawer-footer';
       footerEl.dataset.slot = 'drawer-footer';
-      footerEl.appendChild(footer);
+      footerEl.append(...(Array.isArray(footer) ? footer : [footer]));
       panelEl.appendChild(footerEl);
     }
 
@@ -329,7 +356,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
       scrollLocked = true;
     }
 
-    getFocusable(panelEl)[0]?.focus();
+    (initialFocus ?? getFocusable(panelEl)[0])?.focus();
 
     /*
      * Arraste para dispensar — o mesmo gesto que as três stacks com lib de

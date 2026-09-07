@@ -60,6 +60,8 @@ type Frame = {
   body?: string;
   /** Rodapé completo, já indentado em 4 espaços. */
   footer: string;
+  /** Props do painel, escritas na mesma linha da tag. */
+  contentProps?: string;
 };
 
 /**
@@ -70,7 +72,7 @@ type Frame = {
  * deles que saem o nome e a descrição acessíveis do painel.
  */
 function drawer(m: Frame): string {
-  const { root = '', trigger = '', body = '' } = m;
+  const { root = '', trigger = '', body = '', contentProps = '' } = m;
   const disparo = trigger
     ? `  <DrawerTrigger as-child>
     <Button variant="outline">${trigger}</Button>
@@ -80,7 +82,7 @@ function drawer(m: Frame): string {
   const miolo = body ? `${body}\n` : '';
 
   return `<Drawer${attrs(root)}>
-${disparo}  <DrawerContent>
+${disparo}  <DrawerContent${contentProps}>
     <DrawerHeader>
       <DrawerTitle>${m.title}</DrawerTitle>
       <DrawerDescription>${m.descricao}</DrawerDescription>
@@ -91,18 +93,23 @@ ${miolo}${m.footer}
 }
 
 /**
- * Rodapé do drawer: a ação primária vem PRIMEIRO no DOM.
+ * Rodapé do drawer: o secundário vem PRIMEIRO no DOM, o primário depois.
  *
- * É o inverso do Dialog, e não descuido: o rodapé do drawer empilha em coluna
- * na tela estreita, e a ação principal fica no alto da pilha, onde o polegar
- * alcança.
+ * É a mesma ordem do Dialog, do AlertDialog e do Sheet, e quem faz o resto é a
+ * folha: abaixo de 40rem ela empilha em .nds-drawer-footer com column-reverse,
+ * e a ação principal aparece no alto da pilha; de 40rem para cima ela vira
+ * linha alinhada à direita. Uma ordem de DOM serve os dois eixos, e a ordem de
+ * leitura e de tabulação continua sendo saída antes de ação.
+ *
+ * Isto já esteve invertido, com a ação primária primeiro no DOM: a folha era
+ * column puro, o primário caía EMBAIXO na pilha, e a linha nunca acontecia.
  */
 function footer(acao: string, saida: string, destrutiva = false): string {
   return `    <DrawerFooter>
-      <Button${destrutiva ? ' variant="destructive"' : ''}>${acao}</Button>
       <DrawerClose as-child>
         <Button variant="outline">${saida}</Button>
       </DrawerClose>
+      <Button${destrutiva ? ' variant="destructive"' : ''}>${acao}</Button>
     </DrawerFooter>`;
 }
 
@@ -333,10 +340,10 @@ export function drawerWithFormSource(): string {
       </form>
     </DrawerBody>`,
       footer: `    <DrawerFooter>
-      <Button type="submit">Confirmar</Button>
       <DrawerClose as-child>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
+      <Button type="submit">Confirmar</Button>
     </DrawerFooter>`,
     }),
   );
@@ -347,6 +354,11 @@ export function drawerWithFormSource(): string {
  *
  * A consequência fica escrita na descrição, não subentendida. Vale para
  * confirmação reversível — ação bloqueante de verdade é outro componente.
+ *
+ * Aqui a decisão É a tela, e por isso o painel abre com o foco no fechador do
+ * rodapé (initial-focus="close"), como o AlertDialog: o Enter por reflexo tem de
+ * cair na saída segura. No painel de formulário isso NÃO vale — ali o assunto é
+ * editar, e o foco continua entrando no painel.
  */
 export function drawerWithConfirmSource(): string {
   return vueSnippet(
@@ -355,6 +367,7 @@ export function drawerWithConfirmSource(): string {
       trigger: 'Remover anexo',
       title: 'Remover anexo?',
       descricao: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
+      contentProps: ' initial-focus="close"',
       footer: footer('Remover', 'Cancelar', true),
     }),
   );

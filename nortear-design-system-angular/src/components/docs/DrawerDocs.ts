@@ -376,7 +376,7 @@ const COMPOSITION_CODE = {
     </div>
   </ng-template>
 </nds-drawer>`,
-  withConfirmation: `<nds-drawer>
+  withConfirmation: `<nds-drawer (openAutoFocus)="focusSafeExit($event)">
   <button ndsDrawerTrigger ndsButton variant="outline">Excluir</button>
 
   <ng-template ndsDrawerContent>
@@ -603,7 +603,9 @@ const DIRECOES: DrawerDirection[] = ['bottom', 'top', 'left', 'right'];
     </ng-template>
 
     <ng-template #tplCompConfirmacao>
-      <nds-drawer>
+      <!-- A decisão É a tela: o foco entra na saída segura, e não no primeiro
+           tabbável. Ver o método logo abaixo. -->
+      <nds-drawer (openAutoFocus)="focusSafeExit($event)">
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('demonstration.labels.destroy') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
@@ -887,6 +889,29 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       label: qual,
       location: secao,
     });
+  }
+
+  /**
+   * Foco inicial na saída segura — só na composição de confirmação.
+   *
+   * Onde a decisão É a tela, o Enter por reflexo tem de cair no cancelar, nunca
+   * na ação que consuma; é a mesma escolha do AlertDialog. Na composição de
+   * formulário o padrão FICA: ali o assunto é editar, e o primeiro tabbável já é
+   * o primeiro campo.
+   *
+   * A busca é pelo ATRIBUTO DA DIRETIVA, e não por `data-slot`: nesta stack o
+   * `data-slot` do botão é disputado entre host bindings, e o seletor da
+   * diretiva continua no DOM sem disputa nenhuma.
+   */
+  protected focusSafeExit(event: Event): void {
+    const panelEl = event.target;
+    if (!(panelEl instanceof HTMLElement)) return;
+    const safeExit = panelEl.querySelector<HTMLElement>('[ndsDrawerClose]');
+    // Sem saída no rodapé não há alvo, e aí o padrão do primitivo é melhor que
+    // um diálogo aberto sem foco nenhum dentro.
+    if (!safeExit) return;
+    event.preventDefault();
+    safeExit.focus();
   }
 
   protected readonly navGroups = computed(() => {

@@ -36,11 +36,7 @@ function buildVariant(direction: DrawerDirection, title: string, descricao: stri
 
   const cancel = createButton({ variant: 'outline', label: 'Fechar' });
   cancel.dataset.slot = 'drawer-close';
-  const footer = document.createElement('div');
-  footer.className = 'nds-cluster';
-  footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'md';
-  footer.append(cancel);
+  const footer = [cancel];
 
   const drawer = createDrawer({
     trigger,

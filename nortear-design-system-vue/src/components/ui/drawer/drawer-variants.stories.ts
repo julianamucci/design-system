@@ -233,10 +233,10 @@ export const WithScroll: Story = {
               </p>
             </DrawerBody>
             <DrawerFooter>
-              <Button>Aceitar termos</Button>
               <DrawerClose as-child>
                 <Button variant="outline">Recusar</Button>
               </DrawerClose>
+              <Button>Aceitar termos</Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

@@ -48,11 +48,7 @@ function buildBase(opts: BaseOptions): HTMLElement {
   cancel.dataset.slot = 'drawer-close';
   const action = createButton({ variant: 'default', label: opts.actionLabel ?? 'Salvar' });
 
-  const footer = document.createElement('div');
-  footer.className = 'nds-cluster';
-  footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'md';
-  footer.append(cancel, action);
+  const footer = [cancel, action];
 
   const content = document.createElement('div');
   content.className = 'nds-text-body nds-text-muted-foreground';
@@ -194,11 +190,7 @@ export const Controlled: Story = {
 
     const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
     cancel.dataset.slot = 'drawer-close';
-    const footer = document.createElement('div');
-    footer.className = 'nds-cluster';
-    footer.dataset.justify = 'end';
-    footer.dataset.spacing = 'md';
-    footer.append(cancel, createButton({ variant: 'default', label: 'Confirmar' }));
+    const footer = [cancel, createButton({ variant: 'default', label: 'Confirmar' })];
 
     const drawer = createDrawer({
       trigger: triggerInterno,
