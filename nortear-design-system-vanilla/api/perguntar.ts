@@ -30,8 +30,11 @@
  * quando este arquivo saiu da Anthropic para o Google.
  */
 
+import { existsSync, readFileSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import { GoogleGenAI, ApiError } from '@google/genai';
+import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { GoogleGenAI, ApiError, ThinkingLevel } from '@google/genai';
 import {
   RETRIEVAL_FLOOR,
   isWeakRetrieval,
@@ -51,7 +54,13 @@ export const config = { runtime: 'nodejs' };
  * alcança**, porque a lista muda mais rápido que este arquivo e um nome que não
  * existe volta como `falha_do_modelo` sem dizer que o nome é o problema.
  */
-const MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
+const MODELO_PADRAO = 'gemini-3.6-flash';
+
+/** Lido na hora da chamada, e não na carga do módulo: a rede de segurança de
+ *  `.env.local` roda depois da importação e pode definir `GEMINI_MODEL`. */
+function modelo(): string {
+  return process.env.GEMINI_MODEL ?? MODELO_PADRAO;
+}
 
 /** Teto da resposta. Uma resposta de documentação que passa disto está errada de escopo. */
 const MAX_TOKENS = 4000;
@@ -207,6 +216,62 @@ function sse(event: string, data: unknown): string {
 }
 
 /**
+ * A chave, com uma rede de segurança para desenvolvimento local.
+ *
+ * Em produção a variável vem do ambiente do projeto na Vercel e o resto deste
+ * bloco nunca roda — `.env.local` não existe lá, e o `.gitignore` garante que
+ * não vá existir.
+ *
+ * O bloco existe porque LOCALMENTE o `vercel dev` só injeta o `.env.local` na
+ * função quando o projeto está VINCULADO (`.vercel/project.json`). Sem vínculo,
+ * a chave está no arquivo, é válida, e ainda assim a função responde
+ * `sem_chave` — sintoma que aponta para o lugar errado e faz a pessoa conferir
+ * três vezes um arquivo que está certo. Custou uma sessão inteira.
+ *
+ * Ler o arquivo aqui torna o protótipo independente desse detalhe do CLI. É
+ * fallback, e não o caminho: quando a variável já veio do ambiente, nada disto
+ * acontece.
+ *
+ * O valor NUNCA é registrado — nem em log, nem em erro, nem no corpo da
+ * resposta.
+ */
+let chaveMemoizada: string | null | undefined;
+
+function chaveDoAmbiente(): string | null {
+  if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+  // Saída explícita, para o teste conseguir reproduzir o estado "sem chave".
+  // Sem ela, a rede de segurança acharia o `.env.local` da máquina de quem roda
+  // a suíte e o estado que a pessoa vê PRIMEIRO ficaria sem portão nenhum.
+  if (process.env.NORTEAR_IGNORAR_ENV_LOCAL === '1') return null;
+  if (chaveMemoizada !== undefined) return chaveMemoizada;
+
+  const aqui = fileURLToPath(new URL('.', import.meta.url));
+  const candidatos = [
+    join(aqui, '..', '.env.local'),
+    join(process.cwd(), '.env.local'),
+  ];
+
+  for (const arquivo of candidatos) {
+    if (!existsSync(arquivo)) continue;
+    for (const linha of readFileSync(arquivo, 'utf8').split(/\r?\n/)) {
+      const casa = /^\s*GEMINI_(API_KEY|MODEL)\s*=\s*(.*)$/.exec(linha);
+      if (!casa) continue;
+      // Aspas em volta são convenção comum de arquivo .env e não fazem parte do
+      // valor. Sem tirá-las, a chave viaja com aspas e a API recusa — outro
+      // sintoma que aponta para o lugar errado.
+      const valor = casa[2].trim().replace(/^(['"])(.*)\1$/, '$2');
+      if (!valor) continue;
+      if (casa[1] === 'API_KEY') chaveMemoizada = valor;
+      else process.env.GEMINI_MODEL ??= valor;
+    }
+    if (chaveMemoizada) break;
+  }
+
+  chaveMemoizada ??= null;
+  return chaveMemoizada;
+}
+
+/**
  * O núcleo, no padrão Web: recebe `Request`, devolve `Response`.
  *
  * Fica exportado à parte porque é ele que dá para exercitar sem servidor — a
@@ -276,7 +341,7 @@ export async function responder(request: Request): Promise<Response> {
 
   // A chave é lida AQUI, e nunca sai daqui: não vai para o log, não vai para o
   // corpo, não vai para o cliente.
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = chaveDoAmbiente();
   if (!apiKey) {
     return jsonError(
       503,
@@ -303,7 +368,7 @@ export async function responder(request: Request): Promise<Response> {
 
       try {
         const modelStream = await client.models.generateContentStream({
-          model: MODEL,
+          model: modelo(),
           contents: [
             {
               role: 'user',
@@ -327,9 +392,19 @@ export async function responder(request: Request): Promise<Response> {
             // Temperatura baixa porque a resposta precisa ficar colada nos
             // trechos: aqui invenção não é criatividade, é defeito.
             temperature: 0.2,
-            // Sem raciocínio estendido. A tarefa é ler trecho e responder; o
-            // orçamento de pensamento aqui só adicionaria custo e latência.
-            thinkingConfig: { thinkingBudget: 0 },
+            // Raciocínio no piso. A tarefa é ler trecho e responder; pensamento
+            // longo aqui só adiciona custo e latência.
+            //
+            // `thinkingLevel`, e não `thinkingBudget`. O orçamento numérico é da
+            // geração anterior: `thinkingBudget: 0` faz o modelo atual recusar a
+            // requisição inteira com "Request contains an invalid argument" —
+            // mensagem que não diz qual argumento, e que custa uma bissecção
+            // para achar. E não há como desligar: `low` é o mínimo.
+            // MEDIDO: MINIMAL devolve zero token de pensamento e responde em
+            // 1,25s; LOW gasta 189 tokens e leva 1,94s na mesma pergunta. A
+            // tarefa é extrair de um trecho que já está no prompt — deliberar
+            // não acrescenta nada aqui.
+            thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
           },
         });
 
@@ -355,18 +430,27 @@ export async function responder(request: Request): Promise<Response> {
         // O texto do erro da API pode carregar detalhe de conta. O cliente
         // recebe a categoria; o detalhe fica no log do servidor.
         console.error('[perguntar] falha ao chamar a API', error);
-        // O SDK do Google traz o código HTTP no erro em vez de uma classe por
-        // categoria: 401 e 403 são chave, 429 é limite. O 400 entra em
-        // `chave_invalida` de propósito — é o que volta quando o NOME DO MODELO
-        // não existe para aquela chave, e mandar a pessoa conferir a chave e o
-        // modelo é mais útil que um "falhou" genérico.
+        // O SDK do Google traz o código HTTP no erro, e não uma classe por
+        // categoria. O mapa abaixo foi calibrado apanhando:
+        //
+        // - **404 é modelo, não rota.** `gemini-2.5-flash` deixou de ser
+        //   servido a contas novas e a API respondeu 404 dizendo isso por
+        //   escrito. Classificado como `falha_do_modelo`, virava "tente de
+        //   novo" — conselho inútil para um nome que nunca mais vai funcionar.
+        // - **400 costuma ser argumento, não chave.** `thinkingBudget: 0` é da
+        //   geração anterior e faz o modelo atual recusar com "Request contains
+        //   an invalid argument", sem dizer QUAL. Some com a chave errada, então
+        //   o rótulo manda conferir as duas coisas.
+        // - 401 e 403 são credencial; 429 é limite.
         const status = error instanceof ApiError ? error.status : 0;
         const code =
-          status === 401 || status === 403 || status === 400
-            ? 'chave_invalida'
-            : status === 429
-              ? 'limite_do_modelo'
-              : 'falha_do_modelo';
+          status === 404
+            ? 'modelo_indisponivel'
+            : status === 401 || status === 403 || status === 400
+              ? 'chave_invalida'
+              : status === 429
+                ? 'limite_do_modelo'
+                : 'falha_do_modelo';
         send('error', { code });
       } finally {
         controller.close();

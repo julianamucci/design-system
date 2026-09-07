@@ -112,6 +112,10 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
   it('sem chave configurada, diz isso em vez de falhar calada', async () => {
     const antes = process.env.GEMINI_API_KEY;
     delete process.env.GEMINI_API_KEY;
+    // A função tem uma rede de segurança que lê o .env.local da máquina quando a
+    // variável não veio do ambiente. Aqui ela precisa sair do caminho, senão o
+    // teste passa a depender de quem roda ter — ou não ter — a chave no disco.
+    process.env.NORTEAR_IGNORAR_ENV_LOCAL = '1';
     try {
       const resposta = await perguntar('10.0.0.6', {
         pergunta: 'o que é o slider?',
@@ -120,6 +124,7 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
       expect(resposta.status).toBe(503);
       await expect(resposta.json()).resolves.toMatchObject({ code: 'sem_chave' });
     } finally {
+      delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
       if (antes !== undefined) process.env.GEMINI_API_KEY = antes;
     }
   });
@@ -129,6 +134,10 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
     // chave, então o teste não depende de rede nem de credencial.
     const antes = process.env.GEMINI_API_KEY;
     delete process.env.GEMINI_API_KEY;
+    // A função tem uma rede de segurança que lê o .env.local da máquina quando a
+    // variável não veio do ambiente. Aqui ela precisa sair do caminho, senão o
+    // teste passa a depender de quem roda ter — ou não ter — a chave no disco.
+    process.env.NORTEAR_IGNORAR_ENV_LOCAL = '1';
     try {
       let bateu = 0;
       for (let i = 0; i < 15; i++) {
@@ -142,6 +151,7 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
       expect(bateu).toBeGreaterThan(0);
       expect(bateu).toBeLessThanOrEqual(12);
     } finally {
+      delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
       if (antes !== undefined) process.env.GEMINI_API_KEY = antes;
     }
   });

@@ -50,7 +50,16 @@ const LOCALE_KEY = 'ds-locale';
  * quem ainda não configurou a chave vê primeiro, e ele precisa ficar na tela
  * dizendo o que fazer.
  */
-const CONFIG_ERRORS = new Set(['sem_chave', 'sem_corpus', 'chave_invalida', 'sem_servidor']);
+const CONFIG_ERRORS = new Set([
+  'sem_chave',
+  'sem_corpus',
+  'chave_invalida',
+  'sem_servidor',
+  // Nome de modelo que a chave não alcança é configuração, não intermitência:
+  // mostrar 'tente de novo' na conversa manda a pessoa repetir o que não vai
+  // funcionar nunca.
+  'modelo_indisponivel',
+]);
 
 interface Widget {
   root: HTMLDivElement;

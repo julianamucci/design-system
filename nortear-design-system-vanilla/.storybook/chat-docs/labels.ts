@@ -73,6 +73,8 @@ const PT: ChatDocsLabels = {
     pergunta_longa: 'A pergunta é longa demais. Encurte e tente de novo.',
     pergunta_vazia: 'Escreva uma pergunta.',
     chave_invalida: 'A chave configurada foi recusada pela API.',
+    modelo_indisponivel:
+      'O modelo configurado não existe ou não está disponível para esta chave. Defina GEMINI_MODEL com um nome que o AI Studio liste.',
     limite_do_modelo: 'A API está limitando as chamadas agora. Tente de novo em instantes.',
     falha_do_modelo: 'A chamada ao modelo falhou. Tente de novo.',
     sem_servidor:
@@ -118,6 +120,8 @@ const EN: ChatDocsLabels = {
     pergunta_longa: 'The question is too long. Shorten it and try again.',
     pergunta_vazia: 'Write a question.',
     chave_invalida: 'The configured key was rejected by the API.',
+    modelo_indisponivel:
+      'The configured model does not exist or is unavailable to this key. Set GEMINI_MODEL to a name AI Studio lists.',
     limite_do_modelo: 'The API is rate limiting right now. Try again shortly.',
     falha_do_modelo: 'The model call failed. Try again.',
     sem_servidor:
@@ -163,6 +167,8 @@ const ES: ChatDocsLabels = {
     pergunta_longa: 'La pregunta es demasiado larga. Acórtala e inténtalo de nuevo.',
     pergunta_vazia: 'Escribe una pregunta.',
     chave_invalida: 'La clave configurada fue rechazada por la API.',
+    modelo_indisponivel:
+      'El modelo configurado no existe o no está disponible para esta clave. Define GEMINI_MODEL con un nombre que AI Studio liste.',
     limite_do_modelo: 'La API está limitando las llamadas ahora. Inténtalo en unos instantes.',
     falha_do_modelo: 'La llamada al modelo falló. Inténtalo de nuevo.',
     sem_servidor:
