@@ -15,6 +15,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuSubContent,
 } from "@/components/ui/context-menu";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -48,6 +49,50 @@ const priorityKeyMap: Record<string, string> = {
   medium: "common.medium",
   low: "common.low",
 };
+
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Citar índice por índice trava a lista no tamanho de hoje: o conteúdo
+ * compartilhado ganha um item e ele simplesmente não existe para quem lê — sem
+ * erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com o nono
+ * critério de acessibilidade deste componente, o do item desabilitado que
+ * continua no percurso do teclado.
+ *
+ * Trocar 8 por 9 não resolveria: o total cravado É o defeito, e ele volta no
+ * item seguinte.
+ */
+function stringsFromDict(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = t(`${base}.item${i}`, "");
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * Nível WCAG e ferramenta de cada critério de acessibilidade, por índice.
+ * Ficam aqui, e não no conteúdo compartilhado, porque são IDENTIFICADORES
+ * (número de critério, nome do verificador) e identificador não se traduz.
+ * Item novo que chegue além da lista cai no par padrão em vez de sumir.
+ */
+const A11Y_TEST_LEVELS = ["AA", "AA", "AA", "AA", "AA", "AA", "AA", "AA 1.4.3", "AA"];
+const A11Y_TEST_HOW = [
+  "axe-core",
+  "getByRole('menu')",
+  "getAllByRole('menuitem')",
+  "getByRole('menuitemcheckbox')",
+  "getByRole('menuitemradio')",
+  "aria-disabled",
+  "keyboard: Escape",
+  "Colour Contrast Analyser",
+  "keyboard: ArrowDown",
+];
 
 // A moldura tracejada é o único sinal de "clique com o botão direito aqui", e a
 // mesma classe vale nas stories e nas cinco docs pages. `nds-border-default` traz
@@ -102,6 +147,9 @@ const getNavGroups = (t: (key: string) => string) => [
 // ─── Demo Components ──────────────────────────────────────────────────────────
 
 function DemonstracaoPreview({ tContent }: { tContent: (key: string) => string }) {
+  // O `label` do payload é IDENTIFICADOR, nunca o rótulo traduzido: texto
+  // localizado partiria o mesmo evento em um valor por idioma no GA4 —
+  // "Editar", "Edit" e "Editar" chegariam como três ações diferentes.
   const trackItemClick = (label: string) => () =>
     track("menu_item_click", {
       label,
@@ -125,27 +173,27 @@ function DemonstracaoPreview({ tContent }: { tContent: (key: string) => string }
       </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
-          <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.edit"))}>
+          <ContextMenuItem onClick={trackItemClick("edit")}>
             {tContent("demonstration.labels.edit")}
             <ContextMenuShortcut>{tContent("demonstration.labels.editShortcut")}</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.duplicate"))}>
+          <ContextMenuItem onClick={trackItemClick("duplicate")}>
             {tContent("demonstration.labels.duplicate")}
           </ContextMenuItem>
           <ContextMenuSub>
             <ContextMenuSubTrigger>{tContent("demonstration.labels.share")}</ContextMenuSubTrigger>
             <ContextMenuSubContent>
-              <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.shareEmail"))}>
+              <ContextMenuItem onClick={trackItemClick("share-email")}>
                 {tContent("demonstration.labels.shareEmail")}
               </ContextMenuItem>
-              <ContextMenuItem onClick={trackItemClick(tContent("demonstration.labels.shareLink"))}>
+              <ContextMenuItem onClick={trackItemClick("share-link")}>
                 {tContent("demonstration.labels.shareLink")}
               </ContextMenuItem>
             </ContextMenuSubContent>
           </ContextMenuSub>
         </ContextMenuGroup>
         <ContextMenuSeparator />
-        <ContextMenuItem variant="destructive" onClick={trackItemClick(tContent("demonstration.labels.delete"))}>
+        <ContextMenuItem variant="destructive" onClick={trackItemClick("delete")}>
           {tContent("demonstration.labels.delete")}
           <ContextMenuShortcut>{tContent("demonstration.labels.deleteShortcut")}</ContextMenuShortcut>
         </ContextMenuItem>
@@ -431,27 +479,42 @@ interface ContextMenuCheckboxItemProps
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
+            // A legenda promete "as mesmas ações também via botão visível": o
+            // lado do faça DESENHA esse botão, e o lado do evite mostra a mesma
+            // área sem ele. Um par cujos dois lados são iguais não ensina nada —
+            // era o caso aqui, com os dois previews idênticos e o botão só na
+            // frase.
             doPreview: (
-              <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
-                  Área com menu + botão alternativo
-                </ContextMenuTrigger>
-                <ContextMenuContent>
-                  <ContextMenuItem>Editar</ContextMenuItem>
-                  <ContextMenuSeparator />
-                  <ContextMenuItem variant="destructive">Excluir</ContextMenuItem>
-                </ContextMenuContent>
-              </ContextMenu>
+              <div className="nds-stack" data-spacing="sm" data-align="center">
+                <ContextMenu>
+                  <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
+                    {tContent("demonstration.labels.triggerLabel")}
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem>{tContent("demonstration.labels.edit")}</ContextMenuItem>
+                    <ContextMenuSeparator />
+                    <ContextMenuItem variant="destructive">
+                      {tContent("demonstration.labels.delete")}
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
+                {/* A MESMA ação do menu, alcançável sem o botão direito. */}
+                <Button variant="outline" size="sm">
+                  {tContent("demonstration.labels.edit")}
+                </Button>
+              </div>
             ),
             dontPreview: (
               <ContextMenu>
                 <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
-                  Área sem alternativa visível
+                  {tContent("demonstration.labels.triggerLabel")}
                 </ContextMenuTrigger>
                 <ContextMenuContent>
-                  <ContextMenuItem>Editar</ContextMenuItem>
+                  <ContextMenuItem>{tContent("demonstration.labels.edit")}</ContextMenuItem>
                   <ContextMenuSeparator />
-                  <ContextMenuItem variant="destructive">Excluir</ContextMenuItem>
+                  <ContextMenuItem variant="destructive">
+                    {tContent("demonstration.labels.delete")}
+                  </ContextMenuItem>
                 </ContextMenuContent>
               </ContextMenu>
             ),
@@ -499,28 +562,42 @@ interface ContextMenuCheckboxItemProps
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
+            // A legenda deste par mudou de assunto: as duas metades falam de
+            // DICA VISUAL. É a MESMA área nos dois lados, com o mesmo menu vivo
+            // dentro — a única diferença é o que ela diz de si: `triggerLabel`
+            // anuncia o gesto, `areaNoHint` não anuncia nada.
+            //
+            // Os dois rótulos saem do conteúdo compartilhado. O lado do evite
+            // era um `<div>` desenhado à mão, com literal em português e a borda
+            // tracejada em `style` inline — além de imitação, desenhava
+            // justamente a dica que a legenda manda tirar.
             doPreview: (
               <ContextMenu>
                 <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
-                  Shortcut visual + listener separado
+                  {tContent("demonstration.labels.triggerLabel")}
                 </ContextMenuTrigger>
                 <ContextMenuContent>
-                  <ContextMenuItem>
-                    Editar
-                    <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
+                  <ContextMenuItem>{tContent("demonstration.labels.edit")}</ContextMenuItem>
+                  <ContextMenuSeparator />
+                  <ContextMenuItem variant="destructive">
+                    {tContent("demonstration.labels.delete")}
                   </ContextMenuItem>
                 </ContextMenuContent>
               </ContextMenu>
             ),
             dontPreview: (
-              <div
-                className="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
-                data-align="center"
-                data-justify="center"
-                style={{ borderStyle: "dashed", userSelect: "none" }}
-              >
-                <span style={{ textAlign: "center" }}>Área sem dica visual de right-click</span>
-              </div>
+              <ContextMenu>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
+                  {tContent("demonstration.labels.areaNoHint")}
+                </ContextMenuTrigger>
+                <ContextMenuContent>
+                  <ContextMenuItem>{tContent("demonstration.labels.edit")}</ContextMenuItem>
+                  <ContextMenuSeparator />
+                  <ContextMenuItem variant="destructive">
+                    {tContent("demonstration.labels.delete")}
+                  </ContextMenuItem>
+                </ContextMenuContent>
+              </ContextMenu>
             ),
             doCaption: toPlainText(tContent("doDont.pair3.do")),
             dontCaption: toPlainText(tContent("doDont.pair3.dont")),
@@ -1164,48 +1241,11 @@ const [showRulers, setShowRulers] = useState(false);
             level: "WCAG",
             how: tNav("common.howToVerify"),
           },
-          items: [
-            {
-              criterion: tContent("testes.accessibility.item1"),
-              level: "AA",
-              how: "axe-core",
-            },
-            {
-              criterion: tContent("testes.accessibility.item2"),
-              level: "AA",
-              how: "getByRole('menu')",
-            },
-            {
-              criterion: tContent("testes.accessibility.item3"),
-              level: "AA",
-              how: "getAllByRole('menuitem')",
-            },
-            {
-              criterion: tContent("testes.accessibility.item4"),
-              level: "AA",
-              how: "getByRole('menuitemcheckbox')",
-            },
-            {
-              criterion: tContent("testes.accessibility.item5"),
-              level: "AA",
-              how: "getByRole('menuitemradio')",
-            },
-            {
-              criterion: tContent("testes.accessibility.item6"),
-              level: "AA",
-              how: "aria-disabled",
-            },
-            {
-              criterion: tContent("testes.accessibility.item7"),
-              level: "AA",
-              how: "keyboard: Escape",
-            },
-            {
-              criterion: tContent("testes.accessibility.item8"),
-              level: "AA 1.4.3",
-              how: "Colour Contrast Analyser",
-            },
-          ],
+          items: stringsFromDict(tContent, "testes.accessibility").map((criterion, i) => ({
+            criterion,
+            level: A11Y_TEST_LEVELS[i] ?? "AA",
+            how: A11Y_TEST_HOW[i] ?? "axe-core",
+          })),
         }}
         visual={{
           title: tContent("testes.visual.title"),

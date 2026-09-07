@@ -28,6 +28,7 @@ import {
   contextMenuWithChoiceUnicaSource,
   contextMenuWithMarkupSource,
   contextMenuWithSubmenuSource,
+  contextMenuWithShortcutSource,
   contextMenuSource,
 } from "./context-menu.source";
 
@@ -60,6 +61,12 @@ const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
 export const WithShortcut: Story = {
+  parameters: {
+    // Sem este override o painel cai no snippet do `meta`, que publica um item
+    // "Duplicar" sem atalho dentro de um grupo — o preview mostra "Desfazer,
+    // Ctrl+Z" e nenhum grupo.
+    docs: { source: { transform: contextMenuWithShortcutSource } },
+  },
   render: () => (
     <ContextMenu>
       <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>

@@ -15,6 +15,7 @@ import {
 import {
   contextMenuItemDisabledSource,
   contextMenuItemRecuadoSource,
+  contextMenuDarkPaletteSource,
   contextMenuSource,
 } from "./context-menu.source";
 
@@ -229,6 +230,9 @@ export const DarkPalette: Story = {
     // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
     themes: { themeOverride: "dark" },
+    // O preview mostra "Duplicar" DESABILITADO e nenhum atalho; o snippet do
+    // `meta` publicava atalho em dois itens e nenhum desabilitado.
+    docs: { source: { transform: contextMenuDarkPaletteSource } },
   },
   render: () => (
     <ContextMenu>

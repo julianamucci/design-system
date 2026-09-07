@@ -6,6 +6,8 @@ import {
   contextMenuWithSubmenuSource,
   contextMenuItemDisabledSource,
   contextMenuItemRecuadoSource,
+  contextMenuWithShortcutSource,
+  contextMenuDarkPaletteSource,
   contextMenuSource,
 } from './context-menu.source';
 
@@ -14,6 +16,8 @@ const ALL = [
   contextMenuWithMarkupSource,
   contextMenuWithChoiceUnicaSource,
   contextMenuWithSubmenuSource,
+  contextMenuWithShortcutSource,
+  contextMenuDarkPaletteSource,
   contextMenuItemDisabledSource,
   contextMenuItemRecuadoSource,
   contextMenuCompletoSource,
@@ -96,6 +100,19 @@ describe('composições', () => {
     }
   });
 
+  it('os atalhos publicados são os TRÊS que a story desenha', () => {
+    // A story mostra Editar/Ctrl+E, Desfazer/Ctrl+Z e Excluir/Delete, sem
+    // grupo. O snippet do `meta` publicava "Duplicar" sem atalho — o painel
+    // ensinava um menu que o preview não tem.
+    const saida = contextMenuWithShortcutSource();
+    expect(saida).toContain('<ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>');
+    expect(saida).toContain('<ContextMenuShortcut>Ctrl+Z</ContextMenuShortcut>');
+    expect(saida).toContain('<ContextMenuShortcut>Delete</ContextMenuShortcut>');
+    expect(saida.match(/<ContextMenuShortcut>/g)).toHaveLength(3);
+    expect(saida).not.toContain('Duplicar');
+    expect(saida).not.toContain('<ContextMenuGroup>');
+  });
+
   it('o menu completo faz marcação e escolha única conviverem', () => {
     const saida = contextMenuCompletoSource();
     expect(saida).toContain('<ContextMenuCheckboxItem');
@@ -110,6 +127,17 @@ describe('estados do item', () => {
     const saida = contextMenuItemDisabledSource();
     expect(saida).toContain('<ContextMenuItem disabled>Duplicar</ContextMenuItem>');
     expect(saida).toContain('<ContextMenuItem variant="destructive" disabled>');
+  });
+
+  it('a paleta escura não é prop do menu, e o item desabilitado está lá', () => {
+    // Quem troca a paleta é o tema: o markup do escuro é o mesmo do claro, e
+    // não existe classe de tema para copiar. O que a story do escuro mostra —
+    // e o snippet do `meta` não mostrava — é o item desabilitado sem atalho.
+    const saida = contextMenuDarkPaletteSource();
+    expect(saida).toContain('<ContextMenuItem disabled>Duplicar</ContextMenuItem>');
+    expect(saida).toContain('<ContextMenuItem variant="destructive">Excluir</ContextMenuItem>');
+    expect(saida).not.toContain('<ContextMenuShortcut>');
+    expect(saida).not.toMatch(/\bdark\b/);
   });
 
   it('o recuo vale para o item e para o rótulo do grupo', () => {

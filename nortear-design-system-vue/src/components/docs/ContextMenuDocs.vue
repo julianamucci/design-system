@@ -23,6 +23,7 @@ import {
   ContextMenuLabel,
   ContextMenuShortcut,
 } from '@/components/ui/context-menu';
+import { Button } from '@/components/ui/button';
 
 import DocsHeader        from '@/components/docs/shared/sections/DocsHeader.vue';
 import DocsPageLayout    from '@/components/docs/shared/sections/DocsPageLayout.vue';
@@ -76,6 +77,60 @@ const priorityKeyMap: Record<string, string> = {
 function localPriority(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
+
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Citar índice por índice trava a lista no tamanho de hoje: o conteúdo
+ * compartilhado ganha um item e ele simplesmente não existe para quem lê — sem
+ * erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com o nono
+ * critério de acessibilidade deste componente, o do item desabilitado que
+ * continua no percurso do teclado.
+ *
+ * Trocar 8 por 9 não resolveria: o total cravado É o defeito, e ele volta no
+ * item seguinte.
+ */
+function stringsFromDict(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = t(`${base}.item${i}`, '');
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * Nível WCAG e ferramenta de cada critério de acessibilidade, por índice.
+ * Ficam aqui, e não no conteúdo compartilhado, porque são IDENTIFICADORES
+ * (número de critério, nome do verificador) e identificador não se traduz.
+ * Item novo que chegue além da lista cai no par padrão em vez de sumir.
+ */
+const a11yTestLevels = [
+  'WCAG 2.2 AA',
+  'WCAG 4.1.2',
+  'WCAG 4.1.2',
+  'WCAG 4.1.2',
+  'WCAG 4.1.2',
+  'WCAG 4.1.2',
+  'WCAG 2.1.1',
+  'WCAG 1.4.3',
+  'WCAG 2.1.1',
+];
+const a11yTestHow = [
+  'axe-core',
+  'Inspeção DOM',
+  'Inspeção DOM',
+  'Inspeção DOM',
+  'Inspeção DOM',
+  'Inspeção DOM',
+  'Teste de teclado',
+  'Contrast checker',
+  'Teste de teclado',
+];
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
 
@@ -158,6 +213,9 @@ function handleDemoMenuOpenChange(open: boolean) {
   });
 }
 
+// O `label` do payload é IDENTIFICADOR, nunca o rótulo traduzido: texto
+// localizado partiria o mesmo evento em um valor por idioma no GA4 — "Editar",
+// "Edit" e "Editar" chegariam como três ações diferentes.
 function handleDemoMenuItemSelect(label: string) {
   track('menu_item_click', {
     label,
@@ -476,16 +534,13 @@ const functionalTestItems = computed(() => [
   { action: tContent('testes.functional.item11.action'), result: tContent('testes.functional.item11.result'), priority: localPriority(tContent('testes.functional.item11.priority')) },
 ]);
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1'), level: 'WCAG 2.2 AA', how: 'axe-core'        },
-  { criterion: tContent('testes.accessibility.item2'), level: 'WCAG 4.1.2',  how: 'Inspeção DOM'    },
-  { criterion: tContent('testes.accessibility.item3'), level: 'WCAG 4.1.2',  how: 'Inspeção DOM'    },
-  { criterion: tContent('testes.accessibility.item4'), level: 'WCAG 4.1.2',  how: 'Inspeção DOM'    },
-  { criterion: tContent('testes.accessibility.item5'), level: 'WCAG 4.1.2',  how: 'Inspeção DOM'    },
-  { criterion: tContent('testes.accessibility.item6'), level: 'WCAG 4.1.2',  how: 'Inspeção DOM'    },
-  { criterion: tContent('testes.accessibility.item7'), level: 'WCAG 2.1.1',  how: 'Teste de teclado' },
-  { criterion: tContent('testes.accessibility.item8'), level: 'WCAG 1.4.3',  how: 'Contrast checker' },
-]);
+const a11yTestItems = computed(() =>
+  stringsFromDict(tContent, 'testes.accessibility').map((criterion, i) => ({
+    criterion,
+    level: a11yTestLevels[i] ?? 'WCAG 2.2 AA',
+    how: a11yTestHow[i] ?? 'axe-core',
+  })),
+);
 
 const visualTestItems = computed(() => [
   { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
@@ -604,20 +659,20 @@ const codeCompositionShortcuts = `<ContextMenu>
           </ContextMenuTrigger>
           <ContextMenuContent>
             <ContextMenuGroup>
-              <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.edit'))">
+              <ContextMenuItem @select="handleDemoMenuItemSelect('edit')">
                 {{ tContent('demonstration.labels.edit') }}
                 <ContextMenuShortcut>{{ tContent('demonstration.labels.editShortcut') }}</ContextMenuShortcut>
               </ContextMenuItem>
-              <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.duplicate'))">
+              <ContextMenuItem @select="handleDemoMenuItemSelect('duplicate')">
                 {{ tContent('demonstration.labels.duplicate') }}
               </ContextMenuItem>
               <ContextMenuSub>
                 <ContextMenuSubTrigger>{{ tContent('demonstration.labels.share') }}</ContextMenuSubTrigger>
                 <ContextMenuSubContent>
-                  <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.shareEmail'))">
+                  <ContextMenuItem @select="handleDemoMenuItemSelect('share-email')">
                     {{ tContent('demonstration.labels.shareEmail') }}
                   </ContextMenuItem>
-                  <ContextMenuItem @select="handleDemoMenuItemSelect(tContent('demonstration.labels.shareLink'))">
+                  <ContextMenuItem @select="handleDemoMenuItemSelect('share-link')">
                     {{ tContent('demonstration.labels.shareLink') }}
                   </ContextMenuItem>
                 </ContextMenuSubContent>
@@ -626,7 +681,7 @@ const codeCompositionShortcuts = `<ContextMenu>
             <ContextMenuSeparator />
             <ContextMenuItem
               variant="destructive"
-              @select="handleDemoMenuItemSelect(tContent('demonstration.labels.delete'))"
+              @select="handleDemoMenuItemSelect('delete')"
             >
               {{ tContent('demonstration.labels.delete') }}
               <ContextMenuShortcut>{{ tContent('demonstration.labels.deleteShortcut') }}</ContextMenuShortcut>
@@ -684,29 +739,43 @@ const codeCompositionShortcuts = `<ContextMenu>
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair3.do')), dontCaption: toPlainText(tContent('doDont.pair3.dont')) },
       ]"
     >
-      <!-- Par 1: alternativa explícita -->
+      <!--
+        Par 1: alternativa explícita.
+
+        A legenda promete "as mesmas ações também via botão visível", então o
+        lado do faça DESENHA o botão — anunciá-lo por escrito ("+ botão
+        visível") era contar, não mostrar. Os dois menus levam as mesmas ações;
+        o que muda entre os lados é só o botão.
+      -->
       <template #do-preview-0>
         <div
-          class="nds-cluster"
+          class="nds-stack"
           data-spacing="sm"
+          data-align="center"
         >
           <ContextMenu>
             <ContextMenuTrigger
               :class="areaClasse"
               data-align="center"
               data-justify="center"
-             
             >
-              Área com menu
+              {{ tContent('demonstration.labels.triggerLabel') }}
             </ContextMenuTrigger>
             <ContextMenuContent>
-              <ContextMenuItem>Editar</ContextMenuItem>
+              <ContextMenuItem>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
+              <ContextMenuSeparator />
               <ContextMenuItem variant="destructive">
-                Excluir
+                {{ tContent('demonstration.labels.delete') }}
               </ContextMenuItem>
             </ContextMenuContent>
           </ContextMenu>
-          <span class="nds-text-body nds-text-muted-foreground">+ botão visível</span>
+          <!-- A MESMA ação do menu, alcançável sem o botão direito. -->
+          <Button
+            variant="outline"
+            size="sm"
+          >
+            {{ tContent('demonstration.labels.edit') }}
+          </Button>
         </div>
       </template>
       <template #dont-preview-0>
@@ -716,11 +785,13 @@ const codeCompositionShortcuts = `<ContextMenu>
             data-align="center"
             data-justify="center"
           >
-            Área (sem botão)
+            {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
           <ContextMenuContent>
+            <ContextMenuItem>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
+            <ContextMenuSeparator />
             <ContextMenuItem variant="destructive">
-              Excluir
+              {{ tContent('demonstration.labels.delete') }}
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
@@ -770,7 +841,19 @@ const codeCompositionShortcuts = `<ContextMenu>
         </ContextMenu>
       </template>
 
-      <!-- Par 3: shortcut visual + listener separado -->
+      <!--
+        Par 3: dica visual de que a área tem menu de contexto.
+
+        As duas metades da legenda falam do mesmo assunto. É a MESMA área nos
+        dois lados, com o mesmo menu vivo dentro — a única diferença é o que ela
+        diz de si: `triggerLabel` anuncia o gesto, `areaNoHint` não anuncia
+        nada.
+
+        Os dois rótulos saem do conteúdo compartilhado. O lado do evite era um
+        `<div>` desenhado à mão, com literal em português e a borda tracejada em
+        `style` inline — além de imitação, desenhava justamente a dica que a
+        legenda manda tirar.
+      -->
       <template #do-preview-2>
         <ContextMenu>
           <ContextMenuTrigger
@@ -778,25 +861,34 @@ const codeCompositionShortcuts = `<ContextMenu>
             data-align="center"
             data-justify="center"
           >
-            Clique com direito
+            {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
           <ContextMenuContent>
-            <ContextMenuItem>
-              Editar
-              <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
+            <ContextMenuItem>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem variant="destructive">
+              {{ tContent('demonstration.labels.delete') }}
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       </template>
       <template #dont-preview-2>
-        <div
-          class="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
-          data-align="center"
-          data-justify="center"
-          style="border-style: dashed; user-select: none"
-        >
-          <span style="text-align: center">Sem dica visual</span>
-        </div>
+        <ContextMenu>
+          <ContextMenuTrigger
+            :class="areaClasse"
+            data-align="center"
+            data-justify="center"
+          >
+            {{ tContent('demonstration.labels.areaNoHint') }}
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
+            <ContextMenuSeparator />
+            <ContextMenuItem variant="destructive">
+              {{ tContent('demonstration.labels.delete') }}
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       </template>
     </DocsDoDont>
 

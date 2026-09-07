@@ -90,6 +90,76 @@ ${area(label)}
 };
 
 /**
+ * Com atalhos: o atalho vive DENTRO do item, um por linha de ação.
+ *
+ * Snippet próprio porque a story mostra três atalhos e nenhum grupo, enquanto o
+ * do `meta` publica um item sem atalho dentro de um `ContextMenuGroup` — quem
+ * copiava recebia "Duplicar" onde o preview mostra "Desfazer, Ctrl+Z".
+ *
+ * O `ContextMenuShortcut` não leva `aria-hidden`: "Excluir, Delete" é o nome
+ * útil, e escondido o atalho só existe para quem enxerga.
+ */
+export function contextMenuWithShortcutSource(): string {
+  return jsxSnippet(
+    importDe(
+      'ContextMenu',
+      'ContextMenuContent',
+      'ContextMenuItem',
+      'ContextMenuSeparator',
+      'ContextMenuShortcut',
+      'ContextMenuTrigger',
+    ),
+    `<ContextMenu>
+${area(LABEL_DEFAULT)}
+  <ContextMenuContent>
+    <ContextMenuItem>
+      Editar
+      <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
+    </ContextMenuItem>
+    <ContextMenuItem>
+      Desfazer
+      <ContextMenuShortcut>Ctrl+Z</ContextMenuShortcut>
+    </ContextMenuItem>
+    <ContextMenuSeparator />
+    <ContextMenuItem variant="destructive">
+      Excluir
+      <ContextMenuShortcut>Delete</ContextMenuShortcut>
+    </ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>`,
+  );
+}
+
+/**
+ * Paleta escura: o markup é o MESMO — quem troca a paleta é o tema, e não uma
+ * prop do menu. Por isso o snippet não carrega classe de tema nenhuma.
+ *
+ * Ele existe porque a story do escuro mostra um item desabilitado e nenhum
+ * atalho, e o snippet do `meta` publicava atalho em dois itens e nenhum
+ * desabilitado — o painel Code ensinava outro menu que o da foto.
+ */
+export function contextMenuDarkPaletteSource(): string {
+  return jsxSnippet(
+    importDe(
+      'ContextMenu',
+      'ContextMenuContent',
+      'ContextMenuItem',
+      'ContextMenuSeparator',
+      'ContextMenuTrigger',
+    ),
+    `<ContextMenu>
+${area(LABEL_DEFAULT)}
+  <ContextMenuContent>
+    <ContextMenuItem>Editar</ContextMenuItem>
+    <ContextMenuItem disabled>Duplicar</ContextMenuItem>
+    <ContextMenuSeparator />
+    <ContextMenuItem variant="destructive">Excluir</ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>`,
+  );
+}
+
+/**
  * Com marcação: `ContextMenuCheckboxItem` é de DOIS estados — `checked` é
  * booleano, o payload da mudança é booleano, e não existe terceiro valor para
  * anunciar como misto. O estado vive fora do menu, que só avisa a troca.
