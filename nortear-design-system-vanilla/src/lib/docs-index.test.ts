@@ -94,6 +94,23 @@ describe('normalização e recorte de termos', () => {
     expect(tokenize('alert-dialog')).toEqual(['alert', 'dialog']);
   });
 
+  // Este bloco existe por um defeito de campo, não por zelo: `ComputerUse`
+  // virava o termo único `computeruse` — a quebra acontecia depois de
+  // minuscular — e a pergunta devolvia button, chart e dialog. O chat respondia
+  // que o componente não existe, sobre um componente documentado cujo nome a
+  // pessoa tinha acabado de ler na barra lateral.
+  it.each([
+    ['ComputerUse', ['computer', 'use']],
+    ['HoverCard', ['hover', 'card']],
+    ['DataTable', ['data', 'table']],
+    // Sigla seguida de palavra: o corte da sigla vem primeiro, senão `OTP`
+    // seria partido no meio.
+    ['InputOTP', ['input', 'otp']],
+    ['InputOTPField', ['input', 'otp', 'field']],
+  ])('maiúscula no meio separa: %s', (entrada, esperado) => {
+    expect(tokenize(entrada)).toEqual(esperado);
+  });
+
   it('descarta termo de uma letra, que não distingue documento nenhum', () => {
     expect(tokenize('o a e x')).toEqual([]);
   });
@@ -105,6 +122,10 @@ describe('pergunta que cita o componente pelo nome', () => {
     ['Como uso o chat thread para streaming?', 'chat-thread'],
     ['o composer aceita anexo?', 'composer'],
     ['como funciona o data table?', 'data-table'],
+    // Como a pessoa REALMENTE digita: copiando o nome da barra lateral.
+    ['pra que serve o componente ComputerUse?', 'computer-use'],
+    ['qual a diferença entre popover e HoverCard?', 'hover-card'],
+    ['como uso o InputOTP?', 'input-otp'],
   ])('%s → %s', (pergunta, slug) => {
     expect(melhor(CORPUS_PT, pergunta)).toBe(slug);
   });

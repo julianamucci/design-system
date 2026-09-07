@@ -142,9 +142,33 @@ export function normalize(text: string): string {
     .toLowerCase();
 }
 
-/** Quebra em termos. Hífen separa: `chat-thread` vira dois termos, e é o que faz `alert-dialog` casar com "alert dialog". */
+/**
+ * Quebra em termos.
+ *
+ * Hífen separa: `chat-thread` vira dois termos, e é o que faz `alert-dialog`
+ * casar com "alert dialog".
+ *
+ * MAIÚSCULA NO MEIO TAMBÉM SEPARA, e isso não é refinamento — era um buraco.
+ * A quebra acontecia DEPOIS de minuscular, então `ComputerUse` virava o único
+ * termo `computeruse`, que não casa com `computer` nem com `use`. A pergunta
+ * "pra que serve o componente ComputerUse?" devolvia button, chart, dialog,
+ * card e input-group, e o chat respondia que o componente não existe — sobre um
+ * componente documentado, cujo nome a pessoa acabara de LER na barra lateral.
+ *
+ * É o caso comum, não o exótico: a barra lateral mostra `ComputerUse`,
+ * `HoverCard`, `DataTable`, `InputOTP`. Ninguém digita o slug com hífen; a
+ * pessoa copia o que está na tela.
+ *
+ * Dois cortes, nesta ordem: sigla seguida de palavra (`InputOTPField` →
+ * `Input OTP Field`) e minúscula ou dígito seguida de maiúscula (`ComputerUse`
+ * → `Computer Use`). O primeiro precisa vir antes, senão o segundo parte a
+ * sigla no meio.
+ */
 export function tokenize(text: string): string[] {
-  return normalize(text)
+  const separado = text
+    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2');
+  return normalize(separado)
     .split(/[^a-z0-9]+/)
     .filter((token) => token.length >= 2);
 }
