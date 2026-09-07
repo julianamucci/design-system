@@ -75,8 +75,15 @@
  * `menuitem` com `aria-haspopup="menu"` e `aria-expanded`, e o painel filho é
  * anexado ao `<body>`, FORA da árvore do menu pai.
  *
- *   Fora dela de propósito. O percurso do teclado sai de `getMenuItems`, que é
- *   consulta de DESCENDENTES sobre os três papéis de item: com o painel
+ *   O MECANISMO MORA EM `@/lib/submenu`, e não mais aqui. A mesma capacidade
+ *   estava escrita três vezes nesta stack, com três mecanismos diferentes — e
+ *   nenhum portão vê divergência entre arquivos. O auxiliar saiu DAQUI, que era
+ *   a versão que resolvia mais: painel no `body`, `aria-owns`,
+ *   `positionFloating`, carência de ponteiro. O porquê de cada decisão está
+ *   escrito lá, junto da decisão; o resumo que fica aqui é o contrato.
+ *
+ *   Fora da árvore de propósito. O percurso do teclado sai de `getMenuItems`,
+ *   que é consulta de DESCENDENTES sobre os três papéis de item: com o painel
  *   aninhado, a seta do menu pai passaria a percorrer os itens do filho, e o
  *   defeito só apareceria com o submenu ABERTO — o pior formato, porque a story
  *   fechada continua verde.
@@ -101,6 +108,7 @@ import {
   type FloatingAlign,
   type FloatingSide,
 } from '@/lib/floating';
+import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
 
 export type DropdownMenuSide = FloatingSide;
 export type DropdownMenuAlign = FloatingAlign;
@@ -245,43 +253,17 @@ function createIndicador(state: MarkupState, slot: string): HTMLSpanElement {
   return span;
 }
 
-/**
- * Seta do sub-gatilho. Montada nó a nó pelo mesmo motivo do indicador de
- * marcação, e `aria-hidden` porque quem anuncia que ali há um menu filho é o
- * `aria-haspopup` do item, não o desenho.
- */
-function createChevronIcon(): SVGSVGElement {
-  const svg = document.createElementNS(SVG_NS, 'svg');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  svg.setAttribute('aria-hidden', 'true');
-  // É a classe que encosta a seta na borda direita do item (`margin-left:auto`
-  // na folha compartilhada) — sem ela a seta cola no rótulo.
-  svg.classList.add('nds-dropdown-menu-sub-trigger-chevron');
-  const path = document.createElementNS(SVG_NS, 'path');
-  path.setAttribute('d', 'm9 18 6-6-6-6');
-  svg.appendChild(path);
-  return svg;
-}
+// A seta do sub-gatilho vive em `@/lib/submenu` (`createSubmenuChevron`): ela é
+// a mesma nos três menus desta stack, e o desenho acompanha o mecanismo que o
+// justifica.
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 let _dropdownCounter = 0;
 
-/**
- * Carência entre sair do sub-gatilho e o submenu fechar, em ms.
- *
- * É o que resolve a travessia em DIAGONAL: quem vai do item para um item lá
- * embaixo do painel filho passa por cima dos irmãos do menu pai, e fechar no
- * `mouseleave` puro arrancaria o painel no meio do gesto. A carência é cancelada
- * ao entrar no painel ou ao voltar ao sub-gatilho, então só fecha mesmo quem
- * saiu e ficou fora. Fechar cedo demais é pior que não fechar.
- */
-const SUBMENU_CLOSE_DELAY = 300;
+// A carência de fechamento por ponteiro — a que resolve a travessia em diagonal
+// do item até o painel filho — é o padrão de `@/lib/submenu`, com o motivo
+// escrito lá.
 
 // A conta de posição mora em `@/lib/floating`, compartilhada com o popover e o
 // tooltip. Aqui havia uma cópia que cravava bottom/start a 4px — e foi
@@ -311,20 +293,16 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   let overflowPrevious = '';
 
   // ── Submenu ─────────────────────────────────────────────────────────────────
-  // Um de cada vez: abrir outro fecha o anterior, que é o que evita dois painéis
-  // filhos vivos sobre o mesmo menu.
-  let subPanelEl: HTMLElement | null = null;
-  let subTriggerEl: HTMLElement | null = null;
-  let subPanelCount = 0;
-  let timerSubmenuClose: ReturnType<typeof setTimeout> | null = null;
-
-  /**
-   * A definição de cada sub-gatilho, pelo próprio elemento.
-   *
-   * `WeakMap` e não busca pelo texto do rótulo: o rótulo é traduzido, e casar
-   * por texto quebraria no primeiro idioma que não fosse o pt-BR.
-   */
-  const subTriggerDef = new WeakMap<HTMLElement, DropdownMenuItemDef>();
+  // Um controlador por menu, e um painel filho de cada vez: abrir outro fecha o
+  // anterior. Gatilho, painel, posição, ARIA, teclado, ponteiro e limpeza são
+  // dele; o que continua sendo desta fábrica é montar os ITENS, que é o que cada
+  // menu tem de próprio.
+  const submenu = createSubmenuController({
+    triggerSlot: 'dropdown-menu-sub-trigger',
+    panelIdPrefix: `${menuId}-sub`,
+    getItems: getMenuItems,
+    sideOffset,
+  });
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'dropdown-menu';
@@ -417,40 +395,24 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       }
 
       if (type === 'submenu') {
-        // O sub-gatilho é um `menuitem` COMO OS OUTROS: entra na roda das setas
-        // do menu pai, e é isso que o mantém alcançável por quem não usa mouse.
-        // O que ele acrescenta é o par `aria-haspopup`/`aria-expanded` — e, com
-        // o painel aberto, o `aria-owns` que aponta para ele.
+        // Aqui esta fábrica monta só o que é DELA: a caixa do item, o rótulo e a
+        // seta. Papel, `aria-haspopup`, `aria-expanded`, `data-slot`, ponteiro e
+        // teclado entram com `attach` — o sub-gatilho é um `menuitem` como os
+        // outros, e continua na roda das setas do menu pai.
         const li = document.createElement('li');
-        li.setAttribute('role', 'menuitem');
-        li.setAttribute('aria-haspopup', 'menu');
-        li.setAttribute('aria-expanded', 'false');
-        li.setAttribute('tabindex', '-1');
         li.className = 'nds-dropdown-menu-sub-trigger';
-        li.dataset.slot = 'dropdown-menu-sub-trigger';
         if (item.value) li.dataset.value = item.value;
 
         const text = document.createElement('span');
         text.textContent = item.label ?? '';
         li.appendChild(text);
-        li.appendChild(createChevronIcon());
+        li.appendChild(createSubmenuChevron());
 
-        subTriggerDef.set(li, item);
-
-        li.addEventListener('mouseenter', () => openSubmenu(li, item));
-        li.addEventListener('mouseleave', scheduleSubmenuClose);
-        // Clique abre em vez de escolher: o sub-gatilho não tem ação própria, e
-        // fechar o menu aqui descartaria o que a pessoa veio buscar.
-        li.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openSubmenu(li, item);
-        });
-        li.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            openSubmenu(li, item);
-            if (subPanelEl) getMenuItems(subPanelEl)[0]?.focus();
-          }
+        // O painel é montado a cada abertura, e por `buildMenu`: o submenu tem
+        // os mesmos tipos de item do menu raiz, e o que distingue os dois no
+        // markup é o `data-slot`.
+        submenu.attach(li, {
+          buildPanel: () => buildMenu(item.items ?? [], 'dropdown-menu-sub-content'),
         });
 
         (openGroup ?? menu).appendChild(li);
@@ -575,70 +537,6 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     return menu;
   }
 
-  /**
-   * Abre o painel do submenu do `triggerLi`, fechando o que estiver aberto.
-   *
-   * O painel vai para o `<body>` — ver o bloco do cabeçalho — e é posicionado
-   * por `positionFloating`, a mesma conta do popover e do tooltip. Posicionar na
-   * unha (`left = box.right`) é o que faz o painel sair da tela perto da borda
-   * direita da janela; a conta compartilhada trava o eixo cruzado na área
-   * visível.
-   */
-  function openSubmenu(triggerLi: HTMLElement, def: DropdownMenuItemDef): void {
-    cancelSubmenuClose();
-    if (subTriggerEl === triggerLi && subPanelEl) return;
-    closeSubmenu();
-
-    const panel = buildMenu(def.items ?? [], 'dropdown-menu-sub-content');
-    // O `id` existe para o `aria-owns` ter para onde apontar: com o painel fora
-    // da árvore do menu pai, é a única coisa que liga o item ao menu que ele
-    // abriu.
-    panel.id = `${menuId}-sub-${++subPanelCount}`;
-    document.body.appendChild(panel);
-    positionFloating(triggerLi, panel, 'right', 'start', sideOffset);
-
-    panel.addEventListener('mouseenter', cancelSubmenuClose);
-    panel.addEventListener('mouseleave', scheduleSubmenuClose);
-
-    triggerLi.setAttribute('aria-expanded', 'true');
-    triggerLi.setAttribute('aria-owns', panel.id);
-
-    subPanelEl = panel;
-    subTriggerEl = triggerLi;
-  }
-
-  /** Fecha o painel do submenu e desfaz a ligação que só vale enquanto ele existe. */
-  function closeSubmenu(): void {
-    cancelSubmenuClose();
-    subPanelEl?.remove();
-    subPanelEl = null;
-    if (subTriggerEl) {
-      subTriggerEl.setAttribute('aria-expanded', 'false');
-      // `aria-owns` sai junto: apontar para um painel que já não está no
-      // documento é pior que não apontar para nada.
-      subTriggerEl.removeAttribute('aria-owns');
-    }
-    subTriggerEl = null;
-  }
-
-  function scheduleSubmenuClose(): void {
-    if (!subPanelEl) return;
-    cancelSubmenuClose();
-    timerSubmenuClose = setTimeout(() => {
-      timerSubmenuClose = null;
-      // O foco manda sobre o ponteiro: quem entrou no submenu pela seta não pode
-      // perdê-lo porque o mouse estava parado noutro canto da tela.
-      if (subPanelEl?.contains(document.activeElement)) return;
-      closeSubmenu();
-    }, SUBMENU_CLOSE_DELAY);
-  }
-
-  function cancelSubmenuClose(): void {
-    if (timerSubmenuClose === null) return;
-    clearTimeout(timerSubmenuClose);
-    timerSubmenuClose = null;
-  }
-
   function getMenuItems(menu: HTMLElement): HTMLElement[] {
     // Os três papéis navegam junto: uma lista de ações que mistura alternadores
     // e escolha única continua sendo uma lista só para quem usa as setas.
@@ -733,7 +631,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     if (!isOpen) return;
 
     // Primeiro o filho: o painel dele vive no `body` e não sai junto com o pai.
-    closeSubmenu();
+    submenu.close();
     panelEl?.remove();
     panelEl = null;
     trigger.setAttribute('aria-expanded', 'false');
@@ -793,7 +691,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     // O painel do submenu também é "dentro": ele vive no `body`, fora de
     // `panelEl`, e sem esta linha o clique num item do submenu seria consumido
     // pelo bloqueador e dispensaria o menu em vez de escolher.
-    if (panelEl?.contains(target) || subPanelEl?.contains(target) || wrapper.contains(target)) return;
+    if (panelEl?.contains(target) || submenu.contains(target) || wrapper.contains(target)) return;
     e.preventDefault();
     e.stopPropagation();
     // A dispensa sai no `click`, o último do gesto: dispensar antes desmontaria
@@ -806,17 +704,15 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
     const active = document.activeElement as HTMLElement | null;
 
+    // O submenu vê a tecla PRIMEIRO, e o que ele consome não chega ao menu pai:
+    // com o painel filho aberto, `Escape` fecha só ele e `ArrowLeft` volta ao
+    // sub-gatilho — fechar o menu inteiro ali tiraria a pessoa de dois níveis
+    // com uma tecla. `Enter`, `Espaço` e `ArrowRight` agem com o foco NO
+    // sub-gatilho, e quem os escuta é o próprio elemento.
+    if (submenu.handleKeydown(e)) return;
+
     if (e.key === 'Escape') {
       e.preventDefault();
-      // Com submenu aberto, Escape fecha SÓ o submenu e devolve o foco ao
-      // sub-gatilho: fechar o menu inteiro aqui tiraria a pessoa de dois níveis
-      // com uma tecla, e o Escape seguinte é que fecha o menu.
-      if (subPanelEl) {
-        const subTrigger = subTriggerEl;
-        closeSubmenu();
-        subTrigger?.focus();
-        return;
-      }
       pedirChange(false);
       // O foco só volta se o menu de fato saiu: no modo controlado quem fecha é
       // quem chama, e devolver o foco antes disso o tiraria de dentro de um
@@ -825,30 +721,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       return;
     }
 
-    if (e.key === 'ArrowRight') {
-      const subTrigger = active?.closest<HTMLElement>('[data-slot="dropdown-menu-sub-trigger"]');
-      const def = subTrigger ? subTriggerDef.get(subTrigger) : undefined;
-      if (subTrigger && def) {
-        e.preventDefault();
-        openSubmenu(subTrigger, def);
-        // Abrir sem entrar deixaria a pessoa vendo um painel que a seta seguinte
-        // não percorre — o percurso do teclado sai do painel que tem o foco.
-        if (subPanelEl) getMenuItems(subPanelEl)[0]?.focus();
-        return;
-      }
-    }
-
-    if (e.key === 'ArrowLeft' && subPanelEl?.contains(active)) {
-      e.preventDefault();
-      const subTrigger = subTriggerEl;
-      closeSubmenu();
-      subTrigger?.focus();
-      return;
-    }
-
     // O percurso é do painel que TEM o foco. O painel do submenu não é
     // descendente do menu pai, então nenhum dos dois recolhe os itens do outro.
-    const scope = subPanelEl?.contains(active) ? subPanelEl : panelEl;
+    const subPanel = submenu.panel;
+    const scope = subPanel?.contains(active) ? subPanel : panelEl;
     const menuItems = getMenuItems(scope);
     const currentIdx = menuItems.indexOf(active as HTMLElement);
 
@@ -878,7 +754,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     const target = e.target as Node;
     if (
       !panelEl?.contains(target) &&
-      !subPanelEl?.contains(target) &&
+      !submenu.contains(target) &&
       !trigger.contains(target)
     ) {
       pedirChange(false);
@@ -912,7 +788,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       // Cinto e suspensório: `close` já leva o painel do submenu, mas quem
       // desmonta com o menu FECHADO não passaria por ele, e o timer de carência
       // sobreviveria ao elemento que o registrou.
-      closeSubmenu();
+      submenu.destroy();
     },
   );
 
