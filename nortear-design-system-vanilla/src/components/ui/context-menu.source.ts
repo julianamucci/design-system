@@ -144,3 +144,83 @@ export function contextMenuSourceWith(
 ): SourceTransform<ContextMenuSnippetOptions> {
   return (_gerado, ctx) => contextMenuSnippet({ ...ctx.args, ...fixas });
 }
+
+// ─── Transforms por story ─────────────────────────────────────────────────────
+//
+// Story que mostra um menu diferente do canônico precisa da SUA transform, e a
+// falta disso não aparece em lugar nenhum: sem ela a story herda a do `meta`, o
+// painel Code publica o menu padrão, e o preview ao lado mostra outra coisa. Era
+// o caso em quatro stories deste arquivo — o atalho "Desfazer Ctrl+Z" virava
+// "Duplicar", "Excluir permanentemente" virava "Excluir", e a paleta escura e a
+// sonda de limpeza publicavam o menu padrão inteiro. Quem copiava recebia um
+// exemplo que não é o que estava vendo.
+
+/** `WithShortcut`: dois atalhos de ação e o da ação destrutiva. */
+export const contextMenuSourceWithShortcut: SourceTransform<ContextMenuSnippetOptions> =
+  contextMenuSourceWith({
+    items: [
+      { label: 'Editar', value: 'editar', shortcut: 'Ctrl+E' },
+      { label: 'Desfazer', value: 'undo', shortcut: 'Ctrl+Z' },
+      { type: 'separator' },
+      { label: 'Excluir', value: 'delete', shortcut: 'Delete', variant: 'destructive' },
+    ],
+  });
+
+/** `ItemDestructive`: o rótulo por extenso, que é o que o preview mostra. */
+export const contextMenuSourceItemDestructive: SourceTransform<ContextMenuSnippetOptions> =
+  contextMenuSourceWith({
+    items: [
+      { label: 'Editar', value: 'normal', shortcut: 'Ctrl+E' },
+      { label: 'Duplicar', value: 'duplicate' },
+      { type: 'separator' },
+      {
+        label: 'Excluir permanentemente',
+        value: 'perigo',
+        shortcut: 'Delete',
+        variant: 'destructive',
+      },
+    ],
+  });
+
+/**
+ * `DarkPalette`: a paleta é do TEMA, e não da chamada — o que o snippet tem a
+ * mostrar é o menu que está na foto, item desabilitado incluído.
+ */
+export const contextMenuSourceDarkPalette: SourceTransform<ContextMenuSnippetOptions> =
+  contextMenuSourceWith({
+    items: [
+      { label: 'Editar', value: 'edit' },
+      { label: 'Duplicar', value: 'off', disabled: true },
+      { type: 'separator' },
+      { label: 'Excluir', value: 'delete', variant: 'destructive' },
+    ],
+  });
+
+/**
+ * `ListenerCleanup`: aqui o assunto não é a lista de itens, é o CICLO.
+ *
+ * A fábrica registra ouvinte em `document`, então quem tira o nó da página
+ * precisa de um caminho de saída. `destroy()` é público, idempotente e dispara
+ * sozinho quando a raiz sai do documento; o snippet mostra a chamada explícita
+ * porque é ela que serve a quem remove o nó por conta própria.
+ */
+export function contextMenuCleanupSnippet(o: ContextMenuSnippetOptions = {}): string {
+  return snippet(
+    contextMenuSnippet({
+      ...o,
+      triggerLabel: o.triggerLabel ?? 'Área com menu de contexto',
+      items: [
+        { label: 'Copiar', value: 'copy' },
+        { label: 'Colar', value: 'paste' },
+      ],
+    }),
+    [
+      '// Ouvinte em `document` cobra um caminho de saída. `destroy()` é público',
+      '// e idempotente, e também dispara sozinho quando a raiz sai da página.',
+      'menu.destroy();',
+    ].join('\n'),
+  );
+}
+
+export const contextMenuSourceCleanup: SourceTransform<ContextMenuSnippetOptions> = (_gerado, ctx) =>
+  contextMenuCleanupSnippet(ctx.args ?? {});

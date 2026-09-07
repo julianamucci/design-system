@@ -55,6 +55,50 @@ function priorityLabel(raw: string): string {
 }
 
 /**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Contar à mão (`[1, 2, 3].map(...)`) trava a lista no tamanho de hoje: o
+ * conteúdo compartilhado ganha um item e ele simplesmente não existe para quem
+ * lê — sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com
+ * o nono critério de acessibilidade deste componente, o que registra que a seta
+ * POUSA no item desabilitado em vez de pulá-lo.
+ */
+function stringsFromDict(
+  translate: (key: string, defaultValue?: string) => string,
+  base: string,
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = translate(`${base}.item${i}`, '');
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A mesma varredura para a lista cujo item é um OBJETO — cenário, critério
+ * funcional, story de regressão visual. O primeiro campo é quem decide se o
+ * item existe, e os demais acompanham.
+ */
+function entriesFromDict<K extends string>(
+  translate: (key: string, defaultValue?: string) => string,
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!translate(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map(field => [field, translate(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
+}
+
+/**
  * A moldura tracejada é o único sinal de "clique com o botão direito aqui", e a
  * mesma classe vale nas stories e nas cinco docs pages. `nds-border-default` traz
  * largura e cor; `nds-border-dashed` só troca `border-style` — as duas juntas, ou
@@ -81,12 +125,17 @@ function buildDemoMenu(): HTMLElement {
   };
   return createContextMenu({
     trigger,
+    // Os ATALHOS entram porque a demonstração é a mesma exemplo nas cinco: sem
+    // eles esta era a única que não mostrava a coluna de atalho, e o
+    // `demonstration_labels_divergent` mediu a diferença pelo rótulo que faltava
+    // (`deleteShortcut`). Rótulo de demonstração sai do conteúdo compartilhado,
+    // nunca de literal — é ele que faz as cinco mostrarem o mesmo menu.
     items: [
-      { type: 'item',      label: t('demonstration.labels.edit'),      value: 'edit',      onClick: trackItem(t('demonstration.labels.edit')) },
+      { type: 'item',      label: t('demonstration.labels.edit'),      value: 'edit',      shortcut: t('demonstration.labels.editShortcut'),   onClick: trackItem(t('demonstration.labels.edit')) },
       { type: 'item',      label: t('demonstration.labels.duplicate'), value: 'duplicate', onClick: trackItem(t('demonstration.labels.duplicate')) },
       { type: 'item',      label: t('demonstration.labels.share'),     value: 'share',     onClick: trackItem(t('demonstration.labels.share')) },
       { type: 'separator' },
-      { type: 'item',      label: t('demonstration.labels.delete'),    value: 'delete',    onClick: trackItem(t('demonstration.labels.delete')) },
+      { type: 'item',      label: t('demonstration.labels.delete'),    value: 'delete',    shortcut: t('demonstration.labels.deleteShortcut'), variant: 'destructive', onClick: trackItem(t('demonstration.labels.delete')) },
     ],
     onOpenChange: (open) => {
       if (open) {
@@ -94,6 +143,25 @@ function buildDemoMenu(): HTMLElement {
       }
     },
   });
+}
+
+/**
+ * A mesma área, SEM nenhuma dica de que o gesto existe: sem contorno tracejado,
+ * sem cursor próprio e sem linha de ajuda. É o lado "evite" do par 3 do Do &
+ * Don't, e a legenda dele fala exatamente disso.
+ *
+ * Ela monta o COMPONENTE, e não um desenho: era um `<div>` à mão, que ensina
+ * markup que o design system não emite (guideline 08 §15). Sem `opacity`
+ * também — o esmaecimento levava o texto a 1.52:1 (axe: color-contrast), e o
+ * próprio texto já comunica a ausência.
+ */
+function makePlainArea(label: string): HTMLElement {
+  const el = document.createElement('div');
+  el.className = 'nds-cluster nds-w-xs nds-p-8 nds-rounded-md nds-text-body nds-text-muted-foreground';
+  el.dataset.align = 'center';
+  el.dataset.justify = 'center';
+  el.textContent = label;
+  return el;
 }
 
 function buildSimpleTriggerArea(label: string): HTMLElement {
@@ -254,7 +322,7 @@ export function createContextMenuDocs(): HTMLElement {
       case 'anatomia':
         return createDocsAnatomy({
           title: t('anatomy.title'),
-          items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => t(`anatomy.item${i}`)),
+          items: stringsFromDict(t, 'anatomy'),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
         });
@@ -265,7 +333,7 @@ export function createContextMenuDocs(): HTMLElement {
           title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
-            items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
+            items: stringsFromDict(t, 'usage.guidelines'),
           },
           scenarios: {
             title: t('usage.scenarios.title'),
@@ -274,19 +342,15 @@ export function createContextMenuDocs(): HTMLElement {
               use:         t('usage.scenarios.cols.use'),
               alternative: t('usage.scenarios.cols.alternative'),
             },
-            items: [1, 2, 3, 4].map(i => ({
-              s: t(`usage.scenarios.item${i}.s`),
-              u: t(`usage.scenarios.item${i}.u`),
-              a: t(`usage.scenarios.item${i}.a`),
-            })),
+            items: entriesFromDict(t, 'usage.scenarios', ['s', 'u', 'a']),
           },
           do: {
             title: t('usage.do.title'),
-            items: [1, 2, 3, 4].map(i => t(`usage.do.item${i}`)),
+            items: stringsFromDict(t, 'usage.do'),
           },
           dont: {
             title: t('usage.dont.title'),
-            items: [1, 2, 3].map(i => t(`usage.dont.item${i}`)),
+            items: stringsFromDict(t, 'usage.dont'),
           },
         });
 
@@ -373,23 +437,32 @@ export function createContextMenuDocs(): HTMLElement {
               dontLabel:    tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair3.do')),
               dontCaption: toPlainText(t('doDont.pair3.dont')),
+              // Os dois lados montam o MESMO menu; o que os separa é a DICA
+              // VISUAL, que é o assunto da legenda deste par. À esquerda, a
+              // moldura tracejada da constante compartilhada e a linha que diz o
+              // gesto; à direita, a mesma área sem contorno e sem aviso — o menu
+              // existe e ninguém tem como saber.
               doPreviewFactory: () =>
                 buildMenuPreview({
                   items: [
-                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit', shortcut: t('demonstration.labels.editShortcut') },
+                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
+                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate' },
                   ],
                 }),
-              // A área sem nenhuma pista visual de que o gesto existe. Sem
-              // `opacity`: o esmaecimento levava o texto a 1.52:1 (axe:
-              // color-contrast), e o próprio texto já comunica a ausência.
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default';
+                wrap.className = 'nds-cluster nds-w-full';
                 wrap.dataset.align = 'center';
                 wrap.dataset.justify = 'center';
-                const hint = document.createElement('span');
-                hint.textContent = '(sem dica visual)';
-                wrap.appendChild(hint);
+                wrap.appendChild(
+                  createContextMenu({
+                    trigger: makePlainArea(t('demonstration.labels.areaNoHint')),
+                    items: [
+                      { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
+                      { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate' },
+                    ],
+                  }),
+                );
                 return wrap;
               },
             },
@@ -857,11 +930,8 @@ export type ContextMenuOptions = {
               result:   tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(i => ({
-              action:   t(`testes.functional.item${i}.action`),
-              result:   t(`testes.functional.item${i}.result`),
-              priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
-            })),
+            items: entriesFromDict(t, 'testes.functional', ['action', 'result', 'priority'])
+              .map(entry => ({ ...entry, priority: priorityLabel(entry.priority) })),
           },
           accessibility: {
             title: t('testes.accessibility.title'),
@@ -870,8 +940,8 @@ export type ContextMenuOptions = {
               level:     'WCAG',
               how:       tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
-              criterion: t(`testes.accessibility.item${i}`),
+            items: stringsFromDict(t, 'testes.accessibility').map(criterion => ({
+              criterion,
               level:     'AA',
               how:       'axe-core / manual',
             })),
@@ -882,10 +952,8 @@ export type ContextMenuOptions = {
               story:    tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
-              story:    t(`testes.visual.item${i}.story`),
-              priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
-            })),
+            items: entriesFromDict(t, 'testes.visual', ['story', 'priority'])
+              .map(entry => ({ ...entry, priority: priorityLabel(entry.priority) })),
           },
         });
       }

@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu } from './context-menu';
-import { contextMenuSource, contextMenuSourceWith } from './context-menu.source';
+import {
+  contextMenuSource,
+  contextMenuSourceWith,
+  contextMenuSourceItemDestructive,
+  contextMenuSourceDarkPalette,
+  contextMenuSourceCleanup,
+} from './context-menu.source';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
   gestoOpen,
@@ -48,6 +54,7 @@ export const ItemDisabled: Story = {
           items: [
             { label: 'Editar', value: 'edit' },
             { label: 'Duplicar', value: 'off', disabled: true },
+            { label: 'Renomear', value: 'rename' },
             { type: 'separator' },
             { label: 'Excluir', value: 'perigo-off', variant: 'destructive', disabled: true },
           ],
@@ -170,6 +177,9 @@ export const ItemInset: Story = {
 export const ItemDestructive: Story = {
   parameters: {
     covers: ['functional.item10', 'visual.item2'],
+    // O preview mostra "Excluir permanentemente"; o menu canônico do `meta`
+    // publica "Excluir".
+    docs: { source: { transform: contextMenuSourceItemDestructive } },
   },
   render: () =>
     createContextMenu({
@@ -215,6 +225,9 @@ export const DarkPalette: Story = {
     // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
     themes: { themeOverride: 'dark' },
+    // O preview traz um item desabilitado, que o menu canônico do `meta` não
+    // tem — e a paleta vem do tema, não da chamada.
+    docs: { source: { transform: contextMenuSourceDarkPalette } },
   },
   render: () =>
     createContextMenu({
@@ -329,6 +342,10 @@ export const ListenerCleanup: Story = {
     // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
     // sempre a mesma legenda.
     chromatic: { disable: true },
+    // E é isso que o snippet tem a ensinar: o menu Copiar · Colar que a play
+    // monta, e a chamada de `destroy()`. O menu canônico do `meta` não diz nada
+    // sobre o ciclo, que é o assunto aqui.
+    docs: { source: { transform: contextMenuSourceCleanup } },
   },
   render: () => probeHost(
     'Sonda de limpeza: o menu de contexto é montado, aberto e removido da página pela play.',

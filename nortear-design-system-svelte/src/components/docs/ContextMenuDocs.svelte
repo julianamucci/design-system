@@ -110,6 +110,79 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  /**
+   * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+   *
+   * Citar índice por índice trava a lista no tamanho de hoje: o conteúdo
+   * compartilhado ganha um item e ele simplesmente não existe para quem lê —
+   * sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com o
+   * nono critério de acessibilidade deste componente, o que registra que a seta
+   * POUSA no item desabilitado em vez de pulá-lo.
+   */
+  function stringsFromDict(
+    t: (key: string, defaultValue?: string) => string,
+    base: string,
+  ): string[] {
+    const out: string[] = [];
+    for (let i = 1; ; i++) {
+      const value = t(`${base}.item${i}`, '');
+      if (!value) break;
+      out.push(value);
+    }
+    return out;
+  }
+
+  /**
+   * A mesma varredura para a lista cujo item é um OBJETO — cenário, critério
+   * funcional, story de regressão visual. O primeiro campo é quem decide se o
+   * item existe, e os demais acompanham.
+   */
+  function entriesFromDict<K extends string>(
+    t: (key: string, defaultValue?: string) => string,
+    base: string,
+    fields: readonly K[],
+  ): Array<Record<K, string>> {
+    const out: Array<Record<K, string>> = [];
+    for (let i = 1; ; i++) {
+      if (!t(`${base}.item${i}.${fields[0]}`, '')) break;
+      out.push(
+        Object.fromEntries(
+          fields.map((field) => [field, t(`${base}.item${i}.${field}`, '')]),
+        ) as Record<K, string>,
+      );
+    }
+    return out;
+  }
+
+  // Ferramenta de verificação fica aqui, e não no conteúdo compartilhado,
+  // porque é IDENTIFICADOR de ferramenta — e identificador não se traduz.
+  // Critério além desta lista cai no padrão.
+  const a11yTestHow = [
+    'axe-core',
+    'DOM inspection',
+    'DOM inspection',
+    'DOM inspection',
+    'DOM inspection',
+    'DOM inspection',
+    'Keyboard test',
+    'Contrast analyzer',
+    'Keyboard test',
+  ];
+
+  /**
+   * `location` é a SEÇÃO onde o elemento está, e é por isso que ele chega por
+   * parâmetro em vez de sair de uma constante no topo do arquivo.
+   *
+   * A página inteira mandava `docs_demo`: um clique no preview de Variantes ou
+   * do Do & Don't é tão real quanto o da Demonstração, e chegava ao GA4 com o
+   * carimbo da seção errada. O `menu` nomeia o preview; o rótulo traduzido
+   * nunca entra, sob pena de partir o mesmo evento em um por idioma.
+   */
+  function trackMenuOpen(menu: string, location: string, open: boolean): void {
+    if (!open) return;
+    track('menu_open', { component: 'context_menu', menu, location });
+  }
+
   // ─── State para demos interativos ────────────────────────────────────────────
 
   let checkboxShowBookmarks = $state(true);
@@ -303,7 +376,7 @@ interface ContextMenuRadioGroupProps {
   <!-- ── Demonstração ──────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
-      <ContextMenu.Root onOpenChange={(o: boolean) => { if (o) track('menu_open', { component: 'context_menu', menu: 'demo', location: 'docs_demo' }); }}>
+      <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('demo', 'docs_demo', o)}>
         <ContextMenu.Trigger
           class={areaClasse}
           data-align="center"
@@ -338,19 +411,7 @@ interface ContextMenuRadioGroupProps {
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
   <DocsAnatomy
     title={$tStore('anatomy.title')}
-    items={[
-      $tStore('anatomy.item1'),
-      $tStore('anatomy.item2'),
-      $tStore('anatomy.item3'),
-      $tStore('anatomy.item4'),
-      $tStore('anatomy.item5'),
-      $tStore('anatomy.item6'),
-      $tStore('anatomy.item7'),
-      $tStore('anatomy.item8'),
-      $tStore('anatomy.item9'),
-      $tStore('anatomy.item10'),
-      $tStore('anatomy.item11'),
-    ]}
+    items={stringsFromDict($tStore, 'anatomy')}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
   />
@@ -360,13 +421,7 @@ interface ContextMenuRadioGroupProps {
     title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
-      items: [
-        $tStore('usage.guidelines.item1'),
-        $tStore('usage.guidelines.item2'),
-        $tStore('usage.guidelines.item3'),
-        $tStore('usage.guidelines.item4'),
-        $tStore('usage.guidelines.item5'),
-      ],
+      items: stringsFromDict($tStore, 'usage.guidelines'),
     }}
     scenarios={{
       title: $tStore('usage.scenarios.title'),
@@ -375,29 +430,15 @@ interface ContextMenuRadioGroupProps {
         use: $tStore('usage.scenarios.cols.use'),
         alternative: $tStore('usage.scenarios.cols.alternative'),
       },
-      items: [
-        { s: $tStore('usage.scenarios.item1.s'), u: $tStore('usage.scenarios.item1.u'), a: $tStore('usage.scenarios.item1.a') },
-        { s: $tStore('usage.scenarios.item2.s'), u: $tStore('usage.scenarios.item2.u'), a: $tStore('usage.scenarios.item2.a') },
-        { s: $tStore('usage.scenarios.item3.s'), u: $tStore('usage.scenarios.item3.u'), a: $tStore('usage.scenarios.item3.a') },
-        { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: $tStore('usage.scenarios.item4.a') },
-      ],
+      items: entriesFromDict($tStore, 'usage.scenarios', ['s', 'u', 'a']),
     }}
     do={{
       title: $tStore('usage.do.title'),
-      items: [
-        $tStore('usage.do.item1'),
-        $tStore('usage.do.item2'),
-        $tStore('usage.do.item3'),
-        $tStore('usage.do.item4'),
-      ],
+      items: stringsFromDict($tStore, 'usage.do'),
     }}
     dont={{
       title: $tStore('usage.dont.title'),
-      items: [
-        $tStore('usage.dont.item1'),
-        $tStore('usage.dont.item2'),
-        $tStore('usage.dont.item3'),
-      ],
+      items: stringsFromDict($tStore, 'usage.dont'),
     }}
   />
 
@@ -440,7 +481,7 @@ interface ContextMenuRadioGroupProps {
   -->
   {#snippet doPair1()}
     <div class="nds-cluster" data-spacing="sm">
-      <ContextMenu.Root>
+      <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par1-do', 'docs_do_dont', o)}>
         <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
           Área com menu
         </ContextMenu.Trigger>
@@ -453,7 +494,7 @@ interface ContextMenuRadioGroupProps {
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par1-dont', 'docs_do_dont', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         Área (sem botão)
       </ContextMenu.Trigger>
@@ -464,7 +505,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
 
   {#snippet doPair2()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par2-do', 'docs_do_dont', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         Right-click aqui
       </ContextMenu.Trigger>
@@ -476,7 +517,7 @@ interface ContextMenuRadioGroupProps {
     </ContextMenu.Root>
   {/snippet}
   {#snippet dontPair2()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par2-dont', 'docs_do_dont', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         Right-click aqui
       </ContextMenu.Trigger>
@@ -497,23 +538,41 @@ interface ContextMenuRadioGroupProps {
     </ContextMenu.Root>
   {/snippet}
 
+  <!--
+    Os dois lados montam o MESMO menu; o que os separa é a DICA VISUAL, que é o
+    assunto da legenda deste par. O "faça" traz a moldura tracejada da constante
+    compartilhada e uma linha que diz o gesto; o "evite" é a mesma área sem
+    contorno, sem cursor e sem aviso — o menu existe e ninguém tem como saber.
+
+    O lado direito era um `<div>` desenhado à mão, com `border-style` e
+    `text-align` em `style` inline: ensinava markup que o design system não
+    emite, e a guideline 08 §15 pede componente VIVO em toda seção com exemplo.
+  -->
   {#snippet doPair3()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par3-do', 'docs_do_dont', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        Right-click aqui
+        {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item>
-          Editar
-          <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
-        </ContextMenu.Item>
+        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
+        <ContextMenu.Item>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
   {#snippet dontPair3()}
-    <div class="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="border-style: dashed; user-select: none">
-      <span style="text-align: center">Área sem nenhuma pista visual</span>
-    </div>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par3-dont', 'docs_do_dont', o)}>
+      <ContextMenu.Trigger
+        class="nds-cluster nds-w-xs nds-p-8 nds-rounded-md nds-text-body nds-text-muted-foreground"
+        data-align="center"
+        data-justify="center"
+      >
+        {$tStore('demonstration.labels.areaNoHint')}
+      </ContextMenu.Trigger>
+      <ContextMenu.Content>
+        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
+        <ContextMenu.Item>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
+      </ContextMenu.Content>
+    </ContextMenu.Root>
   {/snippet}
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
@@ -571,7 +630,7 @@ interface ContextMenuRadioGroupProps {
   />
 
   {#snippet variantDefault()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('default', 'docs_variantes', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
@@ -587,7 +646,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantDestructive()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('destructive', 'docs_variantes', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
@@ -603,7 +662,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantLabel()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('label-inset', 'docs_variantes', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
@@ -618,7 +677,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantWithCheckbox()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('with-checkbox', 'docs_variantes', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
@@ -643,7 +702,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantWithRadio()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('with-radio', 'docs_variantes', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
@@ -661,7 +720,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantWithSubmenu()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('with-submenu', 'docs_variantes', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
@@ -680,7 +739,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
 
   {#snippet variantWithShortcuts()}
-    <ContextMenu.Root>
+    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('with-shortcuts', 'docs_variantes', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
@@ -948,19 +1007,9 @@ interface ContextMenuRadioGroupProps {
         result:   $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [
-        { action: $tStore('testes.functional.item1.action'),  result: $tStore('testes.functional.item1.result'),  priority: localPriority($tStore('testes.functional.item1.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item2.action'),  result: $tStore('testes.functional.item2.result'),  priority: localPriority($tStore('testes.functional.item2.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item3.action'),  result: $tStore('testes.functional.item3.result'),  priority: localPriority($tStore('testes.functional.item3.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item4.action'),  result: $tStore('testes.functional.item4.result'),  priority: localPriority($tStore('testes.functional.item4.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item5.action'),  result: $tStore('testes.functional.item5.result'),  priority: localPriority($tStore('testes.functional.item5.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item6.action'),  result: $tStore('testes.functional.item6.result'),  priority: localPriority($tStore('testes.functional.item6.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item7.action'),  result: $tStore('testes.functional.item7.result'),  priority: localPriority($tStore('testes.functional.item7.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item8.action'),  result: $tStore('testes.functional.item8.result'),  priority: localPriority($tStore('testes.functional.item8.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item9.action'),  result: $tStore('testes.functional.item9.result'),  priority: localPriority($tStore('testes.functional.item9.priority'),  $tNavStore) },
-        { action: $tStore('testes.functional.item10.action'), result: $tStore('testes.functional.item10.result'), priority: localPriority($tStore('testes.functional.item10.priority'), $tNavStore) },
-        { action: $tStore('testes.functional.item11.action'), result: $tStore('testes.functional.item11.result'), priority: localPriority($tStore('testes.functional.item11.priority'), $tNavStore) },
-      ],
+      items: entriesFromDict($tStore, 'testes.functional', ['action', 'result', 'priority']).map(
+        (entry) => ({ ...entry, priority: localPriority(entry.priority, $tNavStore) }),
+      ),
     }}
     accessibility={{
       title: $tStore('testes.accessibility.title'),
@@ -969,16 +1018,11 @@ interface ContextMenuRadioGroupProps {
         level:     'WCAG',
         how:       $tNavStore('common.howToVerify'),
       },
-      items: [
-        { criterion: $tStore('testes.accessibility.item1'), level: 'AA', how: 'axe-core' },
-        { criterion: $tStore('testes.accessibility.item2'), level: 'AA', how: 'DOM inspection' },
-        { criterion: $tStore('testes.accessibility.item3'), level: 'AA', how: 'DOM inspection' },
-        { criterion: $tStore('testes.accessibility.item4'), level: 'AA', how: 'DOM inspection' },
-        { criterion: $tStore('testes.accessibility.item5'), level: 'AA', how: 'DOM inspection' },
-        { criterion: $tStore('testes.accessibility.item6'), level: 'AA', how: 'DOM inspection' },
-        { criterion: $tStore('testes.accessibility.item7'), level: 'AA', how: 'Keyboard test' },
-        { criterion: $tStore('testes.accessibility.item8'), level: 'AA', how: 'Contrast analyzer' },
-      ],
+      items: stringsFromDict($tStore, 'testes.accessibility').map((criterion, i) => ({
+        criterion,
+        level: 'AA',
+        how: a11yTestHow[i] ?? 'axe-core',
+      })),
     }}
     visual={{
       title: $tStore('testes.visual.title'),
@@ -986,14 +1030,10 @@ interface ContextMenuRadioGroupProps {
         story:    $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [
-        { story: $tStore('testes.visual.item1.story'), priority: localPriority($tStore('testes.visual.item1.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item2.story'), priority: localPriority($tStore('testes.visual.item2.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
-        { story: $tStore('testes.visual.item6.story'), priority: localPriority($tStore('testes.visual.item6.priority'), $tNavStore) },
-      ],
+      items: entriesFromDict($tStore, 'testes.visual', ['story', 'priority']).map((entry) => ({
+        ...entry,
+        priority: localPriority(entry.priority, $tNavStore),
+      })),
     }}
   />
 </DocsPageLayout>

@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu } from './context-menu';
-import { contextMenuSource, contextMenuSourceWith } from './context-menu.source';
+import {
+  contextMenuSource,
+  contextMenuSourceWith,
+  contextMenuSourceWithShortcut,
+} from './context-menu.source';
 import {
   gestoOpen,
   clickCreateArea,
@@ -36,6 +40,11 @@ const item = (value: string) =>
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
 export const WithShortcut: Story = {
+  parameters: {
+    // "Desfazer Ctrl+Z" é o segundo atalho do preview, e o menu canônico do
+    // `meta` traz "Duplicar" sem atalho nenhum ali.
+    docs: { source: { transform: contextMenuSourceWithShortcut } },
+  },
   render: () =>
     createContextMenu({
       trigger: clickCreateArea('Clique com o botão direito aqui'),

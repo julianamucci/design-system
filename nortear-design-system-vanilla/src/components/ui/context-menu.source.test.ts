@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
+  contextMenuCleanupSnippet,
   contextMenuSnippet,
   contextMenuSource,
+  contextMenuSourceCleanup,
+  contextMenuSourceDarkPalette,
+  contextMenuSourceItemDestructive,
   contextMenuSourceWith,
+  contextMenuSourceWithShortcut,
 } from './context-menu.source';
 
 describe('contextMenuSnippet', () => {
@@ -109,6 +114,57 @@ describe('contextMenuSource', () => {
     expect(
       contextMenuSource('<div data-slot="context-menu" style="display: contents">', {}),
     ).not.toContain('display: contents');
+  });
+});
+
+/**
+ * Cada caso aqui compara o snippet com o que a STORY do mesmo nome monta.
+ *
+ * Story sem transform própria herda a do `meta` e publica o menu canônico —
+ * silenciosamente, porque o painel Code não chega ao DOM durante a play e
+ * nenhuma suíte de navegador o alcança. Era assim em quatro stories deste
+ * componente, cada uma mostrando uma coisa e publicando outra.
+ */
+describe('transforms por story', () => {
+  it('WithShortcut publica os atalhos do preview, e não o menu canônico', () => {
+    const code = contextMenuSourceWithShortcut('', {});
+    expect(code).toContain("{ label: 'Editar', value: 'editar', shortcut: 'Ctrl+E' },");
+    expect(code).toContain("{ label: 'Desfazer', value: 'undo', shortcut: 'Ctrl+Z' },");
+    // "Duplicar" é a segunda entrada do menu canônico, e ela NÃO está no
+    // preview desta story: é exatamente a troca que o defeito fazia.
+    expect(code).not.toContain("label: 'Duplicar'");
+  });
+
+  it('ItemDestructive publica o rótulo por extenso que está na tela', () => {
+    const code = contextMenuSourceItemDestructive('', {});
+    expect(code).toContain(
+      "{ label: 'Excluir permanentemente', value: 'perigo', shortcut: 'Delete', variant: 'destructive' },",
+    );
+    expect(code).not.toContain("{ label: 'Excluir', value:");
+  });
+
+  it('DarkPalette publica o item desabilitado que aparece na foto', () => {
+    const code = contextMenuSourceDarkPalette('', {});
+    expect(code).toContain("{ label: 'Duplicar', value: 'off', disabled: true },");
+    // A paleta vem do tema, não da chamada: nada de opção inventada no snippet.
+    expect(code).not.toContain('dark');
+    expect(code).not.toContain('theme');
+  });
+
+  it('ListenerCleanup publica o menu da sonda e o caminho de saída', () => {
+    const code = contextMenuSourceCleanup('', {});
+    expect(code).toContain("area.textContent = 'Área com menu de contexto';");
+    expect(code).toContain("{ label: 'Copiar', value: 'copy' },");
+    expect(code).toContain("{ label: 'Colar', value: 'paste' },");
+    // O assunto da story é o CICLO, e é ele que o trecho copiável tem de
+    // ensinar — sem esta linha o snippet seria o de qualquer outra story.
+    expect(code).toContain('menu.destroy();');
+  });
+
+  it('o snippet da limpeza ainda respeita o rótulo que os controls trazem', () => {
+    const code = contextMenuCleanupSnippet({ triggerLabel: 'Área do documento' });
+    expect(code).toContain("area.textContent = 'Área do documento';");
+    expect(code).toContain('menu.destroy();');
   });
 });
 
