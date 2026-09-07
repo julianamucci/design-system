@@ -61,12 +61,21 @@ export function localeDoNavegador(
  * `window` é injetável para o teste não depender de `window` global.
  */
 export function negociarLocale(
-  window?: { location?: { search?: string }; localStorage?: Pick<Storage, 'getItem'> },
+  // `janela`, e NÃO `window`. Chamava-se `window` e sombreava o global: com o
+  // argumento omitido — que é como TODOS os chamadores chamam, menos um —, o
+  // `typeof window === 'undefined'` dentro da função testava o PARÂMETRO, dava
+  // verdadeiro, e a função devolvia o padrão sem consultar nada.
+  //
+  // O efeito era a função inteira virar `return 'pt-BR'`: `?lang=` ignorado, a
+  // preferência salva ignorada (trocar de idioma e recarregar perdia a escolha)
+  // e o idioma do navegador ignorado — exatamente o problema que este arquivo
+  // foi escrito para resolver. Nas cinco stacks, e na barra lateral.
+  janela?: { location?: { search?: string }; localStorage?: Pick<Storage, 'getItem'> },
   idiomasDoNavegador?: readonly string[],
   key = 'ds-locale',
   padrao: Locale = 'pt-BR',
 ): Locale {
-  const w = window ?? (typeof window === 'undefined' ? undefined : window);
+  const w = janela ?? (typeof window === 'undefined' ? undefined : window);
   if (!w) return padrao;
 
   const daUrl = new URLSearchParams(w.location?.search ?? '').get('lang');
