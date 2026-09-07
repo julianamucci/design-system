@@ -126,6 +126,11 @@ describe('pergunta que cita o componente pelo nome', () => {
     ['pra que serve o componente ComputerUse?', 'computer-use'],
     ['qual a diferença entre popover e HoverCard?', 'hover-card'],
     ['como uso o InputOTP?', 'input-otp'],
+    // Tudo junto e minúsculo: como se digita de memória, sem copiar da tela.
+    // Não há maiúscula onde cortar — quem resolve é a forma compacta do slug.
+    ['quais os casos de uso para o componente computeruse?', 'computer-use'],
+    ['o que é hovercard?', 'hover-card'],
+    ['o datatable tem seleção de linha?', 'data-table'],
   ])('%s → %s', (pergunta, slug) => {
     expect(melhor(CORPUS_PT, pergunta)).toBe(slug);
   });
@@ -142,6 +147,24 @@ describe('pergunta que cita o componente pelo nome', () => {
   it('funciona em inglês e em espanhol, contra o corpus daquela língua', () => {
     expect(melhor(CORPUS_EN, 'What props does Badge take?')).toBe('badge');
     expect(melhor(CORPUS_ES, 'que hace el componente tooltip?')).toBe('tooltip');
+  });
+
+  it('palavra vazia que é nome de componente continua valendo', () => {
+    // `use` é palavra vazia do inglês E metade do slug `computer-use`. Tratada
+    // como vazia, sumia da pergunta junto com o bônus de sequência, e a nota
+    // caía de 10,5 para 4,2. Quem decide é o corpus: token que aparece em slug
+    // nunca é vazio.
+    expect(nota(CORPUS_PT, 'pra que serve o componente ComputerUse?')).toBeGreaterThan(9);
+    expect(melhor(CORPUS_PT, 'pra que serve o componente ComputerUse?')).toBe('computer-use');
+  });
+
+  it('as três formas de escrever o nome dão a mesma nota, aproximadamente', () => {
+    const formas = [
+      'pra que serve o componente ComputerUse?',
+      'pra que serve o componente computer use?',
+      'pra que serve o componente computeruse?',
+    ].map((pergunta) => nota(CORPUS_PT, pergunta));
+    for (const n of formas) expect(n).toBeGreaterThan(9);
   });
 
   it('pontua muito acima do piso — este é o caso fácil', () => {

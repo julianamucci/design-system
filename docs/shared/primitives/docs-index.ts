@@ -173,12 +173,65 @@ export function tokenize(text: string): string[] {
     .filter((token) => token.length >= 2);
 }
 
-/** Termos úteis da pergunta, sem repetição e sem palavra vazia. */
-function queryTerms(question: string): string[] {
+/**
+ * Nome de componente escrito TUDO JUNTO, em minúsculas.
+ *
+ * A quebra por maiúscula resolve `ComputerUse`. Não resolve `computeruse`, que
+ * é como a pessoa escreve quando digita de memória em vez de copiar da barra
+ * lateral — e não há maiúscula onde cortar. O termo vira um só, não casa com
+ * `computer` nem com `use`, e a busca devolve qualquer coisa.
+ *
+ * A saída é perguntar ao próprio corpus: cada slug tem uma forma compacta
+ * (`computer-use` → `computeruse`), e quando um termo da pergunta é igual a
+ * ela, o termo é trocado pelas partes do slug. Continua sem índice paralelo — o
+ * mapa é montado do corpus a cada chamada, como o IDF.
+ */
+function compactosDoCorpus(corpus: readonly DocsIndexEntry[]): Map<string, string[]> {
+  const mapa = new Map<string, string[]>();
+  for (const entry of corpus) {
+    const partes = tokenize(entry.slug);
+    if (partes.length < 2) continue;
+    mapa.set(partes.join(''), partes);
+  }
+  return mapa;
+}
+
+/**
+ * Os tokens da pergunta com a forma compacta já expandida.
+ *
+ * Sem tirar palavra vazia e sem deduplicar: esta é a lista que o bônus de
+ * sequência lê, e ele depende de ADJACÊNCIA. Remover uma palavra no meio
+ * juntaria termos que não estavam juntos.
+ */
+function expandirTokens(question: string, compactos?: Map<string, string[]>): string[] {
+  const saida: string[] = [];
+  for (const token of tokenize(question)) {
+    const partes = compactos?.get(token);
+    if (partes) saida.push(...partes);
+    else saida.push(token);
+  }
+  return saida;
+}
+
+/**
+ * Termos úteis da pergunta, sem repetição e sem palavra vazia.
+ *
+ * Vale saber que `use` É palavra vazia (da lista do inglês) e ao mesmo tempo
+ * metade do slug `computer-use` — então esse termo não pontua sozinho. Não é
+ * descuido: quem sustenta a nota nesse caso é o bônus de SEQUÊNCIA, que lê a
+ * lista completa de tokens e enxerga "computer use" adjacente.
+ *
+ * Cheguei a excluir da lista de vazias todo token que aparece em algum slug.
+ * Rendia +0,3 nas perguntas reais e fazia a consulta degenerada "use" devolver
+ * `computer-use` com 7,36 — resposta confiante para uma pergunta que não é
+ * pergunta. Nenhum teste conseguia distinguir as duas versões, que é o sinal de
+ * que a complexidade não estava carregando peso.
+ */
+function queryTerms(question: string, compactos?: Map<string, string[]>): string[] {
   const seen = new Set<string>();
   const terms: string[] = [];
-  for (const token of tokenize(question)) {
-    if (STOPWORDS.has(token) || seen.has(token)) continue;
+  for (const token of expandirTokens(question, compactos)) {
+    if (seen.has(token) || STOPWORDS.has(token)) continue;
     seen.add(token);
     terms.push(token);
   }
@@ -274,8 +327,11 @@ export function searchDocs(
   options: DocsIndexOptions = {},
 ): DocsIndexHit[] {
   const limit = options.limit ?? 5;
-  const terms = queryTerms(question);
-  if (corpus.length === 0 || terms.length === 0) return [];
+  if (corpus.length === 0) return [];
+
+  const compactos = compactosDoCorpus(corpus);
+  const terms = queryTerms(question, compactos);
+  if (terms.length === 0) return [];
 
   const prepared = corpus.map(prepare);
   const total = prepared.length;
@@ -295,7 +351,10 @@ export function searchDocs(
   const denominator = terms.reduce((sum, term) => sum + (idf.get(term) ?? 0), 0);
   if (denominator === 0) return [];
 
-  const questionTokens = tokenize(question);
+  // A lista COMPLETA, com a forma compacta expandida e sem tirar nada: o bônus
+  // de sequência lê adjacência, e uma remoção no meio juntaria termos que não
+  // estavam juntos.
+  const questionTokens = expandirTokens(question, compactos);
 
   const hits: DocsIndexHit[] = prepared.map((doc) => {
     let weighted = 0;
