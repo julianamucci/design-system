@@ -523,7 +523,12 @@ function auditAnalytics(slug) {
       // palavra `location` em lugar nenhum. As duas devolviam zero achado, que
       // em check de PRESENÇA é indistinguível de "conferido, tudo certo" — o
       // mesmo erro de leitura que já custou caro nesta casa mais de uma vez.
-      const achados = [...content.matchAll(/["'](docs[_:][A-Za-z0-9_:-]*)["']/g)]
+      // O HÍFEN entra na classe, e ele era um buraco medido: o angular mandava
+      // `location: 'docs-demonstration'` e a varredura procurava `docs[_:]`, de
+      // modo que o valor fora do vocabulário se escondia atrás do separador
+      // errado. Portão que reconhece o valor certo e o valor obviamente errado,
+      // mas não o quase-certo, deixa passar justamente o que ninguém revisa.
+      const achados = [...content.matchAll(/["'](docs[_:-][A-Za-z0-9_:-]*)["']/g)]
         .filter((m) => !EVENTOS_DOCS.includes(m[1]));
       if (achados.length === 0) continue;
 
@@ -6246,8 +6251,19 @@ function auditQuality(slug) {
 
           let renderizado = 0;
           // Interpolada: `${caminho}.item${i}` alimentada por um array literal.
+          //
+          // `[\s\S]` e não `[^\n]`: o array e a interpolação quase nunca estão na
+          // MESMA linha, e a classe que proibia quebra de linha cegava a regra
+          // justamente na forma mais comum de escrever isto —
+          // `[1, 2, 3].map((i) => ({\n  criterion: t(\`x.item${i}\`)`.
+          //
+          // Medido em 2026-09-06: com `[^\n]`, 32 listas em 21 componentes
+          // renderizavam menos itens do que o conteúdo declarava sem ninguém
+          // reprovar — o ChartDocs do vanilla mostrava 6 de 11 critérios
+          // funcionais, o SwitchDocs do angular 3 de 5 notas. A regra existia,
+          // a intenção estava escrita, e um caractere a desligava.
           if (new RegExp(`${p}\\.item\\$\\{i\\}`).test(content)) {
-            const lista = content.match(new RegExp(`\\[([\\d,\\s]+)\\][^\\n]{0,200}${p}`, 's'));
+            const lista = content.match(new RegExp(`\\[([\\d,\\s]+)\\][\\s\\S]{0,200}${p}`, 's'));
             if (lista) {
               renderizado = Math.max(
                 ...lista[1].split(',').map((n) => Number(n.trim())).filter(Number.isFinite),
