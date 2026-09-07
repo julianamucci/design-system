@@ -20,6 +20,7 @@ import {
   ContextMenuShortcut,
 } from '@/components/ui/context-menu';
 import {
+  contextMenuSource,
   contextMenuWithShortcutsSource,
   contextMenuWithChoiceUnicaSource,
   contextMenuWithMarkupSource,
@@ -37,7 +38,11 @@ const meta: Meta = {
     layout: 'centered',
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
-      source: { transform: contextMenuWithShortcutsSource },
+      // O padrão do arquivo é a forma CANÔNICA do menu, e não o snippet de uma
+      // composição: cada story declara a sua logo abaixo. Com `WithShortcuts`
+      // no `meta`, toda story nova herdava em silêncio o painel Code de um menu
+      // de atalhos que ela não desenha. Vanilla e Svelte já usam a canônica.
+      source: { transform: contextMenuSource },
       description: {
         component:
           'Composições do Context Menu: atalhos, marcação, escolha única, submenu e o menu completo.',
@@ -71,6 +76,12 @@ const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid
 // ── Com atalhos ───────────────────────────────────────────────────────────────
 
 export const WithShortcut: Story = {
+  parameters: {
+    // A story mostra três atalhos e nenhum grupo; a forma canônica do `meta`
+    // publica "Duplicar" sem atalho. Declarada aqui, e não herdada do `meta`,
+    // para que a fiação viva ao lado do preview que ela publica.
+    docs: { source: { transform: contextMenuWithShortcutsSource } },
+  },
   render: () => ({
     components: componentes,
     template: `

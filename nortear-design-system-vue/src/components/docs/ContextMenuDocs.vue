@@ -68,6 +68,14 @@ const screenReaderItems = computed(() =>
 // molduras diferentes).
 const areaClasse = AREA_CLICK_DIREITO;
 
+// A MESMA área, sem a dica visual: mesmo tamanho, mesmo recheio, mesmo texto
+// atenuado — só sem moldura e sem cursor. É o lado do "evite" do par 3, e ela
+// existe porque a legenda daquele par contrapõe área COM dica e área SEM. Com o
+// tracejado dos dois lados só o rótulo mudava, e o par não ilustrava nada.
+// Vanilla é a referência: `makePlainArea` em `ContextMenuDocs.ts`.
+const areaSemDicaClasse =
+  'nds-cluster nds-w-xs nds-p-8 nds-rounded-md nds-text-body nds-text-muted-foreground';
+
 const priorityKeyMap: Record<string, string> = {
   high: 'common.high',
   medium: 'common.medium',
@@ -93,12 +101,35 @@ function localPriority(raw: string): string {
 function stringsFromDict(
   t: (key: string, defaultValue?: string) => string,
   base: string,
+  prefix = 'item',
 ): string[] {
   const out: string[] = [];
   for (let i = 1; ; i++) {
-    const value = t(`${base}.item${i}`, '');
+    const value = t(`${base}.${prefix}${i}`, '');
     if (!value) break;
     out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A mesma varredura para a lista cujo item é um OBJETO — cenário, critério
+ * funcional, story de regressão visual. O primeiro campo é quem decide se o
+ * item existe, e os demais acompanham.
+ */
+function entriesFromDict<K extends string>(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!t(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map(field => [field, t(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
   }
   return out;
 }
@@ -340,19 +371,32 @@ interface ContextMenuLabelProps {
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
-const anatomyItems = computed(() => [
-  tContent('anatomy.item1'),
-  tContent('anatomy.item2'),
-  tContent('anatomy.item3'),
-  tContent('anatomy.item4'),
-  tContent('anatomy.item5'),
-  tContent('anatomy.item6'),
-  tContent('anatomy.item7'),
-  tContent('anatomy.item8'),
-  tContent('anatomy.item9'),
-  tContent('anatomy.item10'),
-  tContent('anatomy.item11'),
-]);
+const anatomyItems = computed(() => stringsFromDict(tContent, 'anatomy'));
+
+const usageGuidelines = computed(() => ({
+  title: tContent('usage.guidelines.title'),
+  items: stringsFromDict(tContent, 'usage.guidelines'),
+}));
+
+const usageScenarios = computed(() => ({
+  title: tContent('usage.scenarios.title'),
+  cols: {
+    scenario: tContent('usage.scenarios.cols.scenario'),
+    use: tContent('usage.scenarios.cols.use'),
+    alternative: tContent('usage.scenarios.cols.alternative'),
+  },
+  items: entriesFromDict(tContent, 'usage.scenarios', ['s', 'u', 'a']),
+}));
+
+const usageDo = computed(() => ({
+  title: tContent('usage.do.title'),
+  items: stringsFromDict(tContent, 'usage.do'),
+}));
+
+const usageDont = computed(() => ({
+  title: tContent('usage.dont.title'),
+  items: stringsFromDict(tContent, 'usage.dont'),
+}));
 
 const variantItems = computed(() => [
   { name: 'default',      description: stripHtml(tContent('variants.items.default')),      code: codeDefault       },
@@ -498,13 +542,9 @@ const relatedItems = computed(() => [
   { name: 'Tooltip',      description: toPlainText(tContent('related.tooltip')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
 ]);
 
-const noteItems = computed(() => [
-  { title: '', content: tContent('notes.tip1') },
-  { title: '', content: tContent('notes.tip2') },
-  { title: '', content: tContent('notes.tip3') },
-  { title: '', content: tContent('notes.tip4') },
-  { title: '', content: tContent('notes.tip5') },
-]);
+const noteItems = computed(() =>
+  stringsFromDict(tContent, 'notes', 'tip').map(content => ({ title: '', content })),
+);
 
 const analyticsItems = computed(() => [
   { event: tContent('analytics.table.menuOpen'),     trigger: toPlainText(tContent('analytics.table.menuOpenTrigger')),     payload: tContent('analytics.table.menuOpenPayload')     },
@@ -520,19 +560,12 @@ const a11yCritCols = computed(() => ({
   how: tNav('common.howToVerify'),
 }));
 
-const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'),  result: tContent('testes.functional.item1.result'),  priority: localPriority(tContent('testes.functional.item1.priority'))  },
-  { action: tContent('testes.functional.item2.action'),  result: tContent('testes.functional.item2.result'),  priority: localPriority(tContent('testes.functional.item2.priority'))  },
-  { action: tContent('testes.functional.item3.action'),  result: tContent('testes.functional.item3.result'),  priority: localPriority(tContent('testes.functional.item3.priority'))  },
-  { action: tContent('testes.functional.item4.action'),  result: tContent('testes.functional.item4.result'),  priority: localPriority(tContent('testes.functional.item4.priority'))  },
-  { action: tContent('testes.functional.item5.action'),  result: tContent('testes.functional.item5.result'),  priority: localPriority(tContent('testes.functional.item5.priority'))  },
-  { action: tContent('testes.functional.item6.action'),  result: tContent('testes.functional.item6.result'),  priority: localPriority(tContent('testes.functional.item6.priority'))  },
-  { action: tContent('testes.functional.item7.action'),  result: tContent('testes.functional.item7.result'),  priority: localPriority(tContent('testes.functional.item7.priority'))  },
-  { action: tContent('testes.functional.item8.action'),  result: tContent('testes.functional.item8.result'),  priority: localPriority(tContent('testes.functional.item8.priority'))  },
-  { action: tContent('testes.functional.item9.action'),  result: tContent('testes.functional.item9.result'),  priority: localPriority(tContent('testes.functional.item9.priority'))  },
-  { action: tContent('testes.functional.item10.action'), result: tContent('testes.functional.item10.result'), priority: localPriority(tContent('testes.functional.item10.priority')) },
-  { action: tContent('testes.functional.item11.action'), result: tContent('testes.functional.item11.result'), priority: localPriority(tContent('testes.functional.item11.priority')) },
-]);
+const functionalTestItems = computed(() =>
+  entriesFromDict(tContent, 'testes.functional', ['action', 'result', 'priority']).map(entry => ({
+    ...entry,
+    priority: localPriority(entry.priority),
+  })),
+);
 
 const a11yTestItems = computed(() =>
   stringsFromDict(tContent, 'testes.accessibility').map((criterion, i) => ({
@@ -542,14 +575,12 @@ const a11yTestItems = computed(() =>
   })),
 );
 
-const visualTestItems = computed(() => [
-  { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
-  { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
-  { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
-  { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-  { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
-  { story: tContent('testes.visual.item6.story'), priority: localPriority(tContent('testes.visual.item6.priority')) },
-]);
+const visualTestItems = computed(() =>
+  entriesFromDict(tContent, 'testes.visual', ['story', 'priority']).map(entry => ({
+    ...entry,
+    priority: localPriority(entry.priority),
+  })),
+);
 
 // ─── Composições — state ──────────────────────────────────────────────────────
 const compShowGrid   = ref(true);
@@ -702,32 +733,10 @@ const codeCompositionShortcuts = `<ContextMenu>
     <!-- ── Quando Usar ──────────────────────────────────────────────────────── -->
     <DocsWhenToUse
       :title="tContent('usage.title')"
-      :guidelines="{
-        title: tContent('usage.guidelines.title'),
-        items: [
-          tContent('usage.guidelines.item1'),
-          tContent('usage.guidelines.item2'),
-          tContent('usage.guidelines.item3'),
-          tContent('usage.guidelines.item4'),
-          tContent('usage.guidelines.item5'),
-        ],
-      }"
-      :scenarios="{
-        title: tContent('usage.scenarios.title'),
-        cols: {
-          scenario: tContent('usage.scenarios.cols.scenario'),
-          use: tContent('usage.scenarios.cols.use'),
-          alternative: tContent('usage.scenarios.cols.alternative'),
-        },
-        items: [
-          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-          { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-          { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-          { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
-        ],
-      }"
-      :do="{ title: tContent('usage.do.title'), items: [tContent('usage.do.item1'), tContent('usage.do.item2'), tContent('usage.do.item3'), tContent('usage.do.item4')] }"
-      :dont="{ title: tContent('usage.dont.title'), items: [tContent('usage.dont.item1'), tContent('usage.dont.item2'), tContent('usage.dont.item3')] }"
+      :guidelines="usageGuidelines"
+      :scenarios="usageScenarios"
+      :do="usageDo"
+      :dont="usageDont"
     />
 
     <!-- ── Do & Don't ───────────────────────────────────────────────────────── -->
@@ -797,7 +806,14 @@ const codeCompositionShortcuts = `<ContextMenu>
         </ContextMenu>
       </template>
 
-      <!-- Par 2: item destrutivo separado -->
+      <!--
+        Par 2: item destrutivo separado.
+
+        Todo rótulo sai do conteúdo compartilhado. O par desenhava seis literais
+        em português — "Clique com direito", "Nível 1", "Ação" e afins — que
+        ficam em português para quem lê a página em inglês ou espanhol, sem erro
+        e sem aviso.
+      -->
       <template #do-preview-1>
         <ContextMenu>
           <ContextMenuTrigger
@@ -805,17 +821,19 @@ const codeCompositionShortcuts = `<ContextMenu>
             data-align="center"
             data-justify="center"
           >
-            Clique com direito
+            {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
           <ContextMenuContent>
-            <ContextMenuItem>Editar</ContextMenuItem>
+            <ContextMenuItem>{{ tContent('demonstration.labels.edit') }}</ContextMenuItem>
+            <ContextMenuItem>{{ tContent('demonstration.labels.duplicate') }}</ContextMenuItem>
             <ContextMenuSeparator />
             <ContextMenuItem variant="destructive">
-              Excluir
+              {{ tContent('demonstration.labels.delete') }}
             </ContextMenuItem>
           </ContextMenuContent>
         </ContextMenu>
       </template>
+      <!-- Submenu dentro de submenu — o anti-padrão que `notes.tip3` nomeia. -->
       <template #dont-preview-1>
         <ContextMenu>
           <ContextMenuTrigger
@@ -823,16 +841,16 @@ const codeCompositionShortcuts = `<ContextMenu>
             data-align="center"
             data-justify="center"
           >
-            Clique com direito
+            {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
           <ContextMenuContent>
             <ContextMenuSub>
-              <ContextMenuSubTrigger>Nível 1</ContextMenuSubTrigger>
+              <ContextMenuSubTrigger>{{ tContent('demonstration.labels.share') }}</ContextMenuSubTrigger>
               <ContextMenuSubContent>
                 <ContextMenuSub>
-                  <ContextMenuSubTrigger>Nível 2</ContextMenuSubTrigger>
+                  <ContextMenuSubTrigger>{{ tContent('demonstration.labels.shareLink') }}</ContextMenuSubTrigger>
                   <ContextMenuSubContent>
-                    <ContextMenuItem>Ação</ContextMenuItem>
+                    <ContextMenuItem>{{ tContent('demonstration.labels.shareEmail') }}</ContextMenuItem>
                   </ContextMenuSubContent>
                 </ContextMenuSub>
               </ContextMenuSubContent>
@@ -844,10 +862,11 @@ const codeCompositionShortcuts = `<ContextMenu>
       <!--
         Par 3: dica visual de que a área tem menu de contexto.
 
-        As duas metades da legenda falam do mesmo assunto. É a MESMA área nos
-        dois lados, com o mesmo menu vivo dentro — a única diferença é o que ela
-        diz de si: `triggerLabel` anuncia o gesto, `areaNoHint` não anuncia
-        nada.
+        As duas metades da legenda falam de DICA VISUAL, e é o contorno que faz
+        a diferença: à esquerda a moldura tracejada da constante compartilhada
+        mais a linha que diz o gesto; à direita a mesma área SEM moldura e sem
+        aviso — o menu existe e ninguém tem como saber. Com o tracejado dos dois
+        lados só o rótulo mudava, e o par não ilustrava a legenda que carrega.
 
         Os dois rótulos saem do conteúdo compartilhado. O lado do evite era um
         `<div>` desenhado à mão, com literal em português e a borda tracejada em
@@ -875,7 +894,7 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #dont-preview-2>
         <ContextMenu>
           <ContextMenuTrigger
-            :class="areaClasse"
+            :class="areaSemDicaClasse"
             data-align="center"
             data-justify="center"
           >

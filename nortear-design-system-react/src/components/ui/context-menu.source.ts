@@ -316,6 +316,45 @@ ${area(LABEL_DEFAULT)}
 }
 
 /**
+ * Item destrutivo: a ação perigosa se declara pela VARIANTE, não pela cor.
+ *
+ * Snippet próprio porque o preview escreve "Excluir permanentemente" — o rótulo
+ * por extenso, que é o assunto de uma ação sem volta — enquanto o do `meta`
+ * publica "Excluir". Sem ele o painel Code ensinava um item que a foto não tem,
+ * e era a única das cinco stories deste arquivo sem construtor.
+ */
+export function contextMenuItemDestructiveSource(): string {
+  return jsxSnippet(
+    importDe(
+      'ContextMenu',
+      'ContextMenuContent',
+      'ContextMenuGroup',
+      'ContextMenuItem',
+      'ContextMenuSeparator',
+      'ContextMenuShortcut',
+      'ContextMenuTrigger',
+    ),
+    `<ContextMenu>
+${area(LABEL_DEFAULT)}
+  <ContextMenuContent>
+    <ContextMenuGroup>
+      <ContextMenuItem>
+        Editar
+        <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
+      </ContextMenuItem>
+      <ContextMenuItem>Duplicar</ContextMenuItem>
+    </ContextMenuGroup>
+    <ContextMenuSeparator />
+    <ContextMenuItem variant="destructive">
+      Excluir permanentemente
+      <ContextMenuShortcut>Delete</ContextMenuShortcut>
+    </ContextMenuItem>
+  </ContextMenuContent>
+</ContextMenu>`,
+  );
+}
+
+/**
  * Item recuado: `inset` alinha o rótulo com os itens que têm indicador à
  * esquerda. Só a borda esquerda é empurrada — a caixa continua terminando onde
  * as outras terminam, senão o menu ganharia um degrau à direita.

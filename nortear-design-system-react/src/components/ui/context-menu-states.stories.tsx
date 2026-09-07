@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/context-menu";
 import {
   contextMenuItemDisabledSource,
+  contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
   contextMenuDarkPaletteSource,
   contextMenuSource,
@@ -183,6 +184,10 @@ export const ItemInset: Story = {
 export const ItemDestructive: Story = {
   parameters: {
     covers: ["functional.item10", "visual.item2"],
+    // O preview escreve "Excluir permanentemente"; o snippet do `meta` publica
+    // "Excluir". Sem transform própria o painel Code ensinava um item que a foto
+    // não tem — e esta era a única story do arquivo sem construtor.
+    docs: { source: { transform: contextMenuItemDestructiveSource } },
   },
   render: () => (
     <ContextMenu>

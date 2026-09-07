@@ -65,12 +65,35 @@ const priorityKeyMap: Record<string, string> = {
 function stringsFromDict(
   t: (key: string, defaultValue?: string) => string,
   base: string,
+  prefix = "item",
 ): string[] {
   const out: string[] = [];
   for (let i = 1; ; i++) {
-    const value = t(`${base}.item${i}`, "");
+    const value = t(`${base}.${prefix}${i}`, "");
     if (!value) break;
     out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A mesma varredura para a lista cujo item é um OBJETO — cenário, critério
+ * funcional, story de regressão visual. O primeiro campo é quem decide se o
+ * item existe, e os demais acompanham.
+ */
+function entriesFromDict<K extends string>(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!t(`${base}.item${i}.${fields[0]}`, "")) break;
+    out.push(
+      Object.fromEntries(
+        fields.map((field) => [field, t(`${base}.item${i}.${field}`, "")]),
+      ) as Record<K, string>,
+    );
   }
   return out;
 }
@@ -104,6 +127,14 @@ const A11Y_TEST_HOW = [
 // navegador (WCAG 1.4.4), e o `nds-p-8` entrega o mesmo quadro sem cravá-la.
 // `user-select: none` já vem de `.nds-context-menu-trigger`.
 const triggerAreaClass = AREA_CLICK_DIREITO;
+
+// A MESMA área, sem a dica visual: mesmo tamanho, mesmo recheio, mesmo texto
+// atenuado — só sem moldura e sem cursor. É o lado do "evite" do par 3, e ela
+// existe porque a legenda daquele par contrapõe área COM dica e área SEM. Com o
+// tracejado dos dois lados só o rótulo mudava, e o par não ilustrava nada.
+// Vanilla é a referência: `makePlainArea` em `ContextMenuDocs.ts`.
+const plainAreaClass =
+  "nds-cluster nds-w-xs nds-p-8 nds-rounded-md nds-text-body nds-text-muted-foreground";
 
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 
@@ -153,7 +184,7 @@ function DemonstracaoPreview({ tContent }: { tContent: (key: string) => string }
   const trackItemClick = (label: string) => () =>
     track("menu_item_click", {
       label,
-      menu: "context_menu_demo",
+      menu: "demo",
       location: "docs_demo",
     });
 
@@ -163,7 +194,7 @@ function DemonstracaoPreview({ tContent }: { tContent: (key: string) => string }
         open &&
         track("menu_open", {
           component: "context_menu",
-          menu: "context_menu_demo",
+          menu: "demo",
           location: "docs_demo",
         })
       }
@@ -253,6 +284,14 @@ function RadioDemo({ tContent }: { tContent: (key: string) => string }) {
 export function ContextMenuDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
   const { t: tContent, locale } = useTranslation(contextMenuTranslations);
+
+  // A prioridade chega do conteúdo como identificador ("high", "medium"); quem
+  // a traduz é o dicionário de navegação. Item novo sem prioridade declarada cai
+  // no par padrão em vez de imprimir a chave crua.
+  const priorityLabel = useCallback(
+    (raw: string) => tNav(priorityKeyMap[raw] ?? "common.high"),
+    [tNav],
+  );
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os
   // valores chegam ao container — o `t()` exige nome de chave e não serviria.
@@ -409,19 +448,7 @@ interface ContextMenuCheckboxItemProps
       {/* ── Anatomia ───────────────────────────────────────────────── */}
       <DocsAnatomy
         title={tContent("anatomy.title")}
-        items={[
-          tContent("anatomy.item1"),
-          tContent("anatomy.item2"),
-          tContent("anatomy.item3"),
-          tContent("anatomy.item4"),
-          tContent("anatomy.item5"),
-          tContent("anatomy.item6"),
-          tContent("anatomy.item7"),
-          tContent("anatomy.item8"),
-          tContent("anatomy.item9"),
-          tContent("anatomy.item10"),
-          tContent("anatomy.item11"),
-        ]}
+        items={stringsFromDict(tContent, "anatomy")}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
       />
@@ -431,13 +458,7 @@ interface ContextMenuCheckboxItemProps
         title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
-          items: [
-            tContent("usage.guidelines.item1"),
-            tContent("usage.guidelines.item2"),
-            tContent("usage.guidelines.item3"),
-            tContent("usage.guidelines.item4"),
-            tContent("usage.guidelines.item5"),
-          ],
+          items: stringsFromDict(tContent, "usage.guidelines"),
         }}
         scenarios={{
           title: tContent("usage.scenarios.title"),
@@ -446,29 +467,15 @@ interface ContextMenuCheckboxItemProps
             use: tContent("usage.scenarios.cols.use"),
             alternative: tContent("usage.scenarios.cols.alternative"),
           },
-          items: [
-            { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
-            { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
-            { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
-            { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
-          ],
+          items: entriesFromDict(tContent, "usage.scenarios", ["s", "u", "a"]),
         }}
         do={{
           title: tContent("usage.do.title"),
-          items: [
-            tContent("usage.do.item1"),
-            tContent("usage.do.item2"),
-            tContent("usage.do.item3"),
-            tContent("usage.do.item4"),
-          ],
+          items: stringsFromDict(tContent, "usage.do"),
         }}
         dont={{
           title: tContent("usage.dont.title"),
-          items: [
-            tContent("usage.dont.item1"),
-            tContent("usage.dont.item2"),
-            tContent("usage.dont.item3"),
-          ],
+          items: stringsFromDict(tContent, "usage.dont"),
         }}
       />
 
@@ -524,31 +531,45 @@ interface ContextMenuCheckboxItemProps
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
+            // Todo rótulo sai do conteúdo compartilhado. O par desenhava sete
+            // literais em português — "Item destrutivo separado", "Opções",
+            // "Ação profunda" e afins — que ficam em português para quem lê a
+            // página em inglês ou espanhol, sem erro e sem aviso.
             doPreview: (
               <ContextMenu>
                 <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
-                  Item destrutivo separado
+                  {tContent("demonstration.labels.triggerLabel")}
                 </ContextMenuTrigger>
                 <ContextMenuContent>
-                  <ContextMenuItem>Editar</ContextMenuItem>
+                  <ContextMenuItem>{tContent("demonstration.labels.edit")}</ContextMenuItem>
+                  <ContextMenuItem>{tContent("demonstration.labels.duplicate")}</ContextMenuItem>
                   <ContextMenuSeparator />
-                  <ContextMenuItem variant="destructive">Excluir</ContextMenuItem>
+                  <ContextMenuItem variant="destructive">
+                    {tContent("demonstration.labels.delete")}
+                  </ContextMenuItem>
                 </ContextMenuContent>
               </ContextMenu>
             ),
+            // Submenu dentro de submenu — o anti-padrão que `notes.tip3` nomeia.
             dontPreview: (
               <ContextMenu>
                 <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
-                  Submenus aninhados
+                  {tContent("demonstration.labels.triggerLabel")}
                 </ContextMenuTrigger>
                 <ContextMenuContent>
                   <ContextMenuSub>
-                    <ContextMenuSubTrigger>Opções</ContextMenuSubTrigger>
+                    <ContextMenuSubTrigger>
+                      {tContent("demonstration.labels.share")}
+                    </ContextMenuSubTrigger>
                     <ContextMenuSubContent>
                       <ContextMenuSub>
-                        <ContextMenuSubTrigger>Mais opções</ContextMenuSubTrigger>
+                        <ContextMenuSubTrigger>
+                          {tContent("demonstration.labels.shareLink")}
+                        </ContextMenuSubTrigger>
                         <ContextMenuSubContent>
-                          <ContextMenuItem>Ação profunda</ContextMenuItem>
+                          <ContextMenuItem>
+                            {tContent("demonstration.labels.shareEmail")}
+                          </ContextMenuItem>
                         </ContextMenuSubContent>
                       </ContextMenuSub>
                     </ContextMenuSubContent>
@@ -562,15 +583,14 @@ interface ContextMenuCheckboxItemProps
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
-            // A legenda deste par mudou de assunto: as duas metades falam de
-            // DICA VISUAL. É a MESMA área nos dois lados, com o mesmo menu vivo
-            // dentro — a única diferença é o que ela diz de si: `triggerLabel`
-            // anuncia o gesto, `areaNoHint` não anuncia nada.
+            // As duas metades da legenda falam de DICA VISUAL, e é o contorno
+            // que faz a diferença: à esquerda a moldura tracejada da constante
+            // compartilhada mais a linha que diz o gesto; à direita a mesma
+            // área SEM moldura e sem aviso — o menu existe e ninguém tem como
+            // saber. Com o tracejado dos dois lados só o rótulo mudava, e o par
+            // não ilustrava a legenda que carrega.
             //
-            // Os dois rótulos saem do conteúdo compartilhado. O lado do evite
-            // era um `<div>` desenhado à mão, com literal em português e a borda
-            // tracejada em `style` inline — além de imitação, desenhava
-            // justamente a dica que a legenda manda tirar.
+            // Os dois rótulos saem do conteúdo compartilhado.
             doPreview: (
               <ContextMenu>
                 <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
@@ -587,7 +607,7 @@ interface ContextMenuCheckboxItemProps
             ),
             dontPreview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
+                <ContextMenuTrigger className={plainAreaClass} data-align="center" data-justify="center">
                   {tContent("demonstration.labels.areaNoHint")}
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -1120,13 +1140,10 @@ const [showRulers, setShowRulers] = useState(false);
       {/* ── Notas ──────────────────────────────────────────────────── */}
       <DocsNotes
         title={tContent("notes.title")}
-        items={[
-          { title: "", content: tContent("notes.tip1") },
-          { title: "", content: tContent("notes.tip2") },
-          { title: "", content: tContent("notes.tip3") },
-          { title: "", content: tContent("notes.tip4") },
-          { title: "", content: tContent("notes.tip5") },
-        ]}
+        items={stringsFromDict(tContent, "notes", "tip").map((content) => ({
+          title: "",
+          content,
+        }))}
       />
 
       {/* ── Analytics ──────────────────────────────────────────────── */}
@@ -1176,63 +1193,9 @@ const [showRulers, setShowRulers] = useState(false);
             result: tNav("common.expectedResult"),
             priority: tNav("common.priority"),
           },
-          items: [
-            {
-              action: tContent("testes.functional.item1.action"),
-              result: tContent("testes.functional.item1.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item1.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item2.action"),
-              result: tContent("testes.functional.item2.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item2.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item3.action"),
-              result: tContent("testes.functional.item3.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item3.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item4.action"),
-              result: tContent("testes.functional.item4.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item4.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item5.action"),
-              result: tContent("testes.functional.item5.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item5.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item6.action"),
-              result: tContent("testes.functional.item6.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item6.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item7.action"),
-              result: tContent("testes.functional.item7.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item7.priority")] ?? "common.medium"),
-            },
-            {
-              action: tContent("testes.functional.item8.action"),
-              result: tContent("testes.functional.item8.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item8.priority")] ?? "common.medium"),
-            },
-            {
-              action: tContent("testes.functional.item9.action"),
-              result: tContent("testes.functional.item9.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item9.priority")] ?? "common.medium"),
-            },
-            {
-              action: tContent("testes.functional.item10.action"),
-              result: tContent("testes.functional.item10.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item10.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item11.action"),
-              result: tContent("testes.functional.item11.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item11.priority")] ?? "common.high"),
-            },
-          ],
+          items: entriesFromDict(tContent, "testes.functional", ["action", "result", "priority"]).map(
+            (entry) => ({ ...entry, priority: priorityLabel(entry.priority) }),
+          ),
         }}
         accessibility={{
           title: tContent("testes.accessibility.title"),
@@ -1253,32 +1216,9 @@ const [showRulers, setShowRulers] = useState(false);
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          items: [
-            {
-              story: tContent("testes.visual.item1.story"),
-              priority: tNav(priorityKeyMap[tContent("testes.visual.item1.priority")] ?? "common.high"),
-            },
-            {
-              story: tContent("testes.visual.item2.story"),
-              priority: tNav(priorityKeyMap[tContent("testes.visual.item2.priority")] ?? "common.high"),
-            },
-            {
-              story: tContent("testes.visual.item3.story"),
-              priority: tNav(priorityKeyMap[tContent("testes.visual.item3.priority")] ?? "common.high"),
-            },
-            {
-              story: tContent("testes.visual.item4.story"),
-              priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.medium"),
-            },
-            {
-              story: tContent("testes.visual.item5.story"),
-              priority: tNav(priorityKeyMap[tContent("testes.visual.item5.priority")] ?? "common.medium"),
-            },
-            {
-              story: tContent("testes.visual.item6.story"),
-              priority: tNav(priorityKeyMap[tContent("testes.visual.item6.priority")] ?? "common.high"),
-            },
-          ],
+          items: entriesFromDict(tContent, "testes.visual", ["story", "priority"]).map(
+            (entry) => ({ ...entry, priority: priorityLabel(entry.priority) }),
+          ),
         }}
       />
     </DocsPageLayout>

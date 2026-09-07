@@ -15,6 +15,7 @@ import {
   ContextMenuCheckboxItem,
 } from '@/components/ui/context-menu';
 import {
+  contextMenuSource,
   contextMenuItemDisabledSource,
   contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
@@ -32,7 +33,12 @@ const meta: Meta = {
     layout: 'centered',
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
-      source: { transform: contextMenuItemDisabledSource },
+      // O padrão do arquivo é a forma CANÔNICA do menu, e não o snippet de um
+      // estado: cada story declara o seu logo abaixo. Com `ItemDisabled` no
+      // `meta`, toda story nova herdava em silêncio o painel Code de um item
+      // desabilitado que ela não desenha — o defeito só apareceria para quem
+      // comparasse foto e trecho. Vanilla e Svelte já usam a forma canônica.
+      source: { transform: contextMenuSource },
       description: {
         component:
           'Estados do Context Menu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
@@ -63,6 +69,10 @@ const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid
 export const ItemDisabled: Story = {
   parameters: {
     covers: ['functional.item9', 'accessibility.item6', 'accessibility.item9', 'visual.item5'],
+    // `disabled` é prop do ITEM: sem a transform o snippet não mostraria onde a
+    // prop entra, que é o assunto da story. Declarada aqui, e não herdada do
+    // `meta`, para que a fiação viva ao lado do preview que ela publica.
+    docs: { source: { transform: contextMenuItemDisabledSource } },
   },
   render: () => ({
     components: componentes,

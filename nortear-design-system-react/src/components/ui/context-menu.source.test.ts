@@ -5,6 +5,7 @@ import {
   contextMenuWithMarkupSource,
   contextMenuWithSubmenuSource,
   contextMenuItemDisabledSource,
+  contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
   contextMenuWithShortcutSource,
   contextMenuDarkPaletteSource,
@@ -19,6 +20,7 @@ const ALL = [
   contextMenuWithShortcutSource,
   contextMenuDarkPaletteSource,
   contextMenuItemDisabledSource,
+  contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
   contextMenuCompletoSource,
 ];
@@ -138,6 +140,16 @@ describe('estados do item', () => {
     expect(saida).toContain('<ContextMenuItem variant="destructive">Excluir</ContextMenuItem>');
     expect(saida).not.toContain('<ContextMenuShortcut>');
     expect(saida).not.toMatch(/\bdark\b/);
+  });
+
+  it('o destrutivo publica o rótulo POR EXTENSO, que é o que o preview mostra', () => {
+    // O snippet do `meta` publica "Excluir"; a story escreve "Excluir
+    // permanentemente" porque uma ação sem volta se diz por inteiro. Sem
+    // transform própria o painel Code ensinava o item curto.
+    const saida = contextMenuItemDestructiveSource();
+    expect(saida).toContain('<ContextMenuItem variant="destructive">');
+    expect(saida).toContain('Excluir permanentemente');
+    expect(saida).toContain('<ContextMenuShortcut>Delete</ContextMenuShortcut>');
   });
 
   it('o recuo vale para o item e para o rótulo do grupo', () => {

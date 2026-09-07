@@ -1,6 +1,7 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import * as ContextMenu from '@/components/ui/context-menu';
+  import { Button } from '@/components/ui/button';
   import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -122,10 +123,11 @@
   function stringsFromDict(
     t: (key: string, defaultValue?: string) => string,
     base: string,
+    prefix = 'item',
   ): string[] {
     const out: string[] = [];
     for (let i = 1; ; i++) {
-      const value = t(`${base}.item${i}`, '');
+      const value = t(`${base}.${prefix}${i}`, '');
       if (!value) break;
       out.push(value);
     }
@@ -474,62 +476,82 @@ interface ContextMenuRadioGroupProps {
   />
 
   <!--
-    O par 1 monta o COMPONENTE, como os pares 2 e 3 ao lado e como as outras
-    quatro stacks. Antes ele desenhava caixas à mão, com `padding` cravado em
-    `style` inline: o exemplo saía do tema, da densidade e da escala de tipo, e
-    ensinava markup que o design system não emite.
+    Par 1: alternativa explícita.
+
+    A legenda promete "as mesmas ações também via botão visível", então o lado do
+    faça DESENHA o botão — anunciá-lo por escrito ("+ botão visível") era CONTAR
+    o que o par existe para MOSTRAR, e um texto solto não prova que a ação é
+    alcançável sem o botão direito. Os dois menus levam as mesmas ações; o que
+    muda entre os lados é só o botão.
+
+    Todo rótulo sai do conteúdo compartilhado: literal em português fica em
+    português para quem lê a página em inglês ou espanhol, sem erro e sem aviso.
   -->
   {#snippet doPair1()}
-    <div class="nds-cluster" data-spacing="sm">
+    <div class="nds-stack" data-spacing="sm" data-align="center">
       <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par1-do', 'docs_do_dont', o)}>
         <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-          Área com menu
+          {$tStore('demonstration.labels.triggerLabel')}
         </ContextMenu.Trigger>
         <ContextMenu.Content>
-          <ContextMenu.Item>Editar</ContextMenu.Item>
-          <ContextMenu.Item variant="destructive">Excluir</ContextMenu.Item>
+          <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
+          <ContextMenu.Separator />
+          <ContextMenu.Item variant="destructive">
+            {$tStore('demonstration.labels.delete')}
+          </ContextMenu.Item>
         </ContextMenu.Content>
       </ContextMenu.Root>
-      <span class="nds-text-body nds-text-muted-foreground">+ botão visível</span>
+      <!-- A MESMA ação do menu, alcançável sem o botão direito. -->
+      <Button variant="outline" size="sm">{$tStore('demonstration.labels.edit')}</Button>
     </div>
   {/snippet}
   {#snippet dontPair1()}
     <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par1-dont', 'docs_do_dont', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        Área (sem botão)
+        {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item variant="destructive">Excluir</ContextMenu.Item>
+        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
+        <ContextMenu.Separator />
+        <ContextMenu.Item variant="destructive">
+          {$tStore('demonstration.labels.delete')}
+        </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
 
+  <!-- Par 2: item destrutivo separado, e o submenu que não se aninha. -->
   {#snippet doPair2()}
     <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par2-do', 'docs_do_dont', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        Right-click aqui
+        {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item>Editar</ContextMenu.Item>
+        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
+        <ContextMenu.Item>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
         <ContextMenu.Separator />
-        <ContextMenu.Item variant="destructive">Excluir</ContextMenu.Item>
+        <ContextMenu.Item variant="destructive">
+          {$tStore('demonstration.labels.delete')}
+        </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
+  <!-- Submenu dentro de submenu — o anti-padrão que `notes.tip3` nomeia. -->
   {#snippet dontPair2()}
     <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par2-dont', 'docs_do_dont', o)}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        Right-click aqui
+        {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
-        <ContextMenu.Item>Editar</ContextMenu.Item>
         <ContextMenu.Sub>
-          <ContextMenu.SubTrigger>Mais</ContextMenu.SubTrigger>
+          <ContextMenu.SubTrigger>{$tStore('demonstration.labels.share')}</ContextMenu.SubTrigger>
           <ContextMenu.SubContent>
             <ContextMenu.Sub>
-              <ContextMenu.SubTrigger>Avançado</ContextMenu.SubTrigger>
+              <ContextMenu.SubTrigger>
+                {$tStore('demonstration.labels.shareLink')}
+              </ContextMenu.SubTrigger>
               <ContextMenu.SubContent>
-                <ContextMenu.Item>Opção profunda</ContextMenu.Item>
+                <ContextMenu.Item>{$tStore('demonstration.labels.shareEmail')}</ContextMenu.Item>
               </ContextMenu.SubContent>
             </ContextMenu.Sub>
           </ContextMenu.SubContent>
@@ -971,13 +993,7 @@ interface ContextMenuRadioGroupProps {
   <!-- ── Notas ────────────────────────────────────────────────────────── -->
   <DocsNotes
     title={$tStore('notes.title')}
-    items={[
-      { title: '', content: $tStore('notes.tip1') },
-      { title: '', content: $tStore('notes.tip2') },
-      { title: '', content: $tStore('notes.tip3') },
-      { title: '', content: $tStore('notes.tip4') },
-      { title: '', content: $tStore('notes.tip5') },
-    ]}
+    items={stringsFromDict($tStore, 'notes', 'tip').map((content) => ({ title: '', content }))}
   />
 
   <!-- ── Analytics ────────────────────────────────────────────────────── -->
