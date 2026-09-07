@@ -66,12 +66,12 @@
         },
         "item2": {
           "s": "Mostrar o quanto de um trabalho já foi feito, numa fração única",
-          "u": "Barra de progresso",
+          "u": "Progress",
           "a": "Ali a barra preenche a partir do começo e não sabe começar no meio; aqui o começo é a informação."
         },
         "item3": {
           "s": "Mostrar quanto uma resposta levou, em pares de rótulo e valor",
-          "u": "Medição da resposta",
+          "u": "MessageTiming",
           "a": "Ali não há eixo, e portanto não há posição; aqui há uma régua que todos os trechos dividem."
         },
         "item4": {
@@ -687,12 +687,12 @@
         },
         "item2": {
           "s": "Show how much of a job is done, as a single fraction",
-          "u": "Progress bar",
+          "u": "Progress",
           "a": "There the bar fills from the start and cannot begin midway; here the start is the information."
         },
         "item3": {
           "s": "Show how long a reply took, as label and value pairs",
-          "u": "Message timing",
+          "u": "MessageTiming",
           "a": "There is no axis there, and so no position; here there is a ruler every span shares."
         },
         "item4": {
@@ -1308,12 +1308,12 @@
         },
         "item2": {
           "s": "Mostrar cuánto de un trabajo ya se hizo, en una fracción única",
-          "u": "Barra de progreso",
+          "u": "Progress",
           "a": "Allí la barra se llena desde el inicio y no sabe empezar a la mitad; aquí el inicio es la información."
         },
         "item3": {
           "s": "Mostrar cuánto tardó una respuesta, en pares de etiqueta y valor",
-          "u": "Medición de la respuesta",
+          "u": "MessageTiming",
           "a": "Allí no hay eje, y por tanto no hay posición; aquí hay una regla que todos los tramos comparten."
         },
         "item4": {

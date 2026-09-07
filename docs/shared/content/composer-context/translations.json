@@ -70,7 +70,7 @@
         },
         "item3": {
           "s": "Escolher alguém ou um comando enquanto se escreve",
-          "u": "Seletor de gatilho do composer",
+          "u": "ComposerTriggerPopover",
           "a": "Ali a lista é escolha em andamento; aqui é o que já foi escolhido."
         },
         "item4": {
@@ -542,7 +542,7 @@
         },
         "item3": {
           "s": "Picking a person or a command while writing",
-          "u": "Composer trigger picker",
+          "u": "ComposerTriggerPopover",
           "a": "There the list is a choice in progress; here it is what has already been chosen."
         },
         "item4": {
@@ -1014,7 +1014,7 @@
         },
         "item3": {
           "s": "Elegir a alguien o un comando mientras se escribe",
-          "u": "Selector de disparador del composer",
+          "u": "ComposerTriggerPopover",
           "a": "Allí la lista es una elección en curso; aquí es lo que ya se eligió."
         },
         "item4": {

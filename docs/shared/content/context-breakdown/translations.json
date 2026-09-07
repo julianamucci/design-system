@@ -78,7 +78,7 @@
         },
         "item5": {
           "s": "Listar o que compõe uma resposta, item a item, com ação em cada linha",
-          "u": "Data table",
+          "u": "DataTable",
           "a": "Aquela tabela é para percorrer e agir; esta legenda é para comparar pesos de relance."
         }
       },
@@ -555,7 +555,7 @@
         },
         "item2": {
           "s": "Say how much of the window still fits",
-          "u": "Context display",
+          "u": "ContextDisplay",
           "a": "That question needs a ceiling; this one is answered without knowing how much fits."
         },
         "item3": {
@@ -570,7 +570,7 @@
         },
         "item5": {
           "s": "List what makes up an answer, item by item, with an action on each row",
-          "u": "Data table",
+          "u": "DataTable",
           "a": "That table is for scanning and acting; this legend is for comparing weights at a glance."
         }
       },
@@ -1062,7 +1062,7 @@
         },
         "item5": {
           "s": "Listar lo que compone una respuesta, ítem a ítem, con acción en cada fila",
-          "u": "Data table",
+          "u": "DataTable",
           "a": "Esa tabla es para recorrer y actuar; esta leyenda es para comparar pesos de un vistazo."
         }
       },

@@ -73,12 +73,12 @@
         },
         "item2": {
           "s": "Mostrar o que o agente já fez, com detalhes que podem ficar guardados",
-          "u": "Grupo de chamadas",
+          "u": "ToolGroup",
           "a": "Aquele nasce recolhido porque são detalhes de execução; este fica à vista porque é uma pergunta."
         },
         "item3": {
           "s": "Confirmar uma escolha que precisa interromper tudo até ser respondida",
-          "u": "Alert Dialog",
+          "u": "AlertDialog",
           "a": "Aquele toma a tela e prende o foco; este fica junto da conversa e não corta a leitura."
         },
         "item4": {
@@ -562,7 +562,7 @@
         },
         "item3": {
           "s": "Confirm a choice that has to interrupt everything until it is answered",
-          "u": "Alert Dialog",
+          "u": "AlertDialog",
           "a": "That one takes over the screen and traps focus; this one stays next to the conversation and does not cut the reading."
         },
         "item4": {
@@ -572,7 +572,7 @@
         },
         "item5": {
           "s": "Say where what was already asked for stands",
-          "u": "Agent status",
+          "u": "AgentStatus",
           "a": "That line describes what the machine is doing; this card says what it will not do without a person."
         }
       },
@@ -1041,12 +1041,12 @@
         },
         "item2": {
           "s": "Mostrar lo que el agente ya hizo, con detalles que pueden quedar guardados",
-          "u": "Grupo de llamadas",
+          "u": "ToolGroup",
           "a": "Aquel nace plegado porque son detalles de ejecución; esta queda a la vista porque es una pregunta."
         },
         "item3": {
           "s": "Confirmar una elección que necesita interrumpir todo hasta ser respondida",
-          "u": "Alert Dialog",
+          "u": "AlertDialog",
           "a": "Aquel toma la pantalla y atrapa el foco; esta queda junto a la conversación y no corta la lectura."
         },
         "item4": {

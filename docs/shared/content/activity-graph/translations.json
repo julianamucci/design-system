@@ -109,12 +109,12 @@
         },
         "item2": {
           "s": "Comparar números, proporções ou séries",
-          "u": "Gráfico",
+          "u": "Chart",
           "a": "Lá o desenho sai de valores medidos contra eixos; aqui sai de uma contagem por dia numa grade de calendário."
         },
         "item3": {
           "s": "Escolher uma data",
-          "u": "Calendário",
+          "u": "Calendar",
           "a": "Lá as casas são botões de seleção, com navegação por mês; aqui elas são leitura, e nenhuma delas faz nada."
         },
         "item4": {
@@ -124,7 +124,7 @@
         },
         "item5": {
           "s": "Mostrar o quanto um trabalho longo já andou",
-          "u": "Progresso do trabalho",
+          "u": "JobProgress",
           "a": "Lá há uma conta com um total; aqui há uma contagem por dia, e contagem por dia não se soma numa fração."
         }
       },
@@ -799,7 +799,7 @@
         },
         "item5": {
           "s": "Show how far a long job has come",
-          "u": "Job progress",
+          "u": "JobProgress",
           "a": "There is a sum with a total there; here there is a count per day, and a count per day does not add up to a fraction."
         }
       },
@@ -1459,12 +1459,12 @@
         },
         "item2": {
           "s": "Comparar números, proporciones o series",
-          "u": "Gráfico",
+          "u": "Chart",
           "a": "Allí el dibujo sale de valores medidos contra ejes; aquí sale de un conteo por día en una rejilla de calendario."
         },
         "item3": {
           "s": "Elegir una fecha",
-          "u": "Calendario",
+          "u": "Calendar",
           "a": "Allí las casillas son botones de selección con navegación por mes; aquí son lectura, y ninguna hace nada."
         },
         "item4": {
@@ -1474,7 +1474,7 @@
         },
         "item5": {
           "s": "Mostrar cuánto ha avanzado un trabajo largo",
-          "u": "Progreso del trabajo",
+          "u": "JobProgress",
           "a": "Allí hay una cuenta con un total; aquí hay un conteo por día, y un conteo por día no suma una fracción."
         }
       },

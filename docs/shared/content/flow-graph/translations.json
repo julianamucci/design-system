@@ -68,17 +68,17 @@
         },
         "item3": {
           "s": "Listar o que o agente fez, com estado por chamada",
-          "u": "Grupo de chamadas",
+          "u": "ToolGroup",
           "a": "Ali cada linha é uma chamada e nenhuma depende da outra."
         },
         "item4": {
           "s": "Comparar números, proporções ou séries",
-          "u": "Gráfico",
+          "u": "Chart",
           "a": "Ali o desenho sai de valores medidos; aqui sai de uma relação entre itens."
         },
         "item5": {
           "s": "Mostrar o quanto um trabalho longo já andou",
-          "u": "Progresso do trabalho",
+          "u": "JobProgress",
           "a": "Ali há uma conta com um total; aqui há uma relação entre passos, e relação não se soma."
         }
       },
@@ -673,7 +673,7 @@
         },
         "item5": {
           "s": "Show how far a long job has come",
-          "u": "Job progress",
+          "u": "JobProgress",
           "a": "There it is a count against a total; here it is a relation between steps, and a relation does not add up."
         }
       },
@@ -1258,17 +1258,17 @@
         },
         "item3": {
           "s": "Listar lo que el agente hizo, con estado por llamada",
-          "u": "Grupo de llamadas",
+          "u": "ToolGroup",
           "a": "Allí cada fila es una llamada y ninguna depende de otra."
         },
         "item4": {
           "s": "Comparar números, proporciones o series",
-          "u": "Gráfico",
+          "u": "Chart",
           "a": "Allí el dibujo sale de valores medidos; aquí sale de una relación entre elementos."
         },
         "item5": {
           "s": "Mostrar cuánto ha avanzado un trabajo largo",
-          "u": "Progreso del trabajo",
+          "u": "JobProgress",
           "a": "Allí hay una cuenta contra un total; aquí hay una relación entre pasos, y una relación no se suma."
         }
       },

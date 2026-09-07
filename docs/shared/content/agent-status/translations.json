@@ -72,7 +72,7 @@
         },
         "item3": {
           "s": "Descrever um passo dentro do turno — uma chamada de ferramenta, um raciocínio",
-          "u": "Conversa",
+          "u": "ChatThread",
           "a": "Aquilo mora dentro da mensagem e descreve um passo; esta linha descreve a execução inteira."
         },
         "item4": {
@@ -544,7 +544,7 @@
         },
         "item3": {
           "s": "Describe one step inside a turn — a tool call, a piece of reasoning",
-          "u": "Thread",
+          "u": "ChatThread",
           "a": "That lives inside the message and describes a step; this line describes the whole run."
         },
         "item4": {
@@ -1016,7 +1016,7 @@
         },
         "item3": {
           "s": "Describir un paso dentro del turno — una llamada de herramienta, un razonamiento",
-          "u": "Conversación",
+          "u": "ChatThread",
           "a": "Aquello vive dentro del mensaje y describe un paso; esta línea describe la ejecución entera."
         },
         "item4": {

@@ -62,17 +62,17 @@
         },
         "item3": {
           "s": "O que se espera já tem forma conhecida",
-          "u": "Esqueleto",
+          "u": "Skeleton",
           "a": "Ele desenha a forma do que vem. Aqui não se sabe o tamanho do que vem, e desenhar uma forma seria prometer uma."
         },
         "item4": {
           "s": "Sabe-se quanto falta",
-          "u": "Barra de progresso",
+          "u": "Progress",
           "a": "Ela mede. O indicador só diz que algo está vindo, e é honesto justamente por não medir."
         },
         "item5": {
           "s": "O texto já está chegando, trecho a trecho",
-          "u": "Conversa, com a mensagem em geração",
+          "u": "ChatThread, com a mensagem em geração",
           "a": "A partir do primeiro trecho o lugar já tem texto, e o indicador passa a mentir se ficar."
         }
       },
@@ -458,12 +458,12 @@
         },
         "item4": {
           "s": "How much is left is known",
-          "u": "Progress bar",
+          "u": "Progress",
           "a": "That one measures. The indicator only says something is coming, and it is honest precisely because it does not measure."
         },
         "item5": {
           "s": "The text is already arriving, piece by piece",
-          "u": "Thread, with the message being generated",
+          "u": "ChatThread, with the message being generated",
           "a": "From the first piece on, the place already holds text, and the indicator starts lying if it stays."
         }
       },
@@ -844,17 +844,17 @@
         },
         "item3": {
           "s": "Lo que se espera ya tiene forma conocida",
-          "u": "Esqueleto",
+          "u": "Skeleton",
           "a": "Él dibuja la forma de lo que viene. Aquí no se sabe el tamaño de lo que viene, y dibujar una forma sería prometer una."
         },
         "item4": {
           "s": "Se sabe cuánto falta",
-          "u": "Barra de progreso",
+          "u": "Progress",
           "a": "Ella mide. El indicador solo dice que algo está llegando, y es honesto justamente por no medir."
         },
         "item5": {
           "s": "El texto ya está llegando, trozo a trozo",
-          "u": "Conversación, con el mensaje en generación",
+          "u": "ChatThread, con el mensaje en generación",
           "a": "Desde el primer trozo el lugar ya tiene texto, y el indicador pasa a mentir si se queda."
         }
       },

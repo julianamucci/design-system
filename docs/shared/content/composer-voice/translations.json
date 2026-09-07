@@ -62,22 +62,22 @@
         },
         "item2": {
           "s": "Conversar por voz, com resposta falada",
-          "u": "Conversa por voz",
+          "u": "Não há componente para isso",
           "a": "Ali há uma ligação aberta, com estado de conexão e legenda; aqui há um campo de texto que recebe palavras."
         },
         "item3": {
           "s": "Ouvir uma resposta já escrita",
-          "u": "Leitura em voz alta",
+          "u": "Não há componente para isso",
           "a": "Aquilo sai do sistema para quem escuta; isto entra de quem fala."
         },
         "item4": {
           "s": "Tocar um áudio que já existe",
-          "u": "Reprodutor de mídia",
+          "u": "MediaPlayer",
           "a": "Lá o tempo é de um arquivo com começo e fim; aqui é de uma captura que ainda não acabou."
         },
         "item5": {
           "s": "Um controle que liga e desliga qualquer outra coisa",
-          "u": "Botão alternador",
+          "u": "Toggle",
           "a": "O alternador comum não carrega medidor nem estado intermediário; este tem um passo em que já parou de captar e ainda processa."
         }
       },
@@ -539,22 +539,22 @@
         },
         "item2": {
           "s": "Talking by voice, with a spoken answer",
-          "u": "Voice conversation",
+          "u": "No component for this",
           "a": "There a call is open, with connection state and captions; here there is a text field receiving words."
         },
         "item3": {
           "s": "Listening to an answer already written",
-          "u": "Read aloud",
+          "u": "No component for this",
           "a": "That one leaves the system for whoever listens; this one comes in from whoever speaks."
         },
         "item4": {
           "s": "Playing audio that already exists",
-          "u": "Media player",
+          "u": "MediaPlayer",
           "a": "There the time belongs to a file with a beginning and an end; here it belongs to a capture that has not finished."
         },
         "item5": {
           "s": "A control that turns anything else on and off",
-          "u": "Toggle button",
+          "u": "Toggle",
           "a": "A plain toggle carries neither meter nor an in-between state; this one has a step where capture has stopped and processing has not."
         }
       },
@@ -1016,22 +1016,22 @@
         },
         "item2": {
           "s": "Conversar por voz, con respuesta hablada",
-          "u": "Conversación por voz",
+          "u": "No hay componente para esto",
           "a": "Allí hay una llamada abierta, con estado de conexión y subtítulos; aquí hay un campo de texto que recibe palabras."
         },
         "item3": {
           "s": "Escuchar una respuesta ya escrita",
-          "u": "Lectura en voz alta",
+          "u": "No hay componente para esto",
           "a": "Aquello sale del sistema hacia quien escucha; esto entra desde quien habla."
         },
         "item4": {
           "s": "Reproducir un audio que ya existe",
-          "u": "Reproductor de medios",
+          "u": "MediaPlayer",
           "a": "Allá el tiempo es de un archivo con principio y fin; aquí es de una captura que aún no terminó."
         },
         "item5": {
           "s": "Un control que enciende y apaga cualquier otra cosa",
-          "u": "Botón alternador",
+          "u": "Toggle",
           "a": "El alternador común no lleva medidor ni estado intermedio; este tiene un paso en el que ya dejó de captar y todavía procesa."
         }
       },

@@ -78,7 +78,7 @@
         },
         "item5": {
           "s": "Detalhar uma cobrança item a item, com ação em cada linha",
-          "u": "Data table",
+          "u": "DataTable",
           "a": "Aquela tabela é para percorrer e conferir; esta linha é para ler de relance."
         }
       },
@@ -555,7 +555,7 @@
         },
         "item2": {
           "s": "Say how much of the context window still fits",
-          "u": "Context display",
+          "u": "ContextDisplay",
           "a": "That one measures consumption against a window; this one measures money against a budget."
         },
         "item3": {
@@ -570,7 +570,7 @@
         },
         "item5": {
           "s": "Itemise a charge line by line, with an action on each row",
-          "u": "Data table",
+          "u": "DataTable",
           "a": "That table is for walking through and checking; this line is for reading at a glance."
         }
       },
@@ -1062,7 +1062,7 @@
         },
         "item5": {
           "s": "Detallar un cargo línea por línea, con acción en cada fila",
-          "u": "Data table",
+          "u": "DataTable",
           "a": "Aquella tabla es para recorrer y comprobar; esta línea es para leer de un vistazo."
         }
       },

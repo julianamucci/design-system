@@ -63,7 +63,7 @@
         },
         "item2": {
           "s": "Listar o que o agente fez para responder, sem mostrar tela nenhuma",
-          "u": "Grupo de chamadas",
+          "u": "ToolGroup",
           "a": "Ali cada linha é uma chamada com estado próprio; aqui há um ponto sobre uma imagem."
         },
         "item3": {
@@ -1253,7 +1253,7 @@
         },
         "item2": {
           "s": "Listar lo que el agente hizo para responder, sin mostrar ninguna pantalla",
-          "u": "Grupo de llamadas",
+          "u": "ToolGroup",
           "a": "Allí cada línea es una llamada con estado propio; aquí hay un punto sobre una imagen."
         },
         "item3": {

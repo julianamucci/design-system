@@ -79,7 +79,7 @@
         },
         "item5": {
           "s": "Sequência de eventos de sistema, sem interlocutor",
-          "u": "Item",
+          "u": "Não há componente para isso",
           "a": "—"
         }
       },
@@ -637,7 +637,7 @@
         },
         "item5": {
           "s": "Sequence of system events, with no interlocutor",
-          "u": "Item",
+          "u": "No component for this",
           "a": "—"
         }
       },
@@ -1195,7 +1195,7 @@
         },
         "item5": {
           "s": "Secuencia de eventos de sistema, sin interlocutor",
-          "u": "Item",
+          "u": "No hay componente para esto",
           "a": "—"
         }
       },

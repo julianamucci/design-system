@@ -63,7 +63,7 @@
         },
         "item2": {
           "s": "Mostrar código para alguém ler e copiar",
-          "u": "Bloco de código",
+          "u": "CodeBlock",
           "a": "Ali há gramática, numeração e destaque de trecho; aqui há saída de máquina, sem gramática nenhuma."
         },
         "item3": {
@@ -73,7 +73,7 @@
         },
         "item4": {
           "s": "Recolher várias chamadas de ferramenta num bloco só",
-          "u": "Grupo de chamadas",
+          "u": "ToolGroup",
           "a": "Ali cada linha é uma chamada com estado próprio; aqui há um comando só, e o corpo é o que ele escreveu."
         },
         "item5": {
@@ -610,7 +610,7 @@
         },
         "item2": {
           "s": "Show code for someone to read and copy",
-          "u": "Code block",
+          "u": "CodeBlock",
           "a": "That one has grammar, line numbers and range highlighting; this one has machine output, with no grammar at all."
         },
         "item3": {
@@ -625,7 +625,7 @@
         },
         "item5": {
           "s": "Measure how far a long task has got",
-          "u": "Job progress",
+          "u": "JobProgress",
           "a": "There you have units done and a bar; here you have text, and what it says is the result itself."
         }
       },
@@ -1157,7 +1157,7 @@
         },
         "item2": {
           "s": "Mostrar código para que alguien lo lea y lo copie",
-          "u": "Bloque de código",
+          "u": "CodeBlock",
           "a": "Allí hay gramática, numeración y resaltado de tramo; aquí hay salida de máquina, sin gramática alguna."
         },
         "item3": {
@@ -1167,7 +1167,7 @@
         },
         "item4": {
           "s": "Recoger varias llamadas de herramienta en un solo bloque",
-          "u": "Grupo de llamadas",
+          "u": "ToolGroup",
           "a": "Allí cada fila es una llamada con estado propio; aquí hay un solo comando, y el cuerpo es lo que escribió."
         },
         "item5": {

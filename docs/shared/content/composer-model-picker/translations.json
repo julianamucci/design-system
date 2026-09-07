@@ -67,7 +67,7 @@
         },
         "item4": {
           "s": "Escolher alguém ou um comando enquanto se escreve",
-          "u": "Seletor de gatilho do composer",
+          "u": "ComposerTriggerPopover",
           "a": "Ali a escolha entra no texto da mensagem; aqui ela muda quem vai respondê-la."
         },
         "item5": {
@@ -572,7 +572,7 @@
         },
         "item4": {
           "s": "Choosing a person or a command while writing",
-          "u": "Composer trigger picker",
+          "u": "ComposerTriggerPopover",
           "a": "There the choice goes into the message text; here it changes who will answer it."
         },
         "item5": {
@@ -1077,7 +1077,7 @@
         },
         "item4": {
           "s": "Elegir a alguien o un comando mientras se escribe",
-          "u": "Selector de disparador del composer",
+          "u": "ComposerTriggerPopover",
           "a": "Allí la elección entra en el texto del mensaje; aquí cambia quién va a responderlo."
         },
         "item5": {

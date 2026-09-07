@@ -71,12 +71,12 @@
         },
         "item2": {
           "s": "Mostrar uma chamada isolada, dentro da mensagem",
-          "u": "Conversa",
+          "u": "ChatThread",
           "a": "Ali a chamada mora dentro do turno e cada uma abre por si; aqui elas vêm reunidas num bloco só."
         },
         "item3": {
           "s": "Pedir autorização para uma chamada",
-          "u": "Conversa",
+          "u": "ChatThread",
           "a": "O espaço da autorização fica onde a chamada está à vista, e esta caixa nasce fechada."
         },
         "item4": {
@@ -554,17 +554,17 @@
         },
         "item2": {
           "s": "Show a single call, inside the message",
-          "u": "Chat thread",
+          "u": "ChatThread",
           "a": "There the call lives inside the turn and each one opens on its own; here they come gathered into a single block."
         },
         "item3": {
           "s": "Ask for authorization for a call",
-          "u": "Chat thread",
+          "u": "ChatThread",
           "a": "The space for the authorization sits where the call is in plain sight, and this box starts closed."
         },
         "item4": {
           "s": "Say where the whole answer stands",
-          "u": "Agent status",
+          "u": "AgentStatus",
           "a": "That line talks about the run; this block talks about what it did along the way."
         },
         "item5": {
@@ -1037,12 +1037,12 @@
         },
         "item2": {
           "s": "Mostrar una llamada aislada, dentro del mensaje",
-          "u": "Conversación",
+          "u": "ChatThread",
           "a": "Allí la llamada vive dentro del turno y cada una abre por sí sola; aquí vienen reunidas en un solo bloque."
         },
         "item3": {
           "s": "Pedir autorización para una llamada",
-          "u": "Conversación",
+          "u": "ChatThread",
           "a": "El espacio de la autorización está donde la llamada queda a la vista, y esta caja nace cerrada."
         },
         "item4": {

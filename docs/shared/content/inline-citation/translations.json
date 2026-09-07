@@ -58,22 +58,22 @@
         },
         "item2": {
           "s": "Listar as fontes de um turno inteiro",
-          "u": "Conversa",
+          "u": "ChatThread",
           "a": "Ali as fontes são a lista do turno, sem apontar afirmação nenhuma; aqui a marca aponta uma."
         },
         "item3": {
           "s": "Mostrar a prévia de um link comum",
-          "u": "Cartão de ponteiro",
+          "u": "HoverCard",
           "a": "Aquele abre por ponteiro e por foco, que é o certo para um link isolado; aqui há muitas marcas numa frase e nenhuma delas pode depender de ponteiro."
         },
         "item4": {
           "s": "Explicar um termo dentro do texto",
-          "u": "Dica de ferramenta",
+          "u": "Tooltip",
           "a": "A dica não guarda link nem trecho, e não é caminho de teclado para conteúdo."
         },
         "item5": {
           "s": "Abrir um painel com controles ancorado a um gatilho",
-          "u": "Painel ancorado",
+          "u": "Popover",
           "a": "Aquele trata conteúdo interativo e a política de foco que vem com ele; esta é uma prévia curta dentro da frase."
         }
       },
@@ -587,12 +587,12 @@
         },
         "item2": {
           "s": "List the sources of a whole turn",
-          "u": "Conversation",
+          "u": "ChatThread",
           "a": "There the sources are the turn's list and point at no claim; here the marker points at one."
         },
         "item3": {
           "s": "Show the preview of an ordinary link",
-          "u": "Hover card",
+          "u": "HoverCard",
           "a": "That one opens on pointer and on focus, which is right for a single link; here there are many markers in one sentence and none of them can depend on a pointer."
         },
         "item4": {
@@ -1116,22 +1116,22 @@
         },
         "item2": {
           "s": "Listar las fuentes de todo un turno",
-          "u": "Conversación",
+          "u": "ChatThread",
           "a": "Allí las fuentes son la lista del turno y no señalan ninguna afirmación; aquí la marca señala una."
         },
         "item3": {
           "s": "Mostrar la vista previa de un enlace común",
-          "u": "Tarjeta de puntero",
+          "u": "HoverCard",
           "a": "Aquella se abre con el puntero y con el foco, que es lo correcto para un enlace aislado; aquí hay muchas marcas en una frase y ninguna puede depender del puntero."
         },
         "item4": {
           "s": "Explicar un término dentro del texto",
-          "u": "Descripción emergente",
+          "u": "Tooltip",
           "a": "No guarda enlace ni fragmento, y no es un camino de teclado hacia el contenido."
         },
         "item5": {
           "s": "Abrir un panel con controles anclado a un disparador",
-          "u": "Panel anclado",
+          "u": "Popover",
           "a": "Aquel trata contenido interactivo y la política de foco que lo acompaña; esta es una vista previa breve dentro de la frase."
         }
       },

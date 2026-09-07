@@ -521,7 +521,7 @@
         },
         "item2": {
           "s": "Say where the answer that was already asked for stands",
-          "u": "Agent status",
+          "u": "AgentStatus",
           "a": "That line describes what the agent is doing; this one describes whether there is still a way to talk to it."
         },
         "item3": {

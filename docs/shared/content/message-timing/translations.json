@@ -79,7 +79,7 @@
         },
         "item5": {
           "s": "Guardar as medidas atrás de um controle, quando o espaço é uma linha",
-          "u": "Tempo da resposta dentro de uma dica de ferramenta",
+          "u": "MessageTiming dentro de um Tooltip",
           "a": "A peça não abre camada flutuante: quem precisa dela compõe o controle e a dica por fora."
         }
       },
@@ -533,7 +533,7 @@
         },
         "item2": {
           "s": "Show how long the response has been generating",
-          "u": "Agent status",
+          "u": "AgentStatus",
           "a": "There the clock runs and stays out of what is read; here the numbers settle and are the content."
         },
         "item3": {
@@ -548,7 +548,7 @@
         },
         "item5": {
           "s": "Keep the measures behind a control when the space is a single line",
-          "u": "Response timing inside a tooltip",
+          "u": "MessageTiming inside a Tooltip",
           "a": "The piece opens no floating layer: whoever needs one composes the control and the tooltip outside."
         }
       },
@@ -1017,7 +1017,7 @@
         },
         "item5": {
           "s": "Guardar las medidas detrás de un control cuando el espacio es una línea",
-          "u": "Tiempo de la respuesta dentro de una descripción emergente",
+          "u": "MessageTiming dentro de un Tooltip",
           "a": "La pieza no abre capa flotante: quien la necesita compone el control y la descripción por fuera."
         }
       },

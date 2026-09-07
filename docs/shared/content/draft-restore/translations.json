@@ -58,17 +58,17 @@
         },
         "item2": {
           "s": "Avisar de algo que deu errado e precisa ser lido já",
-          "u": "Alerta",
+          "u": "Alert",
           "a": "Ali o aviso é do sistema e interrompe a leitura em curso; aqui a faixa espera a primeira pausa."
         },
         "item3": {
           "s": "Obter uma resposta antes de qualquer outra coisa",
-          "u": "Diálogo de alerta",
+          "u": "AlertDialog",
           "a": "Aquilo prende o foco até ser respondido; esta faixa deixa quem chegou para escrever continuar escrevendo."
         },
         "item4": {
           "s": "Avisar de algo que passa sozinho e não pede decisão",
-          "u": "Notificação passageira",
+          "u": "Sonner",
           "a": "Lá não fica nada para responder; aqui há uma escolha, e ela espera o tempo que precisar."
         },
         "item5": {
@@ -518,12 +518,12 @@
         },
         "item3": {
           "s": "Get an answer before anything else",
-          "u": "Alert dialog",
+          "u": "AlertDialog",
           "a": "That one holds focus until it is answered; this band lets whoever came to write keep writing."
         },
         "item4": {
           "s": "Warn about something that passes on its own and asks for no decision",
-          "u": "Transient notification",
+          "u": "Sonner",
           "a": "There is nothing left to answer there; here there is a choice, and it waits as long as it needs to."
         },
         "item5": {
@@ -968,17 +968,17 @@
         },
         "item2": {
           "s": "Avisar de algo que salió mal y hay que leer ya",
-          "u": "Alerta",
+          "u": "Alert",
           "a": "Allí el aviso es del sistema e interrumpe la lectura en curso; aquí la franja espera la primera pausa."
         },
         "item3": {
           "s": "Obtener una respuesta antes que cualquier otra cosa",
-          "u": "Diálogo de alerta",
+          "u": "AlertDialog",
           "a": "Aquello retiene el foco hasta ser respondido; esta franja deja seguir escribiendo a quien vino a escribir."
         },
         "item4": {
           "s": "Avisar de algo que pasa solo y no pide decisión",
-          "u": "Notificación pasajera",
+          "u": "Sonner",
           "a": "Allí no queda nada por responder; aquí hay una elección, y espera el tiempo que haga falta."
         },
         "item5": {
