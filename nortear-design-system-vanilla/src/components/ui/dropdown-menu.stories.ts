@@ -89,12 +89,6 @@ export const Playground: Story = {
       'accessibility.item2',
       'accessibility.item5',
     ],
-    // A fábrica não tem submenu aninhado: o que ela entrega é o menu plano.
-    // Declarar cobertura desses itens aqui seria fazer o auditor mentir.
-    coversNotApplicable: {
-      'functional.item7': 'a fábrica não expõe submenu aninhado — não há SubTrigger para abrir',
-      'visual.item4': 'sem submenu na fábrica, não existe estado para o Chromatic fotografar',
-    },
   },
   render: (args) => {
     const container = document.createElement('div');

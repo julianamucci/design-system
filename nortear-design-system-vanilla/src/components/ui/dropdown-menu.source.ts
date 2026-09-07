@@ -20,7 +20,7 @@ import type { DropdownMenuAlign, DropdownMenuSide } from './dropdown-menu';
  */
 export type DropdownMenuSnippetItem = {
   /** `item` é o padrão da fábrica e não entra no snippet. */
-  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio';
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
   label?: string;
   value?: string;
   /** Ênfase. `default` é o padrão e não entra no snippet. */
@@ -30,6 +30,8 @@ export type DropdownMenuSnippetItem = {
   indeterminate?: boolean;
   group?: string;
   disabled?: boolean;
+  /** Itens do submenu — o que `type: 'submenu'` exige para abrir alguma coisa. */
+  items?: DropdownMenuSnippetItem[];
 };
 
 /** O que as stories usam da `DropdownMenuOptions` e o snippet precisa mostrar. */
@@ -70,6 +72,9 @@ function item(i: DropdownMenuSnippetItem): string {
     ['checked', i.checked !== undefined ? String(i.checked) : undefined],
     ['indeterminate', i.indeterminate ? 'true' : undefined],
     ['disabled', i.disabled ? 'true' : undefined],
+    // A lista do filho é DADO, como a do pai: o mesmo `item()` a escreve, e é
+    // por isso que o submenu não ganha uma forma própria no snippet.
+    ['items', i.items ? `[${i.items.map(item).join(', ')}]` : undefined],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');

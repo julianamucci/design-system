@@ -14,10 +14,9 @@ const meta: Meta = {
       source: { transform: dropdownMenuSource },
       description: {
         component:
-          'As composições canônicas: grupos com rótulo, alternadores, escolha única e atalhos. ' +
-          'Todas partem das mesmas peças — o que muda é o papel ARIA do item e o indicador que o ' +
-          'acompanha. NOTA: a fábrica não tem submenu aninhado, e a composição "ComSubmenu" é ' +
-          'omitida de propósito; para hierarquia, prefira menus planos.',
+          'As composições canônicas: grupos com rótulo, alternadores, escolha única, submenu e ' +
+          'atalhos. Todas partem das mesmas peças — o que muda é o papel ARIA do item e o ' +
+          'indicador que o acompanha.',
       },
     },
   },
@@ -243,6 +242,117 @@ export const WithRadioGroup: Story = {
       // O indicador acompanha a troca, senão o estado só existiria para o leitor.
       await expect(escuro.querySelector('.nds-dropdown-menu-item-indicator svg')).not.toBeNull();
       await expect(light.querySelector('.nds-dropdown-menu-item-indicator svg')).toBeNull();
+    });
+
+    await step('Limpa via ESC', async () => {
+      await endClose();
+    });
+  },
+};
+
+// ─── Com submenu ──────────────────────────────────────────────────────────────
+
+export const WithSubmenu: Story = {
+  parameters: {
+    covers: ['functional.item7', 'visual.item4'],
+    // Override de story: o item de submenu leva a própria lista aninhada, e o
+    // snippet do meta mostraria uma lista plana.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceWith({
+          triggerLabel: 'Arquivo',
+          items: [
+            { label: 'Renomear', value: 'rename' },
+            {
+              type: 'submenu',
+              label: 'Exportar',
+              value: 'export',
+              items: [
+                { label: 'PDF', value: 'pdf' },
+                { label: 'CSV', value: 'csv' },
+              ],
+            },
+          ],
+        }),
+      },
+    },
+  },
+  render: () =>
+    montar(
+      'Arquivo',
+      [
+        { type: 'item', label: 'Renomear', value: 'rename' },
+        {
+          type: 'submenu',
+          label: 'Exportar',
+          value: 'export',
+          items: [
+            { type: 'item', label: 'PDF', value: 'pdf' },
+            { type: 'item', label: 'CSV', value: 'csv' },
+          ],
+        },
+      ],
+      FRAME_HEIGHT,
+    ),
+  play: async ({ step }) => {
+    const body = within(document.body);
+    const menu = await body.findByRole('menu');
+    const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
+
+    await step('O sub-gatilho anuncia que abre um menu, e que está fechado', async () => {
+      await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      // Fechado, não há painel para apontar — `aria-owns` só existe enquanto o
+      // menu filho existe.
+      await expect(subTrigger.getAttribute('aria-owns')).toBe(null);
+    });
+
+    await step('A seta para a direita abre o submenu e entra nele', async () => {
+      // Idempotente: a seta só é enviada com o submenu fechado, então o replay
+      // do painel Interactions parte do mesmo estado.
+      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
+        subTrigger.focus();
+        await userEvent.keyboard('{ArrowRight}');
+      }
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
+      await expect(body.getAllByRole('menu')).toHaveLength(2);
+      // Abrir sem entrar deixaria a pessoa vendo um painel que a seta seguinte
+      // não percorre: o percurso do teclado sai do painel que tem o foco.
+      await expect((document.activeElement as HTMLElement).textContent).toBe('PDF');
+    });
+
+    await step('O painel do submenu está ligado ao item que o abriu', async () => {
+      // O painel mora no `body`, fora da árvore do menu pai — é `aria-owns` que
+      // repõe a ligação. Sem ele o submenu é um menu solto para quem lê a tela.
+      const submenu = body.getAllByRole('menu')[1];
+      await expect(submenu.dataset.slot).toBe('dropdown-menu-sub-content');
+      await expect(subTrigger.getAttribute('aria-owns')).toBe(submenu.id);
+      await expect(submenu.id).not.toBe('');
+      // Fora da árvore do pai também para o teclado: se o painel fosse aninhado,
+      // a seta do menu pai passaria a percorrer os itens do filho.
+      await expect(menu.contains(submenu)).toBe(false);
+    });
+
+    await step('O submenu abre AO LADO, não por cima do menu pai', async () => {
+      const submenu = body.getAllByRole('menu')[1];
+      // Dois formatos de exportação, que é o que o painel filho lista.
+      await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(2);
+      // Um submenu que nasce sobre o pai cobre os irmãos do item que o abriu. A
+      // comparação é com a borda DIREITA do pai — comparar com a esquerda
+      // passaria com os dois painéis empilhados.
+      await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+        menu.getBoundingClientRect().right - 8,
+      );
+    });
+
+    await step('A seta para a esquerda fecha o submenu e devolve o foco', async () => {
+      await userEvent.keyboard('{ArrowLeft}');
+      await expect(body.getAllByRole('menu')).toHaveLength(1);
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      // A ligação sai junto: apontar para um painel que já não está no documento
+      // é pior que não apontar para nada.
+      await expect(subTrigger.getAttribute('aria-owns')).toBe(null);
+      await expect(document.activeElement).toBe(subTrigger);
     });
 
     await step('Limpa via ESC', async () => {

@@ -67,6 +67,33 @@ describe('dropdownMenuSnippet', () => {
     expect(code).toContain('disabled: true');
   });
 
+  it('o submenu leva a própria lista, aninhada dentro do item que o abre', () => {
+    // A hierarquia é o assunto deste item: sem os `items` do filho o snippet
+    // ensinaria um `type: 'submenu'` que não abre coisa nenhuma.
+    const code = dropdownMenuSnippet({
+      triggerLabel: 'Arquivo',
+      items: [
+        { label: 'Renomear', value: 'rename' },
+        {
+          type: 'submenu',
+          label: 'Exportar',
+          value: 'export',
+          items: [
+            { label: 'PDF', value: 'pdf' },
+            { label: 'CSV', value: 'csv' },
+          ],
+        },
+      ],
+    });
+    expect(code).toContain(
+      "{ type: 'submenu', label: 'Exportar', value: 'export', " +
+        "items: [{ label: 'PDF', value: 'pdf' }, { label: 'CSV', value: 'csv' }] }",
+    );
+    // O filho segue as mesmas regras do pai: item de ação não repete o tipo
+    // padrão nem dentro do submenu.
+    expect(code).not.toContain("type: 'item'");
+  });
+
   it('o item de ação simples não repete o tipo padrão', () => {
     expect(dropdownMenuSnippet({ items: [{ label: 'Perfil', value: 'profile' }] })).toContain(
       "{ label: 'Perfil', value: 'profile' }",

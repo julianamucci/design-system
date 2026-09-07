@@ -236,6 +236,29 @@ function buildDemoRadioMenu(): HTMLElement {
   });
 }
 
+/** Hierarquia em dois níveis — o exemplo de `demonstration.labels.withSubmenu`. */
+function buildDemoSubmenuMenu(): HTMLElement {
+  const trigger = createButton({ variant: 'outline', label: 'Arquivo' });
+  return createDropdownMenu({
+    trigger,
+    onOpenChange: (open) => trackMenuOpenChange('submenu', open),
+    items: [
+      { type: 'item', label: 'Renomear', value: 'rename', onClick: trackMenuItemSelect('submenu', 'renomear') },
+      {
+        // O sub-gatilho não tem ação própria: ele abre o painel filho, e é lá
+        // que estão os itens que a pessoa veio escolher.
+        type: 'submenu',
+        label: 'Exportar',
+        value: 'export',
+        items: [
+          { type: 'item', label: 'PDF', value: 'pdf', onClick: trackMenuItemSelect('submenu', 'pdf') },
+          { type: 'item', label: 'CSV', value: 'csv', onClick: trackMenuItemSelect('submenu', 'csv') },
+        ],
+      },
+    ],
+  });
+}
+
 // ─── createDropdownMenuDocs ───────────────────────────────────────────────────
 
 export function createDropdownMenuDocs(): HTMLElement {
@@ -347,16 +370,8 @@ export function createDropdownMenuDocs(): HTMLElement {
               buildDemoCell('demonstration.labels.basic', buildDemoMenu('Conta')),
               buildDemoCell('demonstration.labels.withCheckbox', buildDemoCheckboxMenu()),
               buildDemoCell('demonstration.labels.withRadio', buildDemoRadioMenu()),
+              buildDemoCell('demonstration.labels.withSubmenu', buildDemoSubmenuMenu()),
             );
-            // `demonstration.labels.withSubmenu` NÃO tem célula, e a ausência
-            // é deliberada: esta fábrica não tem submenu aninhado — ver a nota
-            // no topo de `dropdown-menu.ts` e a `coversNotApplicable` do
-            // Playground. É divergência de CAPACIDADE, e imitar o exemplo com um
-            // menu plano ensinaria uma peça que a stack não entrega.
-            //
-            // Citar a chave aqui SILENCIAVA o achado, porque o portão a casava
-            // no arquivo inteiro, comentário incluído. Ele passou a varrer sem
-            // comentários em 2026-09-07, e a lacuna volta a ser reportada.
             return wrap;
           },
         });
