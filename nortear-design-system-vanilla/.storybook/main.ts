@@ -15,6 +15,13 @@ const config: StorybookConfig = {
     '@storybook/addon-designs',
   ],
   framework: '@storybook/html-vite',
+
+  /*
+   * O bundle do chat de documentação (ver ../vite.chat-docs.config.ts) sai em
+   * .storybook/public/ e é servido na raiz do Storybook — é de lá que a tag
+   * <script> do manager-head.html o pede. Pasta gerada, fora do git.
+   */
+  staticDirs: ['./public'],
   features: {
     componentsManifest: true,
   },

@@ -23,3 +23,17 @@ addons.setConfig({ theme: nortear, sidebar: { renderLabel: createRenderLabel(Rea
 // Botão "Chromatic" na toolbar — ver ./chromatic-link.ts para o porquê de não
 // ser o painel do addon oficial.
 import './chromatic-link';
+
+
+// ─── Chat de documentação ────────────────────────────────────────────────────
+//
+// Ele NÃO é importado daqui, e a ausência é a informação: o `builder-manager`
+// empacota este arquivo com um esbuild de configuração fechada, sem hook de
+// alias, e as peças do design system importam `@/lib/*` e `@shared/primitives/*`.
+// MEDIDO: 18 erros de resolução ao importá-las aqui. O porquê completo e o que
+// foi tentado estão em ../vite.chat-docs.config.ts.
+//
+// O chat é empacotado pelo mesmo Vite do preview e carregado por
+// `<script type="module">` em ./manager-head.html. O código vive em
+// ./chat-docs/ — no manager, e não no preview, porque o preview recarrega a
+// cada troca de story.

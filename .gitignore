@@ -43,6 +43,10 @@ storybook-static/
 .env.production.local
 !.env.example
 
+# Explicito, ainda que o `*.local` abaixo ja cubra: quem procura a regra de
+# ambiente procura por este padrao.
+.env*.local
+
 # Convenção do Vite para arquivo só-local (o .env.local acima é o caso comum,
 # mas o padrão vale para qualquer um).
 *.local
@@ -73,3 +77,8 @@ scratch/
 
 # Diário da revisão serial — local, não versionado
 .revisao/
+
+# Bundle do chat de documentacao (vanilla) — gerado por
+# nortear-design-system-vanilla/vite.chat-docs.config.ts e servido pelo
+# staticDirs do manager. Artefato de build, nunca versionado.
+nortear-design-system-vanilla/.storybook/public/

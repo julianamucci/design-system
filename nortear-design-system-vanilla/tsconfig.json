@@ -25,5 +25,18 @@
       "micromark-extension-gfm": ["./node_modules/micromark-extension-gfm/index.d.ts"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", ".storybook/**/*.ts", "vite.config.ts", "../scripts/**/*"]
+  // `api/**` entra porque a Vercel Function do chat de documentação não é
+  // alcançada por portão nenhum de outra forma: ela não é story, não é docs
+  // page e não é bundlada pelo Storybook. Sem esta linha o `tsc` passaria verde
+  // por não abrir o arquivo — o defeito descrito na regra "portão só vale
+  // depois de saber o que ele cobre".
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".storybook/**/*.ts",
+    "api/**/*.ts",
+    "vite.config.ts",
+    "vite.chat-docs.config.ts",
+    "../scripts/**/*"
+  ]
 }

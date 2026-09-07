@@ -1,0 +1,168 @@
+/*
+ * ─── O chat de documentação: a folha da APLICAÇÃO ────────────────────────────
+ *
+ * Duas metades, e a separação é a regra e não uma organização de arquivo.
+ *
+ * A PRIMEIRA metade são os `@import`: tokens, temas e as folhas `.nds-*` das
+ * peças que o chat usa. O manager do Storybook é um documento SEPARADO do
+ * preview — ele não carrega `src/styles/globals.css`, e sem estes imports as
+ * peças do design system apareceriam sem cor, sem escala e sem espaçamento. É
+ * uma lista curada, e não o `index.css` inteiro: o que o chat monta são cinco
+ * peças, e importar oitenta folhas para usar cinco engorda o bundle do manager
+ * sem devolver nada.
+ *
+ * A SEGUNDA metade são as regras `.chat-docs-*`, e o prefixo é deliberado.
+ * Inventar `.nds-*` aqui seria dizer que o design system tem um botão flutuante
+ * e um painel ancorado — e ele NÃO tem: procurei, e não existe utilitário de
+ * posicionamento fixo, de camada flutuante nem de painel de canto no CSS
+ * compartilhado. Essa é a lacuna medida, e ela está no relatório em vez de
+ * virar uma classe `.nds-` nova escrita por fora do sistema. O que estas regras
+ * fazem é POSICIONAR peças do sistema; toda cor, raio, sombra, espaço e duração
+ * sai de token, nunca de número solto.
+ *
+ * Nenhuma regra aqui pertence ao design system. Se um dia o sistema ganhar
+ * "camada flutuante", estas regras somem e as classes dele entram.
+ */
+
+/* ── Tokens e temas ──────────────────────────────────────────────────────── */
+@import "../../../docs/shared/tokens/tokens.css";
+@import "../../../docs/shared/themes/index.css";
+
+/* ── As peças que o chat monta, e só elas ────────────────────────────────── */
+@import "../../../docs/shared/styles/nds/reset.css";
+@import "../../../docs/shared/styles/nds/typography.css";
+@import "../../../docs/shared/styles/nds/utilities.css";
+@import "../../../docs/shared/styles/nds/colors.css";
+@import "../../../docs/shared/styles/nds/code.css";
+@import "../../../docs/shared/styles/nds/button.css";
+@import "../../../docs/shared/styles/nds/alert.css";
+@import "../../../docs/shared/styles/nds/markdown.css";
+@import "../../../docs/shared/styles/nds/chat-thread.css";
+@import "../../../docs/shared/styles/nds/composer.css";
+@import "../../../docs/shared/styles/nds/agent-run.css";
+
+/* ── A raiz da aplicação ─────────────────────────────────────────────────── */
+
+/*
+ * Carrega `tema-default` (ver `themes/index.css`: sem classe de tema não há
+ * cor) e é a âncora de tudo que vem abaixo. Não pinta nada: quem pinta é o
+ * painel, porque a raiz cobre a tela inteira e não pode interceptar clique.
+ */
+.chat-docs-root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--z-fixed);
+  font-family: var(--font-family);
+}
+
+.chat-docs-root > * {
+  pointer-events: auto;
+}
+
+/* ── O botão que abre ────────────────────────────────────────────────────── */
+
+/*
+ * Herda `.nds-button` inteiro. O que esta regra acrescenta é POSIÇÃO — e é por
+ * isso que ela existe fora do sistema.
+ */
+.chat-docs-launcher {
+  position: absolute;
+  inset-block-end: var(--spacing-6);
+  inset-inline-end: var(--spacing-6);
+}
+
+/* ── O painel ────────────────────────────────────────────────────────────── */
+
+.chat-docs-panel {
+  position: absolute;
+  inset-block-end: var(--spacing-6);
+  inset-inline-end: var(--spacing-6);
+  inline-size: min(26rem, calc(100vw - var(--spacing-8)));
+  max-block-size: min(40rem, calc(100vh - var(--spacing-8)));
+
+  display: flex;
+  flex-direction: column;
+
+  background-color: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius-card);
+  overflow: hidden;
+
+  /*
+   * A abertura usa `--duration-base`, e a escolha não é estética: `motion.css`
+   * zera justamente esse token dentro de `prefers-reduced-motion: reduce`.
+   * `--duration-panel` NÃO está na lista que ele zera, e usá-lo aqui deixaria a
+   * animação de pé para quem pediu para não ter animação.
+   */
+  transition:
+    opacity var(--duration-base) var(--ease-entrance),
+    transform var(--duration-base) var(--ease-entrance);
+}
+
+.chat-docs-panel[hidden] {
+  display: none;
+}
+
+/* Estado de entrada. A classe sai no quadro seguinte à montagem. */
+.chat-docs-panel[data-entering="true"] {
+  opacity: 0;
+  transform: translateY(var(--spacing-2));
+}
+
+/*
+ * Cinto e suspensório: o token já zera a duração, e esta regra desliga a
+ * transformação. Sem ela, quem abrisse o painel com a aba em segundo plano
+ * ainda veria o salto quando ela voltasse.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .chat-docs-panel {
+    transition: none;
+  }
+  .chat-docs-panel[data-entering="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.chat-docs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-block-end: 1px solid hsl(var(--border));
+}
+
+.chat-docs-title {
+  margin: 0;
+}
+
+.chat-docs-body {
+  flex: 1;
+  min-block-size: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * A conversa manda na altura da janela. `--box-height` é o gancho que o
+ * `chat-thread.css` documenta para quem precisa de altura fora da escada — e
+ * um painel flutuante é exatamente esse caso.
+ */
+.chat-docs-body .nds-chat-thread {
+  --box-height: 22rem;
+  border: 0;
+  border-radius: 0;
+}
+
+.chat-docs-footer {
+  padding: var(--spacing-3);
+  border-block-start: 1px solid hsl(var(--border));
+}
+
+/* O aviso de "sem chave configurada" e os outros erros do servidor. */
+.chat-docs-notice {
+  margin: var(--spacing-3);
+}

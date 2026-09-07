@@ -12,6 +12,8 @@ export default defineConfig([
     'node_modules',
     'coverage',
     '.storybook/manager-head.html',
+    // Bundle GERADO do chat de documentacao (vite.chat-docs.config.ts).
+    '.storybook/public',
   ]),
   {
     files: ['**/*.{ts,js}'],
