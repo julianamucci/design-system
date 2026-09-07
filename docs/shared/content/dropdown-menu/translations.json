@@ -302,7 +302,7 @@
       "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via role=menu/menuitem), 2.1.1 (operável por teclado: setas, Enter, ESC, Home/End), 2.4.3 (foco retorna ao trigger ao fechar), 4.1.2 (name/role/value via aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> recebe <code>aria-haspopup=\"menu\"</code> e <code>aria-expanded</code> automáticos.",
-        "item2": "<code>DropdownMenuContent</code> tem <code>role=\"menu\"</code>, prende o foco enquanto está aberto e recebe o foco ao abrir, de onde as setas alcançam os itens.",
+        "item2": "<code>DropdownMenuContent</code> tem <code>role=\"menu\"</code> e recebe o foco ao abrir, de onde as setas alcançam os itens. Não prende o foco: Tab fecha o menu e segue o percurso da página, que é o comportamento de menu e não de diálogo.",
         "item3": "<code>DropdownMenuItem</code> tem <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> tem <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> tem <code>role=\"menuitemradio\"</code>.",
         "item4": "Setas (cima/baixo) navegam entre itens; Home/End vão ao primeiro/último; letras digitadas movem o foco para item correspondente (typeahead).",
         "item5": "ESC fecha o menu e retorna foco ao trigger; clique fora também fecha.",
@@ -330,7 +330,7 @@
         "open": "Anuncia: \"[label do trigger], menu pop-up, recolhido\". Ao abrir: \"expandido, menu, [N] itens\".",
         "navigation": "A cada item lê: \"[texto], item de menu, [N] de [total]\".",
         "checked": "CheckboxItem: \"[texto], caixa de seleção, marcada/desmarcada\".",
-        "shortcut": "Shortcut é lido como parte do label do item (ex: \"Salvar, Control K\")."
+        "shortcut": "O atalho é lido como parte do rótulo do item (ex.: \"Copiar, Control C\")."
       }
     },
     "related": {
@@ -368,7 +368,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obrigatório: <code>component='dropdown-menu'</code>, <code>location</code> (contexto da página), <code>label</code> (texto do trigger ou item). Disparar via callbacks de mudança de abertura e de seleção no consumidor."
+      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obrigatório: <code>component='dropdown-menu'</code>, <code>location</code> (contexto da página), <code>label</code> (identificador estável do item, nunca o texto traduzido — texto localizado divide o mesmo evento em um valor por idioma). Disparar via callbacks de mudança de abertura e de seleção no consumidor."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -778,7 +778,7 @@
       "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via role=menu/menuitem), 2.1.1 (keyboard operable: arrows, Enter, ESC, Home/End), 2.4.3 (focus returns to trigger on close), 4.1.2 (name/role/value via aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> automatically gets <code>aria-haspopup=\"menu\"</code> and <code>aria-expanded</code>.",
-        "item2": "<code>DropdownMenuContent</code> has <code>role=\"menu\"</code>, traps focus while open and receives focus on open, from where the arrows reach the items.",
+        "item2": "<code>DropdownMenuContent</code> has <code>role=\"menu\"</code> and takes focus on open, from where the arrow keys reach the items. It does not trap focus: Tab closes the menu and continues through the page, which is menu behaviour, not dialog behaviour.",
         "item3": "<code>DropdownMenuItem</code> has <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> has <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> has <code>role=\"menuitemradio\"</code>.",
         "item4": "Up/Down arrows navigate between items; Home/End go to first/last; typed letters move focus to matching item (typeahead).",
         "item5": "ESC closes the menu and returns focus to trigger; outside click also closes.",
@@ -806,7 +806,7 @@
         "open": "Announces: \"[trigger label], menu pop-up, collapsed\". On open: \"expanded, menu, [N] items\".",
         "navigation": "On each item reads: \"[text], menu item, [N] of [total]\".",
         "checked": "CheckboxItem: \"[text], checkbox, checked/unchecked\".",
-        "shortcut": "Shortcut is read as part of the item label (e.g., \"Save, Control K\")."
+        "shortcut": "The shortcut is read as part of the item label (e.g. \"Copy, Control C\")."
       }
     },
     "related": {
@@ -844,7 +844,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Required payload: <code>component='dropdown-menu'</code>, <code>location</code> (page context), <code>label</code> (trigger or item text). Dispatch via the open-change and select callbacks in the consumer."
+      "description": "Relevant events: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Required payload: <code>component='dropdown-menu'</code>, <code>location</code> (page context), <code>label</code> (the item stable identifier, never the translated text — localized text splits one event into a value per locale). Dispatch via the open-change and select callbacks in the consumer."
     },
     "testes": {
       "title": "Test Criteria",
@@ -1254,7 +1254,7 @@
       "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía role=menu/menuitem), 2.1.1 (operable por teclado: flechas, Enter, ESC, Home/End), 2.4.3 (foco vuelve al trigger al cerrar), 4.1.2 (name/role/value vía aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> recibe <code>aria-haspopup=\"menu\"</code> y <code>aria-expanded</code> automáticos.",
-        "item2": "<code>DropdownMenuContent</code> tiene <code>role=\"menu\"</code>, atrapa el foco mientras está abierto y lo recibe al abrir, desde donde las flechas alcanzan los ítems.",
+        "item2": "<code>DropdownMenuContent</code> tiene <code>role=\"menu\"</code> y recibe el foco al abrir, desde donde las flechas alcanzan los elementos. No atrapa el foco: Tab cierra el menú y sigue el recorrido de la página, que es comportamiento de menú y no de diálogo.",
         "item3": "<code>DropdownMenuItem</code> tiene <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> tiene <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> tiene <code>role=\"menuitemradio\"</code>.",
         "item4": "Flechas Arriba/Abajo navegan entre items; Home/End van al primero/último; letras tipeadas mueven foco al item correspondiente (typeahead).",
         "item5": "ESC cierra el menú y devuelve foco al trigger; clic fuera también cierra.",
@@ -1282,7 +1282,7 @@
         "open": "Anuncia: \"[label del trigger], menú emergente, contraído\". Al abrir: \"expandido, menú, [N] items\".",
         "navigation": "En cada item lee: \"[texto], item de menú, [N] de [total]\".",
         "checked": "CheckboxItem: \"[texto], casilla, marcada/desmarcada\".",
-        "shortcut": "Shortcut se lee como parte del label del item (ej: \"Guardar, Control K\")."
+        "shortcut": "El atajo se lee como parte de la etiqueta del elemento (ej.: \"Copiar, Control C\")."
       }
     },
     "related": {
@@ -1320,7 +1320,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obligatorio: <code>component='dropdown-menu'</code>, <code>location</code> (contexto de página), <code>label</code> (texto del trigger o item). Dispara vía los callbacks de cambio de apertura y de selección en el consumidor."
+      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obligatorio: <code>component='dropdown-menu'</code>, <code>location</code> (contexto de página), <code>label</code> (identificador estable del elemento, nunca el texto traducido — el texto localizado divide el mismo evento en un valor por idioma). Dispara vía los callbacks de cambio de apertura y de selección en el consumidor."
     },
     "testes": {
       "title": "Criterios de Test",
