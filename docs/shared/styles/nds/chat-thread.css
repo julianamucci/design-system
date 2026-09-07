@@ -108,6 +108,23 @@
   overflow-x: hidden;
   overscroll-behavior: contain;
   padding: var(--spacing-4);
+  /* Espaço reservado para o botão de ir ao fim, que FLUTUA sobre este viewport.
+   *
+   * Ele é posicionado por "absolute" a 16px da borda e mede ~28px de altura:
+   * ocupa uns 44px que o padding de 16 não cobria, e por isso encobria a última
+   * linha do texto. Acontecia em qualquer conversa rolada — nas cinco stacks.
+   *
+   * A reserva é incondicional de propósito. Reservar só quando o botão aparece,
+   * com "has", seria menos espaço morto, mas mudaria o padding no meio da
+   * rolagem, e o conteúdo daria um salto justamente no gesto em que a pessoa
+   * está lendo. Espaço abaixo da última mensagem não incomoda; texto encoberto,
+   * sim. Quando não há transbordo o botão está escondido e a reserva não se vê.
+   *
+   * O "scroll-padding" faz o mesmo motivo valer na rolagem por teclado e no
+   * "scrollIntoView": sem ele o alvo encosta na borda e volta para debaixo do
+   * botão. */
+  padding-block-end: var(--spacing-12);
+  scroll-padding-block-end: var(--spacing-12);
 }
 
 /* Região rolável é alcançável por teclado — WCAG 2.1.1, regra
