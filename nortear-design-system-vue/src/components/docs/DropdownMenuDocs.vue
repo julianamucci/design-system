@@ -66,6 +66,54 @@ function localPriority(raw: string): string {
   return priorityKeyMap[raw] ?? raw;
 }
 
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Contar à mão (`[1, 2, 3].map(...)`) trava a lista no tamanho de hoje: o
+ * conteúdo compartilhado ganha um item e ele simplesmente não existe para quem
+ * lê — sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu
+ * com o sétimo critério de acessibilidade deste componente.
+ */
+function stringsFromDict(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = t(`${base}.item${i}`, '');
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A demonstração é produto: quem abre um menu aqui dispara o mesmo evento que o
+ * componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
+ * item, nunca o rótulo traduzido — texto localizado partiria o mesmo evento em
+ * um por idioma no GA4.
+ *
+ * `location` é a SEÇÃO onde o elemento está. Estes dois handlers atendem apenas
+ * a demonstração, e é por isso que o valor é fixo dentro deles; preview vivo de
+ * outra seção pede o `docs_<section-id>` daquela seção.
+ */
+function trackMenuOpenChange(menu: string, isOpen: boolean): void {
+  track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
+    component: 'dropdown-menu',
+    label: menu,
+    location: 'docs_demo',
+  });
+}
+
+function trackMenuItemSelect(menu: string, item: string): void {
+  track('dropdown_menu_item_select', {
+    component: 'dropdown-menu',
+    label: item,
+    menu,
+    location: 'docs_demo',
+  });
+}
+
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
 
 useSeoEffect(computed(() => ({
@@ -393,7 +441,7 @@ const noteItems = computed(() => [
 const analyticsItems = computed(() => [
   { event: 'dropdown_menu_open',        trigger: '@update:open(true)',  payload: "{ component: 'dropdown-menu', location, label }" },
   { event: 'dropdown_menu_close',       trigger: '@update:open(false)', payload: "{ component: 'dropdown-menu', location, label }" },
-  { event: 'dropdown_menu_item_select', trigger: '@select em Item',     payload: "{ component: 'dropdown-menu', location, label }" },
+  { event: 'dropdown_menu_item_select', trigger: '@select em Item',     payload: "{ component: 'dropdown-menu', location, label, menu }" },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
@@ -402,11 +450,27 @@ const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
-const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6].map((i) => ({
-  criterion: tContent(`testes.accessibility.item${i}`),
-  level: 'AA',
-  how: tContent(`testes.accessibility.item${i}`),
-})));
+// Nível WCAG e ferramenta ficam aqui, e não no conteúdo compartilhado, porque
+// são IDENTIFICADORES (número de critério, nome do verificador) e identificador
+// não se traduz. Item novo além da lista cai no par padrão em vez de sumir.
+const a11yTestLevels = ['AA', '4.1.2', '4.1.2', '1.3.1', '2.4.3', '1.4.3', '4.1.2'];
+const a11yTestHow = [
+  'axe-core',
+  'DOM inspection',
+  'DOM inspection',
+  'DOM inspection',
+  'Keyboard test',
+  'Contrast analyzer',
+  'Keyboard test',
+];
+
+const a11yTestItems = computed(() =>
+  stringsFromDict(tContent, 'testes.accessibility').map((criterion, i) => ({
+    criterion: toPlainText(criterion),
+    level: a11yTestLevels[i] ?? 'AA',
+    how: a11yTestHow[i] ?? 'axe-core',
+  })),
+);
 
 const visualTestItems = computed(() => [1, 2, 3, 4, 5].map((i) => ({
   story: tContent(`testes.visual.item${i}.story`),
@@ -443,7 +507,7 @@ const a11yCritCols = computed(() => ({
         data-spacing="md"
         style="contain: layout"
       >
-        <DropdownMenu>
+        <DropdownMenu @update:open="trackMenuOpenChange('acoes', $event)">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.basic') }}
@@ -454,10 +518,17 @@ const a11yCritCols = computed(() => ({
             align="start"
           >
             <DropdownMenuLabel>Conta</DropdownMenuLabel>
-            <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
+            <DropdownMenuItem @select="trackMenuItemSelect('acoes', 'perfil')">
+              Perfil
+            </DropdownMenuItem>
+            <DropdownMenuItem @select="trackMenuItemSelect('acoes', 'configuracoes')">
+              Configurações
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">
+            <DropdownMenuItem
+              variant="destructive"
+              @select="trackMenuItemSelect('acoes', 'sair')"
+            >
               Sair
             </DropdownMenuItem>
           </DropdownMenuContent>

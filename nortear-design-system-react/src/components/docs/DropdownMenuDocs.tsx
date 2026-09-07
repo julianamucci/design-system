@@ -50,6 +50,72 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Contar à mão (`[1, 2, 3].map(...)`, ou uma linha por índice) trava a lista no
+ * tamanho de hoje: o conteúdo compartilhado ganha um item e ele simplesmente
+ * não existe para quem lê — sem erro, sem aviso, nos três idiomas de uma vez.
+ * Foi o que aconteceu com o sétimo critério de acessibilidade deste componente.
+ */
+function stringsFromDict(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = t(`${base}.item${i}`, "");
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * Nível WCAG e ferramenta de cada critério de acessibilidade, por índice.
+ * Ficam aqui, e não no conteúdo compartilhado, porque são IDENTIFICADORES
+ * (número de critério, nome do verificador) e identificador não se traduz.
+ * Item novo que chegue além da lista cai no par padrão em vez de sumir.
+ */
+const A11Y_TEST_LEVELS = ["AA", "4.1.2", "4.1.2", "1.3.1", "2.4.3", "1.4.3", "4.1.2"];
+const A11Y_TEST_HOW = [
+  "axe-core",
+  "DevTools a11y tree",
+  "DevTools a11y tree",
+  "DevTools a11y tree",
+  "Keyboard test",
+  "Contrast checker",
+  "Keyboard test",
+];
+
+/**
+ * A demonstração é produto: quem abre um menu aqui dispara o mesmo evento que o
+ * componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
+ * item, nunca o rótulo traduzido — texto localizado partiria o mesmo evento em
+ * um por idioma no GA4.
+ *
+ * `location` é a SEÇÃO onde o elemento está. Estes dois handlers atendem apenas
+ * a demonstração, e é por isso que o valor é fixo dentro deles; preview vivo de
+ * outra seção pede o `docs_<section-id>` daquela seção.
+ */
+function trackMenuOpenChange(menu: string, isOpen: boolean): void {
+  track(isOpen ? "dropdown_menu_open" : "dropdown_menu_close", {
+    component: "dropdown-menu",
+    label: menu,
+    location: "docs_demo",
+  });
+}
+
+function trackMenuItemSelect(menu: string, item: string): () => void {
+  return () =>
+    track("dropdown_menu_item_select", {
+      component: "dropdown-menu",
+      label: item,
+      menu,
+      location: "docs_demo",
+    });
+}
+
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -238,7 +304,7 @@ interface DropdownMenuItemProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.basic"))}
             </p>
-            <DropdownMenu>
+            <DropdownMenu onOpenChange={(open) => trackMenuOpenChange("acoes", open)}>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="nds-w-full">
                   Conta
@@ -247,11 +313,20 @@ interface DropdownMenuItemProps {
               <DropdownMenuContent>
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>Conta</DropdownMenuLabel>
-                  <DropdownMenuItem>Perfil</DropdownMenuItem>
-                  <DropdownMenuItem>Configurações</DropdownMenuItem>
+                  <DropdownMenuItem onClick={trackMenuItemSelect("acoes", "perfil")}>
+                    Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={trackMenuItemSelect("acoes", "configuracoes")}>
+                    Configurações
+                  </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={trackMenuItemSelect("acoes", "sair")}
+                >
+                  Sair
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -265,7 +340,7 @@ interface DropdownMenuItemProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withCheckbox"))}
             </p>
-            <DropdownMenu>
+            <DropdownMenu onOpenChange={(open) => trackMenuOpenChange("colunas", open)}>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="nds-w-full">
                   Colunas
@@ -303,7 +378,7 @@ interface DropdownMenuItemProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withRadio"))}
             </p>
-            <DropdownMenu>
+            <DropdownMenu onOpenChange={(open) => trackMenuOpenChange("tema", open)}>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="nds-w-full">
                   Tema
@@ -328,19 +403,25 @@ interface DropdownMenuItemProps {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withSubmenu"))}
             </p>
-            <DropdownMenu>
+            <DropdownMenu onOpenChange={(open) => trackMenuOpenChange("submenu", open)}>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="nds-w-full">
                   Ações
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>Salvar</DropdownMenuItem>
+                <DropdownMenuItem onClick={trackMenuItemSelect("submenu", "salvar")}>
+                  Salvar
+                </DropdownMenuItem>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
                   <DropdownMenuSubContent>
-                    <DropdownMenuItem>PDF</DropdownMenuItem>
-                    <DropdownMenuItem>CSV</DropdownMenuItem>
+                    <DropdownMenuItem onClick={trackMenuItemSelect("submenu", "pdf")}>
+                      PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={trackMenuItemSelect("submenu", "csv")}>
+                      CSV
+                    </DropdownMenuItem>
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
               </DropdownMenuContent>
@@ -937,11 +1018,10 @@ interface DropdownMenuItemProps {
         title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
-          {
-            event: "dropdown_menu_open / dropdown_menu_close / dropdown_menu_item_select",
-            trigger: toPlainText(tContent("analytics.description")),
-            payload: "component, location, label",
-          },
+          { event: "dropdown_menu_open",        trigger: "onOpenChange(true)",  payload: "component, label, location" },
+          { event: "dropdown_menu_close",       trigger: "onOpenChange(false)", payload: "component, label, location" },
+          { event: "dropdown_menu_item_select", trigger: "onClick no Item",     payload: "component, label, menu, location" },
+          { event: "—",                         trigger: toPlainText(tContent("analytics.description")), payload: "—" },
         ]}
       />
 
@@ -1005,14 +1085,11 @@ interface DropdownMenuItemProps {
             level: "WCAG",
             how: tNav("common.howToVerify"),
           },
-          items: [
-            { criterion: tContent("testes.accessibility.item1"), level: "AA", how: "axe-core" },
-            { criterion: tContent("testes.accessibility.item2"), level: "4.1.2", how: "DevTools a11y tree" },
-            { criterion: tContent("testes.accessibility.item3"), level: "4.1.2", how: "DevTools a11y tree" },
-            { criterion: tContent("testes.accessibility.item4"), level: "1.3.1", how: "DevTools a11y tree" },
-            { criterion: tContent("testes.accessibility.item5"), level: "2.4.3", how: "Keyboard test" },
-            { criterion: tContent("testes.accessibility.item6"), level: "1.4.3", how: "Contrast checker" },
-          ],
+          items: stringsFromDict(tContent, "testes.accessibility").map((criterion, i) => ({
+            criterion,
+            level: A11Y_TEST_LEVELS[i] ?? "AA",
+            how: A11Y_TEST_HOW[i] ?? "axe-core",
+          })),
         }}
         visual={{
           title: tContent("testes.visual.title"),

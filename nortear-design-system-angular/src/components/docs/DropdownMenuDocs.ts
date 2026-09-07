@@ -709,12 +709,21 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
    * A demonstração é produto: quem abre um menu aqui dispara o mesmo evento que
    * o componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
    * item, nunca o rótulo traduzido — o rótulo partiria um evento em três no GA4.
+   *
+   * `location` é a SEÇÃO onde o elemento está, no vocabulário `docs_<section-id>`
+   * — o mesmo id que o `docs_section_viewed` manda em `section_id`. O valor
+   * anterior, `docs-demonstration`, ficava fora dele por dois motivos e não
+   * cruzava com nada no GA4; o hífen logo depois de `docs` ainda o escondia do
+   * portão `location_fora_do_vocabulario`, que varre `docs[_:]`.
+   *
+   * Os dois handlers atendem apenas a demonstração, e é por isso que o valor é
+   * fixo dentro deles; preview vivo de outra seção pede o id daquela seção.
    */
   protected onOpenChange(menu: string, isOpen: boolean): void {
     track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
       component: 'dropdown-menu',
       label: menu,
-      location: 'docs-demonstration',
+      location: 'docs_demo',
     });
   }
 
@@ -723,7 +732,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
       component: 'dropdown-menu',
       label: item,
       menu,
-      location: 'docs-demonstration',
+      location: 'docs_demo',
     });
   }
 
@@ -1080,15 +1089,15 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly testesAccessibility = computed(() => {
-    dict();
+    const d = dict();
     // Critério como frase única, não {criterion, level, how} — mesma forma do
     // tabs e do radio-group.
     return {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: [1, 2, 3, 4, 5, 6].map((i) => ({
-        criterion: toPlainText(t(`testes.accessibility.item${i}`)),
+      items: stringsFromDict(d, 'testes.accessibility').map((criterion) => ({
+        criterion: toPlainText(criterion),
         level: '—',
         how: 'axe + play',
       })),
@@ -1156,6 +1165,20 @@ const priorityKeyMap: Record<string, string> = {
 
 function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
+}
+
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no dicionário.
+ *
+ * Contar à mão (`[1, 2, 3].map(...)`) trava a lista no tamanho de hoje: o
+ * conteúdo compartilhado ganha um item e ele simplesmente não existe para quem
+ * lê — sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com
+ * o sétimo critério de acessibilidade deste componente.
+ */
+function stringsFromDict(d: Record<string, string>, base: string): string[] {
+  const out: string[] = [];
+  for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) out.push(d[`${base}.item${i}`]);
+  return out;
 }
 
 function itemsFromDict<K extends string>(

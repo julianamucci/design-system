@@ -34,6 +34,68 @@
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(dropdownMenuTranslations);
 
+  /**
+   * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+   *
+   * Citar índice por índice trava a lista no tamanho de hoje: o conteúdo
+   * compartilhado ganha um item e ele simplesmente não existe para quem lê —
+   * sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com o
+   * sétimo critério de acessibilidade deste componente.
+   */
+  function stringsFromDict(
+    t: (key: string, defaultValue?: string) => string,
+    base: string,
+  ): string[] {
+    const out: string[] = [];
+    for (let i = 1; ; i++) {
+      const value = t(`${base}.item${i}`, '');
+      if (!value) break;
+      out.push(value);
+    }
+    return out;
+  }
+
+  // Nível WCAG e ferramenta ficam aqui, e não no conteúdo compartilhado, porque
+  // são IDENTIFICADORES (número de critério, nome do verificador) e
+  // identificador não se traduz. Item além da lista cai no par padrão.
+  const a11yTestLevels = ['AA', '4.1.2', '4.1.2', '4.1.2', '2.4.3', '1.4.3', '4.1.2'];
+  const a11yTestHow = [
+    'axe-core',
+    'DOM inspection',
+    'DOM inspection',
+    'DOM inspection',
+    'Keyboard test',
+    'Contrast analyzer',
+    'Keyboard test',
+  ];
+
+  /**
+   * A demonstração é produto: quem abre um menu aqui dispara o mesmo evento que
+   * o componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
+   * item, nunca o rótulo traduzido — texto localizado partiria o mesmo evento em
+   * um por idioma no GA4.
+   *
+   * `location` é a SEÇÃO onde o elemento está. Estes dois handlers atendem
+   * apenas a demonstração, e é por isso que o valor é fixo dentro deles;
+   * preview vivo de outra seção pede o `docs_<section-id>` daquela seção.
+   */
+  function trackMenuOpenChange(menu: string, isOpen: boolean): void {
+    track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
+      component: 'dropdown-menu',
+      label: menu,
+      location: 'docs_demo',
+    });
+  }
+
+  function trackMenuItemSelect(menu: string, item: string): void {
+    track('dropdown_menu_item_select', {
+      component: 'dropdown-menu',
+      label: item,
+      menu,
+      location: 'docs_demo',
+    });
+  }
+
   // As chaves de `accessibility.screenReader` variam por componente, então só os
   // valores chegam ao container — o `t()` exige nome de chave e não serviria.
   const screenReaderItems = $derived(
@@ -223,7 +285,7 @@ interface DropdownMenuRadioGroupProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap; contain: layout">
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={(o: boolean) => trackMenuOpenChange('acoes', o)}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.basic')}</Button>
@@ -231,14 +293,14 @@ interface DropdownMenuRadioGroupProps {
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
           <DropdownMenuLabel>Conta</DropdownMenuLabel>
-          <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configurações</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => trackMenuItemSelect('acoes', 'perfil')}>Perfil</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => trackMenuItemSelect('acoes', 'configuracoes')}>Configurações</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+          <DropdownMenuItem variant="destructive" onSelect={() => trackMenuItemSelect('acoes', 'sair')}>Sair</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={(o: boolean) => trackMenuOpenChange('colunas', o)}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.withCheckbox')}</Button>
@@ -262,7 +324,7 @@ interface DropdownMenuRadioGroupProps {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={(o: boolean) => trackMenuOpenChange('tema', o)}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.withRadio')}</Button>
@@ -279,24 +341,24 @@ interface DropdownMenuRadioGroupProps {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={(o: boolean) => trackMenuOpenChange('submenu', o)}>
         <DropdownMenuTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.withSubmenu')}</Button>
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuItem>Novo arquivo</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'novo-arquivo')}>Novo arquivo</DropdownMenuItem>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>Exportar como</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
-              <DropdownMenuItem>PDF</DropdownMenuItem>
-              <DropdownMenuItem>CSV</DropdownMenuItem>
-              <DropdownMenuItem>JSON</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'pdf')}>PDF</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'csv')}>CSV</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'json')}>JSON</DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
           <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>
+          <DropdownMenuItem variant="destructive" onSelect={() => trackMenuItemSelect('submenu', 'excluir')}>Excluir</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -853,7 +915,7 @@ interface DropdownMenuRadioGroupProps {
     items={[
       { event: 'dropdown_menu_open',        trigger: 'onOpenChange(true)',  payload: "{ component: 'dropdown-menu', location, label }" },
       { event: 'dropdown_menu_close',       trigger: 'onOpenChange(false)', payload: "{ component: 'dropdown-menu', location, label }" },
-      { event: 'dropdown_menu_item_select', trigger: 'onSelect',            payload: "{ component: 'dropdown-menu', location, label }" },
+      { event: 'dropdown_menu_item_select', trigger: 'onSelect',            payload: "{ component: 'dropdown-menu', location, label, menu }" },
       { event: '—',                         trigger: stripHtml($tStore('analytics.description')), payload: '—' },
     ]}
   />
@@ -881,14 +943,11 @@ interface DropdownMenuRadioGroupProps {
         level: 'WCAG',
         how: $tNavStore('common.howToVerify'),
       },
-      items: [
-        { criterion: toPlainText($tStore('testes.accessibility.item1')), level: 'AA',    how: 'axe-core' },
-        { criterion: toPlainText($tStore('testes.accessibility.item2')), level: '4.1.2', how: 'DOM inspection' },
-        { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '4.1.2', how: 'DOM inspection' },
-        { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '4.1.2', how: 'DOM inspection' },
-        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '2.4.3', how: 'Keyboard test' },
-        { criterion: toPlainText($tStore('testes.accessibility.item6')), level: '1.4.3', how: 'Contrast analyzer' },
-      ],
+      items: stringsFromDict($tStore, 'testes.accessibility').map((criterion, i) => ({
+        criterion: toPlainText(criterion),
+        level: a11yTestLevels[i] ?? 'AA',
+        how: a11yTestHow[i] ?? 'axe-core',
+      })),
     }}
     visual={{
       title: $tStore('testes.visual.title'),

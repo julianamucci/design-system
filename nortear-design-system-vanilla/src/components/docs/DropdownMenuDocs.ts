@@ -102,16 +102,67 @@ function makeItem(label: string, shortcut?: string, variant?: 'destructive'): HT
   return li;
 }
 
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Contar à mão (`[1, 2, 3].map(...)`) trava a lista no tamanho de hoje: o
+ * conteúdo compartilhado ganha um item e ele simplesmente não existe para quem
+ * lê — sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com
+ * o sétimo critério de acessibilidade deste componente.
+ */
+function stringsFromDict(
+  translate: (key: string, defaultValue?: string) => string,
+  base: string,
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = translate(`${base}.item${i}`, '');
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A demonstração é produto: quem abre o menu aqui dispara o mesmo evento que o
+ * componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
+ * item, nunca o rótulo traduzido — texto localizado partiria o mesmo evento em
+ * um por idioma no GA4.
+ *
+ * `location` é a SEÇÃO onde o elemento está. Estes dois handlers atendem apenas
+ * a demonstração, e é por isso que o valor é fixo dentro deles; preview vivo de
+ * outra seção pede o `docs_<section-id>` daquela seção.
+ */
+function trackMenuOpenChange(menu: string, isOpen: boolean): void {
+  track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
+    component: 'dropdown-menu',
+    label: menu,
+    location: 'docs_demo',
+  });
+}
+
+function trackMenuItemSelect(menu: string, item: string): () => void {
+  return () => {
+    track('dropdown_menu_item_select', {
+      component: 'dropdown-menu',
+      label: item,
+      menu,
+      location: 'docs_demo',
+    });
+  };
+}
+
 function buildDemoMenu(triggerLabel: string): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: triggerLabel });
   return createDropdownMenu({
     trigger,
+    onOpenChange: (open) => trackMenuOpenChange('acoes', open),
     items: [
       { type: 'label', label: t('demonstration.labels.basic') },
-      { type: 'item', label: 'Perfil', value: 'profile' },
-      { type: 'item', label: 'Configurações', value: 'settings' },
+      { type: 'item', label: 'Perfil', value: 'profile', onClick: trackMenuItemSelect('acoes', 'perfil') },
+      { type: 'item', label: 'Configurações', value: 'settings', onClick: trackMenuItemSelect('acoes', 'configuracoes') },
       { type: 'separator' },
-      { type: 'item', label: 'Sair', value: 'logout' },
+      { type: 'item', label: 'Sair', value: 'logout', onClick: trackMenuItemSelect('acoes', 'sair') },
     ],
   });
 }
@@ -736,7 +787,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
             {
               event: 'dropdown_menu_item_select',
               trigger: 'onSelect / item.onClick',
-              payload: "{ component: 'dropdown-menu', location, label, value }",
+              payload: "{ component: 'dropdown-menu', location, label, menu }",
             },
             {
               event: '—',
@@ -769,8 +820,8 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
-              criterion: t(`testes.accessibility.item${i}`),
+            items: stringsFromDict(t, 'testes.accessibility').map(criterion => ({
+              criterion,
               level: 'AA',
               how: 'axe-core / manual',
             })),
