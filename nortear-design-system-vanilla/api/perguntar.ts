@@ -179,7 +179,7 @@ const LANGUAGE_RULE: Record<Locale, string> = {
  * Mais: toda afirmação cita de qual componente veio. É o que permite a quem lê
  * conferir — e é o que torna a citação verificável em vez de decorativa.
  */
-function systemPrompt(locale: Locale, weak: boolean): string {
+function systemPrompt(locale: Locale, weak: boolean, catalogo: string[]): string {
   return [
     'Você responde perguntas sobre o Nortear Design System usando APENAS os trechos de documentação fornecidos nesta conversa.',
     '',
@@ -189,8 +189,15 @@ function systemPrompt(locale: Locale, weak: boolean): string {
     '2. Se os trechos não respondem à pergunta, DIGA QUE NÃO SABE, em uma frase, e aponte o componente mais próximo que apareceu. Não tente responder mesmo assim. Não peça desculpas longas.',
     '3. Toda afirmação diz de qual componente ela veio, pelo nome do slug — por exemplo "(chat-thread)". Sem exceção.',
     '4. Se a pergunta é sobre um componente que não está nos trechos, diga isso em vez de responder pelo componente parecido.',
-    '5. Seja curto. Documentação boa cabe em poucos parágrafos. Use listas quando houver itens, e blocos de código só quando o trecho trouxer código.',
-    '6. Você não tem acesso a arquivo, rede ou terminal. Não afirme que consultou nada além dos trechos.',
+    '5. NOME DE COMPONENTE VAI SEMPRE EM INGLÊS, exatamente como está no atributo "nome" do documento — ComposerVoice, MediaPlayer, InputOTP. NUNCA traduza o nome, mesmo respondendo em português ou espanhol, e mesmo que o título dentro do documento esteja traduzido: é assim que ele aparece no menu do Storybook, e é por esse nome que a pessoa vai procurar.',
+    '6. SÓ existem os componentes desta lista. Nenhum outro nome é componente deste design system, por mais que o texto dos documentos cite conceitos, alternativas e recursos que soem como peça:',
+    '',
+    catalogo.join(', '),
+    '',
+    '   Ao citar um componente, use exatamente o nome como está na lista. E só faça AFIRMAÇÕES sobre componentes que têm documento nesta conversa: estar na lista prova que existe, não diz como funciona.',
+    '7. NÃO ADIVINHE a que componente uma descrição corresponde. Os documentos citam alternativas por descrição — "botão alternador", "leitura em voz alta", "conversa por voz" — e essas descrições NÃO são nomes de componente. Repita a descrição como o documento a escreveu, sem escolher um nome da lista por conta própria. Mandar a pessoa para a peça errada é pior que deixá-la procurar.',
+    '8. Seja curto. Documentação boa cabe em poucos parágrafos. Use listas quando houver itens, e blocos de código só quando o trecho trouxer código.',
+    '9. Você não tem acesso a arquivo, rede ou terminal. Não afirme que consultou nada além dos trechos.',
     '',
     weak
       ? 'ATENÇÃO: a recuperação veio FRACA para esta pergunta — nenhum documento passou o piso de confiança. É muito provável que a resposta não esteja no corpus. Comece dizendo que não encontrou, e só então mencione o que apareceu de mais próximo, deixando claro que é um palpite de vizinhança.'
@@ -201,6 +208,36 @@ function systemPrompt(locale: Locale, weak: boolean): string {
 }
 
 /** Os documentos vencedores, inteiros, um bloco por slug. */
+/**
+ * Siglas que não viram Palavra Capitalizada ao derivar o nome do menu.
+ *
+ * A barra lateral mostra `InputOTP`, e a derivação ingênua daria `InputOtp`.
+ * São poucas, e uma lista curta é mais honesta que uma regra esperta que erra
+ * em silêncio.
+ */
+const SIGLAS: Record<string, string> = { otp: 'OTP' };
+
+/**
+ * O nome do componente como ele aparece no menu do Storybook.
+ *
+ * Derivado do SLUG, e não lido do conteúdo, porque nenhum campo do conteúdo
+ * serve: dos 84 componentes, 57 têm o título igual nos três idiomas — é o nome
+ * PascalCase — e 27 têm título traduzido: "Ditado por voz" para
+ * `composer-voice`, "Grade de atividade" para `activity-graph`.
+ *
+ * Sem um nome canônico o modelo traduzia o que encontrava, e a resposta citava
+ * componentes que não existem em menu nenhum. Pior: misturava nome de
+ * componente com CONCEITO tirado da prosa — "Conversa por voz" e "Leitura em
+ * voz alta" aparecem no texto do `composer-voice` como alternativas descritas,
+ * e voltaram na resposta como se fossem peças do sistema.
+ */
+function nomeDeMenu(slug: string): string {
+  return slug
+    .split('-')
+    .map((parte) => SIGLAS[parte] ?? parte.charAt(0).toUpperCase() + parte.slice(1))
+    .join('');
+}
+
 function buildContext(
   hits: DocsIndexHit[],
   documents: Map<string, unknown>,
@@ -209,7 +246,9 @@ function buildContext(
     .map((hit) => {
       const document = documents.get(hit.slug);
       return [
-        `<documento slug="${hit.slug}" nota="${hit.score.toFixed(2)}">`,
+        // O nome do menu entra no cabeçalho do documento: é o que o modelo tem
+        // de usar para se referir ao componente, e precisa estar à vista.
+        `<documento nome="${nomeDeMenu(hit.slug)}" slug="${hit.slug}" nota="${hit.score.toFixed(2)}">`,
         JSON.stringify(document, null, 1),
         '</documento>',
       ].join('\n');
@@ -401,6 +440,12 @@ export async function responder(request: Request): Promise<Response> {
     );
   }
 
+  // O catálogo inteiro no prompt custa ~275 tokens (1% do total) e é o que
+  // permite ao modelo distinguir COMPONENTE de conceito citado na prosa. Sem
+  // ele, a resposta mandava "use o Button" onde o texto dizia "botão
+  // alternador" — que é o Toggle, e o Button nem tinha documento na conversa.
+  const catalogo = corpus.entries.map((entrada) => nomeDeMenu(entrada.slug)).sort();
+
   const historico = sanearHistorico(body.historico);
   const hits = searchDocs(corpus.entries, consultaDeRecuperacao(question, historico), {
     limit: MAX_DOCUMENTS,
@@ -470,7 +515,7 @@ export async function responder(request: Request): Promise<Response> {
             },
           ],
           config: {
-            systemInstruction: systemPrompt(locale, weak),
+            systemInstruction: systemPrompt(locale, weak, catalogo),
             maxOutputTokens: MAX_TOKENS,
             // Temperatura baixa porque a resposta precisa ficar colada nos
             // trechos: aqui invenção não é criatividade, é defeito.
