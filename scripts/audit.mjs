@@ -6405,7 +6405,22 @@ function auditQuality(slug) {
           // Ele está copiado em 12 docs pages do angular, cada uma com a sua
           // definição local, e varre `item{i}` até faltar — exatamente o que
           // esta regra quer premiar.
-          if (new RegExp(`(itemsFromDict|listFromDict|stringsFromDict|numberedItems)\\([^)]*['"\`]${p}['"\`]`).test(semComentario)) continue;
+          // Casa por FORMA, não por nome. A lista de nomes tinha quatro
+          // entradas e o repositório tem doze helpers derivados —
+          // `entriesFromDict`, `numberedFromDict`, `namedLeafsFromDict`,
+          // `stringItemsFromDict` e outros ficavam invisíveis. E invisível aqui
+          // é pior que acusado: sem nome conhecido a página cai no ramo de
+          // citação literal, não acha nenhuma, `renderizado` fica 0 — e 0 faz a
+          // regra PULAR.
+          //
+          // Custou duas vezes na prática: em 2026-09-07 uma porta teve de
+          // RENOMEAR os helpers dela para nomes da lista só para o portão
+          // enxergar a página. Renomear código para caber no medidor é o
+          // medidor mandando no código.
+          //
+          // `\w*FromDict` cobre os sete de sufixo comum; `numberedItems` é o
+          // único fora do padrão e entra nomeado.
+          if (new RegExp(`(\\w*FromDict|numberedItems)\\([^)]*['"\`]${p}['"\`]`).test(semComentario)) continue;
 
           let renderizado = 0;
           // Interpolada: `${caminho}.item${i}` alimentada por um array literal.
