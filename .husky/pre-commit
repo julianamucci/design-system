@@ -7,7 +7,19 @@
 
 set -e
 
-FORBIDDEN_PATTERNS='it\.skip|test\.skip|it\.todo|test\.todo|xit\(|xtest\(|xdescribe\(|describe\.skip|expect\.soft|parameters\.a11y\.disable|parameters\.test\.disable'
+# As formas de IDENTIFICADOR levam `\b` à esquerda, e isso não é zelo: sem a
+# borda, `xit\(` casa dentro de `focusSafeExit($event)` — medido em 2026-09-07,
+# bloqueando um commit legítimo do drawer. `\bit\.skip` pela mesma razão
+# (`unit.skip`, `edit.skip`).
+#
+# É a terceira família de portão desta casa a errar por casar palavra solta: o
+# `lista_mais_curta_que_o_conteudo` acusou uma citação dentro de comentário, o
+# de nome acessível reprovou num comentário que explicava uma recusa, e o
+# `demonstration_labels_divergent` fazia o contrário — SILENCIAVA o achado
+# quando a chave era citada em comentário. Aqui o custo é o mais visível dos
+# três: o portão impede o trabalho certo, e a saída fácil é renomear o código
+# para caber no medidor.
+FORBIDDEN_PATTERNS='\bit\.skip|\btest\.skip|\bit\.todo|\btest\.todo|\bxit\(|\bxtest\(|\bxdescribe\(|\bdescribe\.skip|\bexpect\.soft|parameters\.a11y\.disable|parameters\.test\.disable'
 
 ALL_STAGED=$(git diff --cached --name-only --diff-filter=ACM || true)
 
