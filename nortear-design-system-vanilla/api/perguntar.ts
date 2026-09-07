@@ -620,7 +620,133 @@ const provedorGemini: Provedor = {
  * alguém digitou errado uma variável de ambiente troca um defeito de
  * configuração por uma indisponibilidade.
  */
-const PROVEDORES: Record<string, Provedor> = { gemini: provedorGemini };
+/**
+ * ─── Adaptador compatível com a API da OpenAI ────────────────────────────────
+ *
+ * Um só cobre OpenRouter, Groq, Cerebras, Together e a maioria dos servidores
+ * locais: todos falam `POST /chat/completions` com streaming em SSE. O que muda
+ * entre eles é a URL base e a chave, e as duas vêm do ambiente.
+ *
+ * Serve para o que o banco de avaliação precisa: com uma chave do OpenRouter, o
+ * MODELO vira uma string, e medir um candidato é `CHAT_DOCS_MODELO=<nome>` mais
+ * uma rodada.
+ *
+ * `stream_options: { include_usage: true }` NÃO é detalhe. Sem ele a maioria
+ * dos servidores compatíveis não manda contagem de tokens nenhuma em modo
+ * streaming: o evento `done` sai com `null`, e o critério de custo do banco
+ * passa a medir nada — portão sem dentes, que é o defeito que esta sessão já
+ * encontrou quatro vezes.
+ */
+const BASE_PADRAO = 'https://openrouter.ai/api/v1';
+
+const provedorCompativelOpenAI: Provedor = {
+  nome: 'openai-compat',
+
+  chave() {
+    return process.env.CHAT_DOCS_API_KEY ?? null;
+  },
+
+  async *stream(pedido, chave) {
+    const base = (process.env.CHAT_DOCS_BASE_URL ?? BASE_PADRAO).replace(/\/+$/, '');
+    const resposta = await fetch(`${base}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${chave}`,
+      },
+      body: JSON.stringify({
+        model: process.env.CHAT_DOCS_MODELO ?? 'openrouter/auto',
+        stream: true,
+        stream_options: { include_usage: true },
+        max_tokens: pedido.maxTokens,
+        temperature: pedido.temperatura,
+        messages: [
+          { role: 'system', content: pedido.sistema },
+          ...pedido.historico.map((turno) => ({
+            // O protocolo da OpenAI chama de `assistant` o que o Google chama
+            // de `model`. É a única diferença de vocabulário entre os dois.
+            role: turno.papel === 'model' ? 'assistant' : 'user',
+            content: turno.texto,
+          })),
+          { role: 'user', content: pedido.mensagem },
+        ],
+      }),
+    });
+
+    if (!resposta.ok || !resposta.body) {
+      // O corpo do erro pode carregar detalhe de conta — fica no log do
+      // servidor, como no outro adaptador. Só o status atravessa.
+      const detalhe = await resposta.text().catch(() => '');
+      console.error('[perguntar] provedor compatível recusou', resposta.status, detalhe.slice(0, 400));
+      throw Object.assign(new Error('provedor recusou'), { status: resposta.status });
+    }
+
+    const leitor = resposta.body.getReader();
+    const decodificador = new TextDecoder();
+    let sobra = '';
+    let parada: string | null = null;
+    let uso: { input: number | null; output: number | null } | undefined;
+
+    for (;;) {
+      const { done, value } = await leitor.read();
+      if (done) break;
+      sobra += decodificador.decode(value, { stream: true });
+
+      // O SSE separa eventos por linha em branco; o resto fica para a próxima
+      // volta. Cortar no `\n` simples partiria um JSON no meio.
+      const blocos = sobra.split('\n\n');
+      sobra = blocos.pop() ?? '';
+
+      for (const bloco of blocos) {
+        const linha = bloco.split('\n').find((l) => l.startsWith('data:'));
+        if (!linha) continue;
+        const dado = linha.slice(5).trim();
+        if (dado === '[DONE]') continue;
+
+        let evento: {
+          choices?: { delta?: { content?: string }; finish_reason?: string | null }[];
+          usage?: { prompt_tokens?: number; completion_tokens?: number };
+        };
+        try {
+          evento = JSON.parse(dado);
+        } catch {
+          // Comentário de keep-alive ou pedaço malformado: seguir é melhor que
+          // derrubar a resposta inteira por uma linha.
+          continue;
+        }
+
+        const texto = evento.choices?.[0]?.delta?.content;
+        if (texto) yield { texto };
+        if (evento.choices?.[0]?.finish_reason) parada = evento.choices[0].finish_reason ?? null;
+        if (evento.usage) {
+          uso = {
+            input: evento.usage.prompt_tokens ?? null,
+            output: evento.usage.completion_tokens ?? null,
+          };
+        }
+      }
+    }
+
+    yield { parada, uso };
+  },
+
+  classificarFalha(erro) {
+    // Sem classe de erro aqui — o `fetch` não lança por status, então o status
+    // vem pendurado no erro que o `stream` levantou.
+    const status = (erro as { status?: number })?.status ?? 0;
+    if (status === 404) return 'modelo_indisponivel';
+    if (status === 401 || status === 403 || status === 400) return 'chave_invalida';
+    if (status === 429) return 'limite_do_modelo';
+    return 'falha_do_modelo';
+  },
+};
+
+const PROVEDORES: Record<string, Provedor> = {
+  gemini: provedorGemini,
+  openrouter: provedorCompativelOpenAI,
+  // Mesmo adaptador, nomes diferentes: o que muda é `CHAT_DOCS_BASE_URL`.
+  compativel: provedorCompativelOpenAI,
+};
 
 function provedorAtual(): Provedor {
   return PROVEDORES[process.env.CHAT_DOCS_PROVEDOR ?? 'gemini'] ?? provedorGemini;
