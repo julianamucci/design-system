@@ -85,12 +85,24 @@
  */
 @media (prefers-reduced-motion: reduce) {
   :root {
+    /* A escada INTEIRA vai a zero. Duas ficavam de fora — `panel` e `spring` —
+     * e não eram degraus mortos: `accordion.css`, `alert-dialog.css`,
+     * `carousel.css` e `utilities.css` as consomem, nas cinco stacks. Quem liga
+     * a preferência do sistema continuava vendo o painel deslizar e a mola
+     * passar do ponto.
+     *
+     * Escapavam justamente as duas de movimento MAIOR, que é o pior recorte
+     * possível: são as que provocam desconforto vestibular, e são a razão de a
+     * preferência existir. Ao acrescentar um degrau novo aqui em cima, ele
+     * precisa aparecer neste bloco também — a lista não se atualiza sozinha. */
     --duration-instant:  0ms;
     --duration-fast:     0ms;
     --duration-base:     0ms;
     --duration-moderate: 0ms;
     --duration-slow:     0ms;
     --duration-stately:  0ms;
+    --duration-panel:    0ms;
+    --duration-spring:   0ms;
   }
 }
 
