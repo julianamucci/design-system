@@ -32,7 +32,7 @@ import type { ChatSource } from '../../../docs/shared/primitives/chat-protocol';
 import { createChatThread, type ChatThreadElement } from '../../src/components/ui/chat-thread';
 import { createComposer, type ComposerElement } from '../../src/components/ui/composer';
 import { createThinkingIndicator } from '../../src/components/ui/thinking-indicator';
-import { ask, type SourcesEvent } from './client';
+import { ask, type SourcesEvent, type TurnoAnterior } from './client';
 import { labelsFor, type ChatDocsLabels } from './labels';
 import './chat-docs.css';
 
@@ -77,6 +77,22 @@ let widget: Widget | null = null;
 let open = false;
 let running: AbortController | null = null;
 let messageSeq = 0;
+
+/**
+ * A conversa até agora, para a próxima pergunta fazer sentido.
+ *
+ * Sem isto o chat é de turno único: "quais as situações de uso DESSE" não tem
+ * a que se referir, e — pior — a recuperação sozinha devolvia quatro
+ * componentes sem relação com nota ACIMA do piso, o que produziria uma resposta
+ * confiante e errada. O piso não protege contra pergunta de continuação.
+ *
+ * Só em memória, e morre com a aba. Persistir traria armazenamento e, com ele,
+ * o que as pessoas digitam — que é outra conversa, com outras obrigações.
+ */
+const historico: TurnoAnterior[] = [];
+
+/** Turnos que viajam. Seis são três pares, o bastante para um "e esse?" longe. */
+const MAX_TURNOS = 6;
 
 /* ── O índice do Storybook, para a citação virar link ──────────────────────── */
 
@@ -359,11 +375,22 @@ async function submit(question: string): Promise<void> {
       },
     },
     controller.signal,
+    // Cópia, e recortada: o array é mutado logo abaixo, e mandar a referência
+    // viva significaria que uma resposta lenta veria um histórico que mudou.
+    historico.slice(-MAX_TURNOS),
   );
 
   clearThinking();
   running = null;
   w.composer.setRunning(false);
+
+  // O turno entra no histórico DEPOIS de responder, e só se houve resposta.
+  // Guardar a pergunta antes faria a própria pergunta atual voltar como
+  // contexto dela mesma; guardar uma resposta vazia ensinaria o modelo a
+  // responder vazio.
+  historico.push({ papel: 'user', texto: text });
+  if (answer.trim()) historico.push({ papel: 'model', texto: answer });
+  while (historico.length > MAX_TURNOS) historico.shift();
 }
 
 /* ── Entrada ──────────────────────────────────────────────────────────────── */

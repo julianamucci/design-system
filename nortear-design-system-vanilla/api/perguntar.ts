@@ -94,6 +94,20 @@ const SCORE_BAND = 0.15;
 export const MAX_QUESTION_LENGTH = 600;
 
 /**
+ * Tetos do histórico de conversa.
+ *
+ * O histórico vem do CLIENTE, num endpoint público — ou seja, é entrada de
+ * quem chama, não estado do servidor. Sem teto, alguém manda seis turnos de
+ * dez mil caracteres e usa o endpoint como proxy barato de modelo, que é
+ * exatamente o que o teto da pergunta já impede pelo outro lado.
+ *
+ * Seis turnos são três pares: o bastante para um "e esse?" algumas perguntas
+ * depois, e pouco o suficiente para o custo não crescer sem limite.
+ */
+export const MAX_HISTORY_TURNS = 6;
+export const MAX_HISTORY_CHARS = 4000;
+
+/**
  * ── Limite de taxa: isto é PISO, não solução ──
  *
  * Janela deslizante em memória de módulo, por IP. O que ele pega: a aba que
@@ -210,6 +224,63 @@ function jsonError(status: number, code: string, message: string): Response {
   });
 }
 
+/** Um turno da conversa. `model` é como o provedor chama o assistente. */
+interface Turno {
+  papel: 'user' | 'model';
+  texto: string;
+}
+
+/**
+ * Aceita só o que tem forma de turno, e corta pelo teto.
+ *
+ * Nada aqui confia no cliente: o histórico é entrada, como a pergunta. Turno
+ * sem papel válido ou sem texto some; o excesso é cortado pelo FIM da lista,
+ * mantendo os mais recentes — que são os que a pergunta atual referencia.
+ */
+function sanearHistorico(bruto: unknown): Turno[] {
+  if (!Array.isArray(bruto)) return [];
+  const turnos: Turno[] = [];
+  for (const item of bruto.slice(-MAX_HISTORY_TURNS)) {
+    if (typeof item !== 'object' || item === null) continue;
+    const { papel, texto } = item as { papel?: unknown; texto?: unknown };
+    if (papel !== 'user' && papel !== 'model') continue;
+    if (typeof texto !== 'string' || texto.trim().length === 0) continue;
+    turnos.push({ papel, texto: texto.trim() });
+  }
+  // Orçamento de caracteres, gasto do mais recente para trás.
+  let restante = MAX_HISTORY_CHARS;
+  const cabem: Turno[] = [];
+  for (let i = turnos.length - 1; i >= 0; i--) {
+    const custo = turnos[i].texto.length;
+    if (custo > restante) break;
+    restante -= custo;
+    cabem.unshift(turnos[i]);
+  }
+  return cabem;
+}
+
+/**
+ * A consulta que vai para a recuperação.
+ *
+ * MEDIDO, e é a razão de a última pergunta entrar junto: "quais as situações de
+ * uso desse" sozinha recupera `progress` com 0,23. Pior — "e quando não usar?"
+ * sozinha recupera quatro componentes sem relação nenhuma com nota 3,45, ACIMA
+ * do piso, o que produziria uma resposta confiante e errada. Pergunta de
+ * continuação não tem termo próprio; ela herda o assunto.
+ *
+ * Com a pergunta anterior concatenada, as três viram `computer-use` entre 7,9 e
+ * 10,2. E a troca de assunto continua funcionando: "e o HoverCard, qual a
+ * diferença?" traz `hover-card` na frente, com o assunto antigo em segundo —
+ * que é o que uma pergunta de comparação precisa mesmo.
+ *
+ * Só a ÚLTIMA pergunta entra. Concatenar a conversa inteira faria o assunto do
+ * começo puxar todas as respostas seguintes.
+ */
+function consultaDeRecuperacao(question: string, historico: Turno[]): string {
+  const ultimaPergunta = [...historico].reverse().find((t) => t.papel === 'user');
+  return ultimaPergunta ? `${ultimaPergunta.texto} ${question}` : question;
+}
+
 /** Um evento SSE. Nomeado, para o cliente distinguir sem inspecionar o corpo. */
 function sse(event: string, data: unknown): string {
   return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
@@ -294,13 +365,15 @@ export async function responder(request: Request): Promise<Response> {
   // Corpo lido como texto ANTES de virar JSON: é o que permite recusar pelo
   // tamanho sem gastar memória com o parse de um corpo grande de propósito.
   const raw = await request.text();
-  if (raw.length > MAX_QUESTION_LENGTH * 4) {
+  // O teto do CORPO cresceu com o histórico. Continua sendo a primeira defesa:
+  // recusa pelo tamanho antes de gastar memória com o parse.
+  if (raw.length > MAX_QUESTION_LENGTH * 4 + MAX_HISTORY_CHARS) {
     return jsonError(413, 'corpo_grande', 'Corpo grande demais.');
   }
 
-  let body: { pergunta?: unknown; locale?: unknown };
+  let body: { pergunta?: unknown; locale?: unknown; historico?: unknown };
   try {
-    body = JSON.parse(raw) as { pergunta?: unknown; locale?: unknown };
+    body = JSON.parse(raw) as { pergunta?: unknown; locale?: unknown; historico?: unknown };
   } catch {
     return jsonError(400, 'json_invalido', 'Corpo não é JSON.');
   }
@@ -328,7 +401,10 @@ export async function responder(request: Request): Promise<Response> {
     );
   }
 
-  const hits = searchDocs(corpus.entries, question, { limit: MAX_DOCUMENTS });
+  const historico = sanearHistorico(body.historico);
+  const hits = searchDocs(corpus.entries, consultaDeRecuperacao(question, historico), {
+    limit: MAX_DOCUMENTS,
+  });
   const weak = isWeakRetrieval(hits);
   // Mesmo fraca, os melhores vão no prompt: é o que permite ao modelo dizer
   // "não achei, mas o mais próximo foi X" em vez de um silêncio sem pista.
@@ -370,6 +446,13 @@ export async function responder(request: Request): Promise<Response> {
         const modelStream = await client.models.generateContentStream({
           model: modelo(),
           contents: [
+            // Os turnos anteriores primeiro: é o que faz "desse" ter a que se
+            // referir. Os trechos recuperados vão sempre na ÚLTIMA mensagem,
+            // porque é a pergunta atual que eles respondem.
+            ...historico.map((turno) => ({
+              role: turno.papel,
+              parts: [{ text: turno.texto }],
+            })),
             {
               role: 'user',
               parts: [

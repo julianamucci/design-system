@@ -26,7 +26,11 @@
  */
 import { createServer, type Server } from 'node:http';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import handler, { MAX_QUESTION_LENGTH } from '../../api/perguntar';
+import handler, {
+  MAX_HISTORY_CHARS,
+  MAX_HISTORY_TURNS,
+  MAX_QUESTION_LENGTH,
+} from '../../api/perguntar';
 
 let servidor: Server;
 let base: string;
@@ -101,8 +105,12 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
   });
 
   it('recusa corpo grande antes mesmo de olhar a pergunta', async () => {
+    // O tamanho sai das CONSTANTES, e não de um número escrito à mão: quando o
+    // teto do corpo cresceu para acomodar o histórico, a versão com o número
+    // fixo passou a mandar um corpo que já cabia — e o teste reprovou por estar
+    // desatualizado, não por defeito.
     const resposta = await perguntar('10.0.0.8', {
-      pergunta: 'a'.repeat(MAX_QUESTION_LENGTH * 4 + 10),
+      pergunta: 'a'.repeat(MAX_QUESTION_LENGTH * 4 + MAX_HISTORY_CHARS + 10),
       locale: 'pt-BR',
     });
     expect(resposta.status).toBe(413);
@@ -127,6 +135,45 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
       delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
       if (antes !== undefined) process.env.GEMINI_API_KEY = antes;
     }
+  });
+
+  // O histórico é ENTRADA do cliente num endpoint público, não estado do
+  // servidor. Estes testes cobrem a superfície que isso abre.
+  describe('o histórico de conversa', () => {
+    function comHistorico(ip: string, historico: unknown) {
+      return perguntar(ip, { pergunta: 'o que é o slider?', locale: 'pt-BR', historico });
+    }
+
+    it('recusa histórico grande demais pelo teto do corpo', async () => {
+      const gigante = Array.from({ length: MAX_HISTORY_TURNS }, () => ({
+        papel: 'user',
+        texto: 'a'.repeat(MAX_HISTORY_CHARS),
+      }));
+      const resposta = await comHistorico('10.0.1.1', gigante);
+      expect(resposta.status).toBe(413);
+      await expect(resposta.json()).resolves.toMatchObject({ code: 'corpo_grande' });
+    });
+
+    // Os casos abaixo passam do saneamento e chegam à leitura da chave, que
+    // está ausente — 503 prova que o corpo foi ACEITO, sem chamar o modelo.
+    it.each([
+      ['não é lista', 'isto não é lista'],
+      ['papel inválido', [{ papel: 'sistema', texto: 'oi' }]],
+      ['texto vazio', [{ papel: 'user', texto: '   ' }]],
+      ['item que não é objeto', [null, 42, 'x']],
+      ['sem os campos', [{}]],
+    ])('descarta em silêncio o que não tem forma de turno: %s', async (_nome, historico) => {
+      const antes = process.env.GEMINI_API_KEY;
+      delete process.env.GEMINI_API_KEY;
+      process.env.NORTEAR_IGNORAR_ENV_LOCAL = '1';
+      try {
+        const resposta = await comHistorico('10.0.1.2', historico);
+        expect(resposta.status).toBe(503);
+      } finally {
+        delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
+        if (antes !== undefined) process.env.GEMINI_API_KEY = antes;
+      }
+    });
   });
 
   it('o limite de taxa dispara no mesmo IP', async () => {

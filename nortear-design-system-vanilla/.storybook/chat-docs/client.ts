@@ -64,18 +64,25 @@ function dispatch(pending: PendingEvent, handlers: AskHandlers): void {
  * Devolve quando o fluxo fecha. `signal` permite interromper — é o que o botão
  * de parar do composer usa.
  */
+/** Um turno já dito. `model` é o nome que a API do provedor usa para o assistente. */
+export interface TurnoAnterior {
+  papel: 'user' | 'model';
+  texto: string;
+}
+
 export async function ask(
   question: string,
   locale: Locale,
   handlers: AskHandlers,
   signal?: AbortSignal,
+  historico: TurnoAnterior[] = [],
 ): Promise<void> {
   let response: Response;
   try {
     response = await fetch(ENDPOINT, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ pergunta: question, locale }),
+      body: JSON.stringify({ pergunta: question, locale, historico }),
       signal,
     });
   } catch (error) {
