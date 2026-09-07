@@ -58,12 +58,12 @@
         },
         "item1": {
           "s": "Mostrar trabalho que se ramifica e se reencontra, com o que depende de quê",
-          "u": "Grafo de fluxo",
+          "u": "FlowGraph",
           "a": "—"
         },
         "item2": {
           "s": "Mostrar o que o agente pretende fazer, passo a passo, em fila",
-          "u": "Plano do agente",
+          "u": "AgentPlan",
           "a": "Ali a ordem é a informação e nada se ramifica; aqui a informação é qual passo depende de qual."
         },
         "item3": {
@@ -653,17 +653,17 @@
         },
         "item1": {
           "s": "Show work that branches and rejoins, with what depends on what",
-          "u": "Flow graph",
+          "u": "FlowGraph",
           "a": "—"
         },
         "item2": {
           "s": "Show what the agent intends to do, step by step, in a queue",
-          "u": "Agent plan",
+          "u": "AgentPlan",
           "a": "There the order is the information and nothing branches; here the information is which step depends on which."
         },
         "item3": {
           "s": "List what the agent did, with a state per call",
-          "u": "Tool group",
+          "u": "ToolGroup",
           "a": "There each row is a call and none depends on another."
         },
         "item4": {
@@ -1248,12 +1248,12 @@
         },
         "item1": {
           "s": "Mostrar trabajo que se ramifica y se reencuentra, con qué depende de qué",
-          "u": "Grafo de flujo",
+          "u": "FlowGraph",
           "a": "—"
         },
         "item2": {
           "s": "Mostrar lo que el agente pretende hacer, paso a paso, en fila",
-          "u": "Plan del agente",
+          "u": "AgentPlan",
           "a": "Allí el orden es la información y nada se ramifica; aquí la información es qué paso depende de cuál."
         },
         "item3": {

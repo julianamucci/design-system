@@ -53,7 +53,7 @@
         },
         "item1": {
           "s": "Apoiar uma afirmação dentro de uma frase",
-          "u": "Citação em linha",
+          "u": "InlineCitation",
           "a": "—"
         },
         "item2": {
@@ -582,7 +582,7 @@
         },
         "item1": {
           "s": "Back a claim inside a sentence",
-          "u": "Inline citation",
+          "u": "InlineCitation",
           "a": "—"
         },
         "item2": {
@@ -1111,7 +1111,7 @@
         },
         "item1": {
           "s": "Respaldar una afirmación dentro de una frase",
-          "u": "Cita en línea",
+          "u": "InlineCitation",
           "a": "—"
         },
         "item2": {

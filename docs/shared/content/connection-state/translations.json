@@ -58,12 +58,12 @@
         },
         "item1": {
           "s": "Dizer se ainda há por onde pedir, e oferecer tentar de novo",
-          "u": "Estado da ligação",
+          "u": "ConnectionState",
           "a": "—"
         },
         "item2": {
           "s": "Dizer em que pé está a resposta que já foi pedida",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Aquela linha descreve o que o agente está fazendo; esta descreve se ainda há por onde falar com ele."
         },
         "item3": {
@@ -516,7 +516,7 @@
         },
         "item1": {
           "s": "Say whether there is still somewhere to send things, and offer to try again",
-          "u": "Connection state",
+          "u": "ConnectionState",
           "a": "—"
         },
         "item2": {
@@ -974,12 +974,12 @@
         },
         "item1": {
           "s": "Decir si todavía hay por dónde pedir, y ofrecer intentar de nuevo",
-          "u": "Estado de la conexión",
+          "u": "ConnectionState",
           "a": "—"
         },
         "item2": {
           "s": "Decir en qué punto está la respuesta que ya se pidió",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Aquella línea describe qué está haciendo el agente; esta describe si todavía hay manera de hablarle."
         },
         "item3": {

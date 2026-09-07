@@ -57,17 +57,17 @@
         },
         "item1": {
           "s": "Mostrar o que se pretende fazer, antes de começar",
-          "u": "Plano do agente",
+          "u": "AgentPlan",
           "a": "—"
         },
         "item2": {
           "s": "Manter a lista de tarefas durante o trabalho, com o que já saiu",
-          "u": "Plano do agente",
+          "u": "AgentPlan",
           "a": "É a mesma peça: o que muda é quando a lista aparece e quem a propôs."
         },
         "item3": {
           "s": "Dizer em que pé está a resposta inteira",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Aquela é uma linha sobre a execução; esta detalha os passos dentro dela."
         },
         "item4": {
@@ -556,17 +556,17 @@
         },
         "item1": {
           "s": "Show what is meant to happen, before it starts",
-          "u": "Agent plan",
+          "u": "AgentPlan",
           "a": "—"
         },
         "item2": {
           "s": "Keep the task list during the work, with what already went out",
-          "u": "Agent plan",
+          "u": "AgentPlan",
           "a": "It is the same piece: what changes is when the list shows up and who proposed it."
         },
         "item3": {
           "s": "Say where the whole answer stands",
-          "u": "Run status",
+          "u": "AgentStatus",
           "a": "That is one line about the run; this one details the steps inside it."
         },
         "item4": {
@@ -1055,17 +1055,17 @@
         },
         "item1": {
           "s": "Mostrar lo que se pretende hacer, antes de empezar",
-          "u": "Plan del agente",
+          "u": "AgentPlan",
           "a": "—"
         },
         "item2": {
           "s": "Mantener la lista de tareas durante el trabajo, con lo que ya salió",
-          "u": "Plan del agente",
+          "u": "AgentPlan",
           "a": "Es la misma pieza: lo que cambia es cuándo aparece la lista y quién la propuso."
         },
         "item3": {
           "s": "Decir en qué punto está la respuesta entera",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Aquella es una línea sobre la ejecución; esta detalla los pasos dentro de ella."
         },
         "item4": {

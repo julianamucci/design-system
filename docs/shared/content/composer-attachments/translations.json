@@ -64,7 +64,7 @@
         },
         "item1": {
           "s": "Arquivos que vão com a mensagem",
-          "u": "Anexos do composer",
+          "u": "ComposerAttachments",
           "a": "—"
         },
         "item2": {
@@ -534,7 +534,7 @@
         },
         "item1": {
           "s": "Files going with the message",
-          "u": "Composer attachments",
+          "u": "ComposerAttachments",
           "a": "—"
         },
         "item2": {
@@ -1004,7 +1004,7 @@
         },
         "item1": {
           "s": "Archivos que van con el mensaje",
-          "u": "Adjuntos del composer",
+          "u": "ComposerAttachments",
           "a": "—"
         },
         "item2": {

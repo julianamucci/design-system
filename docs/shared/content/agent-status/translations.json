@@ -62,7 +62,7 @@
         },
         "item1": {
           "s": "Dizer em que pé está a resposta, e oferecer parar",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "—"
         },
         "item2": {
@@ -534,7 +534,7 @@
         },
         "item1": {
           "s": "Say where the answer stands, and offer to stop it",
-          "u": "Run status",
+          "u": "AgentStatus",
           "a": "—"
         },
         "item2": {
@@ -1006,7 +1006,7 @@
         },
         "item1": {
           "s": "Decir en qué punto está la respuesta, y ofrecer detenerla",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "—"
         },
         "item2": {

@@ -58,7 +58,7 @@
         },
         "item1": {
           "s": "Mostrar o que um comando escreveu, e como ele terminou",
-          "u": "Bloco de terminal",
+          "u": "TerminalBlock",
           "a": "—"
         },
         "item2": {
@@ -68,7 +68,7 @@
         },
         "item3": {
           "s": "Dizer em que pé está a resposta que está sendo escrita agora",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Aquela linha descreve a resposta inteira; esta descreve um comando dentro dela."
         },
         "item4": {
@@ -78,7 +78,7 @@
         },
         "item5": {
           "s": "Medir o quanto uma tarefa longa já andou",
-          "u": "Andamento de trabalho longo",
+          "u": "JobProgress",
           "a": "Ali há unidades feitas e uma barra; aqui há texto, e o que ele diz é o próprio resultado."
         }
       },
@@ -605,7 +605,7 @@
         },
         "item1": {
           "s": "Show what a command wrote, and how it ended",
-          "u": "Terminal block",
+          "u": "TerminalBlock",
           "a": "—"
         },
         "item2": {
@@ -615,12 +615,12 @@
         },
         "item3": {
           "s": "Say where the answer being written right now stands",
-          "u": "Run status",
+          "u": "AgentStatus",
           "a": "That line describes the whole answer; this one describes one command inside it."
         },
         "item4": {
           "s": "Collapse several tool calls into a single block",
-          "u": "Tool group",
+          "u": "ToolGroup",
           "a": "There each row is a call with its own state; here there is a single command, and the body is what it wrote."
         },
         "item5": {
@@ -1152,7 +1152,7 @@
         },
         "item1": {
           "s": "Mostrar lo que un comando escribió, y cómo terminó",
-          "u": "Bloque de terminal",
+          "u": "TerminalBlock",
           "a": "—"
         },
         "item2": {
@@ -1162,7 +1162,7 @@
         },
         "item3": {
           "s": "Decir en qué punto está la respuesta que se escribe ahora",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Aquella línea describe la respuesta entera; esta describe un comando dentro de ella."
         },
         "item4": {
@@ -1172,7 +1172,7 @@
         },
         "item5": {
           "s": "Medir cuánto ha avanzado una tarea larga",
-          "u": "Avance de trabajo largo",
+          "u": "JobProgress",
           "a": "Allí hay unidades hechas y una barra; aquí hay texto, y lo que dice es el propio resultado."
         }
       },

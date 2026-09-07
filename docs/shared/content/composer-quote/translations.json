@@ -52,7 +52,7 @@
         },
         "item1": {
           "s": "Responder a uma mensagem específica",
-          "u": "Citação do composer",
+          "u": "ComposerQuote",
           "a": "—"
         },
         "item2": {
@@ -67,7 +67,7 @@
         },
         "item4": {
           "s": "Anexar um arquivo à mensagem",
-          "u": "Anexos do composer",
+          "u": "ComposerAttachments",
           "a": "Anexo é o que vai junto; citação é a que se responde."
         },
         "item5": {
@@ -476,7 +476,7 @@
         },
         "item1": {
           "s": "Replying to a specific message",
-          "u": "Composer quote",
+          "u": "ComposerQuote",
           "a": "—"
         },
         "item2": {
@@ -491,7 +491,7 @@
         },
         "item4": {
           "s": "Attaching a file to the message",
-          "u": "Composer attachments",
+          "u": "ComposerAttachments",
           "a": "An attachment is what goes along; a quote is what is being replied to."
         },
         "item5": {
@@ -900,7 +900,7 @@
         },
         "item1": {
           "s": "Responder a un mensaje específico",
-          "u": "Cita del composer",
+          "u": "ComposerQuote",
           "a": "—"
         },
         "item2": {
@@ -915,7 +915,7 @@
         },
         "item4": {
           "s": "Adjuntar un archivo al mensaje",
-          "u": "Adjuntos del composer",
+          "u": "ComposerAttachments",
           "a": "Un adjunto es lo que va junto; una cita es a lo que se responde."
         },
         "item5": {

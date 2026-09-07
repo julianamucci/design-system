@@ -68,7 +68,7 @@
         },
         "item1": {
           "s": "Pedir autorização para algo que ainda não aconteceu",
-          "u": "Cartão de autorização",
+          "u": "ApprovalCard",
           "a": "—"
         },
         "item2": {
@@ -88,7 +88,7 @@
         },
         "item5": {
           "s": "Dizer em que pé está o que já foi pedido",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Aquela linha descreve o que a máquina está fazendo; este cartão diz o que ela não vai fazer sem uma pessoa."
         }
       },
@@ -552,12 +552,12 @@
         },
         "item1": {
           "s": "Ask for approval for something that has not happened yet",
-          "u": "Approval card",
+          "u": "ApprovalCard",
           "a": "—"
         },
         "item2": {
           "s": "Show what the agent already did, with details that may stay tucked away",
-          "u": "Tool group",
+          "u": "ToolGroup",
           "a": "That one is born collapsed because those are execution details; this one stays in sight because it is a question."
         },
         "item3": {
@@ -1036,7 +1036,7 @@
         },
         "item1": {
           "s": "Pedir autorización para algo que todavía no ocurrió",
-          "u": "Tarjeta de autorización",
+          "u": "ApprovalCard",
           "a": "—"
         },
         "item2": {
@@ -1056,7 +1056,7 @@
         },
         "item5": {
           "s": "Decir en qué punto está lo que ya se pidió",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Aquella línea describe qué está haciendo la máquina; esta tarjeta dice qué no va a hacer sin una persona."
         }
       },

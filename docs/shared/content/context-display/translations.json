@@ -59,7 +59,7 @@
         },
         "item1": {
           "s": "Dizer quanto da janela de contexto já foi usada",
-          "u": "Uso do contexto",
+          "u": "ContextDisplay",
           "a": "—"
         },
         "item2": {
@@ -79,7 +79,7 @@
         },
         "item5": {
           "s": "Dizer há quanto tempo a resposta está sendo gerada",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Aquela linha fala de tempo e do que se pode fazer; esta fala de quanto espaço ainda resta."
         }
       },
@@ -587,7 +587,7 @@
         },
         "item1": {
           "s": "Say how much of the context window has been spent",
-          "u": "Context usage",
+          "u": "ContextDisplay",
           "a": "—"
         },
         "item2": {
@@ -607,7 +607,7 @@
         },
         "item5": {
           "s": "Say how long the answer has been coming",
-          "u": "Run status",
+          "u": "AgentStatus",
           "a": "That line speaks of time and of what can be done; this one speaks of how much room is left."
         }
       },
@@ -1115,7 +1115,7 @@
         },
         "item1": {
           "s": "Decir cuánto de la ventana de contexto ya se usó",
-          "u": "Uso del contexto",
+          "u": "ContextDisplay",
           "a": "—"
         },
         "item2": {
@@ -1135,7 +1135,7 @@
         },
         "item5": {
           "s": "Decir hace cuánto tiempo se está generando la respuesta",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Aquella línea habla de tiempo y de lo que se puede hacer; esta habla de cuánto espacio queda."
         }
       },

@@ -65,17 +65,17 @@
         },
         "item1": {
           "s": "Mostrar o quanto uma tarefa longa já andou, e oferecer interrompê-la",
-          "u": "Andamento de trabalho longo",
+          "u": "JobProgress",
           "a": "—"
         },
         "item2": {
           "s": "Dizer em que pé está a resposta que está sendo escrita agora",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Aquela linha se mede em tempo, e esta se mede em unidades feitas."
         },
         "item3": {
           "s": "Dizer se ainda há por onde pedir",
-          "u": "Estado da ligação",
+          "u": "ConnectionState",
           "a": "Aquela descreve o transporte; esta descreve uma tarefa que já foi aceita."
         },
         "item4": {
@@ -85,7 +85,7 @@
         },
         "item5": {
           "s": "Listar os passos que o agente pretende dar",
-          "u": "Plano do agente",
+          "u": "AgentPlan",
           "a": "Ali cada passo tem estado próprio; aqui há um trabalho só, medido em unidades."
         }
       },
@@ -603,17 +603,17 @@
         },
         "item1": {
           "s": "Show how far a long task has come, and offer to stop it",
-          "u": "Long job progress",
+          "u": "JobProgress",
           "a": "—"
         },
         "item2": {
           "s": "Say where the answer being written right now stands",
-          "u": "Run status",
+          "u": "AgentStatus",
           "a": "That line is measured in time, and this one is measured in units done."
         },
         "item3": {
           "s": "Say whether there is still somewhere to ask",
-          "u": "Connection state",
+          "u": "ConnectionState",
           "a": "That one describes the transport; this one describes a task already accepted."
         },
         "item4": {
@@ -623,7 +623,7 @@
         },
         "item5": {
           "s": "List the steps the agent intends to take",
-          "u": "Agent plan",
+          "u": "AgentPlan",
           "a": "There each step has its own state; here there is a single job, measured in units."
         }
       },
@@ -1141,17 +1141,17 @@
         },
         "item1": {
           "s": "Mostrar cuánto ha avanzado una tarea larga, y ofrecer interrumpirla",
-          "u": "Avance de trabajo largo",
+          "u": "JobProgress",
           "a": "—"
         },
         "item2": {
           "s": "Decir en qué punto está la respuesta que se escribe ahora",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Aquella línea se mide en tiempo, y esta se mide en unidades hechas."
         },
         "item3": {
           "s": "Decir si todavía hay por dónde pedir",
-          "u": "Estado de la conexión",
+          "u": "ConnectionState",
           "a": "Aquella describe el transporte; esta describe una tarea ya aceptada."
         },
         "item4": {
@@ -1161,7 +1161,7 @@
         },
         "item5": {
           "s": "Listar los pasos que el agente piensa dar",
-          "u": "Plan del agente",
+          "u": "AgentPlan",
           "a": "Allí cada paso tiene estado propio; aquí hay un solo trabajo, medido en unidades."
         }
       },

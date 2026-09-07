@@ -53,7 +53,7 @@
         },
         "item1": {
           "s": "Havia texto por enviar da vez anterior",
-          "u": "Rascunho recuperado",
+          "u": "DraftRestore",
           "a": "—"
         },
         "item2": {
@@ -73,7 +73,7 @@
         },
         "item5": {
           "s": "Mostrar o trecho a que a mensagem responde",
-          "u": "Citação do composer",
+          "u": "ComposerQuote",
           "a": "Aquilo acompanha o que se está escrevendo agora; isto é sobre o que ficou escrito antes."
         }
       },
@@ -508,7 +508,7 @@
         },
         "item1": {
           "s": "There was unsent text from last time",
-          "u": "Restored draft",
+          "u": "DraftRestore",
           "a": "—"
         },
         "item2": {
@@ -528,7 +528,7 @@
         },
         "item5": {
           "s": "Show the passage the message replies to",
-          "u": "Composer quote",
+          "u": "ComposerQuote",
           "a": "That one follows what is being written now; this one is about what was written before."
         }
       },
@@ -963,7 +963,7 @@
         },
         "item1": {
           "s": "Había texto sin enviar de la vez anterior",
-          "u": "Borrador recuperado",
+          "u": "DraftRestore",
           "a": "—"
         },
         "item2": {
@@ -983,7 +983,7 @@
         },
         "item5": {
           "s": "Mostrar el fragmento al que responde el mensaje",
-          "u": "Cita del composer",
+          "u": "ComposerQuote",
           "a": "Aquello acompaña lo que se está escribiendo ahora; esto trata de lo que quedó escrito antes."
         }
       },

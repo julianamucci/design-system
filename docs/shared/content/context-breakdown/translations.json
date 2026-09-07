@@ -58,12 +58,12 @@
         },
         "item1": {
           "s": "Dizer de onde veio o contexto já gasto",
-          "u": "Repartição do contexto",
+          "u": "ContextBreakdown",
           "a": "—"
         },
         "item2": {
           "s": "Dizer quanto da janela ainda cabe",
-          "u": "Uso do contexto",
+          "u": "ContextDisplay",
           "a": "Aquela pergunta precisa de um teto; esta se responde sem saber quanto cabe."
         },
         "item3": {
@@ -550,7 +550,7 @@
         },
         "item1": {
           "s": "Say where the context already spent came from",
-          "u": "Context breakdown",
+          "u": "ContextBreakdown",
           "a": "—"
         },
         "item2": {
@@ -1042,12 +1042,12 @@
         },
         "item1": {
           "s": "Decir de dónde vino el contexto ya gastado",
-          "u": "Reparto del contexto",
+          "u": "ContextBreakdown",
           "a": "—"
         },
         "item2": {
           "s": "Decir cuánto de la ventana todavía cabe",
-          "u": "Uso del contexto",
+          "u": "ContextDisplay",
           "a": "Aquella pregunta necesita un techo; esta se responde sin saber cuánto cabe."
         },
         "item3": {

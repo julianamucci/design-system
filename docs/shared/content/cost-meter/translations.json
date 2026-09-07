@@ -58,17 +58,17 @@
         },
         "item1": {
           "s": "Dizer quanto uma execução custou",
-          "u": "Medidor de custo",
+          "u": "CostMeter",
           "a": "—"
         },
         "item2": {
           "s": "Dizer quanto da janela de contexto ainda cabe",
-          "u": "Uso do contexto",
+          "u": "ContextDisplay",
           "a": "Aquela mede consumo contra uma janela; esta mede dinheiro contra um orçamento."
         },
         "item3": {
           "s": "Dizer de onde veio o contexto já gasto",
-          "u": "Repartição do contexto",
+          "u": "ContextBreakdown",
           "a": "Aquela reparte um total entre origens; aqui há um valor só e um teto."
         },
         "item4": {
@@ -550,7 +550,7 @@
         },
         "item1": {
           "s": "Say what a run cost",
-          "u": "Cost meter",
+          "u": "CostMeter",
           "a": "—"
         },
         "item2": {
@@ -560,7 +560,7 @@
         },
         "item3": {
           "s": "Say where the context already spent came from",
-          "u": "Context breakdown",
+          "u": "ContextBreakdown",
           "a": "That one splits a total across origins; here there is a single value and a cap."
         },
         "item4": {
@@ -1042,17 +1042,17 @@
         },
         "item1": {
           "s": "Decir cuánto costó una ejecución",
-          "u": "Medidor de coste",
+          "u": "CostMeter",
           "a": "—"
         },
         "item2": {
           "s": "Decir cuánto de la ventana de contexto aún cabe",
-          "u": "Uso del contexto",
+          "u": "ContextDisplay",
           "a": "Aquella mide consumo contra una ventana; esta mide dinero contra un presupuesto."
         },
         "item3": {
           "s": "Decir de dónde vino el contexto ya gastado",
-          "u": "Reparto del contexto",
+          "u": "ContextBreakdown",
           "a": "Aquella reparte un total entre orígenes; aquí hay un solo valor y un tope."
         },
         "item4": {

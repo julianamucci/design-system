@@ -60,12 +60,12 @@
         },
         "item1": {
           "s": "Referência ao que já está aberto",
-          "u": "Contexto do composer",
+          "u": "ComposerContext",
           "a": "—"
         },
         "item2": {
           "s": "Arquivo que sobe com a mensagem",
-          "u": "Anexos do composer",
+          "u": "ComposerAttachments",
           "a": "Aquilo é carga: tem bytes, tem progresso e pode falhar no meio. Isto aponta para o que já existe."
         },
         "item3": {
@@ -75,7 +75,7 @@
         },
         "item4": {
           "s": "A mensagem a que se responde",
-          "u": "Citação do composer",
+          "u": "ComposerQuote",
           "a": "Aquela descreve o campo, porque muda o que se escreve; esta é uma lista com nome próprio."
         },
         "item5": {
@@ -532,12 +532,12 @@
         },
         "item1": {
           "s": "A reference to what is already open",
-          "u": "Composer context",
+          "u": "ComposerContext",
           "a": "—"
         },
         "item2": {
           "s": "A file that uploads with the message",
-          "u": "Composer attachments",
+          "u": "ComposerAttachments",
           "a": "That is cargo: it has bytes, has progress and can fail midway. This points at what already exists."
         },
         "item3": {
@@ -547,7 +547,7 @@
         },
         "item4": {
           "s": "The message being replied to",
-          "u": "Composer quote",
+          "u": "ComposerQuote",
           "a": "That one describes the field, because it changes what you write; this one is a list with a name of its own."
         },
         "item5": {
@@ -1004,12 +1004,12 @@
         },
         "item1": {
           "s": "Referencia a lo que ya está abierto",
-          "u": "Contexto del composer",
+          "u": "ComposerContext",
           "a": "—"
         },
         "item2": {
           "s": "Archivo que sube con el mensaje",
-          "u": "Adjuntos del composer",
+          "u": "ComposerAttachments",
           "a": "Aquello es carga: tiene bytes, tiene progreso y puede fallar a mitad de camino. Esto apunta a lo que ya existe."
         },
         "item3": {
@@ -1019,7 +1019,7 @@
         },
         "item4": {
           "s": "El mensaje al que se responde",
-          "u": "Cita del composer",
+          "u": "ComposerQuote",
           "a": "Aquella describe el campo, porque cambia lo que se escribe; esta es una lista con nombre propio."
         },
         "item5": {

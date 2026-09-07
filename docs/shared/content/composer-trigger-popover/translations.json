@@ -53,7 +53,7 @@
         },
         "item1": {
           "s": "Mencionar alguém no meio da frase",
-          "u": "Seletor do gatilho",
+          "u": "ComposerTriggerPopover",
           "a": "—"
         },
         "item2": {
@@ -73,7 +73,7 @@
         },
         "item5": {
           "s": "Oferecer emoji por atalho",
-          "u": "Seletor do gatilho",
+          "u": "ComposerTriggerPopover",
           "a": "—"
         }
       },
@@ -546,7 +546,7 @@
         },
         "item1": {
           "s": "Mentioning someone mid-sentence",
-          "u": "Trigger picker",
+          "u": "ComposerTriggerPopover",
           "a": "—"
         },
         "item2": {
@@ -566,7 +566,7 @@
         },
         "item5": {
           "s": "Offering emoji by shortcut",
-          "u": "Trigger picker",
+          "u": "ComposerTriggerPopover",
           "a": "—"
         }
       },
@@ -1039,7 +1039,7 @@
         },
         "item1": {
           "s": "Mencionar a alguien a mitad de frase",
-          "u": "Selector del disparador",
+          "u": "ComposerTriggerPopover",
           "a": "—"
         },
         "item2": {
@@ -1059,7 +1059,7 @@
         },
         "item5": {
           "s": "Ofrecer emoji por atajo",
-          "u": "Selector del disparador",
+          "u": "ComposerTriggerPopover",
           "a": "—"
         }
       },

@@ -61,7 +61,7 @@
         },
         "item1": {
           "s": "Mostrar quando cada trecho aconteceu dentro de um todo, com sobreposição e aninhamento",
-          "u": "Cascata de trechos",
+          "u": "TraceWaterfall",
           "a": "—"
         },
         "item2": {
@@ -76,12 +76,12 @@
         },
         "item4": {
           "s": "Mostrar trabalho que se ramifica e volta a se juntar",
-          "u": "Grafo de fluxo",
+          "u": "FlowGraph",
           "a": "Ali a informação é qual passo depende de qual; aqui é quando cada trecho aconteceu."
         },
         "item5": {
           "s": "Mostrar o que o agente pretende fazer, passo a passo, sem tempo",
-          "u": "Plano do agente",
+          "u": "AgentPlan",
           "a": "Ali a ordem é a informação inteira; aqui a ordem é só a de leitura, e o que informa é a posição no eixo."
         }
       },
@@ -682,7 +682,7 @@
         },
         "item1": {
           "s": "Show when each span happened inside a whole, with overlap and nesting",
-          "u": "Trace waterfall",
+          "u": "TraceWaterfall",
           "a": "—"
         },
         "item2": {
@@ -697,12 +697,12 @@
         },
         "item4": {
           "s": "Show work that branches and rejoins",
-          "u": "Flow graph",
+          "u": "FlowGraph",
           "a": "There the information is which step depends on which; here it is when each span happened."
         },
         "item5": {
           "s": "Show what the agent means to do, step by step, with no time",
-          "u": "Agent plan",
+          "u": "AgentPlan",
           "a": "There the order is the whole information; here the order is only reading order, and what informs is the position on the axis."
         }
       },
@@ -1303,7 +1303,7 @@
         },
         "item1": {
           "s": "Mostrar cuándo ocurrió cada tramo dentro de un todo, con solapamiento y anidamiento",
-          "u": "Cascada de tramos",
+          "u": "TraceWaterfall",
           "a": "—"
         },
         "item2": {
@@ -1318,12 +1318,12 @@
         },
         "item4": {
           "s": "Mostrar trabajo que se ramifica y vuelve a juntarse",
-          "u": "Grafo de flujo",
+          "u": "FlowGraph",
           "a": "Allí la información es qué paso depende de cuál; aquí es cuándo ocurrió cada tramo."
         },
         "item5": {
           "s": "Mostrar lo que el agente pretende hacer, paso a paso, sin tiempo",
-          "u": "Plan del agente",
+          "u": "AgentPlan",
           "a": "Allí el orden es toda la información; aquí el orden es solo el de lectura, y lo que informa es la posición en el eje."
         }
       },

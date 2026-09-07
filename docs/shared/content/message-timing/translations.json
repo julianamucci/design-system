@@ -59,22 +59,22 @@
         },
         "item1": {
           "s": "Mostrar quanto uma resposta demorou, medida a medida",
-          "u": "Tempo da resposta",
+          "u": "MessageTiming",
           "a": "—"
         },
         "item2": {
           "s": "Mostrar há quanto tempo a resposta está sendo gerada",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Ali o relógio corre e fica fora do que é lido; aqui os números assentam e são o conteúdo."
         },
         "item3": {
           "s": "Dizer quanto da janela de contexto já foi ocupado",
-          "u": "Uso do contexto",
+          "u": "ContextDisplay",
           "a": "Aquela tem teto, e por isso tem fração, medidor e nível; tempo não tem teto nenhum."
         },
         "item4": {
           "s": "Repartir um total entre as origens que o compõem",
-          "u": "Repartição do contexto",
+          "u": "ContextBreakdown",
           "a": "Ali as parcelas somam um total; aqui as medidas são grandezas diferentes e não somam nada."
         },
         "item5": {
@@ -528,7 +528,7 @@
         },
         "item1": {
           "s": "Show how long a response took, measure by measure",
-          "u": "Response timing",
+          "u": "MessageTiming",
           "a": "—"
         },
         "item2": {
@@ -538,12 +538,12 @@
         },
         "item3": {
           "s": "Say how much of the context window is already taken",
-          "u": "Context usage",
+          "u": "ContextDisplay",
           "a": "That one has a ceiling, and so it has a fraction, a meter and a level; time has no ceiling at all."
         },
         "item4": {
           "s": "Split a total among the origins that make it up",
-          "u": "Context breakdown",
+          "u": "ContextBreakdown",
           "a": "There the shares add up to a total; here the measures are different quantities and add up to nothing."
         },
         "item5": {
@@ -997,22 +997,22 @@
         },
         "item1": {
           "s": "Mostrar cuánto tardó una respuesta, medida a medida",
-          "u": "Tiempo de la respuesta",
+          "u": "MessageTiming",
           "a": "—"
         },
         "item2": {
           "s": "Mostrar hace cuánto se está generando la respuesta",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Allí el reloj corre y queda fuera de lo que se lee; aquí los números se asientan y son el contenido."
         },
         "item3": {
           "s": "Decir cuánto de la ventana de contexto ya se ocupó",
-          "u": "Uso del contexto",
+          "u": "ContextDisplay",
           "a": "Aquella tiene techo, y por eso tiene fracción, medidor y nivel; el tiempo no tiene techo alguno."
         },
         "item4": {
           "s": "Repartir un total entre los orígenes que lo componen",
-          "u": "Reparto del contexto",
+          "u": "ContextBreakdown",
           "a": "Allí las partes suman un total; aquí las medidas son magnitudes distintas y no suman nada."
         },
         "item5": {

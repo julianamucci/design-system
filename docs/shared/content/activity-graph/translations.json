@@ -104,7 +104,7 @@
         },
         "item1": {
           "s": "Mostrar a densidade de um período numa grade de datas",
-          "u": "Grade de atividade",
+          "u": "ActivityGraph",
           "a": "—"
         },
         "item2": {
@@ -119,7 +119,7 @@
         },
         "item4": {
           "s": "Mostrar quando cada trecho aconteceu dentro de um todo",
-          "u": "Cascata de trechos",
+          "u": "TraceWaterfall",
           "a": "Lá o eixo é contínuo e o que informa é o começo; aqui o eixo é o calendário e o que informa é a densidade."
         },
         "item5": {
@@ -779,7 +779,7 @@
         },
         "item1": {
           "s": "Show the density of a period on a grid of dates",
-          "u": "Activity graph",
+          "u": "ActivityGraph",
           "a": "—"
         },
         "item2": {
@@ -794,7 +794,7 @@
         },
         "item4": {
           "s": "Show when each span happened inside a whole",
-          "u": "Trace waterfall",
+          "u": "TraceWaterfall",
           "a": "There the axis is continuous and the start is what informs; here the axis is the calendar and density is what informs."
         },
         "item5": {
@@ -1454,7 +1454,7 @@
         },
         "item1": {
           "s": "Mostrar la densidad de un período en una rejilla de fechas",
-          "u": "Rejilla de actividad",
+          "u": "ActivityGraph",
           "a": "—"
         },
         "item2": {
@@ -1469,7 +1469,7 @@
         },
         "item4": {
           "s": "Mostrar cuándo ocurrió cada tramo dentro de un todo",
-          "u": "Cascada de tramos",
+          "u": "TraceWaterfall",
           "a": "Allí el eje es continuo y lo que informa es el inicio; aquí el eje es el calendario y lo que informa es la densidad."
         },
         "item5": {

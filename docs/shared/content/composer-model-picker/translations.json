@@ -52,7 +52,7 @@
         },
         "item1": {
           "s": "Escolher quem responde, no trilho do campo",
-          "u": "Seletor de modelo do composer",
+          "u": "ComposerModelPicker",
           "a": "—"
         },
         "item2": {
@@ -557,7 +557,7 @@
         },
         "item1": {
           "s": "Choosing who answers, on the field rail",
-          "u": "Composer model picker",
+          "u": "ComposerModelPicker",
           "a": "—"
         },
         "item2": {
@@ -1062,7 +1062,7 @@
         },
         "item1": {
           "s": "Elegir quién responde, en el riel del campo",
-          "u": "Selector de modelo del composer",
+          "u": "ComposerModelPicker",
           "a": "—"
         },
         "item2": {

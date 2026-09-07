@@ -52,12 +52,12 @@
         },
         "item1": {
           "s": "A resposta ainda não começou a chegar",
-          "u": "Indicador de geração",
+          "u": "ThinkingIndicator",
           "a": "—"
         },
         "item2": {
           "s": "Dizer em que pé está a execução, com o que fazer a respeito",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Aquilo é uma linha de informação com ação, e mora fora da resposta. Isto é o lugar da resposta, e não oferece nada para acionar."
         },
         "item3": {
@@ -443,12 +443,12 @@
         },
         "item1": {
           "s": "The answer has not started arriving yet",
-          "u": "Thinking indicator",
+          "u": "ThinkingIndicator",
           "a": "—"
         },
         "item2": {
           "s": "Saying where the run stands, with what to do about it",
-          "u": "Run status",
+          "u": "AgentStatus",
           "a": "That is an information line with an action, and it lives outside the answer. This is the answer's place, and it offers nothing to act on."
         },
         "item3": {
@@ -834,12 +834,12 @@
         },
         "item1": {
           "s": "La respuesta todavía no empezó a llegar",
-          "u": "Indicador de generación",
+          "u": "ThinkingIndicator",
           "a": "—"
         },
         "item2": {
           "s": "Decir en qué punto está la ejecución, con qué hacer al respecto",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Aquello es una línea de información con acción, y vive fuera de la respuesta. Esto es el lugar de la respuesta, y no ofrece nada para accionar."
         },
         "item3": {

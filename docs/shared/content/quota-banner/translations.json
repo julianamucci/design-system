@@ -63,17 +63,17 @@
         },
         "item1": {
           "s": "Avisar que uma cota está no fim, e oferecer o que fazer",
-          "u": "Faixa de cota",
+          "u": "QuotaBanner",
           "a": "—"
         },
         "item2": {
           "s": "Dizer quanto da janela de contexto ainda cabe",
-          "u": "Uso do contexto",
+          "u": "ContextDisplay",
           "a": "Aquela mede o que já foi ocupado; esta mede o que sobra, e traz horizonte e controles."
         },
         "item3": {
           "s": "Dizer quanto uma execução custou em dinheiro",
-          "u": "Medidor de custo",
+          "u": "CostMeter",
           "a": "Ali a quantia chega escrita porque tem moeda; aqui o que se conta são unidades sem símbolo."
         },
         "item4": {
@@ -612,17 +612,17 @@
         },
         "item1": {
           "s": "Warn that an allowance is running out, and offer what to do",
-          "u": "Quota banner",
+          "u": "QuotaBanner",
           "a": "—"
         },
         "item2": {
           "s": "Say how much of the context window still fits",
-          "u": "Context usage",
+          "u": "ContextDisplay",
           "a": "That one measures what has been taken; this one measures what is left, and carries a horizon and controls."
         },
         "item3": {
           "s": "Say how much a run cost in money",
-          "u": "Cost meter",
+          "u": "CostMeter",
           "a": "There the amount arrives written because it carries a currency; here what is counted are units with no symbol."
         },
         "item4": {
@@ -1161,17 +1161,17 @@
         },
         "item1": {
           "s": "Avisar de que una cuota se acaba, y ofrecer qué hacer",
-          "u": "Franja de cuota",
+          "u": "QuotaBanner",
           "a": "—"
         },
         "item2": {
           "s": "Decir cuánto cabe todavía en la ventana de contexto",
-          "u": "Uso del contexto",
+          "u": "ContextDisplay",
           "a": "Aquella mide lo ya ocupado; esta mide lo que sobra, y trae horizonte y controles."
         },
         "item3": {
           "s": "Decir cuánto costó una ejecución en dinero",
-          "u": "Medidor de coste",
+          "u": "CostMeter",
           "a": "Allí la cantidad llega escrita porque lleva moneda; aquí lo que se cuenta son unidades sin símbolo."
         },
         "item4": {

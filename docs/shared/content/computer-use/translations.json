@@ -58,7 +58,7 @@
         },
         "item1": {
           "s": "Mostrar onde o agente tocou numa tela, e o que ele fez ali",
-          "u": "Tela do computador",
+          "u": "ComputerUse",
           "a": "—"
         },
         "item2": {
@@ -68,17 +68,17 @@
         },
         "item3": {
           "s": "Dizer em que pé está a resposta inteira, e oferecer parar",
-          "u": "Estado da execução",
+          "u": "AgentStatus",
           "a": "Aquela linha descreve a resposta e carrega as ações; esta mostra uma tela sendo dirigida."
         },
         "item4": {
           "s": "Mostrar o que um comando escreveu no terminal",
-          "u": "Bloco de terminal",
+          "u": "TerminalBlock",
           "a": "Ali o corpo é texto pré-formatado que rola; aqui é uma imagem que recorta."
         },
         "item5": {
           "s": "Mostrar o que o agente pretende fazer, passo a passo, antes de fazer",
-          "u": "Plano do agente",
+          "u": "AgentPlan",
           "a": "Ali cada passo tem estado próprio e nenhum tem lugar; aqui o passo tem lugar e a sessão é que tem estado."
         }
       },
@@ -653,27 +653,27 @@
         },
         "item1": {
           "s": "Show where the agent touched a screen, and what it did there",
-          "u": "Computer screen",
+          "u": "ComputerUse",
           "a": "—"
         },
         "item2": {
           "s": "List what the agent did to answer, with no screen at all",
-          "u": "Tool group",
+          "u": "ToolGroup",
           "a": "There each line is a call with its own state; here there is a point over an image."
         },
         "item3": {
           "s": "Say where the whole answer stands, and offer to stop it",
-          "u": "Run status",
+          "u": "AgentStatus",
           "a": "That line describes the answer and carries the actions; this one shows a screen being driven."
         },
         "item4": {
           "s": "Show what a command wrote in the terminal",
-          "u": "Terminal block",
+          "u": "TerminalBlock",
           "a": "There the body is preformatted text that scrolls; here it is an image that clips."
         },
         "item5": {
           "s": "Show what the agent intends to do, step by step, before doing it",
-          "u": "Agent plan",
+          "u": "AgentPlan",
           "a": "There each step has its own state and none has a place; here the step has a place and the session is what has state."
         }
       },
@@ -1248,7 +1248,7 @@
         },
         "item1": {
           "s": "Mostrar dónde tocó el agente una pantalla, y qué hizo allí",
-          "u": "Pantalla del ordenador",
+          "u": "ComputerUse",
           "a": "—"
         },
         "item2": {
@@ -1258,17 +1258,17 @@
         },
         "item3": {
           "s": "Decir en qué punto está la respuesta entera, y ofrecer detenerla",
-          "u": "Estado de la ejecución",
+          "u": "AgentStatus",
           "a": "Esa línea describe la respuesta y lleva las acciones; esta muestra una pantalla dirigida."
         },
         "item4": {
           "s": "Mostrar lo que un comando escribió en el terminal",
-          "u": "Bloque de terminal",
+          "u": "TerminalBlock",
           "a": "Allí el cuerpo es texto preformateado que se desplaza; aquí es una imagen que recorta."
         },
         "item5": {
           "s": "Mostrar lo que el agente piensa hacer, paso a paso, antes de hacerlo",
-          "u": "Plan del agente",
+          "u": "AgentPlan",
           "a": "Allí cada paso tiene estado propio y ninguno tiene lugar; aquí el paso tiene lugar y la sesión es la que tiene estado."
         }
       },
