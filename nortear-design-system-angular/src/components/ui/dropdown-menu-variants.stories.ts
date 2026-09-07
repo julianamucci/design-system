@@ -2,6 +2,10 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
+import {
+  dropdownMenuDefaultSource,
+  dropdownMenuDestructiveSource,
+} from './dropdown-menu.source';
 import { NdsButton } from './button';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { itemContrast } from '@shared/testing/dropdown-menu-probe';
@@ -32,7 +36,13 @@ type Story = StoryObj;
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  parameters: { covers: ['accessibility.item4', 'accessibility.item6'] },
+  parameters: {
+    covers: ['accessibility.item4', 'accessibility.item6'],
+    // Sem transform o painel Code publicaria o `[defaultOpen]="true"` e o
+    // `[modal]="false"` que só existem para o popup caber no quadro — menu que
+    // se abre sozinho ao carregar a página é o oposto do que se copia.
+    docs: { source: { transform: dropdownMenuDefaultSource } },
+  },
   render: () => ({
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">
@@ -88,7 +98,10 @@ export const Default: Story = {
 // ─── Destructive ──────────────────────────────────────────────────────────────
 
 export const Destructive: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: { source: { transform: dropdownMenuDestructiveSource } },
+  },
   render: () => ({
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">

@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
+import {
+  dropdownMenuCheckboxIndeterminateSource,
+  dropdownMenuClosedSource,
+  dropdownMenuControlledSource,
+  dropdownMenuItemDisabledSource,
+  dropdownMenuOpenSource,
+} from './dropdown-menu.source';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
@@ -32,7 +39,10 @@ type Story = StoryObj;
 // ─── Fechado ──────────────────────────────────────────────────────────────────
 
 export const Closed: Story = {
-  parameters: { covers: ['accessibility.item2'] },
+  parameters: {
+    covers: ['accessibility.item2'],
+    docs: { source: { transform: dropdownMenuClosedSource } },
+  },
   render: () => ({
     template: `
       <nds-dropdown-menu>
@@ -62,7 +72,13 @@ export const Closed: Story = {
 // ─── Aberto ───────────────────────────────────────────────────────────────────
 
 export const Open: Story = {
-  parameters: { covers: ['functional.item2'] },
+  parameters: {
+    covers: ['functional.item2'],
+    // A única story em que `[defaultOpen]="true"` chega ao snippet: aqui estar
+    // aberto É o assunto. O `[modal]="false"` continua fora — ele destrava o
+    // canvas, e não faz parte de lição nenhuma.
+    docs: { source: { transform: dropdownMenuOpenSource } },
+  },
   render: () => ({
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">
@@ -142,6 +158,12 @@ export const Open: Story = {
  * é o que mantém os dois lados em acordo.
  */
 export const Controlled: Story = {
+  parameters: {
+    // O template da story guarda a abertura num campo comum do objeto de props
+    // do renderer; o snippet guarda num sinal, que é o que agenda o redesenho
+    // num componente de verdade.
+    docs: { source: { transform: dropdownMenuControlledSource } },
+  },
   render: () => ({
     props: { isOpen: false },
     template: `
@@ -188,7 +210,10 @@ export const Controlled: Story = {
 // ─── Item desabilitado ────────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
-  parameters: { covers: ['accessibility.item7'] },
+  parameters: {
+    covers: ['accessibility.item7'],
+    docs: { source: { transform: dropdownMenuItemDisabledSource } },
+  },
   render: () => ({
     props: { onSelect: fn() },
     template: `
@@ -242,7 +267,10 @@ export const ItemDisabled: Story = {
 // mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    docs: { source: { transform: dropdownMenuCheckboxIndeterminateSource } },
+  },
   render: () => ({
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">

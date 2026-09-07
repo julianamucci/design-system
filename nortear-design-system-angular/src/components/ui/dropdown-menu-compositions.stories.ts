@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
+import {
+  dropdownMenuWithCheckboxSource,
+  dropdownMenuWithLabelSource,
+  dropdownMenuWithRadioSource,
+  dropdownMenuWithShortcutsSource,
+  dropdownMenuWithSubmenuSource,
+} from './dropdown-menu.source';
 import { NdsButton } from './button';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
@@ -31,7 +38,10 @@ type Story = StoryObj;
 // ─── Com Label ────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: dropdownMenuWithLabelSource } },
+  },
   render: () => ({
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">
@@ -85,7 +95,13 @@ export const WithCheckboxItems: Story = {
   // alcança `menuitem`; quem verifica `menuitemcheckbox` é esta story, e quem
   // verifica `menuitemradio` é a de escolha única. Declarar tudo lá era
   // declaração deslocada: a story vizinha é que verificava.
-  parameters: { covers: ['functional.item5', 'accessibility.item4', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item4', 'visual.item2'],
+    // A story liga `[checked]` a `name` e `email`, campos do objeto de props do
+    // renderer. O snippet põe os dois num sinal — quem copiasse o template cru
+    // receberia um binding que não resolve em componente nenhum.
+    docs: { source: { transform: dropdownMenuWithCheckboxSource } },
+  },
   render: () => ({
     props: { name: true, email: false },
     template: `
@@ -152,7 +168,10 @@ export const WithCheckboxItems: Story = {
 // ─── Com RadioGroup ───────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
+    docs: { source: { transform: dropdownMenuWithRadioSource } },
+  },
   render: () => ({
     props: { theme: 'light' },
     template: `
@@ -197,7 +216,10 @@ export const WithRadioGroup: Story = {
 // ─── Com submenu ──────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item4'],
+    docs: { source: { transform: dropdownMenuWithSubmenuSource } },
+  },
   render: () => ({
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">
@@ -261,6 +283,9 @@ export const WithSubmenu: Story = {
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
+  parameters: {
+    docs: { source: { transform: dropdownMenuWithShortcutsSource } },
+  },
   render: () => ({
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">
