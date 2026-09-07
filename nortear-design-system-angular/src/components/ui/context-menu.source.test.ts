@@ -224,10 +224,12 @@ describe('cobertura das três stories', () => {
       expect(code).toContain('imports: [NDS_CONTEXT_MENU],');
 
       // O que o componente já entrega e escrever à mão ensinaria API que não
-      // existe: o sub-gatilho anuncia `aria-haspopup` sozinho, e o atalho fica
-      // legível justamente por NÃO ter `aria-hidden`.
+      // existe: o sub-gatilho anuncia `aria-haspopup`, `aria-expanded` e —
+      // porque o painel é portalado — o `aria-owns` que aponta para ele; e o
+      // atalho fica legível justamente por NÃO ter `aria-hidden`.
       expect(code).not.toContain('aria-haspopup');
       expect(code).not.toContain('aria-expanded');
+      expect(code).not.toContain('aria-owns');
       expect(code).not.toContain('aria-hidden');
 
       // Quando há ação destrutiva, ela vem depois da ÚLTIMA divisória e é

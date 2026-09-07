@@ -42,7 +42,8 @@
  *  · o atalho mora DENTRO do item e sem `aria-hidden` — é assim que ele entra
  *    no nome acessível ("Excluir, Delete");
  *  · o submenu é a tríade `ndsContextMenuSub` + `ndsContextMenuSubTrigger` +
- *    `ng-template ndsContextMenuSubContent`, e `aria-haspopup` sai do próprio
+ *    `ng-template ndsContextMenuSubContent`, e o ARIA do segundo nível
+ *    (`aria-haspopup`, `aria-expanded`, `aria-owns`) sai do próprio
  *    sub-gatilho: escrevê-lo à mão ensinaria API que não existe.
  *
  * A EXTRAÇÃO ENCONTROU DOIS DEFEITOS, e os dois estão corrigidos aqui:
@@ -349,8 +350,9 @@ export function contextMenuWithRadioGroupSource(): string {
  * A tríade é obrigatória: `ndsContextMenuSub` guarda o estado, o
  * `ndsContextMenuSubTrigger` é o item que abre, e o `ndsContextMenuSubContent`
  * é o painel filho — outro `<ng-template>`, pelo mesmo motivo do miolo de cima.
- * O chevron entra pelo componente, e o par `aria-haspopup`/`aria-expanded`
- * também: a seta para a direita entra, o Escape volta, e nada disso pede prop.
+ * O chevron entra pelo componente, e o ARIA também: `aria-haspopup`,
+ * `aria-expanded` e o `aria-owns` que liga o item ao painel portalado. A seta
+ * para a direita entra, o Escape volta, e nada disso pede prop.
  */
 export function contextMenuWithSubmenuSource(): string {
   return simpleMenu(

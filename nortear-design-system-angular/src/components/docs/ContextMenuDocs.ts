@@ -186,19 +186,32 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
       </div>
     </ng-template>
 
+    <!-- A legenda do "evite" do par 2 fala de submenu ANINHADO, então o preview
+         mostra dois níveis: "Compartilhar" abre "Por link", que abre outro
+         painel. É o anti-padrão que notes.tip3 nomeia, e a mesma composição
+         que o Vanilla desenha. -->
     <ng-template #tplDoDont2Dont>
       <div ndsContextMenu class="nds-w-full">
         <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
-          <div ndsContextMenuItem variant="destructive">
-            {{ t('demonstration.labels.delete') }}
+          <div ndsContextMenuSub>
+            <div ndsContextMenuSubTrigger>{{ t('demonstration.labels.share') }}</div>
+            <ng-template ndsContextMenuSubContent>
+              <div ndsContextMenuSub>
+                <div ndsContextMenuSubTrigger>{{ t('demonstration.labels.shareLink') }}</div>
+                <ng-template ndsContextMenuSubContent>
+                  <div ndsContextMenuItem>{{ t('demonstration.labels.shareEmail') }}</div>
+                </ng-template>
+              </div>
+            </ng-template>
           </div>
-          <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
-          <div ndsContextMenuItem>{{ t('demonstration.labels.duplicate') }}</div>
         </ng-template>
       </div>
     </ng-template>
 
+    <!-- Par 3 — a dica visual. O "faça" é a área COM as duas dicas que a legenda
+         nomeia: o contorno tracejado (nds-border-dashed de areaClasse) e a
+         linha de ajuda, que é o próprio rótulo dizendo onde clicar. -->
     <ng-template #tplDoDont3Do>
       <div ndsContextMenu class="nds-w-full">
         <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
@@ -211,12 +224,19 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
       </div>
     </ng-template>
 
+    <!-- E o "evite" é a mesma área SEM dica nenhuma: nem contorno tracejado, nem
+         rótulo convidando ao gesto. Não é um menu de contexto montado sem dica —
+         é a área nua, porque o assunto da legenda é a descoberta, e um menu que
+         não se anuncia não tem o que mostrar até alguém adivinhar o gesto.
+         Mesma composição do Vanilla. Sem opacity: o esmaecimento levava o
+         texto a 1,52:1 (axe: color-contrast), e o texto já diz o que falta. -->
     <ng-template #tplDoDont3Dont>
-      <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
-        <ng-template ndsContextMenuContent>
-          <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
-        </ng-template>
+      <div
+        class="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
+        data-align="center"
+        data-justify="center"
+      >
+        <span>{{ t('demonstration.labels.areaNoHint') }}</span>
       </div>
     </ng-template>
 
@@ -296,7 +316,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-stack nds-w-full" data-spacing="md">
-            <div ndsContextMenu>
+            <div ndsContextMenu (openChange)="registrarAbertura($event)">
               <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
 
               <ng-template ndsContextMenuContent>
@@ -313,8 +333,12 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
                 <div ndsContextMenuSub>
                   <div ndsContextMenuSubTrigger>{{ t('demonstration.labels.share') }}</div>
                   <ng-template ndsContextMenuSubContent>
-                    <div ndsContextMenuItem>{{ t('demonstration.labels.shareEmail') }}</div>
-                    <div ndsContextMenuItem>{{ t('demonstration.labels.shareLink') }}</div>
+                    <div ndsContextMenuItem (onSelect)="registrarEscolha('share-email')">
+                      {{ t('demonstration.labels.shareEmail') }}
+                    </div>
+                    <div ndsContextMenuItem (onSelect)="registrarEscolha('share-link')">
+                      {{ t('demonstration.labels.shareLink') }}
+                    </div>
                   </ng-template>
                 </div>
 
@@ -798,9 +822,27 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
     };
   });
 
-  /** A docs page É o produto consumidor: o evento disparado aqui é de verdade. */
+  // ─── Analytics da demonstração ──────────────────────────────────────────────
+  //
+  // A docs page É o produto consumidor: o evento disparado aqui é de verdade, e
+  // por isso o payload é o mesmo que a seção Analytics desta página promete —
+  // `menu_open` com `{ component, location, menu }` e `menu_item_click` com
+  // `{ label, menu, location }`.
+  //
+  // `location` nomeia a SEÇÃO da página (o vocabulário `docs_*`), e `menu`
+  // nomeia o menu dentro dela. Sem `location` os dois eventos chegam ao GA4 sem
+  // dizer de onde vieram, e a demonstração some no meio de qualquer outro menu
+  // da página. Os dois valores são fixos e em inglês: rótulo traduzido partiria
+  // um evento em três.
+
+  /** O menu abriu — só a abertura interessa, o fechamento não é intenção. */
+  protected registrarAbertura(open: boolean): void {
+    if (!open) return;
+    track('menu_open', { component: 'context_menu', location: 'docs_demo', menu: 'demo' });
+  }
+
   protected registrarEscolha(item: string): void {
-    track('menu_item_click', { label: item, menu: 'context-menu' });
+    track('menu_item_click', { label: item, menu: 'demo', location: 'docs_demo' });
   }
 
   private observer: { disconnect: () => void } | undefined;

@@ -267,6 +267,9 @@ export const WithSubmenu: Story = {
       await gestoOpen(area());
       await expect(subTrigger().getAttribute('aria-haspopup')).toBe('menu');
       await expect(subTrigger().getAttribute('aria-expanded')).toBe('false');
+      // Fechado, não há painel: apontar para um `id` que saiu do documento é
+      // pior que não apontar.
+      await expect(subTrigger().getAttribute('aria-owns')).toBeNull();
     });
 
     await step('Seta direita abre o submenu, ao lado do item que o dispara', async () => {
@@ -277,6 +280,13 @@ export const WithSubmenu: Story = {
       const submenu = document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]')!;
       const items = submenu.querySelectorAll('[data-slot="context-menu-item"]');
       await expect(items.length).toBe(2);
+
+      // O painel é portalado para fora da árvore do menu, então `aria-expanded`
+      // sozinho diz que ABRIU sem dizer O QUÊ. Quem devolve a relação é
+      // `aria-owns` — e ele tem de apontar para ESTE painel, não para um id
+      // qualquer.
+      await expect(submenu.id).not.toBe('');
+      await expect(subTrigger().getAttribute('aria-owns')).toBe(submenu.id);
 
       // "À direita" é medida, não atributo: é o que o conteúdo promete e o que
       // um `side` errado quebraria sem nenhum aviso.
@@ -298,6 +308,7 @@ export const WithSubmenu: Story = {
       // que a story não produz; o Escape fecha e é caminho de teclado real.
       await userEvent.keyboard('{Escape}');
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('false'));
+      await expect(subTrigger().getAttribute('aria-owns')).toBeNull();
       await expect(document.activeElement).toBe(subTrigger());
     });
 

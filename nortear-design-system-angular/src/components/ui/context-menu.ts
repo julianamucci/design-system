@@ -32,6 +32,7 @@ import {
   RdxMenuRadioItem,
   RdxMenuRadioItemIndicator,
   injectRdxMenuGroupContext,
+  injectRdxMenuRootContext,
   isIndeterminate,
 } from '@radix-ng/primitives/menu';
 import { ChevronRight, Check, Minus } from 'lucide';
@@ -188,7 +189,12 @@ export class NdsContextMenu {
         [sideOffset]="content()?.sideOffset() ?? 0"
         [alignOffset]="content()?.alignOffset() ?? -3"
       >
-        <div rdxMenuPopup class="nds-dropdown-menu-content" data-slot="context-menu-sub-content">
+        <div
+          rdxMenuPopup
+          class="nds-dropdown-menu-content"
+          data-slot="context-menu-sub-content"
+          [attr.id]="subContentId"
+        >
           <ng-container [ngTemplateOutlet]="content()!.tpl" />
         </div>
       </div>
@@ -197,6 +203,19 @@ export class NdsContextMenu {
 })
 export class NdsContextMenuSub {
   protected readonly content = contentChild(NdsContextMenuContent);
+
+  /**
+   * `id` do painel filho — existe para o sub-gatilho ter para onde apontar.
+   *
+   * O painel é PORTALADO: `rdxMenuPortal` é estrutural e move os nós raiz para
+   * o container, que por padrão é o `<body>` (`RdxPortalPresence`). Ou seja, o
+   * menu filho não é descendente do item que o abriu, e sem este `id` nada no
+   * documento liga um ao outro.
+   *
+   * Único e gerado pelo `RdxIdGenerator` porque a mesma docs page monta vários
+   * menus, e `id` repetido faria a ligação apontar para o painel errado.
+   */
+  readonly subContentId = injectId('nds-context-menu-sub-content-');
 }
 
 /**
@@ -388,6 +407,40 @@ export class NdsContextMenuIcon {
   }
 }
 
+/**
+ * O item que abre o painel filho.
+ *
+ * ─── A ligação com o painel, e por que ela é do design system ─────────────────
+ *
+ * `RdxMenuSubTrigger` liga `aria-haspopup="menu"` e `aria-expanded`, e para por
+ * aí: ele diz que HÁ um menu filho e que ele está aberto, mas não diz QUAL. Como
+ * o painel é portalado para o `<body>`, não sobra nem a relação de ancestral
+ * para o leitor de tela inferir — o menu filho fica solto no documento, longe do
+ * item que o abriu. É a única das quatro libs de cabeçalho que não escreve essa
+ * ligação, então quem a escreve é o wrapper.
+ *
+ * `aria-owns`, e NÃO `aria-controls`. Não são alternativas de gosto:
+ *
+ *   · `aria-controls` é a ligação de quem CONTROLA um painel que já está no seu
+ *     lugar na árvore — vale para o submenu aninhado;
+ *   · `aria-owns` REPARENTA na árvore de acessibilidade um nó que o DOM pôs em
+ *     outro canto, que é exatamente o caso aqui.
+ *
+ * O painel do `@radix-ng/primitives` sai no `<body>` (o container padrão do
+ * `RdxPortalPresence`), medido antes de escolher — mesma colocação, e por isso
+ * mesma escolha, do `aria-owns` que o Vanilla escreve em `src/lib/submenu.ts`.
+ *
+ * A ligação só vale enquanto o painel EXISTE: fechado, o `id` aponta para um nó
+ * que saiu do documento, e apontar para o nada é pior que não apontar. Por isso
+ * o valor é `null` com o menu fechado, na mesma fonte (`isOpen()`) de que a lib
+ * tira o `aria-expanded` — os dois nunca se contradizem.
+ *
+ * Escrito por HOST BINDING, e não por `[attr.aria-owns]` no template de quem
+ * compõe: neste stack o host binding de diretiva vence o atributo do template, e
+ * a ligação escrita lá fora não pintaria (a mesma raiz dos 19 `data-slot` que
+ * renderizaram errado). Aqui não há disputa — nenhuma diretiva da lib escreve
+ * `aria-owns` neste elemento —, mas o lugar continua sendo o host.
+ */
 @Component({
   selector: 'div[ndsContextMenuSubTrigger]',
   standalone: true,
@@ -400,6 +453,7 @@ export class NdsContextMenuIcon {
     class: 'nds-dropdown-menu-sub-trigger',
     '[attr.data-slot]': '"context-menu-sub-trigger"',
     '[attr.data-inset]': 'inset() ? "" : null',
+    '[attr.aria-owns]': 'ownedPanelId()',
   },
   template: `
     <ng-content />
@@ -408,6 +462,21 @@ export class NdsContextMenuIcon {
 })
 export class NdsContextMenuSubTrigger {
   readonly inset = input(false);
+
+  /**
+   * A raiz do SUBMENU, dona do painel — o mesmo elemento de onde a lib tira o
+   * seu contexto (`div[ndsContextMenuSub]`, um degrau acima deste item).
+   * Opcional para que um gatilho montado fora da tríade não derrube a página:
+   * sem raiz não há painel, e sem painel não há ligação a escrever.
+   */
+  private readonly sub = inject(NdsContextMenuSub, { optional: true });
+
+  /** Mesma fonte de estado que alimenta o `aria-expanded` da lib. */
+  private readonly submenu = injectRdxMenuRootContext();
+
+  protected readonly ownedPanelId = computed<string | null>(() =>
+    this.submenu.isOpen() ? (this.sub?.subContentId ?? null) : null,
+  );
 }
 
 @Component({
