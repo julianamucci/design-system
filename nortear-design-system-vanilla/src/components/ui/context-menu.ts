@@ -23,7 +23,9 @@
  * `.nds-dropdown-menu-*`. Vale igual: `role="menu"`, `menuitem` /
  * `menuitemcheckbox` / `menuitemradio` com `aria-checked`, setas, `Home`/`End`,
  * typeahead, `Escape` fechando e DEVOLVENDO o foco, submenu com
- * `aria-haspopup="menu"` + `aria-expanded` no sub-gatilho, NENHUMA região viva,
+ * `aria-haspopup="menu"` + `aria-expanded` + `aria-owns` no sub-gatilho (o
+ * painel filho vive no `<body>`, e sem o `aria-owns` ele é um menu solto ali —
+ * ver `openSubmenu`), NENHUMA região viva,
  * e a seta POUSANDO no item desabilitado (decisão de 2026-09-02, com um patch
  * por lib; o mecanismo de cada uma está escrito no bloco do `dropdown-menu`).
  *
@@ -73,6 +75,7 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { positionFloating } from '@/lib/floating';
 
 export type ContextMenuItemDef = {
   /** `item` é o padrão. `submenu` exige `items`; `radio` exige `value`. */
@@ -119,6 +122,14 @@ export type ContextMenuOptions = {
 let _contextMenuCounter = 0;
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/**
+ * Vão entre o sub-gatilho e o painel do submenu, em px — o mesmo padrão que o
+ * `dropdown-menu` desta stack usa como `sideOffset`. Aqui não é opção pública
+ * porque o menu de contexto não tem `side`/`align`: ele abre onde o ponteiro
+ * está, e o submenu sempre sai pela direita do item.
+ */
+const SUBMENU_SIDE_OFFSET = 4;
 
 /** Indicador de marcação (check). Construído por DOM — nada de innerHTML. */
 function createCheckIcon(): SVGSVGElement {
@@ -209,6 +220,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   let panelEl: HTMLElement | null = null;
   let subPanelEl: HTMLElement | null = null;
   let subTriggerEl: HTMLElement | null = null;
+  let subPanelCount = 0;
   let isOpen = false;
   let radioValue = options.radioValue;
   let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
@@ -343,9 +355,21 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       subTriggerDef.set(li, item);
 
       li.addEventListener('mouseenter', () => openSubmenu(li, item));
+      // Clique abre em vez de escolher: o sub-gatilho não tem ação própria, e
+      // fechar o menu aqui descartaria o que a pessoa veio buscar.
       li.addEventListener('click', (e) => {
         e.stopPropagation();
         openSubmenu(li, item);
+      });
+      // Enter e Espaço abrem, como pede a WAI-ARIA APG. Sem este ouvinte o item
+      // anunciava `aria-haspopup="menu"` e as duas teclas não faziam NADA — o
+      // documento só trata as setas, e nem Enter nem Espaço chegam ao typeahead.
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openSubmenu(li, item);
+          if (subPanelEl) getMenuItems(subPanelEl)[0]?.focus();
+        }
       });
 
       menu.appendChild(li);
@@ -407,26 +431,51 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     return menu;
   }
 
-  function openSubmenu(trigger: HTMLElement, def: ContextMenuItemDef): void {
-    if (subTriggerEl === trigger && subPanelEl) return;
+  /**
+   * Abre o painel do submenu do `subTrigger`, fechando o que estiver aberto.
+   *
+   * O painel vai para o `<body>`, FORA da árvore do menu pai, e é de propósito:
+   * `getMenuItems` é consulta de DESCENDENTES sobre os três papéis de item, e
+   * com o painel aninhado a seta do menu pai passaria a percorrer os itens do
+   * filho — defeito que só aparece com o submenu ABERTO.
+   *
+   * O preço de portar o painel é a ligação perdida: o item diz que abriu um
+   * menu e nada aponta para o menu que ele abriu. Quem a repõe é o `aria-owns`,
+   * escrito aqui e retirado no fechamento; sem ele o submenu é, para quem lê a
+   * tela, um menu solto no `body`.
+   *
+   * A posição sai de `positionFloating`, a mesma conta do popover e do tooltip.
+   * Aqui havia `left = box.right` na unha, e era isso que fazia o painel sair da
+   * tela perto da borda direita da janela: a conta compartilhada trava o eixo
+   * cruzado na área visível.
+   */
+  function openSubmenu(subTrigger: HTMLElement, def: ContextMenuItemDef): void {
+    if (subTriggerEl === subTrigger && subPanelEl) return;
     closeSubmenu();
 
-    subPanelEl = buildMenu(def.items ?? [], 'context-menu-sub-content');
-    subPanelEl.style.position = 'absolute';
-    document.body.appendChild(subPanelEl);
+    const panel = buildMenu(def.items ?? [], 'context-menu-sub-content');
+    // O `id` existe para o `aria-owns` ter para onde apontar.
+    panel.id = `${menuId}-sub-${++subPanelCount}`;
+    document.body.appendChild(panel);
+    positionFloating(subTrigger, panel, 'right', 'start', SUBMENU_SIDE_OFFSET);
 
-    const box = trigger.getBoundingClientRect();
-    subPanelEl.style.top = `${box.top + window.scrollY}px`;
-    subPanelEl.style.left = `${box.right + window.scrollX}px`;
+    subTrigger.setAttribute('aria-expanded', 'true');
+    subTrigger.setAttribute('aria-owns', panel.id);
 
-    trigger.setAttribute('aria-expanded', 'true');
-    subTriggerEl = trigger;
+    subPanelEl = panel;
+    subTriggerEl = subTrigger;
   }
 
+  /** Fecha o painel do submenu e desfaz a ligação que só vale enquanto ele existe. */
   function closeSubmenu(): void {
     subPanelEl?.remove();
     subPanelEl = null;
-    subTriggerEl?.setAttribute('aria-expanded', 'false');
+    if (subTriggerEl) {
+      subTriggerEl.setAttribute('aria-expanded', 'false');
+      // `aria-owns` sai junto: apontar para um painel que já não está no
+      // documento é pior que não apontar para nada.
+      subTriggerEl.removeAttribute('aria-owns');
+    }
     subTriggerEl = null;
   }
 
