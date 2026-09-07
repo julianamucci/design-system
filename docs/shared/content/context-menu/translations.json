@@ -53,8 +53,8 @@
         "item1": "Nunca use como único ponto de acesso: right-click não é descobrível em touch e não é óbvio para todos os usuários.",
         "item2": "Sempre ofereça alternativa explícita (botão, DropdownMenu) para as mesmas ações do menu.",
         "item3": "Item destrutivo usa a variante <code>destructive</code>, que aplica a cor de alerta (<code>--destructive</code>) — nunca escreva essa cor à mão no item.",
-        "item4": "Evite submenus: aumentam carga cognitiva e dificultam navegação por teclado.",
-        "item5": "<code>ContextMenuShortcut</code> é apenas visual — implemente o atalho real via <code>useEffect</code> + listener."
+        "item4": "Use submenu só para agrupar ações de um mesmo objeto, e num nível só: cada nível a mais cobra uma seta e uma pausa de quem navega por teclado.",
+        "item5": "O atalho exibido ao lado do item é apenas VISUAL: quem o faz funcionar é o ouvinte de teclado da aplicação, e o menu não o registra por você."
       },
       "scenarios": {
         "title": "Tabela de Cenários",
@@ -109,7 +109,7 @@
         "dont": "Aninhar múltiplos níveis de submenu — aumenta carga cognitiva."
       },
       "pair3": {
-        "do": "ContextMenuShortcut para exibir o atalho visualmente, com listener separado.",
+        "do": "Dê uma dica visual de que a área tem menu de contexto — cursor, contorno tracejado ou uma linha de ajuda: clique direito não se anuncia sozinho.",
         "dont": "Esperar que o usuário descubra o menu por right-click sem nenhuma dica visual."
       }
     },
@@ -234,7 +234,7 @@
         "destructive": "Texto de item destrutivo",
         "destructiveFocus": "Fundo de item destrutivo em foco",
         "mutedFg": "Texto do atalho exibido no item",
-      "mutedFgLabel": "Texto do rótulo de grupo",
+        "mutedFgLabel": "Texto do rótulo de grupo",
         "border": "Linha separadora",
         "popupBorder": "Borda de 1px do popup",
         "shadow": "Sombra do popup",
@@ -275,7 +275,7 @@
         "onOpen": "Ao abrir: leitor anuncia o menu e o primeiro item focado.",
         "onNavigate": "Ao navegar: leitor anuncia o label do item e seu estado (checked, disabled).",
         "onSelect": "Ao selecionar: leitor anuncia a ação realizada.",
-        "shortcuts": "O atalho é lido junto do item: \"Excluir, Del\" é o nome útil. Escondê-lo deixaria a pessoa sem saber que o atalho existe.",
+        "shortcuts": "O atalho é lido junto do item — \"Excluir, Delete\" é o nome útil. Escondê-lo deixaria a pessoa sem saber que o atalho existe.",
         "alternative": "Alternativa acessível obrigatória: o usuário de leitor de tela pode não descobrir o Context Menu."
       }
     },
@@ -501,8 +501,8 @@
         "item1": "Never use as the only access point: right-click is not discoverable on touch and not obvious to all users.",
         "item2": "Always provide an explicit alternative (button, DropdownMenu) for the same actions.",
         "item3": "A destructive item uses the <code>destructive</code> variant, which applies the alert colour (<code>--destructive</code>) — never hand-write that colour on the item.",
-        "item4": "Avoid submenus: they increase cognitive load and hinder keyboard navigation.",
-        "item5": "<code>ContextMenuShortcut</code> is visual only — implement the real shortcut via <code>useEffect</code> + listener."
+        "item4": "Use a submenu only to group actions on the same object, and only one level deep: every extra level costs an arrow key and a pause for whoever navigates by keyboard.",
+        "item5": "The shortcut shown next to the item is VISUAL only: what makes it work is the application keyboard listener, and the menu does not register it for you."
       },
       "scenarios": {
         "title": "Scenario Table",
@@ -557,7 +557,7 @@
         "dont": "Nesting multiple submenu levels — increases cognitive load."
       },
       "pair3": {
-        "do": "ContextMenuShortcut to display the shortcut visually, with a separate listener.",
+        "do": "Give a visual hint that the area has a context menu — a cursor, a dashed outline or a line of help text: right-click does not announce itself.",
         "dont": "Expect users to discover the menu by right-click with no visual hint."
       }
     },
@@ -682,7 +682,7 @@
         "destructive": "Destructive item text",
         "destructiveFocus": "Destructive item focus background",
         "mutedFg": "Text of the shortcut shown in the item",
-      "mutedFgLabel": "Text of the group heading",
+        "mutedFgLabel": "Text of the group heading",
         "border": "Separator line",
         "popupBorder": "1px popup border",
         "shadow": "Popup shadow",
@@ -723,7 +723,7 @@
         "onOpen": "On open: reader announces the menu and the first focused item.",
         "onNavigate": "On navigation: reader announces the item label and its state (checked, disabled).",
         "onSelect": "On select: reader announces the action taken.",
-        "shortcuts": "The shortcut is read together with the item: \"Delete, Del\" is the useful name. Hiding it would leave the person unaware that the shortcut exists.",
+        "shortcuts": "The shortcut is read together with the item — \"Delete, Delete\" is the useful name. Hiding it would leave the person unaware that the shortcut exists.",
         "alternative": "Accessible alternative required: screen reader users may not discover the Context Menu."
       }
     },
@@ -949,8 +949,8 @@
         "item1": "Nunca uses como único punto de acceso: el clic derecho no es descubrible en touch y no es obvio para todos los usuarios.",
         "item2": "Siempre ofrece una alternativa explícita (botón, DropdownMenu) para las mismas acciones.",
         "item3": "El ítem destructivo usa la variante <code>destructive</code>, que aplica el color de alerta (<code>--destructive</code>) — nunca escribas ese color a mano en el ítem.",
-        "item4": "Evita submenús: aumentan la carga cognitiva y dificultan la navegación por teclado.",
-        "item5": "<code>ContextMenuShortcut</code> es solo visual — implementa el atajo real vía <code>useEffect</code> + listener."
+        "item4": "Usa submenú solo para agrupar acciones de un mismo objeto, y en un solo nivel: cada nivel extra cobra una flecha y una pausa a quien navega por teclado.",
+        "item5": "El atajo que se muestra junto al elemento es solo VISUAL: quien lo hace funcionar es el escucha de teclado de la aplicación, y el menú no lo registra por ti."
       },
       "scenarios": {
         "title": "Tabla de Escenarios",
@@ -1005,7 +1005,7 @@
         "dont": "Anidar múltiples niveles de submenú — aumenta la carga cognitiva."
       },
       "pair3": {
-        "do": "ContextMenuShortcut para mostrar el atajo visualmente, con listener separado.",
+        "do": "Da una pista visual de que el área tiene menú contextual — cursor, contorno punteado o una línea de ayuda: el clic derecho no se anuncia solo.",
         "dont": "Esperar que el usuario descubra el menú por clic derecho sin ninguna pista visual."
       }
     },
@@ -1130,7 +1130,7 @@
         "destructive": "Texto de ítem destructivo",
         "destructiveFocus": "Fondo de ítem destructivo en foco",
         "mutedFg": "Texto del atajo mostrado en el ítem",
-      "mutedFgLabel": "Texto del rótulo de grupo",
+        "mutedFgLabel": "Texto del rótulo de grupo",
         "border": "Línea separadora",
         "popupBorder": "Borde de 1px del popup",
         "shadow": "Sombra del popup",
@@ -1171,7 +1171,7 @@
         "onOpen": "Al abrir: el lector anuncia el menú y el primer ítem enfocado.",
         "onNavigate": "Al navegar: el lector anuncia la etiqueta del ítem y su estado (checked, disabled).",
         "onSelect": "Al seleccionar: el lector anuncia la acción realizada.",
-        "shortcuts": "El atajo se lee junto con el ítem: \"Eliminar, Supr\" es el nombre útil. Ocultarlo dejaría a la persona sin saber que el atajo existe.",
+        "shortcuts": "El atajo se lee junto al elemento — \"Eliminar, Delete\" es el nombre útil. Ocultarlo dejaría a la persona sin saber que el atajo existe.",
         "alternative": "Alternativa accesible obligatoria: el usuario de lector de pantalla puede no descubrir el Context Menu."
       }
     },
