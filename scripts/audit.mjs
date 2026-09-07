@@ -2274,8 +2274,16 @@ function auditDemonstrationLabels(slug) {
     const { docs } = filesForSlug(slug, stack);
     const usadas = new Set();
     for (const file of docs) {
-      const content = readFile(file);
-      if (!content) continue;
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      // Comentário fora, e esta é a TERCEIRA vez que a mesma armadilha aparece
+      // nesta casa: o `lista_mais_curta_que_o_conteudo` acusou uma página por
+      // uma citação dentro de um comentário, o portão de nome acessível
+      // reprovou num comentário que explicava por que `region` fora recusado,
+      // e aqui a direção era a inversa e pior — MENCIONAR a chave num
+      // comentário fazia o achado sumir. Portão que casa palavra solta mede
+      // prosa, e quando a prosa SILENCIA o portão ninguém percebe.
+      const content = stripComments(bruto);
       for (const k of chaves) {
         if (content.includes('demonstration.labels.' + k)) usadas.add(k);
       }
