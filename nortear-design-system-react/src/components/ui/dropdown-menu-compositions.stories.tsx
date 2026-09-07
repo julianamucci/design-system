@@ -136,6 +136,9 @@ export const WithCheckboxItems: Story = {
     const Demo = () => {
       const [name, setNome] = useState(true);
       const [email, setEmail] = useState(false);
+      // Três colunas, como no vanilla, que é a referência: com duas o menu não
+      // mostrava que a marcação de uma não mexe nas OUTRAS, só na vizinha.
+      const [role, setRole] = useState(false);
       return (
         <div className={wrapperClass} style={wrapperStyle}>
           <DropdownMenu defaultOpen modal={false}>
@@ -151,6 +154,9 @@ export const WithCheckboxItems: Story = {
                 <DropdownMenuCheckboxItem checked={email} onCheckedChange={setEmail}>
                   E-mail
                 </DropdownMenuCheckboxItem>
+                <DropdownMenuCheckboxItem checked={role} onCheckedChange={setRole}>
+                  Função
+                </DropdownMenuCheckboxItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -164,11 +170,13 @@ export const WithCheckboxItems: Story = {
     const canvas = within(menu);
     const name = canvas.getByRole("menuitemcheckbox", { name: "Nome" });
     const email = canvas.getByRole("menuitemcheckbox", { name: "E-mail" });
+    const role = canvas.getByRole("menuitemcheckbox", { name: "Função" });
 
     await step("O papel e o estado inicial chegam ao markup", async () => {
-      await expect(canvas.getAllByRole("menuitemcheckbox")).toHaveLength(2);
+      await expect(canvas.getAllByRole("menuitemcheckbox")).toHaveLength(3);
       await expect(name).toHaveAttribute("aria-checked", "true");
       await expect(email).toHaveAttribute("aria-checked", "false");
+      await expect(role).toHaveAttribute("aria-checked", "false");
     });
 
     await step("O indicador só aparece no item marcado", async () => {
@@ -190,8 +198,11 @@ export const WithCheckboxItems: Story = {
       });
       // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
       await expect(within(document.body).queryAllByRole("menu")).toHaveLength(1);
-      // Independentes entre si — é o que separa checkbox de escolha única.
+      // Independentes entre si — é o que separa checkbox de escolha única. O
+      // terceiro item é quem prova: marcar o e-mail não arrasta nem o vizinho de
+      // cima, que já estava marcado, nem o de baixo, que não estava.
       await expect(name).toHaveAttribute("aria-checked", "true");
+      await expect(role).toHaveAttribute("aria-checked", "false");
     });
   },
 };

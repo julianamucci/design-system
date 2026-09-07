@@ -215,11 +215,16 @@ export function DropdownMenuDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
-  // Estado para demos interativas
+  // Estado para demos interativas.
+  //
+  // Os valores iniciais são os da story e os do snippet do painel Code: Nome
+  // marcado, E-mail e Função não, e a aparência em "Claro". O e-mail nascia
+  // marcado e o tema nascia em "Sistema" — a prévia dizia uma coisa e o código
+  // logo abaixo dela dizia outra, que é a deriva medida no vanilla.
   const [showName, setShowName] = useState(true);
-  const [showEmail, setShowEmail] = useState(true);
+  const [showEmail, setShowEmail] = useState(false);
   const [showRole, setShowRole] = useState(false);
-  const [theme, setTheme] = useState("system");
+  const [theme, setTheme] = useState("light");
 
   // ─── Code strings ───────────────────────────────────────────────────────────
 
@@ -347,6 +352,9 @@ interface DropdownMenuItemProps {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
+                {/* O rótulo diz DE QUE lista são as marcações; sem ele o menu
+                    abre com três palavras soltas. As outras stacks o trazem. */}
+                <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
                 <DropdownMenuCheckboxItem
                   checked={showName}
                   onCheckedChange={setShowName}
@@ -363,7 +371,7 @@ interface DropdownMenuItemProps {
                   checked={showRole}
                   onCheckedChange={setShowRole}
                 >
-                  Cargo
+                  Função
                 </DropdownMenuCheckboxItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -386,6 +394,7 @@ interface DropdownMenuItemProps {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
+                  <DropdownMenuLabel>Aparência</DropdownMenuLabel>
                   <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
@@ -532,6 +541,21 @@ interface DropdownMenuItemProps {
       />
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
+      {/*
+        Os quatro previews instanciam o DropdownMenu de verdade (guideline 08
+        §15). Antes eram imitações em texto: o "Do" desenhava um separador com
+        `border-top` em `style` inline, e o "Don't" era a própria legenda
+        repetida em itálico — quem lia via a frase, nunca o defeito.
+
+        Dentro de um par, só o DEFEITO muda de um lado para o outro. O rótulo do
+        gatilho acompanha o que o menu passou a listar ("Tudo" para a lista
+        plana), e nunca vira um segundo erro: um gatilho mal escrito no lado
+        errado ensinaria a lição da tabela de UX Writing no lugar desta.
+
+        Os menus nascem FECHADOS. Menu que se abre sozinho ao carregar a página é
+        justamente o que não se deve copiar, e abrir quatro de uma vez empilharia
+        painéis por cima do texto da seção.
+      */}
       <DocsDoDont
         title={tContent("doDont.title")}
         pairs={[
@@ -539,15 +563,48 @@ interface DropdownMenuItemProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="nds-text-body nds-stack" data-spacing="xs">
-                <div className="nds-font-medium">Conta</div>
-                <div className="nds-text-muted-foreground">Perfil / Configurações</div>
-                <div className="nds-text-muted-foreground nds-pt-1" style={{ borderTop: "1px solid var(--border)" }}>Equipe</div>
+              <div style={{ contain: "layout" }}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">Conta</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start">
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Conta</DropdownMenuLabel>
+                      <DropdownMenuItem>Perfil</DropdownMenuItem>
+                      <DropdownMenuItem>Configurações</DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Equipe</DropdownMenuLabel>
+                      <DropdownMenuItem>Convidar</DropdownMenuItem>
+                      <DropdownMenuItem>Membros</DropdownMenuItem>
+                    </DropdownMenuGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ),
             dontPreview: (
-              <div className="nds-text-body nds-text-muted-foreground nds-italic">
-                10+ items planos sem agrupamento
+              // Dez itens planos, que é o número da legenda: com seis a lista
+              // ainda parece curta, e o "vira lista de scroll" não aparece.
+              <div style={{ contain: "layout" }}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">Tudo</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start">
+                    <DropdownMenuItem>Perfil</DropdownMenuItem>
+                    <DropdownMenuItem>Configurações</DropdownMenuItem>
+                    <DropdownMenuItem>Convidar</DropdownMenuItem>
+                    <DropdownMenuItem>Membros</DropdownMenuItem>
+                    <DropdownMenuItem>Faturas</DropdownMenuItem>
+                    <DropdownMenuItem>Assinatura</DropdownMenuItem>
+                    <DropdownMenuItem>Notificações</DropdownMenuItem>
+                    <DropdownMenuItem>Integrações</DropdownMenuItem>
+                    <DropdownMenuItem>Suporte</DropdownMenuItem>
+                    <DropdownMenuItem>Sair</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
@@ -557,15 +614,32 @@ interface DropdownMenuItemProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="nds-text-body">
-                <div className="nds-text-destructive nds-font-medium">Excluir conta</div>
-                <div className="nds-text-muted-foreground nds-text-caption">variant=destructive</div>
+              <div style={{ contain: "layout" }}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">Ações</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start">
+                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ),
             dontPreview: (
-              <div className="nds-text-body">
-                <div className="nds-font-medium">Excluir conta</div>
-                <div className="nds-text-muted-foreground nds-text-caption">Item normal sem aviso</div>
+              // O mesmo menu sem a marcação: a única diferença para o lado de cá
+              // é o `variant`, que é exatamente o que a legenda cobra.
+              <div style={{ contain: "layout" }}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm">Ações</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="bottom" align="start">
+                    <DropdownMenuItem>Editar</DropdownMenuItem>
+                    <DropdownMenuItem>Excluir conta</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
@@ -671,7 +745,7 @@ interface DropdownMenuItemProps {
         E-mail
       </DropdownMenuCheckboxItem>
       <DropdownMenuCheckboxItem checked={showRole} onCheckedChange={setShowRole}>
-        Cargo
+        Função
       </DropdownMenuCheckboxItem>
     </DropdownMenuGroup>
   </DropdownMenuContent>
@@ -701,7 +775,7 @@ interface DropdownMenuItemProps {
                         checked={showRole}
                         onCheckedChange={setShowRole}
                       >
-                        Cargo
+                        Função
                       </DropdownMenuCheckboxItem>
                     </DropdownMenuGroup>
                   </DropdownMenuContent>

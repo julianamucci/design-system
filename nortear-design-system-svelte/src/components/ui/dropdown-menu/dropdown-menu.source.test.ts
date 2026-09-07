@@ -86,7 +86,7 @@ describe('dropdownMenuSource', () => {
       '<DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>',
     );
     expect(dropdownMenuSource('', { args: { variant: 'withSubmenu' } })).toContain(
-      '<DropdownMenuSubTrigger>Exportar como</DropdownMenuSubTrigger>',
+      '<DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>',
     );
     expect(dropdownMenuSource('', { args: { variant: 'withShortcuts' } })).toContain(
       '<DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>',
@@ -96,10 +96,13 @@ describe('dropdownMenuSource', () => {
   it('importa exatamente as peças que a composição escolhida usa', () => {
     const submenu = dropdownMenuSource('', { args: { variant: 'withSubmenu' } });
     expect(submenu).toContain('  DropdownMenuSubContent,');
-    expect(submenu).toContain('  DropdownMenuSeparator,');
-    // O grupo não entra: esta composição não o usa, e import morto no snippet
-    // vira erro de lint na primeira colagem.
+    expect(submenu).toContain('  DropdownMenuSubTrigger,');
+    // Nem grupo nem separador entram: esta composição não usa nenhum dos dois, e
+    // import morto no snippet vira erro de lint na primeira colagem. O separador
+    // saiu junto com o item destrutivo que vinha depois do submenu — ele existia
+    // só para separá-lo do resto.
     expect(submenu).not.toContain('  DropdownMenuGroup,');
+    expect(submenu).not.toContain('  DropdownMenuSeparator,');
   });
 });
 
@@ -157,23 +160,66 @@ describe('transforms das stories de variação, estado e composição', () => {
     expect(saida).toContain('<DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>');
   });
 
+  it('o grupo com rótulo não marca "Sair" de vermelho — sair não é irreversível', () => {
+    // A TAG inteira, e não o texto solto: `not.toContain('destructive')` também
+    // casaria com o nome da variante em qualquer comentário do snippet.
+    expect(dropdownMenuWithLabelSource()).toContain('<DropdownMenuItem>Sair</DropdownMenuItem>');
+    expect(dropdownMenuWithLabelSource()).not.toContain(
+      '<DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>',
+    );
+  });
+
   it('os alternadores ligam cada item ao seu próprio estado', () => {
     const saida = dropdownMenuWithCheckboxSource();
-    expect(saida).toContain('let mostrarBarraDeStatus = $state(true);');
-    expect(saida).toContain('<DropdownMenuCheckboxItem bind:checked={mostrarBarraDeAtividade}>');
+    expect(saida).toContain('let mostrarNome = $state(true);');
+    expect(saida).toContain('let mostrarEmail = $state(false);');
+    expect(saida).toContain('let mostrarFuncao = $state(false);');
+    expect(saida).toContain('<DropdownMenuCheckboxItem bind:checked={mostrarEmail}>');
+  });
+
+  it('os alternadores são as TRÊS colunas da tabela, e o gatilho as anuncia', () => {
+    // O snippet acompanha o preview: três itens, os mesmos rótulos, o mesmo
+    // gatilho. Painel Code que mostra outra lista ensina um menu que a página
+    // não tem. Três é o número do vanilla, que é a referência.
+    const saida = dropdownMenuWithCheckboxSource();
+    expect(saida).toContain('<DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>');
+    expect(saida).toContain('>Colunas</Button>');
+    expect(saida).toContain('<DropdownMenuCheckboxItem bind:checked={mostrarFuncao}>');
+    expect(saida.match(/<DropdownMenuCheckboxItem /g)).toHaveLength(3);
   });
 
   it('a escolha única compartilha um valor só entre os itens', () => {
     const saida = dropdownMenuWithRadioSource();
-    expect(saida).toContain('let posicao = $state("bottom");');
-    expect(saida).toContain('<DropdownMenuRadioGroup bind:value={posicao}>');
+    expect(saida).toContain('let tema = $state("light");');
+    expect(saida).toContain('<DropdownMenuRadioGroup bind:value={tema}>');
     expect(saida.match(/<DropdownMenuRadioItem value="/g)).toHaveLength(3);
+  });
+
+  it('a escolha única é a aparência, e nasce no valor que a story mostra marcado', () => {
+    const saida = dropdownMenuWithRadioSource();
+    expect(saida).toContain('<DropdownMenuLabel>Aparência</DropdownMenuLabel>');
+    expect(saida).toContain('<DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>');
+    expect(saida).toContain('<DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>');
+    expect(saida).toContain('<DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>');
+    expect(saida).toContain('>Tema</Button>');
   });
 
   it('o submenu aninha conteúdo dentro do próprio item', () => {
     const saida = dropdownMenuWithSubmenuSource();
     expect(saida).toContain('<DropdownMenuSub>');
     expect(saida).toContain('<DropdownMenuSubContent>');
+  });
+
+  it('o submenu lista os dois formatos do preview, e nada depois dele', () => {
+    const saida = dropdownMenuWithSubmenuSource();
+    expect(saida).toContain('<DropdownMenuItem>Renomear</DropdownMenuItem>');
+    expect(saida).toContain('<DropdownMenuItem>PDF</DropdownMenuItem>');
+    expect(saida).toContain('<DropdownMenuItem>CSV</DropdownMenuItem>');
+    // O terceiro formato e o item destrutivo saíram do preview; o painel Code
+    // acompanha, senão ele mostra um menu que a story não monta.
+    expect(saida).not.toContain('<DropdownMenuItem>JSON</DropdownMenuItem>');
+    expect(saida).not.toContain('<DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>');
+    expect(saida).not.toContain('<DropdownMenuSeparator />');
   });
 
   it('o atalho é filho do item, não texto solto ao lado dele', () => {

@@ -262,6 +262,7 @@ ${importDe(
     `function ColunasVisiveis() {
   const [nome, setNome] = useState(true);
   const [email, setEmail] = useState(false);
+  const [funcao, setFuncao] = useState(false);
 
   return (
     <DropdownMenu>
@@ -276,6 +277,9 @@ ${importDe(
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem checked={email} onCheckedChange={setEmail}>
             E-mail
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem checked={funcao} onCheckedChange={setFuncao}>
+            Função
           </DropdownMenuCheckboxItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

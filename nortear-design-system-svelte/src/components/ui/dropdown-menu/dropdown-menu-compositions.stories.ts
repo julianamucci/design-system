@@ -63,7 +63,7 @@ export const WithLabel: Story = {
 };
 
 export const WithCheckboxItems: Story = {
-  args: { defaultOpen: true, variant: 'withCheckbox', triggerLabel: 'Visualização' },
+  args: { defaultOpen: true, variant: 'withCheckbox', triggerLabel: 'Colunas' },
   parameters: {
     covers: ['functional.item5', 'accessibility.item4', 'visual.item2'],
     docs: { source: { transform: dropdownMenuWithCheckboxSource } },
@@ -71,13 +71,15 @@ export const WithCheckboxItems: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
-    const status = canvas.getByRole('menuitemcheckbox', { name: 'Status bar' });
-    const atividade = canvas.getByRole('menuitemcheckbox', { name: 'Activity bar' });
+    const name = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
+    const email = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
+    const role = canvas.getByRole('menuitemcheckbox', { name: 'Função' });
 
     await step('O papel e o estado inicial chegam ao markup', async () => {
-      await expect(canvas.getAllByRole('menuitemcheckbox')).toHaveLength(2);
-      await expect(status).toHaveAttribute('aria-checked', 'true');
-      await expect(atividade).toHaveAttribute('aria-checked', 'false');
+      await expect(canvas.getAllByRole('menuitemcheckbox')).toHaveLength(3);
+      await expect(name).toHaveAttribute('aria-checked', 'true');
+      await expect(email).toHaveAttribute('aria-checked', 'false');
+      await expect(role).toHaveAttribute('aria-checked', 'false');
     });
 
     await step('O indicador só aparece no item marcado', async () => {
@@ -85,28 +87,31 @@ export const WithCheckboxItems: Story = {
       // `aria-checked` é o que ela ouve.
       const marca = (item: HTMLElement) =>
         item.querySelector('.nds-dropdown-menu-item-indicator svg') !== null;
-      await expect(marca(status)).toBe(true);
-      await expect(marca(atividade)).toBe(false);
+      await expect(marca(name)).toBe(true);
+      await expect(marca(email)).toBe(false);
     });
 
     await step('Clicar alterna o item e mantém o menu aberto', async () => {
-      // Idempotente: leva "Activity bar" a marcado só se ainda não estiver, então
-      // o replay do painel Interactions termina no mesmo estado.
-      if (atividade.getAttribute('aria-checked') !== 'true') await userEvent.click(atividade);
+      // Idempotente: leva "E-mail" a marcado só se ainda não estiver, então o
+      // replay do painel Interactions termina no mesmo estado.
+      if (email.getAttribute('aria-checked') !== 'true') await userEvent.click(email);
 
       await waitFor(async () => {
-        await expect(atividade).toHaveAttribute('aria-checked', 'true');
+        await expect(email).toHaveAttribute('aria-checked', 'true');
       });
-      // Alternar não fecha: quem marca uma opção costuma marcar a próxima.
+      // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
       await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
-      // Independentes entre si — é o que separa checkbox de escolha única.
-      await expect(status).toHaveAttribute('aria-checked', 'true');
+      // Independentes entre si — é o que separa checkbox de escolha única. O
+      // terceiro item é quem prova: marcar o e-mail não arrasta nem o vizinho de
+      // cima, que já estava marcado, nem o de baixo, que não estava.
+      await expect(name).toHaveAttribute('aria-checked', 'true');
+      await expect(role).toHaveAttribute('aria-checked', 'false');
     });
   },
 };
 
 export const WithRadioGroup: Story = {
-  args: { defaultOpen: true, variant: 'withRadio', triggerLabel: 'Posição' },
+  args: { defaultOpen: true, variant: 'withRadio', triggerLabel: 'Tema' },
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
     docs: { source: { transform: dropdownMenuWithRadioSource } },
@@ -114,22 +119,22 @@ export const WithRadioGroup: Story = {
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
-    const inferior = canvas.getByRole('menuitemradio', { name: 'Inferior' });
-    const topo = canvas.getByRole('menuitemradio', { name: 'Topo' });
+    const light = canvas.getByRole('menuitemradio', { name: 'Claro' });
+    const dark = canvas.getByRole('menuitemradio', { name: 'Escuro' });
 
     await step('Um item por vez se anuncia escolhido', async () => {
       await expect(canvas.getAllByRole('menuitemradio')).toHaveLength(3);
-      await expect(inferior).toHaveAttribute('aria-checked', 'true');
-      await expect(topo).toHaveAttribute('aria-checked', 'false');
+      await expect(light).toHaveAttribute('aria-checked', 'true');
+      await expect(dark).toHaveAttribute('aria-checked', 'false');
     });
 
     await step('Escolher outro desmarca o anterior', async () => {
-      // Idempotente: só clica se "Topo" ainda não for o escolhido.
-      if (topo.getAttribute('aria-checked') !== 'true') await userEvent.click(topo);
+      // Idempotente: só clica se "Escuro" ainda não for o escolhido.
+      if (dark.getAttribute('aria-checked') !== 'true') await userEvent.click(dark);
 
       await waitFor(async () => {
-        await expect(topo).toHaveAttribute('aria-checked', 'true');
-        await expect(inferior).toHaveAttribute('aria-checked', 'false');
+        await expect(dark).toHaveAttribute('aria-checked', 'true');
+        await expect(light).toHaveAttribute('aria-checked', 'false');
       });
     });
   },
@@ -144,7 +149,7 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const body = within(document.body);
     const menu = await waitForPortal('menu');
-    const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar como' });
+    const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre um menu', async () => {
       await expect(subTrigger).toHaveAttribute('aria-haspopup', 'menu');
@@ -165,7 +170,8 @@ export const WithSubmenu: Story = {
 
     await step('O submenu abre AO LADO, não por cima do menu pai', async () => {
       const submenu = body.getAllByRole('menu')[1];
-      await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(3);
+      // Dois formatos de exportação, que é o que o painel filho lista agora.
+      await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(2);
       // Um submenu que nasce sobre o pai cobre os irmãos do item que o abriu.
       // A comparação é com a borda DIREITA do pai — comparar com a esquerda
       // passaria com os dois painéis empilhados.

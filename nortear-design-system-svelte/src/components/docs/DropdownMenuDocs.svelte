@@ -183,17 +183,23 @@
 
   // ─── State para demos interativos ────────────────────────────────────────────
 
-  let demoShowStatus = $state(true);
-  let demoShowActivity = $state(false);
-  let demoRadio = $state('bottom');
-  let variantCheckbox = $state(true);
-  let variantRadio = $state('system');
+  // Os valores iniciais são os da story e os do snippet do painel Code: Nome
+  // marcado, E-mail e Função não, e a aparência em "Claro". Nascia com o e-mail
+  // marcado e o tema em "Sistema" — a prévia dizia uma coisa e o código logo
+  // abaixo dela dizia outra, que é a deriva medida no vanilla.
+  //
+  // `variantCheckbox` e `variantRadio` viviam aqui sem uso: estado morto que
+  // nenhum dos cinco portões abre, porque `$state` sem leitor não é erro.
+  let demoShowName = $state(true);
+  let demoShowEmail = $state(false);
+  let demoShowRole = $state(false);
+  let demoTheme = $state('light');
 
   // Compositions interactive state
   let compShowName = $state(true);
-  let compShowEmail = $state(true);
+  let compShowEmail = $state(false);
   let compShowRole = $state(false);
-  let compTheme = $state('system');
+  let compTheme = $state('light');
 
   // ─── Code strings ────────────────────────────────────────────────────────────
 
@@ -307,19 +313,25 @@ interface DropdownMenuRadioGroupProps {
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuLabel>Visualização</DropdownMenuLabel>
+          <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuCheckboxItem
-            checked={demoShowStatus}
-            onCheckedChange={(v) => (demoShowStatus = v)}
+            checked={demoShowName}
+            onCheckedChange={(v) => (demoShowName = v)}
           >
-            Status bar
+            Nome
           </DropdownMenuCheckboxItem>
           <DropdownMenuCheckboxItem
-            checked={demoShowActivity}
-            onCheckedChange={(v) => (demoShowActivity = v)}
+            checked={demoShowEmail}
+            onCheckedChange={(v) => (demoShowEmail = v)}
           >
-            Activity bar
+            E-mail
+          </DropdownMenuCheckboxItem>
+          <DropdownMenuCheckboxItem
+            checked={demoShowRole}
+            onCheckedChange={(v) => (demoShowRole = v)}
+          >
+            Função
           </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -331,12 +343,12 @@ interface DropdownMenuRadioGroupProps {
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuLabel>Posição</DropdownMenuLabel>
+          <DropdownMenuLabel>Aparência</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup bind:value={demoRadio}>
-            <DropdownMenuRadioItem value="top">Topo</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="bottom">Inferior</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="right">Direita</DropdownMenuRadioItem>
+          <DropdownMenuRadioGroup bind:value={demoTheme}>
+            <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -348,17 +360,14 @@ interface DropdownMenuRadioGroupProps {
           {/snippet}
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'novo-arquivo')}>Novo arquivo</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'salvar')}>Salvar</DropdownMenuItem>
           <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Exportar como</DropdownMenuSubTrigger>
+            <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
               <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'pdf')}>PDF</DropdownMenuItem>
               <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'csv')}>CSV</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'json')}>JSON</DropdownMenuItem>
             </DropdownMenuSubContent>
           </DropdownMenuSub>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive" onSelect={() => trackMenuItemSelect('submenu', 'excluir')}>Excluir</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -593,7 +602,7 @@ interface DropdownMenuRadioGroupProps {
     <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
     <DropdownMenuCheckboxItem bind:checked={showName}>Nome</DropdownMenuCheckboxItem>
     <DropdownMenuCheckboxItem bind:checked={showEmail}>E-mail</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem bind:checked={showRole}>Cargo</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem bind:checked={showRole}>Função</DropdownMenuCheckboxItem>
   </DropdownMenuContent>
 </DropdownMenu>`,
         preview: variantWithCheckboxItems,
@@ -736,7 +745,7 @@ interface DropdownMenuRadioGroupProps {
             checked={compShowRole}
             onCheckedChange={(v) => (compShowRole = v)}
           >
-            Cargo
+            Função
           </DropdownMenuCheckboxItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -126,7 +126,17 @@ describe('composições', () => {
     const saida = dropdownMenuWithCheckboxSource();
     expect(saida).toContain('<DropdownMenuCheckboxItem checked={nome} onCheckedChange={setNome}>');
     expect(saida).toContain('<DropdownMenuCheckboxItem checked={email} onCheckedChange={setEmail}>');
+    expect(saida).toContain('<DropdownMenuCheckboxItem checked={funcao} onCheckedChange={setFuncao}>');
     expect(saida).toContain('const [nome, setNome] = useState(true);');
+    expect(saida).toContain('const [funcao, setFuncao] = useState(false);');
+  });
+
+  it('são TRÊS colunas, como na story e no vanilla, que é a referência', () => {
+    // O painel Code acompanha o preview item a item: um snippet com duas
+    // colunas ao lado de um menu com três ensina um menu que não existe.
+    const saida = dropdownMenuWithCheckboxSource();
+    expect(saida.match(/<DropdownMenuCheckboxItem /g)).toHaveLength(3);
+    expect(saida).toContain('Função');
   });
 
   it('na escolha única o valor mora no GRUPO, não em cada item', () => {
@@ -134,6 +144,12 @@ describe('composições', () => {
     expect(saida).toContain('<DropdownMenuRadioGroup value={tema} onValueChange={setTema}>');
     expect(saida).toContain('<DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>');
     expect(saida).not.toContain('checked=');
+  });
+
+  it('a escolha única nasce em "Claro", que é o que a story mostra marcado', () => {
+    // A deriva medida no vanilla foi esta: prévia marcando um item e snippet
+    // marcando outro, sem portão ligando os dois.
+    expect(dropdownMenuWithRadioSource()).toContain('const [tema, setTema] = useState("light");');
   });
 
   it('o submenu é o trio Sub / SubTrigger / SubContent', () => {

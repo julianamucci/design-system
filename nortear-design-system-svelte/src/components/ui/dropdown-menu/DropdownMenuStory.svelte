@@ -56,9 +56,10 @@
   }: Props = $props();
 
   // states for interactive variants
-  let showStatusBar = $state(true);
-  let showActivityBar = $state(false);
-  let position = $state('bottom');
+  let showName = $state(true);
+  let showEmail = $state(false);
+  let showRole = $state(false);
+  let appearance = $state('light');
 </script>
 
 <div style="contain: layout">
@@ -96,22 +97,40 @@
             <DropdownMenuGroup>
               <DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>
               <DropdownMenuItem>Documentação</DropdownMenuItem>
-              <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+              <!--
+                "Sair" sem `variant`: nas outras quatro stacks ela é um item
+                comum aqui. Sair não apaga nada — marcar de vermelho o que só
+                encerra a sessão gasta a cor que a seção Destructive reserva
+                para o irreversível.
+              -->
+              <DropdownMenuItem>Sair</DropdownMenuItem>
             </DropdownMenuGroup>
           {:else if variant === 'withCheckbox'}
-            <DropdownMenuLabel>Visualização</DropdownMenuLabel>
+            <!--
+              Mesmos itens das outras quatro stacks: colunas de uma tabela, não
+              barras de um editor. "Status bar / Activity bar" era exemplo que
+              não aparecia em stack nenhuma, e ainda vinha em inglês numa docs
+              page em português.
+            -->
+            <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuCheckboxItem
-              checked={showStatusBar}
-              onCheckedChange={(v) => (showStatusBar = v)}
+              checked={showName}
+              onCheckedChange={(v) => (showName = v)}
             >
-              Status bar
+              Nome
             </DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem
-              checked={showActivityBar}
-              onCheckedChange={(v) => (showActivityBar = v)}
+              checked={showEmail}
+              onCheckedChange={(v) => (showEmail = v)}
             >
-              Activity bar
+              E-mail
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem
+              checked={showRole}
+              onCheckedChange={(v) => (showRole = v)}
+            >
+              Função
             </DropdownMenuCheckboxItem>
           {:else if variant === 'indeterminate'}
             <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
@@ -124,25 +143,29 @@
             <DropdownMenuCheckboxItem checked>E-mail</DropdownMenuCheckboxItem>
             <DropdownMenuCheckboxItem>Telefone</DropdownMenuCheckboxItem>
           {:else if variant === 'withRadio'}
-            <DropdownMenuLabel>Posição</DropdownMenuLabel>
+            <!-- Mesma escolha das outras quatro stacks: aparência, não posição. -->
+            <DropdownMenuLabel>Aparência</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup bind:value={position}>
-              <DropdownMenuRadioItem value="top">Topo</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="bottom">Inferior</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="right">Direita</DropdownMenuRadioItem>
+            <DropdownMenuRadioGroup bind:value={appearance}>
+              <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           {:else if variant === 'withSubmenu'}
-            <DropdownMenuItem>Novo arquivo</DropdownMenuItem>
+            <!--
+              Mesmo menu das outras quatro stacks. O assunto da composição é o
+              segundo nível: o separador e o item destrutivo que vinham depois
+              dele eram a lição da variante Destructive dentro desta, e o
+              terceiro formato do submenu só alongava a lista.
+            -->
+            <DropdownMenuItem>Renomear</DropdownMenuItem>
             <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Exportar como</DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
                 <DropdownMenuItem>PDF</DropdownMenuItem>
                 <DropdownMenuItem>CSV</DropdownMenuItem>
-                <DropdownMenuItem>JSON</DropdownMenuItem>
               </DropdownMenuSubContent>
             </DropdownMenuSub>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>
           {:else if variant === 'withShortcuts'}
             <!--
               Mesmos itens e mesmos atalhos das outras quatro stacks. Antes eram

@@ -101,23 +101,27 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
 <DropdownMenuGroup>
   <DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>
   <DropdownMenuItem>Documentação</DropdownMenuItem>
-  <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+  <DropdownMenuItem>Sair</DropdownMenuItem>
 </DropdownMenuGroup>`,
   },
 
   withCheckbox: {
     names: ['DropdownMenuCheckboxItem', 'DropdownMenuLabel', 'DropdownMenuSeparator'],
     state: [
-      'let mostrarBarraDeStatus = $state(true);',
-      'let mostrarBarraDeAtividade = $state(false);',
+      'let mostrarNome = $state(true);',
+      'let mostrarEmail = $state(false);',
+      'let mostrarFuncao = $state(false);',
     ],
-    markup: `<DropdownMenuLabel>Visualização</DropdownMenuLabel>
+    markup: `<DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
 <DropdownMenuSeparator />
-<DropdownMenuCheckboxItem bind:checked={mostrarBarraDeStatus}>
-  Status bar
+<DropdownMenuCheckboxItem bind:checked={mostrarNome}>
+  Nome
 </DropdownMenuCheckboxItem>
-<DropdownMenuCheckboxItem bind:checked={mostrarBarraDeAtividade}>
-  Activity bar
+<DropdownMenuCheckboxItem bind:checked={mostrarEmail}>
+  E-mail
+</DropdownMenuCheckboxItem>
+<DropdownMenuCheckboxItem bind:checked={mostrarFuncao}>
+  Função
 </DropdownMenuCheckboxItem>`,
   },
 
@@ -137,35 +141,31 @@ const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
       'DropdownMenuRadioItem',
       'DropdownMenuSeparator',
     ],
-    state: ['let posicao = $state("bottom");'],
-    markup: `<DropdownMenuLabel>Posição</DropdownMenuLabel>
+    state: ['let tema = $state("light");'],
+    markup: `<DropdownMenuLabel>Aparência</DropdownMenuLabel>
 <DropdownMenuSeparator />
-<DropdownMenuRadioGroup bind:value={posicao}>
-  <DropdownMenuRadioItem value="top">Topo</DropdownMenuRadioItem>
-  <DropdownMenuRadioItem value="bottom">Inferior</DropdownMenuRadioItem>
-  <DropdownMenuRadioItem value="right">Direita</DropdownMenuRadioItem>
+<DropdownMenuRadioGroup bind:value={tema}>
+  <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
+  <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
+  <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
 </DropdownMenuRadioGroup>`,
   },
 
   withSubmenu: {
     names: [
       'DropdownMenuItem',
-      'DropdownMenuSeparator',
       'DropdownMenuSub',
       'DropdownMenuSubContent',
       'DropdownMenuSubTrigger',
     ],
-    markup: `<DropdownMenuItem>Novo arquivo</DropdownMenuItem>
+    markup: `<DropdownMenuItem>Renomear</DropdownMenuItem>
 <DropdownMenuSub>
-  <DropdownMenuSubTrigger>Exportar como</DropdownMenuSubTrigger>
+  <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
   <DropdownMenuSubContent>
     <DropdownMenuItem>PDF</DropdownMenuItem>
     <DropdownMenuItem>CSV</DropdownMenuItem>
-    <DropdownMenuItem>JSON</DropdownMenuItem>
   </DropdownMenuSubContent>
-</DropdownMenuSub>
-<DropdownMenuSeparator />
-<DropdownMenuItem variant="destructive">Excluir</DropdownMenuItem>`,
+</DropdownMenuSub>`,
   },
 
   withShortcuts: {
@@ -300,12 +300,12 @@ export function dropdownMenuWithLabelSource(): string {
 
 /** Compositions/WithCheckboxItems — alternadores independentes entre si. */
 export function dropdownMenuWithCheckboxSource(): string {
-  return dropdownMenuSource('', { args: { variant: 'withCheckbox', triggerLabel: 'Visualização' } });
+  return dropdownMenuSource('', { args: { variant: 'withCheckbox', triggerLabel: 'Colunas' } });
 }
 
 /** Compositions/WithRadioGroup — escolha única dentro do menu. */
 export function dropdownMenuWithRadioSource(): string {
-  return dropdownMenuSource('', { args: { variant: 'withRadio', triggerLabel: 'Posição' } });
+  return dropdownMenuSource('', { args: { variant: 'withRadio', triggerLabel: 'Tema' } });
 }
 
 /** Compositions/WithSubmenu — um segundo nível que abre ao lado. */
