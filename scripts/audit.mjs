@@ -528,7 +528,41 @@ function auditAnalytics(slug) {
       // modo que o valor fora do vocabulário se escondia atrás do separador
       // errado. Portão que reconhece o valor certo e o valor obviamente errado,
       // mas não o quase-certo, deixa passar justamente o que ninguém revisa.
-      const achados = [...content.matchAll(/["'](docs[_:-][A-Za-z0-9_:-]*)["']/g)]
+      //
+      // MAS o hífen, posto na varredura por VALOR, abriu falso positivo pior
+      // que o buraco que fechou. `docs-…` é também a forma de `id` de campo —
+      // `<Input id="docs-drawer-name">`, `buildField('Nome', 'docs-drawer-name')`,
+      // `form="docs-sheet-profile"`. Medido: 12 achados no drawer e 8 no sheet,
+      // todos identificador de elemento, nenhum `location`. E o estrago não
+      // parou no ruído: eles entram na contagem de valores distintos, então o
+      // `location_so_da_demo` — que dispara quando TODAS as chamadas mandam o
+      // mesmo valor — deixou de disparar no angular, que manda `docs_demo`
+      // também das Composições. Falso positivo MASCARANDO defeito real.
+      //
+      // Guarda de contexto não resolve sozinho: o valor aparece como argumento
+      // POSICIONAL (`rastrearTooltip("docs_variantes", "default")`), e ali não
+      // há atributo para olhar. Foram três desenhos até este:
+      //
+      //   1. `docs[_:]`      — não vê `docs-demonstration`. Buraco.
+      //   2. `docs[_:-]`     — vê, e vê também todo `id` de campo. 20 falsos
+      //                        positivos medidos, e eles MASCARAVAM um achado.
+      //   3. só com rótulo   — sem falso positivo, mas cego ao posicional com
+      //                        hífen. Medido plantando: passou.
+      //
+      // O quarto é este, e ele distingue pelo SUFIXO em vez do contexto: com
+      // hífen, só casa quando o que vem depois é uma palavra do próprio
+      // vocabulário. `docs-variantes` é seção escrita errado e entra;
+      // `docs-drawer-name` é id de campo e não entra, porque `drawer-name` não
+      // é seção nenhuma. Com sublinhado, a varredura segue ampla — ali a forma
+      // já é a do vocabulário e não colide com id.
+      const HIFEN_DE_SECAO = new RegExp(
+        `["'](${SECOES_DOCS.map((s) => s.replace(/_/g, '-')).join('|')})["']`,
+        'g',
+      );
+      const porValor = [...content.matchAll(/["'](docs[_:][A-Za-z0-9_:-]*)["']/g)];
+      const porHifen = [...content.matchAll(HIFEN_DE_SECAO)];
+      const porRotulo = [...content.matchAll(/location\s*[:=]\s*["'](docs-[A-Za-z0-9_:-]*)["']/g)];
+      const achados = [...porValor, ...porHifen, ...porRotulo]
         .filter((m) => !EVENTOS_DOCS.includes(m[1]));
       if (achados.length === 0) continue;
 
