@@ -66,7 +66,7 @@ const PT: ChatDocsLabels = {
   },
   errors: {
     sem_chave:
-      'A chave da API não está configurada neste ambiente. O chat precisa de ANTHROPIC_API_KEY na função de servidor — sem ela, nada é enviado a lugar nenhum.',
+      'A chave da API não está configurada neste ambiente. O chat precisa de GEMINI_API_KEY na função de servidor — sem ela, nada é enviado a lugar nenhum.',
     sem_corpus:
       'O conteúdo compartilhado não subiu junto com a função de servidor. Ver o cabeçalho de api/corpus.ts.',
     limite_de_taxa: 'Muitas perguntas em pouco tempo. Espere um minuto e tente de novo.',
@@ -111,7 +111,7 @@ const EN: ChatDocsLabels = {
   },
   errors: {
     sem_chave:
-      'The API key is not configured in this environment. The chat needs ANTHROPIC_API_KEY on the server function — without it, nothing is sent anywhere.',
+      'The API key is not configured in this environment. The chat needs GEMINI_API_KEY on the server function — without it, nothing is sent anywhere.',
     sem_corpus:
       'The shared content was not deployed with the server function. See the header of api/corpus.ts.',
     limite_de_taxa: 'Too many questions in a short time. Wait a minute and try again.',
@@ -156,7 +156,7 @@ const ES: ChatDocsLabels = {
   },
   errors: {
     sem_chave:
-      'La clave de la API no está configurada en este entorno. El chat necesita ANTHROPIC_API_KEY en la función de servidor — sin ella no se envía nada a ninguna parte.',
+      'La clave de la API no está configurada en este entorno. El chat necesita GEMINI_API_KEY en la función de servidor — sin ella no se envía nada a ninguna parte.',
     sem_corpus:
       'El contenido compartido no se publicó junto a la función de servidor. Ver la cabecera de api/corpus.ts.',
     limite_de_taxa: 'Demasiadas preguntas en poco tiempo. Espera un minuto e inténtalo de nuevo.',

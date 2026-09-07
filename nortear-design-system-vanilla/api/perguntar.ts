@@ -2,8 +2,8 @@
  * ─── Conversar com a documentação — a função de servidor ─────────────────────
  *
  * Recebe `{ pergunta, locale }`, roda a recuperação léxica sobre o conteúdo
- * compartilhado, monta o prompt com os documentos vencedores INTEIROS, chama a
- * API da Anthropic com streaming e devolve por SSE.
+ * compartilhado, monta o prompt com os documentos vencedores INTEIROS, chama o
+ * modelo com streaming e devolve por SSE.
  *
  * ── POR QUE ISTO NÃO É UM COMPONENTE ──
  *
@@ -15,13 +15,22 @@
  *
  * ── A CHAVE ──
  *
- * `process.env.ANTHROPIC_API_KEY`, e só. O repositório é PÚBLICO: a chave não
- * entra em código, em comentário, em teste, em exemplo nem em README. Sem ela a
- * função responde `sem_chave` com 503 — um estado tratado, que a interface
- * mostra por escrito. Falhar calado aqui seria pior do que não existir.
+ * `process.env.GEMINI_API_KEY`, e só — a chave do Google AI Studio. O
+ * repositório é PÚBLICO: ela não entra em código, em comentário, em teste, em
+ * exemplo nem em README. Sem ela a função responde `sem_chave` com 503 — um
+ * estado tratado, que a interface mostra por escrito. Falhar calado aqui seria
+ * pior do que não existir.
+ *
+ * ── O PROVEDOR ESTÁ ISOLADO ──
+ *
+ * Só o bloco de chamada conhece o SDK. Tudo o que vem antes — recuperação,
+ * montagem do contexto, instrução de sistema — e tudo o que vem depois — o
+ * contrato SSE de `sources`, `delta`, `done` e `error` — é agnóstico. Trocar de
+ * provedor mexe em um trecho e não toca no cliente, que foi o que aconteceu
+ * quando este arquivo saiu da Anthropic para o Google.
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import { GoogleGenAI, ApiError } from '@google/genai';
 import {
   RETRIEVAL_FLOOR,
   isWeakRetrieval,
@@ -32,8 +41,16 @@ import { isLocale, loadCorpus, type Locale } from './corpus';
 
 export const config = { runtime: 'nodejs' };
 
-/** Sonnet 5: a resposta é leitura de trecho, não raciocínio longo. */
-const MODEL = 'claude-sonnet-5';
+/**
+ * O modelo, com o nome vindo do ambiente.
+ *
+ * A tarefa é ler trecho e responder, não deliberar: um modelo rápido da linha
+ * Flash dá conta e custa uma fração de um modelo de raciocínio. O padrão é um
+ * ponto de partida — **confira em aistudio.google.com quais modelos a sua chave
+ * alcança**, porque a lista muda mais rápido que este arquivo e um nome que não
+ * existe volta como `falha_do_modelo` sem dizer que o nome é o problema.
+ */
+const MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.5-flash';
 
 /** Teto da resposta. Uma resposta de documentação que passa disto está errada de escopo. */
 const MAX_TOKENS = 4000;
@@ -85,7 +102,7 @@ export const MAX_QUESTION_LENGTH = 600;
  *
  * O que resolveria: contador compartilhado (KV/Redis) com chave por identidade
  * e não por IP, orçamento em TOKENS e não em requisições, e um teto de gasto
- * diário na conta da Anthropic — que é a única defesa que não depende de nada
+ * diário na conta do Google AI Studio — a única defesa que não depende de nada
  * que este processo saiba.
  */
 const RATE_WINDOW_MS = 60_000;
@@ -251,16 +268,16 @@ export default async function handler(request: Request): Promise<Response> {
 
   // A chave é lida AQUI, e nunca sai daqui: não vai para o log, não vai para o
   // corpo, não vai para o cliente.
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return jsonError(
       503,
       'sem_chave',
-      'ANTHROPIC_API_KEY não está configurada no ambiente desta função.',
+      'GEMINI_API_KEY não está configurada no ambiente desta função.',
     );
   }
 
-  const client = new Anthropic({ apiKey });
+  const client = new GoogleGenAI({ apiKey });
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream<Uint8Array>({
@@ -277,51 +294,69 @@ export default async function handler(request: Request): Promise<Response> {
       });
 
       try {
-        const modelStream = client.messages.stream({
+        const modelStream = await client.models.generateContentStream({
           model: MODEL,
-          max_tokens: MAX_TOKENS,
-          // Esforço baixo: a tarefa é ler trecho e responder, não deliberar. O
-          // pensamento adaptativo continua ligado (é o padrão do Sonnet 5) e
-          // custa pouco neste nível.
-          output_config: { effort: 'low' },
-          system: systemPrompt(locale, weak),
-          messages: [
+          contents: [
             {
               role: 'user',
-              content: [
-                'Trechos da documentação recuperados para esta pergunta:',
-                '',
-                buildContext(selected, corpus.documents),
-                '',
-                'Pergunta:',
-                question,
-              ].join('\n'),
+              parts: [
+                {
+                  text: [
+                    'Trechos da documentação recuperados para esta pergunta:',
+                    '',
+                    buildContext(selected, corpus.documents),
+                    '',
+                    'Pergunta:',
+                    question,
+                  ].join('\n'),
+                },
+              ],
             },
           ],
+          config: {
+            systemInstruction: systemPrompt(locale, weak),
+            maxOutputTokens: MAX_TOKENS,
+            // Temperatura baixa porque a resposta precisa ficar colada nos
+            // trechos: aqui invenção não é criatividade, é defeito.
+            temperature: 0.2,
+            // Sem raciocínio estendido. A tarefa é ler trecho e responder; o
+            // orçamento de pensamento aqui só adicionaria custo e latência.
+            thinkingConfig: { thinkingBudget: 0 },
+          },
         });
 
-        for await (const event of modelStream) {
-          if (event.type === 'content_block_delta' && event.delta.type === 'text_delta') {
-            send('delta', { text: event.delta.text });
-          }
+        // O uso vem no ÚLTIMO pedaço, e não num objeto final separado: quem
+        // quiser contabilizar precisa guardar o que passou, porque depois do
+        // laço não há mais nada para consultar.
+        let ultimo: Awaited<ReturnType<typeof modelStream.next>>['value'] | undefined;
+
+        for await (const chunk of modelStream) {
+          ultimo = chunk;
+          const texto = chunk.text;
+          if (texto) send('delta', { text: texto });
         }
 
-        const final = await modelStream.finalMessage();
         send('done', {
-          stopReason: final.stop_reason,
+          stopReason: ultimo?.candidates?.[0]?.finishReason ?? null,
           usage: {
-            input: final.usage.input_tokens,
-            output: final.usage.output_tokens,
+            input: ultimo?.usageMetadata?.promptTokenCount ?? null,
+            output: ultimo?.usageMetadata?.candidatesTokenCount ?? null,
           },
         });
       } catch (error) {
         // O texto do erro da API pode carregar detalhe de conta. O cliente
         // recebe a categoria; o detalhe fica no log do servidor.
         console.error('[perguntar] falha ao chamar a API', error);
+        // O SDK do Google traz o código HTTP no erro em vez de uma classe por
+        // categoria: 401 e 403 são chave, 429 é limite. O 400 entra em
+        // `chave_invalida` de propósito — é o que volta quando o NOME DO MODELO
+        // não existe para aquela chave, e mandar a pessoa conferir a chave e o
+        // modelo é mais útil que um "falhou" genérico.
+        const status = error instanceof ApiError ? error.status : 0;
         const code =
-          error instanceof Anthropic.AuthenticationError
+          status === 401 || status === 403 || status === 400
             ? 'chave_invalida'
-            : error instanceof Anthropic.RateLimitError
+            : status === 429
               ? 'limite_do_modelo'
               : 'falha_do_modelo';
         send('error', { code });
