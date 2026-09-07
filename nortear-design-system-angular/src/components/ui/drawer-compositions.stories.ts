@@ -10,6 +10,7 @@ import { useTranslation } from '@/lib/i18n';
 import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
 import { LABELS_DRAWER } from '@/components/docs/DrawerDocs';
+import { drawerWithConfirmationSource, drawerWithFormSource } from './drawer.source';
 
 // Os rótulos de ação vêm do mesmo lugar que a docs page usa — ver o comentário
 // sobre `LABELS_DRAWER` em DrawerDocs.ts. Duplicar a tabela aqui faria os dois
@@ -56,6 +57,7 @@ export const WithForm: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      source: { transform: drawerWithFormSource },
       description: {
         story:
           'Formulário curto no corpo e par de ações no rodapé. O título diz o que está sendo ' +
@@ -131,6 +133,7 @@ export const WithForm: Story = {
 export const WithConfirmation: Story = {
   parameters: {
     docs: {
+      source: { transform: drawerWithConfirmationSource },
       description: {
         story:
           'Mensagem curta e par de ações, com a principal na variante destrutiva. Vale para ' +

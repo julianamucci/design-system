@@ -6,6 +6,13 @@ import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import drawerTranslations from '@shared/content/drawer/translations.json';
+import {
+  drawerClosedSource,
+  drawerControlledSource,
+  drawerNotDismissibleSource,
+  drawerOpenSource,
+  drawerPlaygroundSource,
+} from './drawer.source';
 
 const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 
@@ -48,6 +55,7 @@ export const Closed: Story = {
   parameters: {
     covers: ['accessibility.item1'],
     docs: {
+      source: { transform: drawerClosedSource },
       description: {
         story:
           'Estado inicial. O painel não está no DOM, e o gatilho anuncia que existe um diálogo ' +
@@ -95,6 +103,7 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item2'],
     docs: {
+      source: { transform: drawerOpenSource },
       description: {
         story:
           'Aberto por defaultOpen, sem estado externo nenhum. O foco entra no painel e o ' +
@@ -152,6 +161,7 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
+      source: { transform: drawerControlledSource },
       description: {
         story:
           'Estado do lado de fora. O componente não decide nada sozinho: abre quando o valor ' +
@@ -219,6 +229,7 @@ export const NotDismissible: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      source: { transform: drawerNotDismissibleSource },
       description: {
         story:
           'Sem dispensa por ponteiro: clique fora e perda de foco não fecham. Escape CONTINUA fechando, ' +
@@ -350,6 +361,12 @@ export const DragToDismiss: Story = {
     // gesto não aparece em imagem parada.
     chromatic: { disable: true },
     docs: {
+      // REUSO DECLARADO, e não esquecimento: o gesto de arraste não liga prop
+      // nenhuma — ele vem do motor de pointer que o componente já monta —, e o
+      // template desta story é exatamente o drawer canônico do Playground.
+      // Um segundo construtor com o mesmo texto seriam duas cópias livres para
+      // divergir; o `drawer.source.test.ts` cobra a igualdade.
+      source: { transform: drawerPlaygroundSource },
       description: {
         story:
           'Arrastar o panel na direção de entrada o dispensa; soltar antes de um quarto do seu tamanho o traz de volta. ' +

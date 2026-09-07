@@ -7,6 +7,13 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
+import {
+  drawerBottomSource,
+  drawerLeftSource,
+  drawerRightSource,
+  drawerTopSource,
+  drawerWithScrollSource,
+} from './drawer.source';
 
 const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 
@@ -84,6 +91,7 @@ export const Bottom: Story = {
   parameters: {
     covers: ['accessibility.item6', 'visual.item1'],
     docs: {
+      source: { transform: drawerBottomSource },
       description: {
         story:
           'Padrão mobile-first: entra por baixo, com teto de 80% da altura da tela e cantos ' +
@@ -111,6 +119,7 @@ export const Top: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: drawerTopSource },
       description: {
         story:
           'Entra por cima, com cantos arredondados embaixo. Serve a notificação rica e a ' +
@@ -136,6 +145,7 @@ export const Left: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: drawerLeftSource },
       description: {
         story:
           'Painel lateral à esquerda — a direção do menu de navegação, que a pessoa espera ' +
@@ -160,6 +170,7 @@ export const Right: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
     docs: {
+      source: { transform: drawerRightSource },
       description: {
         story:
           'Painel lateral à direita — alternativa de desktop para edição e filtros, sem trocar ' +
@@ -184,6 +195,7 @@ export const WithScroll: Story = {
   parameters: {
     covers: ['accessibility.item7'],
     docs: {
+      source: { transform: drawerWithScrollSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o ' +
