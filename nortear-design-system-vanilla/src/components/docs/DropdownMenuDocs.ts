@@ -58,11 +58,15 @@ function priorityLabel(raw: string): string {
  * Painel de menu ESTÁTICO para prévia — o `<ul role="menu">` que a folha
  * compartilhada desenha, sem gatilho e sem posicionamento.
  *
- * Escopo de módulo, e não do `case 'variantes'`, porque o Do & Don't precisa do
- * mesmo painel: `role="menuitem"` solto, sem um `menu` que o possua, é órfão
- * para o leitor de tela (e para o `aria-required-parent` do axe). O painel
- * também é quem dá largura ao item — `.nds-dropdown-menu-content` declara
- * `min-width: 8rem` na folha, no lugar do valor cravado que estava aqui.
+ * Serve às PRÉVIAS DE VARIANTE, que precisam do painel já aberto e sem gatilho
+ * para caber no cartão. O Do & Don't deixou de usá-lo: lá o componente é
+ * instanciado de verdade, porque a legenda fala do mecanismo e não do desenho.
+ *
+ * `role="menuitem"` solto, sem um `menu` que o possua, é órfão para o leitor de
+ * tela (e para o `aria-required-parent` do axe) — é por isso que a imitação
+ * ainda começa por aqui. O painel também é quem dá largura ao item:
+ * `.nds-dropdown-menu-content` declara `min-width: 8rem` na folha, no lugar do
+ * valor cravado que estava aqui.
  */
 function makeStaticMenuPanel(build: (ul: HTMLUListElement) => void): HTMLElement {
   const ul = document.createElement('ul');
@@ -80,9 +84,17 @@ function makeStaticMenuPanel(build: (ul: HTMLUListElement) => void): HTMLElement
  * folha pinta `--destructive` a partir dele —, e não um par de classes de cor
  * escolhidas à mão.
  *
- * Também de escopo de módulo: a seção Variantes e o Do & Don't montam o mesmo
- * item, e duas cópias divergem na primeira correção que só uma delas receber.
+ * Usado pelas prévias de variante, que mostram o painel aberto dentro do cartão.
  */
+/**
+ * Contador dos ids de rótulo das PRÉVIAS.
+ *
+ * De escopo de módulo, e não da seção: a docs page pode ser remontada (troca de
+ * idioma), e um contador que reinicia devolveria o mesmo id a dois grupos vivos
+ * ao mesmo tempo — `aria-labelledby` passaria a apontar para o rótulo errado.
+ */
+let previewLabelCounter = 0;
+
 function makeItem(label: string, shortcut?: string, variant?: 'destructive'): HTMLLIElement {
   const li = document.createElement('li');
   li.setAttribute('role', 'menuitem');
@@ -158,11 +170,68 @@ function buildDemoMenu(triggerLabel: string): HTMLElement {
     trigger,
     onOpenChange: (open) => trackMenuOpenChange('acoes', open),
     items: [
-      { type: 'label', label: t('demonstration.labels.basic') },
+      // O rótulo nomeia o grupo que ele encabeça — e por isso diz de que bloco
+      // se trata, não o que a seção da página está demonstrando. A legenda da
+      // célula é quem carrega o texto do conteúdo compartilhado.
+      { type: 'label', label: 'Conta' },
       { type: 'item', label: 'Perfil', value: 'profile', onClick: trackMenuItemSelect('acoes', 'perfil') },
       { type: 'item', label: 'Configurações', value: 'settings', onClick: trackMenuItemSelect('acoes', 'configuracoes') },
       { type: 'separator' },
       { type: 'item', label: 'Sair', value: 'logout', onClick: trackMenuItemSelect('acoes', 'sair') },
+    ],
+  });
+}
+
+/**
+ * Uma célula da Demonstração: a legenda do conteúdo compartilhado em cima, o
+ * menu embaixo.
+ *
+ * A legenda é o que amarra a célula ao `demonstration.labels.*` — é por ela que
+ * o portão `demonstration_labels_divergent` enxerga que as cinco stacks mostram
+ * o mesmo exemplo.
+ */
+function buildDemoCell(labelKey: string, menu: HTMLElement): HTMLElement {
+  const cell = document.createElement('div');
+  cell.className = 'nds-stack nds-min-h-20';
+  cell.dataset.spacing = 'sm';
+  // Mecânica de layout: o painel vive num portal, e `contain` segura o reflow
+  // da célula quando ele abre.
+  cell.style.contain = 'layout';
+
+  const caption = document.createElement('p');
+  caption.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
+  caption.textContent = t(labelKey);
+
+  cell.append(caption, menu);
+  return cell;
+}
+
+/** Alternadores independentes — o exemplo de `demonstration.labels.withCheckbox`. */
+function buildDemoCheckboxMenu(): HTMLElement {
+  const trigger = createButton({ variant: 'outline', label: 'Colunas' });
+  return createDropdownMenu({
+    trigger,
+    onOpenChange: (open) => trackMenuOpenChange('colunas', open),
+    items: [
+      { type: 'label', label: 'Colunas visíveis' },
+      { type: 'checkbox', label: 'Nome', value: 'nome', checked: true, onClick: trackMenuItemSelect('colunas', 'nome') },
+      { type: 'checkbox', label: 'E-mail', value: 'email', checked: false, onClick: trackMenuItemSelect('colunas', 'email') },
+      { type: 'checkbox', label: 'Função', value: 'funcao', checked: false, onClick: trackMenuItemSelect('colunas', 'funcao') },
+    ],
+  });
+}
+
+/** Escolha única — o exemplo de `demonstration.labels.withRadio`. */
+function buildDemoRadioMenu(): HTMLElement {
+  const trigger = createButton({ variant: 'outline', label: 'Tema' });
+  return createDropdownMenu({
+    trigger,
+    onOpenChange: (open) => trackMenuOpenChange('tema', open),
+    items: [
+      { type: 'label', label: 'Aparência' },
+      { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true, onClick: trackMenuItemSelect('tema', 'light') },
+      { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema', onClick: trackMenuItemSelect('tema', 'dark') },
+      { type: 'radio', label: 'Sistema', value: 'system', group: 'tema', onClick: trackMenuItemSelect('tema', 'system') },
     ],
   });
 }
@@ -269,10 +338,25 @@ export function createDropdownMenuDocs(): HTMLElement {
             wrap.style.contain = 'layout';
             // Degrau da escada `.nds-min-h-*` em vez de altura cravada: inline
             // vence a folha e levaria o andaime para fora do tema e da densidade.
-            wrap.className = 'nds-cluster nds-min-h-40';
-            wrap.dataset.justify = 'center';
-            wrap.dataset.align = 'center';
-            wrap.appendChild(buildDemoMenu(t('demonstration.labels.basic')));
+            wrap.className = 'nds-grid nds-w-full nds-min-h-40';
+            wrap.dataset.spacing = 'md';
+            // Custom property, e não medida cravada: a grade decide quantas
+            // colunas cabem a partir dela.
+            wrap.style.setProperty('--grid-min', '9rem');
+            wrap.append(
+              buildDemoCell('demonstration.labels.basic', buildDemoMenu('Conta')),
+              buildDemoCell('demonstration.labels.withCheckbox', buildDemoCheckboxMenu()),
+              buildDemoCell('demonstration.labels.withRadio', buildDemoRadioMenu()),
+            );
+            // `demonstration.labels.withSubmenu` NÃO tem célula, e a ausência
+            // é deliberada: esta fábrica não tem submenu aninhado — ver a nota
+            // no topo de `dropdown-menu.ts` e a `coversNotApplicable` do
+            // Playground. É divergência de CAPACIDADE, e imitar o exemplo com um
+            // menu plano ensinaria uma peça que a stack não entrega.
+            //
+            // Citar a chave aqui SILENCIAVA o achado, porque o portão a casava
+            // no arquivo inteiro, comentário incluído. Ele passou a varrer sem
+            // comentários em 2026-09-07, e a lacuna volta a ser reportada.
             return wrap;
           },
         });
@@ -368,14 +452,33 @@ export function createDropdownMenuDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () =>
-                makeStaticMenuPanel((ul) => {
-                  ul.appendChild(makeItem('Excluir conta', undefined, 'destructive'));
-                }),
-              dontPreviewFactory: () =>
-                makeStaticMenuPanel((ul) => {
-                  ul.appendChild(makeItem('Excluir conta'));
-                }),
+              // Componente VIVO nos dois lados, como o par acima. Era um painel
+              // imitado, e a imitação não prova o que a legenda afirma: quem
+              // pinta o texto de perigo é o `data-variant` que a FÁBRICA põe no
+              // item, e um `<li>` montado à mão poderia acertar a cor por outro
+              // caminho sem que o mecanismo real estivesse de pé.
+              doPreviewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Conta' });
+                return createDropdownMenu({
+                  trigger,
+                  items: [
+                    { type: 'item', label: 'Renomear' },
+                    { type: 'separator' },
+                    { type: 'item', label: 'Excluir conta', variant: 'destructive' },
+                  ],
+                });
+              },
+              dontPreviewFactory: () => {
+                const trigger = createButton({ variant: 'outline', label: 'Conta' });
+                return createDropdownMenu({
+                  trigger,
+                  items: [
+                    { type: 'item', label: 'Renomear' },
+                    { type: 'separator' },
+                    { type: 'item', label: 'Excluir conta' },
+                  ],
+                });
+              },
             },
           ],
         });
@@ -432,6 +535,35 @@ createDropdownMenu({
           li.className = 'nds-dropdown-menu-label';
           li.textContent = text;
           return li;
+        }
+        /**
+         * O bloco rotulado, como a fábrica o monta: o rótulo dá o nome acessível
+         * ao `role="group"` que envolve os itens seguintes.
+         *
+         * A prévia precisa disto porque a descrição da variante afirma que o
+         * grupo recebe o texto do rótulo — uma imitação sem grupo mostraria ao
+         * leitor exatamente o que o texto diz não acontecer.
+         */
+        function makeGroup(labelText: string, children: HTMLElement[]): HTMLLIElement {
+          const labelId = `dropdown-menu-preview-label-${++previewLabelCounter}`;
+          // `<ul>` não é filho válido de `<ul>`: o portador existe pelo HTML, e
+          // `.nds-dropdown-menu-group` tira a caixa dos dois do caminho — é o
+          // que a fábrica faz, com a mesma classe.
+          const carrier = document.createElement('li');
+          carrier.setAttribute('role', 'presentation');
+          carrier.className = 'nds-dropdown-menu-group';
+
+          const group = document.createElement('ul');
+          group.setAttribute('role', 'group');
+          group.setAttribute('aria-labelledby', labelId);
+          group.className = 'nds-dropdown-menu-group';
+          group.dataset.slot = 'dropdown-menu-group';
+
+          const lbl = makeLabelItem(labelText);
+          lbl.id = labelId;
+          group.append(lbl, ...children);
+          carrier.appendChild(group);
+          return carrier;
         }
         function makeSeparator(): HTMLLIElement {
           const li = document.createElement('li');
@@ -524,13 +656,9 @@ const menu = createDropdownMenu({
 });`,
               previewFactory: () => makeStaticMenuPanel((ul) => {
                 ul.append(
-                  makeLabelItem('Conta'),
-                  makeItem('Perfil'),
-                  makeItem('Configurações'),
+                  makeGroup('Conta', [makeItem('Perfil'), makeItem('Configurações')]),
                   makeSeparator(),
-                  makeLabelItem('Suporte'),
-                  makeItem('Documentação'),
-                  makeItem('Sair'),
+                  makeGroup('Suporte', [makeItem('Documentação'), makeItem('Sair')]),
                 );
               }),
             },
@@ -546,15 +674,20 @@ const menu = createDropdownMenu({
     { type: 'checkbox', label: 'Nome',   value: 'nome',  checked: true  },
     { type: 'checkbox', label: 'E-mail', value: 'email', checked: false,
       onCheckedChange: (checked) => console.log('e-mail', checked) },
+    { type: 'checkbox', label: 'Função', value: 'funcao', checked: false },
   ],
 });
 // Alternar não fecha o menu: quem marca uma coluna costuma marcar a próxima.`,
+              // A prévia mostra exatamente a lista do snippet, e a mesma da
+              // story `WithCheckboxItems`. Divergia nos dois primeiros rótulos
+              // ("Status" e "Email"), e nenhum portão liga prévia a snippet.
               previewFactory: () => makeStaticMenuPanel((ul) => {
                 ul.append(
-                  makeLabelItem('Colunas visíveis'),
-                  makeCheckboxItem('Status', true),
-                  makeCheckboxItem('Email', true),
-                  makeCheckboxItem('Função', false),
+                  makeGroup('Colunas visíveis', [
+                    makeCheckboxItem('Nome', true),
+                    makeCheckboxItem('E-mail', false),
+                    makeCheckboxItem('Função', false),
+                  ]),
                 );
               }),
             },
@@ -573,12 +706,16 @@ const menu = createDropdownMenu({
   ],
 });
 // O 'group' é o que torna a escolha única: marcar um desmarca os irmãos.`,
+              // Marcado é o "Claro", como no snippet acima e na story
+              // `WithRadioGroup`: a prévia marcava o "Escuro" e contradizia os
+              // dois na mesma tela.
               previewFactory: () => makeStaticMenuPanel((ul) => {
                 ul.append(
-                  makeLabelItem('Aparência'),
-                  makeRadioItem('Claro', false),
-                  makeRadioItem('Escuro', true),
-                  makeRadioItem('Sistema', false),
+                  makeGroup('Aparência', [
+                    makeRadioItem('Claro', true),
+                    makeRadioItem('Escuro', false),
+                    makeRadioItem('Sistema', false),
+                  ]),
                 );
               }),
             },

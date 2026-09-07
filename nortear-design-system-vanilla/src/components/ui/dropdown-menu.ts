@@ -14,6 +14,10 @@
  * - Painel: `role="menu"`. Itens: `menuitem`, e `menuitemcheckbox` /
  *   `menuitemradio` quando há estado, com `aria-checked` (aqui e no Angular
  *   também `mixed`, para o estado misto).
+ * - Rótulo de seção: dá o nome acessível a um `role="group"` por
+ *   `aria-labelledby`, e continua fora do percurso do teclado. Esta fábrica era
+ *   a única sem o grupo — o rótulo ficava `role="presentation"` solto, e o nome
+ *   não era conferido a nada. Corrigido em 2026-09-07.
  * - Setas cima/baixo andam item a item; `Home` e `End` vão às pontas; digitar
  *   um caractere salta para o item que começa com ele (typeahead).
  * - `Escape` fecha e DEVOLVE o foco ao gatilho.
@@ -274,6 +278,12 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     menu.dataset.side = side;
     menu.dataset.align = align;
 
+    // O grupo ABERTO. Um rótulo abre; o separador e o rótulo seguinte fecham.
+    // Item que aparece antes de qualquer rótulo continua pendurado no menu, que
+    // é onde ele já estava — grupo sem nome não agrupa nada para quem ouve.
+    let openGroup: HTMLElement | null = null;
+    let labelCount = 0;
+
     items.forEach((item) => {
       const type = item.type ?? 'item';
 
@@ -281,16 +291,47 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         const sep = document.createElement('li');
         sep.setAttribute('role', 'separator');
         sep.className = 'nds-dropdown-menu-separator';
+        openGroup = null;
         menu.appendChild(sep);
         return;
       }
 
       if (type === 'label') {
+        // O rótulo NOMEIA um bloco — e nomear exige que exista um bloco. Ele
+        // era um `role="presentation"` solto: o texto do rótulo não chegava a
+        // nome acessível de coisa alguma, e o conteúdo compartilhado promete o
+        // contrário. O rótulo segue não sendo item focável; o que ganha nome é
+        // o `role="group"` que passa a envolver os itens seguintes.
+        openGroup = null;
+        const labelId = `${menuId}-label-${++labelCount}`;
+
+        // `<ul>` não é filho válido de `<ul>`: o portador existe pelo HTML, e o
+        // `role="presentation"` o apaga da árvore de acessibilidade para que o
+        // grupo continue sendo possuído pelo menu.
+        // `.nds-dropdown-menu-group` nos DOIS níveis: quem tira a caixa dos
+        // dois do layout é a folha compartilhada, e o porquê está escrito lá.
+        // Era `display: contents` inline aqui, por a classe não existir; ela
+        // passou a existir em 2026-09-07.
+        const carrier = document.createElement('li');
+        carrier.setAttribute('role', 'presentation');
+        carrier.className = 'nds-dropdown-menu-group';
+
+        const group = document.createElement('ul');
+        group.setAttribute('role', 'group');
+        group.setAttribute('aria-labelledby', labelId);
+        group.className = 'nds-dropdown-menu-group';
+        group.dataset.slot = 'dropdown-menu-group';
+
         const lbl = document.createElement('li');
+        lbl.id = labelId;
         lbl.setAttribute('role', 'presentation');
         lbl.className = 'nds-dropdown-menu-label';
         lbl.textContent = item.label ?? '';
-        menu.appendChild(lbl);
+
+        group.appendChild(lbl);
+        carrier.appendChild(group);
+        menu.appendChild(carrier);
+        openGroup = group;
         return;
       }
 
@@ -403,7 +444,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         });
       }
 
-      menu.appendChild(li);
+      // Dentro do grupo aberto, se houver um. `menu.querySelectorAll` continua
+      // alcançando o item de qualquer profundidade, e em ordem de documento —
+      // é por isso que o percurso do teclado não sente a mudança.
+      (openGroup ?? menu).appendChild(li);
     });
 
     return menu;
@@ -418,6 +462,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     // ouvido que a opção existe — a WAI-ARIA APG pede o contrário. O que ele não
     // faz é ATIVAR, e isso não depende deste seletor: item desabilitado não
     // recebe ouvinte de `click` nem de `keydown`, e o CSS já lhe tira o ponteiro.
+    //
+    // O `role="group"` do rótulo NÃO entra aqui, e é de propósito: os três
+    // papéis listados são os únicos que a seta pousa. O seletor é de
+    // DESCENDENTE, então o item continua sendo encontrado dentro do grupo, e em
+    // ordem de documento — a roda do teclado não sabe que o grupo existe.
     return Array.from(
       menu.querySelectorAll<HTMLElement>(
         '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',

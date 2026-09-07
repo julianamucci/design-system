@@ -82,6 +82,28 @@ export const WithLabel: Story = {
       for (const r of rotulos) await expect(r.getAttribute('role')).toBe('presentation');
     });
 
+    await step('O rótulo dá nome ao grupo que ele encabeça', async () => {
+      // É o que o rótulo entrega além do texto: sem o `aria-labelledby`, o
+      // leitor anuncia "grupo" e a pessoa não sabe de qual bloco se trata.
+      await expect(canvas.getByRole('group', { name: 'Conta' })).toBeTruthy();
+      await expect(canvas.getByRole('group', { name: 'Suporte' })).toBeTruthy();
+      await expect(canvas.getAllByRole('group')).toHaveLength(2);
+    });
+
+    await step('O grupo fica FORA do percurso do teclado', async () => {
+      // O grupo é embrulho, não parada: se ele entrasse na roda das setas, a
+      // navegação ganharia um passo que não ativa nada.
+      const groups = canvas.getAllByRole('group');
+      for (const g of groups) await expect(g.getAttribute('tabindex')).toBeNull();
+
+      // Uma volta inteira: são quatro itens, e toda parada tem de ser um deles.
+      // Sem espera de relógio — o foco muda dentro do próprio `keydown`.
+      for (let i = 0; i < 4; i++) {
+        await userEvent.keyboard('{ArrowDown}');
+        await expect((document.activeElement as HTMLElement).getAttribute('role')).toBe('menuitem');
+      }
+    });
+
     await step('O separador divide os grupos', async () => {
       await expect(canvas.getAllByRole('separator')).toHaveLength(1);
     });

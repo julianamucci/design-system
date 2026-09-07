@@ -5,11 +5,21 @@
  * item ao abrir.
  *
  *   <ul class="nds-dropdown-menu-content" role="menu" id="dropdown-menu-1">
- *     <li class="nds-dropdown-menu-label">Conta</li>
- *     <li class="nds-dropdown-menu-item" role="menuitem">Perfil</li>
+ *     <li class="nds-dropdown-menu-group" role="presentation">
+ *       <ul class="nds-dropdown-menu-group" role="group" aria-labelledby="lbl-1">
+ *         <li class="nds-dropdown-menu-label" id="lbl-1">Conta</li>
+ *         <li class="nds-dropdown-menu-item" role="menuitem">Perfil</li>
+ *       </ul>
+ *     </li>
  *     <li class="nds-dropdown-menu-separator" role="separator"></li>
  *     <li class="nds-dropdown-menu-item" role="menuitem">Sair</li>
  *   </ul>
+ *
+ * O rótulo NOMEIA o grupo, e é por isso que ele não fica solto dentro do
+ * conteúdo: um `<li>` de rótulo entre itens é texto que o leitor de tela
+ * anuncia sem dizer a que se aplica. O grupo carrega `aria-labelledby`
+ * apontando para o id do rótulo, e o rótulo continua fora do percurso do
+ * teclado.
  *
  * Tokens: --popover, --popover-foreground, --accent, --accent-foreground,
  *         --muted, --muted-foreground, --border, --radius, --radius-sm
@@ -60,6 +70,27 @@
 .nds-dropdown-menu-item[aria-disabled="true"] {
   pointer-events: none;
   opacity: 0.5;
+}
+
+/* ── Grupo ───────────────────────────────────────────────────────────────────
+ *
+ * `display: contents` é a regra inteira, e é MECÂNICA e não valor de design: o
+ * grupo existe para a semântica — `role="group"` mais `aria-labelledby` para o
+ * rótulo nomear o bloco — e não pode existir para o layout. Sem isto, a lista
+ * aninhada traz o recuo e a margem do agente do usuário, e o item muda de lugar
+ * só por ter ganhado um ancestral.
+ *
+ * Vale para os DOIS níveis, o `<li>` que carrega e o `<ul>` que agrupa: o menu
+ * é uma lista, e um `<ul>` só pode ser filho de um `<li>`, então a semântica
+ * pede dois elementos onde o desenho não quer nenhum.
+ *
+ * A classe existe porque a fábrica do vanilla precisava dela e a folha não a
+ * tinha — até 2026-09-07 ela escrevia `display: contents` inline, que é legal
+ * por ser mecânico, mas deixava a mecânica fora da folha. As quatro stacks de
+ * lib recebem o agrupamento pronto do headless e não precisam da classe; ela
+ * está aqui para que precisem da mesma se um dia deixarem de receber. */
+.nds-dropdown-menu-group {
+  display: contents;
 }
 
 /* ── Label (não-interativo) ──────────────────────────────────────────────── */
