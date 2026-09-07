@@ -68,7 +68,7 @@ export const Playground: Story = {
 
           <div ndsContextMenuItem variant="destructive" (onSelect)="onSelect('excluir')">
             Excluir
-            <span ndsContextMenuShortcut>Del</span>
+            <span ndsContextMenuShortcut>Delete</span>
           </div>
         </ng-template>
       </div>

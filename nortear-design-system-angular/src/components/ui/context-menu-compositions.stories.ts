@@ -3,6 +3,13 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
 import { gestoOpen } from './context-menu.fixtures';
+import {
+  contextMenuCompleteCompositionSource,
+  contextMenuWithCheckboxSource,
+  contextMenuWithRadioGroupSource,
+  contextMenuWithShortcutSource,
+  contextMenuWithSubmenuSource,
+} from './context-menu.source';
 import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
@@ -34,6 +41,7 @@ const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid
 // ── Com atalhos ───────────────────────────────────────────────────────────────
 
 export const WithShortcut: Story = {
+  parameters: { docs: { source: { transform: contextMenuWithShortcutSource } } },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
@@ -94,7 +102,10 @@ export const WithShortcut: Story = {
 // ── Com marcação ──────────────────────────────────────────────────────────────
 
 export const WithCheckbox: Story = {
-  parameters: { covers: ['functional.item7', 'accessibility.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item4'],
+    docs: { source: { transform: contextMenuWithCheckboxSource } },
+  },
   render: () => ({
     props: { grade: false, reguas: true, areaClasse: AREA_CLICK_DIREITO },
     template: `
@@ -154,7 +165,10 @@ export const WithCheckbox: Story = {
 // ── Com escolha única ─────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['functional.item8', 'accessibility.item5'] },
+  parameters: {
+    covers: ['functional.item8', 'accessibility.item5'],
+    docs: { source: { transform: contextMenuWithRadioGroupSource } },
+  },
   render: () => ({
     props: { layout: 'grid', areaClasse: AREA_CLICK_DIREITO },
     template: `
@@ -213,6 +227,7 @@ export const WithRadioGroup: Story = {
 export const WithSubmenu: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item3'],
+    docs: { source: { transform: contextMenuWithSubmenuSource } },
     coversNotApplicable: {
       'functional.item6':
         'a seta esquerda só fecha o submenu com o foco dentro dele, e o foco não entra: a view do ng-template resolve DI pela arvore de declaracao e o item nao acha a lista composta do popup (mesma limitacao registrada no DropdownMenu). O Escape fecha, e esta afirmado.',
@@ -301,7 +316,10 @@ export const WithSubmenu: Story = {
 // ── Composição completa ───────────────────────────────────────────────────────
 
 export const CompleteComposition: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: contextMenuCompleteCompositionSource } },
+  },
   render: () => ({
     props: { grade: true, layout: 'grid', areaClasse: AREA_CLICK_DIREITO },
     template: `

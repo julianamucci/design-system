@@ -3,6 +3,13 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
 import { gestoOpen } from './context-menu.fixtures';
+import {
+  contextMenuCheckboxIndeterminateSource,
+  contextMenuDarkPaletteSource,
+  contextMenuItemDestructiveSource,
+  contextMenuItemDisabledSource,
+  contextMenuItemInsetSource,
+} from './context-menu.source';
 import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
@@ -47,6 +54,7 @@ export const ItemDisabled: Story = {
     // pousa no item desabilitado nas cinco, e `accessibility.item9` promete
     // isso. O passo "Ele recebe foco, mas não ativa" é quem o cobra aqui.
     covers: ['functional.item9', 'accessibility.item6', 'accessibility.item9', 'visual.item5'],
+    docs: { source: { transform: contextMenuItemDisabledSource } },
   },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },
@@ -124,6 +132,7 @@ export const ItemDisabled: Story = {
 // ── Item recuado ──────────────────────────────────────────────────────────────
 
 export const ItemInset: Story = {
+  parameters: { docs: { source: { transform: contextMenuItemInsetSource } } },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
@@ -176,7 +185,10 @@ export const ItemInset: Story = {
 // ── Item destrutivo ───────────────────────────────────────────────────────────
 
 export const ItemDestructive: Story = {
-  parameters: { covers: ['functional.item10', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item10', 'visual.item2'],
+    docs: { source: { transform: contextMenuItemDestructiveSource } },
+  },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
@@ -236,7 +248,10 @@ export const ItemDestructive: Story = {
 // coordenadas da área, não do estado anterior.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: { covers: ['functional.item11'] },
+  parameters: {
+    covers: ['functional.item11'],
+    docs: { source: { transform: contextMenuCheckboxIndeterminateSource } },
+  },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
@@ -300,6 +315,7 @@ export const CheckboxIndeterminate: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ['visual.item6'],
+    docs: { source: { transform: contextMenuDarkPaletteSource } },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
