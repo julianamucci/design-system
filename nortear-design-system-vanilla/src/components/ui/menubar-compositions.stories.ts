@@ -178,15 +178,27 @@ export const WithSubmenu: Story = {
       await waitFor(async () => {
         await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
         // Dois painéis abertos ao mesmo tempo: o pai continua no lugar, é o que
-        // distingue submenu de troca de menu.
-        await expect(within(canvasElement).getAllByRole('menu')).toHaveLength(2);
+        // distingue submenu de troca de menu. O escopo é o DOCUMENTO, e não o
+        // canvas, porque o painel do submenu é anexado ao `body` — fora da
+        // árvore do menu pai, que é o que o tira do alcance do `overflow` do pai
+        // e permite posicioná-lo por medida.
+        await expect(within(document.body).getAllByRole('menu')).toHaveLength(2);
       });
     });
 
     await step('O submenu traz os próprios itens e abre AO LADO do pai', async () => {
-      const submenu = canvasElement.querySelector<HTMLElement>(
-        '[data-slot="menubar-sub-content"]:not([hidden])',
-      )!;
+      // O painel só existe enquanto está aberto — é construído a cada abertura e
+      // removido ao fechar —, então encontrá-lo já é prova de estado; era o que
+      // o `:not([hidden])` provava enquanto ele nascia junto do pai.
+      const submenu = within(document.body).getAllByRole('menu')[1];
+      await expect(submenu.dataset.slot).toBe('menubar-sub-content');
+      // Fora da árvore do pai também para o teclado: se o painel fosse aninhado,
+      // a seta do menu pai passaria a percorrer os itens do filho. E é
+      // `aria-owns` que repõe a ligação perdida ao portar — sem ele o submenu é
+      // um menu solto no `body` para quem lê a tela.
+      await expect(panel.contains(submenu)).toBe(false);
+      await expect(submenu.id).not.toBe('');
+      await expect(subTrigger.getAttribute('aria-owns')).toBe(submenu.id);
       await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(EXPORTACOES.length);
       // Um submenu que nascesse embaixo cobriria os irmãos do item que o abriu.
       await expect(submenu.getAttribute('data-side')).toBe('right');
