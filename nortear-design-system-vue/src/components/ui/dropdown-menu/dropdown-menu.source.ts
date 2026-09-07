@@ -304,13 +304,15 @@ export function dropdownMenuWithMarkupSource(): string {
 import { ref } from 'vue'
 
 const mostrarNome = ref(true)
-const mostrarEmail = ref(false)`,
+const mostrarEmail = ref(false)
+const mostrarFuncao = ref(false)`,
     menu({
       trigger: 'Colunas',
       content: `    <DropdownMenuGroup>
       <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
       <DropdownMenuCheckboxItem v-model="mostrarNome">Nome</DropdownMenuCheckboxItem>
       <DropdownMenuCheckboxItem v-model="mostrarEmail">E-mail</DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem v-model="mostrarFuncao">Função</DropdownMenuCheckboxItem>
     </DropdownMenuGroup>`,
     }),
   );

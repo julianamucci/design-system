@@ -14,6 +14,9 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -324,9 +327,9 @@ const codeCompCheckbox = `<DropdownMenu>
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-    <DropdownMenuCheckboxItem v-model:checked="showName">Nome</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem v-model:checked="showEmail">E-mail</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem v-model:checked="showRole">Cargo</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem v-model="showName">Nome</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem v-model="showEmail">E-mail</DropdownMenuCheckboxItem>
+    <DropdownMenuCheckboxItem v-model="showRole">Função</DropdownMenuCheckboxItem>
   </DropdownMenuContent>
 </DropdownMenu>`;
 
@@ -365,10 +368,17 @@ const codeCompShortcuts = `<DropdownMenu>
   </DropdownMenuContent>
 </DropdownMenu>`;
 
+// Estado dos menus vivos da demonstração — separado do estado das fichas de
+// composição, para que abrir um não mexa no outro.
+const demoShowName = ref(true);
+const demoShowEmail = ref(false);
+const demoShowRole = ref(false);
+const demoTheme = ref('light');
+
 const compShowName = ref(true);
-const compShowEmail = ref(true);
+const compShowEmail = ref(false);
 const compShowRole = ref(false);
-const compTheme = ref('system');
+const compTheme = ref('light');
 
 const stateItems = computed(() => [
   { label: tContent('states.closed.label'),   trigger: toPlainText(tContent('states.closed.trigger')),   behavior: toPlainText(tContent('states.closed.behavior')) },
@@ -531,6 +541,81 @@ const a11yCritCols = computed(() => ({
             >
               Sair
             </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu @update:open="trackMenuOpenChange('colunas', $event)">
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.withCheckbox') }}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            side="bottom"
+            align="start"
+          >
+            <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+            <DropdownMenuCheckboxItem v-model="demoShowName">
+              Nome
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem v-model="demoShowEmail">
+              E-mail
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem v-model="demoShowRole">
+              Função
+            </DropdownMenuCheckboxItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu @update:open="trackMenuOpenChange('tema', $event)">
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.withRadio') }}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            side="bottom"
+            align="start"
+          >
+            <DropdownMenuLabel>Aparência</DropdownMenuLabel>
+            <DropdownMenuRadioGroup v-model="demoTheme">
+              <DropdownMenuRadioItem value="light">
+                Claro
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="dark">
+                Escuro
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="system">
+                Sistema
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu @update:open="trackMenuOpenChange('submenu', $event)">
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">
+              {{ tContent('demonstration.labels.withSubmenu') }}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            side="bottom"
+            align="start"
+          >
+            <DropdownMenuItem @select="trackMenuItemSelect('submenu', 'renomear')">
+              Renomear
+            </DropdownMenuItem>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem @select="trackMenuItemSelect('submenu', 'pdf')">
+                  PDF
+                </DropdownMenuItem>
+                <DropdownMenuItem @select="trackMenuItemSelect('submenu', 'csv')">
+                  CSV
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -839,14 +924,14 @@ const a11yCritCols = computed(() => ({
               align="start"
             >
               <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-              <DropdownMenuCheckboxItem v-model:checked="compShowName">
+              <DropdownMenuCheckboxItem v-model="compShowName">
                 Nome
               </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem v-model:checked="compShowEmail">
+              <DropdownMenuCheckboxItem v-model="compShowEmail">
                 E-mail
               </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem v-model:checked="compShowRole">
-                Cargo
+              <DropdownMenuCheckboxItem v-model="compShowRole">
+                Função
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>

@@ -135,7 +135,8 @@ export const WithCheckboxItems: Story = {
     setup() {
       const name = ref(true);
       const email = ref(false);
-      return { name, email };
+      const role = ref(false);
+      return { name, email, role };
     },
     template: `
       <div class="nds-min-h-80" style="contain: layout">
@@ -148,6 +149,7 @@ export const WithCheckboxItems: Story = {
               <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
               <DropdownMenuCheckboxItem v-model="name">Nome</DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem v-model="email">E-mail</DropdownMenuCheckboxItem>
+              <DropdownMenuCheckboxItem v-model="role">Função</DropdownMenuCheckboxItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -161,7 +163,7 @@ export const WithCheckboxItems: Story = {
     const email = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
 
     await step('O papel e o estado inicial chegam ao markup', async () => {
-      await expect(canvas.getAllByRole('menuitemcheckbox')).toHaveLength(2);
+      await expect(canvas.getAllByRole('menuitemcheckbox')).toHaveLength(3);
       await expect(name).toHaveAttribute('aria-checked', 'true');
       await expect(email).toHaveAttribute('aria-checked', 'false');
     });

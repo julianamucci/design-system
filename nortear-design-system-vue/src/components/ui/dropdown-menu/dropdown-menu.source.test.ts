@@ -154,9 +154,13 @@ describe('transforms das stories de composição', () => {
     const saida = dropdownMenuWithMarkupSource();
     expect(saida).toContain('const mostrarNome = ref(true)');
     expect(saida).toContain('const mostrarEmail = ref(false)');
+    expect(saida).toContain('const mostrarFuncao = ref(false)');
     // Um `ref` por item — é o que separa marcação de escolha única.
     expect(saida).toContain('<DropdownMenuCheckboxItem v-model="mostrarNome">Nome');
     expect(saida).toContain('<DropdownMenuCheckboxItem v-model="mostrarEmail">E-mail');
+    expect(saida).toContain('<DropdownMenuCheckboxItem v-model="mostrarFuncao">Função');
+    // TRÊS alternadores, como a story ao lado e como a referência.
+    expect([...saida.matchAll(/<DropdownMenuCheckboxItem /g)].length).toBe(3);
   });
 
   it('na escolha única o valor vive no grupo, e cada item traz o seu `value`', () => {
