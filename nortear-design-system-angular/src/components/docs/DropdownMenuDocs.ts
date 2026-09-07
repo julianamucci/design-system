@@ -305,16 +305,18 @@ const CODE_WITH_LABEL = `<ng-template ndsDropdownMenuContent>
 const CODE_WITH_CHECKBOX = `<ng-template ndsDropdownMenuContent>
   <div ndsDropdownMenuGroup>
     <div ndsDropdownMenuLabel>Colunas visíveis</div>
-    <div ndsDropdownMenuCheckboxItem [(checked)]="nome">Nome</div>
-    <div ndsDropdownMenuCheckboxItem [(checked)]="email">E-mail</div>
+    <div ndsDropdownMenuCheckboxItem [(checked)]="showName">Nome</div>
+    <div ndsDropdownMenuCheckboxItem [(checked)]="showEmail">E-mail</div>
+    <div ndsDropdownMenuCheckboxItem [(checked)]="showRole">Função</div>
   </div>
 </ng-template>`;
 
 const CODE_WITH_RADIO = `<ng-template ndsDropdownMenuContent>
-  <div ndsDropdownMenuRadioGroup [(value)]="tema">
+  <div ndsDropdownMenuRadioGroup [(value)]="theme">
     <div ndsDropdownMenuLabel>Aparência</div>
     <div ndsDropdownMenuRadioItem value="light">Claro</div>
     <div ndsDropdownMenuRadioItem value="dark">Escuro</div>
+    <div ndsDropdownMenuRadioItem value="system">Sistema</div>
   </div>
 </ng-template>`;
 
@@ -324,8 +326,17 @@ const CODE_WITH_SHORTCUTS = `<ng-template ndsDropdownMenuContent>
   </div>
 </ng-template>`;
 
-/** Itens da demonstração — base estável do payload de analytics. */
-const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
+/**
+ * Itens do menu de ações da demonstração.
+ *
+ * O `value` é o identificador estável que vai no payload de analytics; o
+ * `label` é o que a pessoa lê. Os dois vivem separados de propósito: mandar o
+ * rótulo traduzido partiria o mesmo evento em três no GA4, um por idioma.
+ */
+const ITEMS_DEMO = [
+  { value: 'perfil', label: 'Perfil' },
+  { value: 'configuracoes', label: 'Configurações' },
+] as const;
 
 @Component({
   selector: 'nds-dropdown-menu-docs',
@@ -348,150 +359,121 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
     -->
     <ng-template #tplDoDont1Do>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('usage.uxWriting.table.label.good') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
         <ng-template ndsDropdownMenuContent>
           <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>{{ t('usage.uxWriting.table.label.good') }}</div>
-            <div ndsDropdownMenuItem>{{ t('usage.uxWriting.table.item.good') }}</div>
-            <div ndsDropdownMenuItem>{{ t('demonstration.labels.basic') }}</div>
+            <div ndsDropdownMenuLabel>Conta</div>
+            <div ndsDropdownMenuItem>Perfil</div>
+            <div ndsDropdownMenuItem>Configurações</div>
           </div>
           <div ndsDropdownMenuSeparator></div>
           <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>{{ t('related.items.command.name') }}</div>
-            <div ndsDropdownMenuItem>{{ t('demonstration.labels.withCheckbox') }}</div>
+            <div ndsDropdownMenuLabel>Suporte</div>
+            <div ndsDropdownMenuItem>Documentação</div>
+            <div ndsDropdownMenuItem>Sair</div>
           </div>
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
     <ng-template #tplDoDont1Dont>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('usage.uxWriting.table.trigger.bad') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Menu</button>
         <ng-template ndsDropdownMenuContent>
           @for (n of dezItens; track n) {
-            <div ndsDropdownMenuItem>{{ t('usage.uxWriting.table.item.good') }} {{ n }}</div>
+            <div ndsDropdownMenuItem>Ação {{ n }}</div>
           }
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
     <ng-template #tplDoDont2Do>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('usage.uxWriting.table.label.good') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
         <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>{{ t('usage.uxWriting.table.item.good') }}</div>
+          <div ndsDropdownMenuItem>Renomear</div>
           <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuItem variant="destructive">
-            {{ t('usage.uxWriting.table.destructive.good') }}
-          </div>
+          <div ndsDropdownMenuItem variant="destructive">Excluir conta</div>
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
     <ng-template #tplDoDont2Dont>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('usage.uxWriting.table.label.good') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
         <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>{{ t('usage.uxWriting.table.item.good') }}</div>
-          <div ndsDropdownMenuItem>{{ t('usage.uxWriting.table.destructive.good') }}</div>
+          <div ndsDropdownMenuItem>Renomear</div>
+          <div ndsDropdownMenuSeparator></div>
+          <div ndsDropdownMenuItem>Excluir conta</div>
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
 
     <ng-template #tplVarDefault>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('demonstration.labels.basic') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
         <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>{{ t('usage.uxWriting.table.item.good') }}</div>
-          <div ndsDropdownMenuItem>{{ t('demonstration.labels.basic') }}</div>
+          <div ndsDropdownMenuItem>Perfil</div>
+          <div ndsDropdownMenuItem>Configurações</div>
+          <div ndsDropdownMenuItem>Equipe</div>
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
     <ng-template #tplVarDestructive>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('usage.uxWriting.table.destructive.good') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
         <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>{{ t('usage.uxWriting.table.item.good') }}</div>
+          <div ndsDropdownMenuItem>Perfil</div>
           <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuItem variant="destructive">
-            {{ t('usage.uxWriting.table.destructive.good') }}
-          </div>
+          <div ndsDropdownMenuItem variant="destructive">Excluir conta</div>
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
     <ng-template #tplVarLabel>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('usage.uxWriting.table.label.good') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
         <ng-template ndsDropdownMenuContent>
           <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>{{ t('usage.uxWriting.table.label.good') }}</div>
-            <div ndsDropdownMenuItem>{{ t('usage.uxWriting.table.item.good') }}</div>
+            <div ndsDropdownMenuLabel>Conta</div>
+            <div ndsDropdownMenuItem>Perfil</div>
           </div>
           <div ndsDropdownMenuSeparator></div>
           <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>{{ t('related.items.command.name') }}</div>
-            <div ndsDropdownMenuItem>{{ t('demonstration.labels.basic') }}</div>
+            <div ndsDropdownMenuLabel>Suporte</div>
+            <div ndsDropdownMenuItem>Documentação</div>
           </div>
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
     <ng-template #tplVarCheckbox>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('demonstration.labels.withCheckbox') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Colunas</button>
         <ng-template ndsDropdownMenuContent>
           <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>{{ t('demonstration.labels.withCheckbox') }}</div>
-            <div ndsDropdownMenuCheckboxItem [(checked)]="colunaNome">
-              {{ t('usage.uxWriting.table.label.good') }}
-            </div>
-            <div ndsDropdownMenuCheckboxItem [(checked)]="colunaEmail">
-              {{ t('usage.uxWriting.table.item.good') }}
-            </div>
+            <div ndsDropdownMenuLabel>Colunas visíveis</div>
+            <div ndsDropdownMenuCheckboxItem [(checked)]="showName">Nome</div>
+            <div ndsDropdownMenuCheckboxItem [(checked)]="showEmail">E-mail</div>
+            <div ndsDropdownMenuCheckboxItem [(checked)]="showRole">Função</div>
           </div>
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
     <ng-template #tplVarRadio>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('demonstration.labels.withRadio') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Tema</button>
         <ng-template ndsDropdownMenuContent>
           <div ndsDropdownMenuRadioGroup [(value)]="theme">
-            <div ndsDropdownMenuLabel>{{ t('demonstration.labels.withRadio') }}</div>
-            <div ndsDropdownMenuRadioItem value="light">Light</div>
-            <div ndsDropdownMenuRadioItem value="dark">Dark</div>
-            <div ndsDropdownMenuRadioItem value="system">System</div>
+            <div ndsDropdownMenuLabel>Aparência</div>
+            <div ndsDropdownMenuRadioItem value="light">Claro</div>
+            <div ndsDropdownMenuRadioItem value="dark">Escuro</div>
+            <div ndsDropdownMenuRadioItem value="system">Sistema</div>
           </div>
         </ng-template>
       </nds-dropdown-menu>
     </ng-template>
     <ng-template #tplVarShortcuts>
       <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">
-          {{ t('demonstration.labels.basic') }}
-        </button>
+        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Editar</button>
         <ng-template ndsDropdownMenuContent>
           <div ndsDropdownMenuItem>
-            {{ t('usage.uxWriting.table.item.good') }}
-            <span ndsDropdownMenuShortcut>Ctrl+E</span>
-          </div>
-          <div ndsDropdownMenuItem>
-            {{ t('demonstration.labels.basic') }}
-            <span ndsDropdownMenuShortcut>Ctrl+K</span>
+            Copiar <span ndsDropdownMenuShortcut>Ctrl+C</span>
           </div>
         </ng-template>
       </nds-dropdown-menu>
@@ -520,12 +502,20 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
               </button>
               <ng-template ndsDropdownMenuContent>
                 <div ndsDropdownMenuGroup>
-                  <div ndsDropdownMenuLabel>{{ t('usage.uxWriting.table.label.good') }}</div>
-                  @for (item of itensDemo; track item) {
-                    <div ndsDropdownMenuItem (onSelect)="onSelect('acoes', item)">
-                      {{ t('usage.uxWriting.table.item.good') }} — {{ item }}
+                  <div ndsDropdownMenuLabel>Conta</div>
+                  @for (item of itensDemo; track item.value) {
+                    <div ndsDropdownMenuItem (onSelect)="onSelect('acoes', item.value)">
+                      {{ item.label }}
                     </div>
                   }
+                </div>
+                <div ndsDropdownMenuSeparator></div>
+                <div
+                  ndsDropdownMenuItem
+                  variant="destructive"
+                  (onSelect)="onSelect('acoes', 'sair')"
+                >
+                  Sair
                 </div>
               </ng-template>
             </nds-dropdown-menu>
@@ -536,13 +526,10 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
               </button>
               <ng-template ndsDropdownMenuContent>
                 <div ndsDropdownMenuGroup>
-                  <div ndsDropdownMenuLabel>{{ t('demonstration.labels.withCheckbox') }}</div>
-                  <div ndsDropdownMenuCheckboxItem [(checked)]="colunaNome">
-                    {{ t('usage.uxWriting.table.label.good') }}
-                  </div>
-                  <div ndsDropdownMenuCheckboxItem [(checked)]="colunaEmail">
-                    {{ t('usage.uxWriting.table.item.good') }}
-                  </div>
+                  <div ndsDropdownMenuLabel>Colunas visíveis</div>
+                  <div ndsDropdownMenuCheckboxItem [(checked)]="showName">Nome</div>
+                  <div ndsDropdownMenuCheckboxItem [(checked)]="showEmail">E-mail</div>
+                  <div ndsDropdownMenuCheckboxItem [(checked)]="showRole">Função</div>
                 </div>
               </ng-template>
             </nds-dropdown-menu>
@@ -553,10 +540,10 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
               </button>
               <ng-template ndsDropdownMenuContent>
                 <div ndsDropdownMenuRadioGroup [(value)]="theme">
-                  <div ndsDropdownMenuLabel>{{ t('demonstration.labels.withRadio') }}</div>
-                  <div ndsDropdownMenuRadioItem value="light">Light</div>
-                  <div ndsDropdownMenuRadioItem value="dark">Dark</div>
-                  <div ndsDropdownMenuRadioItem value="system">System</div>
+                  <div ndsDropdownMenuLabel>Aparência</div>
+                  <div ndsDropdownMenuRadioItem value="light">Claro</div>
+                  <div ndsDropdownMenuRadioItem value="dark">Escuro</div>
+                  <div ndsDropdownMenuRadioItem value="system">Sistema</div>
                 </div>
               </ng-template>
             </nds-dropdown-menu>
@@ -567,12 +554,10 @@ const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
               </button>
               <ng-template ndsDropdownMenuContent>
                 <div ndsDropdownMenuItem (onSelect)="onSelect('submenu', 'renomear')">
-                  {{ t('usage.uxWriting.table.item.good') }}
+                  Renomear
                 </div>
                 <nds-dropdown-menu-sub>
-                  <div ndsDropdownMenuSubTrigger>
-                    {{ t('demonstration.labels.withSubmenu') }}
-                  </div>
+                  <div ndsDropdownMenuSubTrigger>Exportar</div>
                   <ng-template ndsDropdownMenuSubContent>
                     <div ndsDropdownMenuItem (onSelect)="onSelect('submenu', 'pdf')">PDF</div>
                     <div ndsDropdownMenuItem (onSelect)="onSelect('submenu', 'csv')">CSV</div>
@@ -688,8 +673,9 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly dezItens = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   /** Estado dos exemplos vivos — alternadores e escolha única. */
-  protected readonly colunaNome = signal(true);
-  protected readonly colunaEmail = signal(false);
+  protected readonly showName = signal(true);
+  protected readonly showEmail = signal(false);
+  protected readonly showRole = signal(false);
   protected readonly theme = signal<unknown>('light');
 
   protected readonly activeSection = signal<string | undefined>(undefined);

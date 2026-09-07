@@ -345,10 +345,16 @@ export function dropdownMenuWithCheckboxSource(): string {
             [checked]="showEmail()"
             (checkedChange)="showEmail.set($event)"
           >E-mail</div>
+          <div
+            ndsDropdownMenuCheckboxItem
+            [checked]="showRole()"
+            (checkedChange)="showRole.set($event)"
+          >Função</div>
         </div>`,
     }),
     `  readonly showName = signal(true);
-  readonly showEmail = signal(false);`,
+  readonly showEmail = signal(false);
+  readonly showRole = signal(false);`,
   );
 }
 

@@ -390,10 +390,13 @@ describe('composições', () => {
     expect(code).toContain('(checkedChange)="showName.set($event)"');
     expect(code).toContain('[checked]="showEmail()"');
     expect(code).toContain('(checkedChange)="showEmail.set($event)"');
+    expect(code).toContain('[checked]="showRole()"');
+    expect(code).toContain('(checkedChange)="showRole.set($event)"');
     expect(code).toContain('  readonly showName = signal(true);');
     expect(code).toContain('  readonly showEmail = signal(false);');
-    // DOIS alternadores, como a story ao lado.
-    expect(code.match(/ndsDropdownMenuCheckboxItem/g)).toHaveLength(2);
+    expect(code).toContain('  readonly showRole = signal(false);');
+    // TRÊS alternadores, como a story ao lado.
+    expect(code.match(/ndsDropdownMenuCheckboxItem/g)).toHaveLength(3);
     // Sem valor comum: um `ndsDropdownMenuRadioGroup` aqui faria a marcação de
     // um item desmarcar a do outro.
     expect(code).not.toContain('ndsDropdownMenuRadioGroup');

@@ -103,7 +103,7 @@ export const WithCheckboxItems: Story = {
     docs: { source: { transform: dropdownMenuWithCheckboxSource } },
   },
   render: () => ({
-    props: { name: true, email: false },
+    props: { name: true, email: false, role: false },
     template: `
       <nds-dropdown-menu [defaultOpen]="true" [modal]="false">
         <button ndsDropdownMenuTrigger ndsButton variant="outline">Colunas</button>
@@ -121,6 +121,11 @@ export const WithCheckboxItems: Story = {
               [checked]="email"
               (checkedChange)="email = $event"
             >E-mail</div>
+            <div
+              ndsDropdownMenuCheckboxItem
+              [checked]="role"
+              (checkedChange)="role = $event"
+            >Função</div>
           </div>
         </ng-template>
       </nds-dropdown-menu>
@@ -133,6 +138,7 @@ export const WithCheckboxItems: Story = {
     const email = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
 
     await step('O papel e o estado inicial chegam ao markup', async () => {
+      await expect(canvas.getAllByRole('menuitemcheckbox')).toHaveLength(3);
       await expect(name.getAttribute('aria-checked')).toBe('true');
       await expect(email.getAttribute('aria-checked')).toBe('false');
     });
