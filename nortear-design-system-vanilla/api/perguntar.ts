@@ -187,7 +187,7 @@ function systemPrompt(locale: Locale, weak: boolean, catalogo: string[]): string
     '',
     '1. NUNCA afirme nada que não esteja escrito nos trechos. Não complete com o que você sabe sobre outras bibliotecas de componentes, não deduza nome de prop, não invente valor de variante, não suponha comportamento. Uma prop inventada faz alguém escrever código errado e culpar o design system.',
     '2. Se os trechos não respondem à pergunta, DIGA QUE NÃO SABE, em uma frase, e aponte o componente mais próximo que apareceu. Não tente responder mesmo assim. Não peça desculpas longas.',
-    '3. Toda afirmação diz de qual componente ela veio, pelo nome do slug — por exemplo "(chat-thread)". Sem exceção.',
+    '3. Toda afirmação diz de qual componente ela veio, entre parênteses e no fim da frase — "(ChatThread)" ou "(chat-thread)", tanto faz, porque os dois identificam sem margem. Sem exceção.',
     '4. Se a pergunta é sobre um componente que não está nos trechos, diga isso em vez de responder pelo componente parecido.',
     '5. NOME DE COMPONENTE VAI SEMPRE EM INGLÊS, exatamente como está no atributo "nome" do documento — ComposerVoice, MediaPlayer, InputOTP. NUNCA traduza o nome, mesmo respondendo em português ou espanhol, e mesmo que o título dentro do documento esteja traduzido: é assim que ele aparece no menu do Storybook, e é por esse nome que a pessoa vai procurar.',
     '6. SÓ existem os componentes desta lista. Nenhum outro nome é componente deste design system, por mais que o texto dos documentos cite conceitos, alternativas e recursos que soem como peça:',
@@ -219,8 +219,31 @@ function systemPrompt(locale: Locale, weak: boolean, catalogo: string[]): string
  * documentação: o que o componente é, como se compõe, quando usar, que
  * variantes e estados tem, que props aceita e o que a acessibilidade exige.
  * Ficam de fora `testes`, `analytics`, `seo`, `tokens`, `demonstration`,
- * `notes`, `doDont`, `related` e `import` — texto que existe para a docs page,
- * não para a resposta.
+ * `related` e `import` — texto que existe para a docs page, não para a
+ * resposta. `testes` sozinho é 11,4% do corpus e `tokens` 7,0%, e nenhuma das
+ * duas apareceu em resposta nenhuma nas rodadas medidas.
+ *
+ * `doDont` e `notes` ENTRAM, e o caminho até aqui vale mais que a lista. A única
+ * perda da rodada A × B foi "como anuncio erro de formulário?": a resposta
+ * recortada cobria `aria-live`, `aria-invalid` e `aria-describedby` — tudo
+ * certo — e perdia a regra de ESCRITA, que diz que a mensagem precisa apontar o
+ * problema e a correção.
+ *
+ * A hipótese era que aquilo morava em `doDont`. MEDIDO em três rodadas por
+ * configuração, sobre a mesma pergunta: com `doDont`, a regra apareceu em 0 de
+ * 3; acrescentando `notes`, em 2 de 3; com o documento inteiro, em 3 de 3.
+ * Quem carrega a regra é `notes.tip4` — `doDont` traz o par de exemplos, que é
+ * o complemento, não o enunciado.
+ *
+ * Vale reparar no que isso ensina sobre o corte: a regra JÁ ESTAVA em
+ * `usage.guidelines.item4`, que o recorte nunca tirou. Ter o texto não bastou —
+ * foi a REPETIÇÃO em `notes` que o trouxe à superfície. Cortar seção não remove
+ * só conteúdo; remove reforço.
+ *
+ * O preço das duas: `doDont` é 2,0% dos caracteres do corpus e `notes`, 5,1%.
+ * Somadas, o recorte ainda economiza 35% contra o documento inteiro — a mediana
+ * de entrada cai de 23.550 para 15.489 tokens, e o máximo de 39.103 para
+ * 22.908. É o máximo que decide se um plano gratuito serve.
  *
  * **O padrão continua sendo o documento inteiro.** Trocar o padrão é decisão de
  * produto, e ela só se toma com número: `src/lib/chat-eval/` é o banco que mede
@@ -239,6 +262,8 @@ export const SECOES_DE_ALTO_SINAL = [
   'states',
   'props',
   'accessibility',
+  'doDont',
+  'notes',
 ] as const;
 
 export function contextoRecortado(): boolean {

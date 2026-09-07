@@ -265,6 +265,26 @@ describe('nomes obrigatórios e proibidos', () => {
     ]);
     expect(nomesProibidosCitados('Use o MediaPlayer para ler em voz alta.', proibidos)).toEqual([]);
   });
+
+  it('ABSOLVE quando a negação está por perto — é a resposta certa, não o defeito', () => {
+    // Texto real da rodada com `doDont`, que o guarda reprovava: o travessão
+    // separa o termo da negação, e quebrar por pontuação jogava as duas
+    // metades em fragmentos diferentes. Quarta vez que um critério deste banco
+    // acusou uma resposta correta.
+    const proibidos = ['Conversa por voz', 'Leitura em voz alta'];
+    const certa =
+      'Não use para ter uma conversa por voz com resposta falada — para isso não há componente, pois o ComposerVoice é um campo de texto.';
+    expect(nomesProibidosCitados(certa, proibidos)).toEqual([]);
+  });
+
+  it('mas a negação longe NÃO absolve — senão o guarda vira decorativo', () => {
+    const proibidos = ['Conversa por voz'];
+    const longe =
+      'Use Conversa por voz para falar com o agente. ' +
+      'a'.repeat(200) +
+      ' Já para outra coisa não há componente.';
+    expect(nomesProibidosCitados(longe, proibidos)).toEqual(['Conversa por voz']);
+  });
 });
 
 describe('o banco em si', () => {

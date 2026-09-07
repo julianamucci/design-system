@@ -154,7 +154,22 @@ export function citaSlugEsperado(
   // de comparar é o que impede o critério de medir formatação em vez de
   // conteúdo.
   const texto = normalize(resposta).replace(/[`*_]/g, '');
-  return esperados.some((slug) => texto.includes(`(${normalize(slug)})`));
+  // Duas formas valem: o slug (`(hover-card)`) e o nome do menu
+  // (`(HoverCard)`). MEDIDO ao incluir `doDont`: o modelo citou pelo NOME e o
+  // guarda reprovou uma comparação inteiramente correta entre ComputerUse e
+  // HoverCard.
+  //
+  // A ambiguidade é da instrução de sistema, não do modelo: uma regra manda
+  // citar pelo slug e outra manda escrever o nome em inglês. As duas
+  // identificam o componente sem margem, então as duas passam aqui — e a regra
+  // do prompt foi reescrita para parar de dar ordem dupla.
+  return esperados.some((slug) => {
+    // O nome do menu derivado do slug, sem depender de quem chama injetar a
+    // função: `hover-card` e `HoverCard` normalizam para a mesma coisa quando
+    // se tira o hífen, e é isso que basta comparar.
+    const semHifen = normalize(slug).replace(/-/g, '');
+    return texto.includes(`(${normalize(slug)})`) || texto.includes(`(${semHifen})`);
+  });
 }
 
 /* ── 2b. Negação de um termo específico ───────────────────────────────────── */
@@ -361,16 +376,41 @@ export function nomesObrigatoriosFaltando(
 }
 
 /**
- * Os proibidos que a resposta citou.
+ * Os proibidos que a resposta APRESENTOU COMO COMPONENTE.
  *
- * Sem acento e sem caixa, porque o que se proíbe é o CONCEITO virar nome de
- * peça — e "conversa por voz" em minúsculas erra tanto quanto "Conversa por
- * Voz".
+ * Não basta a frase aparecer. MEDIDO ao incluir `doDont`: o modelo escreveu
+ * "Não use para ter uma conversa por voz com resposta falada — para isso NÃO HÁ
+ * COMPONENTE", que é exatamente o comportamento correto, e o guarda reprovou
+ * por casar o texto cru. Terceira vez que um critério deste banco acusou uma
+ * resposta certa.
+ *
+ * O que se proíbe é o conceito virar PEÇA, e o modelo marca peça de um jeito
+ * consistente: negrito ou crase. Frase solta em prosa é prosa. E negação por
+ * perto — "não há componente", "não existe" — desfaz qualquer suspeita, porque
+ * é justamente a resposta que se quer.
  */
 export function nomesProibidosCitados(
   resposta: string,
   proibidos: readonly string[] = [],
 ): string[] {
   const texto = normalize(resposta);
-  return proibidos.filter((nome) => texto.includes(normalize(nome)));
+  return proibidos.filter((nome) => {
+    const alvo = normalize(nome);
+    const em = texto.indexOf(alvo);
+    if (em === -1) return false;
+
+    // Janela em volta da ocorrência, e não a frase: a resposta que motivou esta
+    // correção separava o termo da negação com um travessão — "conversa por voz
+    // com resposta falada — para isso NÃO HÁ COMPONENTE" —, e quebrar por
+    // pontuação jogava as duas metades em fragmentos diferentes.
+    //
+    // Cento e vinte caracteres cobrem a oração seguinte sem alcançar o próximo
+    // item de uma lista, que é onde a negação deixaria de se referir a este
+    // termo.
+    const janela = texto.slice(Math.max(0, em - 60), em + alvo.length + 120);
+    const negado = /nao ha componente|nao existe|nenhum componente|no component|nao e um componente/.test(
+      janela,
+    );
+    return !negado;
+  });
 }
