@@ -29,7 +29,7 @@ const meta = {
       source: { transform: carouselSource },
       description: {
         component:
-          "Configuracoes funcionais do Carousel: item único, múltiplos itens responsivos e autoplay via plugin.",
+          "Configurações funcionais do Carousel: item único, múltiplos itens responsivos e autoplay via plugin.",
       },
     },
   },

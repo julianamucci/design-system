@@ -72,7 +72,7 @@ function buildBase(
   const navItems = [
     { label: 'Dashboard',    icon: icons.home,     active: true  },
     { label: 'Componentes',  icon: icons.layout,   active: false },
-    { label: 'Configuracoes',icon: icons.settings, active: false },
+    { label: 'Configurações',icon: icons.settings, active: false },
   ];
 
   navItems.forEach(item => {
@@ -200,7 +200,7 @@ export const IconMode: Story = {
     const navItems = [
       { label: 'Dashboard', icon: icons.home, active: true },
       { label: 'Componentes', icon: icons.layout, active: false },
-      { label: 'Configuracoes', icon: icons.settings, active: false },
+      { label: 'Configurações', icon: icons.settings, active: false },
     ];
 
     const menu = document.createElement('ul');

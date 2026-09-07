@@ -28,7 +28,7 @@ const meta: Meta = {
       source: { transform: badgeSource },
       description: {
         component:
-          'Configuracoes contextuais do Badge: combinado com ícone, com contador dentro da própria etiqueta e envolvido em <button> para trigger clicável.',
+          'Configurações contextuais do Badge: combinado com ícone, com contador dentro da própria etiqueta e envolvido em <button> para trigger clicável.',
       },
     },
   },

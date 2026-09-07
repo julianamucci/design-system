@@ -156,19 +156,19 @@ export const Vertical: Story = {
     components: sharedComponents,
     template: `
       <Tabs default-value="profile" orientation="vertical" class="nds-w-lg">
-        <TabsList aria-label="Configuracoes da conta">
+        <TabsList aria-label="Configurações da conta">
           <TabsTrigger value="profile">Perfil</TabsTrigger>
           <TabsTrigger value="account">Conta</TabsTrigger>
           <TabsTrigger value="security">Segurança</TabsTrigger>
         </TabsList>
         <TabsContent value="profile" class="nds-text-body nds-text-muted-foreground nds-pl-4">
-          Configuracoes do perfil — nome, foto e bio.
+          Configurações do perfil — nome, foto e bio.
         </TabsContent>
         <TabsContent value="account" class="nds-text-body nds-text-muted-foreground nds-pl-4">
-          Configuracoes da conta — e-mail, idioma e fuso.
+          Configurações da conta — e-mail, idioma e fuso.
         </TabsContent>
         <TabsContent value="security" class="nds-text-body nds-text-muted-foreground nds-pl-4">
-          Configuracoes de segurança — senha e 2FA.
+          Configurações de segurança — senha e 2FA.
         </TabsContent>
       </Tabs>
     `,

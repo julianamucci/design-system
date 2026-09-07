@@ -28,7 +28,7 @@ const meta = {
       source: { transform: avatarSource },
       description: {
         component:
-          "Configuracoes do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com atraso), failed e noImage.",
+          "Configurações do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com atraso), failed e noImage.",
       },
     },
   },

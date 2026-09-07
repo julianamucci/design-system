@@ -64,7 +64,7 @@ export const Default: Story = {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configuracoes</DropdownMenuItem>
+          <DropdownMenuItem>Configurações</DropdownMenuItem>
           <DropdownMenuItem>Equipe</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

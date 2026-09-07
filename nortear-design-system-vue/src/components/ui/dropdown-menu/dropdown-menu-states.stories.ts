@@ -102,7 +102,7 @@ export const Open: Story = {
           </DropdownMenuTrigger>
           <DropdownMenuContent side="bottom" align="start">
             <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configuracoes</DropdownMenuItem>
+            <DropdownMenuItem>Configurações</DropdownMenuItem>
             <DropdownMenuItem>Equipe</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

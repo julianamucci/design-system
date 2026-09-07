@@ -175,8 +175,8 @@ export const CollapsedIcon: Story = {
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configuracoes">
-                        <Settings aria-hidden="true" /><span>Configuracoes</span>
+                      <SidebarMenuButton tooltip="Configurações">
+                        <Settings aria-hidden="true" /><span>Configurações</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   </SidebarMenu>

@@ -245,12 +245,12 @@ export const FAQ: Story = {
           {
             value: "cancelamento",
             q: "Como cancelo minha assinatura?",
-            a: "Você pode cancelar a qualquer momento em Configuracoes → Assinatura. O acesso permanece ativo até o fim do período já pago.",
+            a: "Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.",
           },
           {
             value: "dados",
             q: "Onde encontro meus dados de acesso?",
-            a: "Seus dados de acesso estão disponíveis em Configuracoes → Conta.",
+            a: "Seus dados de acesso estão disponíveis em Configurações → Conta.",
           },
         ].map(({ value, q, a }) => (
           <AccordionItem key={value} value={value}>

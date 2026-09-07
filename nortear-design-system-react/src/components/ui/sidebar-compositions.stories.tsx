@@ -95,9 +95,9 @@ function SidebarWithNavGroups() {
                     <SidebarMenuBadge>3</SidebarMenuBadge>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Configuracoes">
+                    <SidebarMenuButton tooltip="Configurações">
                       <Settings aria-hidden="true" />
-                      <span>Configuracoes</span>
+                      <span>Configurações</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>
@@ -194,9 +194,9 @@ function SidebarWithSubMenu() {
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Configuracoes">
+                    <SidebarMenuButton tooltip="Configurações">
                       <Settings aria-hidden="true" />
-                      <span>Configuracoes</span>
+                      <span>Configurações</span>
                     </SidebarMenuButton>
                     <SidebarMenuAction showOnHover aria-label="Mais opções de configurações">
                       <ChevronRight aria-hidden="true" />
@@ -239,7 +239,7 @@ function SidebarWithSearch() {
     { icon: Blocks, label: "Componentes" },
     { icon: Coins, label: "Tokens" },
     { icon: Bell, label: "Notificações" },
-    { icon: Settings, label: "Configuracoes" },
+    { icon: Settings, label: "Configurações" },
     { icon: User, label: "Perfil" },
   ];
 

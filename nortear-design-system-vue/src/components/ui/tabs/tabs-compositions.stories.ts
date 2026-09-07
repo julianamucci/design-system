@@ -235,7 +235,7 @@ export const VerticalSettings: Story = {
     components: { ...sharedComponents, User, Settings2, Shield },
     template: `
       <Tabs default-value="profile" orientation="vertical" class="nds-w-lg">
-        <TabsList aria-label="Configuracoes da conta">
+        <TabsList aria-label="Configurações da conta">
           <TabsTrigger value="profile">
             <User class="nds-size-4" aria-hidden="true" />
             Perfil

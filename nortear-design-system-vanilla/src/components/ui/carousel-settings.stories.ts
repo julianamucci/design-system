@@ -20,7 +20,7 @@ const meta: Meta = {
       source: { transform: carouselSource },
       description: {
         component:
-          'Configuracoes do Carousel — um item por vez (padrão), conjuntos longos e avanço automático com parada na primeira interação.',
+          'Configurações do Carousel — um item por vez (padrão), conjuntos longos e avanço automático com parada na primeira interação.',
       },
     },
   },

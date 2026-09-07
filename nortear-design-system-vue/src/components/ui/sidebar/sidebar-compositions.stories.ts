@@ -176,9 +176,9 @@ export const WithNavGroups: Story = {
                       </SidebarMenuAction>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configuracoes">
+                      <SidebarMenuButton tooltip="Configurações">
                         <Settings aria-hidden="true" />
-                        <span>Configuracoes</span>
+                        <span>Configurações</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   </SidebarMenu>
@@ -414,8 +414,8 @@ export const WithSearch: Story = {
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                      <SidebarMenuButton tooltip="Configuracoes">
-                        <Settings aria-hidden="true" /><span>Configuracoes</span>
+                      <SidebarMenuButton tooltip="Configurações">
+                        <Settings aria-hidden="true" /><span>Configurações</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>

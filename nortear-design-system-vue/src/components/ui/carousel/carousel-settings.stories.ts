@@ -21,7 +21,7 @@ const meta = {
     docs: {
       source: { transform: carouselItemUnicoSource },
       description: {
-        component: 'Configuracoes principais do Carousel — quantos itens por vez, autoplay via plugin.',
+        component: 'Configurações principais do Carousel — quantos itens por vez, autoplay via plugin.',
       },
     },
   },

@@ -88,9 +88,9 @@ function SidebarStatePreview({
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                   <SidebarMenuItem>
-                    <SidebarMenuButton tooltip="Configuracoes">
+                    <SidebarMenuButton tooltip="Configurações">
                       <Settings aria-hidden="true" />
-                      <span>Configuracoes</span>
+                      <span>Configurações</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 </SidebarMenu>

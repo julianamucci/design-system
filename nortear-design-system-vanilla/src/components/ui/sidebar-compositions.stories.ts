@@ -154,7 +154,7 @@ export const WithGroups: Story = {
       createSidebarGroup({
         label: 'Conta',
         items: [
-          { label: 'Configuracoes', icon: makeIcon(ICON_SETTINGS), href: '#' },
+          { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
           { label: 'Notificações',  icon: makeIcon(ICON_BELL),     href: '#', badge: '5' },
           { label: 'Perfil',        icon: makeIcon(ICON_USER),     href: '#' },
         ],
@@ -229,7 +229,7 @@ export const WithGroups: Story = {
         alcancados.push(active.getAttribute('aria-label') ?? active.textContent?.trim() ?? '');
       }
       await expect(alcancados).toContain('Componentes');
-      await expect(alcancados).toContain('Configuracoes');
+      await expect(alcancados).toContain('Configurações');
       await expect(alcancados).not.toContain('');
       // Devolve o foco ao ponto de partida para o replay.
       first.blur();
@@ -530,7 +530,7 @@ export const WithSubmenu: Story = {
 
     const footer = createSidebarFooter();
     const footerMenu = createSidebarMenu();
-    footerMenu.appendChild(createSidebarMenuItem({ label: 'Configuracoes', icon: makeIcon(ICON_SETTINGS), href: '#' }));
+    footerMenu.appendChild(createSidebarMenuItem({ label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' }));
     footer.appendChild(footerMenu);
     inner.appendChild(footer);
 
@@ -758,7 +758,7 @@ export const WithSearch: Story = {
           { label: 'Dashboard',     icon: makeIcon(ICON_HOME),     active: true, href: '#' },
           { label: 'Componentes',   icon: makeIcon(ICON_LAYOUT),   href: '#' },
           { label: 'Tokens',        icon: makeIcon(ICON_LAYERS),   href: '#' },
-          { label: 'Configuracoes', icon: makeIcon(ICON_SETTINGS), href: '#' },
+          { label: 'Configurações', icon: makeIcon(ICON_SETTINGS), href: '#' },
         ],
       }),
     );
@@ -858,7 +858,7 @@ export const WithBadges: Story = {
           { label: 'Dashboard',      icon: makeIcon(ICON_HOME),   active: true, href: '#' },
           { label: 'Notificações',   icon: makeIcon(ICON_BELL),   href: '#',    badge: '12' },
           { label: 'Componentes',    icon: makeIcon(ICON_LAYOUT), href: '#',    badge: '3' },
-          { label: 'Configuracoes',  icon: makeIcon(ICON_SETTINGS), href: '#' },
+          { label: 'Configurações',  icon: makeIcon(ICON_SETTINGS), href: '#' },
         ],
       }),
     );

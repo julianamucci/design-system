@@ -31,7 +31,7 @@ const meta = {
       source: { transform: breadcrumbSimpleSource },
       description: {
         component:
-          'Configuracoes estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via as-child.',
+          'Configurações estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via as-child.',
       },
     },
   },

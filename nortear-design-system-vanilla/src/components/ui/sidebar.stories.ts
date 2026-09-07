@@ -116,7 +116,7 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
     createSidebarGroup({
       label: 'Conta',
       items: [
-        { label: 'Configuracoes', href: '#' },
+        { label: 'Configurações', href: '#' },
         { label: 'Perfil',        href: '#' },
       ],
     }),

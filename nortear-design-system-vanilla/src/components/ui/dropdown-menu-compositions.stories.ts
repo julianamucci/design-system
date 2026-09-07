@@ -61,7 +61,7 @@ export const WithLabel: Story = {
       [
         { type: 'label', label: 'Conta' },
         { type: 'item', label: 'Perfil', value: 'profile' },
-        { type: 'item', label: 'Configuracoes', value: 'settings' },
+        { type: 'item', label: 'Configurações', value: 'settings' },
         { type: 'separator' },
         { type: 'label', label: 'Suporte' },
         { type: 'item', label: 'Documentação', value: 'docs' },

@@ -91,7 +91,7 @@ export const WithLabel: Story = {
           <DropdownMenuGroup>
             <DropdownMenuLabel>Conta</DropdownMenuLabel>
             <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configuracoes</DropdownMenuItem>
+            <DropdownMenuItem>Configurações</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>

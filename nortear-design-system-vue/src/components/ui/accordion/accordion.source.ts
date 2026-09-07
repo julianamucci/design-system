@@ -70,7 +70,7 @@ disponível em até 12 vezes sem juros no cartão.`,
   {
     value: 'item-3',
     q: 'Como cancelo minha assinatura?',
-    a: `Você pode cancelar a qualquer momento em Configuracoes → Assinatura.
+    a: `Você pode cancelar a qualquer momento em Configurações → Assinatura.
 O acesso permanece ativo até o fim do período já pago.`,
   },
 ];
@@ -116,7 +116,7 @@ um link de redefinição no email cadastrado, válido por 24 horas.`,
   {
     value: 'item-3',
     q: 'Como cancelo minha assinatura?',
-    a: 'Você pode cancelar a qualquer momento em Configuracoes → Assinatura.',
+    a: 'Você pode cancelar a qualquer momento em Configurações → Assinatura.',
   },
 ];
 
@@ -445,7 +445,7 @@ const perguntas = [
   {
     valor: 'cancelamento',
     pergunta: 'Como cancelo minha assinatura?',
-    resposta: 'Você pode cancelar a qualquer momento em Configuracoes → Assinatura.',
+    resposta: 'Você pode cancelar a qualquer momento em Configurações → Assinatura.',
   },
 ]`,
     `<div class="nds-stack nds-w-lg" data-spacing="sm">

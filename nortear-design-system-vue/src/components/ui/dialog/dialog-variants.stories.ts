@@ -490,7 +490,7 @@ export const CustomCloseInFooter: Story = {
         </DialogTrigger>
         <DialogContent :show-close-button="false">
           <DialogHeader>
-            <DialogTitle>Configuracoes de notificação</DialogTitle>
+            <DialogTitle>Configurações de notificação</DialogTitle>
             <DialogDescription>Escolha como deseja ser avisado sobre novas atividades.</DialogDescription>
           </DialogHeader>
           <DialogFooter show-close-button>
