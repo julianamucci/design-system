@@ -120,8 +120,12 @@ function makeTriggerArea(label: string): HTMLElement {
 
 function buildDemoMenu(): HTMLElement {
   const trigger = makeTriggerArea(t('demonstration.labels.triggerLabel'));
-  const trackItem = (label: string) => () => {
-    track('menu_item_click', { label, menu: 'demo', location: 'docs_demo' });
+  // O payload carrega o ID ESTÁVEL do item, nunca o rótulo traduzido. Rótulo
+  // localizado parte o mesmo evento em um valor por idioma no GA4 — "Excluir",
+  // "Delete" e "Eliminar" viram três linhas do que é uma ação só. É o que as
+  // outras quatro stacks já mandam.
+  const trackItem = (id: string) => () => {
+    track('menu_item_click', { label: id, menu: 'demo', location: 'docs_demo' });
   };
   return createContextMenu({
     trigger,
@@ -130,12 +134,26 @@ function buildDemoMenu(): HTMLElement {
     // `demonstration_labels_divergent` mediu a diferença pelo rótulo que faltava
     // (`deleteShortcut`). Rótulo de demonstração sai do conteúdo compartilhado,
     // nunca de literal — é ele que faz as cinco mostrarem o mesmo menu.
+    //
+    // "Compartilhar" é SUBMENU, e não item plano. As quatro outras stacks
+    // abrem `shareEmail` e `shareLink` a partir dele desde sempre; aqui o item
+    // era plano porque a fábrica ainda não tinha submenu, e as duas chaves
+    // ficavam no conteúdo compartilhado sem ninguém para lê-las. A fábrica
+    // ganhou `type: 'submenu'` nesta campanha, e a limitação deixou de existir.
     items: [
-      { type: 'item',      label: t('demonstration.labels.edit'),      value: 'edit',      shortcut: t('demonstration.labels.editShortcut'),   onClick: trackItem(t('demonstration.labels.edit')) },
-      { type: 'item',      label: t('demonstration.labels.duplicate'), value: 'duplicate', onClick: trackItem(t('demonstration.labels.duplicate')) },
-      { type: 'item',      label: t('demonstration.labels.share'),     value: 'share',     onClick: trackItem(t('demonstration.labels.share')) },
+      { type: 'item',      label: t('demonstration.labels.edit'),      value: 'edit',      shortcut: t('demonstration.labels.editShortcut'),   onClick: trackItem('edit') },
+      { type: 'item',      label: t('demonstration.labels.duplicate'), value: 'duplicate', onClick: trackItem('duplicate') },
+      {
+        type: 'submenu',
+        label: t('demonstration.labels.share'),
+        value: 'share',
+        items: [
+          { type: 'item', label: t('demonstration.labels.shareEmail'), value: 'share-email', onClick: trackItem('share-email') },
+          { type: 'item', label: t('demonstration.labels.shareLink'),  value: 'share-link',  onClick: trackItem('share-link')  },
+        ],
+      },
       { type: 'separator' },
-      { type: 'item',      label: t('demonstration.labels.delete'),    value: 'delete',    shortcut: t('demonstration.labels.deleteShortcut'), variant: 'destructive', onClick: trackItem(t('demonstration.labels.delete')) },
+      { type: 'item',      label: t('demonstration.labels.delete'),    value: 'delete',    shortcut: t('demonstration.labels.deleteShortcut'), variant: 'destructive', onClick: trackItem('delete') },
     ],
     onOpenChange: (open) => {
       if (open) {

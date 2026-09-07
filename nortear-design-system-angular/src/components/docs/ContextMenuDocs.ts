@@ -90,43 +90,6 @@ export class NdsContextMenu {}
 @Component({ selector: 'div[ndsContextMenuSub]', hostDirectives: [RdxMenuRoot] })
 export class NdsContextMenuSub {}`;
 
-// O snippet compartilhado descreve `<nds-context-menu>` e `<button
-// ndsContextMenuItem>`. Aqui a raiz é diretiva de atributo (paridade de markup
-// com o Vanilla) e o item é `<div>`: a folha não zera a aparência nativa de
-// botão, e um `<button>` ali aparece com fundo e borda do navegador. Mesmo
-// caminho do DropdownMenu.
-const ANATOMY_CODE = `<div ndsContextMenu>
-  <div ndsContextMenuTrigger>Clique com o botão direito aqui</div>
-
-  <ng-template ndsContextMenuContent>
-    <div ndsContextMenuGroup>
-      <div ndsContextMenuLabel>Arquivo</div>
-      <div ndsContextMenuItem>
-        Editar
-        <span ndsContextMenuShortcut>Ctrl+E</span>
-      </div>
-      <div ndsContextMenuCheckboxItem [checked]="mostrarGrade">Mostrar grade</div>
-    </div>
-
-    <div ndsContextMenuSeparator></div>
-
-    <div ndsContextMenuSub>
-      <div ndsContextMenuSubTrigger>Compartilhar</div>
-      <ng-template ndsContextMenuSubContent>
-        <div ndsContextMenuItem>Por e-mail</div>
-        <div ndsContextMenuItem>Por link</div>
-      </ng-template>
-    </div>
-
-    <div ndsContextMenuSeparator></div>
-
-    <div ndsContextMenuItem variant="destructive">
-      Excluir
-      <span ndsContextMenuShortcut>Delete</span>
-    </div>
-  </ng-template>
-</div>`;
-
 const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
    redefinir o token, não sobrescrever a regra. */
 .tema-compacto {
@@ -224,19 +187,24 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
       </div>
     </ng-template>
 
-    <!-- E o "evite" é a mesma área SEM dica nenhuma: nem contorno tracejado, nem
-         rótulo convidando ao gesto. Não é um menu de contexto montado sem dica —
-         é a área nua, porque o assunto da legenda é a descoberta, e um menu que
-         não se anuncia não tem o que mostrar até alguém adivinhar o gesto.
+    <!-- E o "evite" é a MESMA área e o MESMO menu, só que sem dica nenhuma: nem
+         contorno tracejado, nem rótulo convidando ao gesto. A legenda diz que os
+         dois lados são a mesma área e que o que os separa é a dica visual, então
+         os dois precisam instanciar o componente — era uma div com um span
+         desenhados à mão, um retângulo morto onde a legenda promete um menu
+         escondido, e ainda o pintava de nds-border-destructive-soft: uma
+         moldura vermelha É uma dica visual, exatamente a que o par manda tirar.
          Mesma composição do Vanilla. Sem opacity: o esmaecimento levava o
          texto a 1,52:1 (axe: color-contrast), e o texto já diz o que falta. -->
     <ng-template #tplDoDont3Dont>
-      <div
-        class="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
-        data-align="center"
-        data-justify="center"
-      >
-        <span>{{ t('demonstration.labels.areaNoHint') }}</span>
+      <div ndsContextMenu class="nds-w-full">
+        <div ndsContextMenuTrigger [class]="areaSemDicaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.areaNoHint') }}</div>
+        <ng-template ndsContextMenuContent>
+          <div ndsContextMenuItem>
+            {{ t('demonstration.labels.edit') }}
+            <span ndsContextMenuShortcut>{{ t('demonstration.labels.editShortcut') }}</span>
+          </div>
+        </ng-template>
       </div>
     </ng-template>
 
@@ -314,8 +282,15 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
       </div>
 
       <ng-container docsMain>
+        <!-- A demonstração é a MESMA nas cinco stacks: editar, duplicar, o
+             submenu de compartilhar e — depois do único traço — a ação
+             destrutiva. Havia aqui um segundo separador antes do submenu e um
+             par de botões alternativos abaixo do menu, que nenhuma das outras
+             quatro tem: a demonstração passava a ensinar um menu diferente do
+             que o design system documenta, e o par de botões é assunto do
+             par 1 do Do e Don't, onde já está. -->
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-stack nds-w-full" data-spacing="md">
+          <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
             <div ndsContextMenu (openChange)="registrarAbertura($event)">
               <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
 
@@ -327,8 +302,6 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
                 <div ndsContextMenuItem (onSelect)="registrarEscolha('duplicate')">
                   {{ t('demonstration.labels.duplicate') }}
                 </div>
-
-                <div ndsContextMenuSeparator></div>
 
                 <div ndsContextMenuSub>
                   <div ndsContextMenuSubTrigger>{{ t('demonstration.labels.share') }}</div>
@@ -354,24 +327,14 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
                 </div>
               </ng-template>
             </div>
-
-            <!-- A alternativa acessível, sempre visível. Sem ela o gesto seria a
-                 única porta, e quem não o conhece ficaria sem as ações. -->
-            <div class="nds-cluster" data-spacing="sm">
-              <button class="nds-button nds-button-outline nds-button-sm" type="button">
-                {{ t('demonstration.labels.edit') }}
-              </button>
-              <button class="nds-button nds-button-outline nds-button-sm" type="button">
-                {{ t('demonstration.labels.duplicate') }}
-              </button>
-            </div>
           </div>
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
-          [structureCode]="anatomyCode"
+          [structureLabel]="t('anatomy.structureLabel')"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -470,8 +433,17 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
    * compartilhado, que é o mesmo das stories e das outras quatro stacks.
    */
   protected readonly areaClasse = AREA_CLICK_DIREITO;
+
+  /**
+   * A mesma área do gesto SEM as duas classes de moldura — é `AREA_CLICK_DIREITO`
+   * menos `nds-border-default nds-border-dashed`. Serve ao lado "evite" do par 3
+   * do Do & Don't, onde a ausência da dica visual é o assunto, e é a mesma lista
+   * que o Vanilla monta ali. Escrita por extenso, e não derivada por `replace`,
+   * porque derivação vira no-op silencioso no dia em que a constante mudar.
+   */
+  protected readonly areaSemDicaClasse =
+    'nds-cluster nds-w-xs nds-p-8 nds-rounded-md nds-text-body nds-text-muted-foreground nds-cursor-default';
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly customizationCode = CUSTOMIZATION_CODE;
   protected readonly importCode = `import { NDS_CONTEXT_MENU } from '@/components/ui/context-menu';`;
 
