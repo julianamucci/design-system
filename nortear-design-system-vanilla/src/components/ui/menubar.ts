@@ -294,6 +294,9 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     // Lado e encosto ficam legíveis no markup mesmo quando quem posiciona é o
     // JS: é por eles que uma story prova que o painel sai ao lado do item, sem
     // depender de medir pixels.
+    // No submenu este valor é o PEDIDO, não o resultado: `positionFloating`
+    // roda com `flip` ligado logo depois e reescreve `data-side` com o lado onde
+    // o painel de fato coube.
     panel.dataset.side = options.submenu ? 'right' : side;
     panel.dataset.align = options.submenu ? 'start' : align;
     panel.setAttribute('role', 'menu');

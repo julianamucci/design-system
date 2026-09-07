@@ -242,7 +242,9 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
    * A posição sai de `positionFloating`, a mesma conta do popover e do tooltip.
    * Posicionar pela folha (`left: 100%`) é o que faz o painel sair da tela perto
    * da borda da janela: CSS não sabe medir a janela nem virar o lado quando não
-   * cabe, e a conta compartilhada trava o eixo cruzado na área visível.
+   * cabe. A conta compartilhada trava o eixo cruzado na área visível e, AQUI,
+   * também vira o lado quando o oposto cabe melhor — o `flip` é opcional lá e
+   * este é o único chamador que o pede.
    */
   function open(trigger: HTMLElement, focusFirst = false): void {
     if (destroyed) return;
@@ -267,7 +269,20 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     document.body.appendChild(panel);
     // Sempre pela DIREITA, encostado no topo do item: é de onde o submenu sai em
     // todo menu do sistema, e é o que a seta do gatilho desenha.
-    positionFloating(trigger, panel, 'right', 'start', sideOffset);
+    //
+    // `flip` LIGADO, e este é o único chamador que o liga. O eixo principal de
+    // `side: 'right'` é o horizontal, e o travamento do `positionFloating` age
+    // só no cruzado: perto da borda direita da janela o painel continuava
+    // saindo da tela, e foi por isso que a migração do menubar não fechou o
+    // defeito por inteiro. Virar para a esquerda é o que todo menu de sistema
+    // faz ali, e o item continua ao lado do painel — a relação que a seta do
+    // gatilho promete.
+    //
+    // Quem escreve o `data-side` do painel do submenu passa a ser a conta, não
+    // quem montou: dois dos três chamadores nem o escreviam, e o terceiro
+    // (menubar) cravava `right` na construção, antes de existir medida. Depois
+    // da troca esse valor estaria mentindo.
+    positionFloating(trigger, panel, 'right', 'start', sideOffset, { flip: true });
 
     if (closeDelay > 0) {
       panel.addEventListener('mouseenter', cancelClose);

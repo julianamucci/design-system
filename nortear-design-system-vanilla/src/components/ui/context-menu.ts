@@ -86,6 +86,7 @@
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
+import { positionFloatingAtPoint } from '@/lib/floating';
 
 export type ContextMenuItemDef = {
   /** `item` é o padrão. `submenu` exige `items`; `radio` exige `value`. */
@@ -135,7 +136,9 @@ const SVG_NS = 'http://www.w3.org/2000/svg';
 
 // O vão entre o sub-gatilho e o painel filho é o padrão de `@/lib/submenu`.
 // Aqui ele não é opção pública porque o menu de contexto não tem `side`/`align`:
-// ele abre onde o ponteiro está, e o submenu sempre sai pela direita do item.
+// ele abre onde o ponteiro está, e o submenu PEDE a direita do item — o auxiliar
+// vira para a esquerda por conta própria quando não cabe, e anuncia o lado final
+// no `data-side` do painel.
 
 /** Indicador de marcação (check). Construído por DOM — nada de innerHTML. */
 function createCheckIcon(): SVGSVGElement {
@@ -464,10 +467,20 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
 
   function open(x: number, y: number): void {
     panelEl = buildMenu(items, 'context-menu-content');
-    panelEl.style.position = 'absolute';
-    panelEl.style.top = `${y + window.scrollY}px`;
-    panelEl.style.left = `${x + window.scrollX}px`;
     document.body.appendChild(panelEl);
+    // O painel ANTES da posição: a conta mede `offsetWidth`/`offsetHeight`, e
+    // nó desanexado mede zero.
+    //
+    // Aqui a âncora é um PONTO, não um elemento, então quem serve é a irmã de
+    // `positionFloating`. Antes desta linha o `top`/`left` saía cru do
+    // `clientX`/`clientY`, sem travamento nenhum: clique direito perto da borda
+    // direita ou inferior punha metade do menu fora da tela.
+    //
+    // Um menu de contexto NÃO vira de lado — ele desliza. É `shift` puro, sem
+    // `flip`: o ponto do clique é a referência que a pessoa tem na tela, e virar
+    // o painel para cima do ponteiro o afastaria do gesto que o pediu. Também
+    // não há `data-side` a escrever, porque não havia lado para começar.
+    positionFloatingAtPoint(x, y, panelEl);
     sincronizarRadios(panelEl);
 
     isOpen = true;
