@@ -2457,9 +2457,21 @@ function auditDoDontPreview(slug) {
         if (linhas.slice(n, n + 40).some((l) => l.includes(token))) fabricas.add(decl[1]);
       }
 
+      // A ÚLTIMA marca não tem marca seguinte, e um teto fixo de 40 linhas
+      // fazia a janela dela atravessar o fim da seção e capturar o componente
+      // vivo da seção DE BAIXO. Medido em 2026-09-07 no context-menu: o par 3
+      // do react é um `<div>` desenhado à mão e passava por vivo; a regra
+      // acusava só o svelte, onde a seção termina o arquivo.
+      //
+      // O teto passa a ser o maior vão observado ENTRE as marcas deste arquivo,
+      // que é a escala real de um preview ali — 40 é chute, e chute a favor
+      // sempre erra para o lado de deixar passar.
+      const vaos = marcas.slice(1).map((m, i) => m - marcas[i]);
+      const teto = vaos.length ? Math.max(...vaos) : 40;
+
       for (let k = 0; k < marcas.length; k++) {
         const inicio = marcas[k];
-        const ate = Math.min(marcas[k + 1] ?? linhas.length, inicio + 40);
+        const ate = Math.min(marcas[k + 1] ?? linhas.length, inicio + teto);
         const janela = linhas.slice(inicio, ate);
         total += 1;
         const viva = janela.some((l) => l.includes(token))
