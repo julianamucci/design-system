@@ -47,8 +47,21 @@ import { provideDrawerModal } from './context'
  * recebe sempre um `open` definido e devolve toda mudança por `update:open`,
  * que é o caminho que ela trata corretamente nos dois modos.
  */
+/**
+ * ─── Por que `shouldScaleBackground` NÃO liga por padrão ─────────────────────
+ *
+ * O enfeite é a página encolhendo atrás do painel, e a régua compartilhada
+ * (`docs/shared/primitives/drawer-swipe.ts`) registra que nenhuma stack o liga —
+ * era o wrapper desta que contradizia o texto, com `shouldScaleBackground: true`
+ * cravado no `withDefaults`.
+ *
+ * Medido na fonte publicada em `node_modules/vaul-vue`: o efeito procura um
+ * `[data-vaul-drawer-wrapper]` na página e DESISTE quando não acha. Nenhuma das
+ * cinco stacks marca esse elemento, então o `true` nunca escalou nada — ligava
+ * uma promessa que a `props.table` compartilhada nem documenta. Tirá-lo alinha
+ * a stack ao texto sem mudar um pixel.
+ */
 const props = withDefaults(defineProps<DrawerRootProps>(), {
-  shouldScaleBackground: true,
   // Defaults do primitivo, declarados aqui porque a conversão de boolean do Vue
   // transformaria a ausência deles em `false` — e um drawer não-modal e não
   // dispensável por omissão é o oposto do que o conteúdo compartilhado documenta.

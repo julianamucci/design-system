@@ -47,6 +47,72 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Citar índice por índice trava a lista no tamanho de hoje: o conteúdo
+ * compartilhado ganha um item e ele simplesmente não existe para quem lê — sem
+ * erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu aqui com os
+ * dois últimos critérios funcionais (o arraste que dispensa e o arraste curto
+ * que volta ao repouso) e com o oitavo de acessibilidade, o da WCAG 2.5.7.
+ *
+ * Trocar 7 por 9 não resolveria: o total cravado É o defeito, e ele volta no
+ * item seguinte.
+ */
+function stringsFromDict(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+  prefix = "item",
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = t(`${base}.${prefix}${i}`, "");
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A mesma varredura para a lista cujo item é um OBJETO — cenário, critério
+ * funcional, story de regressão visual. O primeiro campo é quem decide se o
+ * item existe, e os demais acompanham.
+ */
+function entriesFromDict<K extends string>(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!t(`${base}.item${i}.${fields[0]}`, "")) break;
+    out.push(
+      Object.fromEntries(
+        fields.map((field) => [field, t(`${base}.item${i}.${field}`, "")]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
+}
+
+/**
+ * Nível WCAG e ferramenta de cada critério de acessibilidade, por índice.
+ * Ficam aqui, e não no conteúdo compartilhado, porque são IDENTIFICADORES
+ * (número de critério, nome do verificador) e identificador não se traduz.
+ * Item novo que chegue além da lista cai no par padrão em vez de sumir.
+ */
+const A11Y_TEST_LEVELS = ["AA", "4.1.2", "1.3.1", "2.1.1", "2.4.3", "1.4.3", "2.1.1", "2.5.7"];
+const A11Y_TEST_HOW = [
+  "axe-core",
+  "DevTools a11y tree",
+  "DevTools a11y tree",
+  "Keyboard test",
+  "Keyboard test",
+  "Contrast checker",
+  "Keyboard test",
+  "Keyboard test",
+];
+
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -162,34 +228,6 @@ export function DrawerDocs() {
 
   const structureCode = tContent("anatomy.structureCode");
 
-  const codeBottom = `<Drawer direction="bottom">
-  <DrawerTrigger asChild>
-    <Button variant="outline">Abrir</Button>
-  </DrawerTrigger>
-  <DrawerContent>{/* ... */}</DrawerContent>
-</Drawer>`;
-
-  const codeTop = `<Drawer direction="top">
-  <DrawerTrigger asChild>
-    <Button variant="outline">Notificar</Button>
-  </DrawerTrigger>
-  <DrawerContent>{/* ... */}</DrawerContent>
-</Drawer>`;
-
-  const codeLeft = `<Drawer direction="left">
-  <DrawerTrigger asChild>
-    <Button variant="outline">Menu</Button>
-  </DrawerTrigger>
-  <DrawerContent>{/* ... */}</DrawerContent>
-</Drawer>`;
-
-  const codeRight = `<Drawer direction="right">
-  <DrawerTrigger asChild>
-    <Button variant="outline">Editar</Button>
-  </DrawerTrigger>
-  <DrawerContent>{/* ... */}</DrawerContent>
-</Drawer>`;
-
   const interfaceCode = `// Drawer (vaul)
 interface DrawerProps {
   open?: boolean;
@@ -208,13 +246,93 @@ interface DrawerProps {
     payload: "Payload",
   };
 
-  // ─── Demonstração inline (4 directions compactos) ──────────────────────────
+  // ─── Exemplo por direção — uma fonte só para a prévia e para o snippet ─────
+  //
+  // As duas superfícies leem as MESMAS chaves: o rótulo curto nomeia o painel,
+  // o rótulo longo da demonstração o descreve, e a saída do rodapé usa o verbo
+  // de cancelamento que o próprio UX writing desta página prescreve. Enquanto
+  // cada superfície tinha o seu texto, o snippet ensinava um painel que a
+  // prévia não mostrava.
   const directions: Array<"bottom" | "top" | "left" | "right"> = [
     "bottom",
     "right",
     "left",
     "top",
   ];
+
+  // As chaves de rótulo ficam ESCRITAS por extenso, e não montadas em template:
+  // o guarda de divergência da demonstração procura `demonstration.labels.<dir>`
+  // no texto do arquivo, e a chave interpolada o deixava cego — a página não
+  // entrava sequer na comparação entre as cinco stacks.
+  const directionLabelKeys = {
+    bottom: "demonstration.labels.bottom",
+    top: "demonstration.labels.top",
+    left: "demonstration.labels.left",
+    right: "demonstration.labels.right",
+  } as const;
+
+  const directionExample = (dir: (typeof directions)[number]) => ({
+    title: tContent(`variants.items.${dir}`),
+    description: tContent(directionLabelKeys[dir]),
+    // Falta chave própria para o corpo do painel de exemplo (o `sheet` tem
+    // `demonstration.labels.body`); até ela existir, o corpo empresta a
+    // descrição do componente em vez de cravar literal em pt-BR.
+    body: tContent("description"),
+    close: tContent("usage.uxWriting.table.close.good"),
+  });
+
+  const directionCode = (dir: (typeof directions)[number]) => {
+    const ex = directionExample(dir);
+    return `<Drawer direction="${dir}">
+  <DrawerTrigger asChild>
+    <Button variant="outline">${ex.title}</Button>
+  </DrawerTrigger>
+  <DrawerContent>
+    <DrawerHeader>
+      <DrawerTitle>${ex.title}</DrawerTitle>
+      <DrawerDescription>${ex.description}</DrawerDescription>
+    </DrawerHeader>
+    <DrawerBody className="nds-text-body nds-text-muted-foreground">
+      ${ex.body}
+    </DrawerBody>
+    <DrawerFooter>
+      <DrawerClose asChild>
+        <Button variant="outline">${ex.close}</Button>
+      </DrawerClose>
+    </DrawerFooter>
+  </DrawerContent>
+</Drawer>`;
+  };
+
+  const directionPreview = (dir: (typeof directions)[number]) => {
+    const ex = directionExample(dir);
+    return (
+      <Drawer direction={dir}>
+        <DrawerTrigger asChild>
+          <Button variant="outline" size="sm" className="nds-w-full">
+            {ex.title}
+          </Button>
+        </DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>{ex.title}</DrawerTitle>
+            <DrawerDescription>{ex.description}</DrawerDescription>
+          </DrawerHeader>
+          {/* O corpo é o `DrawerBody`, e não uma `div` com utilitários de
+              espaçamento: é ele que traz `data-slot`, o `tabIndex` que deixa a
+              região rolável alcançável por teclado e a área que de fato rola. */}
+          <DrawerBody className="nds-text-body nds-text-muted-foreground">
+            {ex.body}
+          </DrawerBody>
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button variant="outline">{ex.close}</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    );
+  };
 
   return (
     <DocsPageLayout
@@ -246,35 +364,9 @@ interface DrawerProps {
               style={{ contain: "layout", position: "relative" }}
             >
               <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-                {DOMPurify.sanitize(tContent(`demonstration.labels.${dir}`))}
+                {DOMPurify.sanitize(tContent(directionLabelKeys[dir]))}
               </p>
-              <Drawer direction={dir}>
-                <DrawerTrigger asChild>
-                  <Button variant="outline" size="sm" className="nds-w-full" style={{ textTransform: "capitalize" }}>
-                    {dir}
-                  </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <DrawerHeader>
-                    <DrawerTitle style={{ textTransform: "capitalize" }}>{dir}</DrawerTitle>
-                    <DrawerDescription>
-                      {DOMPurify.sanitize(tContent(`demonstration.labels.${dir}`))}
-                    </DrawerDescription>
-                  </DrawerHeader>
-                  <div
-                    className="nds-px-4 nds-pb-2 nds-text-body nds-text-muted-foreground"
-                  >
-                    {DOMPurify.sanitize(tContent(`variants.styles.${dir}`))}
-                  </div>
-                  <DrawerFooter>
-                    <DrawerClose asChild>
-                      <Button variant="outline">
-                        {locale === "en" ? "Close" : locale === "es" ? "Cerrar" : "Fechar"}
-                      </Button>
-                    </DrawerClose>
-                  </DrawerFooter>
-                </DrawerContent>
-              </Drawer>
+              {directionPreview(dir)}
             </div>
           ))}
         </div>
@@ -283,17 +375,7 @@ interface DrawerProps {
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
         title={tContent("anatomy.title")}
-        items={[
-          tContent("anatomy.item1"),
-          tContent("anatomy.item2"),
-          tContent("anatomy.item3"),
-          tContent("anatomy.item4"),
-          tContent("anatomy.item5"),
-          tContent("anatomy.item6"),
-          tContent("anatomy.item7"),
-          tContent("anatomy.item8"),
-          tContent("anatomy.item9"),
-        ]}
+        items={stringsFromDict(tContent, "anatomy")}
         structureCode={structureCode}
         structureLabel={tContent("anatomy.structureLabel")}
       />
@@ -303,13 +385,7 @@ interface DrawerProps {
         title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
-          items: [
-            tContent("usage.guidelines.item1"),
-            tContent("usage.guidelines.item2"),
-            tContent("usage.guidelines.item3"),
-            tContent("usage.guidelines.item4"),
-            tContent("usage.guidelines.item5"),
-          ],
+          items: stringsFromDict(tContent, "usage.guidelines"),
         }}
         scenarios={{
           title: tContent("usage.scenarios.title"),
@@ -318,13 +394,7 @@ interface DrawerProps {
             use: tContent("usage.scenarios.cols.use"),
             alternative: tContent("usage.scenarios.cols.alternative"),
           },
-          items: [
-            { s: tContent("usage.scenarios.item1.s"), u: tContent("usage.scenarios.item1.u"), a: tContent("usage.scenarios.item1.a") },
-            { s: tContent("usage.scenarios.item2.s"), u: tContent("usage.scenarios.item2.u"), a: tContent("usage.scenarios.item2.a") },
-            { s: tContent("usage.scenarios.item3.s"), u: tContent("usage.scenarios.item3.u"), a: tContent("usage.scenarios.item3.a") },
-            { s: tContent("usage.scenarios.item4.s"), u: tContent("usage.scenarios.item4.u"), a: tContent("usage.scenarios.item4.a") },
-            { s: tContent("usage.scenarios.item5.s"), u: tContent("usage.scenarios.item5.u"), a: tContent("usage.scenarios.item5.a") },
-          ],
+          items: entriesFromDict(tContent, "usage.scenarios", ["s", "u", "a"]),
         }}
         uxWriting={{
           title: tContent("usage.uxWriting.title"),
@@ -363,21 +433,11 @@ interface DrawerProps {
         }}
         do={{
           title: tContent("usage.do.title"),
-          items: [
-            tContent("usage.do.item1"),
-            tContent("usage.do.item2"),
-            tContent("usage.do.item3"),
-            tContent("usage.do.item4"),
-          ],
+          items: stringsFromDict(tContent, "usage.do"),
         }}
         dont={{
           title: tContent("usage.dont.title"),
-          items: [
-            tContent("usage.dont.item1"),
-            tContent("usage.dont.item2"),
-            tContent("usage.dont.item3"),
-            tContent("usage.dont.item4"),
-          ],
+          items: stringsFromDict(tContent, "usage.dont"),
         }}
       />
 
@@ -389,16 +449,62 @@ interface DrawerProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="nds-stack nds-text-body" data-spacing="xs">
-                <div className="nds-font-medium">DrawerTitle: Editar perfil</div>
-                <div className="nds-text-muted-foreground">aria-labelledby OK</div>
-              </div>
+              <Drawer>
+                <DrawerTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    {tContent("usage.uxWriting.table.trigger.good")}
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle>{tContent("usage.uxWriting.table.title.good")}</DrawerTitle>
+                    <DrawerDescription>
+                      {tContent("usage.uxWriting.table.description.good")}
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <DrawerFooter>
+                    <DrawerClose asChild>
+                      <Button variant="outline">
+                        {tContent("usage.uxWriting.table.close.good")}
+                      </Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
             ),
+            // O anti-exemplo MANTÉM o nome acessível: um painel realmente sem
+            // `DrawerTitle` reprovaria o axe da própria docs page, e o conteúdo
+            // compartilhado (`usage.guidelines.item3`) diz que o título oculto é
+            // a forma CORRETA. A lição fica no corpo do painel — o que se evita
+            // é o painel sem título nenhum, não o título visualmente oculto.
             dontPreview: (
-              <div className="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="xs">
-                <div className="nds-italic">(sem DrawerTitle)</div>
-                <div>screen reader silencioso</div>
-              </div>
+              <Drawer>
+                <DrawerTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    {tContent("usage.uxWriting.table.trigger.good")}
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle className="nds-sr-only">
+                      {tContent("usage.uxWriting.table.title.good")}
+                    </DrawerTitle>
+                    <DrawerDescription className="nds-sr-only">
+                      {tContent("usage.uxWriting.table.description.good")}
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <DrawerBody className="nds-text-body nds-text-muted-foreground">
+                    {toPlainText(tContent("doDont.pair1.dont"))}
+                  </DrawerBody>
+                  <DrawerFooter>
+                    <DrawerClose asChild>
+                      <Button variant="outline">
+                        {tContent("usage.uxWriting.table.close.good")}
+                      </Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
             dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
@@ -406,17 +512,36 @@ interface DrawerProps {
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
-            doPreview: (
-              <div className="nds-text-body">
-                <div className="nds-font-medium">Drawer (bottom)</div>
-                <div className="nds-text-muted-foreground">swipe-to-close</div>
-              </div>
-            ),
+            doPreview: directionPreview("bottom"),
+            // Aninhar de verdade quebraria o foco preso da própria docs page —
+            // que é exatamente o que a legenda condena. O painel é um só, e o
+            // que ele explica no corpo é o motivo de não haver um segundo.
             dontPreview: (
-              <div className="nds-text-body">
-                <div className="nds-font-medium">Drawer dentro de Drawer</div>
-                <div className="nds-text-destructive">focus trap quebra</div>
-              </div>
+              <Drawer>
+                <DrawerTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    {tContent("usage.uxWriting.table.trigger.good")}
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle>{tContent("usage.uxWriting.table.title.good")}</DrawerTitle>
+                    <DrawerDescription>
+                      {tContent("usage.uxWriting.table.description.good")}
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <DrawerBody className="nds-text-body nds-text-muted-foreground">
+                    {toPlainText(tContent("doDont.pair2.dont"))}
+                  </DrawerBody>
+                  <DrawerFooter>
+                    <DrawerClose asChild>
+                      <Button variant="outline">
+                        {tContent("usage.uxWriting.table.close.good")}
+                      </Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
             ),
             doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
             dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
@@ -438,45 +563,29 @@ interface DrawerProps {
             trackId: "bottom",
             name: tContent("variants.items.bottom"),
             description: stripHtml(tContent("variants.styles.bottom")),
-            code: codeBottom,
-            preview: (
-              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                direction=&quot;bottom&quot;
-              </div>
-            ),
+            code: directionCode("bottom"),
+            preview: directionPreview("bottom"),
           },
           {
             trackId: "top",
             name: tContent("variants.items.top"),
             description: stripHtml(tContent("variants.styles.top")),
-            code: codeTop,
-            preview: (
-              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                direction=&quot;top&quot;
-              </div>
-            ),
+            code: directionCode("top"),
+            preview: directionPreview("top"),
           },
           {
             trackId: "left",
             name: tContent("variants.items.left"),
             description: stripHtml(tContent("variants.styles.left")),
-            code: codeLeft,
-            preview: (
-              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                direction=&quot;left&quot;
-              </div>
-            ),
+            code: directionCode("left"),
+            preview: directionPreview("left"),
           },
           {
             trackId: "right",
             name: tContent("variants.items.right"),
             description: stripHtml(tContent("variants.styles.right")),
-            code: codeRight,
-            preview: (
-              <div className="nds-text-caption nds-font-mono nds-text-muted-foreground">
-                direction=&quot;right&quot;
-              </div>
-            ),
+            code: directionCode("right"),
+            preview: directionPreview("right"),
           },
           {
             trackId: "withScroll",
@@ -553,6 +662,10 @@ interface DrawerProps {
         items={[
           {
             trackId: "withForm",
+            // Mesmo formulário da stack de referência: "Salvar alterações" no
+            // rodapé e os valores de exemplo dela. Esta stack tinha "Confirmar",
+            // outra descrição e outro nome no campo — a mesma composição contava
+            // uma história diferente aqui.
             name: tContent("variants.compositions.withForm.name"),
             description: tContent("variants.compositions.withForm.description"),
             useWhen: tContent("variants.compositions.withForm.use"),
@@ -563,22 +676,22 @@ interface DrawerProps {
   <DrawerContent>
     <DrawerHeader>
       <DrawerTitle>Editar perfil</DrawerTitle>
-      <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
+      <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
     </DrawerHeader>
     <DrawerBody>
       <form className="nds-grid" data-spacing="sm">
         <div className="nds-grid" data-spacing="xs">
           <Label htmlFor="drawer-name">Nome</Label>
-          <Input id="drawer-name" defaultValue="Juliana" />
+          <Input id="drawer-name" defaultValue="Maria Souza" />
         </div>
         <div className="nds-grid" data-spacing="xs">
           <Label htmlFor="drawer-email">E-mail</Label>
-          <Input id="drawer-email" type="email" defaultValue="juliana@example.com" />
+          <Input id="drawer-email" type="email" defaultValue="maria@exemplo.com" />
         </div>
       </form>
     </DrawerBody>
     <DrawerFooter>
-      <Button>Confirmar</Button>
+      <Button>Salvar alterações</Button>
       <DrawerClose asChild>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
@@ -593,22 +706,22 @@ interface DrawerProps {
                 <DrawerContent>
                   <DrawerHeader>
                     <DrawerTitle>Editar perfil</DrawerTitle>
-                    <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
+                    <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
                   </DrawerHeader>
                   <DrawerBody>
                     <form className="nds-grid" data-spacing="sm">
                       <div className="nds-grid" data-spacing="xs">
                         <Label htmlFor="docs-drawer-name">Nome</Label>
-                        <Input id="docs-drawer-name" defaultValue="Juliana" />
+                        <Input id="docs-drawer-name" defaultValue="Maria Souza" />
                       </div>
                       <div className="nds-grid" data-spacing="xs">
                         <Label htmlFor="docs-drawer-email">E-mail</Label>
-                        <Input id="docs-drawer-email" type="email" defaultValue="juliana@example.com" />
+                        <Input id="docs-drawer-email" type="email" defaultValue="maria@exemplo.com" />
                       </div>
                     </form>
                   </DrawerBody>
                   <DrawerFooter>
-                    <Button>Confirmar</Button>
+                    <Button>Salvar alterações</Button>
                     <DrawerClose asChild>
                       <Button variant="outline">Cancelar</Button>
                     </DrawerClose>
@@ -622,15 +735,20 @@ interface DrawerProps {
             name: tContent("variants.compositions.withConfirmation.name"),
             description: tContent("variants.compositions.withConfirmation.description"),
             useWhen: tContent("variants.compositions.withConfirmation.use"),
+            // Mesmo exemplo da story `WithConfirmation` — que é a superfície
+            // TESTADA (`toHaveAccessibleName("Remover anexo?")`) e a que o
+            // `drawer.source.ts` publica. A página mostrava outra confirmação
+            // ("Remover item da lista?"): quem lia a doc e quem abria a story
+            // viam painéis diferentes do mesmo nome de composição.
             code: `<Drawer>
   <DrawerTrigger asChild>
-    <Button variant="outline">Remover item</Button>
+    <Button variant="outline">Remover anexo</Button>
   </DrawerTrigger>
   <DrawerContent>
     <DrawerHeader>
-      <DrawerTitle>Remover item da lista?</DrawerTitle>
+      <DrawerTitle>Remover anexo?</DrawerTitle>
       <DrawerDescription>
-        Você poderá adicioná-lo novamente a qualquer momento.
+        O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.
       </DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
@@ -644,13 +762,13 @@ interface DrawerProps {
             preview: (
               <Drawer>
                 <DrawerTrigger asChild>
-                  <Button variant="outline">Remover item</Button>
+                  <Button variant="outline">Remover anexo</Button>
                 </DrawerTrigger>
                 <DrawerContent>
                   <DrawerHeader>
-                    <DrawerTitle>Remover item da lista?</DrawerTitle>
+                    <DrawerTitle>Remover anexo?</DrawerTitle>
                     <DrawerDescription>
-                      Você poderá adicioná-lo novamente a qualquer momento.
+                      O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.
                     </DrawerDescription>
                   </DrawerHeader>
                   <DrawerFooter>
@@ -816,15 +934,7 @@ interface DrawerProps {
         screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
-        items={[
-          tContent("accessibility.items.item1"),
-          tContent("accessibility.items.item2"),
-          tContent("accessibility.items.item3"),
-          tContent("accessibility.items.item4"),
-          tContent("accessibility.items.item5"),
-          tContent("accessibility.items.item6"),
-          tContent("accessibility.items.item7"),
-        ]}
+        items={stringsFromDict(tContent, "accessibility.items")}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         // Sem linha de "Swipe": a tabela é de teclado, e arrastar é gesto de
         // ponteiro. O que se sabe sobre o arraste (nunca é o único caminho)
@@ -868,13 +978,7 @@ interface DrawerProps {
       <DocsNotes
         title={tContent("notes.title")}
         componentSlug="drawer"
-        items={[
-          { title: "", content: tContent("notes.item1") },
-          { title: "", content: tContent("notes.item2") },
-          { title: "", content: tContent("notes.item3") },
-          { title: "", content: tContent("notes.item4") },
-          { title: "", content: tContent("notes.item5") },
-        ]}
+        items={stringsFromDict(tContent, "notes").map((content) => ({ title: "", content }))}
       />
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
@@ -900,43 +1004,12 @@ interface DrawerProps {
             result: tNav("common.expectedResult"),
             priority: tNav("common.priority"),
           },
-          items: [
-            {
-              action: tContent("testes.functional.item1.action"),
-              result: tContent("testes.functional.item1.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item1.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item2.action"),
-              result: tContent("testes.functional.item2.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item2.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item3.action"),
-              result: tContent("testes.functional.item3.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item3.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item4.action"),
-              result: tContent("testes.functional.item4.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item4.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item5.action"),
-              result: tContent("testes.functional.item5.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item5.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item6.action"),
-              result: tContent("testes.functional.item6.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item6.priority")] ?? "common.medium"),
-            },
-            {
-              action: tContent("testes.functional.item7.action"),
-              result: tContent("testes.functional.item7.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item7.priority")] ?? "common.medium"),
-            },
-          ],
+          items: entriesFromDict(tContent, "testes.functional", ["action", "result", "priority"]).map(
+            (entry) => ({
+              ...entry,
+              priority: tNav(priorityKeyMap[entry.priority] ?? "common.high"),
+            }),
+          ),
         }}
         accessibility={{
           title: tContent("testes.accessibility.title"),
@@ -945,15 +1018,11 @@ interface DrawerProps {
             level: "WCAG",
             how: tNav("common.howToVerify"),
           },
-          items: [
-            { criterion: tContent("testes.accessibility.item1"), level: "AA", how: "axe-core" },
-            { criterion: tContent("testes.accessibility.item2"), level: "4.1.2", how: "DevTools a11y tree" },
-            { criterion: tContent("testes.accessibility.item3"), level: "1.3.1", how: "DevTools a11y tree" },
-            { criterion: tContent("testes.accessibility.item4"), level: "2.1.1", how: "Keyboard test" },
-            { criterion: tContent("testes.accessibility.item5"), level: "2.4.3", how: "Keyboard test" },
-            { criterion: tContent("testes.accessibility.item6"), level: "1.4.3", how: "Contrast checker" },
-            { criterion: tContent("testes.accessibility.item7"), level: "2.1.1", how: "Keyboard test" },
-          ],
+          items: stringsFromDict(tContent, "testes.accessibility").map((criterion, i) => ({
+            criterion,
+            level: A11Y_TEST_LEVELS[i] ?? "AA",
+            how: A11Y_TEST_HOW[i] ?? "axe-core",
+          })),
         }}
         visual={{
           title: tContent("testes.visual.title"),
@@ -961,13 +1030,10 @@ interface DrawerProps {
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          items: [
-            { story: tContent("testes.visual.item1.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item1.priority")] ?? "common.high") },
-            { story: tContent("testes.visual.item2.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item2.priority")] ?? "common.high") },
-            { story: tContent("testes.visual.item3.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item3.priority")] ?? "common.high") },
-            { story: tContent("testes.visual.item4.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.medium") },
-            { story: tContent("testes.visual.item5.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item5.priority")] ?? "common.high") },
-          ],
+          items: entriesFromDict(tContent, "testes.visual", ["story", "priority"]).map((entry) => ({
+            story: entry.story,
+            priority: tNav(priorityKeyMap[entry.priority] ?? "common.high"),
+          })),
         }}
       />
     </DocsPageLayout>

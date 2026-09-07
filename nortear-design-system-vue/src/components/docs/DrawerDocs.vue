@@ -58,14 +58,77 @@ const { t: tNav } = useTranslation(uiTranslations);
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
-  high: 'Alta',
-  medium: 'Média',
-  low: 'Baixa',
+  high: 'common.high',
+  medium: 'common.medium',
+  low: 'common.low',
 };
 
+// A prioridade vem do dicionário de navegação, não de literal em pt-BR: com o
+// mapa cravado, "Alta/Média/Baixa" apareciam também em `en` e `es`.
 function localPriority(raw: string): string {
-  return priorityKeyMap[raw] ?? raw;
+  return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
+
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Citar índice por índice trava a lista no tamanho de hoje: o conteúdo
+ * compartilhado ganha um item e ele simplesmente não existe para quem lê — sem
+ * erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu aqui com os
+ * dois últimos critérios funcionais (o arraste que dispensa e o arraste curto
+ * que volta ao repouso) e com o oitavo de acessibilidade, o da WCAG 2.5.7.
+ *
+ * Trocar 7 por 9 não resolveria: o total cravado É o defeito, e ele volta no
+ * item seguinte.
+ */
+function stringsFromDict(base: string, prefix = 'item'): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = tContent(`${base}.${prefix}${i}`, '');
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A mesma varredura para a lista cujo item é um OBJETO — cenário, critério
+ * funcional, story de regressão visual. O primeiro campo é quem decide se o
+ * item existe, e os demais acompanham.
+ */
+function entriesFromDict<K extends string>(
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!tContent(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map((field) => [field, tContent(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
+}
+
+/**
+ * Nível WCAG e ferramenta de cada critério de acessibilidade, por índice.
+ * Ficam aqui, e não no conteúdo compartilhado, porque são IDENTIFICADORES
+ * (número de critério, nome do verificador) e identificador não se traduz.
+ * Item novo que chegue além da lista cai no par padrão em vez de sumir.
+ */
+const A11Y_TEST_LEVELS = ['AA', '4.1.2', '1.3.1', '2.1.1', '2.4.3', '1.4.3', '2.1.1', '2.5.7'];
+const A11Y_TEST_HOW = [
+  'axe-core',
+  'DevTools a11y tree',
+  'DevTools a11y tree',
+  'Keyboard test',
+  'Keyboard test',
+  'Contrast checker',
+  'Keyboard test',
+  'Keyboard test',
+];
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
 
@@ -157,42 +220,63 @@ const codeImportBasic = `import {
   DrawerTrigger,
 } from "@/components/ui/drawer";`;
 
-const codeBottom = `<Drawer>
+// ─── Exemplo por direção — uma fonte só para a prévia e para o snippet ───────
+//
+// As duas superfícies leem as MESMAS chaves: o rótulo curto nomeia o painel, o
+// rótulo longo da demonstração o descreve, e a saída do rodapé usa o verbo de
+// cancelamento que o próprio UX writing desta página prescreve. Antes o snippet
+// de Top e de Left saía do corpo de `codeBottom` ("Editar perfil", "Salvar") e a
+// prévia mostrava outro painel: nenhum dos dois era o outro.
+type DrawerDirection = 'bottom' | 'top' | 'left' | 'right';
+
+// As chaves de rótulo ficam ESCRITAS por extenso, e não montadas em template: o
+// guarda de divergência da demonstração procura `demonstration.labels.<dir>` no
+// texto do arquivo, e a chave interpolada o deixaria cego.
+const directionLabelKeys = {
+  bottom: 'demonstration.labels.bottom',
+  top: 'demonstration.labels.top',
+  left: 'demonstration.labels.left',
+  right: 'demonstration.labels.right',
+} as const;
+
+function directionExample(dir: DrawerDirection) {
+  return {
+    title: tContent(`variants.items.${dir}`),
+    description: tContent(directionLabelKeys[dir]),
+    // Falta chave própria para o corpo do painel de exemplo (o `sheet` tem
+    // `demonstration.labels.body`); até ela existir, o corpo empresta a
+    // descrição do componente em vez de cravar literal em pt-BR.
+    body: tContent('description'),
+    close: tContent('usage.uxWriting.table.close.good'),
+  };
+}
+
+function directionCode(dir: DrawerDirection): string {
+  const ex = directionExample(dir);
+  return `<Drawer direction="${dir}">
   <DrawerTrigger as-child>
-    <Button variant="outline">Abrir</Button>
+    <Button variant="outline">${ex.title}</Button>
   </DrawerTrigger>
   <DrawerContent>
     <DrawerHeader>
-      <DrawerTitle>Editar perfil</DrawerTitle>
-      <DrawerDescription>Atualize seus dados.</DrawerDescription>
+      <DrawerTitle>${ex.title}</DrawerTitle>
+      <DrawerDescription>${ex.description}</DrawerDescription>
     </DrawerHeader>
+    <DrawerBody class="nds-text-body nds-text-muted-foreground">
+      ${ex.body}
+    </DrawerBody>
     <DrawerFooter>
-      <Button>Salvar</Button>
       <DrawerClose as-child>
-        <Button variant="outline">Cancelar</Button>
+        <Button variant="outline">${ex.close}</Button>
       </DrawerClose>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`;
+}
 
-const codeRight = `<Drawer direction="right">
-  <DrawerTrigger as-child>
-    <Button variant="outline">Filtros</Button>
-  </DrawerTrigger>
-  <DrawerContent>
-    <DrawerHeader>
-      <DrawerTitle>Filtros</DrawerTitle>
-      <DrawerDescription>Refine sua busca.</DrawerDescription>
-    </DrawerHeader>
-    <DrawerFooter>
-      <Button>Aplicar</Button>
-      <DrawerClose as-child>
-        <Button variant="outline">Cancelar</Button>
-      </DrawerClose>
-    </DrawerFooter>
-  </DrawerContent>
-</Drawer>`;
-
+// `shouldScaleBackground` saiu da interface publicada: a `props.table`
+// compartilhada não a conhece, e o wrapper desta stack deixou de ligá-la — ver
+// o comentário no `Drawer.vue`.
 const interfaceCode = `// Drawer (root) — props vindas de vaul-vue
 interface DrawerRootProps {
   open?: boolean;
@@ -200,7 +284,6 @@ interface DrawerRootProps {
   direction?: 'bottom' | 'top' | 'left' | 'right';
   modal?: boolean;
   dismissible?: boolean;
-  shouldScaleBackground?: boolean;
 }
 
 // DrawerContent — class + slot
@@ -214,23 +297,24 @@ interface DrawerDescriptionProps { class?: string }`;
 
 const anatomyStructure = computed(() => tContent('anatomy.structureCode'));
 
-const anatomyItems = computed(() => [
-  tContent('anatomy.item1'),
-  tContent('anatomy.item2'),
-  tContent('anatomy.item3'),
-  tContent('anatomy.item4'),
-  tContent('anatomy.item5'),
-  tContent('anatomy.item6'),
-  tContent('anatomy.item7'),
-  tContent('anatomy.item8'),
-  tContent('anatomy.item9'),
-]);
+const anatomyItems = computed(() => stringsFromDict('anatomy'));
+
+const directionsExamples = computed<Record<DrawerDirection, ReturnType<typeof directionExample>>>(() => ({
+  bottom: directionExample('bottom'),
+  top: directionExample('top'),
+  left: directionExample('left'),
+  right: directionExample('right'),
+}));
+
+// A demonstração mostrava só a direção de baixo — as outras três, que são o que
+// distingue este componente, ficavam de fora da primeira dobra da página.
+const demonstrationDirections: DrawerDirection[] = ['bottom', 'right', 'left', 'top'];
 
 const variantItems = computed(() => [
-  { trackId: 'bottom', name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: codeBottom },
-  { trackId: 'top', name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: codeBottom.replace('<Drawer>', '<Drawer direction="top">') },
-  { trackId: 'left', name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: codeBottom.replace('<Drawer>', '<Drawer direction="left">') },
-  { trackId: 'right', name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: codeRight },
+  { trackId: 'bottom', name: tContent('variants.items.bottom'), description: stripHtml(tContent('variants.styles.bottom')), code: directionCode('bottom') },
+  { trackId: 'top', name: tContent('variants.items.top'),    description: stripHtml(tContent('variants.styles.top')),    code: directionCode('top') },
+  { trackId: 'left', name: tContent('variants.items.left'),   description: stripHtml(tContent('variants.styles.left')),   code: directionCode('left') },
+  { trackId: 'right', name: tContent('variants.items.right'),  description: stripHtml(tContent('variants.styles.right')),  code: directionCode('right') },
   {
     trackId: 'withScroll',
     name: tContent('variants.items.withScroll.name'),
@@ -268,15 +352,20 @@ const codeCompWithForm = `<Drawer>
   </DrawerContent>
 </Drawer>`;
 
+// Mesmo exemplo da story `WithConfirmation` — que é a superfície TESTADA
+// (`toHaveAccessibleName('Remover anexo?')`) e a que o `drawer.source.ts`
+// publica. A página mostrava outra confirmação ("Remover item da lista?"): quem
+// lia a doc e quem abria a story viam painéis diferentes do mesmo nome de
+// composição.
 const codeCompWithConfirmation = `<Drawer>
   <DrawerTrigger as-child>
-    <Button variant="outline">Remover item</Button>
+    <Button variant="outline">Remover anexo</Button>
   </DrawerTrigger>
   <DrawerContent>
     <DrawerHeader>
-      <DrawerTitle>Remover item da lista?</DrawerTitle>
+      <DrawerTitle>Remover anexo?</DrawerTitle>
       <DrawerDescription>
-        Você poderá adicioná-lo novamente a qualquer momento.
+        O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.
       </DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
@@ -364,15 +453,7 @@ const tokenRows = computed(() => [
   { token: '--drawer-max-width',   value: tContent('tokens.table.maxWidth.class'),   description: tContent('tokens.table.maxWidth.part')   },
 ]);
 
-const accessibilityItems = computed(() => [
-  tContent('accessibility.items.item1'),
-  tContent('accessibility.items.item2'),
-  tContent('accessibility.items.item3'),
-  tContent('accessibility.items.item4'),
-  tContent('accessibility.items.item5'),
-  tContent('accessibility.items.item6'),
-  tContent('accessibility.items.item7'),
-]);
+const accessibilityItems = computed(() => stringsFromDict('accessibility.items'));
 
 // Sem linha de "Swipe": a tabela é de teclado, e arrastar é gesto de ponteiro.
 // O que se sabe sobre o arraste (nunca é o único caminho) está em
@@ -390,35 +471,37 @@ const relatedItems = computed(() => [
   { name: tContent('related.items.sidebar.name'),     description: toPlainText(tContent('related.items.sidebar.description')),     path: '?path=/docs/components-layout-sidebar--docs'     },
 ]);
 
-const noteItems = computed(() => [
-  { title: '', content: tContent('notes.item1') },
-  { title: '', content: tContent('notes.item2') },
-  { title: '', content: tContent('notes.item3') },
-  { title: '', content: tContent('notes.item4') },
-  { title: '', content: tContent('notes.item5') },
-]);
+const noteItems = computed(() => stringsFromDict('notes').map((content) => ({ title: '', content })));
 
 const analyticsItems = computed(() => [
   { event: 'drawer_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'drawer', location, label }" },
   { event: 'drawer_close', trigger: 'onOpenChange(false)', payload: "{ component: 'drawer', location, label }" },
 ]);
 
-const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
-  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
-  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
-  priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
-})));
+const functionalTestItems = computed(() =>
+  entriesFromDict('testes.functional', ['action', 'result', 'priority']).map((entry) => ({
+    action: toPlainText(entry.action),
+    result: toPlainText(entry.result),
+    priority: localPriority(entry.priority),
+  })),
+);
 
-const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
-  criterion: tContent(`testes.accessibility.item${i}`),
-  level: 'AA',
-  how: tContent(`testes.accessibility.item${i}`),
-})));
+// A coluna "como verificar" repetia o próprio critério — mesma frase duas vezes
+// na linha, e nenhuma informação sobre a ferramenta.
+const a11yTestItems = computed(() =>
+  stringsFromDict('testes.accessibility').map((criterion, i) => ({
+    criterion,
+    level: A11Y_TEST_LEVELS[i] ?? 'AA',
+    how: A11Y_TEST_HOW[i] ?? 'axe-core',
+  })),
+);
 
-const visualTestItems = computed(() => [1, 2, 3, 4, 5].map((i) => ({
-  story: tContent(`testes.visual.item${i}.story`),
-  priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
-})));
+const visualTestItems = computed(() =>
+  entriesFromDict('testes.visual', ['story', 'priority']).map((entry) => ({
+    story: entry.story,
+    priority: localPriority(entry.priority),
+  })),
+);
 
 const a11yCritCols = computed(() => ({
   criterion: tNav('common.criterion'),
@@ -448,29 +531,46 @@ const a11yCritCols = computed(() => ({
         class="nds-cluster nds-w-full"
         data-justify="center"
         data-spacing="md"
-        style="contain: layout"
+        style="contain: layout; flex-wrap: wrap"
       >
-        <Drawer>
-          <DrawerTrigger as-child>
-            <Button variant="outline">
-              {{ tContent('demonstration.labels.bottom') }}
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader>
-              <DrawerTitle>{{ tContent('demonstration.labels.bottom') }}</DrawerTitle>
-              <DrawerDescription>{{ tContent('description') }}</DrawerDescription>
-            </DrawerHeader>
-            <DrawerFooter>
-              <Button>OK</Button>
-              <DrawerClose as-child>
-                <Button variant="outline">
-                  Cancelar
-                </Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
+        <div
+          v-for="dir in demonstrationDirections"
+          :key="dir"
+          class="nds-stack"
+          data-spacing="xs"
+          style="contain: layout; position: relative"
+        >
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ directionsExamples[dir].description }}
+          </p>
+          <Drawer :direction="dir">
+            <DrawerTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+                class="nds-w-full"
+              >
+                {{ directionsExamples[dir].title }}
+              </Button>
+            </DrawerTrigger>
+            <DrawerContent>
+              <DrawerHeader>
+                <DrawerTitle>{{ directionsExamples[dir].title }}</DrawerTitle>
+                <DrawerDescription>{{ directionsExamples[dir].description }}</DrawerDescription>
+              </DrawerHeader>
+              <DrawerBody class="nds-text-body nds-text-muted-foreground">
+                {{ directionsExamples[dir].body }}
+              </DrawerBody>
+              <DrawerFooter>
+                <DrawerClose as-child>
+                  <Button variant="outline">
+                    {{ directionsExamples[dir].close }}
+                  </Button>
+                </DrawerClose>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+        </div>
       </div>
     </DocsDemonstration>
 
@@ -487,13 +587,7 @@ const a11yCritCols = computed(() => ({
       :title="tContent('usage.title')"
       :guidelines="{
         title: tContent('usage.guidelines.title'),
-        items: [
-          stripHtml(tContent('usage.guidelines.item1')),
-          stripHtml(tContent('usage.guidelines.item2')),
-          stripHtml(tContent('usage.guidelines.item3')),
-          stripHtml(tContent('usage.guidelines.item4')),
-          stripHtml(tContent('usage.guidelines.item5')),
-        ],
+        items: stringsFromDict('usage.guidelines').map(stripHtml),
       }"
       :scenarios="{
         title: tContent('usage.scenarios.title'),
@@ -502,13 +596,7 @@ const a11yCritCols = computed(() => ({
           use: tContent('usage.scenarios.cols.use'),
           alternative: tContent('usage.scenarios.cols.alternative'),
         },
-        items: [
-          { s: tContent('usage.scenarios.item1.s'), u: tContent('usage.scenarios.item1.u'), a: tContent('usage.scenarios.item1.a') },
-          { s: tContent('usage.scenarios.item2.s'), u: tContent('usage.scenarios.item2.u'), a: tContent('usage.scenarios.item2.a') },
-          { s: tContent('usage.scenarios.item3.s'), u: tContent('usage.scenarios.item3.u'), a: tContent('usage.scenarios.item3.a') },
-          { s: tContent('usage.scenarios.item4.s'), u: tContent('usage.scenarios.item4.u'), a: tContent('usage.scenarios.item4.a') },
-          { s: tContent('usage.scenarios.item5.s'), u: tContent('usage.scenarios.item5.u'), a: tContent('usage.scenarios.item5.a') },
-        ],
+        items: entriesFromDict('usage.scenarios', ['s', 'u', 'a']),
       }"
       :ux-writing="{
         title: tContent('usage.uxWriting.title'),
@@ -527,21 +615,11 @@ const a11yCritCols = computed(() => ({
       }"
       :do="{
         title: tContent('usage.do.title'),
-        items: [
-          tContent('usage.do.item1'),
-          tContent('usage.do.item2'),
-          tContent('usage.do.item3'),
-          tContent('usage.do.item4'),
-        ],
+        items: stringsFromDict('usage.do'),
       }"
       :dont="{
         title: tContent('usage.dont.title'),
-        items: [
-          tContent('usage.dont.item1'),
-          tContent('usage.dont.item2'),
-          tContent('usage.dont.item3'),
-          tContent('usage.dont.item4'),
-        ],
+        items: stringsFromDict('usage.dont'),
       }"
     />
 
@@ -549,8 +627,8 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -566,14 +644,13 @@ const a11yCritCols = computed(() => ({
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>Editar perfil</DrawerTitle>
-                <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+                <DrawerTitle>{{ tContent('usage.uxWriting.table.title.good') }}</DrawerTitle>
+                <DrawerDescription>{{ tContent('usage.uxWriting.table.description.good') }}</DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
-                <Button>Salvar</Button>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Cancelar
+                    {{ tContent('usage.uxWriting.table.close.good') }}
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -581,6 +658,14 @@ const a11yCritCols = computed(() => ({
           </Drawer>
         </div>
       </template>
+      <!--
+        O anti-exemplo MANTÉM o nome acessível: um painel realmente sem
+        `DrawerTitle` reprovaria o axe da própria docs page, e o conteúdo
+        compartilhado (`usage.guidelines.item3`) diz que o título oculto é a
+        forma CORRETA — o anti-exemplo estava, portanto, fazendo a coisa certa.
+        A lição passou para o CORPO do painel: o que se evita é o painel sem
+        título nenhum, não o título visualmente oculto.
+      -->
       <template #dont-preview-0>
         <div
           style="contain: layout"
@@ -589,20 +674,25 @@ const a11yCritCols = computed(() => ({
           <Drawer>
             <DrawerTrigger as-child>
               <Button variant="outline">
-                {{ tContent('usage.uxWriting.table.trigger.bad') }}
+                {{ tContent('usage.uxWriting.table.trigger.good') }}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
                 <DrawerTitle class="nds-sr-only">
-                  Sem título visível
+                  {{ tContent('usage.uxWriting.table.title.good') }}
                 </DrawerTitle>
-                <DrawerDescription>Conteúdo sem título — leitor de tela não anuncia.</DrawerDescription>
+                <DrawerDescription class="nds-sr-only">
+                  {{ tContent('usage.uxWriting.table.description.good') }}
+                </DrawerDescription>
               </DrawerHeader>
+              <DrawerBody class="nds-text-body nds-text-muted-foreground">
+                {{ toPlainText(tContent('doDont.pair1.dont')) }}
+              </DrawerBody>
               <DrawerFooter>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Fechar
+                    {{ tContent('usage.uxWriting.table.close.good') }}
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -618,19 +708,21 @@ const a11yCritCols = computed(() => ({
           <Drawer direction="bottom">
             <DrawerTrigger as-child>
               <Button variant="outline">
-                {{ tContent('usage.uxWriting.table.trigger.good') }}
+                {{ directionsExamples.bottom.title }}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>Filtros</DrawerTitle>
-                <DrawerDescription>Direção bottom com swipe natural em mobile.</DrawerDescription>
+                <DrawerTitle>{{ directionsExamples.bottom.title }}</DrawerTitle>
+                <DrawerDescription>{{ directionsExamples.bottom.description }}</DrawerDescription>
               </DrawerHeader>
+              <DrawerBody class="nds-text-body nds-text-muted-foreground">
+                {{ directionsExamples.bottom.body }}
+              </DrawerBody>
               <DrawerFooter>
-                <Button>Aplicar</Button>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Cancelar
+                    {{ directionsExamples.bottom.close }}
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -638,6 +730,11 @@ const a11yCritCols = computed(() => ({
           </Drawer>
         </div>
       </template>
+      <!--
+        Aninhar de verdade quebraria o foco preso da PRÓPRIA docs page — que é
+        exatamente o que a legenda condena. O painel é um só, e o que ele
+        explica no corpo é o motivo de não haver um segundo.
+      -->
       <template #dont-preview-1>
         <div
           style="contain: layout"
@@ -646,18 +743,21 @@ const a11yCritCols = computed(() => ({
           <Drawer>
             <DrawerTrigger as-child>
               <Button variant="outline">
-                {{ tContent('usage.uxWriting.table.trigger.bad') }}
+                {{ tContent('usage.uxWriting.table.trigger.good') }}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>Drawer aninhado (errado)</DrawerTitle>
-                <DrawerDescription>Aninhar Drawers quebra focus trap e gestos.</DrawerDescription>
+                <DrawerTitle>{{ tContent('usage.uxWriting.table.title.good') }}</DrawerTitle>
+                <DrawerDescription>{{ tContent('usage.uxWriting.table.description.good') }}</DrawerDescription>
               </DrawerHeader>
+              <DrawerBody class="nds-text-body nds-text-muted-foreground">
+                {{ toPlainText(tContent('doDont.pair2.dont')) }}
+              </DrawerBody>
               <DrawerFooter>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Fechar
+                    {{ tContent('usage.uxWriting.table.close.good') }}
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -689,18 +789,21 @@ const a11yCritCols = computed(() => ({
           <Drawer direction="bottom">
             <DrawerTrigger as-child>
               <Button variant="outline">
-                {{ tContent('variants.items.bottom') }}
+                {{ directionsExamples.bottom.title }}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>{{ tContent('variants.items.bottom') }}</DrawerTitle>
-                <DrawerDescription>direction=bottom</DrawerDescription>
+                <DrawerTitle>{{ directionsExamples.bottom.title }}</DrawerTitle>
+                <DrawerDescription>{{ directionsExamples.bottom.description }}</DrawerDescription>
               </DrawerHeader>
+              <DrawerBody class="nds-text-body nds-text-muted-foreground">
+                {{ directionsExamples.bottom.body }}
+              </DrawerBody>
               <DrawerFooter>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Fechar
+                    {{ directionsExamples.bottom.close }}
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -716,18 +819,21 @@ const a11yCritCols = computed(() => ({
           <Drawer direction="top">
             <DrawerTrigger as-child>
               <Button variant="outline">
-                {{ tContent('variants.items.top') }}
+                {{ directionsExamples.top.title }}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>{{ tContent('variants.items.top') }}</DrawerTitle>
-                <DrawerDescription>direction=top</DrawerDescription>
+                <DrawerTitle>{{ directionsExamples.top.title }}</DrawerTitle>
+                <DrawerDescription>{{ directionsExamples.top.description }}</DrawerDescription>
               </DrawerHeader>
+              <DrawerBody class="nds-text-body nds-text-muted-foreground">
+                {{ directionsExamples.top.body }}
+              </DrawerBody>
               <DrawerFooter>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Fechar
+                    {{ directionsExamples.top.close }}
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -743,18 +849,21 @@ const a11yCritCols = computed(() => ({
           <Drawer direction="left">
             <DrawerTrigger as-child>
               <Button variant="outline">
-                {{ tContent('variants.items.left') }}
+                {{ directionsExamples.left.title }}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>{{ tContent('variants.items.left') }}</DrawerTitle>
-                <DrawerDescription>direction=left</DrawerDescription>
+                <DrawerTitle>{{ directionsExamples.left.title }}</DrawerTitle>
+                <DrawerDescription>{{ directionsExamples.left.description }}</DrawerDescription>
               </DrawerHeader>
+              <DrawerBody class="nds-text-body nds-text-muted-foreground">
+                {{ directionsExamples.left.body }}
+              </DrawerBody>
               <DrawerFooter>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Fechar
+                    {{ directionsExamples.left.close }}
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -770,18 +879,21 @@ const a11yCritCols = computed(() => ({
           <Drawer direction="right">
             <DrawerTrigger as-child>
               <Button variant="outline">
-                {{ tContent('variants.items.right') }}
+                {{ directionsExamples.right.title }}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>{{ tContent('variants.items.right') }}</DrawerTitle>
-                <DrawerDescription>direction=right</DrawerDescription>
+                <DrawerTitle>{{ directionsExamples.right.title }}</DrawerTitle>
+                <DrawerDescription>{{ directionsExamples.right.description }}</DrawerDescription>
               </DrawerHeader>
+              <DrawerBody class="nds-text-body nds-text-muted-foreground">
+                {{ directionsExamples.right.body }}
+              </DrawerBody>
               <DrawerFooter>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Fechar
+                    {{ directionsExamples.right.close }}
                   </Button>
                 </DrawerClose>
               </DrawerFooter>
@@ -896,13 +1008,13 @@ const a11yCritCols = computed(() => ({
           <Drawer>
             <DrawerTrigger as-child>
               <Button variant="outline">
-                Remover item
+                Remover anexo
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>Remover item da lista?</DrawerTitle>
-                <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
+                <DrawerTitle>Remover anexo?</DrawerTitle>
+                <DrawerDescription>O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.</DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
                 <Button variant="destructive">
