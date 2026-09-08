@@ -158,6 +158,59 @@ watch(locale, (newLocale) => {
 
 // ─── Analytics — section view ─────────────────────────────────────────────────
 
+// ─── Analytics — painéis vivos ────────────────────────────────────────────────
+
+// `label` leva a DIREÇÃO (valor estável), nunca o título: título é texto
+// traduzido e partiria a mesma série em três valores no GA4.
+//
+// `location` vem de QUEM CHAMA, nunca de constante no topo do arquivo: ele
+// responde de ONDE saiu a interação, e cravá-lo em 'docs_demo' faria a página
+// inteira responder a mesma coisa. Do & Dont, Variantes e Composições
+// renderizam painéis VIVOS — abrir um ali é tão real quanto na demonstração.
+// Vocabulário em `docs/shared/guidelines/07-analytics.md`.
+//
+// O `update:open` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o payload
+// de `drawer_close` promete `reason`, com o vocabulário fechado do design
+// system. Cada caminho que a lib anuncia por evento próprio deixa o motivo
+// anotado abaixo antes de o fechamento chegar; o que sobra é a saída do rodapé,
+// que é o default.
+//
+// Uma variável para a página inteira basta: os painéis são modais, e nunca há
+// dois abertos ao mesmo tempo.
+type DrawerCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+let pendingCloseReason: DrawerCloseReason | null = null;
+
+function markCloseReason(reason: DrawerCloseReason) {
+  pendingCloseReason = reason;
+}
+
+// Arrastar o painel para fora fecha por `overlay` — para quem usa, é a mesma
+// decisão de "saí sem decidir nada" do clique no véu.
+//
+// O motivo é anotado no ARRASTE, e não na soltura, porque a lib fecha antes de
+// anunciar a soltura (`closeDrawer(); emit('release', false)`): anotado ali, o
+// `update:open` já teria passado. A soltura que MANTÉM o painel aberto (arraste
+// curto, que volta ao repouso) limpa a anotação — sem isso, o próximo
+// fechamento pelo botão herdaria um motivo que não é o dele.
+function onDragRelease(open: boolean) {
+  if (open) pendingCloseReason = null;
+}
+
+function trackDrawer(location: string, direction: DrawerDirection, open: boolean) {
+  if (open) {
+    pendingCloseReason = null;
+    track('drawer_open', { component: 'drawer', label: direction, location });
+    return;
+  }
+  track('drawer_close', {
+    component: 'drawer',
+    label: direction,
+    reason: pendingCloseReason ?? 'close-button',
+    location,
+  });
+  pendingCloseReason = null;
+}
+
 // ─── Navigation groups ────────────────────────────────────────────────────────
 
 const navGroups = computed(() => [
@@ -482,9 +535,12 @@ const relatedItems = computed(() => [
 
 const noteItems = computed(() => stringsFromDict('notes').map((content) => ({ title: '', content })));
 
+// Só o FECHAMENTO leva `reason`: as duas linhas anunciavam o mesmo payload, e o
+// motivo — o que separa "saiu sem decidir" de "usou a saída do rodapé" — não
+// aparecia para quem lê.
 const analyticsItems = computed(() => [
-  { event: 'drawer_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'drawer', location, label }" },
-  { event: 'drawer_close', trigger: 'onOpenChange(false)', payload: "{ component: 'drawer', location, label }" },
+  { event: 'drawer_open',  trigger: toPlainText(tContent('states.open.trigger')),        payload: "{ component: 'drawer', location, label }" },
+  { event: 'drawer_close', trigger: toPlainText(tContent('accessibility.keyboard.escape')), payload: "{ component: 'drawer', location, label, reason }" },
 ]);
 
 const functionalTestItems = computed(() =>
@@ -552,7 +608,12 @@ const a11yCritCols = computed(() => ({
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ directionsExamples[dir].description }}
           </p>
-          <Drawer :direction="dir">
+          <Drawer
+            :direction="dir"
+            @update:open="(open: boolean) => trackDrawer('docs_demo', dir, open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button
                 variant="outline"
@@ -562,7 +623,10 @@ const a11yCritCols = computed(() => ({
                 {{ directionsExamples[dir].title }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ directionsExamples[dir].title }}</DrawerTitle>
                 <DrawerDescription>{{ directionsExamples[dir].description }}</DrawerDescription>
@@ -645,13 +709,20 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer>
+          <Drawer
+            @update:open="(open: boolean) => trackDrawer('docs_do_dont', 'bottom', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ tContent('usage.uxWriting.table.trigger.good') }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('usage.uxWriting.table.title.good') }}</DrawerTitle>
                 <DrawerDescription>{{ tContent('usage.uxWriting.table.description.good') }}</DrawerDescription>
@@ -680,13 +751,20 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer>
+          <Drawer
+            @update:open="(open: boolean) => trackDrawer('docs_do_dont', 'bottom', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ tContent('usage.uxWriting.table.trigger.good') }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle class="nds-sr-only">
                   {{ tContent('usage.uxWriting.table.title.good') }}
@@ -714,13 +792,21 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer direction="bottom">
+          <Drawer
+            direction="bottom"
+            @update:open="(open: boolean) => trackDrawer('docs_do_dont', 'bottom', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ directionsExamples.bottom.title }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ directionsExamples.bottom.title }}</DrawerTitle>
                 <DrawerDescription>{{ directionsExamples.bottom.description }}</DrawerDescription>
@@ -749,13 +835,20 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer>
+          <Drawer
+            @update:open="(open: boolean) => trackDrawer('docs_do_dont', 'bottom', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ tContent('usage.uxWriting.table.trigger.good') }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('usage.uxWriting.table.title.good') }}</DrawerTitle>
                 <DrawerDescription>{{ tContent('usage.uxWriting.table.description.good') }}</DrawerDescription>
@@ -795,13 +888,21 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer direction="bottom">
+          <Drawer
+            direction="bottom"
+            @update:open="(open: boolean) => trackDrawer('docs_variantes', 'bottom', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ directionsExamples.bottom.title }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ directionsExamples.bottom.title }}</DrawerTitle>
                 <DrawerDescription>{{ directionsExamples.bottom.description }}</DrawerDescription>
@@ -825,13 +926,21 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer direction="top">
+          <Drawer
+            direction="top"
+            @update:open="(open: boolean) => trackDrawer('docs_variantes', 'top', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ directionsExamples.top.title }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ directionsExamples.top.title }}</DrawerTitle>
                 <DrawerDescription>{{ directionsExamples.top.description }}</DrawerDescription>
@@ -855,13 +964,21 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer direction="left">
+          <Drawer
+            direction="left"
+            @update:open="(open: boolean) => trackDrawer('docs_variantes', 'left', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ directionsExamples.left.title }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ directionsExamples.left.title }}</DrawerTitle>
                 <DrawerDescription>{{ directionsExamples.left.description }}</DrawerDescription>
@@ -885,13 +1002,21 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer direction="right">
+          <Drawer
+            direction="right"
+            @update:open="(open: boolean) => trackDrawer('docs_variantes', 'right', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ directionsExamples.right.title }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ directionsExamples.right.title }}</DrawerTitle>
                 <DrawerDescription>{{ directionsExamples.right.description }}</DrawerDescription>
@@ -915,13 +1040,20 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer>
+          <Drawer
+            @update:open="(open: boolean) => trackDrawer('docs_variantes', 'bottom', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 Ler termos
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>Termos de uso</DrawerTitle>
                 <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
@@ -969,13 +1101,20 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer>
+          <Drawer
+            @update:open="(open: boolean) => trackDrawer('docs_composicoes', 'bottom', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.trigger') }}
               </Button>
             </DrawerTrigger>
-            <DrawerContent>
+            <DrawerContent
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('demonstration.labels.title') }}</DrawerTitle>
                 <DrawerDescription>{{ tContent('demonstration.labels.description') }}</DrawerDescription>
@@ -1030,14 +1169,22 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full"
         >
-          <Drawer>
+          <Drawer
+            @update:open="(open: boolean) => trackDrawer('docs_composicoes', 'bottom', open)"
+            @drag="() => markCloseReason('overlay')"
+            @release="onDragRelease"
+          >
             <DrawerTrigger as-child>
               <Button variant="outline">
                 {{ tContent('demonstration.labels.destroy') }}
               </Button>
             </DrawerTrigger>
             <!-- A decisão É a tela: o foco entra na saída segura, e não no painel. -->
-            <DrawerContent initial-focus="close">
+            <DrawerContent
+              initial-focus="close"
+              @escape-key-down="() => markCloseReason('escape')"
+              @pointer-down-outside="() => markCloseReason('overlay')"
+            >
               <DrawerHeader>
                 <DrawerTitle>{{ tContent('demonstration.labels.destroy') }}</DrawerTitle>
                 <DrawerDescription>{{ tContent('demonstration.labels.destroyMessage') }}</DrawerDescription>
