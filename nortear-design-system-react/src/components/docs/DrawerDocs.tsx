@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, type PointerEvent } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -112,6 +112,90 @@ const A11Y_TEST_HOW = [
   "Keyboard test",
   "Keyboard test",
 ];
+
+// ─── Analytics dos painéis vivos ─────────────────────────────────────────────
+
+type DrawerDirection = "bottom" | "top" | "left" | "right";
+
+/**
+ * Caminho que fechou o painel, no vocabulário do design system.
+ *
+ * É o mesmo conjunto fechado que `AnalyticsEvents["drawer_close"]` cobra: quatro
+ * palavras, iguais nas cinco stacks. Um quinto valor aqui partiria a mesma
+ * dimensão do GA4 em duas leituras.
+ */
+type DrawerCloseReason = "escape" | "overlay" | "close-button" | "api";
+
+/**
+ * O motivo do fechamento, guardado até o `onOpenChange` chegar.
+ *
+ * O primitivo desta stack avisa QUE o painel fechou (`onOpenChange` recebe um
+ * booleano e nada mais), nunca POR QUÊ — e o payload de `drawer_close` promete
+ * `reason`. Cada caminho que a lib anuncia por evento próprio deixa o motivo
+ * anotado aqui antes de o fechamento acontecer; o que sobra é o botão de saída
+ * do rodapé, que é o default.
+ *
+ * Uma variável para a página inteira basta: os painéis são modais, e nunca há
+ * dois abertos ao mesmo tempo.
+ */
+let pendingCloseReason: DrawerCloseReason | null = null;
+
+/**
+ * Ouvintes para o `DrawerContent`: tecla de escape e clique no véu.
+ */
+const closeReasonWatch = {
+  onEscapeKeyDown: () => {
+    pendingCloseReason = "escape";
+  },
+  onPointerDownOutside: () => {
+    pendingCloseReason = "overlay";
+  },
+};
+
+/**
+ * Ouvintes para a raiz: o arraste que dispensa o painel.
+ *
+ * Arrastar para fora fecha por `overlay` — para quem usa, é a mesma decisão de
+ * "saí sem decidir nada" do clique no véu.
+ *
+ * O motivo é anotado no ARRASTE, e não na soltura, porque a lib fecha antes de
+ * anunciar a soltura (`closeDrawer(); onRelease(event, false)`): anotado ali, o
+ * `onOpenChange` já teria passado. Arraste curto, que volta ao repouso, é
+ * anunciado com `open = true` e limpa a anotação — sem isso, o próximo
+ * fechamento por botão herdaria um motivo que não é o dele.
+ */
+const dragWatch = {
+  onDrag: () => {
+    pendingCloseReason = "overlay";
+  },
+  onRelease: (_event: PointerEvent<HTMLDivElement>, open: boolean) => {
+    if (open) pendingCloseReason = null;
+  },
+};
+
+/**
+ * `label` leva a DIREÇÃO, valor estável — nunca o título, que é texto traduzido
+ * e partiria a mesma série em três valores no GA4.
+ *
+ * `location` vem de QUEM CHAMA: ele responde de ONDE saiu a interação, e um
+ * `docs_demo` cravado faria a página inteira responder a mesma coisa. Painel
+ * vivo em Variantes ou Composições é abertura tão real quanto a da demonstração.
+ * Vocabulário em `docs/shared/guidelines/07-analytics.md`.
+ */
+function trackDrawer(location: string, direction: DrawerDirection, open: boolean) {
+  if (open) {
+    pendingCloseReason = null;
+    track("drawer_open", { component: "drawer", label: direction, location });
+    return;
+  }
+  track("drawer_close", {
+    component: "drawer",
+    label: direction,
+    reason: pendingCloseReason ?? "close-button",
+    location,
+  });
+  pendingCloseReason = null;
+}
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
@@ -304,16 +388,22 @@ interface DrawerProps {
 </Drawer>`;
   };
 
-  const directionPreview = (dir: (typeof directions)[number]) => {
+  // `location` é PARÂMETRO, e não constante: a mesma prévia é montada na
+  // demonstração, no par de Do & Don't e nas quatro variantes.
+  const directionPreview = (dir: (typeof directions)[number], location: string) => {
     const ex = directionExample(dir);
     return (
-      <Drawer direction={dir}>
+      <Drawer
+        direction={dir}
+        onOpenChange={(open) => trackDrawer(location, dir, open)}
+        {...dragWatch}
+      >
         <DrawerTrigger asChild>
           <Button variant="outline" size="sm" className="nds-w-full">
             {ex.title}
           </Button>
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeReasonWatch}>
           <DrawerHeader>
             <DrawerTitle>{ex.title}</DrawerTitle>
             <DrawerDescription>{ex.description}</DrawerDescription>
@@ -366,7 +456,7 @@ interface DrawerProps {
               <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {DOMPurify.sanitize(tContent(directionLabelKeys[dir]))}
               </p>
-              {directionPreview(dir)}
+              {directionPreview(dir, "docs_demo")}
             </div>
           ))}
         </div>
@@ -449,13 +539,13 @@ interface DrawerProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Drawer>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...dragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline" size="sm">
                     {tContent("usage.uxWriting.table.trigger.good")}
                   </Button>
                 </DrawerTrigger>
-                <DrawerContent>
+                <DrawerContent {...closeReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle>{tContent("usage.uxWriting.table.title.good")}</DrawerTitle>
                     <DrawerDescription>
@@ -478,13 +568,13 @@ interface DrawerProps {
             // a forma CORRETA. A lição fica no corpo do painel — o que se evita
             // é o painel sem título nenhum, não o título visualmente oculto.
             dontPreview: (
-              <Drawer>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...dragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline" size="sm">
                     {tContent("usage.uxWriting.table.trigger.good")}
                   </Button>
                 </DrawerTrigger>
-                <DrawerContent>
+                <DrawerContent {...closeReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle className="nds-sr-only">
                       {tContent("usage.uxWriting.table.title.good")}
@@ -512,18 +602,18 @@ interface DrawerProps {
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
-            doPreview: directionPreview("bottom"),
+            doPreview: directionPreview("bottom", "docs_do_dont"),
             // Aninhar de verdade quebraria o foco preso da própria docs page —
             // que é exatamente o que a legenda condena. O painel é um só, e o
             // que ele explica no corpo é o motivo de não haver um segundo.
             dontPreview: (
-              <Drawer>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...dragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline" size="sm">
                     {tContent("usage.uxWriting.table.trigger.good")}
                   </Button>
                 </DrawerTrigger>
-                <DrawerContent>
+                <DrawerContent {...closeReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle>{tContent("usage.uxWriting.table.title.good")}</DrawerTitle>
                     <DrawerDescription>
@@ -564,28 +654,28 @@ interface DrawerProps {
             name: tContent("variants.items.bottom"),
             description: stripHtml(tContent("variants.styles.bottom")),
             code: directionCode("bottom"),
-            preview: directionPreview("bottom"),
+            preview: directionPreview("bottom", "docs_variantes"),
           },
           {
             trackId: "top",
             name: tContent("variants.items.top"),
             description: stripHtml(tContent("variants.styles.top")),
             code: directionCode("top"),
-            preview: directionPreview("top"),
+            preview: directionPreview("top", "docs_variantes"),
           },
           {
             trackId: "left",
             name: tContent("variants.items.left"),
             description: stripHtml(tContent("variants.styles.left")),
             code: directionCode("left"),
-            preview: directionPreview("left"),
+            preview: directionPreview("left", "docs_variantes"),
           },
           {
             trackId: "right",
             name: tContent("variants.items.right"),
             description: stripHtml(tContent("variants.styles.right")),
             code: directionCode("right"),
-            preview: directionPreview("right"),
+            preview: directionPreview("right", "docs_variantes"),
           },
           {
             trackId: "withScroll",
@@ -621,11 +711,11 @@ interface DrawerProps {
   </DrawerContent>
 </Drawer>`,
             preview: (
-              <Drawer>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_variantes", "bottom", open)} {...dragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline">Ler termos</Button>
                 </DrawerTrigger>
-                <DrawerContent>
+                <DrawerContent {...closeReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle>Termos de uso</DrawerTitle>
                     <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
@@ -712,11 +802,11 @@ interface DrawerProps {
   </DrawerContent>
 </Drawer>`,
             preview: (
-              <Drawer>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_composicoes", "bottom", open)} {...dragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline">{tContent("demonstration.labels.trigger")}</Button>
                 </DrawerTrigger>
-                <DrawerContent>
+                <DrawerContent {...closeReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle>{tContent("demonstration.labels.title")}</DrawerTitle>
                     <DrawerDescription>
@@ -781,7 +871,7 @@ interface DrawerProps {
       const panelEl = event.target as HTMLElement | null;
       const safeExit = panelEl?.querySelector<HTMLElement>('[data-slot="drawer-close"]');
       // Sem saída marcada no rodapé não há alvo, e aí o padrão do primitivo
-      // é melhor que um diálogo aberto sem foco nenhum dentro.
+      // é melhor que um diálogo open sem foco nenhum dentro.
       if (!safeExit) return;
       event.preventDefault();
       safeExit.focus();
@@ -802,11 +892,12 @@ interface DrawerProps {
   </DrawerContent>
 </Drawer>`,
             preview: (
-              <Drawer>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_composicoes", "bottom", open)} {...dragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline">{tContent("demonstration.labels.destroy")}</Button>
                 </DrawerTrigger>
                 <DrawerContent
+                  {...closeReasonWatch}
                   onOpenAutoFocus={(event) => {
                     // A decisão É a tela: o foco vai para a saída segura, e não
                     // para o primeiro tabbável. O Enter por reflexo não pode
@@ -814,7 +905,7 @@ interface DrawerProps {
                     const panelEl = event.target as HTMLElement | null;
                     const safeExit = panelEl?.querySelector<HTMLElement>('[data-slot="drawer-close"]');
                     // Sem saída marcada no rodapé não há alvo, e aí o padrão do primitivo
-                    // é melhor que um diálogo aberto sem foco nenhum dentro.
+                    // é melhor que um diálogo open sem foco nenhum dentro.
                     if (!safeExit) return;
                     event.preventDefault();
                     safeExit.focus();
@@ -1043,10 +1134,18 @@ interface DrawerProps {
         title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
+          // Duas linhas, e não uma: os payloads são DIFERENTES — só o
+          // fechamento leva `reason`. Anunciado junto, o `reason` sumia da
+          // tabela enquanto o evento o carregava.
           {
-            event: "drawer_open / drawer_close",
-            trigger: toPlainText(tContent("analytics.description")),
+            event: "drawer_open",
+            trigger: toPlainText(tContent("states.open.trigger")),
             payload: "component, label, location",
+          },
+          {
+            event: "drawer_close",
+            trigger: toPlainText(tContent("accessibility.keyboard.escape")),
+            payload: "component, label, reason, location",
           },
         ]}
       />
