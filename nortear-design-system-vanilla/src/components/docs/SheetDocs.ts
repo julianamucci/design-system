@@ -85,6 +85,16 @@ type SheetDemoOptions = {
   srOnlyHeader?: boolean;
   /** Corpo já montado — usado pelas composições que mostram um formulário. */
   bodyEl?: HTMLElement;
+  /**
+   * Id do `<form>` que o corpo carrega, quando ele é um formulário.
+   *
+   * O rodapé é IRMÃO do corpo por construção da fábrica — é o que o mantém
+   * visível enquanto o conteúdo rola —, então a ação primária nunca está dentro
+   * do `<form>`. Sem `type: 'submit'` e sem o atributo `form`, o painel tem
+   * formulário e NENHUMA forma de submeter: com dois ou mais campos o navegador
+   * não faz o envio implícito, e o Enter num campo não dispara nada (PRD D10).
+   */
+  formId?: string;
 };
 
 /** Corpo do exemplo: o parágrafo canônico, ou o que a composição já montou. */
@@ -110,7 +120,13 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   const body = buildDemoBody(opts);
 
   const cancel = createButton({ variant: 'outline', label: opts.cancelLabel });
-  const apply = createButton({ variant: 'default', label: opts.applyLabel });
+  const apply = createButton({
+    variant: 'default',
+    label: opts.applyLabel,
+    type: opts.formId ? 'submit' : 'button',
+  });
+  // A fábrica de botão não expõe `form`: o religamento entra por atributo.
+  if (opts.formId) apply.setAttribute('form', opts.formId);
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
   footer.dataset.spacing = 'md';
@@ -527,8 +543,15 @@ createSheet({
           Array.from({ length: total }, (_, i) => t(`${path}.${i}`));
         const buildAdvancedFiltersBody = () => {
           const form = document.createElement('form');
+          // O id existe para o RODAPÉ: ele mora fora do corpo rolável — é o que
+          // o mantém visível enquanto o formulário rola —, então a primária só
+          // alcança o formulário pelo atributo `form` (PRD D10).
+          form.id = 'docs-sheet-filters';
           form.className = 'nds-stack';
           form.dataset.spacing = 'sm';
+          // Guarda de submit: sem ela, o Enter num campo tentaria NAVEGAR a
+          // página da documentação.
+          form.addEventListener('submit', (e) => e.preventDefault());
           ([
             [t('variants.compositions.advancedFilters.fieldCategory'), 'filtro-categoria', t('variants.compositions.advancedFilters.categoryValue')],
             [t('variants.compositions.advancedFilters.fieldMinPrice'), 'filtro-preco-min', '100'],
@@ -562,8 +585,12 @@ createSheet({
 
         const buildProfileEditBody = () => {
           const form = document.createElement('form');
+          // Mesmo motivo do formulário de filtros: o rodapé é irmão do corpo, e
+          // é o atributo `form` da primária que religa os dois (PRD D10).
+          form.id = 'docs-sheet-profile';
           form.className = 'nds-stack';
           form.dataset.spacing = 'sm';
+          form.addEventListener('submit', (e) => e.preventDefault());
           // Os três campos saem do conteúdo compartilhado, na ordem que as
           // cinco stacks usam. O valor do nome de usuário é identificador, e
           // por isso é o mesmo nos três idiomas.
@@ -627,20 +654,27 @@ createSheet({
               useWhen: t('variants.compositions.advancedFilters.use'),
               code: `const trigger = createButton({ variant: 'outline', label: '${t('demonstration.labels.trigger')}' });
 const form = document.createElement('form');
+// O rodapé é IRMÃO do formulário: é o que o mantém visível enquanto a área
+// rola. Por isso a primária não está dentro do <form>, e é o id daqui que o
+// atributo 'form' dela religa — sem isso, a tecla Enter não envia nada.
+form.id = 'filters';
 form.className = 'nds-stack';
 form.dataset.spacing = 'sm';
+form.addEventListener('submit', (e) => e.preventDefault());
 form.append(
   createLabel({ text: '${t('variants.compositions.advancedFilters.fieldCategory')}', htmlFor: 'filtro-categoria' }),
   createInput({ id: 'filtro-categoria', value: '${t('variants.compositions.advancedFilters.categoryValue')}' }),
   createLabel({ text: '${t('variants.compositions.advancedFilters.fieldMinPrice')}', htmlFor: 'filtro-preco-min' }),
   createInput({ id: 'filtro-preco-min', value: '100' }),
 );
+const apply = createButton({ variant: 'default', label: '${t('demonstration.labels.apply')}', type: 'submit' });
+apply.setAttribute('form', 'filters');
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
 footer.append(
   createButton({ variant: 'outline', label: '${t('demonstration.labels.cancel')}' }),
-  createButton({ variant: 'default', label: '${t('demonstration.labels.apply')}' }),
+  apply,
 );
 createSheet({
   trigger,
@@ -657,6 +691,7 @@ createSheet({
                 title: t('demonstration.labels.title'),
                 description: t('demonstration.labels.description'),
                 bodyEl: buildAdvancedFiltersBody(),
+                formId: 'docs-sheet-filters',
                 cancelLabel: t('demonstration.labels.cancel'),
                 applyLabel: t('demonstration.labels.apply'),
               }),
@@ -727,8 +762,13 @@ createSheet({
               useWhen: t('variants.compositions.profileEdit.use'),
               code: `const trigger = createButton({ variant: 'outline', label: '${t('variants.compositions.profileEdit.trigger')}' });
 const form = document.createElement('form');
+// O rodapé é IRMÃO do formulário: é o que o mantém visível enquanto a área
+// rola. Por isso a primária não está dentro do <form>, e é o id daqui que o
+// atributo 'form' dela religa — sem isso, a tecla Enter não envia nada.
+form.id = 'profile';
 form.className = 'nds-stack';
 form.dataset.spacing = 'sm';
+form.addEventListener('submit', (e) => e.preventDefault());
 [
   ['${t('variants.compositions.profileEdit.fieldName')}', 'profile-name', '${t('variants.compositions.profileEdit.fieldNameValue')}'],
   ['${t('variants.compositions.profileEdit.fieldHandle')}', 'profile-handle', '${t('variants.compositions.profileEdit.fieldHandleValue')}'],
@@ -743,12 +783,14 @@ form.dataset.spacing = 'sm';
   );
   form.appendChild(field);
 });
+const save = createButton({ variant: 'default', label: '${t('variants.compositions.profileEdit.submit')}', type: 'submit' });
+save.setAttribute('form', 'profile');
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
 footer.append(
   createButton({ variant: 'outline', label: '${t('demonstration.labels.cancel')}' }),
-  createButton({ variant: 'default', label: '${t('variants.compositions.profileEdit.submit')}' }),
+  save,
 );
 createSheet({
   trigger,
@@ -766,7 +808,12 @@ createSheet({
                 const save = createButton({
                   variant: 'default',
                   label: t('variants.compositions.profileEdit.submit'),
+                  // A confirmação é o ENVIO do formulário. O rodapé mora fora do
+                  // corpo rolável, então só o atributo `form` o alcança — sem
+                  // ele, três campos e nenhuma forma de submeter (PRD D10).
+                  type: 'submit',
                 });
+                save.setAttribute('form', 'docs-sheet-profile');
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
                 footer.dataset.spacing = 'md';

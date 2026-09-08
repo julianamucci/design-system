@@ -360,9 +360,17 @@ describe('composições', () => {
     const code = sheetAdvancedFiltersSource();
     const bodyBlock = /<div ndsSheetBody>([\s\S]*?)\n {8}<\/div>/.exec(code)?.[1];
     expect(bodyBlock).toBeTypeOf('string');
-    expect(bodyBlock).toContain('<form class="nds-grid" data-spacing="md">');
+    expect(bodyBlock).toContain(
+      '<form id="filtros-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">',
+    );
     expect(bodyBlock).not.toContain('ndsSheetFooter');
-    expect(code).toContain('<button ndsButton>Aplicar filtros</button>');
+    // E é justamente por o rodapé ficar fora do `<form>` que a primária precisa
+    // do religamento pelo id: solta, ela é botão comum, e com dois campos o
+    // navegador não faz o envio implícito — o Enter não dispara nada (PRD D10).
+    expect(code).toContain(
+      '<button ndsButton type="submit" form="filtros-form">Aplicar filtros</button>',
+    );
+    expect(code).not.toContain('<button ndsButton>Aplicar filtros</button>');
   });
 
   it('sheetSecondaryNavigationSource abre à esquerda, com o marco de navegação nomeado', () => {
@@ -387,7 +395,9 @@ describe('composições', () => {
     // só o atributo `form` os liga. Sem ele, o Enter num campo — como a maioria
     // envia formulário curto — não chega a lugar nenhum.
     const code = sheetProfileEditSource();
-    expect(code).toContain('<form id="perfil-form" class="nds-grid" data-spacing="md">');
+    expect(code).toContain(
+      '<form id="perfil-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">',
+    );
     expect(code).toContain(
       '<button ndsButton type="submit" form="perfil-form">Salvar alterações</button>',
     );

@@ -108,13 +108,44 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('<Input id="sheet-categoria" value="Eletrônicos" />');
     // Empilhamento, e não grade: é o que a folha compartilhada define para
     // formulário de painel, e o que o Vanilla renderiza.
-    expect(saida).toContain('<form class="nds-stack" data-spacing="sm">');
+    expect(saida).toContain('<form id="filters" class="nds-stack" data-spacing="sm"');
     expect(saida).toContain('<div class="nds-stack" data-spacing="xs">');
     expect(saida).not.toContain('nds-grid');
     // Por ÍNDICE: são os DOIS campos que o conteúdo compartilhado documenta. O
     // snippet ensinava Nome e Email, que não são composição nenhuma.
     const rotulos = [...saida.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);
     expect(rotulos).toEqual(['Categoria', 'Preço mínimo']);
+  });
+
+  it('religa a primária ao <form> pelo id, e só onde há formulário (D10)', () => {
+    // O rodapé é IRMÃO do corpo rolável por construção do primitivo — é o que o
+    // mantém visível enquanto o formulário rola —, então a primária nunca está
+    // dentro do `<form>`. Sem `type="submit"` e sem o atributo `form`, o snippet
+    // publicava um painel com formulário e NENHUMA forma de submeter: com dois
+    // ou mais campos não há envio implícito, e o Enter não dispara nada. É a
+    // ponta oposta do submit órfão, e igualmente silenciosa.
+    for (const [saida, id] of [
+      [sheetFiltersAvancadosSource(), 'filters'],
+      [perfilSheetEditSource(), 'profile'],
+    ] as const) {
+      expect(saida).toContain(`<form id="${id}" class="nds-stack" data-spacing="sm" onsubmit={handleSubmit}>`);
+      expect(saida).toContain(`form="${id}">`);
+      // O manipulador é DECLARADO no snippet: sem ele, quem copia recebe um
+      // `onsubmit` apontando para um símbolo que não existe.
+      expect(saida).toContain('function handleSubmit(evento: SubmitEvent) {');
+    }
+
+    // Fora dos corpos com formulário não há o que submeter, e `type="submit"`
+    // ali seria promessa vazia.
+    for (const saida of [
+      sheetSource(),
+      sheetTermosWithScrollSource(),
+      sheetBottomPanelSource(),
+      sheetNavegacaoSecundariaSource(),
+    ]) {
+      expect(saida).not.toContain('type="submit"');
+      expect(saida).not.toContain('handleSubmit');
+    }
   });
 
   it('a navegação secundária publica as CINCO seções e o marco com nome', () => {
@@ -143,7 +174,10 @@ describe('transforms das stories de composição', () => {
   it('a edição de perfil traz os três campos, na ordem das outras stacks', () => {
     const saida = perfilSheetEditSource();
     expect(saida).toContain('<SheetTitle>Editar perfil</SheetTitle>');
-    expect(saida).toContain('<Button>Salvar alterações</Button>');
+    expect(saida).toContain('<Button type="submit" form="profile">Salvar alterações</Button>');
+    // A primária SOLTA é o defeito: sem o religamento pelo `form`, o snippet
+    // ensinava um painel com formulário e nenhuma forma de submeter.
+    expect(saida).not.toContain('<Button>Salvar alterações</Button>');
     // Por ÍNDICE: a ordem é a das outras stacks, e o campo do meio já saiu do
     // snippet uma vez sem que nada reprovasse.
     const rotulos = [...saida.matchAll(/<Label for="[^"]*">([^<]*)<\/Label>/g)].map((m) => m[1]);

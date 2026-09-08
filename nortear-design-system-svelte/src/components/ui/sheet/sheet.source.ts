@@ -94,7 +94,7 @@ function panelBody(body: Body): string {
     // composição nenhuma: o snippet ensinava um formulário e a docs page, outro.
     return `
     <SheetBody>
-      <form class="nds-stack" data-spacing="sm">
+      <form id="filters" class="nds-stack" data-spacing="sm" onsubmit={handleSubmit}>
         <div class="nds-stack" data-spacing="xs">
           <Label for="sheet-categoria">Categoria</Label>
           <Input id="sheet-categoria" value="Eletrônicos" />
@@ -113,7 +113,7 @@ function panelBody(body: Body): string {
     // do meio de fora quando os dois compartilhavam o mesmo corpo.
     return `
     <SheetBody>
-      <form class="nds-stack" data-spacing="sm">
+      <form id="profile" class="nds-stack" data-spacing="sm" onsubmit={handleSubmit}>
         <div class="nds-stack" data-spacing="xs">
           <Label for="perfil-nome">Nome</Label>
           <Input id="perfil-nome" value="Juliana Mucci" />
@@ -204,6 +204,20 @@ function panel(o: Options): string {
   { label: 'Excluir', variant: 'destructive' },
 ];`
       : '';
+  // Id do `<form>` do corpo, quando há um. O rodapé é IRMÃO do corpo rolável por
+  // construção do primitivo — é o que o mantém visível enquanto o formulário
+  // rola —, então a ação primária nunca está dentro do `<form>`: sem
+  // `type="submit"` e sem o atributo `form` ela é um botão comum, e o painel
+  // fica com formulário e NENHUMA forma de submeter. Com dois ou mais campos o
+  // navegador não faz o envio implícito, e o Enter num campo não dispara nada.
+  const formId = body === 'formulario' ? 'filters' : body === 'perfil' ? 'profile' : undefined;
+  const envioBlock = formId
+    ? `\n\n// O preview vive dentro de uma página: sem a guarda, o Enter num campo
+// tentaria navegar. Aqui é onde o envio de verdade entraria.
+function handleSubmit(evento: SubmitEvent) {
+  evento.preventDefault();
+}`
+    : '';
   const paragrafosList =
     body === 'rolagem'
       ? `\n\nconst paragrafos = Array.from(
@@ -235,12 +249,16 @@ function panel(o: Options): string {
           <Button variant="outline" {...props}>${cancelLabel}</Button>
         {/snippet}
       </SheetClose>
-      <Button>${actionLabel}</Button>
+      ${
+        formId
+          ? `<Button type="submit" form="${formId}">${actionLabel}</Button>`
+          : `<Button>${actionLabel}</Button>`
+      }
     </SheetFooter>
 `;
 
   return svelteSnippet(
-    `${imports(body)}${state}${secoesList}${acoesList}${paragrafosList}`,
+    `${imports(body)}${state}${envioBlock}${secoesList}${acoesList}${paragrafosList}`,
     `<Sheet${attrs(controlled ? 'bind:open' : '')}>
   <SheetTrigger>
     {#snippet child({ props })}

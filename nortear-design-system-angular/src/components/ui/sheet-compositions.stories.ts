@@ -72,7 +72,9 @@ export const AdvancedFilters: Story = {
           </div>
 
           <div ndsSheetBody>
-            <form class="nds-grid" data-spacing="md">
+            <!-- A guarda de submit existe para o preview: sem ela, o Enter num
+                 campo tentaria navegar a página. -->
+            <form id="filtros-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">
               <div class="nds-grid" data-spacing="xs">
                 <label ndsLabel for="comp-categoria">Categoria</label>
                 <input ndsInput id="comp-categoria" value="Eletrônicos" />
@@ -84,9 +86,12 @@ export const AdvancedFilters: Story = {
             </form>
           </div>
 
+          <!-- O rodapé fica FORA do corpo: é ele que continua visível quando o
+               formulário cresce. Por isso a primária não está dentro do
+               form, e é o atributo form que os religa (PRD D10). -->
           <div ndsSheetFooter>
             <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
-            <button ndsButton>Aplicar filtros</button>
+            <button ndsButton type="submit" form="filtros-form">Aplicar filtros</button>
           </div>
         </ng-template>
       </nds-sheet>
@@ -108,6 +113,18 @@ export const AdvancedFilters: Story = {
       // É o que mantém as ações visíveis quando o formulário cresce.
       await expect(body!.contains(footer!)).toBe(false);
       await expect(within(panel).getByLabelText(/Categoria/i)).toBeVisible();
+    });
+
+    await step('E por isso a primária é submit religado pelo id (D10)', async () => {
+      // Consequência direta do passo anterior: com o rodapé fora do `<form>`, a
+      // primária só o alcança pelo atributo `form`. Sem ele o painel tinha
+      // formulário e NENHUMA forma de submeter — com dois campos o navegador não
+      // faz o envio implícito, e o Enter num campo não disparava nada.
+      const form = panel.querySelector<HTMLFormElement>('form');
+      await expect(form).not.toBeNull();
+      const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]');
+      await expect(submit).not.toBeNull();
+      await expect(submit).toHaveAttribute('form', form!.id);
     });
   },
 };
@@ -193,7 +210,7 @@ export const ProfileEdit: Story = {
           </div>
 
           <div ndsSheetBody>
-            <form id="perfil-form" class="nds-grid" data-spacing="md">
+            <form id="perfil-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">
               <div class="nds-grid" data-spacing="xs">
                 <label ndsLabel for="perfil-nome">Nome</label>
                 <input ndsInput id="perfil-nome" value="Juliana Mucci" />

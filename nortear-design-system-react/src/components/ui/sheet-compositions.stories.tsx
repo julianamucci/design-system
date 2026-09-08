@@ -99,6 +99,7 @@ export const AdvancedFilters: Story = {
                 do Vanilla, referência de markup da casa, e o mesmo que o snippet
                 ao lado ensina. */}
             <form
+              id="filters-form"
               className="nds-stack"
               data-spacing="sm"
               onSubmit={(e) => {
@@ -126,7 +127,14 @@ export const AdvancedFilters: Story = {
             <SheetClose render={<Button type="button" variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </SheetClose>
-            <Button>{t("demonstration.labels.apply")}</Button>
+            {/* O rodapé mora FORA do corpo rolável — é o que o mantém visível
+                enquanto o formulário rola —, então a primária não está dentro do
+                `<form>`: só o par id ↔ `form` os liga (PRD D10). Sem ele o
+                painel tinha formulário e NENHUMA forma de submeter, porque com
+                dois campos o navegador não faz o envio implícito. */}
+            <Button type="submit" form="filters-form">
+              {t("demonstration.labels.apply")}
+            </Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -142,6 +150,14 @@ export const AdvancedFilters: Story = {
     const fields = [...panel.querySelectorAll("input")];
     await expect(fields).toHaveLength(2);
     for (const field of fields) await expect(field).toHaveAccessibleName();
+
+    // O rodapé é irmão do corpo: a primária só alcança o `<form>` pelo atributo
+    // `form`, e `button.form` vem nulo quando ela está órfã (PRD D10).
+    const form = panel.querySelector<HTMLFormElement>("form");
+    await expect(form).not.toBeNull();
+    const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]');
+    await expect(submit).not.toBeNull();
+    await expect(submit).toHaveAttribute("form", form!.id);
   },
 };
 

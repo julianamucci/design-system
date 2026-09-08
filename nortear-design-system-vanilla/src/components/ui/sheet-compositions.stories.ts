@@ -84,8 +84,13 @@ export const AdvancedFilters: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: LABELS.trigger });
     const form = document.createElement('form');
+    // O id existe para o rodapé: ele mora fora do corpo rolável, então a
+    // primária só alcança o formulário pelo atributo `form` (PRD D10).
+    form.id = 'filters';
     form.className = 'nds-stack';
     form.dataset.spacing = 'sm';
+    // Sem a guarda, o Enter num campo tentaria NAVEGAR a página do preview.
+    form.addEventListener('submit', (e) => e.preventDefault());
     // Os DOIS campos que o conteúdo compartilhado documenta. O terceiro era
     // invenção da story, e o snippet ao lado o repetia.
     form.append(
@@ -99,7 +104,7 @@ export const AdvancedFilters: Story = {
       description: LABELS.description,
       content: form,
       // `true`: nesta composição os dois botões do rodapé fecham o painel.
-      footer: makeFooter(LABELS.cancel, LABELS.apply, true),
+      footer: makeFooter(LABELS.cancel, LABELS.apply, true, form.id),
     });
     queueMicrotask(() => trigger.click());
     return sheet;
@@ -114,6 +119,16 @@ export const AdvancedFilters: Story = {
     // Dois campos, e não três: a contagem é o que separa o preview do conteúdo
     // que ele deveria mostrar.
     await expect([...panel.querySelectorAll('input')]).toHaveLength(2);
+
+    // O rodapé mora FORA do corpo rolável, então a primária não está dentro do
+    // `<form>`: sem o atributo `form`, o painel teria formulário e nenhuma forma
+    // de submeter — com dois campos o navegador não faz o envio implícito, e o
+    // Enter num campo não dispararia nada (PRD D10). `button.form` é a leitura
+    // que denuncia: vem nulo quando o botão está órfão.
+    const form = panel.querySelector<HTMLFormElement>('form')!;
+    const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    await expect(submit).toBeInTheDocument();
+    await expect(submit.form).toBe(form);
   },
 };
 
@@ -205,8 +220,13 @@ export const ProfileEdit: Story = {
     const trigger = createButton({ variant: 'outline', label: PROFILE.trigger });
 
     const form = document.createElement('form');
+    // O id existe para o rodapé: ele mora fora do corpo rolável, então a
+    // primária só alcança o formulário pelo atributo `form` (PRD D10).
+    form.id = 'profile';
     form.className = 'nds-stack';
     form.dataset.spacing = 'sm';
+    // Sem a guarda, o Enter num campo tentaria NAVEGAR a página do preview.
+    form.addEventListener('submit', (e) => e.preventDefault());
     form.append(
       createFormField({
         label: PROFILE.fieldName,
@@ -229,7 +249,7 @@ export const ProfileEdit: Story = {
       description: PROFILE.panelDescription,
       content: form,
       // `true`: nesta composição os dois botões do rodapé fecham o painel.
-      footer: makeFooter(LABELS.cancel, PROFILE.submit, true),
+      footer: makeFooter(LABELS.cancel, PROFILE.submit, true, form.id),
     });
     queueMicrotask(() => trigger.click());
     return sheet;
@@ -250,6 +270,14 @@ export const ProfileEdit: Story = {
     await expect(
       within(panel).getByRole('button', { name: PROFILE.submit }),
     ).toBeVisible();
+
+    // A confirmação é o ENVIO do formulário, religado pelo id: o rodapé é irmão
+    // do corpo, e sem o atributo `form` o botão fica órfão — três campos, e o
+    // navegador não faz o envio implícito (PRD D10).
+    const form = panel.querySelector<HTMLFormElement>('form')!;
+    const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    await expect(submit).toHaveAccessibleName(PROFILE.submit);
+    await expect(submit.form).toBe(form);
   },
 };
 

@@ -424,7 +424,7 @@ export function sheetAdvancedFiltersSource(): string {
       title: 'Filtros avançados',
       description: 'Configure os filtros para refinar os resultados.',
       body: `        <div ndsSheetBody>
-          <form class="nds-grid" data-spacing="md">
+          <form id="filtros-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">
             <div class="nds-grid" data-spacing="xs">
               <label ndsLabel for="filtro-categoria">Categoria</label>
               <input ndsInput id="filtro-categoria" value="Eletrônicos" />
@@ -435,7 +435,14 @@ export function sheetAdvancedFiltersSource(): string {
             </div>
           </form>
         </div>`,
-      footer: footerBlock('Cancelar', 'Aplicar filtros'),
+      // Quem aplica é o ENVIO do formulário, religado pelo id. O rodapé mora
+      // fora do corpo, então a primária não está dentro do `<form>`: sem o
+      // atributo `form` ela é um botão comum, e com dois campos o navegador não
+      // faz o envio implícito — o Enter num campo não dispara nada (PRD D10).
+      footer: `        <div ndsSheetFooter>
+          <button ndsSheetClose ndsButton variant="outline">Cancelar</button>
+          <button ndsButton type="submit" form="filtros-form">Aplicar filtros</button>
+        </div>`,
     }),
   );
 }
@@ -489,7 +496,7 @@ export function sheetProfileEditSource(): string {
       title: 'Editar perfil',
       description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
       body: `        <div ndsSheetBody>
-          <form id="perfil-form" class="nds-grid" data-spacing="md">
+          <form id="perfil-form" class="nds-grid" data-spacing="md" (submit)="$event.preventDefault()">
             <div class="nds-grid" data-spacing="xs">
               <label ndsLabel for="perfil-nome">Nome</label>
               <input ndsInput id="perfil-nome" value="Juliana Mucci" />

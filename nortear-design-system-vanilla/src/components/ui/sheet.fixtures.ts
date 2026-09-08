@@ -54,14 +54,27 @@ export function makeExitFooter(exitLabel: string): HTMLElement {
  *
  * Com `fecharAoClicar`, os dois botões passam a fechar o painel. A factory não
  * expõe SheetClose: quem fecha por fora é o overlay.
+ *
+ * `formId` religa a ação principal ao `<form>` do corpo. O rodapé do Sheet é
+ * IRMÃO do corpo rolável por construção da fábrica — é o que o mantém visível
+ * enquanto o formulário rola —, então a primária nunca está dentro do `<form>`:
+ * sem `type="submit"` e sem o atributo `form`, o painel tem formulário e NENHUMA
+ * forma de submeter, e o Enter num campo não dispara nada (PRD D10). A fábrica
+ * de botão não expõe `form`, e por isso ele entra por `setAttribute`.
  */
 export function makeFooter(
   cancelLabel: string,
   actionLabel: string,
   fecharAoClicar = false,
+  formId?: string,
 ): HTMLElement {
   const cancel = createButton({ variant: 'outline', label: cancelLabel });
-  const action = createButton({ variant: 'default', label: actionLabel });
+  const action = createButton({
+    variant: 'default',
+    label: actionLabel,
+    type: formId ? 'submit' : 'button',
+  });
+  if (formId) action.setAttribute('form', formId);
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
   footer.dataset.spacing = 'md';

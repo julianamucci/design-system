@@ -66,6 +66,30 @@
    */
   const SECTIONS = ['Dashboard', 'Projetos', 'Equipe', 'Configurações', 'Faturas'];
 
+  /**
+   * Id do `<form>` do corpo — e só existe onde há formulário.
+   *
+   * O rodapé do Sheet é IRMÃO do corpo rolável por construção do primitivo (é o
+   * que o mantém visível enquanto o formulário rola), então a ação primária
+   * nunca está dentro do `<form>`. Sem `type="submit"` e sem o atributo `form`
+   * ela é um botão comum: o painel tem formulário e NENHUMA forma de submeter —
+   * com dois ou mais campos o navegador não faz o envio implícito, e o Enter num
+   * campo não dispara nada, em silêncio (PRD D10).
+   */
+  const formId = $derived(
+    variant === 'withForm'
+      ? 'sheet-story-filtros'
+      : variant === 'profileForm'
+        ? 'sheet-story-perfil'
+        : undefined,
+  );
+
+  /** Sem a guarda, o Enter num campo tentaria NAVEGAR a página da story. */
+  function handleSubmit(event: SubmitEvent) {
+    event.preventDefault();
+    onAction?.();
+  }
+
   /** A fileira do painel inferior, com a ação destrutiva por último. */
   const ACTIONS = [
     { label: 'Compartilhar', variant: 'outline' as const },
@@ -97,7 +121,7 @@
                  conteúdo compartilhado não descreve em composição nenhuma — a
                  story renderizava um formulário e a docs page, outro. -->
             <SheetBody>
-              <form class="nds-stack" data-spacing="sm">
+              <form id={formId} class="nds-stack" data-spacing="sm" onsubmit={handleSubmit}>
                 <div class="nds-stack" data-spacing="xs">
                   <Label for="sheet-story-categoria">Categoria</Label>
                   <Input id="sheet-story-categoria" value="Eletrônicos" />
@@ -113,7 +137,7 @@
                  Bio. O formulário de filtros tem dois, e a edição de perfil
                  perdia o do meio enquanto os dois dividiam o mesmo corpo. -->
             <SheetBody>
-              <form class="nds-stack" data-spacing="sm">
+              <form id={formId} class="nds-stack" data-spacing="sm" onsubmit={handleSubmit}>
                 <div class="nds-stack" data-spacing="xs">
                   <Label for="sheet-story-perfil-nome">Nome</Label>
                   <Input id="sheet-story-perfil-nome" value="Juliana Mucci" />
@@ -204,7 +228,18 @@
                 {/snippet}
               </SheetClose>
               {#if variant !== 'actionRow'}
-                <Button onclick={onAction}>
+                <!--
+                  Com formulário no corpo, a primária é o ENVIO dele, religado
+                  pelo atributo `form` — o rodapé mora fora do corpo rolável, e
+                  sem o religamento o botão fica órfão do `<form>`. Sem
+                  formulário, `onclick` continua sendo o caminho, e um
+                  `type="submit"` ali seria promessa vazia.
+                -->
+                <Button
+                  type={formId ? 'submit' : 'button'}
+                  form={formId}
+                  onclick={formId ? undefined : onAction}
+                >
                   {actionLabel}
                 </Button>
               {/if}

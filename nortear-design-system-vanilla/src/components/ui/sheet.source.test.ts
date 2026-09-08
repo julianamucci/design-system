@@ -138,6 +138,33 @@ describe('paridade entre snippet e preview', () => {
     expect(labels).toEqual([filters.fieldCategory, filters.fieldMinPrice]);
   });
 
+  it('religa a primária ao <form> pelo id quando o corpo é formulário (D10)', () => {
+    // O rodapé é IRMÃO do corpo por construção da fábrica — é o que o mantém
+    // visível enquanto o formulário rola —, então a primária nunca está dentro
+    // do `<form>`. Sem `type: 'submit'` e sem o atributo `form`, o snippet
+    // ensinaria um painel com formulário e NENHUMA forma de submeter: com dois
+    // ou mais campos o navegador não faz o envio implícito, e o Enter não
+    // dispara nada. É o defeito silencioso da ponta oposta ao submit órfão.
+    for (const [body, id] of [
+      ['form', 'filters'],
+      ['profile', 'profile'],
+    ] as const) {
+      const code = sheetSnippet({ body });
+      expect(code).toContain(`corpo.id = '${id}';`);
+      expect(code).toContain("corpo.addEventListener('submit', (e) => e.preventDefault());");
+      expect(code).toContain("type: 'submit' });");
+      expect(code).toContain(`enviar.setAttribute('form', '${id}');`);
+      expect(code).toContain('  enviar,');
+    }
+
+    // E só ali: sem formulário no corpo, `type: 'submit'` seria promessa vazia.
+    for (const body of ['text', 'paragraphs', 'actions'] as const) {
+      const code = sheetSnippet({ body });
+      expect(code).not.toContain("type: 'submit'");
+      expect(code).not.toContain("setAttribute('form'");
+    }
+  });
+
   it('dá ao painel inferior as TRÊS ações, com a destrutiva por último', () => {
     const code = sheetSnippet({ body: 'actions' });
     const [share, duplicate, remove] = CONTENT.variants.compositions.bottomPanel.actions;

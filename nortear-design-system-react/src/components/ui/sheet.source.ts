@@ -99,18 +99,26 @@ function body(): string {
  * A ordem de leitura e de foco é a do markup — inverter aqui mudaria o que o
  * teclado alcança primeiro, mesmo com o CSS desenhando o contrário.
  *
- * `comFormulario` marca o rodapé que convive com um `<form>` no corpo, e ali a
- * saída diz `type="button"` — que é o que a story renderiza ao lado, e o que a
- * guideline de alinhamento prescreve. O padrão do HTML para `<button>` é
- * `submit`: aqui ele fica inerte porque o rodapé é irmão do corpo, mas quem
- * copia o exemplo e aninha o rodapé no `form` — a forma preferida da guideline —
- * herda um cancelar que ENVIA. Fora desse caso o atributo seria ruído.
+ * `comFormulario` é o id do `<form>` que o corpo publica. Ali a saída diz
+ * `type="button"` — o padrão do HTML para `<button>` é `submit`, e quem copia o
+ * exemplo e aninha o rodapé no `form` herdaria um cancelar que ENVIA —, e a
+ * primária é `type="submit"` RELIGADA pelo atributo `form`.
+ *
+ * O religamento não é adorno: o rodapé é IRMÃO do corpo rolável por construção
+ * do primitivo — é o que o mantém visível enquanto o formulário rola —, então a
+ * primária nunca está dentro do `<form>`. Sem ele o exemplo publicava um painel
+ * com formulário e NENHUMA forma de submeter: com dois ou mais campos o
+ * navegador não faz o envio implícito, e o Enter num campo não dispara nada, em
+ * silêncio (PRD D10). Fora desse caso os dois atributos seriam ruído.
  */
-function footer(acao = 'Aplicar filtros', saida = 'Cancelar', comFormulario = false): string {
+function footer(acao = 'Aplicar filtros', saida = 'Cancelar', comFormulario?: string): string {
   const tipo = comFormulario ? 'type="button" ' : '';
+  const primaria = comFormulario
+    ? `<Button type="submit" form="${comFormulario}">${acao}</Button>`
+    : `<Button>${acao}</Button>`;
   return `    <SheetFooter>
       <SheetClose render={<Button ${tipo}variant="outline" />}>${saida}</SheetClose>
-      <Button>${acao}</Button>
+      ${primaria}
     </SheetFooter>`;
 }
 
@@ -299,6 +307,7 @@ import { Label } from "@/components/ui/label";`,
       `${header()}
     <SheetBody>
       <form
+        id="filters-form"
         className="nds-stack"
         data-spacing="sm"
         onSubmit={(evento) => evento.preventDefault()}
@@ -313,7 +322,7 @@ import { Label } from "@/components/ui/label";`,
         </div>
       </form>
     </SheetBody>
-${footer(undefined, undefined, true)}`,
+${footer(undefined, undefined, 'filters-form')}`,
       'Abrir filtros',
     ),
   );

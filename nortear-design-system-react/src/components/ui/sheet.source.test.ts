@@ -281,6 +281,7 @@ describe('transforms das stories de composição', () => {
     // Vanilla, referência de markup da casa — e o mesmo que a story renderiza.
     expect(output).toContain(
       `<form
+        id="filters-form"
         className="nds-stack"
         data-spacing="sm"
         onSubmit={(evento) => evento.preventDefault()}
@@ -302,6 +303,12 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain(
       '<SheetClose render={<Button type="button" variant="outline" />}>Cancelar</SheetClose>',
     );
+    // E a primária é o ENVIO, religado pelo id: o rodapé é irmão do corpo, e sem
+    // o atributo `form` o snippet publicava um painel com formulário e NENHUMA
+    // forma de submeter — dois campos, sem envio implícito, e o Enter não
+    // dispara nada (PRD D10).
+    expect(output).toContain('<Button type="submit" form="filters-form">Aplicar filtros</Button>');
+    expect(output).not.toContain('<Button>Aplicar filtros</Button>');
     const rotulos = [...output.matchAll(/<Label htmlFor="[^"]*">([^<]*)<\/Label>/g)].map(
       (m) => m[1],
     );

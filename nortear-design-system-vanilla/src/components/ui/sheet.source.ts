@@ -143,8 +143,13 @@ function bodyForm(): Body {
     // Os DOIS campos que `variants.compositions.advancedFilters` documenta: um
     // terceiro campo aqui ensinaria um filtro que a docs page não mostra.
     block: `const corpo = document.createElement('form');
+// O id existe para o RODAPÉ: ele é irmão do corpo por construção da fábrica — é
+// o que o mantém visível enquanto o formulário rola —, então a ação primária só
+// alcança o formulário pelo atributo \`form\`.
+corpo.id = 'filters';
 corpo.className = 'nds-stack';
 corpo.dataset.spacing = 'sm';
+corpo.addEventListener('submit', (e) => e.preventDefault());
 corpo.append(
   createFormField({ label: 'Categoria', input: createInput({ value: 'Eletrônicos' }) }),
   createFormField({ label: 'Preço mínimo', input: createInput({ type: 'number', value: '100' }) }),
@@ -164,8 +169,13 @@ function bodyProfile(): Body {
   return {
     imports: [importing('form', 'createFormField'), importing('input', 'createInput')],
     block: `const corpo = document.createElement('form');
+// O id existe para o RODAPÉ: ele é irmão do corpo por construção da fábrica — é
+// o que o mantém visível enquanto o formulário rola —, então a ação primária só
+// alcança o formulário pelo atributo \`form\`.
+corpo.id = 'profile';
 corpo.className = 'nds-stack';
 corpo.dataset.spacing = 'sm';
+corpo.addEventListener('submit', (e) => e.preventDefault());
 corpo.append(
   createFormField({ label: 'Nome', input: createInput({ value: 'Juliana Mucci' }) }),
   createFormField({ label: 'Nome de usuário', input: createInput({ value: '@julianamucci' }) }),
@@ -197,24 +207,45 @@ function bodyOf(o: SheetSnippetOptions): Body {
  * A fábrica não expõe um botão de fechar componível: o X do canto vem pronto, e
  * quem fecha pelos botões do rodapé é o overlay. É o que a linha do clique
  * mostra — sem ela, o snippet prometeria um `SheetClose` que não existe.
+ *
+ * Quando o corpo é um `<form>`, a primária é `type: 'submit'` RELIGADA pelo
+ * atributo `form` (PRD D10). O rodapé é irmão do corpo por construção da
+ * fábrica, então a primária nunca está dentro do formulário: sem o religamento
+ * o painel teria formulário e nenhuma forma de submeter — com dois ou mais
+ * campos o navegador não faz o envio implícito, e o Enter não dispara nada.
  */
 function footer(o: SheetSnippetOptions): { block?: string; referencia?: string } {
   const cancelar = o.cancelLabel === false ? undefined : (o.cancelLabel ?? 'Cancelar');
   const aplicar = o.applyLabel === false ? undefined : (o.applyLabel ?? 'Aplicar filtros');
   if (!cancelar && !aplicar) return {};
 
+  // O id do `<form>` que `bodyForm`/`bodyProfile` publicam. Fora desses corpos
+  // não há formulário, e um `type: 'submit'` ali seria promessa vazia.
+  const formId = o.body === 'form' ? 'filters' : o.body === 'profile' ? 'profile' : undefined;
+
   const buttons = [
     cancelar ? `createButton({ variant: 'outline', label: ${text(cancelar)} })` : undefined,
-    aplicar ? `createButton({ label: ${text(aplicar)} })` : undefined,
+    aplicar && !formId ? `createButton({ label: ${text(aplicar)} })` : undefined,
   ].filter((b): b is string => Boolean(b));
+
+  // A fábrica de botão não expõe `form`, então o religamento entra por
+  // `setAttribute` — e por isso a primária sai da lista e vira uma variável.
+  const primaria =
+    aplicar && formId
+      ? `const enviar = createButton({ label: ${text(aplicar)}, type: 'submit' });
+// O rodapé mora FORA do \`<form>\`: é este atributo que faz o clique e o Enter
+// num campo enviarem o formulário. Sem ele o botão é inerte.
+enviar.setAttribute('form', ${text(formId)});
+`
+      : '';
 
   return {
     referencia: 'rodape',
-    block: `const rodape = document.createElement('div');
+    block: `${primaria}const rodape = document.createElement('div');
 rodape.className = 'nds-cluster';
 rodape.dataset.spacing = 'md';
 rodape.append(
-${buttons.map((b) => `  ${b},`).join('\n')}
+${[...buttons, ...(primaria ? ['enviar'] : [])].map((b) => `  ${b},`).join('\n')}
 );
 // A fábrica não expõe um botão de fechar componível: quem fecha por fora é o
 // overlay, e é ele que os botões do rodapé acionam.
