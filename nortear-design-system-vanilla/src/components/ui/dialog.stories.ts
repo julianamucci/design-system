@@ -6,6 +6,7 @@ import { createButton } from './button';
 import { createDialogDocs } from '@/components/docs/DialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
+  t,
   open,
   cantoButtonClose,
   checkFocusTrap,
@@ -53,12 +54,15 @@ const meta: Meta<DialogArgs> = {
       table: { type: { summary: '(open: boolean) => void' } },
     },
   },
+  // Os rótulos saem do conteúdo compartilhado: cravados aqui, o Playground
+  // abria em português para quem lê a página em inglês ou espanhol. Continuam
+  // sendo `args` — quem troca o texto pelo painel Controls segue trocando.
   args: {
-    triggerLabel: 'Editar perfil',
-    title: 'Editar perfil',
-    description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-    cancelLabel: 'Cancelar',
-    actionLabel: 'Salvar alterações',
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    cancelLabel: t('demonstration.labels.cancel'),
+    actionLabel: t('demonstration.labels.action'),
     showCloseButton: true,
     onOpenChange: fn(),
   },

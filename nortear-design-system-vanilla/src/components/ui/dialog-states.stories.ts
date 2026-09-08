@@ -5,6 +5,7 @@ import { dialogSource, dialogSourceWith } from './dialog.source';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
+  t,
   open,
   cantoButtonClose,
   checkNameAndDescription,
@@ -61,8 +62,8 @@ function buildDialog(opts: {
     // Lista, e não um `<div>` de embrulho: as ações precisam ser filhas diretas
     // de `.nds-dialog-footer` para o arranjo do CSS valer.
     footer: [
-      createButton({ variant: 'outline', label: 'Cancelar' }),
-      createButton({ variant: 'default', label: 'Salvar alterações' }),
+      createButton({ variant: 'outline', label: t('demonstration.labels.cancel') }),
+      createButton({ variant: 'default', label: t('demonstration.labels.action') }),
     ],
     showCloseButton: opts.showCloseButton,
   });
@@ -79,8 +80,8 @@ export const Closed: Story = {
   },
   render: () =>
     buildDialog({
-      triggerLabel: 'Editar perfil',
-      title: 'Editar perfil',
+      triggerLabel: t('demonstration.labels.triggerLabel'),
+      title: t('demonstration.labels.title'),
       description: 'Atualize suas informações pessoais.',
     }),
   // Esta story não interage com nada: é aqui que a leitura do estado de
@@ -100,7 +101,7 @@ export const Closed: Story = {
     await step('E o gatilho é um botão de verdade, pronto para o teclado', async () => {
       await expect(triggerEl.tagName).toBe('BUTTON');
       await expect(triggerEl).toHaveAttribute('type', 'button');
-      await expect(triggerEl).toHaveAccessibleName('Editar perfil');
+      await expect(triggerEl).toHaveAccessibleName(t('demonstration.labels.triggerLabel'));
     });
   },
 };
@@ -116,8 +117,8 @@ export const Open: Story = {
   },
   render: () =>
     buildDialog({
-      triggerLabel: 'Editar perfil',
-      title: 'Editar perfil',
+      triggerLabel: t('demonstration.labels.triggerLabel'),
+      title: t('demonstration.labels.title'),
       description: 'Atualize suas informações pessoais.',
       openInitially: true,
     }),

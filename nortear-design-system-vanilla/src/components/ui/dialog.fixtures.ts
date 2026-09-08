@@ -1,8 +1,28 @@
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { createTranslation } from '@/lib/i18n';
+import dialogTranslations from '@shared/content/dialog/translations.json';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
+
+/**
+ * Os rótulos dos exemplos saem do conteúdo compartilhado, e não de literais.
+ *
+ * Cravados no arquivo, os cenários ficavam em português para quem abre a página
+ * em inglês ou espanhol. Exportado daqui e não recriado em cada story: as quatro
+ * stories mostram os MESMOS exemplos, e um segundo dicionário abriria espaço
+ * para elas divergirem.
+ *
+ * É a função, e não um objeto congelado no import: o seletor de idioma da docs
+ * page troca o locale em tempo de execução, e um mapa montado uma vez ficaria
+ * preso ao idioma da primeira renderização.
+ *
+ * Snippet mostrado ao leitor NÃO passa por aqui — o que está dentro de crase, de
+ * `dialog.source.ts` ou de um `transform` é o código que a pessoa copia, e
+ * traduzi-lo entregaria um exemplo que não compila.
+ */
+export const { t } = createTranslation(dialogTranslations as Record<string, unknown>);
 
 // Helpers compartilhados pelas quatro stories de Dialog.
 //

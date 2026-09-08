@@ -10,6 +10,7 @@ import {
 } from './dialog.source';
 import { createButton } from './button';
 import {
+  t,
   open,
   mountOpen,
   cantoButtonClose,
@@ -63,11 +64,14 @@ export const Default: Story = {
   render: () =>
     mountOpen(
       createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
-        title: 'Editar perfil',
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.triggerLabel'),
+        }),
+        title: t('demonstration.labels.title'),
         description: 'Atualize suas informações pessoais.',
         content: makeBody('Os campos estariam aqui em uma aplicação real.'),
-        footer: makeFooter('Cancelar', 'Salvar alterações'),
+        footer: makeFooter(t('demonstration.labels.cancel'), t('demonstration.labels.action')),
       }),
     ),
   play: async ({ step }) => {
@@ -128,16 +132,24 @@ export const WithForm: Story = {
     form.className = 'nds-stack';
     form.dataset.spacing = 'md';
     form.append(
-      buildField('dialog-name', 'Nome', 'text', 'Maria Souza'),
-      buildField('dialog-email', 'E-mail', 'email', 'maria@exemplo.com'),
+      buildField('dialog-name', t('demonstration.labels.fieldName'), 'text', 'Maria Souza'),
+      buildField(
+        'dialog-email',
+        t('demonstration.labels.fieldEmail'),
+        'email',
+        'maria@exemplo.com',
+      ),
     );
     return mountOpen(
       createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
-        title: 'Editar perfil',
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.triggerLabel'),
+        }),
+        title: t('demonstration.labels.title'),
         description: 'Atualize suas informações pessoais.',
         content: form,
-        footer: makeFooter('Cancelar', 'Salvar alterações'),
+        footer: makeFooter(t('demonstration.labels.cancel'), t('demonstration.labels.action')),
       }),
     );
   },
@@ -148,11 +160,11 @@ export const WithForm: Story = {
       const name = p.querySelector<HTMLInputElement>('#dialog-name')!;
       // `toHaveAccessibleName` e não a presença do `<label>`: o que importa é o
       // par for/id ter fechado, e é isso que o leitor de tela anuncia.
-      await expect(name).toHaveAccessibleName('Nome');
+      await expect(name).toHaveAccessibleName(t('demonstration.labels.fieldName'));
       await expect(name.value).toBe('Maria Souza');
 
       const email = p.querySelector<HTMLInputElement>('#dialog-email')!;
-      await expect(email).toHaveAccessibleName('E-mail');
+      await expect(email).toHaveAccessibleName(t('demonstration.labels.fieldEmail'));
       await expect(email.value).toBe('maria@exemplo.com');
     });
 
@@ -198,7 +210,7 @@ export const WithScrollContent: Story = {
     // `group` e não `region`: marco aninhado num diálogo já nomeado não
     // acrescenta navegação. O nome diz O QUE rola.
     longBody.setAttribute('role', 'group');
-    longBody.setAttribute('aria-label', 'Termos de uso');
+    longBody.setAttribute('aria-label', t('demonstration.labels.termsTitle'));
     for (let i = 1; i <= 12; i++) {
       const p = document.createElement('p');
       p.textContent = `Parágrafo ${i}: termos de uso longos para garantir que o body precise rolar internamente sem expandir o painel.`;
@@ -207,10 +219,10 @@ export const WithScrollContent: Story = {
     return mountOpen(
       createDialog({
         trigger: createButton({ variant: 'outline', label: 'Ler termos' }),
-        title: 'Termos de uso',
-        description: 'Leia atentamente antes de aceitar.',
+        title: t('demonstration.labels.termsTitle'),
+        description: t('demonstration.labels.termsDescription'),
         content: longBody,
-        footer: makeFooter('Cancelar', 'Aceitar termos'),
+        footer: makeFooter(t('demonstration.labels.cancel'), 'Aceitar termos'),
       }),
     );
   },
@@ -275,11 +287,14 @@ export const WithScrollingOverlay: Story = {
     }
     return mountOpen(
       createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Ver contrato' }),
-        title: 'Contrato de prestação',
-        description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.contractTrigger'),
+        }),
+        title: t('demonstration.labels.contractTitle'),
+        description: t('demonstration.labels.contractDescription'),
         content: longBody,
-        footer: makeFooter('Recusar', 'Aceitar'),
+        footer: makeFooter(t('demonstration.labels.decline'), t('demonstration.labels.accept')),
         scroll: true,
       }),
     );
@@ -428,11 +443,17 @@ export const WithDestructiveAction: Story = {
   render: () =>
     mountOpen(
       createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Remover item' }),
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.removeItemAction'),
+        }),
+        // O título e a descrição continuam cravados: o conteúdo compartilhado
+        // traz "Remover item da lista" sem interrogação e outra descrição, e
+        // ligar a chave mudaria o que esta story mostra hoje.
         title: 'Remover item da lista?',
         description: 'O item sai desta lista, mas continua disponível na biblioteca.',
         content: makeBody('Você poderá adicioná-lo novamente a qualquer momento.'),
-        footer: makeFooter('Cancelar', 'Remover', true),
+        footer: makeFooter(t('demonstration.labels.cancel'), 'Remover', true),
       }),
     ),
   play: async ({ step }) => {
@@ -485,7 +506,10 @@ export const CustomCloseInFooter: Story = {
     },
   },
   render: () => {
-    const footerClose = createButton({ variant: 'ghost', label: 'Fechar' });
+    const footerClose = createButton({
+      variant: 'ghost',
+      label: t('demonstration.labels.close'),
+    });
     // O botão precisa FECHAR de verdade: a factory não liga um `DialogClose`
     // sozinha e não expõe fechamento programático — só `destroy()`, que encerra
     // a instância inteira. Um "Fechar" que não fecha seria a story documentando
@@ -528,7 +552,12 @@ export const CustomCloseInFooter: Story = {
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(cantoButtonClose(p)).toBeNull();
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await expect(within(footer).getByRole('button', { name: /fechar/i })).toBeVisible();
+      // Pelo VALOR que a montagem usou, e não por uma expressão em português:
+      // o rótulo acompanha o idioma da página, e /fechar/i não acharia o botão
+      // em inglês nem em espanhol.
+      await expect(
+        within(footer).getByRole('button', { name: t('demonstration.labels.close') }),
+      ).toBeVisible();
     });
 
     await step('A primária é a ÚLTIMA do rodapé, e o fechar é a primeira', async () => {
@@ -539,7 +568,7 @@ export const CustomCloseInFooter: Story = {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const buttons = [...footer.querySelectorAll<HTMLElement>('button')];
       await expect(buttons.map((b) => b.textContent?.trim())).toEqual([
-        'Fechar', 'Voltar', 'Continuar',
+        t('demonstration.labels.close'), 'Voltar', 'Continuar',
       ]);
       await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
       await expect(buttons[0].parentElement).toBe(footer);
@@ -547,7 +576,9 @@ export const CustomCloseInFooter: Story = {
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await userEvent.click(within(footer).getByRole('button', { name: /fechar/i }));
+      await userEvent.click(
+        within(footer).getByRole('button', { name: t('demonstration.labels.close') }),
+      );
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();
@@ -575,11 +606,17 @@ export const ConfirmEmail: Story = {
       'Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.';
     return mountOpen(
       createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Confirmar e-mail' }),
-        title: 'Confirmar e-mail',
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.confirmEmailTitle'),
+        }),
+        title: t('demonstration.labels.confirmEmailTitle'),
         description: 'Verifique o endereço antes de enviar o link de acesso.',
         content: body,
-        footer: makeFooter('Cancelar', 'Enviar link'),
+        footer: makeFooter(
+          t('demonstration.labels.cancel'),
+          t('demonstration.labels.confirmEmailAction'),
+        ),
       }),
     );
   },

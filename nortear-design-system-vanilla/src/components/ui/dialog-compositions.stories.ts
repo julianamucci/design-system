@@ -4,6 +4,7 @@ import { createDialog } from './dialog';
 import { dialogWithFormSource, dialogSource, dialogSourceWith } from './dialog.source';
 import { createButton } from './button';
 import {
+  t,
   open,
   mountOpen,
   cantoButtonClose,
@@ -71,11 +72,14 @@ export const ProfileEdit: Story = {
     );
     return mountOpen(
       createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
-        title: 'Editar perfil',
-        description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.triggerLabel'),
+        }),
+        title: t('demonstration.labels.title'),
+        description: t('demonstration.labels.description'),
         content: form,
-        footer: makeFooter('Cancelar', 'Salvar alterações'),
+        footer: makeFooter(t('demonstration.labels.cancel'), t('demonstration.labels.action')),
       }),
     );
   },

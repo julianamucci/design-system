@@ -316,19 +316,19 @@ export function createDialogDocs(): HTMLElement {
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDialogDemo({
                 location: 'docs_do_dont',
-                triggerLabel: 'Editar perfil',
-                title: 'Editar perfil',
+                triggerLabel: t('demonstration.labels.triggerLabel'),
+                title: t('demonstration.labels.title'),
                 description: 'Atualize suas informações pessoais.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Salvar alterações',
+                cancelLabel: t('demonstration.labels.cancel'),
+                actionLabel: t('demonstration.labels.action'),
                 bodyText: 'Os campos estariam aqui em uma aplicação real.',
               }),
               dontPreviewFactory: () => buildDialogDemo({
                 location: 'docs_do_dont',
-                triggerLabel: 'Atenção',
-                title: 'Atenção',
-                description: '',
-                cancelLabel: 'Cancelar',
+                triggerLabel: t('demonstration.labels.vagueTitle'),
+                title: t('demonstration.labels.vagueTitle'),
+                description: t('demonstration.labels.vagueDescription'),
+                cancelLabel: t('demonstration.labels.cancel'),
                 actionLabel: 'OK',
                 bodyText: '',
               }),
@@ -340,20 +340,20 @@ export function createDialogDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDialogDemo({
                 location: 'docs_do_dont',
-                triggerLabel: 'Editar perfil',
-                title: 'Editar perfil',
+                triggerLabel: t('demonstration.labels.triggerLabel'),
+                title: t('demonstration.labels.title'),
                 description: 'Atualize suas informações pessoais.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Salvar alterações',
+                cancelLabel: t('demonstration.labels.cancel'),
+                actionLabel: t('demonstration.labels.action'),
                 bodyText: '',
               }),
               dontPreviewFactory: () => buildDialogDemo({
                 location: 'docs_do_dont',
-                triggerLabel: 'Excluir conta',
+                triggerLabel: t('demonstration.labels.destructiveTitle'),
                 triggerVariant: 'destructive',
-                title: 'Excluir conta?',
-                description: 'Confirme para remover.',
-                cancelLabel: 'Cancelar',
+                title: t('demonstration.labels.destructiveTitle'),
+                description: t('demonstration.labels.destructiveDescription'),
+                cancelLabel: t('demonstration.labels.cancel'),
                 actionLabel: 'Excluir',
                 destructive: true,
                 bodyText: 'Use AlertDialog para esse caso.',
@@ -480,11 +480,11 @@ createDialog({
               code: codeWithForm,
               previewFactory: () => buildDialogDemo({
                 location: 'docs_variantes',
-                triggerLabel: 'Editar perfil',
-                title: 'Editar perfil',
+                triggerLabel: t('demonstration.labels.triggerLabel'),
+                title: t('demonstration.labels.title'),
                 description: 'Formulário inline.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Salvar alterações',
+                cancelLabel: t('demonstration.labels.cancel'),
+                actionLabel: t('demonstration.labels.action'),
                 bodyText: 'Imagine os campos aqui.',
               }),
             },
@@ -506,7 +506,7 @@ createDialog({
                 body.dataset.spacing = 'sm';
                 body.tabIndex = 0;
                 body.setAttribute('role', 'group');
-                body.setAttribute('aria-label', 'Termos de uso');
+                body.setAttribute('aria-label', t('demonstration.labels.termsTitle'));
                 for (let i = 1; i <= 10; i++) {
                   const p = document.createElement('p');
                   p.textContent = `Parágrafo ${i}: conteúdo extenso para o corpo precisar rolar.`;
@@ -514,12 +514,15 @@ createDialog({
                 }
                 return createDialog({
                   trigger,
-                  title: 'Termos de uso',
-                  description: 'Leia atentamente antes de aceitar.',
+                  title: t('demonstration.labels.termsTitle'),
+                  description: t('demonstration.labels.termsDescription'),
                   content: body,
                   footer: [
-                    createButton({ variant: 'outline', label: 'Recusar' }),
-                    createButton({ label: 'Aceitar' }),
+                    createButton({
+                      variant: 'outline',
+                      label: t('demonstration.labels.decline'),
+                    }),
+                    createButton({ label: t('demonstration.labels.accept') }),
                   ],
                 });
               },
@@ -532,7 +535,10 @@ createDialog({
               // cinco snippets desta campanha ficaram para trás do código.
               code: t('variants.items.withScrollingOverlayCode'),
               previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Ver contrato' });
+                const trigger = createButton({
+                  variant: 'outline',
+                  label: t('demonstration.labels.contractTrigger'),
+                });
                 const body = document.createElement('div');
                 // A OUTRA rota: sem a classe de rolagem de corpo, sem tabindex e
                 // sem papel — quem rola é o overlay, e ele já está na ordem
@@ -546,12 +552,15 @@ createDialog({
                 }
                 return createDialog({
                   trigger,
-                  title: 'Contrato de prestação',
-                  description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
+                  title: t('demonstration.labels.contractTitle'),
+                  description: t('demonstration.labels.contractDescription'),
                   content: body,
                   footer: [
-                    createButton({ variant: 'outline', label: 'Recusar' }),
-                    createButton({ label: 'Aceitar' }),
+                    createButton({
+                      variant: 'outline',
+                      label: t('demonstration.labels.decline'),
+                    }),
+                    createButton({ label: t('demonstration.labels.accept') }),
                   ],
                   scroll: true,
                 });
@@ -580,10 +589,10 @@ createDialog({
               code: codeDestructive,
               previewFactory: () => buildDialogDemo({
                 location: 'docs_variantes',
-                triggerLabel: 'Remover item',
-                title: 'Remover item da lista?',
-                description: 'O item permanece na biblioteca.',
-                cancelLabel: 'Cancelar',
+                triggerLabel: t('demonstration.labels.removeItemAction'),
+                title: t('demonstration.labels.removeItemTitle'),
+                description: t('demonstration.labels.removeItemDescription'),
+                cancelLabel: t('demonstration.labels.cancel'),
                 actionLabel: 'Remover',
                 destructive: true,
               }),
@@ -604,7 +613,10 @@ createDialog({
                 // diálogos, e `document.querySelector` devolveria o primeiro da
                 // ordem do DOM. Na rota A a fábrica anexa véu e painel ao
                 // `body` nessa ordem, então o véu é o irmão anterior do painel.
-                const closeAction = createButton({ variant: 'ghost', label: 'Fechar' });
+                const closeAction = createButton({
+                  variant: 'ghost',
+                  label: t('demonstration.labels.close'),
+                });
                 closeAction.addEventListener('click', () => {
                   const panelEl = closeAction.closest<HTMLElement>('[data-slot="dialog-content"]');
                   const overlayEl = panelEl?.previousElementSibling;
@@ -649,12 +661,12 @@ createDialog({
 });`,
               previewFactory: () => buildDialogDemo({
                 location: 'docs_variantes',
-                triggerLabel: 'Enviar link',
+                triggerLabel: t('demonstration.labels.confirmEmailAction'),
                 triggerVariant: 'default',
-                title: 'Confirmar e-mail',
+                title: t('demonstration.labels.confirmEmailTitle'),
                 description: 'Verifique o endereço antes de enviar o link de acesso.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Enviar link',
+                cancelLabel: t('demonstration.labels.cancel'),
+                actionLabel: t('demonstration.labels.confirmEmailAction'),
                 bodyText: 'Vamos enviar um link para maria@exemplo.com.',
               }),
             },
@@ -717,8 +729,15 @@ createDialog({
                 field.className = 'nds-stack';
                 field.dataset.spacing = 'sm';
                 field.append(
-                  createLabel({ text: 'Nome completo', htmlFor: 'profile-name' }),
-                  createInput({ id: 'profile-name', name: 'name', value: 'Maria Silva' }),
+                  createLabel({
+                    text: t('demonstration.labels.fieldFullName'),
+                    htmlFor: 'profile-name',
+                  }),
+                  createInput({
+                    id: 'profile-name',
+                    name: 'name',
+                    value: t('demonstration.labels.samplePersonName'),
+                  }),
                 );
                 form.appendChild(field);
 
@@ -730,17 +749,23 @@ createDialog({
                 const footerEl = document.createElement('div');
                 footerEl.className = 'nds-dialog-footer';
                 footerEl.dataset.slot = 'dialog-footer';
-                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const cancel = createButton({
+                  variant: 'outline',
+                  label: t('demonstration.labels.cancel'),
+                });
                 cancel.type = 'button';
                 cancel.dataset.slot = 'dialog-close';
-                const save = createButton({ label: 'Salvar alterações' });
+                const save = createButton({ label: t('demonstration.labels.action') });
                 save.type = 'submit';
                 footerEl.append(cancel, save);
                 form.appendChild(footerEl);
 
                 return createDialog({
-                  trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
-                  title: 'Editar perfil',
+                  trigger: createButton({
+                    variant: 'outline',
+                    label: t('demonstration.labels.triggerLabel'),
+                  }),
+                  title: t('demonstration.labels.title'),
                   description: 'Atualize suas informações pessoais.',
                   content: form,
                 });
