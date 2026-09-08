@@ -140,7 +140,7 @@ describe('transforms das stories de variante', () => {
     expect(saida).toContain('nds-dialog-body-scroll');
     expect(saida).toContain('tabindex="0"');
     expect(saida).toContain('role="group"');
-    expect(saida).toContain('aria-label="Termos de serviço"');
+    expect(saida).toContain('aria-label="Termos de uso"');
     expect(saida).toContain('<p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>');
     // Cabeçalho e rodapé continuam DENTRO do painel, parados.
     expect(saida).toContain('    <DialogHeader>');
@@ -171,7 +171,7 @@ describe('transforms das stories de variante', () => {
 
   it('a ação destrutiva se declara por variante, e só ela', () => {
     const saida = dialogActionDestructiveSource();
-    expect(saida).toContain('<Button variant="destructive">Remover anexo</Button>');
+    expect(saida).toContain('<Button variant="destructive">Remover item</Button>');
     // O painel continua sendo um diálogo comum: confirmação irreversível é
     // outro componente.
     expect(saida).not.toContain('alertdialog');

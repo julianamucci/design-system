@@ -307,20 +307,20 @@ const termos = [
 ]`,
     dialogo({
       painelProps: 'class="nds-max-w-lg"',
-      trigger: 'Ver termos',
-      title: 'Termos de serviço',
-      descricao: 'Leia atentamente os termos antes de aceitar.',
+      trigger: 'Termos de uso',
+      title: 'Termos de uso',
+      descricao: 'Leia atentamente antes de aceitar.',
       body: `    <div
       class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
       data-slot="dialog-body"
       data-spacing="sm"
       tabindex="0"
       role="group"
-      aria-label="Termos de serviço"
+      aria-label="Termos de uso"
     >
       <p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>
     </div>`,
-      footer: footerDefault('Recusar', 'Aceitar termos'),
+      footer: footerDefault('Recusar', 'Aceitar'),
     }),
   );
 }
@@ -408,10 +408,10 @@ export function dialogActionDestructiveSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS),
     dialogo({
-      trigger: 'Remover anexo',
-      title: 'Remover anexo',
-      descricao: 'O anexo será removido desta mensagem. Você pode adicioná-lo novamente depois.',
-      footer: footerDefault('Cancelar', 'Remover anexo', true),
+      trigger: 'Remover item',
+      title: 'Remover item da lista',
+      descricao: 'O item sai desta lista e continua disponível no catálogo.',
+      footer: footerDefault('Cancelar', 'Remover item', true),
     }),
   );
 }
@@ -450,8 +450,8 @@ export function dialogConfirmarEmailSource(): string {
   return vueSnippet(
     importing(PARTS_COMPLETAS, true),
     dialogo({
-      trigger: 'Confirmar novo email',
-      title: 'Confirmar novo email',
+      trigger: 'Confirmar e-mail',
+      title: 'Confirmar e-mail',
       descricao:
         'Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.',
       body: `    <div class="nds-grid" data-spacing="xs">
@@ -459,7 +459,7 @@ export function dialogConfirmarEmailSource(): string {
       <Input id="new-email" type="email" placeholder="voce@example.com" />
     </div>`,
       // A operação é reversível, então a ação primária é neutra.
-      footer: footerDefault('Cancelar', 'Enviar confirmação'),
+      footer: footerDefault('Cancelar', 'Enviar link'),
     }),
   );
 }

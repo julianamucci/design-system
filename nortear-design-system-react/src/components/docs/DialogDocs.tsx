@@ -135,7 +135,13 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, locatio
       onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
           component: "dialog",
-          label: title,
+          // Identificador do CENÁRIO, não o título. `title` chega traduzido, e
+          // texto traduzido em payload parte um evento em três valores no GA4 —
+          // a agregação some. Quem diz a seção é `location`; este campo diz
+          // qual demo. O `i18n_text_in_payload` não via este ponto porque o
+          // texto chegava por prop: o portão lê a chamada de tradução DENTRO do
+          // payload, e a indireção o cega.
+          label: "default",
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location,
         })
@@ -161,7 +167,8 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, locatio
             onClick={() =>
               track("dialog_action", {
                 component: "dialog",
-                action_label: action,
+                // Mesma razão do `label`: `action` chega traduzido por prop.
+                action_label: "save",
                 location,
               })
             }
@@ -180,7 +187,8 @@ function FormDemo({ triggerLabel, title, description, cancel, action, location, 
       onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
           component: "dialog",
-          label: title,
+          // Ver a nota em `DefaultDemo`: cenário, não título traduzido.
+          label: "with-form",
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location,
         })
@@ -199,7 +207,8 @@ function FormDemo({ triggerLabel, title, description, cancel, action, location, 
             e.preventDefault();
             track("dialog_action", {
               component: "dialog",
-              action_label: action,
+              // Mesma razão do `label`: `action` chega traduzido por prop.
+                action_label: "save",
               location,
             });
           }}
@@ -589,7 +598,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                 onOpenChange={(open, details) =>
                   track(open ? "dialog_open" : "dialog_close", {
                     component: "dialog",
-                    label: tContent("demonstration.labels.title"),
+                    label: "do-dont-pair1",
                     ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
                     location: "docs_do_dont",
                   })
@@ -649,7 +658,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                 onOpenChange={(open, details) =>
                   track(open ? "dialog_open" : "dialog_close", {
                     component: "dialog",
-                    label: tContent("demonstration.labels.title"),
+                    label: "do-dont-pair2",
                     ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
                     location: "docs_do_dont",
                   })

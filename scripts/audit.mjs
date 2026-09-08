@@ -750,6 +750,27 @@ function extractTrackPayloads(content) {
   return out;
 }
 
+// CEGUEIRA CONHECIDA E MEDIDA: a regra abaixo lê a chamada de tradução DENTRO
+// do payload. Quando o texto chega por VARIÁVEL — prop, const, campo de objeto
+// — ela não vê. Medido no dialog do react em 2026-09-08: quatro pontos mandavam
+// texto traduzido, a regra via DOIS. Os outros dois eram `label: title` e
+// `action_label: action`, com `title` e `action` chegando por prop de um call
+// site que passa `t(...)`.
+//
+// Por que NÃO foi ampliada: varrendo os campos livres (`label`, `action_label`,
+// `destination`, `task`, `trigger_label`, `field_name`) atrás de valor não
+// literal, dá **126 ocorrências nas cinco stacks** — react 26, vue 22, svelte
+// 19, vanilla 31, angular 28. A maioria é legítima: `key`, `id`,
+// `TRACK_LABELS[chosen]`, ternário entre dois slugs. Acusar as 126 seria
+// despejo de backlog, e backlog ensina a ignorar o portão — junto com ele some
+// o achado que importava.
+//
+// O que sobra é dívida NOMEADA, não silenciosa. Suspeitos reais na varredura,
+// para quem for atrás: `BreadcrumbDocs.ts:104 label: crumb.text` e
+// `destination: crumb.href` (vanilla), `AccordionDocs.ts:757 label: label`
+// (angular). O caminho barato para fechar é ao contrário do portão: exigir
+// literal nesses campos e declarar as exceções, em vez de tentar seguir a
+// indireção.
 function auditAnalyticsPayloads() {
   const violations = [];
   for (const stack of STACKS) {
@@ -2379,7 +2400,37 @@ function auditDemonstrationLabels(slug) {
     contagem.set(a, (contagem.get(a) ?? 0) + 1);
   }
   const [maioria, quantas] = [...contagem.entries()].sort((x, y) => y[1] - x[1])[0];
-  if (quantas < 2) return [];
+
+  // Sem maioria, esta regra devolvia lista vazia — e ficava MUDA exatamente na
+  // divergência máxima. Medido no dialog em 2026-09-08, logo depois de promover
+  // 22 chaves novas: cinco assinaturas distintas, maior grupo de UMA stack,
+  // consumo de 18 a 27 chaves das 28. O portão fechou VERDE com as cinco
+  // discordando entre si, e teria seguido verde para sempre.
+  //
+  // A leitura errada era tratar "não há de quem divergir" como "não há
+  // divergência". É o contrário: quando nem duas stacks concordam, não existe
+  // uma a apontar porque TODAS estão fora — e é a única situação em que o
+  // conserto não é alinhar uma à maioria, e sim escolher o conjunto.
+  //
+  // Terceira regra desta casa a errar por ficar quieta: o
+  // `source-snippets.test.ts` encolheu em silêncio quando 28 exports saíram da
+  // varredura, e o `location_so_da_demo` parou de disparar quando falso
+  // positivo inflou a contagem de valores distintos. O padrão é sempre o
+  // mesmo — a condição de guarda protege contra ruído e apaga o sinal junto.
+  if (quantas < 2) {
+    const espectro = adotaram
+      .map((st) => `${st}=${porStack[st].size}`)
+      .join(' · ');
+    const nunca = chaves.filter((k) => adotaram.every((st) => !porStack[st].has(k)));
+    return [{
+      category: 'quality', severity: 'medium', slug, stack: adotaram[0],
+      file: 'docs/' + slug, rule: 'demonstration_labels_sem_consenso',
+      message: `nenhuma stack concorda com outra sobre quais rótulos a demonstração usa`
+        + ` — ${adotaram.length} conjuntos distintos de ${chaves.length} chaves (${espectro}).`
+        + ` Sem maioria não há quem apontar: escolha o conjunto e alinhe as ${adotaram.length}.`
+        + (nunca.length ? ` Órfãs, que nenhuma consome: [${nunca.join(', ')}]` : ''),
+    }];
+  }
 
   const esperado = new Set(maioria.split(','));
   const quem = adotaram.filter((st) => assinatura(porStack[st]) === maioria);
