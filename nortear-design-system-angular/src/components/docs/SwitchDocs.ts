@@ -79,16 +79,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
-// descreve um elemento `<nds-switch />` que este stack não tem — o componente é
-// um seletor de atributo sobre `<button>`, para o markup bater com o das outras
-// stacks e o CSS `.nds-switch` casar sem wrapper. Enquanto o conteúdo não for
-// corrigido, a estrutura mostrada aqui é a que compila.
-const ANATOMY_CODE = `<div class="nds-cluster" data-spacing="sm">
-  <button ndsSwitch id="notificacoes" [(checked)]="ativo"></button>
-  <label ndsLabel for="notificacoes">Receber notificações</label>
-</div>`;
-
 const INTERFACE_CODE = `// <button ndsSwitch> — compõe o primitivo do Radix NG
 @Component({
   selector: 'button[ndsSwitch]',
@@ -376,7 +366,7 @@ const COMPOSITION_CODE = {
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -471,7 +461,6 @@ const COMPOSITION_CODE = {
 export class NdsSwitchDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly importCode = IMPORT_CODE;
   protected readonly importCodeLabel = IMPORT_CODE_LABEL;

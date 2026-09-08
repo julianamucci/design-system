@@ -97,26 +97,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
-// descreve `<nds-tooltip-provider>` e `<nds-tooltip>` — dois elementos que este
-// stack não tem. As quatro peças são diretivas de ATRIBUTO sobre elementos
-// nativos, para o markup bater com o do Vanilla e o CSS `.nds-tooltip-*` casar
-// sem wrapper. Enquanto o conteúdo não for corrigido, a estrutura mostrada aqui
-// é a que compila.
-const ANATOMY_CODE = `<!-- Uma vez, no root da app -->
-<div ndsTooltipProvider [delay]="400">
-  <router-outlet />
-</div>
-
-<!-- Onde precisar -->
-<span ndsTooltip>
-  <button ndsTooltipTrigger ndsButton variant="outline" size="icon" aria-label="Salvar">
-    <svg class="nds-icon nds-shrink-0" aria-hidden="true">…</svg>
-  </button>
-
-  <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
-</span>`;
-
 const IMPORT_CODE = `import { NDS_TOOLTIP } from '@/components/ui/tooltip';
 
 // ou, peça a peça:
@@ -671,7 +651,7 @@ function buildCompositionCode(): Record<
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -779,7 +759,6 @@ function buildCompositionCode(): Record<
 export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;

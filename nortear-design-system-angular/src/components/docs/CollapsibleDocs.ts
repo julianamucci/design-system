@@ -84,21 +84,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 const PANEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
 
-// A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
-// descreve um elemento `<nds-collapsible>` que este stack não tem: as três
-// peças são diretivas de ATRIBUTO sobre elementos nativos, para o markup bater
-// com o do Vanilla e o CSS `.nds-collapsible` casar sem wrapper. Enquanto o
-// conteúdo não for corrigido, a estrutura mostrada aqui é a que compila.
-const ANATOMY_CODE = `<div ndsCollapsible [(open)]="aberto">
-  <button ndsCollapsibleTrigger ndsButton variant="ghost">
-    Exibir detalhes
-  </button>
-
-  <div ndsCollapsiblePanel>
-    <!-- conteúdo colapsável -->
-  </div>
-</div>`;
-
 const IMPORT_CODE = `import { NDS_COLLAPSIBLE } from '@/components/ui/collapsible';
 
 // ou, peça a peça:
@@ -601,7 +586,7 @@ const COMPOSITION_CODE = {
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -705,7 +690,6 @@ const COMPOSITION_CODE = {
 export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;

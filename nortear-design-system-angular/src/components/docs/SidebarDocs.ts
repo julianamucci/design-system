@@ -123,45 +123,6 @@ export class NdsSidebarProvider {
   readonly open = model<boolean | undefined>(undefined);
 }`;
 
-// O snippet compartilhado descreve seletores de ELEMENTO (`<nds-sidebar>`) e a
-// prop `isActive`. Aqui os seletores são de atributo, para o markup ficar igual
-// ao das outras stacks, e o input chama `active`. Mesmo precedente do Card e do
-// Checkbox: a estrutura correta vive aqui até o conteúdo compartilhado ser
-// corrigido.
-const ANATOMY_CODE = `<div ndsSidebarProvider>
-  <div ndsSidebar side="left" variant="sidebar" collapsible="offcanvas">
-    <div ndsSidebarHeader>Acme</div>
-
-    <div ndsSidebarContent>
-      <nav aria-label="Navegação principal">
-        <div ndsSidebarGroup>
-          <div ndsSidebarGroupLabel>Plataforma</div>
-          <div ndsSidebarGroupContent>
-            <ul ndsSidebarMenu>
-              <li ndsSidebarMenuItem>
-                <a ndsSidebarMenuButton href="/painel" [active]="true">
-                  <svg ndsButtonIcon kind="chevron-right"></svg>
-                  <span>Painel</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-    </div>
-
-    <div ndsSidebarFooter></div>
-    <button ndsSidebarRail></button>
-  </div>
-
-  <main ndsSidebarInset>
-    <button ndsSidebarTrigger aria-label="Alternar barra lateral"></button>
-    <div id="main-content" tabindex="-1">
-      <!-- conteúdo da página -->
-    </div>
-  </main>
-</div>`;
-
 const CUSTOMIZATION_CODE = `/* Largura e tema por contexto, sempre em token —
    as duas custom properties já nascem em .nds-sidebar-wrapper. */
 .tema-compacto {
@@ -459,7 +420,7 @@ const CUSTOMIZATION_CODE = `/* Largura e tema por contexto, sempre em token —
         <nds-docs-anatomy
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -553,7 +514,6 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly customizationCode = CUSTOMIZATION_CODE;
   protected readonly importCode = `import { NDS_SIDEBAR } from '@/components/ui/sidebar';`;
 

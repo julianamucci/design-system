@@ -32,7 +32,7 @@
         "vue": "<ScrollArea size=\"xl\">\n  <!-- Conteúdo longo -->\n</ScrollArea>",
         "svelte": "<ScrollArea size=\"xl\">\n  <!-- Conteúdo longo -->\n</ScrollArea>",
         "vanilla": "createScrollArea({ size: 'xl', children: conteudo });",
-        "angular": "<nds-scroll-area size=\"xl\">\n  <!-- Conteúdo longo -->\n</nds-scroll-area>"
+        "angular": "<div ndsScrollArea size=\"lg\" label=\"Lista de tags\" class=\"nds-w-sm nds-rounded-md nds-border-default\">\n  <div class=\"nds-stack nds-p-4\" data-spacing=\"sm\">\n    <!-- Conteúdo longo -->\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -437,7 +437,7 @@
         "vue": "<ScrollArea size=\"xl\">\n  <!-- Long content -->\n</ScrollArea>",
         "svelte": "<ScrollArea size=\"xl\">\n  <!-- Long content -->\n</ScrollArea>",
         "vanilla": "createScrollArea({ size: 'xl', children: conteudo });",
-        "angular": "<nds-scroll-area size=\"xl\">\n  <!-- Long content -->\n</nds-scroll-area>"
+        "angular": "<div ndsScrollArea size=\"lg\" label=\"Lista de tags\" class=\"nds-w-sm nds-rounded-md nds-border-default\">\n  <div class=\"nds-stack nds-p-4\" data-spacing=\"sm\">\n    <!-- Conteúdo longo -->\n  </div>\n</div>"
       }
     },
     "usage": {
@@ -842,7 +842,7 @@
         "vue": "<ScrollArea size=\"xl\">\n  <!-- Contenido largo -->\n</ScrollArea>",
         "svelte": "<ScrollArea size=\"xl\">\n  <!-- Contenido largo -->\n</ScrollArea>",
         "vanilla": "createScrollArea({ size: 'xl', children: conteudo });",
-        "angular": "<nds-scroll-area size=\"xl\">\n  <!-- Contenido largo -->\n</nds-scroll-area>"
+        "angular": "<div ndsScrollArea size=\"lg\" label=\"Lista de tags\" class=\"nds-w-sm nds-rounded-md nds-border-default\">\n  <div class=\"nds-stack nds-p-4\" data-spacing=\"sm\">\n    <!-- Conteúdo longo -->\n  </div>\n</div>"
       }
     },
     "usage": {

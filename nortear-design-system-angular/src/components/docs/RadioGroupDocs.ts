@@ -125,24 +125,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// Hardcoded, e não `t('anatomy.structureCode')`: a variante `angular` do
-// conteúdo compartilhado descreve seletores de ELEMENTO
-// (`<nds-radio-group>` / `<nds-radio-group-item>`) que este stack não usa —
-// aqui o seletor é de atributo, sobre `<fieldset>` e `<button>` nativos, para o
-// markup e o CSS `.nds-*` baterem com o das outras stacks. Mesmo caminho do
-// CheckboxDocs. A correção do conteúdo compartilhado está reportada.
-const ANATOMY_CODE = `<p id="pagamento-titulo" class="nds-text-body nds-font-semibold">Forma de pagamento</p>
-<fieldset ndsRadioGroup aria-labelledby="pagamento-titulo" name="payment">
-  <div class="nds-radio-row">
-    <button ndsRadioGroupItem value="cartao" id="cartao"></button>
-    <label ndsLabel class="nds-radio-label" for="cartao">Cartão de crédito</label>
-  </div>
-  <div class="nds-radio-row">
-    <button ndsRadioGroupItem value="pix" id="pix"></button>
-    <label ndsLabel class="nds-radio-label" for="pix">Pix</label>
-  </div>
-</fieldset>`;
-
 const INTERFACE_CODE = `// <fieldset ndsRadioGroup> + <button ndsRadioGroupItem>
 @Directive({
   selector: 'fieldset[ndsRadioGroup], div[ndsRadioGroup]',
@@ -462,7 +444,7 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -558,7 +540,6 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
 export class NdsRadioGroupDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode =

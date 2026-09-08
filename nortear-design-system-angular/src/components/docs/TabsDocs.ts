@@ -142,22 +142,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// Hardcoded, e não `t('anatomy.structureCode')`: a variante `angular` do
-// conteúdo compartilhado descreve um elemento `<nds-tabs>` que este stack não
-// usa — aqui o seletor é de atributo, sobre `<div>` e `<button>` nativos, para o
-// markup e o CSS `.nds-*` baterem com o das outras stacks. Mesmo caminho do
-// SwitchDocs e do RadioGroupDocs. A correção do conteúdo está reportada.
-const ANATOMY_CODE = `<div ndsTabs defaultValue="overview">
-  <div ndsTabsList aria-label="Seções do componente">
-    <button ndsTabsTrigger value="overview">Visão geral</button>
-    <button ndsTabsTrigger value="properties">Propriedades</button>
-    <button ndsTabsTrigger value="examples">Exemplos</button>
-  </div>
-  <div ndsTabsContent value="overview">Conteúdo da visão geral</div>
-  <div ndsTabsContent value="properties">Lista de propriedades</div>
-  <div ndsTabsContent value="examples">Exemplos de uso</div>
-</div>`;
-
 const INTERFACE_CODE = `// <div ndsTabs> + <div ndsTabsList> + <button ndsTabsTrigger> + <div ndsTabsContent>
 @Directive({
   selector: 'div[ndsTabs]',
@@ -450,7 +434,7 @@ const ABAS_DEMO = ['overview', 'properties', 'examples'] as const;
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -546,7 +530,6 @@ const ABAS_DEMO = ['overview', 'properties', 'examples'] as const;
 export class NdsTabsDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode =

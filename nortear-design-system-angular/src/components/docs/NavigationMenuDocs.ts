@@ -223,35 +223,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// Hardcoded, e não `t('anatomy.structureCode')`: a variante `angular` do
-// conteúdo compartilhado envolve a barra num elemento `<nds-navigation-menu>` e
-// não distingue o destino da barra do destino de dentro do painel. Aqui a raiz
-// é o próprio `<nav>` (é onde o `aria-label` faz sentido e é o markup do
-// Vanilla) e o painel tem uma raiz visual própria, que é o que o viewport mede.
-// Mesmo caminho do TabsDocs e do DropdownMenuDocs; a correção do conteúdo
-// compartilhado está reportada.
-const ANATOMY_CODE = `<nav ndsNavigationMenu aria-label="Navegação principal">
-  <ul ndsNavigationMenuList>
-    <li ndsNavigationMenuItem>
-      <a ndsNavigationMenuLink href="/" active>Início</a>
-    </li>
-
-    <li ndsNavigationMenuItem value="produtos">
-      <button ndsNavigationMenuTrigger>Produtos</button>
-
-      <ng-template ndsNavigationMenuContent>
-        <ul ndsNavigationMenuPanel class="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
-          <li>
-            <a ndsNavigationMenuChild href="/produtos/inicial">
-              <div ndsNavigationMenuChildLabel>Plano Inicial</div>
-            </a>
-          </li>
-        </ul>
-      </ng-template>
-    </li>
-  </ul>
-</nav>`;
-
 const INTERFACE_CODE = `// A raiz é componente: é ela que declara o portal, o positioner, o popup
 // e o viewport compartilhados por toda a barra.
 @Component({
@@ -836,7 +807,7 @@ const TARGETS_DEMO = [
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -929,7 +900,6 @@ const TARGETS_DEMO = [
 export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;

@@ -145,24 +145,6 @@ export class NdsCalendar {
   readonly numberOfMonths = input(1, { transform: numberAttribute });
 }`;
 
-const ANATOMY_CODE = `<!-- escolhido = signal<Date | undefined>(undefined) -->
-<div
-  ndsCalendar
-  mode="single"
-  [(value)]="escolhido"
-  locale="pt-BR"
-  [showOutsideDays]="true"
-></div>
-
-<!-- Várias datas avulsas, dois meses lado a lado -->
-<div
-  ndsCalendar
-  mode="multiple"
-  [(value)]="escolhidas"
-  [numberOfMonths]="2"
-  locale="pt-BR"
-></div>`;
-
 const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
    redefinir o token, não sobrescrever a regra. */
 .tema-compacto {
@@ -247,7 +229,7 @@ const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
         <nds-docs-anatomy
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -338,7 +320,6 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly customizationCode = CUSTOMIZATION_CODE;
   protected readonly importCode = `import { NdsCalendar } from '@/components/ui/calendar';`;
 

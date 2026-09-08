@@ -146,12 +146,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const STRUCTURE_CODE = `<div ndsScrollArea size="lg" label="Lista de tags" class="nds-w-sm nds-rounded-md nds-border-default">
-  <div class="nds-stack nds-p-4" data-spacing="sm">
-    <!-- Conteúdo longo -->
-  </div>
-</div>`;
-
 const VERTICAL_CODE = `<div ndsScrollArea size="md" label="Lista vertical de tags" class="nds-w-sm">
   <div class="nds-stack nds-p-4" data-spacing="sm">
     @for (tag of tags; track tag) {
@@ -419,7 +413,7 @@ const CAMINHOS: Record<string, string> = {
         <nds-docs-anatomy
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
-          [structureCode]="estruturaCode"
+          [structureCode]="t('anatomy.structureCode')"
           [structureLabel]="t('anatomy.structureLabel')"
           language="html"
         />
@@ -510,7 +504,6 @@ const CAMINHOS: Record<string, string> = {
 export class NdsScrollAreaDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly estruturaCode = STRUCTURE_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilidadeCode = EXTENSIBILIDADE_CODE;
   protected readonly customizacaoCode = CUSTOMIZACAO_CODE;

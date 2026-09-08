@@ -111,17 +111,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// A estrutura é escrita aqui e não lida de `anatomy.structureCode`: a variante
-// `angular` do conteúdo compartilhado descreve um elemento `<nds-avatar>` que
-// este stack não tem — todas as partes são diretiva de atributo em elemento
-// nativo, para o DOM sair igual ao das outras stacks. Enquanto o conteúdo não
-// for corrigido, o snippet correto é este.
-const ANATOMY_CODE = `<span ndsAvatar size="md">             <!-- Container circular -->
-  <img ndsAvatarImage src="…" alt="…" />   <!-- Imagem com alt -->
-  <span ndsAvatarFallback>MR</span>        <!-- Iniciais ou ícone -->
-  <span ndsAvatarBadge></span>             <!-- Status, opcional -->
-</span>`;
-
 const INTERFACE_CODE = `// Uma diretiva de atributo por parte do Avatar.
 @Directive({ selector: 'span[ndsAvatar]', hostDirectives: [RdxAvatarRootDirective] })
 export class NdsAvatar {
@@ -342,7 +331,7 @@ const CODE_STATUS = `<span ndsAvatar>
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -433,7 +422,6 @@ const CODE_STATUS = `<span ndsAvatar>
 export class NdsAvatarDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly importCode = IMPORT_CODE;
   protected readonly importIconCode = IMPORT_ICON_CODE;

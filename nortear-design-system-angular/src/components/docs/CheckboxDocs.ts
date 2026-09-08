@@ -90,11 +90,6 @@ export class NdsCheckbox {}
 // Uso com Reactive Forms:
 // <button ndsCheckbox formControlName="termos" id="termos"></button>`;
 
-const ANATOMY_CODE = `<div class="nds-cluster" data-spacing="sm">
-  <button ndsCheckbox id="termos" [(checked)]="aceito"></button>
-  <label ndsLabel for="termos">Aceito os termos</label>
-</div>`;
-
 @Component({
   selector: 'nds-checkbox-docs',
   standalone: true,
@@ -248,7 +243,7 @@ const ANATOMY_CODE = `<div class="nds-cluster" data-spacing="sm">
         <nds-docs-anatomy
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -341,7 +336,6 @@ export class NdsCheckboxDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly importCode = `import { NdsCheckbox } from '@/components/ui/checkbox';`;
 
   protected readonly activeSection = signal<string | undefined>(undefined);

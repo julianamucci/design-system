@@ -110,27 +110,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 // de estado a alternar no clique.
 const SWATCH_CLASSES = 'nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected';
 
-// A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
-// descreve um elemento `<nds-popover>` que este stack não tem: a raiz é uma
-// diretiva de ATRIBUTO sobre um `<div>` nativo, para o markup bater com o do
-// Vanilla. O painel também é um `<ng-template>` e não um elemento — ele mora em
-// portal no body, então precisa ser molde, não markup posicionado. Enquanto o
-// conteúdo compartilhado não for corrigido, a estrutura mostrada aqui é a que
-// compila.
-const ANATOMY_CODE = `<div ndsPopover>
-  <button ndsPopoverTrigger ndsButton variant="outline">Abrir</button>
-
-  <ng-template ndsPopoverContent side="bottom" align="center">
-    <div ndsPopoverHeader>
-      <h3 ndsPopoverTitle>Título</h3>
-      <p ndsPopoverDescription>Descrição opcional.</p>
-    </div>
-
-    <!-- conteúdo interativo -->
-    <button ndsPopoverClose ndsButton size="sm">Fechar</button>
-  </ng-template>
-</div>`;
-
 const IMPORT_CODE = `import { NDS_POPOVER } from '@/components/ui/popover';
 
 // ou, peça a peça:
@@ -602,7 +581,7 @@ const COMPOSITION_CODE = {
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -704,7 +683,6 @@ const COMPOSITION_CODE = {
 export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;

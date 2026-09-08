@@ -33,7 +33,7 @@
         "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" v-model=\"enabled\" />\n  <Label for=\"notifications\">Receber notificações</Label>\n</div>",
         "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" bind:checked={enabled} />\n  <Label for=\"notifications\">Receber notificações</Label>\n</div>",
         "vanilla": "const row = document.createElement('div');\nrow.className = 'nds-cluster';\nrow.dataset.spacing = 'sm';\n\nrow.append(\n  createSwitch({\n    id: 'notifications',\n    checked: enabled,\n    onCheckedChange: (checked) => setEnabled(checked),\n  }),\n  createLabel({ text: 'Receber notificações', htmlFor: 'notifications' }),\n);",
-        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <button ndsSwitch id=\"notificacoes\" [(checked)]=\"ativo\"></button>\n  <label ndsLabel for=\"notificacoes\">Receber notificações</label>\n</div>"
       }
     },
     "usage": {
@@ -485,7 +485,7 @@
         "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" v-model=\"enabled\" />\n  <Label for=\"notifications\">Receive notifications</Label>\n</div>",
         "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" bind:checked={enabled} />\n  <Label for=\"notifications\">Receive notifications</Label>\n</div>",
         "vanilla": "const row = document.createElement('div');\nrow.className = 'nds-cluster';\nrow.dataset.spacing = 'sm';\n\nrow.append(\n  createSwitch({\n    id: 'notifications',\n    checked: enabled,\n    onCheckedChange: (checked) => setEnabled(checked),\n  }),\n  createLabel({ text: 'Receive notifications', htmlFor: 'notifications' }),\n);",
-        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <button ndsSwitch id=\"notificacoes\" [(checked)]=\"ativo\"></button>\n  <label ndsLabel for=\"notificacoes\">Receber notificações</label>\n</div>"
       }
     },
     "usage": {
@@ -937,7 +937,7 @@
         "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" v-model=\"enabled\" />\n  <Label for=\"notifications\">Recibir notificaciones</Label>\n</div>",
         "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" bind:checked={enabled} />\n  <Label for=\"notifications\">Recibir notificaciones</Label>\n</div>",
         "vanilla": "const row = document.createElement('div');\nrow.className = 'nds-cluster';\nrow.dataset.spacing = 'sm';\n\nrow.append(\n  createSwitch({\n    id: 'notifications',\n    checked: enabled,\n    onCheckedChange: (checked) => setEnabled(checked),\n  }),\n  createLabel({ text: 'Recibir notificaciones', htmlFor: 'notifications' }),\n);",
-        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <button ndsSwitch id=\"notificacoes\" [(checked)]=\"ativo\"></button>\n  <label ndsLabel for=\"notificacoes\">Receber notificações</label>\n</div>"
       }
     },
     "usage": {
