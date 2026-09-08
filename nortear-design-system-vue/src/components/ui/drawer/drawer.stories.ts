@@ -18,12 +18,31 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { drawerSource } from './drawer.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
+import drawerTranslations from '@shared/content/drawer/translations.json';
+
+/**
+ * Rótulos dos cenários: saem do MESMO `translations.json` que a docs page lê,
+ * onde cada chave existe nos três idiomas. A story é fixture e fica presa a
+ * pt-BR de propósito — quem resolve o idioma de quem lê é a docs page, e uma
+ * play que dependesse do seletor de idioma procuraria um nome diferente a cada
+ * rodada. A interpolação é do template literal (`${...}`), e não uma mustache:
+ * assim o nome da chave passa pelo `vue-tsc`, que não abre template em string.
+ *
+ * O que segue literal aqui é o que o conteúdo compartilhado NÃO nomeia — ver o
+ * comentário de cada ponto.
+ */
+const L = drawerTranslations['pt-BR'].demonstration.labels;
+
+// Gatilho, descrição e ação primária deste painel genérico não têm chave em
+// `demonstration.labels` — a descrição é a da tabela de UX writing, e as outras
+// duas nomeiam o andaime da story. Título e saída passam a sair do conteúdo
+// compartilhado, que é o que esta rodada consertou.
 const LABEL = {
   trigger: 'Abrir drawer',
-  title: 'Editar perfil',
+  title: L.title,
   descricao: 'Atualize seus dados pessoais e foto.',
   confirmar: 'Confirmar',
-  cancelar: 'Cancelar',
+  cancelar: L.cancel,
 };
 
 const meta = {

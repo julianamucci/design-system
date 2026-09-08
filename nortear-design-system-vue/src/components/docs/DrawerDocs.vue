@@ -331,7 +331,7 @@ const codeCompWithForm = `<Drawer>
   <DrawerContent>
     <DrawerHeader>
       <DrawerTitle>Editar perfil</DrawerTitle>
-      <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+      <DrawerDescription>Atualize seus dados.</DrawerDescription>
     </DrawerHeader>
     <form id="drawer-form" class="nds-stack nds-px-4" data-spacing="sm" @submit.prevent>
       <Label class="nds-stack nds-text-body" data-spacing="xs">
@@ -354,28 +354,34 @@ const codeCompWithForm = `<Drawer>
   </DrawerContent>
 </Drawer>`;
 
-// Mesmo exemplo da story `WithConfirmation` — que é a superfície TESTADA
-// (`toHaveAccessibleName('Remover anexo?')`) e a que o `drawer.source.ts`
-// publica. A página mostrava outra confirmação ("Remover item da lista?"): quem
-// lia a doc e quem abria a story viam painéis diferentes do mesmo nome de
-// composição.
+// Os rótulos da prévia saem de `demonstration.labels`: gatilho, título e ação
+// destrutiva são o mesmo verbo (`destroy`), e o aviso é `destroyMessage`. É o
+// conjunto que as cinco docs pages leem — o guarda
+// `demonstration_labels_divergent` compara exatamente as chaves usadas na
+// página. A story `WithConfirmation` segue com "Remover anexo": é ela a
+// superfície testada, e o texto dela é o que o `drawer.source.ts` publica no
+// painel Code.
+//
+// Este snippet NÃO interpola tradução: é o código que a pessoa copia, e uma
+// chave no lugar da string ensinaria a coisa errada. O que ele faz é repetir,
+// literal, o mesmo texto que a prévia ao lado mostra em pt-BR.
 const codeCompWithConfirmation = `<Drawer>
   <DrawerTrigger as-child>
-    <Button variant="outline">Remover anexo</Button>
+    <Button variant="outline">Excluir</Button>
   </DrawerTrigger>
   <!-- A decisão É a tela: o foco entra na saída segura, e não no painel. -->
   <DrawerContent initial-focus="close">
     <DrawerHeader>
-      <DrawerTitle>Remover anexo?</DrawerTitle>
+      <DrawerTitle>Excluir</DrawerTitle>
       <DrawerDescription>
-        O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.
+        Você pode desfazer esta ação nos próximos 30 dias.
       </DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
       <DrawerClose as-child>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
-      <Button variant="destructive">Remover</Button>
+      <Button variant="destructive">Excluir</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`;
@@ -394,7 +400,7 @@ const codeCompWithScroll = `<Drawer>
       data-spacing="sm"
       aria-label="Termos de uso"
     >
-      <p v-for="i in 12" :key="i">Parágrafo {{ i }}: termos longos para garantir scroll interno.</p>
+      <p v-for="i in 12" :key="i">{{ i }}. Termos longos, para o corpo do painel passar da altura visível e rolar sozinho.</p>
     </DrawerBody>
     <DrawerFooter>
       <DrawerClose as-child>
@@ -925,17 +931,22 @@ const a11yCritCols = computed(() => ({
                 data-spacing="sm"
                 aria-label="Termos de uso"
               >
+                <!-- O corpo longo é EXEMPLO, e sai de
+                     `demonstration.labels.scrollBody` — não de
+                     `variants.items.withScroll.use`, que responde "quando usar
+                     esta variante" e, repetida doze vezes, faria o painel exibir
+                     a própria recomendação como se fosse o termo a ler. -->
                 <p
                   v-for="i in 12"
                   :key="i"
                 >
-                  Parágrafo {{ i }}: termos longos para garantir scroll interno.
+                  {{ i }}. {{ tContent('demonstration.labels.scrollBody') }}
                 </p>
               </DrawerBody>
               <DrawerFooter>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Cancelar
+                    {{ tContent('demonstration.labels.cancel') }}
                   </Button>
                 </DrawerClose>
                 <Button>Aceitar termos</Button>
@@ -961,13 +972,13 @@ const a11yCritCols = computed(() => ({
           <Drawer>
             <DrawerTrigger as-child>
               <Button variant="outline">
-                Editar perfil
+                {{ tContent('demonstration.labels.trigger') }}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>Editar perfil</DrawerTitle>
-                <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+                <DrawerTitle>{{ tContent('demonstration.labels.title') }}</DrawerTitle>
+                <DrawerDescription>{{ tContent('demonstration.labels.description') }}</DrawerDescription>
               </DrawerHeader>
               <form
                 id="docs-drawer-form"
@@ -979,14 +990,15 @@ const a11yCritCols = computed(() => ({
                   class="nds-stack nds-text-body"
                   data-spacing="xs"
                 >
-                  Nome
+                  {{ tContent('demonstration.labels.fieldName') }}
+                  <!-- O valor é DADO de exemplo, não rótulo: fica literal. -->
                   <Input default-value="Maria Souza" />
                 </Label>
                 <Label
                   class="nds-stack nds-text-body"
                   data-spacing="xs"
                 >
-                  E-mail
+                  {{ tContent('demonstration.labels.fieldEmail') }}
                   <Input
                     type="email"
                     default-value="maria@exemplo.com"
@@ -999,14 +1011,14 @@ const a11yCritCols = computed(() => ({
                     type="button"
                     variant="outline"
                   >
-                    Cancelar
+                    {{ tContent('demonstration.labels.cancel') }}
                   </Button>
                 </DrawerClose>
                 <Button
                   type="submit"
                   form="docs-drawer-form"
                 >
-                  Salvar alterações
+                  {{ tContent('demonstration.labels.confirm') }}
                 </Button>
               </DrawerFooter>
             </DrawerContent>
@@ -1021,23 +1033,23 @@ const a11yCritCols = computed(() => ({
           <Drawer>
             <DrawerTrigger as-child>
               <Button variant="outline">
-                Remover anexo
+                {{ tContent('demonstration.labels.destroy') }}
               </Button>
             </DrawerTrigger>
             <!-- A decisão É a tela: o foco entra na saída segura, e não no painel. -->
             <DrawerContent initial-focus="close">
               <DrawerHeader>
-                <DrawerTitle>Remover anexo?</DrawerTitle>
-                <DrawerDescription>O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.</DrawerDescription>
+                <DrawerTitle>{{ tContent('demonstration.labels.destroy') }}</DrawerTitle>
+                <DrawerDescription>{{ tContent('demonstration.labels.destroyMessage') }}</DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
                 <DrawerClose as-child>
                   <Button variant="outline">
-                    Cancelar
+                    {{ tContent('demonstration.labels.cancel') }}
                   </Button>
                 </DrawerClose>
                 <Button variant="destructive">
-                  Remover
+                  {{ tContent('demonstration.labels.destroy') }}
                 </Button>
               </DrawerFooter>
             </DrawerContent>

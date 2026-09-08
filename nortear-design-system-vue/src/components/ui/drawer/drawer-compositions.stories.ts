@@ -21,6 +21,20 @@ import {
 } from './drawer.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
+import drawerTranslations from '@shared/content/drawer/translations.json';
+
+/**
+ * Rótulos dos cenários: saem do MESMO `translations.json` que a docs page lê,
+ * onde cada chave existe nos três idiomas. A story é fixture e fica presa a
+ * pt-BR de propósito — quem resolve o idioma de quem lê é a docs page, e uma
+ * play que dependesse do seletor de idioma procuraria um nome diferente a cada
+ * rodada. A interpolação é do template literal (`${...}`), e não uma mustache:
+ * assim o nome da chave passa pelo `vue-tsc`, que não abre template em string.
+ *
+ * O que segue literal aqui é o que o conteúdo compartilhado NÃO nomeia — ver o
+ * comentário de cada ponto.
+ */
+const L = drawerTranslations['pt-BR'].demonstration.labels;
 const meta = {
   title: 'Components/Overlay/Drawer/Compositions',
   component: Drawer,
@@ -75,24 +89,24 @@ export const WithForm: Story = {
         <Drawer :default-open="true" direction="bottom">
           <DrawerContent>
             <DrawerHeader>
-              <DrawerTitle>Editar perfil</DrawerTitle>
+              <DrawerTitle>${L.title}</DrawerTitle>
               <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
             </DrawerHeader>
             <DrawerBody>
               <form id="drawer-form" class="nds-grid" data-spacing="sm" @submit.prevent>
                 <div class="nds-grid" data-spacing="xs">
-                  <Label for="drawer-name">Nome</Label>
+                  <Label for="drawer-name">${L.fieldName}</Label>
                   <Input id="drawer-name" model-value="Juliana Mucci" />
                 </div>
                 <div class="nds-grid" data-spacing="xs">
-                  <Label for="drawer-email">E-mail</Label>
+                  <Label for="drawer-email">${L.fieldEmail}</Label>
                   <Input id="drawer-email" type="email" model-value="juliana@example.com" />
                 </div>
               </form>
             </DrawerBody>
             <DrawerFooter>
               <DrawerClose as-child>
-                <Button type="button" variant="outline">Cancelar</Button>
+                <Button type="button" variant="outline">${L.cancel}</Button>
               </DrawerClose>
               <Button type="submit" form="drawer-form">Confirmar</Button>
             </DrawerFooter>
@@ -106,12 +120,12 @@ export const WithForm: Story = {
     const inside = within(panel);
 
     await step('O painel carrega nome, descrição e os campos do formulário', async () => {
-      await expect(panel).toHaveAccessibleName('Editar perfil');
+      await expect(panel).toHaveAccessibleName(L.title);
       await expect(panel).toHaveAccessibleDescription('Atualize seu nome e e-mail.');
       // Os campos são achados pelo RÓTULO: se `for`/`id` não casassem, o input
       // ficaria sem nome acessível e a busca falharia.
-      await expect(inside.getByLabelText(/Nome/i)).toBeInTheDocument();
-      await expect(inside.getByLabelText(/E-mail/i)).toBeInTheDocument();
+      await expect(inside.getByLabelText(L.fieldName)).toBeInTheDocument();
+      await expect(inside.getByLabelText(L.fieldEmail)).toBeInTheDocument();
     });
 
     await step('O rodapé oferece confirmar e cancelar', async () => {
@@ -119,7 +133,7 @@ export const WithForm: Story = {
       await expect(footer).not.toBeNull();
       const names = within(footer).getAllByRole('button').map((b) => b.textContent?.trim());
       await expect(names).toContain('Confirmar');
-      await expect(names).toContain('Cancelar');
+      await expect(names).toContain(L.cancel);
     });
 
     await step('Confirmar submete o formulário do corpo', async () => {
@@ -165,7 +179,7 @@ export const WithConfirmation: Story = {
             </DrawerHeader>
             <DrawerFooter>
               <DrawerClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">${L.cancel}</Button>
               </DrawerClose>
               <Button variant="destructive">Remover</Button>
             </DrawerFooter>
@@ -186,7 +200,7 @@ export const WithConfirmation: Story = {
     await step('A ação principal carrega a variante destrutiva', async () => {
       const destrutivo = inside.getByRole('button', { name: /^Remover$/i });
       await expect(destrutivo).toHaveClass('nds-button-destructive');
-      const cancelar = inside.getByRole('button', { name: /Cancelar/i });
+      const cancelar = inside.getByRole('button', { name: L.cancel });
       await expect(cancelar).toHaveClass('nds-button-outline');
     });
 
@@ -194,7 +208,7 @@ export const WithConfirmation: Story = {
       // O ELEMENTO, não a mera presença de foco: o padrão desta stack é focar o
       // PAINEL, e painel focado também tem foco dentro — é justamente o que esta
       // story recusa.
-      const cancelar = inside.getByRole('button', { name: /^Cancelar$/i });
+      const cancelar = inside.getByRole('button', { name: L.cancel });
       const destrutivo = inside.getByRole('button', { name: /^Remover$/i });
       await waitFor(() => expect(cancelar).toHaveFocus());
       await expect(destrutivo).not.toHaveFocus();
