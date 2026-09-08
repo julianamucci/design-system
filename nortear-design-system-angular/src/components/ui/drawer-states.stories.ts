@@ -308,10 +308,11 @@ export const NotDismissible: Story = {
 
 // ─── Arraste para dispensar ───────────────────────────────────────────────────
 //
-// O gesto existe nas CINCO stacks. Aqui e na stack de referência ele vem do
-// motor de pointer compartilhado (`@shared/primitives/drawer-swipe`); nas
-// outras três, da lib de gaveta. Os limiares são os mesmos, e é isso que esta
-// play mede.
+// O gesto existe nas CINCO stacks, com os mesmos limiares — e é isso que esta
+// play mede. Aqui, quem DECIDE (limiares, curva de resistência, guarda de
+// rolagem, resolução ao soltar) é o compartilhado
+// `@shared/primitives/drawer-swipe`; quem OUVE o pointer e reflete o gesto no
+// painel é a diretiva `NdsDrawerSwipe`, do próprio componente.
 //
 // Os eventos são despachados à mão porque `userEvent.pointer` não entrega a
 // soltura no mesmo elemento quando há captura de pointer — o mesmo motivo já

@@ -4,6 +4,7 @@ import {
   DestroyRef,
   Directive,
   ElementRef,
+  Renderer2,
   TemplateRef,
   ViewEncapsulation,
   computed,
@@ -13,6 +14,7 @@ import {
   input,
   isDevMode,
   output,
+  signal,
   untracked,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
@@ -28,7 +30,16 @@ import {
   type RdxDialogOpenChangeReason,
 } from '@radix-ng/primitives/dialog';
 import { cn } from '@/lib/utils';
-import { attachDrawerSwipe, type DrawerSwipeDirection } from '@shared/primitives/drawer-swipe';
+import {
+  DRAWER_SWIPE_OPEN_GRACE,
+  DRAWER_SWIPE_SCROLL_LOCK_TIMEOUT,
+  drawerDismissSign,
+  drawerSwipeTranslate,
+  isVerticalDrawerSwipe,
+  resolveDrawerRelease,
+  shouldStartDrawerSwipe,
+  type DrawerSwipeDirection,
+} from '@shared/primitives/drawer-swipe';
 
 // ─── Drawer ───────────────────────────────────────────────────────────────────
 //
@@ -81,10 +92,13 @@ import { attachDrawerSwipe, type DrawerSwipeDirection } from '@shared/primitives
 //
 // ─── O gesto de arrastar, e por que ele é escrito à mão ──────────────────────
 //
-// O arraste existe nas cinco stacks. Aqui o motor é
-// `@shared/primitives/drawer-swipe`, escrito com eventos de ponteiro a partir da
-// leitura da lib de gaveta que as outras três usam — mesmos limiares, mesma
-// curva de resistência, mesma guarda de rolagem.
+// O arraste existe nas cinco stacks. As DECISÕES do gesto — limiares, curva de
+// resistência, sinal de cada direção, ordem das perguntas da guarda de rolagem
+// e o que soltar resolve — são regra do design system e continuam em
+// `@shared/primitives/drawer-swipe`, escritas a partir da leitura da lib de
+// gaveta que as outras três stacks usam. A FIAÇÃO — ouvir o ponteiro, capturá-lo
+// e refletir o gesto no painel — mora em `NdsDrawerSwipe`, logo abaixo, no
+// idioma desta stack; a régua e o porquê estão no docblock dela.
 //
 // O `@radix-ng/primitives` 1.1.2 TEM um subpacote `drawer` (não aparece como
 // diretório: está no mapa de `exports` do pacote, em `fesm2022`), com o gesto
@@ -100,11 +114,12 @@ import { attachDrawerSwipe, type DrawerSwipeDirection } from '@shared/primitives
 //   · trocar `RdxDialog*` por `RdxDrawer*` refaz a fundação inteira deste
 //     componente (raiz, portal, backdrop, popup, título, descrição, fechador) —
 //     mudança de arquitetura, não de comportamento, e decisão da dona;
-//   · o único portão que exerceria qualquer uma das duas versões é a suíte de
-//     navegador, que não roda nesta rodada.
+//   · o único portão que exerce qualquer uma das duas versões é a suíte de
+//     navegador — a story `DragToDismiss` de `drawer-states.stories.ts`, que é
+//     quem mede o gesto ponta a ponta.
 //
-// Fica registrado como recomendação: quando a suíte voltar a rodar, o subpacote
-// é o caminho natural desta stack, e o que ele acrescenta sobre o motor à mão é
+// Fica registrado como recomendação: o subpacote é o caminho natural desta
+// stack, e o que ele acrescenta sobre a fiação escrita à mão é
 // ponto de parada e teclado virtual — capacidades que, se entrarem, precisam de
 // caminho alternativo próprio (WCAG 2.5.7), porque nenhuma delas é coberta por
 // Escape, véu ou botão.
@@ -194,26 +209,71 @@ export class NdsDrawerContent {
 }
 
 /**
- * Instala o arraste para dispensar no painel.
+ * Prefere menos movimento?
  *
- * Diretiva, e não `(pointerdown)` no template, por dois motivos medidos:
+ * Lido no instante do gesto, e não guardado: a preferência pode mudar no meio de
+ * uma sessão, e a leitura é barata. Não toca em elemento nenhum — é consulta ao
+ * ambiente —, mas fica aqui junto de quem a usa.
+ */
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+}
+
+/**
+ * O arraste para dispensar — a metade que TOCA no painel.
  *
- *   · o motor compartilhado instala e solta os próprios ouvintes, e uma
- *     diretiva tem exatamente o ciclo de vida do painel — nasce quando o portal
- *     cria a view e morre quando ele a destrói. Com bindings de template os
- *     ouvintes seriam de Angular e os do motor ficariam sem quem os soltasse;
- *   · a carência de 500 ms depois da abertura, que o motor conta a partir da
- *     própria construção, precisa começar quando o painel aparece. É a mesma
- *     janela em que a lib de gaveta recusa arrastar: o painel ainda está
- *     deslizando para dentro, e ali todo movimento é rolagem.
+ * ─── Por que a fiação mora aqui, e não no compartilhado ──────────────────────
  *
- * Nada aqui roda dentro do ciclo de detecção do Angular: o motor escreve
- * `transform` e `data-swiping` direto no elemento a cada quadro, que é o que
- * mantém o painel colado no ponteiro.
+ * A régua do `@nortear/ds-core` é: **se precisa de um `HTMLElement` para
+ * funcionar, não é regra — é implementação.** O corte fica entre
+ * `resolveX(dados)`, que decide, e o que age sobre o elemento vivo. Tudo o que
+ * decide continua importado de `@shared/primitives/drawer-swipe` — os limiares,
+ * a curva de resistência, a guarda de rolagem e a resolução ao soltar são regra
+ * do design system, e é lá que uma divergência com a lib de gaveta reprova.
+ * Ouvir o ponteiro, capturá-lo e refletir o gesto no painel é comportamento de
+ * componente, e comportamento de componente é o que cada stack existe para
+ * escrever no idioma dela. Consumindo um motor pronto, o gesto não aparecia
+ * numa busca por `drawer` dentro desta stack.
+ *
+ * ─── O idioma desta stack ────────────────────────────────────────────────────
+ *
+ * Diretiva, e não `(pointerdown)` no template, porque ela tem exatamente o ciclo
+ * de vida do painel: nasce quando o portal cria a view e morre quando ele a
+ * destrói. É isso que faz a carência de 500 ms depois da abertura começar quando
+ * o painel APARECE — a mesma janela em que a lib de gaveta recusa arrastar,
+ * porque ali o painel ainda está entrando e todo movimento é rolagem.
+ *
+ * O que o painel mostra do gesto são dois estados, e os dois são `signal`:
+ * `dragging`, que vira `data-swiping`, e `offset`, que vira o `transform`.
+ * Nenhum dos dois é escrito à mão no elemento — quem escreve são os host
+ * bindings, que é como o Angular escreve atributo e estilo. Com
+ * `provideZonelessChangeDetection`, escrever no signal é o que agenda a
+ * repintura; os dois chegam ao DOM na mesma passada, então a supressão de
+ * transição de `[data-swiping]` nunca fica um quadro atrás do movimento.
+ *
+ * Os ouvintes entram por `Renderer2.listen`, que devolve o próprio
+ * desligamento, e saem pelo `DestroyRef` — sem `addEventListener` solto e sem
+ * `removeEventListener` pareado à mão. Vão no PRÓPRIO painel, e não no
+ * documento: o painel é um nó novo a cada abertura, então nada se acumula entre
+ * aberturas.
+ *
+ * O que continua sendo variável local, e não signal: a papeleta do gesto em voo
+ * (ponteiro capturado, coordenada e instante iniciais, tamanho do painel,
+ * quanto andou). Nada disso aparece no DOM, e transformar em signal o que
+ * ninguém lê reativamente só empurraria escrita por quadro para dentro do grafo
+ * de reatividade.
  */
 @Directive({
   selector: '[ndsDrawerSwipe]',
   standalone: true,
+  host: {
+    '[style.transform]': 'transform()',
+    '[attr.data-swiping]': 'dragging() ? "" : null',
+  },
 })
 export class NdsDrawerSwipe {
   /** Borda de entrada — e, portanto, o eixo da dispensa. */
@@ -225,18 +285,138 @@ export class NdsDrawerSwipe {
   /** Soltar o painel resolveu por dispensar. */
   readonly swipeDismiss = output<void>();
 
+  /**
+   * Já decidimos que este gesto é arraste?
+   *
+   * Uma vez que a guarda de rolagem liberou, ela não é consultada de novo até
+   * soltar — é o mesmo que a lib faz, e o motivo é que uma região que rola pode
+   * chegar ao topo no meio do movimento e o arraste começaria no meio do gesto.
+   */
+  protected readonly dragging = signal(false);
+
+  /** Deslocamento do painel no eixo da direção, em px. `null` é repouso. */
+  private readonly offset = signal<number | null>(null);
+
+  protected readonly transform = computed(() => {
+    const px = this.offset();
+    if (px === null) return null;
+    return isVerticalDrawerSwipe(this.direction())
+      ? `translate3d(0, ${px}px, 0)`
+      : `translate3d(${px}px, 0, 0)`;
+  });
+
   constructor() {
     const panel = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-    const engine = attachDrawerSwipe({
-      panel: panel,
-      // Funções, e não valores: a direção e o `dismissible` são lidos no
-      // instante do gesto, então trocá-los com o painel aberto vale já no
-      // próximo arraste.
-      direction: () => this.direction(),
-      dismissible: () => this.dismissible(),
-      onDismiss: () => this.swipeDismiss.emit(),
+    const renderer = inject(Renderer2);
+
+    const openedAt = performance.now();
+    let pointerId: number | null = null;
+    let startedAt = 0;
+    let startCoord = 0;
+    let size = 0;
+    let lastRefusedAt = 0;
+    let travel = 0;
+
+    const reset = (): void => {
+      this.offset.set(null);
+      this.dragging.set(false);
+      pointerId = null;
+      travel = 0;
+    };
+
+    const onPointerDown = (e: PointerEvent): void => {
+      if (!this.dismissible()) return;
+      if (pointerId !== null) return;
+      // Botão do meio e direito não arrastam nada.
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
+
+      const dir = this.direction();
+      const rect = panel.getBoundingClientRect();
+      // Travado no viewport como na lib: um painel mais alto que a tela mediria
+      // um limiar de 25% que o dedo nunca alcançaria.
+      size = isVerticalDrawerSwipe(dir)
+        ? Math.min(rect.height, window.innerHeight)
+        : Math.min(rect.width, window.innerWidth);
+      startedAt = performance.now();
+      startCoord = isVerticalDrawerSwipe(dir) ? e.clientY : e.clientX;
+      pointerId = e.pointerId;
+      travel = 0;
+
+      // A captura vai no alvo, como na lib: é o elemento que continuará
+      // recebendo o movimento. `try` porque um alvo removido do documento entre
+      // o evento e esta linha faz o navegador lançar.
+      try {
+        (e.target as Element | null)?.setPointerCapture?.(e.pointerId);
+      } catch {
+        /* alvo saiu do documento — o gesto segue pelos ouvintes do painel */
+      }
+    };
+
+    const onPointerMove = (e: PointerEvent): void => {
+      if (pointerId === null || e.pointerId !== pointerId) return;
+
+      const dir = this.direction();
+      const sign = drawerDismissSign(dir);
+      const coord = isVerticalDrawerSwipe(dir) ? e.clientY : e.clientX;
+      travel = (coord - startCoord) * sign;
+
+      if (!this.dragging()) {
+        const at = performance.now();
+        // Carência de abertura: o painel ainda está deslizando para dentro.
+        if (at - openedAt < DRAWER_SWIPE_OPEN_GRACE) return;
+        if (lastRefusedAt && at - lastRefusedAt < DRAWER_SWIPE_SCROLL_LOCK_TIMEOUT) return;
+        const allowed = shouldStartDrawerSwipe({
+          target: e.target as Element | null,
+          panel,
+          direction: dir,
+          openingWards: travel < 0,
+          hasSelection: (globalThis.getSelection?.()?.toString() ?? '').length > 0,
+        });
+        if (!allowed) {
+          lastRefusedAt = at;
+          return;
+        }
+        this.dragging.set(true);
+      }
+
+      this.offset.set(drawerSwipeTranslate(travel, dir, prefersReducedMotion()));
+    };
+
+    const onPointerUp = (e: PointerEvent): void => {
+      if (pointerId === null || e.pointerId !== pointerId) return;
+      const wasDragging = this.dragging();
+      const distance = travel;
+      const elapsed = performance.now() - startedAt;
+      reset();
+      if (!wasDragging) return;
+      if (resolveDrawerRelease({ travel: distance, elapsed, size }) === 'dismiss') {
+        this.swipeDismiss.emit();
+      }
+    };
+
+    /**
+     * `pointercancel` volta ao repouso sem decidir nada.
+     *
+     * O navegador cancela quando assume o gesto para si (rolagem, zoom, gesto do
+     * sistema). Tratar isso como "soltou" fecharia o painel quando quem cancelou
+     * foi o sistema operacional, e não a pessoa.
+     */
+    const onPointerCancel = (e: PointerEvent): void => {
+      if (pointerId === null || e.pointerId !== pointerId) return;
+      reset();
+    };
+
+    const unlisten = [
+      renderer.listen(panel, 'pointerdown', onPointerDown),
+      renderer.listen(panel, 'pointermove', onPointerMove),
+      renderer.listen(panel, 'pointerup', onPointerUp),
+      renderer.listen(panel, 'pointercancel', onPointerCancel),
+    ];
+
+    inject(DestroyRef).onDestroy(() => {
+      for (const stop of unlisten) stop();
+      reset();
     });
-    inject(DestroyRef).onDestroy(() => engine.destroy());
   }
 }
 
