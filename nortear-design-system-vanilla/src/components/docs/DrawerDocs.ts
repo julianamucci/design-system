@@ -3,7 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createDrawer } from '@/components/ui/drawer';
+import { createDrawer, type DrawerCloseReason, type DrawerDirection } from '@/components/ui/drawer';
 import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import drawerTranslations from '@shared/content/drawer/translations.json';
@@ -94,7 +94,51 @@ function itemsFromDict<K extends string>(
   return rows;
 }
 
+/**
+ * Fiação de analytics de um painel — os dois eventos que a seção Analytics
+ * desta página anuncia, e que ela não disparava.
+ *
+ * O evento nasce AQUI, na camada de produto: a fábrica de UI não importa
+ * `@/lib/analytics`, e há portão para isso (`analytics_in_ui_primitive`).
+ *
+ * `label` carrega a DIREÇÃO — valor estável, não localizado. O título é texto
+ * traduzido e partiria o mesmo evento em três valores no GA4, um por idioma.
+ *
+ * `location` vem de QUEM CHAMA, porque ele existe para dizer de ONDE veio o
+ * clique: painel vivo em Variantes, Composições ou Do & Dont é clique tão real
+ * quanto o da demonstração, e com um valor só `location`, `section_id` e
+ * `data-track-id` deixam de cruzar no GA4.
+ *
+ * O fechamento sai do `onClose`, e não do `onOpenChange(false)`: só ele traz o
+ * motivo, e o `reason` é promessa do payload. O par tem outra vantagem — a
+ * saída de `destroy()` avisa a mudança de abertura SEM motivo, e ela é a página
+ * sendo desmontada, não alguém fechando a gaveta. Ouvir o motivo é o que a
+ * deixa de fora.
+ *
+ * O vocabulário de `reason` é o do design system e já existe na fábrica: quem
+ * arrasta o painel para fora fecha por `overlay`, pelo mesmo motivo pelo qual o
+ * clique no véu fecha — para quem usa, as duas são a decisão de sair sem
+ * decidir nada.
+ *
+ * A direção sai daqui JUNTO com o rastreio, e não de um campo à parte: com duas
+ * fontes, o rótulo do evento pode divergir do painel que o disparou.
+ */
+function drawerTracking(direction: DrawerDirection, location: string) {
+  return {
+    direction,
+    onOpenChange: (open: boolean) => {
+      if (!open) return;
+      track('drawer_open', { component: 'drawer', label: direction, location });
+    },
+    onClose: (reason: DrawerCloseReason) => {
+      track('drawer_close', { component: 'drawer', label: direction, reason, location });
+    },
+  };
+}
+
 type DrawerDemoOptions = {
+  /** Seção onde o painel está — é ela que vira o `location` dos dois eventos. */
+  location: string;
   triggerLabel: string;
   title: string;
   description?: string;
@@ -131,7 +175,7 @@ function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
   // wrapper — onde nenhuma regra do CSS o lê.
   return createDrawer({
     trigger,
-    direction: opts.side ?? 'bottom',
+    ...drawerTracking(opts.side ?? 'bottom', opts.location),
     title: opts.title,
     description: opts.description,
     content: body,
@@ -246,6 +290,7 @@ export function createDrawerDocs(): HTMLElement {
             wrap.style.flexWrap = 'wrap';
             wrap.append(
               buildDrawerDemo({
+                location: 'docs_demo',
                 triggerLabel: t('demonstration.labels.bottom'),
                 title: t('demonstration.labels.title'),
                 description: t('demonstration.labels.description'),
@@ -318,6 +363,7 @@ export function createDrawerDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDrawerDemo({
+                location: 'docs_do_dont',
                 triggerLabel: t('demonstration.labels.trigger'),
                 title: t('demonstration.labels.title'),
                 description: t('demonstration.labels.description'),
@@ -326,6 +372,7 @@ export function createDrawerDocs(): HTMLElement {
                 bodyText: 'Com DrawerTitle visível.',
               }),
               dontPreviewFactory: () => buildDrawerDemo({
+                location: 'docs_do_dont',
                 triggerLabel: 'Abrir',
                 title: '',
                 cancelLabel: t('demonstration.labels.cancel'),
@@ -339,6 +386,7 @@ export function createDrawerDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDrawerDemo({
+                location: 'docs_do_dont',
                 triggerLabel: 'Abrir mobile',
                 title: 'Filtros',
                 description: 'Mobile-first com arraste para dispensar.',
@@ -347,6 +395,7 @@ export function createDrawerDocs(): HTMLElement {
                 side: 'bottom',
               }),
               dontPreviewFactory: () => buildDrawerDemo({
+                location: 'docs_do_dont',
                 triggerLabel: 'Abrir drawer aninhado',
                 title: 'Drawer aninhado',
                 description: 'Não aninhe drawers.',
@@ -426,6 +475,7 @@ const drawer = createDrawer({
               description: t('variants.styles.bottom'),
               code: codeBottom,
               previewFactory: () => buildDrawerDemo({
+                location: 'docs_variantes',
                 triggerLabel: t('demonstration.labels.bottom'),
                 title: t('demonstration.labels.title'),
                 description: t('demonstration.labels.description'),
@@ -440,6 +490,7 @@ const drawer = createDrawer({
               description: t('variants.styles.top'),
               code: codeOther,
               previewFactory: () => buildDrawerDemo({
+                location: 'docs_variantes',
                 triggerLabel: t('demonstration.labels.top'),
                 title: 'Notificação',
                 description: 'Mensagem rápida.',
@@ -454,6 +505,7 @@ const drawer = createDrawer({
               description: t('variants.styles.left'),
               code: codeOther,
               previewFactory: () => buildDrawerDemo({
+                location: 'docs_variantes',
                 triggerLabel: t('demonstration.labels.left'),
                 title: 'Menu',
                 description: 'Navegação lateral.',
@@ -468,6 +520,7 @@ const drawer = createDrawer({
               description: t('variants.styles.right'),
               code: codeOther,
               previewFactory: () => buildDrawerDemo({
+                location: 'docs_variantes',
                 triggerLabel: t('demonstration.labels.right'),
                 title: 'Filtros',
                 description: 'Painel de filtros.',
@@ -504,6 +557,7 @@ const drawer = createDrawer({
                 const action = createButton({ variant: 'default', label: 'Aceitar termos' });
                 const footer = [cancel, action];
                 const el = createDrawer({
+                  ...drawerTracking('bottom', 'docs_variantes'),
                   trigger,
                   title: 'Termos de uso',
                   description: 'Leia atentamente antes de aceitar.',
@@ -657,6 +711,7 @@ const drawer = createDrawer({
                 action.setAttribute('form', form.id);
                 const footer = [cancel, action];
                 const el = createDrawer({
+                  ...drawerTracking('bottom', 'docs_composicoes'),
                   trigger,
                   title: t('demonstration.labels.title'),
                   description: t('demonstration.labels.description'),
@@ -673,6 +728,7 @@ const drawer = createDrawer({
               useWhen: stripHtml(t('variants.compositions.withConfirmation.use')),
               code: codeWithConfirmation,
               previewFactory: () => buildDrawerDemo({
+                location: 'docs_composicoes',
                 triggerLabel: t('demonstration.labels.destroy'),
                 title: t('demonstration.labels.destroy'),
                 description: t('demonstration.labels.destroyMessage'),
@@ -838,8 +894,8 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
             },
             {
               event: 'drawer_close',
-              trigger: 'onOpenChange(false)',
-              payload: "{ component: 'drawer', location, label }",
+              trigger: 'onClose(reason)',
+              payload: "{ component: 'drawer', location, label, reason }",
             },
             {
               event: '—',
