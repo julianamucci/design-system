@@ -52,6 +52,7 @@ const LABEL = {
   confirmar: () => t('demonstration.labels.confirm'),
   destruir: () => t('demonstration.labels.destroy'),
   field: () => t('demonstration.labels.fieldName'),
+  fieldEmail: () => t('demonstration.labels.fieldEmail'),
   aviso: () => t('demonstration.labels.destroyMessage'),
 };
 
@@ -73,6 +74,11 @@ export const WithForm: Story = {
       tituloPainel: LABEL.title(),
       descricaoPainel: LABEL.descricao(),
       rotuloCampo: LABEL.field(),
+      // Nome em inglês, ao contrário dos vizinhos: código se escreve em inglês
+      // (guideline 11), e os `rotulo*` daqui são dívida de linha de base que o
+      // `identificador_pt_novo` tolera mas não deixa CRESCER — um `rotulo`
+      // novo reprovaria o portão.
+      emailFieldLabel: LABEL.fieldEmail(),
       rotuloFechar: LABEL.close(),
       rotuloConfirmar: LABEL.confirmar(),
     },
@@ -86,10 +92,30 @@ export const WithForm: Story = {
             <p ndsDrawerDescription>{{ descricaoPainel }}</p>
           </div>
 
+          <!--
+            DOIS campos, e ambos preenchidos: é o formulário que a stack de
+            referência mostra, é o que a docs page publica, e é o que as play
+            das outras quatro afirmam procurando o campo de e-mail pelo rótulo.
+            Com um campo só o navegador faz submissão implícita sozinho, e o
+            par id ↔ form abaixo — o único elo entre rodapé e corpo — ficaria
+            sem cobertura real.
+          -->
           <div ndsDrawerBody class="nds-stack" data-spacing="sm">
             <form id="drawer-comp-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
-              <label ndsLabel for="drawer-comp-nome">{{ rotuloCampo }}</label>
-              <input ndsInput id="drawer-comp-nome" name="nome" />
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="drawer-comp-nome">{{ rotuloCampo }}</label>
+                <input ndsInput id="drawer-comp-nome" name="nome" value="Maria Souza" />
+              </div>
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="drawer-comp-email">{{ emailFieldLabel }}</label>
+                <input
+                  ndsInput
+                  id="drawer-comp-email"
+                  name="email"
+                  type="email"
+                  value="maria@exemplo.com"
+                />
+              </div>
             </form>
           </div>
 
@@ -111,12 +137,14 @@ export const WithForm: Story = {
     const panel = await waitForPortal('dialog');
     const inside = within(panel);
 
-    await step('O painel carrega nome, descrição e o campo do formulário', async () => {
+    await step('O painel carrega nome, descrição e os campos do formulário', async () => {
       await expect(panel).toHaveAccessibleName(LABEL.title());
       await expect(panel).toHaveAccessibleDescription(LABEL.descricao());
-      // O campo é achado pelo RÓTULO: se o `for`/`id` não casassem, o input
-      // ficaria sem nome acessível e esta busca falharia.
+      // Os campos são achados pelo RÓTULO: se o `for`/`id` não casassem, o
+      // input ficaria sem nome acessível e esta busca falharia. São dois, como
+      // nas outras quatro stacks — e é o de e-mail que prova o segundo.
       await expect(inside.getByLabelText(LABEL.field())).toBeInTheDocument();
+      await expect(inside.getByLabelText(LABEL.fieldEmail())).toBeInTheDocument();
     });
 
     await step('O rodapé oferece cancelar e confirmar, nessa ordem de leitura', async () => {

@@ -55,7 +55,7 @@ const SCROLL_TEXT = text('variants.items.withScroll.use');
 const CONFIRMATION_TITLE = text('variants.compositions.withConfirmation.name');
 
 /**
- * Os quatro rótulos que o conteúdo compartilhado NÃO traz.
+ * Os cinco rótulos que o conteúdo compartilhado NÃO traz.
  *
  * Vêm de `LABELS_DRAWER` em `DrawerDocs.ts`, de onde as stories de composição os
  * leem, e o módulo de snippet os repete numa tabela própria — importar a docs
@@ -66,6 +66,7 @@ const CONFIRMATION_TITLE = text('variants.compositions.withConfirmation.name');
 const CONFIRM = 'Salvar alterações';
 const DESTROY = 'Excluir';
 const FIELD = 'Nome';
+const FIELD_EMAIL = 'E-mail';
 const DESTROY_MESSAGE = 'Você pode desfazer esta ação nos próximos 30 dias.';
 
 /**
@@ -81,6 +82,7 @@ const STORY_PROPS = [
   'rotuloGatilho',
   'rotuloFechar',
   'rotuloCampo',
+  'emailFieldLabel',
   'rotuloConfirmar',
   'rotuloDestruir',
   'rotuloExterno',
@@ -460,7 +462,15 @@ describe('composições', () => {
     // é pelo rótulo que a `play` da story o encontra.
     const code = drawerWithFormSource();
     expect(code).toContain(`<label ndsLabel for="drawer-comp-nome">${FIELD}</label>`);
-    expect(code).toContain('<input ndsInput id="drawer-comp-nome" name="nome" />');
+    expect(code).toContain('<input ndsInput id="drawer-comp-nome" name="nome" value="Maria Souza" />');
+    // O SEGUNDO campo, e o motivo de ele existir: é o de e-mail que as play das
+    // cinco stacks procuram pelo rótulo, e com um campo só a submissão
+    // implícita do navegador esconderia o par id ↔ `form` do rodapé.
+    expect(code).toContain(`<label ndsLabel for="drawer-comp-email">${FIELD_EMAIL}</label>`);
+    expect(code).toContain(
+      '<input ndsInput id="drawer-comp-email" name="email" type="email" value="maria@exemplo.com" />',
+    );
+    expect(code.match(/<label ndsLabel /g)).toHaveLength(2);
     // O `<form>` e o par id ↔ `form`: sem eles a ação primária não envia nada,
     // e o Enter no campo tampouco. Era a única das cinco stacks sem `<form>`.
     expect(code).toContain('<form id="drawer-comp-form"');

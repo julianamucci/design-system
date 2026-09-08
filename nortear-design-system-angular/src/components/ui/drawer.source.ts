@@ -69,7 +69,7 @@ import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
 
 /**
- * Os quatro rótulos de demonstração que o conteúdo compartilhado não traz.
+ * Os cinco rótulos de demonstração que o conteúdo compartilhado não traz.
  *
  * São os MESMOS de `LABELS_DRAWER` em `DrawerDocs.ts` — as stories de
  * composição os leem de lá, e o painel Code precisa publicar o mesmo texto que
@@ -85,18 +85,21 @@ const DEMO_LABELS: TranslationOverrides = {
     'demonstration.labels.confirm': 'Salvar alterações',
     'demonstration.labels.destroy': 'Excluir',
     'demonstration.labels.fieldName': 'Nome',
+    'demonstration.labels.fieldEmail': 'E-mail',
     'demonstration.labels.destroyMessage': 'Você pode desfazer esta ação nos próximos 30 dias.',
   },
   en: {
     'demonstration.labels.confirm': 'Save changes',
     'demonstration.labels.destroy': 'Delete',
     'demonstration.labels.fieldName': 'Name',
+    'demonstration.labels.fieldEmail': 'Email',
     'demonstration.labels.destroyMessage': 'You can undo this action within the next 30 days.',
   },
   es: {
     'demonstration.labels.confirm': 'Guardar cambios',
     'demonstration.labels.destroy': 'Eliminar',
     'demonstration.labels.fieldName': 'Nombre',
+    'demonstration.labels.fieldEmail': 'Correo electrónico',
     'demonstration.labels.destroyMessage': 'Puedes deshacer esta acción en los próximos 30 días.',
   },
 };
@@ -115,6 +118,7 @@ export const LABEL = {
   confirm: () => t('demonstration.labels.confirm'),
   destroy: () => t('demonstration.labels.destroy'),
   field: () => t('demonstration.labels.fieldName'),
+  fieldEmail: () => t('demonstration.labels.fieldEmail'),
   destroyMessage: () => t('demonstration.labels.destroyMessage'),
 };
 
@@ -454,7 +458,13 @@ export function drawerNotDismissibleSource(): string {
 /**
  * Formulário curto no corpo e o par de ações no rodapé.
  *
- * O campo é achado pelo RÓTULO, e é o `for` casando com o `id` que sustenta
+ * São DOIS campos, e ambos preenchidos: é o formulário que a stack de
+ * referência mostra, é o que a docs page publica ao lado, e é o que as play das
+ * cinco stacks afirmam procurando o campo de e-mail pelo rótulo. Com um campo
+ * só o navegador ainda faria submissão implícita, e o par id ↔ `form` abaixo —
+ * a única coisa que religa o rodapé ao corpo — passaria sem cobertura.
+ *
+ * Cada campo é achado pelo RÓTULO, e é o `for` casando com o `id` que sustenta
  * isso: sem o par, o campo fica sem nome acessível dentro de um painel modal, e
  * quem usa leitor de tela ouve "editar texto" e nada mais.
  *
@@ -477,8 +487,14 @@ export function drawerWithFormSource(): string {
       description: LABEL.description(),
       body: `        <div ndsDrawerBody class="nds-stack" data-spacing="sm">
           <form id="drawer-comp-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
-            <label ndsLabel for="drawer-comp-nome">${LABEL.field()}</label>
-            <input ndsInput id="drawer-comp-nome" name="nome" />
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="drawer-comp-nome">${LABEL.field()}</label>
+              <input ndsInput id="drawer-comp-nome" name="nome" value="Maria Souza" />
+            </div>
+            <div class="nds-stack" data-spacing="xs">
+              <label ndsLabel for="drawer-comp-email">${LABEL.fieldEmail()}</label>
+              <input ndsInput id="drawer-comp-email" name="email" type="email" value="maria@exemplo.com" />
+            </div>
           </form>
         </div>`,
       footer: footerWithClose(
