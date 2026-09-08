@@ -511,6 +511,17 @@ export const CustomCloseInFooter: Story = {
       await expect(within(footer).getByRole('button', { name: /fechar/i })).toBeVisible();
     });
 
+    await step('E ele vem ANTES da ação primária, que é a posição de secundária', async () => {
+      // O snippet não pode ver isto: quem emite o botão é o componente, não o
+      // slot. A ordem do DOM é a de leitura e a de foco, e é dela que saem as
+      // duas leituras de `.nds-dialog-footer` — primária em cima no empilhamento
+      // e à direita lado a lado. Emitido DEPOIS do slot, como estava, o fechar
+      // ocupava a posição da ação primária.
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const botoes = [...footer.querySelectorAll('button')].map((b) => b.textContent?.trim() ?? '');
+      await expect(botoes).toEqual(['Fechar', 'Salvar preferências']);
+    });
+
     await step('E o botão do rodapé fecha o diálogo', async () => {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await userEvent.click(within(footer).getByRole('button', { name: /fechar/i }));

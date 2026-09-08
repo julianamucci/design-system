@@ -209,3 +209,99 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('nds-aspect-16-9 nds-w-full');
   });
 });
+
+// ─── Ordem dos botões no rodapé ───────────────────────────────────────────────
+//
+// A regra é uma só, e vale para as cinco stacks: no DOM vêm primeiro os
+// secundários e POR ÚLTIMO a ação primária. É a ordem de leitura e a de foco, e
+// é dela que saem as duas leituras visuais de `.nds-dialog-footer` — primária em
+// cima no empilhamento (`column-reverse`) e à direita quando lado a lado (`row`
+// + `justify-content: flex-end`). Não há inversão a fazer no CSS: quem erra a
+// ordem do DOM erra as duas.
+//
+// O caso varre TODOS os construtores em vez de escolher alguns: construtor novo
+// que nasça com o rodapé invertido reprova sozinho, sem precisar lembrar de
+// escrever o caso dele.
+
+/** Miolo do rodapé, ou `null` quando a composição não tem rodapé. */
+function footerOf(snippet: string): string | null {
+  const block = snippet.match(/<DialogFooter[^>]*>([\s\S]*?)<\/DialogFooter>/);
+  return block ? block[1] : null;
+}
+
+const BUILDERS: Array<[string, () => string]> = [
+  ['dialogSource', () => dialogSource()],
+  ['dialogOpenSource', dialogOpenSource],
+  ['dialogNoButtonCloseSource', dialogNoButtonCloseSource],
+  ['dialogControlledSource', dialogControlledSource],
+  ['dialogWithFormSource', dialogWithFormSource],
+  ['dialogWithScrollSource', dialogWithScrollSource],
+  ['dialogOverlayScrollSource', dialogOverlayScrollSource],
+  ['dialogNoFooterSource', dialogNoFooterSource],
+  ['dialogActionDestructiveSource', dialogActionDestructiveSource],
+  ['footerDialogCloseSource', footerDialogCloseSource],
+  ['dialogConfirmarEmailSource', dialogConfirmarEmailSource],
+  ['dialogEditarPerfilSource', dialogEditarPerfilSource],
+  ['dialogPreviaDeMidiaSource', dialogPreviaDeMidiaSource],
+];
+
+/**
+ * Exceção declarada: composições que não têm rodapé nenhum.
+ *
+ * O painel informativo e o de mídia não têm o que confirmar — o X do canto é a
+ * saída, e por isso ele não pode ser escondido nessas duas.
+ */
+const FOOTERLESS = new Set(['dialogNoFooterSource', 'dialogPreviaDeMidiaSource']);
+
+/**
+ * Exceção declarada: rodapé cuja saída é emitida pelo COMPONENTE, e não escrita
+ * no snippet.
+ *
+ * `<DialogFooter show-close-button>` põe o botão de fechar ANTES do slot, então
+ * o snippet mostra só a ação primária. A premissa é a prop estar ali; o caso
+ * abaixo a cobra, para que a exceção não sobreviva ao que a justificava.
+ */
+const EXIT_FROM_COMPONENT = new Set(['footerDialogCloseSource']);
+
+describe('ordem dos botões no rodapé', () => {
+  it.each(BUILDERS)('%s — secundários primeiro, primária por último', (name, build) => {
+    const snippet = build();
+    const footer = footerOf(snippet);
+
+    if (FOOTERLESS.has(name)) {
+      expect(footer).toBeNull();
+      return;
+    }
+
+    expect(footer).not.toBeNull();
+
+    if (EXIT_FROM_COMPONENT.has(name)) {
+      // A premissa da exceção, verificada: é a prop que repõe a saída.
+      expect(snippet).toContain('<DialogFooter show-close-button>');
+      expect(footer).not.toContain('DialogClose');
+      return;
+    }
+
+    const exit = footer!.lastIndexOf('</DialogClose>');
+    const primary = footer!.lastIndexOf('<Button');
+    expect(exit).toBeGreaterThan(-1);
+    expect(primary).toBeGreaterThan(exit);
+  });
+
+  it('a varredura alcança todo construtor exportado, e as exceções não envelhecem', async () => {
+    // Onde a contagem é GERADA a partir de uma lista, quem fica de fora some sem
+    // deixar rastro: este caso é o que impede a lista de encolher em silêncio.
+    const mod = await import('./dialog.source');
+    const exported = Object.entries(mod)
+      .filter(([, member]) => typeof member === 'function')
+      .map(([key]) => key)
+      .sort();
+    const swept = BUILDERS.map(([key]) => key).sort();
+    expect(swept).toEqual(exported);
+
+    // Exceção que aponta para construtor inexistente é exceção morta.
+    for (const key of [...FOOTERLESS, ...EXIT_FROM_COMPONENT]) {
+      expect(swept).toContain(key);
+    }
+  });
+});

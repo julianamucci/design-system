@@ -20,12 +20,24 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = withDefaults(defineProps<DialogContentProps & { class?: HTMLAttributes['class'], showCloseButton?: boolean }>(), {
+/**
+ * `closeLabel` é o nome acessível do X do canto. Vai como texto dentro de um
+ * `<span class="nds-sr-only">` e não como `aria-label`: texto real sobrevive à
+ * tradução automática da página, que ignora atributo. Existe porque o rótulo
+ * estava CRAVADO em pt-BR aqui dentro, e o padrão o mantém para todo call site
+ * que já existia.
+ */
+const props = withDefaults(defineProps<DialogContentProps & { class?: HTMLAttributes['class'], showCloseButton?: boolean, closeLabel?: string }>(), {
   showCloseButton: true,
+  closeLabel: 'Fechar',
 })
 const emits = defineEmits<DialogContentEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+// `showCloseButton` e `closeLabel` são deste wrapper, não do primitivo: sem
+// tirá-los daqui o `v-bind` os despeja no elemento como atributos soltos
+// (`showclosebutton="true"`, `closelabel="Fechar"`), que não significam nada
+// para ninguém que lê o DOM.
+const delegatedProps = reactiveOmit(props, 'class', 'showCloseButton', 'closeLabel')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
@@ -58,7 +70,7 @@ const ariaModal = computed(() => (rootContext.modal.value ? 'true' : undefined))
           size="icon-sm"
         >
           <XIcon />
-          <span class="nds-sr-only">Fechar</span>
+          <span class="nds-sr-only">{{ closeLabel }}</span>
         </Button>
       </DialogClose>
     </DialogContent>

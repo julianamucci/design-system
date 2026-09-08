@@ -53,16 +53,32 @@ const { t: tNav } = useTranslation(uiTranslations);
 // É o contrário do que ele faz: ele põe `.nds-dialog-overlay-scroll` e
 // `.nds-dialog-content-scroll`, e nesse arranjo quem rola é o overlay — o
 // painel inteiro entra no fluxo e o cabeçalho sobe junto com o resto.
+// As duas chaves de `closeLabel` também são override, e pelo mesmo motivo: a
+// prop nasceu POR STACK, para tirar de dentro do primitivo o rótulo que estava
+// cravado em pt-BR. `props.table.closeLabel` descreve a prop na tabela;
+// `demonstration.labels.close` é o rótulo que os diálogos VIVOS desta página
+// passam ao botão de fechar — sem ele, o X do canto anunciaria "Fechar" para
+// quem lê a página em inglês ou em espanhol. Nome de prop e rótulo, nunca um
+// `*Code`.
 const { t: tContent, locale } = useTranslation(dialogTranslations, {
   'pt-BR': {
+    'props.table.closeLabel':
+      'Nome acessível do botão de fechar. Vai como texto para leitor de tela, não como atributo.',
+    'demonstration.labels.close': 'Fechar',
     'notes.tip3':
       'Conteúdo mais alto que a janela pede uma das duas rotas. Cabeçalho e rodapé parados: mantenha <code>DialogContent</code> e dê ao corpo a classe de rolagem, que já traz altura máxima e barra própria. Painel inteiro rolando com a página: troque por <code>DialogScrollContent</code>, e aí o cabeçalho sobe junto com o conteúdo.',
   },
   en: {
+    'props.table.closeLabel':
+      'Accessible name of the close button. Rendered as screen-reader text, not as an attribute.',
+    'demonstration.labels.close': 'Close',
     'notes.tip3':
       'Content taller than the window calls for one of two routes. Header and footer fixed: keep <code>DialogContent</code> and give the body the scroll class, which already brings a max height and its own scrollbar. Whole panel scrolling with the page: swap in <code>DialogScrollContent</code>, and the header then scrolls away with the content.',
   },
   es: {
+    'props.table.closeLabel':
+      'Nombre accesible del botón de cerrar. Se renderiza como texto para lector de pantalla, no como atributo.',
+    'demonstration.labels.close': 'Cerrar',
     'notes.tip3':
       'El contenido más alto que la ventana pide una de dos rutas. Encabezado y pie fijos: mantén <code>DialogContent</code> y dale al cuerpo la clase de desplazamiento, que ya trae altura máxima y barra propia. Panel entero desplazándose con la página: cambia a <code>DialogScrollContent</code>, y entonces el encabezado sube junto con el contenido.',
   },
@@ -409,14 +425,16 @@ const rootProps = computed(() => [
 ]);
 
 const contentProps = computed(() => [
-  { name: 'showCloseButton', type: 'boolean', defaultValue: 'true', required: 'Não', description: toPlainText(tContent('props.table.showCloseButtonContent')) },
-  { name: 'class',           type: 'string',  defaultValue: '—',    required: 'Não', description: tContent('props.table.className')                          },
-  { name: 'default slot',    type: 'VNode',   defaultValue: '—',    required: 'Sim', description: toPlainText(tContent('props.table.children'))               },
+  { name: 'showCloseButton', type: 'boolean', defaultValue: 'true',      required: 'Não', description: toPlainText(tContent('props.table.showCloseButtonContent')) },
+  { name: 'closeLabel',      type: 'string',  defaultValue: `'Fechar'`,  required: 'Não', description: toPlainText(tContent('props.table.closeLabel'))             },
+  { name: 'class',           type: 'string',  defaultValue: '—',         required: 'Não', description: tContent('props.table.className')                          },
+  { name: 'default slot',    type: 'VNode',   defaultValue: '—',         required: 'Sim', description: toPlainText(tContent('props.table.children'))               },
 ]);
 
 const footerProps = computed(() => [
-  { name: 'showCloseButton', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.showCloseButtonFooter')) },
-  { name: 'class',           type: 'string',  defaultValue: '—',     required: 'Não', description: tContent('props.table.className')                         },
+  { name: 'showCloseButton', type: 'boolean', defaultValue: 'false',     required: 'Não', description: toPlainText(tContent('props.table.showCloseButtonFooter')) },
+  { name: 'closeLabel',      type: 'string',  defaultValue: `'Fechar'`,  required: 'Não', description: toPlainText(tContent('props.table.closeLabel'))            },
+  { name: 'class',           type: 'string',  defaultValue: '—',         required: 'Não', description: tContent('props.table.className')                         },
 ]);
 
 const titleDescriptionProps = computed(() => [
@@ -530,11 +548,26 @@ const a11yCritCols = computed(() => ({
           <DialogTrigger as-child>
             <Button>{{ tContent('demonstration.labels.triggerLabel') }}</Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.description') }}</DialogDescription>
             </DialogHeader>
+            <!--
+              `demonstration.labels.footerNote` existe nos três idiomas do
+              conteúdo compartilhado e esta stack não a lia em lugar nenhum: o
+              diálogo da demonstração ia do cabeçalho direto ao rodapé, sem
+              corpo. A posição é a do Vanilla, que é a referência cross-stack —
+              o corpo do diálogo, em texto esmaecido, entre cabeçalho e rodapé.
+            -->
+            <div
+              class="nds-dialog-body"
+              data-slot="dialog-body"
+            >
+              <p class="nds-text-body nds-text-muted-foreground">
+                {{ tContent('demonstration.labels.footerNote') }}
+              </p>
+            </div>
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
@@ -639,7 +672,7 @@ const a11yCritCols = computed(() => ({
               Editar perfil
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
               <DialogDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</DialogDescription>
@@ -662,7 +695,7 @@ const a11yCritCols = computed(() => ({
               Atenção
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Atenção</DialogTitle>
               <DialogDescription>Deseja continuar?</DialogDescription>
@@ -685,7 +718,7 @@ const a11yCritCols = computed(() => ({
               Editar perfil
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
               <DialogDescription>Atualize seu nome e email.</DialogDescription>
@@ -708,7 +741,7 @@ const a11yCritCols = computed(() => ({
               Excluir conta
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Excluir conta</DialogTitle>
               <DialogDescription>Esta ação é permanente.</DialogDescription>
@@ -753,7 +786,7 @@ const a11yCritCols = computed(() => ({
               Editar perfil
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
               <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
@@ -776,7 +809,7 @@ const a11yCritCols = computed(() => ({
               Editar perfil
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
               <DialogDescription>Atualize seu nome e email.</DialogDescription>
@@ -828,7 +861,10 @@ const a11yCritCols = computed(() => ({
                que é o arranjo em que só o CORPO rola. Com o painel rolável o
                cabeçalho sobe junto, e a prévia contradizia a descrição
                renderizada ao lado dela. -->
-          <DialogContent class="nds-max-w-md">
+          <DialogContent
+            class="nds-max-w-md"
+            :close-label="tContent('demonstration.labels.close')"
+          >
             <DialogHeader>
               <DialogTitle>Termos de serviço</DialogTitle>
               <DialogDescription>Leia atentamente os termos.</DialogDescription>
@@ -876,7 +912,7 @@ const a11yCritCols = computed(() => ({
                overlay, e é o overlay que rola — o cabeçalho sobe junto com o
                conteúdo. Componente próprio, e não uma prop, porque o que muda é
                a composição do overlay com o painel. -->
-          <DialogScrollContent>
+          <DialogScrollContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Contrato de prestação</DialogTitle>
               <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>
@@ -914,7 +950,7 @@ const a11yCritCols = computed(() => ({
               Detalhes do pedido #4287
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Detalhes do pedido #4287</DialogTitle>
               <DialogDescription>Pedido confirmado em 15 de março às 14:32.</DialogDescription>
@@ -929,7 +965,7 @@ const a11yCritCols = computed(() => ({
               Remover anexo
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Remover anexo</DialogTitle>
               <DialogDescription>O anexo será removido desta mensagem.</DialogDescription>
@@ -959,16 +995,18 @@ const a11yCritCols = computed(() => ({
               <DialogTitle>Configurações de notificação</DialogTitle>
               <DialogDescription>Escolha como deseja ser avisado.</DialogDescription>
             </DialogHeader>
+            <!--
+              O fechar sai do canto e vem para o rodapé pela prop do próprio
+              rodapé, que já o emite ANTES do slot — a posição de ação
+              secundária. Escrito à mão como estava, o primário vinha primeiro
+              no DOM (logo, embaixo no empilhamento e à esquerda lado a lado), e
+              `class="nds-stack"` ainda anulava o `column-reverse` da folha.
+            -->
             <DialogFooter
-              class="nds-stack"
-              data-spacing="sm"
+              show-close-button
+              :close-label="tContent('demonstration.labels.close')"
             >
               <Button>Salvar preferências</Button>
-              <DialogClose as-child>
-                <Button variant="ghost">
-                  Fechar
-                </Button>
-              </DialogClose>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -980,7 +1018,7 @@ const a11yCritCols = computed(() => ({
               Confirmar e-mail
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Confirmar e-mail</DialogTitle>
               <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
@@ -1015,7 +1053,7 @@ const a11yCritCols = computed(() => ({
               Editar perfil
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Editar perfil</DialogTitle>
               <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
@@ -1062,7 +1100,7 @@ const a11yCritCols = computed(() => ({
               Capa do post
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>Capa do post</DialogTitle>
               <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>

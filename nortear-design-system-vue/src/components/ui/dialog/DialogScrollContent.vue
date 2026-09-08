@@ -40,10 +40,21 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps<DialogContentProps & { class?: HTMLAttributes['class'] }>()
+/**
+ * `closeLabel` é o nome acessível do X do canto — mesmo mecanismo do
+ * `DialogContent`: texto dentro de `nds-sr-only`, e não `aria-label`, porque
+ * texto real sobrevive à tradução automática da página, que ignora atributo.
+ * Estava CRAVADO em pt-BR aqui dentro; o padrão preserva todo call site que já
+ * existia.
+ */
+const props = withDefaults(defineProps<DialogContentProps & { class?: HTMLAttributes['class'], closeLabel?: string }>(), {
+  closeLabel: 'Fechar',
+})
 const emits = defineEmits<DialogContentEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+// `closeLabel` é deste wrapper, não do primitivo: sem tirá-lo daqui o `v-bind`
+// o despejaria no elemento como atributo solto (`closelabel="Fechar"`).
+const delegatedProps = reactiveOmit(props, 'class', 'closeLabel')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
@@ -83,7 +94,7 @@ const ariaModal = computed(() => (rootContext.modal.value ? 'true' : undefined))
           class="nds-dialog-close"
         >
           <XIcon />
-          <span class="nds-sr-only">Fechar</span>
+          <span class="nds-sr-only">{{ closeLabel }}</span>
         </DialogClose>
       </DialogContent>
     </DialogOverlay>
