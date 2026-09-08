@@ -6,6 +6,7 @@ import { createDialog } from '@/components/ui/dialog';
 import { createButton } from '@/components/ui/button';
 import { createInput } from '@/components/ui/input';
 import { createLabel } from '@/components/ui/label';
+import { createFormField } from '@/components/ui/form';
 import uiTranslations from '@/i18n/ui.json';
 import dialogTranslations from '@shared/content/dialog/translations.json';
 
@@ -130,6 +131,89 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
         reason,
         location: opts.location,
       });
+    },
+  });
+}
+
+/**
+ * A prévia da variante COM FORMULÁRIO.
+ *
+ * Forma própria, e não `buildDialogDemo` com `bodyText`: aqui o corpo É um
+ * formulário, e a prévia mostrava um parágrafo pedindo ao leitor que imaginasse
+ * os campos — enquanto a story desta mesma stack já montava campos de verdade.
+ *
+ * Dois pontos que a forma carrega, e nenhum deles é arrumação:
+ *
+ *   · `createFormField` é quem fecha o par rótulo ↔ controle, gera o id que
+ *     falta e liga descrição e mensagem ao `aria-describedby`. Um `<label>` cru
+ *     com um `<input>` cru pareceria igual na tela e não faria nada disso — é a
+ *     mesma escolha que o snippet gerado em `dialog.source.ts` publica.
+ *   · o rodapé fica DENTRO do `<form>`, com a primária em `type: 'submit'`.
+ *     Fora dele o botão é INERTE: não submete, o Enter num campo não dispara
+ *     nada, e nada na tela denuncia. Por isso ele é montado aqui e vai no
+ *     `content`, e não na opção `footer` da factory — que o põe como IRMÃO do
+ *     corpo, fora do formulário.
+ *
+ * A ordem do rodapé é a do sistema: secundária primeiro no DOM, primária por
+ * último — é ela que põe a primária em cima no empilhamento e à direita quando
+ * as duas ficam lado a lado.
+ */
+function buildDialogFormDemo(location: DocsLocation): HTMLElement {
+  const triggerLabel = t('demonstration.labels.triggerLabel');
+  const actionLabel = t('demonstration.labels.action');
+
+  const form = document.createElement('form');
+  form.className = 'nds-stack';
+  form.dataset.spacing = 'md';
+  form.addEventListener('submit', (e) => e.preventDefault());
+
+  form.append(
+    createFormField({
+      label: t('demonstration.labels.fieldName'),
+      input: createInput({
+        id: 'dialog-name',
+        name: 'name',
+        value: t('demonstration.labels.samplePersonName'),
+      }),
+    }),
+    createFormField({
+      label: t('demonstration.labels.fieldEmail'),
+      input: createInput({
+        id: 'dialog-email',
+        name: 'email',
+        type: 'email',
+        value: 'maria@exemplo.com',
+      }),
+    }),
+  );
+
+  const footerEl = document.createElement('div');
+  footerEl.className = 'nds-dialog-footer';
+  footerEl.dataset.slot = 'dialog-footer';
+  footerEl.append(
+    createButton({ variant: 'outline', label: t('demonstration.labels.cancel') }),
+    createButton({
+      label: actionLabel,
+      type: 'submit',
+      onClick: () => {
+        track('dialog_action', { component: 'dialog', action_label: actionLabel, location });
+      },
+    }),
+  );
+  form.appendChild(footerEl);
+
+  return createDialog({
+    trigger: createButton({ variant: 'outline', label: triggerLabel }),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    content: form,
+    onOpenChange: (open) => {
+      if (open) {
+        track('dialog_open', { component: 'dialog', label: triggerLabel, location });
+      }
+    },
+    onClose: (reason) => {
+      track('dialog_close', { component: 'dialog', label: triggerLabel, reason, location });
     },
   });
 }
@@ -410,10 +494,45 @@ createDialog({
 
         const codeWithForm = `const form = document.createElement('form');
 form.className = 'nds-stack';
-form.dataset.spacing = 'sm';
-// inputs...
+form.dataset.spacing = 'md';
+form.addEventListener('submit', (e) => e.preventDefault());
 
-createDialog({ trigger, title: 'Editar perfil', description: '...', content: form, footer });`;
+// createFormField, e não um <label> cru com um <input> cru: é ele quem fecha o
+// par rótulo ↔ controle, gera o id que falta e liga descrição e mensagem ao
+// aria-describedby. Os dois pareceriam iguais na tela.
+form.append(
+  createFormField({
+    label: 'Nome',
+    input: createInput({ id: 'dialog-name', name: 'name', value: 'Maria Silva' }),
+  }),
+  createFormField({
+    label: 'E-mail',
+    input: createInput({ id: 'dialog-email', name: 'email', type: 'email', value: 'maria@exemplo.com' }),
+  }),
+);
+
+// O rodapé entra DENTRO do form, e a primária é type: 'submit'. Fora do form
+// esse botão é INERTE — não submete, e o Enter num campo não dispara nada, sem
+// que nada na tela denuncie. Por isso ele é montado aqui e vai no content, e
+// não na opção footer da factory, que o põe como irmão do corpo.
+//
+// A ordem é a do sistema: secundária primeiro no DOM, primária por último — é
+// ela que põe a primária em cima no empilhamento e à direita quando lado a lado.
+const footerEl = document.createElement('div');
+footerEl.className = 'nds-dialog-footer';
+footerEl.dataset.slot = 'dialog-footer';
+footerEl.append(
+  createButton({ variant: 'outline', label: 'Cancelar' }),
+  createButton({ label: 'Salvar alterações', type: 'submit' }),
+);
+form.appendChild(footerEl);
+
+createDialog({
+  trigger: createButton({ variant: 'outline', label: 'Editar perfil' }),
+  title: 'Editar perfil',
+  description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+  content: form,
+});`;
 
         const codeWithBodyScroll = `const body = document.createElement('div');
 // A rolagem é do CORPO: o teto, o overflow e a folga da barra vêm desta classe.
@@ -478,15 +597,7 @@ createDialog({
               name: 'withForm',
               description: t('variants.items.withForm'),
               code: codeWithForm,
-              previewFactory: () => buildDialogDemo({
-                location: 'docs_variantes',
-                triggerLabel: t('demonstration.labels.triggerLabel'),
-                title: t('demonstration.labels.title'),
-                description: 'Formulário inline.',
-                cancelLabel: t('demonstration.labels.cancel'),
-                actionLabel: t('demonstration.labels.action'),
-                bodyText: 'Imagine os campos aqui.',
-              }),
+              previewFactory: () => buildDialogFormDemo('docs_variantes'),
             },
             {
               // Faltava: as outras quatro páginas renderizavam esta variante e
