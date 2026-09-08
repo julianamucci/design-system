@@ -28,8 +28,6 @@ export type DialogSnippetOptions = {
   footer?: DialogSnippetAction[];
   /** Só aparece quando é `false`: a fábrica desenha o X do canto por padrão. */
   showCloseButton?: boolean;
-  /** Rota B: o painel entra no fluxo do overlay, e o overlay é quem rola. */
-  scroll?: boolean;
   /** Corpo do callback de mudança de estado, quando a story o exercita. */
   onOpenChange?: string;
   /** Atalho do control do Playground — rótulo da ação que cancela. */
@@ -54,6 +52,22 @@ function button(acao: DialogSnippetAction): string {
   const pairs = options([
     ['variant', acao.variant && acao.variant !== 'default' ? text(acao.variant) : undefined],
     ['label', text(acao.label)],
+  ])
+    .map((line) => line.replace(/,$/, ''))
+    .join(', ');
+  return `createButton({ ${pairs} })`;
+}
+
+/**
+ * A ação que ENVIA o formulário — só existe no rodapé montado dentro do
+ * `<form>` (PRD D10). `type: 'submit'` é o que faz o Enter num campo valer, e é
+ * justamente o que não pode ficar fora do formulário.
+ */
+function submitButton(acao: DialogSnippetAction): string {
+  const pairs = options([
+    ['variant', acao.variant && acao.variant !== 'default' ? text(acao.variant) : undefined],
+    ['label', text(acao.label)],
+    ['type', text('submit')],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');
@@ -86,7 +100,6 @@ function linesComuns(o: DialogSnippetOptions, content: string): string[] {
     ],
     ['content', content],
     ['footer', footer(actionsOf(o))],
-    ['scroll', o.scroll ? 'true' : undefined],
     ['showCloseButton', o.showCloseButton === false ? 'false' : undefined],
     // Guarda de tipo, e não confiança no tipo declarado: `ctx.args` chega do
     // Storybook, e o control de callback do Playground é um espião de teste —
@@ -161,12 +174,19 @@ function field(c: DialogField): string {
  * controle, gera o id que falta e liga a descrição ao `aria-describedby`. Um
  * `<label>` cru com um `<input>` cru pareceria igual na tela e não faria nada
  * disso.
+ *
+ * E o RODAPÉ entra dentro do `<form>` (PRD D10), montado à mão em vez de sair
+ * pela opção `footer` da fábrica — que o anexa como IRMÃO do corpo, portanto
+ * fora do formulário. Fora dele o `type: 'submit'` é botão inerte: não submete,
+ * o Enter num campo não dispara nada, e nada na tela denuncia. É a mesma forma
+ * que a docs page desta stack já publica.
  */
 export function dialogWithFormSnippet(o: DialogWithFormSnippetOptions = {}): string {
   const fields = o.fields ?? [
     { label: 'Nome', value: 'Maria Souza' },
     { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
   ];
+  const [cancelar, primaria] = actionsOf(o);
 
   return snippet(
     [
@@ -177,10 +197,22 @@ export function dialogWithFormSnippet(o: DialogWithFormSnippetOptions = {}): str
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack';
 formulario.dataset.spacing = 'md';
+formulario.addEventListener('submit', (e) => e.preventDefault());
 formulario.append(
 ${fields.map(field).join('\n')}
 );`,
-    `const dialogo = ${callLine('createDialog', linesComuns(o, 'formulario'))};`,
+    `// O rodapé vai DENTRO do form, e a primária é \`type: 'submit'\`. Fora do form
+// ela é inerte: não submete, e o Enter num campo não dispara nada. Por isso ele
+// não sai pela opção \`footer\`, que o anexa como irmão do corpo.
+const footerEl = document.createElement('div');
+footerEl.className = 'nds-dialog-footer';
+footerEl.dataset.slot = 'dialog-footer';
+footerEl.append(
+  ${button(cancelar)},
+  ${submitButton(primaria)},
+);
+formulario.appendChild(footerEl);`,
+    `const dialogo = ${callLine('createDialog', linesComuns({ ...o, footer: [] }, 'formulario'))};`,
     appendLine('dialogo'),
   );
 }
@@ -242,52 +274,4 @@ export function dialogWithBodyScrollableSource(
   fixas: DialogWithBodyScrollableSnippetOptions,
 ): SourceTransform<DialogWithBodyScrollableSnippetOptions> {
   return (_gerado, ctx) => dialogWithBodyScrollableSnippet({ ...ctx.args, ...fixas });
-}
-
-// ─── Quarta forma: overlay rolando (rota B) ──────────────────────────────────
-
-export type DialogOverlayScrollSnippetOptions = DialogSnippetOptions & {
-  /** Quantos parágrafos o exemplo empilha para o overlay precisar rolar. */
-  paragrafos?: number;
-};
-
-/**
- * Diálogo com o OVERLAY rolando — a outra rota para conteúdo alto.
- *
- * O contrário da forma acima: aqui o cabeçalho NÃO fica parado, ele sobe junto
- * com o conteúdo. Não há região rolável aninhada, então também não há
- * `tabindex`, papel nem nome a declarar — quem rola é o overlay, e ele já está
- * na ordem natural da página.
- *
- * A forma é uma OPÇÃO da fábrica porque é ela que monta overlay e painel: o
- * `scroll: true` põe as duas classes e faz o painel virar filho do overlay,
- * sem o que a rolagem não teria o que alcançar.
- */
-export function dialogWithOverlayScrollSnippet(o: DialogOverlayScrollSnippetOptions = {}): string {
-  const total = o.paragrafos ?? 20;
-
-  return snippet(
-    IMPORTS_BASE,
-    `const corpo = document.createElement('div');
-corpo.className = 'nds-stack nds-text-body nds-text-muted-foreground';
-corpo.dataset.spacing = 'md';
-
-for (let i = 1; i <= ${total}; i++) {
-  const paragrafo = document.createElement('p');
-  paragrafo.textContent = \`Cláusula \${i} do contrato.\`;
-  corpo.appendChild(paragrafo);
-}`,
-    // `scroll: true` é da FORMA, e não do call site: esta função existe para
-    // ensinar a rota B, e um snippet dela sem a opção ensinaria a rota A com
-    // parágrafos a mais.
-    `const dialogo = ${callLine('createDialog', linesComuns({ ...o, scroll: true }, 'corpo'))};`,
-    appendLine('dialogo'),
-  );
-}
-
-/** Transform de story para a forma com o overlay rolando. */
-export function dialogWithOverlayScrollSource(
-  fixas: DialogOverlayScrollSnippetOptions,
-): SourceTransform<DialogOverlayScrollSnippetOptions> {
-  return (_gerado, ctx) => dialogWithOverlayScrollSnippet({ ...ctx.args, ...fixas });
 }

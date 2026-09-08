@@ -41,36 +41,25 @@
 //      compõe pendura .nds-dialog-body-scroll no elemento do corpo, junto de
 //      tabindex="0" (WCAG 2.1.1) e de role="group" com nome. group e não
 //      region: marco aninhado num diálogo já nomeado não acrescenta navegação.
-//      É a ROTA A das duas descritas logo abaixo.
+//      É a ÚNICA saída para conteúdo alto — ver o bloco logo abaixo.
 //  10. REGIÃO VIVA: nenhuma. A abertura já move o foco, e o papel de diálogo
 //      já é anunciado.
 //
-// ─── Conteúdo mais alto que a janela: as DUAS rotas ─────────────────────────
+// ─── Conteúdo mais alto que a janela: UMA saída ─────────────────────────────
 //
-// ROTA A — CORPO ROLÁVEL. O painel fica parado e centralizado, o cabeçalho e o
-// rodapé não saem da tela, e a rolagem acontece dentro do corpo. Nada muda na
-// factory: quem compõe pendura .nds-dialog-body-scroll no elemento que passa em
+// CORPO ROLÁVEL. O painel fica parado e centralizado, o cabeçalho e o rodapé
+// não saem da tela, e a rolagem acontece dentro do corpo. Nada muda na fábrica:
+// quem compõe pendura .nds-dialog-body-scroll no elemento que passa em
 // `content`, com tabindex="0", role="group" e nome (item 9 acima).
 //
-// ROTA B — OVERLAY ROLANDO. O painel entra no FLUXO do overlay, e quem rola é o
-// overlay: o cabeçalho sobe junto com o conteúdo e sai da tela. Serve para
-// conteúdo que se lê de ponta a ponta (um contrato, um artigo), em que fixar o
-// cabeçalho rouba altura útil. Liga-se com a opção `scroll`, que põe
-// .nds-dialog-overlay-scroll e .nds-dialog-content-scroll — o par que
-// dialog.css declara para as cinco stacks.
-//
-// A FORMA da rota B diverge por stack, e isso é divergência de API de
-// framework: não há fonte de verdade e não se "alinha". Aqui é uma opção da
-// factory, na mesma família de `showCloseButton` e `headerHidden`.
-//
-// Duas consequências de montagem, e as duas são da rota B:
-//
-//   · o painel deixa de ser IRMÃO do overlay e passa a ser FILHO dele —
-//     rolagem de um elemento só alcança o que está dentro dele;
-//   · o clique no painel agora borbulha até o overlay, e o ouvinte que dispensa
-//     passa a exigir `event.target === overlayEl`. Junto vem a conta da BARRA
-//     DE ROLAGEM: o ponteiro que cai além da caixa de conteúdo do overlay não é
-//     clique fora, e sem essa guarda arrastar a barra fecharia o diálogo.
+// Houve uma SEGUNDA rota, retirada em 2026-09-08 por decisão de produto (PRD
+// D7): o painel inteiro entrava no fluxo do véu, virava FILHO dele, e a PÁGINA
+// é que rolava. Duas razões — um modal que rola junto com a página desfaz a
+// própria promessa de interromper, e duas saídas opostas para o mesmo problema
+// obrigam cada tela a escolher sem critério. Saíram a opção `scroll`, o par de
+// classes -overlay-scroll/-content-scroll (que dialog.css não declara mais), a
+// anexação do painel dentro do overlay e o pouso de foco próprio que ela
+// exigia. O painel é sempre IRMÃO do overlay.
 //
 // ─── O que esta stack NÃO faz, e é decisão de família ───────────────────────
 //
@@ -127,15 +116,6 @@ export type DialogOptions = {
    * Aditivo: sem a opção, nada muda para quem já usa a factory.
    */
   headerHidden?: boolean;
-  /**
-   * Rota B — o painel sai do centro fixo e entra no fluxo do overlay, que passa
-   * a ser quem rola. O cabeçalho sobe junto com o conteúdo.
-   *
-   * Para manter cabeçalho e rodapé parados (rota A), deixe fora e pendure
-   * `.nds-dialog-body-scroll` no elemento que vai em `content`. As duas rotas
-   * estão descritas no cabeçalho deste arquivo.
-   */
-  scroll?: boolean;
   showCloseButton?: boolean;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: DialogCloseReason) => void;
@@ -217,30 +197,21 @@ export function createDialog(options: DialogOptions): DestroyableElement {
     previousFocus = document.activeElement as HTMLElement;
 
     overlayEl = document.createElement('div');
-    overlayEl.className = cn(
-      'nds-dialog-overlay',
-      options.scroll && 'nds-dialog-overlay-scroll',
-    );
+    overlayEl.className = 'nds-dialog-overlay';
     overlayEl.dataset.slot = 'dialog-overlay';
     overlayEl.dataset.state = 'open';
-    // `target === overlayEl` e não "qualquer clique no véu": na rota B o painel
-    // é filho do overlay, então o clique dentro dele borbulha até aqui. E a
-    // conta de `offsetX`/`offsetY` separa a BARRA DE ROLAGEM do véu — o ponteiro
-    // que cai além da caixa de conteúdo não é clique fora, e sem isto arrastar
-    // a barra fecharia o diálogo.
+    // `target === overlayEl` e não "qualquer clique": o véu é o próprio alvo, e
+    // a guarda deixa explícito que só ele dispensa. A conta de `offsetX`/
+    // `offsetY` que morava aqui existia para a rota do overlay rolando, em que
+    // arrastar a barra de rolagem do véu fechava o diálogo; sem aquela rota o
+    // véu não rola e não tem barra.
     overlayEl.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement | null;
-      if (!target || target !== overlayEl) return;
-      if (event.offsetX > target.clientWidth || event.offsetY > target.clientHeight) return;
+      if (event.target !== overlayEl) return;
       closeWithReason('overlay');
     });
 
     panelEl = document.createElement('div');
-    panelEl.className = cn(
-      'nds-dialog-content',
-      options.scroll && 'nds-dialog-content-scroll',
-      options.class,
-    );
+    panelEl.className = cn('nds-dialog-content', options.class);
     panelEl.setAttribute('role', 'dialog');
     panelEl.setAttribute('aria-modal', 'true');
     panelEl.setAttribute('aria-labelledby', titleId);
@@ -304,35 +275,14 @@ export function createDialog(options: DialogOptions): DestroyableElement {
     }
 
     document.body.appendChild(overlayEl);
-    // Rota B: o painel é FILHO do overlay, porque a rolagem de um elemento só
-    // alcança o que está dentro dele. Rota A: irmãos, e o painel se posiciona
-    // sozinho no centro sem depender do overlay.
-    if (options.scroll) overlayEl.appendChild(panelEl);
-    else document.body.appendChild(panelEl);
+    // Painel e overlay são IRMÃOS: o painel se posiciona sozinho no centro sem
+    // depender do overlay. A rota que o fazia FILHO do véu — para que a rolagem
+    // do véu o alcançasse — saiu em 2026-09-08 (ver o cabeçalho deste arquivo),
+    // e com ela o pouso de foco próprio que ela exigia.
+    document.body.appendChild(panelEl);
 
-    // O primeiro focável do painel NÃO serve de pouso na rota B. O X do canto é
-    // anexado por último (logo acima), então `getFocusable[0]` é o que estiver
-    // no corpo ou no rodapé — e como ali o painel está no FLUXO do overlay,
-    // focá-lo faz o navegador rolar o overlay até ele: o diálogo abre no FIM do
-    // documento, com o cabeçalho já fora da tela. Medido no React, mesma causa
-    // e mesma ordem de anexação: `scrollTop` 2216 de um máximo de 2216.
-    //
-    // Na rota B o pouso é o PAINEL — o padrão da APG quando não há um primeiro
-    // controle óbvio: o leitor ouve o nome do diálogo e começa do topo. Na rota
-    // A nada muda, porque ali o painel é `fixed` e não rola: o primeiro focável
-    // continua sendo o pouso certo.
-    if (options.scroll) {
-      panelEl.tabIndex = -1;
-      // `preventScroll` não é detalhe: focar o painel sem ele ainda rola o
-      // overlay 88px, encostando o topo do painel no topo da vista e comendo o
-      // respiro que a folha declara. Medido — a asserção reprovou com 88 antes
-      // desta opção entrar. Rolar é o efeito que estamos evitando; o pouso do
-      // foco é o que queremos.
-      panelEl.focus({ preventScroll: true });
-    } else {
-      const focusable = getFocusable(panelEl);
-      focusable[0]?.focus();
-    }
+    const focusable = getFocusable(panelEl);
+    focusable[0]?.focus();
 
     // A página atrás do véu não rola enquanto o diálogo está aberto — sem
     // isto, a roda do mouse sobre o véu rolava o documento inteiro por baixo.

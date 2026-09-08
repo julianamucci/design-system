@@ -3,7 +3,6 @@ import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
 import {
   dialogWithBodyScrollableSource,
-  dialogWithOverlayScrollSource,
   dialogWithFormSource,
   dialogSource,
   dialogSourceWith,
@@ -131,6 +130,7 @@ export const WithForm: Story = {
     const form = document.createElement('form');
     form.className = 'nds-stack';
     form.dataset.spacing = 'md';
+    form.addEventListener('submit', (e) => e.preventDefault());
     form.append(
       buildField('dialog-name', t('demonstration.labels.fieldName'), 'text', 'Maria Souza'),
       buildField(
@@ -140,6 +140,22 @@ export const WithForm: Story = {
         'maria@exemplo.com',
       ),
     );
+
+    // O rodapé fica DENTRO do `<form>` (PRD D10), e a primária é
+    // `type: 'submit'`. Fora do formulário ela é INERTE: não submete, o Enter
+    // num campo não dispara nada, e nada na tela denuncia. Por isso ele é
+    // montado aqui e entra em `content`, e não pela opção `footer` da fábrica,
+    // que o anexa como IRMÃO do corpo — fora do form. É a mesma forma que a
+    // docs page desta stack já usa, e a que o snippet publica.
+    const footerEl = document.createElement('div');
+    footerEl.className = 'nds-dialog-footer';
+    footerEl.dataset.slot = 'dialog-footer';
+    footerEl.append(
+      createButton({ variant: 'outline', label: t('demonstration.labels.cancel') }),
+      createButton({ label: t('demonstration.labels.action'), type: 'submit' }),
+    );
+    form.appendChild(footerEl);
+
     return mountOpen(
       createDialog({
         trigger: createButton({
@@ -149,7 +165,6 @@ export const WithForm: Story = {
         title: t('demonstration.labels.title'),
         description: 'Atualize suas informações pessoais.',
         content: form,
-        footer: makeFooter(t('demonstration.labels.cancel'), t('demonstration.labels.action')),
       }),
     );
   },
@@ -174,6 +189,25 @@ export const WithForm: Story = {
       await expect(document.activeElement).toBe(name);
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector('#dialog-email'));
+    });
+
+    await step('A primária é submit DENTRO do form, com o rodapé junto (D10)', async () => {
+      // Fora do `<form>` o `type="submit"` é botão inerte: não submete, o Enter
+      // num campo não dispara nada, e nada na tela denuncia. A asserção é a
+      // RELAÇÃO de contenção, e não a presença do atributo — o atributo sozinho
+      // é o que passava enquanto a opção `footer` da fábrica punha o rodapé como
+      // irmão do corpo.
+      const form = p.querySelector<HTMLFormElement>('form')!;
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(form.contains(footer)).toBe(true);
+
+      const submit = footer.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      await expect(submit).toBeInTheDocument();
+      await expect(submit.form).toBe(form);
+      // A fábrica de botão nasce em `type="button"`, e é o que o Cancelar
+      // precisa ser: dentro de um form o padrão do HTML seria `submit`.
+      const cancelar = footer.querySelector<HTMLButtonElement>('button:not([type="submit"])')!;
+      await expect(cancelar.type).toBe('button');
     });
   },
 };
@@ -248,123 +282,6 @@ export const WithScrollContent: Story = {
       const body = p.querySelector<HTMLElement>('[role="group"]')!;
       await expect(body).toHaveAttribute('tabindex', '0');
       await expect(body).toHaveAccessibleName();
-    });
-  },
-};
-
-export const WithScrollingOverlay: Story = {
-  parameters: {
-    covers: ['visual.item6'],
-    // A OUTRA rota, e por isso story própria: reusar o nome da de cima é
-    // exatamente como as duas circularam sob o mesmo rótulo.
-    docs: {
-      source: {
-        transform: dialogWithOverlayScrollSource({
-          triggerLabel: 'Ver contrato',
-          title: 'Contrato de prestação',
-          description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
-          cancelLabel: 'Recusar',
-          actionLabel: 'Aceitar',
-        }),
-      },
-      description: {
-        story:
-          'Painel no fluxo do overlay, que passa a ser a área de rolagem: o cabeçalho sobe junto com o conteúdo.',
-      },
-    },
-  },
-  render: () => {
-    const longBody = document.createElement('div');
-    // Sem `.nds-dialog-body-scroll`, sem tabindex e sem papel: nesta rota não há
-    // região rolável aninhada para alcançar por teclado — quem rola é o
-    // overlay, e ele já está na ordem natural da página.
-    longBody.className = 'nds-stack nds-text-body nds-text-muted-foreground';
-    longBody.dataset.spacing = 'md';
-    for (let i = 1; i <= 20; i++) {
-      const p = document.createElement('p');
-      p.textContent = `Cláusula ${i}: o painel entra no fluxo do overlay, e o cabeçalho sobe junto com o conteúdo em vez de ficar parado no topo do painel.`;
-      longBody.appendChild(p);
-    }
-    return mountOpen(
-      createDialog({
-        trigger: createButton({
-          variant: 'outline',
-          label: t('demonstration.labels.contractTrigger'),
-        }),
-        title: t('demonstration.labels.contractTitle'),
-        description: t('demonstration.labels.contractDescription'),
-        content: longBody,
-        footer: makeFooter(t('demonstration.labels.decline'), t('demonstration.labels.accept')),
-        scroll: true,
-      }),
-    );
-  },
-  play: async ({ step }) => {
-    const p = await waitForOpen();
-
-    await step('Quem rola é o overlay, e o painel está DENTRO dele', async () => {
-      // Comportamento, e não nome de classe: a rota só existe se o overlay
-      // tiver o que rolar, e ele só tem se o painel for filho dele. Medido
-      // contra a folha compartilhada, com os dois como irmãos o `scrollHeight`
-      // do overlay é igual ao `clientHeight` — a classe chega e não pinta.
-      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
-      await expect(ov.contains(p)).toBe(true);
-      await expect(getComputedStyle(ov).overflowY).toBe('auto');
-      await expect(ov.scrollHeight).toBeGreaterThan(ov.clientHeight);
-    });
-
-    await step('Abre no TOPO, e o pouso do foco é o painel', async () => {
-      // Este passo é o que faltava, e a falta dele deixou o defeito virar
-      // contrato: o passo seguinte zerava a rolagem para poder medir, e o
-      // comentário registrava como fato que o overlay já vinha rolado até o
-      // fim. Vinha porque o pouso do foco era o primeiro focável do painel —
-      // nesta rota, o botão do rodapé, já que o X do canto é o último filho —,
-      // e o navegador rola o overlay até o que recebe foco. Quem abria um
-      // contrato de vinte cláusulas chegava na última.
-      //
-      // Na rota A o mesmo pouso é inofensivo (painel `fixed`, não rola), e é
-      // por isso que só esta rota mudou.
-      // A asserção é o que o leitor VÊ, e não um número: o cabeçalho tem de
-      // estar dentro da janela do overlay ao abrir. Zero absoluto foi tentado e
-      // é contrato errado — o overlay é um grid `place-items: center` e o
-      // painel traz `margin-block: var(--spacing-8)`, então a origem legítima
-      // desta rota são os 32px da margem, não 0.
-      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
-      const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
-      const caixaOv = ov.getBoundingClientRect();
-      const caixaHeader = header.getBoundingClientRect();
-      await expect(caixaHeader.top).toBeGreaterThanOrEqual(caixaOv.top);
-      await expect(caixaHeader.bottom).toBeLessThanOrEqual(caixaOv.bottom);
-
-      // E o complemento que nomeia o defeito antigo: não abre no FIM.
-      await expect(ov.scrollTop).toBeLessThan(ov.scrollHeight - ov.clientHeight);
-      await expect(document.activeElement).toBe(p);
-    });
-
-    await step('O painel entra no fluxo, e o cabeçalho sobe junto', async () => {
-      // O que separa esta rota da outra: lá o cabeçalho fica parado. Aqui ele
-      // se move com a rolagem do overlay, e é isso que a asserção mede.
-      await expect(getComputedStyle(p).position).toBe('relative');
-      const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
-      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
-
-      // O zero é ESTABELECIDO, e não presumido — a rolagem é estado, e o painel
-      // Interactions reexecuta a play no mesmo DOM.
-      ov.scrollTop = 0;
-      const antes = header.getBoundingClientRect().top;
-      ov.scrollTop = 120;
-      await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
-      ov.scrollTop = 0;
-    });
-
-    await step('Clique no painel NÃO fecha, mesmo borbulhando até o overlay', async () => {
-      // Nesta rota o painel é filho do overlay, então o clique dentro dele
-      // chega ao ouvinte que dispensa. Sem a guarda de `target`, clicar no
-      // cabeçalho fecharia o diálogo — e a rota B seria inutilizável. A sonda é
-      // a classe porque a fábrica desta stack não marca o título com slot.
-      const title = p.querySelector<HTMLElement>('.nds-dialog-title')!;
-      await userEvent.click(title);
-      await expect(document.querySelector('[data-slot="dialog-content"]')).toBeInTheDocument();
     });
   },
 };

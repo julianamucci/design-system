@@ -639,45 +639,6 @@ createDialog({
               },
             },
             {
-              name: 'withScrollingOverlay',
-              description: t('variants.items.withScrollingOverlay'),
-              // O snippet vem do conteúdo compartilhado, com uma variante por
-              // stack: escrito aqui ele ficaria preso a esta página, que é como
-              // cinco snippets desta campanha ficaram para trás do código.
-              code: t('variants.items.withScrollingOverlayCode'),
-              previewFactory: () => {
-                const trigger = createButton({
-                  variant: 'outline',
-                  label: t('demonstration.labels.contractTrigger'),
-                });
-                const body = document.createElement('div');
-                // A OUTRA rota: sem a classe de rolagem de corpo, sem tabindex e
-                // sem papel — quem rola é o overlay, e ele já está na ordem
-                // natural da página.
-                body.className = 'nds-stack nds-text-body nds-text-muted-foreground';
-                body.dataset.spacing = 'sm';
-                for (let i = 1; i <= 16; i++) {
-                  const p = document.createElement('p');
-                  p.textContent = `Cláusula ${i}: o conteúdo rola junto com o cabeçalho, e não dentro de uma caixa própria.`;
-                  body.appendChild(p);
-                }
-                return createDialog({
-                  trigger,
-                  title: t('demonstration.labels.contractTitle'),
-                  description: t('demonstration.labels.contractDescription'),
-                  content: body,
-                  footer: [
-                    createButton({
-                      variant: 'outline',
-                      label: t('demonstration.labels.decline'),
-                    }),
-                    createButton({ label: t('demonstration.labels.accept') }),
-                  ],
-                  scroll: true,
-                });
-              },
-            },
-            {
               name: 'noFooter',
               description: t('variants.items.noFooter'),
               code: codeNoFooter,

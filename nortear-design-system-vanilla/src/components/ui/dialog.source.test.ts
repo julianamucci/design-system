@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   dialogWithBodyScrollableSnippet,
-  dialogWithOverlayScrollSnippet,
   dialogWithFormSnippet,
   dialogSnippet,
   dialogSource,
@@ -124,13 +123,34 @@ describe('dialogComFormularioSnippet', () => {
     expect(code).not.toContain('buildField');
   });
 
+  it('o rodapé é montado DENTRO do form, e não pela opção da fábrica (PRD D10)', () => {
+    // `type: 'submit'` fora do `<form>` é botão inerte, e o snippet é o que se
+    // copia. A asserção é de ORDEM — o rodapé é anexado ao formulário ANTES de
+    // o formulário entrar em `content` —, e junto vem a ausência da opção
+    // `footer`, que é o que punha o rodapé como irmão do corpo.
+    const code = dialogWithFormSnippet();
+    const appendAt = code.indexOf('formulario.appendChild(footerEl);');
+    const callAt = code.indexOf('content: formulario');
+    expect(appendAt).toBeGreaterThan(-1);
+    expect(callAt).toBeGreaterThan(appendAt);
+    expect(code).toContain("footerEl.className = 'nds-dialog-footer';");
+    expect(code).toContain("createButton({ label: 'Salvar alterações', type: 'submit' })");
+    // A opção `footer` da fábrica não pode aparecer: ela anexa como IRMÃO do
+    // corpo, fora do formulário.
+    expect(code).not.toContain('footer: [');
+  });
+
   it('omite o tipo quando ele já é o padrão do controle', () => {
-    expect(dialogWithFormSnippet({ fields: [{ label: 'Nome', type: 'text' }] })).not.toContain(
-      'type:',
+    // A sonda é a linha do CONTROLE, e não o snippet inteiro: desde que o rodapé
+    // passou a ser montado dentro do form (D10) existe um `type: 'submit'`
+    // legítimo no snippet, e um `not.toContain('type:')` solto reprovaria por
+    // causa dele — medindo o oposto do que esta asserção quer dizer.
+    expect(dialogWithFormSnippet({ fields: [{ label: 'Nome', type: 'text' }] })).toContain(
+      'input: createInput({  }),',
     );
     expect(
       dialogWithFormSnippet({ fields: [{ label: 'E-mail', type: 'email' }] }),
-    ).toContain("type: 'email'");
+    ).toContain("input: createInput({ type: 'email' }),");
   });
 });
 
@@ -151,26 +171,21 @@ describe('dialogComCorpoRolavelSnippet', () => {
   });
 });
 
-describe('dialogComOverlayRolandoSnippet', () => {
-  it('liga a rota pela opção da fábrica, e não por classe no call site', () => {
-    // A opção é o que faz o painel virar FILHO do overlay — sem isso as classes
-    // chegariam e a rolagem não teria o que alcançar.
-    const code = dialogWithOverlayScrollSnippet({ paragrafos: 20 });
-    expect(code).toContain('scroll: true,');
-    expect(code).toContain('i <= 20');
-  });
-
-  it('as duas rotas ensinam composições DIFERENTES', () => {
-    // As duas circularam sob o mesmo nome, e três stacks mostravam uma enquanto
-    // duas mostravam a outra. Comparadas em PAR, o que separa é o corpo.
-    const rotaA = dialogWithBodyScrollableSnippet();
-    const rotaB = dialogWithOverlayScrollSnippet();
-
-    expect(rotaB).not.toContain('nds-dialog-body-scroll');
-    expect(rotaB).not.toContain('corpo.tabIndex = 0');
-    expect(rotaB).not.toContain("corpo.setAttribute('role', 'group')");
-
-    expect(rotaA).toContain('nds-dialog-body-scroll');
-    expect(rotaA).not.toContain('scroll: true,');
+describe('rota de overlay rolando — RETIRADA (PRD D7)', () => {
+  it('nenhum snippet liga a opção scroll nem cita as classes que saíram', () => {
+    // A rota saiu em 2026-09-08: a fábrica não tem mais a opção, e dialog.css
+    // não declara mais o par de classes. O snippet é o que se copia, então a
+    // guarda é sobre a AUSÊNCIA — foi por sobrevivência silenciosa que as duas
+    // rotas circularam sob o mesmo nome em cinco stacks.
+    const todos = [
+      dialogSnippet(),
+      dialogWithFormSnippet(),
+      dialogWithBodyScrollableSnippet(),
+    ];
+    for (const code of todos) {
+      expect(code).not.toContain('scroll: true');
+      expect(code).not.toContain('nds-dialog-overlay-scroll');
+      expect(code).not.toContain('nds-dialog-content-scroll');
+    }
   });
 });
