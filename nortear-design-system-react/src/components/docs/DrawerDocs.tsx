@@ -608,7 +608,7 @@ interface DrawerProps {
     >
       {Array.from({ length: 12 }).map((_, i) => (
         <p key={i}>
-          Parágrafo {i + 1}: termos longos para garantir scroll interno.
+          {i + 1}. Termos longos, para o corpo do painel passar da altura visível e rolar sozinho.
         </p>
       ))}
     </DrawerBody>
@@ -635,15 +635,19 @@ interface DrawerProps {
                     data-spacing="sm"
                     aria-label="Termos de uso"
                   >
+                    {/* O corpo longo é EXEMPLO, e sai de `demonstration.labels.scrollBody`
+                        — não de `variants.items.withScroll.use`, que responde "quando usar
+                        esta variante" e, repetida doze vezes, faria o painel exibir a
+                        própria recomendação como se fosse o termo a ler. */}
                     {Array.from({ length: 12 }).map((_, i) => (
                       <p key={i}>
-                        Parágrafo {i + 1}: termos longos para garantir scroll interno.
+                        {i + 1}. {tContent("demonstration.labels.scrollBody")}
                       </p>
                     ))}
                   </DrawerBody>
                   <DrawerFooter>
                     <DrawerClose asChild>
-                      <Button variant="outline">Cancelar</Button>
+                      <Button variant="outline">{tContent("demonstration.labels.cancel")}</Button>
                     </DrawerClose>
                     <Button>Aceitar termos</Button>
                   </DrawerFooter>
@@ -676,7 +680,7 @@ interface DrawerProps {
   <DrawerContent>
     <DrawerHeader>
       <DrawerTitle>Editar perfil</DrawerTitle>
-      <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+      <DrawerDescription>Atualize seus dados.</DrawerDescription>
     </DrawerHeader>
     <DrawerBody>
       <form
@@ -710,12 +714,14 @@ interface DrawerProps {
             preview: (
               <Drawer>
                 <DrawerTrigger asChild>
-                  <Button variant="outline">Editar perfil</Button>
+                  <Button variant="outline">{tContent("demonstration.labels.trigger")}</Button>
                 </DrawerTrigger>
                 <DrawerContent>
                   <DrawerHeader>
-                    <DrawerTitle>Editar perfil</DrawerTitle>
-                    <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+                    <DrawerTitle>{tContent("demonstration.labels.title")}</DrawerTitle>
+                    <DrawerDescription>
+                      {tContent("demonstration.labels.description")}
+                    </DrawerDescription>
                   </DrawerHeader>
                   <DrawerBody>
                     <form
@@ -725,21 +731,26 @@ interface DrawerProps {
                       onSubmit={(event) => event.preventDefault()}
                     >
                       <div className="nds-grid" data-spacing="xs">
-                        <Label htmlFor="docs-drawer-name">Nome</Label>
+                        <Label htmlFor="docs-drawer-name">
+                          {tContent("demonstration.labels.fieldName")}
+                        </Label>
+                        {/* O valor é DADO de exemplo, não rótulo: fica literal. */}
                         <Input id="docs-drawer-name" defaultValue="Maria Souza" />
                       </div>
                       <div className="nds-grid" data-spacing="xs">
-                        <Label htmlFor="docs-drawer-email">E-mail</Label>
+                        <Label htmlFor="docs-drawer-email">
+                          {tContent("demonstration.labels.fieldEmail")}
+                        </Label>
                         <Input id="docs-drawer-email" type="email" defaultValue="maria@exemplo.com" />
                       </div>
                     </form>
                   </DrawerBody>
                   <DrawerFooter>
                     <DrawerClose asChild>
-                      <Button variant="outline">Cancelar</Button>
+                      <Button variant="outline">{tContent("demonstration.labels.cancel")}</Button>
                     </DrawerClose>
                     <Button type="submit" form="docs-drawer-form">
-                      Salvar alterações
+                      {tContent("demonstration.labels.confirm")}
                     </Button>
                   </DrawerFooter>
                 </DrawerContent>
@@ -751,14 +762,17 @@ interface DrawerProps {
             name: tContent("variants.compositions.withConfirmation.name"),
             description: tContent("variants.compositions.withConfirmation.description"),
             useWhen: tContent("variants.compositions.withConfirmation.use"),
-            // Mesmo exemplo da story `WithConfirmation` — que é a superfície
-            // TESTADA (`toHaveAccessibleName("Remover anexo?")`) e a que o
-            // `drawer.source.ts` publica. A página mostrava outra confirmação
-            // ("Remover item da lista?"): quem lia a doc e quem abria a story
-            // viam painéis diferentes do mesmo nome de composição.
+            // Os rótulos saem de `demonstration.labels`: gatilho, título e ação
+            // destrutiva são o mesmo verbo (`destroy`), e o aviso é
+            // `destroyMessage`. É o conjunto que as cinco docs pages leem — o
+            // guarda `demonstration_labels_divergent` compara exatamente as
+            // chaves usadas AQUI, e antes desta rodada a página cravava o texto
+            // em português. A story `WithConfirmation` segue com "Remover
+            // anexo": é ela a superfície testada, e o texto dela é o que o
+            // `drawer.source.ts` publica no painel Code.
             code: `<Drawer>
   <DrawerTrigger asChild>
-    <Button variant="outline">Remover anexo</Button>
+    <Button variant="outline">Excluir</Button>
   </DrawerTrigger>
   <DrawerContent
     onOpenAutoFocus={(event) => {
@@ -774,23 +788,23 @@ interface DrawerProps {
     }}
   >
     <DrawerHeader>
-      <DrawerTitle>Remover anexo?</DrawerTitle>
+      <DrawerTitle>Excluir</DrawerTitle>
       <DrawerDescription>
-        O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.
+        Você pode desfazer esta ação nos próximos 30 dias.
       </DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
       <DrawerClose asChild>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
-      <Button variant="destructive">Remover</Button>
+      <Button variant="destructive">Excluir</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
             preview: (
               <Drawer>
                 <DrawerTrigger asChild>
-                  <Button variant="outline">Remover anexo</Button>
+                  <Button variant="outline">{tContent("demonstration.labels.destroy")}</Button>
                 </DrawerTrigger>
                 <DrawerContent
                   onOpenAutoFocus={(event) => {
@@ -807,16 +821,18 @@ interface DrawerProps {
                   }}
                 >
                   <DrawerHeader>
-                    <DrawerTitle>Remover anexo?</DrawerTitle>
+                    <DrawerTitle>{tContent("demonstration.labels.destroy")}</DrawerTitle>
                     <DrawerDescription>
-                      O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.
+                      {tContent("demonstration.labels.destroyMessage")}
                     </DrawerDescription>
                   </DrawerHeader>
                   <DrawerFooter>
                     <DrawerClose asChild>
-                      <Button variant="outline">Cancelar</Button>
+                      <Button variant="outline">{tContent("demonstration.labels.cancel")}</Button>
                     </DrawerClose>
-                    <Button variant="destructive">Remover</Button>
+                    <Button variant="destructive">
+                      {tContent("demonstration.labels.destroy")}
+                    </Button>
                   </DrawerFooter>
                 </DrawerContent>
               </Drawer>

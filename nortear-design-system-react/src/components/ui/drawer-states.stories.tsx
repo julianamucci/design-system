@@ -18,7 +18,10 @@ import {
   drawerNotDispensavelSource,
   drawerSource,
 } from "./drawer.source";
+import { label } from "./drawer.fixtures";
 import { Button } from "./button";
+import { useTranslation } from "@/lib/i18n";
+import drawerTranslations from "@shared/content/drawer/translations.json";
 
 import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
@@ -64,26 +67,32 @@ export const Closed: Story = {
       },
     },
   },
-  render: () => (
-    <div style={wrapperStyle}>
-      <Drawer>
-        <DrawerTrigger asChild>
-          <Button variant="outline">Abrir</Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
-            <DrawerDescription>Atualize seus dados.</DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancelar</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  ),
+  render: () => {
+    // `render` É componente, e o hook vale aqui; a `play` lê o mesmo dicionário
+    // por `label()`. O rótulo do gatilho segue literal: o conteúdo compartilhado
+    // não nomeia o gatilho destas stories de estado.
+    const { t } = useTranslation(drawerTranslations);
+    return (
+      <div style={wrapperStyle}>
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline">Abrir</Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>{t("demonstration.labels.title")}</DrawerTitle>
+              <DrawerDescription>{t("demonstration.labels.description")}</DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter>
+              <DrawerClose asChild>
+                <Button variant="outline">{t("demonstration.labels.cancel")}</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    );
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("Fechado, o painel não existe no DOM", async () => {
@@ -115,26 +124,29 @@ export const Open: Story = {
       },
     },
   },
-  render: () => (
-    <div style={wrapperStyle}>
-      <Drawer defaultOpen>
-        <DrawerTrigger asChild>
-          <Button variant="outline">Abrir</Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
-            <DrawerDescription>Atualize seus dados.</DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancelar</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  ),
+  render: () => {
+    const { t } = useTranslation(drawerTranslations);
+    return (
+      <div style={wrapperStyle}>
+        <Drawer defaultOpen>
+          <DrawerTrigger asChild>
+            <Button variant="outline">Abrir</Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>{t("demonstration.labels.title")}</DrawerTitle>
+              <DrawerDescription>{t("demonstration.labels.description")}</DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter>
+              <DrawerClose asChild>
+                <Button variant="outline">{t("demonstration.labels.cancel")}</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    );
+  },
   play: async ({ step }) => {
     const panel = await waitForPortal("dialog");
 
@@ -143,7 +155,7 @@ export const Open: Story = {
       await expect(panel).toHaveAttribute("role", "dialog");
       await expect(panel).toHaveAttribute("aria-modal", "true");
       await expect(panel).toHaveAttribute("data-slot", "drawer-content");
-      await expect(panel).toHaveAccessibleName("Editar perfil");
+      await expect(panel).toHaveAccessibleName(label("demonstration.labels.title"));
       await expect(document.querySelector("[data-slot='drawer-overlay']")).not.toBeNull();
     });
 
@@ -174,6 +186,7 @@ export const Controlled: Story = {
   render: () => {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
+      const { t } = useTranslation(drawerTranslations);
       return (
         <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
           <div className="nds-cluster" data-spacing="md">
@@ -185,12 +198,12 @@ export const Controlled: Story = {
           <Drawer open={open} onOpenChange={setOpen}>
             <DrawerContent>
               <DrawerHeader>
-                <DrawerTitle>Editar perfil</DrawerTitle>
-                <DrawerDescription>Atualize seus dados.</DrawerDescription>
+                <DrawerTitle>{t("demonstration.labels.title")}</DrawerTitle>
+                <DrawerDescription>{t("demonstration.labels.description")}</DrawerDescription>
               </DrawerHeader>
               <DrawerFooter>
                 <DrawerClose asChild>
-                  <Button variant="outline">Cancelar</Button>
+                  <Button variant="outline">{t("demonstration.labels.cancel")}</Button>
                 </DrawerClose>
               </DrawerFooter>
             </DrawerContent>
@@ -217,12 +230,14 @@ export const Controlled: Story = {
       await userEvent.click(openBtn);
       const panel = await waitForPortal("dialog");
       await expect(panel).toBeVisible();
-      await expect(panel).toHaveAccessibleName("Editar perfil");
+      await expect(panel).toHaveAccessibleName(label("demonstration.labels.title"));
     });
 
     await step("Fechar por dentro devolve o valor a quem é dono dele", async () => {
       const panel = await waitForPortal("dialog");
-      await userEvent.click(within(panel).getByRole("button", { name: /Cancelar/i }));
+      await userEvent.click(
+        within(panel).getByRole("button", { name: label("demonstration.labels.cancel") }),
+      );
       await waitForPortalGone("dialog");
       // Se o callback não tivesse chegado, `open` continuaria true e o painel
       // reabriria no render seguinte.
@@ -403,26 +418,31 @@ export const DragToDismiss: Story = {
       },
     },
   },
-  render: () => (
-    <div style={wrapperStyle}>
-      <Drawer>
-        <DrawerTrigger asChild>
-          <Button variant="outline">Abrir</Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>Arraste para dispensar</DrawerTitle>
-            <DrawerDescription>Puxe o panel para baixo, ou use Escape.</DrawerDescription>
-          </DrawerHeader>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancelar</Button>
-            </DrawerClose>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  ),
+  render: () => {
+    // Título e descrição desta story nomeiam o GESTO, e o conteúdo compartilhado
+    // não tem chave para eles — seguem literais. A saída do rodapé tem.
+    const { t } = useTranslation(drawerTranslations);
+    return (
+      <div style={wrapperStyle}>
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button variant="outline">Abrir</Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>Arraste para dispensar</DrawerTitle>
+              <DrawerDescription>Puxe o panel para baixo, ou use Escape.</DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter>
+              <DrawerClose asChild>
+                <Button variant="outline">{t("demonstration.labels.cancel")}</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    );
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("button", { name: /^Abrir$/i });

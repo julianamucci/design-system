@@ -13,17 +13,22 @@ import {
   DrawerTrigger,
 } from "./drawer";
 import { drawerSource } from "./drawer.source";
+import { label } from "./drawer.fixtures";
 import { Button } from "./button";
+import { useTranslation } from "@/lib/i18n";
+import drawerTranslations from "@shared/content/drawer/translations.json";
 import { DrawerDocs } from "@/components/docs/DrawerDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 import { figmaDesign } from "@shared/figma/design-links";
+// O que sobra de literal aqui é o que o conteúdo compartilhado NÃO nomeia: o
+// gatilho deste painel genérico, a ação primária e o corpo de exemplo. Título e
+// saída saem de `demonstration.labels` e acompanham o idioma da toolbar — antes
+// o painel inteiro estava cravado em português.
 const LABEL = {
   trigger: "Abrir Drawer",
-  title: "Editar perfil",
   descricao: "Atualize seus dados pessoais e foto.",
   confirmar: "Confirmar",
-  cancelar: "Cancelar",
 };
 
 const meta = {
@@ -111,30 +116,37 @@ export const Playground: Story = {
       "accessibility.item3", "accessibility.item4", "accessibility.item5",
     ],
   },
-  render: (args) => (
-    <div style={{ contain: "layout", position: "relative" }}>
-      <Drawer {...args}>
-        <DrawerTrigger asChild>
-          <Button variant="outline">{LABEL.trigger}</Button>
-        </DrawerTrigger>
-        <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>{LABEL.title}</DrawerTitle>
-            <DrawerDescription>{LABEL.descricao}</DrawerDescription>
-          </DrawerHeader>
-          <DrawerBody className="nds-text-body nds-text-muted-foreground">
-            Conteúdo do drawer.
-          </DrawerBody>
-          <DrawerFooter>
-            <DrawerClose asChild>
-              <Button variant="outline">{LABEL.cancelar}</Button>
-            </DrawerClose>
-            <Button>{LABEL.confirmar}</Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
-    </div>
-  ),
+  render: (args) => {
+    // `render` É componente, e por isso o hook vale aqui. A `play` logo abaixo
+    // não é, e lê o MESMO dicionário por `label()`: os dois caminhos passam
+    // pela mesma store de locale, então a asserção procura o texto que o painel
+    // de fato mostra.
+    const { t } = useTranslation(drawerTranslations);
+    return (
+      <div style={{ contain: "layout", position: "relative" }}>
+        <Drawer {...args}>
+          <DrawerTrigger asChild>
+            <Button variant="outline">{LABEL.trigger}</Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              <DrawerTitle>{t("demonstration.labels.title")}</DrawerTitle>
+              <DrawerDescription>{LABEL.descricao}</DrawerDescription>
+            </DrawerHeader>
+            <DrawerBody className="nds-text-body nds-text-muted-foreground">
+              Conteúdo do drawer.
+            </DrawerBody>
+            <DrawerFooter>
+              <DrawerClose asChild>
+                <Button variant="outline">{t("demonstration.labels.cancel")}</Button>
+              </DrawerClose>
+              <Button>{LABEL.confirmar}</Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    );
+  },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("button", { name: LABEL.trigger });
@@ -151,7 +163,7 @@ export const Playground: Story = {
       // Nome e descrição saem do aria-labelledby/-describedby que o primitivo
       // liga aos ids REAIS do título e da descrição — painel modal anônimo é o
       // defeito silencioso aqui.
-      await expect(panel).toHaveAccessibleName(LABEL.title);
+      await expect(panel).toHaveAccessibleName(label("demonstration.labels.title"));
       await expect(panel).toHaveAccessibleDescription(LABEL.descricao);
       await expect(panel).toHaveAttribute("data-vaul-drawer-direction", args.direction!);
       await expect(panel).toHaveClass(/nds-drawer-content/);
@@ -190,7 +202,9 @@ export const Playground: Story = {
 
     await step("5. O botão de fechar do rodapé fecha e devolve o foco ao gatilho", async () => {
       const panel = await open(trigger);
-      const closeBtn = within(panel).getByRole("button", { name: LABEL.cancelar });
+      const closeBtn = within(panel).getByRole("button", {
+        name: label("demonstration.labels.cancel"),
+      });
       await userEvent.click(closeBtn);
       await waitForPortalGone("dialog");
       await waitFor(() => {

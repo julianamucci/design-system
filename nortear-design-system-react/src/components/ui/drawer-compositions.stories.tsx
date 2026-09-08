@@ -17,9 +17,12 @@ import {
   drawerWithFormSource,
   drawerSource,
 } from "./drawer.source";
+import { label } from "./drawer.fixtures";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
+import { useTranslation } from "@/lib/i18n";
+import drawerTranslations from "@shared/content/drawer/translations.json";
 
 import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
@@ -66,15 +69,20 @@ export const WithForm: Story = {
       },
     },
   },
-  render: () => (
+  render: () => {
+    // `render` É componente, e o hook vale aqui; a `play` lê o mesmo dicionário
+    // por `label()`. Descrição, ação primária e os VALORES de exemplo seguem
+    // literais: o conteúdo compartilhado não os nomeia.
+    const { t } = useTranslation(drawerTranslations);
+    return (
     <div style={wrapperStyle}>
       <Drawer defaultOpen>
         <DrawerTrigger asChild>
-          <Button variant="outline">Editar perfil</Button>
+          <Button variant="outline">{t("demonstration.labels.trigger")}</Button>
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
+            <DrawerTitle>{t("demonstration.labels.title")}</DrawerTitle>
             <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
           </DrawerHeader>
           <DrawerBody>
@@ -85,11 +93,11 @@ export const WithForm: Story = {
               onSubmit={(event) => event.preventDefault()}
             >
               <div className="nds-grid" data-spacing="xs">
-                <Label htmlFor="drawer-name">Nome</Label>
+                <Label htmlFor="drawer-name">{t("demonstration.labels.fieldName")}</Label>
                 <Input id="drawer-name" defaultValue="Juliana" />
               </div>
               <div className="nds-grid" data-spacing="xs">
-                <Label htmlFor="drawer-email">E-mail</Label>
+                <Label htmlFor="drawer-email">{t("demonstration.labels.fieldEmail")}</Label>
                 <Input id="drawer-email" type="email" defaultValue="juliana@example.com" />
               </div>
             </form>
@@ -103,7 +111,7 @@ export const WithForm: Story = {
           */}
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">{t("demonstration.labels.cancel")}</Button>
             </DrawerClose>
             <Button type="submit" form="drawer-form">
               Confirmar
@@ -112,18 +120,19 @@ export const WithForm: Story = {
         </DrawerContent>
       </Drawer>
     </div>
-  ),
+    );
+  },
   play: async ({ step }) => {
     const panel = await waitForPortal("dialog");
     const inside = within(panel);
 
     await step("O painel carrega nome, descrição e os campos do formulário", async () => {
-      await expect(panel).toHaveAccessibleName("Editar perfil");
+      await expect(panel).toHaveAccessibleName(label("demonstration.labels.title"));
       await expect(panel).toHaveAccessibleDescription("Atualize seu nome e e-mail.");
       // Os campos são achados pelo RÓTULO: se `htmlFor`/`id` não casassem, o
       // input ficaria sem nome acessível e a busca falharia.
-      await expect(inside.getByLabelText(/Nome/i)).toBeInTheDocument();
-      await expect(inside.getByLabelText(/E-mail/i)).toBeInTheDocument();
+      await expect(inside.getByLabelText(label("demonstration.labels.fieldName"))).toBeInTheDocument();
+      await expect(inside.getByLabelText(label("demonstration.labels.fieldEmail"))).toBeInTheDocument();
     });
 
     await step("O rodapé oferece confirmar e cancelar", async () => {
@@ -131,7 +140,7 @@ export const WithForm: Story = {
       await expect(footer).not.toBeNull();
       const names = within(footer).getAllByRole("button").map((b) => b.textContent?.trim());
       await expect(names).toContain("Confirmar");
-      await expect(names).toContain("Cancelar");
+      await expect(names).toContain(label("demonstration.labels.cancel"));
     });
 
     await step("Confirmar submete o formulário do corpo", async () => {
@@ -158,7 +167,11 @@ export const WithConfirmation: Story = {
       },
     },
   },
-  render: () => (
+  render: () => {
+    // Só a saída sai do conteúdo compartilhado: título, aviso e o verbo da ação
+    // destrutiva desta composição não têm chave — ver o relato da rodada.
+    const { t } = useTranslation(drawerTranslations);
+    return (
     <div style={wrapperStyle}>
       <Drawer defaultOpen>
         <DrawerTrigger asChild>
@@ -192,14 +205,15 @@ export const WithConfirmation: Story = {
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose asChild>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">{t("demonstration.labels.cancel")}</Button>
             </DrawerClose>
             <Button variant="destructive">Remover</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </div>
-  ),
+    );
+  },
   play: async ({ step }) => {
     const panel = await waitForPortal("dialog");
     const inside = within(panel);
@@ -212,14 +226,14 @@ export const WithConfirmation: Story = {
     await step("A ação principal carrega a variante destrutiva", async () => {
       const destrutivo = inside.getByRole("button", { name: /^Remover$/i });
       await expect(destrutivo).toHaveClass(/nds-button-destructive/);
-      const cancelar = inside.getByRole("button", { name: /Cancelar/i });
+      const cancelar = inside.getByRole("button", { name: label("demonstration.labels.cancel") });
       await expect(cancelar).toHaveClass(/nds-button-outline/);
     });
 
     await step("O foco abre no cancelar, não na ação destrutiva", async () => {
       // O ELEMENTO, não a mera presença de foco: um painel que foca a si mesmo
       // também tem foco dentro, e é justamente o que esta story recusa.
-      const cancelar = inside.getByRole("button", { name: /^Cancelar$/i });
+      const cancelar = inside.getByRole("button", { name: label("demonstration.labels.cancel") });
       const destrutivo = inside.getByRole("button", { name: /^Remover$/i });
       await waitFor(() => expect(cancelar).toHaveFocus());
       await expect(destrutivo).not.toHaveFocus();
