@@ -371,7 +371,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes do Drawer: <code>drawer_open</code> e <code>drawer_close</code>. Payload obrigatório: <code>component='drawer'</code>, <code>location</code> (contexto da página), <code>label</code> (título do drawer). Disparar via callback de mudança no componente consumidor."
+      "description": "Eventos relevantes do Drawer: <code>drawer_open</code> e <code>drawer_close</code>. Payload obrigatório: <code>component='drawer'</code>, <code>location</code> (contexto da página), <code>label</code> (a direção do painel — <code>bottom</code>, <code>right</code>, <code>left</code> ou <code>top</code> —, nunca o título traduzido, que partiria a série por idioma). O <code>drawer_close</code> leva ainda <code>reason</code>, com o vocabulário do design system: <code>escape</code>, <code>overlay</code>, <code>close-button</code> ou <code>api</code>. Disparar via callback de mudança no componente consumidor."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -855,7 +855,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant Drawer events: <code>drawer_open</code> and <code>drawer_close</code>. Required payload: <code>component='drawer'</code>, <code>location</code> (page context), <code>label</code> (drawer title). Dispatch via the change callback in the consumer component."
+      "description": "Relevant Drawer events: <code>drawer_open</code> and <code>drawer_close</code>. Required payload: <code>component='drawer'</code>, <code>location</code> (page context), <code>label</code> (the panel direction — <code>bottom</code>, <code>right</code>, <code>left</code> or <code>top</code> —, never the translated title, which would split the series by language). <code>drawer_close</code> also carries <code>reason</code>, in the design system vocabulary: <code>escape</code>, <code>overlay</code>, <code>close-button</code> or <code>api</code>. Fire it from the consuming component change callback."
     },
     "testes": {
       "title": "Test Criteria",
@@ -1339,7 +1339,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes del Drawer: <code>drawer_open</code> y <code>drawer_close</code>. Payload obligatorio: <code>component='drawer'</code>, <code>location</code> (contexto de página), <code>label</code> (título del drawer). Dispara vía el callback de cambio en el componente consumidor."
+      "description": "Eventos relevantes del Drawer: <code>drawer_open</code> y <code>drawer_close</code>. Payload obligatorio: <code>component='drawer'</code>, <code>location</code> (contexto de página), <code>label</code> (la dirección del panel — <code>bottom</code>, <code>right</code>, <code>left</code> o <code>top</code> —, nunca el título traducido, que partiría la serie por idioma). <code>drawer_close</code> lleva además <code>reason</code>, con el vocabulario del design system: <code>escape</code>, <code>overlay</code>, <code>close-button</code> o <code>api</code>. Dispararlo desde el callback de cambio del componente consumidor."
     },
     "testes": {
       "title": "Criterios de Test",
