@@ -104,6 +104,7 @@ Começando pela categoria Overlay, na ordem em que a revisão serial fechou cada
 | Tooltip | [tooltip.md](tooltip.md) | 2026-09-06 |
 | Sheet | [sheet.md](sheet.md) | 2026-09-06 |
 | DropdownMenu | [dropdown-menu.md](dropdown-menu.md) | 2026-09-07 |
+| Drawer | [drawer.md](drawer.md) | 2026-09-07 |
 
 O ContextMenu **não terá PRD próprio**: ele não tem folha, e o componente inteiro
 é montado com as classes do DropdownMenu — está registrado como decisão D9 lá.
@@ -122,5 +123,5 @@ decisões são medidas do mesmo jeito — e sim de expectativa: aqui é normal q
 linha mude, e a forma de mudar é a mesma de sempre, movendo-a para o histórico
 com a nova data e a nova medição.
 
-O Drawer fica de fora por ora: ele está sendo tocado enquanto isto é escrito, e
-PRD de árvore em movimento registra a medição, não o trabalho.
+Com o Drawer, a categoria Overlay inteira tem registro: os seis revisados acima e
+os três de pré-revisão aqui.
