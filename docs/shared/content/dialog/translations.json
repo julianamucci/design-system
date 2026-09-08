@@ -49,7 +49,7 @@
         "item1": "Use para formulários modais, edição de recursos ou conteúdo informativo que precisa de atenção temporária.",
         "item2": "Sempre inclua <code>DialogTitle</code> — base para <code>aria-labelledby</code> e leitura por leitores de tela.",
         "item3": "Inclua <code>DialogDescription</code> sempre que houver contexto adicional — alimenta <code>aria-describedby</code>.",
-        "item4": "Para conteúdo longo, deixe o corpo rolar por dentro: altura máxima no corpo mais rolagem no eixo vertical, com cabeçalho e rodapé fixos.",
+        "item4": "Para conteúdo longo há duas rotas, e a página demonstra as duas: o corpo rola por dentro, com cabeçalho e rodapé fixos; ou o diálogo inteiro rola dentro do véu, para quando o conteúdo é uma leitura contínua e fixar o cabeçalho rouba altura.",
         "item5": "Para confirmação destrutiva (excluir, cancelar, encerrar), use <code>AlertDialog</code> — Dialog não é o componente certo.",
         "item6": "Em mobile com formulários longos, considere <code>Sheet</code> ou <code>Drawer</code> em vez de Dialog."
       },
@@ -123,7 +123,7 @@
             "bad": "\"Voltar\", \"Desistir\", \"Fechar agora\""
           },
           "srOnly": {
-            "name": "Botão Close (X) — texto sr-only",
+            "name": "Botão de fechar (X) — texto só para leitor de tela",
             "format": "Verbo no infinitivo · 1 palavra",
             "good": "\"Fechar\"",
             "bad": "\"X\", \"Sair daqui\", \"Cancelar\""
@@ -215,7 +215,7 @@
       "opening": {
         "label": "Abrindo",
         "trigger": "Transição de fechado para aberto",
-        "behavior": "<code>data-state=open</code>, animação <code>fade-in zoom-in-95</code> em 100ms"
+        "behavior": "<code>data-state=open</code> — o véu aparece e o painel cresce a partir de 95%, em <code>--duration-base</code>."
       },
       "open": {
         "label": "Aberto",
@@ -225,7 +225,7 @@
       "closing": {
         "label": "Fechando",
         "trigger": "Transição de aberto para fechado",
-        "behavior": "<code>data-state=closed</code>, animação <code>fade-out zoom-out-95</code>; foco retorna ao trigger"
+        "behavior": "<code>data-state=closed</code> — o painel encolhe e o véu some, em <code>--duration-fast</code>, que é mais curta que a entrada; o foco retorna ao gatilho."
       },
       "withCloseButtonHidden": {
         "label": "Sem botão Close",
@@ -270,8 +270,8 @@
         "border": "Separador superior do DialogFooter",
         "radius": "Border radius do DialogContent",
         "overlay": "Cor do véu sobre a página enquanto o modal está aberto",
-        "zIndex": "z-index 50 no Overlay e Content",
-        "duration": "Duração de 100ms na animação de entrada e saída"
+        "zIndex": "Véu em --z-modal-backdrop, painel em --z-modal",
+        "duration": "Entrada em --duration-base, saída em --duration-fast"
       },
       "customizationTitle": "Como personalizar via tema:"
     },
@@ -281,10 +281,10 @@
       "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.2 AA: 2.1.2 (sem armadilhas de teclado), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — sinaliza ao leitor que o conteúdo fora do diálogo está inativo.",
       "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente a partir de <code>DialogTitle</code> e <code>DialogDescription</code>. Title é obrigatório; Description é altamente recomendado.",
-      "item3": "<strong>Focus trap</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. Foco inicial vai para o primeiro elemento focável.",
+      "item3": "<strong>Foco preso</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. O foco inicial vai para o primeiro elemento focável; na rota de rolagem, em que o corpo inteiro rola, ele vai para o painel, que é quem recebe a rolagem.",
       "item4": "<strong>Retorno de foco</strong> — ao fechar, o foco volta ao trigger que abriu o diálogo.",
       "item5": "<strong>Escape e clique no overlay</strong> — fecham o diálogo sem disparar ações do Footer. Body scroll-lock é restaurado.",
-      "item6": "<strong>Botão Close</strong> — tem <code>&lt;span class=\"sr-only\"&gt;Fechar&lt;/span&gt;</code> para leitores de tela."
+      "item6": "<strong>Botão de fechar</strong> — carrega um rótulo visível só para leitor de tela, na classe <code>.nds-sr-only</code>."
     },
     "keyboard": {
       "escape": "Fecha o diálogo. Foco retorna ao trigger.",
@@ -307,7 +307,7 @@
       "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
-      "alertDialog": "Para confirmação de ações destrutivas — usa <code>role=\"alertdialog\"</code>, foco inicial em Cancel e Cancel obrigatório.",
+      "alertDialog": "Para confirmação de ação destrutiva. Três coisas o separam deste: <code>role=\"alertdialog\"</code>, que faz o leitor de tela anunciar com urgência; clique no véu NÃO fecha; e o foco entra no cancelar, não no primeiro focável.",
       "sheet": "Painel lateral em mobile ou para formulários longos. Mantém contexto da tela.",
       "popover": "Conteúdo flutuante não modal, para informações complementares ou menus contextuais.",
       "form": "Combinação natural com Dialog — formulários modais usam Form como conteúdo do Body.",
@@ -315,7 +315,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "Por padrão, <code>DialogContent</code> renderiza em Portal — isola de overflow e transform de pais, mas pode causar conflitos com z-index custom. Use <code>className=\"z-[60]\"</code> se precisar elevar.",
+      "tip1": "O conteúdo do diálogo é renderizado em portal, o que o isola de <code>overflow</code> e <code>transform</code> de ancestrais. Se algo da sua aplicação precisar aparecer ACIMA dele, use um valor maior que <code>--z-modal</code> — o painel já está na camada de modal, não numa camada baixa.",
       "tip2": "Para fechar Dialog após submit assíncrono, controle <code>open</code> via state e feche apenas em caso de sucesso. Em erro, mantenha aberto e exiba feedback inline.",
       "tip3": "Conteúdo mais alto que a janela pede uma de duas rotas. Cabeçalho e rodapé parados: dê ao corpo uma altura máxima relativa à janela e rolagem no eixo vertical, e o painel continua centralizado e fixo. Painel inteiro rolando: ponha o painel no fluxo do overlay e deixe o overlay ser a área de rolagem — aí o cabeçalho sobe junto com o conteúdo. A primeira serve a formulário e confirmação; a segunda, a texto que se lê de ponta a ponta.",
       "tip4": "Evite aninhar Dialog dentro de DropdownMenu ou Popover — o focus trap pode conflitar. Feche o menu antes de abrir o diálogo."
@@ -524,7 +524,7 @@
         "item1": "Use for modal forms, resource editing, or informational content needing temporary attention.",
         "item2": "Always include <code>DialogTitle</code> — it powers <code>aria-labelledby</code> and screen reader announcements.",
         "item3": "Include <code>DialogDescription</code> whenever there is additional context — it powers <code>aria-describedby</code>.",
-        "item4": "For long content, let the body scroll internally: a max height on the body plus vertical scrolling, with header and footer fixed.",
+        "item4": "Long content has two routes, and the page demonstrates both: the body scrolls inside, with header and footer fixed; or the whole dialog scrolls inside the overlay, for when the content is a continuous read and pinning the header steals height.",
         "item5": "For destructive confirmation (delete, cancel, terminate), use <code>AlertDialog</code> — Dialog is not the right component.",
         "item6": "On mobile with long forms, consider <code>Sheet</code> or <code>Drawer</code> instead of Dialog."
       },
@@ -598,7 +598,7 @@
             "bad": "\"Back\", \"Abort\", \"Close now\""
           },
           "srOnly": {
-            "name": "Close button (X) — sr-only text",
+            "name": "Close button (X) — screen-reader-only text",
             "format": "Verb in infinitive · 1 word",
             "good": "\"Close\"",
             "bad": "\"X\", \"Get out of here\", \"Cancel\""
@@ -690,7 +690,7 @@
       "opening": {
         "label": "Opening",
         "trigger": "Transition from closed to open",
-        "behavior": "<code>data-state=open</code>, <code>fade-in zoom-in-95</code> animation in 100ms"
+        "behavior": "<code>data-state=open</code> — the overlay appears and the panel grows from 95%, over <code>--duration-base</code>."
       },
       "open": {
         "label": "Open",
@@ -700,7 +700,7 @@
       "closing": {
         "label": "Closing",
         "trigger": "Transition from open to closed",
-        "behavior": "<code>data-state=closed</code>, <code>fade-out zoom-out-95</code> animation; focus returns to trigger"
+        "behavior": "<code>data-state=closed</code> — the panel shrinks and the overlay fades, over <code>--duration-fast</code>, shorter than the entrance; focus returns to the trigger."
       },
       "withCloseButtonHidden": {
         "label": "Without Close button",
@@ -745,8 +745,8 @@
         "border": "DialogFooter top separator",
         "radius": "DialogContent border radius",
         "overlay": "Colour of the veil over the page while the modal is open",
-        "zIndex": "z-index 50 on Overlay and Content",
-        "duration": "100ms duration for enter and exit animations"
+        "zIndex": "Overlay on --z-modal-backdrop, panel on --z-modal",
+        "duration": "Entrance on --duration-base, exit on --duration-fast"
       },
       "customizationTitle": "How to customize via theme:"
     },
@@ -756,10 +756,10 @@
       "summary": "Dialog uses <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> with automatic focus trap and focus return to trigger. Meets WCAG 2.2 AA: 2.1.2 (no keyboard trap), 2.4.3 (focus order), 4.1.2 (name, role, value).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — signals to the reader that content outside the dialog is inert.",
       "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically from <code>DialogTitle</code> and <code>DialogDescription</code>. Title is required; Description is highly recommended.",
-      "item3": "<strong>Focus trap</strong> — Tab and Shift+Tab navigate only within the dialog. Initial focus goes to the first focusable element.",
+      "item3": "<strong>Focus is trapped</strong> — Tab and Shift+Tab move only inside the dialog. Initial focus goes to the first focusable element; on the scrolling route, where the whole body scrolls, it goes to the panel, which is what receives the scroll.",
       "item4": "<strong>Focus return</strong> — when closed, focus returns to the trigger that opened the dialog.",
       "item5": "<strong>Escape and overlay click</strong> — close the dialog without firing Footer actions. Body scroll-lock is restored.",
-      "item6": "<strong>Close button</strong> — has <code>&lt;span class=\"sr-only\"&gt;Fechar&lt;/span&gt;</code> for screen readers."
+      "item6": "<strong>Close button</strong> — carries a label visible only to screen readers, in the <code>.nds-sr-only</code> class."
     },
     "keyboard": {
       "escape": "Closes the dialog. Focus returns to trigger.",
@@ -782,7 +782,7 @@
       "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
-      "alertDialog": "For destructive action confirmation — uses <code>role=\"alertdialog\"</code>, initial focus on Cancel, and required Cancel.",
+      "alertDialog": "For confirming a destructive action. Three things separate it from this one: <code>role=\"alertdialog\"</code>, which makes the screen reader announce with urgency; clicking the overlay does NOT close it; and focus enters the cancel button, not the first focusable.",
       "sheet": "Side panel on mobile or for long forms. Keeps screen context.",
       "popover": "Non-modal floating content for complementary info or context menus.",
       "form": "Natural pairing with Dialog — modal forms use Form as Body content.",
@@ -790,7 +790,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "By default, <code>DialogContent</code> renders in a Portal — isolates from parent overflow and transform but may conflict with custom z-index. Use <code>className=\"z-[60]\"</code> if you need to raise it.",
+      "tip1": "The dialog content renders in a portal, which isolates it from ancestor <code>overflow</code> and <code>transform</code>. If something in your application must appear ABOVE it, use a value higher than <code>--z-modal</code> — the panel already sits on the modal layer, not on a low one.",
       "tip2": "To close Dialog after async submit, control <code>open</code> via state and close only on success. On error, keep open and show inline feedback.",
       "tip3": "Content taller than the window calls for one of two routes. Header and footer fixed: give the body a max height relative to the window plus vertical scrolling, and the panel stays centred and fixed. Whole panel scrolling: put the panel in the overlay flow and let the overlay be the scrolling area — the header then scrolls away with the content. The first suits forms and confirmations; the second, text read end to end.",
       "tip4": "Avoid nesting Dialog inside DropdownMenu or Popover — focus trap may conflict. Close the menu before opening the dialog."
@@ -999,7 +999,7 @@
         "item1": "Úsalo para formularios modales, edición de recursos o contenido informativo que requiera atención temporal.",
         "item2": "Siempre incluye <code>DialogTitle</code> — base para <code>aria-labelledby</code> y lectura por lectores de pantalla.",
         "item3": "Incluye <code>DialogDescription</code> siempre que haya contexto adicional — alimenta <code>aria-describedby</code>.",
-        "item4": "Para contenido largo, deja que el cuerpo se desplace por dentro: altura máxima en el cuerpo más desplazamiento vertical, con encabezado y pie fijos.",
+        "item4": "Para contenido largo hay dos rutas, y la página demuestra las dos: el cuerpo se desplaza por dentro, con encabezado y pie fijos; o el diálogo entero se desplaza dentro del velo, para cuando el contenido es una lectura continua y fijar el encabezado roba altura.",
         "item5": "Para confirmación destructiva (eliminar, cancelar, finalizar), usa <code>AlertDialog</code> — Dialog no es el componente correcto.",
         "item6": "En mobile con formularios largos, considera <code>Sheet</code> o <code>Drawer</code> en lugar de Dialog."
       },
@@ -1073,7 +1073,7 @@
             "bad": "\"Volver\", \"Abortar\", \"Cerrar ahora\""
           },
           "srOnly": {
-            "name": "Botón Close (X) — texto sr-only",
+            "name": "Botón de cerrar (X) — texto solo para lector de pantalla",
             "format": "Verbo en infinitivo · 1 palabra",
             "good": "\"Cerrar\"",
             "bad": "\"X\", \"Salir de aquí\", \"Cancelar\""
@@ -1165,7 +1165,7 @@
       "opening": {
         "label": "Abriendo",
         "trigger": "Transición de cerrado a abierto",
-        "behavior": "<code>data-state=open</code>, animación <code>fade-in zoom-in-95</code> en 100ms"
+        "behavior": "<code>data-state=open</code> — el velo aparece y el panel crece desde el 95%, en <code>--duration-base</code>."
       },
       "open": {
         "label": "Abierto",
@@ -1175,7 +1175,7 @@
       "closing": {
         "label": "Cerrando",
         "trigger": "Transición de abierto a cerrado",
-        "behavior": "<code>data-state=closed</code>, animación <code>fade-out zoom-out-95</code>; el foco vuelve al trigger"
+        "behavior": "<code>data-state=closed</code> — el panel se encoge y el velo desaparece, en <code>--duration-fast</code>, más corta que la entrada; el foco vuelve al disparador."
       },
       "withCloseButtonHidden": {
         "label": "Sin botón Close",
@@ -1220,8 +1220,8 @@
         "border": "Separador superior del DialogFooter",
         "radius": "Border radius del DialogContent",
         "overlay": "Color del velo sobre la página mientras el modal está abierto",
-        "zIndex": "z-index 50 en Overlay y Content",
-        "duration": "Duración de 100ms en la animación de entrada y salida"
+        "zIndex": "Velo en --z-modal-backdrop, panel en --z-modal",
+        "duration": "Entrada en --duration-base, salida en --duration-fast"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },
@@ -1231,10 +1231,10 @@
       "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.2 AA: 2.1.2 (sin trampas de teclado), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — señala al lector que el contenido fuera del diálogo está inerte.",
       "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente desde <code>DialogTitle</code> y <code>DialogDescription</code>. Title es obligatorio; Description es muy recomendado.",
-      "item3": "<strong>Focus trap</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. El foco inicial va al primer elemento focalizable.",
+      "item3": "<strong>Foco atrapado</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. El foco inicial va al primer elemento enfocable; en la ruta de scroll, donde el cuerpo entero se desplaza, va al panel, que es quien recibe el scroll.",
       "item4": "<strong>Retorno de foco</strong> — al cerrar, el foco vuelve al trigger que abrió el diálogo.",
       "item5": "<strong>Escape y clic en overlay</strong> — cierran el diálogo sin disparar acciones del Footer. El scroll-lock del body se restaura.",
-      "item6": "<strong>Botón Close</strong> — tiene <code>&lt;span class=\"sr-only\"&gt;Fechar&lt;/span&gt;</code> para lectores de pantalla."
+      "item6": "<strong>Botón de cerrar</strong> — lleva una etiqueta visible solo para lectores de pantalla, en la clase <code>.nds-sr-only</code>."
     },
     "keyboard": {
       "escape": "Cierra el diálogo. El foco vuelve al trigger.",
@@ -1257,7 +1257,7 @@
       "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
-      "alertDialog": "Para confirmar acciones destructivas — usa <code>role=\"alertdialog\"</code>, foco inicial en Cancel y Cancel obligatorio.",
+      "alertDialog": "Para confirmar una acción destructiva. Tres cosas lo separan de este: <code>role=\"alertdialog\"</code>, que hace que el lector de pantalla anuncie con urgencia; el clic en el velo NO cierra; y el foco entra en cancelar, no en el primer enfocable.",
       "sheet": "Panel lateral en mobile o para formularios largos. Mantiene el contexto de la pantalla.",
       "popover": "Contenido flotante no modal, para información complementaria o menús contextuales.",
       "form": "Combinación natural con Dialog — los formularios modales usan Form como contenido del Body.",
@@ -1265,7 +1265,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "Por defecto, <code>DialogContent</code> renderiza en Portal — aísla del overflow y transform de los padres, pero puede chocar con z-index custom. Usa <code>className=\"z-[60]\"</code> si necesitas elevarlo.",
+      "tip1": "El contenido del diálogo se renderiza en portal, lo que lo aísla del <code>overflow</code> y el <code>transform</code> de sus ancestros. Si algo de tu aplicación debe aparecer POR ENCIMA, usa un valor mayor que <code>--z-modal</code> — el panel ya está en la capa de modal, no en una capa baja.",
       "tip2": "Para cerrar Dialog tras submit asíncrono, controla <code>open</code> vía state y cierra solo en caso de éxito. En error, mantén abierto y muestra feedback inline.",
       "tip3": "El contenido más alto que la ventana pide una de dos rutas. Encabezado y pie fijos: dale al cuerpo una altura máxima relativa a la ventana y desplazamiento vertical, y el panel sigue centrado y fijo. Panel entero desplazándose: pon el panel en el flujo del overlay y deja que el overlay sea el área de desplazamiento — así el encabezado sube junto con el contenido. La primera sirve a formularios y confirmaciones; la segunda, a texto que se lee de principio a fin.",
       "tip4": "Evita anidar Dialog dentro de DropdownMenu o Popover — el focus trap puede chocar. Cierra el menú antes de abrir el diálogo."
