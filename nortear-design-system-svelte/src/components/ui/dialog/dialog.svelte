@@ -19,24 +19,18 @@
 	 * fecha, porque a decisão é crítica e exige escolha explícita. Escape fecha
 	 * nos dois.
 	 *
-	 * ─── Conteúdo mais alto que a janela: as DUAS rotas ─────────────────────
+	 * ─── Conteúdo mais alto que a janela: UMA saída ────────────────────────
 	 *
-	 * Rota A — CORPO ROLÁVEL. O painel fica parado e centralizado, o cabeçalho
-	 * e o rodapé não saem da tela, e a rolagem acontece dentro do corpo. Nada
-	 * muda no componente: quem compõe pendura `.nds-dialog-body-scroll` no
-	 * elemento do corpo, com `tabindex="0"`, `role="group"` e nome.
+	 * CORPO ROLÁVEL. O painel fica parado e centralizado, o cabeçalho e o rodapé
+	 * não saem da tela, e a rolagem acontece dentro do corpo. Nada muda no
+	 * componente: quem compõe pendura `.nds-dialog-body-scroll` no elemento do
+	 * corpo, com `tabindex="0"`, `role="group"` e nome.
 	 *
-	 * Rota B — OVERLAY ROLANDO. O painel entra no FLUXO do overlay, e quem
-	 * rola é o overlay: o cabeçalho sobe junto com o conteúdo e sai da tela.
-	 * Serve para conteúdo que se lê de ponta a ponta (um contrato, um artigo),
-	 * em que fixar o cabeçalho rouba altura útil. Liga-se com `scroll` no
-	 * Content, que põe `.nds-dialog-overlay-scroll` e
-	 * `.nds-dialog-content-scroll` — o par que `dialog.css` declara para as
-	 * cinco stacks.
-	 *
-	 * A FORMA da rota B diverge por stack, e isso é divergência de API de
-	 * framework: não há fonte de verdade e não se "alinha". Aqui é uma prop
-	 * booleana do Content, na mesma família de `showCloseButton`.
+	 * Houve uma segunda rota — o painel entrava no FLUXO do overlay e a PÁGINA
+	 * rolava —, retirada em 2026-09-08: modal que rola junto com a página desfaz
+	 * a promessa de interromper, e duas saídas opostas para o mesmo problema
+	 * obrigam cada tela a escolher sem critério. Saíram a prop `scroll`, o ramo
+	 * que fazia o painel virar filho do overlay e o par de classes que a pintava.
 	 */
 	import { Dialog as DialogPrimitive } from "bits-ui";
 

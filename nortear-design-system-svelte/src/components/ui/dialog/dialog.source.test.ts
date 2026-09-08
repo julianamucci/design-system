@@ -3,7 +3,6 @@ import {
   dialogActionDestructiveSource,
   dialogWithFormSource,
   dialogWithScrollSource,
-  dialogOverlayScrollSource,
   dialogConfirmarEmailSource,
   dialogEditarPerfilSource,
   dialogPreviaDeMidiaSource,
@@ -97,6 +96,24 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('onsubmit={salvar}');
   });
 
+  it('no snippet com formulário o rodapé fica DENTRO do form (PRD D10)', () => {
+    // `type="submit"` fora do `<form>` é botão inerte, e o snippet é o que se
+    // copia. A asserção é de ORDEM — abertura do form, rodapé, fechamento —, e
+    // não a presença do atributo: o atributo sozinho é o que passava enquanto o
+    // rodapé era irmão do formulário.
+    const saida = dialogWithFormSource();
+    const formOpensAt = saida.indexOf('<form ');
+    const footerAt = saida.indexOf('<DialogFooter>');
+    const formClosesAt = saida.indexOf('</form>');
+    expect(formOpensAt).toBeGreaterThan(-1);
+    expect(footerAt).toBeGreaterThan(formOpensAt);
+    expect(formClosesAt).toBeGreaterThan(footerAt);
+    expect(saida).toContain('<Button type="submit">Salvar alterações</Button>');
+    // Dentro de um form o padrão do HTML é `submit`: o Cancelar precisa dizer
+    // que é `button`, ou submete antes de fechar.
+    expect(saida).toContain('<Button type="button" variant="outline" {...props}>Cancelar</Button>');
+  });
+
   it('a composição com rolagem marca a região rolável como alcançável e nomeada', () => {
     const saida = dialogWithScrollSource();
     expect(saida).toContain('nds-dialog-body-scroll');
@@ -104,19 +121,24 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('aria-label="Termos de uso"');
   });
 
-  it('as duas rotas de rolagem ensinam composições DIFERENTES', () => {
-    // O defeito que esta guarda existe para pegar já aconteceu: as duas rotas
-    // circularam sob o mesmo nome e três stacks mostravam uma, duas mostravam a
-    // outra. Comparadas em PAR, o que separa é o markup.
-    const rotaA = dialogWithScrollSource();
-    const rotaB = dialogOverlayScrollSource();
-
-    expect(rotaB).toContain('<DialogContent scroll>');
-    expect(rotaB).not.toContain('nds-dialog-body-scroll');
-    expect(rotaB).not.toContain('tabindex="0"');
-
-    expect(rotaA).toContain('nds-dialog-body-scroll');
-    expect(rotaA).not.toContain('<DialogContent scroll');
+  it('não há rota de overlay rolando: nenhum snippet liga a prop `scroll`', () => {
+    // A rota foi RETIRADA em 2026-09-08 (PRD D7), e o snippet é o que se copia:
+    // um `<DialogContent scroll>` publicado aqui ensinaria uma prop que o
+    // primitivo não tem mais. A guarda é sobre a AUSÊNCIA porque foi por
+    // sobrevivência silenciosa que as duas rotas circularam sob o mesmo nome.
+    const todos = [
+      dialogSource(),
+      dialogWithFormSource(),
+      dialogWithScrollSource(),
+      dialogNoFooterSource(),
+      dialogCustomCloseSource(),
+      dialogActionDestructiveSource(),
+    ];
+    for (const saida of todos) {
+      expect(saida).not.toContain('DialogContent scroll');
+      expect(saida).not.toContain('nds-dialog-overlay-scroll');
+      expect(saida).not.toContain('nds-dialog-content-scroll');
+    }
   });
 
   it('a composição sem rodapé não importa nem escreve as peças de rodapé', () => {

@@ -6,7 +6,6 @@ import {
   dialogActionDestructiveSource,
   dialogWithFormSource,
   dialogWithScrollSource,
-  dialogOverlayScrollSource,
   dialogNoFooterSource,
   dialogCustomCloseSource,
   dialogConfirmarEmailSource,
@@ -151,6 +150,24 @@ export const WithForm: Story = {
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector('#dialog-email'));
     });
+
+    await step('A primária é submit DENTRO do form, com o rodapé junto (D10)', async () => {
+      // Fora do `<form>` o `type="submit"` é botão inerte: não submete, o Enter
+      // num campo não dispara nada, e nada na tela denuncia. A asserção é a
+      // RELAÇÃO de contenção, e não a presença do atributo — o atributo sozinho
+      // é exatamente o que passava enquanto o defeito existia.
+      const form = p.querySelector<HTMLFormElement>('form')!;
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(form.contains(footer)).toBe(true);
+
+      const submit = footer.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      await expect(submit).toBeInTheDocument();
+      await expect(submit.form).toBe(form);
+      // O Cancelar precisa ser `type="button"`: dentro de um form o padrão do
+      // HTML é `submit`, e ele submeteria antes de fechar.
+      const cancelar = footer.querySelector<HTMLButtonElement>('button:not([type="submit"])')!;
+      await expect(cancelar.type).toBe('button');
+    });
   },
 };
 
@@ -194,71 +211,6 @@ export const WithScrollContent: Story = {
       const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
       await expect(body).toHaveAttribute('tabindex', '0');
       await expect(body).toHaveAccessibleName();
-    });
-  },
-};
-
-export const WithScrollingOverlay: Story = {
-  parameters: {
-    covers: ['visual.item6'],
-    docs: {
-      // A OUTRA rota, e por isso story própria: reusar o nome da de cima é
-      // exatamente como as duas circularam sob o mesmo rótulo.
-      source: { transform: dialogOverlayScrollSource },
-      description: {
-        story:
-          'Painel no fluxo do overlay, que passa a ser a área de rolagem: o cabeçalho sobe junto com o conteúdo.',
-      },
-    },
-  },
-  args: {
-    open: true,
-    variant: 'withScrollingOverlay',
-    triggerLabel: t('demonstration.labels.contractTrigger'),
-    title: t('demonstration.labels.contractTitle'),
-    description: t('demonstration.labels.contractDescription'),
-    actionLabel: t('demonstration.labels.accept'),
-    cancelLabel: t('demonstration.labels.decline'),
-  },
-  play: async ({ step }) => {
-    const p = await waitForOpen();
-
-    await step('Quem rola é o overlay, e o painel está DENTRO dele', async () => {
-      // Comportamento, e não nome de classe: a rota só existe se o overlay
-      // tiver o que rolar, e ele só tem se o painel for filho dele. Medido
-      // contra a folha compartilhada, com os dois como irmãos o `scrollHeight`
-      // do overlay é igual ao `clientHeight` — a classe chega e não pinta.
-      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
-      await expect(ov.contains(p)).toBe(true);
-      await expect(getComputedStyle(ov).overflowY).toBe('auto');
-      await expect(ov.scrollHeight).toBeGreaterThan(ov.clientHeight);
-    });
-
-    await step('O painel entra no fluxo, e o cabeçalho sobe junto', async () => {
-      // O que separa esta rota da outra: lá o cabeçalho fica parado. Aqui ele
-      // se move com a rolagem do overlay, e é isso que a asserção mede.
-      await expect(getComputedStyle(p).position).toBe('relative');
-      const header = p.querySelector<HTMLElement>('[data-slot="dialog-header"]')!;
-      const ov = document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')!;
-      // A leitura de referência sai de uma posição de rolagem CONHECIDA, e não
-      // da que a página tiver no momento. Ao abrir, o foco automático do painel
-      // rola o overlay até o primeiro focável, e a story chegava aqui com ele já
-      // descido: medido em 2026-09-03, `antes` valia -727,9px, descer para 120px
-      // SUBIA o cabeçalho de volta para -71,9px, e a asserção — correta —
-      // reprovava por uma precondição que ninguém tinha escrito. Este arquivo
-      // vinha marcado como `(0 test)` nas rodadas anteriores, então o passo
-      // nunca tinha sido executado.
-      ov.scrollTop = 0;
-      const antes = header.getBoundingClientRect().top;
-      ov.scrollTop = 120;
-      await expect(header.getBoundingClientRect().top).toBeLessThan(antes);
-      ov.scrollTop = 0;
-    });
-
-    await step('Não há região rolável aninhada nesta rota', async () => {
-      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
-      await expect(body).not.toHaveClass('nds-dialog-body-scroll');
-      await expect(body).not.toHaveAttribute('tabindex');
     });
   },
 };

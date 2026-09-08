@@ -576,7 +576,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       { name: 'default',               description: stripHtml($tStore('variants.items.default')),               code: codeDefault,     preview: variantDefault     },
       { name: 'withForm',              description: stripHtml($tStore('variants.items.withForm')),              code: codeWithForm,    preview: variantWithForm    },
       { name: 'withScrollContent',     description: stripHtml($tStore('variants.items.withScrollContent')),     code: codeImportWithScroll, preview: variantWithScroll },
-      { name: 'withScrollingOverlay',  description: stripHtml($tStore('variants.items.withScrollingOverlay')), code: $tStore('variants.items.withScrollingOverlayCode'), preview: variantScrollingOverlay },
       { name: 'noFooter',              description: stripHtml($tStore('variants.items.noFooter')),              code: codeNoFooter,    preview: variantNoFooter    },
       { name: 'withDestructiveAction', description: stripHtml($tStore('variants.items.withDestructiveAction')), code: codeDestructive, preview: variantDestructive },
       { name: 'customCloseInFooter',   description: stripHtml($tStore('variants.items.customCloseInFooter')),   code: codeNoCloseBtn,  preview: variantNoClose     },
@@ -685,41 +684,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         >
           {#each Array.from({ length: 10 }) as _, i (i)}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno.</p>
-          {/each}
-        </div>
-        <DialogFooter>
-          <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.decline')}</Button>{/snippet}
-          </DialogClose>
-          <Button>{$tStore('demonstration.labels.accept')}</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  {/snippet}
-  {#snippet variantScrollingOverlay()}
-    <Dialog>
-      <DialogTrigger>
-        {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.contractTrigger')}</Button>{/snippet}
-      </DialogTrigger>
-      <!-- A OUTRA rota: `scroll` põe o painel no fluxo do overlay, e é o
-           overlay que rola — o cabeçalho sobe junto com o conteúdo. Prop
-           booleana, e não componente próprio, porque o Content desta stack já
-           monta o overlay. -->
-      <DialogContent scroll closeLabel={$tStore('demonstration.labels.close')}>
-        <DialogHeader>
-          <DialogTitle>{$tStore('demonstration.labels.contractTitle')}</DialogTitle>
-          <DialogDescription>{$tStore('demonstration.labels.contractDescription')}</DialogDescription>
-        </DialogHeader>
-        <!-- Sem `.nds-dialog-body-scroll`, sem tabindex e sem papel: aqui não há
-             região rolável aninhada para alcançar por teclado, porque o que
-             rola já está na ordem natural da página. -->
-        <div
-          class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
-          data-slot="dialog-body"
-          data-spacing="sm"
-        >
-          {#each Array.from({ length: 16 }) as _, i (i)}
-            <p>Cláusula {i + 1}: o conteúdo rola junto com o cabeçalho, e não dentro de uma caixa própria.</p>
           {/each}
         </div>
         <DialogFooter>

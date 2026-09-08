@@ -24,7 +24,6 @@
     | 'default'
     | 'withForm'
     | 'withScrollContent'
-    | 'withScrollingOverlay'
     | 'noFooter'
     | 'withDestructiveAction'
     | 'customCloseInFooter';
@@ -73,7 +72,7 @@
         <Button variant="outline" {...props}>{triggerLabel}</Button>
       {/snippet}
     </DialogTrigger>
-    <DialogContent {showCloseButton} scroll={variant === 'withScrollingOverlay'}>
+    <DialogContent {showCloseButton}>
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
@@ -87,6 +86,14 @@
           é prop nenhuma — virava atributo inerte e os campos renderizavam
           VAZIOS enquanto a story dizia mostrar dados preenchidos.
         -->
+        <!--
+          O `<form>` envolve o corpo E o RODAPÉ (PRD D10), e a primária é
+          `type="submit"` dentro dele. Fora do form o `submit` é botão inerte:
+          não submete, o Enter num campo não dispara nada, e nada na tela
+          denuncia — o botão continua clicável e com a aparência certa. Por isso
+          esta variante monta o próprio rodapé, em vez de cair no bloco genérico
+          logo abaixo, que o deixaria como IRMÃO do formulário.
+        -->
         <form class="nds-grid" data-spacing="sm" onsubmit={(e) => { e.preventDefault(); onAction?.(); }}>
           <div class="nds-grid" data-spacing="xs">
             <Label for="dialog-name">{t('demonstration.labels.fieldName')}</Label>
@@ -96,6 +103,30 @@
             <Label for="dialog-email">{t('demonstration.labels.fieldEmail')}</Label>
             <Input id="dialog-email" type="email" value="maria@exemplo.com" />
           </div>
+          <DialogFooter>
+            <DialogClose>
+              {#snippet child({ props })}
+                <!--
+                  `type="button"` explícito: dentro de um `<form>` o padrão do
+                  HTML é `submit`, e o Cancelar submeteria o formulário antes de
+                  fechar. Encadear o `onclick` do primitivo preserva o
+                  fechamento, como no bloco genérico abaixo.
+                -->
+                <Button
+                  type="button"
+                  variant="outline"
+                  {...props}
+                  onclick={(event: MouseEvent) => {
+                    (props.onclick as ((e: MouseEvent) => void) | undefined)?.(event);
+                    onCancel?.();
+                  }}
+                >
+                  {cancelLabel}
+                </Button>
+              {/snippet}
+            </DialogClose>
+            <Button type="submit">{actionLabel}</Button>
+          </DialogFooter>
         </form>
       {:else if variant === 'withScrollContent'}
         <!-- Story, e não primitivo — mas story é o que se copia, e esta ensinava
@@ -117,20 +148,6 @@
         >
           {#each Array.from({ length: 14 }) as _, i (i)}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Dialog quando o body excede a height disponível em viewport.</p>
-          {/each}
-        </div>
-      {:else if variant === 'withScrollingOverlay'}
-        <!-- A OUTRA rota: quem rola é o overlay, e o painel entra no fluxo dele.
-             Sem `.nds-dialog-body-scroll`, sem tabindex e sem papel — não há
-             região rolável aninhada para alcançar por teclado, porque o que
-             rola já está na ordem natural da página. -->
-        <div
-          class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
-          data-slot="dialog-body"
-          data-spacing="sm"
-        >
-          {#each Array.from({ length: 20 }) as _, i (i)}
-            <p>Cláusula {i + 1}: o diálogo entra no fluxo do overlay, e o cabeçalho sobe junto com o conteúdo em vez de ficar parado no topo.</p>
           {/each}
         </div>
       {:else if bodyText}
@@ -160,7 +177,7 @@
           <Button variant="outline" onclick={onCancel}>{cancelLabel}</Button>
           <Button onclick={onAction}>{actionLabel}</Button>
         </DialogFooter>
-      {:else if variant !== 'noFooter'}
+      {:else if variant !== 'noFooter' && variant !== 'withForm'}
         <DialogFooter>
           <DialogClose>
             {#snippet child({ props })}
