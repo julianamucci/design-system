@@ -27,6 +27,26 @@ import { cn } from "@/lib/utils"
 const DrawerModalContext = React.createContext(true)
 
 /**
+ * A direção, da raiz para o painel.
+ *
+ * A folha compartilhada posiciona o painel por `[data-direction]` — borda,
+ * cantos, alça, cabeçalho e as transições das quatro direções saem dali. Sem o
+ * atributo, o painel não tem posição nenhuma.
+ *
+ * O atributo é escrito por este wrapper, e não herdado da lib de gesto: o
+ * `data-vaul-drawer-direction` que ela injeta continua no elemento, mas é NOME
+ * DELA, e só três das cinco stacks a carregam. O contrato de markup do design
+ * system não pode ser batizado com o nome de uma dependência que parte das
+ * implementações não tem — quem cumpre o contrato aqui é este wrapper.
+ *
+ * A direção só é conhecida na raiz (é prop dela) e quem precisa do atributo é
+ * o painel; daí o contexto. `"bottom"` é o default da raiz e o da lib.
+ */
+const DrawerDirectionContext = React.createContext<
+  "top" | "bottom" | "left" | "right"
+>("bottom")
+
+/**
  * Fechamento EXPLÍCITO, e só existe quando `dismissible={false}`.
  *
  * O primitivo trata `dismissible={false}` como "não fecha por nada": a guarda
@@ -63,6 +83,7 @@ const DrawerCloseContext = React.createContext<(() => void) | null>(null)
 function Drawer({
   autoFocus = true,
   dismissible = true,
+  direction = "bottom",
   open,
   defaultOpen = false,
   onOpenChange,
@@ -117,17 +138,20 @@ function Drawer({
 
   return (
     <DrawerModalContext.Provider value={props.modal ?? true}>
+      <DrawerDirectionContext.Provider value={direction}>
       <DrawerCloseContext.Provider value={explicitClose}>
         <DrawerPrimitive.Root
           data-slot="drawer"
           autoFocus={autoFocus}
           dismissible={dismissible}
+          direction={direction}
           {...(precisaControlar
             ? { open: isOpen, onOpenChange: changeOpen }
             : { open, defaultOpen, onOpenChange })}
           {...props}
         />
       </DrawerCloseContext.Provider>
+      </DrawerDirectionContext.Provider>
     </DrawerModalContext.Provider>
   )
 }
@@ -185,11 +209,13 @@ function DrawerContent({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Content>) {
   const modal = React.useContext(DrawerModalContext)
+  const direction = React.useContext(DrawerDirectionContext)
   return (
     <DrawerPortal data-slot="drawer-portal">
       <DrawerOverlay />
       <DrawerPrimitive.Content
         data-slot="drawer-content"
+        data-direction={direction}
         className={cn(
           "nds-drawer-content",
           className

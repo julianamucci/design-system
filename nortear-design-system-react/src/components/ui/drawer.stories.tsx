@@ -165,7 +165,7 @@ export const Playground: Story = {
       // defeito silencioso aqui.
       await expect(panel).toHaveAccessibleName(label("demonstration.labels.title"));
       await expect(panel).toHaveAccessibleDescription(LABEL.descricao);
-      await expect(panel).toHaveAttribute("data-vaul-drawer-direction", args.direction!);
+      await expect(panel).toHaveAttribute("data-direction", args.direction!);
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
