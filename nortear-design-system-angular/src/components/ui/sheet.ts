@@ -335,7 +335,7 @@ export class NdsSheetHeader {}
  * página em volta.
  */
 @Directive({
-  selector: 'h2[ndsSheetTitle], h3[ndsSheetTitle]',
+  selector: 'h1[ndsSheetTitle], h2[ndsSheetTitle], h3[ndsSheetTitle], h4[ndsSheetTitle], h5[ndsSheetTitle], h6[ndsSheetTitle]',
   standalone: true,
   hostDirectives: [RdxDialogTitle],
   host: {

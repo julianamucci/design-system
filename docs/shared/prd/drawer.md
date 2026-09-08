@@ -266,15 +266,20 @@ um jeito** — medido na fonte de cada lib, não na documentação delas:
 | react | prop `render` (`BaseUIComponentProps<'h2'>`) | `h2` |
 | vue | prop `as` (ou `as-child`) | `as: 'h2'` |
 | svelte | prop `level`, numérica | `level = 2` |
-| angular | dois seletores, `h2[…]` e `h3[…]` — e **só esses dois níveis** | o que quem escreve usar |
-| vanilla | **não é customizável**: `createElement('h2')` cravado na fábrica | `h2` |
+| angular | seletor por elemento, nos SEIS níveis | o que quem escreve usar |
+| vanilla | opção `titleLevel` da fábrica | `2` |
 
-Duas leituras que isso corrige. O Angular não é o único que troca o nível — ele é
-o mais RESTRITO dos quatro que trocam, porque oferece dois níveis onde os outros
-aceitam qualquer um. E o **vanilla, que é a referência de contrato da casa, é o
-único que não troca** — o que importa porque `heading-order` do axe reprova
-salto de nível, e um painel aberto de dentro de uma seção já em `h3` precisaria
-de `h4`. Registrado no `FIXES-NEEDED.md`.
+As cinco aceitam qualquer nível desde 2026-09-08, e chegaram lá por caminhos
+diferentes. O Angular oferecia só `h2` e `h3` e ganhou os seis por decisão da
+dona; o vanilla não oferecia nenhum — `createElement('h2')` cravado — e ganhou
+`titleLevel`, na mesma forma que `createPopoverTitle` e `createCardTitle` já
+tinham.
+
+**Por que isso importa**: `heading-order` do axe reprova salto de nível, e o
+painel não sabe de que profundidade da página foi aberto — um diálogo disparado
+de dentro de uma seção já em `h3` precisa sair em `h4`. O que ainda falta é a
+story que exercita isso; está no `FIXES-NEEDED.md`, porque hoje o portão está
+verde por não perguntar.
 
 ## 8. Acessibilidade
 

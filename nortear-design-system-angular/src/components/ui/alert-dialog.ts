@@ -193,7 +193,7 @@ export class NdsAlertDialogMedia {}
 
 /** Título — obrigatório. É a fonte do `aria-labelledby`. */
 @Directive({
-  selector: 'h2[ndsAlertDialogTitle], h3[ndsAlertDialogTitle]',
+  selector: 'h1[ndsAlertDialogTitle], h2[ndsAlertDialogTitle], h3[ndsAlertDialogTitle], h4[ndsAlertDialogTitle], h5[ndsAlertDialogTitle], h6[ndsAlertDialogTitle]',
   standalone: true,
   hostDirectives: [RdxDialogTitle],
   host: {

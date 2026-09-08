@@ -180,24 +180,13 @@ histórico; a lista de cima é o que está por fazer.
   **Como medir depois de consertar**: a asserção é que nenhum item da lista repita o texto do `<h3>` acima dela. Vale como portão genérico da seção, não só para esta chave — o mesmo defeito volta no dia em que outro objeto de conteúdo ganhar um `title` e for lido por `Object.values`.
 
 
-- [ ] **O título de dialog, sheet, drawer e alert-dialog crava `h2` no VANILLA, e as outras quatro deixam trocar.** (Aberto em 2026-09-08, ao conferir uma dúvida da dona sobre o PRD do tooltip.) Medido na fonte de cada lib, não na documentação delas:
+- [x] **O nível do cabeçalho do título, nos quatro painéis modais.** **Resolvido em 2026-09-08.** Era `h2` cravado no VANILLA e só `h2`/`h3` no Angular, enquanto react, vue e svelte aceitavam qualquer nível pelo mecanismo da própria lib. **Decisão da dona: o Angular ganha os seis níveis** — o seletor das quatro diretivas de título passou a listar `h1` a `h6`. E o vanilla ganhou `titleLevel` (`1|2|3|4|5|6`, padrão `2`) nas quatro fábricas, na mesma forma que `createPopoverTitle` e `createCardTitle` já tinham. As cinco agora aceitam qualquer nível.
 
-  | stack | mecanismo | padrão |
-  |---|---|---|
-  | react | prop `render` (`BaseUIComponentProps<'h2'>`) | `h2` |
-  | vue | prop `as` / `as-child` | `as: 'h2'` |
-  | svelte | prop `level`, numérica | `level = 2` |
-  | angular | dois seletores, `h2[…]` e `h3[…]` — só esses dois níveis | o que quem escreve usar |
-  | vanilla | `createElement('h2')` cravado na fábrica | `h2`, sem opção |
+- [ ] **Falta a story que exercita o nível do título.** (Aberto em 2026-09-08, ao fechar o item acima.) A capacidade existe nas cinco e **nenhuma superfície a usa**: não há, em stack nenhuma, story com o painel aberto de dentro de uma seção em `h3` afirmando que o título sai em `h4`. O `heading-order` do axe já roda nas stories, então o portão está verde por não perguntar — e capacidade sem exercício é o que some na próxima refatoração sem nada reprovar.
 
-  **Por que importa**: `heading-order` do axe reprova salto de nível, e um painel aberto de dentro de uma seção que já está em `h3` precisa de `h4`. Nas quatro stacks com lib dá para fazer; no Vanilla não — e o Vanilla é a referência de contrato da casa, então a divergência é dívida de porte, não decisão.
+  **Forma**: uma story por componente (dialog, sheet, drawer, alert-dialog), nas cinco stacks — 20 no total. Nasce nas cinco ou não nasce: story só numa stack gera `coverage_divergence`.
 
-  **O caminho já existe dentro da própria stack**: `createPopoverTitle` aceita `level` (`1|2|3|4|5|6`, padrão `h4`), e `createCardTitle` também — a docs page do Card usa `level: 3` e `level: 4`. É a mesma forma, aplicada a quatro fábricas que não a têm.
-
-  **Como medir depois**: o `heading-order` do axe já roda nas stories; o teste que falta é uma story com o painel aberto de dentro de uma seção em `h3`, afirmando que o título sai em `h4`. Hoje ela não existe em stack nenhuma, então o portão está verde por não perguntar.
-
-  **Cuidado ao fechar**: o Angular resolve com DOIS seletores, e cobre só `h2` e `h3`. Alinhar de verdade pede decidir se ele ganha os seis níveis ou se o contrato do sistema é "dois níveis bastam" — e essa é decisão da dona, não porte.
-
+  **O que ela afirma**: que o elemento renderizado é o pedido, e que o `aria-labelledby` do painel continua apontando para ele. A segunda metade é a que importa — trocar a tag sem manter o vínculo troca um defeito por outro.
 ### Divergência cross-stack do carrossel (3)
 
 - [ ] **`class` do `CarouselContent` cai em nós diferentes.** Nas três stacks com lib vai para o **track**; no Vanilla e no Angular vai para o **recorte**. Três primitivos a mexer, com Chromatic a reboque.

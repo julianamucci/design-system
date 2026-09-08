@@ -73,6 +73,18 @@ export type SheetOptions = {
   trigger: HTMLElement;
   side?: SheetSide;
   title?: string;
+  /**
+   * Nível do cabeçalho do título, de 1 a 6. Padrão `2`.
+   *
+   * `heading-order` do axe reprova salto de nível, e o painel não sabe de que
+   * profundidade da página foi aberto: um diálogo disparado de dentro de uma
+   * seção que já está em `h3` precisa sair em `h4`. As quatro stacks com lib
+   * já trocavam o nível pelo mecanismo da própria lib — `render` no base-ui,
+   * `as` na reka, `level` no bits, seletor por elemento no radix-ng —, e esta
+   * era a única sem a opção. Mesma forma de `createPopoverTitle` e de
+   * `createCardTitle`, que já a tinham.
+   */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   content: HTMLElement;
   footer?: HTMLElement;
@@ -183,6 +195,7 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     trigger,
     side = 'right',
     title,
+    titleLevel = 2,
     description,
     content,
     footer,
@@ -267,7 +280,7 @@ export function createSheet(options: SheetOptions): DestroyableElement {
       headerEl.dataset.slot = 'sheet-header';
 
       if (title) {
-        const titleEl = document.createElement('h2');
+        const titleEl = document.createElement(`h${titleLevel}`);
         titleEl.id = titleId;
         titleEl.className = 'nds-sheet-title';
         titleEl.textContent = title;

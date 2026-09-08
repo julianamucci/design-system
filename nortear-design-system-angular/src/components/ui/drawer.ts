@@ -461,7 +461,7 @@ export class NdsDrawerHeader {}
  * verdade; o nível certo depende do que existe na página em volta.
  */
 @Directive({
-  selector: 'h2[ndsDrawerTitle], h3[ndsDrawerTitle]',
+  selector: 'h1[ndsDrawerTitle], h2[ndsDrawerTitle], h3[ndsDrawerTitle], h4[ndsDrawerTitle], h5[ndsDrawerTitle], h6[ndsDrawerTitle]',
   standalone: true,
   hostDirectives: [RdxDialogTitle],
   host: {

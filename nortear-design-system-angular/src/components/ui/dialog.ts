@@ -359,11 +359,15 @@ export class NdsDialogHeader {}
 /**
  * Título — obrigatório, e é dele que sai o `aria-labelledby` do painel.
  *
- * `h2` ou `h3` no seletor: o nível do cabeçalho depende da página que abre o
- * diálogo, e forçar um só quebraria a hierarquia de quem já tem `h2` na tela.
+ * O seletor cobre os SEIS níveis: o nível do cabeçalho depende da página que
+ * abre o painel, e forçar um só quebraria a hierarquia de quem já tem `h2` na
+ * tela. Eram só `h2` e `h3` até 2026-09-08 — decisão da dona ao fechar a
+ * divergência com as outras quatro stacks, que aceitam qualquer nível pelo
+ * mecanismo da própria lib (`render` no base-ui, `as` na reka, `level` no
+ * bits) e, no vanilla, pela opção `titleLevel` das fábricas.
  */
 @Directive({
-  selector: 'h2[ndsDialogTitle], h3[ndsDialogTitle]',
+  selector: 'h1[ndsDialogTitle], h2[ndsDialogTitle], h3[ndsDialogTitle], h4[ndsDialogTitle], h5[ndsDialogTitle], h6[ndsDialogTitle]',
   standalone: true,
   hostDirectives: [RdxDialogTitle],
   host: {
