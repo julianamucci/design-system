@@ -250,10 +250,19 @@ saída mais rápida (`--duration-fast`, `--ease-exit`). Sob
 
 | estado | quando ocorre | o que muda |
 |---|---|---|
-| Closed | inicial | painel desmontado |
-| Open | gatilho | painel montado, foco preso, rolagem travada |
-| Transitioning | entrada e saída | fade no véu, fade e zoom no painel |
-| Focused | Tab dentro | anel do próprio elemento; no botão de fechar, o de duas camadas |
+| Closed | inicial, ou `open=false` | só o gatilho na tela; o painel não está no DOM — não é painel escondido |
+| Opening | de fechado para aberto | `data-state="open"`: o véu aparece e o painel cresce a partir de 95% |
+| Open | gatilho, ou `open=true` | véu semitransparente, foco preso, rolagem da página travada |
+| Closing | de aberto para fechado | `data-state="closed"`: o painel encolhe e o véu some, em `--duration-fast` |
+| WithCloseButtonHidden | `showCloseButtonContent` desligado | sem X no canto; a saída fica sendo Escape, clique no véu ou ação do rodapé |
+
+**Entrada e saída são estados SEPARADOS**, e não um `Transitioning` só — foi o
+conteúdo compartilhado que os separou, e eles não são simétricos: a entrada usa
+`--duration-base` com `--ease-entrance`, a saída `--duration-fast` com
+`--ease-exit`. Sob `prefers-reduced-motion` as duas somem.
+
+O foco dentro do painel não é estado do Dialog: o anel é do elemento focado, e
+no botão de fechar ele tem as duas camadas descritas na §5.
 
 ## 7. API
 
@@ -264,13 +273,18 @@ saída mais rápida (`--duration-fast`, `--ease-exit`). Sob
 | `onOpenChange` | callback com o novo estado |
 | `showCloseButtonContent` | exibe o X no canto do painel |
 | `showCloseButtonFooter` | exibe um botão de fechar dentro do rodapé, como ação TERCIÁRIA — variante `ghost`, primeiro no DOM (D9) |
-| `closeLabel` | rótulo do botão de fechar — o visível do rodapé e o de leitor de tela do X |
+| `closeLabel` | rótulo do botão de fechar — o visível do rodapé e o de leitor de tela do X. **Não existe no vanilla** |
 | `className` | classes `.nds-*` adicionais |
 
-`closeLabel` existia só no Angular; as outras quatro cravavam o literal `Fechar`
-DENTRO do primitivo, o que obrigava quem consome em outro idioma a reescrever o
-componente. Regularizado em 2026-09-07, com o mesmo default (`'Fechar'`), de
-modo que nenhum call site existente muda.
+`closeLabel` existia só no Angular e foi levado a react, vue e svelte em
+2026-09-07, com o mesmo default (`'Fechar'`), de modo que nenhum call site
+existente muda. Antes disso o literal ficava cravado DENTRO do primitivo, e quem
+consumisse em outro idioma tinha de reescrever o componente.
+
+**O VANILLA ficou de fora, e ainda está** — medido em 2026-09-08: `dialog.ts`
+crava `'Fechar'` em dois pontos, o `aria-label` do botão e o `.nds-sr-only`
+dentro dele. É a única das cinco sem a opção, e a referência de contrato da casa.
+Registrado no `FIXES-NEEDED.md`.
 
 Os dois `showCloseButton*` são independentes: um é o X do canto, o outro é uma
 ação no rodapé.
@@ -286,7 +300,7 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | vue | `Dialog`, `DialogClose`, `DialogContent`, `DialogDescription`, `DialogFooter`, `DialogHeader`, `DialogOverlay`, `DialogTitle`, `DialogTrigger` |
 | svelte | `Dialog`, `DialogClose`, `DialogContent`, `DialogDescription`, `DialogFooter`, `DialogHeader`, `DialogOverlay`, `DialogPortal`, `DialogTitle`, `DialogTrigger` |
 | vanilla | `createDialog` |
-| angular | `button[ndsDialogClose]`, `button[ndsDialogTrigger]`, `div[ndsDialogBody]`, `div[ndsDialogContent]`, `div[ndsDialogFooter]`, `div[ndsDialogHeader]`, `div[ndsDialogOverlay]`, `div[ndsDialog]`, `h2[ndsDialogTitle], h3[ndsDialogTitle]`, `ng-template[ndsDialogPortal]`, `p[ndsDialogDescription]` |
+| angular | `button[ndsDialogClose]`, `button[ndsDialogTrigger]`, `div[ndsDialogBody]`, `div[ndsDialogContent]`, `div[ndsDialogFooter]`, `div[ndsDialogHeader]`, `div[ndsDialogOverlay]`, `div[ndsDialog]`, `h1[ndsDialogTitle]` … `h6[ndsDialogTitle]` (os seis), `ng-template[ndsDialogPortal]`, `p[ndsDialogDescription]` |
 
 O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.

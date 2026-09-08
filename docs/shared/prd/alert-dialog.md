@@ -191,7 +191,7 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | vue | `AlertDialog`, `AlertDialogAction`, `AlertDialogCancel`, `AlertDialogContent`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogHeader`, `AlertDialogMedia`, `AlertDialogTitle`, `AlertDialogTrigger` |
 | svelte | `AlertDialog`, `AlertDialogAction`, `AlertDialogCancel`, `AlertDialogContent`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogHeader`, `AlertDialogMedia`, `AlertDialogOverlay`, `AlertDialogPortal`, `AlertDialogTitle`, `AlertDialogTrigger` |
 | vanilla | `createAlertDialog`, `createAlertDialogMedia` |
-| angular | `button[ndsAlertDialogAction]`, `button[ndsAlertDialogCancel]`, `button[ndsAlertDialogTrigger]`, `div[ndsAlertDialogFooter]`, `div[ndsAlertDialogHeader]`, `div[ndsAlertDialogMedia]`, `h2[ndsAlertDialogTitle], h3[ndsAlertDialogTitle]`, `nds-alert-dialog`, `ng-template[ndsAlertDialogContent]`, `p[ndsAlertDialogDescription]` |
+| angular | `button[ndsAlertDialogAction]`, `button[ndsAlertDialogCancel]`, `button[ndsAlertDialogTrigger]`, `div[ndsAlertDialogFooter]`, `div[ndsAlertDialogHeader]`, `div[ndsAlertDialogMedia]`, `h1[ndsAlertDialogTitle]` … `h6[ndsAlertDialogTitle]` (os seis), `nds-alert-dialog`, `ng-template[ndsAlertDialogContent]`, `p[ndsAlertDialogDescription]` |
 
 O índice do svelte também reexporta as formas curtas — `Action`, `Cancel`, `Content`, `Description`, `Footer`, `Header`, `Media`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.

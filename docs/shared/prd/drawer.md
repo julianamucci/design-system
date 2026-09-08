@@ -250,7 +250,7 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | vue | `Drawer`, `DrawerBody`, `DrawerClose`, `DrawerContent`, `DrawerDescription`, `DrawerFooter`, `DrawerHeader`, `DrawerOverlay`, `DrawerTitle`, `DrawerTrigger` |
 | svelte | `Drawer`, `DrawerBody`, `DrawerClose`, `DrawerContent`, `DrawerDescription`, `DrawerFooter`, `DrawerHeader`, `DrawerOverlay`, `DrawerPortal`, `DrawerTitle`, `DrawerTrigger` |
 | vanilla | `createDrawer` |
-| angular | `[ndsDrawerSwipe]`, `button[ndsDrawerClose]`, `button[ndsDrawerTrigger]`, `div[ndsDrawerBody]`, `div[ndsDrawerFooter]`, `div[ndsDrawerHeader]`, `h2[ndsDrawerTitle], h3[ndsDrawerTitle]`, `nds-drawer`, `ng-template[ndsDrawerContent]`, `p[ndsDrawerDescription]` |
+| angular | `[ndsDrawerSwipe]`, `button[ndsDrawerClose]`, `button[ndsDrawerTrigger]`, `div[ndsDrawerBody]`, `div[ndsDrawerFooter]`, `div[ndsDrawerHeader]`, `h1[ndsDrawerTitle]` … `h6[ndsDrawerTitle]` (os seis), `nds-drawer`, `ng-template[ndsDrawerContent]`, `p[ndsDrawerDescription]` |
 
 O índice do svelte também reexporta as formas curtas — `Body`, `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.
