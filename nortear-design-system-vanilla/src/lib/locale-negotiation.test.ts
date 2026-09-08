@@ -103,6 +103,24 @@ describe('a regressão do parâmetro que sombreava o global', () => {
     }
   });
 
+  it('armazenamento que LANÇA não derruba — cai para o passo seguinte', () => {
+    // Acontece em iframe isolado, com dados de site bloqueados ou em janela
+    // anônima restrita. Medido no navegador: sem a guarda, o SecurityError sobe
+    // e derruba a montagem inteira de quem chama — a pessoa fica sem interface
+    // por causa de uma preferência que era só conveniência.
+    //
+    // Quem lança é o ACESSO à propriedade, antes de haver o que encadear com
+    // `?.` — por isso o getter aqui, e não um `getItem` que rejeita.
+    const hostil = {
+      location: { search: '' },
+      get localStorage(): Pick<Storage, 'getItem'> {
+        throw new Error('SecurityError: acesso negado');
+      },
+    };
+    expect(negociarLocale(hostil, ['en-US'])).toBe('en');
+    expect(negociarLocale(hostil, ['fr-FR'])).toBe('pt-BR');
+  });
+
   it('a chave do armazenamento é respeitada', () => {
     const lida: string[] = [];
     const w = {

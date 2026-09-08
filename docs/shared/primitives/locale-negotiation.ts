@@ -82,7 +82,22 @@ export function negociarLocale(
   const urlValida = LOCALES.find((l) => l === daUrl);
   if (urlValida) return urlValida;
 
-  const salvo = w.localStorage?.getItem(key);
+  // A leitura vai num `try`, e o `?.` não bastava: quem LANÇA é o acesso à
+  // propriedade `localStorage`, antes de haver o que encadear. Acontece de
+  // verdade — iframe isolado, navegador com dados de site bloqueados, janela
+  // anônima com restrição. Medido: sem esta guarda, um `SecurityError` sobe e
+  // derruba a montagem inteira de quem chama, e a pessoa fica sem a interface
+  // por causa de uma preferência que era só conveniência.
+  //
+  // Falhar aqui volta ao passo seguinte da escada — o idioma do navegador —,
+  // que é exatamente o que se quer: perde-se a memória da escolha, não o
+  // idioma.
+  let salvo: string | null = null;
+  try {
+    salvo = w.localStorage?.getItem(key) ?? null;
+  } catch {
+    salvo = null;
+  }
   const salvoValido = LOCALES.find((l) => l === salvo);
   if (salvoValido) return salvoValido;
 

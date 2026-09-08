@@ -86,7 +86,8 @@ const PT: ChatDocsLabels = {
     chave_invalida: 'A chave configurada foi recusada pela API.',
     modelo_indisponivel:
       'O modelo configurado não existe ou não está disponível para esta chave. Defina GEMINI_MODEL com um nome que o AI Studio liste.',
-    limite_do_modelo: 'A API está limitando as chamadas agora. Tente de novo em instantes.',
+    limite_do_modelo:
+      'O limite de requisições foi atingido. Pode ser o teto por minuto — nesse caso, espere um pouco. Se for o teto diário do modelo gratuito, só amanhã.',
     falha_do_modelo: 'A chamada ao modelo falhou. Tente de novo.',
     sem_servidor:
       'A função de servidor não respondeu. Em desenvolvimento local ela só existe sob `vercel dev`.',
@@ -135,7 +136,8 @@ const EN: ChatDocsLabels = {
     chave_invalida: 'The configured key was rejected by the API.',
     modelo_indisponivel:
       'The configured model does not exist or is unavailable to this key. Set GEMINI_MODEL to a name AI Studio lists.',
-    limite_do_modelo: 'The API is rate limiting right now. Try again shortly.',
+    limite_do_modelo:
+      'The request limit was reached. It may be the per-minute cap — in that case, wait a moment. If it is the free model daily cap, only tomorrow.',
     falha_do_modelo: 'The model call failed. Try again.',
     sem_servidor:
       'The server function did not answer. Locally it only exists under `vercel dev`.',
@@ -184,7 +186,8 @@ const ES: ChatDocsLabels = {
     chave_invalida: 'La clave configurada fue rechazada por la API.',
     modelo_indisponivel:
       'El modelo configurado no existe o no está disponible para esta clave. Define GEMINI_MODEL con un nombre que AI Studio liste.',
-    limite_do_modelo: 'La API está limitando las llamadas ahora. Inténtalo en unos instantes.',
+    limite_do_modelo:
+      'Se alcanzó el límite de solicitudes. Puede ser el tope por minuto — en ese caso, espera un poco. Si es el tope diario del modelo gratuito, solo mañana.',
     falha_do_modelo: 'La llamada al modelo falló. Inténtalo de nuevo.',
     sem_servidor:
       'La función de servidor no respondió. En local solo existe con `vercel dev`.',

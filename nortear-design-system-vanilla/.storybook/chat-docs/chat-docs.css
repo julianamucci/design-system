@@ -163,6 +163,22 @@
 }
 
 /* O aviso de "sem chave configurada" e os outros erros do servidor. */
+/*
+ * `width: auto` desfaz o `width: 100%` do `.nds-alert`.
+ *
+ * Cem por cento é do CONTÊINER, e a margem soma por fora: a caixa ficava 24px
+ * mais larga que o painel e vazava pela direita. Com `auto`, o item volta a se
+ * esticar no eixo cruzado do flex, que já desconta a margem — que é o
+ * comportamento que a margem pressupunha.
+ *
+ * O alerta precisa do `width: 100%` no uso comum, dentro de uma página; aqui
+ * ele está num painel estreito com margem, e é o consumidor que ajusta.
+ */
+.chat-docs-notice,
+.chat-docs-demo {
+  width: auto;
+}
+
 .chat-docs-notice {
   margin: var(--spacing-3);
 }
