@@ -319,6 +319,11 @@ export function drawerNotDispensavelSource(): string {
  *
  * Cada campo mora num bloco com o próprio rótulo — é o `for`/`id` que liga os
  * dois, e sem ele o campo chega ao leitor sem nome.
+ *
+ * Quem confirma é o ENVIO do formulário. O rodapé é irmão do corpo por
+ * construção do primitivo, então o botão não está dentro do `form`: é o par
+ * id ↔ `form` que os religa. Sem o atributo, `type="submit"` fica INERTE — não
+ * envia pelo clique nem pelo Enter num campo, e nada na tela denuncia.
  */
 export function drawerWithFormSource(): string {
   return vueSnippet(
@@ -328,7 +333,7 @@ export function drawerWithFormSource(): string {
       title: 'Editar perfil',
       descricao: 'Atualize seu nome e e-mail.',
       body: `    <DrawerBody>
-      <form class="nds-grid" data-spacing="sm">
+      <form id="drawer-form" class="nds-grid" data-spacing="sm" @submit.prevent>
         <div class="nds-grid" data-spacing="xs">
           <Label for="drawer-name">Nome</Label>
           <Input id="drawer-name" default-value="Juliana Mucci" />
@@ -341,9 +346,9 @@ export function drawerWithFormSource(): string {
     </DrawerBody>`,
       footer: `    <DrawerFooter>
       <DrawerClose as-child>
-        <Button variant="outline">Cancelar</Button>
+        <Button type="button" variant="outline">Cancelar</Button>
       </DrawerClose>
-      <Button type="submit">Confirmar</Button>
+      <Button type="submit" form="drawer-form">Confirmar</Button>
     </DrawerFooter>`,
     }),
   );

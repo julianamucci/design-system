@@ -79,7 +79,7 @@ export const WithForm: Story = {
               <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
             </DrawerHeader>
             <DrawerBody>
-              <form class="nds-grid" data-spacing="sm">
+              <form id="drawer-form" class="nds-grid" data-spacing="sm" @submit.prevent>
                 <div class="nds-grid" data-spacing="xs">
                   <Label for="drawer-name">Nome</Label>
                   <Input id="drawer-name" model-value="Juliana Mucci" />
@@ -92,9 +92,9 @@ export const WithForm: Story = {
             </DrawerBody>
             <DrawerFooter>
               <DrawerClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button type="button" variant="outline">Cancelar</Button>
               </DrawerClose>
-              <Button type="submit">Confirmar</Button>
+              <Button type="submit" form="drawer-form">Confirmar</Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>

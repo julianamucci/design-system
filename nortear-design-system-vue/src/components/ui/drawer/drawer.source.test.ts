@@ -170,6 +170,19 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain(`import { Label } from '@/components/ui/label'`);
   });
 
+  it('a confirmação é o ENVIO do formulário, religado pelo atributo form', () => {
+    // O rodapé é irmão do corpo por construção do primitivo, então o botão fica
+    // FORA do `form`: sem o par id ↔ `form`, um `type="submit"` ali é botão
+    // inerte — não envia pelo clique nem pelo Enter num campo, continua clicável
+    // e com a aparência certa, e nenhum type-checker das cinco stacks alcança.
+    const saida = drawerWithFormSource();
+    expect(saida).toContain('<form id="drawer-form" class="nds-grid" data-spacing="sm"');
+    expect(saida).toContain('<Button type="submit" form="drawer-form">Confirmar</Button>');
+    expect(saida).not.toContain('<Button type="submit">Confirmar</Button>');
+    // O descartar não pode herdar `submit` do padrão do HTML.
+    expect(saida).toContain('<Button type="button" variant="outline">Cancelar</Button>');
+  });
+
   it('a confirmação marca a ação principal e dispensa o corpo', () => {
     const saida = drawerWithConfirmSource();
     expect(saida).toContain('<Button variant="destructive">Remover</Button>');
