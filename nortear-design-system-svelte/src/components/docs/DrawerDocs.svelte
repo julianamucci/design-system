@@ -311,13 +311,13 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
-            <DrawerDescription>Atualize seus dados.</DrawerDescription>
+            <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
               {#snippet child({ props })}
-                <Button variant="outline" {...props}>Cancelar</Button>
+                <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
               {/snippet}
             </DrawerClose>
             <Button>OK</Button>
@@ -333,13 +333,13 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
-            <DrawerDescription>Atualize seus dados.</DrawerDescription>
+            <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
               {#snippet child({ props })}
-                <Button variant="outline" {...props}>Cancelar</Button>
+                <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
               {/snippet}
             </DrawerClose>
             <Button>OK</Button>
@@ -355,13 +355,13 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
-            <DrawerDescription>Atualize seus dados.</DrawerDescription>
+            <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
               {#snippet child({ props })}
-                <Button variant="outline" {...props}>Cancelar</Button>
+                <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
               {/snippet}
             </DrawerClose>
             <Button>OK</Button>
@@ -377,13 +377,13 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
-            <DrawerDescription>Atualize seus dados.</DrawerDescription>
+            <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
               {#snippet child({ props })}
-                <Button variant="outline" {...props}>Cancelar</Button>
+                <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
               {/snippet}
             </DrawerClose>
             <Button>OK</Button>
@@ -473,12 +473,12 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
-            <DrawerDescription>Atualize seus dados.</DrawerDescription>
+            <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
             <Button>Salvar</Button>
           </DrawerFooter>
@@ -494,7 +494,7 @@ interface TriggerProps {
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerDescription>Atualize seus dados.</DrawerDescription>
+            <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <Button>OK</Button>
@@ -516,7 +516,7 @@ interface TriggerProps {
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
             <Button>Aplicar</Button>
           </DrawerFooter>
@@ -583,7 +583,7 @@ interface TriggerProps {
       aria-label="Termos de uso"
     >
       {#each Array.from({ length: 12 }) as _, i}
-        <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
+        <p>{i + 1}. Termos longos, para o corpo do painel passar da altura visível e rolar sozinho.</p>
       {/each}
     </DrawerBody>
     <DrawerFooter>
@@ -612,7 +612,7 @@ interface TriggerProps {
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
             <Button>OK</Button>
           </DrawerFooter>
@@ -633,7 +633,7 @@ interface TriggerProps {
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
             <Button>OK</Button>
           </DrawerFooter>
@@ -654,7 +654,7 @@ interface TriggerProps {
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
             <Button>OK</Button>
           </DrawerFooter>
@@ -675,7 +675,7 @@ interface TriggerProps {
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
             <Button>OK</Button>
           </DrawerFooter>
@@ -701,12 +701,12 @@ interface TriggerProps {
             aria-label="Termos de uso"
           >
             {#each Array.from({ length: 12 }) as _, i (i)}
-              <p>Parágrafo {i + 1}: termos longos para garantir scroll interno.</p>
+              <p>{i + 1}. {$tStore('demonstration.labels.scrollBody')}</p>
             {/each}
           </DrawerBody>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
             <Button>Aceitar termos</Button>
           </DrawerFooter>
@@ -735,7 +735,7 @@ interface TriggerProps {
   <DrawerContent>
     <DrawerHeader>
       <DrawerTitle>Editar perfil</DrawerTitle>
-      <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+      <DrawerDescription>Atualize seus dados.</DrawerDescription>
     </DrawerHeader>
     <DrawerBody>
       <form
@@ -793,19 +793,19 @@ interface TriggerProps {
 <Drawer>
   <DrawerTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" {...props}>Remover item</Button>
+      <Button variant="outline" {...props}>Excluir</Button>
     {/snippet}
   </DrawerTrigger>
   <DrawerContent bind:ref={panelEl} onOpenAutoFocus={focusSafeExit}>
     <DrawerHeader>
-      <DrawerTitle>Remover item da lista?</DrawerTitle>
-      <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
+      <DrawerTitle>Excluir</DrawerTitle>
+      <DrawerDescription>Você pode desfazer esta ação nos próximos 30 dias.</DrawerDescription>
     </DrawerHeader>
     <DrawerFooter>
       <DrawerClose>
         {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
       </DrawerClose>
-      <Button variant="destructive">Remover</Button>
+      <Button variant="destructive">Excluir</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -818,12 +818,12 @@ interface TriggerProps {
     <div style="contain: layout">
       <Drawer>
         <DrawerTrigger>
-          {#snippet child({ props })}<Button variant="outline" {...props}>Editar perfil</Button>{/snippet}
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>{/snippet}
         </DrawerTrigger>
         <DrawerContent>
           <DrawerHeader>
-            <DrawerTitle>Editar perfil</DrawerTitle>
-            <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
+            <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
+            <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
           <DrawerBody>
             <form
@@ -833,20 +833,20 @@ interface TriggerProps {
               onsubmit={(event: SubmitEvent) => event.preventDefault()}
             >
               <div class="nds-grid" data-spacing="xs">
-                <Label for="docs-drawer-name">Nome</Label>
+                <Label for="docs-drawer-name">{$tStore('demonstration.labels.fieldName')}</Label>
                 <Input id="docs-drawer-name" value="Maria Souza" />
               </div>
               <div class="nds-grid" data-spacing="xs">
-                <Label for="docs-drawer-email">E-mail</Label>
+                <Label for="docs-drawer-email">{$tStore('demonstration.labels.fieldEmail')}</Label>
                 <Input id="docs-drawer-email" type="email" value="maria@exemplo.com" />
               </div>
             </form>
           </DrawerBody>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
-            <Button type="submit" form="docs-drawer-form">Salvar alterações</Button>
+            <Button type="submit" form="docs-drawer-form">{$tStore('demonstration.labels.confirm')}</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -856,19 +856,19 @@ interface TriggerProps {
     <div style="contain: layout">
       <Drawer>
         <DrawerTrigger>
-          {#snippet child({ props })}<Button variant="outline" {...props}>Remover item</Button>{/snippet}
+          {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.destroy')}</Button>{/snippet}
         </DrawerTrigger>
         <!-- A decisão É a tela: o foco entra na saída segura, e não no corpo. -->
         <DrawerContent bind:ref={confirmationPanel} onOpenAutoFocus={focusSafeExit}>
           <DrawerHeader>
-            <DrawerTitle>Remover item da lista?</DrawerTitle>
-            <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
+            <DrawerTitle>{$tStore('demonstration.labels.destroy')}</DrawerTitle>
+            <DrawerDescription>{$tStore('demonstration.labels.destroyMessage')}</DrawerDescription>
           </DrawerHeader>
           <DrawerFooter>
             <DrawerClose>
-              {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DrawerClose>
-            <Button variant="destructive">Remover</Button>
+            <Button variant="destructive">{$tStore('demonstration.labels.destroy')}</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
