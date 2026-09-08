@@ -771,6 +771,127 @@ function extractTrackPayloads(content) {
 // (angular). O caminho barato para fechar é ao contrário do portão: exigir
 // literal nesses campos e declarar as exceções, em vez de tentar seguir a
 // indireção.
+/**
+ * `type="submit"` que não está dentro de nenhum `<form>`.
+ *
+ * O botão fica clicável, com a aparência certa, e NÃO SUBMETE — e o Enter num
+ * campo não dispara nada. Nada na tela denuncia. É a decisão D10 do
+ * `docs/shared/prd/dialog.md`.
+ *
+ * SETE ocorrências na campanha de setembro de 2026, antes de existir portão:
+ * o rodapé do perfil no sheet do angular; a story `WithForm` do dialog do
+ * angular, num arquivo sem UM `<form>` sequer; as três variantes react/vue/
+ * svelte de `anatomy.structureCode`, que é conteúdo COMPARTILHADO e a chave
+ * mais copiada que um componente tem; a docs page do svelte; a do vue. Todas
+ * passaram por `tsc`, `vue-tsc`, `svelte-check` e `ngc` sem uma palavra —
+ * markup válido, tipos corretos.
+ *
+ * A conta é simples e por isso confiável: antes de cada `type="submit"`, conte
+ * as aberturas e os fechamentos de `<form>`. Iguais significa que todo form já
+ * fechou, logo o botão está fora. Não tenta casar aninhamento nem entender
+ * componente — só profundidade.
+ *
+ * DUAS isenções, ambas legítimas:
+ *  - `form="<id>"` no próprio botão, que é a religação explícita do HTML e foi
+ *    justamente o conserto usado no sheet;
+ *  - arquivo sem nenhum `type="submit"`, que não tem o que medir.
+ *
+ * Varre também os `*Code` do conteúdo compartilhado, porque foi lá que a
+ * ocorrência mais cara viveu: snippet não executa, ninguém percebe, e cada
+ * leitor que copiar leva o defeito para o produto dele.
+ */
+function auditSubmitForaDoForm(slug) {
+  const violations = [];
+  const SUBMIT = /type\s*=\s*["'{]?["']?submit["']?["'}]?/g;
+
+  const examinar = (texto, onde, stack, file) => {
+    const achados = [];
+    let m;
+    SUBMIT.lastIndex = 0;
+    while ((m = SUBMIT.exec(texto))) {
+      const antes = texto.slice(0, m.index);
+      const abre = (antes.match(/<form\b/gi) || []).length;
+      const fecha = (antes.match(/<\/form>/gi) || []).length;
+      if (abre > fecha) continue; // dentro de um form ainda aberto
+
+      // `form="<id>"` religa o botão a um form em qualquer lugar do documento.
+      const linha = texto.slice(Math.max(0, m.index - 200), m.index + 200);
+      if (/\bform\s*=\s*["'][^"']+["']/.test(linha)) continue;
+
+      achados.push({
+        linha: antes.split('\n').length,
+        temForm: abre > 0,
+      });
+    }
+    for (const a of achados) {
+      violations.push({
+        category: 'quality', severity: 'high', slug, stack,
+        file, line: a.linha, rule: 'submit_fora_do_form',
+        message: a.temForm
+          ? `type="submit" DEPOIS do </form> em ${onde} — o botão não submete e o Enter num campo não faz nada. Mova o rodapé para dentro do form, ou religue com form="<id>" (D10)`
+          : `type="submit" em ${onde}, e não há <form> nenhum — botão inerte com aparência de ação (D10)`,
+      });
+    }
+  };
+
+  // A varredura de ARQUIVO DE CÓDIGO foi escrita, medida e RETIRADA no mesmo
+  // dia — 2026-09-08. Fica o registro, porque a tentação de reescrevê-la é
+  // grande e o motivo não é óbvio.
+  //
+  // A ideia era contar `<form` e `</form>` antes de cada `type="submit"`:
+  // profundidade zero significaria botão fora do form. Deu 16 achados no
+  // dialog, e a conferência mostrou que a maioria era FALSA, por três causas
+  // independentes:
+  //
+  //  - `dialog.source.ts` monta o snippet por PEDAÇOS — o `<form>` nasce numa
+  //    função e o botão em outra, coladas depois. Contar no arquivo inteiro
+  //    compara fragmentos que nunca se encontram.
+  //  - `dialog.source.test.ts` foi pior: a regra reprovou a ASSERÇÃO que existe
+  //    para guardar esta mesma regra (`expect(footer).toBeLessThan(endForm)`),
+  //    porque `type="submit"` aparece dentro da string esperada.
+  //  - arquivo de stories guarda VÁRIOS templates independentes, e o `<form>`
+  //    de uma story não protege o botão de outra. Restringir a "arquivo
+  //    contíguo" não resolve: o vanilla monta o form com
+  //    `createElement('form')`, então não existe tag literal para contar.
+  //
+  // Delimitar um template de verdade exigiria parser por stack — quatro
+  // gramáticas. E portão que grita errado é pior que portão nenhum: ensina a
+  // ignorar o portão, e junto some o achado que importava. Foi a mesma família
+  // de erro que este repositório já documentou três vezes em portões alheios;
+  // desta vez foi o meu.
+  //
+  // O que ficou é a varredura do conteúdo COMPARTILHADO, onde cada chave É uma
+  // unidade contígua e a contagem vale. Não por acaso é também onde a
+  // ocorrência mais cara viveu: `anatomy.structureCode` de react, vue e svelte
+  // publicava o defeito na chave mais copiada que um componente tem.
+  //
+  // No código de stack, quem cobre é a suíte: ler `button.form`, que vem vazio
+  // quando o botão está órfão. É barato, é exato e não depende de gramática.
+
+  // Conteúdo compartilhado: só as chaves de snippet.
+  const jsonPath = join(ROOT, 'docs/shared/content', slug, 'translations.json');
+  if (existsSync(jsonPath)) {
+    let doc;
+    try { doc = JSON.parse(readFileSync(jsonPath, 'utf8')); } catch { doc = null; }
+    const base = doc?.['pt-BR'];
+    if (base) {
+      const andar = (o, caminho) => {
+        for (const k of Object.keys(o || {})) {
+          const v = o[k];
+          const q = caminho ? `${caminho}.${k}` : k;
+          if (typeof v === 'string') {
+            if (!/Code(\.\w+)?$/.test(q)) continue;
+            examinar(v, `\`${q}\``, 'shared', `docs/shared/content/${slug}/translations.json`);
+          } else if (v && typeof v === 'object') andar(v, q);
+        }
+      };
+      andar(base, '');
+    }
+  }
+
+  return violations;
+}
+
 function auditAnalyticsPayloads() {
   const violations = [];
   for (const stack of STACKS) {
@@ -6789,6 +6910,7 @@ function auditQuality(slug) {
   violations.push(...auditIconeDeBotaoEmbrulhado(slug));
   violations.push(...auditDoDontPreview(slug));
   violations.push(...auditPlayIdempotente(slug));
+  violations.push(...auditSubmitForaDoForm(slug));
 
   return violations;
 }
