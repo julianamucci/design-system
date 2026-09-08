@@ -526,7 +526,7 @@ export const CustomCloseInFooter: Story = {
       source: { transform: footerDialogCloseSource },
       description: {
         story:
-          "`showCloseButton={false}` no Content e `showCloseButton` no Footer — botão de fechar fica abaixo das ações.",
+          "`showCloseButton={false}` no Content e `showCloseButton` no Footer — o fechar entra como ação secundária: primeiro no DOM, abaixo das demais no empilhamento e à esquerda delas quando lado a lado.",
       },
     },
   },
@@ -561,6 +561,18 @@ export const CustomCloseInFooter: Story = {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await expect(cantoButtonClose(p)).toBeNull();
       await expect(within(footer).getByRole("button", { name: /fechar/i })).toBeVisible();
+    });
+
+    await step("O fechar é SECUNDÁRIO: primeiro do DOM, primário por último", async () => {
+      // Único portão que alcança a ordem do rodapé. A folha é `column-reverse`
+      // empilhada e `row` + `flex-end` a partir de 40rem, então as duas
+      // leituras saem desta mesma ordem de DOM — e ela só existe como posição
+      // entre irmãos: nenhum compilador a vê, e asserção por papel tampouco.
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = [...footer.querySelectorAll<HTMLElement>("button")];
+      await expect(buttons.length).toBe(2);
+      await expect(buttons[0]).toHaveAccessibleName(/fechar/i);
+      await expect(buttons[buttons.length - 1]).toHaveClass("nds-button-default");
     });
 
     await step("E o botão do rodapé fecha o diálogo", async () => {

@@ -82,16 +82,29 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
+/**
+ * `location` responde DE ONDE VEIO o clique, e por isso é prop e não constante.
+ *
+ * As quatro chamadas desta página mandavam `docs_demo` — inclusive as de
+ * Variantes, que renderizam componente vivo tanto quanto a Demonstração. O
+ * parâmetro existe para cruzar com o `section_id` do `docs_section_viewed` e
+ * com o meio do `data-track-id`, e respondendo sempre a mesma coisa ele não
+ * cruzava com nada. O vocabulário é `docs_<section-id>`
+ * (`docs/shared/guidelines/07-analytics.md`).
+ */
+type DocsLocation = "docs_demo" | "docs_variantes" | "docs_do_dont";
+
 type DemoProps = {
   triggerLabel: string;
   title: string;
   description: string;
   cancel: string;
   action: string;
+  location: DocsLocation;
   defaultOpen?: boolean;
 };
 
-function DefaultDemo({ triggerLabel, title, description, cancel, action, defaultOpen }: DemoProps) {
+function DefaultDemo({ triggerLabel, title, description, cancel, action, location, defaultOpen }: DemoProps) {
   return (
     <Dialog
       defaultOpen={defaultOpen}
@@ -100,7 +113,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, default
           component: "dialog",
           label: title,
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
-          location: "docs_demo",
+          location,
         })
       }
     >
@@ -117,7 +130,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, default
               track("dialog_action", {
                 component: "dialog",
                 action_label: action,
-                location: "docs_demo",
+                location,
               })
             }
           >
@@ -129,7 +142,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, default
   );
 }
 
-function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProps) {
+function FormDemo({ triggerLabel, title, description, cancel, action, location }: DemoProps) {
   return (
     <Dialog
       onOpenChange={(open, details) =>
@@ -137,7 +150,7 @@ function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProp
           component: "dialog",
           label: title,
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
-          location: "docs_demo",
+          location,
         })
       }
     >
@@ -155,7 +168,7 @@ function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProp
             track("dialog_action", {
               component: "dialog",
               action_label: action,
-              location: "docs_demo",
+              location,
             });
           }}
         >
@@ -177,7 +190,27 @@ function FormDemo({ triggerLabel, title, description, cancel, action }: DemoProp
 
 export function DialogDocs() {
   const { t: tNav } = useTranslation(uiTranslations);
-  const { t: tContent, locale } = useTranslation(dialogTranslations);
+  /*
+   * `props.table.closeLabel` não existe no conteúdo compartilhado: a prop nasce
+   * de um literal em português que estava CRAVADO no primitivo, e enquanto as
+   * cinco stacks não a expuserem ela não é contrato de todas. Override é
+   * exatamente o mecanismo previsto para isso — e vale por ser descrição de
+   * prop, nunca snippet: `*Code` em override fica preso a uma stack.
+   */
+  const { t: tContent, locale } = useTranslation(dialogTranslations, {
+    "pt-BR": {
+      "props.table.closeLabel":
+        "Nome do botão de fechar. No Content vai como texto para leitor de tela; no Footer é o rótulo visível.",
+    },
+    en: {
+      "props.table.closeLabel":
+        "Name of the close button. On Content it is screen-reader text; on Footer it is the visible label.",
+    },
+    es: {
+      "props.table.closeLabel":
+        "Nombre del botón de cerrar. En Content es texto para lector de pantalla; en Footer es la etiqueta visible.",
+    },
+  });
 
   const navGroups = useMemo(() => getNavGroups(tNav), [tNav]);
   const allIds = useMemo(
@@ -341,13 +374,15 @@ interface DialogProps {
 // DialogContent
 interface DialogContentProps extends DialogPrimitive.Popup.Props {
   showCloseButton?: boolean; // default: true
+  closeLabel?: string;       // default: "Fechar"
   className?: string;
   children: React.ReactNode;
 }
 
-// DialogFooter
+// DialogFooter — secundários primeiro, primário por ÚLTIMO no DOM
 interface DialogFooterProps extends React.HTMLAttributes<HTMLDivElement> {
   showCloseButton?: boolean; // default: false
+  closeLabel?: string;       // default: "Fechar"
 }
 
 // DialogTitle / DialogDescription
@@ -370,6 +405,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-cluster" data-justify="center" data-spacing="md" style={{ flexWrap: "wrap" }}>
           <DefaultDemo
+            location="docs_demo"
             triggerLabel={tContent("demonstration.labels.triggerLabel")}
             title={tContent("demonstration.labels.title")}
             description={tContent("demonstration.labels.description")}
@@ -377,6 +413,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             action={tContent("demonstration.labels.action")}
           />
           <FormDemo
+            location="docs_demo"
             triggerLabel={tContent("demonstration.labels.triggerLabel")}
             title={tContent("demonstration.labels.title")}
             description={tContent("demonstration.labels.description")}
@@ -491,6 +528,15 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         }}
       />
 
+      {/*
+        Os quatro previews INSTANCIAM o componente, e é isso que a guideline 08
+        §15 cobra: toda seção com exemplo traz componente vivo. Os dois lados
+        "do" chamavam `<DefaultDemo>`, um wrapper local — o Dialog renderizava,
+        mas o par ficava assimétrico (um lado componente, o outro em linha) e o
+        leitor comparava duas construções diferentes em vez de dois conteúdos
+        diferentes. As outras stacks montam os quatro em linha; esta agora
+        também.
+      */}
       <DocsDoDont
         title={tContent("doDont.title")}
         pairs={[
@@ -498,13 +544,34 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <DefaultDemo
-                triggerLabel={tContent("demonstration.labels.triggerLabel")}
-                title={tContent("demonstration.labels.title")}
-                description={tContent("demonstration.labels.description")}
-                cancel={tContent("demonstration.labels.cancel")}
-                action={tContent("demonstration.labels.action")}
-              />
+              <Dialog
+                onOpenChange={(open, details) =>
+                  track(open ? "dialog_open" : "dialog_close", {
+                    component: "dialog",
+                    label: tContent("demonstration.labels.title"),
+                    ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                    location: "docs_do_dont",
+                  })
+                }
+              >
+                <DialogTrigger render={<Button variant="outline" />}>
+                  {tContent("demonstration.labels.triggerLabel")}
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{tContent("demonstration.labels.title")}</DialogTitle>
+                    <DialogDescription>
+                      {tContent("demonstration.labels.description")}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose render={<Button variant="outline" />}>
+                      {tContent("demonstration.labels.cancel")}
+                    </DialogClose>
+                    <Button>{tContent("demonstration.labels.action")}</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             ),
             dontPreview: (
               <Dialog>
@@ -528,13 +595,34 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <DefaultDemo
-                triggerLabel={tContent("demonstration.labels.triggerLabel")}
-                title={tContent("demonstration.labels.title")}
-                description={tContent("demonstration.labels.description")}
-                cancel={tContent("demonstration.labels.cancel")}
-                action={tContent("demonstration.labels.action")}
-              />
+              <Dialog
+                onOpenChange={(open, details) =>
+                  track(open ? "dialog_open" : "dialog_close", {
+                    component: "dialog",
+                    label: tContent("demonstration.labels.title"),
+                    ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                    location: "docs_do_dont",
+                  })
+                }
+              >
+                <DialogTrigger render={<Button variant="outline" />}>
+                  {tContent("demonstration.labels.triggerLabel")}
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>{tContent("demonstration.labels.title")}</DialogTitle>
+                    <DialogDescription>
+                      {tContent("demonstration.labels.description")}
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose render={<Button variant="outline" />}>
+                      {tContent("demonstration.labels.cancel")}
+                    </DialogClose>
+                    <Button>{tContent("demonstration.labels.action")}</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             ),
             dontPreview: (
               <Dialog>
@@ -581,6 +669,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             code: codeDefault,
             preview: (
               <DefaultDemo
+                location="docs_variantes"
                 triggerLabel={tContent("demonstration.labels.triggerLabel")}
                 title={tContent("demonstration.labels.title")}
                 description={tContent("demonstration.labels.description")}
@@ -595,6 +684,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             code: codeWithForm,
             preview: (
               <FormDemo
+                location="docs_variantes"
                 triggerLabel={tContent("demonstration.labels.triggerLabel")}
                 title={tContent("demonstration.labels.title")}
                 description={tContent("demonstration.labels.description")}
@@ -974,6 +1064,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             },
             items: [
               { name: "showCloseButton", type: "boolean",         defaultValue: "true", required: "Não", description: toPlainText(tContent("props.table.showCloseButtonContent")) },
+              { name: "closeLabel",      type: "string",          defaultValue: '"Fechar"', required: "Não", description: tContent("props.table.closeLabel") },
               { name: "className",       type: "string",          defaultValue: "—",    required: "Não", description: tContent("props.table.className") },
               { name: "children",        type: "React.ReactNode", defaultValue: "—",    required: "Sim", description: tContent("props.table.children") },
             ],
@@ -989,6 +1080,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             },
             items: [
               { name: "showCloseButton", type: "boolean", defaultValue: "false", required: "Não", description: toPlainText(tContent("props.table.showCloseButtonFooter")) },
+              { name: "closeLabel",      type: "string", defaultValue: '"Fechar"', required: "Não", description: tContent("props.table.closeLabel") },
               { name: "className",       type: "string", defaultValue: "—",    required: "Não", description: tContent("props.table.className") },
             ],
           },
@@ -1126,7 +1218,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          items: [1, 2, 3, 4, 5].map((i) => ({
+          // Seis, e não cinco: `testes.visual.item6` (WithScrollingOverlay)
+          // existe no conteúdo compartilhado desde que a rota B entrou, e a
+          // lista contada à mão parou no cinco — o item não existia para quem lê.
+          items: [1, 2, 3, 4, 5, 6].map((i) => ({
             story: tContent(`testes.visual.item${i}.story`),
             priority: tNav(priorityKeyMap[tContent(`testes.visual.item${i}.priority`)] ?? "common.high"),
           })),

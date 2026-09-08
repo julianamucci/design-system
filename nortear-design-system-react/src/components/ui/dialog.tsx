@@ -131,11 +131,23 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  closeLabel = "Fechar",
   scroll = false,
   ref,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
+  /**
+   * Nome acessível do X do canto. Vai num `<span class="nds-sr-only">` e não
+   * num `aria-label`: é o mecanismo que o conteúdo compartilhado documenta, e
+   * texto real sobrevive à tradução automática da página, que ignora
+   * `aria-label`.
+   *
+   * A prop existe porque o rótulo estava CRAVADO em português aqui dentro:
+   * quem consome o design system noutro idioma tinha de reescrever o
+   * primitivo para trocar uma palavra. O default preserva todo call site.
+   */
+  closeLabel?: string
   /**
    * Rota B — o painel sai do centro fixo e entra no fluxo do overlay, que
    * passa a ser quem rola. O cabeçalho sobe junto com o conteúdo.
@@ -206,7 +218,7 @@ function DialogContent({
         >
           <XIcon
           />
-          <span className="nds-sr-only">Fechar</span>
+          <span className="nds-sr-only">{closeLabel}</span>
         </DialogPrimitive.Close>
       )}
     </DialogPrimitive.Popup>
@@ -239,13 +251,37 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/*
+ * ─── A ordem do rodapé é a INVERSA da que parece ────────────────────────────
+ *
+ * `.nds-dialog-footer` é `column-reverse` empilhado e, a partir de 40rem,
+ * `row` + `justify-content: flex-end`. As duas leituras saem da MESMA ordem de
+ * DOM: **secundários primeiro, primário por último**. Empilhado, o primário
+ * sobe ao topo; deitado, vai para a direita — que é a regra de
+ * `04-padroes-design-sistema.md`, "Alinhamento de Grupos de Botões", e o §D9
+ * do PRD do dialog.
+ *
+ * Escrever o primário por último é contraintuitivo, e por isso o defeito era
+ * reincidente: o botão de `showCloseButton` — que é ação SECUNDÁRIA — era
+ * renderizado DEPOIS de `{children}`, o que o punha exatamente na posição do
+ * primário. Nenhum compilador alcança isso e nenhuma asserção por papel
+ * tampouco: a ordem só existe como posição entre irmãos.
+ */
 function DialogFooter({
   className,
   showCloseButton = false,
+  closeLabel = "Fechar",
   children,
   ...props
 }: React.ComponentProps<"div"> & {
   showCloseButton?: boolean
+  /**
+   * Rótulo VISÍVEL do botão de fechar do rodapé — aqui ele fica lado a lado
+   * com as ações e é texto normal, não `nds-sr-only`. Mesma razão da prop
+   * homônima do Content: o literal em português prendia o primitivo a um
+   * idioma.
+   */
+  closeLabel?: string
 }) {
   return (
     <div
@@ -256,12 +292,12 @@ function DialogFooter({
       )}
       {...props}
     >
-      {children}
       {showCloseButton && (
         <DialogPrimitive.Close render={<Button variant="outline" />}>
-          Fechar
+          {closeLabel}
         </DialogPrimitive.Close>
       )}
+      {children}
     </div>
   )
 }

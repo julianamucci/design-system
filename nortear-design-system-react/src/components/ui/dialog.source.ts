@@ -128,7 +128,10 @@ export function dialogNoButtonCloseSource(): string {
  * Fechar no rodapé: o X do canto sai do Content e o Footer acrescenta o botão.
  *
  * `showCloseButton` existe nos dois lugares e faz coisas diferentes — no
- * Content é o X do canto, no Footer é um botão rotulado, abaixo das ações.
+ * Content é o X do canto, no Footer é um botão rotulado, na posição de ação
+ * SECUNDÁRIA — primeiro no DOM, portanto abaixo das demais no empilhamento e à
+ * esquerda delas quando lado a lado. O primário é sempre o ÚLTIMO do DOM, e é
+ * a folha (`column-reverse`) que inverte.
  */
 export function footerDialogCloseSource(): string {
   return dialogSnippet(
