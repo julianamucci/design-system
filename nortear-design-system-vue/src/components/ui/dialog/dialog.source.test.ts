@@ -161,13 +161,16 @@ describe('transforms das stories de variante', () => {
   it('o fechar sai do canto e volta no rodapé como a ação de MENOR ênfase', () => {
     const saida = footerDialogCloseSource();
     expect(saida).toContain('<DialogContent :show-close-button="false">');
-    // Três ênfases distintas, na ordem do DOM: fechar, voltar, continuar.
-    expect(saida).toContain('<Button variant="ghost">Fechar</Button>');
+    // Quem emite o fechar é o próprio rodapé: a prop o coloca ANTES do slot e
+    // em `ghost`, a variante da ação terciária. Enquanto ela cravava `outline`,
+    // todo call site a contornava com um `DialogClose` escrito à mão.
+    expect(saida).toContain('<DialogFooter show-close-button>');
+    expect(saida).not.toContain('DialogClose');
+    // Valor padrão não se escreve: `close-label` já vale "Fechar".
+    expect(saida).not.toContain('close-label');
+    // As outras duas ênfases continuam escritas, na ordem do DOM.
     expect(saida).toContain('<Button variant="outline">Voltar</Button>');
     expect(saida).toContain('<Button>Continuar</Button>');
-    // A prop do rodapé emitiria um `outline` nessa primeira posição, e ele
-    // apagaria a diferença de ênfase para o "Voltar" ao lado.
-    expect(saida).not.toContain('<DialogFooter show-close-button>');
   });
 });
 
@@ -239,6 +242,16 @@ const BUILDERS: Array<[string, () => string]> = [
  */
 const FOOTERLESS = new Set(['dialogNoFooterSource', 'dialogPreviaDeMidiaSource']);
 
+/**
+ * Exceção declarada: a saída não é ESCRITA no rodapé, é emitida por ele.
+ *
+ * `<DialogFooter show-close-button>` já põe o fechar antes do slot, em `ghost`.
+ * Não há `</DialogClose>` no miolo para ancorar a busca, então a ancora vira a
+ * própria prop — e a regra medida continua sendo a mesma: a primária é o
+ * ÚLTIMO `<Button` do rodapé.
+ */
+const CLOSE_POR_PROP = new Set(['footerDialogCloseSource']);
+
 describe('ordem dos botões no rodapé', () => {
   it.each(BUILDERS)('%s — secundários primeiro, primária por último', (name, build) => {
     const snippet = build();
@@ -250,6 +263,18 @@ describe('ordem dos botões no rodapé', () => {
     }
 
     expect(footer).not.toBeNull();
+
+    if (CLOSE_POR_PROP.has(name)) {
+      // A premissa da exceção é cobrada: se a prop sair do snippet, o caso
+      // reprova em vez de continuar quieto medindo menos.
+      expect(snippet).toContain('<DialogFooter show-close-button>');
+      expect(footer).not.toContain('DialogClose');
+      const secondary = footer!.indexOf('<Button variant="outline">');
+      const primary = footer!.lastIndexOf('<Button');
+      expect(secondary).toBeGreaterThan(-1);
+      expect(primary).toBeGreaterThan(secondary);
+      return;
+    }
 
     const exit = footer!.lastIndexOf('</DialogClose>');
     const primary = footer!.lastIndexOf('<Button');
@@ -269,7 +294,7 @@ describe('ordem dos botões no rodapé', () => {
     expect(swept).toEqual(exported);
 
     // Exceção que aponta para construtor inexistente é exceção morta.
-    for (const key of FOOTERLESS) {
+    for (const key of [...FOOTERLESS, ...CLOSE_POR_PROP]) {
       expect(swept).toContain(key);
     }
   });

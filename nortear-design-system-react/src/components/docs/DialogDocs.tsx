@@ -408,9 +408,9 @@ export function DialogDocs() {
       O guia continua disponível no menu de ajuda.
     </div>
     {/* Secundários primeiro, primária por último: o rodapé empilha ao
-        contrário no estreito e alinha à direita no largo. */}
-    <DialogFooter>
-      <DialogClose render={<Button variant="ghost" />}>Fechar</DialogClose>
+        contrário no estreito e alinha à direita no largo. O fechar sai do
+        próprio rodapé, em ghost — a variante da ação terciária. */}
+    <DialogFooter showCloseButton>
       <Button variant="outline">Voltar</Button>
       <Button>Continuar</Button>
     </DialogFooter>
@@ -930,13 +930,14 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                    * estreito e alinha à direita no largo — das duas leituras sai
                    * "Continuar" em cima e à direita.
                    *
-                   * `DialogClose` próprio, e não o `showCloseButton` do Footer:
-                   * aquele renderiza `outline`, a mesma ênfase do "Voltar".
+                   * O fechar vem do `showCloseButton` do próprio Footer, que o
+                   * emite antes dos filhos e em `ghost` — a variante da ação
+                   * terciária pela tabela da guideline 06.
                    */}
-                  <DialogFooter>
-                    <DialogClose render={<Button variant="ghost" />}>
-                      {tContent("demonstration.labels.close")}
-                    </DialogClose>
+                  <DialogFooter
+                    showCloseButton
+                    closeLabel={tContent("demonstration.labels.close")}
+                  >
                     <Button variant="outline">
                       {tContent("demonstration.labels.back")}
                     </Button>

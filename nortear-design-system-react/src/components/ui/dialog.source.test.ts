@@ -91,18 +91,25 @@ describe('composições estruturais', () => {
     expect(saida).toContain('<DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>');
   });
 
-  it('fechar no rodapé: X do canto desligado e o fechar como MENOR ênfase de três', () => {
+  it('fechar no rodapé: X do canto desligado e o fechar vindo da prop do Footer', () => {
     const saida = footerDialogCloseSource();
     expect(saida).toContain('<DialogContent showCloseButton={false}>');
-    expect(saida).toContain('<DialogClose render={<Button variant="ghost" />}>Fechar</DialogClose>');
+    // Quem emite o fechar é o próprio rodapé, e não um `DialogClose` escrito à
+    // mão: a prop o coloca ANTES dos filhos e em `ghost`, que é a variante da
+    // ação terciária. Enquanto ela cravava `outline`, todo call site a
+    // contornava — e a prop ficou documentada sem uma story que a exercitasse.
+    expect(saida).toContain('<DialogFooter showCloseButton>');
+    expect(saida).not.toContain('DialogClose');
+    // Valor padrão não se escreve: `closeLabel` já vale "Fechar".
+    expect(saida).not.toContain('closeLabel');
     // O snippet ensina a MESMA ordem que a story renderiza: secundários antes,
     // primária por último. Snippet que ensinasse o oposto da prévia seria pior
     // que snippet nenhum — e é a folha (`column-reverse`) que inverte a leitura.
-    const closeAt = saida.indexOf('>Fechar</DialogClose>');
+    const footerAt = saida.indexOf('<DialogFooter showCloseButton>');
     const backAt = saida.indexOf('<Button variant="outline">Voltar</Button>');
     const continueAt = saida.indexOf('<Button>Continuar</Button>');
-    expect(closeAt).toBeGreaterThan(-1);
-    expect(backAt).toBeGreaterThan(closeAt);
+    expect(footerAt).toBeGreaterThan(-1);
+    expect(backAt).toBeGreaterThan(footerAt);
     expect(continueAt).toBeGreaterThan(backAt);
   });
 

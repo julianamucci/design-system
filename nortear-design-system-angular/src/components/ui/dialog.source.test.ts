@@ -165,6 +165,14 @@ const CONSTRUCTORS: Array<{
    * perfil" em duas composições que as outras quatro descrevem de outro jeito.
    */
   footer?: string[];
+  /**
+   * Exceção declarada: a saída do rodapé não é ESCRITA, é emitida pelo
+   * `[showCloseButton]` do próprio `ndsDialogFooter`, que a projeta antes do
+   * `ng-content` e em `ghost`. Não há `ndsDialogClose` no markup para contar, e
+   * o rótulo do fechar não entra em `footer` — o que se cobra no lugar é a
+   * presença da prop. Se ela sair do snippet, o caso reprova.
+   */
+  closeByProp?: true;
   /** Estado próprio na classe do exemplo: a lista de cláusulas ou o sinal. */
   stateful?: true;
   /** Importa `NdsInput` + `NdsLabel`. */
@@ -206,7 +214,8 @@ const CONSTRUCTORS: Array<{
     story: 'Variants/CustomCloseInFooter',
     build: dialogCustomCloseInFooterSource,
     withBody: true,
-    footer: [CLOSE, BACK, CONTINUE_ACTION],
+    closeByProp: true,
+    footer: [BACK, CONTINUE_ACTION],
   },
   {
     name: 'dialogConfirmEmailSource',
@@ -351,7 +360,15 @@ describe('cobertura das quatro stories', () => {
         // lado. Com a asserção medindo só `labels[0]`, duas composições desta
         // stack mostraram "Editar perfil" por meses sem uma palavra do portão.
         expect(footerLabels(code)).toEqual(c.footer ?? [CANCEL, ACTION]);
-        expect(code.match(/ndsDialogClose/g)).toHaveLength(1);
+
+        if (c.closeByProp) {
+          // A premissa da exceção é cobrada: some a prop, some o fechar, e o
+          // caso reprova em vez de continuar quieto medindo dois botões.
+          expect(code).toContain('<div ndsDialogFooter [showCloseButton]="true">');
+          expect(code).not.toContain('ndsDialogClose');
+        } else {
+          expect(code.match(/ndsDialogClose/g)).toHaveLength(1);
+        }
       }
 
       // Estado próprio é de três snippets; nos demais a classe fica vazia, e
@@ -549,15 +566,20 @@ describe('variantes', () => {
     expect(code).toContain(`<h2 ndsDialogTitle>${GUIDE_TITLE}</h2>`);
     expect(code).toContain(`<p ndsDialogDescription>${GUIDE_DESCRIPTION}</p>`);
     expect(code).toContain(`<p>${GUIDE_BODY}</p>`);
-    expect(code).toContain(
-      `<button ndsDialogClose ndsButton variant="ghost">${CLOSE}</button>`,
-    );
+    // O fechar é DESENHADO pelo `[showCloseButton]` do rodapé, que o projeta
+    // antes do `ng-content` e em `ghost` — a variante da ação terciária. Ele
+    // nascia `outline`, com o mesmo peso do "Voltar" ao lado, e por isso a
+    // composição o escrevia à mão.
+    expect(code).toContain('<div ndsDialogFooter [showCloseButton]="true">');
+    expect(code).not.toContain('ndsDialogClose');
+    // A premissa de omitir `[closeLabel]`: o padrão do primitivo é `Fechar`, e
+    // é exatamente o rótulo do conteúdo compartilhado. Mudou um dos dois e o
+    // snippet passa a ensinar um botão com outro texto — este caso reprova
+    // antes disso chegar ao painel Code.
+    expect(CLOSE).toBe('Fechar');
+    expect(code).not.toContain('closeLabel');
     expect(code).toContain(`<button ndsButton variant="outline">${BACK}</button>`);
     expect(code).toContain(`<button ndsButton>${CONTINUE_ACTION}</button>`);
-    // O botão é ESCRITO, e não desenhado pelo `[showCloseButton]` do rodapé:
-    // aquele nasce `variant="outline"`, e aqui o fechar precisa da ênfase mais
-    // baixa das três para o rodapé ler como escala.
-    expect(code).not.toContain('<div ndsDialogFooter [showCloseButton]');
   });
 
   it('dialogConfirmEmailSource confirma um envio, e mantém a ação primária neutra', () => {

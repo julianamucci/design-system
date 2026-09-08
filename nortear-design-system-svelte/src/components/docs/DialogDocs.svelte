@@ -257,13 +257,10 @@
     O "Fechar" é a ação de MENOR ênfase das três, então abre a lista; a
     primária fecha. O rodapé empilha ao contrário no estreito e alinha à
     direita no largo, e das duas leituras sai a primária em cima e à direita.
+    Quem emite o fechar é o próprio rodapé, em ghost — a variante da ação
+    terciária.
   -->
-  <DialogFooter>
-    <DialogClose>
-      {#snippet child({ props })}
-        <Button variant="ghost" {...props}>Fechar</Button>
-      {/snippet}
-    </DialogClose>
+  <DialogFooter showCloseButton>
     <Button variant="outline">Voltar</Button>
     <Button>Continuar</Button>
   </DialogFooter>
@@ -744,14 +741,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           {$tStore('demonstration.labels.guideBody')}
         </div>
         <!--
-          O "Fechar" próprio é o ASSUNTO desta variante, e sem ele desenhado o
-          exemplo mostrava só um par comum de ações — o snippet ao lado ensina
-          três botões. Secundários primeiro, primária por último no DOM.
+          O "Fechar" do rodapé é o ASSUNTO desta variante, e sem ele o exemplo
+          mostrava só um par comum de ações — o snippet ao lado ensina três
+          botões. Secundários primeiro, primária por último no DOM, e quem
+          emite o fechar é o `showCloseButton` do próprio rodapé, em `ghost`.
         -->
-        <DialogFooter>
-          <DialogClose>
-            {#snippet child({ props })}<Button variant="ghost" {...props}>{$tStore('demonstration.labels.close')}</Button>{/snippet}
-          </DialogClose>
+        <DialogFooter showCloseButton closeLabel={$tStore('demonstration.labels.close')}>
           <Button variant="outline">{$tStore('demonstration.labels.back')}</Button>
           <Button>{$tStore('demonstration.labels.continueAction')}</Button>
         </DialogFooter>

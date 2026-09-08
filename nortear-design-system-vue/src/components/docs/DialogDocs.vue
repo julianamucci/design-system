@@ -285,11 +285,9 @@ const codeCustomCloseInFooter = `<Dialog>
       O guia continua disponível no menu de ajuda.
     </div>
     <!-- Secundários primeiro, primária por último: o rodapé empilha ao
-         contrário no estreito e alinha à direita no largo. -->
-    <DialogFooter>
-      <DialogClose as-child>
-        <Button variant="ghost">Fechar</Button>
-      </DialogClose>
+         contrário no estreito e alinha à direita no largo. O fechar sai do
+         próprio rodapé, em ghost — a variante da ação terciária. -->
+    <DialogFooter show-close-button>
       <Button variant="outline">Voltar</Button>
       <Button>Continuar</Button>
     </DialogFooter>
@@ -1009,16 +1007,14 @@ const a11yCritCols = computed(() => ({
               leitura e a de foco, e é dela que saem as duas leituras de
               `.nds-dialog-footer` (empilha ao contrário no estreito, alinha à
               direita no largo). O fechar é o mais secundário dos três, então
-              abre a lista, e por isso vem `ghost`: o `show-close-button` do
-              rodapé o emitiria `outline`, colado ao "Voltar", e as duas ênfases
-              se apagariam.
+              abre a lista — e quem o emite é o `show-close-button` do próprio
+              rodapé, em `ghost`, a variante da ação terciária pela tabela da
+              guideline 06.
             -->
-            <DialogFooter>
-              <DialogClose as-child>
-                <Button variant="ghost">
-                  {{ tContent('demonstration.labels.close') }}
-                </Button>
-              </DialogClose>
+            <DialogFooter
+              show-close-button
+              :close-label="tContent('demonstration.labels.close')"
+            >
               <Button variant="outline">
                 {{ tContent('demonstration.labels.back') }}
               </Button>

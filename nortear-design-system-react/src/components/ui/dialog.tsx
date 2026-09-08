@@ -181,9 +181,9 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
  * do PRD do dialog.
  *
  * Escrever o primário por último é contraintuitivo, e por isso o defeito era
- * reincidente: o botão de `showCloseButton` — que é ação SECUNDÁRIA — era
- * renderizado DEPOIS de `{children}`, o que o punha exatamente na posição do
- * primário. Nenhum compilador alcança isso e nenhuma asserção por papel
+ * reincidente: o botão de `showCloseButton` — a ação de MENOR ênfase do rodapé
+ * — era renderizado DEPOIS de `{children}`, o que o punha exatamente na posição
+ * do primário. Nenhum compilador alcança isso e nenhuma asserção por papel
  * tampouco: a ordem só existe como posição entre irmãos.
  */
 function DialogFooter({
@@ -211,8 +211,15 @@ function DialogFooter({
       )}
       {...props}
     >
+      {/*
+       * `ghost`, e não `outline`: pela tabela de variantes de
+       * `guidelines/06-form-components.md`, `default` é a ação primária,
+       * `outline` a secundária e `ghost` a TERCIÁRIA. Fechar é a ação menos
+       * importante do rodapé, então é `ghost` — com `outline` ele saía com o
+       * mesmo peso do secundário ao lado e a escala de ênfase desaparecia.
+       */}
       {showCloseButton && (
-        <DialogPrimitive.Close render={<Button variant="outline" />}>
+        <DialogPrimitive.Close render={<Button variant="ghost" />}>
           {closeLabel}
         </DialogPrimitive.Close>
       )}

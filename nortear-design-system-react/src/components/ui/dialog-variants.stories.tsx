@@ -427,7 +427,7 @@ export const CustomCloseInFooter: Story = {
       source: { transform: footerDialogCloseSource },
       description: {
         story:
-          "`showCloseButton={false}` no Content e um `DialogClose` próprio no rodapé — o fechar entra como a ação de MENOR ênfase das três: primeiro no DOM, abaixo das demais no empilhamento e à esquerda delas quando lado a lado.",
+          "`showCloseButton={false}` no Content e `showCloseButton` no Footer — o fechar entra como a ação de MENOR ênfase das três: primeiro no DOM, abaixo das demais no empilhamento e à esquerda delas quando lado a lado.",
       },
     },
   },
@@ -459,14 +459,15 @@ export const CustomCloseInFooter: Story = {
            * `column-reverse` empilhado e `row` + `flex-end` a partir de 40rem:
            * das duas leituras sai `Continuar` em cima e à direita.
            *
-           * O fechar é um `DialogClose` próprio, e não o `showCloseButton` do
-           * Footer, porque aquele renderiza `outline` — a mesma ênfase do
-           * "Voltar" ao lado, o que apagaria a diferença entre os dois.
+           * O fechar sai do `showCloseButton` do próprio Footer, que o emite
+           * ANTES dos filhos e em `ghost` — a variante da ação terciária pela
+           * tabela da guideline 06. Escrever um `DialogClose` à mão aqui
+           * duplicaria o que o primitivo já faz.
            */}
-          <DialogFooter>
-            <DialogClose render={<Button variant="ghost" />}>
-              {t("demonstration.labels.close")}
-            </DialogClose>
+          <DialogFooter
+            showCloseButton
+            closeLabel={t("demonstration.labels.close")}
+          >
             <Button variant="outline">{t("demonstration.labels.back")}</Button>
             <Button>{t("demonstration.labels.continueAction")}</Button>
           </DialogFooter>
@@ -479,7 +480,7 @@ export const CustomCloseInFooter: Story = {
 
     await step("Sem X no canto, o fechar mora no rodapé", async () => {
       // O X do canto some com `showCloseButton={false}` no Content; o que resta
-      // é o `DialogClose` que a composição pendura no rodapé.
+      // é o botão que `showCloseButton` do Footer emite entre as ações.
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await expect(cantoButtonClose(p)).toBeNull();
       await expect(within(footer).getByRole("button", { name: label("demonstration.labels.close") })).toBeVisible();

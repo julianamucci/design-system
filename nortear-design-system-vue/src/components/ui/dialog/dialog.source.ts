@@ -375,20 +375,23 @@ export function dialogActionDestructiveSource(): string {
  * Variante CustomCloseInFooter: o fechar sai do canto e acompanha as ações,
  * como a de MENOR ênfase de três.
  *
- * O `:show-close-button="false"` do Content desliga o X; o fechar volta como um
- * `DialogClose` próprio, `ghost`, PRIMEIRO no DOM — portanto abaixo das demais
- * no empilhamento e à esquerda delas quando lado a lado. Depois vem o secundário
- * `outline`, e a primária é sempre a ÚLTIMA do DOM: quem inverte a leitura é a
- * folha (`column-reverse`).
+ * O `:show-close-button="false"` do Content desliga o X; o fechar volta pelo
+ * `show-close-button` do FOOTER, que o emite `ghost` e PRIMEIRO no DOM —
+ * portanto abaixo das demais no empilhamento e à esquerda delas quando lado a
+ * lado. Depois vem o secundário `outline`, e a primária é sempre a ÚLTIMA do
+ * DOM: quem inverte a leitura é a folha (`column-reverse`).
  *
- * O `show-close-button` do Footer continua existindo e emite um botão `outline`
- * nessa mesma primeira posição — mas o cenário de referência pede três ações com
- * ênfases distintas, e um `outline` ao lado do "Voltar" apagaria a diferença
- * entre os dois.
+ * `ghost` é a variante da ação TERCIÁRIA na tabela da guideline 06, e é o que
+ * põe as três ações em escala. Enquanto a prop cravava `outline`, o fechar
+ * saía com o mesmo peso do "Voltar" ao lado, e todo call site a contornava
+ * escrevendo um `DialogClose` à mão.
+ *
+ * `close-label` não aparece: o padrão já é "Fechar", e valor padrão não se
+ * escreve num snippet que alguém copia.
  */
 export function footerDialogCloseSource(): string {
   return vueSnippet(
-    importing(PARTS_COMPLETAS),
+    importing(PARTS_COMPLETAS.filter((part) => part !== 'DialogClose')),
     dialogo({
       painelProps: ':show-close-button="false"',
       trigger: 'Abrir guia',
@@ -401,10 +404,7 @@ export function footerDialogCloseSource(): string {
     >
       O guia continua disponível no menu de ajuda.
     </div>`,
-      footer: `    <DialogFooter>
-      <DialogClose as-child>
-        <Button variant="ghost">Fechar</Button>
-      </DialogClose>
+      footer: `    <DialogFooter show-close-button>
       <Button variant="outline">Voltar</Button>
       <Button>Continuar</Button>
     </DialogFooter>`,

@@ -403,14 +403,13 @@ export const CustomCloseInFooter: Story = {
     docs: { source: { transform: dialogCustomCloseInFooterSource } },
   },
   // O cenário é o painel do GUIA, com TRÊS ações no rodapé — o mesmo que as
-  // outras stacks mostram. Aqui ele exibia "Editar perfil" com uma ação só, e
-  // o fechar saía do `[showCloseButton]` do próprio rodapé.
+  // outras stacks mostram. Aqui ele exibia "Editar perfil" com uma ação só.
   //
-  // As três ações são escritas, e não desenhadas pelo rodapé: o botão embutido
-  // do `NdsDialogFooter` nasce `variant="outline"`, e a composição de
-  // referência quer o fechar em `ghost` — a ação de MENOR ênfase das três.
-  // Escrevê-lo mantém a ordem de DOM que a folha lê (secundários primeiro,
-  // primária por último) e a ênfase que o sistema define.
+  // O fechar sai do `[showCloseButton]` do próprio rodapé: ele o projeta ANTES
+  // do `ng-content` — a ordem de DOM que a folha lê, secundários primeiro e
+  // primária por último — e em `ghost`, a variante da ação terciária pela
+  // tabela da guideline 06. Enquanto a prop cravava `outline`, o fechar saía
+  // com o mesmo peso do "Voltar" ao lado e esta story o escrevia à mão.
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -430,8 +429,7 @@ export const CustomCloseInFooter: Story = {
               <p>{{ labels.guideBody }}</p>
             </div>
 
-            <div ndsDialogFooter>
-              <button ndsDialogClose ndsButton variant="ghost">{{ labels.close }}</button>
+            <div ndsDialogFooter [showCloseButton]="true" [closeLabel]="labels.close">
               <button ndsButton variant="outline">{{ labels.back }}</button>
               <button ndsButton>{{ labels.continueAction }}</button>
             </div>

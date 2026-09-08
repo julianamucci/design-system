@@ -10,9 +10,9 @@
  * a ordem de leitura e a de foco, então não há o que inverter no CSS.
  *
  * Por isso o botão de fechar do `showCloseButton` é renderizado ANTES do slot:
- * fechar é ação SECUNDÁRIA, e emiti-lo depois o punha na posição do primário —
- * exatamente a leitura que o conteúdo compartilhado descreve como "na posição
- * de ação secundária".
+ * fechar é a ação de MENOR ênfase do rodapé, e emiti-lo depois o punha na
+ * posição do primário — exatamente a leitura que o conteúdo compartilhado
+ * descreve como "na posição de ação secundária".
  */
 import type { HTMLAttributes } from 'vue'
 import { DialogClose } from 'reka-ui'
@@ -41,11 +41,18 @@ const props = withDefaults(defineProps<{
     data-slot="dialog-footer"
     :class="cn('nds-dialog-footer', props.class)"
   >
+    <!--
+      `ghost`, e não `outline`: pela tabela de variantes de
+      `guidelines/06-form-components.md`, `default` é a ação primária, `outline`
+      a secundária e `ghost` a TERCIÁRIA. Fechar é a ação menos importante do
+      rodapé, então é `ghost` — com `outline` ele saía com o mesmo peso do
+      secundário ao lado e a escala de ênfase desaparecia.
+    -->
     <DialogClose
       v-if="showCloseButton"
       as-child
     >
-      <Button variant="outline">
+      <Button variant="ghost">
         {{ closeLabel }}
       </Button>
     </DialogClose>

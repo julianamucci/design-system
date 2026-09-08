@@ -158,15 +158,24 @@ describe('transforms das stories de composição', () => {
   it('com o X desligado, o fechar desce para o rodapé e a primária fecha a lista', () => {
     const saida = dialogCustomCloseSource();
     expect(saida).toContain('<DialogContent showCloseButton={false}>');
+    // Quem emite o fechar é o próprio rodapé: a prop o coloca ANTES do conteúdo
+    // e em `ghost`, a variante da ação terciária. Enquanto ela cravava
+    // `outline`, todo call site a contornava com um `DialogClose` à mão — e a
+    // prop ficou documentada sem uma story que a exercitasse.
+    expect(saida).toContain('<DialogFooter showCloseButton>');
+    expect(saida).not.toContain('DialogClose');
+    // Valor padrão não se escreve: `closeLabel` já vale "Fechar".
+    expect(saida).not.toContain('closeLabel');
     // A ORDEM é o assunto: secundários primeiro, primária por último no DOM.
     // Snippet que ensinasse o oposto da prévia ao lado seria pior que nenhum.
-    const expectedOrder = ['>Fechar</Button>', '>Voltar</Button>', '>Continuar</Button>'];
+    const expectedOrder = [
+      '<DialogFooter showCloseButton>',
+      '>Voltar</Button>',
+      '>Continuar</Button>',
+    ];
     const positions = expectedOrder.map((fragment) => saida.indexOf(fragment));
     expect(positions.every((i) => i >= 0)).toBe(true);
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
-    // Só o fechar é DialogClose: as outras duas seguem o fluxo.
-    expect(saida.match(/<DialogClose>/g)).toHaveLength(1);
-    expect(saida).toContain('<Button variant="ghost" {...props}>Fechar</Button>');
     expect(saida).toContain('<Button variant="outline">Voltar</Button>');
     expect(saida).toContain('<Button>Continuar</Button>');
     expect(saida).toContain('O guia continua disponível no menu de ajuda.');

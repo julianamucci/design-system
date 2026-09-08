@@ -128,16 +128,19 @@ export function dialogNoButtonCloseSource(): string {
  * Fechar no rodapé: o X do canto sai do Content e o fechamento desce para o
  * rodapé, como a ação de MENOR ênfase de três.
  *
- * O `showCloseButton={false}` do Content desliga o X; o fechar volta como um
- * `DialogClose` próprio, `ghost`, PRIMEIRO no DOM — portanto abaixo das demais
- * no empilhamento e à esquerda delas quando lado a lado. Depois vem o
- * secundário `outline`, e a primária é sempre a ÚLTIMA do DOM: é a folha
- * (`column-reverse`) que inverte a leitura.
+ * O `showCloseButton={false}` do Content desliga o X; o fechar volta pelo
+ * `showCloseButton` do FOOTER, que o emite `ghost` e PRIMEIRO no DOM —
+ * portanto abaixo das demais no empilhamento e à esquerda delas quando lado a
+ * lado. Depois vem o secundário `outline`, e a primária é sempre a ÚLTIMA do
+ * DOM: é a folha (`column-reverse`) que inverte a leitura.
  *
- * O `showCloseButton` do Footer continua existindo e faz um botão `outline`
- * nessa mesma primeira posição — mas o cenário de referência pede três ações
- * com ênfases distintas, e um `outline` ao lado do "Voltar" apagaria a
- * diferença entre os dois.
+ * `ghost` é a variante da ação TERCIÁRIA na tabela da guideline 06, e é o que
+ * põe as três ações em escala. Enquanto a prop cravava `outline`, o fechar
+ * saía com o mesmo peso do "Voltar" ao lado, e todo call site a contornava
+ * escrevendo um `DialogClose` à mão.
+ *
+ * `closeLabel` não aparece: o padrão já é "Fechar", e valor padrão não se
+ * escreve num snippet que alguém copia.
  */
 export function footerDialogCloseSource(): string {
   return dialogSnippet(
@@ -156,12 +159,11 @@ export function footerDialogCloseSource(): string {
     >
       O guia continua disponível no menu de ajuda.
     </div>
-    <DialogFooter>
-      <DialogClose render={<Button variant="ghost" />}>Fechar</DialogClose>
+    <DialogFooter showCloseButton>
       <Button variant="outline">Voltar</Button>
       <Button>Continuar</Button>
     </DialogFooter>`,
-    IMPORT_BASE,
+    IMPORT_BASE.replace('  DialogClose,\n', ''),
     `  <DialogTrigger render={<Button variant="outline" />}>
     Abrir guia
   </DialogTrigger>`,

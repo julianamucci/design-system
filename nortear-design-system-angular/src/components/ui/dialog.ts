@@ -381,8 +381,8 @@ export class NdsDialogBody {}
  * Rodapé de ações.
  *
  * `@Component` pelo mesmo motivo do Content: `showCloseButton` acrescenta um
- * botão de fechar como ação SECUNDÁRIA do rodapé, e o conteúdo compartilhado
- * documenta essa configuração como uma composição própria.
+ * botão de fechar como a ação de MENOR ênfase do rodapé, e o conteúdo
+ * compartilhado documenta essa configuração como uma composição própria.
  *
  * A ordem visual (empilhado no estreito, lado a lado a partir de 40rem, com a
  * ação primária à direita) é `flex-direction: column-reverse` no CSS: no DOM os
@@ -415,8 +415,13 @@ export class NdsDialogBody {}
         ações e precisa da mesma aparência. Por isso também não recebe
         data-slot próprio — o slot do elemento é button, e o que o identifica
         como fechador é o texto e a diretiva.
+
+        E a variante é ghost: pela tabela de 06-form-components.md, default é a
+        ação primária, outline a secundária e ghost a TERCIÁRIA. Fechar é a
+        ação menos importante do rodapé — com outline ele saía com o mesmo peso
+        do secundário ao lado e a escala de ênfase desaparecia.
       -->
-      <button rdxDialogClose ndsButton variant="outline">{{ closeLabel() }}</button>
+      <button rdxDialogClose ndsButton variant="ghost">{{ closeLabel() }}</button>
     }
 
     <ng-content />
@@ -424,8 +429,8 @@ export class NdsDialogBody {}
 })
 export class NdsDialogFooter {
   /**
-   * Botão de fechar dentro do rodapé, como ação secundária: abaixo das demais
-   * no empilhamento e à esquerda delas quando lado a lado.
+   * Botão de fechar dentro do rodapé, como a ação de MENOR ênfase: abaixo das
+   * demais no empilhamento e à esquerda delas quando lado a lado.
    */
   readonly showCloseButton = input(false, { transform: booleanAttribute });
 

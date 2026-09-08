@@ -350,9 +350,8 @@ const VARIANT_CODE = {
   <!-- O fechar é a ação de MENOR ênfase das três, então abre a lista e vai de
        ghost; a primária fecha. O rodapé empilha ao contrário no estreito e
        alinha à direita no largo, e das duas leituras sai a primária em cima e
-       à direita. -->
-  <div ndsDialogFooter>
-    <button ndsDialogClose ndsButton variant="ghost">Fechar</button>
+       à direita. Quem o emite é o [showCloseButton] do próprio rodapé. -->
+  <div ndsDialogFooter [showCloseButton]="true">
     <button ndsButton variant="outline">Voltar</button>
     <button ndsButton>Continuar</button>
   </div>
@@ -668,12 +667,11 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
            as outras stacks mostram. Aqui a prévia exibia "Editar perfil" com uma
            ação só.
 
-           As três são ESCRITAS, e não desenhadas pelo [showCloseButton] do
-           rodapé: aquele nasce variant="outline", e o fechar precisa da ênfase
-           mais baixa das três (ghost) para o rodapé ler como uma escala. A
-           ordem de DOM é a da guideline 04 — secundários primeiro, primária por
-           último; a folha põe o primeiro embaixo no empilhamento e à esquerda
-           no lado a lado. -->
+           O fechar é DESENHADO pelo [showCloseButton] do rodapé, que o projeta
+           antes do ng-content e em ghost — a variante da ação terciária pela
+           tabela da guideline 06. A ordem de DOM é a da guideline 04 —
+           secundários primeiro, primária por último; a folha põe o primeiro
+           embaixo no empilhamento e à esquerda no lado a lado. -->
       <div ndsDialog (onOpenChange)="aoMudarNoExemplo('custom_close_in_footer', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.guideTrigger') }}</button>
         <ng-template ndsDialogPortal>
@@ -686,8 +684,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
             <div ndsDialogBody>
               <p>{{ t('demonstration.labels.guideBody') }}</p>
             </div>
-            <div ndsDialogFooter>
-              <button ndsDialogClose ndsButton variant="ghost">{{ t('demonstration.labels.close') }}</button>
+            <div ndsDialogFooter [showCloseButton]="true" [closeLabel]="t('demonstration.labels.close')">
               <button ndsButton variant="outline">{{ t('demonstration.labels.back') }}</button>
               <button ndsButton>{{ t('demonstration.labels.continueAction') }}</button>
             </div>

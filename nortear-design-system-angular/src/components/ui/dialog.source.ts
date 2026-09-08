@@ -458,10 +458,14 @@ export function dialogWithDestructiveActionSource(): string {
  * isso primeiro no DOM: a folha põe o primeiro embaixo no empilhamento e à
  * esquerda no lado a lado.
  *
- * O botão é ESCRITO, e não desenhado pelo `[showCloseButton]` do rodapé: aquele
- * nasce `variant="outline"`, e aqui o fechar precisa da ênfase mais baixa das
- * três para o rodapé ler como uma escala. Quem fecha é a diretiva
- * `ndsDialogClose`, e não o rótulo.
+ * O botão é DESENHADO pelo `[showCloseButton]` do rodapé, que o projeta antes
+ * do `ng-content` e em `ghost` — a variante da ação terciária pela tabela da
+ * guideline 06, e o que põe as três ações em escala. Enquanto a prop cravava
+ * `outline`, o fechar saía com o mesmo peso do "Voltar" ao lado e todo call
+ * site a contornava escrevendo um `ndsDialogClose` à mão.
+ *
+ * `[closeLabel]` não aparece: o padrão já é "Fechar", e valor padrão não se
+ * escreve num snippet que alguém copia.
  */
 export function dialogCustomCloseInFooterSource(): string {
   return example({
@@ -472,11 +476,9 @@ export function dialogCustomCloseInFooterSource(): string {
         title: LABELS.guideTitle,
         description: LABELS.guideDescription,
         after: `${textBody(LABELS.guideBody)}\n\n${footer({
+          attrs: ' [showCloseButton]="true"',
           cancel: false,
-          extra: [
-            `            <button ndsDialogClose ndsButton variant="ghost">${LABELS.close}</button>`,
-            secondaryAction(LABELS.back),
-          ],
+          extra: [secondaryAction(LABELS.back)],
           action: action(LABELS.continueAction),
         })}`,
       }),

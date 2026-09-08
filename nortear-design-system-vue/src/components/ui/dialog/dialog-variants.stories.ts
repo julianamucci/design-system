@@ -408,7 +408,7 @@ export const CustomCloseInFooter: Story = {
       source: { transform: footerDialogCloseSource },
       description: {
         story:
-          '`showCloseButton: false` no Content — o botão de fechar sai do canto e passa a acompanhar as ações do Footer, como a de menor ênfase das três.',
+          '`showCloseButton: false` no Content e `showCloseButton` no Footer — o botão de fechar sai do canto e passa a acompanhar as ações, como a de menor ênfase das três.',
       },
     },
   },
@@ -431,10 +431,12 @@ export const CustomCloseInFooter: Story = {
           >
             ${L.guideBody}
           </div>
-          <DialogFooter>
-            <DialogClose as-child>
-              <Button variant="ghost">${L.close}</Button>
-            </DialogClose>
+          <!--
+            O fechar sai do \`show-close-button\` do próprio rodapé: ele o emite
+            ANTES do slot e em \`ghost\`, a variante da ação terciária pela
+            tabela da guideline 06. Escrevê-lo à mão duplicaria o primitivo.
+          -->
+          <DialogFooter show-close-button close-label="${L.close}">
             <Button variant="outline">${L.back}</Button>
             <Button>${L.continueAction}</Button>
           </DialogFooter>

@@ -164,16 +164,12 @@
           primária em cima e à direita, a partir desta MESMA ordem de DOM. O
           "Fechar" é a de menor ênfase das três, então abre a lista.
 
-          Só ele é `DialogClose`: é o que fecha o painel quando o X do canto
-          está desligado. "Voltar" e "Continuar" seguiriam para outra etapa do
-          fluxo, e fechar não é o que elas fazem.
+          Quem emite o fechar é o `showCloseButton` do próprio rodapé: ele o
+          põe antes do conteúdo e em `ghost`, a variante da ação terciária pela
+          tabela da guideline 06. "Voltar" e "Continuar" seguiriam para outra
+          etapa do fluxo, e fechar não é o que elas fazem.
         -->
-        <DialogFooter>
-          <DialogClose>
-            {#snippet child({ props })}
-              <Button variant="ghost" {...props}>{footerCloseLabel}</Button>
-            {/snippet}
-          </DialogClose>
+        <DialogFooter showCloseButton closeLabel={footerCloseLabel}>
           <Button variant="outline" onclick={onCancel}>{cancelLabel}</Button>
           <Button onclick={onAction}>{actionLabel}</Button>
         </DialogFooter>

@@ -31,17 +31,24 @@
 	{...restProps}
 >
 	<!--
-		O fechar vem ANTES do conteúdo, e não depois: ele é ação SECUNDÁRIA, e a
+		O fechar vem ANTES do conteúdo, e não depois: ele é a ação de MENOR
+		ênfase do rodapé, e a
 		folha empilha o rodapé em `column-reverse` (e alinha à direita a partir de
 		40rem). Nas duas leituras a mesma ordem de DOM — secundários primeiro,
 		primário por último — põe a ação primária no topo da pilha e à direita
 		quando lado a lado. Renderizado depois de `children`, este botão ocupava
 		exatamente a posição do primário.
+
+		E ele é `ghost`: pela tabela de variantes de
+		`guidelines/06-form-components.md`, `default` é a ação primária, `outline`
+		a secundária e `ghost` a TERCIÁRIA. Fechar é a ação menos importante do
+		rodapé — com `outline` ele saía com o mesmo peso do secundário ao lado e a
+		escala de ênfase desaparecia.
 	-->
 	{#if showCloseButton}
 		<DialogPrimitive.Close>
 			{#snippet child({ props })}
-				<Button variant="outline" {...props}>{closeLabel}</Button>
+				<Button variant="ghost" {...props}>{closeLabel}</Button>
 			{/snippet}
 		</DialogPrimitive.Close>
 	{/if}

@@ -33,6 +33,21 @@ const IMPORT_WITH_FIELDS = `${IMPORT_BASE}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`;
 
+/**
+ * Rodapé cuja saída vem do `showCloseButton`: não há `DialogClose` escrito, e
+ * import que o snippet não usa é ruído para quem copia.
+ */
+const IMPORT_NO_CLOSE = `import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";`;
+
 /** Sem rodapé não há o que fechar por botão: as duas peças saem do import. */
 const IMPORT_NO_FOOTER = `import {
   Dialog,
@@ -244,23 +259,25 @@ export function dialogNoFooterSource(): string {
  * cima e à direita. Snippet que ensinasse o oposto da prévia ao lado seria pior
  * que snippet nenhum.
  *
- * Só o "Fechar" é `DialogClose`: é ele que fecha o painel agora que o X não
- * existe. "Voltar" e "Continuar" seguem o fluxo, e fechar não é o que fazem.
+ * Quem emite o "Fechar" é o `showCloseButton` do RODAPÉ: ele o põe antes do
+ * conteúdo e em `ghost`, que é a variante da ação TERCIÁRIA na tabela da
+ * guideline 06 — e é o que põe as três ações em escala. Enquanto a prop cravava
+ * `outline`, o fechar saía com o mesmo peso do "Voltar" ao lado, e todo call
+ * site a contornava escrevendo um `DialogClose` à mão.
+ *
+ * `closeLabel` não aparece: o padrão já é "Fechar", e valor padrão não se
+ * escreve num snippet que alguém copia.
  */
 export function dialogCustomCloseSource(): string {
   return dialogo({
+    imports: IMPORT_NO_CLOSE,
     isOpen: true,
     showCloseButton: false,
     triggerLabel: 'Abrir guia',
     title: 'Próximos passos',
     description: 'Continue o fluxo ou volte ao início.',
     body: bodyBlock('O guia continua disponível no menu de ajuda.'),
-    footer: `    <DialogFooter>
-      <DialogClose>
-        {#snippet child({ props })}
-          <Button variant="ghost" {...props}>Fechar</Button>
-        {/snippet}
-      </DialogClose>
+    footer: `    <DialogFooter showCloseButton>
       <Button variant="outline">Voltar</Button>
       <Button>Continuar</Button>
     </DialogFooter>`,

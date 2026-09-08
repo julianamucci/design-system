@@ -302,7 +302,7 @@ export const CustomCloseInFooter: Story = {
       source: { transform: dialogCustomCloseSource },
       description: {
         story:
-          'showCloseButton={false} no Content para ocultar o X — o fechamento desce para o rodapé, ao lado das demais ações.',
+          'showCloseButton={false} no Content para ocultar o X e showCloseButton no Footer para repor a saída — o fechamento desce para o rodapé, ao lado das demais ações.',
       },
     },
   },
@@ -337,7 +337,11 @@ export const CustomCloseInFooter: Story = {
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(cantoButtonClose(p)).toBeNull();
       await expect(footerButtons()[0]).toBeVisible();
-      await expect(footerButtons()[0]).toHaveAttribute('data-slot', 'dialog-close');
+      // Pelo RÓTULO, e não pelo `data-slot`: quem emite este botão agora é o
+      // `showCloseButton` do rodapé, que usa o primitivo de fechamento cru — o
+      // `data-slot="dialog-close"` é do wrapper, e o rodapé não o veste. O que
+      // prova que este botão fecha é o passo do clique, mais abaixo.
+      await expect(footerButtons()[0]).toHaveTextContent(t('demonstration.labels.close'));
     });
 
     await step('São três ações, e a primária é a ÚLTIMA do DOM', async () => {
