@@ -122,9 +122,10 @@ type DemoProps = {
   defaultOpen?: boolean;
 };
 
-/** O formulário da demonstração acrescenta um campo rotulado e um valor de exemplo. */
+/** O formulário da demonstração acrescenta dois campos rotulados e um valor de exemplo. */
 type FormDemoProps = DemoProps & {
   fieldName: string;
+  fieldEmail: string;
   sampleName: string;
 };
 
@@ -181,7 +182,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, locatio
   );
 }
 
-function FormDemo({ triggerLabel, title, description, cancel, action, location, footerNote, closeLabel, fieldName, sampleName }: FormDemoProps) {
+function FormDemo({ triggerLabel, title, description, cancel, action, location, footerNote, closeLabel, fieldName, fieldEmail, sampleName }: FormDemoProps) {
   return (
     <Dialog
       onOpenChange={(open, details) =>
@@ -216,6 +217,10 @@ function FormDemo({ triggerLabel, title, description, cancel, action, location, 
           <div className="nds-stack" data-spacing="xs">
             <Label htmlFor="docs-dialog-name">{fieldName}</Label>
             <Input id="docs-dialog-name" defaultValue={sampleName} />
+          </div>
+          <div className="nds-stack" data-spacing="xs">
+            <Label htmlFor="docs-dialog-email">{fieldEmail}</Label>
+            <Input id="docs-dialog-email" type="email" />
           </div>
           {footerNote && (
             <p className="nds-text-caption nds-text-muted-foreground">{footerNote}</p>
@@ -344,18 +349,23 @@ export function DialogDocs() {
 </Dialog>`;
 
   const codeWithForm = `<Dialog>
-  <DialogTrigger asChild>
-    <Button variant="outline">Editar perfil</Button>
-  </DialogTrigger>
+  <DialogTrigger render={<Button variant="outline" />}>Editar perfil</DialogTrigger>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Editar perfil</DialogTitle>
       <DialogDescription>
-        Atualize suas informações pessoais.
+        Atualize suas informações pessoais. As mudanças são salvas ao confirmar.
       </DialogDescription>
     </DialogHeader>
     <form className="nds-stack" data-spacing="sm" onSubmit={onSubmit}>
-      <Input defaultValue="Maria Silva" />
+      <div className="nds-stack" data-spacing="xs">
+        <Label htmlFor="dialog-name">Nome</Label>
+        <Input id="dialog-name" defaultValue="Maria Silva" />
+      </div>
+      <div className="nds-stack" data-spacing="xs">
+        <Label htmlFor="dialog-email">E-mail</Label>
+        <Input id="dialog-email" type="email" />
+      </div>
       <DialogFooter>
         <DialogClose render={<Button type="button" variant="outline" />}>Cancelar</DialogClose>
         <Button type="submit">Salvar alterações</Button>
@@ -484,6 +494,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             action={tContent("demonstration.labels.action")}
             closeLabel={tContent("demonstration.labels.close")}
             fieldName={tContent("demonstration.labels.fieldName")}
+            fieldEmail={tContent("demonstration.labels.fieldEmail")}
             sampleName={tContent("demonstration.labels.samplePersonName")}
           />
         </div>
@@ -772,6 +783,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                 action={tContent("demonstration.labels.action")}
                 closeLabel={tContent("demonstration.labels.close")}
                 fieldName={tContent("demonstration.labels.fieldName")}
+                fieldEmail={tContent("demonstration.labels.fieldEmail")}
                 sampleName={tContent("demonstration.labels.samplePersonName")}
               />
             ),
@@ -869,9 +881,15 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                       <p key={i}>Cláusula {i + 1}. Lorem ipsum dolor sit amet.</p>
                     ))}
                   </div>
+                  {/*
+                    "Recusar" e não "Cancelar": o par do contrato é
+                    aceitar/recusar, e é o que o snippet publicado ao lado
+                    (`variants.items.withScrollingOverlayCode`, conteúdo
+                    compartilhado) sempre mostrou — a prévia é que divergia.
+                  */}
                   <DialogFooter>
                     <DialogClose render={<Button variant="outline" />}>
-                      {tContent("demonstration.labels.cancel")}
+                      {tContent("demonstration.labels.decline")}
                     </DialogClose>
                     <Button>{tContent("demonstration.labels.accept")}</Button>
                   </DialogFooter>
