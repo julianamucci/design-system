@@ -238,14 +238,53 @@ export function dialogOverlayScrollSource(): string {
   });
 }
 
+/** Corpo de texto corrido entre o cabeçalho e o rodapé, já indentado em 4. */
+function bodyBlock(text: string): string {
+  return `    <div class="nds-dialog-body nds-text-body nds-text-muted-foreground" data-slot="dialog-body">
+      ${text}
+    </div>`;
+}
+
 /** Sem rodapé: painel informativo, cuja única saída visível é o botão do canto. */
 export function dialogNoFooterSource(): string {
   return dialogo({
     isOpen: true,
-    triggerLabel: 'Sobre o produto',
-    title: 'Sobre este produto',
-    description:
-      'Plataforma de design system multi-stack mantida pela equipe de Engenharia. Atualizada continuamente.',
+    triggerLabel: 'Sobre este recurso',
+    title: 'Sobre este recurso',
+    description: 'Detalhes técnicos exibidos para fins informativos. Sem ações.',
+    body: bodyBlock('O fechamento ocorre via X, Escape ou clique no overlay.'),
+  });
+}
+
+/**
+ * X do canto desligado: o fechar desce para o rodapé, ao lado das outras ações.
+ *
+ * A ordem é a do sistema, e é a MESMA do render da story: secundários antes,
+ * primária por último no DOM. `.nds-dialog-footer` empilha ao contrário no
+ * estreito e alinha à direita no largo — das duas leituras sai a primária em
+ * cima e à direita. Snippet que ensinasse o oposto da prévia ao lado seria pior
+ * que snippet nenhum.
+ *
+ * Só o "Fechar" é `DialogClose`: é ele que fecha o painel agora que o X não
+ * existe. "Voltar" e "Continuar" seguem o fluxo, e fechar não é o que fazem.
+ */
+export function dialogCustomCloseSource(): string {
+  return dialogo({
+    isOpen: true,
+    showCloseButton: false,
+    triggerLabel: 'Abrir guia',
+    title: 'Próximos passos',
+    description: 'Continue o fluxo ou volte ao início.',
+    body: bodyBlock('O guia continua disponível no menu de ajuda.'),
+    footer: `    <DialogFooter>
+      <DialogClose>
+        {#snippet child({ props })}
+          <Button variant="ghost" {...props}>Fechar</Button>
+        {/snippet}
+      </DialogClose>
+      <Button variant="outline">Voltar</Button>
+      <Button>Continuar</Button>
+    </DialogFooter>`,
   });
 }
 

@@ -205,11 +205,14 @@
   <DialogTrigger>...</DialogTrigger>
   <DialogContent>
     <DialogHeader>
-      <DialogTitle>Sobre este produto</DialogTitle>
+      <DialogTitle>Sobre este recurso</DialogTitle>
       <DialogDescription>
-        Plataforma de design system multi-stack.
+        Detalhes técnicos exibidos para fins informativos. Sem ações.
       </DialogDescription>
     </DialogHeader>
+    <div class="nds-dialog-body nds-text-body nds-text-muted-foreground" data-slot="dialog-body">
+      O fechamento ocorre via X, Escape ou clique no overlay.
+    </div>
   </DialogContent>
 </Dialog>`;
 
@@ -232,8 +235,27 @@
 </Dialog>`;
 
   const codeNoCloseBtn = `<DialogContent showCloseButton={false}>
-  <DialogHeader>...</DialogHeader>
-  <DialogFooter>...</DialogFooter>
+  <DialogHeader>
+    <DialogTitle>Próximos passos</DialogTitle>
+    <DialogDescription>Continue o fluxo ou volte ao início.</DialogDescription>
+  </DialogHeader>
+  <div class="nds-dialog-body nds-text-body nds-text-muted-foreground" data-slot="dialog-body">
+    O guia continua disponível no menu de ajuda.
+  </div>
+  <!--
+    O "Fechar" é a ação de MENOR ênfase das três, então abre a lista; a
+    primária fecha. O rodapé empilha ao contrário no estreito e alinha à
+    direita no largo, e das duas leituras sai a primária em cima e à direita.
+  -->
+  <DialogFooter>
+    <DialogClose>
+      {#snippet child({ props })}
+        <Button variant="ghost" {...props}>Fechar</Button>
+      {/snippet}
+    </DialogClose>
+    <Button variant="outline">Voltar</Button>
+    <Button>Continuar</Button>
+  </DialogFooter>
 </DialogContent>`;
 
   const codeCustomizationTokens = `/* Em globals.css — override do Dialog via tokens */
@@ -693,13 +715,16 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {#snippet variantNoFooter()}
     <Dialog>
       <DialogTrigger>
-        {#snippet child({ props })}<Button variant="outline" {...props}>Sobre este produto</Button>{/snippet}
+        {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.aboutTitle')}</Button>{/snippet}
       </DialogTrigger>
       <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
-          <DialogTitle>Sobre este produto</DialogTitle>
-          <DialogDescription>Plataforma de design system multi-stack.</DialogDescription>
+          <DialogTitle>{$tStore('demonstration.labels.aboutTitle')}</DialogTitle>
+          <DialogDescription>{$tStore('demonstration.labels.aboutDescription')}</DialogDescription>
         </DialogHeader>
+        <div class="nds-dialog-body nds-text-body nds-text-muted-foreground" data-slot="dialog-body">
+          {$tStore('demonstration.labels.aboutBody')}
+        </div>
       </DialogContent>
     </Dialog>
   {/snippet}
@@ -725,18 +750,27 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {#snippet variantNoClose()}
     <Dialog>
       <DialogTrigger>
-        {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>{/snippet}
+        {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.guideTrigger')}</Button>{/snippet}
       </DialogTrigger>
       <DialogContent showCloseButton={false} closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
-          <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
-          <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
+          <DialogTitle>{$tStore('demonstration.labels.guideTitle')}</DialogTitle>
+          <DialogDescription>{$tStore('demonstration.labels.guideDescription')}</DialogDescription>
         </DialogHeader>
+        <div class="nds-dialog-body nds-text-body nds-text-muted-foreground" data-slot="dialog-body">
+          {$tStore('demonstration.labels.guideBody')}
+        </div>
+        <!--
+          O "Fechar" próprio é o ASSUNTO desta variante, e sem ele desenhado o
+          exemplo mostrava só um par comum de ações — o snippet ao lado ensina
+          três botões. Secundários primeiro, primária por último no DOM.
+        -->
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="ghost" {...props}>{$tStore('demonstration.labels.close')}</Button>{/snippet}
           </DialogClose>
-          <Button>{$tStore('demonstration.labels.action')}</Button>
+          <Button variant="outline">{$tStore('demonstration.labels.back')}</Button>
+          <Button>{$tStore('demonstration.labels.continueAction')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

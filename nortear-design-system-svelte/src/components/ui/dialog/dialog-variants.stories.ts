@@ -8,6 +8,7 @@ import {
   dialogWithScrollSource,
   dialogOverlayScrollSource,
   dialogNoFooterSource,
+  dialogCustomCloseSource,
   dialogConfirmarEmailSource,
   dialogSource,
 } from './dialog.source';
@@ -25,8 +26,8 @@ import dialogTranslations from '@shared/content/dialog/translations.json';
 import { figmaDesign } from '@shared/figma/design-links';
 // Todos os rótulos das composições saem do conteúdo compartilhado, como nas
 // outras stacks — inclusive os próprios de cada cenário (termos, contrato,
-// remoção, confirmação de e-mail), que ganharam chave. O que sobra literal é
-// só a NoFooter, que ainda não tem chave: está no relato da revisão.
+// remoção, confirmação de e-mail, guia e painel informativo), que ganharam
+// chave. Não sobra literal de cenário neste arquivo.
 const { t } = useTranslation(dialogTranslations);
 
 const meta: Meta = {
@@ -273,10 +274,12 @@ export const NoFooter: Story = {
   args: {
     open: true,
     variant: 'noFooter',
-    triggerLabel: 'Sobre o produto',
-    title: 'Sobre este produto',
-    description:
-      'Plataforma de design system multi-stack mantida pela equipe de Engenharia. Atualizada continuamente.',
+    // O título serve de GATILHO e de título, como na referência: o painel não
+    // tem outra ação, e o botão que o abre nomeia o mesmo assunto.
+    triggerLabel: t('demonstration.labels.aboutTitle'),
+    title: t('demonstration.labels.aboutTitle'),
+    description: t('demonstration.labels.aboutDescription'),
+    bodyText: t('demonstration.labels.aboutBody'),
   },
   play: async ({ canvasElement, step }) => {
     const p = await waitForOpen();
@@ -342,46 +345,68 @@ export const CustomCloseInFooter: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // Override de story: o snippet do meta mostraria o X ligado e um par de
+      // ações, que é o oposto do que esta composição demonstra.
+      source: { transform: dialogCustomCloseSource },
       description: {
         story:
-          'showCloseButton={false} no Content para ocultar o X — o fechamento passa a ser o Cancelar do rodapé, ou Escape.',
+          'showCloseButton={false} no Content para ocultar o X — o fechamento desce para o rodapé, ao lado das demais ações.',
       },
     },
   },
   args: {
     open: true,
-    variant: 'default',
+    variant: 'customCloseInFooter',
     showCloseButton: false,
-    // O assunto desta story é a AUSÊNCIA do X no canto, não um fluxo próprio:
-    // o cenário é o mesmo das demais, e sai do conteúdo compartilhado. O
-    // convite que morava aqui era história só desta stack.
-    triggerLabel: t('demonstration.labels.triggerLabel'),
-    title: t('demonstration.labels.title'),
-    description: t('demonstration.labels.description'),
-    actionLabel: t('demonstration.labels.action'),
-    cancelLabel: t('demonstration.labels.cancel'),
+    triggerLabel: t('demonstration.labels.guideTrigger'),
+    title: t('demonstration.labels.guideTitle'),
+    description: t('demonstration.labels.guideDescription'),
+    bodyText: t('demonstration.labels.guideBody'),
+    // Secundários primeiro, PRIMÁRIA por último. O "Fechar" é o de menor
+    // ênfase dos três, então abre a lista.
+    footerCloseLabel: t('demonstration.labels.close'),
+    cancelLabel: t('demonstration.labels.back'),
+    actionLabel: t('demonstration.labels.continueAction'),
   },
   play: async ({ canvasElement, step }) => {
     const p = await waitForOpen();
 
-    // Pelo CONTRATO de markup e não pelo texto: o rótulo do Cancelar agora sai
-    // do conteúdo compartilhado, então uma consulta por /Cancelar/i reprovaria
-    // com a barra de idiomas em inglês ou espanhol sem nada de errado no
-    // componente. É a mesma regra que o `dialog.fixtures.ts` declara no topo. A
-    // saída é o PRIMEIRO botão do rodapé — a ordem que a folha exige.
-    const footerCloseButton = (): HTMLElement =>
-      p
+    // Pelo CONTRATO de markup e não pelo texto: os rótulos saem do conteúdo
+    // compartilhado, então uma consulta por /Fechar/i reprovaria com a barra de
+    // idiomas em inglês ou espanhol sem nada de errado no componente. É a mesma
+    // regra que o `dialog.fixtures.ts` declara no topo. A saída é o PRIMEIRO
+    // botão do rodapé — a ordem que a folha exige.
+    const footerButtons = (): HTMLElement[] => [
+      ...p
         .querySelector<HTMLElement>('[data-slot="dialog-footer"]')!
-        .querySelectorAll<HTMLElement>('button')[0];
+        .querySelectorAll<HTMLElement>('button'),
+    ];
 
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(cantoButtonClose(p)).toBeNull();
-      await expect(footerCloseButton()).toBeVisible();
-      await expect(footerCloseButton()).toHaveAttribute('data-slot', 'dialog-close');
+      await expect(footerButtons()[0]).toBeVisible();
+      await expect(footerButtons()[0]).toHaveAttribute('data-slot', 'dialog-close');
+    });
+
+    await step('São três ações, e a primária é a ÚLTIMA do DOM', async () => {
+      // Ordem de DOM, e não posição na tela: `.nds-dialog-footer` inverte o
+      // empilhamento no estreito e alinha à direita no largo, e as duas
+      // leituras saem desta mesma ordem. Conferir pixel aqui mediria a largura
+      // do viewport da rodada, não a regra.
+      const buttons = footerButtons();
+      await expect(buttons).toHaveLength(3);
+      await expect(buttons[0]).toHaveClass('nds-button-ghost');
+      await expect(buttons[1]).toHaveClass('nds-button-outline');
+      await expect(buttons[2]).toHaveClass('nds-button-default');
+      await expect(buttons.map((b) => b.textContent?.trim())).toEqual([
+        t('demonstration.labels.close'),
+        t('demonstration.labels.back'),
+        t('demonstration.labels.continueAction'),
+      ]);
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
-      await userEvent.click(footerCloseButton());
+      await userEvent.click(footerButtons()[0]);
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();

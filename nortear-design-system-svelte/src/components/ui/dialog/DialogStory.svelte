@@ -34,8 +34,16 @@
     triggerLabel?: string;
     title?: string;
     description?: string;
+    /** Texto corrido do corpo, entre o cabeçalho e o rodapé. */
+    bodyText?: string;
     actionLabel?: string;
     cancelLabel?: string;
+    /**
+     * Rótulo do fechar que desce para o RODAPÉ quando o X do canto está
+     * desligado. Não é o `closeLabel` do Content, que nomeia o X — aqui o X não
+     * existe, e o fechar é uma ação como as outras duas.
+     */
+    footerCloseLabel?: string;
     showCloseButton?: boolean;
     variant?: Variant;
     onAction?: () => void;
@@ -47,8 +55,10 @@
     triggerLabel = t('demonstration.labels.triggerLabel'),
     title = t('demonstration.labels.title'),
     description = t('demonstration.labels.description'),
+    bodyText,
     actionLabel = t('demonstration.labels.action'),
     cancelLabel = t('demonstration.labels.cancel'),
+    footerCloseLabel = t('demonstration.labels.close'),
     showCloseButton = true,
     variant = 'default',
     onAction,
@@ -123,9 +133,34 @@
             <p>Cláusula {i + 1}: o diálogo entra no fluxo do overlay, e o cabeçalho sobe junto com o conteúdo em vez de ficar parado no topo.</p>
           {/each}
         </div>
+      {:else if bodyText}
+        <div class="nds-dialog-body nds-text-body nds-text-muted-foreground" data-slot="dialog-body">
+          {bodyText}
+        </div>
       {/if}
 
-      {#if variant !== 'noFooter'}
+      {#if variant === 'customCloseInFooter'}
+        <!--
+          Três ações, e a ordem é a do sistema: secundários primeiro, primária
+          por último no DOM. `.nds-dialog-footer` é `column-reverse` no estreito
+          e vira `row` + `flex-end` a partir de 40rem — das duas leituras sai a
+          primária em cima e à direita, a partir desta MESMA ordem de DOM. O
+          "Fechar" é a de menor ênfase das três, então abre a lista.
+
+          Só ele é `DialogClose`: é o que fecha o painel quando o X do canto
+          está desligado. "Voltar" e "Continuar" seguiriam para outra etapa do
+          fluxo, e fechar não é o que elas fazem.
+        -->
+        <DialogFooter>
+          <DialogClose>
+            {#snippet child({ props })}
+              <Button variant="ghost" {...props}>{footerCloseLabel}</Button>
+            {/snippet}
+          </DialogClose>
+          <Button variant="outline" onclick={onCancel}>{cancelLabel}</Button>
+          <Button onclick={onAction}>{actionLabel}</Button>
+        </DialogFooter>
+      {:else if variant !== 'noFooter'}
         <DialogFooter>
           <DialogClose>
             {#snippet child({ props })}

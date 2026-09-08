@@ -8,6 +8,7 @@ import {
   dialogEditarPerfilSource,
   dialogPreviaDeMidiaSource,
   dialogNoFooterSource,
+  dialogCustomCloseSource,
   dialogSource,
 } from './dialog.source';
 
@@ -122,6 +123,31 @@ describe('transforms das stories de composição', () => {
     const saida = dialogNoFooterSource();
     expect(saida).not.toContain('DialogFooter');
     expect(saida).not.toContain('DialogClose');
+    // O cenário é o da referência, e o gatilho repete o título: o painel não
+    // tem outra ação, e o botão que o abre nomeia o mesmo assunto.
+    expect(saida).toContain('<DialogTitle>Sobre este recurso</DialogTitle>');
+    expect(saida).toContain('>Sobre este recurso</Button>');
+    expect(saida).toContain(
+      '<DialogDescription>Detalhes técnicos exibidos para fins informativos. Sem ações.</DialogDescription>',
+    );
+    expect(saida).toContain('O fechamento ocorre via X, Escape ou clique no overlay.');
+  });
+
+  it('com o X desligado, o fechar desce para o rodapé e a primária fecha a lista', () => {
+    const saida = dialogCustomCloseSource();
+    expect(saida).toContain('<DialogContent showCloseButton={false}>');
+    // A ORDEM é o assunto: secundários primeiro, primária por último no DOM.
+    // Snippet que ensinasse o oposto da prévia ao lado seria pior que nenhum.
+    const expectedOrder = ['>Fechar</Button>', '>Voltar</Button>', '>Continuar</Button>'];
+    const positions = expectedOrder.map((fragment) => saida.indexOf(fragment));
+    expect(positions.every((i) => i >= 0)).toBe(true);
+    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+    // Só o fechar é DialogClose: as outras duas seguem o fluxo.
+    expect(saida.match(/<DialogClose>/g)).toHaveLength(1);
+    expect(saida).toContain('<Button variant="ghost" {...props}>Fechar</Button>');
+    expect(saida).toContain('<Button variant="outline">Voltar</Button>');
+    expect(saida).toContain('<Button>Continuar</Button>');
+    expect(saida).toContain('O guia continua disponível no menu de ajuda.');
   });
 
   it('a ação destrutiva sai na variante destrutiva, e só ela', () => {
