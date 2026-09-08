@@ -31,8 +31,20 @@ import {
   dialogConfirmarEmailSource,
   dialogSource,
 } from './dialog.source';
+import dialogTranslations from '@shared/content/dialog/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
+
+/**
+ * Rótulos dos cenários: saem do MESMO `translations.json` que a docs page lê,
+ * onde cada chave existe nos três idiomas. A story é fixture e fica presa a
+ * pt-BR de propósito — quem resolve o idioma de quem lê é a docs page, e uma
+ * play que dependesse do seletor de idioma procuraria um nome diferente a cada
+ * rodada. A interpolação é do template literal (`${...}`), e não uma mustache:
+ * assim o nome da chave passa pelo `vue-tsc`, que não abre template em string.
+ */
+const L = dialogTranslations['pt-BR'].demonstration.labels;
+
 const meta = {
   title: 'Components/Overlay/Dialog/Variants',
   component: Dialog,
@@ -87,18 +99,18 @@ export const Default: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Editar perfil</Button>
+          <Button variant="outline">${L.triggerLabel}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar perfil</DialogTitle>
-            <DialogDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</DialogDescription>
+            <DialogTitle>${L.title}</DialogTitle>
+            <DialogDescription>${L.description}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">${L.cancel}</Button>
             </DialogClose>
-            <Button>Salvar alterações</Button>
+            <Button>${L.action}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -157,28 +169,28 @@ export const WithForm: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Editar perfil</Button>
+          <Button variant="outline">${L.triggerLabel}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar perfil</DialogTitle>
+            <DialogTitle>${L.title}</DialogTitle>
             <DialogDescription>Atualize seu nome e email. As mudanças entram em vigor após salvar.</DialogDescription>
           </DialogHeader>
           <form class="nds-grid" data-spacing="sm">
             <div class="nds-grid" data-spacing="xs">
-              <Label for="dialog-name">Nome</Label>
+              <Label for="dialog-name">${L.fieldName}</Label>
               <Input id="dialog-name" default-value="Juliana Mucci" />
             </div>
             <div class="nds-grid" data-spacing="xs">
-              <Label for="dialog-email">E-mail</Label>
+              <Label for="dialog-email">${L.fieldEmail}</Label>
               <Input id="dialog-email" type="email" default-value="juliana@example.com" />
             </div>
           </form>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">${L.cancel}</Button>
             </DialogClose>
-            <Button type="submit">Salvar alterações</Button>
+            <Button type="submit">${L.action}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -191,11 +203,11 @@ export const WithForm: Story = {
       // O valor entra na asserção junto com o rótulo: um campo que renderiza
       // vazio passaria só na presença do label e ninguém veria a falha.
       const name = p.querySelector<HTMLInputElement>('#dialog-name')!;
-      await expect(name).toHaveAccessibleName('Nome');
+      await expect(name).toHaveAccessibleName(L.fieldName);
       await expect(name.value).toBe('Juliana Mucci');
 
       const email = p.querySelector<HTMLInputElement>('#dialog-email')!;
-      await expect(email).toHaveAccessibleName('E-mail');
+      await expect(email).toHaveAccessibleName(L.fieldEmail);
       await expect(email.value).toBe('juliana@example.com');
     });
 
@@ -227,12 +239,12 @@ export const WithScrollContent: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Ver termos</Button>
+          <Button variant="outline">${L.termsTitle}</Button>
         </DialogTrigger>
         <DialogContent class="nds-max-w-lg">
           <DialogHeader>
-            <DialogTitle>Termos de serviço</DialogTitle>
-            <DialogDescription>Leia atentamente os termos antes de aceitar.</DialogDescription>
+            <DialogTitle>${L.termsTitle}</DialogTitle>
+            <DialogDescription>${L.termsDescription}</DialogDescription>
           </DialogHeader>
           <div
             class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
@@ -240,7 +252,7 @@ export const WithScrollContent: Story = {
             data-spacing="sm"
             tabindex="0"
             role="group"
-            aria-label="Termos de serviço"
+            aria-label="${L.termsTitle}"
           >
             <p v-for="i in 12" :key="i">
               Parágrafo {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
@@ -250,9 +262,9 @@ export const WithScrollContent: Story = {
           </div>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Recusar</Button>
+              <Button variant="outline">${L.decline}</Button>
             </DialogClose>
-            <Button>Aceitar termos</Button>
+            <Button>${L.accept}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -303,12 +315,12 @@ export const WithScrollingOverlay: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Ver contrato</Button>
+          <Button variant="outline">${L.contractTrigger}</Button>
         </DialogTrigger>
         <DialogScrollContent>
           <DialogHeader>
-            <DialogTitle>Contrato de prestação</DialogTitle>
-            <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>
+            <DialogTitle>${L.contractTitle}</DialogTitle>
+            <DialogDescription>${L.contractDescription}</DialogDescription>
           </DialogHeader>
           <!--
             Sem \`.nds-dialog-body-scroll\`, sem tabindex e sem papel: nesta rota
@@ -328,9 +340,9 @@ export const WithScrollingOverlay: Story = {
           </div>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Recusar</Button>
+              <Button variant="outline">${L.decline}</Button>
             </DialogClose>
-            <Button>Aceitar</Button>
+            <Button>${L.accept}</Button>
           </DialogFooter>
         </DialogScrollContent>
       </Dialog>
@@ -435,18 +447,18 @@ export const WithDestructiveAction: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Remover anexo</Button>
+          <Button variant="outline">${L.removeItemAction}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Remover anexo</DialogTitle>
-            <DialogDescription>O anexo será removido desta mensagem. Você pode adicioná-lo novamente depois.</DialogDescription>
+            <DialogTitle>${L.removeItemTitle}</DialogTitle>
+            <DialogDescription>${L.removeItemDescription}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">${L.cancel}</Button>
             </DialogClose>
-            <Button variant="destructive">Remover anexo</Button>
+            <Button variant="destructive">${L.removeItemAction}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -550,11 +562,11 @@ export const ConfirmEmail: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Confirmar novo email</Button>
+          <Button variant="outline">${L.confirmEmailTitle}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Confirmar novo email</DialogTitle>
+            <DialogTitle>${L.confirmEmailTitle}</DialogTitle>
             <DialogDescription>
               Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.
             </DialogDescription>
@@ -565,9 +577,9 @@ export const ConfirmEmail: Story = {
           </div>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">${L.cancel}</Button>
             </DialogClose>
-            <Button>Enviar confirmação</Button>
+            <Button>${L.confirmEmailAction}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

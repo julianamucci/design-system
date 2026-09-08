@@ -28,8 +28,20 @@ import {
   dialogNoButtonCloseSource,
   dialogSource,
 } from './dialog.source';
+import dialogTranslations from '@shared/content/dialog/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
+
+/**
+ * Rótulos dos cenários: saem do MESMO `translations.json` que a docs page lê,
+ * onde cada chave existe nos três idiomas. A story é fixture e fica presa a
+ * pt-BR de propósito — quem resolve o idioma de quem lê é a docs page, e uma
+ * play que dependesse do seletor de idioma procuraria um nome diferente a cada
+ * rodada. A interpolação é do template literal (`${...}`), e não uma mustache:
+ * assim o nome da chave passa pelo `vue-tsc`, que não abre template em string.
+ */
+const L = dialogTranslations['pt-BR'].demonstration.labels;
+
 const meta = {
   title: 'Components/Overlay/Dialog/States',
   component: Dialog,
@@ -78,18 +90,18 @@ export const Closed: Story = {
     template: `
       <Dialog>
         <DialogTrigger as-child>
-          <Button variant="outline">Editar perfil</Button>
+          <Button variant="outline">${L.triggerLabel}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar perfil</DialogTitle>
+            <DialogTitle>${L.title}</DialogTitle>
             <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">${L.cancel}</Button>
             </DialogClose>
-            <Button>Salvar alterações</Button>
+            <Button>${L.action}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -131,18 +143,18 @@ export const Open: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Editar perfil</Button>
+          <Button variant="outline">${L.triggerLabel}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar perfil</DialogTitle>
-            <DialogDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</DialogDescription>
+            <DialogTitle>${L.title}</DialogTitle>
+            <DialogDescription>${L.description}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">${L.cancel}</Button>
             </DialogClose>
-            <Button>Salvar alterações</Button>
+            <Button>${L.action}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -264,7 +276,7 @@ export const Controlled: Story = {
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline">${L.cancel}</Button>
               </DialogClose>
               <Button @click="onChange(false)">Confirmar</Button>
             </DialogFooter>

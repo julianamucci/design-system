@@ -53,32 +53,32 @@ const { t: tNav } = useTranslation(uiTranslations);
 // É o contrário do que ele faz: ele põe `.nds-dialog-overlay-scroll` e
 // `.nds-dialog-content-scroll`, e nesse arranjo quem rola é o overlay — o
 // painel inteiro entra no fluxo e o cabeçalho sobe junto com o resto.
-// As duas chaves de `closeLabel` também são override, e pelo mesmo motivo: a
-// prop nasceu POR STACK, para tirar de dentro do primitivo o rótulo que estava
-// cravado em pt-BR. `props.table.closeLabel` descreve a prop na tabela;
-// `demonstration.labels.close` é o rótulo que os diálogos VIVOS desta página
-// passam ao botão de fechar — sem ele, o X do canto anunciaria "Fechar" para
-// quem lê a página em inglês ou em espanhol. Nome de prop e rótulo, nunca um
-// `*Code`.
+//
+// `props.table.closeLabel` também é override, e pelo mesmo motivo: a prop
+// nasceu POR STACK, para tirar de dentro do primitivo o rótulo que estava
+// cravado em pt-BR, e a tabela descreve a prop desta stack. Nome de prop,
+// nunca um `*Code`.
+//
+// O RÓTULO que os diálogos vivos passam ao botão de fechar já não mora aqui:
+// `demonstration.labels.close` está no conteúdo compartilhado, nos três
+// idiomas, junto com o resto dos rótulos dos cenários. Override que duplicava
+// conteúdo comum prendia o rótulo a esta stack.
 const { t: tContent, locale } = useTranslation(dialogTranslations, {
   'pt-BR': {
     'props.table.closeLabel':
       'Nome acessível do botão de fechar. Vai como texto para leitor de tela, não como atributo.',
-    'demonstration.labels.close': 'Fechar',
     'notes.tip3':
       'Conteúdo mais alto que a janela pede uma das duas rotas. Cabeçalho e rodapé parados: mantenha <code>DialogContent</code> e dê ao corpo a classe de rolagem, que já traz altura máxima e barra própria. Painel inteiro rolando com a página: troque por <code>DialogScrollContent</code>, e aí o cabeçalho sobe junto com o conteúdo.',
   },
   en: {
     'props.table.closeLabel':
       'Accessible name of the close button. Rendered as screen-reader text, not as an attribute.',
-    'demonstration.labels.close': 'Close',
     'notes.tip3':
       'Content taller than the window calls for one of two routes. Header and footer fixed: keep <code>DialogContent</code> and give the body the scroll class, which already brings a max height and its own scrollbar. Whole panel scrolling with the page: swap in <code>DialogScrollContent</code>, and the header then scrolls away with the content.',
   },
   es: {
     'props.table.closeLabel':
       'Nombre accesible del botón de cerrar. Se renderiza como texto para lector de pantalla, no como atributo.',
-    'demonstration.labels.close': 'Cerrar',
     'notes.tip3':
       'El contenido más alto que la ventana pide una de dos rutas. Encabezado y pie fijos: mantén <code>DialogContent</code> y dale al cuerpo la clase de desplazamiento, que ya trae altura máxima y barra propia. Panel entero desplazándose con la página: cambia a <code>DialogScrollContent</code>, y entonces el encabezado sube junto con el contenido.',
   },
@@ -669,21 +669,21 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Editar perfil
+              {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Editar perfil</DialogTitle>
-              <DialogDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</DialogDescription>
+              <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
+              <DialogDescription>{{ tContent('demonstration.labels.description') }}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Cancelar
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>Salvar alterações</Button>
+              <Button>{{ tContent('demonstration.labels.action') }}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -692,13 +692,13 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Atenção
+              {{ tContent('demonstration.labels.vagueTitle') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Atenção</DialogTitle>
-              <DialogDescription>Deseja continuar?</DialogDescription>
+              <DialogTitle>{{ tContent('demonstration.labels.vagueTitle') }}</DialogTitle>
+              <DialogDescription>{{ tContent('demonstration.labels.vagueDescription') }}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
@@ -715,21 +715,21 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Editar perfil
+              {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Editar perfil</DialogTitle>
+              <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>Atualize seu nome e email.</DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Cancelar
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>Salvar alterações</Button>
+              <Button>{{ tContent('demonstration.labels.action') }}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -738,22 +738,22 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="destructive">
-              Excluir conta
+              {{ tContent('demonstration.labels.destructiveTitle') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Excluir conta</DialogTitle>
-              <DialogDescription>Esta ação é permanente.</DialogDescription>
+              <DialogTitle>{{ tContent('demonstration.labels.destructiveTitle') }}</DialogTitle>
+              <DialogDescription>{{ tContent('demonstration.labels.destructiveDescription') }}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Cancelar
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
               <Button variant="destructive">
-                Excluir conta
+                {{ tContent('demonstration.labels.destructiveTitle') }}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -783,21 +783,21 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Editar perfil
+              {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Editar perfil</DialogTitle>
+              <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Cancelar
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>Salvar alterações</Button>
+              <Button>{{ tContent('demonstration.labels.action') }}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -806,12 +806,12 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Editar perfil
+              {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Editar perfil</DialogTitle>
+              <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>Atualize seu nome e email.</DialogDescription>
             </DialogHeader>
             <form
@@ -822,14 +822,14 @@ const a11yCritCols = computed(() => ({
                 class="nds-stack"
                 data-spacing="xs"
               >
-                <Label for="docs-form-name">Nome</Label>
+                <Label for="docs-form-name">{{ tContent('demonstration.labels.fieldName') }}</Label>
                 <Input id="docs-form-name" />
               </div>
               <div
                 class="nds-stack"
                 data-spacing="xs"
               >
-                <Label for="docs-form-email">Email</Label>
+                <Label for="docs-form-email">{{ tContent('demonstration.labels.fieldEmail') }}</Label>
                 <Input
                   id="docs-form-email"
                   type="email"
@@ -839,11 +839,11 @@ const a11yCritCols = computed(() => ({
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Cancelar
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
               <Button type="submit">
-                Salvar alterações
+                {{ tContent('demonstration.labels.action') }}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -853,7 +853,7 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Termos de serviço
+              {{ tContent('demonstration.labels.termsTitle') }}
             </Button>
           </DialogTrigger>
           <!-- `DialogContent`, e não `DialogScrollContent`: o conteúdo
@@ -866,8 +866,8 @@ const a11yCritCols = computed(() => ({
             :close-label="tContent('demonstration.labels.close')"
           >
             <DialogHeader>
-              <DialogTitle>Termos de serviço</DialogTitle>
-              <DialogDescription>Leia atentamente os termos.</DialogDescription>
+              <DialogTitle>{{ tContent('demonstration.labels.termsTitle') }}</DialogTitle>
+              <DialogDescription>{{ tContent('demonstration.labels.termsDescription') }}</DialogDescription>
             </DialogHeader>
             <!-- O teto e a rolagem saem de `.nds-dialog-body-scroll`: um
                  `max-height` inline vence a folha e sai do tema, da densidade e
@@ -881,7 +881,7 @@ const a11yCritCols = computed(() => ({
               data-spacing="sm"
               tabindex="0"
               role="group"
-              aria-label="Termos de serviço"
+              :aria-label="tContent('demonstration.labels.termsTitle')"
             >
               <p
                 v-for="i in 8"
@@ -893,10 +893,10 @@ const a11yCritCols = computed(() => ({
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Recusar
+                  {{ tContent('demonstration.labels.decline') }}
                 </Button>
               </DialogClose>
-              <Button>Aceitar termos</Button>
+              <Button>{{ tContent('demonstration.labels.accept') }}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -905,7 +905,7 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Ver contrato
+              {{ tContent('demonstration.labels.contractTrigger') }}
             </Button>
           </DialogTrigger>
           <!-- A OUTRA rota: DialogScrollContent põe o painel no fluxo do
@@ -914,8 +914,8 @@ const a11yCritCols = computed(() => ({
                a composição do overlay com o painel. -->
           <DialogScrollContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Contrato de prestação</DialogTitle>
-              <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>
+              <DialogTitle>{{ tContent('demonstration.labels.contractTitle') }}</DialogTitle>
+              <DialogDescription>{{ tContent('demonstration.labels.contractDescription') }}</DialogDescription>
             </DialogHeader>
             <!-- Sem a classe de rolagem de corpo, sem tabindex e sem papel:
                  aqui não há região rolável aninhada para alcançar por teclado,
@@ -935,10 +935,10 @@ const a11yCritCols = computed(() => ({
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Recusar
+                  {{ tContent('demonstration.labels.decline') }}
                 </Button>
               </DialogClose>
-              <Button>Aceitar</Button>
+              <Button>{{ tContent('demonstration.labels.accept') }}</Button>
             </DialogFooter>
           </DialogScrollContent>
         </Dialog>
@@ -962,22 +962,22 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Remover anexo
+              {{ tContent('demonstration.labels.removeItemAction') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Remover anexo</DialogTitle>
-              <DialogDescription>O anexo será removido desta mensagem.</DialogDescription>
+              <DialogTitle>{{ tContent('demonstration.labels.removeItemTitle') }}</DialogTitle>
+              <DialogDescription>{{ tContent('demonstration.labels.removeItemDescription') }}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Cancelar
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
               <Button variant="destructive">
-                Remover anexo
+                {{ tContent('demonstration.labels.removeItemAction') }}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -1015,12 +1015,12 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Confirmar e-mail
+              {{ tContent('demonstration.labels.confirmEmailTitle') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Confirmar e-mail</DialogTitle>
+              <DialogTitle>{{ tContent('demonstration.labels.confirmEmailTitle') }}</DialogTitle>
               <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
             </DialogHeader>
             <p class="nds-text-body">
@@ -1029,10 +1029,10 @@ const a11yCritCols = computed(() => ({
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Cancelar
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>Enviar link</Button>
+              <Button>{{ tContent('demonstration.labels.confirmEmailAction') }}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -1050,12 +1050,12 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Editar perfil
+              {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Editar perfil</DialogTitle>
+              <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
             </DialogHeader>
             <!-- O rodapé fica DENTRO do form: é o que faz o Enter em qualquer
@@ -1070,10 +1070,10 @@ const a11yCritCols = computed(() => ({
                 class="nds-stack"
                 data-spacing="sm"
               >
-                <Label for="profile-name">Nome completo</Label>
+                <Label for="profile-name">{{ tContent('demonstration.labels.fieldFullName') }}</Label>
                 <Input
                   id="profile-name"
-                  model-value="Maria Silva"
+                  :model-value="tContent('demonstration.labels.samplePersonName')"
                 />
               </div>
               <DialogFooter>
@@ -1082,11 +1082,11 @@ const a11yCritCols = computed(() => ({
                     type="button"
                     variant="outline"
                   >
-                    Cancelar
+                    {{ tContent('demonstration.labels.cancel') }}
                   </Button>
                 </DialogClose>
                 <Button type="submit">
-                  Salvar alterações
+                  {{ tContent('demonstration.labels.action') }}
                 </Button>
               </DialogFooter>
             </form>

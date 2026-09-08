@@ -26,8 +26,20 @@ import {
   dialogEditarPerfilSource,
   dialogPreviaDeMidiaSource,
 } from './dialog.source';
+import dialogTranslations from '@shared/content/dialog/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
+
+/**
+ * Rótulos dos cenários: saem do MESMO `translations.json` que a docs page lê,
+ * onde cada chave existe nos três idiomas. A story é fixture e fica presa a
+ * pt-BR de propósito — quem resolve o idioma de quem lê é a docs page, e uma
+ * play que dependesse do seletor de idioma procuraria um nome diferente a cada
+ * rodada. A interpolação é do template literal (`${...}`), e não uma mustache:
+ * assim o nome da chave passa pelo `vue-tsc`, que não abre template em string.
+ */
+const L = dialogTranslations['pt-BR'].demonstration.labels;
+
 const meta = {
   title: 'Components/Overlay/Dialog/Compositions',
   component: Dialog,
@@ -78,20 +90,20 @@ export const ProfileEdit: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Editar perfil</Button>
+          <Button variant="outline">${L.triggerLabel}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Editar perfil</DialogTitle>
-            <DialogDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</DialogDescription>
+            <DialogTitle>${L.title}</DialogTitle>
+            <DialogDescription>${L.description}</DialogDescription>
           </DialogHeader>
           <form class="nds-grid" data-spacing="sm">
             <div class="nds-grid" data-spacing="xs">
-              <Label for="profile-name">Nome</Label>
+              <Label for="profile-name">${L.fieldName}</Label>
               <Input id="profile-name" default-value="Juliana Mucci" />
             </div>
             <div class="nds-grid" data-spacing="xs">
-              <Label for="profile-handle">Username</Label>
+              <Label for="profile-handle">${L.fieldUsername}</Label>
               <Input id="profile-handle" default-value="@julianamucci" />
             </div>
             <div class="nds-grid" data-spacing="xs">
@@ -101,9 +113,9 @@ export const ProfileEdit: Story = {
           </form>
           <DialogFooter>
             <DialogClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button variant="outline">${L.cancel}</Button>
             </DialogClose>
-            <Button type="submit">Salvar alterações</Button>
+            <Button type="submit">${L.action}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -116,11 +128,11 @@ export const ProfileEdit: Story = {
       // O valor entra na asserção junto com o rótulo: um campo que renderiza
       // vazio passaria só na presença do label e ninguém veria a falha.
       const name = p.querySelector<HTMLInputElement>('#profile-name')!;
-      await expect(name).toHaveAccessibleName('Nome');
+      await expect(name).toHaveAccessibleName(L.fieldName);
       await expect(name.value).toBe('Juliana Mucci');
 
       const handle = p.querySelector<HTMLInputElement>('#profile-handle')!;
-      await expect(handle).toHaveAccessibleName('Username');
+      await expect(handle).toHaveAccessibleName(L.fieldUsername);
       await expect(handle.value).toBe('@julianamucci');
     });
 
