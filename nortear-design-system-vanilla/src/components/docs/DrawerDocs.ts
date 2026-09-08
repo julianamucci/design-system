@@ -247,10 +247,10 @@ export function createDrawerDocs(): HTMLElement {
             wrap.append(
               buildDrawerDemo({
                 triggerLabel: t('demonstration.labels.bottom'),
-                title: 'Editar perfil',
-                description: 'Atualize seus dados.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Salvar',
+                title: t('demonstration.labels.title'),
+                description: t('demonstration.labels.description'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                actionLabel: t('demonstration.labels.confirm'),
                 bodyText: 'Conteúdo do drawer.',
                 side: 'bottom',
               }),
@@ -318,17 +318,17 @@ export function createDrawerDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDrawerDemo({
-                triggerLabel: 'Editar perfil',
-                title: 'Editar perfil',
-                description: 'Atualize seus dados.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Salvar',
+                triggerLabel: t('demonstration.labels.trigger'),
+                title: t('demonstration.labels.title'),
+                description: t('demonstration.labels.description'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                actionLabel: t('demonstration.labels.confirm'),
                 bodyText: 'Com DrawerTitle visível.',
               }),
               dontPreviewFactory: () => buildDrawerDemo({
                 triggerLabel: 'Abrir',
                 title: '',
-                cancelLabel: 'Cancelar',
+                cancelLabel: t('demonstration.labels.cancel'),
                 actionLabel: 'OK',
                 bodyText: 'Sem DrawerTitle — leitor de tela não anuncia.',
               }),
@@ -342,7 +342,7 @@ export function createDrawerDocs(): HTMLElement {
                 triggerLabel: 'Abrir mobile',
                 title: 'Filtros',
                 description: 'Mobile-first com arraste para dispensar.',
-                cancelLabel: 'Cancelar',
+                cancelLabel: t('demonstration.labels.cancel'),
                 actionLabel: 'Aplicar',
                 side: 'bottom',
               }),
@@ -350,7 +350,7 @@ export function createDrawerDocs(): HTMLElement {
                 triggerLabel: 'Abrir drawer aninhado',
                 title: 'Drawer aninhado',
                 description: 'Não aninhe drawers.',
-                cancelLabel: 'Cancelar',
+                cancelLabel: t('demonstration.labels.cancel'),
                 actionLabel: 'OK',
                 bodyText: 'Aninhar quebra focus trap.',
               }),
@@ -402,7 +402,7 @@ longBody.dataset.spacing = 'sm';
 // Sem altura própria: o corpo do painel já rola dentro do teto de altura dele.
 for (let i = 1; i <= 12; i++) {
   const p = document.createElement('p');
-  p.textContent = \`Parágrafo \${i}: termos longos para garantir scroll interno.\`;
+  p.textContent = \`\${i}. Termos longos, para o corpo do painel passar da altura visível e rolar sozinho.\`;
   longBody.appendChild(p);
 }
 
@@ -427,10 +427,10 @@ const drawer = createDrawer({
               code: codeBottom,
               previewFactory: () => buildDrawerDemo({
                 triggerLabel: t('demonstration.labels.bottom'),
-                title: 'Editar perfil',
-                description: 'Atualize seus dados.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Salvar',
+                title: t('demonstration.labels.title'),
+                description: t('demonstration.labels.description'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                actionLabel: t('demonstration.labels.confirm'),
                 side: 'bottom',
               }),
             },
@@ -471,7 +471,7 @@ const drawer = createDrawer({
                 triggerLabel: t('demonstration.labels.right'),
                 title: 'Filtros',
                 description: 'Painel de filtros.',
-                cancelLabel: 'Cancelar',
+                cancelLabel: t('demonstration.labels.cancel'),
                 actionLabel: 'Aplicar',
                 side: 'right',
               }),
@@ -493,13 +493,13 @@ const drawer = createDrawer({
                 // desta página divergir das demais.
                 for (let i = 1; i <= 12; i++) {
                   const p = document.createElement('p');
-                  p.textContent = `Parágrafo ${i}: termos longos para garantir scroll interno.`;
+                  p.textContent = `${i}. ${t('demonstration.labels.scrollBody')}`;
                   longBody.appendChild(p);
                 }
                 // `data-slot="drawer-close"` é o que liga o clique ao fechamento nesta
                 // stack. Sem ele o Cancelar da PRÉVIA era um botão inerte, enquanto o
                 // helper de demonstração desta mesma página já o marcava.
-                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const cancel = createButton({ variant: 'outline', label: t('demonstration.labels.cancel') });
                 cancel.dataset.slot = 'drawer-close';
                 const action = createButton({ variant: 'default', label: 'Aceitar termos' });
                 const footer = [cancel, action];
@@ -591,30 +591,30 @@ const footer = [cancel, action];
 const drawer = createDrawer({
   trigger,
   title: 'Editar perfil',
-  description: 'Atualize seus dados pessoais.',
+  description: 'Atualize seus dados.',
   content: form,
   footer,
 });`;
 
-        const codeWithConfirmation = `const trigger = createButton({ variant: 'outline', label: 'Remover item' });
+        const codeWithConfirmation = `const trigger = createButton({ variant: 'outline', label: 'Excluir' });
 
 const body = document.createElement('div');
 body.className = 'nds-text-body nds-text-muted-foreground';
-body.textContent = 'Você poderá adicioná-lo novamente a qualquer momento.';
+body.textContent = 'Esta ação remove o item desta lista.';
 
 // data-slot="drawer-close" é o que faz a fábrica ligar o clique ao fechamento.
 // Sem ele o Cancelar é um botão inerte.
 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
 cancel.dataset.slot = 'drawer-close';
-const action = createButton({ variant: 'destructive', label: 'Remover' });
+const action = createButton({ variant: 'destructive', label: 'Excluir' });
 const footer = [cancel, action];
 
 // A decisão É a tela: o foco entra no cancelar, e não no corpo. O Enter por
 // reflexo tem de cair na saída segura, nunca na ação que consuma.
 const drawer = createDrawer({
   trigger,
-  title: 'Remover item da lista?',
-  description: 'Você poderá adicioná-lo novamente a qualquer momento.',
+  title: 'Excluir',
+  description: 'Você pode desfazer esta ação nos próximos 30 dias.',
   content: body,
   footer,
   initialFocus: cancel,
@@ -632,34 +632,34 @@ const drawer = createDrawer({
               useWhen: stripHtml(t('variants.compositions.withForm.use')),
               code: codeWithForm,
               previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
+                const trigger = createButton({ variant: 'outline', label: t('demonstration.labels.trigger') });
                 const form = document.createElement('form');
                 form.id = 'docs-drawer-form';
                 form.className = 'nds-stack';
                 form.dataset.spacing = 'sm';
                 form.addEventListener('submit', (evento) => evento.preventDefault());
                 form.append(
-                  buildField('Nome', 'docs-drawer-name', 'text', 'Maria Souza'),
-                  buildField('E-mail', 'docs-drawer-email', 'email', 'maria@exemplo.com'),
+                  buildField(t('demonstration.labels.fieldName'), 'docs-drawer-name', 'text', 'Maria Souza'),
+                  buildField(t('demonstration.labels.fieldEmail'), 'docs-drawer-email', 'email', 'maria@exemplo.com'),
                 );
                 // `data-slot="drawer-close"` é o que liga o clique ao fechamento nesta
                 // stack. Sem ele o Cancelar da PRÉVIA era um botão inerte, enquanto o
                 // helper de demonstração desta mesma página já o marcava.
-                const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
+                const cancel = createButton({ variant: 'outline', label: t('demonstration.labels.cancel') });
                 cancel.dataset.slot = 'drawer-close';
                 // O rodapé é irmão do corpo: é o par id ↔ `form` que religa a ação
                 // principal ao formulário. Sem ele o Enter num campo não dispara nada.
                 const action = createButton({
                   variant: 'default',
-                  label: 'Salvar alterações',
+                  label: t('demonstration.labels.confirm'),
                   type: 'submit',
                 });
                 action.setAttribute('form', form.id);
                 const footer = [cancel, action];
                 const el = createDrawer({
                   trigger,
-                  title: 'Editar perfil',
-                  description: 'Atualize seus dados pessoais.',
+                  title: t('demonstration.labels.title'),
+                  description: t('demonstration.labels.description'),
                   content: form,
                   footer,
                 });
@@ -673,11 +673,11 @@ const drawer = createDrawer({
               useWhen: stripHtml(t('variants.compositions.withConfirmation.use')),
               code: codeWithConfirmation,
               previewFactory: () => buildDrawerDemo({
-                triggerLabel: 'Remover item',
-                title: 'Remover item da lista?',
-                description: 'Você poderá adicioná-lo novamente a qualquer momento.',
-                cancelLabel: 'Cancelar',
-                actionLabel: 'Remover',
+                triggerLabel: t('demonstration.labels.destroy'),
+                title: t('demonstration.labels.destroy'),
+                description: t('demonstration.labels.destroyMessage'),
+                cancelLabel: t('demonstration.labels.cancel'),
+                actionLabel: t('demonstration.labels.destroy'),
                 destructive: true,
                 bodyText: 'Esta ação remove o item desta lista.',
                 side: 'bottom',
