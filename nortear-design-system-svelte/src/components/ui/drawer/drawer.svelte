@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Drawer as DrawerPrimitive } from "vaul-svelte";
 	import { setDrawerCloseContext } from "./close-context.js";
+	import { setDrawerDirectionContext } from "./direction-context.js";
 
 	/**
 	 * ─── Decisão de acessibilidade (bloco canônico no drawer da stack vanilla) ─
@@ -54,9 +55,16 @@
 	 * até a lib. O que muda é o PADRÃO, que volta a ser o dela — e o dela é o
 	 * mesmo do design system.
 	 */
+	/**
+	 * `direction` é declarada aqui com o default do primitivo porque a folha
+	 * compartilhada precisa dele por escrito: é este valor que o painel emite
+	 * como `data-direction`, e sem atributo o painel não tem posição nenhuma.
+	 * Ver `direction-context.ts`. A prop continua chegando à lib, intacta.
+	 */
 	let {
 		autoFocus = true,
 		dismissible = true,
+		direction = "bottom",
 		open = $bindable(false),
 		...restProps
 	}: DrawerPrimitive.RootProps = $props();
@@ -80,11 +88,18 @@
 			return dismissible ? null : closeExplicitly;
 		},
 	});
+
+	setDrawerDirectionContext({
+		get direction() {
+			return direction;
+		},
+	});
 </script>
 
 <DrawerPrimitive.Root
 	{autoFocus}
 	{dismissible}
+	{direction}
 	bind:open
 	{...restProps}
 />
