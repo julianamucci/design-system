@@ -16,7 +16,17 @@
         "bottom": "Bottom — drawer mobile padrão",
         "right": "Right — painel lateral em desktop",
         "left": "Left — menu lateral",
-        "top": "Top — notificação ou seletor"
+        "top": "Top — notificação ou seletor",
+        "trigger": "Editar perfil",
+        "title": "Editar perfil",
+        "description": "Atualize seus dados.",
+        "confirm": "Salvar alterações",
+        "cancel": "Cancelar",
+        "destroy": "Excluir",
+        "destroyMessage": "Você pode desfazer esta ação nos próximos 30 dias.",
+        "fieldName": "Nome",
+        "fieldEmail": "E-mail",
+        "scrollBody": "Termos longos, para o corpo do painel passar da altura visível e rolar sozinho."
       }
     },
     "anatomy": {
@@ -490,7 +500,17 @@
         "bottom": "Bottom — default mobile drawer",
         "right": "Right — desktop side panel",
         "left": "Left — side menu",
-        "top": "Top — notification or selector"
+        "top": "Top — notification or selector",
+        "trigger": "Edit profile",
+        "title": "Edit profile",
+        "description": "Update your details.",
+        "confirm": "Save changes",
+        "cancel": "Cancel",
+        "destroy": "Delete",
+        "destroyMessage": "You can undo this action within the next 30 days.",
+        "fieldName": "Name",
+        "fieldEmail": "Email",
+        "scrollBody": "Long terms, so the panel body exceeds the visible height and scrolls on its own."
       }
     },
     "anatomy": {
@@ -964,7 +984,17 @@
         "bottom": "Bottom — drawer mobile predeterminado",
         "right": "Right — panel lateral en desktop",
         "left": "Left — menú lateral",
-        "top": "Top — notificación o selector"
+        "top": "Top — notificación o selector",
+        "trigger": "Editar perfil",
+        "title": "Editar perfil",
+        "description": "Actualiza tus datos.",
+        "confirm": "Guardar cambios",
+        "cancel": "Cancelar",
+        "destroy": "Eliminar",
+        "destroyMessage": "Puedes deshacer esta acción en los próximos 30 días.",
+        "fieldName": "Nombre",
+        "fieldEmail": "Correo electrónico",
+        "scrollBody": "Términos largos, para que el cuerpo del panel supere la altura visible y se desplace solo."
       }
     },
     "anatomy": {
