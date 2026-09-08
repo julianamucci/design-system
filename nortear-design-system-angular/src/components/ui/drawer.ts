@@ -37,9 +37,54 @@ import {
   drawerSwipeTranslate,
   isVerticalDrawerSwipe,
   resolveDrawerRelease,
-  shouldStartDrawerSwipe,
+  resolveDrawerDragGuard,
   type DrawerSwipeDirection,
 } from '@shared/primitives/drawer-swipe';
+
+/**
+ * Decide se o gesto pode COMEÇAR, a partir do alvo do ponteiro.
+ *
+ * Mora aqui, e não no compartilhado, por caminhar na árvore: pela régua do
+ * CLAUDE.md, o que precisa de um `HTMLElement` é implementação. A DECISÃO
+ * continua vindo de `resolveDrawerDragGuard`, que recebe só bandeiras — é ela
+ * que os testes de unidade cobrem, e é ela que o pacote publica.
+ */
+function shouldStartDrawerSwipe(options: {
+  target: Element | null;
+  panel: HTMLElement;
+  direction: DrawerSwipeDirection;
+  /** Movimento no sentido de ABRIR mais — nesse sentido, rolar tem prioridade. */
+  openingWards: boolean;
+  /** Já existe texto selecionado? Então o gesto é de seleção, não de arraste. */
+  hasSelection: boolean;
+}): boolean {
+  const { target, panel, direction, openingWards, hasSelection } = options;
+  if (!target) return false;
+
+  // `<select>` nativo abre a própria lista de opções ao arrastar; a lib recusa
+  // pelo mesmo motivo, e `[data-no-drag]` é a saída explícita de quem compõe.
+  const optedOut = target.tagName === 'SELECT' || target.closest('[data-no-drag]') !== null;
+
+  let scrollOwnsIt = false;
+  let el: Element | null = target;
+  while (el) {
+    if (el.scrollHeight > el.clientHeight && el.scrollTop !== 0) {
+      scrollOwnsIt = true;
+      break;
+    }
+    if (el === panel) break;
+    el = el.parentElement;
+  }
+
+  return resolveDrawerDragGuard({
+    optedOut,
+    sideways: direction === 'left' || direction === 'right',
+    hasSelection,
+    openingWards,
+    scrollOwnsIt,
+  });
+}
+
 
 // ─── Drawer ───────────────────────────────────────────────────────────────────
 //

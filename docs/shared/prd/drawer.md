@@ -117,7 +117,7 @@ longo empurrava o rodapé com os botões para fora da tela.
 **Medição**: sem isso o navegador trata o movimento como rolagem da página e nunca
 entrega os `pointermove` ao painel. As três stacks que rodam lib de gesto já
 recebiam a declaração da própria lib; na folha ela é do design system, e é o que
-permite às outras duas rodarem o gesto pelo primitivo compartilhado.
+permite às outras duas rodarem o gesto que implementam em casa.
 
 **Nota de 2026-09-08**: esta linha dizia que o valor era "o da lib, LIDO na folha
 que ela injeta". Descrever o próprio contrato como cópia do de uma dependência
@@ -135,7 +135,9 @@ rolagem por toque dentro do corpo é herdada da lib e continua sem medição.
 manda é o transform escrito a cada quadro seguindo o ponteiro, e interpolar por
 cima deixaria o painel atrasado em relação ao dedo.
 **Medição que corrigiu a nota anterior**: `[data-swiping]` é escrito pelo motor de
-ponteiro **compartilhado** (vanilla e angular). A versão antiga da nota dizia que
+ponteiro de CADA stack — vanilla em `ui/drawer-swipe.ts`, angular na diretiva
+`NdsDrawerSwipe` (o motor era compartilhado até 2026-09-08; ver a nota em
+`docs/shared/primitives/drawer-swipe.ts`). A versão antiga da nota dizia que
 a lib escrevia o atributo, e era FALSO — procurado na fonte publicada, ele não
 aparece uma única vez; a lib suprime a transição por `style` inline
 (`transition: none`), que vence esta folha de qualquer jeito. O seletor era um
@@ -241,7 +243,7 @@ componentes.
 
 | stack | como difere |
 |---|---|
-| vanilla, angular | motor de ponteiro compartilhado, que escreve `[data-swiping]` (D9) |
+| vanilla, angular | motor de ponteiro PRÓPRIO, que escreve `[data-swiping]` (D9); do compartilhado vêm só os limiares e as funções que decidem |
 | svelte | `shouldScaleBackground` e `activeSnapPoint` chegaram a ser expostos contra o que o comentário compartilhado afirma, e foram recolhidos em `3807596f8` |
 | angular | consulta `[ndsDrawerClose]` para o foco inicial, porque host binding disputa `data-slot` (D12) |
 
