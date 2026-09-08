@@ -373,9 +373,11 @@ export const ListenerCleanup: Story = {
 
 // ─── Arraste para dispensar ───────────────────────────────────────────────────
 //
-// O gesto existe nas CINCO stacks. Nesta e na do Angular ele vem do motor de
-// pointer compartilhado (`@shared/primitives/drawer-swipe`); nas outras três,
-// da lib de gaveta. Os limiares são os mesmos, e é isso que esta play mede.
+// O gesto existe nas CINCO stacks. Nesta e na do Angular ele é escrito à mão com
+// eventos de ponteiro — aqui em `./drawer-swipe.ts`, ao lado do componente; nas
+// outras três, vem da lib de gaveta. Os limiares e a decisão ao soltar são os do
+// compartilhado (`@shared/primitives/drawer-swipe`, que é regra e não montagem),
+// então são os mesmos nas cinco — e é isso que esta play mede.
 //
 // ─── Por que os eventos são despachados à mão ────────────────────────────────
 //

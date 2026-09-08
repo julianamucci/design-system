@@ -15,10 +15,16 @@ import {
 /**
  * O motor do arraste do Drawer, na parte que EXISTE fora do navegador.
  *
- * Divisão deliberada: a decisão (dispensar ou voltar), a curva de resistência e
- * o sinal de cada direção são aritmética pura e cabem aqui; a instalação dos
- * ouvintes, a captura de ponteiro e o `transform` escrito a cada quadro só
- * existem em execução e são cobertos pelas stories de `drawer-states`.
+ * Divisão deliberada, e ela virou divisão de ARQUIVO: a decisão (dispensar ou
+ * voltar), a curva de resistência e o sinal de cada direção são aritmética pura,
+ * moram em `@shared/primitives/drawer-swipe` porque são regra do design system,
+ * e é daí que os 19 casos abaixo importam — nenhum deles precisa de um
+ * `HTMLElement`. A instalação dos ouvintes, a captura de ponteiro e o
+ * `transform` escrito a cada quadro só existem em execução, moram na stack em
+ * `./drawer-swipe.ts` e são cobertos pelas stories de `drawer-states`.
+ *
+ * A régua é a mesma que decide onde cada metade vive: `resolveX(dados)` fica no
+ * compartilhado, `attachX(elemento)` fica na stack.
  *
  * O que estes casos guardam é a EQUIVALÊNCIA com a lib de gaveta que as outras
  * três stacks usam: os limiares e a fórmula foram lidos na fonte publicada dela,

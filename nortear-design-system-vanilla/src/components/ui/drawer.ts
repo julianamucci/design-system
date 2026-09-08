@@ -60,9 +60,10 @@
 //
 // ─── Onde ele DIVERGE do Sheet, e por quê ────────────────────────────────────
 //
-//   · Gesto de arrastar. Existe nas CINCO. Aqui o motor é
-//     `@shared/primitives/drawer-swipe`, escrito com eventos de ponteiro sobre
-//     a leitura da lib que as outras três usam; lá é a própria lib. Em todas é
+//   · Gesto de arrastar. Existe nas CINCO. Aqui o motor é `./drawer-swipe.ts`,
+//     escrito nesta stack com eventos de ponteiro sobre a leitura da lib que as
+//     outras três usam (os limiares e a decisão ao soltar vêm de
+//     `@shared/primitives/drawer-swipe`, que é regra); lá é a própria lib. Em todas é
 //     extra de ponteiro: arrastar só DISPENSA, e dispensar já tem Escape, véu e
 //     o botão do rodapé — nenhuma ação depende de trajeto (WCAG 2.5.7). O Sheet
 //     não tem gesto em stack nenhuma.
@@ -85,7 +86,7 @@
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
-import { attachDrawerSwipe, type DrawerSwipeHandle } from '@shared/primitives/drawer-swipe';
+import { attachDrawerSwipe, type DrawerSwipeHandle } from './drawer-swipe';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -375,7 +376,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
 
     /*
      * Arraste para dispensar — o mesmo gesto que as três stacks com lib de
-     * gaveta trazem pronto, aqui pelo motor compartilhado.
+     * gaveta trazem pronto, aqui pelo motor da própria stack (`./drawer-swipe`).
      *
      * Fecha por `'overlay'`, e não por um motivo novo: para quem escuta, soltar
      * o painel para fora da tela é a mesma decisão de "saí sem decidir nada" que
