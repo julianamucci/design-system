@@ -17,7 +17,7 @@ describe('drawerSnippet', () => {
     // markup que o renderer despejaria.
     expect(code).not.toContain('data-slot="drawer-content"');
     expect(code).not.toContain('aria-modal');
-    expect(code).not.toContain('data-vaul-drawer-direction');
+    expect(code).not.toContain('data-direction');
   });
 
   it('o nome do painel sai do título, e não de um apelido inventado', () => {
@@ -96,7 +96,7 @@ describe('drawerSource', () => {
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
-    expect(drawerSource('<div role="dialog" data-vaul-drawer-direction="bottom">', {})).not.toContain(
+    expect(drawerSource('<div role="dialog" data-direction="bottom">', {})).not.toContain(
       'role="dialog"',
     );
   });

@@ -8,12 +8,12 @@
 // `createDrawer` era `createSheet({ side: 'bottom' })`, e o resultado era um
 // Sheet com nome de Drawer: painel `.nds-sheet-content` com `data-side`, sem
 // alça, sem os cantos arredondados do Drawer, sem corpo rolável próprio e sem
-// `data-vaul-drawer-direction`. As stories compensavam escrevendo o atributo à
+// `data-direction`. As stories compensavam escrevendo o atributo à
 // mão no WRAPPER — onde nenhuma regra do CSS o lê — e chamando `createSheet`
 // direto para as outras três direções.
 //
 // A folha do Drawer (`docs/shared/styles/nds/drawer.css`) publica
-// `.nds-drawer-content[data-vaul-drawer-direction]`, `.nds-drawer-handle`,
+// `.nds-drawer-content[data-direction]`, `.nds-drawer-handle`,
 // `.nds-drawer-header`, `.nds-drawer-body` e `.nds-drawer-footer`, e nada nesta
 // stack os usava. Como esta é a stack de
 // referência de markup, o contrato que ela não cumpre é contrato que não existe.
@@ -78,7 +78,9 @@
 //     de viewport. Nos dois, classe de largura NÃO vence: as regras de direção
 //     são (0,2,0) e qualquer utilitária é (0,1,0).
 //   · Atributo de posição. O Sheet usa `data-side`; o Drawer usa
-//     `data-vaul-drawer-direction`, que é o seletor que o CSS compartilhado lê.
+//     `data-direction`, que é o seletor que o CSS compartilhado lê. Nenhum dos
+//     dois nomeia lib: os dois são contrato do design system, e valem igual em
+//     stack com gesto e em stack sem.
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
@@ -276,8 +278,8 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
     panelEl.dataset.state = 'open';
     // O atributo que TODA regra de posição, borda e canto do painel lê no CSS
     // compartilhado. Escrevê-lo no wrapper (como as stories faziam) não pinta
-    // nada: o seletor é `.nds-drawer-content[data-vaul-drawer-direction=…]`.
-    panelEl.dataset.vaulDrawerDirection = direction;
+    // nada: o seletor é `.nds-drawer-content[data-direction=…]`.
+    panelEl.dataset.direction = direction;
     panelEl.setAttribute('role', 'dialog');
     if (modal) panelEl.setAttribute('aria-modal', 'true');
     if (title) panelEl.setAttribute('aria-labelledby', titleId);

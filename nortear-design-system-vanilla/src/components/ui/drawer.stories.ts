@@ -172,7 +172,7 @@ export const Playground: Story = {
       await expect(panel).toHaveAttribute('aria-modal', 'true');
       await expect(panel).toHaveAccessibleName(args.title);
       await expect(panel).toHaveAccessibleDescription(args.description);
-      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', args.direction);
+      await expect(panel).toHaveAttribute('data-direction', args.direction);
       await expect(panel).toHaveClass(/nds-drawer-content/);
     });
 

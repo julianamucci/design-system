@@ -126,7 +126,7 @@ function buildDrawerDemo(opts: DrawerDemoOptions): HTMLElement {
   body.textContent = opts.bodyText ?? '';
 
   // A factory cobre as quatro direções e escreve sozinha o `data-slot` e o
-  // `data-vaul-drawer-direction` no painel. Antes, só `bottom` vinha do Drawer:
+  // `data-direction` no painel. Antes, só `bottom` vinha do Drawer:
   // as outras três chamavam o Sheet, e o atributo de direção era colado no
   // wrapper — onde nenhuma regra do CSS o lê.
   return createDrawer({

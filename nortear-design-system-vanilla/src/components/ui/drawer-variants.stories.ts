@@ -77,7 +77,7 @@ export const Bottom: Story = {
   play: async ({ canvasElement, step }) => {
     const panel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na base e mostra a alça', async () => {
-      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
+      await expect(panel).toHaveAttribute('data-direction', 'bottom');
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(panel).toHaveAccessibleName('Detalhes do pedido');
       // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
@@ -115,7 +115,7 @@ export const Top: Story = {
   play: async ({ canvasElement, step }) => {
     const panel = await openPeloTrigger(canvasElement);
     await step('O painel encosta no topo e esconde a alça', async () => {
-      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'top');
+      await expect(panel).toHaveAttribute('data-direction', 'top');
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(panel).toHaveAccessibleName('Nova versão disponível');
       const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle')!;
@@ -150,7 +150,7 @@ export const Left: Story = {
   play: async ({ canvasElement, step }) => {
     const panel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na borda esquerda', async () => {
-      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'left');
+      await expect(panel).toHaveAttribute('data-direction', 'left');
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(panel).toHaveAccessibleName('Menu');
       // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
@@ -185,7 +185,7 @@ export const Right: Story = {
   play: async ({ canvasElement, step }) => {
     const panel = await openPeloTrigger(canvasElement);
     await step('O painel encosta na borda direita', async () => {
-      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', 'right');
+      await expect(panel).toHaveAttribute('data-direction', 'right');
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(panel).toHaveAccessibleName('Filtros');
       const box = panel.getBoundingClientRect();
