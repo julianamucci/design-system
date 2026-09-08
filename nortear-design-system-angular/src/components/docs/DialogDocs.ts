@@ -87,8 +87,6 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
       'Trava a rolagem da página e torna o restante do documento inerte enquanto aberto.',
     'props.table.closeLabel':
       'Nome acessível do botão de fechar. Vai como texto para leitor de tela, não como atributo.',
-    'props.table.scroll':
-      'Passa a rolagem para o fundo e tira o painel do centro fixo. Vai no Overlay e no Content, sempre nos dois.',
     'props.table.escapeKeyDown':
       'Emitido antes do fechamento por Escape. Permite cancelar o fechamento.',
     'props.table.pointerDownOutside':
@@ -105,8 +103,6 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
       'Locks page scrolling and makes the rest of the document inert while open.',
     'props.table.closeLabel':
       'Accessible name of the close button. Rendered as screen-reader text, not as an attribute.',
-    'props.table.scroll':
-      'Moves scrolling to the backdrop and takes the panel out of fixed centering. Goes on both Overlay and Content.',
     'props.table.escapeKeyDown':
       'Emitted before closing via Escape. Allows cancelling the dismissal.',
     'props.table.pointerDownOutside':
@@ -123,8 +119,6 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
       'Bloquea el desplazamiento de la página y vuelve inerte el resto del documento mientras está abierto.',
     'props.table.closeLabel':
       'Nombre accesible del botón de cerrar. Se renderiza como texto para lector de pantalla, no como atributo.',
-    'props.table.scroll':
-      'Pasa el desplazamiento al fondo y saca el panel del centrado fijo. Va en el Overlay y en el Content, siempre en ambos.',
     'props.table.escapeKeyDown':
       'Se emite antes del cierre por Escape. Permite cancelar el cierre.',
     'props.table.pointerDownOutside':
@@ -221,7 +215,6 @@ export class NdsDialogPortal {}
 export class NdsDialogContent {
   readonly showCloseButton = input(true, { transform: booleanAttribute });
   readonly closeLabel = input('Fechar');
-  readonly scroll = input(false, { transform: booleanAttribute });
 }`;
 
 // `props.extensibility` do conteúdo compartilhado ensina `className` e o
@@ -321,7 +314,7 @@ const VARIANT_CODE = {
     </div>
 
     <div ndsDialogFooter>
-      <button ndsDialogClose ndsButton variant="outline">Cancelar</button>
+      <button ndsDialogClose ndsButton variant="outline">Recusar</button>
       <button ndsButton>Aceitar</button>
     </div>
   </div>
@@ -591,10 +584,9 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
       <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_scroll_content', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.termsTitle') }}</button>
         <ng-template ndsDialogPortal>
-          <!-- Sem [scroll]: o conteúdo compartilhado descreve esta variante como
-               "Header e Footer fixos", que é o arranjo em que só o CORPO rola.
-               Com o painel rolável o cabeçalho sobe junto, e a prévia
-               contradizia a descrição renderizada ao lado dela. -->
+          <!-- Quem rola é o CORPO: o painel fica parado e centralizado, e o
+               cabeçalho e o rodapé continuam visíveis, que é o que o conteúdo
+               compartilhado descreve como "Header e Footer fixos". -->
           <div ndsDialogOverlay></div>
           <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
             <div ndsDialogHeader>
@@ -613,41 +605,12 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
                 <p>{{ line }}</p>
               }
             </div>
+            <!-- "Recusar", e não "Cancelar": o par de um documento que se
+                 aceita é aceitar/recusar, e é o rótulo que o vanilla — a
+                 referência cross-stack — usa nesta mesma variante. -->
             <div ndsDialogFooter>
-              <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+              <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.decline') }}</button>
               <button ndsButton>{{ t('demonstration.labels.accept') }}</button>
-            </div>
-          </div>
-        </ng-template>
-      </div>
-    </ng-template>
-
-    <ng-template #tplVarScrollingOverlay>
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_scrolling_overlay', 'docs_variantes', $event)">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.contractTrigger') }}</button>
-        <ng-template ndsDialogPortal>
-          <!-- A OUTRA rota: o par [scroll] põe o painel no fluxo do overlay, e é
-               o overlay que rola — o cabeçalho sobe junto com o conteúdo. O
-               painel é FILHO do overlay aqui, e não irmão: rolagem de um
-               elemento só alcança o que está dentro dele. -->
-          <div ndsDialogOverlay scroll>
-            <div ndsDialogContent scroll [closeLabel]="t('demonstration.labels.close')">
-              <div ndsDialogHeader>
-                <h2 ndsDialogTitle>{{ t('demonstration.labels.contractTitle') }}</h2>
-                <p ndsDialogDescription>{{ t('demonstration.labels.contractDescription') }}</p>
-              </div>
-              <!-- Sem a classe de rolagem de corpo, sem tabindex e sem papel:
-                   aqui não há região rolável aninhada para alcançar por teclado,
-                   porque o que rola já está na ordem natural da página. -->
-              <div ndsDialogBody class="nds-stack" data-spacing="sm">
-                @for (line of conteudoLongo(); track line) {
-                  <p>{{ line }}</p>
-                }
-              </div>
-              <div ndsDialogFooter>
-                <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.decline') }}</button>
-                <button ndsButton>{{ t('demonstration.labels.accept') }}</button>
-              </div>
             </div>
           </div>
         </ng-template>
@@ -850,26 +813,41 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
                   <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
                 </div>
 
-                <div ndsDialogBody class="nds-stack" data-spacing="md">
-                  @for (field of camposDoFormulario(); track field.id) {
-                    <div class="nds-stack" data-spacing="xs">
-                      <label ndsLabel [attr.for]="'demo-' + field.id">{{ field.label }}</label>
-                      <input ndsInput [id]="'demo-' + field.id" [name]="field.id" [value]="field.value" />
-                    </div>
-                  }
-                  <p class="nds-text-caption nds-text-muted-foreground">
-                    {{ t('demonstration.labels.footerNote') }}
-                  </p>
-                </div>
+                <!-- O form envolve o corpo E o rodapé (PRD D10): a ação primária é
+                     type="submit" e precisa estar DENTRO dele, senão é botão
+                     inerte — não submete, e o Enter num campo não faz nada.
+                     Nada na tela denuncia, porque o botão continua clicável e
+                     com a aparência certa. -->
+                <form (submit)="$event.preventDefault()">
+                  <div ndsDialogBody class="nds-stack" data-spacing="md">
+                    @for (field of camposDoFormulario(); track field.id) {
+                      <div class="nds-stack" data-spacing="xs">
+                        <label ndsLabel [attr.for]="'demo-' + field.id">{{ field.label }}</label>
+                        <input ndsInput [id]="'demo-' + field.id" [name]="field.id" [value]="field.value" />
+                      </div>
+                    }
+                    <p class="nds-text-caption nds-text-muted-foreground">
+                      {{ t('demonstration.labels.footerNote') }}
+                    </p>
+                  </div>
 
-                <div ndsDialogFooter>
-                  <button ndsDialogClose ndsButton variant="outline">
-                    {{ t('demonstration.labels.cancel') }}
-                  </button>
-                  <button ndsDialogClose ndsButton (click)="aoConfirmar()">
-                    {{ t('demonstration.labels.action') }}
-                  </button>
-                </div>
+                  <div ndsDialogFooter>
+                    <button ndsDialogClose ndsButton type="button" variant="outline">
+                      {{ t('demonstration.labels.cancel') }}
+                    </button>
+                    <!-- type="submit" AQUI vence o type="button" que o
+                         RdxDialogClose põe como atributo estático de host: o
+                         ndsButton expõe type como INPUT e o reemite por
+                         [attr.type], e binding de update vence atributo
+                         estático. A primária continua fechando (o listener do
+                         ndsDialogClose) e agora também submete — clique e Enter
+                         percorrem o mesmo caminho, porque o Enter num campo
+                         dispara um clique no botão padrão do form. -->
+                    <button ndsDialogClose ndsButton type="submit" (click)="aoConfirmar()">
+                      {{ t('demonstration.labels.action') }}
+                    </button>
+                  </div>
+                </form>
               </div>
             </ng-template>
           </div>
@@ -1001,8 +979,6 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarWithForm = viewChild.required<TemplateRef<unknown>>('tplVarWithForm');
   private readonly tplVarWithScrollContent =
     viewChild.required<TemplateRef<unknown>>('tplVarWithScrollContent');
-  private readonly tplVarScrollingOverlay =
-    viewChild.required<TemplateRef<unknown>>('tplVarScrollingOverlay');
   private readonly tplVarNoFooter = viewChild.required<TemplateRef<unknown>>('tplVarNoFooter');
   private readonly tplVarWithDestructiveAction =
     viewChild.required<TemplateRef<unknown>>('tplVarWithDestructiveAction');
@@ -1190,11 +1166,6 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     // como "showCloseButton={false} no Content e showCloseButton no Footer",
     // que vira um título ilegível. A chave é o identificador estável que também
     // aparece no snippet, e é o que as outras stacks mostram.
-    //
-    // O `code` sai da entrada, e não mais de `VARIANT_CODE[key]`: o snippet da
-    // rota B vive no conteúdo compartilhado, com uma variante por stack.
-    // Escrito aqui ele ficaria preso a esta página, que é como cinco snippets
-    // desta campanha ficaram para trás do código.
     const mapa: {
       key: string;
       tpl: TemplateRef<unknown>;
@@ -1203,7 +1174,6 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       { key: 'default',               tpl: this.tplVarDefault(),               code: VARIANT_CODE.default               },
       { key: 'withForm',              tpl: this.tplVarWithForm(),              code: VARIANT_CODE.withForm              },
       { key: 'withScrollContent',     tpl: this.tplVarWithScrollContent(),     code: VARIANT_CODE.withScrollContent     },
-      { key: 'withScrollingOverlay',  tpl: this.tplVarScrollingOverlay(),      code: t('variants.items.withScrollingOverlayCode') },
       { key: 'noFooter',              tpl: this.tplVarNoFooter(),              code: VARIANT_CODE.noFooter              },
       { key: 'withDestructiveAction', tpl: this.tplVarWithDestructiveAction(), code: VARIANT_CODE.withDestructiveAction },
       { key: 'customCloseInFooter',   tpl: this.tplVarCustomCloseInFooter(),   code: VARIANT_CODE.customCloseInFooter   },
@@ -1332,13 +1302,6 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
             defaultValue: "'Fechar'",
             required: not,
             description: toPlainText(t('props.table.closeLabel')),
-          },
-          {
-            name: 'scroll',
-            type: 'boolean',
-            defaultValue: 'false',
-            required: not,
-            description: toPlainText(t('props.table.scroll')),
           },
           {
             name: 'escapeKeyDown',
@@ -1486,8 +1449,8 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     // `tip1` e `tip3` do conteúdo compartilhado ensinam classes utilitárias
     // (`z-[60]`, `max-h-[80vh] overflow-y-auto`) que não existem neste sistema,
     // e `tip3` ainda nomeia outro stack. O que elas pedem já está resolvido: o
-    // z-index sai de `--z-modal` e a rolagem é o par `scroll` do Overlay e do
-    // Content.
+    // z-index sai de `--z-modal` e a rolagem é a do CORPO, com
+    // `.nds-dialog-body-scroll` mais `tabindex`, papel e nome.
     return [
       { title: '', content: t('notes.tip2') },
       { title: '', content: t('notes.tip4') },

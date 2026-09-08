@@ -46,11 +46,10 @@
  *    ordem dela é a da guideline 04: no DOM o secundário primeiro (`Cancelar`),
  *    a ação primária por último. A folha faz o resto — `.nds-dialog-footer` é
  *    `column-reverse` no estreito e `row` + `justify-end` a partir de 40rem;
- *  · as DUAS rotas de rolagem, que é onde este componente se escreve errado: na
- *    rota A quem rola é o corpo (`.nds-dialog-body-scroll` mais `tabindex="0"`,
- *    `role="group"` e nome — parada de teclado precisa de papel e de nome); na
- *    rota B o par `scroll` do véu e do painel, com o painel DENTRO do véu,
- *    porque rolagem de um elemento só alcança o que está dentro dele.
+ *  · a rolagem de conteúdo longo, que é onde este componente se escreve errado:
+ *    quem rola é o CORPO, e os três atributos andam juntos —
+ *    `.nds-dialog-body-scroll` mais `tabindex="0"`, `role="group"` e nome,
+ *    porque parada de teclado precisa de papel e papel sem nome não diz o que é.
  *
  * O QUE NÃO ENTRA EM SNIPPET NENHUM porque é do AlertDialog, e não daqui:
  * `role="alertdialog"`, o véu que não fecha por clique e o foco inicial no
@@ -130,7 +129,6 @@ const DEMO = {
   mediaSrc: '/capa-do-artigo.jpg',
 
   bodyClause: 'o corpo é a única região que rola, e o cabeçalho e o rodapé ficam parados enquanto o texto passa por baixo deles.',
-  overlayClause: 'o painel entra no fluxo do overlay, e o cabeçalho sobe junto com o conteúdo em vez de ficar parado no topo do painel.',
 };
 
 const IMPORTS = `import { NDS_DIALOG } from '@/components/ui/dialog';
@@ -205,21 +203,12 @@ ${blocks.join('\n\n')}
 /**
  * Raiz, gatilho e o miolo teleportado.
  *
- * `nested` é a ROTA B: o painel vira FILHO do véu, que passa a ser a área de
- * rolagem. Com os dois como irmãos — o arranjo da rota A — as classes chegam e
- * o véu não tem o que rolar.
+ * O véu é IRMÃO do painel, nunca pai: `.nds-dialog-content` cria contexto de
+ * empilhamento próprio, então um véu em volta pintaria por cima do fundo do
+ * painel e o clique nele contaria como "dentro".
  */
-function panel(o: {
-  root?: string;
-  trigger?: string;
-  content: string;
-  nested?: true;
-}): string {
-  const inner = o.nested
-    ? `        <div ndsDialogOverlay scroll>
-${indent(o.content, 2)}
-        </div>`
-    : `        <div ndsDialogOverlay></div>
+function panel(o: { root?: string; trigger?: string; content: string }): string {
+  const inner = `        <div ndsDialogOverlay></div>
 
 ${o.content}`;
 
@@ -383,7 +372,7 @@ ${formFooter}
 }
 
 /**
- * ROTA A — quem rola é o CORPO, com cabeçalho e rodapé parados.
+ * Conteúdo longo: quem rola é o CORPO, com cabeçalho e rodapé parados.
  *
  * Três atributos andam juntos, e nenhum deles vem do componente: a classe de
  * rolagem, o `tabindex="0"` (sem ele quem navega só por teclado não alcança a
@@ -410,44 +399,7 @@ export function dialogWithScrollContentSource(): string {
       content: content({
         title: LABELS.termsTitle,
         description: LABELS.termsDescription,
-        after: `${body}\n\n${footer({ action: action(LABELS.accept) })}`,
-      }),
-    }),
-    body: '  readonly clauses = Array.from({ length: 20 }, (_, i) => i + 1);',
-  });
-}
-
-/**
- * ROTA B — quem rola é o VÉU, e o painel entra no fluxo dele.
- *
- * Os dois `scroll` andam juntos E o painel tem de estar DENTRO do véu: rolagem
- * de um elemento só alcança o que está dentro dele. Com os dois como irmãos as
- * classes chegam e não produzem rolagem nenhuma — medido contra a folha
- * compartilhada.
- *
- * Aqui o corpo NÃO leva classe de rolagem, nem `tabindex`, nem papel: não há
- * região rolável aninhada para alcançar, e quem rola já está na ordem natural
- * da página.
- */
-export function dialogWithScrollingOverlaySource(): string {
-  const body = `          <div ndsDialogBody class="nds-stack" data-spacing="sm">
-            @for (n of clauses; track n) {
-              <p>Cláusula {{ n }}: ${DEMO.overlayClause}</p>
-            }
-          </div>`;
-
-  return example({
-    template: panel({
-      nested: true,
-      trigger: LABELS.contractTrigger,
-      content: content({
-        attrs: ' scroll',
-        title: LABELS.contractTitle,
-        description: LABELS.contractDescription,
-        after: `${body}\n\n${footer({
-          cancelLabel: LABELS.decline,
-          action: action(LABELS.accept),
-        })}`,
+        after: `${body}\n\n${footer({ cancelLabel: LABELS.decline, action: action(LABELS.accept) })}`,
       }),
     }),
     body: '  readonly clauses = Array.from({ length: 20 }, (_, i) => i + 1);',

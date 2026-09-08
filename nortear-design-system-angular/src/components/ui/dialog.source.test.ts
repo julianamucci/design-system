@@ -14,7 +14,6 @@ import {
   dialogWithDestructiveActionSource,
   dialogWithFormSource,
   dialogWithScrollContentSource,
-  dialogWithScrollingOverlaySource,
 } from './dialog.source';
 
 /**
@@ -77,7 +76,7 @@ const PROFILE_NAME = text('demonstration.labels.fieldFullName');
 const PROFILE_USERNAME = text('demonstration.labels.fieldUsername');
 
 // Os cenários que esta stack escrevia à mão e que, por isso, divergiam das
-// demais: o painel informativo, o painel do guia, as duas rotas de rolagem e a
+// demais: o painel informativo, o painel do guia, a rolagem do corpo e a
 // confirmação de e-mail. Todos existem em `demonstration.labels`, e vêm de lá
 // pelo mesmo `text()` — cravá-los aqui faria o portão medir a cópia velha.
 const CLOSE = text('demonstration.labels.close');
@@ -94,9 +93,6 @@ const TERMS_TITLE = text('demonstration.labels.termsTitle');
 const TERMS_DESCRIPTION = text('demonstration.labels.termsDescription');
 const DECLINE = text('demonstration.labels.decline');
 const ACCEPT = text('demonstration.labels.accept');
-const CONTRACT_TRIGGER = text('demonstration.labels.contractTrigger');
-const CONTRACT_TITLE = text('demonstration.labels.contractTitle');
-const CONTRACT_DESCRIPTION = text('demonstration.labels.contractDescription');
 const CONFIRM_EMAIL_TITLE = text('demonstration.labels.confirmEmailTitle');
 const CONFIRM_EMAIL_ACTION = text('demonstration.labels.confirmEmailAction');
 
@@ -142,14 +138,14 @@ function footerLabels(code: string): string[] {
 // ─── Cobertura das quatro stories ─────────────────────────────────────────────
 
 /**
- * Os treze construtores e a story que cada um serve.
+ * Os doze construtores e a story que cada um serve.
  *
  * A lista existe para ser COBRADA: o caso logo abaixo compara com o que o
  * módulo exporta, e um construtor novo que não entre aqui reprova em vez de
  * sair calado da varredura. É a lição do `source-snippets.test.ts` do Vue, onde
  * 28 exports saíram do alcance e a suíte seguiu verde medindo menos.
  *
- * QUINZE stories, treze construtores: `Variants/Default` e `States/Closed`
+ * CATORZE stories, doze construtores: `Variants/Default` e `States/Closed`
  * reusam o do Playground, e as duas exclusões estão declaradas no cabeçalho de
  * `dialog.source.ts`, com a premissa cobrada no caso `reuso declarado` no fim
  * deste arquivo.
@@ -188,14 +184,6 @@ const CONSTRUCTORS: Array<{
     name: 'dialogWithScrollContentSource',
     story: 'Variants/WithScrollContent',
     build: dialogWithScrollContentSource,
-    withBody: true,
-    stateful: true,
-    footer: [CANCEL, ACCEPT],
-  },
-  {
-    name: 'dialogWithScrollingOverlaySource',
-    story: 'Variants/WithScrollingOverlay',
-    build: dialogWithScrollingOverlaySource,
     withBody: true,
     stateful: true,
     footer: [DECLINE, ACCEPT],
@@ -477,7 +465,7 @@ describe('variantes', () => {
   });
 
   it('dialogWithScrollContentSource nomeia a região que rola, e a torna alcançável', () => {
-    // ROTA A: os três atributos andam juntos, e nenhum vem do componente. Sem
+    // Os três atributos andam juntos, e nenhum vem do componente. Sem
     // `tabindex` quem navega só por teclado não alcança a caixa (WCAG 2.1.1), e
     // parada de tabulação sem papel e sem nome não diz o que é.
     const code = dialogWithScrollContentSource();
@@ -485,49 +473,33 @@ describe('variantes', () => {
     expect(code).toContain('tabindex="0"');
     expect(code).toContain('role="group"');
     // O nome da região é o TÍTULO do painel, e o cenário é o dos termos — o
-    // mesmo que as outras stacks mostram nesta rota.
+    // mesmo que as outras stacks mostram nesta variante.
     expect(code).toContain(`<h2 ndsDialogTitle>${TERMS_TITLE}</h2>`);
     expect(code).toContain(`<p ndsDialogDescription>${TERMS_DESCRIPTION}</p>`);
     expect(code).toContain(`aria-label="${TERMS_TITLE}"`);
     // VINTE cláusulas, o mesmo número que a story monta — com texto curto o
-    // conteúdo cabia inteiro no teto de 60vh e a rota não acontecia.
+    // conteúdo cabia inteiro no teto de 60vh e a variante não acontecia.
     expect(code).toContain('readonly clauses = Array.from({ length: 20 }, (_, i) => i + 1);');
     expect(code).toContain('@for (n of clauses; track n) {');
     // Cabeçalho e rodapé ficam parados, e por isso continuam no snippet.
     expect(code.indexOf('<div ndsDialogFooter')).toBeGreaterThan(code.indexOf('ndsDialogBody'));
-    // Rota A: o painel é IRMÃO do véu, nunca filho.
+    // O painel é IRMÃO do véu, nunca filho.
     expect(code).toContain('<div ndsDialogOverlay></div>');
-    expect(code).not.toContain('ndsDialogOverlay scroll');
   });
 
-  it('dialogWithScrollingOverlaySource aninha o painel DENTRO do véu', () => {
-    // ROTA B: rolagem de um elemento só alcança o que está dentro dele. Com os
-    // dois como irmãos as classes chegam e o véu não tem o que rolar — medido
-    // contra a folha compartilhada.
-    const code = dialogWithScrollingOverlaySource();
-    expect(code).toContain('<div ndsDialogOverlay scroll>');
-    expect(code).toContain('<div ndsDialogContent scroll>');
-    // O cenário desta rota é o contrato que rola de ponta a ponta.
-    expect(code).toContain(
-      `<button ndsDialogTrigger ndsButton variant="outline">${CONTRACT_TRIGGER}</button>`,
-    );
-    expect(code).toContain(`<h2 ndsDialogTitle>${CONTRACT_TITLE}</h2>`);
-    expect(code).toContain(`<p ndsDialogDescription>${CONTRACT_DESCRIPTION}</p>`);
-    expect(code.indexOf('<div ndsDialogOverlay scroll>')).toBeLessThan(
-      code.indexOf('<div ndsDialogContent scroll>'),
-    );
-    expect(code).not.toContain('<div ndsDialogOverlay></div>');
-    // Nesta rota não há região rolável aninhada para alcançar por teclado.
-    expect(code).not.toContain('nds-dialog-body-scroll');
-    expect(code).not.toContain('tabindex');
-    expect(code).not.toContain('role=');
-    expect(code).toContain('readonly clauses = Array.from({ length: 20 }, (_, i) => i + 1);');
-  });
-
-  it('as duas rotas de rolagem publicam painéis distintos', () => {
-    // Se colapsassem no mesmo texto, uma delas estaria ensinando a outra rota —
-    // que é exatamente o defeito de as duas terem circulado sob o mesmo rótulo.
-    expect(dialogWithScrollContentSource()).not.toBe(dialogWithScrollingOverlaySource());
+  it('nenhum construtor publica a rota de rolagem do véu, retirada em 2026-09-08', () => {
+    // O PRD (D7) deixou UMA saída para conteúdo longo: o corpo rola, cabeçalho
+    // e rodapé param. A outra — painel no fluxo do véu, com a PÁGINA rolando —
+    // saiu do CSS compartilhado, e o que a folha não pinta um snippet não pode
+    // ensinar. Sem este caso a reintrodução voltaria calada: o markup compila,
+    // as classes só não fazem nada.
+    for (const { name, build } of CONSTRUCTORS) {
+      const code = build();
+      expect(code, name).not.toContain('nds-dialog-overlay-scroll');
+      expect(code, name).not.toContain('nds-dialog-content-scroll');
+      expect(code, name).not.toContain('ndsDialogOverlay scroll');
+      expect(code, name).not.toContain('ndsDialogContent scroll');
+    }
   });
 
   it('dialogNoFooterSource não escreve nada para ter o X do canto', () => {
@@ -568,6 +540,12 @@ describe('variantes', () => {
     // empilhamento e à esquerda no lado a lado.
     const code = dialogCustomCloseInFooterSource();
     expect(code).toContain('<div ndsDialogContent [showCloseButton]="false">');
+    // O cenário é o do guia (PRD D11), e o gatilho é parte dele: sem esta
+    // asserção a constante ficava declarada e nunca cobrada, que é como um
+    // cenário trocado passa calado.
+    expect(code).toContain(
+      `<button ndsDialogTrigger ndsButton variant="outline">${GUIDE_TRIGGER}</button>`,
+    );
     expect(code).toContain(`<h2 ndsDialogTitle>${GUIDE_TITLE}</h2>`);
     expect(code).toContain(`<p ndsDialogDescription>${GUIDE_DESCRIPTION}</p>`);
     expect(code).toContain(`<p>${GUIDE_BODY}</p>`);

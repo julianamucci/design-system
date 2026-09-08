@@ -180,45 +180,31 @@ export class NdsDialogPortal {}
 /**
  * Backdrop translúcido atrás do painel.
  *
- * Na ROTA A (padrão) é irmão do painel, nunca pai: `.nds-dialog-content` é
- * posicionado e cria contexto de empilhamento próprio, então um overlay
- * aninhado pintaria POR CIMA do fundo do painel — e o clique nele contaria como
- * "dentro", desligando o fechamento por clique fora.
+ * É irmão do painel, nunca pai: `.nds-dialog-content` é posicionado e cria
+ * contexto de empilhamento próprio, então um overlay aninhado pintaria POR CIMA
+ * do fundo do painel — e o clique nele contaria como "dentro", desligando o
+ * fechamento por clique fora.
  *
- * Na ROTA B a relação se INVERTE, e é o que o par `scroll` exige: o overlay
- * vira a área de rolagem e o painel entra no fluxo DELE, como filho. Medido
- * contra a folha compartilhada: com os dois como irmãos, o overlay não tem o
- * que rolar (`scrollHeight === clientHeight`) e a rota não acontece — a classe
- * chega e não pinta. Aninhar é do call site, e por isso está no snippet e na
- * story, não aqui.
- *
- * `scroll` troca o overlay para o modo rolável: ele vira a área de rolagem e o
- * painel entra no fluxo, para conteúdo mais alto que a janela. As duas rotas
- * estão descritas no docblock de `NdsDialogContent`.
+ * Houve uma segunda rota, em que o painel entrava no fluxo do véu e a PÁGINA é
+ * que rolava. Foi retirada em 2026-09-08 (PRD D7): modal que rola junto com a
+ * página desfaz a própria promessa de interromper, e duas saídas opostas para o
+ * mesmo problema obrigam cada tela a escolher sem critério. Para conteúdo longo
+ * ficou uma saída só — quem rola é o CORPO, e cabeçalho e rodapé param.
  */
 @Directive({
   selector: 'div[ndsDialogOverlay]',
   standalone: true,
   hostDirectives: [RdxDialogBackdrop],
   host: {
-    '[class]': 'hostClass()',
+    class: 'nds-dialog-overlay',
     '[attr.data-slot]': '"dialog-overlay"',
     '[attr.data-state]': 'state()',
   },
 })
 export class NdsDialogOverlay {
-  /** Rola a página inteira do diálogo em vez de centralizar o painel. */
-  readonly scroll = input(false, { transform: booleanAttribute });
-
   private readonly root = injectRdxDialogRootContext();
 
   protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
-
-  protected readonly hostClass = computed(() =>
-    ['nds-dialog-overlay', this.scroll() ? 'nds-dialog-overlay-scroll' : '']
-      .filter(Boolean)
-      .join(' '),
-  );
 }
 
 // ─── NdsDialogContent ─────────────────────────────────────────────────────────
@@ -237,6 +223,14 @@ export class NdsDialogOverlay {
  * Uma `<ng-content />` só, fora de qualquer `@if`: dois destinos de projeção em
  * ramos de um `@if` não entregam conteúdo a nenhum dos dois (a projeção é
  * resolvida em tempo de compilação, antes de existir ramo ativo).
+ *
+ * CONTEÚDO LONGO: o painel fica parado e centralizado, e quem rola é o CORPO —
+ * cabeçalho e rodapé não saem da tela. Quem compõe pendura
+ * `.nds-dialog-body-scroll` no `div ndsDialogBody`, com `tabindex="0"`,
+ * `role="group"` e nome juntos: caixa que rola é parada de teclado (WCAG
+ * 2.1.1), parada de teclado precisa de papel, e nome em elemento sem papel é
+ * atributo proibido. Não há segunda rota — a de rolar o véu saiu em 2026-09-08
+ * (PRD D7).
  */
 @Component({
   selector: 'div[ndsDialogContent]',
@@ -258,7 +252,7 @@ export class NdsDialogOverlay {
     },
   ],
   host: {
-    '[class]': 'hostClass()',
+    class: 'nds-dialog-content',
     '[attr.data-slot]': '"dialog-content"',
     '[attr.data-state]': 'state()',
   },
@@ -309,35 +303,9 @@ export class NdsDialogContent {
    */
   readonly closeLabel = input('Fechar');
 
-  /**
-   * ROTA B — par do `scroll` do overlay: tira o painel do centro fixo e o põe
-   * no fluxo, e a partir daí quem rola é o overlay. O cabeçalho sobe junto com
-   * o conteúdo.
-   *
-   * Os dois `scroll` andam juntos E o painel tem de estar DENTRO do overlay no
-   * template: rolagem de um elemento só alcança o que está dentro dele. Com os
-   * dois como irmãos as classes chegam e não produzem rolagem nenhuma.
-   *
-   * ROTA A, o padrão, é o contrário: o painel fica parado e centralizado, o
-   * cabeçalho e o rodapé não saem da tela, e a rolagem acontece dentro do corpo
-   * — quem compõe pendura `.nds-dialog-body-scroll` no `div ndsDialogBody`,
-   * com `tabindex="0"`, `role="group"` e nome.
-   *
-   * A FORMA da rota B diverge por stack, e isso é divergência de API de
-   * framework: não há fonte de verdade e não se "alinha". Aqui é um par de
-   * inputs, porque a composição do overlay e do painel é do template.
-   */
-  readonly scroll = input(false, { transform: booleanAttribute });
-
   private readonly root = injectRdxDialogRootContext();
 
   protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
-
-  protected readonly hostClass = computed(() =>
-    ['nds-dialog-content', this.scroll() ? 'nds-dialog-content-scroll' : '']
-      .filter(Boolean)
-      .join(' '),
-  );
 }
 
 // ─── Estrutura interna ────────────────────────────────────────────────────────

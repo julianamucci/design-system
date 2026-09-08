@@ -55,9 +55,6 @@ export const LABELS = {
   termsDescription: t('demonstration.labels.termsDescription'),
   decline: t('demonstration.labels.decline'),
   accept: t('demonstration.labels.accept'),
-  contractTrigger: t('demonstration.labels.contractTrigger'),
-  contractTitle: t('demonstration.labels.contractTitle'),
-  contractDescription: t('demonstration.labels.contractDescription'),
   confirmEmailTitle: t('demonstration.labels.confirmEmailTitle'),
   confirmEmailAction: t('demonstration.labels.confirmEmailAction'),
 };
