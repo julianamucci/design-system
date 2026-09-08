@@ -44,67 +44,6 @@ import {
 } from '@/components/docs/shared/sections';
 
 /**
- * Rótulos de ação que o conteúdo compartilhado do Drawer não traz.
- *
- * O bloco `demonstration.labels` deste slug só tem as quatro direções — não há
- * gatilho, título, descrição, saída, rótulo de campo nem corpo de exemplo, que
- * os exemplos de formulário, de confirmação destrutiva e de rolagem precisam.
- * O do Sheet tem o bloco inteiro; o do Drawer é a lacuna. Entram por override,
- * o mecanismo que este projeto reserva para rótulos e nomes de prop, e ficam
- * nos três idiomas para não plantar literal em português na página.
- *
- * O que eles SUBSTITUEM importa mais que o que eles são: sem estes rótulos, o
- * texto de tela saía das células "Use" da tabela de UX Writing e dos parágrafos
- * de `variants.styles.*`. Texto que ensina COMO escrever virava o que está
- * escrito, e uma revisão de conteúdo mudava calada o exemplo vivo.
- *
- * Exportado porque a story de composições monta os MESMOS exemplos: uma segunda
- * tabela de textos divergiria da primeira na revisão de conteúdo seguinte.
- * Registrado no relatório como lacuna do conteúdo compartilhado.
- */
-export const LABELS_DRAWER: TranslationOverrides = {
-  'pt-BR': {
-    'demonstration.labels.confirm': 'Salvar alterações',
-    'demonstration.labels.destroy': 'Excluir',
-    'demonstration.labels.trigger': 'Editar perfil',
-    'demonstration.labels.title': 'Editar perfil',
-    'demonstration.labels.description': 'Atualize seus dados.',
-    'demonstration.labels.cancel': 'Cancelar',
-    'demonstration.labels.fieldName': 'Nome',
-    'demonstration.labels.fieldEmail': 'E-mail',
-    'demonstration.labels.scrollBody':
-      'Termos longos, para o corpo do painel passar da altura visível e rolar sozinho.',
-    'demonstration.labels.destroyMessage': 'Você pode desfazer esta ação nos próximos 30 dias.',
-  },
-  en: {
-    'demonstration.labels.confirm': 'Save changes',
-    'demonstration.labels.destroy': 'Delete',
-    'demonstration.labels.trigger': 'Edit profile',
-    'demonstration.labels.title': 'Edit profile',
-    'demonstration.labels.description': 'Update your details.',
-    'demonstration.labels.cancel': 'Cancel',
-    'demonstration.labels.fieldName': 'Name',
-    'demonstration.labels.fieldEmail': 'Email',
-    'demonstration.labels.scrollBody':
-      'Long terms, so the panel body exceeds the visible height and scrolls on its own.',
-    'demonstration.labels.destroyMessage': 'You can undo this action within the next 30 days.',
-  },
-  es: {
-    'demonstration.labels.confirm': 'Guardar cambios',
-    'demonstration.labels.destroy': 'Eliminar',
-    'demonstration.labels.trigger': 'Editar perfil',
-    'demonstration.labels.title': 'Editar perfil',
-    'demonstration.labels.description': 'Actualiza tus datos.',
-    'demonstration.labels.cancel': 'Cancelar',
-    'demonstration.labels.fieldName': 'Nombre',
-    'demonstration.labels.fieldEmail': 'Correo electrónico',
-    'demonstration.labels.scrollBody':
-      'Términos largos, para que el cuerpo del panel supere la altura visible y se desplace solo.',
-    'demonstration.labels.destroyMessage': 'Puedes deshacer esta acción en los próximos 30 días.',
-  },
-};
-
-/**
  * Ajustes de texto que descrevem ESTE stack.
  *
  * O conteúdo compartilhado do Drawer foi escrito a partir das stacks que rodam
@@ -171,14 +110,8 @@ const AJUSTES_ANGULAR: TranslationOverrides = {
   },
 };
 
-const OVERRIDES: TranslationOverrides = {
-  'pt-BR': { ...LABELS_DRAWER['pt-BR'], ...AJUSTES_ANGULAR['pt-BR'] },
-  en: { ...LABELS_DRAWER.en, ...AJUSTES_ANGULAR.en },
-  es: { ...LABELS_DRAWER.es, ...AJUSTES_ANGULAR.es },
-};
-
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
-const { t, dict } = useTranslation(drawerTranslations as Record<string, unknown>, OVERRIDES);
+const { t, dict } = useTranslation(drawerTranslations as Record<string, unknown>, AJUSTES_ANGULAR);
 
 const SECTION_IDS = [
   'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
@@ -398,6 +331,22 @@ const COMPOSITION_CODE = {
 };
 
 const DIRECOES: DrawerDirection[] = ['bottom', 'top', 'left', 'right'];
+
+/**
+ * As quatro chaves de direção, escritas POR EXTENSO.
+ *
+ * `t(`demonstration.labels.${key}`)` resolve certo em tempo de execução, mas é
+ * invisível para quem varre texto: a regra `demonstration_labels_divergent` do
+ * `audit.mjs` procura a chave literal no arquivo da docs page, e acusava esta
+ * stack de não usar rótulo de direção nenhum enquanto os quatro painéis os
+ * mostravam na tela. Chave montada em template literal não é lida por portão.
+ */
+const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
+  bottom: 'demonstration.labels.bottom',
+  top: 'demonstration.labels.top',
+  left: 'demonstration.labels.left',
+  right: 'demonstration.labels.right',
+};
 
 @Component({
   selector: 'nds-drawer-docs',
@@ -847,7 +796,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
     return DIRECOES.map((key) => ({
       key,
       name: t(`variants.items.${key}`),
-      label: stripHtml(t(`demonstration.labels.${key}`)),
+      label: stripHtml(t(CHAVE_DIRECAO[key])),
     }));
   });
 
@@ -873,7 +822,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   /** Chamado do template: `String(...)` e afins não existem no contexto Angular. */
   protected rotuloDirecao(key: DrawerDirection): string {
-    return stripHtml(t(`demonstration.labels.${key}`));
+    return stripHtml(t(CHAVE_DIRECAO[key]));
   }
 
   /**

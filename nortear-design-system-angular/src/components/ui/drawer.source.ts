@@ -64,52 +64,16 @@
  * cobra a igualdade, para que a reutilização continue verdadeira.
  */
 import type { DrawerDirection } from './drawer';
-import { useTranslation, type TranslationOverrides } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
 
-/**
- * Os cinco rótulos de demonstração que o conteúdo compartilhado não traz.
- *
- * São os MESMOS de `LABELS_DRAWER` em `DrawerDocs.ts` — as stories de
- * composição os leem de lá, e o painel Code precisa publicar o mesmo texto que
- * o preview mostra ao lado. A tabela é repetida aqui, e não importada, porque
- * este módulo roda no projeto `unit` do vitest: node puro, sem o compilador do
- * Angular. Importar a docs page traria um `@Component` para um ambiente que não
- * sabe compilá-lo, e derrubaria junto a varredura inteira do
- * `source-snippets.test.ts`. O `drawer.source.test.ts` fixa os quatro textos,
- * para que a divergência apareça como falha e não como silêncio.
- */
-const DEMO_LABELS: TranslationOverrides = {
-  'pt-BR': {
-    'demonstration.labels.confirm': 'Salvar alterações',
-    'demonstration.labels.destroy': 'Excluir',
-    'demonstration.labels.fieldName': 'Nome',
-    'demonstration.labels.fieldEmail': 'E-mail',
-    'demonstration.labels.destroyMessage': 'Você pode desfazer esta ação nos próximos 30 dias.',
-  },
-  en: {
-    'demonstration.labels.confirm': 'Save changes',
-    'demonstration.labels.destroy': 'Delete',
-    'demonstration.labels.fieldName': 'Name',
-    'demonstration.labels.fieldEmail': 'Email',
-    'demonstration.labels.destroyMessage': 'You can undo this action within the next 30 days.',
-  },
-  es: {
-    'demonstration.labels.confirm': 'Guardar cambios',
-    'demonstration.labels.destroy': 'Eliminar',
-    'demonstration.labels.fieldName': 'Nombre',
-    'demonstration.labels.fieldEmail': 'Correo electrónico',
-    'demonstration.labels.destroyMessage': 'Puedes deshacer esta acción en los próximos 30 días.',
-  },
-};
+const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 
-const { t } = useTranslation(drawerTranslations as Record<string, unknown>, DEMO_LABELS);
-
-// O conteúdo compartilhado do Drawer não tem um bloco completo de rótulos de
-// demonstração (o do Sheet tem). Os textos do painel saem da tabela de UX
-// writing, que é justamente onde o conteúdo diz como cada elemento deve ser
-// escrito — o exemplo "bom" de cada linha É o rótulo canônico, nos três idiomas.
+// Gatilho, título, descrição e fechar saem da tabela de UX writing, e não de
+// `demonstration.labels`: o exemplo "bom" de cada linha é o texto que o próprio
+// conteúdo declara como canônico para aquele elemento, nos três idiomas. Os
+// demais rótulos vêm de `demonstration.labels`, no conteúdo compartilhado.
 export const LABEL = {
   trigger: () => t('usage.uxWriting.table.trigger.good'),
   title: () => t('usage.uxWriting.table.title.good'),

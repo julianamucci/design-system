@@ -55,13 +55,11 @@ const SCROLL_TEXT = text('variants.items.withScroll.use');
 const CONFIRMATION_TITLE = text('variants.compositions.withConfirmation.name');
 
 /**
- * Os cinco rótulos que o conteúdo compartilhado NÃO traz.
+ * Os cinco rótulos de ação, fixados como texto.
  *
- * Vêm de `LABELS_DRAWER` em `DrawerDocs.ts`, de onde as stories de composição os
- * leem, e o módulo de snippet os repete numa tabela própria — importar a docs
- * page traria um `@Component` para dentro do projeto `unit`, que roda em node
- * sem o compilador do Angular. Ficam fixados aqui para que a divergência entre
- * as duas cópias apareça como falha, e não como silêncio.
+ * Vêm de `demonstration.labels` no conteúdo compartilhado, de onde a docs page,
+ * as stories de composição e o módulo de snippet os leem. Ficam fixados aqui
+ * para que uma reescrita do conteúdo apareça como falha, e não como silêncio.
  */
 const CONFIRM = 'Salvar alterações';
 const DESTROY = 'Excluir';

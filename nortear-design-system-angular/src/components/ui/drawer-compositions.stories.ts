@@ -9,14 +9,13 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
-import { LABELS_DRAWER } from '@/components/docs/DrawerDocs';
 import { drawerWithConfirmationSource, drawerWithFormSource } from './drawer.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
-// Os rótulos de ação vêm do mesmo lugar que a docs page usa — ver o comentário
-// sobre `LABELS_DRAWER` em DrawerDocs.ts. Duplicar a tabela aqui faria os dois
-// textos divergirem na primeira revisão de conteúdo.
-const { t } = useTranslation(drawerTranslations as Record<string, unknown>, LABELS_DRAWER);
+// Os rótulos de ação saem do conteúdo compartilhado, como todo texto de tela
+// desta stack. Declará-los aqui faria os dois textos divergirem na primeira
+// revisão de conteúdo.
+const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 
 // As duas composições que o conteúdo compartilhado documenta. Ambas nascem
 // ABERTAS: é o rodapé de ações que elas existem para mostrar, e ele só existe
