@@ -197,9 +197,11 @@ O índice do svelte também reexporta as formas curtas — `Content`, `Portal`, 
 para quem importa o namespace inteiro. As stories usam a forma longa.
 
 No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
-semântica, não só o estilo. Onde há dois seletores para a mesma peça
-(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
-cabeçalho diferentes sem pular hierarquia.
+semântica, não só o estilo.
+
+Este componente **não tem título de cabeçalho**, então não há seletor `h2[…]`
+nem `h3[…]` aqui — a nota de nível de cabeçalho vale para dialog, sheet, drawer
+e alert-dialog, que são os que nomeiam o painel com um cabeçalho.
 
 ## 8. Acessibilidade
 

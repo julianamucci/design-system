@@ -247,9 +247,14 @@ O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `
 para quem importa o namespace inteiro. As stories usam a forma longa.
 
 No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
-semântica, não só o estilo. Onde há dois seletores para a mesma peça
-(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
-cabeçalho diferentes sem pular hierarquia.
+semântica, não só o estilo.
+
+**O título do popover é a exceção da família, nas duas pontas.** No vanilla ele é
+o único com `level` (padrão `h4`, porque o painel é `role="dialog"` e o
+`aria-labelledby` procura um cabeçalho antes de cair no nome do gatilho); no
+Angular o seletor é `[ndsPopoverTitle]` **sem elemento**, então a tag é escolha
+de quem escreve, sem os dois níveis fixos que dialog, sheet, drawer e
+alert-dialog impõem.
 
 ## 8. Acessibilidade
 

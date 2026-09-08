@@ -248,9 +248,25 @@ O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `
 para quem importa o namespace inteiro. As stories usam a forma longa.
 
 No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
-semântica, não só o estilo. Onde há dois seletores para a mesma peça
-(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
-cabeçalho diferentes sem pular hierarquia.
+semântica, não só o estilo.
+
+**O nível do cabeçalho do título é customizável em quatro das cinco, cada uma de
+um jeito** — medido na fonte de cada lib, não na documentação delas:
+
+| stack | mecanismo | padrão |
+|---|---|---|
+| react | prop `render` (`BaseUIComponentProps<'h2'>`) | `h2` |
+| vue | prop `as` (ou `as-child`) | `as: 'h2'` |
+| svelte | prop `level`, numérica | `level = 2` |
+| angular | dois seletores, `h2[…]` e `h3[…]` — e **só esses dois níveis** | o que quem escreve usar |
+| vanilla | **não é customizável**: `createElement('h2')` cravado na fábrica | `h2` |
+
+Duas leituras que isso corrige. O Angular não é o único que troca o nível — ele é
+o mais RESTRITO dos quatro que trocam, porque oferece dois níveis onde os outros
+aceitam qualquer um. E o **vanilla, que é a referência de contrato da casa, é o
+único que não troca** — o que importa porque `heading-order` do axe reprova
+salto de nível, e um painel aberto de dentro de uma seção já em `h3` precisaria
+de `h4`. Registrado no `FIXES-NEEDED.md`.
 
 ## 8. Acessibilidade
 
