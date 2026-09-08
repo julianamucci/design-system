@@ -261,7 +261,7 @@ describe('cobertura das quatro stories', () => {
       expect(code).not.toContain('aria-describedby');
       expect(code).not.toContain('aria-hidden');
       expect(code).not.toContain('nds-drawer-handle');
-      expect(code).not.toContain('data-vaul');
+      expect(code).not.toContain('data-direction');
       // `tabindex` da região rolável vem da diretiva. Escrito à mão, viraria
       // duas fontes para o mesmo atributo.
       expect(code).not.toContain('tabindex');

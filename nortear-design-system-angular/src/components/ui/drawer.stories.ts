@@ -140,7 +140,7 @@ export const Playground: Story = {
       await expect(panel).toHaveAttribute('data-state', 'open');
       // O atributo que o CSS compartilhado lê para posicionar o painel. Sob JIT
       // o input `direction` seria ignorado e viria sempre o default (armadilha 1).
-      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', args.direction);
+      await expect(panel).toHaveAttribute('data-direction', args.direction);
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,

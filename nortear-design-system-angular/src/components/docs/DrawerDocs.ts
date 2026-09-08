@@ -238,9 +238,9 @@ const TOKENS_CODE = `/* Tokens que o painel consome */
   --muted:          210 40% 96%;   /* alça */
 }
 
-/* A direção mora em data-vaul-drawer-direction, e é dela que saem posição,
+/* A direção mora em data-direction, e é dela que saem posição,
    borda e cantos:
-   .nds-drawer-content[data-vaul-drawer-direction="right"] { right: 0; … } */`;
+   .nds-drawer-content[data-direction="right"] { right: 0; … } */`;
 
 const VARIANT_CODE = (direction: DrawerDirection, title: string) => `<nds-drawer${
   direction === 'bottom' ? '' : ` direction="${direction}"`

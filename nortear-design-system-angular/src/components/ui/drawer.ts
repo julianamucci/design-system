@@ -57,16 +57,12 @@ import { attachDrawerSwipe, type DrawerSwipeDirection } from '@shared/primitives
 // do primitivo, que o CSS lê, e o `data-state`, que o conteúdo compartilhado
 // documenta na tabela de estados.
 //
-// ─── Por que o atributo se chama `data-vaul-drawer-direction` ─────────────────
+// ─── Por que o painel emite `data-direction` ──────────────────────────────────
 //
-// Não é invenção nem homenagem: é o seletor que o CSS COMPARTILHADO usa. Toda
-// regra de posição, borda e canto arredondado do painel mora em
-// `.nds-drawer-content[data-vaul-drawer-direction="…"]`, e o próprio conteúdo
-// compartilhado cobra o atributo no critério de teste `functional.item5`
-// ("Painel entra pela direita com data-vaul-drawer-direction=right"). O nome
-// nasceu da lib que as stacks de React/Vue/Svelte usam; aqui ele é apenas o
-// contrato de markup que o design system publicou. Emitir outro nome (ou criar
-// uma classe `.nds-drawer-right`) deixaria o painel sem posição nenhuma.
+// É o contrato de markup do design system, sem nome de lib dentro: toda regra
+// de posição, borda, canto e alça mora em
+// `.nds-drawer-content[data-direction="…"]`, e sem o atributo o painel não tem
+// posição nenhuma.
 //
 // ─── Decisão de acessibilidade (bloco canônico no drawer da stack vanilla) ───
 //
@@ -302,7 +298,7 @@ export class NdsDrawerSwipe {
           rdxDialogPopup
           [class]="classeDoPainel()"
           data-slot="drawer-content"
-          [attr.data-vaul-drawer-direction]="direction()"
+          [attr.data-direction]="direction()"
           [attr.data-state]="state()"
           [ndsDrawerSwipe]="direction()"
           [ndsDrawerSwipeDismissible]="swipeEnabled()"

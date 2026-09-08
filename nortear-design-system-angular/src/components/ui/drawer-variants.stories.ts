@@ -82,7 +82,7 @@ function panel(direction: DrawerDirection) {
   });
 }
 
-// A asserção de `data-vaul-drawer-direction` está escrita story a story, e não
+// A asserção de `data-direction` está escrita story a story, e não
 // extraída para um helper: a direção é o ÚNICO contrato que cada uma destas
 // quatro verifica, e sob JIT o componente renderiza no default — o atributo
 // viria sempre "bottom" e as quatro passariam iguais (armadilha 1 do CLAUDE.md
@@ -105,7 +105,7 @@ export const Bottom: Story = {
   play: async ({ step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
       const panelEl = await waitForPortal('dialog');
-      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
+      await expect(panelEl).toHaveAttribute('data-direction', 'bottom');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName();
 
@@ -133,7 +133,7 @@ export const Top: Story = {
   play: async ({ step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
       const panelEl = await waitForPortal('dialog');
-      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'top');
+      await expect(panelEl).toHaveAttribute('data-direction', 'top');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName();
 
@@ -159,7 +159,7 @@ export const Left: Story = {
   play: async ({ step }) => {
     await step('O painel encosta na borda esquerda', async () => {
       const panelEl = await waitForPortal('dialog');
-      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'left');
+      await expect(panelEl).toHaveAttribute('data-direction', 'left');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName();
       // Ocupa a altura inteira, ao contrário de bottom/top.
@@ -184,7 +184,7 @@ export const Right: Story = {
   play: async ({ step }) => {
     await step('O painel encosta na borda direita', async () => {
       const panelEl = await waitForPortal('dialog');
-      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'right');
+      await expect(panelEl).toHaveAttribute('data-direction', 'right');
       await expect(panelEl).toHaveClass(/nds-drawer-content/);
       await expect(panelEl).toHaveAccessibleName();
       const box = panelEl.getBoundingClientRect();
