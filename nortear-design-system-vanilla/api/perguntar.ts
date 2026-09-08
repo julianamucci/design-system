@@ -506,6 +506,15 @@ export interface PedidoAoProvedor {
 /** O que o provedor devolve, pedaço a pedaço. Só o último traz `uso`. */
 export interface PedacoDoProvedor {
   texto?: string;
+  /**
+   * O modelo que o provedor diz ter servido.
+   *
+   * Existe porque nome pedido e modelo servido PODEM DIVERGIR, e a divergência
+   * é silenciosa: um agregador aceita o identificador, responde bem, e a
+   * avaliação atribui o resultado ao modelo errado. Sem este campo, um banco de
+   * comparação mede reputação em vez de medir modelo.
+   */
+  modeloServido?: string;
   parada?: string | null;
   uso?: { input: number | null; output: number | null };
 }
@@ -685,6 +694,7 @@ const provedorCompativelOpenAI: Provedor = {
     const decodificador = new TextDecoder();
     let sobra = '';
     let parada: string | null = null;
+    let modeloRelatado: string | undefined;
     let uso: { input: number | null; output: number | null } | undefined;
 
     for (;;) {
@@ -704,6 +714,7 @@ const provedorCompativelOpenAI: Provedor = {
         if (dado === '[DONE]') continue;
 
         let evento: {
+          model?: string;
           choices?: { delta?: { content?: string }; finish_reason?: string | null }[];
           usage?: { prompt_tokens?: number; completion_tokens?: number };
         };
@@ -715,6 +726,10 @@ const provedorCompativelOpenAI: Provedor = {
           continue;
         }
 
+        if (evento.model && evento.model !== modeloRelatado) {
+          modeloRelatado = evento.model;
+          yield { modeloServido: evento.model };
+        }
         const texto = evento.choices?.[0]?.delta?.content;
         if (texto) yield { texto };
         if (evento.choices?.[0]?.finish_reason) parada = evento.choices[0].finish_reason ?? null;
