@@ -210,6 +210,77 @@
     (safeExit ?? panelEl).focus();
   }
 
+  // ─── Analytics — abertura, fechamento e o motivo ────────────────────────────
+
+  /**
+   * O evento nasce AQUI, na camada de produto: o primitivo de UI não importa
+   * `@/lib/analytics`, e há portão para isso (`analytics_in_ui_primitive`).
+   *
+   * O `onOpenChange` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o
+   * payload de `drawer_close` promete `reason`. Os caminhos que a lib anuncia
+   * por evento próprio ficam anotados aqui; o que sobra é o botão, a saída do
+   * rodapé, que fecha pelo `DrawerClose`.
+   *
+   * Arrastar o painel para fora fecha por `overlay`: o vocabulário é o do design
+   * system, não o da lib — para quem usa, o gesto é a mesma decisão de "saí sem
+   * decidir nada" do clique no véu. O aviso tem de sair do `onDrag`, e não do
+   * `onRelease`: a lib FECHA a gaveta antes de chamar o release
+   * (`closeDrawer(); onRelease(event, false)`), então o motivo chegaria depois do
+   * evento que ele explica. Arraste que não fecha se desmarca no release com
+   * `open === true`.
+   *
+   * Uma variável para a página inteira basta: o painel é modal, e nunca há dois
+   * abertos ao mesmo tempo.
+   */
+  type DrawerCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+  type DrawerDirection = 'bottom' | 'top' | 'left' | 'right';
+
+  let pendingCloseReason: DrawerCloseReason | null = null;
+
+  /** Ouvintes do CONTEÚDO, prontos para espalhar — o painel os repassa à lib. */
+  const closeWatch = {
+    onEscapeKeydown: () => { pendingCloseReason = 'escape'; },
+    onInteractOutside: () => { pendingCloseReason = 'overlay'; },
+  };
+
+  /**
+   * Props da RAIZ de cada painel vivo desta página.
+   *
+   * `label` carrega a DIREÇÃO — valor estável, não localizado. O título é texto
+   * traduzido e partiria o mesmo evento em três valores no GA4, um por idioma.
+   *
+   * `location` vem de QUEM CHAMA, porque ele existe para dizer de ONDE veio o
+   * clique: componente vivo em Variantes, Composições ou Do & Dont é clique tão
+   * real quanto o da demonstração, e com um valor só `location`, `section_id` e
+   * `data-track-id` deixam de cruzar no GA4.
+   *
+   * A direção sai daqui JUNTO com o rastreio, e não de um atributo à parte: com
+   * duas fontes, o rótulo do evento pode divergir do painel que o disparou.
+   */
+  function drawerWatch(location: string, direction: DrawerDirection) {
+    return {
+      direction,
+      onOpenChange: (open: boolean) => {
+        if (open) {
+          pendingCloseReason = null;
+          track('drawer_open', { component: 'drawer', label: direction, location });
+          return;
+        }
+        track('drawer_close', {
+          component: 'drawer',
+          label: direction,
+          reason: pendingCloseReason ?? 'close-button',
+          location,
+        });
+        pendingCloseReason = null;
+      },
+      onDrag: () => { pendingCloseReason = 'overlay'; },
+      onRelease: (_event: PointerEvent, open: boolean) => {
+        if (open) pendingCloseReason = null;
+      },
+    };
+  }
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import {
@@ -303,13 +374,13 @@ interface TriggerProps {
   -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="contain: layout">
-      <Drawer direction="bottom">
+      <Drawer {...drawerWatch('docs_demo', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.bottom')}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -325,13 +396,13 @@ interface TriggerProps {
         </DrawerContent>
       </Drawer>
 
-      <Drawer direction="right">
+      <Drawer {...drawerWatch('docs_demo', 'right')}>
         <DrawerTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.right')}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -347,13 +418,13 @@ interface TriggerProps {
         </DrawerContent>
       </Drawer>
 
-      <Drawer direction="left">
+      <Drawer {...drawerWatch('docs_demo', 'left')}>
         <DrawerTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.left')}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -369,13 +440,13 @@ interface TriggerProps {
         </DrawerContent>
       </Drawer>
 
-      <Drawer direction="top">
+      <Drawer {...drawerWatch('docs_demo', 'top')}>
         <DrawerTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.top')}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -467,11 +538,11 @@ interface TriggerProps {
 
   {#snippet doPair1()}
     <div style="contain: layout">
-      <Drawer direction="bottom">
+      <Drawer {...drawerWatch('docs_do_dont', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -488,11 +559,11 @@ interface TriggerProps {
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout">
-      <Drawer direction="bottom">
+      <Drawer {...drawerWatch('docs_do_dont', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.bad')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
@@ -505,11 +576,11 @@ interface TriggerProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <Drawer direction="bottom">
+      <Drawer {...drawerWatch('docs_do_dont', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>Filtros</DrawerTitle>
             <DrawerDescription>Refine os resultados.</DrawerDescription>
@@ -526,11 +597,11 @@ interface TriggerProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <Drawer direction="bottom">
+      <Drawer {...drawerWatch('docs_do_dont', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>Externo</DrawerTitle>
             <DrawerDescription>Drawer aninhado quebra focus trap.</DrawerDescription>
@@ -601,11 +672,11 @@ interface TriggerProps {
 
   {#snippet variantBottom()}
     <div style="contain: layout">
-      <Drawer direction="bottom">
+      <Drawer {...drawerWatch('docs_variantes', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.bottom')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>Bottom</DrawerTitle>
             <DrawerDescription>Drawer mobile padrão com handle de drag.</DrawerDescription>
@@ -622,11 +693,11 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantTop()}
     <div style="contain: layout">
-      <Drawer direction="top">
+      <Drawer {...drawerWatch('docs_variantes', 'top')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.top')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>Top</DrawerTitle>
             <DrawerDescription>Drawer entra por cima.</DrawerDescription>
@@ -643,11 +714,11 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantLeft()}
     <div style="contain: layout">
-      <Drawer direction="left">
+      <Drawer {...drawerWatch('docs_variantes', 'left')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.left')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>Left</DrawerTitle>
             <DrawerDescription>Painel lateral à esquerda.</DrawerDescription>
@@ -664,11 +735,11 @@ interface TriggerProps {
   {/snippet}
   {#snippet variantRight()}
     <div style="contain: layout">
-      <Drawer direction="right">
+      <Drawer {...drawerWatch('docs_variantes', 'right')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.right')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>Right</DrawerTitle>
             <DrawerDescription>Painel lateral à direita (padrão desktop).</DrawerDescription>
@@ -686,11 +757,11 @@ interface TriggerProps {
 
   {#snippet variantWithScroll()}
     <div style="contain: layout">
-      <Drawer>
+      <Drawer {...drawerWatch('docs_variantes', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>Ler termos</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>Termos de uso</DrawerTitle>
             <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
@@ -816,11 +887,11 @@ interface TriggerProps {
 
   {#snippet compWithForm()}
     <div style="contain: layout">
-      <Drawer>
+      <Drawer {...drawerWatch('docs_composicoes', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent>
+        <DrawerContent {...closeWatch}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -854,12 +925,12 @@ interface TriggerProps {
   {/snippet}
   {#snippet compWithConfirmation()}
     <div style="contain: layout">
-      <Drawer>
+      <Drawer {...drawerWatch('docs_composicoes', 'bottom')}>
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.destroy')}</Button>{/snippet}
         </DrawerTrigger>
         <!-- A decisão É a tela: o foco entra na saída segura, e não no corpo. -->
-        <DrawerContent bind:ref={confirmationPanel} onOpenAutoFocus={focusSafeExit}>
+        <DrawerContent {...closeWatch} bind:ref={confirmationPanel} onOpenAutoFocus={focusSafeExit}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.destroy')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.destroyMessage')}</DrawerDescription>
@@ -974,7 +1045,7 @@ interface TriggerProps {
     }}
     items={[
       { event: 'drawer_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'drawer', location, label }" },
-      { event: 'drawer_close', trigger: 'onOpenChange(false)', payload: "{ component: 'drawer', location, label }" },
+      { event: 'drawer_close', trigger: 'onOpenChange(false)', payload: "{ component: 'drawer', location, label, reason }" },
       { event: '—',            trigger: stripHtml($tStore('analytics.description')), payload: '—' },
     ]}
   />
