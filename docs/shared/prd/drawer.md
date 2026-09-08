@@ -76,7 +76,7 @@ parecia regressão. No svelte, as superfícies discordavam DENTRO do mesmo arqui
 ### D4 · A alça existe só em `bottom`
 
 **Estado**: `.nds-drawer-handle` é `display: none` por padrão e vira `block` só sob
-`[data-vaul-drawer-direction="bottom"]`.
+`[data-direction="bottom"]`.
 **Geometria**: 100px de largura (`6.25rem`, literal) por `--spacing-1` de altura,
 `--radius-full`, fundo `--muted`, centralizada por `margin-inline: auto` com
 `margin-top: --spacing-4`.
@@ -115,10 +115,16 @@ longo empurrava o rodapé com os botões para fora da tela.
 
 **Estado**: declarado no painel.
 **Medição**: sem isso o navegador trata o movimento como rolagem da página e nunca
-entrega os `pointermove` ao painel. É a mesma declaração que a lib de gaveta já
-injeta nas três stacks que a usam — trazê-la para a folha não muda nada nelas e
-liga o gesto nas outras duas. O valor é o da lib, LIDO na folha que ela injeta
-(`[data-vaul-drawer]{touch-action:none}`), não uma segunda interpretação.
+entrega os `pointermove` ao painel. As três stacks que rodam lib de gesto já
+recebiam a declaração da própria lib; na folha ela é do design system, e é o que
+permite às outras duas rodarem o gesto pelo primitivo compartilhado.
+
+**Nota de 2026-09-08**: esta linha dizia que o valor era "o da lib, LIDO na folha
+que ela injeta". Descrever o próprio contrato como cópia do de uma dependência
+convida a tratá-lo como emprestado — foi assim que o atributo de direção passou
+anos chamando-se `data-vaul-drawer-direction` na folha que as CINCO leem (ver
+D-do-atributo). O valor é `none` porque é o único que entrega `pointermove` ao
+painel, e isso é verdade independente de quem mais o declare.
 **O que nenhum portão desta casa alcança**: o toque. A suíte dirige um ponteiro de
 mouse, onde `touch-action` não tem efeito. A convivência desta declaração com a
 rolagem por toque dentro do corpo é herdada da lib e continua sem medição.
@@ -170,7 +176,7 @@ tem o foco **e qual não tem**.
 
 ```
 sheet-overlay                 véu — reusado do Sheet, não declarado aqui
-drawer-content [data-vaul-drawer-direction]
+drawer-content [data-direction]
 ├── drawer-handle             só em bottom (D4)
 ├── drawer-header             gap 2px, padding 16px; centralizado em bottom/top (D10)
 │   ├── drawer-title             obrigatório — regra do Sheet

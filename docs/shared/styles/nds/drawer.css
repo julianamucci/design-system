@@ -24,7 +24,7 @@
  *
  * Estrutura:
  *   <div class="nds-sheet-overlay" />                (do Sheet)
- *   <div class="nds-drawer-content" data-vaul-drawer-direction="bottom"
+ *   <div class="nds-drawer-content" data-direction="bottom"
  *        role="dialog" aria-modal="true">
  *     <div class="nds-drawer-handle" aria-hidden="true" />
  *     <div class="nds-drawer-header">
@@ -72,11 +72,10 @@
 
   /*
    * Sem isto o arraste por toque não existe: o navegador trata o movimento como
-   * rolagem da página e nunca entrega os `pointermove` ao painel. É a mesma
-   * declaração que a lib de gaveta já injeta por conta própria nas três stacks
-   * que a usam — trazê-la para cá não muda nada nelas e liga o gesto nas outras
-   * duas. O valor é o da lib, LIDO na folha que ela injeta
-   * (`[data-vaul-drawer]{touch-action:none}`), e não uma segunda interpretação.
+   * rolagem da página e nunca entrega os `pointermove` ao painel. As três
+   * stacks que rodam lib de gesto já recebiam esta declaração da própria lib;
+   * aqui ela é do design system, e é o que permite às outras duas implementarem
+   * o gesto sem depender de uma.
    *
    * O que NENHUM portão deste repositório alcança é o toque: a suíte dirige um
    * ponteiro de mouse, onde `touch-action` não tem efeito. A convivência desta
@@ -88,6 +87,24 @@
 }
 
 /*
+ * ─── Por que `data-direction`, e não o nome antigo ──────────────────────────
+ *
+ * Até 2026-09-08 estes dezessete seletores liam `data-vaul-drawer-direction`,
+ * o atributo da lib de gesto que TRÊS das cinco stacks carregam. As outras duas
+ * o emitiam sem usar a lib, só para o painel ter posição, e o docblock do
+ * drawer do Angular registrava isso como fato consumado: "Emitir outro nome
+ * deixaria o painel sem posição nenhuma."
+ *
+ * O diagnóstico estava certo e a conclusão invertida — o que estava errado era
+ * o contrato. Design system não batiza o próprio markup com o nome da
+ * dependência de parte das implementações: o nome vaza a lib para as cinco
+ * docs pages, e prende quem não a usa a fingir que usa.
+ *
+ * O critério de teste `functional.item5` do conteúdo compartilhado cobrava o
+ * atributo pelo nome antigo; foi corrigido junto.
+ */
+
+/*
  * O raio dos cantos vem de `--radius-xl` (14px), não do `0.75rem` (12px) que
  * estava escrito literalmente nas quatro regras de direção. 12px não existe na
  * escala de raios — e não existe de propósito, a régua vai 10 → 14. Valor solto
@@ -96,7 +113,7 @@
  * A troca move 2px em cada canto do drawer nas cinco stacks; conferir no
  * Chromatic junto com a borda da alça do Slider.
  */
-.nds-drawer-content[data-vaul-drawer-direction="bottom"] {
+.nds-drawer-content[data-direction="bottom"] {
   inset-inline: 0;
   bottom: 0;
   margin-top: var(--spacing-24);
@@ -106,7 +123,7 @@
   border-start-end-radius: var(--radius-xl);
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="top"] {
+.nds-drawer-content[data-direction="top"] {
   inset-inline: 0;
   top: 0;
   margin-bottom: var(--spacing-24);
@@ -116,7 +133,7 @@
   border-end-end-radius: var(--radius-xl);
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="left"] {
+.nds-drawer-content[data-direction="left"] {
   inset-block: 0;
   left: 0;
   /* Ver a nota das regras de lado do Sheet: largura por custom property (o
@@ -128,7 +145,7 @@
   border-end-end-radius: var(--radius-xl);
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="right"] {
+.nds-drawer-content[data-direction="right"] {
   inset-block: 0;
   right: 0;
   width: var(--drawer-width);
@@ -138,8 +155,8 @@
 }
 
 @media (min-width: 40rem) {
-  .nds-drawer-content[data-vaul-drawer-direction="left"],
-  .nds-drawer-content[data-vaul-drawer-direction="right"] {
+  .nds-drawer-content[data-direction="left"],
+  .nds-drawer-content[data-direction="right"] {
     max-width: var(--drawer-max-width);
   }
 }
@@ -155,7 +172,7 @@
   background-color: hsl(var(--muted));
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="bottom"] .nds-drawer-handle {
+.nds-drawer-content[data-direction="bottom"] .nds-drawer-handle {
   display: block;
 }
 
@@ -166,8 +183,8 @@
   padding: var(--spacing-4);
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="bottom"] .nds-drawer-header,
-.nds-drawer-content[data-vaul-drawer-direction="top"] .nds-drawer-header {
+.nds-drawer-content[data-direction="bottom"] .nds-drawer-header,
+.nds-drawer-content[data-direction="top"] .nds-drawer-header {
   text-align: center;
 }
 
@@ -285,23 +302,23 @@
   opacity: 0;
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="bottom"][data-starting-style],
-.nds-drawer-content[data-vaul-drawer-direction="bottom"][data-ending-style] {
+.nds-drawer-content[data-direction="bottom"][data-starting-style],
+.nds-drawer-content[data-direction="bottom"][data-ending-style] {
   transform: translateY(100%);
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="top"][data-starting-style],
-.nds-drawer-content[data-vaul-drawer-direction="top"][data-ending-style] {
+.nds-drawer-content[data-direction="top"][data-starting-style],
+.nds-drawer-content[data-direction="top"][data-ending-style] {
   transform: translateY(-100%);
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="left"][data-starting-style],
-.nds-drawer-content[data-vaul-drawer-direction="left"][data-ending-style] {
+.nds-drawer-content[data-direction="left"][data-starting-style],
+.nds-drawer-content[data-direction="left"][data-ending-style] {
   transform: translateX(-100%);
 }
 
-.nds-drawer-content[data-vaul-drawer-direction="right"][data-starting-style],
-.nds-drawer-content[data-vaul-drawer-direction="right"][data-ending-style] {
+.nds-drawer-content[data-direction="right"][data-starting-style],
+.nds-drawer-content[data-direction="right"][data-ending-style] {
   transform: translateX(100%);
 }
 
