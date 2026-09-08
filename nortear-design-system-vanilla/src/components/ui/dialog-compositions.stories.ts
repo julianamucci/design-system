@@ -13,7 +13,6 @@ import {
   waitForClosed,
   close,
   trigger,
-  makeFooter,
   panel,
 } from './dialog.fixtures';
 
@@ -66,10 +65,28 @@ export const ProfileEdit: Story = {
     const form = document.createElement('form');
     form.className = 'nds-stack';
     form.dataset.spacing = 'md';
+    form.addEventListener('submit', (e) => e.preventDefault());
     form.append(
       buildField('profile-name', 'Nome de exibição', 'text', 'Maria Souza'),
       buildField('profile-role', 'Função', 'text', 'Designer'),
     );
+
+    // O rodapé fica DENTRO do `<form>` (PRD D10), e a primária é
+    // `type: 'submit'`. É a mesma forma da story `WithForm` e da docs page desta
+    // stack — e o motivo é o oposto do submit órfão: aqui o formulário existia e
+    // NENHUM botão o submetia. Com dois campos o navegador não faz o envio
+    // implícito, então o Enter num campo não disparava nada, em silêncio. A
+    // opção `footer` da fábrica não serve porque anexa o rodapé como IRMÃO do
+    // corpo, fora do formulário.
+    const footerEl = document.createElement('div');
+    footerEl.className = 'nds-dialog-footer';
+    footerEl.dataset.slot = 'dialog-footer';
+    footerEl.append(
+      createButton({ variant: 'outline', label: t('demonstration.labels.cancel') }),
+      createButton({ label: t('demonstration.labels.action'), type: 'submit' }),
+    );
+    form.appendChild(footerEl);
+
     return mountOpen(
       createDialog({
         trigger: createButton({
@@ -79,7 +96,6 @@ export const ProfileEdit: Story = {
         title: t('demonstration.labels.title'),
         description: t('demonstration.labels.description'),
         content: form,
-        footer: makeFooter(t('demonstration.labels.cancel'), t('demonstration.labels.action')),
       }),
     );
   },
@@ -101,6 +117,24 @@ export const ProfileEdit: Story = {
       name.focus();
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector('#profile-role'));
+    });
+
+    await step('A primária é submit DENTRO do form, com o rodapé junto (D10)', async () => {
+      // A asserção é a RELAÇÃO de contenção, e não a presença do atributo: era
+      // o rodapé irmão do corpo que deixava o formulário sem NENHUMA forma de
+      // submeter — dois campos, sem envio implícito, e o Enter num campo não
+      // disparava nada. `button.form` é a leitura que denuncia o órfão.
+      const form = p.querySelector<HTMLFormElement>('form')!;
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      await expect(form.contains(footer)).toBe(true);
+
+      const submit = footer.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+      await expect(submit).toHaveAccessibleName(t('demonstration.labels.action'));
+      await expect(submit.form).toBe(form);
+      // Dentro de um form o padrão do HTML para `<button>` é `submit`: o
+      // Cancelar precisa dizer `type="button"`, e é o que a fábrica já dá.
+      const cancelar = footer.querySelector<HTMLButtonElement>('button:not([type="submit"])')!;
+      await expect(cancelar.type).toBe('button');
     });
   },
 };
