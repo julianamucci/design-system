@@ -67,20 +67,24 @@ describe('dialogSource', () => {
   });
 
   it('os textos do painel acompanham os controls', () => {
+    // Valores SINTÉTICOS de propósito: o que esta guarda mede é a substituição,
+    // não um cenário. Os rótulos de cenário que moravam aqui ("Convidar para o
+    // time") eram uma demo que só esta stack contava, e a medição cross-stack
+    // os lia como conteúdo divergente.
     const saida = dialogSource('', {
       args: {
-        triggerLabel: 'Convidar',
-        title: 'Convidar para o time',
-        description: 'Envie um convite por e-mail.',
-        actionLabel: 'Enviar convite',
-        cancelLabel: 'Recusar',
+        triggerLabel: 'Gatilho',
+        title: 'Título do painel',
+        description: 'Descrição do painel.',
+        actionLabel: 'Ação primária',
+        cancelLabel: 'Ação secundária',
       },
     });
-    expect(saida).toContain('>Convidar</Button>');
-    expect(saida).toContain('<DialogTitle>Convidar para o time</DialogTitle>');
-    expect(saida).toContain('<DialogDescription>Envie um convite por e-mail.</DialogDescription>');
-    expect(saida).toContain('<Button>Enviar convite</Button>');
-    expect(saida).toContain('>Recusar</Button>');
+    expect(saida).toContain('>Gatilho</Button>');
+    expect(saida).toContain('<DialogTitle>Título do painel</DialogTitle>');
+    expect(saida).toContain('<DialogDescription>Descrição do painel.</DialogDescription>');
+    expect(saida).toContain('<Button>Ação primária</Button>');
+    expect(saida).toContain('>Ação secundária</Button>');
   });
 });
 
@@ -96,7 +100,7 @@ describe('transforms das stories de composição', () => {
     const saida = dialogWithScrollSource();
     expect(saida).toContain('nds-dialog-body-scroll');
     expect(saida).toContain('tabindex="0"');
-    expect(saida).toContain('aria-label="Termos e condições"');
+    expect(saida).toContain('aria-label="Termos de uso"');
   });
 
   it('as duas rotas de rolagem ensinam composições DIFERENTES', () => {
@@ -129,7 +133,7 @@ describe('transforms das stories de composição', () => {
   it('o fluxo de confirmar email traz o campo de e-mail do próprio fluxo', () => {
     const saida = dialogConfirmarEmailSource();
     expect(saida).toContain('<Label for="confirm-new-email">Novo email</Label>');
-    expect(saida).toContain('<Button>Enviar confirmação</Button>');
+    expect(saida).toContain('<Button>Enviar link</Button>');
   });
 
   it('na edição de perfil o rodapé fica dentro do formulário, e o envio é submit', () => {

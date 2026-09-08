@@ -79,11 +79,11 @@
         -->
         <form class="nds-grid" data-spacing="sm" onsubmit={(e) => { e.preventDefault(); onAction?.(); }}>
           <div class="nds-grid" data-spacing="xs">
-            <Label for="dialog-name">Nome</Label>
-            <Input id="dialog-name" value="Maria Silva" />
+            <Label for="dialog-name">{t('demonstration.labels.fieldName')}</Label>
+            <Input id="dialog-name" value={t('demonstration.labels.samplePersonName')} />
           </div>
           <div class="nds-grid" data-spacing="xs">
-            <Label for="dialog-email">E-mail</Label>
+            <Label for="dialog-email">{t('demonstration.labels.fieldEmail')}</Label>
             <Input id="dialog-email" type="email" value="maria@exemplo.com" />
           </div>
         </form>
@@ -103,7 +103,7 @@
           data-spacing="sm"
           tabindex="0"
           role="group"
-          aria-label="Termos de uso"
+          aria-label={t('demonstration.labels.termsTitle')}
         >
           {#each Array.from({ length: 14 }) as _, i (i)}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar o scroll interno do Dialog quando o body excede a height disponível em viewport.</p>

@@ -23,10 +23,10 @@ import { useTranslation } from '@/lib/i18n';
 import dialogTranslations from '@shared/content/dialog/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
-// Os rótulos genéricos do painel saem do conteúdo compartilhado, como nas
-// outras stacks. Os rótulos PRÓPRIOS de cada composição (termos, contrato,
-// convite) seguem literais: não existe chave para eles no conteúdo
-// compartilhado — está no relato da revisão.
+// Todos os rótulos das composições saem do conteúdo compartilhado, como nas
+// outras stacks — inclusive os próprios de cada cenário (termos, contrato,
+// remoção, confirmação de e-mail), que ganharam chave. O que sobra literal é
+// só a NoFooter, que ainda não tem chave: está no relato da revisão.
 const { t } = useTranslation(dialogTranslations);
 
 const meta: Meta = {
@@ -118,10 +118,10 @@ export const WithForm: Story = {
   args: {
     open: true,
     variant: 'withForm',
-    triggerLabel: 'Editar dados',
-    title: 'Editar dados pessoais',
-    description: 'Atualize seu nome e e-mail.',
-    actionLabel: 'Salvar',
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.action'),
     cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ step }) => {
@@ -131,12 +131,15 @@ export const WithForm: Story = {
       // O valor entra na asserção junto com o rótulo: era exatamente aqui que
       // um `defaultValue` inexistente na lib deixava os campos VAZIOS enquanto
       // a story dizia mostrá-los preenchidos, e nada reprovava.
+      // Rótulo e valor saem das MESMAS chaves que a story monta: cravado em
+      // pt-BR, o esperado reprovaria com a barra de idiomas em inglês ou
+      // espanhol sem nada de errado no componente.
       const name = p.querySelector<HTMLInputElement>('#dialog-name')!;
-      await expect(name).toHaveAccessibleName('Nome');
-      await expect(name.value).toBe('Maria Silva');
+      await expect(name).toHaveAccessibleName(t('demonstration.labels.fieldName'));
+      await expect(name.value).toBe(t('demonstration.labels.samplePersonName'));
 
       const email = p.querySelector<HTMLInputElement>('#dialog-email')!;
-      await expect(email).toHaveAccessibleName('E-mail');
+      await expect(email).toHaveAccessibleName(t('demonstration.labels.fieldEmail'));
       await expect(email.value).toBe('maria@exemplo.com');
     });
 
@@ -164,11 +167,11 @@ export const WithScrollContent: Story = {
   args: {
     open: true,
     variant: 'withScrollContent',
-    triggerLabel: 'Termos de uso',
-    title: 'Termos e condições',
-    description: 'Leia atentamente antes de aceitar.',
-    actionLabel: 'Aceitar',
-    cancelLabel: 'Recusar',
+    triggerLabel: t('demonstration.labels.termsTitle'),
+    title: t('demonstration.labels.termsTitle'),
+    description: t('demonstration.labels.termsDescription'),
+    actionLabel: t('demonstration.labels.accept'),
+    cancelLabel: t('demonstration.labels.decline'),
   },
   play: async ({ step }) => {
     const p = await waitForOpen();
@@ -210,11 +213,11 @@ export const WithScrollingOverlay: Story = {
   args: {
     open: true,
     variant: 'withScrollingOverlay',
-    triggerLabel: 'Ver contrato',
-    title: 'Contrato de prestação',
-    description: 'O documento rola inteiro, e o cabeçalho sobe junto.',
-    actionLabel: 'Aceitar',
-    cancelLabel: 'Recusar',
+    triggerLabel: t('demonstration.labels.contractTrigger'),
+    title: t('demonstration.labels.contractTitle'),
+    description: t('demonstration.labels.contractDescription'),
+    actionLabel: t('demonstration.labels.accept'),
+    cancelLabel: t('demonstration.labels.decline'),
   },
   play: async ({ step }) => {
     const p = await waitForOpen();
@@ -308,10 +311,10 @@ export const WithDestructiveAction: Story = {
   args: {
     open: true,
     variant: 'withDestructiveAction',
-    triggerLabel: 'Remover item',
-    title: 'Remover item da lista',
-    description: 'Você pode adicioná-lo novamente depois, mas perderá os ajustes feitos.',
-    actionLabel: 'Remover item',
+    triggerLabel: t('demonstration.labels.removeItemAction'),
+    title: t('demonstration.labels.removeItemTitle'),
+    description: t('demonstration.labels.removeItemDescription'),
+    actionLabel: t('demonstration.labels.removeItemAction'),
     cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ step }) => {
@@ -349,10 +352,13 @@ export const CustomCloseInFooter: Story = {
     open: true,
     variant: 'default',
     showCloseButton: false,
-    triggerLabel: 'Convidar',
-    title: 'Convidar para o time',
-    description: 'Envie um convite por e-mail. O destinatário poderá aceitar ou recusar.',
-    actionLabel: 'Enviar convite',
+    // O assunto desta story é a AUSÊNCIA do X no canto, não um fluxo próprio:
+    // o cenário é o mesmo das demais, e sai do conteúdo compartilhado. O
+    // convite que morava aqui era história só desta stack.
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.action'),
     cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ canvasElement, step }) => {
@@ -394,7 +400,7 @@ export const ConfirmEmail: Story = {
       source: { transform: dialogConfirmarEmailSource },
       description: {
         story:
-          'Dialog usado para confirmar troca de email. Title nomeia a ação, Description orienta o usuário, Footer com Cancelar + Enviar confirmação.',
+          'Dialog usado para confirmar troca de email. Title nomeia a ação, Description orienta o usuário, Footer com Cancelar + Enviar link.',
       },
     },
   },

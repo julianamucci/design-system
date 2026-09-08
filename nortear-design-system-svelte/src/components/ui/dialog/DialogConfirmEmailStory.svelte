@@ -15,9 +15,8 @@
   import { useTranslation } from '@/lib/i18n';
   import dialogTranslations from '@shared/content/dialog/translations.json';
 
-  // O 'Cancelar' vem do conteúdo compartilhado. Os demais rótulos deste fluxo
-  // (gatilho, título, descrição, campo e ação) ainda não têm chave em
-  // conteudo compartilhado do dialog — ver o relato da revisão.
+  // Gatilho, título, ação e Cancelar vêm do conteúdo compartilhado. Sem chave
+  // ainda: a descrição do fluxo e o rótulo do campo — ver o relato da revisão.
   const { t } = useTranslation(dialogTranslations);
 
   interface Props {
@@ -28,7 +27,7 @@
 
   let { open = $bindable(true), onOpenChange, onAction }: Props = $props();
 
-  const title = 'Confirmar novo email';
+  const title = t('demonstration.labels.confirmEmailTitle');
 
   function handleOpenChange(value: boolean) {
     onOpenChange?.(value);
@@ -42,7 +41,7 @@
 <Dialog bind:open onOpenChange={handleOpenChange}>
   <DialogTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" {...props}>Confirmar email</Button>
+      <Button variant="outline" {...props}>{t('demonstration.labels.confirmEmailTitle')}</Button>
     {/snippet}
   </DialogTrigger>
   <DialogContent>
@@ -62,7 +61,7 @@
           <Button variant="outline" {...props}>{t('demonstration.labels.cancel')}</Button>
         {/snippet}
       </DialogClose>
-      <Button onclick={handleAction}>Enviar confirmação</Button>
+      <Button onclick={handleAction}>{t('demonstration.labels.confirmEmailAction')}</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>

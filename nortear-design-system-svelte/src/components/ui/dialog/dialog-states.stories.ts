@@ -17,9 +17,9 @@ import { useTranslation } from '@/lib/i18n';
 import dialogTranslations from '@shared/content/dialog/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
-// Os rótulos genéricos do painel saem do conteúdo compartilhado, como nas
-// outras stacks. Os rótulos PRÓPRIOS de cada estado (convite, estado externo)
-// seguem literais: não existe chave para eles no conteúdo compartilhado.
+// Os rótulos do painel saem do conteúdo compartilhado, como nas outras stacks.
+// Segue literal só o cenário de estado externo (`Controlled`), que não tem
+// chave no conteúdo compartilhado — está no relato da revisão.
 const { t } = useTranslation(dialogTranslations);
 
 const meta: Meta = {
@@ -127,10 +127,12 @@ export const WithCloseButtonHidden: Story = {
   args: {
     open: true,
     showCloseButton: false,
-    triggerLabel: 'Convidar',
-    title: 'Convidar para o time',
-    description: 'Envie um convite por e-mail.',
-    actionLabel: 'Enviar convite',
+    // O que esta story mostra é o painel SEM o X, e não um fluxo próprio: o
+    // cenário é o mesmo dos demais estados, vindo do conteúdo compartilhado.
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.action'),
     cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ canvasElement, step }) => {

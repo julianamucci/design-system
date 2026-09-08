@@ -155,13 +155,13 @@ function salvar(evento: SubmitEvent) {
     `<Dialog bind:open>
   <DialogTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" {...props}>Editar dados</Button>
+      <Button variant="outline" {...props}>Editar perfil</Button>
     {/snippet}
   </DialogTrigger>
   <DialogContent>
     <DialogHeader>
-      <DialogTitle>Editar dados pessoais</DialogTitle>
-      <DialogDescription>Atualize seu nome e e-mail.</DialogDescription>
+      <DialogTitle>Editar perfil</DialogTitle>
+      <DialogDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</DialogDescription>
     </DialogHeader>
     <form class="nds-grid" data-spacing="sm" onsubmit={salvar}>
       <div class="nds-grid" data-spacing="xs">
@@ -173,7 +173,7 @@ function salvar(evento: SubmitEvent) {
         <Input id="dialog-email" type="email" value="maria@exemplo.com" />
       </div>
     </form>
-${footerDefault('Cancelar', 'Salvar')}
+${footerDefault('Cancelar', 'Salvar alterações')}
   </DialogContent>
 </Dialog>`,
   );
@@ -190,7 +190,7 @@ export function dialogWithScrollSource(): string {
   return dialogo({
     isOpen: true,
     triggerLabel: 'Termos de uso',
-    title: 'Termos e condições',
+    title: 'Termos de uso',
     description: 'Leia atentamente antes de aceitar.',
     body: `    <div
       class="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
@@ -198,7 +198,7 @@ export function dialogWithScrollSource(): string {
       data-spacing="sm"
       tabindex="0"
       role="group"
-      aria-label="Termos e condições"
+      aria-label="Termos de uso"
     >
       <p>Parágrafo 1: conteúdo extenso o bastante para o corpo passar da altura disponível.</p>
       <p>Parágrafo 2: a rolagem é do corpo, e não da página atrás do painel.</p>
@@ -255,7 +255,7 @@ export function dialogActionDestructiveSource(): string {
     isOpen: true,
     triggerLabel: 'Remover item',
     title: 'Remover item da lista',
-    description: 'Você pode adicioná-lo novamente depois, mas perderá os ajustes feitos.',
+    description: 'O item sai desta lista e continua disponível no catálogo.',
     footer: footerDefault('Cancelar', 'Remover item', true),
   });
 }
@@ -269,12 +269,12 @@ let open = $state(true);`,
     `<Dialog bind:open>
   <DialogTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" {...props}>Confirmar email</Button>
+      <Button variant="outline" {...props}>Confirmar e-mail</Button>
     {/snippet}
   </DialogTrigger>
   <DialogContent>
     <DialogHeader>
-      <DialogTitle>Confirmar novo email</DialogTitle>
+      <DialogTitle>Confirmar e-mail</DialogTitle>
       <DialogDescription>
         Enviaremos um link de confirmação para o novo endereço. O email atual continua ativo até a confirmação.
       </DialogDescription>
@@ -283,7 +283,7 @@ let open = $state(true);`,
       <Label for="confirm-new-email">Novo email</Label>
       <Input id="confirm-new-email" type="email" placeholder="voce@example.com" />
     </div>
-${footerDefault('Cancelar', 'Enviar confirmação')}
+${footerDefault('Cancelar', 'Enviar link')}
   </DialogContent>
 </Dialog>`,
   );

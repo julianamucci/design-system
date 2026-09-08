@@ -17,7 +17,15 @@ import {
   panel,
 } from './dialog.fixtures';
 
+import { useTranslation } from '@/lib/i18n';
+import dialogTranslations from '@shared/content/dialog/translations.json';
+
 import { figmaDesign } from '@shared/figma/design-links';
+// Rótulo e valor esperados saem das MESMAS chaves que a story monta: cravados
+// em pt-BR, reprovariam com a barra de idiomas em inglês ou espanhol sem nada
+// de errado no componente.
+const { t } = useTranslation(dialogTranslations);
+
 const meta: Meta = {
   title: 'Components/Overlay/Dialog/Compositions',
   // `tags` estava aninhado dentro de `docs.description` — no lugar errado o
@@ -66,11 +74,11 @@ export const ProfileEdit: Story = {
       // um `defaultValue` inexistente na lib deixava os campos VAZIOS enquanto
       // a story dizia mostrá-los preenchidos, e nada reprovava.
       const name = p.querySelector<HTMLInputElement>('#profile-name')!;
-      await expect(name).toHaveAccessibleName('Nome completo');
-      await expect(name.value).toBe('Maria Silva');
+      await expect(name).toHaveAccessibleName(t('demonstration.labels.fieldFullName'));
+      await expect(name.value).toBe(t('demonstration.labels.samplePersonName'));
 
       const usuario = p.querySelector<HTMLInputElement>('#profile-username')!;
-      await expect(usuario).toHaveAccessibleName('Nome de usuário');
+      await expect(usuario).toHaveAccessibleName(t('demonstration.labels.fieldUsername'));
       await expect(usuario.value).toBe('@mariasilva');
     });
 
