@@ -101,10 +101,21 @@ type DemoProps = {
   cancel: string;
   action: string;
   location: DocsLocation;
+  /**
+   * Nota do corpo do painel — a chave `demonstration.labels.footerNote` do
+   * conteúdo compartilhado, que existia nos três idiomas e não tinha
+   * consumidor nesta stack.
+   *
+   * Opcional de propósito: no vanilla e no angular ela aparece SÓ na
+   * Demonstração, e as prévias de Variantes trazem o corpo que o snippet ao
+   * lado mostra. Passá-la também ali faria a prévia divergir do código
+   * publicado, que é o defeito dominante desta campanha.
+   */
+  footerNote?: string;
   defaultOpen?: boolean;
 };
 
-function DefaultDemo({ triggerLabel, title, description, cancel, action, location, defaultOpen }: DemoProps) {
+function DefaultDemo({ triggerLabel, title, description, cancel, action, location, footerNote, defaultOpen }: DemoProps) {
   return (
     <Dialog
       defaultOpen={defaultOpen}
@@ -123,6 +134,14 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, locatio
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        {footerNote && (
+          <div
+            data-slot="dialog-body"
+            className="nds-dialog-body nds-text-body nds-text-muted-foreground"
+          >
+            {footerNote}
+          </div>
+        )}
         <DialogFooter>
           <DialogClose render={<Button variant="outline" />}>{cancel}</DialogClose>
           <Button
@@ -142,7 +161,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, locatio
   );
 }
 
-function FormDemo({ triggerLabel, title, description, cancel, action, location }: DemoProps) {
+function FormDemo({ triggerLabel, title, description, cancel, action, location, footerNote }: DemoProps) {
   return (
     <Dialog
       onOpenChange={(open, details) =>
@@ -176,6 +195,9 @@ function FormDemo({ triggerLabel, title, description, cancel, action, location }
             <Label htmlFor="docs-dialog-name">Nome</Label>
             <Input id="docs-dialog-name" defaultValue="Maria Silva" />
           </div>
+          {footerNote && (
+            <p className="nds-text-caption nds-text-muted-foreground">{footerNote}</p>
+          )}
           <DialogFooter>
             <DialogClose render={<Button type="button" variant="outline" />}>
               {cancel}
@@ -406,6 +428,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         <div className="nds-cluster" data-justify="center" data-spacing="md" style={{ flexWrap: "wrap" }}>
           <DefaultDemo
             location="docs_demo"
+            footerNote={tContent("demonstration.labels.footerNote")}
             triggerLabel={tContent("demonstration.labels.triggerLabel")}
             title={tContent("demonstration.labels.title")}
             description={tContent("demonstration.labels.description")}
@@ -414,6 +437,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
           />
           <FormDemo
             location="docs_demo"
+            footerNote={tContent("demonstration.labels.footerNote")}
             triggerLabel={tContent("demonstration.labels.triggerLabel")}
             title={tContent("demonstration.labels.title")}
             description={tContent("demonstration.labels.description")}
