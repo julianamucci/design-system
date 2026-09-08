@@ -112,10 +112,23 @@ type DemoProps = {
    * publicado, que é o defeito dominante desta campanha.
    */
   footerNote?: string;
+  /**
+   * Nome do botão de fechar. O primitivo tem um default cravado em português
+   * (`closeLabel = "Fechar"`), então sem passar nada o X do canto continuava
+   * dizendo "Fechar" para quem abre a página em inglês ou espanhol — o único
+   * pedaço do painel que não seguia o idioma escolhido.
+   */
+  closeLabel: string;
   defaultOpen?: boolean;
 };
 
-function DefaultDemo({ triggerLabel, title, description, cancel, action, location, footerNote, defaultOpen }: DemoProps) {
+/** O formulário da demonstração acrescenta um campo rotulado e um valor de exemplo. */
+type FormDemoProps = DemoProps & {
+  fieldName: string;
+  sampleName: string;
+};
+
+function DefaultDemo({ triggerLabel, title, description, cancel, action, location, footerNote, closeLabel, defaultOpen }: DemoProps) {
   return (
     <Dialog
       defaultOpen={defaultOpen}
@@ -129,7 +142,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, locatio
       }
     >
       <DialogTrigger render={<Button variant="outline" />}>{triggerLabel}</DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={closeLabel}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
@@ -161,7 +174,7 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, locatio
   );
 }
 
-function FormDemo({ triggerLabel, title, description, cancel, action, location, footerNote }: DemoProps) {
+function FormDemo({ triggerLabel, title, description, cancel, action, location, footerNote, closeLabel, fieldName, sampleName }: FormDemoProps) {
   return (
     <Dialog
       onOpenChange={(open, details) =>
@@ -174,7 +187,7 @@ function FormDemo({ triggerLabel, title, description, cancel, action, location, 
       }
     >
       <DialogTrigger render={<Button variant="outline" />}>{triggerLabel}</DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={closeLabel}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
@@ -192,8 +205,8 @@ function FormDemo({ triggerLabel, title, description, cancel, action, location, 
           }}
         >
           <div className="nds-stack" data-spacing="xs">
-            <Label htmlFor="docs-dialog-name">Nome</Label>
-            <Input id="docs-dialog-name" defaultValue="Maria Silva" />
+            <Label htmlFor="docs-dialog-name">{fieldName}</Label>
+            <Input id="docs-dialog-name" defaultValue={sampleName} />
           </div>
           {footerNote && (
             <p className="nds-text-caption nds-text-muted-foreground">{footerNote}</p>
@@ -434,6 +447,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             description={tContent("demonstration.labels.description")}
             cancel={tContent("demonstration.labels.cancel")}
             action={tContent("demonstration.labels.action")}
+            closeLabel={tContent("demonstration.labels.close")}
           />
           <FormDemo
             location="docs_demo"
@@ -443,6 +457,9 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             description={tContent("demonstration.labels.description")}
             cancel={tContent("demonstration.labels.cancel")}
             action={tContent("demonstration.labels.action")}
+            closeLabel={tContent("demonstration.labels.close")}
+            fieldName={tContent("demonstration.labels.fieldName")}
+            sampleName={tContent("demonstration.labels.samplePersonName")}
           />
         </div>
       </DocsDemonstration>
@@ -581,7 +598,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.triggerLabel")}
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
                     <DialogTitle>{tContent("demonstration.labels.title")}</DialogTitle>
                     <DialogDescription>
@@ -599,12 +616,21 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             ),
             dontPreview: (
               <Dialog>
-                <DialogTrigger render={<Button variant="outline" />}>Atenção</DialogTrigger>
-                <DialogContent>
+                <DialogTrigger render={<Button variant="outline" />}>
+                  {tContent("demonstration.labels.vagueTitle")}
+                </DialogTrigger>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
-                    <DialogTitle>Atenção</DialogTitle>
-                    <DialogDescription>Aqui você pode mexer em várias coisas.</DialogDescription>
+                    <DialogTitle>{tContent("demonstration.labels.vagueTitle")}</DialogTitle>
+                    <DialogDescription>
+                      {tContent("demonstration.labels.vagueDescription")}
+                    </DialogDescription>
                   </DialogHeader>
+                  {/*
+                    "Não" e "OK" continuam literais: o par vago é o defeito que
+                    este lado existe para mostrar, e não há chave para eles no
+                    conteúdo compartilhado.
+                  */}
                   <DialogFooter>
                     <DialogClose render={<Button variant="outline" />}>Não</DialogClose>
                     <Button>OK</Button>
@@ -632,7 +658,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.triggerLabel")}
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
                     <DialogTitle>{tContent("demonstration.labels.title")}</DialogTitle>
                     <DialogDescription>
@@ -651,17 +677,21 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             dontPreview: (
               <Dialog>
                 <DialogTrigger render={<Button variant="destructive" />}>
-                  Excluir conta
+                  {tContent("demonstration.labels.destructiveTitle")}
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
-                    <DialogTitle>Excluir conta</DialogTitle>
+                    <DialogTitle>{tContent("demonstration.labels.destructiveTitle")}</DialogTitle>
                     <DialogDescription>
-                      Esta ação é permanente.
+                      {tContent("demonstration.labels.destructiveDescription")}
                     </DialogDescription>
                   </DialogHeader>
+                  {/* "Excluir" segue literal — não há chave de ação destrutiva
+                      no conteúdo compartilhado. */}
                   <DialogFooter>
-                    <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
+                    <DialogClose render={<Button variant="outline" />}>
+                      {tContent("demonstration.labels.cancel")}
+                    </DialogClose>
                     <Button variant="destructive">Excluir</Button>
                   </DialogFooter>
                 </DialogContent>
@@ -699,6 +729,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 action={tContent("demonstration.labels.action")}
+                closeLabel={tContent("demonstration.labels.close")}
               />
             ),
           },
@@ -714,6 +745,9 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 action={tContent("demonstration.labels.action")}
+                closeLabel={tContent("demonstration.labels.close")}
+                fieldName={tContent("demonstration.labels.fieldName")}
+                sampleName={tContent("demonstration.labels.samplePersonName")}
               />
             ),
           },
@@ -722,14 +756,19 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             description: stripHtml(tContent("variants.items.withScrollContent")),
             preview: (
               <Dialog>
+                {/* "Ver termos" segue literal: não há chave de gatilho para o
+                    cenário de termos no conteúdo compartilhado. */}
                 <DialogTrigger render={<Button variant="outline" />}>
                   Ver termos
                 </DialogTrigger>
-                <DialogContent className="nds-max-w-md">
+                <DialogContent
+                  className="nds-max-w-md"
+                  closeLabel={tContent("demonstration.labels.close")}
+                >
                   <DialogHeader>
-                    <DialogTitle>Termos de uso</DialogTitle>
+                    <DialogTitle>{tContent("demonstration.labels.termsTitle")}</DialogTitle>
                     <DialogDescription>
-                      Leia atentamente antes de aceitar.
+                      {tContent("demonstration.labels.termsDescription")}
                     </DialogDescription>
                   </DialogHeader>
                   {/*
@@ -748,7 +787,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     data-slot="dialog-body"
                     tabIndex={0}
                     role="group"
-                    aria-label="Termos de uso"
+                    aria-label={tContent("demonstration.labels.termsTitle")}
                     className="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
                     data-spacing="sm"
                   >
@@ -760,7 +799,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button>Aceitar</Button>
+                    <Button>{tContent("demonstration.labels.accept")}</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -776,13 +815,17 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             preview: (
               <Dialog>
                 <DialogTrigger render={<Button variant="outline" />}>
-                  Ver contrato
+                  {tContent("demonstration.labels.contractTrigger")}
                 </DialogTrigger>
-                <DialogContent scroll className="nds-max-w-md">
+                <DialogContent
+                  scroll
+                  className="nds-max-w-md"
+                  closeLabel={tContent("demonstration.labels.close")}
+                >
                   <DialogHeader>
-                    <DialogTitle>Contrato de prestação</DialogTitle>
+                    <DialogTitle>{tContent("demonstration.labels.contractTitle")}</DialogTitle>
                     <DialogDescription>
-                      O documento rola inteiro, e o cabeçalho sobe junto.
+                      {tContent("demonstration.labels.contractDescription")}
                     </DialogDescription>
                   </DialogHeader>
                   {/*
@@ -805,7 +848,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button>Aceitar</Button>
+                    <Button>{tContent("demonstration.labels.accept")}</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -817,10 +860,12 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             code: codeNoFooter,
             preview: (
               <Dialog>
+                {/* Cenário sem chave no conteúdo compartilhado: "Saiba mais",
+                    "Sobre este recurso" e a descrição seguem literais. */}
                 <DialogTrigger render={<Button variant="outline" />}>
                   Saiba mais
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
                     <DialogTitle>Sobre este recurso</DialogTitle>
                     <DialogDescription>
@@ -836,19 +881,22 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             description: stripHtml(tContent("variants.items.withDestructiveAction")),
             preview: (
               <Dialog>
+                {/* "Remover" (gatilho) não tem chave — só a ação do rodapé tem. */}
                 <DialogTrigger render={<Button variant="outline" />}>Remover</DialogTrigger>
-                <DialogContent>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
-                    <DialogTitle>Remover item da lista</DialogTitle>
+                    <DialogTitle>{tContent("demonstration.labels.removeItemTitle")}</DialogTitle>
                     <DialogDescription>
-                      O item será removido desta lista.
+                      {tContent("demonstration.labels.removeItemDescription")}
                     </DialogDescription>
                   </DialogHeader>
                   <DialogFooter>
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button variant="destructive">Remover item</Button>
+                    <Button variant="destructive">
+                      {tContent("demonstration.labels.removeItemAction")}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -870,7 +918,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                       {tContent("demonstration.labels.description")}
                     </DialogDescription>
                   </DialogHeader>
-                  <DialogFooter showCloseButton>
+                  <DialogFooter
+                    showCloseButton
+                    closeLabel={tContent("demonstration.labels.close")}
+                  >
                     <Button>{tContent("demonstration.labels.action")}</Button>
                   </DialogFooter>
                 </DialogContent>
@@ -906,10 +957,15 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
 </Dialog>`,
             preview: (
               <Dialog>
-                <DialogTrigger render={<Button variant="outline" />}>Enviar link</DialogTrigger>
-                <DialogContent>
+                <DialogTrigger render={<Button variant="outline" />}>
+                  {tContent("demonstration.labels.confirmEmailAction")}
+                </DialogTrigger>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
-                    <DialogTitle>Confirmar e-mail</DialogTitle>
+                    <DialogTitle>{tContent("demonstration.labels.confirmEmailTitle")}</DialogTitle>
+                    {/* Descrição e corpo seguem literais: o conteúdo
+                        compartilhado tem título e ação deste cenário, não o
+                        texto de orientação nem o endereço de exemplo. */}
                     <DialogDescription>
                       Verifique o endereço antes de enviar o link de acesso.
                     </DialogDescription>
@@ -918,8 +974,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     Vamos enviar um link para maria@exemplo.com.
                   </p>
                   <DialogFooter>
-                    <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
-                    <Button>Enviar link</Button>
+                    <DialogClose render={<Button variant="outline" />}>
+                      {tContent("demonstration.labels.cancel")}
+                    </DialogClose>
+                    <Button>{tContent("demonstration.labels.confirmEmailAction")}</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -965,12 +1023,14 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
 </Dialog>`,
             preview: (
               <Dialog>
-                <DialogTrigger render={<Button variant="outline" />}>Editar perfil</DialogTrigger>
-                <DialogContent>
+                <DialogTrigger render={<Button variant="outline" />}>
+                  {tContent("demonstration.labels.triggerLabel")}
+                </DialogTrigger>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
-                    <DialogTitle>Editar perfil</DialogTitle>
+                    <DialogTitle>{tContent("demonstration.labels.title")}</DialogTitle>
                     <DialogDescription>
-                      Atualize suas informações pessoais.
+                      {tContent("demonstration.labels.description")}
                     </DialogDescription>
                   </DialogHeader>
                   {/*
@@ -984,14 +1044,19 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     onSubmit={(e) => e.preventDefault()}
                   >
                     <div className="nds-stack" data-spacing="sm">
-                      <Label htmlFor="profile-name">Nome completo</Label>
-                      <Input id="profile-name" defaultValue="Maria Silva" />
+                      <Label htmlFor="profile-name">
+                        {tContent("demonstration.labels.fieldFullName")}
+                      </Label>
+                      <Input
+                        id="profile-name"
+                        defaultValue={tContent("demonstration.labels.samplePersonName")}
+                      />
                     </div>
                     <DialogFooter>
                       <DialogClose render={<Button type="button" variant="outline" />}>
-                        Cancelar
+                        {tContent("demonstration.labels.cancel")}
                       </DialogClose>
-                      <Button type="submit">Salvar alterações</Button>
+                      <Button type="submit">{tContent("demonstration.labels.action")}</Button>
                     </DialogFooter>
                   </form>
                 </DialogContent>
@@ -1021,8 +1086,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
 </Dialog>`,
             preview: (
               <Dialog>
+                {/* Cenário de mídia sem chave no conteúdo compartilhado:
+                    gatilho, título e descrição seguem literais. */}
                 <DialogTrigger render={<Button variant="outline" />}>Pré-visualizar</DialogTrigger>
-                <DialogContent>
+                <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
                     <DialogTitle>Capa do post</DialogTitle>
                     <DialogDescription>

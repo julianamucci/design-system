@@ -72,7 +72,7 @@ export const Closed: Story = {
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
@@ -131,7 +131,7 @@ export const Open: Story = {
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
@@ -267,7 +267,7 @@ export const Controlled: Story = {
               spyControlled(value);
             }}
           >
-            <DialogContent>
+            <DialogContent closeLabel={t("demonstration.labels.close")}>
               <DialogHeader>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogDescription>

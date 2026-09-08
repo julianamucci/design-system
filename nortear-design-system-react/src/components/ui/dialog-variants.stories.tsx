@@ -6,6 +6,7 @@ import {
   waitForOpen,
   waitForClosed,
   checkNameAndDescription,
+  label,
 } from "./dialog.fixtures";
 import {
   Dialog,
@@ -73,7 +74,7 @@ export const Default: Story = {
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
@@ -149,7 +150,7 @@ export const WithForm: Story = {
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
@@ -163,11 +164,16 @@ export const WithForm: Story = {
             }}
           >
             <div className="nds-stack" data-spacing="sm">
-              <Label htmlFor="dialog-name">Nome</Label>
-              <Input id="dialog-name" defaultValue="Maria Silva" />
+              <Label htmlFor="dialog-name">{t("demonstration.labels.fieldName")}</Label>
+              <Input
+                id="dialog-name"
+                defaultValue={t("demonstration.labels.samplePersonName")}
+              />
             </div>
             <div className="nds-stack" data-spacing="sm">
-              <Label htmlFor="dialog-email">E-mail</Label>
+              <Label htmlFor="dialog-email">{t("demonstration.labels.fieldEmail")}</Label>
+              {/* O endereço de exemplo não tem chave no conteúdo compartilhado
+                  e segue literal — é dado, não rótulo. */}
               <Input id="dialog-email" type="email" defaultValue="maria@exemplo.com" />
             </div>
             <DialogFooter>
@@ -191,11 +197,11 @@ export const WithForm: Story = {
       // asserção sem mostrar nada — foi assim que um `defaultValue` ignorado
       // sobreviveu em outra stack.
       const name = p.querySelector<HTMLInputElement>("#dialog-name")!;
-      await expect(name).toHaveAccessibleName("Nome");
-      await expect(name.value).toBe("Maria Silva");
+      await expect(name).toHaveAccessibleName(label("demonstration.labels.fieldName"));
+      await expect(name.value).toBe(label("demonstration.labels.samplePersonName"));
 
       const email = p.querySelector<HTMLInputElement>("#dialog-email")!;
-      await expect(email).toHaveAccessibleName("E-mail");
+      await expect(email).toHaveAccessibleName(label("demonstration.labels.fieldEmail"));
       await expect(email.value).toBe("maria@exemplo.com");
     });
 
@@ -224,23 +230,28 @@ export const WithScrollContent: Story = {
   },
   render: () => {
     const { t } = useTranslation(dialogTranslations);
-    const title = "Termos de uso";
+    const title = t("demonstration.labels.termsTitle");
     return (
       <Dialog defaultOpen>
+        {/* "Ver termos" segue literal: o conteúdo compartilhado não tem chave
+            de gatilho para o cenário de termos. */}
         <DialogTrigger render={<Button variant="outline" />}>
           Ver termos
         </DialogTrigger>
-        <DialogContent className="nds-sm-max-w-md">
+        <DialogContent
+          className="nds-sm-max-w-md"
+          closeLabel={t("demonstration.labels.close")}
+        >
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
-              Leia atentamente as condições antes de aceitar.
+              {t("demonstration.labels.termsDescription")}
             </DialogDescription>
           </DialogHeader>
           <div
             tabIndex={0}
             role="group"
-            aria-label="Termos de uso"
+            aria-label={title}
             data-slot="dialog-body"
             className="nds-dialog-body nds-dialog-body-scroll nds-stack nds-text-body nds-text-muted-foreground"
             data-spacing="sm"
@@ -258,7 +269,7 @@ export const WithScrollContent: Story = {
             <DialogClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button>Aceitar</Button>
+            <Button>{t("demonstration.labels.accept")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -306,13 +317,17 @@ export const WithScrollingOverlay: Story = {
     return (
       <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
-          Ver contrato
+          {t("demonstration.labels.contractTrigger")}
         </DialogTrigger>
-        <DialogContent scroll className="nds-sm-max-w-md">
+        <DialogContent
+          scroll
+          className="nds-sm-max-w-md"
+          closeLabel={t("demonstration.labels.close")}
+        >
           <DialogHeader>
-            <DialogTitle>Contrato de prestação</DialogTitle>
+            <DialogTitle>{t("demonstration.labels.contractTitle")}</DialogTitle>
             <DialogDescription>
-              O documento rola inteiro, e o cabeçalho sobe junto.
+              {t("demonstration.labels.contractDescription")}
             </DialogDescription>
           </DialogHeader>
           {/*
@@ -338,7 +353,7 @@ export const WithScrollingOverlay: Story = {
             <DialogClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button>Aceitar</Button>
+            <Button>{t("demonstration.labels.accept")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -423,13 +438,16 @@ export const NoFooter: Story = {
     },
   },
   render: () => {
+    const { t } = useTranslation(dialogTranslations);
+    // Cenário informativo sem chave no conteúdo compartilhado: gatilho, título
+    // e descrição seguem literais.
     const title = "Sobre este recurso";
     return (
       <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           Saiba mais
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
@@ -475,25 +493,27 @@ export const WithDestructiveAction: Story = {
   },
   render: () => {
     const { t } = useTranslation(dialogTranslations);
-    const title = "Remover item da lista";
+    const title = t("demonstration.labels.removeItemTitle");
     return (
       <Dialog defaultOpen>
+        {/* "Remover" (gatilho) não tem chave — só a ação do rodapé tem. */}
         <DialogTrigger render={<Button variant="outline" />}>
           Remover
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
-              O item será removido desta lista. Você pode adicioná-lo novamente
-              depois.
+              {t("demonstration.labels.removeItemDescription")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose render={<Button variant="outline" />}>
               {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button variant="destructive">Remover item</Button>
+            <Button variant="destructive">
+              {t("demonstration.labels.removeItemAction")}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -545,7 +565,7 @@ export const CustomCloseInFooter: Story = {
               {t("demonstration.labels.description")}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter showCloseButton>
+          <DialogFooter showCloseButton closeLabel={t("demonstration.labels.close")}>
             <Button>{t("demonstration.labels.action")}</Button>
           </DialogFooter>
         </DialogContent>
@@ -560,7 +580,7 @@ export const CustomCloseInFooter: Story = {
       // é o botão de fechar que o Footer acrescenta.
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await expect(cantoButtonClose(p)).toBeNull();
-      await expect(within(footer).getByRole("button", { name: /fechar/i })).toBeVisible();
+      await expect(within(footer).getByRole("button", { name: label("demonstration.labels.close") })).toBeVisible();
     });
 
     await step("O fechar é SECUNDÁRIO: primeiro do DOM, primário por último", async () => {
@@ -571,13 +591,13 @@ export const CustomCloseInFooter: Story = {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const buttons = [...footer.querySelectorAll<HTMLElement>("button")];
       await expect(buttons.length).toBe(2);
-      await expect(buttons[0]).toHaveAccessibleName(/fechar/i);
+      await expect(buttons[0]).toHaveAccessibleName(label("demonstration.labels.close"));
       await expect(buttons[buttons.length - 1]).toHaveClass("nds-button-default");
     });
 
     await step("E o botão do rodapé fecha o diálogo", async () => {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await userEvent.click(within(footer).getByRole("button", { name: /fechar/i }));
+      await userEvent.click(within(footer).getByRole("button", { name: label("demonstration.labels.close") }));
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();
@@ -600,15 +620,17 @@ export const ConfirmEmail: Story = {
     },
   },
   render: () => {
-    const title = "Confirmar e-mail";
+    const { t } = useTranslation(dialogTranslations);
+    const title = t("demonstration.labels.confirmEmailTitle");
     return (
       <Dialog defaultOpen>
-        <DialogTrigger render={<Button variant="outline" />}>
-          Confirmar e-mail
-        </DialogTrigger>
-        <DialogContent>
+        <DialogTrigger render={<Button variant="outline" />}>{title}</DialogTrigger>
+        <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
+            {/* A descrição segue literal: o conteúdo compartilhado tem título e
+                ação deste cenário, não o texto de orientação nem o endereço de
+                exemplo, que é dado e não rótulo. */}
             <DialogDescription>
               Enviaremos um link de confirmação para{" "}
               <strong>maria@exemplo.com</strong>. Verifique sua caixa de entrada.
@@ -616,9 +638,9 @@ export const ConfirmEmail: Story = {
           </DialogHeader>
           <DialogFooter>
             <DialogClose render={<Button variant="outline" />}>
-              Cancelar
+              {t("demonstration.labels.cancel")}
             </DialogClose>
-            <Button>Enviar link</Button>
+            <Button>{t("demonstration.labels.confirmEmailAction")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

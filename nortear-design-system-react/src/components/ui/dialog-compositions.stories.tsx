@@ -8,6 +8,7 @@ import {
   close,
   trigger,
   panel,
+  label,
 } from "./dialog.fixtures";
 import {
   Dialog,
@@ -27,6 +28,8 @@ import {
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
+import { useTranslation } from "@/lib/i18n";
+import dialogTranslations from "@shared/content/dialog/translations.json";
 
 import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
@@ -63,18 +66,21 @@ export const ProfileEdit: Story = {
     },
   },
   render: () => {
-    const title = "Editar perfil";
+    const { t } = useTranslation(dialogTranslations);
+    const title = t("demonstration.labels.title");
     return (
       <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
-          Editar perfil
+          {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
-        <DialogContent className="nds-sm-max-w-md">
+        <DialogContent
+          className="nds-sm-max-w-md"
+          closeLabel={t("demonstration.labels.close")}
+        >
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
-              Atualize suas informações pessoais. As mudanças são salvas ao
-              confirmar.
+              {t("demonstration.labels.description")}
             </DialogDescription>
           </DialogHeader>
           <form
@@ -84,18 +90,27 @@ export const ProfileEdit: Story = {
             }}
           >
             <div className="nds-stack" data-spacing="sm">
-              <Label htmlFor="profile-name">Nome completo</Label>
-              <Input id="profile-name" defaultValue="Maria Silva" />
+              <Label htmlFor="profile-name">
+                {t("demonstration.labels.fieldFullName")}
+              </Label>
+              <Input
+                id="profile-name"
+                defaultValue={t("demonstration.labels.samplePersonName")}
+              />
             </div>
             <div className="nds-stack" data-spacing="sm">
-              <Label htmlFor="profile-username">Nome de usuário</Label>
+              <Label htmlFor="profile-username">
+                {t("demonstration.labels.fieldUsername")}
+              </Label>
+              {/* O apelido de exemplo não tem chave no conteúdo compartilhado e
+                  segue literal — é dado, não rótulo. */}
               <Input id="profile-username" defaultValue="@mariasilva" />
             </div>
             <DialogFooter>
               <DialogClose render={<Button type="button" variant="outline" />}>
-                Cancelar
+                {t("demonstration.labels.cancel")}
               </DialogClose>
-              <Button type="submit">Salvar alterações</Button>
+              <Button type="submit">{t("demonstration.labels.action")}</Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -109,11 +124,11 @@ export const ProfileEdit: Story = {
       // O valor entra na asserção junto com o rótulo: um campo que renderiza
       // vazio passaria só na presença do label e ninguém veria a falha.
       const name = p.querySelector<HTMLInputElement>("#profile-name")!;
-      await expect(name).toHaveAccessibleName("Nome completo");
-      await expect(name.value).toBe("Maria Silva");
+      await expect(name).toHaveAccessibleName(label("demonstration.labels.fieldFullName"));
+      await expect(name.value).toBe(label("demonstration.labels.samplePersonName"));
 
       const usuario = p.querySelector<HTMLInputElement>("#profile-username")!;
-      await expect(usuario).toHaveAccessibleName("Nome de usuário");
+      await expect(usuario).toHaveAccessibleName(label("demonstration.labels.fieldUsername"));
       await expect(usuario.value).toBe("@mariasilva");
     });
 
@@ -141,13 +156,19 @@ export const MediaPreview: Story = {
     },
   },
   render: () => {
+    const { t } = useTranslation(dialogTranslations);
+    // Cenário de mídia sem chave no conteúdo compartilhado: gatilho, título,
+    // descrição e o nome da imagem seguem literais.
     const title = "Pôr-do-sol na praia";
     return (
       <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
           Ver imagem
         </DialogTrigger>
-        <DialogContent className="nds-sm-max-w-lg">
+        <DialogContent
+          className="nds-sm-max-w-lg"
+          closeLabel={t("demonstration.labels.close")}
+        >
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>

@@ -90,7 +90,7 @@ export const Playground: Story = {
         <DialogTrigger render={<Button variant="outline" />}>
           {t("demonstration.labels.triggerLabel")}
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{t("demonstration.labels.title")}</DialogTitle>
             <DialogDescription>

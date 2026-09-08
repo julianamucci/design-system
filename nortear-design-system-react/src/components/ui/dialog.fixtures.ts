@@ -1,15 +1,35 @@
 import { expect, userEvent, waitFor } from "storybook/test";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { useI18nStore } from "@/lib/i18n";
+import dialogTranslations from "@shared/content/dialog/translations.json";
 
 // Helpers compartilhados pelas quatro stories de Dialog.
 //
 // Arquivo à parte porque num `*.stories.tsx` TODO export nomeado vira uma
 // story: um helper exportado apareceria na sidebar como se fosse um exemplo.
 //
-// Tudo aqui procura pelo CONTRATO de markup (`data-slot`), nunca por texto: o
-// rótulo visível segue o idioma escolhido na toolbar, e uma play presa a
-// "Editar perfil" quebraria em inglês e espanhol sem nada de errado no
-// componente.
+// A busca por elemento é sempre pelo CONTRATO de markup (`data-slot`), nunca
+// por texto: o rótulo visível segue o idioma escolhido na toolbar, e uma play
+// presa a "Editar perfil" quebraria em inglês e espanhol sem nada de errado no
+// componente. Quando a asserção é sobre o TEXTO em si — o nome acessível de um
+// campo, o rótulo do botão de fechar — ela lê o mesmo dicionário que o `render`
+// usa, por `label()`, e não uma constante em português.
+
+/**
+ * Rótulo fora do React.
+ *
+ * `useTranslation` é hook e vale dentro do `render`, que é componente; a `play`
+ * não é. Os dois caminhos leem a MESMA store de locale, então o texto que a
+ * play procura é sempre o que o painel mostra.
+ */
+export function label(path: string): string {
+  const dicionarios = dialogTranslations as unknown as Record<string, unknown>;
+  const dict = (dicionarios[useI18nStore.getState().locale] ??
+    dicionarios["pt-BR"]) as Record<string, unknown>;
+  return path
+    .split(".")
+    .reduce<unknown>((no, key) => (no as Record<string, unknown>)?.[key], dict) as string;
+}
 
 /** O painel vive no `<body>`, fora do `canvasElement` — o portal é o ponto. */
 export const panel = (): HTMLElement | null =>
