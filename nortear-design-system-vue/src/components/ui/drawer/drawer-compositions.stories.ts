@@ -121,6 +121,14 @@ export const WithForm: Story = {
       await expect(names).toContain('Confirmar');
       await expect(names).toContain('Cancelar');
     });
+
+    await step('Confirmar submete o formulário do corpo', async () => {
+      // `button.form` é o que denuncia o botão órfão: vem `null` quando nada o
+      // liga ao `<form>`, e nada na tela denuncia. Leitura pura, sem `waitFor`.
+      const confirmar = inside.getByRole('button', { name: 'Confirmar' }) as HTMLButtonElement;
+      await expect(confirmar.type).toBe('submit');
+      await expect(confirmar.form?.id).toBe('drawer-form');
+    });
   },
 };
 

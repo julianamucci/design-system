@@ -187,15 +187,25 @@
    * formulário o padrão FICA, porque ali o assunto é editar.
    *
    * `onOpenAutoFocus` é o que o primitivo desta stack oferece para escolher o
-   * alvo. O `tick()` espera o commit pendente: a lib de baixo é a mesma do
-   * AlertDialog, e lá foi medido que o rodapé ainda NÃO está no DOM quando este
-   * evento dispara.
+   * alvo, e o painel vem do REF — não de `event.target`.
+   *
+   * A lib não DESPACHA este evento: ela constrói um `CustomEvent` e o entrega
+   * direto ao callback, então `event.target` é `null`. Ler dali e desistir numa
+   * guarda de tipo apagava a escolha inteira — sem `preventDefault()` a lib
+   * seguia com o padrão dela e focava o primeiro tabbable, que é o corpo
+   * rolável. Medido na story desta stack, que reprovava por isso.
+   *
+   * O `tick()` espera o commit pendente: só depois dele o rodapé está no DOM e
+   * o ref, preenchido. `preventDefault()` fica ANTES, porque a lib lê
+   * `defaultPrevented` assim que o callback volta.
    */
+  let confirmationPanel = $state<HTMLElement | null>(null);
+
   async function focusSafeExit(event: Event) {
-    const panelEl = event.target;
-    if (!(panelEl instanceof HTMLElement)) return;
     event.preventDefault();
     await tick();
+    const panelEl = confirmationPanel;
+    if (!panelEl) return;
     const safeExit = panelEl.querySelector<HTMLElement>('[data-slot="drawer-close"]');
     (safeExit ?? panelEl).focus();
   }
@@ -728,7 +738,12 @@ interface TriggerProps {
       <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
     </DrawerHeader>
     <DrawerBody>
-      <form class="nds-grid" data-spacing="sm">
+      <form
+        id="drawer-form"
+        class="nds-grid"
+        data-spacing="sm"
+        onsubmit={(event: SubmitEvent) => event.preventDefault()}
+      >
         <div class="nds-grid" data-spacing="xs">
           <Label for="drawer-name">Nome</Label>
           <Input id="drawer-name" value="Maria Souza" />
@@ -739,11 +754,13 @@ interface TriggerProps {
         </div>
       </form>
     </DrawerBody>
+    <!-- O rodapé é irmão do corpo: é o par id ↔ form que religa a ação
+         primária ao formulário. Sem ele o Enter num campo não dispara nada. -->
     <DrawerFooter>
       <DrawerClose>
         {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
       </DrawerClose>
-      <Button>Salvar alterações</Button>
+      <Button type="submit" form="drawer-form">Salvar alterações</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -757,13 +774,17 @@ interface TriggerProps {
         code: `<script lang="ts">
   import { tick } from "svelte";
 
-  // A decisão É a tela: o foco entra na saída segura, e não no corpo. O tick()
-  // espera o commit pendente — sem ele o rodapé ainda não está no DOM aqui.
+  // A decisão É a tela: o foco entra na saída segura, e não no corpo.
+  //
+  // O painel vem do REF, não de event.target: a lib não despacha este evento —
+  // ela entrega um CustomEvent direto ao callback, e o alvo é nulo. O tick()
+  // espera o commit pendente; sem ele o rodapé ainda não está no DOM aqui.
+  let panelEl = $state<HTMLElement | null>(null);
+
   async function focusSafeExit(event: Event) {
-    const panelEl = event.target;
-    if (!(panelEl instanceof HTMLElement)) return;
     event.preventDefault();
     await tick();
+    if (!panelEl) return;
     const safeExit = panelEl.querySelector<HTMLElement>('[data-slot="drawer-close"]');
     (safeExit ?? panelEl).focus();
   }
@@ -775,7 +796,7 @@ interface TriggerProps {
       <Button variant="outline" {...props}>Remover item</Button>
     {/snippet}
   </DrawerTrigger>
-  <DrawerContent onOpenAutoFocus={focusSafeExit}>
+  <DrawerContent bind:ref={panelEl} onOpenAutoFocus={focusSafeExit}>
     <DrawerHeader>
       <DrawerTitle>Remover item da lista?</DrawerTitle>
       <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>
@@ -805,7 +826,12 @@ interface TriggerProps {
             <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
           </DrawerHeader>
           <DrawerBody>
-            <form class="nds-grid" data-spacing="sm">
+            <form
+              id="docs-drawer-form"
+              class="nds-grid"
+              data-spacing="sm"
+              onsubmit={(event: SubmitEvent) => event.preventDefault()}
+            >
               <div class="nds-grid" data-spacing="xs">
                 <Label for="docs-drawer-name">Nome</Label>
                 <Input id="docs-drawer-name" value="Maria Souza" />
@@ -820,7 +846,7 @@ interface TriggerProps {
             <DrawerClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
             </DrawerClose>
-            <Button>Salvar alterações</Button>
+            <Button type="submit" form="docs-drawer-form">Salvar alterações</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -833,7 +859,7 @@ interface TriggerProps {
           {#snippet child({ props })}<Button variant="outline" {...props}>Remover item</Button>{/snippet}
         </DrawerTrigger>
         <!-- A decisão É a tela: o foco entra na saída segura, e não no corpo. -->
-        <DrawerContent onOpenAutoFocus={focusSafeExit}>
+        <DrawerContent bind:ref={confirmationPanel} onOpenAutoFocus={focusSafeExit}>
           <DrawerHeader>
             <DrawerTitle>Remover item da lista?</DrawerTitle>
             <DrawerDescription>Você poderá adicioná-lo novamente a qualquer momento.</DrawerDescription>

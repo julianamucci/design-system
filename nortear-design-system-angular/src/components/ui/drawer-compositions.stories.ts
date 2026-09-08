@@ -87,13 +87,21 @@ export const WithForm: Story = {
           </div>
 
           <div ndsDrawerBody class="nds-stack" data-spacing="sm">
-            <label ndsLabel for="drawer-comp-nome">{{ rotuloCampo }}</label>
-            <input ndsInput id="drawer-comp-nome" name="nome" />
+            <form id="drawer-comp-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
+              <label ndsLabel for="drawer-comp-nome">{{ rotuloCampo }}</label>
+              <input ndsInput id="drawer-comp-nome" name="nome" />
+            </form>
           </div>
 
+          <!--
+            O rodapé é IRMÃO do corpo por construção da diretiva — o corpo só
+            rola enquanto é filho direto do flex column do painel —, então o
+            <form> não pode envolvê-lo. Quem religa os dois é o par id ↔ form:
+            sem ele a ação primária não envia nada, e o Enter no campo tampouco.
+          -->
           <div ndsDrawerFooter>
             <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
-            <button ndsButton>{{ rotuloConfirmar }}</button>
+            <button ndsButton type="submit" form="drawer-comp-form">{{ rotuloConfirmar }}</button>
           </div>
         </ng-template>
       </nds-drawer>
@@ -116,6 +124,20 @@ export const WithForm: Story = {
       const names = buttons.map((b) => b.textContent?.trim());
       await expect(names).toContain(LABEL.close());
       await expect(names).toContain(LABEL.confirmar());
+    });
+
+    await step('A ação primária submete o formulário do corpo', async () => {
+      // `button.form` é o que denuncia o botão órfão: vem `null` quando nada o
+      // liga ao `<form>`, e nada na tela denuncia. Leitura pura, sem `waitFor`.
+      //
+      // `type` também se lê do ELEMENTO: nesta stack o atributo é escrito por
+      // host binding da diretiva a partir do input de mesmo nome, e é a
+      // propriedade resolvida que diz o que o navegador vai fazer.
+      const confirmar = inside.getByRole('button', {
+        name: LABEL.confirmar(),
+      }) as HTMLButtonElement;
+      await expect(confirmar.type).toBe('submit');
+      await expect(confirmar.form?.id).toBe('drawer-comp-form');
     });
 
     await step('O corpo do formulário é a região rolável do painel', async () => {

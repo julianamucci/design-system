@@ -54,6 +54,25 @@
   }: Props = $props();
 
   /**
+   * Id do `<form>` da variante de formulário, e o elo da ação primária com ele.
+   *
+   * O rodapé é irmão do corpo por construção do primitivo — `.nds-drawer-body`
+   * só rola enquanto é filho direto do flex column do painel —, então o `<form>`
+   * não pode envolvê-lo: é o par id ↔ `form` que os religa. Sem o atributo, com
+   * dois campos o navegador NÃO faz submissão implícita, o Enter num campo não
+   * dispara nada, e nada na tela denuncia.
+   *
+   * O rodapé é ÚNICO para as quatro variantes deste andaime, então o elo é
+   * condicional: nas outras não há `<form>` nenhum, e um `type="submit"` ali
+   * seria a mesma promessa vazia em outro lugar.
+   */
+  const FORM_ID = 'drawer-story-form';
+  const isFormVariant = $derived(variant === 'withForm');
+
+  /** O elemento do painel. É daqui que sai o alvo do foco — ver abaixo. */
+  let panelEl = $state<HTMLElement | null>(null);
+
+  /**
    * Foco inicial na saída segura — só no painel de confirmação.
    *
    * Onde a decisão É a tela, o Enter por reflexo tem de cair no cancelar, nunca
@@ -61,16 +80,22 @@
    * formulário o padrão FICA: ali o assunto é editar, e forçar o Cancelar
    * cobraria um Tab a mais de quem só quer editar.
    *
-   * O `tick()` não é cautela: a lib de baixo é a mesma do AlertDialog, e lá foi
-   * medido que o rodapé ainda NÃO está no DOM quando este evento dispara. Sem
-   * esperar o commit pendente, a busca não acha o fechador e o foco fica no
-   * painel.
+   * O painel vem do REF, e não de `event.target` — este é o ponto.
+   *
+   * A lib não DESPACHA este evento: ela constrói um `CustomEvent` e o entrega
+   * direto ao callback, então `event.target` é `null`. A versão anterior lia
+   * dali e desistia na guarda de tipo, sem chamar `preventDefault()` — a lib
+   * seguia com o padrão dela e focava o primeiro tabbable, que é o corpo
+   * rolável. A escolha inteira era um no-op, e nada na tela denunciava.
+   *
+   * O `tick()` continua: `preventDefault()` tem de ser SÍNCRONO (a lib lê
+   * `defaultPrevented` assim que o callback volta), e só depois do commit
+   * pendente o rodapé está no DOM e o ref, preenchido.
    */
   async function focusSafeExit(event: Event) {
-    const panelEl = event.target;
-    if (!(panelEl instanceof HTMLElement)) return;
     event.preventDefault();
     await tick();
+    if (!panelEl) return;
     const safeExit = panelEl.querySelector<HTMLElement>('[data-slot="drawer-close"]');
     (safeExit ?? panelEl).focus();
   }
@@ -85,6 +110,7 @@
           {/snippet}
         </DrawerTrigger>
         <DrawerContent
+          bind:ref={panelEl}
           onOpenAutoFocus={variant === 'withConfirmation' ? focusSafeExit : undefined}
         >
           <DrawerHeader>
@@ -94,7 +120,12 @@
 
           {#if variant === 'withForm'}
             <DrawerBody>
-              <form class="nds-grid" data-spacing="sm">
+              <form
+                id={FORM_ID}
+                class="nds-grid"
+                data-spacing="sm"
+                onsubmit={(event: SubmitEvent) => event.preventDefault()}
+              >
                 <div class="nds-grid" data-spacing="xs">
                   <Label for="drawer-story-nome">Nome</Label>
                   <Input id="drawer-story-nome" type="text" value="Maria Silva" />
@@ -146,7 +177,13 @@
               </Button>
               {/snippet}
             </DrawerClose>
-            <Button onclick={onAction}>{actionLabel}</Button>
+            <Button
+              type={isFormVariant ? 'submit' : 'button'}
+              form={isFormVariant ? FORM_ID : undefined}
+              onclick={onAction}
+            >
+              {actionLabel}
+            </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

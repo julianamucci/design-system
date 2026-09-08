@@ -125,4 +125,22 @@ describe('drawerComFormularioSnippet', () => {
   it('mantém o fechador do rodapé, que a gaveta precisa para fechar por dentro', () => {
     expect(drawerWithFormSnippet()).toContain("acao1.dataset.slot = 'drawer-close';");
   });
+
+  it('religa a ação principal ao formulário, que é irmão do rodapé', () => {
+    // `type: 'submit'` sem o `form` é botão INERTE: não envia pelo clique nem
+    // pelo Enter num campo, e nada na tela denuncia. Com dois campos não há
+    // submissão implícita para salvar o caso.
+    const code = drawerWithFormSnippet();
+    expect(code).toContain("formulario.id = 'drawer-form';");
+    expect(code).toContain("type: 'submit'");
+    expect(code).toContain("acao2.setAttribute('form', 'drawer-form');");
+  });
+
+  it('o elo de envio não vaza para a gaveta sem formulário', () => {
+    // `footerBlock` é o mesmo das duas formas. `type: 'submit'` num painel sem
+    // `<form>` seria a mesma promessa vazia, só que em outro lugar.
+    const code = drawerSnippet();
+    expect(code).not.toContain("type: 'submit'");
+    expect(code).not.toContain("setAttribute('form'");
+  });
 });

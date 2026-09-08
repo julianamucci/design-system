@@ -48,18 +48,29 @@ export async function openPeloTrigger(
  * Devolve a LISTA de botões, na ordem do DOM — secundário primeiro. Quem
  * empilha e alinha é `.nds-drawer-footer`, e por isso não há mais embrulho de
  * `.nds-cluster` aqui.
+ *
+ * `formId` religa a ação principal a um `<form>` do CORPO. O rodapé é irmão do
+ * corpo por construção da fábrica — `.nds-drawer-body` só rola enquanto é filho
+ * direto do flex column do painel —, então o `<form>` não pode envolvê-lo: sem
+ * o par id ↔ `form`, com dois campos o navegador não faz submissão implícita e
+ * o Enter num campo não dispara nada. É OPCIONAL de propósito: este rodapé
+ * serve também aos painéis sem formulário, e ali `type="submit"` seria a mesma
+ * promessa vazia em outro lugar.
  */
 export function buildDrawerFooter(
   cancelLabel: string,
   actionLabel: string,
   destrutivo = false,
+  formId?: string,
 ): HTMLElement[] {
   const cancel = createButton({ variant: 'outline', label: cancelLabel });
   cancel.dataset.slot = 'drawer-close';
   const action = createButton({
     variant: destrutivo ? 'destructive' : 'default',
     label: actionLabel,
+    type: formId ? 'submit' : 'button',
   });
+  if (formId) action.setAttribute('form', formId);
 
   const footer = [cancel, action];
   return footer;

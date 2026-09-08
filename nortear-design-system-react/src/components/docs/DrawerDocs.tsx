@@ -679,7 +679,12 @@ interface DrawerProps {
       <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
     </DrawerHeader>
     <DrawerBody>
-      <form className="nds-grid" data-spacing="sm">
+      <form
+        id="drawer-form"
+        className="nds-grid"
+        data-spacing="sm"
+        onSubmit={(event) => event.preventDefault()}
+      >
         <div className="nds-grid" data-spacing="xs">
           <Label htmlFor="drawer-name">Nome</Label>
           <Input id="drawer-name" defaultValue="Maria Souza" />
@@ -690,11 +695,15 @@ interface DrawerProps {
         </div>
       </form>
     </DrawerBody>
+    {/* O rodapé é irmão do corpo: é o par id ↔ form que religa a ação primária
+        ao formulário. Sem ele o Enter num campo não dispara nada. */}
     <DrawerFooter>
       <DrawerClose asChild>
         <Button variant="outline">Cancelar</Button>
       </DrawerClose>
-      <Button>Salvar alterações</Button>
+      <Button type="submit" form="drawer-form">
+        Salvar alterações
+      </Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -709,7 +718,12 @@ interface DrawerProps {
                     <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
                   </DrawerHeader>
                   <DrawerBody>
-                    <form className="nds-grid" data-spacing="sm">
+                    <form
+                      id="docs-drawer-form"
+                      className="nds-grid"
+                      data-spacing="sm"
+                      onSubmit={(event) => event.preventDefault()}
+                    >
                       <div className="nds-grid" data-spacing="xs">
                         <Label htmlFor="docs-drawer-name">Nome</Label>
                         <Input id="docs-drawer-name" defaultValue="Maria Souza" />
@@ -724,7 +738,9 @@ interface DrawerProps {
                     <DrawerClose asChild>
                       <Button variant="outline">Cancelar</Button>
                     </DrawerClose>
-                    <Button>Salvar alterações</Button>
+                    <Button type="submit" form="docs-drawer-form">
+                      Salvar alterações
+                    </Button>
                   </DrawerFooter>
                 </DrawerContent>
               </Drawer>

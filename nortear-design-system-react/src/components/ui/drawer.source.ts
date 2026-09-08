@@ -265,12 +265,23 @@ export function drawerNotDispensavelSource(): string {
  * Formulário curto no corpo e o par de ações no rodapé. Cada campo é achado
  * pelo RÓTULO, e é o `htmlFor` casando com o `id` que sustenta isso: sem o par,
  * o campo fica sem nome acessível dentro de um painel modal.
+ *
+ * Quem confirma é o ENVIO do formulário. O rodapé é irmão do corpo por
+ * construção do primitivo — `.nds-drawer-body` só rola enquanto é filho direto
+ * do flex column do painel —, então o botão não pode estar dentro do `<form>`:
+ * é o par id ↔ `form` que os religa. Sem o atributo, com dois campos o
+ * navegador não faz submissão implícita e o Enter num campo não dispara nada.
  */
 export function drawerWithFormSource(): string {
   const miolo = [
     header('Editar perfil', 'Atualize seu nome e e-mail.'),
     `<DrawerBody>
-  <form className="nds-grid" data-spacing="sm">
+  <form
+    id="drawer-form"
+    className="nds-grid"
+    data-spacing="sm"
+    onSubmit={(event) => event.preventDefault()}
+  >
     <div className="nds-grid" data-spacing="xs">
       <Label htmlFor="drawer-name">Nome</Label>
       <Input id="drawer-name" defaultValue="Juliana" />
@@ -285,7 +296,9 @@ export function drawerWithFormSource(): string {
   <DrawerClose asChild>
     <Button variant="outline">Cancelar</Button>
   </DrawerClose>
-  <Button>Confirmar</Button>
+  <Button type="submit" form="drawer-form">
+    Confirmar
+  </Button>
 </DrawerFooter>`,
   ].join('\n');
 

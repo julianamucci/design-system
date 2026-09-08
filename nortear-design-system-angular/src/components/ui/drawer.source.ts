@@ -461,6 +461,12 @@ export function drawerNotDismissibleSource(): string {
  * Este corpo não leva `aria-label`: sem nome a diretiva não emite papel nenhum,
  * e nome em elemento sem papel é atributo proibido — o axe acusa
  * `aria-prohibited-attr`. O rótulo do campo já diz o que há ali dentro.
+ *
+ * Quem confirma é o ENVIO do formulário. O rodapé é irmão do corpo por
+ * construção da diretiva — o corpo só rola enquanto é filho direto do flex
+ * column do painel —, então o botão não pode estar dentro do `<form>`: é o par
+ * id ↔ `form` que os religa. Sem o atributo, `type="submit"` fica INERTE, e o
+ * Enter no campo não dispara nada.
  */
 export function drawerWithFormSource(): string {
   return example({
@@ -470,10 +476,14 @@ export function drawerWithFormSource(): string {
       title: LABEL.title(),
       description: LABEL.description(),
       body: `        <div ndsDrawerBody class="nds-stack" data-spacing="sm">
-          <label ndsLabel for="drawer-comp-nome">${LABEL.field()}</label>
-          <input ndsInput id="drawer-comp-nome" name="nome" />
+          <form id="drawer-comp-form" class="nds-stack" data-spacing="sm" (submit)="$event.preventDefault()">
+            <label ndsLabel for="drawer-comp-nome">${LABEL.field()}</label>
+            <input ndsInput id="drawer-comp-nome" name="nome" />
+          </form>
         </div>`,
-      footer: footerWithClose(`          <button ndsButton>${LABEL.confirm()}</button>`),
+      footer: footerWithClose(
+        `          <button ndsButton type="submit" form="drawer-comp-form">${LABEL.confirm()}</button>`,
+      ),
     }),
   });
 }

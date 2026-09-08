@@ -461,13 +461,19 @@ describe('composições', () => {
     const code = drawerWithFormSource();
     expect(code).toContain(`<label ndsLabel for="drawer-comp-nome">${FIELD}</label>`);
     expect(code).toContain('<input ndsInput id="drawer-comp-nome" name="nome" />');
+    // O `<form>` e o par id ↔ `form`: sem eles a ação primária não envia nada,
+    // e o Enter no campo tampouco. Era a única das cinco stacks sem `<form>`.
+    expect(code).toContain('<form id="drawer-comp-form"');
+    expect(code).toContain('(submit)="$event.preventDefault()"');
     // As duas peças a mais entram no import e no `imports` do componente.
     expect(code).toContain("import { NdsInput } from '@/components/ui/input';");
     expect(code).toContain("import { NdsLabel } from '@/components/ui/label';");
     expect(code).toContain('imports: [...NDS_DRAWER, NdsButton, NdsInput, NdsLabel],');
     // DUAS ações no rodapé, cancelar primeiro — a ordem de leitura que a `play`
     // da story afirma.
-    expect(code).toContain(`<button ndsButton>${CONFIRM}</button>`);
+    expect(code).toContain(
+      `<button ndsButton type="submit" form="drawer-comp-form">${CONFIRM}</button>`,
+    );
     expect(code.indexOf(CLOSE)).toBeLessThan(code.indexOf(CONFIRM));
     // Este corpo não leva nome: sem nome a diretiva não emite papel, e o rótulo
     // do campo já diz o que há ali dentro.

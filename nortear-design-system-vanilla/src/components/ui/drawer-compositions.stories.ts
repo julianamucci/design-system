@@ -79,8 +79,10 @@ export const WithForm: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
     const form = document.createElement('form');
+    form.id = 'drawer-comp-form';
     form.className = 'nds-stack';
     form.dataset.spacing = 'md';
+    form.addEventListener('submit', (event) => event.preventDefault());
     form.append(
       buildField('Nome', 'drawer-comp-nome', 'text', 'Maria Souza'),
       buildField('E-mail', 'drawer-comp-email', 'email', 'maria@exemplo.com'),
@@ -91,7 +93,9 @@ export const WithForm: Story = {
       title: 'Editar perfil',
       description: 'Atualize seu nome e e-mail.',
       content: form,
-      footer: buildDrawerFooter('Cancelar', 'Confirmar'),
+      // O rodapé é irmão do corpo: é o par id ↔ `form` que religa a ação
+      // principal ao formulário. Sem ele o Enter num campo não dispara nada.
+      footer: buildDrawerFooter('Cancelar', 'Confirmar', false, form.id),
     });
     return buildDrawerWrapper(drawer);
   },
@@ -114,6 +118,14 @@ export const WithForm: Story = {
       const names = within(footer).getAllByRole('button').map((b) => b.textContent?.trim());
       await expect(names).toContain('Confirmar');
       await expect(names).toContain('Cancelar');
+    });
+
+    await step('Confirmar submete o formulário do corpo', async () => {
+      // `button.form` é o que denuncia o botão órfão: vem `null` quando nada o
+      // liga ao `<form>`, e nada na tela denuncia. Leitura pura, sem `waitFor`.
+      const confirmar = inside.getByRole('button', { name: 'Confirmar' }) as HTMLButtonElement;
+      await expect(confirmar.type).toBe('submit');
+      await expect(confirmar.form?.id).toBe('drawer-comp-form');
     });
   },
 };
@@ -190,6 +202,15 @@ export const WithConfirmation: Story = {
     await step('O foco abre no cancelar, que é a saída segura', async () => {
       const cancelar = inside.getByRole('button', { name: /^Cancelar$/i });
       await expect(cancelar).toHaveFocus();
+    });
+
+    await step('Sem formulário no corpo, a ação não promete envio', async () => {
+      // `buildDrawerFooter` serve a este painel e ao de formulário. O elo de
+      // envio que a WithForm precisa não pode vazar para cá: `type="submit"`
+      // sem `<form>` é a mesma promessa vazia, só que em outro painel.
+      const acao = inside.getByRole('button', { name: /^Remover$/i }) as HTMLButtonElement;
+      await expect(acao.type).toBe('button');
+      await expect(acao.form).toBeNull();
     });
   },
 };

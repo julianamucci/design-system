@@ -360,19 +360,23 @@ const COMPOSITION_CODE = {
     </div>
 
     <div ndsDrawerBody class="nds-stack" data-spacing="sm">
-      <div class="nds-stack" data-spacing="xs">
-        <label ndsLabel for="perfil-nome">Nome</label>
-        <input ndsInput id="perfil-nome" name="nome" value="Maria Souza" />
-      </div>
-      <div class="nds-stack" data-spacing="xs">
-        <label ndsLabel for="perfil-email">E-mail</label>
-        <input ndsInput id="perfil-email" name="email" type="email" value="maria@exemplo.com" />
-      </div>
+      <form id="perfil-form" class="nds-stack" data-spacing="sm" (submit)="salvar($event)">
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="perfil-nome">Nome</label>
+          <input ndsInput id="perfil-nome" name="nome" value="Maria Souza" />
+        </div>
+        <div class="nds-stack" data-spacing="xs">
+          <label ndsLabel for="perfil-email">E-mail</label>
+          <input ndsInput id="perfil-email" name="email" type="email" value="maria@exemplo.com" />
+        </div>
+      </form>
     </div>
 
+    <!-- O rodapé é irmão do corpo: é o par id ↔ form que religa a ação
+         primária ao formulário. Sem ele o Enter num campo não dispara nada. -->
     <div ndsDrawerFooter>
       <button ndsDrawerClose ndsButton variant="outline">Cancelar</button>
-      <button ndsButton (click)="salvar()">Salvar alterações</button>
+      <button ndsButton type="submit" form="perfil-form">Salvar alterações</button>
     </div>
   </ng-template>
 </nds-drawer>`,
@@ -574,27 +578,46 @@ const DIRECOES: DrawerDirection[] = ['bottom', 'top', 'left', 'right'];
             frase que a descreve.
           -->
           <div ndsDrawerBody class="nds-stack" data-spacing="sm">
-            <div class="nds-stack" data-spacing="xs">
-              <label ndsLabel for="docs-drawer-nome">{{ t('demonstration.labels.fieldName') }}</label>
-              <input ndsInput id="docs-drawer-nome" name="nome" value="Maria Souza" />
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <label ndsLabel for="docs-drawer-email">{{ t('demonstration.labels.fieldEmail') }}</label>
-              <input
-                ndsInput
-                id="docs-drawer-email"
-                name="email"
-                type="email"
-                value="maria@exemplo.com"
-              />
-            </div>
+            <!--
+              O <form> envolve os campos, e a ação primária do rodapé se religa
+              a ele pelo par id ↔ form. O rodapé é IRMÃO do corpo por construção
+              da diretiva — o corpo só rola enquanto é filho direto do flex
+              column do painel —, então aninhar não é opção aqui. Sem o elo,
+              com dois campos não há submissão implícita: o Enter não dispara.
+            -->
+            <form
+              id="docs-drawer-form"
+              class="nds-stack"
+              data-spacing="sm"
+              (submit)="$event.preventDefault()"
+            >
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="docs-drawer-nome">{{ t('demonstration.labels.fieldName') }}</label>
+                <input ndsInput id="docs-drawer-nome" name="nome" value="Maria Souza" />
+              </div>
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="docs-drawer-email">{{ t('demonstration.labels.fieldEmail') }}</label>
+                <input
+                  ndsInput
+                  id="docs-drawer-email"
+                  name="email"
+                  type="email"
+                  value="maria@exemplo.com"
+                />
+              </div>
+            </form>
           </div>
 
           <div ndsDrawerFooter>
             <button ndsDrawerClose ndsButton variant="outline">
               {{ t('demonstration.labels.cancel') }}
             </button>
-            <button ndsButton (click)="aoConfirmar('composicoes', 'docs_composicoes')">
+            <button
+              ndsButton
+              type="submit"
+              form="docs-drawer-form"
+              (click)="aoConfirmar('composicoes', 'docs_composicoes')"
+            >
               {{ t('demonstration.labels.confirm') }}
             </button>
           </div>

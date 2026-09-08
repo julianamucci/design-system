@@ -66,21 +66,37 @@ type Frame = {
    * Só onde a decisão É a tela — no painel de formulário o padrão fica.
    */
   focusOnSafeExit?: boolean;
+  /**
+   * Id do `<form>` do corpo, quando há um. O rodapé é IRMÃO do corpo por
+   * construção do primitivo — `.nds-drawer-body` só rola enquanto é filho
+   * direto do flex column do painel —, então o `<form>` não pode envolvê-lo: é
+   * o par id ↔ `form` que os religa. Sem o atributo, com dois campos o
+   * navegador não faz submissão implícita e o Enter num campo não dispara nada.
+   */
+  formId?: string;
 };
 
 /**
  * O gancho de foco desta stack, tal como a story o escreve.
  *
- * `onOpenAutoFocus` é o que o primitivo oferece para escolher o alvo. O `tick()`
- * não é cautela: a lib de baixo é a mesma do AlertDialog, e lá foi medido que o
- * rodapé ainda NÃO está no DOM quando este evento dispara.
+ * `onOpenAutoFocus` é o que o primitivo oferece para escolher o alvo, e o painel
+ * vem do REF — não de `event.target`. A lib não DESPACHA este evento: ela
+ * constrói um `CustomEvent` e o entrega direto ao callback, então o alvo é
+ * `null`. O snippet ensinava a lê-lo, e quem copiasse levava um no-op: sem
+ * `preventDefault()` a lib seguia com o padrão dela, focando o primeiro
+ * tabbable — que num painel com corpo rolável é o corpo.
+ *
+ * O `tick()` não é cautela: só depois do commit pendente o rodapé está no DOM e
+ * o ref, preenchido. `preventDefault()` fica ANTES dele, porque a lib lê
+ * `defaultPrevented` assim que o callback volta.
  */
 const FOCUS_SCRIPT = `
+let panelEl = $state<HTMLElement | null>(null);
+
 async function focusSafeExit(event: Event) {
-  const panelEl = event.target;
-  if (!(panelEl instanceof HTMLElement)) return;
   event.preventDefault();
   await tick();
+  if (!panelEl) return;
   const safeExit = panelEl.querySelector<HTMLElement>('[data-slot="drawer-close"]');
   (safeExit ?? panelEl).focus();
 }`;
@@ -101,6 +117,7 @@ function panel({
   actionLabel,
   cancelLabel,
   focusOnSafeExit = false,
+  formId,
 }: Frame): string {
   const rootProps = attrs(
     direction === 'bottom' ? '' : `direction="${direction}"`,
@@ -108,7 +125,10 @@ function panel({
   );
   const miolo = body ? `\n${body}` : '';
   const importTick = focusOnSafeExit ? `import { tick } from "svelte";\n` : '';
-  const contentProps = focusOnSafeExit ? ' onOpenAutoFocus={focusSafeExit}' : '';
+  const contentProps = focusOnSafeExit
+    ? ' bind:ref={panelEl} onOpenAutoFocus={focusSafeExit}'
+    : '';
+  const acaoProps = formId ? ` type="submit" form="${formId}"` : '';
 
   return svelteSnippet(
     `${importTick}${imports}
@@ -131,7 +151,7 @@ let open = $state(${isOpen});${focusOnSafeExit ? `\n${FOCUS_SCRIPT}` : ''}`,
           <Button variant="outline" {...props}>${cancelLabel}</Button>
         {/snippet}
       </DrawerClose>
-      <Button>${actionLabel}</Button>
+      <Button${acaoProps}>${actionLabel}</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`,
@@ -164,7 +184,13 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
   });
 }
 
-/** Composição com formulário curto no corpo, em painel lateral. */
+/**
+ * Composição com formulário curto no corpo, em painel lateral.
+ *
+ * Quem confirma é o ENVIO do formulário, e o elo é o par id ↔ `form`: ver a
+ * nota de `formId` em `Frame`. Sem ele o botão fica inerte e o Enter num campo
+ * não dispara nada — com dois campos não há submissão implícita que salve.
+ */
 export function drawerWithFormSource(): string {
   return panel({
     imports: IMPORT_WITH_FIELDS,
@@ -174,7 +200,12 @@ export function drawerWithFormSource(): string {
     title: 'Editar dados pessoais',
     description: 'Atualize seu nome e e-mail.',
     body: `    <DrawerBody>
-      <form class="nds-grid" data-spacing="sm">
+      <form
+        id="drawer-form"
+        class="nds-grid"
+        data-spacing="sm"
+        onsubmit={(event: SubmitEvent) => event.preventDefault()}
+      >
         <div class="nds-grid" data-spacing="xs">
           <Label for="drawer-nome">Nome</Label>
           <Input id="drawer-nome" type="text" value="Maria Silva" />
@@ -185,6 +216,7 @@ export function drawerWithFormSource(): string {
         </div>
       </form>
     </DrawerBody>`,
+    formId: 'drawer-form',
     actionLabel: 'Confirmar',
     cancelLabel: 'Cancelar',
   });

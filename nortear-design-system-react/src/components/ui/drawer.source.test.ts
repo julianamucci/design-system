@@ -128,6 +128,16 @@ describe('composições', () => {
     expect(saida).toContain('<Input id="drawer-email"');
   });
 
+  it('religa a ação primária ao formulário, que é irmão do rodapé', () => {
+    // `type="submit"` sem o `form` é botão INERTE: não envia pelo clique nem
+    // pelo Enter num campo, e nada na tela denuncia. Com dois campos não há
+    // submissão implícita para salvar o caso.
+    const saida = drawerWithFormSource();
+    expect(saida).toContain('id="drawer-form"');
+    expect(saida).toContain('<Button type="submit" form="drawer-form">');
+    expect(saida).not.toContain('<Button>Confirmar</Button>');
+  });
+
   it('a confirmação põe a ação principal na variante destrutiva', () => {
     const saida = drawerWithConfirmSource();
     expect(saida).toContain('<Button variant="destructive">Remover</Button>');

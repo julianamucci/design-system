@@ -333,7 +333,7 @@ const codeCompWithForm = `<Drawer>
       <DrawerTitle>Editar perfil</DrawerTitle>
       <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
     </DrawerHeader>
-    <form class="nds-stack nds-px-4" data-spacing="sm">
+    <form id="drawer-form" class="nds-stack nds-px-4" data-spacing="sm" @submit.prevent>
       <Label class="nds-stack nds-text-body" data-spacing="xs">
         Nome
         <Input default-value="Maria Souza" />
@@ -343,11 +343,13 @@ const codeCompWithForm = `<Drawer>
         <Input type="email" default-value="maria@exemplo.com" />
       </Label>
     </form>
+    <!-- O rodapé é irmão do formulário: é o par id ↔ form que religa a ação
+         primária. Sem ele, com dois campos o Enter não dispara nada. -->
     <DrawerFooter>
       <DrawerClose as-child>
-        <Button variant="outline">Cancelar</Button>
+        <Button type="button" variant="outline">Cancelar</Button>
       </DrawerClose>
-      <Button>Salvar alterações</Button>
+      <Button type="submit" form="drawer-form">Salvar alterações</Button>
     </DrawerFooter>
   </DrawerContent>
 </Drawer>`;
@@ -968,8 +970,10 @@ const a11yCritCols = computed(() => ({
                 <DrawerDescription>Atualize seus dados pessoais.</DrawerDescription>
               </DrawerHeader>
               <form
+                id="docs-drawer-form"
                 class="nds-stack nds-px-4"
                 data-spacing="sm"
+                @submit.prevent
               >
                 <Label
                   class="nds-stack nds-text-body"
@@ -991,11 +995,19 @@ const a11yCritCols = computed(() => ({
               </form>
               <DrawerFooter>
                 <DrawerClose as-child>
-                  <Button variant="outline">
+                  <Button
+                    type="button"
+                    variant="outline"
+                  >
                     Cancelar
                   </Button>
                 </DrawerClose>
-                <Button>Salvar alterações</Button>
+                <Button
+                  type="submit"
+                  form="docs-drawer-form"
+                >
+                  Salvar alterações
+                </Button>
               </DrawerFooter>
             </DrawerContent>
           </Drawer>

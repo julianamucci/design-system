@@ -101,6 +101,23 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('from "@/components/ui/input"');
   });
 
+  it('religa a ação primária ao formulário, que é irmão do rodapé', () => {
+    // `type="submit"` sem o `form` é botão INERTE: não envia pelo clique nem
+    // pelo Enter num campo, e nada na tela denuncia. Com dois campos não há
+    // submissão implícita para salvar o caso.
+    const saida = drawerWithFormSource();
+    expect(saida).toContain('id="drawer-form"');
+    expect(saida).toContain('<Button type="submit" form="drawer-form">Confirmar</Button>');
+    expect(saida).not.toContain('<Button>Confirmar</Button>');
+  });
+
+  it('o elo só existe onde existe formulário — a confirmação não o herda', () => {
+    // O `panel()` é o mesmo para as quatro composições. Vazar o `form` para as
+    // que não têm `<form>` seria a mesma promessa vazia em outro lugar.
+    expect(drawerWithConfirmSource()).not.toContain('type="submit"');
+    expect(drawerWithScrollSource()).not.toContain('type="submit"');
+  });
+
   it('a confirmação usa o corpo do painel para a mensagem curta', () => {
     const saida = drawerWithConfirmSource();
     expect(saida).toContain('<DrawerBody class="nds-text-body nds-text-muted-foreground">');

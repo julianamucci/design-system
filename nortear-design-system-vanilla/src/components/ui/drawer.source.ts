@@ -18,6 +18,14 @@ export type DrawerSnippetAction = {
   variant?: 'default' | 'outline' | 'ghost' | 'destructive';
   /** Recebe `data-slot="drawer-close"` — o fechador explícito desta fábrica. */
   close?: boolean;
+  /**
+   * Id do `<form>` do CORPO que esta ação envia. O rodapé é irmão do corpo por
+   * construção da fábrica — `.nds-drawer-body` só rola enquanto é filho direto
+   * do flex column do painel —, então o `<form>` não pode envolvê-lo: é o par
+   * id ↔ `form` que os religa. Sem o atributo, com dois campos o navegador não
+   * faz submissão implícita e o Enter num campo não dispara nada.
+   */
+  submitsForm?: string;
 };
 
 /** O que as stories usam da `DrawerOptions` e o snippet precisa mostrar. */
@@ -69,6 +77,7 @@ function button(acao: DrawerSnippetAction): string {
   const pairs = options([
     ['variant', acao.variant && acao.variant !== 'default' ? text(acao.variant) : undefined],
     ['label', text(acao.label)],
+    ['type', acao.submitsForm ? text('submit') : undefined],
   ])
     .map((line) => line.replace(/,$/, ''))
     .join(', ');
@@ -97,6 +106,12 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
 
   const declarados = actions.map((acao, i) => ({ acao, name: `acao${i + 1}` }));
   const fechadores = declarados.filter(({ acao }) => acao.close);
+  const enviadores = declarados.filter(({ acao }) => acao.submitsForm);
+  // Quem precisa de fiação depois da construção tem de virar variável; o resto
+  // continua entrando como argumento na própria linha da lista.
+  const nomeados = new Set(
+    [...fechadores, ...enviadores].map(({ name }) => name),
+  );
 
   const lines: string[] = [];
 
@@ -111,8 +126,24 @@ function footerBlock(actions: DrawerSnippetAction[]): string | undefined {
     lines.push('');
   }
 
+  if (enviadores.length > 0) {
+    lines.push(
+      '// O rodapé é IRMÃO do corpo: o `<form>` não pode envolvê-lo sem tirar do',
+      '// corpo a rolagem que ele só tem como filho direto do painel. O par',
+      "// id ↔ `form` é o que religa os dois — sem ele o `type: 'submit'` é",
+      '// inerte, e com dois campos o Enter num campo não dispara nada.',
+    );
+    for (const { acao, name } of enviadores) {
+      lines.push(
+        `const ${name} = ${button(acao)};`,
+        `${name}.setAttribute('form', ${text(acao.submitsForm!)});`,
+      );
+    }
+    lines.push('');
+  }
+
   const args = declarados
-    .map(({ acao, name }) => (acao.close ? name : button(acao)))
+    .map(({ acao, name }) => (nomeados.has(name) ? name : button(acao)))
     .join(', ');
 
   lines.push(`const rodape = [${args}];`);
@@ -195,6 +226,9 @@ export type DrawerWithFormSnippetOptions = Omit<DrawerSnippetOptions, 'bodyText'
   fields?: DrawerField[];
 };
 
+/** Id do `<form>` do corpo, e o alvo do `form` da ação principal. */
+const FORM_ID = 'drawer-form';
+
 function field(c: DrawerField): string {
   const entry = options([
     ['type', c.type && c.type !== 'text' ? text(c.type) : undefined],
@@ -220,7 +254,12 @@ export function drawerWithFormSnippet(o: DrawerWithFormSnippetOptions = {}): str
     { label: 'Nome', value: 'Maria Souza' },
     { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
   ];
-  const footer = footerBlock(actionsOf(o));
+  // A ação principal é a que NÃO fecha; é ela que envia o formulário do corpo.
+  const acoes = actionsOf(o);
+  const principal = acoes.findLastIndex((acao) => !acao.close);
+  const footer = footerBlock(
+    acoes.map((acao, i) => (i === principal ? { ...acao, submitsForm: FORM_ID } : acao)),
+  );
 
   return snippet(
     [
@@ -229,8 +268,10 @@ export function drawerWithFormSnippet(o: DrawerWithFormSnippetOptions = {}): str
       importing('input', 'createInput'),
     ].join('\n'),
     `const formulario = document.createElement('form');
+formulario.id = ${text(FORM_ID)};
 formulario.className = 'nds-stack';
 formulario.dataset.spacing = 'md';
+formulario.addEventListener('submit', (evento) => evento.preventDefault());
 formulario.append(
 ${fields.map(field).join('\n')}
 );`,

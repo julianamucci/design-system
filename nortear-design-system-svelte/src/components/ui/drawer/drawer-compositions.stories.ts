@@ -74,6 +74,14 @@ export const WithForm: Story = {
       await expect(names).toContain('Confirmar');
       await expect(names).toContain('Cancelar');
     });
+
+    await step('Confirmar submete o formulário do corpo', async () => {
+      // `button.form` é o que denuncia o botão órfão: vem `null` quando nada o
+      // liga ao `<form>`, e nada na tela denuncia. Leitura pura, sem `waitFor`.
+      const confirmar = inside.getByRole('button', { name: 'Confirmar' }) as HTMLButtonElement;
+      await expect(confirmar.type).toBe('submit');
+      await expect(confirmar.form?.id).toBe('drawer-story-form');
+    });
   },
 };
 
@@ -118,6 +126,15 @@ export const WithConfirmation: Story = {
       const acao = inside.getByRole('button', { name: /^Remover$/i });
       await waitFor(() => expect(cancelar).toHaveFocus());
       await expect(acao).not.toHaveFocus();
+    });
+
+    await step('Sem formulário no corpo, a ação não promete envio', async () => {
+      // O rodapé é ÚNICO para as quatro variantes do andaime. O elo de envio
+      // que a WithForm precisa não pode vazar para cá: `type="submit"` sem
+      // `<form>` é a mesma promessa vazia, só que em outro painel.
+      const acao = inside.getByRole('button', { name: /^Remover$/i }) as HTMLButtonElement;
+      await expect(acao.type).toBe('button');
+      await expect(acao.form).toBeNull();
     });
   },
 };

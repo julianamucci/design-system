@@ -78,7 +78,12 @@ export const WithForm: Story = {
             <DrawerDescription>Atualize seu nome e e-mail.</DrawerDescription>
           </DrawerHeader>
           <DrawerBody>
-            <form className="nds-grid" data-spacing="sm">
+            <form
+              id="drawer-form"
+              className="nds-grid"
+              data-spacing="sm"
+              onSubmit={(event) => event.preventDefault()}
+            >
               <div className="nds-grid" data-spacing="xs">
                 <Label htmlFor="drawer-name">Nome</Label>
                 <Input id="drawer-name" defaultValue="Juliana" />
@@ -89,11 +94,20 @@ export const WithForm: Story = {
               </div>
             </form>
           </DrawerBody>
+          {/*
+            O rodapé é IRMÃO do corpo por construção do primitivo — `.nds-drawer-body`
+            só rola enquanto é filho direto do flex column de `.nds-drawer-content` —,
+            então o `<form>` não pode envolvê-lo. Quem religa os dois é o par
+            id ↔ `form`: sem ele, com dois campos o navegador NÃO faz submissão
+            implícita e o Enter num campo não dispara nada.
+          */}
           <DrawerFooter>
             <DrawerClose asChild>
               <Button variant="outline">Cancelar</Button>
             </DrawerClose>
-            <Button>Confirmar</Button>
+            <Button type="submit" form="drawer-form">
+              Confirmar
+            </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
@@ -118,6 +132,16 @@ export const WithForm: Story = {
       const names = within(footer).getAllByRole("button").map((b) => b.textContent?.trim());
       await expect(names).toContain("Confirmar");
       await expect(names).toContain("Cancelar");
+    });
+
+    await step("Confirmar submete o formulário do corpo", async () => {
+      // `button.form` é o que denuncia o botão órfão: vem `null` quando nada o
+      // liga ao `<form>`, e nada na tela denuncia. Leitura pura, sem `waitFor`.
+      const confirmar = within(panel).getByRole("button", {
+        name: "Confirmar",
+      }) as HTMLButtonElement;
+      await expect(confirmar.type).toBe("submit");
+      await expect(confirmar.form?.id).toBe("drawer-form");
     });
   },
 };

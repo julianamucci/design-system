@@ -568,8 +568,10 @@ function buildField(labelText, id, type, value) {
 }
 
 const form = document.createElement('form');
+form.id = 'drawer-form';
 form.className = 'nds-stack';
 form.dataset.spacing = 'sm';
+form.addEventListener('submit', (evento) => evento.preventDefault());
 form.append(
   buildField('Nome', 'drawer-name', 'text', 'Maria Souza'),
   buildField('E-mail', 'drawer-email', 'email', 'maria@exemplo.com'),
@@ -579,7 +581,11 @@ form.append(
 // Sem ele o Cancelar é um botão inerte — e era assim que este snippet ensinava.
 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
 cancel.dataset.slot = 'drawer-close';
-const action = createButton({ variant: 'default', label: 'Salvar alterações' });
+// O rodapé é IRMÃO do corpo: o form não pode envolvê-lo sem tirar do corpo a
+// rolagem. O par id ↔ form é o que religa os dois — sem ele o type 'submit' é
+// inerte, e com dois campos o Enter num campo não dispara nada.
+const action = createButton({ variant: 'default', label: 'Salvar alterações', type: 'submit' });
+action.setAttribute('form', 'drawer-form');
 const footer = [cancel, action];
 
 const drawer = createDrawer({
@@ -628,8 +634,10 @@ const drawer = createDrawer({
               previewFactory: () => {
                 const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
                 const form = document.createElement('form');
+                form.id = 'docs-drawer-form';
                 form.className = 'nds-stack';
-form.dataset.spacing = 'sm';
+                form.dataset.spacing = 'sm';
+                form.addEventListener('submit', (evento) => evento.preventDefault());
                 form.append(
                   buildField('Nome', 'docs-drawer-name', 'text', 'Maria Souza'),
                   buildField('E-mail', 'docs-drawer-email', 'email', 'maria@exemplo.com'),
@@ -639,7 +647,14 @@ form.dataset.spacing = 'sm';
                 // helper de demonstração desta mesma página já o marcava.
                 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
                 cancel.dataset.slot = 'drawer-close';
-                const action = createButton({ variant: 'default', label: 'Salvar alterações' });
+                // O rodapé é irmão do corpo: é o par id ↔ `form` que religa a ação
+                // principal ao formulário. Sem ele o Enter num campo não dispara nada.
+                const action = createButton({
+                  variant: 'default',
+                  label: 'Salvar alterações',
+                  type: 'submit',
+                });
+                action.setAttribute('form', form.id);
                 const footer = [cancel, action];
                 const el = createDrawer({
                   trigger,
