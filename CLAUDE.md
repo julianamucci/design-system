@@ -70,6 +70,32 @@ node scripts/tabela-tokens.mjs <slug>            # tabela de tokens × folha CSS
 npm run core:pack                                # empacota docs/shared como @nortear/ds-core
 ```
 
+### `@nortear/ds-core` publica REGRA, nunca componente
+
+O pacote existe por um consumidor só: o **`nortear-design-system-flutter`**, que
+é outro projeto e precisa ler aqui as regras que este design system define —
+conteúdo, temas, tokens, guidelines, e função pura que expresse uma decisão
+(limiar, cálculo, negociação de locale, catálogo de rótulo).
+
+**Comportamento de componente não entra.** Nada em `docs/shared/` deve anexar
+ouvinte, capturar ponteiro, escrever atributo de estado ou tocar num elemento
+vivo — isso é o que cada stack existe para implementar no idioma dela, e o
+Flutter não consumiria de qualquer forma.
+
+A régua prática, e ela é fácil de aplicar: **se precisa de um `HTMLElement` para
+funcionar, não é regra — é implementação.** O corte fica entre `resolveX(dados)`,
+que decide, e `attachX(elemento)`, que age.
+
+Medido em 2026-09-08, nos 51 arquivos de `docs/shared/primitives/`: **um** anexava
+ouvinte de interação a elemento de componente — o motor de arraste do drawer, com
+11 toques em DOM contra zero da imensa maioria. Vanilla e Angular o consumiam em
+vez de implementar o gesto, o que tirava das duas justamente a prova que cinco
+stacks existem para dar. O `faro.ts` e o `sidebar-i18n.ts` também escutam evento,
+mas em `window` e por troca de idioma — infraestrutura, não componente.
+
+Sintoma de que a fronteira foi cruzada: a capacidade some das buscas de quem
+procura pelo componente. O gesto não aparecia em `drawer.ts` de stack nenhuma.
+
 ## Architecture
 
 ### Storybook is the home
