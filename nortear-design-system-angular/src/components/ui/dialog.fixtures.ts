@@ -24,8 +24,19 @@ export const LABELS = {
   footerNote: t('demonstration.labels.footerNote'),
   // O botão X do canto precisa de nome acessível próprio. A regra de formato
   // está em `usage.uxWriting.table.srOnly` do conteúdo compartilhado: verbo no
-  // infinitivo, uma palavra.
-  close: 'Fechar',
+  // infinitivo, uma palavra. Estava cravado em português aqui, e por isso o X
+  // se anunciava como "Fechar" para quem lia a página em inglês.
+  close: t('demonstration.labels.close'),
+  // Rótulos dos formulários e da variante de remoção. Escritos direto no
+  // template das stories, ficavam em português nos três idiomas.
+  fieldName: t('demonstration.labels.fieldName'),
+  fieldEmail: t('demonstration.labels.fieldEmail'),
+  fieldFullName: t('demonstration.labels.fieldFullName'),
+  fieldUsername: t('demonstration.labels.fieldUsername'),
+  samplePersonName: t('demonstration.labels.samplePersonName'),
+  removeItemTitle: t('demonstration.labels.removeItemTitle'),
+  removeItemDescription: t('demonstration.labels.removeItemDescription'),
+  removeItemAction: t('demonstration.labels.removeItemAction'),
 };
 
 /**

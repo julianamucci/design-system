@@ -157,11 +157,11 @@ export const WithForm: Story = {
             <form (submit)="$event.preventDefault()">
               <div ndsDialogBody class="nds-stack" data-spacing="md">
                 <div class="nds-stack" data-spacing="xs">
-                  <label ndsLabel for="dlg-nome">Nome</label>
+                  <label ndsLabel for="dlg-nome">{{ labels.fieldName }}</label>
                   <input ndsInput id="dlg-nome" name="name" value="Ana Ribeiro" />
                 </div>
                 <div class="nds-stack" data-spacing="xs">
-                  <label ndsLabel for="dlg-email">E-mail</label>
+                  <label ndsLabel for="dlg-email">{{ labels.fieldEmail }}</label>
                   <input ndsInput id="dlg-email" name="email" type="email" value="ana@exemplo.com" />
                 </div>
               </div>
@@ -183,8 +183,10 @@ export const WithForm: Story = {
       const name = p.querySelector<HTMLInputElement>('#dlg-nome')!;
       // `toHaveAccessibleName` e não a presença do `<label>`: o que importa é o
       // par for/id ter fechado, e é isso que o leitor de tela anuncia.
-      await expect(name).toHaveAccessibleName('Nome');
-      await expect(p.querySelector('#dlg-email')).toHaveAccessibleName('E-mail');
+      // Pelo mesmo valor que a montagem usou: o rótulo acompanha o idioma da
+      // página, e a asserção em português reprovaria em inglês.
+      await expect(name).toHaveAccessibleName(LABELS.fieldName);
+      await expect(p.querySelector('#dlg-email')).toHaveAccessibleName(LABELS.fieldEmail);
     });
 
     await step('O foco alcança os campos por teclado, dentro do painel', async () => {
@@ -434,22 +436,20 @@ export const WithDestructiveAction: Story = {
     props: { labels: LABELS },
     template: `
       <div ndsDialog [defaultOpen]="true">
-        <button ndsDialogTrigger ndsButton variant="outline">Remover item</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.removeItemAction }}</button>
 
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
 
           <div ndsDialogContent [closeLabel]="labels.close">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>Remover item da lista</h2>
-              <p ndsDialogDescription>
-                O item sai desta lista e continua disponível no catálogo.
-              </p>
+              <h2 ndsDialogTitle>{{ labels.removeItemTitle }}</h2>
+              <p ndsDialogDescription>{{ labels.removeItemDescription }}</p>
             </div>
 
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ labels.cancel }}</button>
-              <button ndsButton variant="destructive">Remover item</button>
+              <button ndsButton variant="destructive">{{ labels.removeItemAction }}</button>
             </div>
           </div>
         </ng-template>

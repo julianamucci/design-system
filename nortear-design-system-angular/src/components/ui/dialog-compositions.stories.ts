@@ -60,27 +60,25 @@ export const ProfileEdit: Story = {
     props: { labels: LABELS },
     template: `
       <div ndsDialog [defaultOpen]="true">
-        <button ndsDialogTrigger ndsButton variant="outline">Editar perfil</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
 
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
 
           <div ndsDialogContent [closeLabel]="labels.close">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>Editar perfil</h2>
-              <p ndsDialogDescription>
-                Atualize suas informações pessoais. As mudanças são salvas ao confirmar.
-              </p>
+              <h2 ndsDialogTitle>{{ labels.title }}</h2>
+              <p ndsDialogDescription>{{ labels.description }}</p>
             </div>
 
             <form (submit)="$event.preventDefault()">
               <div ndsDialogBody class="nds-grid" data-spacing="md">
                 <div class="nds-stack" data-spacing="sm">
-                  <label ndsLabel for="profile-name">Nome completo</label>
-                  <input ndsInput id="profile-name" name="name" value="Maria Silva" />
+                  <label ndsLabel for="profile-name">{{ labels.fieldFullName }}</label>
+                  <input ndsInput id="profile-name" name="name" [value]="labels.samplePersonName" />
                 </div>
                 <div class="nds-stack" data-spacing="sm">
-                  <label ndsLabel for="profile-username">Nome de usuário</label>
+                  <label ndsLabel for="profile-username">{{ labels.fieldUsername }}</label>
                   <input ndsInput id="profile-username" name="username" value="@mariasilva" />
                 </div>
               </div>
@@ -89,7 +87,7 @@ export const ProfileEdit: Story = {
                 <button ndsDialogClose ndsButton type="button" variant="outline">
                   {{ labels.cancel }}
                 </button>
-                <button ndsButton type="submit">Salvar alterações</button>
+                <button ndsButton type="submit">{{ labels.action }}</button>
               </div>
             </form>
           </div>
@@ -104,11 +102,11 @@ export const ProfileEdit: Story = {
       // O valor entra na asserção junto com o rótulo: um campo que renderiza
       // vazio passaria só na presença do label e ninguém veria a falha.
       const name = p.querySelector<HTMLInputElement>('#profile-name')!;
-      await expect(name).toHaveAccessibleName('Nome completo');
-      await expect(name.value).toBe('Maria Silva');
+      await expect(name).toHaveAccessibleName(LABELS.fieldFullName);
+      await expect(name.value).toBe(LABELS.samplePersonName);
 
       const username = p.querySelector<HTMLInputElement>('#profile-username')!;
-      await expect(username).toHaveAccessibleName('Nome de usuário');
+      await expect(username).toHaveAccessibleName(LABELS.fieldUsername);
       await expect(username.value).toBe('@mariasilva');
     });
 

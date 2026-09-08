@@ -56,32 +56,21 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 //     API do Base UI, onde a rolagem é um subcomponente e o rótulo do botão de
 //     fechar é filho JSX. Aqui as duas são inputs, e prop sem descrição é API
 //     invisível;
-//   · rótulos dos exemplos que o conteúdo não tem (nomes de campo, o exemplo
-//     negativo destrutivo, o contraexemplo vago do primeiro don't, o par
-//     remover-item da variante destrutiva, o par do convite da variante de
-//     confirmação e o `alt` da capa) e que, escritos
-//     direto no template, ficariam em português nas três versões da página.
-//     A maioria deles é comum às cinco stacks — as outras quatro escrevem os
-//     mesmos textos à mão, em português — e por isso foram reportados para
-//     promoção ao conteúdo compartilhado. Enquanto não sobem, ficam aqui.
+//   · rótulos dos exemplos que o conteúdo compartilhado não tem — hoje só o
+//     par do convite da variante de confirmação e o `alt` da capa — e que,
+//     escritos direto no template, ficariam em português nas três versões da
+//     página. Os dez que estavam aqui (o botão de fechar, os nomes de campo, o
+//     contraexemplo vago, o exemplo negativo destrutivo e o trio de
+//     remover-item) SUBIRAM para `demonstration.labels` e saíram desta lista:
+//     override que repete o conteúdo compartilhado o sombreia, e a correção do
+//     texto lá em cima deixaria de chegar aqui. O `coverAlt` fica, e o motivo
+//     é medido: só esta stack renderiza um `<img>` de verdade na composição
+//     de mídia, então o `alt` não é conteúdo comum às cinco.
 //
 // `import.withScroll` é substituição, não acréscimo: o texto original diz
 // "(Vue)", e nomear outro stack numa página que é lida sozinha vaza contexto.
 const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>, {
   'pt-BR': {
-    'demonstration.labels.close': 'Fechar',
-    'demonstration.labels.fieldName': 'Nome',
-    'demonstration.labels.fieldEmail': 'E-mail',
-    'demonstration.labels.vagueTitle': 'Atenção',
-    'demonstration.labels.vagueDescription':
-      'Aqui você pode mexer em várias coisas.',
-    'demonstration.labels.destructiveTitle': 'Excluir conta',
-    'demonstration.labels.destructiveDescription':
-      'A conta e todo o histórico são apagados. Não há como desfazer.',
-    'demonstration.labels.removeItemTitle': 'Remover item da lista',
-    'demonstration.labels.removeItemDescription':
-      'O item sai desta lista e continua disponível no catálogo.',
-    'demonstration.labels.removeItemAction': 'Remover item',
     'demonstration.labels.inviteAction': 'Enviar convite',
     'demonstration.labels.inviteDescription':
       'O convite vai para ana@exemplo.com. Você pode reenviar depois.',
@@ -99,19 +88,6 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
       'Emitido antes do fechamento por clique fora. Permite cancelar o fechamento.',
   },
   en: {
-    'demonstration.labels.close': 'Close',
-    'demonstration.labels.fieldName': 'Name',
-    'demonstration.labels.fieldEmail': 'Email',
-    'demonstration.labels.vagueTitle': 'Attention',
-    'demonstration.labels.vagueDescription':
-      'Here you can change several things.',
-    'demonstration.labels.destructiveTitle': 'Delete account',
-    'demonstration.labels.destructiveDescription':
-      'The account and all history are erased. This cannot be undone.',
-    'demonstration.labels.removeItemTitle': 'Remove item from the list',
-    'demonstration.labels.removeItemDescription':
-      'The item leaves this list and stays available in the catalogue.',
-    'demonstration.labels.removeItemAction': 'Remove item',
     'demonstration.labels.inviteAction': 'Send invite',
     'demonstration.labels.inviteDescription':
       'The invite goes to ana@example.com. You can resend it later.',
@@ -129,19 +105,6 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
       'Emitted before closing via outside click. Allows cancelling the dismissal.',
   },
   es: {
-    'demonstration.labels.close': 'Cerrar',
-    'demonstration.labels.fieldName': 'Nombre',
-    'demonstration.labels.fieldEmail': 'Correo electrónico',
-    'demonstration.labels.vagueTitle': 'Atención',
-    'demonstration.labels.vagueDescription':
-      'Aquí puedes cambiar varias cosas.',
-    'demonstration.labels.destructiveTitle': 'Eliminar cuenta',
-    'demonstration.labels.destructiveDescription':
-      'La cuenta y todo el historial se borran. No se puede deshacer.',
-    'demonstration.labels.removeItemTitle': 'Quitar ítem de la lista',
-    'demonstration.labels.removeItemDescription':
-      'El ítem sale de esta lista y sigue disponible en el catálogo.',
-    'demonstration.labels.removeItemAction': 'Quitar ítem',
     'demonstration.labels.inviteAction': 'Enviar invitación',
     'demonstration.labels.inviteDescription':
       'La invitación va a ana@ejemplo.com. Puedes reenviarla después.',
@@ -755,8 +718,13 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
             <form (submit)="$event.preventDefault()">
               <div ndsDialogBody class="nds-grid" data-spacing="md">
                 <div class="nds-stack" data-spacing="sm">
-                  <label ndsLabel for="profile-name">Nome completo</label>
-                  <input ndsInput id="profile-name" name="name" value="Maria Silva" />
+                  <label ndsLabel for="profile-name">{{ t('demonstration.labels.fieldFullName') }}</label>
+                  <input
+                    ndsInput
+                    id="profile-name"
+                    name="name"
+                    [value]="t('demonstration.labels.samplePersonName')"
+                  />
                 </div>
               </div>
               <div ndsDialogFooter>

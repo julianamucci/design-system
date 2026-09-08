@@ -54,22 +54,29 @@ const ACTION = text('demonstration.labels.action');
 const CANCEL = text('demonstration.labels.cancel');
 
 /**
- * Os textos que as stories escrevem À MÃO, fixados aqui.
+ * Os textos que o SNIPPET repete, e contra os quais as stories são conferidas.
  *
- * O conteúdo compartilhado não os traz, e o módulo de snippet os repete numa
- * tabela própria — importar um `.stories.ts` traria o renderer do Storybook
- * para dentro do projeto `unit`, que roda em node. Ficam fixados para que a
- * divergência entre as duas cópias apareça como falha, e não como silêncio.
+ * Sete deles subiram para `demonstration.labels` e passaram a sair de lá: a
+ * story lê a chave, e cravá-los aqui de novo faria o portão medir a cópia velha
+ * — mudar o texto no conteúdo compartilhado deixaria o snippet para trás sem
+ * uma palavra, que é exatamente a divergência que este arquivo existe para
+ * denunciar.
+ *
+ * Os cinco de baixo continuam cravados porque o conteúdo compartilhado não os
+ * tem: são rótulos do convite e da composição de mídia, que só esta stack
+ * escreve. Importar um `.stories.ts` traria o renderer do Storybook para
+ * dentro do projeto `unit`, que roda em node — por isso a conferência é
+ * contra o texto, e não contra a story.
  */
-const DESTRUCTIVE_TRIGGER = 'Remover item';
-const DESTRUCTIVE_TITLE = 'Remover item da lista';
-const DESTRUCTIVE_DESCRIPTION = 'O item sai desta lista e continua disponível no catálogo.';
+const DESTRUCTIVE_TRIGGER = text('demonstration.labels.removeItemAction');
+const DESTRUCTIVE_TITLE = text('demonstration.labels.removeItemTitle');
+const DESTRUCTIVE_DESCRIPTION = text('demonstration.labels.removeItemDescription');
+const FORM_NAME = text('demonstration.labels.fieldName');
+const FORM_EMAIL = text('demonstration.labels.fieldEmail');
+const PROFILE_NAME = text('demonstration.labels.fieldFullName');
+const PROFILE_USERNAME = text('demonstration.labels.fieldUsername');
 const INVITE_TRIGGER = 'Enviar convite';
 const INVITE_DESCRIPTION = 'O convite vai para ana&#64;exemplo.com. Você pode reenviar depois.';
-const FORM_NAME = 'Nome';
-const FORM_EMAIL = 'E-mail';
-const PROFILE_NAME = 'Nome completo';
-const PROFILE_USERNAME = 'Nome de usuário';
 const MEDIA_TRIGGER = 'Ver capa';
 const MEDIA_TITLE = 'Capa do artigo';
 const MEDIA_ALT = 'Padrão geométrico em tons de cinza';
