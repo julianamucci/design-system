@@ -200,7 +200,13 @@ saída mais rápida (`--duration-fast`, `--ease-exit`). Sob
 | `onOpenChange` | callback com o novo estado |
 | `showCloseButtonContent` | exibe o X no canto do painel |
 | `showCloseButtonFooter` | exibe um botão de fechar dentro do rodapé, como ação secundária (D9) |
+| `closeLabel` | rótulo do botão de fechar — o visível do rodapé e o de leitor de tela do X |
 | `className` | classes `.nds-*` adicionais |
+
+`closeLabel` existia só no Angular; as outras quatro cravavam o literal `Fechar`
+DENTRO do primitivo, o que obrigava quem consome em outro idioma a reescrever o
+componente. Regularizado em 2026-09-07, com o mesmo default (`'Fechar'`), de
+modo que nenhum call site existente muda.
 
 Os dois `showCloseButton*` são independentes: um é o X do canto, o outro é uma
 ação no rodapé.

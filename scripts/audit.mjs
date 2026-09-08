@@ -38,6 +38,29 @@ function readFile(path) {
   try { return readFileSync(path, 'utf8'); } catch { return null; }
 }
 
+/**
+ * Todas as guidelines das cinco stacks, lidas UMA vez por processo.
+ *
+ * `catalogo_duplicado_com_prd` roda por slug e precisa varrer os 80 arquivos;
+ * sem este cache eram 80 × 85 leituras, e a varredura completa passou de um
+ * minuto para mais de cinco.
+ */
+let _guidelinesCache = null;
+function guidelinesDeTodasAsStacks() {
+  if (_guidelinesCache) return _guidelinesCache;
+  _guidelinesCache = [];
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'guidelines');
+    if (!existsSync(dir)) continue;
+    for (const nome of readdirSync(dir).filter((f) => f.endsWith('.md'))) {
+      const caminho = join(dir, nome);
+      const conteudo = readFile(caminho);
+      if (conteudo) _guidelinesCache.push({ stack, caminho, conteudo });
+    }
+  }
+  return _guidelinesCache;
+}
+
 function grepFile(path, pattern, flags = 'g') {
   const content = readFile(path);
   if (!content) return [];
@@ -6282,6 +6305,51 @@ function auditQuality(slug) {
     }
   }
 
+  // 0c. Componente com PRD que ainda tem seção de catálogo na guideline.
+  //
+  // As guidelines por stack e o PRD são eixos TRANSPOSTOS da mesma matriz: o PRD
+  // é um componente atravessando as cinco stacks, a guideline é uma stack
+  // atravessando os componentes. Enquanto os dois descrevem o MESMO componente,
+  // há duas fontes para a mesma coisa — e a experiência desta casa é que uma
+  // delas é corrigida e a outra não.
+  //
+  // Medido em 2026-09-07, antes da migração: as cinco cópias da guideline de
+  // overlay cobriam a categoria com 6 a 13 seções cada, e o vanilla — que é a
+  // referência de contrato — documentava 6 dos 10 componentes. Não era
+  // especialização por stack; era cobertura desigual do mesmo assunto em cinco
+  // lugares que envelheciam separados.
+  //
+  // O que a guideline CONTINUA guardando é o que o PRD não tem casa para: regra
+  // que vale para a categoria inteira, atravessando componentes. Por isso a
+  // regra cobra o cabeçalho `## <Componente>`, não o arquivo.
+  if (existsSync(prdFile)) {
+    // `dropdown-menu` → `Dropdown Menu` e `DropdownMenu`; as guidelines usam as
+    // duas formas, e o Angular ainda escreve algumas com o nome da diretiva.
+    const partes = slug.split('-').map((p) => p[0].toUpperCase() + p.slice(1));
+    const titulos = new Set([partes.join(' '), partes.join('')]);
+    // As guidelines são lidas UMA vez para o processo inteiro, não uma vez por
+    // slug: são 80 arquivos × 85 componentes, e a primeira versão desta regra
+    // levou a varredura completa de um minuto para além de cinco.
+    for (const { stack, caminho, conteudo } of guidelinesDeTodasAsStacks()) {
+      {
+        for (const titulo of titulos) {
+          const cabecalho = new RegExp(`^##\\s+${titulo}\\s*$`, 'im');
+          if (!cabecalho.test(conteudo)) continue;
+          violations.push({
+            category: 'quality', severity: 'medium', slug, stack,
+            file: relative(ROOT, caminho), rule: 'catalogo_duplicado_com_prd',
+            message:
+              `a guideline ainda tem a seção "## ${titulo}" e o componente já tem PRD ` +
+              `(docs/shared/prd/${slug}.md) — duas fontes para a mesma coisa, e é a ` +
+              `segunda que deixa de ser corrigida. Regra de CATEGORIA fica; catálogo de ` +
+              `componente vai para o PRD, com os nomes de peça na seção "Peças, por stack"`,
+          });
+          break;
+        }
+      }
+    }
+  }
+
   for (const stack of STACKS) {
     const { ui, docs } = filesForSlug(slug, stack);
 
@@ -7026,6 +7094,21 @@ const IDENTIFICADORES_PT_EM_SNIPPET = new Set([
   'espera', 'atraso', 'inicio', 'fim', 'passo', 'etapa', 'nivel', 'ordem', 'filtro',
   'busca', 'chave', 'senha', 'usuario', 'perfil', 'conta', 'hora', 'dia', 'mes',
   'ano', 'acordeao', 'selecionado', 'marcado', 'itens', 'formulario', 'duracao',
+  // NOME DE COMPONENTE em português — a família que a lista original inteira
+  // deixou passar, porque ao montá-la ninguém olha para o nome do componente
+  // procurando português. As duas viviam em `anatomy.structureCode.vanilla`,
+  // que é a chave mais copiada que um componente tem.
+  //
+  // Medido antes de acrescentar, varrendo toda declaração dentro de chave
+  // `*Code` nos três idiomas de todos os componentes: `dialogo` = 3 (uma por
+  // idioma, no dialog), `calendario` = 3 (idem, no calendar). Seis no total, e
+  // as seis foram corrigidas na mesma passagem — a lista entra como guarda de
+  // regressão, não como backlog.
+  //
+  // `menu` foi MEDIDA e RECUSADA: daria 9 ocorrências, e é a mesma palavra em
+  // inglês. Palavra que existe nos dois idiomas não distingue nada, e o portão
+  // passaria a reprovar `const menu = createDropdownMenu(…)`, que está certo.
+  'dialogo', 'calendario',
 ]);
 
 function auditIdentificadorPtEmSnippet(slug) {
