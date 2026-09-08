@@ -93,16 +93,51 @@ describe('composições estruturais', () => {
     expect(saida).toContain('<DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>');
   });
 
-  it('fechar no rodapé usa a prop dos DOIS lugares, com papéis diferentes', () => {
+  it('fechar no rodapé: X do canto desligado e o fechar como MENOR ênfase de três', () => {
     const saida = footerDialogCloseSource();
     expect(saida).toContain('<DialogContent showCloseButton={false}>');
-    expect(saida).toContain('<DialogFooter showCloseButton>');
+    expect(saida).toContain('<DialogClose render={<Button variant="ghost" />}>Fechar</DialogClose>');
+    // O snippet ensina a MESMA ordem que a story renderiza: secundários antes,
+    // primária por último. Snippet que ensinasse o oposto da prévia seria pior
+    // que snippet nenhum — e é a folha (`column-reverse`) que inverte a leitura.
+    const closeAt = saida.indexOf('>Fechar</DialogClose>');
+    const backAt = saida.indexOf('<Button variant="outline">Voltar</Button>');
+    const continueAt = saida.indexOf('<Button>Continuar</Button>');
+    expect(closeAt).toBeGreaterThan(-1);
+    expect(backAt).toBeGreaterThan(closeAt);
+    expect(continueAt).toBeGreaterThan(backAt);
+  });
+
+  it('o cenário do fechar no rodapé bate com o da story, letra por letra', () => {
+    const saida = footerDialogCloseSource();
+    for (const snippetText of [
+      'Abrir guia',
+      '<DialogTitle>Próximos passos</DialogTitle>',
+      'Continue o fluxo ou volte ao início.',
+      'O guia continua disponível no menu de ajuda.',
+    ]) {
+      expect(saida).toContain(snippetText);
+    }
   });
 
   it('sem rodapé, o snippet não importa as peças que não usa', () => {
     const saida = dialogNoFooterSource();
     expect(saida).not.toContain('<DialogFooter');
     expect(saida).not.toContain('DialogClose');
+  });
+
+  it('o cenário sem rodapé bate com o da story, letra por letra', () => {
+    const saida = dialogNoFooterSource();
+    for (const snippetText of [
+      '<DialogTitle>Sobre este recurso</DialogTitle>',
+      'Detalhes técnicos exibidos para fins informativos. Sem ações.',
+      'O fechamento ocorre via X, Escape ou clique no overlay.',
+    ]) {
+      expect(saida).toContain(snippetText);
+    }
+    // O gatilho REPETE o título; o "Saiba mais" era o cenário anterior desta
+    // stack, e é ele que o alinhamento tirou.
+    expect(saida).not.toContain('Saiba mais');
   });
 
   it('no formulário o rodapé fica DENTRO do form, e o cancelar não submete', () => {

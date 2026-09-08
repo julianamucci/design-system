@@ -439,22 +439,28 @@ export const NoFooter: Story = {
   },
   render: () => {
     const { t } = useTranslation(dialogTranslations);
-    // Cenário informativo sem chave no conteúdo compartilhado: gatilho, título
-    // e descrição seguem literais.
-    const title = "Sobre este recurso";
+    // O gatilho REPETE o título: quem abre já sabe o que vai ler, e o painel
+    // não tem ação nenhuma a nomear depois.
+    const title = t("demonstration.labels.aboutTitle");
     return (
       <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
-          Saiba mais
+          {title}
         </DialogTrigger>
         <DialogContent closeLabel={t("demonstration.labels.close")}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
-              Este recurso permite visualizar detalhes do item selecionado sem sair
-              da tela atual. Você pode fechar a qualquer momento.
+              {t("demonstration.labels.aboutDescription")}
             </DialogDescription>
           </DialogHeader>
+          <div
+            data-slot="dialog-body"
+            className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+            data-spacing="sm"
+          >
+            {t("demonstration.labels.aboutBody")}
+          </div>
         </DialogContent>
       </Dialog>
     );
@@ -541,32 +547,54 @@ export const CustomCloseInFooter: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
-      // `showCloseButton` existe no Content e no Footer e faz coisas
-      // diferentes: só o snippet com os dois mostra o par.
+      // O X do canto desligado e uma TERCEIRA ação no rodapé: o snippet do
+      // `meta` mostraria o X ligado e um par comum de botões, que é o oposto
+      // do que esta composição existe para demonstrar.
       source: { transform: footerDialogCloseSource },
       description: {
         story:
-          "`showCloseButton={false}` no Content e `showCloseButton` no Footer — o fechar entra como ação secundária: primeiro no DOM, abaixo das demais no empilhamento e à esquerda delas quando lado a lado.",
+          "`showCloseButton={false}` no Content e um `DialogClose` próprio no rodapé — o fechar entra como a ação de MENOR ênfase das três: primeiro no DOM, abaixo das demais no empilhamento e à esquerda delas quando lado a lado.",
       },
     },
   },
   render: () => {
     const { t } = useTranslation(dialogTranslations);
-    const title = t("demonstration.labels.title");
+    const title = t("demonstration.labels.guideTitle");
     return (
       <Dialog defaultOpen>
         <DialogTrigger render={<Button variant="outline" />}>
-          {t("demonstration.labels.triggerLabel")}
+          {t("demonstration.labels.guideTrigger")}
         </DialogTrigger>
         <DialogContent showCloseButton={false}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>
-              {t("demonstration.labels.description")}
+              {t("demonstration.labels.guideDescription")}
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter showCloseButton closeLabel={t("demonstration.labels.close")}>
-            <Button>{t("demonstration.labels.action")}</Button>
+          <div
+            data-slot="dialog-body"
+            className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+            data-spacing="sm"
+          >
+            {t("demonstration.labels.guideBody")}
+          </div>
+          {/*
+           * Secundários primeiro, PRIMÁRIA por último — e o "Fechar" é o mais
+           * secundário dos três, então abre a lista. `.nds-dialog-footer` é
+           * `column-reverse` empilhado e `row` + `flex-end` a partir de 40rem:
+           * das duas leituras sai `Continuar` em cima e à direita.
+           *
+           * O fechar é um `DialogClose` próprio, e não o `showCloseButton` do
+           * Footer, porque aquele renderiza `outline` — a mesma ênfase do
+           * "Voltar" ao lado, o que apagaria a diferença entre os dois.
+           */}
+          <DialogFooter>
+            <DialogClose render={<Button variant="ghost" />}>
+              {t("demonstration.labels.close")}
+            </DialogClose>
+            <Button variant="outline">{t("demonstration.labels.back")}</Button>
+            <Button>{t("demonstration.labels.continueAction")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -577,21 +605,27 @@ export const CustomCloseInFooter: Story = {
 
     await step("Sem X no canto, o fechar mora no rodapé", async () => {
       // O X do canto some com `showCloseButton={false}` no Content; o que resta
-      // é o botão de fechar que o Footer acrescenta.
+      // é o `DialogClose` que a composição pendura no rodapé.
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await expect(cantoButtonClose(p)).toBeNull();
       await expect(within(footer).getByRole("button", { name: label("demonstration.labels.close") })).toBeVisible();
     });
 
-    await step("O fechar é SECUNDÁRIO: primeiro do DOM, primário por último", async () => {
+    await step("Três ações, o fechar de MENOR ênfase primeiro e a primária por último", async () => {
       // Único portão que alcança a ordem do rodapé. A folha é `column-reverse`
       // empilhada e `row` + `flex-end` a partir de 40rem, então as duas
       // leituras saem desta mesma ordem de DOM — e ela só existe como posição
       // entre irmãos: nenhum compilador a vê, e asserção por papel tampouco.
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const buttons = [...footer.querySelectorAll<HTMLElement>("button")];
-      await expect(buttons.length).toBe(2);
+      await expect(buttons.length).toBe(3);
       await expect(buttons[0]).toHaveAccessibleName(label("demonstration.labels.close"));
+      // A ênfase de cada um também é o assunto: três `outline` lado a lado não
+      // diriam qual é a saída, qual volta e qual segue.
+      await expect(buttons[0]).toHaveClass("nds-button-ghost");
+      await expect(buttons[1]).toHaveAccessibleName(label("demonstration.labels.back"));
+      await expect(buttons[1]).toHaveClass("nds-button-outline");
+      await expect(buttons[2]).toHaveAccessibleName(label("demonstration.labels.continueAction"));
       await expect(buttons[buttons.length - 1]).toHaveClass("nds-button-default");
     });
 

@@ -125,22 +125,46 @@ export function dialogNoButtonCloseSource(): string {
 }
 
 /**
- * Fechar no rodapé: o X do canto sai do Content e o Footer acrescenta o botão.
+ * Fechar no rodapé: o X do canto sai do Content e o fechamento desce para o
+ * rodapé, como a ação de MENOR ênfase de três.
  *
- * `showCloseButton` existe nos dois lugares e faz coisas diferentes — no
- * Content é o X do canto, no Footer é um botão rotulado, na posição de ação
- * SECUNDÁRIA — primeiro no DOM, portanto abaixo das demais no empilhamento e à
- * esquerda delas quando lado a lado. O primário é sempre o ÚLTIMO do DOM, e é
- * a folha (`column-reverse`) que inverte.
+ * O `showCloseButton={false}` do Content desliga o X; o fechar volta como um
+ * `DialogClose` próprio, `ghost`, PRIMEIRO no DOM — portanto abaixo das demais
+ * no empilhamento e à esquerda delas quando lado a lado. Depois vem o
+ * secundário `outline`, e a primária é sempre a ÚLTIMA do DOM: é a folha
+ * (`column-reverse`) que inverte a leitura.
+ *
+ * O `showCloseButton` do Footer continua existindo e faz um botão `outline`
+ * nessa mesma primeira posição — mas o cenário de referência pede três ações
+ * com ênfases distintas, e um `outline` ao lado do "Voltar" apagaria a
+ * diferença entre os dois.
  */
 export function footerDialogCloseSource(): string {
   return dialogSnippet(
     ' defaultOpen',
     ' showCloseButton={false}',
-    `${HEADER}
-    <DialogFooter showCloseButton>
-      <Button>Salvar alterações</Button>
+    `    <DialogHeader>
+      <DialogTitle>Próximos passos</DialogTitle>
+      <DialogDescription>
+        Continue o fluxo ou volte ao início.
+      </DialogDescription>
+    </DialogHeader>
+    <div
+      data-slot="dialog-body"
+      className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-spacing="sm"
+    >
+      O guia continua disponível no menu de ajuda.
+    </div>
+    <DialogFooter>
+      <DialogClose render={<Button variant="ghost" />}>Fechar</DialogClose>
+      <Button variant="outline">Voltar</Button>
+      <Button>Continuar</Button>
     </DialogFooter>`,
+    IMPORT_BASE,
+    `  <DialogTrigger render={<Button variant="outline" />}>
+    Abrir guia
+  </DialogTrigger>`,
   );
 }
 
@@ -156,16 +180,22 @@ export function dialogNoFooterSource(): string {
     IMPORT_BASE.replace('  DialogClose,\n', '').replace('  DialogFooter,\n', ''),
     `<Dialog defaultOpen>
   <DialogTrigger render={<Button variant="outline" />}>
-    Saiba mais
+    Sobre este recurso
   </DialogTrigger>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Sobre este recurso</DialogTitle>
       <DialogDescription>
-        Este recurso permite visualizar detalhes do item selecionado sem sair da
-        tela atual. Você pode fechar a qualquer momento.
+        Detalhes técnicos exibidos para fins informativos. Sem ações.
       </DialogDescription>
     </DialogHeader>
+    <div
+      data-slot="dialog-body"
+      className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-spacing="sm"
+    >
+      O fechamento ocorre via X, Escape ou clique no overlay.
+    </div>
   </DialogContent>
 </Dialog>`,
   );

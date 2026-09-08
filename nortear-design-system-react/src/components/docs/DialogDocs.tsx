@@ -370,29 +370,49 @@ export function DialogDocs() {
 
   const codeNoFooter = `<Dialog>
   <DialogTrigger asChild>
-    <Button variant="outline">Saiba mais</Button>
+    <Button variant="outline">Sobre este recurso</Button>
   </DialogTrigger>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Sobre este recurso</DialogTitle>
       <DialogDescription>
-        Visualize detalhes sem sair da tela atual.
+        Detalhes técnicos exibidos para fins informativos. Sem ações.
       </DialogDescription>
     </DialogHeader>
+    <div
+      data-slot="dialog-body"
+      className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-spacing="sm"
+    >
+      O fechamento ocorre via X, Escape ou clique no overlay.
+    </div>
   </DialogContent>
 </Dialog>`;
 
   const codeCustomCloseInFooter = `<Dialog>
   <DialogTrigger asChild>
-    <Button variant="outline">Editar perfil</Button>
+    <Button variant="outline">Abrir guia</Button>
   </DialogTrigger>
   <DialogContent showCloseButton={false}>
     <DialogHeader>
-      <DialogTitle>Editar perfil</DialogTitle>
-      <DialogDescription>...</DialogDescription>
+      <DialogTitle>Próximos passos</DialogTitle>
+      <DialogDescription>
+        Continue o fluxo ou volte ao início.
+      </DialogDescription>
     </DialogHeader>
-    <DialogFooter showCloseButton>
-      <Button>Salvar alterações</Button>
+    <div
+      data-slot="dialog-body"
+      className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-spacing="sm"
+    >
+      O guia continua disponível no menu de ajuda.
+    </div>
+    {/* Secundários primeiro, primária por último: o rodapé empilha ao
+        contrário no estreito e alinha à direita no largo. */}
+    <DialogFooter>
+      <DialogClose render={<Button variant="ghost" />}>Fechar</DialogClose>
+      <Button variant="outline">Voltar</Button>
+      <Button>Continuar</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>`;
@@ -869,18 +889,26 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             code: codeNoFooter,
             preview: (
               <Dialog>
-                {/* Cenário sem chave no conteúdo compartilhado: "Saiba mais",
-                    "Sobre este recurso" e a descrição seguem literais. */}
+                {/* O gatilho REPETE o título: não há ação a nomear depois. */}
                 <DialogTrigger render={<Button variant="outline" />}>
-                  Saiba mais
+                  {tContent("demonstration.labels.aboutTitle")}
                 </DialogTrigger>
                 <DialogContent closeLabel={tContent("demonstration.labels.close")}>
                   <DialogHeader>
-                    <DialogTitle>Sobre este recurso</DialogTitle>
+                    <DialogTitle>
+                      {tContent("demonstration.labels.aboutTitle")}
+                    </DialogTitle>
                     <DialogDescription>
-                      Visualize detalhes sem sair da tela atual.
+                      {tContent("demonstration.labels.aboutDescription")}
                     </DialogDescription>
                   </DialogHeader>
+                  <div
+                    data-slot="dialog-body"
+                    className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+                    data-spacing="sm"
+                  >
+                    {tContent("demonstration.labels.aboutBody")}
+                  </div>
                 </DialogContent>
               </Dialog>
             ),
@@ -918,20 +946,43 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             preview: (
               <Dialog>
                 <DialogTrigger render={<Button variant="outline" />}>
-                  {tContent("demonstration.labels.triggerLabel")}
+                  {tContent("demonstration.labels.guideTrigger")}
                 </DialogTrigger>
                 <DialogContent showCloseButton={false}>
                   <DialogHeader>
-                    <DialogTitle>{tContent("demonstration.labels.title")}</DialogTitle>
+                    <DialogTitle>
+                      {tContent("demonstration.labels.guideTitle")}
+                    </DialogTitle>
                     <DialogDescription>
-                      {tContent("demonstration.labels.description")}
+                      {tContent("demonstration.labels.guideDescription")}
                     </DialogDescription>
                   </DialogHeader>
-                  <DialogFooter
-                    showCloseButton
-                    closeLabel={tContent("demonstration.labels.close")}
+                  <div
+                    data-slot="dialog-body"
+                    className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+                    data-spacing="sm"
                   >
-                    <Button>{tContent("demonstration.labels.action")}</Button>
+                    {tContent("demonstration.labels.guideBody")}
+                  </div>
+                  {/*
+                   * O "Fechar" é a ação de MENOR ênfase das três, então abre a
+                   * lista; a primária a fecha. O rodapé empilha ao contrário no
+                   * estreito e alinha à direita no largo — das duas leituras sai
+                   * "Continuar" em cima e à direita.
+                   *
+                   * `DialogClose` próprio, e não o `showCloseButton` do Footer:
+                   * aquele renderiza `outline`, a mesma ênfase do "Voltar".
+                   */}
+                  <DialogFooter>
+                    <DialogClose render={<Button variant="ghost" />}>
+                      {tContent("demonstration.labels.close")}
+                    </DialogClose>
+                    <Button variant="outline">
+                      {tContent("demonstration.labels.back")}
+                    </Button>
+                    <Button>
+                      {tContent("demonstration.labels.continueAction")}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
