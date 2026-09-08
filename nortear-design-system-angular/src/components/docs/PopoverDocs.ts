@@ -231,7 +231,7 @@ const VARIANT_CODE = {
 
       <div class="nds-cluster" data-justify="end" data-spacing="sm">
         <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-        <button ndsPopoverClose ndsButton size="sm">Atualizar</button>
+        <button ndsButton type="submit" size="sm">Atualizar</button>
       </div>
     </form>
   </ng-template>
@@ -441,11 +441,15 @@ const COMPOSITION_CODE = {
               <input ndsInput id="pd-perfil-email" type="email" value="ana@nortear.com.br" />
             </div>
 
+            <!-- A ação primária é submit DO form, não um ndsPopoverClose: um
+                 botão de fechar fora do fluxo de submissão deixa o Enter num
+                 campo sem efeito, e o popover é justamente onde se edita em
+                 linha. Fechar por dentro é papel do "Cancelar". -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <button ndsPopoverClose ndsButton variant="ghost" size="sm">
                 {{ t('demonstration.labels.cancel') }}
               </button>
-              <button ndsPopoverClose ndsButton size="sm">
+              <button ndsButton type="submit" size="sm">
                 {{ t('demonstration.labels.form.submit') }}
               </button>
             </div>

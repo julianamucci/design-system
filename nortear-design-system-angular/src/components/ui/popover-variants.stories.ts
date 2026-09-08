@@ -147,9 +147,12 @@ export const Form: Story = {
               <input ndsInput id="pv-form-email" type="email" value="ana@nortear.com.br" />
             </div>
 
+            <!-- "Atualizar" é submit do form, não ndsPopoverClose: fora do form o
+                 botão fica inerte e o Enter num campo não dispara nada. Fechar
+                 por dentro é papel do "Cancelar", que sai sem salvar. -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-              <button ndsPopoverClose ndsButton size="sm">Atualizar</button>
+              <button ndsButton type="submit" size="sm">Atualizar</button>
             </div>
           </form>
         </ng-template>
