@@ -15,6 +15,7 @@ import {
   waitForClosed,
   close,
 } from './dialog.fixtures';
+import { dialogMediaPreviewSource, dialogProfileEditSource } from './dialog.source';
 
 // Composições do Dialog: arranjos completos que resolvem um caso de uso, não
 // configurações de uma propriedade.
@@ -49,7 +50,10 @@ type Story = StoryObj;
 // chave 'variants.compositions.profileEdit' do conteúdo compartilhado, que
 // antes não descrevia nenhuma delas.
 export const ProfileEdit: Story = {
-  parameters: { covers: ['functional.item2'] },
+  parameters: {
+    covers: ['functional.item2'],
+    docs: { source: { transform: dialogProfileEditSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -120,7 +124,10 @@ export const ProfileEdit: Story = {
 };
 
 export const MediaPreview: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item6'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item6'],
+    docs: { source: { transform: dialogMediaPreviewSource } },
+  },
   render: () => ({
     props: { labels: LABELS, src: IMG_PLACEHOLDER },
     template: `

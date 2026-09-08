@@ -13,6 +13,16 @@ import {
   waitForClosed,
   checkNameAndDescription,
 } from './dialog.fixtures';
+import {
+  dialogConfirmEmailSource,
+  dialogCustomCloseInFooterSource,
+  dialogNoFooterSource,
+  dialogPlaygroundSource,
+  dialogWithDestructiveActionSource,
+  dialogWithFormSource,
+  dialogWithScrollContentSource,
+  dialogWithScrollingOverlaySource,
+} from './dialog.source';
 
 // Dialog não tem prop `variant` nem `size` — o conteúdo compartilhado diz isso
 // com todas as letras. As "variantes" abaixo são composições estruturais
@@ -47,7 +57,14 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    // Reuso declarado, e a exclusão está escrita no topo de `dialog.source.ts`:
+    // esta é a composição canônica, e o `[defaultOpen]="true"` daqui é a captura
+    // do Chromatic, que não entra em snippet. Com os controls no padrão o
+    // Playground publica exatamente este painel, letra por letra.
+    docs: { source: { transform: dialogPlaygroundSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -110,7 +127,10 @@ export const Default: Story = {
 };
 
 export const WithForm: Story = {
-  parameters: { covers: ['visual.item2', 'visual.item4'] },
+  parameters: {
+    covers: ['visual.item2', 'visual.item4'],
+    docs: { source: { transform: dialogWithFormSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -168,7 +188,10 @@ export const WithForm: Story = {
 };
 
 export const WithScrollContent: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: { source: { transform: dialogWithScrollContentSource } },
+  },
   render: () => ({
     props: {
       labels: LABELS,
@@ -250,7 +273,10 @@ export const WithScrollContent: Story = {
 export const WithScrollingOverlay: Story = {
   // A OUTRA rota, e por isso story própria: reusar o nome da de cima é
   // exatamente como as duas circularam sob o mesmo rótulo.
-  parameters: { covers: ['visual.item6'] },
+  parameters: {
+    covers: ['visual.item6'],
+    docs: { source: { transform: dialogWithScrollingOverlaySource } },
+  },
   render: () => ({
     props: {
       labels: LABELS,
@@ -334,7 +360,10 @@ export const WithScrollingOverlay: Story = {
 };
 
 export const NoFooter: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: dialogNoFooterSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -374,7 +403,10 @@ export const NoFooter: Story = {
 };
 
 export const WithDestructiveAction: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: dialogWithDestructiveActionSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -423,7 +455,10 @@ export const WithDestructiveAction: Story = {
 };
 
 export const CustomCloseInFooter: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: dialogCustomCloseInFooterSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -469,7 +504,10 @@ export const CustomCloseInFooter: Story = {
 };
 
 export const ConfirmEmail: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: dialogConfirmEmailSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `

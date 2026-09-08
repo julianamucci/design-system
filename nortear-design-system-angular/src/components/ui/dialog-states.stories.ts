@@ -11,6 +11,12 @@ import {
   waitForOpen,
   waitForClosed,
 } from './dialog.fixtures';
+import {
+  dialogControlledSource,
+  dialogOpenSource,
+  dialogPlaygroundSource,
+  dialogWithCloseButtonHiddenSource,
+} from './dialog.source';
 
 // As configurações que o conteúdo compartilhado descreve. Abrindo e Fechando
 // são transições — quem as verifica é a Playground, que passa pelas duas ao
@@ -40,7 +46,13 @@ export default meta;
 type Story = StoryObj;
 
 export const Closed: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // Reuso declarado, e a exclusão está escrita no topo de `dialog.source.ts`:
+    // fechado é o PADRÃO do componente, e esta story não escreve prop nenhuma —
+    // o painel que o Playground publica com os controls no padrão é este mesmo.
+    docs: { source: { transform: dialogPlaygroundSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -85,7 +97,10 @@ export const Closed: Story = {
 };
 
 export const Open: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: dialogOpenSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -131,7 +146,10 @@ export const Open: Story = {
 };
 
 export const WithCloseButtonHidden: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: dialogWithCloseButtonHiddenSource } },
+  },
   render: () => ({
     props: { labels: LABELS },
     template: `
@@ -181,7 +199,10 @@ export const WithCloseButtonHidden: Story = {
 const spyControlled = fn();
 
 export const Controlled: Story = {
-  parameters: { covers: ['functional.item7'] },
+  parameters: {
+    covers: ['functional.item7'],
+    docs: { source: { transform: dialogControlledSource } },
+  },
   render: () => ({
     props: { labels: LABELS, isOpen: false, onOpenChange: spyControlled },
     template: `
