@@ -2421,7 +2421,23 @@ function auditDemonstrationLabels(slug) {
     const espectro = adotaram
       .map((st) => `${st}=${porStack[st].size}`)
       .join(' · ');
-    const nunca = chaves.filter((k) => adotaram.every((st) => !porStack[st].has(k)));
+    // A comparação de assinatura acima olha só a DOCS PAGE, e está certa: o que
+    // se compara é a demonstração. Mas "chave que ninguém consome" é outra
+    // pergunta, e respondê-la com o mesmo dado é errado — story também consome.
+    //
+    // Medido em 2026-09-08, na primeira execução desta regra: ela declarou
+    // `fieldUsername` órfã, e a chave é lida pelas stories de composição do
+    // react e do angular. Eu ia apagá-la. O portão novo errou na estreia, pelo
+    // mesmo vício que ele existe para denunciar — afirmar a partir do que a
+    // varredura alcança, em vez do que existe.
+    const consumidaEmQualquerLugar = (k) => STACKS.some((st) => {
+      const { all } = filesForSlug(slug, st);
+      return all.some((file) => {
+        const bruto = readFile(file);
+        return bruto && stripComments(bruto).includes('demonstration.labels.' + k);
+      });
+    });
+    const nunca = chaves.filter((k) => !consumidaEmQualquerLugar(k));
     return [{
       category: 'quality', severity: 'medium', slug, stack: adotaram[0],
       file: 'docs/' + slug, rule: 'demonstration_labels_sem_consenso',
