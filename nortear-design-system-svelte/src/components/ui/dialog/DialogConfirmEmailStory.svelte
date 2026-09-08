@@ -12,6 +12,13 @@
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
+  import { useTranslation } from '@/lib/i18n';
+  import dialogTranslations from '@shared/content/dialog/translations.json';
+
+  // O 'Cancelar' vem do conteúdo compartilhado. Os demais rótulos deste fluxo
+  // (gatilho, título, descrição, campo e ação) ainda não têm chave em
+  // conteudo compartilhado do dialog — ver o relato da revisão.
+  const { t } = useTranslation(dialogTranslations);
 
   interface Props {
     open?: boolean;
@@ -52,7 +59,7 @@
     <DialogFooter>
       <DialogClose>
         {#snippet child({ props })}
-          <Button variant="outline" {...props}>Cancelar</Button>
+          <Button variant="outline" {...props}>{t('demonstration.labels.cancel')}</Button>
         {/snippet}
       </DialogClose>
       <Button onclick={handleAction}>Enviar confirmação</Button>

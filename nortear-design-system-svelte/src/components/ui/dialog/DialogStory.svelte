@@ -12,6 +12,13 @@
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
+  import { useTranslation } from '@/lib/i18n';
+  import dialogTranslations from '@shared/content/dialog/translations.json';
+
+  // Os rótulos padrão saem do conteúdo compartilhado, e não de literais em
+  // pt-BR: cravados aqui, a story mostrava português com a barra de idiomas em
+  // inglês ou espanhol, e o mesmo texto vivia em cinco arquivos desta stack.
+  const { t } = useTranslation(dialogTranslations);
 
   type Variant =
     | 'default'
@@ -37,11 +44,11 @@
 
   let {
     open = $bindable(false),
-    triggerLabel = 'Editar perfil',
-    title = 'Editar perfil',
-    description = 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-    actionLabel = 'Salvar alterações',
-    cancelLabel = 'Cancelar',
+    triggerLabel = t('demonstration.labels.triggerLabel'),
+    title = t('demonstration.labels.title'),
+    description = t('demonstration.labels.description'),
+    actionLabel = t('demonstration.labels.action'),
+    cancelLabel = t('demonstration.labels.cancel'),
     showCloseButton = true,
     variant = 'default',
     onAction,

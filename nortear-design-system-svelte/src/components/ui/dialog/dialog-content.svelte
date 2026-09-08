@@ -17,12 +17,24 @@
 		portalProps,
 		children,
 		showCloseButton = true,
+		closeLabel = "Fechar",
 		scroll = false,
 		...restProps
 	}: WithoutChildrenOrChild<DialogPrimitive.ContentProps> & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof DialogPortal>>;
 		children: Snippet;
 		showCloseButton?: boolean;
+		/**
+		 * Nome acessível do X do canto. Vai num `<span class="nds-sr-only">` e não
+		 * num `aria-label`: é o mecanismo que o conteúdo compartilhado documenta, e
+		 * texto real sobrevive à tradução automática da página, que ignora
+		 * `aria-label`.
+		 *
+		 * A prop existe porque o rótulo estava CRAVADO em português aqui dentro:
+		 * quem consome o design system noutro idioma tinha de reescrever o
+		 * primitivo para trocar uma palavra. O default preserva todo call site.
+		 */
+		closeLabel?: string;
 		/**
 		 * Rota B — o painel sai do centro fixo e entra no fluxo do overlay, que
 		 * passa a ser quem rola. O cabeçalho sobe junto com o conteúdo.
@@ -61,7 +73,7 @@
 				{#snippet child({ props })}
 					<Button variant="ghost" class="nds-dialog-close-position" size="icon-sm" {...props}>
 						<XIcon  />
-						<span class="nds-sr-only">Fechar</span>
+						<span class="nds-sr-only">{closeLabel}</span>
 					</Button>
 				{/snippet}
 			</DialogPrimitive.Close>

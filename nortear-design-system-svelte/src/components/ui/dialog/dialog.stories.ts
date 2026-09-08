@@ -17,7 +17,16 @@ import {
   panel,
 } from './dialog.fixtures';
 
+import { useTranslation } from '@/lib/i18n';
+import dialogTranslations from '@shared/content/dialog/translations.json';
+
 import { figmaDesign } from '@shared/figma/design-links';
+// Os rótulos genéricos do painel saem do conteúdo compartilhado, como nas
+// outras stacks: cravados aqui em pt-BR, a story mostrava português com a
+// barra de idiomas em outro idioma, e o mesmo texto vivia repetido em cinco
+// arquivos desta stack.
+const { t } = useTranslation(dialogTranslations);
+
 const meta: Meta = {
   title: 'Components/Overlay/Dialog',
   component: Dialog,
@@ -60,7 +69,7 @@ const meta: Meta = {
   args: {
     open: false,
     showCloseButton: true,
-    triggerLabel: 'Editar perfil',
+    triggerLabel: t('demonstration.labels.triggerLabel'),
     onAction: fn(),
     onCancel: fn(),
   },

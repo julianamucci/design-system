@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { expect, userEvent, within } from 'storybook/test';
+import { expect, userEvent } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
 import DialogConfirmEmailStory from './DialogConfirmEmailStory.svelte';
 import {
@@ -19,7 +19,16 @@ import {
   waitForClosed,
 } from './dialog.fixtures';
 
+import { useTranslation } from '@/lib/i18n';
+import dialogTranslations from '@shared/content/dialog/translations.json';
+
 import { figmaDesign } from '@shared/figma/design-links';
+// Os rótulos genéricos do painel saem do conteúdo compartilhado, como nas
+// outras stacks. Os rótulos PRÓPRIOS de cada composição (termos, contrato,
+// convite) seguem literais: não existe chave para eles no conteúdo
+// compartilhado — está no relato da revisão.
+const { t } = useTranslation(dialogTranslations);
+
 const meta: Meta = {
   title: 'Components/Overlay/Dialog/Variants',
   component: DialogStory,
@@ -54,11 +63,11 @@ export const Default: Story = {
   args: {
     open: true,
     variant: 'default',
-    triggerLabel: 'Editar perfil',
-    title: 'Editar perfil',
-    description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-    actionLabel: 'Salvar alterações',
-    cancelLabel: 'Cancelar',
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.action'),
+    cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ step }) => {
     const p = await waitForOpen();
@@ -113,7 +122,7 @@ export const WithForm: Story = {
     title: 'Editar dados pessoais',
     description: 'Atualize seu nome e e-mail.',
     actionLabel: 'Salvar',
-    cancelLabel: 'Cancelar',
+    cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ step }) => {
     const p = await waitForOpen();
@@ -303,7 +312,7 @@ export const WithDestructiveAction: Story = {
     title: 'Remover item da lista',
     description: 'Você pode adicioná-lo novamente depois, mas perderá os ajustes feitos.',
     actionLabel: 'Remover item',
-    cancelLabel: 'Cancelar',
+    cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ step }) => {
     const p = await waitForOpen();
@@ -344,20 +353,29 @@ export const CustomCloseInFooter: Story = {
     title: 'Convidar para o time',
     description: 'Envie um convite por e-mail. O destinatário poderá aceitar ou recusar.',
     actionLabel: 'Enviar convite',
-    cancelLabel: 'Cancelar',
+    cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ canvasElement, step }) => {
     const p = await waitForOpen();
 
+    // Pelo CONTRATO de markup e não pelo texto: o rótulo do Cancelar agora sai
+    // do conteúdo compartilhado, então uma consulta por /Cancelar/i reprovaria
+    // com a barra de idiomas em inglês ou espanhol sem nada de errado no
+    // componente. É a mesma regra que o `dialog.fixtures.ts` declara no topo. A
+    // saída é o PRIMEIRO botão do rodapé — a ordem que a folha exige.
+    const footerCloseButton = (): HTMLElement =>
+      p
+        .querySelector<HTMLElement>('[data-slot="dialog-footer"]')!
+        .querySelectorAll<HTMLElement>('button')[0];
+
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(cantoButtonClose(p)).toBeNull();
-      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await expect(within(footer).getByRole('button', { name: /Cancelar/i })).toBeVisible();
+      await expect(footerCloseButton()).toBeVisible();
+      await expect(footerCloseButton()).toHaveAttribute('data-slot', 'dialog-close');
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
-      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await userEvent.click(within(footer).getByRole('button', { name: /Cancelar/i }));
+      await userEvent.click(footerCloseButton());
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();

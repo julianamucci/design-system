@@ -13,7 +13,15 @@ import {
   panel,
 } from './dialog.fixtures';
 
+import { useTranslation } from '@/lib/i18n';
+import dialogTranslations from '@shared/content/dialog/translations.json';
+
 import { figmaDesign } from '@shared/figma/design-links';
+// Os rótulos genéricos do painel saem do conteúdo compartilhado, como nas
+// outras stacks. Os rótulos PRÓPRIOS de cada estado (convite, estado externo)
+// seguem literais: não existe chave para eles no conteúdo compartilhado.
+const { t } = useTranslation(dialogTranslations);
+
 const meta: Meta = {
   title: 'Components/Overlay/Dialog/States',
   component: DialogStory,
@@ -45,11 +53,11 @@ export const Closed: Story = {
   },
   args: {
     open: false,
-    triggerLabel: 'Editar perfil',
-    title: 'Editar perfil',
-    description: 'Atualize suas informações pessoais.',
-    actionLabel: 'Salvar',
-    cancelLabel: 'Cancelar',
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.action'),
+    cancelLabel: t('demonstration.labels.cancel'),
   },
   // Esta story não interage com nada: é aqui que a leitura do estado de
   // MONTAGEM vale, porque nenhum replay pode ter mudado o que ela observa.
@@ -79,11 +87,11 @@ export const Open: Story = {
   },
   args: {
     open: true,
-    triggerLabel: 'Editar perfil',
-    title: 'Editar perfil',
-    description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-    actionLabel: 'Salvar alterações',
-    cancelLabel: 'Cancelar',
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.action'),
+    cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ step }) => {
     // `waitForOpen` e não o helper idempotente: esta story tem que provar que
@@ -123,7 +131,7 @@ export const WithCloseButtonHidden: Story = {
     title: 'Convidar para o time',
     description: 'Envie um convite por e-mail.',
     actionLabel: 'Enviar convite',
-    cancelLabel: 'Cancelar',
+    cancelLabel: t('demonstration.labels.cancel'),
   },
   play: async ({ canvasElement, step }) => {
     const p = await waitForOpen();
@@ -162,7 +170,7 @@ export const Controlled: Story = {
     title: 'Controlado pelo pai',
     description: 'Este diálogo é comandado por estado externo via bind:open.',
     actionLabel: 'Confirmar',
-    cancelLabel: 'Cancelar',
+    cancelLabel: t('demonstration.labels.cancel'),
     onCancel: spyCancelar,
   },
   play: async ({ canvasElement, step }) => {

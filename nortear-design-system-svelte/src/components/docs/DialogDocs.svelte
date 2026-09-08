@@ -28,7 +28,29 @@
   import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
-  const { tStore } = useTranslation(dialogTranslations);
+  // As duas chaves de `closeLabel` são override porque a prop nasceu POR STACK,
+  // para tirar de dentro do primitivo o rótulo que estava cravado em pt-BR.
+  // `props.table.closeLabel` descreve a prop na tabela; `demonstration.labels.close`
+  // é o rótulo que os diálogos VIVOS desta página passam ao botão de fechar —
+  // sem ele, o X do canto anunciaria "Fechar" para quem lê a página em inglês
+  // ou em espanhol. Nome de prop e rótulo, nunca um `*Code`.
+  const { tStore } = useTranslation(dialogTranslations, {
+    'pt-BR': {
+      'props.table.closeLabel':
+        'Nome acessível do botão de fechar. Vai como texto para leitor de tela, não como atributo.',
+      'demonstration.labels.close': 'Fechar',
+    },
+    en: {
+      'props.table.closeLabel':
+        'Accessible name of the close button. Rendered as screen-reader text, not as an attribute.',
+      'demonstration.labels.close': 'Close',
+    },
+    es: {
+      'props.table.closeLabel':
+        'Nombre accesible del botón de cerrar. Se renderiza como texto para lector de pantalla, no como atributo.',
+      'demonstration.labels.close': 'Cerrar',
+    },
+  });
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
 
@@ -240,8 +262,17 @@ interface DialogProps {
 // DialogContent
 interface DialogContentProps extends BitsContentProps {
   showCloseButton?: boolean;
+  closeLabel?: string;
   class?: string;
   children: Snippet;
+}
+
+// DialogFooter
+interface DialogFooterProps {
+  showCloseButton?: boolean;
+  closeLabel?: string;
+  class?: string;
+  children?: Snippet;
 }
 
 // DialogTrigger / DialogClose
@@ -275,11 +306,23 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
             <Button {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
           {/snippet}
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
           <DialogHeader>
             <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
             <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
           </DialogHeader>
+          <!--
+            `demonstration.labels.footerNote` existe nos três idiomas do
+            conteúdo compartilhado e esta stack não a lia em lugar nenhum: o
+            diálogo da demonstração ia do cabeçalho direto ao rodapé, sem
+            corpo. A posição é a do Vanilla, que é a referência cross-stack —
+            o corpo do diálogo, em texto esmaecido, entre cabeçalho e rodapé.
+          -->
+          <div class="nds-dialog-body" data-slot="dialog-body">
+            <p class="nds-text-body nds-text-muted-foreground">
+              {$tStore('demonstration.labels.footerNote')}
+            </p>
+          </div>
           <DialogFooter>
             <DialogClose>
               {#snippet child({ props })}
@@ -406,16 +449,16 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
-          <DialogTitle>Editar perfil</DialogTitle>
-          <DialogDescription>Atualize seus dados. As mudanças são salvas ao confirmar.</DialogDescription>
+          <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
+          <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button>Salvar alterações</Button>
+          <Button>{$tStore('demonstration.labels.action')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -425,14 +468,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Atenção</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Atenção</DialogTitle>
           <DialogDescription>&nbsp;</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
           <Button>OK</Button>
         </DialogFooter>
@@ -444,16 +487,16 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
-          <DialogTitle>Editar perfil</DialogTitle>
-          <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+          <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
+          <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button>Salvar alterações</Button>
+          <Button>{$tStore('demonstration.labels.action')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -463,14 +506,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Excluir conta</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Excluir conta</DialogTitle>
           <DialogDescription>Esta ação não pode ser desfeita.</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
           <Button variant="destructive">Excluir conta</Button>
         </DialogFooter>
@@ -531,16 +574,16 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
-          <DialogTitle>Editar perfil</DialogTitle>
-          <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+          <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
+          <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
-          <Button>Salvar alterações</Button>
+          <Button>{$tStore('demonstration.labels.action')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -550,7 +593,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Editar dados</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Editar dados pessoais</DialogTitle>
           <DialogDescription>Atualize seu nome e e-mail.</DialogDescription>
@@ -563,7 +606,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         </form>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
           <Button>Salvar</Button>
         </DialogFooter>
@@ -575,7 +618,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Termos de uso</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Termos de uso</DialogTitle>
           <DialogDescription>Leia atentamente antes de aceitar.</DialogDescription>
@@ -616,7 +659,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
            overlay que rola — o cabeçalho sobe junto com o conteúdo. Prop
            booleana, e não componente próprio, porque o Content desta stack já
            monta o overlay. -->
-      <DialogContent scroll>
+      <DialogContent scroll closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Contrato de prestação</DialogTitle>
           <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>
@@ -647,7 +690,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Sobre este produto</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Sobre este produto</DialogTitle>
           <DialogDescription>Plataforma de design system multi-stack.</DialogDescription>
@@ -660,14 +703,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Remover item da lista</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Remover item da lista</DialogTitle>
           <DialogDescription>Você pode adicioná-lo novamente depois.</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
           <Button variant="destructive">Remover item</Button>
         </DialogFooter>
@@ -679,14 +722,14 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Convidar para o time</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent showCloseButton={false}>
+      <DialogContent showCloseButton={false} closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Convidar para o time</DialogTitle>
           <DialogDescription>Envie um convite por e-mail.</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
           <Button>Enviar convite</Button>
         </DialogFooter>
@@ -699,7 +742,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Confirmar e-mail</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Confirmar e-mail</DialogTitle>
           <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
@@ -707,7 +750,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <p class="nds-text-body">Vamos enviar um link para maria@exemplo.com.</p>
         <DialogFooter>
           <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>Cancelar</Button>{/snippet}
+            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
           </DialogClose>
           <Button>Enviar link</Button>
         </DialogFooter>
@@ -775,12 +818,12 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {#snippet compProfileEdit()}
     <Dialog>
       <DialogTrigger>
-        {#snippet child({ props })}<Button variant="outline" {...props}>Editar perfil</Button>{/snippet}
+        {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
-          <DialogTitle>Editar perfil</DialogTitle>
-          <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
+          <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
+          <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
         </DialogHeader>
         <!-- O rodapé fica DENTRO do form: é o que faz o Enter em qualquer campo
              disparar a ação primária, e é o que separa esta composição de um
@@ -792,9 +835,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           </div>
           <DialogFooter>
             <DialogClose>
-              {#snippet child({ props })}<Button type="button" variant="outline" {...props}>Cancelar</Button>{/snippet}
+              {#snippet child({ props })}<Button type="button" variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </DialogClose>
-            <Button type="submit">Salvar alterações</Button>
+            <Button type="submit">{$tStore('demonstration.labels.action')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>
@@ -806,7 +849,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <DialogTrigger>
         {#snippet child({ props })}<Button variant="outline" {...props}>Capa do post</Button>{/snippet}
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
         <DialogHeader>
           <DialogTitle>Capa do post</DialogTitle>
           <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>
@@ -854,6 +897,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         cols: propsTableCols,
         items: [
           { name: 'showCloseButton', type: 'boolean', defaultValue: 'true', required: 'Não', description: $tStore('props.table.showCloseButtonContent') },
+          { name: 'closeLabel',      type: 'string',  defaultValue: "'Fechar'", required: 'Não', description: toPlainText($tStore('props.table.closeLabel')) },
           { name: 'class',           type: 'string',  defaultValue: '—',    required: 'Não', description: $tStore('props.table.className')              },
           { name: 'children',        type: 'Snippet', defaultValue: '—',    required: 'Sim', description: $tStore('props.table.children')               },
         ],
@@ -863,6 +907,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         cols: propsTableCols,
         items: [
           { name: 'showCloseButton', type: 'boolean', defaultValue: 'false', required: 'Não', description: $tStore('props.table.showCloseButtonFooter') },
+          { name: 'closeLabel',      type: 'string',  defaultValue: "'Fechar'", required: 'Não', description: toPlainText($tStore('props.table.closeLabel')) },
           { name: 'class',           type: 'string',  defaultValue: '—',     required: 'Não', description: $tStore('props.table.className')             },
         ],
       },
@@ -1000,7 +1045,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5].map((i) => ({
+      items: [1, 2, 3, 4, 5, 6].map((i) => ({
         story: $tStore(`testes.visual.item${i}.story`),
         priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
       })),

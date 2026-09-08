@@ -12,6 +12,12 @@
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
+  import { useTranslation } from '@/lib/i18n';
+  import dialogTranslations from '@shared/content/dialog/translations.json';
+
+  // Rótulos do conteúdo compartilhado: cravados em pt-BR, a story mostrava
+  // português com a barra de idiomas em inglês ou espanhol.
+  const { t } = useTranslation(dialogTranslations);
 
   interface Props {
     open?: boolean;
@@ -21,7 +27,7 @@
 
   let { open = $bindable(true), onOpenChange, onAction }: Props = $props();
 
-  const title = 'Editar perfil';
+  const title = t('demonstration.labels.title');
 
   function handleOpenChange(value: boolean) {
     onOpenChange?.(value);
@@ -36,14 +42,14 @@
 <Dialog bind:open onOpenChange={handleOpenChange}>
   <DialogTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" {...props}>Editar perfil</Button>
+      <Button variant="outline" {...props}>{t('demonstration.labels.triggerLabel')}</Button>
     {/snippet}
   </DialogTrigger>
   <DialogContent class="nds-sm-max-w-md">
     <DialogHeader>
       <DialogTitle>{title}</DialogTitle>
       <DialogDescription>
-        Atualize suas informações pessoais. As mudanças são salvas ao confirmar.
+        {t('demonstration.labels.description')}
       </DialogDescription>
     </DialogHeader>
     <form class="nds-grid" data-spacing="sm" onsubmit={handleSubmit}>
@@ -64,10 +70,10 @@
       <DialogFooter>
         <DialogClose>
           {#snippet child({ props })}
-            <Button type="button" variant="outline" {...props}>Cancelar</Button>
+            <Button type="button" variant="outline" {...props}>{t('demonstration.labels.cancel')}</Button>
           {/snippet}
         </DialogClose>
-        <Button type="submit">Salvar alterações</Button>
+        <Button type="submit">{t('demonstration.labels.action')}</Button>
       </DialogFooter>
     </form>
   </DialogContent>
