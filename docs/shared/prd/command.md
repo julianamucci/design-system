@@ -202,6 +202,27 @@ O `cmdk` gera o cabeçalho de grupo com o atributo `[cmdk-group-heading]`, não 
 uma classe — por isso a folha estiliza o cabeçalho **por atributo** além da
 classe. Não é preferência: é o que a lib emite.
 
+### Peças, por stack
+
+Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
+seletores do código — não transcrito da guideline, que é a fonte aposentada.
+
+| stack | peças |
+|---|---|
+| react | `Command`, `CommandDialog`, `CommandEmpty`, `CommandGroup`, `CommandInput`, `CommandItem`, `CommandList`, `CommandSeparator`, `CommandShortcut` |
+| vue | `Command`, `CommandDialog`, `CommandEmpty`, `CommandGroup`, `CommandInput`, `CommandItem`, `CommandList`, `CommandSeparator`, `CommandShortcut` |
+| svelte | `Command`, `CommandDialog`, `CommandEmpty`, `CommandGroup`, `CommandInput`, `CommandItem`, `CommandLinkItem`, `CommandList`, `CommandLoading`, `CommandSeparator`, `CommandShortcut` |
+| vanilla | `createCommand` |
+| angular | `div[ndsCommandEmpty]`, `div[ndsCommandGroup]`, `div[ndsCommandItem]`, `div[ndsCommandList]`, `div[ndsCommandSeparator]`, `input[ndsCommandInput]`, `nds-command`, `span[ndsCommandShortcut]` |
+
+O índice do svelte também reexporta as formas curtas — `Dialog`, `Empty`, `Group`, `Input`, `Item`, `LinkItem`, `List`, `Loading`, `Root`, `Separator`, `Shortcut` —,
+para quem importa o namespace inteiro. As stories usam a forma longa.
+
+No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
+semântica, não só o estilo. Onde há dois seletores para a mesma peça
+(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
+cabeçalho diferentes sem pular hierarquia.
+
 ## 8. Acessibilidade
 
 **Atributos**: o campo mantém o foco e aponta o item ativo por

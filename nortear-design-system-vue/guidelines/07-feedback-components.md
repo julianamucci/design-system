@@ -75,13 +75,18 @@ Alert (variant)
 
 ---
 
-## Alert Dialog
+## Componentes de outra categoria
 
-> **Documentação completa em `10-overlay-components.md`** — o AlertDialog é um componente de overlay e está documentado junto com Dialog, Sheet, Drawer e os demais overlays.
+O **AlertDialog** é um overlay, e mora em [`10-overlay-components.md`](10-overlay-components.md)
+— as regras da categoria — e em
+[`docs/shared/prd/alert-dialog.md`](../../docs/shared/prd/alert-dialog.md), que é
+onde estão a estrutura, os tokens, as decisões e os nomes de peça das cinco
+stacks.
 
-**Resumo de uso**: modal de confirmação para ações destrutivas ou irreversíveis. Diferencia-se do `Dialog` por não ter botão X de fechar — exige resposta explícita do usuário (confirmar ou cancelar).
-
----
+Ele aparece aqui porque quem procura por "confirmação" pensa em feedback: é
+modal de decisão obrigatória para ação destrutiva ou irreversível, e o que o
+separa do Dialog é não ter botão de fechar no canto — a saída é o par Cancelar +
+Ação, sempre explícita.
 
 ## Badge
 

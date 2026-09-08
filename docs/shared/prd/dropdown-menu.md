@@ -207,6 +207,42 @@ tokens.
 Repare no `align`: `start` aqui, `center` no popover e no tooltip. Menu alinha
 pela borda do gatilho porque a lista se lê de cima para baixo, encostada.
 
+### Peças, por stack
+
+Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
+seletores do código — não transcrito da guideline, que é a fonte aposentada.
+
+**DropdownMenu**
+
+| stack | peças |
+|---|---|
+| react | `DropdownMenu`, `DropdownMenuCheckboxItem`, `DropdownMenuContent`, `DropdownMenuGroup`, `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuRadioGroup`, `DropdownMenuRadioItem`, `DropdownMenuSeparator`, `DropdownMenuShortcut`, `DropdownMenuSub`, `DropdownMenuSubContent`, `DropdownMenuSubTrigger`, `DropdownMenuTrigger` |
+| vue | `DropdownMenu`, `DropdownMenuCheckboxItem`, `DropdownMenuContent`, `DropdownMenuGroup`, `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuPortal`, `DropdownMenuRadioGroup`, `DropdownMenuRadioItem`, `DropdownMenuSeparator`, `DropdownMenuShortcut`, `DropdownMenuSub`, `DropdownMenuSubContent`, `DropdownMenuSubTrigger`, `DropdownMenuTrigger` |
+| svelte | `DropdownMenu`, `DropdownMenuCheckboxItem`, `DropdownMenuContent`, `DropdownMenuGroup`, `DropdownMenuGroupHeading`, `DropdownMenuItem`, `DropdownMenuLabel`, `DropdownMenuPortal`, `DropdownMenuRadioGroup`, `DropdownMenuRadioItem`, `DropdownMenuSeparator`, `DropdownMenuShortcut`, `DropdownMenuSub`, `DropdownMenuSubContent`, `DropdownMenuSubTrigger`, `DropdownMenuTrigger` |
+| vanilla | `createDropdownMenu` |
+| angular | `a[ndsDropdownMenuLinkItem]`, `button[ndsDropdownMenuTrigger]`, `div[ndsDropdownMenuCheckboxItem]`, `div[ndsDropdownMenuGroup]`, `div[ndsDropdownMenuItem]`, `div[ndsDropdownMenuLabel]`, `div[ndsDropdownMenuRadioGroup]`, `div[ndsDropdownMenuRadioItem]`, `div[ndsDropdownMenuSeparator]`, `div[ndsDropdownMenuSubTrigger]`, `nds-dropdown-menu, nds-dropdown-menu-sub`, `ng-template[ndsDropdownMenuContent], ng-template[ndsDropdownMenuSubContent]`, `span[ndsDropdownMenuShortcut]`, `svg[ndsDropdownMenuIcon]` |
+
+O índice do svelte também reexporta as formas curtas — `CheckboxItem`, `Content`, `Group`, `GroupHeading`, `Item`, `Label`, `Portal`, `RadioGroup`, `RadioItem`, `Root`, `Separator`, `Shortcut`, `Sub`, `SubContent`, `SubTrigger`, `Trigger` —,
+para quem importa o namespace inteiro. As stories usam a forma longa.
+
+**ContextMenu**
+
+| stack | peças |
+|---|---|
+| react | `ContextMenu`, `ContextMenuCheckboxItem`, `ContextMenuContent`, `ContextMenuGroup`, `ContextMenuItem`, `ContextMenuLabel`, `ContextMenuRadioGroup`, `ContextMenuRadioItem`, `ContextMenuSeparator`, `ContextMenuShortcut`, `ContextMenuSub`, `ContextMenuSubContent`, `ContextMenuSubTrigger`, `ContextMenuTrigger` |
+| vue | `ContextMenu`, `ContextMenuCheckboxItem`, `ContextMenuContent`, `ContextMenuGroup`, `ContextMenuItem`, `ContextMenuLabel`, `ContextMenuRadioGroup`, `ContextMenuRadioItem`, `ContextMenuSeparator`, `ContextMenuShortcut`, `ContextMenuSub`, `ContextMenuSubContent`, `ContextMenuSubTrigger`, `ContextMenuTrigger` |
+| svelte | `ContextMenu`, `ContextMenuCheckboxItem`, `ContextMenuContent`, `ContextMenuGroup`, `ContextMenuGroupHeading`, `ContextMenuItem`, `ContextMenuLabel`, `ContextMenuRadioGroup`, `ContextMenuRadioItem`, `ContextMenuSeparator`, `ContextMenuShortcut`, `ContextMenuSub`, `ContextMenuSubContent`, `ContextMenuSubTrigger`, `ContextMenuTrigger` |
+| vanilla | `createContextMenu` |
+| angular | `div[ndsContextMenuCheckboxItem]`, `div[ndsContextMenuGroup]`, `div[ndsContextMenuItem]`, `div[ndsContextMenuLabel]`, `div[ndsContextMenuRadioGroup]`, `div[ndsContextMenuRadioItem]`, `div[ndsContextMenuSeparator]`, `div[ndsContextMenuSubTrigger]`, `div[ndsContextMenuSub]`, `div[ndsContextMenuTrigger]`, `div[ndsContextMenu]`, `ng-template[ndsContextMenuContent], ng-template[ndsContextMenuSubContent]`, `span[ndsContextMenuShortcut]`, `svg[ndsContextMenuIcon]` |
+
+O índice do svelte também reexporta as formas curtas — `CheckboxItem`, `Content`, `Group`, `GroupHeading`, `Item`, `Label`, `RadioGroup`, `RadioItem`, `Root`, `Separator`, `Shortcut`, `Sub`, `SubContent`, `SubTrigger`, `Trigger` —,
+para quem importa o namespace inteiro. As stories usam a forma longa.
+
+No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
+semântica, não só o estilo. Onde há dois seletores para a mesma peça
+(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
+cabeçalho diferentes sem pular hierarquia.
+
 ## 8. Acessibilidade
 
 **Papéis**: `menu` no painel; `menuitem`, `menuitemcheckbox` e `menuitemradio`

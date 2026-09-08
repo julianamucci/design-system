@@ -173,6 +173,27 @@ Não há estado de tamanho nem de tom (D5).
 | `onClick` | callback da confirmação ou do cancelamento; o diálogo fecha depois de disparar |
 | `className` | classes adicionais |
 
+### Peças, por stack
+
+Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
+seletores do código — não transcrito da guideline, que é a fonte aposentada.
+
+| stack | peças |
+|---|---|
+| react | `AlertDialog`, `AlertDialogAction`, `AlertDialogCancel`, `AlertDialogContent`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogHeader`, `AlertDialogMedia`, `AlertDialogOverlay`, `AlertDialogPortal`, `AlertDialogTitle`, `AlertDialogTrigger` |
+| vue | `AlertDialog`, `AlertDialogAction`, `AlertDialogCancel`, `AlertDialogContent`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogHeader`, `AlertDialogMedia`, `AlertDialogTitle`, `AlertDialogTrigger` |
+| svelte | `AlertDialog`, `AlertDialogAction`, `AlertDialogCancel`, `AlertDialogContent`, `AlertDialogDescription`, `AlertDialogFooter`, `AlertDialogHeader`, `AlertDialogMedia`, `AlertDialogOverlay`, `AlertDialogPortal`, `AlertDialogTitle`, `AlertDialogTrigger` |
+| vanilla | `createAlertDialog`, `createAlertDialogMedia` |
+| angular | `button[ndsAlertDialogAction]`, `button[ndsAlertDialogCancel]`, `button[ndsAlertDialogTrigger]`, `div[ndsAlertDialogFooter]`, `div[ndsAlertDialogHeader]`, `div[ndsAlertDialogMedia]`, `h2[ndsAlertDialogTitle], h3[ndsAlertDialogTitle]`, `nds-alert-dialog`, `ng-template[ndsAlertDialogContent]`, `p[ndsAlertDialogDescription]` |
+
+O índice do svelte também reexporta as formas curtas — `Action`, `Cancel`, `Content`, `Description`, `Footer`, `Header`, `Media`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
+para quem importa o namespace inteiro. As stories usam a forma longa.
+
+No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
+semântica, não só o estilo. Onde há dois seletores para a mesma peça
+(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
+cabeçalho diferentes sem pular hierarquia.
+
 ## 8. Acessibilidade
 
 **Atributos**: `role="alertdialog"`, `aria-labelledby` sempre presente (o título),

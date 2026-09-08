@@ -230,6 +230,27 @@ Forma de API não tem fonte de verdade — cada lib tem a sua.
 | angular | `modal` não é booleano na lib: o `radix-ng` aceita a string `'trap-focus'`, e o wrapper traduz |
 | svelte | a lib não tem `modal`; o mecanismo é `trapFocus` + `preventScroll` no Content |
 
+### Peças, por stack
+
+Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
+seletores do código — não transcrito da guideline, que é a fonte aposentada.
+
+| stack | peças |
+|---|---|
+| react | `Popover`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverTitle`, `PopoverTrigger` |
+| vue | `Popover`, `PopoverAnchor`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverTitle`, `PopoverTrigger` |
+| svelte | `Popover`, `PopoverClose`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverPortal`, `PopoverTitle`, `PopoverTrigger` |
+| vanilla | `createPopover`, `createPopoverDescription`, `createPopoverHeader`, `createPopoverTitle` |
+| angular | `[ndsPopoverDescription]`, `[ndsPopoverTitle]`, `button[ndsPopoverClose]`, `button[ndsPopoverTrigger]`, `div[ndsPopoverHeader]`, `div[ndsPopover]`, `ng-template[ndsPopoverContent]` |
+
+O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `Description`, `Header`, `Portal`, `Root`, `Title`, `Trigger` —,
+para quem importa o namespace inteiro. As stories usam a forma longa.
+
+No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
+semântica, não só o estilo. Onde há dois seletores para a mesma peça
+(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
+cabeçalho diferentes sem pular hierarquia.
+
 ## 8. Acessibilidade
 
 **Atributos.** Painel: `role="dialog"`, mais `aria-labelledby` **ou** `aria-label`

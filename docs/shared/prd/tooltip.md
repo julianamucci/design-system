@@ -171,6 +171,27 @@ acima do que ele descreve; painel nasce abaixo do que o abriu.
 | react, angular | nomeiam o positioner; vue e svelte usam wrapper anônimo da lib |
 | angular | a lib projeta um `<svg>` dentro da seta (D3) |
 
+### Peças, por stack
+
+Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
+seletores do código — não transcrito da guideline, que é a fonte aposentada.
+
+| stack | peças |
+|---|---|
+| react | `Tooltip`, `TooltipContent`, `TooltipProvider`, `TooltipTrigger` |
+| vue | `Tooltip`, `TooltipContent`, `TooltipProvider`, `TooltipTrigger` |
+| svelte | `Tooltip`, `TooltipContent`, `TooltipPortal`, `TooltipProvider`, `TooltipTrigger` |
+| vanilla | `createTooltip`, `createTooltipProvider` |
+| angular | `[ndsTooltipProvider]`, `[ndsTooltip]`, `button[ndsTooltipTrigger]`, `ng-template[ndsTooltipContent]` |
+
+O índice do svelte também reexporta as formas curtas — `Content`, `Portal`, `Provider`, `Root`, `Trigger` —,
+para quem importa o namespace inteiro. As stories usam a forma longa.
+
+No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
+semântica, não só o estilo. Onde há dois seletores para a mesma peça
+(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
+cabeçalho diferentes sem pular hierarquia.
+
 ## 8. Acessibilidade
 
 **Atributos**: `role="tooltip"` no balão; `aria-describedby` no gatilho.

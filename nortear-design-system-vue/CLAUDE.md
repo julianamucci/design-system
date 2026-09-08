@@ -12,6 +12,7 @@ Siga estritamente as regras em `guidelines/RULES.md` antes de qualquer tarefa.
 
 Para detalhes de implementação de componentes:
 - `guidelines/04-layout-components.md` a `guidelines/10-overlay-components.md`
+- **`../docs/shared/prd/<slug>.md`** — o que o componente É hoje: contrato, decisões com data e medição, tokens, e os nomes de peça das CINCO stacks. Onde existe PRD, a guideline guarda só a regra da CATEGORIA; o catálogo por componente saiu de lá (portão `catalogo_duplicado_com_prd`)
 - `guidelines/11-documentacao-componentes.md` (estrutura de ComponentDocs + stories)
 
 Guidelines compartilhadas (todas as stacks):

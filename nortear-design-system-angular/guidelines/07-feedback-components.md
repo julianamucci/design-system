@@ -244,42 +244,15 @@ div[ndsToaster]                     (região com live region, posicionada)
 
 ---
 
-## Alert Dialog
+## Componentes de outra categoria
 
-**Propósito**: decisão que **precisa** de resposta antes de seguir — confirmar exclusão, descartar alteração. Para formulário ou conteúdo navegável, Dialog.
+O **AlertDialog** é um overlay, e mora em [`10-overlay-components.md`](10-overlay-components.md)
+— as regras da categoria — e em
+[`docs/shared/prd/alert-dialog.md`](../../docs/shared/prd/alert-dialog.md), que é
+onde estão a estrutura, os tokens, as decisões e os nomes de peça das cinco
+stacks.
 
-**Peças**: `nds-alert-dialog`, `button[ndsAlertDialogTrigger]`, `ng-template[ndsAlertDialogContent]`, e as diretivas de estrutura: `div[ndsAlertDialogHeader]`, `div[ndsAlertDialogMedia]`, `h2|h3[ndsAlertDialogTitle]`, `p[ndsAlertDialogDescription]`, `div[ndsAlertDialogFooter]`, `button[ndsAlertDialogCancel]`, `button[ndsAlertDialogAction]`.
-
-**Estrutura**:
-
-```
-nds-alert-dialog
-├── button[ndsAlertDialogTrigger]           (fica na página)
-└── ng-template[ndsAlertDialogContent]      ← portalizado ao abrir
-    ├── fundo escurecido
-    └── painel (role="alertdialog", modal)
-        ├── div[ndsAlertDialogHeader]
-        │   ├── div[ndsAlertDialogMedia]    (opcional)
-        │   ├── h2|h3[ndsAlertDialogTitle]
-        │   └── p[ndsAlertDialogDescription] (opcional)
-        └── div[ndsAlertDialogFooter]
-            ├── button[ndsAlertDialogCancel]
-            └── button[ndsAlertDialogAction]
-```
-
-**Entradas**: aberto e aberto inicial, no host do `nds-alert-dialog`. Saídas: mudança de aberto, e mudança concluída depois da animação.
-
-**Regras**:
-- **O perfil é fixo, não configurável**: papel de `alertdialog`, sempre modal, e dispensa por clique fora e por perda de foco desligada. Isso é o que distingue este componente do Dialog — não há input para afrouxar. **O Escape continua fechando, de propósito**: barrar o Escape prende quem navega por teclado
-- Título obrigatório: é a base do nome acessível do painel. Descrição **opcional e recomendada** — quando existe, é a base da descrição acessível; quando não existe, o painel omite o atributo em vez de referenciar um id ausente. Omitir só se justifica quando o próprio título já diz o que se perde
-- Ordem no rodapé: `[Cancelar] [Confirmar]` — o primário à direita, e a ordem do DOM é a ordem visual
-- O rótulo do botão de ação **repete o verbo** do título ("Excluir", não "OK"): botão genérico faz a pessoa reler o diálogo
-- Não aninhar Alert Dialog dentro de Alert Dialog
-
-**Acessibilidade**:
-- Papel de `alertdialog` com modal, nome pelo título e descrição pela descrição
-- Foco entra no painel ao abrir e volta ao gatilho ao fechar; Tab circula dentro
-- O resto da página fica inerte enquanto está aberto
-- Em teste, o painel **não está no canvas** — é portalizado para o corpo do documento, e afirmar sobre ele antes de a animação assentar produz falsa violação de contraste
-
-**Analytics**: `dialog_open`, `dialog_confirm` e `dialog_close` com a origem do fechamento (botão de cancelar, Escape) em valor estável.
+Ele aparece aqui porque quem procura por "confirmação" pensa em feedback: é
+modal de decisão obrigatória para ação destrutiva ou irreversível, e o que o
+separa do Dialog é não ter botão de fechar no canto — a saída é o par Cancelar +
+Ação, sempre explícita.

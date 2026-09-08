@@ -180,6 +180,27 @@ visibilidade.
 | vanilla | fábrica `createHoverCard`, e ela ainda expõe `open`/`close` em vez dos verbos em inglês que o popover e o sidebar adotaram. Renomear é mudança de API pública e tem dono |
 | react, angular | montam o `hover-card-positioner` nomeado; vue, svelte e vanilla não |
 
+### Peças, por stack
+
+Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
+seletores do código — não transcrito da guideline, que é a fonte aposentada.
+
+| stack | peças |
+|---|---|
+| react | `HoverCard`, `HoverCardContent`, `HoverCardTrigger` |
+| vue | `HoverCard`, `HoverCardContent`, `HoverCardTrigger` |
+| svelte | `HoverCard`, `HoverCardContent`, `HoverCardPortal`, `HoverCardTrigger` |
+| vanilla | `createHoverCard` |
+| angular | `a[ndsHoverCardTrigger], button[ndsHoverCardTrigger]`, `ng-template[ndsHoverCardContent]`, `span[ndsHoverCard]` |
+
+O índice do svelte também reexporta as formas curtas — `Content`, `Portal`, `Root`, `Trigger` —,
+para quem importa o namespace inteiro. As stories usam a forma longa.
+
+No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
+semântica, não só o estilo. Onde há dois seletores para a mesma peça
+(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
+cabeçalho diferentes sem pular hierarquia.
+
 ## 8. Acessibilidade
 
 **Atributos**: gatilho com `aria-describedby` apontando para o cartão enquanto ele
