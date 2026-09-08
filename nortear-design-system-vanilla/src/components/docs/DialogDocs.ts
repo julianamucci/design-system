@@ -1098,7 +1098,7 @@ export interface DialogOptions {
             // Seis, e não cinco: o conteúdo compartilhado traz `item6`
             // (WithScrollingOverlay) e a página parava no quinto — a linha
             // existia no JSON e não existia para quem lê.
-            items: [1,2,3,4,5,6].map(i => ({
+            items: [1,2,3,4,5].map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

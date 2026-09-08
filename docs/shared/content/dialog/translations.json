@@ -29,9 +29,6 @@
         "termsDescription": "Leia atentamente antes de aceitar.",
         "decline": "Recusar",
         "accept": "Aceitar",
-        "contractTrigger": "Ver contrato",
-        "contractTitle": "Contrato de prestação",
-        "contractDescription": "O documento rola inteiro, e o cabeçalho sobe junto.",
         "removeItemTitle": "Remover item da lista",
         "removeItemDescription": "O item sai desta lista e continua disponível no catálogo.",
         "removeItemAction": "Remover item",
@@ -200,14 +197,6 @@
         "default": "Title + Description + Footer com ação primária. Composição padrão para formulários e edições.",
         "withForm": "Body com formulário inline (inputs, selects). Submissão dispara a ação primária do Footer.",
         "withScrollContent": "Body com conteúdo longo e scroll interno. Header e Footer fixos.",
-        "withScrollingOverlay": "Painel no fluxo do overlay, que passa a ser a área de rolagem — o cabeçalho sobe junto com o conteúdo. Para leitura de ponta a ponta, quando fixar o cabeçalho custa altura útil.",
-        "withScrollingOverlayCode": {
-          "react": "<Dialog defaultOpen>\n  <DialogTrigger render={<Button variant=\"outline\" />}>Ver contrato</DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div className=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose render={<Button variant=\"outline\" />}>Recusar</DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
-          "vue": "<Dialog default-open>\n  <DialogTrigger as-child>\n    <Button variant=\"outline\">Ver contrato</Button>\n  </DialogTrigger>\n  <DialogScrollContent>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose as-child>\n        <Button variant=\"outline\">Recusar</Button>\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogScrollContent>\n</Dialog>",
-          "svelte": "<Dialog bind:open>\n  <DialogTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Ver contrato</Button>\n    {/snippet}\n  </DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose>\n        {#snippet child({ props })}\n          <Button {...props} variant=\"outline\">Recusar</Button>\n        {/snippet}\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
-          "vanilla": "const body = document.createElement('div');\nbody.className = 'nds-dialog-body nds-stack';\nbody.dataset.spacing = 'sm';\n\nconst clausula = document.createElement('p');\nclausula.textContent = 'Cláusula 1. …';\nbody.appendChild(clausula);\n\n// Lista, e não um <div> de embrulho: as ações precisam ser filhas diretas do\n// rodapé. E a secundária vem PRIMEIRO — o rodapé é `column-reverse`, então\n// quem está por último sobe ao topo (e vai para a direita a partir de 40rem).\nconst recusar = createButton({ variant: 'outline', label: 'Recusar' });\nconst aceitar = createButton({ label: 'Aceitar' });\n\n// `scroll` põe o painel DENTRO do overlay: rolagem de um elemento só\n// alcança o que está dentro dele.\ncreateDialog({\n  trigger: createButton({ variant: 'outline', label: 'Ver contrato' }),\n  title: 'Contrato de prestação',\n  description: 'O documento rola inteiro, e o cabeçalho sobe junto.',\n  content: body,\n  footer: [recusar, aceitar],\n  scroll: true,\n});",
-          "angular": "<ng-template ndsDialogPortal>\n  <!-- Na rota B o painel é FILHO do overlay, e os dois recebem `scroll`. -->\n  <div ndsDialogOverlay scroll>\n    <div ndsDialogContent scroll>\n      <div ndsDialogHeader>\n        <h2 ndsDialogTitle>Contrato de prestação</h2>\n        <p ndsDialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</p>\n      </div>\n\n      <div ndsDialogBody class=\"nds-stack\" data-spacing=\"sm\">\n        <p>Cláusula 1. …</p>\n      </div>\n\n      <div ndsDialogFooter>\n        <button ndsDialogClose ndsButton variant=\"outline\">Recusar</button>\n        <button ndsButton>Aceitar</button>\n      </div>\n    </div>\n  </div>\n</ng-template>"
-        },
         "noFooter": "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva.",
         "withDestructiveAction": "Footer com ação primária <code>destructive</code>. Diferente de AlertDialog — use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista).",
         "customCloseInFooter": "O X do canto é desligado e o fechamento passa para o rodapé, onde entra como ação secundária: abaixo das demais no empilhamento e à esquerda delas quando lado a lado.",
@@ -476,10 +465,6 @@
         "item5": {
           "story": "Composição WithScrollContent — conteúdo longo com scroll interno",
           "priority": "medium"
-        },
-        "item6": {
-          "story": "Variante WithScrollingOverlay — painel no fluxo, com o overlay rolando",
-          "priority": "medium"
         }
       }
     },
@@ -535,9 +520,6 @@
         "termsDescription": "Read carefully before accepting.",
         "decline": "Decline",
         "accept": "Accept",
-        "contractTrigger": "View contract",
-        "contractTitle": "Service agreement",
-        "contractDescription": "The whole document scrolls, and the header goes with it.",
         "removeItemTitle": "Remove item from the list",
         "removeItemDescription": "The item leaves this list and stays available in the catalogue.",
         "removeItemAction": "Remove item",
@@ -706,14 +688,6 @@
         "default": "Title + Description + Footer with primary action. Default composition for forms and editing.",
         "withForm": "Body with inline form (inputs, selects). Submit fires the Footer's primary action.",
         "withScrollContent": "Body with long content and internal scroll. Header and Footer fixed.",
-        "withScrollingOverlay": "Panel in the overlay's flow, and the overlay becomes the scrolling area — the header scrolls away with the content. For end-to-end reading, when pinning the header costs useful height.",
-        "withScrollingOverlayCode": {
-          "react": "<Dialog defaultOpen>\n  <DialogTrigger render={<Button variant=\"outline\" />}>Ver contrato</DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div className=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose render={<Button variant=\"outline\" />}>Recusar</DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
-          "vue": "<Dialog default-open>\n  <DialogTrigger as-child>\n    <Button variant=\"outline\">Ver contrato</Button>\n  </DialogTrigger>\n  <DialogScrollContent>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose as-child>\n        <Button variant=\"outline\">Recusar</Button>\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogScrollContent>\n</Dialog>",
-          "svelte": "<Dialog bind:open>\n  <DialogTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Ver contrato</Button>\n    {/snippet}\n  </DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose>\n        {#snippet child({ props })}\n          <Button {...props} variant=\"outline\">Recusar</Button>\n        {/snippet}\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
-          "vanilla": "const body = document.createElement('div');\nbody.className = 'nds-dialog-body nds-stack';\nbody.dataset.spacing = 'sm';\n\nconst clausula = document.createElement('p');\nclausula.textContent = 'Cláusula 1. …';\nbody.appendChild(clausula);\n\n// Lista, e não um <div> de embrulho: as ações precisam ser filhas diretas do\n// rodapé. E a secundária vem PRIMEIRO — o rodapé é `column-reverse`, então\n// quem está por último sobe ao topo (e vai para a direita a partir de 40rem).\nconst recusar = createButton({ variant: 'outline', label: 'Recusar' });\nconst aceitar = createButton({ label: 'Aceitar' });\n\n// `scroll` põe o painel DENTRO do overlay: rolagem de um elemento só\n// alcança o que está dentro dele.\ncreateDialog({\n  trigger: createButton({ variant: 'outline', label: 'Ver contrato' }),\n  title: 'Contrato de prestação',\n  description: 'O documento rola inteiro, e o cabeçalho sobe junto.',\n  content: body,\n  footer: [recusar, aceitar],\n  scroll: true,\n});",
-          "angular": "<ng-template ndsDialogPortal>\n  <!-- Na rota B o painel é FILHO do overlay, e os dois recebem `scroll`. -->\n  <div ndsDialogOverlay scroll>\n    <div ndsDialogContent scroll>\n      <div ndsDialogHeader>\n        <h2 ndsDialogTitle>Contrato de prestação</h2>\n        <p ndsDialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</p>\n      </div>\n\n      <div ndsDialogBody class=\"nds-stack\" data-spacing=\"sm\">\n        <p>Cláusula 1. …</p>\n      </div>\n\n      <div ndsDialogFooter>\n        <button ndsDialogClose ndsButton variant=\"outline\">Recusar</button>\n        <button ndsButton>Aceitar</button>\n      </div>\n    </div>\n  </div>\n</ng-template>"
-        },
         "noFooter": "Only Title + Description, no Footer. For informational use or passive preview.",
         "withDestructiveAction": "Footer with <code>destructive</code> primary action. Different from AlertDialog — use only when destructiveness is secondary to the flow (e.g. remove item from list).",
         "customCloseInFooter": "The corner X is turned off and closing moves to the footer, where it enters as a secondary action: below the others when stacked, and to their left when side by side.",
@@ -982,10 +956,6 @@
         "item5": {
           "story": "WithScrollContent composition — long content with internal scroll",
           "priority": "medium"
-        },
-        "item6": {
-          "story": "WithScrollingOverlay variant — panel in flow, with the overlay scrolling",
-          "priority": "medium"
         }
       }
     },
@@ -1041,9 +1011,6 @@
         "termsDescription": "Lee atentamente antes de aceptar.",
         "decline": "Rechazar",
         "accept": "Aceptar",
-        "contractTrigger": "Ver contrato",
-        "contractTitle": "Contrato de prestación",
-        "contractDescription": "El documento se desplaza entero, y el encabezado sube con él.",
         "removeItemTitle": "Quitar ítem de la lista",
         "removeItemDescription": "El ítem sale de esta lista y sigue disponible en el catálogo.",
         "removeItemAction": "Quitar ítem",
@@ -1212,14 +1179,6 @@
         "default": "Title + Description + Footer con acción primaria. Composición estándar para formularios y ediciones.",
         "withForm": "Body con formulario inline (inputs, selects). El submit dispara la acción primaria del Footer.",
         "withScrollContent": "Body con contenido largo y scroll interno. Header y Footer fijos.",
-        "withScrollingOverlay": "Panel en el flujo del overlay, que pasa a ser el área de desplazamiento: el encabezado sube junto con el contenido. Para lectura de principio a fin, cuando fijar el encabezado cuesta altura útil.",
-        "withScrollingOverlayCode": {
-          "react": "<Dialog defaultOpen>\n  <DialogTrigger render={<Button variant=\"outline\" />}>Ver contrato</DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div className=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose render={<Button variant=\"outline\" />}>Recusar</DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
-          "vue": "<Dialog default-open>\n  <DialogTrigger as-child>\n    <Button variant=\"outline\">Ver contrato</Button>\n  </DialogTrigger>\n  <DialogScrollContent>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose as-child>\n        <Button variant=\"outline\">Recusar</Button>\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogScrollContent>\n</Dialog>",
-          "svelte": "<Dialog bind:open>\n  <DialogTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Ver contrato</Button>\n    {/snippet}\n  </DialogTrigger>\n  <DialogContent scroll>\n    <DialogHeader>\n      <DialogTitle>Contrato de prestação</DialogTitle>\n      <DialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</DialogDescription>\n    </DialogHeader>\n    <div class=\"nds-dialog-body nds-stack\" data-spacing=\"sm\">\n      <p>Cláusula 1. …</p>\n    </div>\n    <DialogFooter>\n      <DialogClose>\n        {#snippet child({ props })}\n          <Button {...props} variant=\"outline\">Recusar</Button>\n        {/snippet}\n      </DialogClose>\n      <Button>Aceitar</Button>\n    </DialogFooter>\n  </DialogContent>\n</Dialog>",
-          "vanilla": "const body = document.createElement('div');\nbody.className = 'nds-dialog-body nds-stack';\nbody.dataset.spacing = 'sm';\n\nconst clausula = document.createElement('p');\nclausula.textContent = 'Cláusula 1. …';\nbody.appendChild(clausula);\n\n// Lista, e não um <div> de embrulho: as ações precisam ser filhas diretas do\n// rodapé. E a secundária vem PRIMEIRO — o rodapé é `column-reverse`, então\n// quem está por último sobe ao topo (e vai para a direita a partir de 40rem).\nconst recusar = createButton({ variant: 'outline', label: 'Recusar' });\nconst aceitar = createButton({ label: 'Aceitar' });\n\n// `scroll` põe o painel DENTRO do overlay: rolagem de um elemento só\n// alcança o que está dentro dele.\ncreateDialog({\n  trigger: createButton({ variant: 'outline', label: 'Ver contrato' }),\n  title: 'Contrato de prestação',\n  description: 'O documento rola inteiro, e o cabeçalho sobe junto.',\n  content: body,\n  footer: [recusar, aceitar],\n  scroll: true,\n});",
-          "angular": "<ng-template ndsDialogPortal>\n  <!-- Na rota B o painel é FILHO do overlay, e os dois recebem `scroll`. -->\n  <div ndsDialogOverlay scroll>\n    <div ndsDialogContent scroll>\n      <div ndsDialogHeader>\n        <h2 ndsDialogTitle>Contrato de prestação</h2>\n        <p ndsDialogDescription>O documento rola inteiro, e o cabeçalho sobe junto.</p>\n      </div>\n\n      <div ndsDialogBody class=\"nds-stack\" data-spacing=\"sm\">\n        <p>Cláusula 1. …</p>\n      </div>\n\n      <div ndsDialogFooter>\n        <button ndsDialogClose ndsButton variant=\"outline\">Recusar</button>\n        <button ndsButton>Aceitar</button>\n      </div>\n    </div>\n  </div>\n</ng-template>"
-        },
         "noFooter": "Solo Title + Description, sin Footer. Para uso informativo o previsualización pasiva.",
         "withDestructiveAction": "Footer con acción primaria <code>destructive</code>. Distinto de AlertDialog — úsalo solo cuando lo destructivo es secundario al flujo (ej. quitar ítem de lista).",
         "customCloseInFooter": "La X de la esquina se desactiva y el cierre pasa al pie, donde entra como acción secundaria: debajo de las demás en el apilamiento y a su izquierda cuando están lado a lado.",
@@ -1487,10 +1446,6 @@
         },
         "item5": {
           "story": "Composición WithScrollContent — contenido largo con scroll interno",
-          "priority": "medium"
-        },
-        "item6": {
-          "story": "Variante WithScrollingOverlay — panel en el flujo, con el overlay desplazándose",
           "priority": "medium"
         }
       }

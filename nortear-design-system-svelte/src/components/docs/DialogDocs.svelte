@@ -1067,7 +1067,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5, 6].map((i) => ({
+      items: [1, 2, 3, 4, 5].map((i) => ({
         story: $tStore(`testes.visual.item${i}.story`),
         priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
       })),
