@@ -180,7 +180,7 @@
   const codeWithForm = `<Dialog>
   <DialogTrigger>
     {#snippet child({ props })}
-      <Button {...props}>Editar perfil</Button>
+      <Button variant="outline" {...props}>Editar perfil</Button>
     {/snippet}
   </DialogTrigger>
   <DialogContent>
@@ -190,14 +190,25 @@
         Atualize suas informações pessoais. As mudanças são salvas ao confirmar.
       </DialogDescription>
     </DialogHeader>
+    <!-- O form envolve o corpo E o rodapé: submit fora dele não submete. -->
     <form class="nds-stack" data-spacing="sm" onsubmit={onSave}>
-      <Input name="name" value="Maria Silva" />
-      <Input name="email" type="email" />
+      <label class="nds-stack nds-text-body" data-spacing="xs">
+        <span>Nome</span>
+        <input type="text" class="nds-input" value="Maria Silva" />
+      </label>
+      <label class="nds-stack nds-text-body" data-spacing="xs">
+        <span>E-mail</span>
+        <input type="email" class="nds-input" />
+      </label>
+      <DialogFooter>
+        <DialogClose>
+          {#snippet child({ props })}
+            <Button type="button" variant="outline" {...props}>Cancelar</Button>
+          {/snippet}
+        </DialogClose>
+        <Button type="submit">Salvar alterações</Button>
+      </DialogFooter>
     </form>
-    <DialogFooter>
-      <DialogClose>...</DialogClose>
-      <Button type="submit">Salvar alterações</Button>
-    </DialogFooter>
   </DialogContent>
 </Dialog>`;
 
@@ -622,7 +633,11 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
           <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>
         </DialogHeader>
-        <form class="nds-stack" data-spacing="sm">
+        <!-- O `<form>` envolve o corpo E o rodapé (PRD D10): `type="submit"`
+             fora dele é botão inerte — não submete, e o Enter num campo não
+             dispara nada. Nada na tela denuncia, porque o botão continua
+             clicável e com a aparência certa. -->
+        <form class="nds-stack" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
           <label class="nds-stack nds-text-body" data-spacing="xs">
             <span>{$tStore('demonstration.labels.fieldName')}</span>
             <!-- `value` e não `defaultValue`: em Svelte `defaultValue` não é
@@ -630,13 +645,17 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
                  VAZIO, que é o mesmo defeito já corrigido nas stories. -->
             <input type="text" class="nds-input" value={$tStore('demonstration.labels.samplePersonName')} />
           </label>
+          <label class="nds-stack nds-text-body" data-spacing="xs">
+            <span>{$tStore('demonstration.labels.fieldEmail')}</span>
+            <input type="email" class="nds-input" />
+          </label>
+          <DialogFooter>
+            <DialogClose>
+              {#snippet child({ props })}<Button type="button" variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
+            </DialogClose>
+            <Button type="submit">{$tStore('demonstration.labels.action')}</Button>
+          </DialogFooter>
         </form>
-        <DialogFooter>
-          <DialogClose>
-            {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
-          </DialogClose>
-          <Button>{$tStore('demonstration.labels.action')}</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   {/snippet}
