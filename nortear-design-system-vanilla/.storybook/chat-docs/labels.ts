@@ -24,6 +24,15 @@ export interface ChatDocsLabels {
   close: string;
   /** O que a conversa mostra antes da primeira pergunta. */
   empty: string;
+  /**
+   * Aviso permanente no topo do painel.
+   *
+   * O Storybook é público e o chat usa um modelo de camada gratuita, com teto
+   * DIÁRIO de requisições. Sem este aviso, quem chega depois do teto estourado
+   * vê um erro e conclui que o chat está quebrado — quando ele está apenas
+   * esgotado. Dizer isso antes é mais barato que explicar depois.
+   */
+  demo: string;
   /** Frase do indicador de espera. É o que quem ouve a tela recebe. */
   thinking: string;
   /** Cabeçalho da lista de fontes, dentro da mensagem. */
@@ -43,6 +52,8 @@ const PT: ChatDocsLabels = {
   close: 'Fechar',
   empty:
     'Pergunte sobre qualquer componente do design system. As respostas saem da documentação compartilhada, e cada afirmação diz de qual componente veio.',
+  demo:
+    'Esse chat é para demonstração e usa um modelo gratuito, com limitação de requisições diárias. Se já tiver esgotado, volte amanhã ;)',
   thinking: 'Procurando na documentação',
   sourcesHeading: 'Componentes consultados',
   thread: {
@@ -90,6 +101,8 @@ const EN: ChatDocsLabels = {
   close: 'Close',
   empty:
     'Ask about any component in the design system. Answers come from the shared documentation, and every claim names the component it came from.',
+  demo:
+    'This chat is a demo and runs on a free model, with a daily request cap. If it is already used up, come back tomorrow ;)',
   thinking: 'Searching the documentation',
   sourcesHeading: 'Components consulted',
   thread: {
@@ -137,6 +150,8 @@ const ES: ChatDocsLabels = {
   close: 'Cerrar',
   empty:
     'Pregunta sobre cualquier componente del sistema de diseño. Las respuestas salen de la documentación compartida, y cada afirmación dice de qué componente vino.',
+  demo:
+    'Este chat es una demostración y usa un modelo gratuito, con límite diario de solicitudes. Si ya se agotó, vuelve mañana ;)',
   thinking: 'Buscando en la documentación',
   sourcesHeading: 'Componentes consultados',
   thread: {

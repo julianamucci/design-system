@@ -166,3 +166,18 @@
 .chat-docs-notice {
   margin: var(--spacing-3);
 }
+
+/*
+ * O aviso de demonstração. Mesmo recuo do aviso de falha, e nada além disso —
+ * a variante `info` do alerta já traz cor, borda e contraste do tema, e o
+ * texto corrido já vem em `--foreground` pela regra da casa: em contêiner
+ * colorido, cor semântica fica na borda, não na prosa.
+ *
+ * `flex-shrink: 0` porque o corpo do painel é uma coluna flexível e a conversa
+ * cresce: sem isto o aviso encolheria até virar uma linha ilegível quando a
+ * conversa ficasse longa.
+ */
+.chat-docs-demo {
+  flex-shrink: 0;
+  margin: var(--spacing-3) var(--spacing-3) 0;
+}

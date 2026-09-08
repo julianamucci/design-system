@@ -194,6 +194,26 @@ function build(locale: Locale): Widget {
   const notice = document.createElement('div');
   notice.hidden = true;
 
+  // ── Aviso permanente de demonstração ──────────────────────────────────────
+  //
+  // O Storybook é público e o chat roda num modelo de camada gratuita, com teto
+  // DIÁRIO de requisições. Sem este aviso, quem chega depois do teto estourado
+  // vê um erro e conclui que o chat está quebrado — quando ele está esgotado.
+  //
+  // NÃO é `role="alert"`: o aviso já está na tela quando o painel abre, e região
+  // viva serve para o que CHEGA. Anunciá-lo a cada abertura seria repetir a
+  // mesma frase para quem usa leitor de tela, antes de deixar a pessoa
+  // perguntar o que veio perguntar. O texto está no fluxo do documento, então
+  // quem navega o lê na ordem natural. Compare com `showNotice`, que É
+  // `role="alert"` — lá o aviso aparece por causa de uma falha, e a pessoa
+  // precisa saber sem procurar.
+  const demo = document.createElement('div');
+  demo.className = 'nds-alert nds-alert-info chat-docs-demo';
+  const demoTexto = document.createElement('div');
+  demoTexto.className = 'nds-alert-description';
+  demoTexto.textContent = labels.demo;
+  demo.appendChild(demoTexto);
+
   const thread = createChatThread({
     labels: labels.thread,
     regionLabel: labels.panel,
@@ -202,7 +222,7 @@ function build(locale: Locale): Widget {
 
   const thinkingSlot = document.createElement('div');
 
-  body.append(notice, thread, thinkingSlot);
+  body.append(demo, notice, thread, thinkingSlot);
 
   const footer = document.createElement('div');
   footer.className = 'chat-docs-footer';
