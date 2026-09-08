@@ -75,8 +75,37 @@ const FORM_NAME = text('demonstration.labels.fieldName');
 const FORM_EMAIL = text('demonstration.labels.fieldEmail');
 const PROFILE_NAME = text('demonstration.labels.fieldFullName');
 const PROFILE_USERNAME = text('demonstration.labels.fieldUsername');
-const INVITE_TRIGGER = 'Enviar convite';
-const INVITE_DESCRIPTION = 'O convite vai para ana&#64;exemplo.com. Você pode reenviar depois.';
+
+// Os cenários que esta stack escrevia à mão e que, por isso, divergiam das
+// demais: o painel informativo, o painel do guia, as duas rotas de rolagem e a
+// confirmação de e-mail. Todos existem em `demonstration.labels`, e vêm de lá
+// pelo mesmo `text()` — cravá-los aqui faria o portão medir a cópia velha.
+const CLOSE = text('demonstration.labels.close');
+const ABOUT_TITLE = text('demonstration.labels.aboutTitle');
+const ABOUT_DESCRIPTION = text('demonstration.labels.aboutDescription');
+const ABOUT_BODY = text('demonstration.labels.aboutBody');
+const GUIDE_TRIGGER = text('demonstration.labels.guideTrigger');
+const GUIDE_TITLE = text('demonstration.labels.guideTitle');
+const GUIDE_DESCRIPTION = text('demonstration.labels.guideDescription');
+const GUIDE_BODY = text('demonstration.labels.guideBody');
+const BACK = text('demonstration.labels.back');
+const CONTINUE_ACTION = text('demonstration.labels.continueAction');
+const TERMS_TITLE = text('demonstration.labels.termsTitle');
+const TERMS_DESCRIPTION = text('demonstration.labels.termsDescription');
+const DECLINE = text('demonstration.labels.decline');
+const ACCEPT = text('demonstration.labels.accept');
+const CONTRACT_TRIGGER = text('demonstration.labels.contractTrigger');
+const CONTRACT_TITLE = text('demonstration.labels.contractTitle');
+const CONTRACT_DESCRIPTION = text('demonstration.labels.contractDescription');
+const CONFIRM_EMAIL_TITLE = text('demonstration.labels.confirmEmailTitle');
+const CONFIRM_EMAIL_ACTION = text('demonstration.labels.confirmEmailAction');
+
+// Estes quatro seguem cravados porque o conteúdo compartilhado não os tem: a
+// descrição e o corpo da confirmação de e-mail, e os rótulos da composição de
+// mídia.
+const CONFIRM_EMAIL_DESCRIPTION = 'Verifique o endereço antes de enviar o link de acesso.';
+const CONFIRM_EMAIL_BODY =
+  'Vamos enviar um link para maria&#64;exemplo.com. Confirme o endereço antes de prosseguir.';
 const MEDIA_TRIGGER = 'Ver capa';
 const MEDIA_TITLE = 'Capa do artigo';
 const MEDIA_ALT = 'Padrão geométrico em tons de cinza';
@@ -133,8 +162,13 @@ const CONSTRUCTORS: Array<{
   withBody?: true;
   /** Sem rodapé: nada a confirmar, e o X do canto é a saída. */
   noFooter?: true;
-  /** Sem `ndsDialogClose`: quem fecha é o botão que o próprio rodapé desenha. */
-  noCancel?: true;
+  /**
+   * Os rótulos do rodapé, na ORDEM do DOM — secundários primeiro, primária por
+   * último. Cada snippet declara o seu: com um padrão implícito, um cenário
+   * trocado passaria calado, que é como esta stack acabou mostrando "Editar
+   * perfil" em duas composições que as outras quatro descrevem de outro jeito.
+   */
+  footer?: string[];
   /** Estado próprio na classe do exemplo: a lista de cláusulas ou o sinal. */
   stateful?: true;
   /** Importa `NdsInput` + `NdsLabel`. */
@@ -156,6 +190,7 @@ const CONSTRUCTORS: Array<{
     build: dialogWithScrollContentSource,
     withBody: true,
     stateful: true,
+    footer: [CANCEL, ACCEPT],
   },
   {
     name: 'dialogWithScrollingOverlaySource',
@@ -163,28 +198,34 @@ const CONSTRUCTORS: Array<{
     build: dialogWithScrollingOverlaySource,
     withBody: true,
     stateful: true,
+    footer: [DECLINE, ACCEPT],
   },
   {
     name: 'dialogNoFooterSource',
     story: 'Variants/NoFooter',
     build: dialogNoFooterSource,
+    withBody: true,
     noFooter: true,
   },
   {
     name: 'dialogWithDestructiveActionSource',
     story: 'Variants/WithDestructiveAction',
     build: dialogWithDestructiveActionSource,
+    footer: [CANCEL, DESTRUCTIVE_TRIGGER],
   },
   {
     name: 'dialogCustomCloseInFooterSource',
     story: 'Variants/CustomCloseInFooter',
     build: dialogCustomCloseInFooterSource,
-    noCancel: true,
+    withBody: true,
+    footer: [CLOSE, BACK, CONTINUE_ACTION],
   },
   {
     name: 'dialogConfirmEmailSource',
     story: 'Variants/ConfirmEmail',
     build: dialogConfirmEmailSource,
+    withBody: true,
+    footer: [CANCEL, CONFIRM_EMAIL_ACTION],
   },
   { name: 'dialogOpenSource', story: 'States/Open', build: dialogOpenSource },
   {
@@ -316,17 +357,13 @@ describe('cobertura das quatro stories', () => {
         // em cima no empilhamento e à direita no lado a lado — inverter aqui
         // inverteria a tela. No Drawer três stacks estavam invertidas, e uma
         // delas tinha teste VERDE cobrando a inversão.
-        const labels = footerLabels(code);
-        if (c.noCancel) {
-          // O fechar deste rodapé é desenhado pelo próprio `NdsDialogFooter`, e
-          // não se escreve: sobra a ação primária.
-          expect(code).not.toContain('ndsDialogClose');
-          expect(labels).toEqual([ACTION]);
-        } else {
-          expect(code.match(/ndsDialogClose/g)).toHaveLength(1);
-          expect(labels[0]).toBe(CANCEL);
-          expect(labels).toHaveLength(2);
-        }
+        //
+        // E os rótulos são cobrados por EXTENSO, não só o primeiro: é a
+        // conferência de que o snippet mostra o mesmo cenário que a story ao
+        // lado. Com a asserção medindo só `labels[0]`, duas composições desta
+        // stack mostraram "Editar perfil" por meses sem uma palavra do portão.
+        expect(footerLabels(code)).toEqual(c.footer ?? [CANCEL, ACTION]);
+        expect(code.match(/ndsDialogClose/g)).toHaveLength(1);
       }
 
       // Estado próprio é de três snippets; nos demais a classe fica vazia, e
@@ -447,7 +484,11 @@ describe('variantes', () => {
     expect(code).toContain('class="nds-dialog-body-scroll nds-stack"');
     expect(code).toContain('tabindex="0"');
     expect(code).toContain('role="group"');
-    expect(code).toContain(`aria-label="${TITLE}"`);
+    // O nome da região é o TÍTULO do painel, e o cenário é o dos termos — o
+    // mesmo que as outras stacks mostram nesta rota.
+    expect(code).toContain(`<h2 ndsDialogTitle>${TERMS_TITLE}</h2>`);
+    expect(code).toContain(`<p ndsDialogDescription>${TERMS_DESCRIPTION}</p>`);
+    expect(code).toContain(`aria-label="${TERMS_TITLE}"`);
     // VINTE cláusulas, o mesmo número que a story monta — com texto curto o
     // conteúdo cabia inteiro no teto de 60vh e a rota não acontecia.
     expect(code).toContain('readonly clauses = Array.from({ length: 20 }, (_, i) => i + 1);');
@@ -466,6 +507,12 @@ describe('variantes', () => {
     const code = dialogWithScrollingOverlaySource();
     expect(code).toContain('<div ndsDialogOverlay scroll>');
     expect(code).toContain('<div ndsDialogContent scroll>');
+    // O cenário desta rota é o contrato que rola de ponta a ponta.
+    expect(code).toContain(
+      `<button ndsDialogTrigger ndsButton variant="outline">${CONTRACT_TRIGGER}</button>`,
+    );
+    expect(code).toContain(`<h2 ndsDialogTitle>${CONTRACT_TITLE}</h2>`);
+    expect(code).toContain(`<p ndsDialogDescription>${CONTRACT_DESCRIPTION}</p>`);
     expect(code.indexOf('<div ndsDialogOverlay scroll>')).toBeLessThan(
       code.indexOf('<div ndsDialogContent scroll>'),
     );
@@ -490,6 +537,15 @@ describe('variantes', () => {
     expect(code).not.toContain('ndsDialogFooter');
     expect(code).not.toContain('showCloseButton');
     expect(code).toContain('<div ndsDialogContent>');
+    // O cenário é o painel INFORMATIVO, e não um painel de edição sem ação
+    // para confirmar a edição. O corpo diz por onde se fecha, porque não há
+    // rodapé para dizê-lo.
+    expect(code).toContain(
+      `<button ndsDialogTrigger ndsButton variant="outline">${ABOUT_TITLE}</button>`,
+    );
+    expect(code).toContain(`<h2 ndsDialogTitle>${ABOUT_TITLE}</h2>`);
+    expect(code).toContain(`<p ndsDialogDescription>${ABOUT_DESCRIPTION}</p>`);
+    expect(code).toContain(`<p>${ABOUT_BODY}</p>`);
   });
 
   it('dialogWithDestructiveActionSource marca a ação e mantém o Cancelar antes', () => {
@@ -506,27 +562,41 @@ describe('variantes', () => {
     expect(footerLabels(code)).toEqual([CANCEL, DESTRUCTIVE_TRIGGER]);
   });
 
-  it('dialogCustomCloseInFooterSource desliga o X do canto e liga o do rodapé', () => {
-    // `showCloseButton` existe nos DOIS lugares e faz coisas diferentes: no
-    // painel nasce ligado, no rodapé nasce desligado. Trocar os dois é a
-    // composição inteira desta variante.
+  it('dialogCustomCloseInFooterSource tira o X do canto e desce o fechar para o rodapé', () => {
+    // O X do canto sai do painel e o fechar passa a ser a ação de MENOR ênfase
+    // do rodapé: `ghost`, e primeiro no DOM — a folha põe o primeiro embaixo no
+    // empilhamento e à esquerda no lado a lado.
     const code = dialogCustomCloseInFooterSource();
     expect(code).toContain('<div ndsDialogContent [showCloseButton]="false">');
-    expect(code).toContain('<div ndsDialogFooter [showCloseButton]="true">');
-    expect(code).toContain(`<button ndsButton>${ACTION}</button>`);
+    expect(code).toContain(`<h2 ndsDialogTitle>${GUIDE_TITLE}</h2>`);
+    expect(code).toContain(`<p ndsDialogDescription>${GUIDE_DESCRIPTION}</p>`);
+    expect(code).toContain(`<p>${GUIDE_BODY}</p>`);
+    expect(code).toContain(
+      `<button ndsDialogClose ndsButton variant="ghost">${CLOSE}</button>`,
+    );
+    expect(code).toContain(`<button ndsButton variant="outline">${BACK}</button>`);
+    expect(code).toContain(`<button ndsButton>${CONTINUE_ACTION}</button>`);
+    // O botão é ESCRITO, e não desenhado pelo `[showCloseButton]` do rodapé:
+    // aquele nasce `variant="outline"`, e aqui o fechar precisa da ênfase mais
+    // baixa das três para o rodapé ler como escala.
+    expect(code).not.toContain('<div ndsDialogFooter [showCloseButton]');
   });
 
-  it('dialogConfirmEmailSource mantém a ação primária neutra', () => {
+  it('dialogConfirmEmailSource confirma um envio, e mantém a ação primária neutra', () => {
     // Operação reversível: variante destrutiva aqui gritaria perigo onde não há
-    // — o convite pode ser reenviado, e a descrição diz isso.
+    // — o link pode ser pedido de novo, e a descrição diz isso. E a variante
+    // CONFIRMA: o cenário do convite era só desta stack, sem par no conteúdo
+    // compartilhado.
     const code = dialogConfirmEmailSource();
-    expect(code).toContain(`<h2 ndsDialogTitle>${INVITE_TRIGGER}</h2>`);
-    expect(code).toContain(`<p ndsDialogDescription>${INVITE_DESCRIPTION}</p>`);
+    expect(code).toContain(`<h2 ndsDialogTitle>${CONFIRM_EMAIL_TITLE}</h2>`);
+    expect(code).toContain(`<p ndsDialogDescription>${CONFIRM_EMAIL_DESCRIPTION}</p>`);
+    // O endereço vai no CORPO: é o dado que a pessoa confere antes de decidir,
+    // e o título sozinho não diz para onde o link vai.
+    expect(code).toContain(`<p>${CONFIRM_EMAIL_BODY}</p>`);
     expect(code).not.toContain('variant="destructive"');
-    expect(footerLabels(code)).toEqual([CANCEL, INVITE_TRIGGER]);
     // O arroba escapado: em texto de template do Angular ele abre bloco de
     // controle, e é assim que a story o escreve.
-    expect(code).not.toContain('ana@exemplo.com. Você pode');
+    expect(code).not.toContain('maria@exemplo.com');
   });
 });
 

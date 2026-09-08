@@ -37,6 +37,29 @@ export const LABELS = {
   removeItemTitle: t('demonstration.labels.removeItemTitle'),
   removeItemDescription: t('demonstration.labels.removeItemDescription'),
   removeItemAction: t('demonstration.labels.removeItemAction'),
+  // Os cenários que esta stack escrevia à mão, e que por isso divergiam das
+  // outras quatro: o painel do guia (rodapé de três ações), o painel
+  // informativo sem rodapé, as duas rotas de rolagem e a confirmação de
+  // e-mail. Todos existem em `demonstration.labels`; escritos aqui, mostravam
+  // "Editar perfil" onde as demais mostram o cenário que a composição descreve.
+  guideTrigger: t('demonstration.labels.guideTrigger'),
+  guideTitle: t('demonstration.labels.guideTitle'),
+  guideDescription: t('demonstration.labels.guideDescription'),
+  guideBody: t('demonstration.labels.guideBody'),
+  back: t('demonstration.labels.back'),
+  continueAction: t('demonstration.labels.continueAction'),
+  aboutTitle: t('demonstration.labels.aboutTitle'),
+  aboutDescription: t('demonstration.labels.aboutDescription'),
+  aboutBody: t('demonstration.labels.aboutBody'),
+  termsTitle: t('demonstration.labels.termsTitle'),
+  termsDescription: t('demonstration.labels.termsDescription'),
+  decline: t('demonstration.labels.decline'),
+  accept: t('demonstration.labels.accept'),
+  contractTrigger: t('demonstration.labels.contractTrigger'),
+  contractTitle: t('demonstration.labels.contractTitle'),
+  contractDescription: t('demonstration.labels.contractDescription'),
+  confirmEmailTitle: t('demonstration.labels.confirmEmailTitle'),
+  confirmEmailAction: t('demonstration.labels.confirmEmailAction'),
 };
 
 /**

@@ -99,12 +99,16 @@ const DEMO = {
   destructiveDescription: 'O item sai desta lista e continua disponível no catálogo.',
   destructiveAction: 'Remover item',
 
-  inviteTrigger: 'Enviar convite',
-  inviteTitle: 'Enviar convite',
+  // A variante CONFIRMA um envio — o cenário do convite era só desta stack, e
+  // por isso `inviteTitle`/`inviteAction` não tinham par no conteúdo
+  // compartilhado. O título e a ação saem agora de `LABELS`; só a descrição e o
+  // corpo continuam aqui, porque o compartilhado não os tem.
+  //
   // `&#64;` e não `@`: em texto de template do Angular o arroba abre bloco de
   // controle, e é assim que a story o escreve.
-  inviteDescription: 'O convite vai para ana&#64;exemplo.com. Você pode reenviar depois.',
-  inviteAction: 'Enviar convite',
+  confirmEmailDescription: 'Verifique o endereço antes de enviar o link de acesso.',
+  confirmEmailBody:
+    'Vamos enviar um link para maria&#64;exemplo.com. Confirme o endereço antes de prosseguir.',
 
   formName: 'Nome',
   formNameValue: 'Ana Ribeiro',
@@ -240,13 +244,18 @@ ${inner}
  * `ndsButton` e duas diretivas ligando o mesmo atributo não têm vencedor
  * definido — em teste, procure pelo nome acessível.
  */
-function footer(o: { action?: string; cancel?: boolean; attrs?: string } = {}): string {
+function footer(
+  o: { action?: string; cancel?: boolean; cancelLabel?: string; extra?: string[]; attrs?: string } = {},
+): string {
   const buttons: string[] = [];
   if (o.cancel !== false) {
     buttons.push(
-      `            <button ndsDialogClose ndsButton variant="outline">${LABELS.cancel}</button>`,
+      `            <button ndsDialogClose ndsButton variant="outline">${o.cancelLabel ?? LABELS.cancel}</button>`,
     );
   }
+  // Ações que entram ENTRE o fechador e a primária — é o caso do rodapé de três
+  // botões, onde `Voltar` é mais secundário que a primária e menos que o fechar.
+  if (o.extra) buttons.push(...o.extra);
   if (o.action) buttons.push(o.action);
 
   return `          <div ndsDialogFooter${o.attrs ?? ''}>
@@ -258,6 +267,18 @@ ${buttons.join('\n')}
 function action(label: string, variant?: 'destructive'): string {
   const attrs = variant ? ` variant="${variant}"` : '';
   return `            <button ndsButton${attrs}>${label}</button>`;
+}
+
+/** Um botão secundário do rodapé — o `Voltar` do painel do guia. */
+function secondaryAction(label: string): string {
+  return `            <button ndsButton variant="outline">${label}</button>`;
+}
+
+/** Um parágrafo solto no corpo, para as composições que só têm texto. */
+function textBody(text: string): string {
+  return `          <div ndsDialogBody>
+            <p>${text}</p>
+          </div>`;
 }
 
 /** O par cabeçalho + rodapé canônico, que quase toda story mostra. */
@@ -376,7 +397,7 @@ export function dialogWithScrollContentSource(): string {
             data-spacing="sm"
             tabindex="0"
             role="group"
-            aria-label="${LABELS.title}"
+            aria-label="${LABELS.termsTitle}"
           >
             @for (n of clauses; track n) {
               <p>Cláusula {{ n }}: ${DEMO.bodyClause}</p>
@@ -385,10 +406,11 @@ export function dialogWithScrollContentSource(): string {
 
   return example({
     template: panel({
+      trigger: LABELS.termsTitle,
       content: content({
-        title: LABELS.title,
-        description: LABELS.description,
-        after: `${body}\n\n${defaultAfter()}`,
+        title: LABELS.termsTitle,
+        description: LABELS.termsDescription,
+        after: `${body}\n\n${footer({ action: action(LABELS.accept) })}`,
       }),
     }),
     body: '  readonly clauses = Array.from({ length: 20 }, (_, i) => i + 1);',
@@ -417,11 +439,15 @@ export function dialogWithScrollingOverlaySource(): string {
   return example({
     template: panel({
       nested: true,
+      trigger: LABELS.contractTrigger,
       content: content({
         attrs: ' scroll',
-        title: LABELS.title,
-        description: LABELS.description,
-        after: `${body}\n\n${defaultAfter()}`,
+        title: LABELS.contractTitle,
+        description: LABELS.contractDescription,
+        after: `${body}\n\n${footer({
+          cancelLabel: LABELS.decline,
+          action: action(LABELS.accept),
+        })}`,
       }),
     }),
     body: '  readonly clauses = Array.from({ length: 20 }, (_, i) => i + 1);',
@@ -437,9 +463,12 @@ export function dialogWithScrollingOverlaySource(): string {
 export function dialogNoFooterSource(): string {
   return example({
     template: panel({
+      trigger: LABELS.aboutTitle,
       content: content({
-        title: LABELS.title,
-        description: LABELS.description,
+        title: LABELS.aboutTitle,
+        description: LABELS.aboutDescription,
+        // O corpo diz por onde se fecha, já que não há rodapé para dizê-lo.
+        after: textBody(LABELS.aboutBody),
       }),
     }),
   });
@@ -472,25 +501,32 @@ export function dialogWithDestructiveActionSource(): string {
 /**
  * O fechar sai do canto e vai para o rodapé.
  *
- * `showCloseButton` existe nos DOIS lugares e faz coisas diferentes: no painel
- * ele desenha o X do canto (ligado por padrão), no rodapé ele acrescenta um
- * botão de fechar ao lado das ações (desligado por padrão). Desligar um e ligar
- * o outro é a composição inteira desta variante.
+ * O X do canto sai (`[showCloseButton]="false"` no painel) e o fechar desce
+ * para o rodapé, como ação de MENOR ênfase das três — por isso `ghost`, e por
+ * isso primeiro no DOM: a folha põe o primeiro embaixo no empilhamento e à
+ * esquerda no lado a lado.
  *
- * O rótulo do botão do rodapé não se escreve: `closeLabel` já vale `Fechar`.
+ * O botão é ESCRITO, e não desenhado pelo `[showCloseButton]` do rodapé: aquele
+ * nasce `variant="outline"`, e aqui o fechar precisa da ênfase mais baixa das
+ * três para o rodapé ler como uma escala. Quem fecha é a diretiva
+ * `ndsDialogClose`, e não o rótulo.
  */
 export function dialogCustomCloseInFooterSource(): string {
   return example({
     template: panel({
+      trigger: LABELS.guideTrigger,
       content: content({
         attrs: ' [showCloseButton]="false"',
-        title: LABELS.title,
-        description: LABELS.description,
-        after: footer({
+        title: LABELS.guideTitle,
+        description: LABELS.guideDescription,
+        after: `${textBody(LABELS.guideBody)}\n\n${footer({
           cancel: false,
-          attrs: ' [showCloseButton]="true"',
-          action: action(LABELS.action),
-        }),
+          extra: [
+            `            <button ndsDialogClose ndsButton variant="ghost">${LABELS.close}</button>`,
+            secondaryAction(LABELS.back),
+          ],
+          action: action(LABELS.continueAction),
+        })}`,
       }),
     }),
   });
@@ -499,17 +535,22 @@ export function dialogCustomCloseInFooterSource(): string {
 /**
  * Confirmação de operação reversível: a ação primária fica neutra.
  *
- * Variante destrutiva aqui gritaria perigo onde não há — o convite pode ser
- * reenviado, e a descrição diz isso.
+ * Variante destrutiva aqui gritaria perigo onde não há — o link pode ser
+ * pedido de novo, e a descrição diz isso.
+ *
+ * O endereço vai no CORPO, e não só no título: é o dado que a pessoa precisa
+ * conferir antes de decidir, e um título sozinho não diz para onde o link vai.
  */
 export function dialogConfirmEmailSource(): string {
   return example({
     template: panel({
-      trigger: DEMO.inviteTrigger,
+      trigger: LABELS.confirmEmailTitle,
       content: content({
-        title: DEMO.inviteTitle,
-        description: DEMO.inviteDescription,
-        after: footer({ action: action(DEMO.inviteAction) }),
+        title: LABELS.confirmEmailTitle,
+        description: DEMO.confirmEmailDescription,
+        after: `${textBody(DEMO.confirmEmailBody)}\n\n${footer({
+          action: action(LABELS.confirmEmailAction),
+        })}`,
       }),
     }),
   });

@@ -233,15 +233,15 @@ export const WithScrollContent: Story = {
     },
     template: `
       <div ndsDialog [defaultOpen]="true">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.termsTitle }}</button>
 
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
 
           <div ndsDialogContent [closeLabel]="labels.close">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ labels.title }}</h2>
-              <p ndsDialogDescription>{{ labels.description }}</p>
+              <h2 ndsDialogTitle>{{ labels.termsTitle }}</h2>
+              <p ndsDialogDescription>{{ labels.termsDescription }}</p>
             </div>
 
             <div
@@ -250,7 +250,7 @@ export const WithScrollContent: Story = {
               data-spacing="sm"
               tabindex="0"
               role="group"
-              [attr.aria-label]="labels.title"
+              [attr.aria-label]="labels.termsTitle"
             >
               @for (paragrafo of paragrafos; track paragrafo) {
                 <p>{{ paragrafo }}</p>
@@ -259,7 +259,7 @@ export const WithScrollContent: Story = {
 
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ labels.cancel }}</button>
-              <button ndsButton>{{ labels.action }}</button>
+              <button ndsButton>{{ labels.accept }}</button>
             </div>
           </div>
         </ng-template>
@@ -313,7 +313,7 @@ export const WithScrollingOverlay: Story = {
     },
     template: `
       <div ndsDialog [defaultOpen]="true">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.contractTrigger }}</button>
 
         <ng-template ndsDialogPortal>
           <!--
@@ -325,8 +325,8 @@ export const WithScrollingOverlay: Story = {
           <div ndsDialogOverlay scroll>
             <div ndsDialogContent scroll [closeLabel]="labels.close">
               <div ndsDialogHeader>
-                <h2 ndsDialogTitle>{{ labels.title }}</h2>
-                <p ndsDialogDescription>{{ labels.description }}</p>
+                <h2 ndsDialogTitle>{{ labels.contractTitle }}</h2>
+                <p ndsDialogDescription>{{ labels.contractDescription }}</p>
               </div>
 
               <!--
@@ -341,8 +341,8 @@ export const WithScrollingOverlay: Story = {
               </div>
 
               <div ndsDialogFooter>
-                <button ndsDialogClose ndsButton variant="outline">{{ labels.cancel }}</button>
-                <button ndsButton>{{ labels.action }}</button>
+                <button ndsDialogClose ndsButton variant="outline">{{ labels.decline }}</button>
+                <button ndsButton>{{ labels.accept }}</button>
               </div>
             </div>
           </div>
@@ -389,19 +389,28 @@ export const NoFooter: Story = {
     covers: ['visual.item2'],
     docs: { source: { transform: dialogNoFooterSource } },
   },
+  // O cenário é o painel INFORMATIVO, e ele vem do conteúdo compartilhado.
+  // Esta story mostrava "Editar perfil" — um painel de edição sem nenhuma ação
+  // para confirmar a edição, que é o contrário do que a composição ensina — e
+  // por isso divergia das outras stacks, que já mostram este mesmo texto. O
+  // corpo diz por onde se fecha, já que não há rodapé para dizê-lo.
   render: () => ({
     props: { labels: LABELS },
     template: `
       <div ndsDialog [defaultOpen]="true">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.aboutTitle }}</button>
 
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
 
           <div ndsDialogContent [closeLabel]="labels.close">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ labels.title }}</h2>
-              <p ndsDialogDescription>{{ labels.description }}</p>
+              <h2 ndsDialogTitle>{{ labels.aboutTitle }}</h2>
+              <p ndsDialogDescription>{{ labels.aboutDescription }}</p>
+            </div>
+
+            <div ndsDialogBody>
+              <p>{{ labels.aboutBody }}</p>
             </div>
           </div>
         </ng-template>
@@ -482,23 +491,38 @@ export const CustomCloseInFooter: Story = {
     covers: ['visual.item2'],
     docs: { source: { transform: dialogCustomCloseInFooterSource } },
   },
+  // O cenário é o painel do GUIA, com TRÊS ações no rodapé — o mesmo que as
+  // outras stacks mostram. Aqui ele exibia "Editar perfil" com uma ação só, e
+  // o fechar saía do `[showCloseButton]` do próprio rodapé.
+  //
+  // As três ações são escritas, e não desenhadas pelo rodapé: o botão embutido
+  // do `NdsDialogFooter` nasce `variant="outline"`, e a composição de
+  // referência quer o fechar em `ghost` — a ação de MENOR ênfase das três.
+  // Escrevê-lo mantém a ordem de DOM que a folha lê (secundários primeiro,
+  // primária por último) e a ênfase que o sistema define.
   render: () => ({
     props: { labels: LABELS },
     template: `
       <div ndsDialog [defaultOpen]="true">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.guideTrigger }}</button>
 
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
 
           <div ndsDialogContent [showCloseButton]="false">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ labels.title }}</h2>
-              <p ndsDialogDescription>{{ labels.description }}</p>
+              <h2 ndsDialogTitle>{{ labels.guideTitle }}</h2>
+              <p ndsDialogDescription>{{ labels.guideDescription }}</p>
             </div>
 
-            <div ndsDialogFooter [showCloseButton]="true" [closeLabel]="labels.close">
-              <button ndsButton>{{ labels.action }}</button>
+            <div ndsDialogBody>
+              <p>{{ labels.guideBody }}</p>
+            </div>
+
+            <div ndsDialogFooter>
+              <button ndsDialogClose ndsButton variant="ghost">{{ labels.close }}</button>
+              <button ndsButton variant="outline">{{ labels.back }}</button>
+              <button ndsButton>{{ labels.continueAction }}</button>
             </div>
           </div>
         </ng-template>
@@ -517,15 +541,19 @@ export const CustomCloseInFooter: Story = {
     });
 
     await step('E ele entra como SECUNDÁRIO: primeiro no DOM, ação primária por último', async () => {
-      // O botão que o rodapé desenha era projetado DEPOIS do conteúdo, e com
-      // isso ocupava a posição da ação primária nas duas larguras — a folha
-      // deriva as duas leituras da mesma ordem de DOM (column-reverse no
-      // estreito, row + justify-end no largo). Ordem, e não posição em pixels:
-      // é o que a guideline 04 escreve e o que o CSS lê.
+      // Ordem de DOM, e não posição em pixels: a folha deriva as duas leituras
+      // da mesma ordem (column-reverse no estreito, row + justify-end no
+      // largo). Conferir pixel aqui mediria a largura do viewport da rodada.
+      // O fechar é a ação de MENOR ênfase das três, então abre a lista.
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const buttons = [...footer.querySelectorAll('button')];
-      await expect(buttons[0]).toHaveAccessibleName(LABELS.close);
-      await expect(buttons[buttons.length - 1]).toHaveTextContent(LABELS.action);
+      await expect(buttons.map((b) => b.textContent?.trim())).toEqual([
+        LABELS.close,
+        LABELS.back,
+        LABELS.continueAction,
+      ]);
+      await expect(buttons[0]).toHaveClass(/nds-button-ghost/);
+      await expect(buttons[buttons.length - 1]).toHaveClass(/nds-button-default/);
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
@@ -543,26 +571,39 @@ export const ConfirmEmail: Story = {
     covers: ['visual.item2'],
     docs: { source: { transform: dialogConfirmEmailSource } },
   },
+  // A variante CONFIRMA um envio — ela não convida. O cenário do convite era
+  // só desta stack, e por isso o título e a ação viviam num override local sem
+  // par no conteúdo compartilhado; `confirmEmailTitle` e `confirmEmailAction`
+  // existem lá e são o que as outras stacks mostram.
+  //
+  // A descrição e o corpo continuam escritos aqui porque o conteúdo
+  // compartilhado não os tem — é o mesmo texto da stack de referência, letra
+  // por letra. `&#64;` e não `@`: em texto de template do Angular o arroba abre
+  // bloco de controle.
   render: () => ({
     props: { labels: LABELS },
     template: `
       <div ndsDialog [defaultOpen]="true">
-        <button ndsDialogTrigger ndsButton variant="outline">Enviar convite</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.confirmEmailTitle }}</button>
 
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
 
           <div ndsDialogContent [closeLabel]="labels.close">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>Enviar convite</h2>
+              <h2 ndsDialogTitle>{{ labels.confirmEmailTitle }}</h2>
               <p ndsDialogDescription>
-                O convite vai para ana&#64;exemplo.com. Você pode reenviar depois.
+                Verifique o endereço antes de enviar o link de acesso.
               </p>
+            </div>
+
+            <div ndsDialogBody>
+              <p>Vamos enviar um link para maria&#64;exemplo.com. Confirme o endereço antes de prosseguir.</p>
             </div>
 
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ labels.cancel }}</button>
-              <button ndsButton>Enviar convite</button>
+              <button ndsButton>{{ labels.confirmEmailAction }}</button>
             </div>
           </div>
         </ng-template>
@@ -571,6 +612,13 @@ export const ConfirmEmail: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const p = await waitForOpen();
+
+    await step('O endereço confirmado aparece no corpo, não só no título', async () => {
+      // O dado que a pessoa precisa conferir antes de decidir tem que estar na
+      // tela — o título sozinho não diz para onde o link vai.
+      const body = p.querySelector<HTMLElement>('[data-slot="dialog-body"]')!;
+      await expect(body).toHaveTextContent('maria@exemplo.com');
+    });
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;

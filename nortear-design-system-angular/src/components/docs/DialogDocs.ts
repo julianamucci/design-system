@@ -56,8 +56,8 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 //     API do Base UI, onde a rolagem é um subcomponente e o rótulo do botão de
 //     fechar é filho JSX. Aqui as duas são inputs, e prop sem descrição é API
 //     invisível;
-//   · rótulos dos exemplos que o conteúdo compartilhado não tem — hoje só o
-//     par do convite da variante de confirmação e o `alt` da capa — e que,
+//   · rótulos dos exemplos que o conteúdo compartilhado não tem — hoje a
+//     descrição e o corpo da confirmação de e-mail, e o `alt` da capa — e que,
 //     escritos direto no template, ficariam em português nas três versões da
 //     página. Os dez que estavam aqui (o botão de fechar, os nomes de campo, o
 //     contraexemplo vago, o exemplo negativo destrutivo e o trio de
@@ -67,13 +67,20 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 //     é medido: só esta stack renderiza um `<img>` de verdade na composição
 //     de mídia, então o `alt` não é conteúdo comum às cinco.
 //
+//     O par do CONVITE (`inviteAction`/`inviteDescription`) saiu junto com o
+//     cenário: a variante de confirmação convidava em vez de confirmar, e era
+//     a única das cinco a fazê-lo. `confirmEmailTitle` e `confirmEmailAction`
+//     existem no compartilhado e entraram no lugar; sobraram aqui só a
+//     descrição e o corpo, que lá não têm chave.
+//
 // `import.withScroll` é substituição, não acréscimo: o texto original diz
 // "(Vue)", e nomear outro stack numa página que é lida sozinha vaza contexto.
 const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>, {
   'pt-BR': {
-    'demonstration.labels.inviteAction': 'Enviar convite',
-    'demonstration.labels.inviteDescription':
-      'O convite vai para ana@exemplo.com. Você pode reenviar depois.',
+    'demonstration.labels.confirmEmailDescription':
+      'Verifique o endereço antes de enviar o link de acesso.',
+    'demonstration.labels.confirmEmailBody':
+      'Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.',
     'demonstration.labels.coverAlt': 'Padrão geométrico em tons de cinza',
     'import.withScroll': 'No componente que compõe:',
     'props.table.modal':
@@ -88,9 +95,10 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
       'Emitido antes do fechamento por clique fora. Permite cancelar o fechamento.',
   },
   en: {
-    'demonstration.labels.inviteAction': 'Send invite',
-    'demonstration.labels.inviteDescription':
-      'The invite goes to ana@example.com. You can resend it later.',
+    'demonstration.labels.confirmEmailDescription':
+      'Check the address before sending the access link.',
+    'demonstration.labels.confirmEmailBody':
+      'We will send a link to maria@example.com. Confirm the address before continuing.',
     'demonstration.labels.coverAlt': 'Geometric pattern in shades of grey',
     'import.withScroll': 'In the composing component:',
     'props.table.modal':
@@ -105,9 +113,10 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
       'Emitted before closing via outside click. Allows cancelling the dismissal.',
   },
   es: {
-    'demonstration.labels.inviteAction': 'Enviar invitación',
-    'demonstration.labels.inviteDescription':
-      'La invitación va a ana@ejemplo.com. Puedes reenviarla después.',
+    'demonstration.labels.confirmEmailDescription':
+      'Verifica la dirección antes de enviar el enlace de acceso.',
+    'demonstration.labels.confirmEmailBody':
+      'Enviaremos un enlace a maria@ejemplo.com. Confirma la dirección antes de continuar.',
     'demonstration.labels.coverAlt': 'Patrón geométrico en tonos de gris',
     'import.withScroll': 'En el componente que compone:',
     'props.table.modal':
@@ -297,7 +306,7 @@ const VARIANT_CODE = {
   <div ndsDialogContent closeLabel="Fechar">
     <div ndsDialogHeader>
       <h2 ndsDialogTitle>Termos de uso</h2>
-      <p ndsDialogDescription>Leia antes de aceitar.</p>
+      <p ndsDialogDescription>Leia atentamente antes de aceitar.</p>
     </div>
 
     <div
@@ -310,13 +319,23 @@ const VARIANT_CODE = {
     >
       <!-- conteúdo longo -->
     </div>
+
+    <div ndsDialogFooter>
+      <button ndsDialogClose ndsButton variant="outline">Cancelar</button>
+      <button ndsButton>Aceitar</button>
+    </div>
   </div>
 </ng-template>`,
 
   noFooter: `<div ndsDialogContent closeLabel="Fechar">
   <div ndsDialogHeader>
-    <h2 ndsDialogTitle>Detalhes do pedido</h2>
-    <p ndsDialogDescription>Pedido 1042, entregue em 12 de março.</p>
+    <h2 ndsDialogTitle>Sobre este recurso</h2>
+    <p ndsDialogDescription>Detalhes técnicos exibidos para fins informativos. Sem ações.</p>
+  </div>
+
+  <!-- Sem rodapé, o corpo diz por onde se fecha. -->
+  <div ndsDialogBody>
+    <p>O fechamento ocorre via X, Escape ou clique no overlay.</p>
   </div>
 </div>`,
 
@@ -327,24 +346,38 @@ const VARIANT_CODE = {
 
   customCloseInFooter: `<div ndsDialogContent [showCloseButton]="false">
   <div ndsDialogHeader>
-    <h2 ndsDialogTitle>Editar perfil</h2>
-    <p ndsDialogDescription>Atualize suas informações pessoais.</p>
+    <h2 ndsDialogTitle>Próximos passos</h2>
+    <p ndsDialogDescription>Continue o fluxo ou volte ao início.</p>
   </div>
 
-  <div ndsDialogFooter [showCloseButton]="true" closeLabel="Fechar">
-    <button ndsButton>Salvar alterações</button>
+  <div ndsDialogBody>
+    <p>O guia continua disponível no menu de ajuda.</p>
+  </div>
+
+  <!-- O fechar é a ação de MENOR ênfase das três, então abre a lista e vai de
+       ghost; a primária fecha. O rodapé empilha ao contrário no estreito e
+       alinha à direita no largo, e das duas leituras sai a primária em cima e
+       à direita. -->
+  <div ndsDialogFooter>
+    <button ndsDialogClose ndsButton variant="ghost">Fechar</button>
+    <button ndsButton variant="outline">Voltar</button>
+    <button ndsButton>Continuar</button>
   </div>
 </div>`,
 
   confirmEmail: `<div ndsDialogContent closeLabel="Fechar">
   <div ndsDialogHeader>
-    <h2 ndsDialogTitle>Enviar convite</h2>
-    <p ndsDialogDescription>O convite vai para ana@exemplo.com.</p>
+    <h2 ndsDialogTitle>Confirmar e-mail</h2>
+    <p ndsDialogDescription>Verifique o endereço antes de enviar o link de acesso.</p>
+  </div>
+
+  <div ndsDialogBody>
+    <p>Vamos enviar um link para maria@exemplo.com. Confirme o endereço antes de prosseguir.</p>
   </div>
 
   <div ndsDialogFooter>
     <button ndsDialogClose ndsButton variant="outline">Cancelar</button>
-    <button ndsButton>Enviar convite</button>
+    <button ndsButton>Enviar link</button>
   </div>
 </div>`,
 };
@@ -556,7 +589,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
 
     <ng-template #tplVarWithScrollContent>
       <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_scroll_content', 'docs_variantes', $event)">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.termsTitle') }}</button>
         <ng-template ndsDialogPortal>
           <!-- Sem [scroll]: o conteúdo compartilhado descreve esta variante como
                "Header e Footer fixos", que é o arranjo em que só o CORPO rola.
@@ -565,8 +598,8 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
           <div ndsDialogOverlay></div>
           <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ t('demonstration.labels.title') }}</h2>
-              <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
+              <h2 ndsDialogTitle>{{ t('demonstration.labels.termsTitle') }}</h2>
+              <p ndsDialogDescription>{{ t('demonstration.labels.termsDescription') }}</p>
             </div>
             <div
               ndsDialogBody
@@ -574,7 +607,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
               data-spacing="sm"
               tabindex="0"
               role="group"
-              [attr.aria-label]="t('demonstration.labels.title')"
+              [attr.aria-label]="t('demonstration.labels.termsTitle')"
             >
               @for (line of conteudoLongo(); track line) {
                 <p>{{ line }}</p>
@@ -582,7 +615,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton>{{ t('demonstration.labels.action') }}</button>
+              <button ndsButton>{{ t('demonstration.labels.accept') }}</button>
             </div>
           </div>
         </ng-template>
@@ -591,7 +624,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
 
     <ng-template #tplVarScrollingOverlay>
       <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_scrolling_overlay', 'docs_variantes', $event)">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.contractTrigger') }}</button>
         <ng-template ndsDialogPortal>
           <!-- A OUTRA rota: o par [scroll] põe o painel no fluxo do overlay, e é
                o overlay que rola — o cabeçalho sobe junto com o conteúdo. O
@@ -600,8 +633,8 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
           <div ndsDialogOverlay scroll>
             <div ndsDialogContent scroll [closeLabel]="t('demonstration.labels.close')">
               <div ndsDialogHeader>
-                <h2 ndsDialogTitle>{{ t('demonstration.labels.title') }}</h2>
-                <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
+                <h2 ndsDialogTitle>{{ t('demonstration.labels.contractTitle') }}</h2>
+                <p ndsDialogDescription>{{ t('demonstration.labels.contractDescription') }}</p>
               </div>
               <!-- Sem a classe de rolagem de corpo, sem tabindex e sem papel:
                    aqui não há região rolável aninhada para alcançar por teclado,
@@ -612,8 +645,8 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
                 }
               </div>
               <div ndsDialogFooter>
-                <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-                <button ndsButton>{{ t('demonstration.labels.action') }}</button>
+                <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.decline') }}</button>
+                <button ndsButton>{{ t('demonstration.labels.accept') }}</button>
               </div>
             </div>
           </div>
@@ -622,14 +655,22 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarNoFooter>
+      <!-- O cenário é o painel INFORMATIVO, e ele vem do conteúdo compartilhado.
+           Aqui a prévia mostrava "Editar perfil" — um painel de edição sem
+           nenhuma ação para confirmar a edição, que é o contrário do que a
+           composição ensina — e divergia das outras stacks. O corpo diz por
+           onde se fecha, já que não há rodapé para dizê-lo. -->
       <div ndsDialog (onOpenChange)="aoMudarNoExemplo('no_footer', 'docs_variantes', $event)">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.aboutTitle') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
           <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ t('demonstration.labels.title') }}</h2>
-              <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
+              <h2 ndsDialogTitle>{{ t('demonstration.labels.aboutTitle') }}</h2>
+              <p ndsDialogDescription>{{ t('demonstration.labels.aboutDescription') }}</p>
+            </div>
+            <div ndsDialogBody>
+              <p>{{ t('demonstration.labels.aboutBody') }}</p>
             </div>
           </div>
         </ng-template>
@@ -660,17 +701,32 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarCustomCloseInFooter>
+      <!-- O cenário é o painel do GUIA, com TRÊS ações no rodapé — o mesmo que
+           as outras stacks mostram. Aqui a prévia exibia "Editar perfil" com uma
+           ação só.
+
+           As três são ESCRITAS, e não desenhadas pelo [showCloseButton] do
+           rodapé: aquele nasce variant="outline", e o fechar precisa da ênfase
+           mais baixa das três (ghost) para o rodapé ler como uma escala. A
+           ordem de DOM é a da guideline 04 — secundários primeiro, primária por
+           último; a folha põe o primeiro embaixo no empilhamento e à esquerda
+           no lado a lado. -->
       <div ndsDialog (onOpenChange)="aoMudarNoExemplo('custom_close_in_footer', 'docs_variantes', $event)">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.guideTrigger') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
           <div ndsDialogContent [showCloseButton]="false">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ t('demonstration.labels.title') }}</h2>
-              <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
+              <h2 ndsDialogTitle>{{ t('demonstration.labels.guideTitle') }}</h2>
+              <p ndsDialogDescription>{{ t('demonstration.labels.guideDescription') }}</p>
             </div>
-            <div ndsDialogFooter [showCloseButton]="true" [closeLabel]="t('demonstration.labels.close')">
-              <button ndsButton>{{ t('demonstration.labels.action') }}</button>
+            <div ndsDialogBody>
+              <p>{{ t('demonstration.labels.guideBody') }}</p>
+            </div>
+            <div ndsDialogFooter>
+              <button ndsDialogClose ndsButton variant="ghost">{{ t('demonstration.labels.close') }}</button>
+              <button ndsButton variant="outline">{{ t('demonstration.labels.back') }}</button>
+              <button ndsButton>{{ t('demonstration.labels.continueAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -685,17 +741,22 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
            analytics com interface — e ainda punha "Confirmação de e-mail" num
            botão de ação. O texto agora é o mesmo do snippet ao lado. -->
       <div ndsDialog (onOpenChange)="aoMudarNoExemplo('confirm_email', 'docs_variantes', $event)">
-        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.inviteAction') }}</button>
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.confirmEmailTitle') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
           <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ t('demonstration.labels.inviteAction') }}</h2>
-              <p ndsDialogDescription>{{ t('demonstration.labels.inviteDescription') }}</p>
+              <h2 ndsDialogTitle>{{ t('demonstration.labels.confirmEmailTitle') }}</h2>
+              <p ndsDialogDescription>{{ t('demonstration.labels.confirmEmailDescription') }}</p>
+            </div>
+            <!-- O endereço vai no CORPO: é o dado que a pessoa confere antes de
+                 decidir, e o título sozinho não diz para onde o link vai. -->
+            <div ndsDialogBody>
+              <p>{{ t('demonstration.labels.confirmEmailBody') }}</p>
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton>{{ t('demonstration.labels.inviteAction') }}</button>
+              <button ndsButton>{{ t('demonstration.labels.confirmEmailAction') }}</button>
             </div>
           </div>
         </ng-template>
