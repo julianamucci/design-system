@@ -17,6 +17,38 @@ Este é o texto canônico. A seção "Alinhamento de Grupos de Botões" da
 
 Os secundários seguem por ordem de importância, do primário para longe.
 
+## A variante DIZ a posição — e é uma tabela só
+
+A ordem não é escolha de cada componente: ela sai da variante, e a variante sai
+da importância da ação. A tabela é a de
+[`<stack>/guidelines/06-form-components.md`](../../nortear-design-system-vanilla/guidelines/06-form-components.md),
+seção "Variantes":
+
+| variante | importância | posição no DOM | onde aparece |
+|---|---|---|---|
+| `default` | primária | **último** | topo empilhado · direita deitado |
+| `outline` | secundária | meio | |
+| `ghost` | terciária | **primeiro** | base empilhado · esquerda deitado |
+
+Um rodapé de três ações é, portanto, `[ghost, outline, default]` na marcação —
+sempre, em dialog, sheet, drawer e alert-dialog. Com dois, é `[outline,
+default]`.
+
+**Esta tabela existe porque a lacuna entre as duas guidelines produziu um
+defeito.** A `02` dizia "ordem de importância, do primário para longe", correto;
+a `06` dizia "ghost = ação terciária", correto; e nenhuma das duas se citava.
+No meio ficou o `showCloseButton` do rodapé do Dialog, que cravava `outline`
+para o botão de fechar — a ação MENOS importante das três — porque a descrição
+dele em três lugares o chamava de "ação secundária". Duas regras certas, um
+nome errado entre elas, e o resultado foi dois pesos iguais para ações de
+importância diferente.
+
+O sinal de que era defeito estava à vista e foi lido ao contrário: **as cinco
+stacks abandonaram a prop e escreveram o botão à mão em `ghost`, cada uma por
+conta.** Cinco implementações independentes convergindo contra o primitivo não
+é preferência de quem escreveu — é o primitivo entregando a coisa errada.
+Corrigido em 2026-09-08; a prop voltou a ser usada nas quatro.
+
 ## Uma ordem de DOM serve aos dois eixos
 
 E é a parte contraintuitiva, por isso está em destaque:

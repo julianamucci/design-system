@@ -263,7 +263,7 @@ saída mais rápida (`--duration-fast`, `--ease-exit`). Sob
 | `defaultOpen` | estado inicial não controlado |
 | `onOpenChange` | callback com o novo estado |
 | `showCloseButtonContent` | exibe o X no canto do painel |
-| `showCloseButtonFooter` | exibe um botão de fechar dentro do rodapé, como ação secundária (D9) |
+| `showCloseButtonFooter` | exibe um botão de fechar dentro do rodapé, como ação TERCIÁRIA — variante `ghost`, primeiro no DOM (D9) |
 | `closeLabel` | rótulo do botão de fechar — o visível do rodapé e o de leitor de tela do X |
 | `className` | classes `.nds-*` adicionais |
 

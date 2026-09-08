@@ -199,7 +199,7 @@
         "withScrollContent": "Body com conteúdo longo e scroll interno. Header e Footer fixos.",
         "noFooter": "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva.",
         "withDestructiveAction": "Footer com ação primária <code>destructive</code>. Diferente de AlertDialog — use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista).",
-        "customCloseInFooter": "O X do canto é desligado e o fechamento passa para o rodapé, onde entra como ação secundária: abaixo das demais no empilhamento e à esquerda delas quando lado a lado.",
+        "customCloseInFooter": "O X do canto é desligado e o fechamento passa para o rodapé, onde entra como ação terciária, em <code>ghost</code>: abaixo das demais no empilhamento e à esquerda delas quando lado a lado.",
         "confirmEmail": {
           "name": "Confirmação de e-mail",
           "description": "Body curto com mensagem informativa + footer com ação primária neutra. Confirma uma operação reversível antes de disparar o efeito real (envio, agendamento, geração).",
@@ -270,7 +270,7 @@
         "defaultOpen": "Estado inicial em modo não controlado.",
         "onOpenChange": "Callback disparado ao abrir ou fechar. Recebe o novo estado booleano.",
         "showCloseButtonContent": "Exibe botão X no canto superior direito do Content.",
-        "showCloseButtonFooter": "Exibe um botão de fechar dentro do Footer, na posição de ação secundária.",
+        "showCloseButtonFooter": "Exibe um botão de fechar dentro do Footer, como ação terciária — variante ghost, primeiro no DOM.",
         "className": "Classes .nds-* adicionais para override de estilo.",
         "children": "Conteúdo renderizado dentro do subcomponente. Em Title e Description, é o texto exibido."
       },
@@ -690,7 +690,7 @@
         "withScrollContent": "Body with long content and internal scroll. Header and Footer fixed.",
         "noFooter": "Only Title + Description, no Footer. For informational use or passive preview.",
         "withDestructiveAction": "Footer with <code>destructive</code> primary action. Different from AlertDialog — use only when destructiveness is secondary to the flow (e.g. remove item from list).",
-        "customCloseInFooter": "The corner X is turned off and closing moves to the footer, where it enters as a secondary action: below the others when stacked, and to their left when side by side.",
+        "customCloseInFooter": "The corner X is turned off and closing moves to the footer, where it enters as a tertiary action, in <code>ghost</code>: below the others when stacked, and to their left when side by side.",
         "confirmEmail": {
           "name": "Email confirmation",
           "description": "Short informational body + footer with a neutral primary action. Confirms a reversible operation before triggering the real effect (send, schedule, generate).",
@@ -761,7 +761,7 @@
         "defaultOpen": "Initial state in uncontrolled mode.",
         "onOpenChange": "Callback fired on open or close. Receives the new boolean state.",
         "showCloseButtonContent": "Shows X button at the top-right corner of Content.",
-        "showCloseButtonFooter": "Shows a close button inside the Footer, in the secondary action position.",
+        "showCloseButtonFooter": "Shows a close button inside the Footer, as a tertiary action — ghost variant, first in the DOM.",
         "className": "Additional .nds-* classes for style overrides.",
         "children": "Content rendered inside the subcomponent. In Title and Description, it is the displayed text."
       },
@@ -1181,7 +1181,7 @@
         "withScrollContent": "Body con contenido largo y scroll interno. Header y Footer fijos.",
         "noFooter": "Solo Title + Description, sin Footer. Para uso informativo o previsualización pasiva.",
         "withDestructiveAction": "Footer con acción primaria <code>destructive</code>. Distinto de AlertDialog — úsalo solo cuando lo destructivo es secundario al flujo (ej. quitar ítem de lista).",
-        "customCloseInFooter": "La X de la esquina se desactiva y el cierre pasa al pie, donde entra como acción secundaria: debajo de las demás en el apilamiento y a su izquierda cuando están lado a lado.",
+        "customCloseInFooter": "La X de la esquina se desactiva y el cierre pasa al pie, donde entra como acción terciaria, en <code>ghost</code>: debajo de las demás en el apilamiento y a su izquierda cuando están lado a lado.",
         "confirmEmail": {
           "name": "Confirmación de e-mail",
           "description": "Body corto con mensaje informativo + footer con acción primaria neutra. Confirma una operación reversible antes de disparar el efecto real (envío, programación, generación).",
@@ -1252,7 +1252,7 @@
         "defaultOpen": "Estado inicial en modo no controlado.",
         "onOpenChange": "Callback disparado al abrir o cerrar. Recibe el nuevo estado booleano.",
         "showCloseButtonContent": "Muestra botón X en la esquina superior derecha del Content.",
-        "showCloseButtonFooter": "Muestra un botón de cierre dentro del Footer, en la posición de acción secundaria.",
+        "showCloseButtonFooter": "Muestra un botón de cierre dentro del Footer, como acción terciaria — variante ghost, primero en el DOM.",
         "className": "Clases .nds-* adicionales para override de estilo.",
         "children": "Contenido renderizado dentro del subcomponente. En Title y Description, es el texto mostrado."
       },
