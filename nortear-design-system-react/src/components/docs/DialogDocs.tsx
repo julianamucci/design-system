@@ -331,9 +331,7 @@ export function DialogDocs() {
 </DialogContent>`;
 
   const codeDefault = `<Dialog>
-  <DialogTrigger asChild>
-    <Button variant="outline">Editar perfil</Button>
-  </DialogTrigger>
+  <DialogTrigger render={<Button variant="outline" />}>Editar perfil</DialogTrigger>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Editar perfil</DialogTitle>
@@ -375,9 +373,7 @@ export function DialogDocs() {
 </Dialog>`;
 
   const codeNoFooter = `<Dialog>
-  <DialogTrigger asChild>
-    <Button variant="outline">Sobre este recurso</Button>
-  </DialogTrigger>
+  <DialogTrigger render={<Button variant="outline" />}>Sobre este recurso</DialogTrigger>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Sobre este recurso</DialogTitle>
@@ -396,9 +392,7 @@ export function DialogDocs() {
 </Dialog>`;
 
   const codeCustomCloseInFooter = `<Dialog>
-  <DialogTrigger asChild>
-    <Button variant="outline">Abrir guia</Button>
-  </DialogTrigger>
+  <DialogTrigger render={<Button variant="outline" />}>Abrir guia</DialogTrigger>
   <DialogContent showCloseButton={false}>
     <DialogHeader>
       <DialogTitle>Próximos passos</DialogTitle>
@@ -832,60 +826,12 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                       <p key={i}>Cláusula {i + 1}. Lorem ipsum dolor sit amet.</p>
                     ))}
                   </div>
-                  <DialogFooter>
-                    <DialogClose render={<Button variant="outline" />}>
-                      {tContent("demonstration.labels.cancel")}
-                    </DialogClose>
-                    <Button>{tContent("demonstration.labels.accept")}</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            ),
-          },
-          {
-            name: "withScrollingOverlay",
-            description: stripHtml(tContent("variants.items.withScrollingOverlay")),
-            // O snippet vem do conteúdo compartilhado, com uma variante por
-            // stack: escrito aqui ele ficaria preso a esta página, que é como
-            // cinco snippets desta campanha ficaram para trás do código.
-            code: tContent("variants.items.withScrollingOverlayCode"),
-            preview: (
-              <Dialog>
-                <DialogTrigger render={<Button variant="outline" />}>
-                  {tContent("demonstration.labels.contractTrigger")}
-                </DialogTrigger>
-                <DialogContent
-                  scroll
-                  className="nds-max-w-md"
-                  closeLabel={tContent("demonstration.labels.close")}
-                >
-                  <DialogHeader>
-                    <DialogTitle>{tContent("demonstration.labels.contractTitle")}</DialogTitle>
-                    <DialogDescription>
-                      {tContent("demonstration.labels.contractDescription")}
-                    </DialogDescription>
-                  </DialogHeader>
                   {/*
-                    A OUTRA rota: quem rola é o overlay, e o painel entra no
-                    fluxo dele. Sem `.nds-dialog-body-scroll`, sem `tabindex` e
-                    sem papel — não há região rolável aninhada para alcançar por
-                    teclado, porque o que rola já está na ordem natural da
-                    página.
-                  */}
-                  <div
-                    data-slot="dialog-body"
-                    className="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
-                    data-spacing="sm"
-                  >
-                    {Array.from({ length: 16 }).map((_, i) => (
-                      <p key={i}>Cláusula {i + 1}. Lorem ipsum dolor sit amet.</p>
-                    ))}
-                  </div>
-                  {/*
-                    "Recusar" e não "Cancelar": o par do contrato é
-                    aceitar/recusar, e é o que o snippet publicado ao lado
-                    (`variants.items.withScrollingOverlayCode`, conteúdo
-                    compartilhado) sempre mostrou — a prévia é que divergia.
+                    "Recusar", e não "Cancelar": o par de um documento que se
+                    aceita é aceitar/recusar. É o rótulo que vanilla — a
+                    referência cross-stack — usa nesta mesma variante, e a
+                    divergência só apareceu quando a outra prévia que consumia
+                    a chave saiu daqui.
                   */}
                   <DialogFooter>
                     <DialogClose render={<Button variant="outline" />}>
@@ -1008,9 +954,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             description: tContent("variants.items.confirmEmail.description"),
             useWhen: tContent("variants.items.confirmEmail.use"),
             code: `<Dialog>
-  <DialogTrigger asChild>
-    <Button>Enviar link</Button>
-  </DialogTrigger>
+  <DialogTrigger render={<Button />}>Enviar link</DialogTrigger>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Confirmar e-mail</DialogTitle>
@@ -1069,9 +1013,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             description: tContent("variants.compositions.profileEdit.description"),
             useWhen: tContent("variants.compositions.profileEdit.use"),
             code: `<Dialog>
-  <DialogTrigger asChild>
-    <Button variant="outline">Editar perfil</Button>
-  </DialogTrigger>
+  <DialogTrigger render={<Button variant="outline" />}>Editar perfil</DialogTrigger>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Editar perfil</DialogTitle>
@@ -1139,9 +1081,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             description: tContent("variants.compositions.mediaPreview.description"),
             useWhen: tContent("variants.compositions.mediaPreview.use"),
             code: `<Dialog>
-  <DialogTrigger asChild>
-    <Button variant="outline">Pré-visualizar</Button>
-  </DialogTrigger>
+  <DialogTrigger render={<Button variant="outline" />}>Pré-visualizar</DialogTrigger>
   <DialogContent>
     <DialogHeader>
       <DialogTitle>Capa do post</DialogTitle>
@@ -1379,10 +1319,11 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),
           },
-          // Seis, e não cinco: `testes.visual.item6` (WithScrollingOverlay)
-          // existe no conteúdo compartilhado desde que a rota B entrou, e a
-          // lista contada à mão parou no cinco — o item não existia para quem lê.
-          items: [1, 2, 3, 4, 5, 6].map((i) => ({
+          // Cinco: `testes.visual.item6` descrevia a variante WithScrollingOverlay,
+          // rota retirada em 2026-09-08. A chave ainda existe no conteúdo
+          // compartilhado, que não é desta stack — por isso a lista para no cinco
+          // em vez de contar o que o JSON tem.
+          items: [1, 2, 3, 4, 5].map((i) => ({
             story: tContent(`testes.visual.item${i}.story`),
             priority: tNav(priorityKeyMap[tContent(`testes.visual.item${i}.priority`)] ?? "common.high"),
           })),
