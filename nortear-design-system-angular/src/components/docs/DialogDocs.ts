@@ -195,48 +195,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
-// descreve um elemento `<nds-dialog>` e um `<ng-template ndsDialogContent>` que
-// este stack não tem — quem copiasse o bloco receberia markup que o Angular não
-// compila. A raiz é diretiva de ATRIBUTO num `<div>` — para o markup bater com
-// o do Vanilla — e o portal precisa ser o `<ng-template>`, porque o diálogo tem
-// DOIS nós raiz (overlay e painel) e o primitivo só teleporta os dois pela
-// forma estrutural.
-//
-// ESTE TEXTO É PROVISÓRIO e foi entregue para correção da chave compartilhada,
-// letra por letra: quando ela subir, apague a constante e volte a ler
-// `t('anatomy.structureCode')`. O contorno local é o que escondeu o defeito por
-// tanto tempo — a página ficava certa e a chave, errada para quem a lesse de
-// qualquer outro lugar.
-const ANATOMY_CODE = `<div ndsDialog>
-  <button ndsDialogTrigger ndsButton variant="outline">Editar perfil</button>
-
-  <ng-template ndsDialogPortal>
-    <div ndsDialogOverlay></div>
-
-    <div ndsDialogContent>
-      <div ndsDialogHeader>
-        <h2 ndsDialogTitle>Editar perfil</h2>
-        <p ndsDialogDescription>Atualize suas informações pessoais.</p>
-      </div>
-
-      <!-- O rodapé fica DENTRO do form: é o que faz o Enter em qualquer campo
-           disparar a ação primária. -->
-      <form (submit)="salvar($event)">
-        <div ndsDialogBody><!-- campos --></div>
-
-        <!-- No DOM o secundário vem primeiro e a ação primária por último: a
-             folha põe a primária em cima no empilhamento e à direita no lado a
-             lado. -->
-        <div ndsDialogFooter>
-          <button ndsDialogClose ndsButton variant="outline">Cancelar</button>
-          <button ndsButton type="submit">Salvar alterações</button>
-        </div>
-      </form>
-    </div>
-  </ng-template>
-</div>`;
-
 const IMPORT_CODE = `import { NDS_DIALOG } from '@/components/ui/dialog';
 
 // ou, peça a peça:
@@ -892,7 +850,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -997,7 +955,6 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
 export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;

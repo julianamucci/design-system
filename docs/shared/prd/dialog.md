@@ -139,6 +139,26 @@ inversão.
 **Nenhum compilador alcança isto**, e nenhuma suíte que asserte por papel
 tampouco: a ordem só existe como posição entre irmãos. O portão é ler o DOM.
 
+### D10 · O rodapé fica DENTRO do `<form>`, e é isso que faz o Enter funcionar
+
+**Estado**: em diálogo de formulário, o `<form>` envolve o corpo **e** o rodapé.
+A ação primária é `type="submit"` e fica dentro dele.
+
+**Por que não é detalhe de arrumação**: `type="submit"` fora do `<form>` é um
+botão inerte — não submete, e o Enter num campo não dispara nada. O botão
+continua clicável e com a aparência certa, então nada na tela denuncia.
+
+**Quarta ocorrência desta classe na campanha**, e o caminho dela diz muito: no
+`sheet` do Angular o botão de confirmar do perfil estava fora do form; na story
+`WithForm` do `dialog` do Angular o arquivo inteiro não tinha um `<form>`
+sequer; e a mesma coisa vivia em `anatomy.structureCode` de react, vue e svelte
+— que é conteúdo COMPARTILHADO, a chave mais copiada que o componente tem.
+Corrigido em 2026-09-07 nas quatro pontas.
+
+**O que nenhum portão vê**: `<form>` presente e submit fora dele é HTML válido,
+compila nas cinco e passa em qualquer asserção por papel ou por texto. O que
+denuncia é ler `button.form` — vazio quando o botão está órfão.
+
 ## 4. Anatomia
 
 ```
