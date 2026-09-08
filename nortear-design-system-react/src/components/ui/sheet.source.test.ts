@@ -295,6 +295,13 @@ describe('transforms das stories de composição', () => {
     // terceiro campo do snippet não existia no conteúdo nem na docs page.
     expect(output).toContain('<Label htmlFor="filtro-minimo">Preço mínimo</Label>');
     expect(output).not.toContain('Preço máximo');
+    // Onde há formulário, a saída diz `type="button"`: aqui o rodapé é irmão
+    // do corpo e o botão fica inerte de todo jeito, mas quem copia e aninha o
+    // rodapé no `form` -- a forma preferida da guideline -- herdaria um cancelar
+    // que ENVIA, porque o padrão do HTML para `<button>` é `submit`.
+    expect(output).toContain(
+      '<SheetClose render={<Button type="button" variant="outline" />}>Cancelar</SheetClose>',
+    );
     const rotulos = [...output.matchAll(/<Label htmlFor="[^"]*">([^<]*)<\/Label>/g)].map(
       (m) => m[1],
     );
@@ -344,8 +351,13 @@ describe('transforms das stories de composição', () => {
     expect(output).toContain('import { Input } from "@/components/ui/input";');
     expect(output).toContain('import { Label } from "@/components/ui/label";');
     // A saída sem compromisso vem primeiro no DOM; confirmar é a última parada
-    // do foco, e o SheetClose é quem fecha sem salvar.
-    expect(output).toContain('<SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>');
+    // do foco, e o SheetClose é quem fecha sem salvar. `type="button"` explicita
+    // a intenção onde há formulário: o padrão do HTML para `<button>` é
+    // `submit`, e quem aninhasse este rodapé no `form` herdaria um cancelar que
+    // envia em vez de descartar.
+    expect(output).toContain(
+      '<SheetClose render={<Button type="button" variant="outline" />}>Cancelar</SheetClose>',
+    );
   });
 
   it('o painel inferior deixa a ação destrutiva por último e sozinha na variante', () => {

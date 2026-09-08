@@ -98,10 +98,18 @@ function body(): string {
  * Rodapé com a saída explícita à esquerda e a ação primária por último no DOM.
  * A ordem de leitura e de foco é a do markup — inverter aqui mudaria o que o
  * teclado alcança primeiro, mesmo com o CSS desenhando o contrário.
+ *
+ * `comFormulario` marca o rodapé que convive com um `<form>` no corpo, e ali a
+ * saída diz `type="button"` — que é o que a story renderiza ao lado, e o que a
+ * guideline de alinhamento prescreve. O padrão do HTML para `<button>` é
+ * `submit`: aqui ele fica inerte porque o rodapé é irmão do corpo, mas quem
+ * copia o exemplo e aninha o rodapé no `form` — a forma preferida da guideline —
+ * herda um cancelar que ENVIA. Fora desse caso o atributo seria ruído.
  */
-function footer(acao = 'Aplicar filtros', saida = 'Cancelar'): string {
+function footer(acao = 'Aplicar filtros', saida = 'Cancelar', comFormulario = false): string {
+  const tipo = comFormulario ? 'type="button" ' : '';
   return `    <SheetFooter>
-      <SheetClose render={<Button variant="outline" />}>${saida}</SheetClose>
+      <SheetClose render={<Button ${tipo}variant="outline" />}>${saida}</SheetClose>
       <Button>${acao}</Button>
     </SheetFooter>`;
 }
@@ -305,7 +313,7 @@ import { Label } from "@/components/ui/label";`,
         </div>
       </form>
     </SheetBody>
-${footer()}`,
+${footer(undefined, undefined, true)}`,
       'Abrir filtros',
     ),
   );
@@ -408,7 +416,7 @@ import { Label } from "@/components/ui/label";`,
       </form>
     </SheetBody>
     <SheetFooter>
-      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      <SheetClose render={<Button type="button" variant="outline" />}>Cancelar</SheetClose>
       <Button type="submit" form="profile-form">Salvar alterações</Button>
     </SheetFooter>`,
       'Editar perfil',

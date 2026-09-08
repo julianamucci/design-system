@@ -210,8 +210,19 @@ describe('transforms das stories de composição', () => {
 
   it('a edição de perfil embrulha os campos num form e confirma por submit', () => {
     const saida = sheetEditPerfilSource();
-    expect(saida).toContain('<form class="nds-stack" data-spacing="sm">');
-    expect(saida).toContain('<Button type="submit">Salvar alterações</Button>');
+    expect(saida).toContain(
+      '<form id="profile-form" class="nds-stack" data-spacing="sm" @submit.prevent>',
+    );
+    // O rodapé é IRMÃO do corpo por construção do primitivo, então o botão fica
+    // fora do formulário: sem o atributo `form` o `type="submit"` é inerte —
+    // não envia pelo clique nem pelo Enter, e nada na tela denuncia. A asserção
+    // cobra o par id ↔ `form`, e não só a presença do `type`.
+    expect(saida).toContain(
+      '<Button type="submit" form="profile-form">Salvar alterações</Button>',
+    );
+    expect(saida).not.toContain('<Button type="submit">Salvar alterações</Button>');
+    // O descartar não pode herdar `submit` do padrão do HTML.
+    expect(saida).toContain('<Button type="button" variant="outline">Cancelar</Button>');
   });
 
   it('os três campos do perfil saem na ordem Nome · Nome de usuário · Bio', () => {

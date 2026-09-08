@@ -123,8 +123,8 @@ export const AdvancedFilters: Story = {
 export const ProfileEdit: Story = {
   parameters: {
     docs: {
-      // O corpo é um `form` e a confirmação é o `submit` dele — o meta mostra
-      // filtros soltos, sem formulário em volta.
+      // O corpo é um `form` e a confirmação é o `submit` dele, religado pelo
+      // atributo `form` — o meta mostra filtros soltos, sem formulário em volta.
       source: { transform: sheetEditPerfilSource },
       description: { story: 'Edição de perfil com múltiplos campos no painel direito.' },
     },
@@ -142,7 +142,7 @@ export const ProfileEdit: Story = {
             <SheetDescription>Atualize suas informações pessoais. As mudanças são salvas ao confirmar.</SheetDescription>
           </SheetHeader>
           <SheetBody>
-            <form class="nds-stack" data-spacing="sm">
+            <form id="profile-form" class="nds-stack" data-spacing="sm" @submit.prevent>
               <div class="nds-stack" data-spacing="xs">
                 <Label for="profile-name">Nome</Label>
                 <Input id="profile-name" defaultValue="Juliana Mucci" />
@@ -159,9 +159,9 @@ export const ProfileEdit: Story = {
           </SheetBody>
           <SheetFooter>
             <SheetClose as-child>
-              <Button variant="outline">Cancelar</Button>
+              <Button type="button" variant="outline">Cancelar</Button>
             </SheetClose>
-            <Button type="submit">Salvar alterações</Button>
+            <Button type="submit" form="profile-form">Salvar alterações</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -175,6 +175,15 @@ export const ProfileEdit: Story = {
     // posição — ou casaria dois rótulos, já que um deles começa pelo outro.
     const rotulos = [...panel.querySelectorAll('label')].map((el) => el.textContent?.trim());
     await expect(rotulos).toEqual(['Nome', 'Nome de usuário', 'Bio']);
+
+    // O rodapé mora FORA do corpo rolável, então o botão não está dentro do
+    // formulário: só o atributo `form` o alcança, e sem ele nem o clique nem o
+    // Enter num campo enviariam — o botão continuaria clicável e inerte.
+    const form = panel.querySelector<HTMLFormElement>('form');
+    await expect(form).not.toBeNull();
+    const submit = panel.querySelector<HTMLButtonElement>('button[type="submit"]');
+    await expect(submit).not.toBeNull();
+    await expect(submit).toHaveAttribute('form', form!.id);
   },
 };
 

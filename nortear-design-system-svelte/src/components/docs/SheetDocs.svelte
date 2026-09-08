@@ -937,7 +937,16 @@ interface TriggerProps {
             <SheetDescription>{$tStore('variants.compositions.profileEdit.panelDescription')}</SheetDescription>
           </SheetHeader>
           <SheetBody>
-            <form id="docs-sheet-profile" class="nds-stack" data-spacing="sm">
+            <!-- Mesmo guard do preview de filtros, e pela mesma razão: o botão
+                 do rodapé é `type="submit"` religado por `form`, então o clique
+                 — e o Enter dentro de um campo — DISPARA envio de verdade, e sem
+                 `preventDefault` a docs page tentaria navegar. O rastreio mora
+                 no envio, e não no clique, para valer também pelo Enter. -->
+            <form id="docs-sheet-profile" class="nds-stack" data-spacing="sm"
+                  onsubmit={(e: SubmitEvent) => {
+                    e.preventDefault();
+                    track('dialog_confirm', { component: 'sheet', action: 'save', label: 'right', location: 'docs_composicoes' });
+                  }}>
               <div class="nds-stack" data-spacing="xs">
                 <Label for="docs-sheet-profile-name">{$tStore('variants.compositions.profileEdit.fieldName')}</Label>
                 <Input id="docs-sheet-profile-name" value={$tStore('variants.compositions.profileEdit.fieldNameValue')} />
@@ -956,7 +965,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button type="button" variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button type="submit" form="docs-sheet-profile" onclick={() => track('dialog_confirm', { component: 'sheet', action: 'save', label: 'right', location: 'docs_composicoes' })}>{$tStore('variants.compositions.profileEdit.submit')}</Button>
+            <Button type="submit" form="docs-sheet-profile">{$tStore('variants.compositions.profileEdit.submit')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>

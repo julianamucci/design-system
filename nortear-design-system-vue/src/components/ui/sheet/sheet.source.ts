@@ -354,8 +354,12 @@ ${footer('Cancelar', 'Aplicar filtros', 4)}
 }
 
 /**
- * Edição de perfil: o corpo é um `form`, e a confirmação é o `submit` dele —
- * o rodapé fica dentro do painel, mas a ação pertence ao formulário.
+ * Edição de perfil: o corpo é um `form`, e a confirmação é o `submit` dele.
+ *
+ * O rodapé mora FORA do corpo rolável — é irmão dele por construção do
+ * primitivo —, então o botão não está dentro do formulário e só o par
+ * id ↔ `form` o alcança. Sem o atributo, `type="submit"` é botão INERTE: nem o
+ * clique nem o Enter num campo enviam, e nada na tela denuncia.
  */
 export function sheetEditPerfilSource(): string {
   return vueSnippet(
@@ -380,7 +384,7 @@ ${header(
   4,
 )}
     <SheetBody>
-      <form class="nds-stack" data-spacing="sm">
+      <form id="profile-form" class="nds-stack" data-spacing="sm" @submit.prevent>
 ${field('profile-name', 'Nome', 'Juliana Mucci', 8)}
 ${field('profile-handle', 'Nome de usuário', '@julianamucci', 8)}
 ${field('profile-bio', 'Bio', 'Designer de sistemas em São Paulo', 8)}
@@ -388,9 +392,9 @@ ${field('profile-bio', 'Bio', 'Designer de sistemas em São Paulo', 8)}
     </SheetBody>
     <SheetFooter>
       <SheetClose as-child>
-        <Button variant="outline">Cancelar</Button>
+        <Button type="button" variant="outline">Cancelar</Button>
       </SheetClose>
-      <Button type="submit">Salvar alterações</Button>
+      <Button type="submit" form="profile-form">Salvar alterações</Button>
     </SheetFooter>
   </SheetContent>
 </Sheet>`,

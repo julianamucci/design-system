@@ -665,7 +665,7 @@ export function SheetDocs() {
       </form>
     </SheetBody>
     <SheetFooter>
-      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      <SheetClose render={<Button type="button" variant="outline" />}>Cancelar</SheetClose>
       <Button type="submit" form="filters">Aplicar filtros</Button>
     </SheetFooter>
   </SheetContent>
@@ -785,7 +785,7 @@ export function SheetDocs() {
       </form>
     </SheetBody>
     <SheetFooter>
-      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      <SheetClose render={<Button type="button" variant="outline" />}>Cancelar</SheetClose>
       <Button type="submit" form="profile">Salvar alterações</Button>
     </SheetFooter>
   </SheetContent>

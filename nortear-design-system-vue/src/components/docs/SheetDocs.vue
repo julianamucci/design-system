@@ -331,7 +331,7 @@ function codeAdvancedFilters(): string {
     </SheetBody>
     <SheetFooter>
       <SheetClose as-child>
-        <Button variant="outline">${tContent('demonstration.labels.cancel')}</Button>
+        <Button type="button" variant="outline">${tContent('demonstration.labels.cancel')}</Button>
       </SheetClose>
       <Button type="submit" form="filters">${tContent('demonstration.labels.apply')}</Button>
     </SheetFooter>
@@ -392,7 +392,7 @@ function codeProfileEdit(): string {
     </SheetBody>
     <SheetFooter>
       <SheetClose as-child>
-        <Button variant="outline">${tContent('demonstration.labels.cancel')}</Button>
+        <Button type="button" variant="outline">${tContent('demonstration.labels.cancel')}</Button>
       </SheetClose>
       <Button type="submit" form="profile">${tContent('variants.compositions.profileEdit.submit')}</Button>
     </SheetFooter>
@@ -1040,10 +1040,16 @@ const a11yCritCols = computed(() => ({
                 <SheetDescription>{{ tContent('demonstration.labels.description') }}</SheetDescription>
               </SheetHeader>
               <SheetBody>
+                <!-- O guard de envio existe para o preview ao vivo: o botão do
+                     rodapé é `type="submit"` religado por `form`, então o clique
+                     — e o Enter dentro de um campo — DISPARA envio de verdade, e
+                     sem `prevent` a docs page tentaria navegar. O rastreio mora
+                     aqui, e não no clique, para valer também pelo Enter. -->
                 <form
                   id="docs-sheet-filters"
                   class="nds-stack"
                   data-spacing="sm"
+                  @submit.prevent="rastrearConfirmacao('docs_composicoes', 'right')"
                 >
                   <div
                     class="nds-stack"
@@ -1070,14 +1076,13 @@ const a11yCritCols = computed(() => ({
               </SheetBody>
               <SheetFooter>
                 <SheetClose as-child>
-                  <Button variant="outline">
+                  <Button type="button" variant="outline">
                     {{ tContent('demonstration.labels.cancel') }}
                   </Button>
                 </SheetClose>
                 <Button
                   type="submit"
                   form="docs-sheet-filters"
-                  @click="rastrearConfirmacao('docs_composicoes', 'right')"
                 >
                   {{ tContent('demonstration.labels.apply') }}
                 </Button>
@@ -1137,10 +1142,14 @@ const a11yCritCols = computed(() => ({
                 <SheetDescription>{{ tContent('variants.compositions.profileEdit.panelDescription') }}</SheetDescription>
               </SheetHeader>
               <SheetBody>
+                <!-- Mesmo guard do preview de filtros: o `submit` religado por
+                     `form` envia de verdade, e o rastreio no envio cobre tanto o
+                     clique quanto o Enter dentro de um campo. -->
                 <form
                   id="docs-sheet-profile"
                   class="nds-stack"
                   data-spacing="sm"
+                  @submit.prevent="rastrearConfirmacao('docs_composicoes', 'right', 'save')"
                 >
                   <div
                     class="nds-stack"
@@ -1176,14 +1185,13 @@ const a11yCritCols = computed(() => ({
               </SheetBody>
               <SheetFooter>
                 <SheetClose as-child>
-                  <Button variant="outline">
+                  <Button type="button" variant="outline">
                     {{ tContent('demonstration.labels.cancel') }}
                   </Button>
                 </SheetClose>
                 <Button
                   type="submit"
                   form="docs-sheet-profile"
-                  @click="rastrearConfirmacao('docs_composicoes', 'right', 'save')"
                 >
                   {{ tContent('variants.compositions.profileEdit.submit') }}
                 </Button>
