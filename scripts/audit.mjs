@@ -893,6 +893,28 @@ function auditSubmitForaDoForm(slug) {
 }
 
 /**
+ * Todo `selector:` declarado pela stack angular, lido UMA vez por execução.
+ * Precisa ser da stack inteira: os blocos de anatomia compõem com diretivas de
+ * outros componentes (`ndsButton`, `ndsInput`, `ndsLabel`), e escopo por slug
+ * transformaria isso em falso positivo generalizado.
+ */
+let _seletoresAngular = null;
+function seletoresAngularDaStack() {
+  if (_seletoresAngular) return _seletoresAngular;
+  _seletoresAngular = new Set();
+  const dir = join(ROOT, 'nortear-design-system-angular/src/components/ui');
+  if (!existsSync(dir)) return _seletoresAngular;
+  for (const nome of readdirSync(dir)) {
+    if (!nome.endsWith('.ts')) continue;
+    if (/\.(stories|source|test|spec|fixtures)\./.test(nome)) continue;
+    const src = readFile(join(dir, nome));
+    if (!src) continue;
+    for (const m of src.matchAll(/selector:\s*'([^']+)'/g)) _seletoresAngular.add(m[1]);
+  }
+  return _seletoresAngular;
+}
+
+/**
  * `anatomy.structureCode.angular` publica `<nds-algo>` quando o seletor real é
  * diretiva de ATRIBUTO (`div[ndsAlgo]`). Quem copiar o bloco recebe markup que
  * o Angular não compila.
@@ -924,16 +946,25 @@ function auditAnatomiaAngularSeletor(slug) {
   if (!ng || typeof ng !== 'string') return [];
 
   const publicados = [...new Set([...ng.matchAll(/<(nds-[a-z0-9-]+)[\s>]/g)].map((m) => m[1]))];
-  if (!publicados.length) return [];
+  // SEM saída antecipada aqui, e a ausência é o conserto. A primeira versão
+  // fazia `if (!publicados.length) return []`, herdado de quando a regra só
+  // media elemento. Com a metade de ATRIBUTO acrescentada, esse retorno
+  // pulava exatamente os componentes que fazem tudo por diretiva: o `badge`
+  // publica `<svg ndsBadgeIcon>`, que não existe na stack, e passava — porque
+  // não tinha nenhum `<nds-*>` para a regra se interessar.
+  //
+  // Vale como aviso geral: ao AMPLIAR um portão, as condições de guarda da
+  // versão antiga continuam lá, escritas para o escopo antigo, e silenciam a
+  // parte nova sem deixar rastro.
 
-  const { all } = filesForSlug(slug, 'angular');
-  const seletores = new Set();
-  for (const file of all) {
-    if (/\.(stories|source|test|spec|fixtures)\./.test(file.replace(/\\/g, '/'))) continue;
-    const src = readFile(file);
-    if (!src) continue;
-    for (const m of src.matchAll(/selector:\s*'([^']+)'/g)) seletores.add(m[1]);
-  }
+  // Varre a stack INTEIRA, não só os arquivos do slug. Medido ao ligar a
+  // metade de atributo: com escopo por componente, o `sheet` reprovava por
+  // `ndsButton` — que existe, declarado em `button.ts`. Diretiva compartilhada
+  // é a regra e não a exceção nestes blocos (`ndsButton`, `ndsInput`,
+  // `ndsLabel`), então o escopo estreito teria feito o portão gritar em quase
+  // todos. Um portão que grita errado ensina a ignorá-lo.
+  const seletores = seletoresAngularDaStack();
+  if (!seletores.size) return [];
   // Sem seletor nenhum encontrado, a comparação não tem lastro — calar é o
   // certo. Zero de uma varredura que não achou nada é indistinguível de limpo,
   // e essa confusão já custou caro nesta casa.
@@ -942,14 +973,44 @@ function auditAnatomiaAngularSeletor(slug) {
   const inexistentes = publicados.filter(
     (el) => ![...seletores].some((s) => new RegExp(`(^|[\\s,])${el}([\\s,\\[]|$)`).test(s)),
   );
-  if (!inexistentes.length) return [];
+
+  // Segunda metade, acrescentada depois de a primeira rodar: ATRIBUTO
+  // inexistente. A varredura de elemento não via `ndsNavigationMenuViewport`
+  // (o real é `ndsNavigationMenuPanel`) nem `ndsToggleGroupItem` (os itens são
+  // `<button ndsToggle>`), os dois achados à mão durante a correção dos 16.
+  //
+  // Medido antes de ligar: 4 achados em 2 componentes — `ndsBadgeIcon`, que
+  // não existe em lugar nenhum, e o trio `ndsInputOtpGroup/Slot/Separator`,
+  // onde o defeito é maior que um nome errado: a chave publica uma API
+  // COMPOSTA e a stack entrega um elemento único (`nds-input-otp`). Quatro não
+  // é despejo; a regra entra.
+  //
+  // Deliberadamente conservador: só casa atributo solto (`<div ndsFoo>`), não
+  // binding (`[ndsFoo]="x"`). Binding de propriedade pode vir de diretiva
+  // declarada noutra pasta, e falso positivo aqui custa mais que a cobertura
+  // que ele traria.
+  const nomesDeclarados = new Set();
+  for (const s of seletores) {
+    for (const a of s.matchAll(/\[([A-Za-z][\w]*)\]/g)) nomesDeclarados.add(a[1]);
+    for (const e of s.matchAll(/(?:^|[\s,])(nds-[a-z0-9-]+)/g)) nomesDeclarados.add(e[1]);
+  }
+  const atributosCitados = [...new Set(
+    [...ng.matchAll(/(?:\s)(nds[A-Z][\w]*)(?=[\s=>\]])/g)].map((m) => m[1]),
+  )];
+  const atributosInexistentes = atributosCitados.filter((a) => !nomesDeclarados.has(a));
+
+  if (!inexistentes.length && !atributosInexistentes.length) return [];
+
+  const partes = [];
+  if (inexistentes.length) partes.push(`elemento <${inexistentes.join('>, <')}>`);
+  if (atributosInexistentes.length) partes.push(`atributo ${atributosInexistentes.join(', ')}`);
 
   return [{
     category: 'quality', severity: 'high', slug, stack: 'angular',
     file: `docs/shared/content/${slug}/translations.json`,
     rule: 'angular_anatomy_seletor_inexistente',
-    message: `a anatomia publica <${inexistentes.join('>, <')}>, e a stack não declara esse elemento`
-      + ` — os seletores são de atributo. Quem copiar recebe markup que não compila.`
+    message: `a anatomia publica ${partes.join(' e ')}, que a stack não declara.`
+      + ` Quem copiar recebe markup que o Angular não compila.`
       + ` Declarados: ${[...seletores].slice(0, 4).join(' · ')}${seletores.size > 4 ? ' …' : ''}`,
   }];
 }
