@@ -85,3 +85,6 @@ nortear-design-system-vanilla/.storybook/public/
 
 .vercel
 .env*
+
+# Diretório de trabalho do scanner do SonarQube
+.scannerwork/

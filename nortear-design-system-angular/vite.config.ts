@@ -26,7 +26,7 @@ export default defineConfig({
   test: {
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html', 'json', 'json-summary'],
+      reporter: ['text', 'html', 'json', 'json-summary', 'lcov'],
       include: ['src/components/ui/**/*.ts'],
       exclude: [
         'src/components/ui/**/*.stories.ts',

@@ -51,7 +51,7 @@ export default defineConfig({
       provider: 'v8',
       // json-summary: totais por arquivo num JSON pequeno, para comparar a
       // cobertura de um componente com o que o /quality apurou nele.
-      reporter: ['text', 'html', 'json', 'json-summary'],
+      reporter: ['text', 'html', 'json', 'json-summary', 'lcov'],
       include: ['src/components/ui/**/*.{ts,tsx}'],
       exclude: [
         'src/components/ui/**/*.stories.{ts,tsx}',

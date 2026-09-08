@@ -29,7 +29,7 @@ export default defineConfig({
     // design system inteiro, não por stack.
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html', 'json', 'json-summary'],
+      reporter: ['text', 'html', 'json', 'json-summary', 'lcov'],
       include: ['src/components/ui/**/*.{ts,svelte}'],
       exclude: [
         'src/components/ui/**/*.stories.{ts,tsx}',
