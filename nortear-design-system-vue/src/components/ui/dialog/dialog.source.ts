@@ -25,7 +25,6 @@ const ORDER = [
   'DialogDescription',
   'DialogFooter',
   'DialogHeader',
-  'DialogScrollContent',
   'DialogTitle',
   'DialogTrigger',
 ];
@@ -67,8 +66,6 @@ function descricao(frase: string): string {
 type Frame = {
   /** Props da raiz: `default-open`, `:modal="false"`. */
   root?: string;
-  /** `DialogContent` (centrado) ou `DialogScrollContent` (rola no overlay). */
-  panel?: 'DialogContent' | 'DialogScrollContent';
   painelProps?: string;
   trigger: string;
   title: string;
@@ -87,7 +84,7 @@ type Frame = {
  * botão DENTRO de outro botão.
  */
 function dialogo(m: Frame): string {
-  const { root = '', panel = 'DialogContent', painelProps = '', body = '', footer = '' } = m;
+  const { root = '', painelProps = '', body = '', footer = '' } = m;
   // Sem corpo e sem rodapé o painel é só cabeçalho: nada de linha em branco
   // sobrando entre o fim do cabeçalho e o fecho do painel.
   const partes = [body, footer].filter(Boolean);
@@ -97,12 +94,12 @@ function dialogo(m: Frame): string {
   <DialogTrigger as-child>
     <Button variant="outline">${m.trigger}</Button>
   </DialogTrigger>
-  <${panel}${attrs(painelProps)}>
+  <DialogContent${attrs(painelProps)}>
     <DialogHeader>
       <DialogTitle>${m.title}</DialogTitle>
 ${descricao(m.descricao)}
     </DialogHeader>${miolo}
-  </${panel}>
+  </DialogContent>
 </Dialog>`;
 }
 
@@ -283,9 +280,9 @@ export function dialogWithFormSource(): string {
  * ponteiro (WCAG 2.1.1). `group` e não `region`: marco aninhado num diálogo
  * já nomeado não acrescenta navegação.
  *
- * A outra rota — `DialogScrollContent`, em que o painel entra no fluxo e o
- * OVERLAY rola — existe nesta stack e está descrita na dica da docs page. Ela
- * não é esta variante: ali o cabeçalho sobe junto com o conteúdo.
+ * É a ÚNICA rota. Houve uma segunda, em que o painel entrava no fluxo do véu e
+ * a página rolava inteira; foi retirada em 2026-09-08, junto do componente que
+ * a montava.
  */
 export function dialogWithScrollSource(): string {
   return vueSnippet(
@@ -319,54 +316,6 @@ const termos = [
       aria-label="Termos de uso"
     >
       <p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>
-    </div>`,
-      footer: footerDefault('Recusar', 'Aceitar'),
-    }),
-  );
-}
-
-/**
- * Variante WithScrollingOverlay: a OUTRA rota para conteúdo mais alto que a
- * janela.
- *
- * Quem rola é o OVERLAY: o painel entra no fluxo dele e o cabeçalho sobe junto
- * com o conteúdo. Não há região rolável aninhada, então também não há
- * `tabindex`, papel nem nome a declarar — o que rola já está na ordem natural
- * da página.
- *
- * A forma é um COMPONENTE próprio nesta stack, porque o que muda é a composição
- * do overlay com o painel, e o `DialogContent` daqui já monta os dois. Isso é
- * divergência de API de framework: não há fonte de verdade e não se "alinha".
- */
-export function dialogOverlayScrollSource(): string {
-  return vueSnippet(
-    `${importing([
-      'Dialog',
-      'DialogClose',
-      'DialogDescription',
-      'DialogFooter',
-      'DialogHeader',
-      'DialogScrollContent',
-      'DialogTitle',
-      'DialogTrigger',
-    ])}
-
-const clausulas = [
-  'Do objeto: os serviços são fornecidos no estado em que se encontram, e esta cláusula descreve o alcance de cada um deles.',
-  'Do uso: a conta é pessoal e intransferível, e o acesso por terceiros depende de autorização registrada.',
-  'Do encerramento: o cancelamento pode ser pedido a qualquer momento, e os dados ficam disponíveis por trinta dias.',
-]`,
-    dialogo({
-      panel: 'DialogScrollContent',
-      trigger: 'Ver contrato',
-      title: 'Contrato de prestação',
-      descricao: 'O documento rola inteiro, e o cabeçalho sobe junto.',
-      body: `    <div
-      class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
-      data-slot="dialog-body"
-      data-spacing="sm"
-    >
-      <p v-for="(clausula, i) in clausulas" :key="i">{{ clausula }}</p>
     </div>`,
       footer: footerDefault('Recusar', 'Aceitar'),
     }),

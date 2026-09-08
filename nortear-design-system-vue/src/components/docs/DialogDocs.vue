@@ -11,7 +11,6 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogScrollContent,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -42,19 +41,12 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
-// O conteúdo compartilhado descreve o padrão de rolagem interna sem nomear
-// subcomponente, porque nem toda stack tem um. O override abaixo nomeia as
-// DUAS rotas que existem aqui — divergência de API de framework, que fica
-// registrada neste override em vez de virar comparação no texto comum. Nenhuma
-// chave `*Code` passa por aqui.
+// `notes.tip3` JÁ NÃO é override. Ele nomeava as duas rotas de rolagem que
+// existiam aqui; a segunda — painel no fluxo do véu, página rolando inteira —
+// foi retirada em 2026-09-08 junto do componente que a montava. Sobrou uma
+// rota só, e o texto compartilhado já a descreve sem nomear subcomponente.
 //
-// O texto anterior afirmava que `DialogScrollContent` "dá ao corpo a altura
-// máxima e a rolagem vertical, e mantém cabeçalho e rodapé sempre visíveis".
-// É o contrário do que ele faz: ele põe `.nds-dialog-overlay-scroll` e
-// `.nds-dialog-content-scroll`, e nesse arranjo quem rola é o overlay — o
-// painel inteiro entra no fluxo e o cabeçalho sobe junto com o resto.
-//
-// `props.table.closeLabel` também é override, e pelo mesmo motivo: a prop
+// `props.table.closeLabel` segue override, e pelo motivo de sempre: a prop
 // nasceu POR STACK, para tirar de dentro do primitivo o rótulo que estava
 // cravado em pt-BR, e a tabela descreve a prop desta stack. Nome de prop,
 // nunca um `*Code`.
@@ -67,20 +59,14 @@ const { t: tContent, locale } = useTranslation(dialogTranslations, {
   'pt-BR': {
     'props.table.closeLabel':
       'Nome acessível do botão de fechar. Vai como texto para leitor de tela, não como atributo.',
-    'notes.tip3':
-      'Conteúdo mais alto que a janela pede uma das duas rotas. Cabeçalho e rodapé parados: mantenha <code>DialogContent</code> e dê ao corpo a classe de rolagem, que já traz altura máxima e barra própria. Painel inteiro rolando com a página: troque por <code>DialogScrollContent</code>, e aí o cabeçalho sobe junto com o conteúdo.',
   },
   en: {
     'props.table.closeLabel':
       'Accessible name of the close button. Rendered as screen-reader text, not as an attribute.',
-    'notes.tip3':
-      'Content taller than the window calls for one of two routes. Header and footer fixed: keep <code>DialogContent</code> and give the body the scroll class, which already brings a max height and its own scrollbar. Whole panel scrolling with the page: swap in <code>DialogScrollContent</code>, and the header then scrolls away with the content.',
   },
   es: {
     'props.table.closeLabel':
       'Nombre accesible del botón de cerrar. Se renderiza como texto para lector de pantalla, no como atributo.',
-    'notes.tip3':
-      'El contenido más alto que la ventana pide una de dos rutas. Encabezado y pie fijos: mantén <code>DialogContent</code> y dale al cuerpo la clase de desplazamiento, que ya trae altura máxima y barra propia. Panel entero desplazándose con la página: cambia a <code>DialogScrollContent</code>, y entonces el encabezado sube junto con el contenido.',
   },
 });
 
@@ -244,18 +230,22 @@ const codeWithForm = `<Dialog>
       <DialogTitle>Editar perfil</DialogTitle>
       <DialogDescription>Atualize seu nome e email.</DialogDescription>
     </DialogHeader>
-    <form class="nds-stack" data-spacing="sm">
-      <Label for="name">Nome</Label>
-      <Input id="name" />
-      <Label for="email">Email</Label>
-      <Input id="email" type="email" />
+    <form class="nds-stack" data-spacing="sm" @submit.prevent>
+      <div class="nds-stack" data-spacing="xs">
+        <Label for="name">Nome</Label>
+        <Input id="name" />
+      </div>
+      <div class="nds-stack" data-spacing="xs">
+        <Label for="email">Email</Label>
+        <Input id="email" type="email" />
+      </div>
+      <DialogFooter>
+        <DialogClose as-child>
+          <Button type="button" variant="outline">Cancelar</Button>
+        </DialogClose>
+        <Button type="submit">Salvar alterações</Button>
+      </DialogFooter>
     </form>
-    <DialogFooter>
-      <DialogClose as-child>
-        <Button variant="outline">Cancelar</Button>
-      </DialogClose>
-      <Button type="submit">Salvar alterações</Button>
-    </DialogFooter>
   </DialogContent>
 </Dialog>`;
 
@@ -358,10 +348,6 @@ const variantItems = computed(() => [
   { name: 'default',               description: stripHtml(tContent('variants.items.default')),               code: codeDefault },
   { name: 'withForm',              description: stripHtml(tContent('variants.items.withForm')),              code: codeWithForm },
   { name: 'withScrollContent',     description: stripHtml(tContent('variants.items.withScrollContent')),     code: codeDefault },
-  // O snippet vem do conteúdo compartilhado, com uma variante por stack:
-  // escrito aqui ele ficaria preso a esta página, que é como cinco snippets
-  // desta campanha ficaram para trás do código.
-  { name: 'withScrollingOverlay',  description: stripHtml(tContent('variants.items.withScrollingOverlay')),  code: tContent('variants.items.withScrollingOverlayCode') },
   { name: 'noFooter',              description: stripHtml(tContent('variants.items.noFooter')),              code: codeNoFooter },
   { name: 'withDestructiveAction', description: stripHtml(tContent('variants.items.withDestructiveAction')), code: codeDefault },
   { name: 'customCloseInFooter',   description: stripHtml(tContent('variants.items.customCloseInFooter')),   code: codeCustomCloseInFooter },
@@ -859,11 +845,14 @@ const a11yCritCols = computed(() => ({
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
-              <DialogDescription>Atualize seu nome e email.</DialogDescription>
+              <DialogDescription>{{ tContent('demonstration.labels.description') }}</DialogDescription>
             </DialogHeader>
+            <!-- O rodapé fica DENTRO do form (D10): `type="submit"` fora dele é
+                 botão inerte — não submete, e o Enter num campo não faz nada. -->
             <form
               class="nds-stack"
               data-spacing="sm"
+              @submit.prevent
             >
               <div
                 class="nds-stack"
@@ -882,17 +871,20 @@ const a11yCritCols = computed(() => ({
                   type="email"
                 />
               </div>
-            </form>
-            <DialogFooter>
-              <DialogClose as-child>
-                <Button variant="outline">
-                  {{ tContent('demonstration.labels.cancel') }}
+              <DialogFooter>
+                <DialogClose as-child>
+                  <Button
+                    type="button"
+                    variant="outline"
+                  >
+                    {{ tContent('demonstration.labels.cancel') }}
+                  </Button>
+                </DialogClose>
+                <Button type="submit">
+                  {{ tContent('demonstration.labels.action') }}
                 </Button>
-              </DialogClose>
-              <Button type="submit">
-                {{ tContent('demonstration.labels.action') }}
-              </Button>
-            </DialogFooter>
+              </DialogFooter>
+            </form>
           </DialogContent>
         </Dialog>
       </template>
@@ -903,11 +895,9 @@ const a11yCritCols = computed(() => ({
               {{ tContent('demonstration.labels.termsTitle') }}
             </Button>
           </DialogTrigger>
-          <!-- `DialogContent`, e não `DialogScrollContent`: o conteúdo
-               compartilhado descreve esta variante como "Header e Footer fixos",
-               que é o arranjo em que só o CORPO rola. Com o painel rolável o
-               cabeçalho sobe junto, e a prévia contradizia a descrição
-               renderizada ao lado dela. -->
+          <!-- O conteúdo compartilhado descreve esta variante como "Header e
+               Footer fixos", que é o arranjo em que só o CORPO rola — e desde
+               2026-09-08 é o único que o design system oferece. -->
           <DialogContent
             class="nds-max-w-md"
             :close-label="tContent('demonstration.labels.close')"
@@ -952,48 +942,6 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              {{ tContent('demonstration.labels.contractTrigger') }}
-            </Button>
-          </DialogTrigger>
-          <!-- A OUTRA rota: DialogScrollContent põe o painel no fluxo do
-               overlay, e é o overlay que rola — o cabeçalho sobe junto com o
-               conteúdo. Componente próprio, e não uma prop, porque o que muda é
-               a composição do overlay com o painel. -->
-          <DialogScrollContent :close-label="tContent('demonstration.labels.close')">
-            <DialogHeader>
-              <DialogTitle>{{ tContent('demonstration.labels.contractTitle') }}</DialogTitle>
-              <DialogDescription>{{ tContent('demonstration.labels.contractDescription') }}</DialogDescription>
-            </DialogHeader>
-            <!-- Sem a classe de rolagem de corpo, sem tabindex e sem papel:
-                 aqui não há região rolável aninhada para alcançar por teclado,
-                 porque o que rola já está na ordem natural da página. -->
-            <div
-              class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
-              data-slot="dialog-body"
-              data-spacing="sm"
-            >
-              <p
-                v-for="i in 16"
-                :key="i"
-              >
-                Cláusula {{ i }} — Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </p>
-            </div>
-            <DialogFooter>
-              <DialogClose as-child>
-                <Button variant="outline">
-                  {{ tContent('demonstration.labels.decline') }}
-                </Button>
-              </DialogClose>
-              <Button>{{ tContent('demonstration.labels.accept') }}</Button>
-            </DialogFooter>
-          </DialogScrollContent>
-        </Dialog>
-      </template>
-      <template #variant-preview-4>
-        <Dialog>
-          <DialogTrigger as-child>
-            <Button variant="outline">
               {{ tContent('demonstration.labels.aboutTitle') }}
             </Button>
           </DialogTrigger>
@@ -1012,7 +960,7 @@ const a11yCritCols = computed(() => ({
           </DialogContent>
         </Dialog>
       </template>
-      <template #variant-preview-5>
+      <template #variant-preview-4>
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
@@ -1037,7 +985,7 @@ const a11yCritCols = computed(() => ({
           </DialogContent>
         </Dialog>
       </template>
-      <template #variant-preview-6>
+      <template #variant-preview-5>
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
@@ -1079,7 +1027,7 @@ const a11yCritCols = computed(() => ({
           </DialogContent>
         </Dialog>
       </template>
-      <template #variant-preview-7>
+      <template #variant-preview-6>
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">

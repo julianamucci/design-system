@@ -4,7 +4,6 @@ import {
   dialogActionDestructiveSource,
   dialogWithFormSource,
   dialogWithScrollSource,
-  dialogOverlayScrollSource,
   dialogConfirmarEmailSource,
   dialogControlledSource,
   dialogEditarPerfilSource,
@@ -133,10 +132,8 @@ describe('transforms das stories de variante', () => {
 
   it('a rolagem é do CORPO, e o corpo chega alcançável por teclado', () => {
     const saida = dialogWithScrollSource();
-    // O painel continua sendo o centralizado: trocar por `DialogScrollContent`
-    // é a outra rota, em que o cabeçalho sobe junto com o conteúdo.
+    // Rota única: o painel é o centralizado, e quem rola é o corpo dentro dele.
     expect(saida).toContain('<DialogContent class="nds-max-w-lg">');
-    expect(saida).not.toContain('DialogScrollContent');
     expect(saida).toContain('nds-dialog-body-scroll');
     expect(saida).toContain('tabindex="0"');
     expect(saida).toContain('role="group"');
@@ -145,22 +142,6 @@ describe('transforms das stories de variante', () => {
     // Cabeçalho e rodapé continuam DENTRO do painel, parados.
     expect(saida).toContain('    <DialogHeader>');
     expect(saida).toContain('    <DialogFooter>');
-  });
-
-  it('a OUTRA rota rola o overlay, e não repete a composição da rolagem de corpo', () => {
-    // As duas rotas circularam sob o mesmo nome, e três stacks mostravam uma
-    // enquanto duas mostravam a outra. Comparadas em PAR, o que as separa é o
-    // painel escolhido e a ausência da região rolável aninhada.
-    const rotaB = dialogOverlayScrollSource();
-    expect(rotaB).toContain('<DialogScrollContent>');
-    expect(rotaB).toContain("  DialogScrollContent,");
-    expect(rotaB).not.toContain('nds-dialog-body-scroll');
-    expect(rotaB).not.toContain('tabindex="0"');
-
-    // O par: a rota A não usa o painel rolável, e a B não usa o centralizado.
-    const rotaA = dialogWithScrollSource();
-    expect(rotaA).not.toContain('DialogScrollContent');
-    expect(rotaB).not.toContain('<DialogContent');
   });
 
   it('sem rodapé, as peças do rodapé saem também do import', () => {
@@ -242,7 +223,6 @@ const BUILDERS: Array<[string, () => string]> = [
   ['dialogControlledSource', dialogControlledSource],
   ['dialogWithFormSource', dialogWithFormSource],
   ['dialogWithScrollSource', dialogWithScrollSource],
-  ['dialogOverlayScrollSource', dialogOverlayScrollSource],
   ['dialogNoFooterSource', dialogNoFooterSource],
   ['dialogActionDestructiveSource', dialogActionDestructiveSource],
   ['footerDialogCloseSource', footerDialogCloseSource],
