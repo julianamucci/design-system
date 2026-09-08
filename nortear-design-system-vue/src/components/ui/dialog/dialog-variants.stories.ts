@@ -397,15 +397,20 @@ export const NoFooter: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Ver detalhes do pedido</Button>
+          <Button variant="outline">${L.aboutTitle}</Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Detalhes do pedido #4287</DialogTitle>
-            <DialogDescription>
-              Pedido confirmado em 15 de março às 14:32. Entrega prevista para 20 de março via transportadora parceira.
-            </DialogDescription>
+            <DialogTitle>${L.aboutTitle}</DialogTitle>
+            <DialogDescription>${L.aboutDescription}</DialogDescription>
           </DialogHeader>
+          <div
+            class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+            data-slot="dialog-body"
+            data-spacing="sm"
+          >
+            ${L.aboutBody}
+          </div>
         </DialogContent>
       </Dialog>
     `,
@@ -487,11 +492,12 @@ export const CustomCloseInFooter: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
-      // Duas props que andam em par, e nenhuma delas está no snippet do meta.
+      // O X desligado e a saída reposta no rodapé — nada disso está no snippet
+      // do meta, que é a composição neutra.
       source: { transform: footerDialogCloseSource },
       description: {
         story:
-          '`showCloseButton: false` no Content e `showCloseButton` no Footer — o botão de fechar sai do canto e passa a acompanhar as ações.',
+          '`showCloseButton: false` no Content — o botão de fechar sai do canto e passa a acompanhar as ações do Footer, como a de menor ênfase das três.',
       },
     },
   },
@@ -500,15 +506,26 @@ export const CustomCloseInFooter: Story = {
     template: `
       <Dialog default-open>
         <DialogTrigger as-child>
-          <Button variant="outline">Configurar notificações</Button>
+          <Button variant="outline">${L.guideTrigger}</Button>
         </DialogTrigger>
         <DialogContent :show-close-button="false">
           <DialogHeader>
-            <DialogTitle>Configurações de notificação</DialogTitle>
-            <DialogDescription>Escolha como deseja ser avisado sobre novas atividades.</DialogDescription>
+            <DialogTitle>${L.guideTitle}</DialogTitle>
+            <DialogDescription>${L.guideDescription}</DialogDescription>
           </DialogHeader>
-          <DialogFooter show-close-button>
-            <Button>Salvar preferências</Button>
+          <div
+            class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+            data-slot="dialog-body"
+            data-spacing="sm"
+          >
+            ${L.guideBody}
+          </div>
+          <DialogFooter>
+            <DialogClose as-child>
+              <Button variant="ghost">${L.close}</Button>
+            </DialogClose>
+            <Button variant="outline">${L.back}</Button>
+            <Button>${L.continueAction}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -520,23 +537,25 @@ export const CustomCloseInFooter: Story = {
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(cantoButtonClose(p)).toBeNull();
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await expect(within(footer).getByRole('button', { name: /fechar/i })).toBeVisible();
+      // Pelo VALOR que a montagem usou, e não por uma expressão em português: o
+      // rótulo sai do conteúdo compartilhado, e /fechar/i não o acharia em
+      // inglês nem em espanhol.
+      await expect(within(footer).getByRole('button', { name: L.close })).toBeVisible();
     });
 
-    await step('E ele vem ANTES da ação primária, que é a posição de secundária', async () => {
-      // O snippet não pode ver isto: quem emite o botão é o componente, não o
-      // slot. A ordem do DOM é a de leitura e a de foco, e é dela que saem as
-      // duas leituras de `.nds-dialog-footer` — primária em cima no empilhamento
-      // e à direita lado a lado. Emitido DEPOIS do slot, como estava, o fechar
-      // ocupava a posição da ação primária.
+    await step('A primária é a ÚLTIMA do rodapé, e o fechar é a primeira', async () => {
+      // Ordem de DOM, e não posição na tela: `.nds-dialog-footer` inverte o
+      // empilhamento no estreito e alinha à direita no largo, e as duas leituras
+      // saem desta mesma ordem. Conferir pixel aqui mediria a largura do
+      // viewport da rodada, não a regra.
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const botoes = [...footer.querySelectorAll('button')].map((b) => b.textContent?.trim() ?? '');
-      await expect(botoes).toEqual(['Fechar', 'Salvar preferências']);
+      await expect(botoes).toEqual([L.close, L.back, L.continueAction]);
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await userEvent.click(within(footer).getByRole('button', { name: /fechar/i }));
+      await userEvent.click(within(footer).getByRole('button', { name: L.close }));
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();

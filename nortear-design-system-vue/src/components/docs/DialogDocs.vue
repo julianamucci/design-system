@@ -259,6 +259,53 @@ const codeWithForm = `<Dialog>
   </DialogContent>
 </Dialog>`;
 
+const codeNoFooter = `<Dialog>
+  <DialogTrigger as-child>
+    <Button variant="outline">Sobre este recurso</Button>
+  </DialogTrigger>
+  <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Sobre este recurso</DialogTitle>
+      <DialogDescription>Detalhes técnicos exibidos para fins informativos. Sem ações.</DialogDescription>
+    </DialogHeader>
+    <div
+      class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-slot="dialog-body"
+      data-spacing="sm"
+    >
+      O fechamento ocorre via X, Escape ou clique no overlay.
+    </div>
+  </DialogContent>
+</Dialog>`;
+
+const codeCustomCloseInFooter = `<Dialog>
+  <DialogTrigger as-child>
+    <Button variant="outline">Abrir guia</Button>
+  </DialogTrigger>
+  <DialogContent :show-close-button="false">
+    <DialogHeader>
+      <DialogTitle>Próximos passos</DialogTitle>
+      <DialogDescription>Continue o fluxo ou volte ao início.</DialogDescription>
+    </DialogHeader>
+    <div
+      class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-slot="dialog-body"
+      data-spacing="sm"
+    >
+      O guia continua disponível no menu de ajuda.
+    </div>
+    <!-- Secundários primeiro, primária por último: o rodapé empilha ao
+         contrário no estreito e alinha à direita no largo. -->
+    <DialogFooter>
+      <DialogClose as-child>
+        <Button variant="ghost">Fechar</Button>
+      </DialogClose>
+      <Button variant="outline">Voltar</Button>
+      <Button>Continuar</Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>`;
+
 const codeCustomizationTokens = `/* Em globals.css — override do Dialog via tokens */
 :root {
   --popover: 0 0% 100%;
@@ -315,9 +362,9 @@ const variantItems = computed(() => [
   // escrito aqui ele ficaria preso a esta página, que é como cinco snippets
   // desta campanha ficaram para trás do código.
   { name: 'withScrollingOverlay',  description: stripHtml(tContent('variants.items.withScrollingOverlay')),  code: tContent('variants.items.withScrollingOverlayCode') },
-  { name: 'noFooter',              description: stripHtml(tContent('variants.items.noFooter')),              code: codeDefault },
+  { name: 'noFooter',              description: stripHtml(tContent('variants.items.noFooter')),              code: codeNoFooter },
   { name: 'withDestructiveAction', description: stripHtml(tContent('variants.items.withDestructiveAction')), code: codeDefault },
-  { name: 'customCloseInFooter',   description: stripHtml(tContent('variants.items.customCloseInFooter')),   code: codeDefault },
+  { name: 'customCloseInFooter',   description: stripHtml(tContent('variants.items.customCloseInFooter')),   code: codeCustomCloseInFooter },
   {
     trackId: 'confirmEmail',
     name: tContent('variants.items.confirmEmail.name'),
@@ -947,14 +994,21 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Detalhes do pedido #4287
+              {{ tContent('demonstration.labels.aboutTitle') }}
             </Button>
           </DialogTrigger>
           <DialogContent :close-label="tContent('demonstration.labels.close')">
             <DialogHeader>
-              <DialogTitle>Detalhes do pedido #4287</DialogTitle>
-              <DialogDescription>Pedido confirmado em 15 de março às 14:32.</DialogDescription>
+              <DialogTitle>{{ tContent('demonstration.labels.aboutTitle') }}</DialogTitle>
+              <DialogDescription>{{ tContent('demonstration.labels.aboutDescription') }}</DialogDescription>
             </DialogHeader>
+            <div
+              class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+              data-slot="dialog-body"
+              data-spacing="sm"
+            >
+              {{ tContent('demonstration.labels.aboutBody') }}
+            </div>
           </DialogContent>
         </Dialog>
       </template>
@@ -987,26 +1041,40 @@ const a11yCritCols = computed(() => ({
         <Dialog>
           <DialogTrigger as-child>
             <Button variant="outline">
-              Configurações de notificação
+              {{ tContent('demonstration.labels.guideTrigger') }}
             </Button>
           </DialogTrigger>
           <DialogContent :show-close-button="false">
             <DialogHeader>
-              <DialogTitle>Configurações de notificação</DialogTitle>
-              <DialogDescription>Escolha como deseja ser avisado.</DialogDescription>
+              <DialogTitle>{{ tContent('demonstration.labels.guideTitle') }}</DialogTitle>
+              <DialogDescription>{{ tContent('demonstration.labels.guideDescription') }}</DialogDescription>
             </DialogHeader>
-            <!--
-              O fechar sai do canto e vem para o rodapé pela prop do próprio
-              rodapé, que já o emite ANTES do slot — a posição de ação
-              secundária. Escrito à mão como estava, o primário vinha primeiro
-              no DOM (logo, embaixo no empilhamento e à esquerda lado a lado), e
-              `class="nds-stack"` ainda anulava o `column-reverse` da folha.
-            -->
-            <DialogFooter
-              show-close-button
-              :close-label="tContent('demonstration.labels.close')"
+            <div
+              class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+              data-slot="dialog-body"
+              data-spacing="sm"
             >
-              <Button>Salvar preferências</Button>
+              {{ tContent('demonstration.labels.guideBody') }}
+            </div>
+            <!--
+              Secundários primeiro, PRIMÁRIA por último — a ordem do DOM é a de
+              leitura e a de foco, e é dela que saem as duas leituras de
+              `.nds-dialog-footer` (empilha ao contrário no estreito, alinha à
+              direita no largo). O fechar é o mais secundário dos três, então
+              abre a lista, e por isso vem `ghost`: o `show-close-button` do
+              rodapé o emitiria `outline`, colado ao "Voltar", e as duas ênfases
+              se apagariam.
+            -->
+            <DialogFooter>
+              <DialogClose as-child>
+                <Button variant="ghost">
+                  {{ tContent('demonstration.labels.close') }}
+                </Button>
+              </DialogClose>
+              <Button variant="outline">
+                {{ tContent('demonstration.labels.back') }}
+              </Button>
+              <Button>{{ tContent('demonstration.labels.continueAction') }}</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

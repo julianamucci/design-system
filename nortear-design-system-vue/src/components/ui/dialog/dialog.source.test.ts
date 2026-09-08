@@ -177,10 +177,16 @@ describe('transforms das stories de variante', () => {
     expect(saida).not.toContain('alertdialog');
   });
 
-  it('o fechar no rodapé exige as DUAS props, uma apagando e outra repondo', () => {
+  it('o fechar sai do canto e volta no rodapé como a ação de MENOR ênfase', () => {
     const saida = footerDialogCloseSource();
     expect(saida).toContain('<DialogContent :show-close-button="false">');
-    expect(saida).toContain('<DialogFooter show-close-button>');
+    // Três ênfases distintas, na ordem do DOM: fechar, voltar, continuar.
+    expect(saida).toContain('<Button variant="ghost">Fechar</Button>');
+    expect(saida).toContain('<Button variant="outline">Voltar</Button>');
+    expect(saida).toContain('<Button>Continuar</Button>');
+    // A prop do rodapé emitiria um `outline` nessa primeira posição, e ele
+    // apagaria a diferença de ênfase para o "Voltar" ao lado.
+    expect(saida).not.toContain('<DialogFooter show-close-button>');
   });
 });
 
@@ -253,16 +259,6 @@ const BUILDERS: Array<[string, () => string]> = [
  */
 const FOOTERLESS = new Set(['dialogNoFooterSource', 'dialogPreviaDeMidiaSource']);
 
-/**
- * Exceção declarada: rodapé cuja saída é emitida pelo COMPONENTE, e não escrita
- * no snippet.
- *
- * `<DialogFooter show-close-button>` põe o botão de fechar ANTES do slot, então
- * o snippet mostra só a ação primária. A premissa é a prop estar ali; o caso
- * abaixo a cobra, para que a exceção não sobreviva ao que a justificava.
- */
-const EXIT_FROM_COMPONENT = new Set(['footerDialogCloseSource']);
-
 describe('ordem dos botões no rodapé', () => {
   it.each(BUILDERS)('%s — secundários primeiro, primária por último', (name, build) => {
     const snippet = build();
@@ -274,13 +270,6 @@ describe('ordem dos botões no rodapé', () => {
     }
 
     expect(footer).not.toBeNull();
-
-    if (EXIT_FROM_COMPONENT.has(name)) {
-      // A premissa da exceção, verificada: é a prop que repõe a saída.
-      expect(snippet).toContain('<DialogFooter show-close-button>');
-      expect(footer).not.toContain('DialogClose');
-      return;
-    }
 
     const exit = footer!.lastIndexOf('</DialogClose>');
     const primary = footer!.lastIndexOf('<Button');
@@ -300,7 +289,7 @@ describe('ordem dos botões no rodapé', () => {
     expect(swept).toEqual(exported);
 
     // Exceção que aponta para construtor inexistente é exceção morta.
-    for (const key of [...FOOTERLESS, ...EXIT_FROM_COMPONENT]) {
+    for (const key of FOOTERLESS) {
       expect(swept).toContain(key);
     }
   });

@@ -390,10 +390,16 @@ export function dialogNoFooterSource(): string {
       'DialogTrigger',
     ]),
     dialogo({
-      trigger: 'Ver detalhes do pedido',
-      title: 'Detalhes do pedido #4287',
-      descricao:
-        'Pedido confirmado em 15 de março às 14:32. Entrega prevista para 20 de março via transportadora parceira.',
+      trigger: 'Sobre este recurso',
+      title: 'Sobre este recurso',
+      descricao: 'Detalhes técnicos exibidos para fins informativos. Sem ações.',
+      body: `    <div
+      class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-slot="dialog-body"
+      data-spacing="sm"
+    >
+      O fechamento ocorre via X, Escape ou clique no overlay.
+    </div>`,
     }),
   );
 }
@@ -417,29 +423,41 @@ export function dialogActionDestructiveSource(): string {
 }
 
 /**
- * Variante CustomCloseInFooter: o fechar sai do canto e acompanha as ações.
+ * Variante CustomCloseInFooter: o fechar sai do canto e acompanha as ações,
+ * como a de MENOR ênfase de três.
  *
- * As duas props andam em par: esconder o X sem repor a saída no rodapé tiraria
- * do painel o único fechamento visível.
+ * O `:show-close-button="false"` do Content desliga o X; o fechar volta como um
+ * `DialogClose` próprio, `ghost`, PRIMEIRO no DOM — portanto abaixo das demais
+ * no empilhamento e à esquerda delas quando lado a lado. Depois vem o secundário
+ * `outline`, e a primária é sempre a ÚLTIMA do DOM: quem inverte a leitura é a
+ * folha (`column-reverse`).
+ *
+ * O `show-close-button` do Footer continua existindo e emite um botão `outline`
+ * nessa mesma primeira posição — mas o cenário de referência pede três ações com
+ * ênfases distintas, e um `outline` ao lado do "Voltar" apagaria a diferença
+ * entre os dois.
  */
 export function footerDialogCloseSource(): string {
   return vueSnippet(
-    importing([
-      'Dialog',
-      'DialogContent',
-      'DialogDescription',
-      'DialogFooter',
-      'DialogHeader',
-      'DialogTitle',
-      'DialogTrigger',
-    ]),
+    importing(PARTS_COMPLETAS),
     dialogo({
       painelProps: ':show-close-button="false"',
-      trigger: 'Configurar notificações',
-      title: 'Configurações de notificação',
-      descricao: 'Escolha como deseja ser avisado sobre novas atividades.',
-      footer: `    <DialogFooter show-close-button>
-      <Button>Salvar preferências</Button>
+      trigger: 'Abrir guia',
+      title: 'Próximos passos',
+      descricao: 'Continue o fluxo ou volte ao início.',
+      body: `    <div
+      class="nds-dialog-body nds-stack nds-text-body nds-text-muted-foreground"
+      data-slot="dialog-body"
+      data-spacing="sm"
+    >
+      O guia continua disponível no menu de ajuda.
+    </div>`,
+      footer: `    <DialogFooter>
+      <DialogClose as-child>
+        <Button variant="ghost">Fechar</Button>
+      </DialogClose>
+      <Button variant="outline">Voltar</Button>
+      <Button>Continuar</Button>
     </DialogFooter>`,
     }),
   );
