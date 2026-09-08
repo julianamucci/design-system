@@ -46,63 +46,50 @@ import {
 /**
  * Ajustes de texto que descrevem ESTE stack.
  *
- * O conteúdo compartilhado do Drawer foi escrito a partir das stacks que rodam
- * a lib de gestos: as notas e as metatags citam a lib e as outras stacks pelo
- * nome, e um dos itens de acessibilidade recomenda um utilitário da era
- * Tailwind que não existe mais no CSS `.nds-*`. Cada docs page é consumida
- * sozinha — comparação cross-stack no texto vaza. Estes overrides trocam só as
- * frases afetadas; o resto do conteúdo é o compartilhado, sem cópia.
+ * Restaram DOIS, e os dois são divergência de API de framework — o que a regra
+ * do projeto manda registrar em vez de alinhar:
+ *
+ *   · `dismissible` — o único desta stack é o da diretiva de arraste; a raiz usa
+ *     `disablePointerDismissal`, com a semântica invertida (desliga, em vez de
+ *     permitir).
+ *   · `panelClass` — prop que existe só aqui. A chave nem consta do conteúdo
+ *     compartilhado: este override é que a cria.
+ *
+ * SAÍRAM SEIS, em 2026-09-08, e as três justificativas que este bloco dava
+ * tinham deixado de valer — cada uma por um caminho diferente:
+ *
+ *   · "as notas citam a lib de gestos" — o conteúdo compartilhado parou de
+ *     citá-la, e o gesto desta stack hoje é próprio, não emprestado;
+ *   · "as metatags citam as outras stacks pelo nome" — o `seo.aiEntities`
+ *     compartilhado deixou de nomear stack nenhuma;
+ *   · "um item de acessibilidade recomenda utilitário da era Tailwind que não
+ *     existe mais" — mede-se e não é verdade: `nds-motion-reduce-none` está em
+ *     `utilities.css`, e é o compartilhado que a nomeia com precisão.
+ *
+ * Três das seis removidas estavam ERRADAS, não apenas velhas: `seo.*` negavam o
+ * arraste, e `accessibility.items.item5` afirmava que "nenhuma ação depende de
+ * arrastar". A premissa era que esta stack não tinha o gesto, e ela nunca foi
+ * verdadeira — o painel aplica `[ndsDrawerSwipe]` no próprio template.
+ *
+ * O que fica de lição sobre override: ele CONGELA a razão que o criou. Quando a
+ * razão deixa de valer, nada avisa — a página segue correta aos olhos de quem a
+ * abre, e o desacordo fica só entre a chave e o mundo. Nenhum portão os via,
+ * porque trocar texto por texto é sempre sintaticamente válido.
  */
 const AJUSTES_ANGULAR: TranslationOverrides = {
   'pt-BR': {
-    'seo.description':
-      'Documentação do Drawer: painel deslizante com 4 direções, foco preso, Escape e WCAG 2.2 AA.',
-    'seo.aiSummary':
-      'Componente Drawer mobile-first que renderiza um painel deslizante com 4 direções (bottom/top/left/right), com foco preso, Escape e nome acessível ligado ao título.',
-    'seo.aiEntities':
-      'Drawer, Angular, foco preso, WCAG 2.2, role=dialog, aria-modal, painel deslizante',
-    'notes.item1':
-      '<strong>Base</strong>: o painel compõe o primitivo de diálogo headless — dele vêm <code>role="dialog"</code>, <code>aria-modal</code>, foco preso, devolução de foco ao gatilho, Escape e portal. O visual inteiro vem das classes <code>.nds-drawer-*</code> do CSS compartilhado.',
-    'accessibility.items.item5':
-      'Nenhuma ação depende de arrastar: a alça é afordância visual e todo caminho de fechamento (Escape, clique no overlay, botão do rodapé) é operável por teclado (WCAG 2.5.7).',
-    'accessibility.items.item6':
-      'A redução de movimento é respeitada pelo CSS compartilhado via <code>prefers-reduced-motion</code>; animação customizada precisa repetir a mesma consulta de mídia.',
     'props.table.dismissible.description':
       'Desliga o fechamento por clique fora e por perda de foco. Escape continua fechando — painel modal que engole Escape é armadilha de teclado.',
     'props.table.panelClass.description':
       'Classes do design system aplicadas ao painel. Existe porque o painel é construído dentro do portal: não há elemento onde quem consome pudesse escrever a classe.',
   },
   en: {
-    'seo.description':
-      'Drawer documentation: sliding panel with 4 directions, focus trap, Escape, and WCAG 2.2 AA.',
-    'seo.aiSummary':
-      'Mobile-first Drawer component renders a sliding panel with 4 directions (bottom/top/left/right), with focus trap, Escape, and an accessible name bound to the title.',
-    'seo.aiEntities':
-      'Drawer, Angular, focus trap, WCAG 2.2, role=dialog, aria-modal, sliding panel',
-    'notes.item1':
-      '<strong>Base</strong>: the panel composes the headless dialog primitive — it provides <code>role="dialog"</code>, <code>aria-modal</code>, focus trap, focus restoration to the trigger, Escape, and the portal. All visuals come from the shared <code>.nds-drawer-*</code> classes.',
-    'accessibility.items.item5':
-      'No action depends on dragging: the handle is a visual affordance and every closing path (Escape, overlay click, footer button) is keyboard operable (WCAG 2.5.7).',
-    'accessibility.items.item6':
-      'Reduced motion is honoured by the shared CSS through <code>prefers-reduced-motion</code>; custom animation must repeat the same media query.',
     'props.table.dismissible.description':
       'Turns off closing by outside click and focus loss. Escape still closes — a modal panel that swallows Escape is a keyboard trap.',
     'props.table.panelClass.description':
       'Design system classes applied to the panel. It exists because the panel is built inside the portal: there is no element where the consumer could write the class.',
   },
   es: {
-    'seo.description':
-      'Documentación de Drawer: panel deslizante con 4 direcciones, foco atrapado, Escape y WCAG 2.2 AA.',
-    'seo.aiSummary':
-      'Componente Drawer mobile-first que renderiza un panel deslizante con 4 direcciones (bottom/top/left/right), con foco atrapado, Escape y nombre accesible ligado al título.',
-    'seo.aiEntities':
-      'Drawer, Angular, foco atrapado, WCAG 2.2, role=dialog, aria-modal, panel deslizante',
-    'notes.item1':
-      '<strong>Base</strong>: el panel compone el primitivo de diálogo headless — de él vienen <code>role="dialog"</code>, <code>aria-modal</code>, foco atrapado, devolución del foco al disparador, Escape y el portal. Todo el visual viene de las clases <code>.nds-drawer-*</code> del CSS compartido.',
-    'accessibility.items.item5':
-      'Ninguna acción depende de arrastrar: el asa es una afordancia visual y todo camino de cierre (Escape, clic en el overlay, botón del pie) es operable por teclado (WCAG 2.5.7).',
-    'accessibility.items.item6':
-      'La reducción de movimiento la respeta el CSS compartido vía <code>prefers-reduced-motion</code>; una animación personalizada debe repetir la misma consulta de medios.',
     'props.table.dismissible.description':
       'Apaga el cierre por clic fuera y por pérdida de foco. Escape sigue cerrando — un panel modal que se traga Escape es una trampa de teclado.',
     'props.table.panelClass.description':
