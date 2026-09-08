@@ -390,10 +390,17 @@ export const NoFooter: Story = {
   render: () =>
     mountOpen(
       createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Sobre este recurso' }),
-        title: 'Sobre este recurso',
-        description: 'Detalhes técnicos exibidos para fins informativos. Sem ações.',
-        content: makeBody('O fechamento ocorre via X, Escape ou clique no overlay.'),
+        // O cenário sai do conteúdo compartilhado — o mesmo texto que as outras
+        // quatro stacks passaram a mostrar. Cravado aqui, ele ficava em
+        // português para quem abre a página em inglês ou espanhol, e as demais
+        // não tinham chave a que se alinhar.
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.aboutTitle'),
+        }),
+        title: t('demonstration.labels.aboutTitle'),
+        description: t('demonstration.labels.aboutDescription'),
+        content: makeBody(t('demonstration.labels.aboutBody')),
       }),
     ),
   play: async ({ canvasElement, step }) => {
@@ -529,18 +536,23 @@ export const CustomCloseInFooter: Story = {
 
     return mountOpen(
       createDialog({
-        trigger: createButton({ variant: 'outline', label: 'Abrir guia' }),
-        title: 'Próximos passos',
-        description: 'Continue o fluxo ou volte ao início.',
-        content: makeBody('O guia continua disponível no menu de ajuda.'),
+        // Cenário do conteúdo compartilhado, e não literal: é a mesma chave que
+        // as outras quatro stacks passaram a ler para mostrar esta composição.
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.guideTrigger'),
+        }),
+        title: t('demonstration.labels.guideTitle'),
+        description: t('demonstration.labels.guideDescription'),
+        content: makeBody(t('demonstration.labels.guideBody')),
         // Secundários primeiro, PRIMÁRIA por último. `column-reverse` no
         // estreito põe `Continuar` em cima; `row` + `justify-content: flex-end`
         // no largo a põe à direita. A mesma ordem de DOM serve às duas leituras
         // — e o "Fechar" é o mais secundário dos três, então abre a lista.
         footer: [
           footerClose,
-          createButton({ variant: 'outline', label: 'Voltar' }),
-          createButton({ variant: 'default', label: 'Continuar' }),
+          createButton({ variant: 'outline', label: t('demonstration.labels.back') }),
+          createButton({ variant: 'default', label: t('demonstration.labels.continueAction') }),
         ],
         showCloseButton: false,
       }),
@@ -568,7 +580,9 @@ export const CustomCloseInFooter: Story = {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const buttons = [...footer.querySelectorAll<HTMLElement>('button')];
       await expect(buttons.map((b) => b.textContent?.trim())).toEqual([
-        t('demonstration.labels.close'), 'Voltar', 'Continuar',
+        t('demonstration.labels.close'),
+        t('demonstration.labels.back'),
+        t('demonstration.labels.continueAction'),
       ]);
       await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
       await expect(buttons[0].parentElement).toBe(footer);

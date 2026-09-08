@@ -430,7 +430,7 @@ createDialog({ trigger, title: 'Termos de uso', description: '...', content: bod
         const codeNoFooter = `createDialog({
   trigger,
   title: 'Sobre este recurso',
-  description: 'Detalhes informativos.',
+  description: 'Detalhes técnicos exibidos para fins informativos. Sem ações.',
   content: body,
   // sem footer
 });`;
@@ -445,7 +445,7 @@ const continuar = createButton({ variant: 'default', label: 'Continuar' });
 createDialog({
   trigger,
   title: 'Próximos passos',
-  description: '...',
+  description: 'Continue o fluxo ou volte ao início.',
   content,
   // O "Fechar" é a ação de MENOR ênfase das três, então abre a lista; a
   // primária fecha. O rodapé empilha ao contrário no estreito e alinha à
@@ -571,14 +571,21 @@ createDialog({
               description: t('variants.items.noFooter'),
               code: codeNoFooter,
               previewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Sobre este recurso' });
+                // O cenário sai do conteúdo compartilhado, e não de literais: a
+                // página troca de idioma em tempo de execução, e o texto cravado
+                // aqui ficava em português nas três versões. É a MESMA chave que
+                // a story lê, então prévia e story mostram o mesmo exemplo.
+                const trigger = createButton({
+                  variant: 'outline',
+                  label: t('demonstration.labels.aboutTitle'),
+                });
                 const body = document.createElement('div');
                 body.className = 'nds-text-body nds-text-muted-foreground';
-                body.textContent = 'Sem ações — apenas informação.';
+                body.textContent = t('demonstration.labels.aboutBody');
                 return createDialog({
                   trigger,
-                  title: 'Sobre este recurso',
-                  description: 'Detalhes técnicos.',
+                  title: t('demonstration.labels.aboutTitle'),
+                  description: t('demonstration.labels.aboutDescription'),
                   content: body,
                 });
               },
@@ -626,14 +633,18 @@ createDialog({
                 });
                 return buildDialogDemo({
                   location: 'docs_variantes',
-                  triggerLabel: 'Abrir guia',
-                  title: 'Próximos passos',
-                  description: 'Continue o fluxo.',
+                  // Do conteúdo compartilhado, como na story: literal aqui ficava
+                  // em português nas três versões da página, e as outras stacks
+                  // não tinham chave a que se alinhar.
+                  triggerLabel: t('demonstration.labels.guideTrigger'),
+                  title: t('demonstration.labels.guideTitle'),
+                  description: t('demonstration.labels.guideDescription'),
+                  bodyText: t('demonstration.labels.guideBody'),
                   // O de menor ênfase abre a lista; `cancelLabel` e
                   // `actionLabel` entram depois, nessa ordem.
                   leadingActions: [closeAction],
-                  cancelLabel: 'Voltar',
-                  actionLabel: 'Continuar',
+                  cancelLabel: t('demonstration.labels.back'),
+                  actionLabel: t('demonstration.labels.continueAction'),
                   showCloseButton: false,
                 });
               },
