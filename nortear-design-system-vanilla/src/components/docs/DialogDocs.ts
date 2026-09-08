@@ -45,6 +45,16 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+/**
+ * A SEÇÃO onde o elemento está — nunca uma constante no topo do arquivo.
+ *
+ * Variantes, Composições, Estados e Do & Don't renderizam componente VIVO, e um
+ * clique ali é tão real quanto o da demonstração. Cravar `docs_demo` em tudo
+ * junta quatro seções num balde só no GA4, e a página deixa de responder onde
+ * o leitor de fato experimentou o componente.
+ */
+type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_do_dont';
+
 type DialogDemoOptions = {
   triggerLabel: string;
   triggerVariant?: 'default' | 'outline' | 'destructive';
@@ -55,6 +65,14 @@ type DialogDemoOptions = {
   destructive?: boolean;
   showCloseButton?: boolean;
   bodyText?: string;
+  /**
+   * Ações que entram ANTES do cancelar — as mais secundárias do rodapé.
+   *
+   * Existe para o caso do "Fechar" próprio, que é a ação de menor ênfase dos
+   * três e por isso abre a lista.
+   */
+  leadingActions?: HTMLElement[];
+  location: DocsLocation;
 };
 
 function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
@@ -70,16 +88,10 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
       track('dialog_action', {
         component: 'dialog',
         action_label: opts.actionLabel,
-        location: 'docs_demo',
+        location: opts.location,
       });
     },
   });
-  const footer = document.createElement('div');
-  footer.className = 'nds-cluster';
-  footer.dataset.justify = 'end';
-  footer.dataset.spacing = 'xs';
-  footer.appendChild(cancel);
-  footer.appendChild(action);
 
   const body = document.createElement('div');
   body.className = 'nds-text-body nds-text-muted-foreground';
@@ -90,14 +102,24 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
     title: opts.title,
     description: opts.description,
     content: body,
-    footer,
+    // Lista, e não um `<div>` de embrulho. Quem faz o arranjo do rodapé é o
+    // próprio `.nds-dialog-footer` — empilha ao contrário no estreito, alinha à
+    // direita no largo —, e para isso as ações precisam ser filhas DIRETAS
+    // dele. A `.nds-cluster` que morava aqui deixava o rodapé com um filho só:
+    // o `column-reverse` e o `justify-end` da folha passavam a alinhar um
+    // elemento único e não faziam nada. O docblock de `dialog.ts` proíbe o
+    // embrulho e a play da `Default` cobra o contrário — a página contradizia
+    // o componente e o teste que o guarda.
+    //
+    // E a ORDEM é a do sistema: secundários primeiro, PRIMÁRIA por último.
+    footer: [...(opts.leadingActions ?? []), cancel, action],
     showCloseButton: opts.showCloseButton,
     onOpenChange: (open) => {
       if (open) {
         track('dialog_open', {
           component: 'dialog',
           label: opts.triggerLabel,
-          location: 'docs_demo',
+          location: opts.location,
         });
       }
     },
@@ -106,7 +128,7 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
         component: 'dialog',
         label: opts.triggerLabel,
         reason,
-        location: 'docs_demo',
+        location: opts.location,
       });
     },
   });
@@ -217,6 +239,7 @@ export function createDialogDocs(): HTMLElement {
             wrap.style.flexWrap = 'wrap';
             wrap.append(
               buildDialogDemo({
+                location: 'docs_demo',
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 title: t('demonstration.labels.title'),
                 description: t('demonstration.labels.description'),
@@ -292,6 +315,7 @@ export function createDialogDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDialogDemo({
+                location: 'docs_do_dont',
                 triggerLabel: 'Editar perfil',
                 title: 'Editar perfil',
                 description: 'Atualize suas informações pessoais.',
@@ -300,6 +324,7 @@ export function createDialogDocs(): HTMLElement {
                 bodyText: 'Os campos estariam aqui em uma aplicação real.',
               }),
               dontPreviewFactory: () => buildDialogDemo({
+                location: 'docs_do_dont',
                 triggerLabel: 'Atenção',
                 title: 'Atenção',
                 description: '',
@@ -314,6 +339,7 @@ export function createDialogDocs(): HTMLElement {
               doCaption: stripHtml(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDialogDemo({
+                location: 'docs_do_dont',
                 triggerLabel: 'Editar perfil',
                 title: 'Editar perfil',
                 description: 'Atualize suas informações pessoais.',
@@ -322,6 +348,7 @@ export function createDialogDocs(): HTMLElement {
                 bodyText: '',
               }),
               dontPreviewFactory: () => buildDialogDemo({
+                location: 'docs_do_dont',
                 triggerLabel: 'Excluir conta',
                 triggerVariant: 'destructive',
                 title: 'Excluir conta?',
@@ -366,16 +393,20 @@ const dialog = createDialog({
 
       case 'variantes': {
         const codeDefault = `const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
-const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
-const action = createButton({ variant: 'default', label: 'Salvar alterações' });
+const cancelar = createButton({ variant: 'outline', label: 'Cancelar' });
+const salvar = createButton({ variant: 'default', label: 'Salvar alterações' });
 
-const footer = document.createElement('div');
-footer.className = 'nds-cluster';
-footer.dataset.justify = 'end';
-footer.dataset.spacing = 'md';
-footer.append(cancel, action);
-
-createDialog({ trigger, title: 'Editar perfil', description: '...', content, footer });`;
+createDialog({
+  trigger,
+  title: 'Editar perfil',
+  description: '...',
+  content,
+  // Lista, e não um <div> de embrulho: as ações precisam ser filhas diretas do
+  // rodapé para o arranjo do CSS valer. E a ordem é secundários primeiro,
+  // primária por último — é ela que põe a primária em cima no empilhamento e à
+  // direita quando as duas ficam lado a lado.
+  footer: [cancelar, salvar],
+});`;
 
         const codeWithForm = `const form = document.createElement('form');
 form.className = 'nds-stack';
@@ -407,12 +438,19 @@ createDialog({ trigger, title: 'Termos de uso', description: '...', content: bod
         const codeDestructive = `const action = createButton({ variant: 'destructive', label: 'Remover' });
 // Footer com action destrutiva — uso secundário; para confirmação primária use AlertDialog.`;
 
-        const codeCustomClose = `createDialog({
+        const codeCustomClose = `const fechar = createButton({ variant: 'ghost', label: 'Fechar' });
+const voltar = createButton({ variant: 'outline', label: 'Voltar' });
+const continuar = createButton({ variant: 'default', label: 'Continuar' });
+
+createDialog({
   trigger,
   title: 'Próximos passos',
   description: '...',
   content,
-  footer, // inclui o seu próprio botão "Fechar"
+  // O "Fechar" é a ação de MENOR ênfase das três, então abre a lista; a
+  // primária fecha. O rodapé empilha ao contrário no estreito e alinha à
+  // direita no largo, e das duas leituras sai a primária em cima e à direita.
+  footer: [fechar, voltar, continuar],
   showCloseButton: false, // remove o X do canto
 });`;
 
@@ -428,6 +466,7 @@ createDialog({ trigger, title: 'Termos de uso', description: '...', content: bod
               description: t('variants.items.default'),
               code: codeDefault,
               previewFactory: () => buildDialogDemo({
+                location: 'docs_variantes',
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 title: t('demonstration.labels.title'),
                 description: t('demonstration.labels.description'),
@@ -440,6 +479,7 @@ createDialog({ trigger, title: 'Termos de uso', description: '...', content: bod
               description: t('variants.items.withForm'),
               code: codeWithForm,
               previewFactory: () => buildDialogDemo({
+                location: 'docs_variantes',
                 triggerLabel: 'Editar perfil',
                 title: 'Editar perfil',
                 description: 'Formulário inline.',
@@ -539,6 +579,7 @@ createDialog({ trigger, title: 'Termos de uso', description: '...', content: bod
               description: stripHtml(t('variants.items.withDestructiveAction')),
               code: codeDestructive,
               previewFactory: () => buildDialogDemo({
+                location: 'docs_variantes',
                 triggerLabel: 'Remover item',
                 title: 'Remover item da lista?',
                 description: 'O item permanece na biblioteca.',
@@ -551,14 +592,39 @@ createDialog({ trigger, title: 'Termos de uso', description: '...', content: bod
               name: 'customCloseInFooter',
               description: stripHtml(t('variants.items.customCloseInFooter')),
               code: codeCustomClose,
-              previewFactory: () => buildDialogDemo({
-                triggerLabel: 'Abrir guia',
-                title: 'Próximos passos',
-                description: 'Continue o fluxo.',
-                cancelLabel: 'Voltar',
-                actionLabel: 'Continuar',
-                showCloseButton: false,
-              }),
+              previewFactory: () => {
+                // O "Fechar" próprio é o ASSUNTO desta variante, e sem ele
+                // desenhado o exemplo mostrava só um par comum de ações — o
+                // snippet ao lado ensinava três botões e a prévia trazia dois.
+                //
+                // Ele fecha de verdade: a fábrica não expõe fechamento
+                // programático (só `destroy()`, que encerra a instância), e o
+                // clique no véu é o caminho público. A consulta parte do
+                // PRÓPRIO botão, e não do documento — a página monta vários
+                // diálogos, e `document.querySelector` devolveria o primeiro da
+                // ordem do DOM. Na rota A a fábrica anexa véu e painel ao
+                // `body` nessa ordem, então o véu é o irmão anterior do painel.
+                const closeAction = createButton({ variant: 'ghost', label: 'Fechar' });
+                closeAction.addEventListener('click', () => {
+                  const panelEl = closeAction.closest<HTMLElement>('[data-slot="dialog-content"]');
+                  const overlayEl = panelEl?.previousElementSibling;
+                  if (overlayEl instanceof HTMLElement && overlayEl.dataset.slot === 'dialog-overlay') {
+                    overlayEl.click();
+                  }
+                });
+                return buildDialogDemo({
+                  location: 'docs_variantes',
+                  triggerLabel: 'Abrir guia',
+                  title: 'Próximos passos',
+                  description: 'Continue o fluxo.',
+                  // O de menor ênfase abre a lista; `cancelLabel` e
+                  // `actionLabel` entram depois, nessa ordem.
+                  leadingActions: [closeAction],
+                  cancelLabel: 'Voltar',
+                  actionLabel: 'Continuar',
+                  showCloseButton: false,
+                });
+              },
             },
             {
               name: stripHtml(t('variants.items.confirmEmail.name')),
@@ -569,22 +635,20 @@ createDialog({ trigger, title: 'Termos de uso', description: '...', content: bod
 body.className = 'nds-text-body nds-text-muted-foreground';
 body.textContent = 'Vamos enviar um link para maria@exemplo.com.';
 
-const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
-const action = createButton({ variant: 'default', label: 'Enviar link' });
-const footer = document.createElement('div');
-footer.className = 'nds-cluster';
-footer.dataset.justify = 'end';
-footer.dataset.spacing = 'md';
-footer.append(cancel, action);
+const cancelar = createButton({ variant: 'outline', label: 'Cancelar' });
+const enviar = createButton({ variant: 'default', label: 'Enviar link' });
 
 createDialog({
   trigger: createButton({ variant: 'default', label: 'Enviar link' }),
   title: 'Confirmar e-mail',
   description: 'Verifique o endereço antes de enviar o link de acesso.',
   content: body,
-  footer,
+  // Lista, e não um <div> de embrulho: as ações são filhas diretas do rodapé, e
+  // a primária vem por último.
+  footer: [cancelar, enviar],
 });`,
               previewFactory: () => buildDialogDemo({
+                location: 'docs_variantes',
                 triggerLabel: 'Enviar link',
                 triggerVariant: 'default',
                 title: 'Confirmar e-mail',
@@ -923,7 +987,10 @@ export interface DialogOptions {
           visual: {
             title: t('testes.visual.title'),
             cols: { story: tNav('common.storyState'), priority: tNav('common.priority') },
-            items: [1,2,3,4,5].map(i => ({
+            // Seis, e não cinco: o conteúdo compartilhado traz `item6`
+            // (WithScrollingOverlay) e a página parava no quinto — a linha
+            // existia no JSON e não existia para quem lê.
+            items: [1,2,3,4,5,6].map(i => ({
               story: t(`testes.visual.item${i}.story`),
               priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
             })),

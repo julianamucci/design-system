@@ -90,8 +90,17 @@ function buildPlayground(args: DialogArgs): HTMLElement {
     onOpenChange: args.onOpenChange,
   });
 
-  const closePeloOverlay = () => {
-    document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
+  // Mesma lacuna da `CustomCloseInFooter`: a fábrica não expõe fechamento
+  // programático — só `destroy()`, que encerra a instância —, então o clique no
+  // véu é o caminho público. A consulta parte do BOTÃO clicado, e não do
+  // documento: com dois diálogos montados, `document.querySelector` devolve o
+  // primeiro da ordem do DOM, que pode ser o do outro. Na rota A a fábrica anexa
+  // véu e painel ao `body` nessa ordem, então o véu é o irmão anterior do painel.
+  const closePeloOverlay = (event: Event) => {
+    const clicked = event.currentTarget as HTMLElement;
+    const panelEl = clicked.closest<HTMLElement>('[data-slot="dialog-content"]');
+    const overlayEl = panelEl?.previousElementSibling;
+    if (overlayEl instanceof HTMLElement && overlayEl.dataset.slot === 'dialog-overlay') overlayEl.click();
   };
   cancel.addEventListener('click', closePeloOverlay);
   action.addEventListener('click', closePeloOverlay);

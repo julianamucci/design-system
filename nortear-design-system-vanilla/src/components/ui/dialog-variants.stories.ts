@@ -466,10 +466,15 @@ export const CustomCloseInFooter: Story = {
           title: 'Próximos passos',
           description: 'Continue o fluxo ou volte ao início.',
           bodyText: 'O guia continua disponível no menu de ajuda.',
+          // A ordem é a MESMA do render, e é a do sistema: secundários antes,
+          // primária por último. `.nds-dialog-footer` empilha ao contrário no
+          // estreito e alinha à direita no largo — das duas leituras sai a
+          // primária em cima e à direita. Snippet que ensinasse o oposto da
+          // story seria pior que snippet nenhum.
           footer: [
+            { label: 'Fechar', variant: 'ghost' },
             { label: 'Voltar', variant: 'outline' },
             { label: 'Continuar' },
-            { label: 'Fechar', variant: 'ghost' },
           ],
           showCloseButton: false,
         }),
@@ -482,10 +487,20 @@ export const CustomCloseInFooter: Story = {
   render: () => {
     const footerClose = createButton({ variant: 'ghost', label: 'Fechar' });
     // O botão precisa FECHAR de verdade: a factory não liga um `DialogClose`
-    // sozinha, e um "Fechar" que não fecha seria a story documentando o
-    // contrário do que promete. O clique no overlay é o caminho público.
+    // sozinha e não expõe fechamento programático — só `destroy()`, que encerra
+    // a instância inteira. Um "Fechar" que não fecha seria a story documentando
+    // o contrário do que promete, então o clique no véu é o caminho público que
+    // sobra.
+    //
+    // A consulta parte do PRÓPRIO botão, e não do documento: com dois diálogos
+    // montados, `document.querySelector('[data-slot="dialog-overlay"]')` devolve
+    // o primeiro da ordem do DOM — que pode ser o do outro. Na rota A a fábrica
+    // anexa véu e painel ao `body` nessa ordem, então o véu desta instância é o
+    // irmão anterior do painel que contém este botão.
     footerClose.addEventListener('click', () => {
-      document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
+      const panelEl = footerClose.closest<HTMLElement>('[data-slot="dialog-content"]');
+      const overlayEl = panelEl?.previousElementSibling;
+      if (overlayEl instanceof HTMLElement && overlayEl.dataset.slot === 'dialog-overlay') overlayEl.click();
     });
 
     return mountOpen(
@@ -494,10 +509,14 @@ export const CustomCloseInFooter: Story = {
         title: 'Próximos passos',
         description: 'Continue o fluxo ou volte ao início.',
         content: makeBody('O guia continua disponível no menu de ajuda.'),
+        // Secundários primeiro, PRIMÁRIA por último. `column-reverse` no
+        // estreito põe `Continuar` em cima; `row` + `justify-content: flex-end`
+        // no largo a põe à direita. A mesma ordem de DOM serve às duas leituras
+        // — e o "Fechar" é o mais secundário dos três, então abre a lista.
         footer: [
+          footerClose,
           createButton({ variant: 'outline', label: 'Voltar' }),
           createButton({ variant: 'default', label: 'Continuar' }),
-          footerClose,
         ],
         showCloseButton: false,
       }),
@@ -510,6 +529,20 @@ export const CustomCloseInFooter: Story = {
       await expect(cantoButtonClose(p)).toBeNull();
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await expect(within(footer).getByRole('button', { name: /fechar/i })).toBeVisible();
+    });
+
+    await step('A primária é a ÚLTIMA do rodapé, e o fechar é a primeira', async () => {
+      // Ordem de DOM, e não posição na tela: `.nds-dialog-footer` inverte o
+      // empilhamento no estreito e alinha à direita no largo, e as duas
+      // leituras saem desta mesma ordem. Conferir pixel aqui mediria a largura
+      // do viewport da rodada, não a regra.
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = [...footer.querySelectorAll<HTMLElement>('button')];
+      await expect(buttons.map((b) => b.textContent?.trim())).toEqual([
+        'Fechar', 'Voltar', 'Continuar',
+      ]);
+      await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
+      await expect(buttons[0].parentElement).toBe(footer);
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
