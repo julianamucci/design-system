@@ -337,9 +337,7 @@ export function DialogDocs() {
       </DialogDescription>
     </DialogHeader>
     <DialogFooter>
-      <DialogClose asChild>
-        <Button variant="outline">Cancelar</Button>
-      </DialogClose>
+      <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
       <Button>Salvar alterações</Button>
     </DialogFooter>
   </DialogContent>
@@ -359,9 +357,7 @@ export function DialogDocs() {
     <form className="nds-stack" data-spacing="sm" onSubmit={onSubmit}>
       <Input defaultValue="Maria Silva" />
       <DialogFooter>
-        <DialogClose asChild>
-          <Button type="button" variant="outline">Cancelar</Button>
-        </DialogClose>
+        <DialogClose render={<Button type="button" variant="outline" />}>Cancelar</DialogClose>
         <Button type="submit">Salvar alterações</Button>
       </DialogFooter>
     </form>
@@ -1008,9 +1004,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       Vamos enviar um link para maria@exemplo.com.
     </p>
     <DialogFooter>
-      <DialogClose asChild>
-        <Button variant="outline">Cancelar</Button>
-      </DialogClose>
+      <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
       <Button>Enviar link</Button>
     </DialogFooter>
   </DialogContent>
@@ -1073,9 +1067,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         <Input id="profile-name" defaultValue="Maria Silva" />
       </div>
       <DialogFooter>
-        <DialogClose asChild>
-          <Button type="button" variant="outline">Cancelar</Button>
-        </DialogClose>
+        <DialogClose render={<Button type="button" variant="outline" />}>Cancelar</DialogClose>
         <Button type="submit">Salvar alterações</Button>
       </DialogFooter>
     </form>

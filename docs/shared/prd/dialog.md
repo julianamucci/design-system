@@ -159,6 +159,34 @@ Corrigido em 2026-09-07 nas quatro pontas.
 compila nas cinco e passa em qualquer asserção por papel ou por texto. O que
 denuncia é ler `button.form` — vazio quando o botão está órfão.
 
+### D11 · O cenário das duas composições sem consenso é o do Vanilla
+
+**Estado**: `CustomCloseInFooter` mostra o guia — "Abrir guia" / "Próximos
+passos" / rodapé de três botões `[Fechar (ghost), Voltar (outline), Continuar
+(primária)]`. `NoFooter` mostra "Sobre este recurso", só título e descrição.
+Ambos vivem em `demonstration.labels` do conteúdo compartilhado, nos três
+idiomas.
+
+**Por que precisou de decisão, e não de medição**: `CustomCloseInFooter`
+renderizava QUATRO cenários diferentes nas cinco stacks — perfil no react,
+"Próximos passos" no vanilla, "Configurações de notificação" no vue, convite ao
+time no svelte —, e `NoFooter` discordava entre "Sobre este produto", "Sobre
+este recurso" e "Saiba mais". Onde nem duas stacks concordam não existe maioria
+a que alinhar: a regra "o vanilla é a referência" resolve divergência de markup
+e comportamento, mas qual HISTÓRIA a demo conta é escolha de produto. Decidido
+pela dona em 2026-09-08, a favor do vanilla.
+
+**O que deixou isso passar tanto tempo**: `demonstration_labels_divergent` só
+aponta quem foge da MAIORIA e emudecia sem ela — ver a nota da regra em
+`scripts/audit.mjs`. Divergência máxima produzia zero achados. Hoje o
+`demonstration_labels_sem_consenso` cobre esse caso, e ele acusava 3 dos 85
+componentes: chart, dialog e table.
+
+**Consequência para quem for montar demo nova**: rótulo de cenário nasce no
+conteúdo compartilhado, nunca cravado numa stack. `demonstration.labels` tinha
+SEIS chaves para uma página de dez cenários — foi essa escassez que levou cada
+stack a inventar a sua.
+
 ## 4. Anatomia
 
 ```
@@ -258,15 +286,20 @@ um jeito** — medido na fonte de cada lib, não na documentação delas:
 | react | prop `render` (`BaseUIComponentProps<'h2'>`) | `h2` |
 | vue | prop `as` (ou `as-child`) | `as: 'h2'` |
 | svelte | prop `level`, numérica | `level = 2` |
-| angular | dois seletores, `h2[…]` e `h3[…]` — e **só esses dois níveis** | o que quem escreve usar |
-| vanilla | **não é customizável**: `createElement('h2')` cravado na fábrica | `h2` |
+| angular | seletor por elemento, nos SEIS níveis | o que quem escreve usar |
+| vanilla | opção `titleLevel` da fábrica | `2` |
 
-Duas leituras que isso corrige. O Angular não é o único que troca o nível — ele é
-o mais RESTRITO dos quatro que trocam, porque oferece dois níveis onde os outros
-aceitam qualquer um. E o **vanilla, que é a referência de contrato da casa, é o
-único que não troca** — o que importa porque `heading-order` do axe reprova
-salto de nível, e um painel aberto de dentro de uma seção já em `h3` precisaria
-de `h4`. Registrado no `FIXES-NEEDED.md`.
+As cinco aceitam qualquer nível desde 2026-09-08, e chegaram lá por caminhos
+diferentes. O Angular oferecia só `h2` e `h3` e ganhou os seis por decisão da
+dona; o vanilla não oferecia nenhum — `createElement('h2')` cravado — e ganhou
+`titleLevel`, na mesma forma que `createPopoverTitle` e `createCardTitle` já
+tinham.
+
+**Por que isso importa**: `heading-order` do axe reprova salto de nível, e o
+painel não sabe de que profundidade da página foi aberto — um diálogo disparado
+de dentro de uma seção já em `h3` precisa sair em `h4`. O que ainda falta é a
+story que exercita isso; está no `FIXES-NEEDED.md`, porque hoje o portão está
+verde por não perguntar.
 
 ## 8. Acessibilidade
 
