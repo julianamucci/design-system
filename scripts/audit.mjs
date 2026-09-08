@@ -892,6 +892,68 @@ function auditSubmitForaDoForm(slug) {
   return violations;
 }
 
+/**
+ * `anatomy.structureCode.angular` publica `<nds-algo>` quando o seletor real é
+ * diretiva de ATRIBUTO (`div[ndsAlgo]`). Quem copiar o bloco recebe markup que
+ * o Angular não compila.
+ *
+ * Achado três vezes à mão nesta campanha — context-menu, dialog, popover —,
+ * sempre pelo mesmo mecanismo: a docs page contorna a chave com um bloco local,
+ * então a PÁGINA fica certa e a CHAVE fica errada para quem a lê de qualquer
+ * outro lugar. Contorno local é o que mantém defeito de conteúdo vivo: ele
+ * remove o sintoma no único lugar onde alguém olharia.
+ *
+ * A medição que motivou o portão: **16 dos 51 componentes** com variante
+ * angular publicavam elemento inexistente.
+ *
+ * A comparação é fechada e não usa heurística de nome: os dois lados saem do
+ * código. De um, os `<nds-*>` que a chave abre; do outro, os `selector:` que os
+ * `@Component`/`@Directive` da stack declaram. A stack tem as DUAS formas —
+ * 20 seletores de elemento reais (`nds-sheet`, `nds-drawer`, `nds-select`…) e
+ * dezenas de diretivas de atributo —, então o portão foi provado nos dois
+ * sentidos: não acusa nenhum dos 20 legítimos.
+ */
+function auditAnatomiaAngularSeletor(slug) {
+  const jsonPath = join(ROOT, 'docs/shared/content', slug, 'translations.json');
+  if (!existsSync(jsonPath)) return [];
+  let doc;
+  try { doc = JSON.parse(readFileSync(jsonPath, 'utf8')); } catch { return []; }
+
+  const code = doc?.['pt-BR']?.anatomy?.structureCode;
+  const ng = code && typeof code === 'object' ? code.angular : null;
+  if (!ng || typeof ng !== 'string') return [];
+
+  const publicados = [...new Set([...ng.matchAll(/<(nds-[a-z0-9-]+)[\s>]/g)].map((m) => m[1]))];
+  if (!publicados.length) return [];
+
+  const { all } = filesForSlug(slug, 'angular');
+  const seletores = new Set();
+  for (const file of all) {
+    if (/\.(stories|source|test|spec|fixtures)\./.test(file.replace(/\\/g, '/'))) continue;
+    const src = readFile(file);
+    if (!src) continue;
+    for (const m of src.matchAll(/selector:\s*'([^']+)'/g)) seletores.add(m[1]);
+  }
+  // Sem seletor nenhum encontrado, a comparação não tem lastro — calar é o
+  // certo. Zero de uma varredura que não achou nada é indistinguível de limpo,
+  // e essa confusão já custou caro nesta casa.
+  if (!seletores.size) return [];
+
+  const inexistentes = publicados.filter(
+    (el) => ![...seletores].some((s) => new RegExp(`(^|[\\s,])${el}([\\s,\\[]|$)`).test(s)),
+  );
+  if (!inexistentes.length) return [];
+
+  return [{
+    category: 'quality', severity: 'high', slug, stack: 'angular',
+    file: `docs/shared/content/${slug}/translations.json`,
+    rule: 'angular_anatomy_seletor_inexistente',
+    message: `a anatomia publica <${inexistentes.join('>, <')}>, e a stack não declara esse elemento`
+      + ` — os seletores são de atributo. Quem copiar recebe markup que não compila.`
+      + ` Declarados: ${[...seletores].slice(0, 4).join(' · ')}${seletores.size > 4 ? ' …' : ''}`,
+  }];
+}
+
 function auditAnalyticsPayloads() {
   const violations = [];
   for (const stack of STACKS) {
@@ -2551,14 +2613,17 @@ function auditDemonstrationLabels(slug) {
     // react e do angular. Eu ia apagá-la. O portão novo errou na estreia, pelo
     // mesmo vício que ele existe para denunciar — afirmar a partir do que a
     // varredura alcança, em vez do que existe.
-    const consumidaEmQualquerLugar = (k) => STACKS.some((st) => {
-      const { all } = filesForSlug(slug, st);
-      return all.some((file) => {
-        const bruto = readFile(file);
-        return bruto && stripComments(bruto).includes('demonstration.labels.' + k);
-      });
-    });
-    const nunca = chaves.filter((k) => !consumidaEmQualquerLugar(k));
+    // Lê e limpa UMA vez, não uma vez por chave. A primeira versão desta
+    // verificação re-globava e re-lia todos os arquivos das cinco stacks para
+    // CADA uma das 37 chaves, e `stripComments` roda por cima de tudo: o
+    // `audit.mjs <slug>` foi de segundos para 2m47s num componente. Custo
+    // acidental de O(chaves × arquivos) onde bastava O(arquivos).
+    const todoOTexto = STACKS.flatMap((st) => filesForSlug(slug, st).all)
+      .map((file) => readFile(file))
+      .filter(Boolean)
+      .map((bruto) => stripComments(bruto))
+      .join('\n');
+    const nunca = chaves.filter((k) => !todoOTexto.includes('demonstration.labels.' + k));
     return [{
       category: 'quality', severity: 'medium', slug, stack: adotaram[0],
       file: 'docs/' + slug, rule: 'demonstration_labels_sem_consenso',
@@ -6911,6 +6976,7 @@ function auditQuality(slug) {
   violations.push(...auditDoDontPreview(slug));
   violations.push(...auditPlayIdempotente(slug));
   violations.push(...auditSubmitForaDoForm(slug));
+  violations.push(...auditAnatomiaAngularSeletor(slug));
 
   return violations;
 }

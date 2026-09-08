@@ -1,7 +1,112 @@
-# Alinhamento de Botões - Regras Obrigatórias
+# Alinhamento de grupos de botões
 
-* **Botão primário sempre à direita dos cards/containers**
-* **Demais botões organizados da direita para esquerda por ordem de importância**
-* **Exemplo correto**: `[Cancelar] [Editar] [Salvar]` (Salvar = primary, mais à direita)
-* **Use `justify-end` ou `ml-auto` para alinhar grupos de botões à direita**
-* **Para múltiplos botões**: `flex flex-row-reverse gap-2` no container
+Regra transversal: vale em qualquer lugar onde dois ou mais botões aparecem
+juntos — card, formulário, dialog, drawer, sheet, alert-dialog, rodapé de seção.
+
+Este é o texto canônico. A seção "Alinhamento de Grupos de Botões" da
+`04-padroes-design-sistema.md` aponta para cá.
+
+---
+
+## A regra, nos dois eixos
+
+| eixo | onde fica o primário |
+|---|---|
+| empilhado (uma coluna) | **em cima** |
+| lado a lado (uma linha) | **à direita** |
+
+Os secundários seguem por ordem de importância, do primário para longe.
+
+## Uma ordem de DOM serve aos dois eixos
+
+E é a parte contraintuitiva, por isso está em destaque:
+
+> **No DOM, os secundários vêm PRIMEIRO e o primário vem POR ÚLTIMO.**
+
+```css
+.nds-<slug>-footer {
+  display: flex;
+  flex-direction: column-reverse;   /* empilhado: o último do DOM sobe ao topo */
+  gap: var(--spacing-2);
+}
+
+@media (min-width: 40rem) {
+  .nds-<slug>-footer {
+    flex-direction: row;            /* deitado: o último do DOM vai à direita */
+    justify-content: flex-end;
+  }
+}
+```
+
+`column-reverse` é o que faz uma única ordem de marcação servir às duas
+leituras. Sem ele seriam duas ordens de DOM para o mesmo grupo, e a ordem de
+tabulação mudaria com a largura da tela.
+
+```html
+<!-- CORRETO -->
+<div class="nds-dialog-footer">
+  <button class="nds-button nds-button-outline">Cancelar</button>
+  <button class="nds-button">Salvar alterações</button>
+</div>
+```
+
+## O foco entra no secundário — só em confirmação
+
+Onde a decisão É a tela (alert-dialog, drawer e sheet de confirmação), o foco
+inicial vai ao **cancelar**: a saída segura é o padrão, e confirmar exige um
+gesto deliberado.
+
+Onde o painel tem formulário, o foco entra no **primeiro campo** — mandar o foco
+para "Cancelar" ali obrigaria a tabular de volta a tela inteira antes de digitar.
+
+## Em painel com formulário, o `<form>` envolve o rodapé
+
+O `<form>` envolve o corpo **e** o rodapé, e a ação primária é `type="submit"`
+dentro dele. Vale para dialog, sheet, drawer e popover — qualquer overlay que
+receba campos.
+
+```html
+<form>
+  <div class="nds-dialog-body"><!-- campos --></div>
+  <div class="nds-dialog-footer">
+    <button type="button" class="nds-button nds-button-outline">Cancelar</button>
+    <button type="submit" class="nds-button">Salvar alterações</button>
+  </div>
+</form>
+```
+
+`type="submit"` fora do `<form>` é **botão inerte**: não submete, e o Enter num
+campo não dispara nada. Continua clicável e com a aparência certa, então nada na
+tela denuncia — e nenhum type-checker das cinco stacks alcança, porque o markup
+é válido.
+
+Quando a estrutura não permitir aninhar (o rodapé é irmão do corpo por
+construção do primitivo), religue explicitamente com `form="<id>"` no botão.
+
+Portão: `submit_fora_do_form` no `audit.mjs` cobre o conteúdo compartilhado, que
+é onde o defeito custa mais caro — snippet copiado leva o erro para o produto de
+quem copiou. **No código de stack, quem cobre é a suíte**: leia `button.form`,
+que vem vazio quando o botão está órfão. A varredura estática foi tentada e
+retirada; o motivo está registrado em `scripts/audit.mjs`, junto da regra.
+
+---
+
+## Por que estas regras têm portão, e o que os defeitos ensinaram
+
+**Nenhum compilador vê ordem entre irmãos.** Nem asserção por papel ou por
+texto: a ordem só existe como posição. Em setembro de 2026 as quatro stacks que
+ofereciam botão de fechar no rodapé o renderizavam DEPOIS dos filhos, o que o
+punha na posição do primário; e a story do vanilla montava `[Voltar, Continuar,
+Fechar]`, deixando o primário no meio.
+
+**O que guardava o defeito eram os documentos.** Quatro textos afirmavam que o
+botão de fechar ficava "abaixo das ações" — duas chaves de conteúdo, um docblock
+e uma tabela de API. Quem conferisse pela leitura encontrava quatro documentos
+concordando entre si; o desacordo era com a folha, que nenhum dos quatro citava.
+
+**Esta guideline também apodreceu.** Até 2026-09-08 ela prescrevia
+`flex flex-row-reverse gap-2`, `justify-end` e `ml-auto` — vocabulário do
+Tailwind, que saiu do projeto —, não falava do eixo empilhado (onde o defeito
+vivia) e contradizia o que as folhas fazem. E a mesma regra vivia em DOIS
+arquivos, o que é como as duas cópias apodreceram sem ninguém notar: quem
+corrigia uma não sabia da outra.

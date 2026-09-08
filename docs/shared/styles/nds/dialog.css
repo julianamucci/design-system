@@ -37,9 +37,10 @@
  *   · véu: aqui o clique no véu FECHA; lá não fecha — a decisão é crítica e
  *     exige escolha explícita (está escrito no docblock de alert-dialog.css);
  *   · Escape: fecha NOS DOIS, e no alertdialog equivale a cancelar;
- *   · desfoque: só este overlay tem backdrop-filter, e sob um véu de
- *     --overlay / 0.8 ele quase não aparece — o que o justifica hoje é o
- *     movimento do que está atrás, não o contraste;
+ *   · desfoque: NENHUM dos dois desfoca. O Dialog tinha `backdrop-filter`
+ *     até 2026-09-08, e a medição registrada aqui já dizia que sob um véu de
+ *     --overlay / 0.8 ele quase não aparecia — custo de pintura por um efeito
+ *     invisível;
  *   · o AlertDialog não tem botão de fechar no canto: a saída é o par
  *     Cancel + Action do rodapé, e é por isso que o rodapé é obrigatório lá.
  *
@@ -56,12 +57,6 @@
   isolation: isolate;
   background-color: hsl(var(--overlay) / 0.8);
   /* entrada instantânea — anima só a saída (evita corrida de opacity:0 com toBeVisible) */
-}
-
-@supports (backdrop-filter: blur(4px)) {
-  .nds-dialog-overlay {
-    backdrop-filter: blur(4px);
-  }
 }
 
 /* ── Content panel ───────────────────────────────────────────────────────── */
@@ -265,27 +260,17 @@
   color: hsl(var(--foreground));
 }
 
-/* ── Variante scrollável (overlay rola; content no fluxo do grid) ─────────── */
-.nds-dialog-overlay-scroll {
-  display: grid;
-  place-items: center;
-  overflow-y: auto;
-}
-
-.nds-dialog-content-scroll {
-  position: relative;
-  top: auto;
-  left: auto;
-  translate: none;
-  margin-block: var(--spacing-8);
-}
-
 /* ── Corpo rolável (o painel fica parado; só o corpo rola) ────────────────── */
 /*
- * A outra saída para conteúdo longo é o par `-overlay-scroll` + `-content-scroll`
- * acima, em que o painel INTEIRO entra no fluxo do overlay e a página é que
- * rola. Aqui é o contrário: o painel continua centralizado e fixo, o header e o
- * rodapé ficam parados, e a rolagem acontece dentro do corpo.
+ * Esta é a ÚNICA saída para conteúdo longo. O painel continua centralizado e
+ * fixo, o cabeçalho e o rodapé ficam parados, e a rolagem acontece dentro do
+ * corpo.
+ *
+ * Havia uma segunda rota — `-overlay-scroll` + `-content-scroll` —, em que o
+ * painel inteiro entrava no fluxo do véu e a página é que rolava. Foi RETIRADA
+ * em 2026-09-08, por decisão de produto: um diálogo modal que rola junto com a
+ * página desfaz a própria promessa de interromper, e ter duas saídas opostas
+ * para o mesmo problema obrigava cada tela a escolher entre elas sem critério.
  *
  * `max-block-size` e não `height`: o limite é o teto, e o painel curto continua
  * do tamanho do conteúdo. A medida cresce com o zoom do navegador porque é

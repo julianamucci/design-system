@@ -78,12 +78,21 @@ contorno externo de 1px, não borda.
 **Contraste**: o Sheet usa um fio equivalente, mas **literal** — preto a 5%, sem
 token. Os dois não são o mesmo valor.
 
-### D5 · Só este véu desfoca o fundo
+### D5 · Nenhum véu desfoca o fundo
 
-**Estado**: `backdrop-filter: blur(4px)`, dentro de `@supports`.
-**Medição honesta, registrada na própria folha**: sob um véu de `--overlay / 0.8`
-o desfoque quase não aparece — o que o justifica hoje é o movimento do que está
-atrás, não o contraste. O AlertDialog não tem.
+**Estado**: sem `backdrop-filter`. Nenhuma folha modal tem.
+
+**Histórico**: até 2026-09-08 este era o único overlay com
+`backdrop-filter: blur(4px)`, dentro de `@supports`. A medição que o acompanhava
+já dizia o suficiente contra ele — sob um véu de `--overlay / 0.8` o desfoque
+quase não aparece —, e a justificativa que restava era o movimento do que está
+atrás, não o contraste. Retirado por decisão de produto: custo de pintura em
+toda abertura por um efeito que a própria folha declarava invisível.
+
+**O que isso ensina sobre decisão registrada**: a linha ficou de pé por meses
+com a medição que a derrubava escrita ao lado. Registrar a dúvida não é o mesmo
+que resolvê-la — decisão marcada como frágil precisa de data de revisão, senão
+o registro honesto vira álibi para a manter.
 
 ### D6 · Clique no véu FECHA — e é aqui que os irmãos se separam
 
@@ -91,14 +100,21 @@ atrás, não o contraste. O AlertDialog não tem.
 **Por quê**: lá a decisão é crítica e exige escolha explícita; aqui o diálogo é
 um passo, não um compromisso. `Escape` fecha nos dois.
 
-### D7 · Há DUAS saídas para conteúdo longo, e elas são opostas
+### D7 · Há UMA saída para conteúdo longo: o corpo rola
 
-**Estado**:
+**Estado**: `-body-scroll`. O painel fica centralizado e fixo, o cabeçalho e o
+rodapé param, e o corpo ganha `max-block-size: 60vh`.
 
-| saída | o que rola | como |
-|---|---|---|
-| `-overlay-scroll` + `-content-scroll` | a página | o painel INTEIRO entra no fluxo do véu, que vira grid com `place-items: center` e `overflow-y: auto` |
-| `-body-scroll` | só o corpo | o painel fica centralizado e fixo, o cabeçalho e o rodapé param, e o corpo ganha `max-block-size: 60vh` |
+**A segunda rota foi RETIRADA em 2026-09-08**. Era o par `-overlay-scroll` +
+`-content-scroll`: o painel inteiro entrava no fluxo do véu, que virava grid com
+`overflow-y: auto`, e a PÁGINA é que rolava. Duas razões para não existir —
+um modal que rola junto com a página desfaz a própria promessa de interromper;
+e duas saídas opostas para o mesmo problema obrigam cada tela a escolher entre
+elas sem critério, que é como divergência entra num design system.
+
+A remoção é do recurso, não da story: sai a prop `scroll`, saem as classes, sai
+`DialogScrollContent` do Vue e o ramo do overlay no Svelte. Sistema que ainda
+permite a rota errada não a proibiu — só deixou de demonstrá-la.
 
 **Por que `max-block-size` e não `height`**: o limite é teto, então painel curto
 continua do tamanho do conteúdo. E a medida é relativa à janela, logo cresce com

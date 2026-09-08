@@ -107,7 +107,14 @@ resolve a superfície, e ninguém pinta fundo por fora.
 
 ### D8 · O véu não desfoca
 
-**Estado**: sem `backdrop-filter`. Só o véu do Dialog tem.
+**Estado**: sem `backdrop-filter` — e desde 2026-09-08 nenhuma folha modal tem.
+
+**Histórico**: esta linha dizia "só o véu do Dialog tem", e era verdade até o
+desfoque ser retirado de lá (ver `dialog.md`, D5). Vale reparar em como ela
+apodreceu: a afirmação descrevia o VIZINHO, então nada que tocasse o Dialog
+passava por este arquivo. Afirmação sobre o que os outros fazem é a que mais
+envelhece sem aviso — e a única defesa é não fazê-la, ou marcá-la como
+comparação datada, que é o que esta linha virou.
 
 ## 4. Anatomia
 

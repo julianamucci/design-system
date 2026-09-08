@@ -34,7 +34,10 @@
  *   · sem botão de fechar no canto: a saída visível é o par Cancel + Action do
  *     rodapé, e é por isso que o rodapé não é opcional aqui. O Dialog tem
  *     .nds-dialog-close, e esta folha não declara equivalente;
- *   · sem backdrop-filter: só o véu do Dialog desfoca o fundo.
+ *   · sem backdrop-filter — e desde 2026-09-08 o Dialog também não tem. Esta
+ *     linha dizia que "só o véu do Dialog desfoca"; era verdade e deixou de
+ *     ser, o que é exatamente como comentário apodrece: ele descrevia o
+ *     VIZINHO, então nada que tocasse o vizinho passava por aqui.
  *
  * Tokens: --background, --foreground, --muted-foreground, --border,
  *         --spacing-*

@@ -433,38 +433,37 @@ export function ComponentDocs() {
 
 ### Alinhamento de Grupos de Botões
 
-Regra transversal aplicada a qualquer contexto onde dois ou mais botões aparecem juntos — cards, formulários, dialogs, drawers, sheets e footers de seção.
+**O texto canônico mora em [`02-alinhamento-botoes.md`](./02-alinhamento-botoes.md).**
+Ordem nos dois eixos, a ordem de DOM que serve aos dois, onde o foco entra, e o
+`<form>` envolvendo o rodapé em painel com formulário.
 
-**Regra obrigatória**: botão primário sempre à direita. Os demais botões ordenados da direita para esquerda por ordem de importância decrescente.
+Esta seção era uma SEGUNDA cópia da mesma regra, e foi a duplicação que deixou
+as duas apodrecerem em paralelo até 2026-09-08 — ambas escritas em vocabulário
+do Tailwind (`justify-end`, `ml-auto`, `className`), que saiu do projeto, e
+nenhuma delas falando do eixo empilhado, que é onde o defeito vivia.
 
-```tsx
-{/* ✅ CORRETO — primário à direita, secundários à esquerda */}
-<div className="flex justify-end gap-2">
-  <Button variant="outline">Cancelar</Button>
-  <Button variant="outline">Editar</Button>
-  <Button>Salvar</Button>
-</div>
+#### A ressalva de teclado que este texto levantava, e que continua valendo
 
-{/* ✅ Alternativa com ml-auto para empurrar o grupo à direita */}
-<div className="flex gap-2 ml-auto">
-  <Button variant="ghost">Cancelar</Button>
-  <Button>Confirmar</Button>
-</div>
+A versão antiga proibia `flex-row-reverse` com um motivo correto: **inverter a
+ordem visual sem inverter a ordem do DOM prejudica a navegação por teclado**.
 
-{/* ❌ INCORRETO — primário à esquerda */}
-<div className="flex gap-2">
-  <Button>Salvar</Button>
-  <Button variant="outline">Cancelar</Button>
-</div>
-```
+O que as folhas fazem hoje é aparentado, e por isso a ressalva vira exceção
+declarada em vez de sumir. `.nds-*-footer` usa `column-reverse` no eixo
+empilhado, então ali a ordem visual (primário em cima) **difere** da ordem de
+DOM e de tabulação (secundário primeiro). Três razões para isso ser aceito, e
+não um descuido:
 
-**Regras específicas**:
-- Use `justify-end` no container para alinhar o grupo inteiro à direita
-- Use `ml-auto` no grupo quando ele compartilha uma linha com outro conteúdo
-- Nunca use `flex-row-reverse` — inverte a ordem visual sem inverter a ordem do DOM, prejudicando navegação por teclado e leitores de tela
-- Em dialogs e overlays, aplicar a mesma regra no `DialogFooter` / `DrawerFooter`
+1. o foco chegar ao **cancelar** antes do primário é o comportamento desejado,
+   não um efeito colateral — é a mesma decisão registrada em "o foco entra no
+   secundário";
+2. no eixo deitado, que é o caso comum em desktop, ordem visual e ordem de DOM
+   **coincidem** (esquerda para a direita: Cancelar, Salvar);
+3. a alternativa seria duas ordens de marcação para o mesmo grupo, e aí a ordem
+   de tabulação mudaria com a largura da tela — que é pior pelo mesmo critério
+   de WCAG 2.4.3 que a ressalva invoca.
 
-> **Referência detalhada por componente**: arquivo `06-form-components.md` (Button) e arquivo `10-overlay-components.md` (Dialog, Drawer, Sheet).
+`flex-row-reverse` continua proibido: ele inverte o eixo em que os dois já
+coincidem, trocando um alinhamento correto por um desencontro sem ganho.
 
 ### Seção "Notas e Dicas" - Padrão Visual
 
