@@ -20,3 +20,33 @@ export function provideDrawerModal(modal: ComputedRef<boolean>): void {
 export function useDrawerModal(): ComputedRef<boolean> {
   return inject(DRAWER_MODAL_KEY, computed(() => true))
 }
+
+/**
+ * A direção, da raiz para o painel.
+ *
+ * A folha compartilhada posiciona o painel por `[data-direction]` — borda,
+ * cantos, alça, cabeçalho e as transições das quatro direções saem dali. Sem o
+ * atributo, o painel não tem posição nenhuma.
+ *
+ * O atributo é escrito pelo wrapper, e não herdado da lib de gesto: o
+ * `data-vaul-drawer-direction` que ela injeta continua no elemento, mas é NOME
+ * DELA, e só três das cinco stacks a carregam. O contrato de markup do design
+ * system não pode ser batizado com o nome de uma dependência que parte das
+ * implementações não tem.
+ *
+ * Mesma razão do modo modal acima: a direção é prop da RAIZ e quem precisa do
+ * atributo é o painel, então ela desce por injeção.
+ */
+export type DrawerDirection = 'top' | 'bottom' | 'left' | 'right'
+
+const DRAWER_DIRECTION_KEY: InjectionKey<ComputedRef<DrawerDirection>>
+  = Symbol('nds-drawer-direction')
+
+export function provideDrawerDirection(direction: ComputedRef<DrawerDirection>): void {
+  provide(DRAWER_DIRECTION_KEY, direction)
+}
+
+/** `'bottom'` por omissão — é o default da raiz e o do primitivo. */
+export function useDrawerDirection(): ComputedRef<DrawerDirection> {
+  return inject(DRAWER_DIRECTION_KEY, computed<DrawerDirection>(() => 'bottom'))
+}

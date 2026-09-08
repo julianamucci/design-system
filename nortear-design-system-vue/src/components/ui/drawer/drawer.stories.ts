@@ -192,7 +192,7 @@ export const Playground: Story = {
       // painel se anunciando "Drawer".
       await expect(panel).toHaveAccessibleName(LABEL.title);
       await expect(panel).toHaveAccessibleDescription(LABEL.descricao);
-      await expect(panel).toHaveAttribute('data-vaul-drawer-direction', args.direction!);
+      await expect(panel).toHaveAttribute('data-direction', args.direction!);
       await expect(panel).toHaveClass(/nds-drawer-content/);
       await expect(spy.mock.calls.length).toBe(callsBefore + 1);
     });

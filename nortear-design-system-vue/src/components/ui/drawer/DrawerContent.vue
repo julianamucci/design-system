@@ -7,7 +7,7 @@ import { useForwardPropsEmits } from 'reka-ui'
 import { DrawerContent, DrawerPortal } from 'vaul-vue'
 import { cn } from '@/lib/utils'
 import DrawerOverlay from './DrawerOverlay.vue'
-import { useDrawerModal } from './context'
+import { useDrawerDirection, useDrawerModal } from './context'
 
 defineOptions({
   inheritAttrs: false,
@@ -76,6 +76,19 @@ const forwarded = useForwardPropsEmits(reactiveOmit(props, 'initialFocus'), emit
  * real dele.
  */
 const modal = useDrawerModal()
+
+/**
+ * `data-direction` é o que dá posição ao painel.
+ *
+ * A folha compartilhada ancora dezessete seletores neste atributo — borda,
+ * cantos, alça, cabeçalho e as transições das quatro direções. A lib de gesto
+ * escreve o `data-vaul-drawer-direction` dela no mesmo elemento e pode
+ * continuar escrevendo; o que a folha lê é este, porque o contrato de markup é
+ * do design system e não da dependência de parte das stacks.
+ *
+ * A direção vem da raiz por injeção — é lá que ela é prop.
+ */
+const direction = useDrawerDirection()
 
 /**
  * O foco entra no painel — a lib desta stack impede que ele entre.
@@ -166,7 +179,7 @@ watch(
     <DrawerContent
       ref="panel"
       data-slot="drawer-content"
-      v-bind="{ 'aria-modal': modal ? 'true' : undefined, ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-modal': modal ? 'true' : undefined, 'data-direction': direction, ...$attrs, ...forwarded }"
       :class="cn('nds-drawer-content', props.class)"
     >
       <div

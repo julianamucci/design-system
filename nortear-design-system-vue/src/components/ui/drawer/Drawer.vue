@@ -3,7 +3,7 @@ import type { DrawerRootEmits, DrawerRootProps } from 'vaul-vue'
 import { computed, ref } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { DrawerRoot } from 'vaul-vue'
-import { provideDrawerModal } from './context'
+import { provideDrawerDirection, provideDrawerModal } from './context'
 
 /**
  * ─── Decisão de acessibilidade (bloco canônico no drawer da stack vanilla) ───
@@ -69,6 +69,10 @@ const props = withDefaults(defineProps<DrawerRootProps>(), {
   dismissible: true,
   open: undefined,
   defaultOpen: undefined,
+  // Default do primitivo, declarado aqui porque a folha compartilhada precisa
+  // dele por escrito: é este valor que o painel emite como `data-direction`, e
+  // sem atributo o painel não tem posição nenhuma. Ver `provideDrawerDirection`.
+  direction: 'bottom',
 })
 
 const emits = defineEmits<DrawerRootEmits>()
@@ -92,6 +96,7 @@ function onChangeAbertura(value: boolean) {
 const repassados = reactiveOmit(props, 'open', 'defaultOpen')
 
 provideDrawerModal(computed(() => props.modal))
+provideDrawerDirection(computed(() => props.direction))
 </script>
 
 <template>
