@@ -37,7 +37,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Setup Node 22
+      - name: Setup Node 24
         uses: actions/setup-node@v7
         with:
           node-version: '24'
@@ -49,6 +49,21 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      # `tsc` / `vue-tsc -b` / `svelte-check` / `ngc --noEmit`, conforme a stack.
+      #
+      # O cabeçalho deste arquivo prometia typecheck desde sempre e o passo nunca
+      # existiu. Medido em 2026-09-08 plantando `const x: number = "texto"` no
+      # fim de `api/perguntar.ts` do vanilla: `npm run lint` fechou exit 0 com
+      # zero erros, e `build-storybook` nem abre o arquivo, porque nenhuma story
+      # importa `api/`. As ~900 linhas do servidor do chat eram checadas por
+      # NADA. Só o `tsc` viu (exit 2, TS2322).
+      #
+      # Custo a frio, medido na máquina local: react 117s, vue 140s, svelte
+      # 319s, vanilla 46s, angular 94s. Como a matriz roda uma job por stack, o
+      # relógio de cada job cresce só o próprio número.
+      - name: Typecheck
+        run: npm run build
 
       - name: Build Storybook
         run: npm run build-storybook
