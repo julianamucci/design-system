@@ -419,6 +419,19 @@ describe('variantes', () => {
     expect(code).not.toContain('role=');
   });
 
+  it('dialogWithFormSource põe o rodapé DENTRO do form, como a story', () => {
+    // O defeito que este caso guarda: a story escrevia `type="submit"` e o
+    // arquivo inteiro não tinha um `<form>`. Botão de submissão fora de form
+    // não submete nada, e o Enter no campo não faz nada — numa variante cujo
+    // assunto É o formulário.
+    const code = dialogWithFormSource();
+    expect(code).toContain('<form (submit)="$event.preventDefault()">');
+    expect(code.indexOf('<form')).toBeLessThan(code.indexOf('<div ndsDialogBody'));
+    expect(code.indexOf('<div ndsDialogFooter>')).toBeLessThan(code.indexOf('</form>'));
+    expect(code).toContain(`<button ndsButton type="submit">${ACTION}</button>`);
+    expect(footerLabels(code)).toEqual([CANCEL, ACTION]);
+  });
+
   it('dialogWithScrollContentSource nomeia a região que rola, e a torna alcançável', () => {
     // ROTA A: os três atributos andam juntos, e nenhum vem do componente. Sem
     // `tabindex` quem navega só por teclado não alcança a caixa (WCAG 2.1.1), e

@@ -148,21 +148,29 @@ export const WithForm: Story = {
               <p ndsDialogDescription>{{ labels.description }}</p>
             </div>
 
-            <div ndsDialogBody class="nds-stack" data-spacing="md">
-              <div class="nds-stack" data-spacing="xs">
-                <label ndsLabel for="dlg-nome">Nome</label>
-                <input ndsInput id="dlg-nome" name="name" value="Ana Ribeiro" />
+            <!--
+              O form envolve o corpo E o rodapé. Sem ele o type="submit" da
+              ação primária não submetia nada e o Enter num campo não fazia
+              nada — numa story cujo assunto É o formulário. Botão de
+              submissão fora de form é decoração.
+            -->
+            <form (submit)="$event.preventDefault()">
+              <div ndsDialogBody class="nds-stack" data-spacing="md">
+                <div class="nds-stack" data-spacing="xs">
+                  <label ndsLabel for="dlg-nome">Nome</label>
+                  <input ndsInput id="dlg-nome" name="name" value="Ana Ribeiro" />
+                </div>
+                <div class="nds-stack" data-spacing="xs">
+                  <label ndsLabel for="dlg-email">E-mail</label>
+                  <input ndsInput id="dlg-email" name="email" type="email" value="ana@exemplo.com" />
+                </div>
               </div>
-              <div class="nds-stack" data-spacing="xs">
-                <label ndsLabel for="dlg-email">E-mail</label>
-                <input ndsInput id="dlg-email" name="email" type="email" value="ana@exemplo.com" />
-              </div>
-            </div>
 
-            <div ndsDialogFooter>
-              <button ndsDialogClose ndsButton variant="outline">{{ labels.cancel }}</button>
-              <button ndsButton type="submit">{{ labels.action }}</button>
-            </div>
+              <div ndsDialogFooter>
+                <button ndsDialogClose ndsButton variant="outline">{{ labels.cancel }}</button>
+                <button ndsButton type="submit">{{ labels.action }}</button>
+              </div>
+            </form>
           </div>
         </ng-template>
       </div>
@@ -185,6 +193,19 @@ export const WithForm: Story = {
       await expect(document.activeElement).toBe(name);
       await userEvent.tab();
       await expect(document.activeElement).toBe(p.querySelector('#dlg-email'));
+    });
+
+    await step('A ação primária submete o form que contém os campos', async () => {
+      // `type="submit"` fora de um `<form>` é botão inerte: não submete nada e
+      // o Enter no campo não dispara nada. A associação é lida pela
+      // propriedade `form` do botão, que é o mesmo elo que o navegador usa —
+      // procurar o ancestral à mão provaria só o aninhamento.
+      const form = p.querySelector<HTMLFormElement>('form')!;
+      await expect(form).not.toBeNull();
+      const action = within(p).getByRole('button', { name: LABELS.action });
+      await expect((action as HTMLButtonElement).type).toBe('submit');
+      await expect((action as HTMLButtonElement).form).toBe(form);
+      await expect(p.querySelector<HTMLInputElement>('#dlg-nome')!.form).toBe(form);
     });
   },
 };
@@ -493,6 +514,18 @@ export const CustomCloseInFooter: Story = {
       // é `button` — ver a nota em NdsDialogClose.
       const close = within(p).getByRole('button', { name: LABELS.close });
       await expect(close.closest('[data-slot="dialog-footer"]')).not.toBeNull();
+    });
+
+    await step('E ele entra como SECUNDÁRIO: primeiro no DOM, ação primária por último', async () => {
+      // O botão que o rodapé desenha era projetado DEPOIS do conteúdo, e com
+      // isso ocupava a posição da ação primária nas duas larguras — a folha
+      // deriva as duas leituras da mesma ordem de DOM (column-reverse no
+      // estreito, row + justify-end no largo). Ordem, e não posição em pixels:
+      // é o que a guideline 04 escreve e o que o CSS lê.
+      const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
+      const buttons = [...footer.querySelectorAll('button')];
+      await expect(buttons[0]).toHaveAccessibleName(LABELS.close);
+      await expect(buttons[buttons.length - 1]).toHaveTextContent(LABELS.action);
     });
 
     await step('E o botão do rodapé fecha o diálogo', async () => {

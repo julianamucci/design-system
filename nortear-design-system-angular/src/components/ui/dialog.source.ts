@@ -317,18 +317,36 @@ export function dialogPlaygroundSource(
  * O corpo não leva `tabindex` nem papel: aqui ele não rola, e parada de
  * tabulação que não faz nada é ruído para quem navega por teclado. Quem rola é
  * a variante de baixo.
+ *
+ * O `form` envolve o corpo E o rodapé, pela mesma razão da composição de edição
+ * de perfil: é o que faz o Enter em qualquer campo disparar a ação primária. Um
+ * `type="submit"` fora de `form` não submete nada — a story publicava
+ * exatamente isso, e o snippet ensinava a repetir.
  */
 export function dialogWithFormSource(): string {
-  const body = `          <div ndsDialogBody class="nds-stack" data-spacing="md">
-            <div class="nds-stack" data-spacing="xs">
-              <label ndsLabel for="dlg-nome">${DEMO.formName}</label>
-              <input ndsInput id="dlg-nome" name="name" value="${DEMO.formNameValue}" />
-            </div>
-            <div class="nds-stack" data-spacing="xs">
-              <label ndsLabel for="dlg-email">${DEMO.formEmail}</label>
-              <input ndsInput id="dlg-email" name="email" type="email" value="${DEMO.formEmailValue}" />
-            </div>
-          </div>`;
+  const body = `            <div ndsDialogBody class="nds-stack" data-spacing="md">
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="dlg-nome">${DEMO.formName}</label>
+                <input ndsInput id="dlg-nome" name="name" value="${DEMO.formNameValue}" />
+              </div>
+              <div class="nds-stack" data-spacing="xs">
+                <label ndsLabel for="dlg-email">${DEMO.formEmail}</label>
+                <input ndsInput id="dlg-email" name="email" type="email" value="${DEMO.formEmailValue}" />
+              </div>
+            </div>`;
+
+  const formFooter = indent(
+    footer({
+      action: `            <button ndsButton type="submit">${LABELS.action}</button>`,
+    }),
+    2,
+  );
+
+  const form = `          <form (submit)="$event.preventDefault()">
+${body}
+
+${formFooter}
+          </form>`;
 
   return example({
     imports: IMPORTS_WITH_FIELD,
@@ -337,9 +355,7 @@ export function dialogWithFormSource(): string {
       content: content({
         title: LABELS.title,
         description: LABELS.description,
-        after: `${body}\n\n${footer({
-          action: `            <button ndsButton type="submit">${LABELS.action}</button>`,
-        })}`,
+        after: form,
       }),
     }),
   });

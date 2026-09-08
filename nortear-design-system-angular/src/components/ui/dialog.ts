@@ -408,13 +408,16 @@ export class NdsDialogBody {}
 /**
  * Rodapé de ações.
  *
- * `@Component` pelo mesmo motivo do Content: `showCloseButton` põe um botão de
- * fechar ABAIXO das ações, e o conteúdo compartilhado documenta essa
- * configuração como uma composição própria.
+ * `@Component` pelo mesmo motivo do Content: `showCloseButton` acrescenta um
+ * botão de fechar como ação SECUNDÁRIA do rodapé, e o conteúdo compartilhado
+ * documenta essa configuração como uma composição própria.
  *
  * A ordem visual (empilhado no estreito, lado a lado a partir de 40rem, com a
- * ação primária à direita) é `flex-direction: column-reverse` no CSS: no DOM a
- * ação primária vem por último, que é a ordem de leitura e de foco correta.
+ * ação primária à direita) é `flex-direction: column-reverse` no CSS: no DOM os
+ * secundários vêm primeiro e a ação primária por último, que é a ordem de
+ * leitura e de foco correta — e é a regra de "Alinhamento de Grupos de Botões"
+ * da guideline 04. Por isso o botão deste rodapé é projetado ANTES do
+ * `<ng-content />`: depois dele, o fechar cairia na posição da primária.
  */
 @Component({
   selector: 'div[ndsDialogFooter]',
@@ -427,10 +430,15 @@ export class NdsDialogBody {}
     '[attr.data-slot]': '"dialog-footer"',
   },
   template: `
-    <ng-content />
-
     @if (showCloseButton()) {
       <!--
+        ANTES do ng-content, e a ordem é o assunto: fechar é a ação de MENOR
+        ênfase do rodapé, e a folha compartilhada deriva as duas leituras da
+        mesma ordem de DOM — column-reverse no estreito põe o primeiro do DOM
+        embaixo, row + justify-end no largo o põe à esquerda. Projetado depois
+        do conteúdo, este botão ocupava a posição da ação PRIMÁRIA nas duas
+        larguras.
+
         Aqui o botão É um ndsButton: no rodapé ele fica lado a lado com as
         ações e precisa da mesma aparência. Por isso também não recebe
         data-slot próprio — o slot do elemento é button, e o que o identifica
@@ -438,10 +446,15 @@ export class NdsDialogBody {}
       -->
       <button rdxDialogClose ndsButton variant="outline">{{ closeLabel() }}</button>
     }
+
+    <ng-content />
   `,
 })
 export class NdsDialogFooter {
-  /** Botão de fechar dentro do rodapé, abaixo das ações. */
+  /**
+   * Botão de fechar dentro do rodapé, como ação secundária: abaixo das demais
+   * no empilhamento e à esquerda delas quando lado a lado.
+   */
   readonly showCloseButton = input(false, { transform: booleanAttribute });
 
   /** Rótulo visível do botão de fechar do rodapé. */

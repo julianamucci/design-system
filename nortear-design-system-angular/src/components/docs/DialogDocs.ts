@@ -57,8 +57,13 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 //     fechar é filho JSX. Aqui as duas são inputs, e prop sem descrição é API
 //     invisível;
 //   · rótulos dos exemplos que o conteúdo não tem (nomes de campo, o exemplo
-//     negativo destrutivo, o `alt` da capa) e que, escritos direto no template,
-//     ficariam em português nas três versões da página.
+//     negativo destrutivo, o contraexemplo vago do primeiro don't, o par
+//     remover-item da variante destrutiva, o par do convite da variante de
+//     confirmação e o `alt` da capa) e que, escritos
+//     direto no template, ficariam em português nas três versões da página.
+//     A maioria deles é comum às cinco stacks — as outras quatro escrevem os
+//     mesmos textos à mão, em português — e por isso foram reportados para
+//     promoção ao conteúdo compartilhado. Enquanto não sobem, ficam aqui.
 //
 // `import.withScroll` é substituição, não acréscimo: o texto original diz
 // "(Vue)", e nomear outro stack numa página que é lida sozinha vaza contexto.
@@ -67,9 +72,19 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
     'demonstration.labels.close': 'Fechar',
     'demonstration.labels.fieldName': 'Nome',
     'demonstration.labels.fieldEmail': 'E-mail',
+    'demonstration.labels.vagueTitle': 'Atenção',
+    'demonstration.labels.vagueDescription':
+      'Aqui você pode mexer em várias coisas.',
     'demonstration.labels.destructiveTitle': 'Excluir conta',
     'demonstration.labels.destructiveDescription':
       'A conta e todo o histórico são apagados. Não há como desfazer.',
+    'demonstration.labels.removeItemTitle': 'Remover item da lista',
+    'demonstration.labels.removeItemDescription':
+      'O item sai desta lista e continua disponível no catálogo.',
+    'demonstration.labels.removeItemAction': 'Remover item',
+    'demonstration.labels.inviteAction': 'Enviar convite',
+    'demonstration.labels.inviteDescription':
+      'O convite vai para ana@exemplo.com. Você pode reenviar depois.',
     'demonstration.labels.coverAlt': 'Padrão geométrico em tons de cinza',
     'import.withScroll': 'No componente que compõe:',
     'props.table.modal':
@@ -87,9 +102,19 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
     'demonstration.labels.close': 'Close',
     'demonstration.labels.fieldName': 'Name',
     'demonstration.labels.fieldEmail': 'Email',
+    'demonstration.labels.vagueTitle': 'Attention',
+    'demonstration.labels.vagueDescription':
+      'Here you can change several things.',
     'demonstration.labels.destructiveTitle': 'Delete account',
     'demonstration.labels.destructiveDescription':
       'The account and all history are erased. This cannot be undone.',
+    'demonstration.labels.removeItemTitle': 'Remove item from the list',
+    'demonstration.labels.removeItemDescription':
+      'The item leaves this list and stays available in the catalogue.',
+    'demonstration.labels.removeItemAction': 'Remove item',
+    'demonstration.labels.inviteAction': 'Send invite',
+    'demonstration.labels.inviteDescription':
+      'The invite goes to ana@example.com. You can resend it later.',
     'demonstration.labels.coverAlt': 'Geometric pattern in shades of grey',
     'import.withScroll': 'In the composing component:',
     'props.table.modal':
@@ -107,9 +132,19 @@ const { t, dict } = useTranslation(dialogTranslations as Record<string, unknown>
     'demonstration.labels.close': 'Cerrar',
     'demonstration.labels.fieldName': 'Nombre',
     'demonstration.labels.fieldEmail': 'Correo electrónico',
+    'demonstration.labels.vagueTitle': 'Atención',
+    'demonstration.labels.vagueDescription':
+      'Aquí puedes cambiar varias cosas.',
     'demonstration.labels.destructiveTitle': 'Eliminar cuenta',
     'demonstration.labels.destructiveDescription':
       'La cuenta y todo el historial se borran. No se puede deshacer.',
+    'demonstration.labels.removeItemTitle': 'Quitar ítem de la lista',
+    'demonstration.labels.removeItemDescription':
+      'El ítem sale de esta lista y sigue disponible en el catálogo.',
+    'demonstration.labels.removeItemAction': 'Quitar ítem',
+    'demonstration.labels.inviteAction': 'Enviar invitación',
+    'demonstration.labels.inviteDescription':
+      'La invitación va a ana@ejemplo.com. Puedes reenviarla después.',
     'demonstration.labels.coverAlt': 'Patrón geométrico en tonos de gris',
     'import.withScroll': 'En el componente que compone:',
     'props.table.modal':
@@ -162,29 +197,42 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
 // A variante `angular` de `anatomy.structureCode` no conteúdo compartilhado
 // descreve um elemento `<nds-dialog>` e um `<ng-template ndsDialogContent>` que
-// este stack não tem. A raiz é diretiva de ATRIBUTO num `<div>` — para o markup
-// bater com o do Vanilla — e o portal precisa ser o `<ng-template>`, porque o
-// diálogo tem DOIS nós raiz (overlay e painel) e o primitivo só teleporta os
-// dois pela forma estrutural. Enquanto o conteúdo não for corrigido, a
-// estrutura mostrada aqui é a que compila.
+// este stack não tem — quem copiasse o bloco receberia markup que o Angular não
+// compila. A raiz é diretiva de ATRIBUTO num `<div>` — para o markup bater com
+// o do Vanilla — e o portal precisa ser o `<ng-template>`, porque o diálogo tem
+// DOIS nós raiz (overlay e painel) e o primitivo só teleporta os dois pela
+// forma estrutural.
+//
+// ESTE TEXTO É PROVISÓRIO e foi entregue para correção da chave compartilhada,
+// letra por letra: quando ela subir, apague a constante e volte a ler
+// `t('anatomy.structureCode')`. O contorno local é o que escondeu o defeito por
+// tanto tempo — a página ficava certa e a chave, errada para quem a lesse de
+// qualquer outro lugar.
 const ANATOMY_CODE = `<div ndsDialog>
   <button ndsDialogTrigger ndsButton variant="outline">Editar perfil</button>
 
   <ng-template ndsDialogPortal>
     <div ndsDialogOverlay></div>
 
-    <div ndsDialogContent closeLabel="Fechar">
+    <div ndsDialogContent>
       <div ndsDialogHeader>
         <h2 ndsDialogTitle>Editar perfil</h2>
         <p ndsDialogDescription>Atualize suas informações pessoais.</p>
       </div>
 
-      <div ndsDialogBody><!-- campos --></div>
+      <!-- O rodapé fica DENTRO do form: é o que faz o Enter em qualquer campo
+           disparar a ação primária. -->
+      <form (submit)="salvar($event)">
+        <div ndsDialogBody><!-- campos --></div>
 
-      <div ndsDialogFooter>
-        <button ndsDialogClose ndsButton variant="outline">Cancelar</button>
-        <button ndsButton>Salvar alterações</button>
-      </div>
+        <!-- No DOM o secundário vem primeiro e a ação primária por último: a
+             folha põe a primária em cima no empilhamento e à direita no lado a
+             lado. -->
+        <div ndsDialogFooter>
+          <button ndsDialogClose ndsButton variant="outline">Cancelar</button>
+          <button ndsButton type="submit">Salvar alterações</button>
+        </div>
+      </form>
     </div>
   </ng-template>
 </div>`;
@@ -297,22 +345,26 @@ const VARIANT_CODE = {
   </ng-template>
 </div>`,
 
-  withForm: `<div ndsDialogBody class="nds-stack" data-spacing="md">
-  <div class="nds-stack" data-spacing="xs">
-    <label ndsLabel for="profile-name">Nome</label>
-    <input ndsInput id="profile-name" name="name" />
+  withForm: `<!-- O form envolve o corpo E o rodapé: é o que faz o Enter em qualquer campo
+     disparar a ação primária. Um type="submit" fora de form não submete nada. -->
+<form (submit)="salvar($event)">
+  <div ndsDialogBody class="nds-stack" data-spacing="md">
+    <div class="nds-stack" data-spacing="xs">
+      <label ndsLabel for="profile-name">Nome</label>
+      <input ndsInput id="profile-name" name="name" />
+    </div>
+
+    <div class="nds-stack" data-spacing="xs">
+      <label ndsLabel for="perfil-email">E-mail</label>
+      <input ndsInput id="perfil-email" name="email" type="email" />
+    </div>
   </div>
 
-  <div class="nds-stack" data-spacing="xs">
-    <label ndsLabel for="perfil-email">E-mail</label>
-    <input ndsInput id="perfil-email" name="email" type="email" />
+  <div ndsDialogFooter>
+    <button ndsDialogClose ndsButton variant="outline">Cancelar</button>
+    <button ndsButton type="submit">Salvar alterações</button>
   </div>
-</div>
-
-<div ndsDialogFooter>
-  <button ndsDialogClose ndsButton variant="outline">Cancelar</button>
-  <button ndsButton type="submit">Salvar alterações</button>
-</div>`,
+</form>`,
 
   withScrollContent: `<!-- Quem rola é o CORPO: o painel fica parado e centralizado, e cabeçalho e
      rodapé continuam visíveis. O teto e a barra vêm da classe de rolagem;
@@ -443,7 +495,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
          documentação inalcançável. O que o card mostra é o gatilho. -->
 
     <ng-template #tplDoDont1Do>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('par1_do', 'docs_do_dont', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -463,15 +515,22 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
 
     <ng-template #tplDoDont1Dont>
       <!-- Título genérico, descrição que não orienta e botão "OK": nada aqui
-           diz o que vai acontecer ao confirmar. -->
-      <div ndsDialog>
-        <button ndsDialogTrigger ndsButton variant="outline">{{ rotuloGenerico() }}</button>
+           diz o que vai acontecer ao confirmar.
+
+           Os textos são rótulos PRÓPRIOS deste contraexemplo, e não mais as
+           células "bad" da tabela de UX Writing: aquelas existem para ser
+           EXIBIDAS como contraexemplo dentro da tabela, e derivá-las por
+           expressão regular para dentro de um componente vivo fazia a página
+           renderizar de verdade o que a tabela ao lado condena — além de
+           prender o rótulo à pontuação de uma string traduzida. -->
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('par1_dont', 'docs_do_dont', $event)">
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.vagueTitle') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
           <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ rotuloGenerico() }}</h2>
-              <p ndsDialogDescription>{{ descricaoVaga() }}</p>
+              <h2 ndsDialogTitle>{{ t('demonstration.labels.vagueTitle') }}</h2>
+              <p ndsDialogDescription>{{ t('demonstration.labels.vagueDescription') }}</p>
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
@@ -483,7 +542,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('par2_do', 'docs_do_dont', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -505,7 +564,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
       <!-- Confirmação destrutiva num Dialog: o leitor de tela anuncia
            "diálogo" e não "alerta", e o foco inicial cai no primeiro focável em
            vez de no Cancelar. -->
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('par2_dont', 'docs_do_dont', $event)">
         <button ndsDialogTrigger ndsButton variant="destructive">{{ t('demonstration.labels.destructiveTitle') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -524,7 +583,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarDefault>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('default', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -543,7 +602,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarWithForm>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_form', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -552,25 +611,30 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
               <h2 ndsDialogTitle>{{ t('demonstration.labels.title') }}</h2>
               <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
             </div>
-            <div ndsDialogBody class="nds-stack" data-spacing="md">
-              @for (field of camposDoFormulario(); track field.id) {
-                <div class="nds-stack" data-spacing="xs">
-                  <label ndsLabel [attr.for]="field.id">{{ field.label }}</label>
-                  <input ndsInput [id]="field.id" [name]="field.id" [value]="field.value" />
-                </div>
-              }
-            </div>
-            <div ndsDialogFooter>
-              <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton type="submit">{{ t('demonstration.labels.action') }}</button>
-            </div>
+            <!-- O form envolve o corpo E o rodapé: sem ele o type="submit" da
+                 ação primária não submete nada, e o Enter num campo não faz
+                 nada — numa variante cujo assunto É o formulário. -->
+            <form (submit)="$event.preventDefault()">
+              <div ndsDialogBody class="nds-stack" data-spacing="md">
+                @for (field of camposDoFormulario(); track field.id) {
+                  <div class="nds-stack" data-spacing="xs">
+                    <label ndsLabel [attr.for]="field.id">{{ field.label }}</label>
+                    <input ndsInput [id]="field.id" [name]="field.id" [value]="field.value" />
+                  </div>
+                }
+              </div>
+              <div ndsDialogFooter>
+                <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
+                <button ndsButton type="submit">{{ t('demonstration.labels.action') }}</button>
+              </div>
+            </form>
           </div>
         </ng-template>
       </div>
     </ng-template>
 
     <ng-template #tplVarWithScrollContent>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_scroll_content', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <!-- Sem [scroll]: o conteúdo compartilhado descreve esta variante como
@@ -605,7 +669,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarScrollingOverlay>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_scrolling_overlay', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <!-- A OUTRA rota: o par [scroll] põe o painel no fluxo do overlay, e é
@@ -637,7 +701,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarNoFooter>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('no_footer', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -652,18 +716,22 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarWithDestructiveAction>
-      <div ndsDialog>
-        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
+      <!-- A ação destrutiva é REMOVER, e o rótulo diz isso. "Salvar alterações"
+           com a variante destructive pintava de perigo uma ação que não destrói
+           nada, e contradizia o snippet ao lado, que já mostrava "Remover
+           item". Destrutivo é para o que destrói. -->
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_destructive_action', 'docs_variantes', $event)">
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.removeItemAction') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
           <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ t('demonstration.labels.title') }}</h2>
-              <p ndsDialogDescription>{{ t('demonstration.labels.description') }}</p>
+              <h2 ndsDialogTitle>{{ t('demonstration.labels.removeItemTitle') }}</h2>
+              <p ndsDialogDescription>{{ t('demonstration.labels.removeItemDescription') }}</p>
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton variant="destructive">{{ t('demonstration.labels.action') }}</button>
+              <button ndsButton variant="destructive">{{ t('demonstration.labels.removeItemAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -671,7 +739,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarCustomCloseInFooter>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('custom_close_in_footer', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -689,18 +757,24 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplVarConfirmEmail>
-      <div ndsDialog>
-        <button ndsDialogTrigger ndsButton variant="outline">{{ t('variants.items.confirmEmail.name') }}</button>
+      <!-- Os rótulos saem de demonstration.labels, nunca de
+           variants.items.confirmEmail.name: aquele campo é o NOME DO CARD de
+           variante, e é dele que o DocsVariants tira o snippet_id do evento
+           docs_code_copy. Usá-lo como texto de botão misturava dado de
+           analytics com interface — e ainda punha "Confirmação de e-mail" num
+           botão de ação. O texto agora é o mesmo do snippet ao lado. -->
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('confirm_email', 'docs_variantes', $event)">
+        <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.inviteAction') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
           <div ndsDialogContent [closeLabel]="t('demonstration.labels.close')">
             <div ndsDialogHeader>
-              <h2 ndsDialogTitle>{{ t('variants.items.confirmEmail.name') }}</h2>
-              <p ndsDialogDescription>{{ t('variants.items.confirmEmail.use') }}</p>
+              <h2 ndsDialogTitle>{{ t('demonstration.labels.inviteAction') }}</h2>
+              <p ndsDialogDescription>{{ t('demonstration.labels.inviteDescription') }}</p>
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton>{{ t('variants.items.confirmEmail.name') }}</button>
+              <button ndsButton>{{ t('demonstration.labels.inviteAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -708,7 +782,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplCompProfileEdit>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('profile_edit', 'docs_composicoes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('variants.compositions.profileEdit.name') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -738,7 +812,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> =
     </ng-template>
 
     <ng-template #tplCompMediaPreview>
-      <div ndsDialog>
+      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('media_preview', 'docs_composicoes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('variants.compositions.mediaPreview.name') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -955,22 +1029,6 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
   private readonly tplCompMediaPreview =
     viewChild.required<TemplateRef<unknown>>('tplCompMediaPreview');
 
-  /**
-   * Rótulo ruim do primeiro "don't": o exemplo negativo do próprio conteúdo,
-   * sem as aspas com que ele é escrito. Derivar do texto traduzido evita
-   * literal em português numa página trilíngue.
-   */
-  protected readonly rotuloGenerico = computed(() => {
-    dict();
-    return firstExemplo(t('usage.uxWriting.table.title.bad'));
-  });
-
-  /** Descrição vaga do mesmo "don't", pela mesma via. */
-  protected readonly descricaoVaga = computed(() => {
-    dict();
-    return firstExemplo(t('usage.uxWriting.table.description.bad'));
-  });
-
   /** Os dois campos do formulário de exemplo. */
   protected readonly camposDoFormulario = computed(() => {
     dict();
@@ -1016,6 +1074,31 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       location: 'docs_demo',
     });
     this.confirmou = false;
+  }
+
+  /**
+   * Analytics dos exemplos VIVOS das outras seções.
+   *
+   * `location` sai de ONDE O ELEMENTO ESTÁ, e por isso vem como argumento: o Do
+   * & Don't, as Variantes e as Composições instanciam o componente de verdade,
+   * e um clique ali é tão real quanto o da demonstração. Com `docs_demo` cravado
+   * em tudo, o funil somava quatro seções numa só — é o que a regra
+   * `location_so_da_demo` do `audit.mjs` mede.
+   *
+   * `qual` é identificador estável do exemplo, nunca o texto traduzido: um único
+   * evento viraria três valores no GA4, um por idioma.
+   */
+  protected aoMudarNoExemplo(qual: string, secao: string, evento: RdxDialogOpenChange): void {
+    if (evento.open) {
+      track('dialog_open', { component: 'dialog', label: qual, location: secao });
+      return;
+    }
+    track('dialog_close', {
+      component: 'dialog',
+      label: qual,
+      reason: MOTIVO[evento.reason] ?? 'action',
+      location: secao,
+    });
   }
 
   /**
@@ -1538,18 +1621,6 @@ const priorityKeyMap: Record<string, string> = {
 
 function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
-}
-
-/**
- * O primeiro exemplo de uma lista entre aspas: `"Olá!", "Atenção"` → `Olá!`.
- *
- * O conteúdo guarda os exemplos de UX writing assim, e o "don't" da página
- * precisa de UM deles. Derivar mantém a página trilíngue sem literal aqui.
- */
-function firstExemplo(raw: string): string {
-  const limpo = toPlainText(raw);
-  const entreAspas = limpo.match(/"([^"]+)"/);
-  return entreAspas ? entreAspas[1] : limpo;
 }
 
 /**
