@@ -5,6 +5,7 @@ import { balaoDe, clearPortal, wrap } from './tooltip.fixtures';
 import { tooltipSource, tooltipSourceWith } from './tooltip.source';
 import { createButton } from './button';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
 // visual capturar o balão, que só existe no DOM enquanto está aberto.
@@ -28,6 +29,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Tooltip/Variants',
   parameters: {
+    design: figmaDesign('tooltip'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

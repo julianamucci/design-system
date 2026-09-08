@@ -20,11 +20,13 @@ import {
   commandPaletteSource,
 } from './command.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/Command/Compositions',
   component: Command,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('command'),
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },

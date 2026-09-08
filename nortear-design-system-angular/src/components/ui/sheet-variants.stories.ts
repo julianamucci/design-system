@@ -14,6 +14,7 @@ import {
   sheetSideTopSource,
 } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
 
 // As quatro direções são a única variação visual do Sheet, e todas moram no
@@ -26,6 +27,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton] })],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

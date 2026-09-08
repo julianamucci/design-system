@@ -10,10 +10,12 @@ import { popoverSource, popoverSourceActions, popoverSourceWith } from './popove
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Popover/States',
   parameters: {
+    design: figmaDesign('popover'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

@@ -13,6 +13,7 @@ import { hoverCardSource } from "./hover-card.source";
 import { HoverCardDocs } from "@/components/docs/HoverCardDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
+import { figmaDesign } from "@shared/figma/design-links";
 type HoverCardPlaygroundArgs = {
   side?: "top" | "bottom" | "left" | "right";
   align?: "start" | "center" | "end";
@@ -30,6 +31,7 @@ const meta = {
   component: HoverCardForArgs,
   tags: ["autodocs", "overlay"],
   parameters: {
+    design: figmaDesign("hoverCard"),
     layout: "centered",
     docs: {
       page: withAutoDocsTab(HoverCardDocs),

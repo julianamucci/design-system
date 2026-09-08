@@ -17,12 +17,14 @@ import {
 } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/ContextMenu/States',
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

@@ -7,6 +7,7 @@ import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Command Palette ──────────────────────────────────────────────────────────
 
 /**
@@ -92,6 +93,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [DemoCommandPalette] })],
   parameters: {
+    design: figmaDesign('command'),
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },

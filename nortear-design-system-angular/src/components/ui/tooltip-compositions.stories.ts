@@ -15,6 +15,7 @@ import { NdsInput } from './input';
 import { NdsLabel } from './label';
 import { NdsCard, NdsCardContent, NdsCardHeader, NdsCardTitle } from './card';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As três composições que o conteúdo compartilhado documenta, mais os quatro
 // lados de posicionamento. As composições repetem a mesma regra: o Tooltip
 // acrescenta contexto a um elemento que JÁ se explica sozinho — nunca é o único
@@ -32,6 +33,7 @@ const meta: Meta = {
     }),
   ],
   parameters: {
+    design: figmaDesign('tooltip'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

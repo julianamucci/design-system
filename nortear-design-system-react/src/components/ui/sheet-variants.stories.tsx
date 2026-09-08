@@ -23,6 +23,7 @@ import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 
+import { figmaDesign } from "@shared/figma/design-links";
 // As quatro direções são a única variação visual do Sheet, e todas moram no
 // conteúdo (`side`), não na raiz. Cada uma nasce ABERTA: é o estado que a
 // regressão visual precisa capturar e é nele que o axe tem o que examinar —
@@ -33,6 +34,7 @@ const meta = {
   tags: ["overlay"],
   component: Sheet,
   parameters: {
+    design: figmaDesign("sheet"),
     layout: "centered",
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

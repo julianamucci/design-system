@@ -24,6 +24,7 @@ import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
 
+import { figmaDesign } from "@shared/figma/design-links";
 // Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
@@ -32,6 +33,7 @@ const meta = {
   tags: ["overlay"],
   component: Sheet,
   parameters: {
+    design: figmaDesign("sheet"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

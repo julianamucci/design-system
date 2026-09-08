@@ -13,6 +13,7 @@ import { TooltipDocs } from "@/components/docs/TooltipDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { tooltipSource } from "./tooltip.source";
 
+import { figmaDesign } from "@shared/figma/design-links";
 /**
  * De que lado o balão nasceu.
  *
@@ -37,6 +38,7 @@ const meta = {
     ),
   ],
   parameters: {
+    design: figmaDesign("tooltip"),
     layout: "centered",
     docs: { page: withAutoDocsTab(TooltipDocs), source: { transform: tooltipSource } },
   },

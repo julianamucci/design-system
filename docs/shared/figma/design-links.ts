@@ -108,6 +108,66 @@ export const figmaNodes = {
   /** Página de documentação do componente. */
   breadcrumbDocs: '354-38',
 
+  /*
+   * ─── Família Overlay ──────────────────────────────────────────────────────
+   * Desenhada entre 2026-09-04 e 2026-09-07, e descrita em `docs/shared/prd/`.
+   * O nó apontado é sempre o RAIZ da página: variante muda de id ao ser
+   * recombinada, o raiz não. Foi o que aconteceu com o rodapé do Drawer, que
+   * virou conjunto em 2026-09-07 e ganhou id novo.
+   */
+
+  /** Balão com seta — variant set de quatro lados; a seta é quem muda. */
+  tooltip: '662-14',
+  /** Cartão de apoio; sem eixo, porque sem seta os quatro lados desenham igual. */
+  hoverCard: '674-3',
+  /** Painel de clique; booleanos de cabeçalho e de conteúdo livre. */
+  popover: '677-3',
+
+  /** Painel do menu suspenso — serve também ao menu de contexto e ao menubar. */
+  dropdownMenu: '684-377',
+  /** Variant set do item: eixos `variant` × `state`. */
+  dropdownMenuItem: '683-51',
+  /** Item com marcação — eixo `checked` (false, true, mixed). */
+  dropdownMenuSelectableItem: '684-32',
+  /** Sub-gatilho com chevron — eixo `state`. */
+  dropdownMenuSubTrigger: '684-41',
+  /** Rótulo de grupo, não interativo. */
+  dropdownMenuLabel: '684-18',
+  /** Régua entre grupos. */
+  dropdownMenuSeparator: '684-20',
+
+  /** Modal centralizado, com véu que desfoca — o único da família. */
+  dialog: '692-53',
+  /** Cabeçalho — eixo `Layout`, que é a consulta de mídia de 40rem. */
+  dialogHeader: '690-9',
+  /** Rodapé — eixo `Layout`; ele É a aresta de baixo do painel. */
+  dialogFooter: '690-74',
+
+  /** Painel de borda — variant set de quatro lados, e aqui o lado muda o desenho. */
+  sheet: '695-166',
+  /** Cabeçalho — eixo `Layout` (40rem). */
+  sheetHeader: '694-9',
+  /** Rodapé — eixo `Layout` (40rem). */
+  sheetFooter: '694-74',
+
+  /** Gaveta arrastável — variant set de quatro direções; a alça só em `bottom`. */
+  drawer: '698-116',
+  /** Cabeçalho — eixo `Layout`; o ponto de corte AQUI é 48rem, não 40. */
+  drawerHeader: '697-9',
+  /** Rodapé — eixo `Layout` (40rem). Id novo desde 2026-09-07: virou conjunto. */
+  drawerFooter: '728-99',
+
+  /** Paleta de comandos: campo de busca mais lista filtrável. */
+  command: '702-8',
+  /** Variant set do item — eixo `state` (default, selected, disabled). */
+  commandItem: '701-27',
+  /** Título de grupo. */
+  commandGroupHeading: '701-28',
+  /** Aviso de busca sem resultado. */
+  commandEmpty: '701-30',
+  /** Régua entre grupos — `--border` aqui, `--muted` no menu suspenso. */
+  commandSeparator: '701-32',
+
   /** Página com os 80 ícones lucide gerados do pacote do repo. */
   icons: '171-2',
 } as const;

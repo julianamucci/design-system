@@ -10,6 +10,7 @@ import { createLabel } from './label';
 import { createFormField } from './form';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 
+import { figmaDesign } from '@shared/figma/design-links';
 /**
  * Rótulos e valores das quatro composições.
  *
@@ -34,6 +35,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Sheet/Compositions',
   parameters: {
+    design: figmaDesign('sheet'),
     actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },

@@ -24,6 +24,7 @@ import {
   dialogWithScrollingOverlaySource,
 } from './dialog.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Dialog não tem prop `variant` nem `size` — o conteúdo compartilhado diz isso
 // com todas as letras. As "variantes" abaixo são composições estruturais
 // recorrentes, e cada uma é uma story própria porque é assim que a regressão
@@ -39,6 +40,7 @@ const meta: Meta = {
     moduleMetadata({ imports: [...NDS_DIALOG, NdsButton, NdsInput, NdsLabel] }),
   ],
   parameters: {
+    design: figmaDesign('dialog'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

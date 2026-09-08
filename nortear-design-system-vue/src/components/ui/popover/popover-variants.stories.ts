@@ -19,11 +19,13 @@ import {
   popoverFormSource,
 } from './popover.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/Popover/Variants',
   component: Popover,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

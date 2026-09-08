@@ -27,11 +27,13 @@ import {
   dialogPreviaDeMidiaSource,
 } from './dialog.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/Dialog/Compositions',
   component: Dialog,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('dialog'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

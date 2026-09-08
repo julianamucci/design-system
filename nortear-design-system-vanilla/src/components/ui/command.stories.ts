@@ -5,6 +5,7 @@ import { commandSource } from './command.source';
 import { createCommandDocs } from '@/components/docs/CommandDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type CommandArgs = {
@@ -18,6 +19,7 @@ const meta: Meta<CommandArgs> = {
   title: 'Components/Overlay/Command',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('command'),
     docs: {
       page: withAutoDocsTab(createCommandDocs),
       // O painel Code mostra a chamada da fábrica, e não o `outerHTML` da

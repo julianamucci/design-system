@@ -7,6 +7,7 @@ import DrawerDocs from '@/components/docs/DrawerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { drawerSource } from './drawer.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const LABEL = {
   trigger: 'Abrir drawer',
   title: 'Editar perfil',
@@ -20,6 +21,7 @@ const meta: Meta = {
   component: DrawerStory,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(DrawerDocs),

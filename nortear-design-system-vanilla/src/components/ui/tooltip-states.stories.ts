@@ -6,6 +6,7 @@ import { tooltipSource, tooltipSourceWith } from './tooltip.source';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois da espera interna) e aberto por foco (na hora). A
 // diferença entre os dois últimos é o que a WCAG 1.4.13 cobra: o tooltip não
@@ -32,6 +33,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Tooltip/States',
   parameters: {
+    design: figmaDesign('tooltip'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

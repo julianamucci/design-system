@@ -12,6 +12,7 @@ import drawerTranslations from '@shared/content/drawer/translations.json';
 import { LABELS_DRAWER } from '@/components/docs/DrawerDocs';
 import { drawerWithConfirmationSource, drawerWithFormSource } from './drawer.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Os rótulos de ação vêm do mesmo lugar que a docs page usa — ver o comentário
 // sobre `LABELS_DRAWER` em DrawerDocs.ts. Duplicar a tabela aqui faria os dois
 // textos divergirem na primeira revisão de conteúdo.
@@ -26,6 +27,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton, NdsInput, NdsLabel] })],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

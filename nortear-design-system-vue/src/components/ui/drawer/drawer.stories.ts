@@ -17,6 +17,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { drawerSource } from './drawer.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const LABEL = {
   trigger: 'Abrir drawer',
   title: 'Editar perfil',
@@ -30,6 +31,7 @@ const meta = {
   component: Drawer,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(DrawerDocs),

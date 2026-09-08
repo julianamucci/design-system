@@ -14,6 +14,7 @@ import {
   contrastRatio,
 } from './hover-card.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
 // gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
 // fora). Não há estado desabilitado com visual próprio — um gatilho
@@ -24,6 +25,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR, NdsButton] })],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'padded',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

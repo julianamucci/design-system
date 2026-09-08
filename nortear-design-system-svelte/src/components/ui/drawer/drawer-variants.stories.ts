@@ -5,11 +5,13 @@ import { expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 import { drawerSource, drawerWithScrollSource } from './drawer.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Drawer/Variants',
   component: DrawerStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

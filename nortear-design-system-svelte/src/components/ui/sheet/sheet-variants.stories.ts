@@ -6,6 +6,7 @@ import { expect } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 import { sheetSource } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As quatro direções são a única variação visual do Sheet, e todas moram no
 // conteúdo (`side`). Cada uma nasce ABERTA: é o estado que a regressão visual
 // captura e o que o axe tem para examinar — fechada, o painel nem está no DOM.
@@ -15,6 +16,7 @@ const meta: Meta = {
   component: SheetStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

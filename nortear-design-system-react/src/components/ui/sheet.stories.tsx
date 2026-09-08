@@ -19,6 +19,7 @@ import sheetTranslations from "@shared/content/sheet/translations.json";
 import { SheetDocs } from "@/components/docs/SheetDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
+import { figmaDesign } from "@shared/figma/design-links";
 /**
  * Rótulo fora do React.
  *
@@ -48,6 +49,7 @@ const meta = {
   component: Sheet,
   tags: ["autodocs", "overlay"],
   parameters: {
+    design: figmaDesign("sheet"),
     layout: "centered",
     docs: {
       page: withAutoDocsTab(SheetDocs),

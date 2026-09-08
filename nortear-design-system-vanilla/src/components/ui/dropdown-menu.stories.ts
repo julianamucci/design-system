@@ -6,6 +6,7 @@ import { createButton } from './button';
 import { createDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type DropdownArgs = {
@@ -20,6 +21,7 @@ const meta: Meta<DropdownArgs> = {
   title: 'Components/Overlay/DropdownMenu',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(createDropdownMenuDocs),

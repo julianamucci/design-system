@@ -20,12 +20,14 @@ import {
   makeFooter,
 } from './dialog.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Dialog/Variants',
   parameters: {
+    design: figmaDesign('dialog'),
     actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },

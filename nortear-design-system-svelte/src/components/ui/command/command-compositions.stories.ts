@@ -13,6 +13,7 @@ import {
   commandSource,
 } from './command.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Espiões de escopo de MÓDULO: dentro do `render` seriam inalcançáveis pela
 // play, e a aba Actions nasceria vazia.
 const aoRodarComando = fn();
@@ -22,6 +23,7 @@ const meta: Meta = {
   component: Command,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('command'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

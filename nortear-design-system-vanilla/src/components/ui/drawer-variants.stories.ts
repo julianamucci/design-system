@@ -5,10 +5,12 @@ import { drawerSource, drawerSourceWith } from './drawer.source';
 import { createButton } from './button';
 import { buildDrawerFooter, buildDrawerWrapper, openPeloTrigger } from './drawer.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Drawer/Variants',
   parameters: {
+    design: figmaDesign('drawer'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

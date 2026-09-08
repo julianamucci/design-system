@@ -15,11 +15,13 @@ import { Button } from "./button";
 import { DropdownMenuDocs } from "@/components/docs/DropdownMenuDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/DropdownMenu",
   component: DropdownMenu,
   tags: ["autodocs", "overlay"],
   parameters: {
+    design: figmaDesign("dropdownMenu"),
     layout: "centered",
     docs: {
       page: withAutoDocsTab(DropdownMenuDocs),

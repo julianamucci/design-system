@@ -17,6 +17,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { sheetPlaygroundSource } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const LABELS = {
   trigger: 'Abrir filtros',
   title: 'Filtros avançados',
@@ -42,6 +43,7 @@ const meta = {
   component: Sheet,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(SheetDocs), source: { transform: sheetPlaygroundSource } },
   },

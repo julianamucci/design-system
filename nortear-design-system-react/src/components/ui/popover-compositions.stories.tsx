@@ -20,6 +20,7 @@ import {
   popoverSource,
 } from "./popover.source";
 
+import { figmaDesign } from "@shared/figma/design-links";
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
 // filtro de tabela, seletor de cor e configurações rápidas — mais a prova de
 // posicionamento em side="top".
@@ -33,6 +34,7 @@ const meta = {
   tags: ["overlay"],
   component: Popover,
   parameters: {
+    design: figmaDesign("popover"),
     layout: "centered",
     controls: { disable: true },
     docs: {

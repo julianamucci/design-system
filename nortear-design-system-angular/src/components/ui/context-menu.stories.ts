@@ -9,11 +9,13 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<ContextMenuArgs> = {
   title: 'Components/Overlay/ContextMenu',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsContextMenuDocs) },
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },

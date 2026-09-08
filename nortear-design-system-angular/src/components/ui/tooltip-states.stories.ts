@@ -11,6 +11,7 @@ import {
   tooltipPersistenceSource,
 } from './tooltip.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois do delay do provider) e aberto por foco (na hora).
 // A diferença entre os dois últimos é o que a WCAG 1.4.13 cobra: o tooltip não
@@ -29,6 +30,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_TOOLTIP, NdsButton] })],
   parameters: {
+    design: figmaDesign('tooltip'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

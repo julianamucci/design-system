@@ -21,11 +21,13 @@ import {
 } from "./drawer.source";
 import { Button } from "./button";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/Drawer/Variants",
   tags: ["overlay"],
   component: Drawer,
   parameters: {
+    design: figmaDesign("drawer"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

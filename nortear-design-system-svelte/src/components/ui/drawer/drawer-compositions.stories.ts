@@ -9,11 +9,13 @@ import {
   drawerSource,
 } from './drawer.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Drawer/Compositions',
   component: DrawerStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

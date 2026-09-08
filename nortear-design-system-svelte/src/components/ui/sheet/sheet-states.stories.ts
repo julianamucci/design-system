@@ -5,6 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 import { sheetSource, sheetTermosWithScrollSource } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
 
@@ -13,6 +14,7 @@ const meta: Meta = {
   component: SheetStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

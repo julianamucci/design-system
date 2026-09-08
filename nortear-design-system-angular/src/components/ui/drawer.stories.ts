@@ -8,11 +8,13 @@ import { drawerPlaygroundSource, LABEL, type DrawerArgs } from './drawer.source'
 import { NdsDrawerDocs } from '@/components/docs/DrawerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<DrawerArgs> = {
   title: 'Components/Overlay/Drawer',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton] })],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsDrawerDocs) },
   },

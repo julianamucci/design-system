@@ -10,11 +10,13 @@ import {
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/DropdownMenu/Variants',
   component: DropdownMenuStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

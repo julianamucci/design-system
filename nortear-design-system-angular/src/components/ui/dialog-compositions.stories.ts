@@ -17,6 +17,7 @@ import {
 } from './dialog.fixtures';
 import { dialogMediaPreviewSource, dialogProfileEditSource } from './dialog.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Composições do Dialog: arranjos completos que resolvem um caso de uso, não
 // configurações de uma propriedade.
 
@@ -29,6 +30,7 @@ const meta: Meta = {
     }),
   ],
   parameters: {
+    design: figmaDesign('dialog'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

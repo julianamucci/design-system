@@ -8,11 +8,13 @@ import { NdsButton } from './button';
 import { NdsPopoverDocs } from '@/components/docs/PopoverDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<PopoverArgs> = {
   title: 'Components/Overlay/Popover',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton] })],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsPopoverDocs) },
   },

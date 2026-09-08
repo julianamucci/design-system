@@ -15,11 +15,13 @@ import {
   commandSource,
 } from "./command.source";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/Command/States",
   tags: ["overlay"],
   component: Command,
   parameters: {
+    design: figmaDesign("command"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

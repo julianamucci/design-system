@@ -18,12 +18,14 @@ import { createDialog } from './dialog';
 import { createButton } from './button';
 import { open as abrirDialog, waitForClosed, panel } from './dialog.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Command/Compositions',
   parameters: {
+    design: figmaDesign('command'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

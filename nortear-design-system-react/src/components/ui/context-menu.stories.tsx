@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/context-menu";
 import { contextMenuSource } from "./context-menu.source";
 
+import { figmaDesign } from "@shared/figma/design-links";
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 // `onOpenChange` é REDECLARADO com um argumento só. A lib entrega
@@ -40,6 +41,7 @@ const meta: Meta<ContextMenuArgs> = {
   title: "Components/Overlay/ContextMenu",
   tags: ["autodocs", "overlay"],
   parameters: {
+    design: figmaDesign("dropdownMenu"),
     layout: "centered",
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {

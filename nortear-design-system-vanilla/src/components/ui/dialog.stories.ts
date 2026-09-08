@@ -17,6 +17,7 @@ import {
   panel,
 } from './dialog.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type DialogArgs = {
@@ -33,6 +34,7 @@ const meta: Meta<DialogArgs> = {
   title: 'Components/Overlay/Dialog',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dialog'),
     docs: { page: withAutoDocsTab(createDialogDocs), source: { transform: dialogSource } },
   },
   argTypes: {

@@ -5,6 +5,7 @@ import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Os estados canônicos do AlertDialog: fechado, aberto, confirmado e cancelado.
 //
 // Existiam nas outras quatro stacks e não aqui — e não é detalhe de árvore de
@@ -19,6 +20,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {
+    design: figmaDesign('alertDialog'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

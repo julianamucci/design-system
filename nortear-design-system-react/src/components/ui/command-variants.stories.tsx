@@ -12,6 +12,7 @@ import {
 import { commandSource } from "./command.source";
 import { LayoutIcon, TypeIcon, MinusIcon } from "lucide-react";
 
+import { figmaDesign } from "@shared/figma/design-links";
 /*
  * As VARIANTES da paleta são as entradas de `variants.items` do conteúdo
  * compartilhado — inline, command palette e com grupos. `inline` é o próprio
@@ -28,6 +29,7 @@ const meta = {
   tags: ["overlay"],
   component: Command,
   parameters: {
+    design: figmaDesign("command"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

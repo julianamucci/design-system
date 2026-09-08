@@ -14,6 +14,7 @@ import {
   commandSource,
 } from './command.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
 // pela play, e a aba Actions nasceria vazia.
 const onChoose = fn();
@@ -23,6 +24,7 @@ const meta: Meta = {
   component: Command.Root,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('command'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

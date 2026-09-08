@@ -7,6 +7,7 @@ import { createButton } from './button';
 import { makeBody, makeFooter } from './sheet.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 // Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
@@ -16,6 +17,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Sheet/States',
   parameters: {
+    design: figmaDesign('sheet'),
     actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },

@@ -8,6 +8,7 @@ import { drawerClearPortais } from './drawer-portal-cleanup';
 import { createDrawerDocs } from '@/components/docs/DrawerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type DrawerArgs = {
@@ -26,6 +27,7 @@ const meta: Meta<DrawerArgs> = {
   title: 'Components/Overlay/Drawer',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'padded',
     docs: { page: withAutoDocsTab(createDrawerDocs), source: { transform: drawerSource } },
   },

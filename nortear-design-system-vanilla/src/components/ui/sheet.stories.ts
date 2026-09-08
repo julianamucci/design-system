@@ -8,6 +8,7 @@ import { makeBody } from './sheet.fixtures';
 import { createSheetDocs } from '@/components/docs/SheetDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type SheetArgs = {
@@ -24,6 +25,7 @@ const meta: Meta<SheetArgs> = {
   title: 'Components/Overlay/Sheet',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(createSheetDocs), source: { transform: sheetSource } },
   },

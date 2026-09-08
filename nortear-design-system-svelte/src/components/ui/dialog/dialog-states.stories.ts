@@ -13,11 +13,13 @@ import {
   panel,
 } from './dialog.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Dialog/States',
   component: DialogStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('dialog'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

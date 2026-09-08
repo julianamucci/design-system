@@ -13,6 +13,7 @@ import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixt
 import { createHoverCardDocs } from '@/components/docs/HoverCardDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type HoverCardArgs = {
@@ -29,6 +30,7 @@ const meta: Meta<HoverCardArgs> = {
   title: 'Components/Overlay/HoverCard',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'padded',
     docs: { page: withAutoDocsTab(createHoverCardDocs), source: { transform: hoverCardSource } },
   },

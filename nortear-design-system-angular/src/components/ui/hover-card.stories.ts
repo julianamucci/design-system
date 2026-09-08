@@ -15,11 +15,13 @@ import { hoverCardPlaygroundSource, type HoverCardArgs } from './hover-card.sour
 import { NdsHoverCardDocs } from '@/components/docs/HoverCardDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<HoverCardArgs> = {
   title: 'Components/Overlay/HoverCard',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR] })],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'padded',
     docs: { page: withAutoDocsTab(NdsHoverCardDocs) },
   },

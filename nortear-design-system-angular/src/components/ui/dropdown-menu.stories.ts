@@ -8,6 +8,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 import { NdsDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta<DropdownMenuArgs> = {
@@ -15,6 +16,7 @@ const meta: Meta<DropdownMenuArgs> = {
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DROPDOWN_MENU, NdsButton] })],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: { page: withAutoDocsTab(NdsDropdownMenuDocs) },

@@ -7,11 +7,13 @@ import { Root as Command } from '@/components/ui/command';
 import CommandStory from './CommandStory.svelte';
 import { commandSource } from './command.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Command',
   component: Command,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('command'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(CommandDocs),

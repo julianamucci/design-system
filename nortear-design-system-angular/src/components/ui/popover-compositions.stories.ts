@@ -8,6 +8,7 @@ import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As quatro combinações canônicas do conteúdo compartilhado — edição de perfil,
 // filtro de tabela, seletor de cor e configurações rápidas — mais a prova de
 // posicionamento em `side="top"`.
@@ -23,6 +24,7 @@ const meta: Meta = {
     moduleMetadata({ imports: [...NDS_POPOVER, NdsButton, NdsCheckbox, NdsInput, NdsLabel] }),
   ],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

@@ -26,11 +26,13 @@ import {
 } from './dialog.fixtures';
 import { dialogSource } from './dialog.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/Dialog',
   component: Dialog,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dialog'),
     docs: { page: withAutoDocsTab(DialogDocs), source: { transform: dialogSource } },
   },
   argTypes: {

@@ -12,6 +12,7 @@ import { createButton } from './button';
 import { createPopoverDocs } from '@/components/docs/PopoverDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type PopoverArgs = {
@@ -28,6 +29,7 @@ const meta: Meta<PopoverArgs> = {
   title: 'Components/Overlay/Popover',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'padded',
     docs: { page: withAutoDocsTab(createPopoverDocs), source: { transform: popoverSource } },
   },

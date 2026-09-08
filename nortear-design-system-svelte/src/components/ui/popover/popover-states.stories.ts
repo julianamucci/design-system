@@ -6,11 +6,13 @@ import PopoverStory from './PopoverStory.svelte';
 import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Popover/States',
   component: PopoverStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

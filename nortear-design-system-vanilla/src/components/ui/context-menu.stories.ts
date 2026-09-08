@@ -12,6 +12,7 @@ import {
   menuOpen,
 } from '@shared/testing/context-menu-area';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type ContextMenuArgs = {
@@ -26,6 +27,7 @@ const meta: Meta<ContextMenuArgs> = {
   title: 'Components/Overlay/ContextMenu',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(createContextMenuDocs),

@@ -6,6 +6,7 @@ import PopoverStory from './PopoverStory.svelte';
 import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
 // filtro de tabela, seletor de cor e configurações rápidas. Nenhuma acrescenta
 // API: todas são arranjo de conteúdo dentro do mesmo `PopoverContent`.
@@ -15,6 +16,7 @@ const meta: Meta = {
   component: PopoverStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

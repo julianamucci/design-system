@@ -16,6 +16,7 @@ import HoverCardDocs from '@/components/docs/HoverCardDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { hoverCardSource } from './hover-card.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 type HoverCardArgs = {
   triggerLabel: string;
   side: 'top' | 'bottom' | 'left' | 'right';
@@ -31,6 +32,7 @@ const meta = {
   component: HoverCard,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(HoverCardDocs),

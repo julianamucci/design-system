@@ -15,6 +15,7 @@ import { CommandDocs } from "@/components/docs/CommandDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { LayoutIcon, TypeIcon, MinusIcon } from "lucide-react";
 
+import { figmaDesign } from "@shared/figma/design-links";
 type CommandArgs = React.ComponentProps<typeof Command> & {
   onItemSelect: (value: string) => void;
 };
@@ -24,6 +25,7 @@ const meta: Meta<CommandArgs> = {
   component: Command,
   tags: ["autodocs", "overlay"],
   parameters: {
+    design: figmaDesign("command"),
     layout: "centered",
     docs: {
       page: withAutoDocsTab(CommandDocs),

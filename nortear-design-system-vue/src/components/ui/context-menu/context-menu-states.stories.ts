@@ -23,11 +23,13 @@ import {
   contextMenuPaletteDarkSource,
 } from './context-menu.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/ContextMenu/States',
   component: ContextMenu,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

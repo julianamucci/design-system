@@ -12,11 +12,13 @@ import HoverCardDocs from '@/components/docs/HoverCardDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { hoverCardSource } from './hover-card.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/HoverCard',
   component: HoverCardStory,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(HoverCardDocs),

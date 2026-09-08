@@ -3,11 +3,13 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_COMMAND } from './command';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Command/States',
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_COMMAND] })],
   parameters: {
+    design: figmaDesign('command'),
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },

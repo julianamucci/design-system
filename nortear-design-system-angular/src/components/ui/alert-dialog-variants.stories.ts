@@ -5,6 +5,7 @@ import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Variantes e formas do painel. Sem argTypes, então o painel Controls é
 // desligado — do contrário apareceria vazio.
 //
@@ -25,6 +26,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {
+    design: figmaDesign('alertDialog'),
     layout: 'centered',
     controls: { disable: true },
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },

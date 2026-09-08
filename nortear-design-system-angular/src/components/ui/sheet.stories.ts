@@ -10,6 +10,7 @@ import { NdsSheetDocs } from '@/components/docs/SheetDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sheetPlaygroundSource, type SheetArgs } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const { t } = useTranslation(sheetTranslations as Record<string, unknown>);
 
 const meta: Meta<SheetArgs> = {
@@ -17,6 +18,7 @@ const meta: Meta<SheetArgs> = {
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton] })],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsSheetDocs) },
   },

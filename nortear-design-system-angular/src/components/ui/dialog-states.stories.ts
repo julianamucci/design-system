@@ -18,6 +18,7 @@ import {
   dialogWithCloseButtonHiddenSource,
 } from './dialog.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As configurações que o conteúdo compartilhado descreve. Abrindo e Fechando
 // são transições — quem as verifica é a Playground, que passa pelas duas ao
 // abrir e fechar; aqui ficam os estados que a regressão visual consegue
@@ -28,6 +29,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DIALOG, NdsButton] })],
   parameters: {
+    design: figmaDesign('dialog'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

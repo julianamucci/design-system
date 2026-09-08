@@ -28,11 +28,13 @@ import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/Dialog/Compositions",
   tags: ["overlay"],
   component: Dialog,
   parameters: {
+    design: figmaDesign("dialog"),
     layout: "centered",
     controls: { disable: true },
     docs: {

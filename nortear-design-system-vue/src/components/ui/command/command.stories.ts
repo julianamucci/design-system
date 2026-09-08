@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/command';
 import { commandSource } from './command.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 type CommandArgs = {
   placeholder: string;
   emptyMessage: string;
@@ -27,6 +28,7 @@ const meta = {
   component: Command,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('command'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(CommandDocs),

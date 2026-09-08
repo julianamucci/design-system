@@ -15,11 +15,13 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/Popover',
   component: Popover,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('popover'),
     docs: {
       page: withAutoDocsTab(PopoverDocs),
       source: { transform: popoverSource },

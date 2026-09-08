@@ -28,11 +28,13 @@ import dialogTranslations from "@shared/content/dialog/translations.json";
 import { DialogDocs } from "@/components/docs/DialogDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/Dialog",
   component: Dialog,
   tags: ["autodocs", "overlay"],
   parameters: {
+    design: figmaDesign("dialog"),
     docs: {
       page: withAutoDocsTab(DialogDocs),
       // O `render` chama `useTranslation` para os rótulos: o painel imprimia

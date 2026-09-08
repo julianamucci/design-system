@@ -16,11 +16,13 @@ import { dialogPlaygroundSource, type DialogArgs } from './dialog.source';
 import { NdsDialogDocs } from '@/components/docs/DialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<DialogArgs> = {
   title: 'Components/Overlay/Dialog',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DIALOG, NdsButton] })],
   parameters: {
+    design: figmaDesign('dialog'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsDialogDocs) },
   },

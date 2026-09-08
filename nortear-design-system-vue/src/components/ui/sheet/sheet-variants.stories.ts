@@ -20,6 +20,7 @@ import {
   sheetSideSuperiorSource,
 } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As quatro direções são a única variação visual do Sheet, e todas moram no
 // conteúdo (`side`), não na raiz. Cada uma nasce ABERTA e MODAL: é o estado que
 // a regressão visual captura e o que o axe tem para examinar — fechado, o
@@ -30,6 +31,7 @@ const meta = {
   component: Sheet,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

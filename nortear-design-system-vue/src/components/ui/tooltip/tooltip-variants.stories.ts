@@ -16,6 +16,7 @@ import {
   tooltipTextLongSource,
 } from './tooltip.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
 // visual capturar o balão, que só existe no DOM enquanto está aberto.
@@ -46,6 +47,7 @@ const meta = {
     }),
   ],
   parameters: {
+    design: figmaDesign('tooltip'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

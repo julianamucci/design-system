@@ -6,10 +6,12 @@ import { createButton } from './button';
 import { endClose, montar } from './dropdown-menu.fixtures';
 import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/DropdownMenu/Variants',
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

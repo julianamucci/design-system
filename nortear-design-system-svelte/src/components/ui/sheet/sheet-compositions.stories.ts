@@ -11,11 +11,13 @@ import {
   sheetSource,
 } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Sheet/Compositions',
   component: SheetStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

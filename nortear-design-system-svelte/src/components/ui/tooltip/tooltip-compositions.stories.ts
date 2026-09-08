@@ -5,6 +5,7 @@ import { balaoDe } from './tooltip.fixtures';
 import { aguardarSeta } from '@shared/testing/tooltip-arrow-probe';
 import { tooltipSource } from './tooltip.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
 // posicionamento. Em todas, o Tooltip acrescenta contexto a um elemento que JÁ
 // se explica sozinho — nunca é o único portador da informação.
@@ -19,6 +20,7 @@ const meta: Meta = {
   component: TooltipStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('tooltip'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

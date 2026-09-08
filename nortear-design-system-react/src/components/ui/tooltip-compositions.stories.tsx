@@ -17,6 +17,7 @@ import {
   tooltipSource,
 } from "./tooltip.source";
 
+import { figmaDesign } from "@shared/figma/design-links";
 // As composições que o conteúdo compartilhado documenta. Todas repetem a mesma
 // regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica sozinho —
 // nunca é o único portador da informação.
@@ -44,6 +45,7 @@ const meta = {
     ),
   ],
   parameters: {
+    design: figmaDesign("tooltip"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

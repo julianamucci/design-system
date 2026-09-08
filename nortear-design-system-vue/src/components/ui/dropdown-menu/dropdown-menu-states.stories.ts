@@ -19,11 +19,13 @@ import {
   dropdownMenuMarkupMistaSource,
 } from './dropdown-menu.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/DropdownMenu/States',
   component: DropdownMenu,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

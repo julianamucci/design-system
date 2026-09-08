@@ -20,11 +20,13 @@ import {
   drawerNotDispensavelSource,
 } from './drawer.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/Drawer/States',
   component: Drawer,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

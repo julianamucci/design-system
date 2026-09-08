@@ -7,11 +7,13 @@ import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { dropdownMenuSource } from './dropdown-menu.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/DropdownMenu',
   component: DropdownMenuStory,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(DropdownMenuDocs),

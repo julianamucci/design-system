@@ -7,10 +7,12 @@ import { wrap } from './dropdown-menu.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/DropdownMenu/States',
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

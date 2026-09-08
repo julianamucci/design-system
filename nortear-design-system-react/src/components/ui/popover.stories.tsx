@@ -13,11 +13,13 @@ import { popoverSource } from "./popover.source";
 import { PopoverDocs } from "@/components/docs/PopoverDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/Popover",
   component: Popover,
   tags: ["autodocs", "overlay"],
   parameters: {
+    design: figmaDesign("popover"),
     layout: "centered",
     docs: { page: withAutoDocsTab(PopoverDocs), source: { transform: popoverSource } },
   },

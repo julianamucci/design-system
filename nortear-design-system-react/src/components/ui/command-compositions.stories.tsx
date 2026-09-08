@@ -26,11 +26,13 @@ import {
   SearchIcon,
 } from "lucide-react";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/Command/Compositions",
   tags: ["overlay"],
   component: Command,
   parameters: {
+    design: figmaDesign("command"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

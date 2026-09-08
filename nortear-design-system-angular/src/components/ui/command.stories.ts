@@ -6,11 +6,13 @@ import { commandPlaygroundSource, type CommandArgs } from './command.source';
 import { NdsCommandDocs } from '@/components/docs/CommandDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<CommandArgs> = {
   title: 'Components/Overlay/Command',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_COMMAND] })],
   parameters: {
+    design: figmaDesign('command'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsCommandDocs) },
   },

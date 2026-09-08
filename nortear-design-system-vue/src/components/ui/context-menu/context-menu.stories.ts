@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/context-menu';
 import { contextMenuSource } from './context-menu.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 type ContextMenuArgs = {
   triggerLabel: string;
   modal: boolean;
@@ -31,6 +32,7 @@ const meta: Meta<ContextMenuArgs> = {
   component: ContextMenu,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: { page: withAutoDocsTab(ContextMenuDocs), source: { transform: contextMenuSource } },

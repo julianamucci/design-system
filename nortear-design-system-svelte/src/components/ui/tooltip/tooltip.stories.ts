@@ -6,6 +6,7 @@ import TooltipDocs from '@/components/docs/TooltipDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tooltipSource } from './tooltip.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
 function sideOf(balao: HTMLElement | null): string | null {
   return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
@@ -16,6 +17,7 @@ const meta: Meta = {
   component: TooltipStory,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('tooltip'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(TooltipDocs),

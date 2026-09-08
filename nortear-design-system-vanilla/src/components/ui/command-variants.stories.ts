@@ -4,6 +4,7 @@ import type { CommandItem } from './command';
 import { commandSource } from './command.source';
 import { separadores, mountInline } from './command.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 /*
  * As VARIANTES da paleta são as entradas de `variants.items` do conteúdo
  * compartilhado — inline, command palette e com grupos. `inline` é o próprio
@@ -19,6 +20,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Command/Variants',
   parameters: {
+    design: figmaDesign('command'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

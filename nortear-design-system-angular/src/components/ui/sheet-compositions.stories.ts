@@ -13,6 +13,7 @@ import {
   sheetSecondaryNavigationSource,
 } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As QUATRO composições que o conteúdo compartilhado documenta
 // (`variants.compositions`): filtros avançados à direita, navegação secundária à
 // esquerda, edição de perfil à direita e painel de ações embaixo. Este arquivo
@@ -30,6 +31,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_SHEET, NdsButton, NdsInput, NdsLabel] })],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

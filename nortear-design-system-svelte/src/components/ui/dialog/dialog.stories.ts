@@ -17,11 +17,13 @@ import {
   panel,
 } from './dialog.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Dialog',
   component: Dialog,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dialog'),
     docs: {
       page: withAutoDocsTab(DialogDocs),
       source: { transform: dialogSource },

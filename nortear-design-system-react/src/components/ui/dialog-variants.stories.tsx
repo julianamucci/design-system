@@ -32,11 +32,13 @@ import { Label } from "./label";
 import { useTranslation } from "@/lib/i18n";
 import dialogTranslations from "@shared/content/dialog/translations.json";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/Dialog/Variants",
   tags: ["overlay"],
   component: Dialog,
   parameters: {
+    design: figmaDesign("dialog"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

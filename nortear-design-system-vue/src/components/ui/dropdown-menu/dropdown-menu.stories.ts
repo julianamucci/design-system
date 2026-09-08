@@ -15,11 +15,13 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { dropdownMenuSource } from './dropdown-menu.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/DropdownMenu',
   component: DropdownMenu,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {

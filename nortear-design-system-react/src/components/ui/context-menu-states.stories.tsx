@@ -20,6 +20,7 @@ import {
   contextMenuSource,
 } from "./context-menu.source";
 
+import { figmaDesign } from "@shared/figma/design-links";
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta = {
@@ -27,6 +28,7 @@ const meta = {
   tags: ["overlay"],
   component: ContextMenu,
   parameters: {
+    design: figmaDesign("dropdownMenu"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

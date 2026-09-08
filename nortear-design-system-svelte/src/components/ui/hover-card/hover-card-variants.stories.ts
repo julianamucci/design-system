@@ -8,6 +8,7 @@ import {
 import HoverCardStory from './HoverCardStory.svelte';
 import { hoverCardWaitDefaultSource, hoverCardSource } from './hover-card.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
 // e essa escolha é de conteúdo, não de estilo: preview rico pede 300-500ms;
@@ -19,6 +20,7 @@ const meta: Meta = {
   component: HoverCardStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

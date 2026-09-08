@@ -19,11 +19,13 @@ import {
   popoverModalSource,
 } from './popover.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/Popover/States',
   component: Popover,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

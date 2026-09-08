@@ -5,6 +5,7 @@ import { Root as Command } from '@/components/ui/command';
 import CommandComposicaoGruposStory from './CommandComposicaoGruposStory.svelte';
 import { commandWithGroupsSource } from './command.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 /*
  * As VARIANTES da paleta são as entradas de `variants.items` do conteúdo
  * compartilhado — inline, command palette e com grupos. `inline` é o próprio
@@ -21,6 +22,7 @@ const meta: Meta = {
   component: Command,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('command'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

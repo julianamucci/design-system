@@ -14,6 +14,7 @@ import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Sem argTypes, então o painel Controls é desligado — do contrário abriria vazio.
 
 const meta: Meta = {
@@ -21,6 +22,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

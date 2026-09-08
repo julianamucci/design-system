@@ -7,6 +7,7 @@ import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As três formas canônicas do painel, na ordem em que o conteúdo compartilhado
 // as descreve: conteúdo livre, cabeçalho com título e descrição, e formulário
 // inline. Nenhuma acrescenta API — todas são arranjo de conteúdo dentro do
@@ -17,6 +18,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton, NdsInput, NdsLabel] })],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

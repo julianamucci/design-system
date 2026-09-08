@@ -7,11 +7,13 @@ import SheetDocs from '@/components/docs/SheetDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sheetSource } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Sheet',
   component: SheetStory,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(SheetDocs),

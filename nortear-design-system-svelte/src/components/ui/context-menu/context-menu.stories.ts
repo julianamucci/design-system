@@ -8,11 +8,13 @@ import { FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from '@/lib/wait-
 import { gestoOpen, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
 import { contextMenuSource } from './context-menu.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/ContextMenu',
   component: ContextMenuStory,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     layout: 'centered',
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {

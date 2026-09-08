@@ -7,10 +7,12 @@ import { createButton } from './button';
 import { drawerClearPortais } from './drawer-portal-cleanup';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Drawer/States',
   parameters: {
+    design: figmaDesign('drawer'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

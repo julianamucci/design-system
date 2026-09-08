@@ -7,6 +7,7 @@ import { makeBody, makeFooter } from './sheet.fixtures';
 import { sheetSource, sheetSourceWith } from './sheet.source';
 import { createButton } from './button';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 // As quatro direções são a única variação visual do Sheet. Cada uma nasce
@@ -17,6 +18,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Sheet/Variants',
   parameters: {
+    design: figmaDesign('sheet'),
     actions: { disable: true },
     layout: 'centered',
     controls: { disable: true },

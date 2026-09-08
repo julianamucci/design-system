@@ -11,6 +11,7 @@ import {
 import HoverCardStory from './HoverCardStory.svelte';
 import { hoverCardSource } from './hover-card.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
 // gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
 // fora). Não há estado desabilitado com visual próprio — um gatilho
@@ -21,6 +22,7 @@ const meta: Meta = {
   component: HoverCardStory,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

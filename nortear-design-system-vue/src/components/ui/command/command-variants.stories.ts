@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/command';
 import { commandWithGroupsSource } from './command.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 /*
  * As VARIANTES da paleta são as entradas de `variants.items` do conteúdo
  * compartilhado — inline, command palette e com grupos. `inline` é o próprio
@@ -27,6 +28,7 @@ const meta = {
   component: Command,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('command'),
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },

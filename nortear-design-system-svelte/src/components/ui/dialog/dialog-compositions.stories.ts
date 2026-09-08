@@ -17,6 +17,7 @@ import {
   panel,
 } from './dialog.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Dialog/Compositions',
   // `tags` estava aninhado dentro de `docs.description` — no lugar errado o
@@ -24,6 +25,7 @@ const meta: Meta = {
   // overlays.
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('dialog'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

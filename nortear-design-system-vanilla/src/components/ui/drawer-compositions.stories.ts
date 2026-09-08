@@ -5,10 +5,12 @@ import { drawerWithFormSource, drawerSource, drawerSourceWith } from './drawer.s
 import { createButton } from './button';
 import { buildDrawerFooter, buildDrawerWrapper, openPeloTrigger } from './drawer.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Drawer/Compositions',
   parameters: {
+    design: figmaDesign('drawer'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

@@ -8,11 +8,13 @@ import { NdsTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tooltipPlaygroundSource, type TooltipArgs } from './tooltip.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<TooltipArgs> = {
   title: 'Components/Overlay/Tooltip',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_TOOLTIP, NdsButton] })],
   parameters: {
+    design: figmaDesign('tooltip'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsTooltipDocs) },
   },

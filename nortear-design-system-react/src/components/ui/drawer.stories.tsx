@@ -17,6 +17,7 @@ import { Button } from "./button";
 import { DrawerDocs } from "@/components/docs/DrawerDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const LABEL = {
   trigger: "Abrir Drawer",
   title: "Editar perfil",
@@ -30,6 +31,7 @@ const meta = {
   component: Drawer,
   tags: ["autodocs", "overlay"],
   parameters: {
+    design: figmaDesign("drawer"),
     layout: "centered",
     docs: {
       page: withAutoDocsTab(DrawerDocs),

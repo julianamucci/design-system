@@ -6,6 +6,7 @@ import { aguardarSeta } from '@shared/testing/tooltip-arrow-probe';
 import { tooltipSource, tooltipSourceWith, tooltipSourceLados } from './tooltip.source';
 import { createButton, createButtonIcon } from './button';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
 // posicionamento. Em todas, o Tooltip acrescenta contexto a um elemento que JÁ
 // se explica sozinho — nunca é o único portador da informação.
@@ -18,6 +19,7 @@ const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Tooltip/Compositions',
   parameters: {
+    design: figmaDesign('tooltip'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

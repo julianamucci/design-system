@@ -12,12 +12,14 @@ import {
   menuOpen,
 } from '@shared/testing/context-menu-area';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/ContextMenu/Compositions',
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',

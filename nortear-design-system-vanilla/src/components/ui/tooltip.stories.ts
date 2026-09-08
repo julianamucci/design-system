@@ -7,6 +7,7 @@ import { tooltipSourceWith } from './tooltip.source';
 import { createTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type TooltipArgs = {
@@ -20,6 +21,7 @@ const meta: Meta<TooltipArgs> = {
   title: 'Components/Overlay/Tooltip',
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('tooltip'),
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(createTooltipDocs),

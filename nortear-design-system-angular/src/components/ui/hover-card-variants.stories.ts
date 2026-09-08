@@ -4,6 +4,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { NDS_HOVER_CARD } from './hover-card';
 import { waitForOpen, waitForClosed, panelOpen } from './hover-card.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
 // e essa escolha é de conteúdo, não de estilo: preview rico pede 300-500ms;
@@ -17,6 +18,7 @@ const meta: Meta = {
   // texto. O preview com avatar mora em UI/HoverCard/Compositions.
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD] })],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'padded',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

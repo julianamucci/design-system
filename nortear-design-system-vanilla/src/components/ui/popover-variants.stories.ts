@@ -12,10 +12,12 @@ import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/Popover/Variants',
   parameters: {
+    design: figmaDesign('popover'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

@@ -10,6 +10,7 @@ import {
   panelsAbertos,
 } from './hover-card.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Os padrões de conteúdo que o cartão hospeda. Todos seguem a mesma regra: o
 // que está aqui dentro é ENRIQUECIMENTO — existe outro caminho para a mesma
 // informação (o link, a página, o glossário), porque no toque não há hover.
@@ -22,6 +23,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_HOVER_CARD, ...NDS_AVATAR] })],
   parameters: {
+    design: figmaDesign('hoverCard'),
     layout: 'padded',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

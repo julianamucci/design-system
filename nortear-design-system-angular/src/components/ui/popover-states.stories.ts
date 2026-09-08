@@ -5,6 +5,7 @@ import { NDS_POPOVER } from './popover';
 import { open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
 
+import { figmaDesign } from '@shared/figma/design-links';
 // Os quatro estados que o conteúdo compartilhado descreve: fechado (painel fora
 // do DOM), aberto, controlado por fora e foco dentro do painel. O estado
 // "transitioning" não vira story própria — ele é o intervalo entre dois destes,
@@ -15,6 +16,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton] })],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

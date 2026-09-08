@@ -8,11 +8,13 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Popover',
   component: PopoverStory,
   tags: ['autodocs', 'overlay'],
   parameters: {
+    design: figmaDesign('popover'),
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(PopoverDocs),

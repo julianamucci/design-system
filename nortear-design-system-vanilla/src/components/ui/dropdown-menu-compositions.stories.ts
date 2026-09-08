@@ -3,10 +3,12 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { endClose, montar } from './dropdown-menu.fixtures';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/DropdownMenu/Compositions',
   parameters: {
+    design: figmaDesign('dropdownMenu'),
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },

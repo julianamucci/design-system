@@ -14,6 +14,7 @@ import {
   drawerPlaygroundSource,
 } from './drawer.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const { t } = useTranslation(drawerTranslations as Record<string, unknown>);
 
 // Os três estados que o conteúdo compartilhado descreve. Fechado e aberto são
@@ -25,6 +26,7 @@ const meta: Meta = {
   tags: ['overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_DRAWER, NdsButton] })],
   parameters: {
+    design: figmaDesign('drawer'),
     layout: 'centered',
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },

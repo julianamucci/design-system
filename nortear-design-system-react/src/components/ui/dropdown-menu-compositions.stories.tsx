@@ -32,11 +32,13 @@ import {
 } from "./dropdown-menu.source";
 import { Button } from "./button";
 
+import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
   title: "Components/Overlay/DropdownMenu/Compositions",
   tags: ["overlay"],
   component: DropdownMenu,
   parameters: {
+    design: figmaDesign("dropdownMenu"),
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },

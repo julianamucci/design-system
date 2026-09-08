@@ -22,11 +22,13 @@ import {
   sheetNavigationSecundariaSource,
 } from './sheet.source';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta = {
   title: 'Components/Overlay/Sheet/Compositions',
   component: Sheet,
   tags: ['overlay'],
   parameters: {
+    design: figmaDesign('sheet'),
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },

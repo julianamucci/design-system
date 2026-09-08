@@ -8,11 +8,13 @@ import { NdsAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
+import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<AlertDialogArgs> = {
   title: 'Components/Overlay/AlertDialog',
   tags: ['autodocs', 'overlay'],
   decorators: [moduleMetadata({ imports: [...NDS_ALERT_DIALOG, NdsButton] })],
   parameters: {
+    design: figmaDesign('alertDialog'),
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsAlertDialogDocs) },
   },
