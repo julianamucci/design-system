@@ -115,6 +115,30 @@ acrescenta navegação — mesma decisão registrada em `sheet.css`.
 as cinco stacks entregam — sobrescreve para `--spacing-2`, alinhado à esquerda.
 **Consequência**: ao ler a folha, o segundo valor é o que vale.
 
+### D9 · No rodapé, o primário é o ÚLTIMO do DOM — e é a folha que inverte
+
+**Estado**: `.nds-dialog-footer` é `column-reverse` empilhado e `row` +
+`justify-content: flex-end` a partir de 40rem. As duas leituras saem da MESMA
+ordem de DOM: secundários primeiro, primário por último. Empilhado o primário
+sobe ao topo; deitado ele vai para a direita.
+
+**Por que o inverso do que parece**: escrever o primário por último é
+contraintuitivo, e por isso o defeito é reincidente. Medido em 2026-09-07 nas
+cinco stacks: as quatro que oferecem `showCloseButtonFooter` renderizavam o
+botão DEPOIS dos filhos, o que o punha na posição do primário; e a story do
+vanilla montava `[Voltar, Continuar, Fechar]`, deixando o primário no MEIO com
+um `ghost` acima dele.
+
+**O que guardava o defeito**: quatro textos afirmavam "abaixo das ações" — as
+duas chaves do conteúdo compartilhado, o docblock do `NdsDialogFooter` e a
+linha da tabela de API (§7). Quem conferisse pela leitura encontraria acordo
+entre documento e documento; o desacordo estava com a folha, que nenhum dos
+quatro cita. É o mesmo mecanismo do drawer, onde um teste verde afirmava a
+inversão.
+
+**Nenhum compilador alcança isto**, e nenhuma suíte que asserte por papel
+tampouco: a ordem só existe como posição entre irmãos. O portão é ler o DOM.
+
 ## 4. Anatomia
 
 ```
@@ -175,11 +199,32 @@ saída mais rápida (`--duration-fast`, `--ease-exit`). Sob
 | `defaultOpen` | estado inicial não controlado |
 | `onOpenChange` | callback com o novo estado |
 | `showCloseButtonContent` | exibe o X no canto do painel |
-| `showCloseButtonFooter` | exibe um botão de fechar dentro do rodapé, abaixo das ações |
+| `showCloseButtonFooter` | exibe um botão de fechar dentro do rodapé, como ação secundária (D9) |
 | `className` | classes `.nds-*` adicionais |
 
 Os dois `showCloseButton*` são independentes: um é o X do canto, o outro é uma
 ação no rodapé.
+
+### Peças, por stack
+
+Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
+seletores do código — não transcrito da guideline, que é a fonte aposentada.
+
+| stack | peças |
+|---|---|
+| react | `Dialog`, `DialogClose`, `DialogContent`, `DialogDescription`, `DialogFooter`, `DialogHeader`, `DialogOverlay`, `DialogPortal`, `DialogTitle`, `DialogTrigger` |
+| vue | `Dialog`, `DialogClose`, `DialogContent`, `DialogDescription`, `DialogFooter`, `DialogHeader`, `DialogOverlay`, `DialogScrollContent`, `DialogTitle`, `DialogTrigger` |
+| svelte | `Dialog`, `DialogClose`, `DialogContent`, `DialogDescription`, `DialogFooter`, `DialogHeader`, `DialogOverlay`, `DialogPortal`, `DialogTitle`, `DialogTrigger` |
+| vanilla | `createDialog` |
+| angular | `button[ndsDialogClose]`, `button[ndsDialogTrigger]`, `div[ndsDialogBody]`, `div[ndsDialogContent]`, `div[ndsDialogFooter]`, `div[ndsDialogHeader]`, `div[ndsDialogOverlay]`, `div[ndsDialog]`, `h2[ndsDialogTitle], h3[ndsDialogTitle]`, `ng-template[ndsDialogPortal]`, `p[ndsDialogDescription]` |
+
+O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
+para quem importa o namespace inteiro. As stories usam a forma longa.
+
+No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
+semântica, não só o estilo. Onde há dois seletores para a mesma peça
+(`h2[...]` e `h3[...]`), os dois existem para a peça caber em níveis de
+cabeçalho diferentes sem pular hierarquia.
 
 ## 8. Acessibilidade
 
