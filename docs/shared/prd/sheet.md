@@ -117,6 +117,33 @@ serial as encontrou depois de o componente ser dado por pronto:
 
 O que elas têm em comum: eram verdadeiras na stack de lib e falsas na referência.
 
+### D9 · Aqui o `<form>` NÃO envolve o rodapé — religa-se por `form="<id>"`
+
+**Estado**: o `<form>` envolve os campos; a ação primária vive no rodapé, fora
+dele, e se religa com `form="<id>"`. O descartar leva `type="button"`.
+
+**Por que difere do Dialog** (`dialog.md`, D10, e a regra de categoria em
+`docs/shared/guidelines/02-alinhamento-botoes.md`): lá o rodapé pode entrar
+dentro do `<form>`. Aqui não — o rodapé é **irmão do corpo rolável por
+construção do primitivo**, e aninhá-lo o tiraria da área que rola. A norma
+continua valendo; muda o mecanismo, e o HTML já oferece o certo.
+
+**O que isto custou antes de ser escrito**: cinco pontos entregavam
+`type="submit"` sem religamento nenhum — vanilla (filtros e perfil), svelte
+(dois), e as composições de filtro do react e do angular, que uma passagem
+anterior deixou para trás ao consertar só a de perfil. Botão inerte: não envia
+pelo clique nem pelo Enter num campo, e nada na tela denuncia.
+
+**A pista que existia e não foi seguida**: o docblock do rodapé do react
+ADMITIA a inércia — "aqui ele fica inerte porque o rodapé é irmão do corpo" —
+sem tirar a conclusão. Comentário que descreve o defeito sem o chamar de defeito
+é pior que comentário nenhum: ele dá a quem lê a sensação de que aquilo foi
+considerado.
+
+**E religar exige a guarda**: com `form="<id>"` a submissão passa a funcionar de
+verdade, então falta `preventDefault` navega a página. O angular era a única
+stack sem ela, e o defeito só apareceu quando o religamento o destravou.
+
 ## 4. Anatomia
 
 ```
