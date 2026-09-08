@@ -166,6 +166,21 @@ describe('respondeu de fato, medido pela citação obrigatória do slug', () => 
     expect(citaSlugEsperado(comCrase, ['composer-voice'])).toBe(true);
   });
 
+  it('aceita VÁRIAS fontes numa parênteses só, separadas por vírgula', () => {
+    // Texto real do Gemma. Citar todas as fontes de uma afirmação é
+    // comportamento melhor que citar uma; o guarda antigo reprovava por isso.
+    const resposta =
+      'A mensagem de erro deve estar associada ao controle via aria-describedby (Form, FormField, Input, Textarea).';
+    expect(citaSlugEsperado(resposta, ['form'])).toBe(true);
+    expect(citaSlugEsperado(resposta, ['textarea'])).toBe(true);
+    expect(citaSlugEsperado(resposta, ['input'])).toBe(true);
+  });
+
+  it('e continua NÃO aceitando componente que a resposta não citou', () => {
+    const resposta = 'A regra vale para o campo (Form, FormField).';
+    expect(citaSlugEsperado(resposta, ['media-player'])).toBe(false);
+  });
+
   it('não confunde o slug citado com o slug esperado', () => {
     const outro = 'Use o Popover para isso (popover).';
     expect(citaSlugEsperado(outro, ['hover-card'])).toBe(false);

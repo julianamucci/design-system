@@ -163,12 +163,31 @@ export function citaSlugEsperado(
   // citar pelo slug e outra manda escrever o nome em inglês. As duas
   // identificam o componente sem margem, então as duas passam aqui — e a regra
   // do prompt foi reescrita para parar de dar ordem dupla.
+  // Todo grupo entre parênteses, quebrado por vírgula.
+  //
+  // MEDIDO no Gemma: ele citou "(Form, FormField, Textarea)" — VÁRIAS fontes
+  // numa parênteses só —, e o guarda, que procurava um nome isolado, reprovou
+  // uma resposta correta. Quinta vez que um critério deste banco acusa o certo.
+  //
+  // E era o pior tipo de erro para um banco de comparação: citar todas as
+  // fontes de uma afirmação é comportamento MELHOR que citar uma, então o
+  // critério penalizava justamente quem fazia mais direito. Um viés desses não
+  // aparece no total — aparece como um modelo "pior" que os outros.
+  const citados = new Set<string>();
+  for (const grupo of texto.match(/\(([^()]*)\)/g) ?? []) {
+    for (const item of grupo.slice(1, -1).split(',')) {
+      const limpo = item.trim();
+      if (limpo) citados.add(limpo);
+    }
+  }
+
   return esperados.some((slug) => {
-    // O nome do menu derivado do slug, sem depender de quem chama injetar a
-    // função: `hover-card` e `HoverCard` normalizam para a mesma coisa quando
-    // se tira o hífen, e é isso que basta comparar.
-    const semHifen = normalize(slug).replace(/-/g, '');
-    return texto.includes(`(${normalize(slug)})`) || texto.includes(`(${semHifen})`);
+    // `hover-card` e `HoverCard` normalizam para a mesma coisa quando se tira o
+    // hífen — é isso que permite aceitar as duas formas de citação sem precisar
+    // derivar o nome do menu aqui.
+    const alvo = normalize(slug);
+    const semHifen = alvo.replace(/-/g, '');
+    return citados.has(alvo) || citados.has(semHifen);
   });
 }
 
