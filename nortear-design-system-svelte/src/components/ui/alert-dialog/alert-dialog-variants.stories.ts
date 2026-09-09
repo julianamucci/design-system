@@ -369,7 +369,7 @@ export const ExtraClass: Story = {
 
 export const HeadingH3: Story = {
   parameters: {
-    covers: ['accessibility.item2'],
+    covers: ['accessibility.item2', 'accessibility.item9'],
     docs: {
       source: { transform: alertDialogHeadingH3Source },
       description: {

@@ -241,7 +241,7 @@ export const HeadingH3: Story = {
     cancelLabel: t('demonstration.labels.cancel'),
   },
   parameters: {
-    covers: ['accessibility.item3'],
+    covers: ['accessibility.item3', 'accessibility.item9'],
     docs: {
       source: { transform: drawerHeadingH3Source },
       description: {

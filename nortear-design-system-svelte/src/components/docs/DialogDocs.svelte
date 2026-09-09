@@ -1050,7 +1050,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         level: 'WCAG',
         how: $tNavStore('common.howToVerify'),
       },
-      items: [1, 2, 3, 4, 5, 6].map((i) => ({
+      items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
         criterion: $tStore(`testes.accessibility.item${i}.criterion`),
         level: $tStore(`testes.accessibility.item${i}.level`),
         how: $tStore(`testes.accessibility.item${i}.how`),

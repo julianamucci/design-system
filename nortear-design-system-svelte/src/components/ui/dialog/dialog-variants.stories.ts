@@ -413,7 +413,7 @@ export const ConfirmEmail: Story = {
 
 export const HeadingH3: Story = {
   parameters: {
-    covers: ['accessibility.item3'],
+    covers: ['accessibility.item3', 'accessibility.item7'],
     docs: {
       source: { transform: dialogHeadingH3Source },
       description: {

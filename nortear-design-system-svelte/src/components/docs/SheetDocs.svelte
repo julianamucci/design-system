@@ -1156,6 +1156,7 @@ interface TriggerProps {
         { criterion: $tStore('testes.accessibility.item3'), level: '4.1.2', how: '—' },
         { criterion: $tStore('testes.accessibility.item4'), level: '4.1.2', how: '—' },
         { criterion: $tStore('testes.accessibility.item5'), level: '4.1.2', how: '—' },
+        { criterion: $tStore('testes.accessibility.item6'), level: '4.1.2', how: '—' },
       ],
     }}
     visual={{
