@@ -4,6 +4,7 @@ import {
   sheetContentLongSource,
   sheetControlledSource,
   sheetFiltersSource,
+  sheetHeadingH3Source,
   sheetNavigationSource,
   sheetNoButtonCloseSource,
   sheetOpenSource,
@@ -35,6 +36,7 @@ const ALL_SOURCES = [
   sheetProfileEditSource,
   sheetBottomPanelSource,
   sheetContentLongSource,
+  sheetHeadingH3Source,
 ];
 
 /** As quatro direções compartilham a mesma composição; só a borda muda. */
@@ -165,9 +167,13 @@ describe('o painel se nomeia em todos os exemplos', () => {
   it('título e descrição andam sempre juntos — é deles que sai o nome acessível', () => {
     // Um diálogo modal sem nome chega ao leitor de tela como região anônima; o
     // par existe em cada snippet porque cada snippet é copiável isolado.
+    // A abertura da tag é comparada por EXPRESSÃO, e não por texto: o título
+    // aceita `render` para a página escolher o nível do cabeçalho, e um
+    // `toContain('<SheetTitle>')` deixaria de fora justamente o snippet que
+    // exercita essa capacidade — passando a medir menos sem reprovar nada.
     for (const fn of ALL_SOURCES) {
       const output = fn();
-      expect(output, `${fn.name} deve nomear o painel`).toContain('<SheetTitle>');
+      expect(output, `${fn.name} deve nomear o painel`).toMatch(/<SheetTitle[\s>]/);
       expect(output, `${fn.name} deve descrever o painel`).toContain('<SheetDescription>');
     }
   });
@@ -397,5 +403,25 @@ describe('nenhum snippet ensina o andaime da story', () => {
       expect(output).not.toContain('contain:');
       expect(output).not.toContain('waitForPortal');
     }
+  });
+});
+
+describe('nível do cabeçalho', () => {
+  it('o título sai em h3, e é a ÚNICA diferença para a composição padrão', () => {
+    // O nível pertence à página: um painel aberto de dentro de uma seção já em
+    // `h2` pede `h3` para não pôr dois irmãos onde há um pai e um filho.
+    const output = sheetHeadingH3Source();
+    expect(output).toContain('<SheetTitle render={<h3 />}>Filtros avançados</SheetTitle>');
+    expect(output).not.toContain('<SheetTitle>Filtros avançados</SheetTitle>');
+    // Descrição, gatilho e rodapé continuam os canônicos — trocar mais de uma
+    // coisa ensinaria que o nível pede outra composição.
+    expect(output).toContain('<SheetDescription>');
+    expect(output).toContain('<Button>Aplicar filtros</Button>');
+  });
+
+  it('o snippet não ensina a mexer no aria-labelledby à mão', () => {
+    // Quem nomeia o painel é o componente, pelo id do título; escrever o
+    // atributo no exemplo ensinaria a duplicar o que já existe — e a errar.
+    expect(sheetHeadingH3Source()).not.toContain('aria-labelledby');
   });
 });

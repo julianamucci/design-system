@@ -489,3 +489,27 @@ ${footer('Aceitar termos')}`,
     ),
   );
 }
+
+/**
+ * Título em `h3` — o NÍVEL do cabeçalho pertence à página, não ao componente.
+ *
+ * O painel abre de dentro de uma seção que já está em `h2`, e repetir o nível
+ * ali poria dois irmãos na lista de cabeçalhos do leitor de tela onde há um pai
+ * e um filho. Por isso quem compõe escolhe o nível.
+ *
+ * O que a troca NÃO pode custar é o vínculo: quem nomeia o painel é o
+ * `aria-labelledby`, que aponta para o id do título. `render` empresta as props
+ * ao elemento de quem consome — id, classe e slot continuam saindo do
+ * componente —, então só a semântica de cabeçalho muda.
+ */
+export function sheetHeadingH3Source(): string {
+  return jsxSnippet(
+    `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
+    sheet(
+      '',
+      '',
+      `${header().replace('<SheetTitle>', '<SheetTitle render={<h3 />}>')}\n${footer()}`,
+      'Abrir filtros',
+    ),
+  );
+}

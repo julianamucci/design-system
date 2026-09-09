@@ -423,3 +423,24 @@ import { useState } from "react";`,
 }`,
   );
 }
+
+/**
+ * Título em `h3` — o NÍVEL do cabeçalho pertence à página, não ao componente.
+ *
+ * O painel abre de dentro de uma seção que já está em `h2`, e um `h2` no título
+ * do diálogo repetiria o nível do bloco que o abriu; a lista de cabeçalhos do
+ * leitor de tela passaria a ter dois irmãos onde há um pai e um filho. Por isso
+ * o nível é escolhido por quem compõe.
+ *
+ * O que a troca NÃO pode custar é o vínculo: quem dá nome ao painel é o
+ * `aria-labelledby`, que aponta para o id do título. `render` empresta as props
+ * ao elemento de quem consome — id, classe e slot continuam saindo do
+ * componente —, então trocar a tag muda só a semântica de cabeçalho.
+ */
+export function dialogHeadingH3Source(): string {
+  return dialogSnippet(
+    ' defaultOpen',
+    '',
+    `${HEADER.replace('<DialogTitle>', '<DialogTitle render={<h3 />}>')}\n${FOOTER}`,
+  );
+}

@@ -16,11 +16,14 @@ import {
 } from "./alert-dialog";
 import { Button } from "./button";
 import { TriangleAlert } from "lucide-react";
+import { useTranslation } from "@/lib/i18n";
+import alertDialogTranslations from "@shared/content/alert-dialog/translations.json";
 import {
   alertDialogClassNameExtraSource,
   alertDialogWithIconSource,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
+  alertDialogHeadingH3Source,
   alertDialogSource,
 } from "./alert-dialog.source";
 
@@ -437,5 +440,70 @@ export const ExtraClass: Story = {
     const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
     await expect(media).toHaveClass("nds-alert-dialog-media");
     await expect(getComputedStyle(media as HTMLElement).flexShrink).toBe("0");
+  },
+};
+
+// O nível do cabeçalho é decisão de QUEM COMPÕE, não do componente: um painel
+// que abre a partir de uma seção já em `h2` precisa de `h3` no título para não
+// pôr dois irmãos onde há um pai e um filho. A capacidade existe desde
+// 2026-09-08 e nenhuma story a exercitava.
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ["accessibility.item2"],
+    docs: {
+      // O nível do título é a ÚNICA diferença para o snippet canônico — e é
+      // justamente ela que o painel Code precisa ensinar.
+      source: { transform: alertDialogHeadingH3Source },
+      description: {
+        story:
+          "A confirmação abre de dentro de uma página cuja seção já está em `h2`, então o título entra como `h3`. Trocar a tag não pode romper o `aria-labelledby`: o nome acessível continua saindo do mesmo elemento.",
+      },
+    },
+  },
+  render: () => {
+    const { t } = useTranslation(alertDialogTranslations);
+    return (
+      <AlertDialog defaultOpen>
+        <AlertDialogTrigger asChild>
+          <Button variant="destructive">
+            {t("demonstration.labels.triggerLabel")}
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle render={<h3 />}>
+              {t("demonstration.labels.title")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("demonstration.labels.description")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("demonstration.labels.cancel")}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">
+              {t("demonstration.labels.action")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    );
+  },
+  play: async ({ step }) => {
+    const p = await waitForPortal("alertdialog");
+
+    await step("O título vira h3 sem soltar o vínculo que nomeia o painel", async () => {
+      // O id é o elo: `render` empresta as props ao elemento de quem compõe, e
+      // se ele fosse descartado o `aria-labelledby` apontaria para um id que
+      // não existe — nome acessível vazio, e `aria-valid-attr-value` no axe.
+      const id = p.getAttribute("aria-labelledby");
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe("H3");
+      // A classe do componente sobrevive à troca da tag: o estilo do título não
+      // depende de qual cabeçalho a página escolheu.
+      await expect(heading!.classList.contains("nds-alert-dialog-title")).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };

@@ -15,11 +15,14 @@ import {
 import {
   drawerDireitaSource,
   drawerEsquerdaSource,
+  drawerHeadingH3Source,
   drawerSource,
   drawerTopoSource,
   drawerWithScrollSource,
 } from "./drawer.source";
 import { Button } from "./button";
+import { useTranslation } from "@/lib/i18n";
+import drawerTranslations from "@shared/content/drawer/translations.json";
 
 import { figmaDesign } from "@shared/figma/design-links";
 const meta = {
@@ -278,6 +281,74 @@ export const WithScroll: Story = {
       const boxPanel = panel.getBoundingClientRect();
       await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
       await expect(boxFooter.height).toBeGreaterThan(0);
+    });
+  },
+};
+
+// O nível do cabeçalho é decisão de QUEM COMPÕE, não do componente: um painel
+// que abre a partir de uma seção já em `h2` precisa de `h3` no título para não
+// pôr dois irmãos onde há um pai e um filho. A capacidade existe desde
+// 2026-09-08 e nenhuma story a exercitava.
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ["accessibility.item3"],
+    docs: {
+      // O nível do título é a ÚNICA diferença para o snippet canônico — e é
+      // justamente ela que o painel Code precisa ensinar.
+      source: { transform: drawerHeadingH3Source },
+      description: {
+        story:
+          "O painel abre de dentro de uma página cuja seção já está em `h2`, então o título entra como `h3`. Trocar a tag não pode romper o `aria-labelledby`: o nome acessível continua saindo do mesmo elemento.",
+      },
+    },
+  },
+  render: () => {
+    const { t } = useTranslation(drawerTranslations);
+    return (
+      <div style={wrapperStyle}>
+        <Drawer defaultOpen>
+          <DrawerTrigger asChild>
+            <Button variant="outline">{t("demonstration.labels.trigger")}</Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader>
+              {/* `asChild` funde as props do componente no elemento de quem
+                  compõe — id, classe e slot continuam vindo do Drawer. */}
+              <DrawerTitle asChild>
+                <h3>{t("demonstration.labels.title")}</h3>
+              </DrawerTitle>
+              <DrawerDescription>
+                {t("demonstration.labels.description")}
+              </DrawerDescription>
+            </DrawerHeader>
+            <DrawerFooter>
+              <DrawerClose asChild>
+                <Button variant="outline">
+                  {t("demonstration.labels.cancel")}
+                </Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </div>
+    );
+  },
+  play: async ({ step }) => {
+    const p = await waitForPortal("dialog");
+
+    await step("O título vira h3 sem soltar o vínculo que nomeia o painel", async () => {
+      // O id é o elo: se a fusão do `asChild` descartasse as props do
+      // componente, o `aria-labelledby` apontaria para um id que não existe —
+      // nome acessível vazio, e `aria-valid-attr-value` no axe.
+      const id = p.getAttribute("aria-labelledby");
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe("H3");
+      // A classe do componente sobrevive à troca da tag: o estilo do título não
+      // depende de qual cabeçalho a página escolheu.
+      await expect(heading!.classList.contains("nds-sheet-title")).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

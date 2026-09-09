@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   dialogOpenSource,
+  dialogHeadingH3Source,
   dialogWithActionDestructiveSource,
   dialogWithFormSource,
   dialogWithMidiaSource,
@@ -19,6 +20,7 @@ const ALL = [
   dialogNoButtonCloseSource,
   footerDialogCloseSource,
   dialogNoFooterSource,
+  dialogHeadingH3Source,
   dialogWithFormSource,
   dialogPerfilSource,
   dialogWithScrollSource,
@@ -204,5 +206,25 @@ describe('composições estruturais', () => {
     const saida = dialogControlledSource();
     expect(saida).toContain('<Dialog open={aberto} onOpenChange={setAberto}>');
     expect(saida).not.toContain('DialogTrigger');
+  });
+});
+
+describe('nível do cabeçalho', () => {
+  it('o título sai em h3, e é a ÚNICA diferença para a composição padrão', () => {
+    // O nível pertence à página: um painel aberto de dentro de uma seção já em
+    // `h2` pede `h3` para não pôr dois irmãos onde há um pai e um filho.
+    const saida = dialogHeadingH3Source();
+    expect(saida).toContain('<DialogTitle render={<h3 />}>Editar perfil</DialogTitle>');
+    expect(saida).not.toContain('<DialogTitle>Editar perfil</DialogTitle>');
+    // A descrição e o rodapé continuam os canônicos — trocar mais de uma coisa
+    // faria o snippet ensinar que o nível pede outra composição.
+    expect(saida).toContain('<DialogDescription>');
+    expect(saida).toContain('<Button>Salvar alterações</Button>');
+  });
+
+  it('o snippet não ensina a mexer no aria-labelledby à mão', () => {
+    // Quem nomeia o painel é o componente, pelo id do título; escrever o
+    // atributo no exemplo ensinaria a duplicar o que já existe — e a errar.
+    expect(dialogHeadingH3Source()).not.toContain('aria-labelledby');
   });
 });

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   drawerOpenSource,
+  drawerHeadingH3Source,
   drawerWithConfirmSource,
   drawerWithFormSource,
   drawerWithScrollSource,
@@ -23,6 +24,7 @@ const ALL = [
   drawerWithFormSource,
   drawerWithConfirmSource,
   drawerWithScrollSource,
+  drawerHeadingH3Source,
 ];
 
 describe('drawerSource', () => {
@@ -37,9 +39,13 @@ describe('drawerSource', () => {
   });
 
   it('título e descrição estão sempre lá — é deles que sai o nome acessível', () => {
+    // A abertura da tag é comparada por EXPRESSÃO, e não por texto: o título
+    // aceita `asChild` para a página escolher o nível do cabeçalho, e um
+    // `toContain('<DrawerTitle>')` deixaria de fora justamente o snippet que
+    // exercita essa capacidade — passando a medir menos sem reprovar nada.
     for (const fn of ALL) {
       const saida = fn();
-      expect(saida).toContain('<DrawerTitle>');
+      expect(saida, `${fn.name}`).toMatch(/<DrawerTitle[\s>]/);
       expect(saida).toContain('<DrawerDescription>');
     }
   });
@@ -166,5 +172,26 @@ describe('guardas do painel', () => {
       // Nenhum valor de design em style inline.
       expect(saida).not.toContain('style={{');
     }
+  });
+});
+
+describe('nível do cabeçalho', () => {
+  it('o título sai em h3 por asChild, e é a ÚNICA diferença para a composição padrão', () => {
+    // O nível pertence à página: um painel aberto de dentro de uma seção já em
+    // `h2` pede `h3` para não pôr dois irmãos onde há um pai e um filho.
+    const saida = drawerHeadingH3Source();
+    expect(saida).toContain('<DrawerTitle asChild>');
+    expect(saida).toContain('<h3>Editar perfil</h3>');
+    expect(saida).not.toContain('<DrawerTitle>Editar perfil</DrawerTitle>');
+    // Descrição, gatilho e saída continuam os canônicos — trocar mais de uma
+    // coisa ensinaria que o nível pede outra composição.
+    expect(saida).toContain('<DrawerDescription>Atualize seus dados.</DrawerDescription>');
+    expect(saida).toContain('<DrawerTrigger asChild>');
+  });
+
+  it('o snippet não ensina a mexer no aria-labelledby à mão', () => {
+    // Quem nomeia o painel é o componente, pelo id do título; escrever o
+    // atributo no exemplo ensinaria a duplicar o que já existe — e a errar.
+    expect(drawerHeadingH3Source()).not.toContain('aria-labelledby');
   });
 });

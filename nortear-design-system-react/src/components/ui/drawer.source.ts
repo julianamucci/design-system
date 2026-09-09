@@ -390,3 +390,33 @@ export function drawerWithScrollSource(): string {
 
   return jsxSnippet(IMPORT, panel('', miolo, trigger('Ver lista')));
 }
+
+/**
+ * Título em `h3` — o NÍVEL do cabeçalho pertence à página, não ao componente.
+ *
+ * O painel abre de dentro de uma seção que já está em `h2`, e repetir o nível
+ * ali poria dois irmãos na lista de cabeçalhos do leitor de tela onde há um pai
+ * e um filho. Por isso quem compõe escolhe o nível.
+ *
+ * O que a troca NÃO pode custar é o vínculo: quem nomeia o painel é o
+ * `aria-labelledby`, que aponta para o id do título. `asChild` funde as props
+ * do componente no elemento de quem consome — id, classe e slot continuam
+ * vindo do componente —, então só a semântica de cabeçalho muda.
+ */
+export function drawerHeadingH3Source(): string {
+  const miolo = [
+    `<DrawerHeader>
+  <DrawerTitle asChild>
+    <h3>Editar perfil</h3>
+  </DrawerTitle>
+  <DrawerDescription>Atualize seus dados.</DrawerDescription>
+</DrawerHeader>`,
+    `<DrawerFooter>
+  <DrawerClose asChild>
+    <Button variant="outline">Cancelar</Button>
+  </DrawerClose>
+</DrawerFooter>`,
+  ].join('\n');
+
+  return jsxSnippet(IMPORT_NO_BODY, panel('', miolo, trigger('Editar perfil')));
+}

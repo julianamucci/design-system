@@ -62,6 +62,8 @@ type Confirm = {
   classeContent?: string;
   /** Classe extra no bloco de mídia — idem. */
   classeMidia?: string;
+  /** Tag do título quando o contexto da página exige outro nível de cabeçalho. */
+  titleTag?: string;
   /** `onClick` do consumidor, quando a story é sobre o callback. */
   onAction?: string;
   onCancel?: string;
@@ -98,6 +100,7 @@ function confirm({
   actionLabel = 'Excluir',
   classeContent,
   classeMidia,
+  titleTag,
   onAction,
   onCancel,
   preambulo,
@@ -123,7 +126,7 @@ function confirm({
   </AlertDialogTrigger>
   <AlertDialogContent${classeContent ? ` className="${classeContent}"` : ''}>
     <AlertDialogHeader>
-${indentar(`${blockMidia}<AlertDialogTitle>${title}</AlertDialogTitle>${blockDescription}`, '      ')}
+${indentar(`${blockMidia}<AlertDialogTitle${titleTag ? ` render={<${titleTag} />}` : ''}>${title}</AlertDialogTitle>${blockDescription}`, '      ')}
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel${onCancel ? ` onClick={${onCancel}}` : ''}>${cancelLabel}</AlertDialogCancel>
@@ -314,4 +317,20 @@ export function alertDialogClassNameExtraSource(): string {
     classeContent: 'nds-overflow-hidden',
     classeMidia: 'nds-shrink-0',
   });
+}
+
+/**
+ * Título em `h3` — o NÍVEL do cabeçalho pertence à página, não ao componente.
+ *
+ * A confirmação abre de dentro de uma seção que já está em `h2`, e repetir o
+ * nível ali poria dois irmãos na lista de cabeçalhos do leitor de tela onde há
+ * um pai e um filho. Por isso quem compõe escolhe o nível.
+ *
+ * O que a troca NÃO pode custar é o vínculo: quem nomeia o painel é o
+ * `aria-labelledby`, que aponta para o id do título. `render` empresta as props
+ * ao elemento de quem consome — id, classe e slot continuam saindo do
+ * componente —, então só a semântica de cabeçalho muda.
+ */
+export function alertDialogHeadingH3Source(): string {
+  return confirm({ tone: 'destructive', titleTag: 'h3' });
 }

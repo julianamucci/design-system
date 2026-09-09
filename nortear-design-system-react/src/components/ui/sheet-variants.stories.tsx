@@ -17,6 +17,7 @@ import {
   sheetSideLeftSource,
   sheetSideRightSource,
   sheetSideTopSource,
+  sheetHeadingH3Source,
   sheetSource,
 } from "./sheet.source";
 import { Button } from "./button";
@@ -62,8 +63,23 @@ type Story = StoryObj<typeof meta>;
 
 type Side = "top" | "right" | "bottom" | "left";
 
-/** Mesmo painel nas quatro direções — o que muda é `side` e o rótulo do título. */
-function Panel({ side, tituloKey }: { side: Side; tituloKey: string }) {
+/**
+ * Mesmo painel nas quatro direções — o que muda é `side` e o rótulo do título.
+ *
+ * `titleRender` é opcional e existe para a story de nível de cabeçalho: o
+ * elemento do título é escolha de quem compõe, e omitir a prop deixa o
+ * componente com o padrão dele. Um segundo `render` duplicado aqui separaria em
+ * dois caminhos o que é um painel só.
+ */
+function Panel({
+  side,
+  tituloKey,
+  titleRender,
+}: {
+  side: Side;
+  tituloKey: string;
+  titleRender?: React.ReactElement;
+}) {
   const { t } = useTranslation(sheetTranslations);
   return (
     <Sheet defaultOpen>
@@ -72,7 +88,9 @@ function Panel({ side, tituloKey }: { side: Side; tituloKey: string }) {
       </SheetTrigger>
       <SheetContent side={side}>
         <SheetHeader>
-          <SheetTitle>{t(`demonstration.labels.${tituloKey}`)}</SheetTitle>
+          <SheetTitle render={titleRender}>
+            {t(`demonstration.labels.${tituloKey}`)}
+          </SheetTitle>
           <SheetDescription>
             {t("demonstration.labels.description")}
           </SheetDescription>
@@ -183,5 +201,43 @@ export const Bottom: Story = {
     await expect(panel).toHaveClass(/nds-sheet-content/);
     await expect(panel).toHaveAccessibleName();
     await borderWaitForEncostar(panel, "bottom");
+  },
+};
+
+// O nível do cabeçalho é decisão de QUEM COMPÕE, não do componente: um painel
+// que abre a partir de uma seção já em `h2` precisa de `h3` no título para não
+// pôr dois irmãos onde há um pai e um filho. A capacidade existe desde
+// 2026-09-08 e nenhuma story a exercitava.
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ["accessibility.item4"],
+    docs: {
+      // O nível do título é a ÚNICA diferença para o snippet canônico — e é
+      // justamente ela que o painel Code precisa ensinar.
+      source: { transform: sheetHeadingH3Source },
+      description: {
+        story:
+          "O painel abre de dentro de uma página cuja seção já está em `h2`, então o título entra como `h3`. Trocar a tag não pode romper o `aria-labelledby`: o nome acessível continua saindo do mesmo elemento.",
+      },
+    },
+  },
+  render: () => <Panel side="right" tituloKey="title" titleRender={<h3 />} />,
+  play: async ({ step }) => {
+    const p = await waitForPortal("dialog");
+
+    await step("O título vira h3 sem soltar o vínculo que nomeia o painel", async () => {
+      // O id é o elo: `render` empresta as props ao elemento de quem compõe, e
+      // se ele fosse descartado o `aria-labelledby` apontaria para um id que
+      // não existe — nome acessível vazio, e `aria-valid-attr-value` no axe.
+      const id = p.getAttribute("aria-labelledby");
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe("H3");
+      // A classe do componente sobrevive à troca da tag: o estilo do título não
+      // depende de qual cabeçalho a página escolheu.
+      await expect(heading!.classList.contains("nds-sheet-title")).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };

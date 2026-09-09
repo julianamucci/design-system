@@ -3,6 +3,7 @@ import {
   alertDialogOpenSource,
   alertDialogCanceladoSource,
   alertDialogClassNameExtraSource,
+  alertDialogHeadingH3Source,
   alertDialogWithIconSource,
   alertDialogConfirmadoSource,
   alertDialogControlledSource,
@@ -115,6 +116,7 @@ describe('estados', () => {
       alertDialogClassNameExtraSource,
       alertDialogWithIconSource,
       alertDialogConfirmadoSource,
+      alertDialogHeadingH3Source,
       alertDialogNeutralSource,
       alertDialogNoDescriptionSource,
     ]) {
@@ -165,6 +167,7 @@ describe('composições', () => {
       alertDialogWithIconSource,
       alertDialogConfirmadoSource,
       alertDialogControlledSource,
+      alertDialogHeadingH3Source,
       alertDialogNeutralSource,
       alertDialogNoDescriptionSource,
     ]) {
@@ -174,5 +177,31 @@ describe('composições', () => {
       expect(saida).not.toContain('showMedia');
       expect(saida).not.toContain('key={');
     }
+  });
+});
+
+describe('nível do cabeçalho', () => {
+  it('o título sai em h3, e é a ÚNICA diferença para a confirmação canônica', () => {
+    // O nível pertence à página: uma confirmação aberta de dentro de uma seção
+    // já em `h2` pede `h3` para não pôr dois irmãos onde há um pai e um filho.
+    const saida = alertDialogHeadingH3Source();
+    expect(saida).toContain('<AlertDialogTitle render={<h3 />}>Excluir conta</AlertDialogTitle>');
+    expect(saida).not.toContain('<AlertDialogTitle>Excluir conta</AlertDialogTitle>');
+    // Descrição e as duas saídas continuam as canônicas — trocar mais de uma
+    // coisa ensinaria que o nível pede outra composição.
+    expect(saida).toContain('<AlertDialogDescription>');
+    expect(saida).toContain('<AlertDialogAction variant="destructive">Excluir</AlertDialogAction>');
+  });
+
+  it('o snippet não ensina a mexer no aria-labelledby à mão', () => {
+    // Quem nomeia o painel é o componente, pelo id do título; escrever o
+    // atributo no exemplo ensinaria a duplicar o que já existe — e a errar.
+    expect(alertDialogHeadingH3Source()).not.toContain('aria-labelledby');
+  });
+
+  it('sem titleTag, o título continua saindo sem render — o nível é opcional', () => {
+    // A opção é ADITIVA: se ela vazasse para os demais construtores, todo
+    // snippet passaria a ensinar um nível que a página não pediu.
+    expect(alertDialogSource()).toContain('<AlertDialogTitle>Excluir conta</AlertDialogTitle>');
   });
 });
