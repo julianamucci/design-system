@@ -401,7 +401,7 @@ export const ExtraClass: Story = {
 
 export const HeadingH3: Story = {
   parameters: {
-    covers: ['accessibility.item2'],
+    covers: ['accessibility.item2', 'accessibility.item9'],
     // O meta já desliga os controls; as ações não, e sem argTypes o painel de
     // Actions abriria vazio.
     actions: { disable: true },

@@ -284,7 +284,7 @@ export const WithScroll: Story = {
 
 export const HeadingH3: Story = {
   parameters: {
-    covers: ['accessibility.item3'],
+    covers: ['accessibility.item3', 'accessibility.item9'],
     // O meta já desliga os controls; as ações não, e sem argTypes o painel de
     // Actions abriria vazio.
     actions: { disable: true },

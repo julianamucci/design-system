@@ -1331,6 +1331,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
       { i: 3, level: '4.1.2', how: 'Storybook Test' },
       { i: 4, level: '1.3.1', how: 'Storybook Test' },
       { i: 5, level: '1.3.1', how: 'Storybook Test' },
+      { i: 6, level: '1.3.1', how: 'Storybook Test' },
     ];
     return {
       title: t('testes.accessibility.title'),
