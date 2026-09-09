@@ -5,6 +5,7 @@ import {
   dialogConfirmEmailSource,
   dialogControlledSource,
   dialogCustomCloseInFooterSource,
+  dialogHeadingH3Source,
   dialogMediaPreviewSource,
   dialogNoFooterSource,
   dialogOpenSource,
@@ -138,14 +139,14 @@ function footerLabels(code: string): string[] {
 // ─── Cobertura das quatro stories ─────────────────────────────────────────────
 
 /**
- * Os doze construtores e a story que cada um serve.
+ * Os treze construtores e a story que cada um serve.
  *
  * A lista existe para ser COBRADA: o caso logo abaixo compara com o que o
  * módulo exporta, e um construtor novo que não entre aqui reprova em vez de
  * sair calado da varredura. É a lição do `source-snippets.test.ts` do Vue, onde
  * 28 exports saíram do alcance e a suíte seguiu verde medindo menos.
  *
- * CATORZE stories, doze construtores: `Variants/Default` e `States/Closed`
+ * QUINZE stories, treze construtores: `Variants/Default` e `States/Closed`
  * reusam o do Playground, e as duas exclusões estão declaradas no cabeçalho de
  * `dialog.source.ts`, com a premissa cobrada no caso `reuso declarado` no fim
  * deste arquivo.
@@ -179,6 +180,14 @@ const CONSTRUCTORS: Array<{
   withField?: true;
   /** Importa `NdsAspectRatio`. */
   withMedia?: true;
+  /**
+   * Nível do cabeçalho do título, quando não é o `h2` de sempre.
+   *
+   * DECLARADO por construtor, e não afrouxando a asserção para `h[1-6]`: a
+   * varredura que aceita qualquer nível deixaria um `h5` acidental passar
+   * calado, que é a forma exata do defeito do `source-snippets.test.ts` do Vue.
+   */
+  titleTag?: 'h3';
 }> = [
   { name: 'dialogPlaygroundSource', story: 'Playground', build: dialogPlaygroundSource },
   {
@@ -223,6 +232,12 @@ const CONSTRUCTORS: Array<{
     build: dialogConfirmEmailSource,
     withBody: true,
     footer: [CANCEL, CONFIRM_EMAIL_ACTION],
+  },
+  {
+    name: 'dialogHeadingH3Source',
+    story: 'Variants/HeadingH3',
+    build: dialogHeadingH3Source,
+    titleTag: 'h3',
   },
   { name: 'dialogOpenSource', story: 'States/Open', build: dialogOpenSource },
   {
@@ -287,7 +302,12 @@ describe('cobertura das quatro stories', () => {
       // O par que sustenta o nome e a descrição acessíveis do diálogo — um de
       // cada, sempre, porque é do id REAL deles que o primitivo se serve.
       expect(code.match(/<div ndsDialogHeader>/g)).toHaveLength(1);
-      expect(code.match(/<h2 ndsDialogTitle>/g)).toHaveLength(1);
+      // O nível é DECLARADO: `h2` por padrão, e a exceção se escreve na lista.
+      // Trocar a asserção por `h[1-6]` aceitaria um `h5` acidental sem uma
+      // palavra — portão que afrouxa para caber uma exceção deixa de medir.
+      const titleTag = c.titleTag ?? 'h2';
+      expect(code.match(new RegExp(`<${titleTag} ndsDialogTitle>`, 'g'))).toHaveLength(1);
+      expect(code.match(/<h[1-6] ndsDialogTitle>/g)).toHaveLength(1);
       expect(code.match(/<p ndsDialogDescription>/g)).toHaveLength(1);
 
       // O gatilho, e um só: é ele que devolve o foco no fechamento.
@@ -580,6 +600,27 @@ describe('variantes', () => {
     expect(code).not.toContain('closeLabel');
     expect(code).toContain(`<button ndsButton variant="outline">${BACK}</button>`);
     expect(code).toContain(`<button ndsButton>${CONTINUE_ACTION}</button>`);
+  });
+
+  it('dialogHeadingH3Source imprime o título em h3, e SÓ a tag muda', () => {
+    // A capacidade que a story exercita é o nível do cabeçalho: a diretiva casa
+    // de `h1` a `h6`, e o nível certo é o que a página em volta pede. O que o
+    // snippet ensina é isso e nada mais — a igualdade com o painel canônico é
+    // cobrada letra por letra, para que uma mudança no canônico não deixe este
+    // para trás em silêncio.
+    const code = dialogHeadingH3Source();
+    expect(code).toContain(`<h3 ndsDialogTitle>${TITLE}</h3>`);
+    expect(code).not.toContain('<h2 ndsDialogTitle>');
+    expect(code).toBe(
+      dialogPlaygroundSource()
+        .replace('<h2 ndsDialogTitle>', '<h3 ndsDialogTitle>')
+        .replace('</h2>', '</h3>'),
+    );
+    // O nível é do DOCUMENTO; o vínculo é do id. Escrever `aria-labelledby` à
+    // mão ensinaria a duplicar o que o primitivo já faz, e é o que romperia o
+    // nome acessível quando a tag mudasse.
+    expect(code).not.toContain('aria-labelledby');
+    expect(code).not.toContain('role=');
   });
 
   it('dialogConfirmEmailSource confirma um envio, e mantém a ação primária neutra', () => {

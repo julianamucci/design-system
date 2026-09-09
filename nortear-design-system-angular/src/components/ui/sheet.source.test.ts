@@ -6,6 +6,7 @@ import {
   sheetCloseButtonHiddenSource,
   sheetClosedSource,
   sheetControlledSource,
+  sheetHeadingH3Source,
   sheetLongScrollBodySource,
   sheetOpenSource,
   sheetPlaygroundSource,
@@ -111,14 +112,14 @@ describe('sheetPlaygroundSource', () => {
 });
 
 /**
- * Os quatorze construtores e a story que cada um serve.
+ * Os quinze construtores e a story que cada um serve.
  *
  * A lista existe para ser COBRADA: o caso logo abaixo compara com o que o
  * módulo exporta, e um construtor novo que não entre aqui reprova em vez de
  * sair calado da varredura. É a lição do `source-snippets.test.ts` do Vue, onde
  * 28 exports saíram do alcance e a suíte seguiu verde medindo menos.
  *
- * NENHUMA das quatorze stories fica sem construtor próprio. As quatro direções
+ * NENHUMA das quinze stories fica sem construtor próprio. As quatro direções
  * chegaram perto de compartilhar um — o markup é o mesmo, muda `side` e o
  * título —, mas o painel Code é por story: um construtor comum publicaria
  * `side="right"` embaixo do painel que entra pela esquerda.
@@ -129,12 +130,26 @@ const CONSTRUCTORS: Array<{
   build: () => string;
   /** Snippet sem gatilho interno: o caso controlado, aberto por um botão de fora. */
   noTrigger?: true;
+  /**
+   * Nível do cabeçalho do título, quando não é o `h2` de sempre.
+   *
+   * DECLARADO por construtor, e não afrouxando a asserção para `h[1-6]`: a
+   * varredura que aceita qualquer nível deixaria um `h5` acidental passar
+   * calado, que é a forma exata do defeito do `source-snippets.test.ts` do Vue.
+   */
+  titleTag?: 'h3';
 }> = [
   { name: 'sheetPlaygroundSource', story: 'Playground', build: sheetPlaygroundSource },
   { name: 'sheetSideRightSource', story: 'Variants/Right', build: sheetSideRightSource },
   { name: 'sheetSideLeftSource', story: 'Variants/Left', build: sheetSideLeftSource },
   { name: 'sheetSideTopSource', story: 'Variants/Top', build: sheetSideTopSource },
   { name: 'sheetSideBottomSource', story: 'Variants/Bottom', build: sheetSideBottomSource },
+  {
+    name: 'sheetHeadingH3Source',
+    story: 'Variants/HeadingH3',
+    build: sheetHeadingH3Source,
+    titleTag: 'h3',
+  },
   { name: 'sheetClosedSource', story: 'States/Closed', build: sheetClosedSource },
   { name: 'sheetOpenSource', story: 'States/Open', build: sheetOpenSource },
   {
@@ -184,7 +199,7 @@ describe('cobertura das quatro stories', () => {
     expect(exportados).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
   });
 
-  for (const { name, story, build, noTrigger } of CONSTRUCTORS) {
+  for (const { name, story, build, noTrigger, titleTag } of CONSTRUCTORS) {
     it(`${name} (${story}) publica o componente, não o andaime da story`, () => {
       const code = build();
 
@@ -204,9 +219,15 @@ describe('cobertura das quatro stories', () => {
       expect(code.match(/<nds-sheet[ >]/g)).toHaveLength(1);
       expect(code.match(/<\/nds-sheet>/g)).toHaveLength(1);
 
-      // O par que dá nome e descrição acessíveis ao diálogo. Vale para os quatorze:
+      // O par que dá nome e descrição acessíveis ao diálogo. Vale para os quinze:
       // não há painel deste design system sem título.
-      expect(code).toMatch(/<h2 ndsSheetTitle>[^<]+<\/h2>/);
+      //
+      // O nível é DECLARADO: `h2` por padrão, e a exceção se escreve na lista.
+      // Trocar a asserção por `h[1-6]` aceitaria um `h5` acidental sem uma
+      // palavra — portão que afrouxa para caber uma exceção deixa de medir.
+      const tag = titleTag ?? 'h2';
+      expect(code).toMatch(new RegExp(`<${tag} ndsSheetTitle>[^<]+</${tag}>`));
+      expect(code.match(/<h[1-6] ndsSheetTitle>/g)).toHaveLength(1);
       expect(code).toMatch(/<p ndsSheetDescription>[^<]+<\/p>/);
 
       // `side` mora no conteúdo — a raiz nunca o carrega.
@@ -245,6 +266,29 @@ describe('variantes: as quatro direções', () => {
     const bottom = sheetSideBottomSource();
     expect(bottom).toContain('<ng-template ndsSheetContent side="bottom">');
     expect(bottom).toContain('<h2 ndsSheetTitle>Painel inferior</h2>');
+  });
+
+  it('sheetHeadingH3Source imprime o título em h3, e SÓ a tag e o texto mudam', () => {
+    // A capacidade que a story exercita é o nível do cabeçalho: a diretiva casa
+    // de `h1` a `h6`, e o nível certo é o que a página em volta pede. A
+    // igualdade com o painel da direita é cobrada letra por letra — a story não
+    // é sobre direção, então o título é o do painel canônico, e nada além disso
+    // pode divergir sem o portão dizer.
+    const code = sheetHeadingH3Source();
+    expect(code).toContain('<h3 ndsSheetTitle>Filtros avançados</h3>');
+    expect(code).not.toContain('<h2 ndsSheetTitle>');
+    expect(code).toBe(
+      sheetSideRightSource().replace(
+        '<h2 ndsSheetTitle>Painel direito</h2>',
+        '<h3 ndsSheetTitle>Filtros avançados</h3>',
+      ),
+    );
+    // O nível é do DOCUMENTO; o vínculo é do id. Escrever `aria-labelledby` à
+    // mão ensinaria a duplicar o que o primitivo já faz, e é o que romperia o
+    // nome acessível quando a tag mudasse.
+    expect(code).not.toContain('aria-labelledby');
+    // `right` continua sendo o padrão, e a story não é sobre direção.
+    expect(code).not.toContain('side=');
   });
 
   it('as quatro nascem abertas, como as stories ao lado, e nenhuma tem corpo', () => {

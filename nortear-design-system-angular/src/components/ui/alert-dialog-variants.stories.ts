@@ -4,6 +4,9 @@ import { expect, within } from 'storybook/test';
 import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { alertDialogHeadingH3Source } from './alert-dialog.source';
+import { useTranslation } from '@/lib/i18n';
+import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Variantes e formas do painel. Sem argTypes, então o painel Controls é
@@ -35,6 +38,8 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+const { t } = useTranslation(alertDialogTranslations as Record<string, unknown>);
 
 // Destructive existia nas outras quatro stacks e não aqui. É a primeira linha
 // de `variants.items` do conteúdo compartilhado — sem ela, metade da tabela de
@@ -390,6 +395,64 @@ export const ExtraClass: Story = {
       const midia = document.querySelector<HTMLElement>('[data-testid="midia"]')!;
       await expect(midia).toHaveClass('nds-alert-dialog-media');
       await expect(getComputedStyle(midia).flexShrink).toBe('0');
+    });
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item2'],
+    // O meta já desliga os controls; as ações não, e sem argTypes o painel de
+    // Actions abriria vazio.
+    actions: { disable: true },
+    docs: {
+      source: { transform: alertDialogHeadingH3Source },
+      description: {
+        story:
+          'O painel aberto de dentro de uma página cuja seção já está em h2 pede o título em h3, ' +
+          'para não repetir o degrau da hierarquia. Trocar a tag não pode romper o aria-labelledby: ' +
+          'o vínculo sai do id real do título, nunca do nível do cabeçalho.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      panelTitle: t('demonstration.labels.title'),
+      panelDescription: t('demonstration.labels.description'),
+      triggerLabel: t('demonstration.labels.triggerLabel'),
+      cancelLabel: t('demonstration.labels.cancel'),
+      actionLabel: t('demonstration.labels.action'),
+    },
+    template: `
+      <nds-alert-dialog [defaultOpen]="true">
+        <button ndsAlertDialogTrigger ndsButton variant="destructive">{{ triggerLabel }}</button>
+
+        <ng-template ndsAlertDialogContent>
+          <div ndsAlertDialogHeader>
+            <h3 ndsAlertDialogTitle>{{ panelTitle }}</h3>
+            <p ndsAlertDialogDescription>{{ panelDescription }}</p>
+          </div>
+          <div ndsAlertDialogFooter>
+            <button ndsAlertDialogCancel ndsButton variant="outline">{{ cancelLabel }}</button>
+            <button ndsAlertDialogAction ndsButton variant="destructive">{{ actionLabel }}</button>
+          </div>
+        </ng-template>
+      </nds-alert-dialog>
+    `,
+  }),
+  play: async ({ step }) => {
+    await step('O título em h3 continua sendo o nome acessível do painel', async () => {
+      // A tag é do documento; o vínculo é do id. Consulta pela CLASSE e não por
+      // `data-slot`: no Angular o host binding da diretiva disputa o atributo, e
+      // a classe é o que existe em todas as stacks.
+      const p = await waitForPortal('alertdialog');
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-alert-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

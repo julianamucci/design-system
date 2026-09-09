@@ -9,6 +9,7 @@ import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
 import {
   drawerBottomSource,
+  drawerHeadingH3Source,
   drawerLeftSource,
   drawerRightSource,
   drawerTopSource,
@@ -49,6 +50,10 @@ type Story = StoryObj;
 
 const LABEL = {
   trigger: () => t('usage.uxWriting.table.trigger.good'),
+  // O título canônico do painel, o mesmo que o Playground mostra. Ele não vem
+  // de `demonstration.labels` porque ali cada chave nomeia uma DIREÇÃO, e a
+  // story de nível de cabeçalho não é sobre direção.
+  title: () => t('usage.uxWriting.table.title.good'),
   descricao: () => t('usage.uxWriting.table.description.good'),
   close: () => t('usage.uxWriting.table.close.good'),
 };
@@ -273,6 +278,63 @@ export const WithScroll: Story = {
       const boxPanel = panelEl.getBoundingClientRect();
       await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
       await expect(boxFooter.height).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item3'],
+    // O meta já desliga os controls; as ações não, e sem argTypes o painel de
+    // Actions abriria vazio.
+    actions: { disable: true },
+    docs: {
+      source: { transform: drawerHeadingH3Source },
+      description: {
+        story:
+          'O painel aberto de dentro de uma página cuja seção já está em h2 pede o título em h3, ' +
+          'para não repetir o degrau da hierarquia. Trocar a tag não pode romper o aria-labelledby: ' +
+          'o vínculo sai do id real do título, nunca do nível do cabeçalho.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      tituloPainel: LABEL.title(),
+      descricaoPainel: LABEL.descricao(),
+      rotuloGatilho: LABEL.trigger(),
+      rotuloFechar: LABEL.close(),
+    },
+    template: `
+      <nds-drawer [defaultOpen]="true">
+        <button ndsDrawerTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+
+        <ng-template ndsDrawerContent>
+          <div ndsDrawerHeader>
+            <h3 ndsDrawerTitle>{{ tituloPainel }}</h3>
+            <p ndsDrawerDescription>{{ descricaoPainel }}</p>
+          </div>
+
+          <div ndsDrawerFooter>
+            <button ndsDrawerClose ndsButton variant="outline">{{ rotuloFechar }}</button>
+          </div>
+        </ng-template>
+      </nds-drawer>
+    `,
+  }),
+  play: async ({ step }) => {
+    await step('O título em h3 continua sendo o nome acessível do painel', async () => {
+      // A tag é do documento; o vínculo é do id. Consulta pela CLASSE e não por
+      // `data-slot`: no Angular o host binding da diretiva disputa o atributo, e
+      // a classe é o que existe em todas as stacks.
+      const p = await waitForPortal('dialog');
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-sheet-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

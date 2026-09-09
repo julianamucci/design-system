@@ -117,6 +117,12 @@ function sheetMarkup(o: {
   body?: string;
   footer?: string;
   pad?: string;
+  /**
+   * Nível do cabeçalho do título. Padrão `h2`, que é o que quase toda story
+   * mostra; a diretiva casa de `h1` a `h6`, porque o nível certo depende da
+   * hierarquia da página em volta e não do componente.
+   */
+  titleTag?: string;
 }): string {
   const pad = o.pad ?? '    ';
   const p2 = `${pad}  `;
@@ -127,9 +133,11 @@ function sheetMarkup(o: {
       ? ''
       : `${p2}<button ndsSheetTrigger ndsButton variant="outline">${o.triggerLabel}</button>\n\n`;
 
+  const tag = o.titleTag ?? 'h2';
+
   const blocks = [
     `${p4}<div ndsSheetHeader>
-${p4}  <h2 ndsSheetTitle>${o.title}</h2>
+${p4}  <${tag} ndsSheetTitle>${o.title}</${tag}>
 ${p4}  <p ndsSheetDescription>${o.description}</p>
 ${p4}</div>`,
     o.body,
@@ -253,6 +261,35 @@ export function sheetSideTopSource(): string {
 /** Base: o mesmo desenho do Drawer, sem o gesto de arrastar. */
 export function sheetSideBottomSource(): string {
   return sideExample('bottom', t('demonstration.labels.bottomLabel'));
+}
+
+/**
+ * O título num nível diferente de `h2`.
+ *
+ * A diretiva de título casa de `h1` a `h6`, e o nível certo é o que a página em
+ * volta pede: aberto de dentro de uma seção que já está em `h2`, o painel entra
+ * em `h3` para não repetir o degrau. Nada mais muda — o `aria-labelledby` sai do
+ * id REAL do título, e não da tag.
+ *
+ * Mesma forma das quatro direções, sem direção nenhuma: `right` é o padrão e
+ * escrevê-lo apagaria a informação de que existe um padrão. O
+ * `[defaultOpen]="true"` fica, pelo mesmo motivo delas — a story nasce aberta, e
+ * sem ele quem copiasse veria um painel fechado.
+ */
+export function sheetHeadingH3Source(): string {
+  const l = labels();
+  return example(
+    [SHEET_IMPORT, BUTTON_IMPORT],
+    '...NDS_SHEET, NdsButton',
+    sheetMarkup({
+      rootAttrs: ' [defaultOpen]="true"',
+      triggerLabel: l.trigger,
+      titleTag: 'h3',
+      title: l.title,
+      description: l.description,
+      footer: footerBlock(l.cancel, l.apply),
+    }),
+  );
 }
 
 // ─── Estados ──────────────────────────────────────────────────────────────────

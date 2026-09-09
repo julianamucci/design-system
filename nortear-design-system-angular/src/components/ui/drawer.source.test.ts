@@ -5,6 +5,7 @@ import {
   drawerBottomSource,
   drawerClosedSource,
   drawerControlledSource,
+  drawerHeadingH3Source,
   drawerLeftSource,
   drawerNotDismissibleSource,
   drawerOpenSource,
@@ -153,7 +154,7 @@ describe('drawerPlaygroundSource', () => {
  * calado da varredura. É a lição do `source-snippets.test.ts` do Vue, onde 28
  * exports saíram do alcance e a suíte seguiu verde medindo menos.
  *
- * TREZE stories, doze construtores: `States/DragToDismiss` reusa o do
+ * CATORZE stories, treze construtores: `States/DragToDismiss` reusa o do
  * Playground, e a exclusão está declarada no cabeçalho de `drawer.source.ts` e
  * cobrada no caso `reuso declarado` no fim deste arquivo.
  */
@@ -173,6 +174,14 @@ const CONSTRUCTORS: Array<{
    * silenciosa — o caso abaixo cobra a premissa nos outros onze.
    */
   comMetodo?: true;
+  /**
+   * Nível do cabeçalho do título, quando não é o `h2` de sempre.
+   *
+   * DECLARADO por construtor, e não afrouxando a asserção para `h[1-6]`: a
+   * varredura que aceita qualquer nível deixaria um `h5` acidental passar
+   * calado, que é a forma exata do defeito do `source-snippets.test.ts` do Vue.
+   */
+  titleTag?: 'h3';
 }> = [
   { name: 'drawerPlaygroundSource', story: 'Playground', build: drawerPlaygroundSource },
   { name: 'drawerBottomSource', story: 'Variants/Bottom', build: drawerBottomSource },
@@ -184,6 +193,12 @@ const CONSTRUCTORS: Array<{
     story: 'Variants/WithScroll',
     build: drawerWithScrollSource,
     stateful: true,
+  },
+  {
+    name: 'drawerHeadingH3Source',
+    story: 'Variants/HeadingH3',
+    build: drawerHeadingH3Source,
+    titleTag: 'h3',
   },
   {
     name: 'drawerClosedSource',
@@ -226,7 +241,16 @@ describe('cobertura das quatro stories', () => {
     expect(exported).toEqual(CONSTRUCTORS.map((c) => c.name).sort());
   });
 
-  for (const { name, story, build, noTrigger, noFooter, stateful, comMetodo } of CONSTRUCTORS) {
+  for (const {
+    name,
+    story,
+    build,
+    noTrigger,
+    noFooter,
+    stateful,
+    comMetodo,
+    titleTag,
+  } of CONSTRUCTORS) {
     it(`${name} (${story}) publica o componente, não o andaime da story`, () => {
       const code = build();
 
@@ -249,7 +273,13 @@ describe('cobertura das quatro stories', () => {
 
       // O par que sustenta o nome e a descrição acessíveis do diálogo — um de
       // cada, sempre, porque é do id REAL deles que o primitivo se serve.
-      expect(code.match(/<h2 ndsDrawerTitle>/g)).toHaveLength(1);
+      //
+      // O nível é DECLARADO: `h2` por padrão, e a exceção se escreve na lista.
+      // Trocar a asserção por `h[1-6]` aceitaria um `h5` acidental sem uma
+      // palavra — portão que afrouxa para caber uma exceção deixa de medir.
+      const tag = titleTag ?? 'h2';
+      expect(code.match(new RegExp(`<${tag} ndsDrawerTitle>`, 'g'))).toHaveLength(1);
+      expect(code.match(/<h[1-6] ndsDrawerTitle>/g)).toHaveLength(1);
       expect(code.match(/<p ndsDrawerDescription>/g)).toHaveLength(1);
 
       // O que o componente já entrega, e escrever à mão ensinaria API que não
@@ -332,6 +362,28 @@ describe('direções', () => {
     expect(code).toContain('<nds-drawer>');
     expect(code).not.toContain('direction=');
     expect(code).toContain(`<h2 ndsDrawerTitle>${text('demonstration.labels.bottom')}</h2>`);
+  });
+
+  it('drawerHeadingH3Source imprime o título em h3, e SÓ a tag muda', () => {
+    // A capacidade que a story exercita é o nível do cabeçalho: a diretiva casa
+    // de `h1` a `h6`, e o nível certo é o que a página em volta pede. O que o
+    // snippet ensina é isso e nada mais — a igualdade com o painel canônico é
+    // cobrada letra por letra, para que uma mudança no canônico não deixe este
+    // para trás em silêncio.
+    const code = drawerHeadingH3Source();
+    expect(code).toContain(`<h3 ndsDrawerTitle>${TITLE}</h3>`);
+    expect(code).not.toContain('<h2 ndsDrawerTitle>');
+    expect(code).toBe(
+      drawerPlaygroundSource()
+        .replace('<h2 ndsDrawerTitle>', '<h3 ndsDrawerTitle>')
+        .replace('</h2>', '</h3>'),
+    );
+    // O nível é do DOCUMENTO; o vínculo é do id. Escrever `aria-labelledby` à
+    // mão ensinaria a duplicar o que o primitivo já faz, e é o que romperia o
+    // nome acessível quando a tag mudasse.
+    expect(code).not.toContain('aria-labelledby');
+    // `bottom` continua sendo o padrão, e a story não é sobre direção.
+    expect(code).not.toContain('direction=');
   });
 
   it('as outras três escrevem a direção como atributo simples', () => {

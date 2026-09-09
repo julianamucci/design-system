@@ -186,10 +186,17 @@ function content(o: {
   title: string;
   description: string;
   after?: string;
+  /**
+   * Nível do cabeçalho do título. Padrão `h2`, que é o que quase toda story
+   * mostra; a diretiva casa de `h1` a `h6`, porque o nível certo depende da
+   * hierarquia da página em volta e não do componente.
+   */
+  titleTag?: string;
 }): string {
+  const tag = o.titleTag ?? 'h2';
   const blocks = [
     `          <div ndsDialogHeader>
-            <h2 ndsDialogTitle>${o.title}</h2>
+            <${tag} ndsDialogTitle>${o.title}</${tag}>
             <p ndsDialogDescription>${o.description}</p>
           </div>`,
   ];
@@ -505,6 +512,31 @@ export function dialogConfirmEmailSource(): string {
         after: `${textBody(DEMO.confirmEmailBody)}\n\n${footer({
           action: action(LABELS.confirmEmailAction),
         })}`,
+      }),
+    }),
+  });
+}
+
+/**
+ * O título num nível diferente de `h2`.
+ *
+ * A diretiva de título casa de `h1` a `h6`, e o nível certo é o que a página em
+ * volta pede: aberto de dentro de uma seção que já está em `h2`, o painel entra
+ * em `h3` para não repetir o degrau. Nada mais muda — o `aria-labelledby` sai do
+ * id REAL do título, e não da tag.
+ *
+ * O snippet é o painel canônico do Playground com a tag trocada, e o
+ * `dialog.source.test.ts` cobra exatamente essa igualdade: mudou o canônico,
+ * este não fica para trás calado.
+ */
+export function dialogHeadingH3Source(): string {
+  return example({
+    template: panel({
+      content: content({
+        titleTag: 'h3',
+        title: LABELS.title,
+        description: LABELS.description,
+        after: defaultAfter(),
       }),
     }),
   });

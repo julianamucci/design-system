@@ -16,6 +16,7 @@ import {
 import {
   dialogConfirmEmailSource,
   dialogCustomCloseInFooterSource,
+  dialogHeadingH3Source,
   dialogNoFooterSource,
   dialogPlaygroundSource,
   dialogWithDestructiveActionSource,
@@ -540,6 +541,64 @@ export const ConfirmEmail: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();
+    });
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item3'],
+    // O meta já desliga os controls; as ações não, e sem argTypes o painel de
+    // Actions abriria vazio.
+    actions: { disable: true },
+    docs: {
+      source: { transform: dialogHeadingH3Source },
+      description: {
+        story:
+          'O painel aberto de dentro de uma página cuja seção já está em h2 pede o título em h3, ' +
+          'para não repetir o degrau da hierarquia. Trocar a tag não pode romper o aria-labelledby: ' +
+          'o vínculo sai do id real do título, nunca do nível do cabeçalho.',
+      },
+    },
+  },
+  render: () => ({
+    props: { labels: LABELS },
+    template: `
+      <div ndsDialog [defaultOpen]="true">
+        <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
+
+        <ng-template ndsDialogPortal>
+          <div ndsDialogOverlay></div>
+
+          <div ndsDialogContent [closeLabel]="labels.close">
+            <div ndsDialogHeader>
+              <h3 ndsDialogTitle>{{ labels.title }}</h3>
+              <p ndsDialogDescription>{{ labels.description }}</p>
+            </div>
+
+            <div ndsDialogFooter>
+              <button ndsDialogClose ndsButton variant="outline">{{ labels.cancel }}</button>
+              <button ndsButton>{{ labels.action }}</button>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    `,
+  }),
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('O título em h3 continua sendo o nome acessível do painel', async () => {
+      // A tag é do documento; o vínculo é do id. Consulta pela CLASSE e não por
+      // `data-slot`: no Angular o host binding da diretiva disputa o atributo, e
+      // a classe é o que existe em todas as stacks.
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

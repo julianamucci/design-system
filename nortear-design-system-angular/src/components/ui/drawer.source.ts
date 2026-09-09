@@ -161,7 +161,14 @@ function panel(o: {
   description: string;
   body?: string;
   footer?: string;
+  /**
+   * Nível do cabeçalho do título. Padrão `h2`, que é o que quase toda story
+   * mostra; a diretiva casa de `h1` a `h6`, porque o nível certo depende da
+   * hierarquia da página em volta e não do componente.
+   */
+  titleTag?: string;
 }): string {
+  const tag = o.titleTag ?? 'h2';
   const blocks: string[] = [];
 
   if (o.trigger !== null) {
@@ -172,7 +179,7 @@ function panel(o: {
 
   const inner = [
     `        <div ndsDrawerHeader>
-          <h2 ndsDrawerTitle>${o.title}</h2>
+          <${tag} ndsDrawerTitle>${o.title}</${tag}>
           <p ndsDrawerDescription>${o.description}</p>
         </div>`,
   ];
@@ -289,6 +296,30 @@ export function drawerLeftSource(): string {
 /** Painel lateral à direita — a alternativa de desktop para edição e filtros. */
 export function drawerRightSource(): string {
   return directionPanel('right');
+}
+
+/**
+ * O título num nível diferente de `h2`.
+ *
+ * A diretiva de título casa de `h1` a `h6`, e o nível certo é o que a página em
+ * volta pede: aberto de dentro de uma seção que já está em `h2`, o painel entra
+ * em `h3` para não repetir o degrau. Nada mais muda — o `aria-labelledby` sai do
+ * id REAL do título, e não da tag.
+ *
+ * O snippet é o painel canônico do Playground com a tag trocada, e o
+ * `drawer.source.test.ts` cobra exatamente essa igualdade: mudou o canônico,
+ * este não fica para trás calado. `bottom` é o padrão da direção, e por isso
+ * continua sem se escrever — a story não é sobre direção.
+ */
+export function drawerHeadingH3Source(): string {
+  return example({
+    template: panel({
+      titleTag: 'h3',
+      title: LABEL.title(),
+      description: LABEL.description(),
+      footer: footerWithClose(),
+    }),
+  });
 }
 
 /**

@@ -8,6 +8,7 @@ import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 import {
+  sheetHeadingH3Source,
   sheetSideBottomSource,
   sheetSideLeftSource,
   sheetSideRightSource,
@@ -179,6 +180,65 @@ export const Bottom: Story = {
       await expect(panelEl).toHaveAccessibleName();
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
       await borderWaitForEncostar(panelEl, 'bottom');
+    });
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item4'],
+    // O meta já desliga os controls; as ações não, e sem argTypes o painel de
+    // Actions abriria vazio.
+    actions: { disable: true },
+    docs: {
+      source: { transform: sheetHeadingH3Source },
+      description: {
+        story:
+          'O painel aberto de dentro de uma página cuja seção já está em h2 pede o título em h3, ' +
+          'para não repetir o degrau da hierarquia. Trocar a tag não pode romper o aria-labelledby: ' +
+          'o vínculo sai do id real do título, nunca do nível do cabeçalho.',
+      },
+    },
+  },
+  render: () => ({
+    props: {
+      tituloPainel: t('demonstration.labels.title'),
+      descricaoPainel: t('demonstration.labels.description'),
+      rotuloGatilho: t('demonstration.labels.trigger'),
+      rotuloCancelar: t('demonstration.labels.cancel'),
+      rotuloAplicar: t('demonstration.labels.apply'),
+    },
+    template: `
+      <nds-sheet [defaultOpen]="true">
+        <button ndsSheetTrigger ndsButton variant="outline">{{ rotuloGatilho }}</button>
+
+        <ng-template ndsSheetContent>
+          <div ndsSheetHeader>
+            <h3 ndsSheetTitle>{{ tituloPainel }}</h3>
+            <p ndsSheetDescription>{{ descricaoPainel }}</p>
+          </div>
+
+          <div ndsSheetFooter>
+            <button ndsSheetClose ndsButton variant="outline">{{ rotuloCancelar }}</button>
+            <button ndsButton>{{ rotuloAplicar }}</button>
+          </div>
+        </ng-template>
+      </nds-sheet>
+    `,
+  }),
+  play: async ({ step }) => {
+    await step('O título em h3 continua sendo o nome acessível do painel', async () => {
+      // A tag é do documento; o vínculo é do id. Consulta pela CLASSE e não por
+      // `data-slot`: no Angular o host binding da diretiva disputa o atributo, e
+      // a classe é o que existe em todas as stacks.
+      const p = await waitForPortal('dialog');
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-sheet-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };
