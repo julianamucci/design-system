@@ -678,7 +678,7 @@ export interface AlertDialogOptions {
           accessibility: {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-            items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),

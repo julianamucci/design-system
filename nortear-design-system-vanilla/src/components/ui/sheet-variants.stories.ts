@@ -192,7 +192,7 @@ export const Bottom: Story = {
 
 export const HeadingH3: Story = {
   parameters: {
-    covers: ['accessibility.item4'],
+    covers: ['accessibility.item4', 'accessibility.item6'],
     // Override de story: o nível do título não passa por control neste arquivo,
     // e o snippet do meta mostraria o painel no nível padrão — que é justamente
     // o que esta story existe para NÃO ter.

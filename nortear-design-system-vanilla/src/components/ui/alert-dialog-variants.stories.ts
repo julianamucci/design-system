@@ -106,7 +106,7 @@ export const Destructive: Story = {
 
 export const HeadingH3: Story = {
   parameters: {
-    covers: ['accessibility.item2'],
+    covers: ['accessibility.item2', 'accessibility.item9'],
     // Override de story: o nível do título não passa por control nenhum, e o
     // snippet do meta mostraria a composição no nível padrão — que é justamente
     // o que esta story existe para NÃO ter.

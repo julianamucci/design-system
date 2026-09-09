@@ -1100,7 +1100,7 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               criterion: t(`testes.accessibility.item${i}`),
               level: 'AA',
               how: 'axe-core / manual',
