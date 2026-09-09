@@ -346,7 +346,10 @@ Três verificações antes de fechar a edição:
    estar em duas ou três chaves, e `seo.*` entra na varredura;
 2. as chaves irmãs que falam do mesmo assunto continuam concordando
    (`usage.guidelines` × `doDont` × `variants.styles` × `notes`);
-3. a mesma frase fora do conteúdo compartilhado — `description.component` de
+3. as PENDÊNCIAS abertas do PRD daquele componente, inclusive as que outra
+   rodada registrou — o `pre-commit` as imprime, e a pergunta é se o SEU trabalho
+   satisfez o `Fecha quando` de alguma delas;
+4. a mesma frase fora do conteúdo compartilhado — `description.component` de
    `*.stories.*` guarda cópias antigas, e no popover duas stacks carregavam a
    frase errada onde as outras três não tinham descrição nenhuma.
 

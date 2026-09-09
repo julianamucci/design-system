@@ -61,6 +61,12 @@ if [ "$PRD_SKIP" != "1" ]; then
     if [ -n "$DESCRITOS" ]; then
       LISTA=$(printf '%s' "$DESCRITOS" | sed 's/^/      /')
       PRD_PENDENTES="$PRD_PENDENTES\n  \033[1m$SLUG\033[0m — $PRD não entrou, e estes entraram:\n$LISTA\n"
+      # as pendências ABERTAS daquele PRD, para a pergunta 2 deixar de ser
+      # "audite a lista" e virar "estas aqui, o seu commit fecha alguma?"
+      ABERTAS=$(grep -A2 '^> \*\*PENDÊNCIA · ' "$PRD" | sed 's/^> //;s/^--\$//' || true)
+      if [ -n "$ABERTAS" ]; then
+        PRD_PENDENTES="$PRD_PENDENTES\n      \033[33mpendências abertas neste PRD:\033[0m\n$(printf '%s' "$ABERTAS" | sed 's/^/      /')\n"
+      fi
     fi
   done
 
@@ -69,8 +75,10 @@ if [ "$PRD_SKIP" != "1" ]; then
     printf '%b' "$PRD_PENDENTES"
     printf '\n\033[33mAntes de commitar, responda as três:\033[0m\n'
     printf '  1. alguma afirmação do CONTRATO mudou? → atualize a linha e o portão que a cobre\n'
-    printf '  2. alguma DECISÃO fixada foi revertida? → se de propósito, mova a linha para o\n'
-    printf '     histórico com a nova data e a nova medição; se sem querer, é defeito\n'
+    printf '  2. alguma DECISÃO fixada foi revertida, ou alguma PENDÊNCIA acima fechou?\n'
+    printf '     → inclusive as que você NÃO escreveu: duas vezes em 2026-09-08 a rodada\n'
+    printf '     atualizou o que ela mesma decidiu e deixou de pé a linha da rodada anterior\n'
+    printf '     → revertida de propósito vira histórico, com a nova data e a nova medição\n'
     printf '  3. algum valor da tabela de TOKENS mudou? → node scripts/tabela-tokens.mjs <slug>\n'
     printf '\nSe a mudança não altera nada do que o PRD afirma (renomear variável interna,\n'
     printf 'corrigir typo de comentário), siga com \033[36mPRD_SKIP=1 git commit …\033[0m — que\n'
@@ -78,6 +86,19 @@ if [ "$PRD_SKIP" != "1" ]; then
     printf 'e não é o caminho para isto.\n\n'
     exit 1
   fi
+
+  # O PRD entrou no commit: não há o que bloquear, mas quem está com o contexto
+  # na cabeça é justamente quem está commitando agora — então a lista aparece
+  # como AVISO, sem interromper.
+  for PRD in docs/shared/prd/*.md; do
+    [ -f "$PRD" ] || continue
+    if ! printf '%s\n' "$ALL_STAGED" | grep -qx "$PRD"; then continue; fi
+    ABERTAS=$(grep -A2 '^> \*\*PENDÊNCIA · ' "$PRD" | sed 's/^> //;s/^--\$//' || true)
+    if [ -n "$ABERTAS" ]; then
+      printf '\n\033[33m● %s tem pendência aberta — o seu commit fecha alguma?\033[0m\n' "$PRD"
+      printf '%s\n' "$ABERTAS" | sed 's/^/    /'
+    fi
+  done
 fi
 
 if [ -z "$STAGED" ]; then

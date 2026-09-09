@@ -7580,7 +7580,7 @@ function runAudit(slug, category) {
     return runners[category](slug);
   }
 
-  return [
+  const todas = [
     ...auditSecurity(slug),
     ...auditPerformance(slug),
     ...auditAnalytics(slug),
@@ -7608,6 +7608,87 @@ function runAudit(slug, category) {
     ...auditPromessaDeCustomizacao(slug),
     ...auditDeadClassInTokenTable(slug),
   ];
+  // por último, e consultando o resultado das outras: a pendência de PRD
+  // pergunta se a condição que ela mesma declarou já foi satisfeita.
+  return [...todas, ...auditPendenciaDePrd(slug, todas)];
+}
+
+/**
+ * Pendência de PRD que envelheceu sem revisão — ou que já pode fechar.
+ *
+ * A forma é fixa desde 2026-09-08, e é ela que torna a pendência mensurável:
+ *
+ *   > **PENDÊNCIA · AAAA-MM-DD** — o que é.
+ *   > **Fecha quando**: a condição.
+ *
+ * Duas medições no mesmo dia mostraram por que isto precisa de portão: a rodada
+ * que mexe no componente atualiza as decisões que ELA tomou e deixa de pé a
+ * linha que outra rodada registrou. No Dialog foi um `closeLabel` documentado
+ * como resolvido nas cinco quando eram quatro; no Drawer, duas pendências de
+ * analytics que já tinham fechado e continuavam escritas como abertas. Nos dois
+ * casos ninguém reverteu nada — só ninguém releu.
+ *
+ * Duas checagens, e a segunda é a que vale:
+ *
+ *  1. IDADE — aberta há mais de 45 dias. Não prova que fechou, prova que ninguém
+ *     olhou. É a lição que a D5 do PRD do Dialog escreveu: decisão marcada como
+ *     frágil sem data de revisão vira álibi para se manter. Esta é a única regra
+ *     do arquivo cujo resultado muda sem ninguém commitar — de propósito.
+ *
+ *  2. CONDIÇÃO MECÂNICA — quando o "Fecha quando" diz que uma regra do próprio
+ *     auditor não pode mais reportar, dá para PERGUNTAR. Se nenhuma das citadas
+ *     aparece mais, a pendência fechou e a linha ficou de pé.
+ *
+ * Recebe as violações de TODAS as categorias, e não é acidente: a primeira
+ * versão vivia dentro de `auditQuality` e deu falso positivo na estreia — a
+ * pendência do hover-card cita `lista_mais_curta_que_o_conteudo` (que fechou) e
+ * `story_file_sem_transform` (que não), e a segunda é somada em `runAudit`, fora
+ * do alcance de lá. Portão que enxerga metade do estado responde sobre a metade
+ * que vê.
+ */
+function auditPendenciaDePrd(slug, violacoesAteAqui) {
+  const violations = [];
+  const prdFile = join(ROOT, 'docs', 'shared', 'prd', `${slug}.md`);
+  if (!existsSync(prdFile)) return violations;
+
+  const prd = readFile(prdFile) || '';
+  const HOJE = new Date();
+  // `$` com a flag `m` casa no fim de CADA linha, então a primeira versão desta
+  // regex cortava o corpo na primeira quebra e nunca via o "Fecha quando".
+  const BLOCO = /^> \*\*PENDÊNCIA · (\d{4})-(\d{2})-(\d{2})\*\*(.*(?:\n>.*)*)/gm;
+  for (const m of prd.matchAll(BLOCO)) {
+    const [, ano, mes, dia, corpo] = m;
+    const aberta = new Date(Number(ano), Number(mes) - 1, Number(dia));
+    const dias = Math.floor((HOJE - aberta) / 86400000);
+    const resumo = corpo.replace(/\n>\s?/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 90);
+
+    if (dias > 45) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack: 'shared',
+        file: relative(ROOT, prdFile), rule: 'prd_pendencia_sem_revisao',
+        message:
+          `pendência aberta há ${dias} dias sem revisão: "${resumo}…" — ` +
+          'releia e feche, ou renove a data dizendo o que mudou desde então',
+      });
+    }
+
+    const fecha = corpo.match(/\*\*Fecha quando\*\*:([\s\S]*)/);
+    if (!fecha || !/não reportar/.test(fecha[1])) continue;
+    const citadas = [...fecha[1].matchAll(/`([a-z][a-z0-9_]+)`/g)]
+      .map((x) => x[1])
+      .filter((r) => r.includes('_'));
+    if (!citadas.length) continue;
+    const aindaReporta = citadas.some((regra) => violacoesAteAqui.some((v) => v.rule === regra));
+    if (aindaReporta) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug, stack: 'shared',
+      file: relative(ROOT, prdFile), rule: 'prd_pendencia_ja_fechada',
+      message:
+        `a pendência fecha quando ${citadas.join(' e ')} parar de reportar, e nenhuma ` +
+        `reporta mais para este slug — a linha ficou de pé depois de resolvida: "${resumo}…"`,
+    });
+  }
+  return violations;
 }
 
 function formatText(violations, slug) {

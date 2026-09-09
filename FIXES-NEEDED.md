@@ -34,7 +34,7 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 17 itens
+## Aberto de verdade — 16 itens
 
 ### Precisam de decisão da dona (2)
 
@@ -43,7 +43,7 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (14)
+### Dívida de fundação, sem dono de componente (13)
 - [ ] **O `toggle-group` do Vanilla ganhou três capacidades que as outras quatro stacks não têm.** (Aberto em 2026-08-27, ao montar a barra do protótipo de editor.) Vanilla é a referência, então a divergência é dívida de porte, não decisão:
 
   | capacidade | por que existe |
@@ -188,14 +188,7 @@ histórico; a lista de cima é o que está por fazer.
 
   **O que ela afirma**: que o elemento renderizado é o pedido, e que o `aria-labelledby` do painel continua apontando para ele. A segunda metade é a que importa — trocar a tag sem manter o vínculo troca um defeito por outro.
 
-- [ ] **O `closeLabel` do Dialog chegou a quatro stacks, e o Vanilla ficou com "Fechar" cravado.** (Aberto em 2026-09-08, ao auditar o PRD do Dialog contra o código.) `eea2cb364` levou a opção do Angular para react, vue e svelte, com default `'Fechar'` — e o vanilla ficou de fora. Medido: `nortear-design-system-vanilla/src/components/ui/dialog.ts` crava a string em DOIS pontos, o `aria-label` do botão e o `.nds-sr-only` dentro dele.
-
-  **Por que importa**: o texto está dentro do primitivo, então quem consome o design system em outro idioma precisa reescrever o componente para trocar uma palavra. É o defeito que a regularização foi corrigir, e ele sobreviveu justamente na stack que é a referência de contrato da casa.
-
-  **Forma**: `closeLabel?: string` em `DialogOptions`, default `'Fechar'`, alimentando os dois pontos. Nenhum call site existente muda.
-
-  **Conferir junto**: sheet, drawer e alert-dialog do vanilla — o `sheet.ts` já tem `closeLabel`, e os outros dois não foram medidos nesta passagem.
-
+- [x] **O `closeLabel` do Dialog chegou a quatro stacks, e o Vanilla ficou com "Fechar" cravado.** **Resolvido em 2026-09-08**, no mesmo dia em que foi aberto: o vanilla ganhou `closeLabel` em `DialogOptions`, alimentando o `aria-label` e o `.nds-sr-only`. Os três vizinhos que a entrada mandava conferir foram medidos e estão certos — o `sheet.ts` já tinha, o `drawer` não gera botão de fechar em stack nenhuma (delega por `data-slot`), e o `alert-dialog` não tem botão de canto por decisão.
 ### Divergência cross-stack do carrossel (3)
 
 - [ ] **`class` do `CarouselContent` cai em nós diferentes.** Nas três stacks com lib vai para o **track**; no Vanilla e no Angular vai para o **recorte**. Três primitivos a mexer, com Chromatic a reboque.

@@ -629,6 +629,16 @@ seção do mesmo arquivo.** Cruze `usage.guidelines` com `doDont`,
 seções da mesma página é sempre defeito de uma delas — e a que está certa
 costuma ser a que foi tocada por último, não a que está mais acima.
 
+**E as PENDÊNCIAS abertas do PRD, inclusive as que você não escreveu.** Elas
+vivem com forma fixa — `> **PENDÊNCIA · AAAA-MM-DD**` seguida de
+`**Fecha quando**:` — e o `.husky/pre-commit` as imprime quando o componente
+muda. Medido duas vezes em 2026-09-08: a rodada atualiza as decisões que ELA
+tomou e deixa de pé a linha que outra rodada registrou. No Dialog, um
+`closeLabel` documentado como resolvido nas cinco quando eram quatro; no
+Drawer, duas pendências de analytics que já tinham fechado. Ninguém reverteu
+nada — só ninguém releu. Se o seu trabalho satisfaz o `Fecha quando`, feche a
+linha; se fecha metade, estreite-a e diga o que fechou.
+
 **3b. Acessibilidade na docs page**:
 - Documenta navegação por teclado
 - Lista atributos ARIA obrigatórios

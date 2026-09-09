@@ -251,8 +251,9 @@ Ordem: folha → primitivo → stories → docs page.
 | desenho e anotações | Figma, página `HoverCard` (componente `674:3`) |
 | portões determinísticos | `node scripts/audit.mjs hover-card --json` |
 
-**Pendência aberta, medida em 2026-09-07**: a docs page do Angular renderiza 3 dos
-5 itens de `usage.guidelines` (`lista_mais_curta_que_o_conteudo`), e os três
-arquivos de story do Angular não têm `transform` no painel Code
-(`story_file_sem_transform`). Nenhuma das duas é do componente — são da página que
-o documenta.
+> **PENDÊNCIA · 2026-09-08** — os três arquivos de story do Angular não têm
+> `transform` no painel Code. Não é do componente: é da página que o documenta.
+> **Fecha quando**: `audit.mjs hover-card` não reportar `story_file_sem_transform`.
+>
+> *Metade fechada em 2026-09-08*: a docs page do Angular renderizava 3 dos 5
+> itens de `usage.guidelines` e passou a renderizar os cinco.

@@ -80,13 +80,45 @@ contradizer. Então:
 |---|---|---|
 | commit que mexe na folha, no primitivo ou no conteúdo de um componente com PRD exige o PRD no mesmo commit | `.husky/pre-commit` | **atenção**, no único momento em que quem editou tem o contexto na cabeça |
 | token nomeado na tabela de geometria que a folha do componente não lê | `prd_token_sem_lastro`, em `scripts/audit.mjs` | **verdade** de uma parte factual |
+| pendência aberta há mais de 45 dias, ou cuja condição de fecho já foi satisfeita | `prd_pendencia_sem_revisao` e `prd_pendencia_ja_fechada` | **envelhecimento**, e a segunda mede de verdade |
 
-Os dois são metades. O hook não sabe se a edição do PRD foi correta — um espaço
-em branco passa. A regra não sabe que uma decisão mudou — ela só sabe que um
-token sumiu da folha. E **nenhum dos dois pega o defeito que motivou o
-diretório**: decisão revertida com o código e o PRD mudando juntos só aparece
-para quem ler a linha. O que os gatilhos compram é que o documento seja aberto na
-hora certa e que as tabelas factuais não possam derivar em silêncio.
+Cada um é uma metade. O hook não sabe se a edição do PRD foi correta — um espaço
+em branco passa; o que ele faz é **mostrar** as pendências abertas daquele
+componente no momento do commit, para a pergunta 2 deixar de ser "audite a lista"
+e virar "estas aqui, o seu commit fecha alguma?". As regras de token e de
+pendência medem partes factuais, não intenção.
+
+E **nenhum deles pega o defeito que motivou o diretório**: decisão revertida com
+o código e o PRD mudando juntos só aparece para quem ler a linha. O que os
+gatilhos compram é que o documento seja aberto na hora certa, que as tabelas
+factuais não possam derivar em silêncio, e que uma pendência não envelheça sem
+alguém a reler.
+
+### A forma da pendência
+
+Pendência aberta num PRD tem forma fixa, e é ela que torna o resto possível:
+
+```
+> **PENDÊNCIA · 2026-09-07** — o que está aberto, em uma ou duas linhas.
+> **Fecha quando**: a condição, de preferência mecânica.
+```
+
+A **data** é o que o portão de envelhecimento lê. O **`Fecha quando`** é o que
+separa lembrete de medição: quando ele diz que uma regra do auditor não pode
+mais reportar, o `prd_pendencia_ja_fechada` PERGUNTA — e reprova quando a
+condição já foi satisfeita e a linha continua de pé.
+
+Antes disso as pendências eram prosa livre, com cinco redações diferentes para a
+mesma coisa: *"Pendência aberta, medida em"*, *"O que ainda falta é"*, *"ficam
+registradas porque a revisão não as fechou"*. Nada greppável, nada printável — e
+por isso o hook não tinha como MOSTRAR o que perguntava. Duas foram fechadas por
+outra rodada sem ninguém apagar a linha, e uma terceira ficou apontando para um
+item do `FIXES-NEEDED.md` já resolvido.
+
+**Fechou pela metade? Estreite a linha e diga o que fechou.** Foi o que aconteceu
+com a do HoverCard: das duas regras que ela citava, uma parou de reportar e a
+outra não. Apagar tudo perderia o que resta; deixar como estava afirmaria um
+defeito que não existe mais.
 
 Story, fixture, snippet e teste não disparam o hook: eles mudam como o componente
 é DEMONSTRADO, não o que ele é. Para mudança que de fato não altera nada do que o

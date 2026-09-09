@@ -218,9 +218,15 @@ tinham.
 
 **Por que isso importa**: `heading-order` do axe reprova salto de nível, e o
 painel não sabe de que profundidade da página foi aberto — um diálogo disparado
-de dentro de uma seção já em `h3` precisa sair em `h4`. O que ainda falta é a
-story que exercita isso; está no `FIXES-NEEDED.md`, porque hoje o portão está
-verde por não perguntar.
+de dentro de uma seção já em `h3` precisa sair em `h4`.
+
+> **PENDÊNCIA · 2026-09-08** — a capacidade existe nas cinco e nenhuma superfície
+> a exercita: não há story com o painel aberto dentro de uma seção em `h3`
+> afirmando que o título sai em `h4`. O `heading-order` do axe está verde por
+> não perguntar.
+> **Fecha quando**: existir essa story nas cinco stacks, afirmando as duas
+> metades — o elemento renderizado é o pedido, e o `aria-labelledby` continua
+> apontando para ele.
 
 ## 8. Acessibilidade
 
