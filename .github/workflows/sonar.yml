@@ -19,16 +19,26 @@ name: SonarQube (informative)
 # Sem ele, scan quebrado fica VERMELHO e visível, e o gate continua não
 # bloqueando, que era o objetivo desde o começo.
 #
-# A CAUSA, e a primeira hipótese estava errada. Chutei conflito com a Automatic
-# Analysis; ela já estava desligada. O que a cronologia diz é pior para mim: a
-# última análise que existiu foi a do commit ANTERIOR ao que criou o passo de
-# instalação aqui embaixo. Depois dele, nenhuma. O passo que eu acrescentei para
-# a análise medir MAIS é o que a fez parar de medir.
+# A CAUSA, achada no log e ERRADA nas duas vezes em que chutei antes dele.
 #
-# `npm ci --dry-run` fecha exit 0 nas cinco, mas isso foi medido no Windows e o
-# runner é Linux — e `--ignore-scripts` entrou na mesma mudança. Enquanto não
-# houver o log da job, a hipótese fica sem prova, e é por isso que o passo virou
-# best-effort em vez de eu adivinhar o conserto.
+# Chute 1: conflito com a Automatic Analysis. Ela já estava desligada.
+# Chute 2: o passo de instalação abaixo estava FALHANDO. Ele não falha.
+#
+# O que o log diz: o passo de instalação FUNCIONA, e é justamente por isso que
+# a análise morria. Com `node_modules` presente o SonarJS passa a montar os
+# programas TypeScript dos 6 `tsconfig.json` e a atravessar 4.043 arquivos com
+# informação de tipo — que é o que este passo veio comprar — e isso estoura o
+# heap padrão de 4.288 MB do Node embutido no analisador. A ponte gRPC cai,
+# o scanner sai com código 3, e nada é enviado: o painel fica parado no commit
+# anterior parecendo que ninguém empurrou nada.
+#
+# O conserto é `sonar.javascript.node.maxspace`, em `sonar-project.properties`,
+# onde a medição está registrada. Aqui embaixo não muda nada.
+#
+# A lição de método, porque ela custou dois palpites: sintoma de "não atualizou"
+# não distingue job que não rodou, job que falhou e análise que morreu no meio.
+# Só o log distingue — e enquanto o `continue-on-error` estava na JOB, o log era
+# a única coisa que ninguém tinha motivo para abrir.
 #
 # O CodeQL continua onde está e NÃO é substituído. Os dois se sobrepõem em
 # segurança, e divergem no resto: o CodeQL segue fluxo de dados entre arquivos e
@@ -90,11 +100,10 @@ jobs:
         # patch de comportamento de runtime não muda o que o analisador lê.
         # Poupa tempo e tira uma fonte de falha que não diz nada sobre o código.
         #
-        # BEST-EFFORT, e por medição: a última análise que existiu foi a do
-        # commit ANTERIOR ao que criou este passo. Depois dele, nenhuma. Não sei
-        # ainda qual das cinco instalações quebra no runner — `npm ci --dry-run`
-        # fecha exit 0 aqui, mas isto é Windows e lá é Linux, e `--ignore-scripts`
-        # é mais uma variável que entrou junto.
+        # BEST-EFFORT, e a razão MUDOU depois do log: não é que este passo
+        # falhe — ele funciona. É que instalar muda o custo da análise, e o
+        # primeiro efeito medido disso foi um estouro de memória, consertado por
+        # sonar.javascript.node.maxspace em sonar-project.properties.
         #
         # O que não pode acontecer é o que aconteceu: um passo de MELHORIA matar
         # a análise inteira. Sem `node_modules` a análise perde as regras de
