@@ -21,13 +21,28 @@
  * endereço: `<stack>/api/perguntar.ts` é um reexport de uma linha. O corpo é
  * este arquivo, e é um só.
  *
- * ── A CHAVE ──
+ * ── O MODELO E A CHAVE ──
  *
- * `process.env.GEMINI_API_KEY`, e só — a chave do Google AI Studio. O
- * repositório é PÚBLICO: ela não entra em código, em comentário, em teste, em
- * exemplo nem em README. Sem ela a função responde `sem_chave` com 503 — um
- * estado tratado, que a interface mostra por escrito. Falhar calado aqui seria
- * pior do que não existir.
+ * O chat fala com `google/gemma-4-26b-a4b-it:free` pelo OpenRouter, e a chave é
+ * `process.env.CHAT_DOCS_API_KEY`. É um modelo GRATUITO, com cota diária: é
+ * decisão de projeto, não configuração de ambiente, e por isso o padrão está no
+ * código — ver `MODELO_COMPATIVEL_PADRAO`.
+ *
+ * Havia um adaptador NATIVO do Google aqui, e ele saiu. Medido: o banco de
+ * avaliação não o usava — ele chama `responder`, que usa o provedor
+ * configurado —, então o SDK `@google/genai` era importado estaticamente e
+ * viajava no pacote das cinco funções sem ninguém exercitá-lo.
+ *
+ * Trocar isso por menos não fechou porta nenhuma: o Google atende em
+ * `https://generativelanguage.googleapis.com/v1beta/openai/`, com a chave do AI
+ * Studio como Bearer, pelo mesmo adaptador compatível. Voltar para lá são duas
+ * variáveis de ambiente, e não um pacote. O que se perdeu foi o
+ * `thinkingLevel: MINIMAL` do SDK nativo, que a camada compatível não expõe.
+ *
+ * O repositório é PÚBLICO: chave nenhuma entra em código, em comentário, em
+ * teste, em exemplo nem em README. Sem ela a função responde `sem_chave` com
+ * 503 — um estado tratado, que a interface mostra por escrito. Falhar calado
+ * aqui seria pior do que não existir.
  *
  * ── O PROVEDOR ESTÁ ISOLADO ──
  *
@@ -41,7 +56,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { join } from 'node:path';
-import { GoogleGenAI, ApiError, ThinkingLevel } from '@google/genai';
 import {
   RETRIEVAL_FLOOR,
   isWeakRetrieval,
@@ -51,23 +65,6 @@ import {
 import { isLocale, loadCorpus, type Locale } from './corpus';
 
 export const config = { runtime: 'nodejs' };
-
-/**
- * O modelo, com o nome vindo do ambiente.
- *
- * A tarefa é ler trecho e responder, não deliberar: um modelo rápido da linha
- * Flash dá conta e custa uma fração de um modelo de raciocínio. O padrão é um
- * ponto de partida — **confira em aistudio.google.com quais modelos a sua chave
- * alcança**, porque a lista muda mais rápido que este arquivo e um nome que não
- * existe volta como `falha_do_modelo` sem dizer que o nome é o problema.
- */
-const MODELO_PADRAO = 'gemini-3.6-flash';
-
-/** Lido na hora da chamada, e não na carga do módulo: a rede de segurança de
- *  `.env.local` roda depois da importação e pode definir `GEMINI_MODEL`. */
-function modelo(): string {
-  return process.env.GEMINI_MODEL ?? MODELO_PADRAO;
-}
 
 /** Teto da resposta. Uma resposta de documentação que passa disto está errada de escopo. */
 const MAX_TOKENS = 4000;
@@ -427,16 +424,43 @@ function sse(event: string, data: unknown): string {
  *
  * O valor NUNCA é registrado — nem em log, nem em erro, nem no corpo da
  * resposta.
+ *
+ * ── POR QUE UMA LISTA, E NÃO "TUDO QUE PARECER VARIÁVEL" ──
+ *
+ * O arquivo vem de um caminho que ninguém controla: um `.env.local` de máquina
+ * pode ter qualquer coisa, e despejar tudo em `process.env` daria a um arquivo
+ * local o poder de mexer no comportamento do processo inteiro.
+ *
+ * A lista cobria só `GEMINI_*`, de quando o Google era o único provedor, e o
+ * efeito era sutil: sem vínculo com a Vercel, as `CHAT_DOCS_*` do arquivo eram
+ * IGNORADAS, o provedor caía no padrão e o chat respondia — pela outra
+ * credencial, sem nada na tela dizendo isso.
  */
-let chaveMemoizada: string | null | undefined;
+const VARIAVEIS_DO_CHAT = [
+  'CHAT_DOCS_PROVEDOR',
+  'CHAT_DOCS_API_KEY',
+  'CHAT_DOCS_MODELO',
+  'CHAT_DOCS_BASE_URL',
+] as const;
 
-function chaveDoAmbiente(): string | null {
-  if (process.env.GEMINI_API_KEY) return process.env.GEMINI_API_KEY;
+let envLocalCarregado = false;
+
+/**
+ * Copia o `.env.local` da stack para `process.env`, uma vez por processo.
+ *
+ * `??=` em cada nome: o que já veio do ambiente de verdade SEMPRE vence. O
+ * arquivo é rede, nunca autoridade.
+ */
+function carregarEnvLocal(): void {
+  if (envLocalCarregado) return;
   // Saída explícita, para o teste conseguir reproduzir o estado "sem chave".
   // Sem ela, a rede de segurança acharia o `.env.local` da máquina de quem roda
   // a suíte e o estado que a pessoa vê PRIMEIRO ficaria sem portão nenhum.
-  if (process.env.NORTEAR_IGNORAR_ENV_LOCAL === '1') return null;
-  if (chaveMemoizada !== undefined) return chaveMemoizada;
+  if (process.env.NORTEAR_IGNORAR_ENV_LOCAL === '1') {
+    envLocalCarregado = true;
+    return;
+  }
+  envLocalCarregado = true;
 
   // O `.env.local` é POR STACK — cada uma se implanta sozinha, com o seu
   // próprio domínio. Este módulo é compartilhado e não tem como saber de qual
@@ -447,26 +471,23 @@ function chaveDoAmbiente(): string | null {
   // `docs/shared/chat-docs/`, todo caminho para uma stack teria de nomear uma
   // delas — e um módulo compartilhado que nomeia uma stack é o começo da
   // divergência.
-  const candidatos = [join(process.cwd(), '.env.local')];
+  const arquivo = join(process.cwd(), '.env.local');
+  if (!existsSync(arquivo)) return;
 
-  for (const arquivo of candidatos) {
-    if (!existsSync(arquivo)) continue;
-    for (const linha of readFileSync(arquivo, 'utf8').split(/\r?\n/)) {
-      const casa = /^\s*GEMINI_(API_KEY|MODEL)\s*=\s*(.*)$/.exec(linha);
-      if (!casa) continue;
-      // Aspas em volta são convenção comum de arquivo .env e não fazem parte do
-      // valor. Sem tirá-las, a chave viaja com aspas e a API recusa — outro
-      // sintoma que aponta para o lugar errado.
-      const valor = casa[2].trim().replace(/^(['"])(.*)\1$/, '$2');
-      if (!valor) continue;
-      if (casa[1] === 'API_KEY') chaveMemoizada = valor;
-      else process.env.GEMINI_MODEL ??= valor;
-    }
-    if (chaveMemoizada) break;
+  for (const linha of readFileSync(arquivo, 'utf8').split(/\r?\n/)) {
+    const casa = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(linha);
+    if (!casa) continue;
+    const nome = casa[1] as (typeof VARIAVEIS_DO_CHAT)[number];
+    if (!VARIAVEIS_DO_CHAT.includes(nome)) continue;
+    // Aspas em volta são convenção comum de arquivo .env e não fazem parte do
+    // valor. Sem tirá-las, a chave viaja com aspas e a API recusa — outro
+    // sintoma que aponta para o lugar errado. Vale igual para o NOME do modelo:
+    // com aspas ele vira um modelo que não existe, e a resposta é um 404 que
+    // acusa o modelo em vez do arquivo.
+    const valor = casa[2].trim().replace(/^(['"])(.*)\1$/, '$2');
+    if (!valor) continue;
+    process.env[nome] ??= valor;
   }
-
-  chaveMemoizada ??= null;
-  return chaveMemoizada;
 }
 
 /* ── PONTO DE EXTENSÃO: O PROVEDOR ───────────────────────────────────────── */
@@ -542,6 +563,14 @@ export interface Provedor {
   /** Só para leitura humana. Não vai para o cliente. */
   nome: string;
   /**
+   * O NOME da variável de ambiente que guarda a credencial deste provedor.
+   *
+   * Existe para a mensagem de `sem_chave` poder dizer qual conferir. Antes o
+   * nome era cravado no texto, e mandava quem configurou olhar a variável
+   * errada sempre que o provedor não fosse aquele.
+   */
+  nomeDaChave: string;
+  /**
    * A credencial, ou `null` quando não há.
    *
    * NUNCA registre o valor — nem em log de depuração. O repositório é público.
@@ -552,87 +581,6 @@ export interface Provedor {
   /** Traduz o erro do provedor para um código que o cliente já sabe mostrar. */
   classificarFalha(erro: unknown): CodigoDeFalha;
 }
-
-/**
- * O adaptador do Google — hoje o único, e o único com chave neste repositório.
- *
- * Repare no que ele NÃO faz: não monta prompt, não decide quantos documentos
- * entram, não escreve SSE. Só traduz `PedidoAoProvedor` para o SDK, e o
- * streaming do SDK de volta para `PedacoDoProvedor`.
- */
-const provedorGemini: Provedor = {
-  nome: 'gemini',
-  chave: () => chaveDoAmbiente(),
-  async *stream(pedido, chave) {
-    const client = new GoogleGenAI({ apiKey: chave });
-    const modelStream = await client.models.generateContentStream({
-      model: modelo(),
-      contents: [
-        // Os turnos anteriores primeiro: é o que faz "desse" ter a que se
-        // referir. Os trechos recuperados vão sempre na ÚLTIMA mensagem,
-        // porque é a pergunta atual que eles respondem.
-        ...pedido.historico.map((turno) => ({
-          role: turno.papel,
-          parts: [{ text: turno.texto }],
-        })),
-        { role: 'user', parts: [{ text: pedido.mensagem }] },
-      ],
-      config: {
-        systemInstruction: pedido.sistema,
-        maxOutputTokens: pedido.maxTokens,
-        // Temperatura baixa porque a resposta precisa ficar colada nos
-        // trechos: aqui invenção não é criatividade, é defeito.
-        temperature: pedido.temperatura,
-        // Raciocínio no piso. A tarefa é ler trecho e responder; pensamento
-        // longo aqui só adiciona custo e latência.
-        //
-        // `thinkingLevel`, e não `thinkingBudget`. O orçamento numérico é da
-        // geração anterior: `thinkingBudget: 0` faz o modelo atual recusar a
-        // requisição inteira com "Request contains an invalid argument" —
-        // mensagem que não diz qual argumento, e que custa uma bissecção
-        // para achar. E não há como desligar: `low` é o mínimo.
-        // MEDIDO: MINIMAL devolve zero token de pensamento e responde em
-        // 1,25s; LOW gasta 189 tokens e leva 1,94s na mesma pergunta.
-        thinkingConfig: { thinkingLevel: ThinkingLevel.MINIMAL },
-      },
-    });
-
-    // O uso vem no ÚLTIMO pedaço, e não num objeto final separado: quem
-    // quiser contabilizar precisa guardar o que passou, porque depois do
-    // laço não há mais nada para consultar.
-    let ultimo: Awaited<ReturnType<typeof modelStream.next>>['value'] | undefined;
-    for await (const chunk of modelStream) {
-      ultimo = chunk;
-      if (chunk.text) yield { texto: chunk.text };
-    }
-    yield {
-      parada: ultimo?.candidates?.[0]?.finishReason ?? null,
-      uso: {
-        input: ultimo?.usageMetadata?.promptTokenCount ?? null,
-        output: ultimo?.usageMetadata?.candidatesTokenCount ?? null,
-      },
-    };
-  },
-  classificarFalha(erro) {
-    // O SDK do Google traz o código HTTP no erro, e não uma classe por
-    // categoria. O mapa abaixo foi calibrado apanhando:
-    //
-    // - **404 é modelo, não rota.** `gemini-2.5-flash` deixou de ser servido
-    //   a contas novas e a API respondeu 404 dizendo isso por escrito.
-    //   Classificado como `falha_do_modelo`, virava "tente de novo" —
-    //   conselho inútil para um nome que nunca mais vai funcionar.
-    // - **400 costuma ser argumento, não chave.** `thinkingBudget: 0` é da
-    //   geração anterior e faz o modelo atual recusar com "Request contains
-    //   an invalid argument", sem dizer QUAL. Some com a chave errada, então
-    //   o rótulo manda conferir as duas coisas.
-    // - 401 e 403 são credencial; 429 é limite.
-    const status = erro instanceof ApiError ? erro.status : 0;
-    if (status === 404) return 'modelo_indisponivel';
-    if (status === 401 || status === 403 || status === 400) return 'chave_invalida';
-    if (status === 429) return 'limite_do_modelo';
-    return 'falha_do_modelo';
-  },
-};
 
 /**
  * O registro. Um adaptador novo entra aqui, e em nenhum outro lugar.
@@ -660,10 +608,27 @@ const provedorGemini: Provedor = {
  */
 const BASE_PADRAO = 'https://openrouter.ai/api/v1';
 
+/**
+ * O modelo do chat. A decisão está AQUI, e não só no ambiente.
+ *
+ * Gratuito, com cota DIÁRIA — é o que o aviso dentro do painel diz a quem
+ * pergunta, e é por isso que a mensagem de 429 manda voltar amanhã em vez de
+ * tentar de novo em instantes.
+ *
+ * Ser o padrão do código, e não apenas um valor de `.env`, corrige uma
+ * armadilha medida: enquanto o padrão apontava para outro provedor, um ambiente
+ * sem as variáveis caía silenciosamente naquele outro — respondendo, mas não
+ * pelo motivo que quem configurou imaginava. Padrão que contradiz a decisão não
+ * é conservador, é enganoso.
+ */
+export const MODELO_COMPATIVEL_PADRAO = 'google/gemma-4-26b-a4b-it:free';
+
 const provedorCompativelOpenAI: Provedor = {
   nome: 'openai-compat',
+  nomeDaChave: 'CHAT_DOCS_API_KEY',
 
   chave() {
+    carregarEnvLocal();
     return process.env.CHAT_DOCS_API_KEY ?? null;
   },
 
@@ -676,7 +641,7 @@ const provedorCompativelOpenAI: Provedor = {
         authorization: `Bearer ${chave}`,
       },
       body: JSON.stringify({
-        model: process.env.CHAT_DOCS_MODELO ?? 'openrouter/auto',
+        model: process.env.CHAT_DOCS_MODELO ?? MODELO_COMPATIVEL_PADRAO,
         stream: true,
         stream_options: { include_usage: true },
         max_tokens: pedido.maxTokens,
@@ -769,14 +734,21 @@ const provedorCompativelOpenAI: Provedor = {
 };
 
 const PROVEDORES: Record<string, Provedor> = {
-  gemini: provedorGemini,
   openrouter: provedorCompativelOpenAI,
   // Mesmo adaptador, nomes diferentes: o que muda é `CHAT_DOCS_BASE_URL`.
   compativel: provedorCompativelOpenAI,
 };
 
 function provedorAtual(): Provedor {
-  return PROVEDORES[process.env.CHAT_DOCS_PROVEDOR ?? 'gemini'] ?? provedorGemini;
+  // Antes de LER a escolha: sem isto, um ambiente local sem vínculo com a
+  // Vercel decidiria o provedor com as variáveis ainda não carregadas.
+  carregarEnvLocal();
+  // O padrão é o OpenRouter, que é onde vive o modelo gratuito escolhido.
+  //
+  // Nome desconhecido cai no adaptador compatível de propósito: derrubar a
+  // função porque alguém digitou errado uma variável de ambiente troca um
+  // defeito de configuração por uma indisponibilidade.
+  return PROVEDORES[process.env.CHAT_DOCS_PROVEDOR ?? 'openrouter'] ?? provedorCompativelOpenAI;
 }
 
 /**
@@ -866,7 +838,10 @@ export async function responder(request: Request): Promise<Response> {
     return jsonError(
       503,
       'sem_chave',
-      'GEMINI_API_KEY não está configurada no ambiente desta função.',
+      // O NOME sai do provedor ativo. Cravar um nome aqui mandava quem
+      // configurou conferir a variável errada — e depois que o padrão passou a
+      // ser o OpenRouter, mandaria isso na maioria das vezes.
+      `${provedor.nomeDaChave} não está configurada no ambiente desta função.`,
     );
   }
 

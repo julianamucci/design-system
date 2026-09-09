@@ -28,6 +28,7 @@ import { createServer, type Server } from 'node:http';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import handler, {
   MAX_HISTORY_CHARS,
+  MODELO_COMPATIVEL_PADRAO,
   MAX_HISTORY_TURNS,
   MAX_QUESTION_LENGTH,
 } from '../../../docs/shared/chat-docs/servidor';
@@ -117,9 +118,16 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
     await expect(resposta.json()).resolves.toMatchObject({ code: 'corpo_grande' });
   });
 
-  it('sem chave configurada, diz isso em vez de falhar calada', async () => {
-    const antes = process.env.GEMINI_API_KEY;
+  it('sem chave configurada, diz isso — e NOMEIA a variável do provedor ativo', async () => {
+    // As DUAS chaves saem. Antes só a do Google saía, e o teste passava pelo
+    // motivo errado: a outra também não estava no ambiente da suíte, por acaso.
+    // Com o padrão em OpenRouter, apagar só a do Google não prova nada.
+    const antesGemini = process.env.GEMINI_API_KEY;
+    const antesChat = process.env.CHAT_DOCS_API_KEY;
+    const antesProvedor = process.env.CHAT_DOCS_PROVEDOR;
     delete process.env.GEMINI_API_KEY;
+    delete process.env.CHAT_DOCS_API_KEY;
+    delete process.env.CHAT_DOCS_PROVEDOR;
     // A função tem uma rede de segurança que lê o .env.local da máquina quando a
     // variável não veio do ambiente. Aqui ela precisa sair do caminho, senão o
     // teste passa a depender de quem roda ter — ou não ter — a chave no disco.
@@ -130,11 +138,30 @@ describe('a função responde pela borda do Node, que é a que a Vercel entrega'
         locale: 'pt-BR',
       });
       expect(resposta.status).toBe(503);
-      await expect(resposta.json()).resolves.toMatchObject({ code: 'sem_chave' });
+      const corpo = (await resposta.json()) as { code?: string; detail?: string };
+      expect(corpo.code).toBe('sem_chave');
+      // Este `expect` é o que PINA o provedor padrão. Trocá-lo sem trocar a
+      // decisão faz este teste reprovar, que é exatamente o que se quer: a
+      // escolha de provedor é decisão de projeto, e mudá-la por acidente é o
+      // defeito que já aconteceu — um ambiente sem variáveis caía no outro
+      // provedor e respondia, sem nada na tela dizendo isso.
+      expect(JSON.stringify(corpo)).toContain('CHAT_DOCS_API_KEY');
+      expect(JSON.stringify(corpo)).not.toContain('GEMINI_API_KEY');
     } finally {
       delete process.env.NORTEAR_IGNORAR_ENV_LOCAL;
-      if (antes !== undefined) process.env.GEMINI_API_KEY = antes;
+      if (antesGemini !== undefined) process.env.GEMINI_API_KEY = antesGemini;
+      if (antesChat !== undefined) process.env.CHAT_DOCS_API_KEY = antesChat;
+      if (antesProvedor !== undefined) process.env.CHAT_DOCS_PROVEDOR = antesProvedor;
     }
+  });
+
+  it('o modelo padrão é o gratuito escolhido, e mora no código', () => {
+    // Não é preciosismo: enquanto o nome vivia só no `.env`, cada ambiente podia
+    // estar num modelo diferente e ninguém saberia. O `.env` continua podendo
+    // sobrescrever — o que este caso guarda é o que vale quando ele não fala.
+    expect(MODELO_COMPATIVEL_PADRAO).toBe('google/gemma-4-26b-a4b-it:free');
+    // Gratuito, e é disso que dependem o aviso do painel e a mensagem de 429.
+    expect(MODELO_COMPATIVEL_PADRAO.endsWith(':free')).toBe(true);
   });
 
   // O histórico é ENTRADA do cliente num endpoint público, não estado do

@@ -20,10 +20,6 @@
       // então sem estes `paths` ele reprova com TS2307 em código que existe.
       // Contraparte de `resolve.alias` no vite.config; ver o porquê medido em
       // `docs/shared/bundler/alias-pacotes.mjs`.
-      // O SDK do modelo, importado por docs/shared/chat-docs/servidor.ts. Mesma
-      // razao das tres linhas abaixo: o arquivo vive no compartilhado, e dali a
-      // resolucao nunca entra no node_modules de uma stack.
-      "@google/genai": ["./node_modules/@google/genai/dist/genai.d.ts"],
       "mdast-util-from-markdown": ["./node_modules/mdast-util-from-markdown/index.d.ts"],
       "mdast-util-gfm": ["./node_modules/mdast-util-gfm/index.d.ts"],
       "micromark-extension-gfm": ["./node_modules/micromark-extension-gfm/index.d.ts"]

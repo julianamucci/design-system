@@ -22,7 +22,6 @@
     "@angular/forms": "^22.1.1",
     "@angular/platform-browser": "^22.1.1",
     "@floating-ui/dom": "^1.7.6",
-    "@google/genai": "^2.21.0",
     "@internationalized/date": "^3.12.2",
     "@internationalized/number": "^3.6.7",
     "@radix-ng/primitives": "^1.1.2",

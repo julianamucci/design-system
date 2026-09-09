@@ -77,7 +77,7 @@ const PT: ChatDocsLabels = {
   },
   errors: {
     sem_chave:
-      'A chave da API não está configurada neste ambiente. O chat precisa de GEMINI_API_KEY na função de servidor — sem ela, nada é enviado a lugar nenhum.',
+      'A chave da API não está configurada neste ambiente. O chat precisa dela na função de servidor — sem ela, nada é enviado a lugar nenhum.',
     sem_corpus:
       'O conteúdo compartilhado não subiu junto com a função de servidor. Ver o cabeçalho de docs/shared/chat-docs/corpus.ts.',
     limite_de_taxa: 'Muitas perguntas em pouco tempo. Espere um minuto e tente de novo.',
@@ -85,7 +85,7 @@ const PT: ChatDocsLabels = {
     pergunta_vazia: 'Escreva uma pergunta.',
     chave_invalida: 'A chave configurada foi recusada pela API.',
     modelo_indisponivel:
-      'O modelo configurado não existe ou não está disponível para esta chave. Defina GEMINI_MODEL com um nome que o AI Studio liste.',
+      'O modelo configurado não existe ou não está disponível para esta chave. Confira o nome do modelo na configuração da função de servidor.',
     limite_do_modelo:
       'O limite de requisições foi atingido. Pode ser o teto por minuto — nesse caso, espere um pouco. Se for o teto diário do modelo gratuito, só amanhã.',
     falha_do_modelo: 'A chamada ao modelo falhou. Tente de novo.',
@@ -127,7 +127,7 @@ const EN: ChatDocsLabels = {
   },
   errors: {
     sem_chave:
-      'The API key is not configured in this environment. The chat needs GEMINI_API_KEY on the server function — without it, nothing is sent anywhere.',
+      'The API key is not configured in this environment. The chat needs it on the server function — without it, nothing is sent anywhere.',
     sem_corpus:
       'The shared content was not deployed with the server function. See the header of docs/shared/chat-docs/corpus.ts.',
     limite_de_taxa: 'Too many questions in a short time. Wait a minute and try again.',
@@ -135,7 +135,7 @@ const EN: ChatDocsLabels = {
     pergunta_vazia: 'Write a question.',
     chave_invalida: 'The configured key was rejected by the API.',
     modelo_indisponivel:
-      'The configured model does not exist or is unavailable to this key. Set GEMINI_MODEL to a name AI Studio lists.',
+      'The configured model does not exist or is unavailable to this key. Check the model name in the server function configuration.',
     limite_do_modelo:
       'The request limit was reached. It may be the per-minute cap — in that case, wait a moment. If it is the free model daily cap, only tomorrow.',
     falha_do_modelo: 'The model call failed. Try again.',
@@ -177,7 +177,7 @@ const ES: ChatDocsLabels = {
   },
   errors: {
     sem_chave:
-      'La clave de la API no está configurada en este entorno. El chat necesita GEMINI_API_KEY en la función de servidor — sin ella no se envía nada a ninguna parte.',
+      'La clave de la API no está configurada en este entorno. El chat la necesita en la función de servidor — sin ella no se envía nada a ninguna parte.',
     sem_corpus:
       'El contenido compartido no se publicó junto a la función de servidor. Ver la cabecera de docs/shared/chat-docs/corpus.ts.',
     limite_de_taxa: 'Demasiadas preguntas en poco tiempo. Espera un minuto e inténtalo de nuevo.',
@@ -185,7 +185,7 @@ const ES: ChatDocsLabels = {
     pergunta_vazia: 'Escribe una pregunta.',
     chave_invalida: 'La clave configurada fue rechazada por la API.',
     modelo_indisponivel:
-      'El modelo configurado no existe o no está disponible para esta clave. Define GEMINI_MODEL con un nombre que AI Studio liste.',
+      'El modelo configurado no existe o no está disponible para esta clave. Revisa el nombre del modelo en la configuración de la función de servidor.',
     limite_do_modelo:
       'Se alcanzó el límite de solicitudes. Puede ser el tope por minuto — en ese caso, espera un poco. Si es el tope diario del modelo gratuito, solo mañana.',
     falha_do_modelo: 'La llamada al modelo falló. Inténtalo de nuevo.',
