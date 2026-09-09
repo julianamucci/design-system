@@ -34,13 +34,16 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
 
 // As chaves de `accessibility.screenReader` variam por componente, então só os
-// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+// valores chegam ao container — o `t()` exige nome de chave e não serviria. O
+// `title` fica de fora: ele é o cabeçalho da lista, não um item dela.
 function screenReaderItems(): string[] {
   const locale = getLocale();
-  return Object.values(
+  return Object.entries(
     (selectTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
       ?.accessibility?.screenReader ?? {},
-  );
+  )
+    .filter(([k]) => k !== 'title')
+    .map(([, v]) => v);
 }
 const { t, subscribe } = createTranslation(selectTranslations as Record<string, unknown>);
 

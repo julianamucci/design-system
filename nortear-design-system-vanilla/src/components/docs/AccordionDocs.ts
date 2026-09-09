@@ -84,13 +84,16 @@ function buildDemoAccordion(): HTMLElement {
 }
 
 // As chaves de `accessibility.screenReader` variam por componente, então só os
-// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+// valores chegam ao container — o `t()` exige nome de chave e não serviria. O
+// `title` fica de fora: ele é o cabeçalho da lista, não um item dela.
 function screenReaderItems(): string[] {
   const locale = getLocale();
-  return Object.values(
+  return Object.entries(
     (accordionTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
       ?.accessibility?.screenReader ?? {},
-  );
+  )
+    .filter(([k]) => k !== 'title')
+    .map(([, v]) => v);
 }
 
 function getTokenItems(): Array<{ token: string; value: string; description: string }> {

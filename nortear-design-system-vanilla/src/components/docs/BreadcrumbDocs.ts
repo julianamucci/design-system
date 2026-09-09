@@ -39,13 +39,16 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
 
 // As chaves de `accessibility.screenReader` variam por componente, então só os
-// valores chegam ao container — o `t()` exige nome de chave e não serviria.
+// valores chegam ao container — o `t()` exige nome de chave e não serviria. O
+// `title` fica de fora: ele é o cabeçalho da lista, não um item dela.
 function screenReaderItems(): string[] {
   const locale = getLocale();
-  return Object.values(
+  return Object.entries(
     (breadcrumbTranslations as unknown as Record<string, { accessibility?: { screenReader?: Record<string, string> } }>)[locale]
       ?.accessibility?.screenReader ?? {},
-  );
+  )
+    .filter(([k]) => k !== 'title')
+    .map(([, v]) => v);
 }
 // O compartilhado explica a integração com roteador pela troca do elemento raiz
 // do link. Aqui a factory sempre devolve um `<a href>` pronto — não há elemento
