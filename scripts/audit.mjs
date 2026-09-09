@@ -935,6 +935,77 @@ function seletoresAngularDaStack() {
  * dezenas de diretivas de atributo —, então o portão foi provado nos dois
  * sentidos: não acusa nenhum dos 20 legítimos.
  */
+/**
+ * Bloco de conteúdo que tem `title` JUNTO com os itens, e uma docs page que o
+ * despeja na lista sem filtrar — o título vira o primeiro marcador da lista que
+ * ele encabeça.
+ *
+ * Medido em 2026-09-06 e fechado em 2026-09-09: `DocsAccessibility` recebia
+ * `Object.values(…screenReader ?? {})` em QUATRO stacks, e 54 dos 76 blocos têm
+ * a chave `title`. A pessoa lia "Leitor de tela" como `<h3>` e de novo como
+ * primeira linha. Os outros 22 escapavam por acidente — não tinham a chave.
+ *
+ * O defeito nasceu de um CONSERTO: em agosto, `screenReader.*` era conteúdo
+ * morto em 44 de 50 componentes; ao ligá-lo, usou-se `Object.values` porque "as
+ * chaves não têm formato comum entre componentes". A decisão que resolveu um
+ * problema criou o seguinte, e ele durou meio ano.
+ *
+ * O Angular nunca reproduziu: lá a lista sempre foi montada por chave nomeada.
+ *
+ * A regra guarda o padrão que ficou — quem monta lista a partir de um objeto de
+ * conteúdo cujo `title` é o cabeçalho da própria lista tem de excluí-lo. Ela
+ * casa a montagem por `Object.values` sobre um bloco que TEM `title`; a forma
+ * correta (`Object.entries(…).filter(…)`) passa.
+ */
+function auditTituloComoItemDaPropriaLista(slug) {
+  const jsonPath = join(ROOT, 'docs/shared/content', slug, 'translations.json');
+  if (!existsSync(jsonPath)) return [];
+  let doc;
+  try { doc = JSON.parse(readFileSync(jsonPath, 'utf8')); } catch { return []; }
+
+  // Blocos cujo `title` é o cabeçalho da lista que os itens formam. Se outro
+  // bloco ganhar essa forma, ele entra aqui — a lista é declarada, não inferida.
+  const BLOCOS = [
+    ['accessibility', 'screenReader'],
+    ['accessibility', 'aria'],
+  ];
+
+  const comTitle = BLOCOS.filter(([a, b]) => {
+    const bloco = doc?.['pt-BR']?.[a]?.[b];
+    return bloco && typeof bloco === 'object' && 'title' in bloco;
+  });
+  if (!comTitle.length) return [];
+
+  const violations = [];
+  for (const stack of STACKS) {
+    const { docs } = filesForSlug(slug, stack);
+    for (const file of docs) {
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const content = stripComments(bruto);
+
+      for (const [a, b] of comTitle) {
+        // `Object.values(` … `.<a>?.<b>` no mesmo trecho, sem `!== 'title'`.
+        const re = new RegExp(`Object\\.values\\(([\\s\\S]{0,400}?\\.${a}\\?\\.${b}[\\s\\S]{0,60}?)\\)`, 'g');
+        for (const m of content.matchAll(re)) {
+          const janela = content.slice(m.index, m.index + m[0].length + 200);
+          if (/!==\s*['"]title['"]/.test(janela)) continue;
+          violations.push({
+            category: 'quality', severity: 'medium', slug, stack,
+            file: relative(ROOT, file),
+            line: content.slice(0, m.index).split('\n').length,
+            rule: 'titulo_como_item_da_propria_lista',
+            message: `monta a lista de \`${a}.${b}\` com Object.values, e o bloco tem a chave \`title\``
+              + ` — o cabeçalho da seção vira o primeiro item dela. Use`
+              + ` Object.entries(…).filter(([k]) => k !== 'title').map(([, v]) => v)`,
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 function auditAnatomiaAngularSeletor(slug) {
   const jsonPath = join(ROOT, 'docs/shared/content', slug, 'translations.json');
   if (!existsSync(jsonPath)) return [];
@@ -7038,6 +7109,7 @@ function auditQuality(slug) {
   violations.push(...auditPlayIdempotente(slug));
   violations.push(...auditSubmitForaDoForm(slug));
   violations.push(...auditAnatomiaAngularSeletor(slug));
+  violations.push(...auditTituloComoItemDaPropriaLista(slug));
 
   return violations;
 }

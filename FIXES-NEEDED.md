@@ -158,7 +158,7 @@ histórico; a lista de cima é o que está por fazer.
 
   **Armadilha de método, para quem revisitar:** um filtro por sufixo de chave (`/\.label$/`) devolve 54 falsos "títulos com markup" — são `props.table.label` (descrição de uma prop chamada "label"), `variants.items.label` (variante chamada "label") e `accessibility.aria.label` (descrição do atributo). **Nome de chave não diz destino**; só o container diz.
 
-- [ ] **O título do bloco "Leitor de tela" vira o primeiro item da própria lista, em 54 componentes.** (Aberto em 2026-09-06, ao revisar o conteúdo do popover.) As docs pages de react, vue, svelte e vanilla montam a lista assim:
+- [x] ~~**O título do bloco "Leitor de tela" vira o primeiro item da própria lista, em 54 componentes.**~~ **RESOLVIDO em 2026-09-09** — 187 arquivos nas quatro stacks passaram de `Object.values` para `Object.entries(…).filter(([k]) => k !== 'title').map(([, v]) => v)`, a forma que o Angular já usava e que 116 arquivos das quatro já tinham. Estado final: **303/303**. Provado por comparação de saída — em componentes COM a chave a lista perdeu a linha duplicada; nos SEM ela a saída ficou byte a byte idêntica, o que mostra que o filtro não remove item legítimo. Ganhou portão: `titulo_como_item_da_propria_lista` no `audit.mjs`, provado nos dois sentidos. (Aberto em 2026-09-06, ao revisar o conteúdo do popover.) As docs pages de react, vue, svelte e vanilla montam a lista assim:
 
   ```
   Object.values(traducoes[locale]?.accessibility?.screenReader ?? {})
