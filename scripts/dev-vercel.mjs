@@ -1,6 +1,13 @@
 /**
  * ─── O servidor de desenvolvimento que o `vercel dev` chama ──────────────────
  *
+ * Um arquivo para as cinco stacks. Não há nada específico de stack aqui: a
+ * porta vem do ambiente e o resto é `npm run chat-docs` + `storybook dev`, que
+ * as cinco têm com o mesmo nome. Cada `vercel.json` aponta para cá com
+ * `"devCommand": "node ../scripts/dev-vercel.mjs"`, e o `vercel dev` roda o
+ * comando com o diretório de trabalho na raiz da stack — que é o que faz o
+ * `npm run` acertar o package.json certo.
+ *
  * POR QUE ESTE ARQUIVO EXISTE
  *
  * Sem `devCommand` no `vercel.json`, o `vercel dev` ADIVINHA o framework. Ele
