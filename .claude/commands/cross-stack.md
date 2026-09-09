@@ -41,11 +41,28 @@ Corolário para o relatório: consistência entre as cinco **não é** evidênci
 fidelidade ao código. Quando as cinco concordam, a pergunta que sobra é para a
 `quality` (§3a2, "a afirmação ainda bate com o código?"), não para este passo.
 
+**E essa delegação tinha um buraco, medido em 2026-09-08.** Perguntar "a
+afirmação bate com o código?" não bastou, porque nos casos que passaram ela
+BATIA: as quatro stacks faziam exatamente o que os quatro textos diziam. Quem
+discordava era a **folha CSS**, que não entra em comparação nenhuma — nem entre
+as stacks, nem contra o conteúdo.
+
+O caso: `showCloseButton` punha o botão de fechar DEPOIS dos filhos do rodapé em
+quatro stacks, e quatro documentos afirmavam que ele fica "abaixo das ações" —
+duas chaves de conteúdo, um docblock e a tabela de API do PRD. Código e texto em
+acordo perfeito. Só que `.nds-dialog-footer` é `column-reverse`, então quem é
+último aparece EM CIMA empilhado e À DIREITA deitado: a afirmação era falsa nos
+dois eixos, e nenhum dos quatro documentos cita a folha.
+
+**Por isso existe o Check 14.** A folha e o PRD são os dois artefatos que
+descrevem o componente de forma independente das implementações, e são os únicos
+que não estavam em nenhuma comparação.
+
 ---
 
 ## Fontes de Referência
 
-1. **Catálogo de checks**: `docs/shared/skill-refs/cross-stack-checks.md` — todos os 11 checks com pseudocódigo e thresholds. **Use como playbook completo**.
+1. **Catálogo de checks**: `docs/shared/skill-refs/cross-stack-checks.md` — todos os 14 checks com pseudocódigo e thresholds. **Use como playbook completo**.
 2. `docs/shared/guidelines/11-consistencia-cross-stack.md` — regras gerais
 3. `PATCHES.md` (raiz) — divergências intencionais sobre libs primitivas/externas
 4. `docs/shared/guidelines/12-tokenizacao-dimensoes.md` — exceções aceitas
@@ -60,7 +77,7 @@ fidelidade ao código. Quando as cinco concordam, a pergunta que sobra é para a
 
 ---
 
-## Os 11 Checks (resumo)
+## Os 14 Checks (resumo)
 
 Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 
@@ -79,6 +96,7 @@ Detalhes em `docs/shared/skill-refs/cross-stack-checks.md`.
 | 11 | Divergências idiomáticas Vanilla (3 camadas: notes, DocsProps, story) | inspeção após Read | Bug |
 | 12 | Higiene `.nds-*` + paridade estrutural (classes redundantes, style inline, wrapper de tabela, items→Card/lista) | Grep × 5 | Bug |
 | 13 | **O que a docs page RENDERIZA** — seções, títulos, cartões, `trackId`, linhas de props e de tokens | **sonda de navegador** (Passo 0) | Bug |
+| 14 | **As cinco concordam com a FOLHA e com o PRD?** — único check em que "as cinco fazem igual" é motivo para OLHAR | Read da folha + do PRD | Bloqueante |
 
 **O check 6 era `Glob` — presença — e por isso os containers nunca eram LIDOS.**
 Eles são o vão de escopo mais caro deste repositório, e o mecanismo vale
@@ -102,6 +120,47 @@ propriedades com 4 linhas no svelte e 23 no angular para o mesmo componente,
 título de cartão como `<p>` em vez de `<h3>` em 102 páginas, e 67 páginas
 chamando `DocsVariants` sem `componentSlug` — o que omite o `data-track-id` e faz
 o observador IGNORAR o clique, então copiar código ali não gera evento nenhum.
+
+### Check 14 — as cinco concordam com a FOLHA e com o PRD?
+
+**Este é o único check em que "as cinco fazem igual" é motivo para OLHAR, e não
+para relaxar.** Os outros treze comparam implementações entre si e o conteúdo
+compartilhado com elas. Sobram dois artefatos que descrevem o componente de
+forma independente e nunca entram em comparação nenhuma: a folha
+`docs/shared/styles/nds/<slug>.css` e o `docs/shared/prd/<slug>.md`.
+
+**Contra a FOLHA.** Leia as regras que governam disposição, ordem, estado e
+ponto de corte — `flex-direction`, `justify-content`, `align-items`, `order`,
+`@media`, seletores de estado — e pergunte o que elas fazem com o markup que as
+cinco stacks produzem. Não "as cinco escrevem igual", e sim "o que a folha faz
+com o que elas escrevem é o que os textos prometem?".
+
+O caso que originou o check: `column-reverse` inverte a leitura do rodapé, então
+o ÚLTIMO do DOM aparece em cima. Quatro documentos afirmavam o contrário e as
+quatro stacks implementavam o que os documentos diziam. Consistência perfeita,
+resultado errado nos dois eixos.
+
+**Contra o PRD.** Cada linha de `## 2. Contrato de comportamento` e cada decisão
+`### D…` afirma algo verificável. Percorra-as e responda: isto é verdade HOJE,
+nas cinco? O PRD é escrito para envelhecer bem, mas envelhece — e a forma mais
+comum é a afirmação sobre ONDE algo mora ou sobre o que o VIZINHO faz, que nada
+invalida quando a coisa se muda. Dois exemplos medidos: a §7 do dialog dizia
+`closeLabel` "regularizado nas cinco" quando eram quatro, e o D8 do alert-dialog
+dizia "só o véu do Dialog desfoca" depois de o desfoque sair de lá.
+
+**Contra os SELETORES, no angular.** `anatomy.structureCode.angular` publicava
+`<nds-algo>` onde o real é `div[ndsAlgo]` em **16 de 51** componentes. A docs
+page contornava com um bloco local, então a PÁGINA ficava certa e a CHAVE
+errada. Há portão hoje (`angular_anatomy_seletor_inexistente`), mas a forma
+generaliza: onde uma docs page carrega constante local que duplica uma chave
+compartilhada, o contorno está escondendo o defeito — procure `ANATOMY_CODE`,
+`STRUCTURE_CODE`, `VARIANT_CODE` e parentes.
+
+**O sinal que vale reconhecer**: quando as cinco stacks contornam a mesma coisa,
+cada uma por conta própria, elas não estão sendo criativas — o primitivo ou a
+especificação está entregando o errado. Aconteceu duas vezes na campanha de
+setembro: com o `showCloseButton` emitindo `outline` onde a ação é terciária, e
+com o motor de gesto que duas stacks consumiam em vez de implementar.
 
 ---
 
@@ -165,6 +224,42 @@ tabela ficavam com ZERO linha comparada, imprimindo "nenhuma" por ausência.
 ### Passo 2 — Analisar em 1 passagem por arquivo
 
 Cada docs page é lida **uma vez**. Aplique os sub-checks 7a–7j em ordem, com `Grep` adicional só se algum check exigir verificar conteúdo no DOM gerado.
+
+### Passo 2b — Check 14: confrontar com a folha e com o PRD
+
+Só depois de saber o que as cinco fazem — porque este passo pergunta se **o que
+elas concordam em fazer** está certo, e para isso é preciso saber o que é.
+
+Leia os dois artefatos que nenhum outro check abre:
+
+- `docs/shared/styles/nds/<slug>.css`
+- `docs/shared/prd/<slug>.md`
+
+E responda, por escrito, três perguntas:
+
+1. **A folha desmente algum texto?** Olhe as regras de disposição e estado —
+   `flex-direction`, `justify-content`, `align-items`, `order`, `@media`,
+   `:not()`, seletores de atributo. Pergunte o que elas FAZEM com o markup que
+   as cinco produzem, e compare com o que os textos prometem. Ordem invertida
+   por `column-reverse` e mudança de eixo por `@media` são as duas que mais
+   enganam, porque o markup lido de cima a baixo sugere o contrário do render.
+2. **Cada linha de contrato e cada decisão `D…` do PRD é verdade hoje?** Percorra
+   uma a uma. As que mais envelhecem sem aviso são as que falam de ONDE algo
+   mora e as que descrevem o VIZINHO — nada que toque o vizinho passa por aquele
+   arquivo.
+3. **Há contorno local duplicando chave compartilhada?** `ANATOMY_CODE`,
+   `STRUCTURE_CODE`, `VARIANT_CODE`, tabelas de override de rótulo. Onde houver,
+   a página está certa e a CHAVE provavelmente errada — compare as duas letra
+   por letra antes de seguir.
+
+**Sinal forte:** quando as cinco stacks contornam a mesma coisa, cada uma por
+conta, não é criatividade — é o primitivo ou a especificação entregando o
+errado. Investigue o contornado, não o contorno.
+
+O que este passo achar **não é divergência cross-stack** e não entra na
+contagem de `Divergências encontradas`. Reporte em bloco próprio, "Check 14 —
+contra a folha e o PRD", porque a correção é de conteúdo compartilhado ou de
+folha, e essa é do orquestrador.
 
 ### Passo 3 — Decidir: report-only vs fix
 

@@ -198,6 +198,80 @@ Raio aninhado: filho arredondado com inset dentro de pai arredondado deve seguir
 
 ---
 
+## Check 13 — o que a docs page RENDERIZA
+
+Sonda de navegador (Passo 0 da skill), única que não se faz por `Grep`. Existe
+porque os doze anteriores leem FONTE, e fonte não responde o que a leitora vê:
+componente de seção resolve título, cartão e tabela em tempo de render.
+
+Achou, na primeira rodada: tabela de propriedades com 4 linhas no svelte e 23 no
+angular para o mesmo componente; título de cartão como `<p class="nds-font-semibold">`
+em vez de `<h3>` em **102 docs pages**; e 67 páginas chamando `DocsVariants` sem
+`componentSlug`, o que omite o `data-track-id` e faz o observador ignorar o
+clique — copiar código ali não gerava evento nenhum.
+
+---
+
+## Check 14 — as cinco concordam com a FOLHA e com o PRD?
+
+**O único check em que "as cinco fazem igual" é motivo para OLHAR.** Os treze
+anteriores comparam implementações entre si, ou o conteúdo compartilhado com
+elas. Sobram dois artefatos que descrevem o componente de forma independente e
+não entram em comparação nenhuma:
+
+- `docs/shared/styles/nds/<slug>.css`
+- `docs/shared/prd/<slug>.md`
+
+### As três perguntas
+
+**1. A folha desmente algum texto?** Leia as regras de disposição e estado —
+`flex-direction`, `justify-content`, `align-items`, `order`, `@media`, `:not()`,
+seletor de atributo — e pergunte o que elas FAZEM com o markup que as cinco
+produzem. Não "as cinco escrevem igual", e sim "o resultado é o que os textos
+prometem?".
+
+As duas que mais enganam: `column-reverse`, porque o markup lido de cima a baixo
+sugere o inverso do render; e mudança de eixo por `@media`, porque a leitura
+correta depende da largura.
+
+**2. Cada linha de contrato e cada `### D…` do PRD é verdade HOJE?** Percorra uma
+a uma, nas cinco. As que mais envelhecem sem aviso: afirmação sobre ONDE algo
+mora (muda quando a coisa se muda) e sobre o que o VIZINHO faz (nada que toque o
+vizinho passa por aquele arquivo).
+
+**3. Há contorno local duplicando chave compartilhada?** `ANATOMY_CODE`,
+`STRUCTURE_CODE`, `VARIANT_CODE`, tabela de override de rótulo. Onde houver, a
+PÁGINA está certa e a CHAVE provavelmente errada — compare letra por letra.
+
+### O sinal mais forte
+
+Quando as cinco stacks contornam a mesma coisa, cada uma por conta própria, não
+é criatividade: é o primitivo ou a especificação entregando o errado. Investigue
+o contornado, não o contorno.
+
+### O que motivou o check
+
+Medido em 2026-09-08, numa revisão que passou por `pipeline fix` e deixou passar:
+
+| defeito | alcance | por que passou |
+|---|---|---|
+| `type="submit"` fora do `<form>` | 7 pontos | markup válido, tipo correto — nenhum build vê |
+| anatomia publicando `<nds-algo>` inexistente | **16 de 51** componentes | docs page contornava com bloco local |
+| botão de fechar na posição do primário | 4 stacks | 4 documentos afirmavam o contrário, concordando entre si |
+| atributo de lib no seletor da folha | 19 seletores | 2 stacks emitiam o atributo sem usar a lib |
+
+Nenhum é divergência — todos são ACORDO. Um erro implementado fielmente cinco
+vezes é maximamente consistente, e o relatório sai verde porque o erro é
+perfeito.
+
+### Onde o achado vai
+
+**Não entra em `Divergências encontradas`.** Bloco próprio, "Check 14 — contra a
+folha e o PRD", porque a correção é de conteúdo compartilhado ou de folha, e
+essa é do orquestrador da pipeline, não das skills por stack.
+
+---
+
 ## Correções comuns
 
 ### Copiar classes do React → outras stacks

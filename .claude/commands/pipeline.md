@@ -260,6 +260,9 @@ Fase A (serial):
 
 Fase B (1 agent, serial — MEDIÇÃO, e é ela que muda tudo):
   /cross-stack <slug>   report-only, com a SONDA do Passo 0 dela
+                        e o CHECK 14 (Passo 2b): as cinco concordam com a
+                        FOLHA e com o PRD? — é o único em que "as cinco fazem
+                        igual" é motivo para olhar, não para relaxar
 
 Fase C (até 5 agents em PARALELO — FIX-MODE, com a lista da Fase B em mãos):
   /quality <slug>       sempre
@@ -290,6 +293,25 @@ A ordem também evita trabalho jogado fora: metade dos achados cross-stack se
 resolve numa linha de `translations.json`, que conserta as cinco de uma vez.
 Descobrir isso depois de corrigir três stacks à mão é pagar quatro vezes pelo
 mesmo defeito.
+
+**E o Check 14 existe porque a Fase B, sozinha, era cega ao defeito UNIFORME.**
+Medido em 2026-09-08, numa revisão que passou por `fix` e deixou passar: o
+`type="submit"` fora do `<form>` em sete pontos, a anatomia publicando elemento
+inexistente em **16 de 51** componentes, e o botão de fechar na posição do
+primário em quatro stacks — com quatro documentos afirmando o contrário e
+concordando entre si.
+
+Nada disso é divergência: é acordo. O instrumento mais forte desta pipeline
+compara as implementações umas com as outras, então um erro implementado
+fielmente cinco vezes sai **maximamente consistente**. O Check 14 acrescenta o
+único eixo que faltava — confrontar o que as cinco concordam em fazer com a
+FOLHA e com o PRD, que descrevem o componente sem depender de nenhuma delas.
+
+Duas consequências para quem orquestra. A primeira: achado do Check 14 quase
+sempre é correção de `docs/shared/**`, que pela tabela acima é SUA, não das
+skills — separe-o do resto do relatório. A segunda: `audit.mjs` limpo e
+cross-stack sem divergência continuam **não sendo** prova de que o componente
+está certo; são prova de que ele está igual.
 
 **A `/quality` NÃO chama cross-stack neste modo** — ela detecta que a chamada veio
 da pipeline (o prompt traz `scan-<slug>.json`) e registra `cross-stack: da
