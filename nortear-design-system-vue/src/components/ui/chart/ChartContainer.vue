@@ -1,6 +1,17 @@
 <!--
-  ChartContainer — wrapper de vue-echarts. Substitui o wrapper anterior
-  baseado em @unovis/vue. API agora é declarativa: `<ChartContainer :option="..." />`.
+  ChartContainer — wrapper de vue-echarts. API declarativa:
+  `<ChartContainer :option="..." />`. As cinco stacks usam echarts.
+
+  Substituiu um wrapper baseado em `@unovis/vue`, e o pacote antigo ficou
+  DECLARADO no package.json por engano — sem um import sequer, invisível para
+  qualquer portão, porque nenhum deles audita dependência não usada.
+
+  Não foi inócuo: `@unovis/vue` arrastava `@unovis/ts` e este o `maplibre-gl`,
+  que em 2026-09-09 acumulou um advisory CRÍTICO (bypass do sanitizador,
+  XSS). E não havia conserto por atualização — `@unovis/ts` fixa
+  `maplibre-gl@^2.1.9` e 1.6.7 é a última versão publicada, então o Dependabot
+  falhava em laço tentando subir para a versão corrigida. Removê-lo tirou 172
+  pacotes e zerou os críticos.
 -->
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
