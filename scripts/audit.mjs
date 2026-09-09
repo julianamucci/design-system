@@ -5245,8 +5245,36 @@ const SUFIXO_PT = /(ado|ada|ados|adas|cao|coes|mento|dade|vel|veis|eiro|encia|an
 // é palavra inglesa (NoResults, NoLimit) e sairia falso positivo em 9 nomes.
 const CONECTIVO_PT = /^(De|Da|Do|Dos|Das|Com|Sem|Por|Nao|Como|Uma)$/;
 
+/**
+ * Palavras INGLESAS que terminam num sufixo da lista acima, e por isso caem na
+ * morfologia sem serem português.
+ *
+ * Medido em 2026-09-09, quando a regra reprovou uma story chamada
+ * `HeadingLevel`: `Level` termina em `vel`. O agente contornou renomeando para
+ * `HeadingH3` — o que é aceitar a heurística errada, e o portão passa a ditar o
+ * vocabulário em vez de medi-lo.
+ *
+ * É a terceira vez que esta casa vê a mesma forma: o `xit\(` do pre-commit
+ * casava dentro de `focusSafeExit(`, e o portão de nome acessível reprovou num
+ * comentário que explicava uma recusa. **Portão que impede o trabalho certo é
+ * pior que portão nenhum**, porque a saída fácil é renomear o código para caber
+ * no medidor — e aí o defeito de vocabulário que a regra existia para pegar
+ * passa a conviver com nomes torcidos que ela criou.
+ *
+ * `vel` e `ado` são os únicos sufixos da lista com homógrafo inglês frequente;
+ * os outros (`cao`, `mento`, `dade`, `encia`, `agem`) não têm. A lista é
+ * fechada e declarada: nome novo que caia aqui se acrescenta com o motivo, em
+ * vez de a regra ser afrouxada.
+ */
+const INGLES_COM_SUFIXO_PT = new Set([
+  'level', 'levels', 'novel', 'travel', 'marvel', 'swivel', 'cancel',
+  'avocado', 'tornado', 'bravado',
+]);
+
 function pareceProtugues(nome) {
-  const palavras = palavrasDoNome(nome);
+  const palavras = palavrasDoNome(nome).filter(
+    (p) => !INGLES_COM_SUFIXO_PT.has(p.toLowerCase()),
+  );
   if (palavras.some((p) => SUFIXO_PT.test(p) || CONECTIVO_PT.test(p))) return true;
   // `E` isolado entre duas palavras é o "e" português (DefaultEActive). Na
   // ponta ou em sigla não conta.
