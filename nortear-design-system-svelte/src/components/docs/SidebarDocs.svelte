@@ -63,14 +63,17 @@ import uiTranslations from '@/i18n/ui.json';
   const { tStore } = useTranslation(sidebarTranslations);
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os
-  // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  // valores chegam ao container — o `t()` exige nome de chave e não serviria. O
+  // `title` fica de fora: ele é o cabeçalho da lista, não um item dela.
   const screenReaderItems = $derived(
-    Object.values(
+    Object.entries(
       (sidebarTranslations as unknown as Record<
         string,
         { accessibility?: { screenReader?: Record<string, string> } }
       >)[$locale]?.accessibility?.screenReader ?? {},
-    ),
+    )
+      .filter(([key]) => key !== 'title')
+      .map(([, value]) => value),
   );
 
   // ─── SEO + Analytics ─────────────────────────────────────────────────────────
