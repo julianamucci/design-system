@@ -44,6 +44,40 @@ jobs:
           # repositório inteiro a cada vez.
           fetch-depth: 0
 
+      - name: Setup Node 24
+        if: env.SONAR_TOKEN != ''
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: nortear-design-system-*/package-lock.json
+
+      - name: Dependências das cinco stacks
+        # POR QUE INSTALAR NUMA JOB QUE SÓ ANALISA.
+        #
+        # A primeira análise fechou com o aviso "At least one
+        # referenced/extended tsconfig.json was not found in the project".
+        # A causa: `vue/tsconfig.app.json` estende `@vue/tsconfig` e
+        # `svelte/tsconfig.json` estende `@tsconfig/svelte` — os dois vindos do
+        # `node_modules`, que não existia aqui.
+        #
+        # E o aviso subestima o estrago. Sem `node_modules` o SonarJS não monta
+        # o programa TypeScript, então as regras que dependem de TIPO são
+        # puladas — nas cinco stacks, caladas, e a análise fica parecendo
+        # completa. É o modo de falha que esta casa mais persegue: portão que
+        # reporta sucesso sem ter medido.
+        #
+        # `--ignore-scripts` porque `postinstall` aqui é `patch-package`, e
+        # patch de comportamento de runtime não muda o que o analisador lê.
+        # Poupa tempo e tira uma fonte de falha que não diz nada sobre o código.
+        if: env.SONAR_TOKEN != ''
+        run: |
+          for dir in nortear-design-system-*/; do
+            echo "::group::npm ci — ${dir}"
+            (cd "$dir" && npm ci --ignore-scripts)
+            echo "::endgroup::"
+          done
+
       - name: Análise
         # Sem a chave o passo é PULADO, não reprovado. Vale para dois casos
         # reais: antes de o segredo existir, e em PR vindo de fork, que por
