@@ -8,6 +8,7 @@ import {
   drawerControlledSource,
   drawerDireitaSource,
   drawerEsquerdaSource,
+  drawerHeadingH3Source,
   drawerClosedSource,
   drawerNotDispensavelSource,
   drawerSource,
@@ -109,6 +110,23 @@ describe('transforms das stories de direção', () => {
     // Chromatic, mas quem copia precisa de um caminho de entrada.
     expect(drawerTopoSource()).toContain('<DrawerTrigger as-child>');
     expect(drawerTopoSource()).not.toContain('default-open');
+  });
+});
+
+describe('transform da story de nível do título', () => {
+  it('o nível é escrito, e o padrão do primitivo continua fora do snippet', () => {
+    const saida = drawerHeadingH3Source();
+    expect(saida).toContain('<DrawerTitle as="h3">Editar perfil</DrawerTitle>');
+    // `h2` é o padrão do primitivo: quem não pede nível não escreve prop
+    // nenhuma, e o snippet não ensina a repetir o padrão.
+    expect(drawerBaixoSource()).toContain('<DrawerTitle>Detalhes do pedido</DrawerTitle>');
+    // Fora o nível, é a forma canônica: gatilho, corpo e o par de ações. O
+    // assunto é a tag, não uma composição nova a comparar linha a linha.
+    expect(saida).toContain('<DrawerTrigger as-child>');
+    expect(saida).toContain('<DrawerBody class="nds-text-body nds-text-muted-foreground">');
+    expect(saida).toContain('<Button>Salvar alterações</Button>');
+    // A direção padrão continua sendo a que não se escreve.
+    expect(saida).not.toContain('direction=');
   });
 });
 

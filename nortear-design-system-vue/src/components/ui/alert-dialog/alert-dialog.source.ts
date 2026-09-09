@@ -40,6 +40,13 @@ type Composition = {
   trigger?: { label: string; variant?: string };
   panel?: string;
   midia?: { className?: string };
+  /**
+   * Props do título — hoje só o nível de cabeçalho (`as="h3"`).
+   *
+   * Fica vazio na maioria das composições: `h2` é o padrão do primitivo, e
+   * valor padrão não se escreve num snippet que alguém copia.
+   */
+  titleProps?: string;
   title: string;
   descricao?: string;
   cancelar: { label: string; evento?: string };
@@ -98,7 +105,7 @@ function dialogo(c: Composition): string {
     );
   }
 
-  lines.push(withText('AlertDialogTitle', '', c.title, 6));
+  lines.push(withText('AlertDialogTitle', attrs(c.titleProps), c.title, 6));
   if (c.descricao) lines.push(withText('AlertDialogDescription', '', c.descricao, 6));
 
   lines.push(
@@ -279,6 +286,28 @@ export function alertDialogDestructiveSource(): string {
   return snippet({
     root: ['default-open'],
     trigger: { label: 'Excluir conta', variant: 'destructive' },
+    title: 'Excluir conta',
+    descricao: DESCRIPTION_DEFAULT,
+    cancelar: { label: 'Cancelar' },
+    acao: { label: 'Excluir', variant: 'destructive' },
+  });
+}
+
+/**
+ * Nível do título: o painel entra numa hierarquia que a página já tem.
+ *
+ * `h2` é o padrão do primitivo, e serve à página cujo painel abre a partir do
+ * `h1`. Aberto de dentro de uma seção que já é `h2`, o painel precisa CONTINUAR
+ * a hierarquia em vez de repeti-la — daí `h3`.
+ *
+ * A tag é a única coisa que muda: o `aria-labelledby` do painel continua
+ * apontando para este mesmo elemento, e o nome acessível continua saindo dele.
+ */
+export function alertDialogHeadingH3Source(): string {
+  return snippet({
+    root: ['default-open'],
+    trigger: { label: 'Excluir conta', variant: 'destructive' },
+    titleProps: 'as="h3"',
     title: 'Excluir conta',
     descricao: DESCRIPTION_DEFAULT,
     cancelar: { label: 'Cancelar' },

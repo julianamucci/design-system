@@ -55,11 +55,17 @@ function importing(parts: string[]): string {
 const BUTTON = `import { Button } from '@/components/ui/button'`;
 const FIELD = `import { Input } from '@/components/ui/input'\nimport { Label } from '@/components/ui/label'`;
 
-/** Cabeçalho: o título é o nome acessível do painel, a descrição é a descrição. */
-function header(title: string, descricao: string, recuo = 2): string {
+/**
+ * Cabeçalho: o título é o nome acessível do painel, a descrição é a descrição.
+ *
+ * `titleProps` carrega hoje só o nível de cabeçalho (`as="h3"`), e fica vazio
+ * na maioria das composições: `h2` é o padrão do primitivo, e valor padrão não
+ * se escreve num snippet que alguém copia.
+ */
+function header(title: string, descricao: string, recuo = 2, titleProps = ''): string {
   const p = ' '.repeat(recuo);
   return `${p}<SheetHeader>
-${p}  <SheetTitle>${title}</SheetTitle>
+${p}  <SheetTitle${attrs(titleProps)}>${title}</SheetTitle>
 ${p}  <SheetDescription>${descricao}</SheetDescription>
 ${p}</SheetHeader>`;
 }
@@ -209,8 +215,14 @@ ${header('Filtros avançados', 'Configure os filtros para refinar os resultados.
   );
 }
 
-/** Aberto de saída, sem estado externo nenhum: `default-open` e mais nada. */
-export function sheetOpenSource(): string {
+/**
+ * Painel canônico aberto: gatilho, cabeçalho e rodapé, e nada além disso.
+ *
+ * `titleProps` é o único ponto de variação — hoje o nível de cabeçalho. Duas
+ * stories saem daqui, e é o compartilhamento que prova a frase que a segunda
+ * ensina: o nível é a ÚNICA coisa que muda.
+ */
+function openPanel(titleProps = ''): string {
   return vueSnippet(
     `${importing([
       'SheetClose',
@@ -224,11 +236,30 @@ export function sheetOpenSource(): string {
     `<Sheet default-open>
 ${TRIGGER(LABEL_TRIGGER)}
   <SheetContent>
-${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
+${header('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4, titleProps)}
 ${footer('Cancelar', 'Aplicar filtros', 4)}
   </SheetContent>
 </Sheet>`,
   );
+}
+
+/** Aberto de saída, sem estado externo nenhum: `default-open` e mais nada. */
+export function sheetOpenSource(): string {
+  return openPanel();
+}
+
+/**
+ * Nível do título: o painel entra numa hierarquia que a página já tem.
+ *
+ * `h2` é o padrão do primitivo e serve à página cujo painel abre a partir do
+ * `h1`. Aberto de dentro de uma seção que já é `h2`, o painel precisa
+ * CONTINUAR a hierarquia em vez de repeti-la — daí `h3`.
+ *
+ * A tag é a única coisa que muda: o `aria-labelledby` do painel continua
+ * apontando para este mesmo elemento, e o nome acessível continua saindo dele.
+ */
+export function sheetHeadingH3Source(): string {
+  return openPanel('as="h3"');
 }
 
 /**

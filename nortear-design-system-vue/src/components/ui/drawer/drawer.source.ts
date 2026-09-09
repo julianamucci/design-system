@@ -56,6 +56,13 @@ type Frame = {
   trigger?: string;
   title: string;
   descricao: string;
+  /**
+   * Props do título — hoje só o nível de cabeçalho (`as="h3"`).
+   *
+   * Fica vazio na maioria das composições: `h2` é o padrão do primitivo, e
+   * valor padrão não se escreve num snippet que alguém copia.
+   */
+  titleProps?: string;
   /** Corpo do painel, já indentado em 4 espaços. */
   body?: string;
   /** Rodapé completo, já indentado em 4 espaços. */
@@ -72,7 +79,7 @@ type Frame = {
  * deles que saem o nome e a descrição acessíveis do painel.
  */
 function drawer(m: Frame): string {
-  const { root = '', trigger = '', body = '', contentProps = '' } = m;
+  const { root = '', trigger = '', titleProps = '', body = '', contentProps = '' } = m;
   const disparo = trigger
     ? `  <DrawerTrigger as-child>
     <Button variant="outline">${trigger}</Button>
@@ -84,7 +91,7 @@ function drawer(m: Frame): string {
   return `<Drawer${attrs(root)}>
 ${disparo}  <DrawerContent${contentProps}>
     <DrawerHeader>
-      <DrawerTitle>${m.title}</DrawerTitle>
+      <DrawerTitle${attrs(titleProps)}>${m.title}</DrawerTitle>
       <DrawerDescription>${m.descricao}</DrawerDescription>
     </DrawerHeader>
 ${miolo}${m.footer}
@@ -221,6 +228,32 @@ export function drawerDireitaSource(): string {
     'Filtros',
     'Refine sua busca por categoria, preço e disponibilidade.',
     'Abrir filtros',
+  );
+}
+
+/**
+ * Variante HeadingH3: o título assume o nível que a página pede.
+ *
+ * `h2` é o padrão do primitivo, e serve à página cujo painel abre a partir do
+ * `h1`. Aberto de dentro de uma seção que já é `h2`, o painel precisa CONTINUAR
+ * a hierarquia em vez de repeti-la — daí `h3`.
+ *
+ * A tag é a única coisa que muda: o `aria-labelledby` do painel continua
+ * apontando para este mesmo elemento, e o nome acessível continua saindo dele.
+ */
+export function drawerHeadingH3Source(): string {
+  return vueSnippet(
+    importing(PARTS_COMPLETAS),
+    drawer({
+      titleProps: 'as="h3"',
+      trigger: 'Editar perfil',
+      title: 'Editar perfil',
+      descricao: 'Atualize seus dados.',
+      body: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
+      Conteúdo do painel.
+    </DrawerBody>`,
+      footer: footer('Salvar alterações', 'Cancelar'),
+    }),
   );
 }
 

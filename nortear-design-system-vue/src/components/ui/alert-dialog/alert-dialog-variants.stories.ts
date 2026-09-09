@@ -20,9 +20,19 @@ import {
   alertDialogWithIconSource,
   alertDialogDescriptionLongaSource,
   alertDialogDestructiveSource,
+  alertDialogHeadingH3Source,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
 } from './alert-dialog.source';
+import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
+
+/**
+ * Rótulos: saem do MESMO `translations.json` que a docs page lê, onde cada
+ * chave existe nos três idiomas. A story é fixture e fica presa a pt-BR de
+ * propósito — quem resolve o idioma de quem lê é a docs page, e uma play que
+ * dependesse do seletor procuraria um nome diferente a cada rodada.
+ */
+const L = alertDialogTranslations['pt-BR'].demonstration.labels;
 
 // As sete stories abaixo NÃO são composições, e por isso não moram mais em
 // -compositions: composição é um arranjo que resolve um caso de uso, e o que
@@ -506,5 +516,57 @@ export const ExtraClass: Story = {
     const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
     await expect(media).toHaveClass('nds-alert-dialog-media');
     await expect(getComputedStyle(media as HTMLElement).flexShrink).toBe('0');
+  },
+};
+
+// O nível do cabeçalho do título é escolha de quem monta a PÁGINA, e não do
+// componente: o painel entra numa hierarquia que já existe. A capacidade está
+// no primitivo desde 2026-09-08 e nenhuma story a exercitava — o que significa
+// que nada impedia uma regressão de voltar a cravar o nível.
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item2'],
+    docs: {
+      // O nível É o assunto: a transform do meta mostra o padrão, que é
+      // justamente o que esta story não usa.
+      source: { transform: alertDialogHeadingH3Source },
+      description: {
+        story:
+          'Painel aberto de dentro de uma página cuja seção já está em h2: o título entra como h3 e continua a hierarquia em vez de repeti-la. Trocar a tag não pode romper o aria-labelledby que dá nome ao painel.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <AlertDialog default-open>
+        <AlertDialogTrigger as-child>
+          <Button variant="destructive">${L.triggerLabel}</Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle as="h3">${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">${L.action}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    `,
+  }),
+  play: async ({ step }) => {
+    const p = await within(document.body).findByRole('alertdialog');
+
+    await step('O título vira h3 sem soltar o nome acessível do painel', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-alert-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };

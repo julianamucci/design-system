@@ -14,13 +14,24 @@ import { Button } from '@/components/ui/button';
 import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
 import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import {
+  sheetHeadingH3Source,
   sheetSideDireitoSource,
   sheetSideEsquerdoSource,
   sheetSideInferiorSource,
   sheetSideSuperiorSource,
 } from './sheet.source';
+import sheetTranslations from '@shared/content/sheet/translations.json';
 
 import { figmaDesign } from '@shared/figma/design-links';
+
+/**
+ * Rótulos: saem do MESMO `translations.json` que a docs page lê, onde cada
+ * chave existe nos três idiomas. A story é fixture e fica presa a pt-BR de
+ * propósito — quem resolve o idioma de quem lê é a docs page, e uma play que
+ * dependesse do seletor procuraria um nome diferente a cada rodada.
+ */
+const L = sheetTranslations['pt-BR'].demonstration.labels;
+
 // As quatro direções são a única variação visual do Sheet, e todas moram no
 // conteúdo (`side`), não na raiz. Cada uma nasce ABERTA e MODAL: é o estado que
 // a regressão visual captura e o que o axe tem para examinar — fechado, o
@@ -189,5 +200,59 @@ export const Bottom: Story = {
     await expect(dialog).toHaveClass(/nds-sheet-content/);
     await expect(dialog).toHaveAccessibleName();
     await borderWaitForEncostar(dialog, 'bottom');
+  },
+};
+
+// O nível do cabeçalho do título é escolha de quem monta a PÁGINA, e não do
+// componente: o painel entra numa hierarquia que já existe. A capacidade está
+// no primitivo desde 2026-09-08 e nenhuma story a exercitava — o que significa
+// que nada impedia uma regressão de voltar a cravar o nível.
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item4'],
+    docs: {
+      // O nível É o assunto: a transform do meta mostra o padrão, que é
+      // justamente o que esta story não usa.
+      source: { transform: sheetHeadingH3Source },
+      description: {
+        story:
+          'Painel aberto de dentro de uma página cuja seção já está em h2: o título entra como h3 e continua a hierarquia em vez de repeti-la. Trocar a tag não pode romper o aria-labelledby que dá nome ao painel.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <Sheet default-open>
+        <SheetTrigger as-child>
+          <Button variant="outline">${L.trigger}</Button>
+        </SheetTrigger>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle as="h3">${L.title}</SheetTitle>
+            <SheetDescription>${L.description}</SheetDescription>
+          </SheetHeader>
+          <SheetFooter>
+            <SheetClose as-child>
+              <Button variant="outline">${L.cancel}</Button>
+            </SheetClose>
+            <Button>${L.apply}</Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
+    `,
+  }),
+  play: async ({ step }) => {
+    const p = await waitForPortal('dialog');
+
+    await step('O título vira h3 sem soltar o nome acessível do painel', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-sheet-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };

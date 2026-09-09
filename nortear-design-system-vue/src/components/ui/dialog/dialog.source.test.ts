@@ -7,6 +7,7 @@ import {
   dialogConfirmarEmailSource,
   dialogControlledSource,
   dialogEditarPerfilSource,
+  dialogHeadingH3Source,
   footerDialogCloseSource,
   dialogPreviaDeMidiaSource,
   dialogNoButtonCloseSource,
@@ -158,6 +159,17 @@ describe('transforms das stories de variante', () => {
     expect(saida).not.toContain('alertdialog');
   });
 
+  it('o nível do título é escrito, e é a ÚNICA coisa que difere da forma canônica', () => {
+    const saida = dialogHeadingH3Source();
+    expect(saida).toContain('<DialogTitle as="h3">Editar perfil</DialogTitle>');
+    // `h2` é o padrão do primitivo: quem não pede nível não escreve prop
+    // nenhuma, e o snippet não ensina a repetir o padrão.
+    expect(dialogSource()).toContain('<DialogTitle>Editar perfil</DialogTitle>');
+    // Tirado o nível, sobra exatamente o snippet canônico — a lição é a tag, e
+    // não uma composição nova que o leitor teria de comparar linha a linha.
+    expect(saida.replace(' as="h3"', '')).toBe(dialogSource());
+  });
+
   it('o fechar sai do canto e volta no rodapé como a ação de MENOR ênfase', () => {
     const saida = footerDialogCloseSource();
     expect(saida).toContain('<DialogContent :show-close-button="false">');
@@ -228,6 +240,7 @@ const BUILDERS: Array<[string, () => string]> = [
   ['dialogWithScrollSource', dialogWithScrollSource],
   ['dialogNoFooterSource', dialogNoFooterSource],
   ['dialogActionDestructiveSource', dialogActionDestructiveSource],
+  ['dialogHeadingH3Source', dialogHeadingH3Source],
   ['footerDialogCloseSource', footerDialogCloseSource],
   ['dialogConfirmarEmailSource', dialogConfirmarEmailSource],
   ['dialogEditarPerfilSource', dialogEditarPerfilSource],

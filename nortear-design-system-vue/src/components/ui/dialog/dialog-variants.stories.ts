@@ -27,6 +27,7 @@ import {
   footerDialogCloseSource,
   dialogNoFooterSource,
   dialogConfirmarEmailSource,
+  dialogHeadingH3Source,
   dialogSource,
 } from './dialog.source';
 import dialogTranslations from '@shared/content/dialog/translations.json';
@@ -472,6 +473,60 @@ export const CustomCloseInFooter: Story = {
       await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await open(canvasElement)).toBeVisible();
+    });
+  },
+};
+
+// O nível do cabeçalho do título é escolha de quem monta a PÁGINA, e não do
+// componente: o painel entra numa hierarquia que já existe. A capacidade está
+// no primitivo desde 2026-09-08 e nenhuma story a exercitava — o que significa
+// que nada impedia uma regressão de voltar a cravar o nível.
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item3'],
+    docs: {
+      // O nível É o assunto: o snippet do meta mostra o padrão, que é
+      // justamente o que esta story não usa.
+      source: { transform: dialogHeadingH3Source },
+      description: {
+        story:
+          'Painel aberto de dentro de uma página cuja seção já está em h2: o título entra como h3 e continua a hierarquia em vez de repeti-la. Trocar a tag não pode romper o aria-labelledby que dá nome ao painel.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <Dialog default-open>
+        <DialogTrigger as-child>
+          <Button variant="outline">${L.triggerLabel}</Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle as="h3">${L.title}</DialogTitle>
+            <DialogDescription>${L.description}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose as-child>
+              <Button variant="outline">${L.cancel}</Button>
+            </DialogClose>
+            <Button>${L.action}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    `,
+  }),
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('O título vira h3 sem soltar o nome acessível do painel', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

@@ -7,6 +7,7 @@ import {
   sheetClosedSource,
   sheetFiltersAvancadosSource,
   sheetFormLongSource,
+  sheetHeadingH3Source,
   sheetSideDireitoSource,
   sheetSideEsquerdoSource,
   sheetSideInferiorSource,
@@ -135,6 +136,19 @@ describe('transforms das stories de direção', () => {
     ]) {
       expect(fn()).toContain('<Sheet default-open>');
     }
+  });
+});
+
+describe('transform da story de nível do título', () => {
+  it('o nível é escrito, e é a ÚNICA coisa que difere do painel aberto', () => {
+    const saida = sheetHeadingH3Source();
+    expect(saida).toContain('<SheetTitle as="h3">Filtros avançados</SheetTitle>');
+    // `h2` é o padrão do primitivo: quem não pede nível não escreve prop
+    // nenhuma, e o snippet não ensina a repetir o padrão.
+    expect(sheetOpenSource()).toContain('<SheetTitle>Filtros avançados</SheetTitle>');
+    // Tirado o nível, sobra exatamente o painel canônico aberto — a lição é a
+    // tag, e não uma composição nova a comparar linha a linha.
+    expect(saida.replace(' as="h3"', '')).toBe(sheetOpenSource());
   });
 });
 

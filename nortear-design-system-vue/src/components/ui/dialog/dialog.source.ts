@@ -67,6 +67,13 @@ type Frame = {
   /** Props da raiz: `default-open`, `:modal="false"`. */
   root?: string;
   painelProps?: string;
+  /**
+   * Props do título — hoje só o nível de cabeçalho (`as="h3"`).
+   *
+   * Fica vazio na maioria das composições: `h2` é o padrão do primitivo, e
+   * valor padrão não se escreve num snippet que alguém copia.
+   */
+  titleProps?: string;
   trigger: string;
   title: string;
   descricao: string;
@@ -84,7 +91,7 @@ type Frame = {
  * botão DENTRO de outro botão.
  */
 function dialogo(m: Frame): string {
-  const { root = '', painelProps = '', body = '', footer = '' } = m;
+  const { root = '', painelProps = '', titleProps = '', body = '', footer = '' } = m;
   // Sem corpo e sem rodapé o painel é só cabeçalho: nada de linha em branco
   // sobrando entre o fim do cabeçalho e o fecho do painel.
   const partes = [body, footer].filter(Boolean);
@@ -96,7 +103,7 @@ function dialogo(m: Frame): string {
   </DialogTrigger>
   <DialogContent${attrs(painelProps)}>
     <DialogHeader>
-      <DialogTitle>${m.title}</DialogTitle>
+      <DialogTitle${attrs(titleProps)}>${m.title}</DialogTitle>
 ${descricao(m.descricao)}
     </DialogHeader>${miolo}
   </DialogContent>
@@ -408,6 +415,29 @@ export function footerDialogCloseSource(): string {
       <Button variant="outline">Voltar</Button>
       <Button>Continuar</Button>
     </DialogFooter>`,
+    }),
+  );
+}
+
+/**
+ * Variante HeadingH3: o título assume o nível que a página pede.
+ *
+ * `h2` é o padrão do primitivo, e serve à página cujo painel abre a partir do
+ * `h1`. Aberto de dentro de uma seção que já é `h2`, o painel precisa CONTINUAR
+ * a hierarquia em vez de repeti-la — daí `h3`.
+ *
+ * A tag é a única coisa que muda: o `aria-labelledby` do painel continua
+ * apontando para este mesmo elemento, e o nome acessível continua saindo dele.
+ */
+export function dialogHeadingH3Source(): string {
+  return vueSnippet(
+    importing(PARTS_COMPLETAS),
+    dialogo({
+      titleProps: 'as="h3"',
+      trigger: 'Editar perfil',
+      title: 'Editar perfil',
+      descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+      footer: footerDefault('Cancelar', 'Salvar alterações'),
     }),
   );
 }

@@ -8,6 +8,7 @@ import {
   alertDialogControlledSource,
   alertDialogDescriptionLongaSource,
   alertDialogDestructiveSource,
+  alertDialogHeadingH3Source,
   alertDialogClosedSource,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
@@ -162,6 +163,7 @@ describe('transforms das stories de composição', () => {
     const funcoes = [
       alertDialogWithIconSource,
       alertDialogDestructiveSource,
+      alertDialogHeadingH3Source,
       alertDialogNeutralSource,
       alertDialogNoDescriptionSource,
       alertDialogClassNameExtraSource,
@@ -215,6 +217,19 @@ describe('transforms das stories de composição', () => {
     // Largura máxima e espaçamento do painel não são extensíveis por classe: o
     // CSS do componente é carregado depois e vence no empate.
     expect(saida).not.toContain('nds-max-w');
+  });
+
+  it('o nível do título é escrito, e é a ÚNICA coisa que difere da destrutiva', () => {
+    const saida = alertDialogHeadingH3Source();
+    expect(saida).toContain('<AlertDialogTitle as="h3">Excluir conta</AlertDialogTitle>');
+    // `h2` é o padrão do primitivo: quem não pede nível não escreve prop
+    // nenhuma, e o snippet não ensina a repetir o padrão.
+    expect(alertDialogDestructiveSource()).toContain(
+      '<AlertDialogTitle>Excluir conta</AlertDialogTitle>',
+    );
+    // Tirado o nível, sobra exatamente a confirmação destrutiva — a lição é a
+    // tag, e não uma composição nova a comparar linha a linha.
+    expect(saida.replace(' as="h3"', '')).toBe(alertDialogDestructiveSource());
   });
 
   it('o ícone da mídia é decorativo — quem nomeia o painel é o título', () => {
