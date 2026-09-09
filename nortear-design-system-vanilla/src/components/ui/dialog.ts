@@ -125,10 +125,19 @@ export type DialogOptions = {
    * sobrevivia aqui em DOIS pontos — o `aria-label` do botão e o `.nds-sr-only`
    * dentro dele —, na stack que é a referência de contrato do projeto.
    *
-   * O `sheet.ts` desta stack usa só o `aria-label`; aqui há os dois, como nas
-   * outras quatro. Com `aria-label` presente o nome acessível sai dele e o
-   * `.nds-sr-only` não é lido — a duplicação é padrão do componente nas cinco,
-   * não desvio desta stack, e sair dela é decisão à parte.
+   * O nome vai num `.nds-sr-only`, NÃO num `aria-label` — mesma decisão das
+   * outras quatro, e pelo mesmo motivo documentado lá: texto real sobrevive à
+   * tradução automática do navegador, que ignora atributo ARIA.
+   *
+   * Esta stack tinha os DOIS até 2026-09-08, e a sobreposição não era inócua:
+   * com `aria-label` presente o nome sai dele e o span não é lido, então o
+   * vanilla perdia justamente a propriedade que motivou a escolha. Medido no
+   * repositório inteiro — 429 ocorrências de `.nds-sr-only`, e este era o único
+   * ponto real de sobreposição.
+   *
+   * O `sheet.ts` desta stack usa só `aria-label`, e continua assim: lá não há
+   * span, então o atributo é o único portador do nome. A divergência entre os
+   * dois componentes está registrada, não resolvida.
    */
   closeLabel?: string;
   onOpenChange?: (open: boolean) => void;
@@ -279,7 +288,12 @@ export function createDialog(options: DialogOptions): DestroyableElement {
       closeBtn.type = 'button';
       closeBtn.className = 'nds-dialog-close';
       closeBtn.dataset.slot = 'dialog-close';
-      closeBtn.setAttribute('aria-label', closeLabel);
+      // SEM `aria-label`: o nome vem do `.nds-sr-only` logo abaixo, que é a
+      // decisão documentada nas outras quatro stacks — texto real sobrevive à
+      // tradução automática do navegador, que ignora atributo ARIA. Com o
+      // `aria-label` presente ele VENCIA o span, e o vanilla perdia justamente
+      // a propriedade que motivou a escolha. O ícone é `aria-hidden`, então o
+      // nome sai limpo do span.
       closeBtn.appendChild(createCloseIcon());
       const srOnly = document.createElement('span');
       srOnly.className = 'nds-sr-only';
