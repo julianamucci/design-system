@@ -4,11 +4,25 @@ name: SonarQube (informative)
 # exclusões e o porquê da duplicação — vive em `sonar-project.properties`, na
 # raiz, e não aqui: quem for entender o relatório vai procurar lá.
 #
-# INFORMATIVO, pelo mesmo motivo do test.yml: portão novo cuja linha de base
-# ninguém mediu ainda. Um repositório de cinco stacks entra vermelho na primeira
-# análise por dívida antiga, e portão que nasce vermelho por dívida é portão que
-# se aprende a ignorar. Depois da primeira análise, escolha o Quality Gate,
-# apague o `continue-on-error` e ponha no branch protection.
+# NÃO BLOQUEIA MERGE, e isso NÃO se faz com `continue-on-error`.
+#
+# Havia um `continue-on-error: true` aqui, posto para o Quality Gate vermelho não
+# reprovar o PR. Ele não protegia de nada: a action de scan só falha quando o
+# SCAN falha — o gate vermelho só reprova a job se alguém pedir, com
+# `sonar.qualitygate.wait` ou com a action separada de quality gate, e este
+# arquivo não usa nenhuma das duas.
+#
+# O que ele fazia, de fato, era esconder quebra. MEDIDO em 2026-09-09: quatro
+# pushes seguidos não produziram análise nenhuma — o painel ficou parado no
+# commit 29eef558 — e o workflow aparecia verde. A job falhava e ninguém via.
+#
+# Sem ele, scan quebrado fica VERMELHO e visível, e o gate continua não
+# bloqueando, que era o objetivo desde o começo.
+#
+# A causa provável daquelas falhas está do lado do Sonar, não daqui: com a
+# Automatic Analysis LIGADA, a análise por CI é recusada. As duas não convivem,
+# e desligar a automática em Administration > Analysis Method é o que libera
+# esta.
 #
 # O CodeQL continua onde está e NÃO é substituído. Os dois se sobrepõem em
 # segurança, e divergem no resto: o CodeQL segue fluxo de dados entre arquivos e
@@ -29,7 +43,6 @@ jobs:
   sonar:
     name: Análise
     runs-on: ubuntu-latest
-    continue-on-error: true
 
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
