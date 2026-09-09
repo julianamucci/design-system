@@ -6927,8 +6927,27 @@ function auditQuality(slug) {
             // são `[1, 2, 3, 4, 5, 6]`. A janela alcançava a primeira, e a
             // regra reportou "renderiza 4" sobre uma página que renderiza seis
             // — achado `high` num arquivo correto.
-            for (const mapa of semComentario.matchAll(/\[([\d,\s]+)\]\s*\.map\(/g)) {
-              const janela = semComentario.slice(mapa.index, mapa.index + 400);
+            // A janela para no INÍCIO do `.map(` seguinte, e não só nos 400
+            // caracteres. Sem esse teto ela transborda para a lista de baixo, e
+            // o array de CIMA leva o crédito.
+            //
+            // Medido em 2026-09-09 no `DialogDocs.vue`: a página renderizava 6
+            // de 7 critérios e a regra passou calada. A janela começava num
+            // `[1..7].map(` oito linhas acima e alcançava a interpolação
+            // `testes.accessibility.item${i}` da lista seguinte — `renderizado`
+            // virou 7, o total era 7, e o `>=` pulou.
+            //
+            // É a MESMA armadilha de vizinhança que a amarração ao próprio
+            // `.map(` corrigiu em 2026-09-07, e a correção de então resolveu só
+            // metade: o caso do array anterior ser MENOR. O caso de ele ser
+            // maior ou igual continuou passando — e passando em SILÊNCIO, que é
+            // o pior dos dois, porque falso negativo não deixa rastro.
+            const mapas = [...semComentario.matchAll(/\[([\d,\s]+)\]\s*\.map\(/g)];
+            for (let mi = 0; mi < mapas.length; mi++) {
+              const mapa = mapas[mi];
+              const proximo = mapas[mi + 1]?.index ?? semComentario.length;
+              const fim = Math.min(mapa.index + 400, proximo);
+              const janela = semComentario.slice(mapa.index, fim);
               if (!new RegExp(`${p}\\.item\\$\\{i\\}`).test(janela)) continue;
               renderizado = Math.max(
                 renderizado,
