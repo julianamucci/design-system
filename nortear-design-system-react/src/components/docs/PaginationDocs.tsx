@@ -91,14 +91,17 @@ export function PaginationDocs() {
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os
   // valores chegam ao container — o `t()` exige nome de chave e não serviria.
+  // O `title` fica de fora: ele é o cabeçalho da lista, não um item dela.
   const screenReaderItems = useMemo(
     () =>
-      Object.values(
+      Object.entries(
         (paginationTranslations as unknown as Record<
           string,
           { accessibility?: { screenReader?: Record<string, string> } }
         >)[locale]?.accessibility?.screenReader ?? {},
-      ),
+      )
+        .filter(([key]) => key !== "title")
+        .map(([, value]) => value),
     [locale],
   );
 
