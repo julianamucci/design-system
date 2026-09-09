@@ -9,7 +9,7 @@ import unusedImports from 'eslint-plugin-unused-imports'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
-export default defineConfig([globalIgnores(['dist', 'storybook-static', 'node_modules', 'coverage', '.storybook/manager-head.html']), {
+export default defineConfig([globalIgnores(['dist', 'storybook-static', 'node_modules', 'coverage', '.storybook/manager-head.html', '.storybook/public']), {
   files: ['**/*.{ts,tsx}'],
   extends: [
     js.configs.recommended,

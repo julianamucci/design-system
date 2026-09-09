@@ -13,6 +13,16 @@
     // não faz parte deste programa.
     "types": ["node", "vite/client"]
   },
-  "include": ["../src/**/*.ts", "./**/*.ts"],
+  "include": [
+    "../src/**/*.ts",
+    "./**/*.ts",
+    // A funcao do chat e o config do bundle dele. Sem estas duas linhas o
+    // `ngc` nao os abre: este arquivo SUBSTITUI o `include` do tsconfig que
+    // estende, e o build do angular e `ngc -p .storybook/tsconfig.json` — foi
+    // medido plantando um erro de tipo em `api/perguntar.ts`, que as outras
+    // quatro stacks reprovaram e esta fechou exit 0.
+    "../api/**/*.ts",
+    "../vite.chat-docs.config.ts"
+  ],
   "exclude": ["../src/**/*.spec.ts"]
 }

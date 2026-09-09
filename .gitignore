@@ -78,10 +78,10 @@ scratch/
 # Diário da revisão serial — local, não versionado
 .revisao/
 
-# Bundle do chat de documentacao (vanilla) — gerado por
-# nortear-design-system-vanilla/vite.chat-docs.config.ts e servido pelo
-# staticDirs do manager. Artefato de build, nunca versionado.
-nortear-design-system-vanilla/.storybook/public/
+# Bundle do chat de documentacao — fonte unica em docs/shared/chat-docs,
+# empacotada por <stack>/vite.chat-docs.config.ts e servida pelo staticDirs do
+# manager, nas CINCO. Artefato de build, nunca versionado.
+nortear-design-system-*/.storybook/public/
 
 .vercel
 .env*

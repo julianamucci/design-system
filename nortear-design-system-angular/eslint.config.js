@@ -10,6 +10,8 @@ export default defineConfig([
   globalIgnores([
     'dist',
     'storybook-static',
+    // Bundle GERADO do chat de documentacao (vite.chat-docs.config.ts).
+    '.storybook/public',
     'node_modules',
     'coverage',
     '.storybook/manager-head.html',

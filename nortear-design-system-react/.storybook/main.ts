@@ -1,6 +1,9 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
+  // Serve .storybook/public na raiz do Storybook — é de lá que o manager-head
+  // pede o bundle do chat, construído por ../vite.chat-docs.config.ts.
+  staticDirs: ['./public'],
   "stories": [
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"

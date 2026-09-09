@@ -11,7 +11,15 @@
  * system não tem runtime de conversa, e não vai ter. Nenhuma peça de
  * `src/components/ui/` faz `fetch`, abre `WebSocket`, lê `localStorage` ou
  * agenda relógio de negócio. O chat é uma APLICAÇÃO que consome as peças — mora
- * aqui e em `.storybook/`, e nunca ao lado delas.
+ * aqui, em `docs/shared/chat-docs/`, e nunca ao lado delas.
+ *
+ * ── UMA IMPLEMENTAÇÃO, CINCO ENDEREÇOS ──
+ *
+ * As cinco stacks se implantam sozinhas, cada uma no seu domínio, e cada uma
+ * serve `/api/perguntar` da PRÓPRIA origem — senão o widget faria pedido entre
+ * origens e dependeria do deploy de outra. O que existe cinco vezes é o
+ * endereço: `<stack>/api/perguntar.ts` é um reexport de uma linha. O corpo é
+ * este arquivo, e é um só.
  *
  * ── A CHAVE ──
  *
@@ -33,14 +41,13 @@
 import { existsSync, readFileSync } from 'node:fs';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { GoogleGenAI, ApiError, ThinkingLevel } from '@google/genai';
 import {
   RETRIEVAL_FLOOR,
   isWeakRetrieval,
   searchDocs,
   type DocsIndexHit,
-} from '../../docs/shared/primitives/docs-index';
+} from '../primitives/docs-index';
 import { isLocale, loadCorpus, type Locale } from './corpus';
 
 export const config = { runtime: 'nodejs' };
@@ -431,11 +438,16 @@ function chaveDoAmbiente(): string | null {
   if (process.env.NORTEAR_IGNORAR_ENV_LOCAL === '1') return null;
   if (chaveMemoizada !== undefined) return chaveMemoizada;
 
-  const aqui = fileURLToPath(new URL('.', import.meta.url));
-  const candidatos = [
-    join(aqui, '..', '.env.local'),
-    join(process.cwd(), '.env.local'),
-  ];
+  // O `.env.local` é POR STACK — cada uma se implanta sozinha, com o seu
+  // próprio domínio. Este módulo é compartilhado e não tem como saber de qual
+  // stack partiu a chamada; quem sabe é o processo. Em `vercel dev` o
+  // diretório de trabalho é a raiz da stack, que é exatamente o que se quer.
+  //
+  // Não há candidato relativo a ESTE arquivo de propósito: daqui,
+  // `docs/shared/chat-docs/`, todo caminho para uma stack teria de nomear uma
+  // delas — e um módulo compartilhado que nomeia uma stack é o começo da
+  // divergência.
+  const candidatos = [join(process.cwd(), '.env.local')];
 
   for (const arquivo of candidatos) {
     if (!existsSync(arquivo)) continue;
@@ -822,7 +834,7 @@ export async function responder(request: Request): Promise<Response> {
     return jsonError(
       503,
       'sem_corpus',
-      'O conteúdo compartilhado não subiu junto com a função. Ver o cabeçalho de api/corpus.ts.',
+      'O conteúdo compartilhado não subiu junto com a função. Ver o cabeçalho de docs/shared/chat-docs/corpus.ts.',
     );
   }
 

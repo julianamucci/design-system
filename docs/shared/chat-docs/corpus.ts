@@ -31,7 +31,7 @@ import {
   entryFromTranslations,
   type DocsIndexEntry,
   type TranslationsLocaleDocument,
-} from '../../docs/shared/primitives/docs-index';
+} from '../primitives/docs-index';
 
 /** As três línguas do conteúdo compartilhado. */
 export type Locale = 'pt-BR' | 'en' | 'es';
@@ -63,6 +63,13 @@ function candidateRoots(): string[] {
   const here = fileURLToPath(new URL('.', import.meta.url));
   const roots: string[] = [];
   if (process.env.NORTEAR_CONTENT_DIR) roots.push(process.env.NORTEAR_CONTENT_DIR);
+  // Este módulo vive em `docs/shared/chat-docs/`, então o conteúdo é a pasta
+  // irmã. É o candidato mais direto e o único que não depende de onde o
+  // processo foi iniciado — por isso vem primeiro.
+  roots.push(join(here, '..', 'content'));
+  // Os de baixo são de quando o servidor morava em `<stack>/api/`. Ficam como
+  // rede: não custam nada, e um layout de deploy que achate a árvore ainda cai
+  // em algum deles.
   roots.push(join(here, '..', '..', 'docs', 'shared', 'content'));
   roots.push(join(process.cwd(), '..', 'docs', 'shared', 'content'));
   roots.push(join(process.cwd(), 'docs', 'shared', 'content'));

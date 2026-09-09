@@ -9,13 +9,15 @@
     "pretest": "node ../scripts/limpar-orfaos.mjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "storybook": "storybook dev -p 6008",
-    "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://svelte.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
+    "storybook": "npm run chat-docs && storybook dev -p 6008",
+    "build-storybook": "npm run chat-docs && storybook build && node ../scripts/generate-seo-files.mjs --base https://svelte.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
     "chromatic": "npx chromatic",
     "postinstall": "patch-package",
-    "build-storybook:chromatic": "storybook build"
+    "build-storybook:chromatic": "npm run chat-docs && storybook build",
+    "chat-docs": "vite build --config vite.chat-docs.config.ts"
   },
   "dependencies": {
+    "@google/genai": "^2.21.0",
     "@grafana/faro-web-sdk": "^2.9.0",
     "@grafana/faro-web-tracing": "^2.9.0",
     "@tanstack/svelte-virtual": "^3.13.34",

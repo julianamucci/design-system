@@ -40,8 +40,8 @@
  * log, nem para o JSON de saída, nem para uma mensagem de erro.
  */
 
-import { nomeDeMenu, recortarDocumento, responder } from '../../../api/perguntar';
-import { loadCorpus, isLocale, type Locale } from '../../../api/corpus';
+import { nomeDeMenu, recortarDocumento, responder } from '../../../../docs/shared/chat-docs/servidor';
+import { loadCorpus, isLocale, type Locale } from '../../../../docs/shared/chat-docs/corpus';
 import { BANCO, type CasoDeAvaliacao, type TurnoDoBanco } from './banco';
 import {
   avaliarRecuperacao,

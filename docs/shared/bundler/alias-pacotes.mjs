@@ -43,3 +43,37 @@ export function aliasDoCompartilhado(dirDaStack) {
     PACOTES_DO_COMPARTILHADO.map((nome) => [nome, requireDaStack.resolve(nome)]),
   );
 }
+
+/**
+ * Pacotes que o BUNDLE DO CHAT alcança além dos de cima.
+ *
+ * O chat do manager é montado a partir das factories do vanilla — é a
+ * implementação em DOM do design system, e o manager do Storybook é DOM em
+ * todas as stacks. Só que resolução de módulo parte do ARQUIVO que importa: os
+ * arquivos são de `nortear-design-system-vanilla/src`, então sem alias eles
+ * acham o `node_modules` DO VANILLA e não o da stack que está construindo.
+ *
+ * Na máquina de quem desenvolve isso passa: as cinco pastas estão instaladas
+ * lado a lado, e o build do react fecha verde puxando dependência do vanilla.
+ * No CI cada job instala só a própria stack — medido em 2026-09-09, é
+ * exatamente o mesmo mecanismo que este arquivo já documenta para o markdown.
+ *
+ * `lucide` é o motivo de react e vue passarem a declará-lo: as duas usavam só
+ * `lucide-react` e `lucide-vue-next`, que são outros pacotes.
+ */
+export const PACOTES_DO_CHAT = ['clsx', 'dompurify', 'lucide'];
+
+/**
+ * Entradas de `resolve.alias` para o bundle do chat de uma stack.
+ *
+ * @param {string} dirDaStack diretório raiz da stack (onde vive o package.json)
+ */
+export function aliasDoChat(dirDaStack) {
+  const requireDaStack = createRequire(path.join(dirDaStack, 'package.json'));
+  return {
+    ...aliasDoCompartilhado(dirDaStack),
+    ...Object.fromEntries(
+      PACOTES_DO_CHAT.map((nome) => [nome, requireDaStack.resolve(nome)]),
+    ),
+  };
+}

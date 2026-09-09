@@ -6,6 +6,9 @@ import { aliasDoCompartilhado } from '../../docs/shared/bundler/alias-pacotes.mj
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
+  // Serve .storybook/public na raiz do Storybook — é de lá que o manager-head
+  // pede o bundle do chat, construído por ../vite.chat-docs.config.ts.
+  staticDirs: ['./public'],
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|ts)'],
   addons: [
     '@chromatic-com/storybook',

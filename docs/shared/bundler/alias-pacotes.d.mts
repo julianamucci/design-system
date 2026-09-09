@@ -13,3 +13,14 @@ export declare const PACOTES_DO_COMPARTILHADO: readonly string[];
  * @param dirDaStack diretório raiz da stack (onde vive o package.json)
  */
 export declare function aliasDoCompartilhado(dirDaStack: string): Record<string, string>;
+
+/** Pacotes que o bundle do chat alcança além dos de cima. */
+export declare const PACOTES_DO_CHAT: readonly string[];
+
+/**
+ * Entradas de `resolve.alias` para o bundle do chat de uma stack: as de
+ * `aliasDoCompartilhado` mais as do chat.
+ *
+ * @param dirDaStack diretório raiz da stack (onde vive o package.json)
+ */
+export declare function aliasDoChat(dirDaStack: string): Record<string, string>;

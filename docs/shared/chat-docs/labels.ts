@@ -11,9 +11,9 @@
  * abrir em outra língua que o resto da tela.
  */
 
-import type { Locale } from '../../../docs/shared/primitives/locale-negotiation';
-import type { ChatThreadLabels } from '../../src/components/ui/chat-thread';
-import type { ComposerLabels } from '../../src/components/ui/composer';
+import type { Locale } from '../primitives/locale-negotiation';
+import type { ChatThreadLabels } from '@/components/ui/chat-thread';
+import type { ComposerLabels } from '@/components/ui/composer';
 
 export interface ChatDocsLabels {
   /** Nome acessível do botão que abre, e o texto dele. */
@@ -79,7 +79,7 @@ const PT: ChatDocsLabels = {
     sem_chave:
       'A chave da API não está configurada neste ambiente. O chat precisa de GEMINI_API_KEY na função de servidor — sem ela, nada é enviado a lugar nenhum.',
     sem_corpus:
-      'O conteúdo compartilhado não subiu junto com a função de servidor. Ver o cabeçalho de api/corpus.ts.',
+      'O conteúdo compartilhado não subiu junto com a função de servidor. Ver o cabeçalho de docs/shared/chat-docs/corpus.ts.',
     limite_de_taxa: 'Muitas perguntas em pouco tempo. Espere um minuto e tente de novo.',
     pergunta_longa: 'A pergunta é longa demais. Encurte e tente de novo.',
     pergunta_vazia: 'Escreva uma pergunta.',
@@ -129,7 +129,7 @@ const EN: ChatDocsLabels = {
     sem_chave:
       'The API key is not configured in this environment. The chat needs GEMINI_API_KEY on the server function — without it, nothing is sent anywhere.',
     sem_corpus:
-      'The shared content was not deployed with the server function. See the header of api/corpus.ts.',
+      'The shared content was not deployed with the server function. See the header of docs/shared/chat-docs/corpus.ts.',
     limite_de_taxa: 'Too many questions in a short time. Wait a minute and try again.',
     pergunta_longa: 'The question is too long. Shorten it and try again.',
     pergunta_vazia: 'Write a question.',
@@ -179,7 +179,7 @@ const ES: ChatDocsLabels = {
     sem_chave:
       'La clave de la API no está configurada en este entorno. El chat necesita GEMINI_API_KEY en la función de servidor — sin ella no se envía nada a ninguna parte.',
     sem_corpus:
-      'El contenido compartido no se publicó junto a la función de servidor. Ver la cabecera de api/corpus.ts.',
+      'El contenido compartido no se publicó junto a la función de servidor. Ver la cabecera de docs/shared/chat-docs/corpus.ts.',
     limite_de_taxa: 'Demasiadas preguntas en poco tiempo. Espera un minuto e inténtalo de nuevo.',
     pergunta_longa: 'La pregunta es demasiado larga. Acórtala e inténtalo de nuevo.',
     pergunta_vazia: 'Escribe una pregunta.',

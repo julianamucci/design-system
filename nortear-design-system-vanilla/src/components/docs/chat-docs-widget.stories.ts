@@ -26,7 +26,7 @@
  */
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent } from 'storybook/test';
-import { mountChatDocs } from '../../../.storybook/chat-docs';
+import { mountChatDocs } from '../../../../docs/shared/chat-docs';
 
 const meta: Meta = {
   title: 'QA/Chat da documentação',

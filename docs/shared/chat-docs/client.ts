@@ -11,7 +11,7 @@
  * que consome as peças, e o transporte é dela.
  */
 
-import type { Locale } from '../../../docs/shared/primitives/locale-negotiation';
+import type { Locale } from '../primitives/locale-negotiation';
 
 /** As fontes recuperadas, antes do primeiro token da resposta. */
 export interface SourcesEvent {

@@ -30,7 +30,7 @@ import handler, {
   MAX_HISTORY_CHARS,
   MAX_HISTORY_TURNS,
   MAX_QUESTION_LENGTH,
-} from '../../api/perguntar';
+} from '../../../docs/shared/chat-docs/servidor';
 
 let servidor: Server;
 let base: string;

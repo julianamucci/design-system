@@ -9,9 +9,10 @@
     "pretest": "node ../scripts/limpar-orfaos.mjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "storybook": "storybook dev -p 6010",
-    "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://angular.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
-    "build-storybook:chromatic": "storybook build",
+    "storybook": "npm run chat-docs && storybook dev -p 6010",
+    "build-storybook": "npm run chat-docs && storybook build && node ../scripts/generate-seo-files.mjs --base https://angular.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
+    "build-storybook:chromatic": "npm run chat-docs && storybook build",
+    "chat-docs": "vite build --config vite.chat-docs.config.ts",
     "chromatic": "npx chromatic"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "@angular/forms": "^22.1.1",
     "@angular/platform-browser": "^22.1.1",
     "@floating-ui/dom": "^1.7.6",
+    "@google/genai": "^2.21.0",
     "@internationalized/date": "^3.12.2",
     "@internationalized/number": "^3.6.7",
     "@radix-ng/primitives": "^1.1.2",

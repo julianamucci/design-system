@@ -10,12 +10,14 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "postinstall": "patch-package",
-    "storybook": "storybook dev -p 6007",
-    "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://vue.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
+    "storybook": "npm run chat-docs && storybook dev -p 6007",
+    "build-storybook": "npm run chat-docs && storybook build && node ../scripts/generate-seo-files.mjs --base https://vue.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
     "chromatic": "npx chromatic",
-    "build-storybook:chromatic": "storybook build"
+    "build-storybook:chromatic": "npm run chat-docs && storybook build",
+    "chat-docs": "vite build --config vite.chat-docs.config.ts"
   },
   "dependencies": {
+    "@google/genai": "^2.21.0",
     "@grafana/faro-web-sdk": "^2.9.0",
     "@grafana/faro-web-tracing": "^2.9.0",
     "@tanstack/vue-table": "^9.1.2",
@@ -41,6 +43,7 @@
     "embla-carousel-autoplay": "^8.6.0",
     "embla-carousel-vue": "^8.6.0",
     "katex": "0.18.5",
+    "lucide": "^1.43.0",
     "lucide-vue-next": "^1.0.0",
     "mdast-util-from-markdown": "^2.0.3",
     "mdast-util-gfm": "^3.1.0",

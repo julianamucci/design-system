@@ -29,3 +29,11 @@
     max-height: none !important;
   }
 </style>
+
+<!-- Chat de documentação — botão flutuante que conversa com o conteúdo
+     compartilhado. A fonte é única para as cinco stacks (docs/shared/chat-docs),
+     empacotada por ../vite.chat-docs.config.ts e servida pelo staticDirs do
+     main.ts; ver o cabeçalho de docs/shared/bundler/config-chat.mjs para o
+     porquê de não ser um import do manager. -->
+<link rel="stylesheet" href="./chat-docs.css">
+<script type="module" src="./chat-docs.js"></script>

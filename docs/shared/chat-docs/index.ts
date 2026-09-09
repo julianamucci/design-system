@@ -27,16 +27,16 @@
  * - `prefers-reduced-motion` é respeitado pela folha (ver `chat-docs.css`).
  */
 
-import { negociarLocale, type Locale } from '../../../docs/shared/primitives/locale-negotiation';
-import type { ChatSource } from '../../../docs/shared/primitives/chat-protocol';
-import { createChatThread, type ChatThreadElement } from '../../src/components/ui/chat-thread';
-import { createComposer, type ComposerElement } from '../../src/components/ui/composer';
-import { createThinkingIndicator } from '../../src/components/ui/thinking-indicator';
+import { negociarLocale, type Locale } from '../primitives/locale-negotiation';
+import type { ChatSource } from '../primitives/chat-protocol';
+import { createChatThread, type ChatThreadElement } from '@/components/ui/chat-thread';
+import { createComposer, type ComposerElement } from '@/components/ui/composer';
+import { createThinkingIndicator } from '@/components/ui/thinking-indicator';
 import { ask, type SourcesEvent, type TurnoAnterior } from './client';
 import { labelsFor, type ChatDocsLabels } from './labels';
 import './chat-docs.css';
 
-/** Mesmo teto que `api/perguntar.ts` declara. A pessoa vê o limite antes de bater nele. */
+/** Mesmo teto que `servidor.ts` declara. A pessoa vê o limite antes de bater nele. */
 const MAX_QUESTION_LENGTH = 600;
 
 /** Chave do idioma, a mesma que as docs pages e a sidebar usam. */
