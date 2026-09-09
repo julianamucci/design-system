@@ -6942,11 +6942,41 @@ function auditQuality(slug) {
             // metade: o caso do array anterior ser MENOR. O caso de ele ser
             // maior ou igual continuou passando — e passando em SILÊNCIO, que é
             // o pior dos dois, porque falso negativo não deixa rastro.
-            const mapas = [...semComentario.matchAll(/\[([\d,\s]+)\]\s*\.map\(/g)];
+            // SEGUNDA forma de intervalo cravado: array de OBJETOS que carrega
+            // o índice num campo — `[{ i: 1, … }, { i: 2, … }]` seguido de
+            // `.map(({ i, … }) => … item${i})`. O Angular usa isso onde a linha
+            // tem metadado por item (nível WCAG, como verificar).
+            //
+            // Medido em 2026-09-09: o `SheetDocs.ts` do Angular renderizava 5 de
+            // 6 e a regra PULOU — ela só reconhecia `[1, 2, 3].map(`, então
+            // `renderizado` ficava 0 e o `if (!renderizado …) continue` saía
+            // calado. Zero de uma varredura que não achou nada é indistinguível
+            // de limpo, e é a terceira vez que esta casa paga por isso: o
+            // `source-snippets.test.ts` encolheu em silêncio quando 28 exports
+            // saíram da varredura, e a checagem de órfã contou chave como
+            // consumida por olhar só a docs page.
+            const objetos = [...semComentario.matchAll(
+              /\[\s*(\{\s*i:\s*\d+[\s\S]{0,600}?)\]\s*;?\s*(?:[\s\S]{0,400}?\.map\()?/g,
+            )].map((m) => ({
+              index: m.index,
+              // Teto próprio, e maior: a forma de objeto é mais espalhada,
+              // porque o array carrega metadado por linha. Medido no
+              // `SheetDocs.ts` do Angular — 717 caracteres entre o array e o
+              // uso que o consome, contra os 400 que bastam para a forma
+              // `[1, 2, 3].map(`. O limite do `.map(` seguinte continua valendo
+              // por cima deste, então o teto maior não reabre o transbordo para
+              // a lista vizinha.
+              teto: 1200,
+              1: [...m[1].matchAll(/\bi:\s*(\d+)/g)].map((x) => x[1]).join(','),
+            }));
+            const mapas = [
+              ...semComentario.matchAll(/\[([\d,\s]+)\]\s*\.map\(/g),
+              ...objetos,
+            ].sort((a, b) => a.index - b.index);
             for (let mi = 0; mi < mapas.length; mi++) {
               const mapa = mapas[mi];
               const proximo = mapas[mi + 1]?.index ?? semComentario.length;
-              const fim = Math.min(mapa.index + 400, proximo);
+              const fim = Math.min(mapa.index + (mapa.teto ?? 400), proximo);
               const janela = semComentario.slice(mapa.index, fim);
               if (!new RegExp(`${p}\\.item\\$\\{i\\}`).test(janela)) continue;
               renderizado = Math.max(

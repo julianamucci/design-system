@@ -394,6 +394,11 @@
           "criterion": "Sem descrição, o painel omite aria-describedby em vez de referenciar um ID inexistente",
           "level": "AA",
           "how": "Abrir sem descrição e conferir que o atributo não existe no painel"
+        },
+        "item9": {
+          "criterion": "O nível do cabeçalho do título é configurável, e o aria-labelledby continua apontando para ele",
+          "level": "AA",
+          "how": "Renderizar o título como h3 e conferir no DOM: a tag é H3 E o aria-labelledby do painel resolve nela"
         }
       },
       "visual": {
@@ -842,6 +847,11 @@
           "criterion": "Without a description, the panel omits aria-describedby instead of referencing a missing ID",
           "level": "AA",
           "how": "Open without a description and check that the attribute is absent from the panel"
+        },
+        "item9": {
+          "criterion": "The title heading level is configurable, and aria-labelledby still points at it",
+          "level": "AA",
+          "how": "Render the title as h3 and check the DOM: the tag is H3 AND the panel aria-labelledby resolves to it"
         }
       },
       "visual": {
@@ -1290,6 +1300,11 @@
           "criterion": "Sin descripción, el panel omite aria-describedby en lugar de referenciar un ID inexistente",
           "level": "AA",
           "how": "Abrir sin descripción y comprobar que el atributo no existe en el panel"
+        },
+        "item9": {
+          "criterion": "El nivel del encabezado del título es configurable, y aria-labelledby sigue apuntando a él",
+          "level": "AA",
+          "how": "Renderizar el título como h3 y comprobar en el DOM: la etiqueta es H3 Y el aria-labelledby del panel resuelve en ella"
         }
       },
       "visual": {

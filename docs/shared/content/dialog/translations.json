@@ -440,6 +440,11 @@
           "criterion": "Sem violações axe-core no estado aberto",
           "level": "AA",
           "how": "axe-playwright no test-runner do Storybook"
+        },
+        "item7": {
+          "criterion": "O nível do cabeçalho do título é configurável, e o aria-labelledby continua apontando para ele",
+          "level": "AA",
+          "how": "Renderizar o título como h3 e conferir no DOM: a tag é H3 E o aria-labelledby do painel resolve nela"
         }
       },
       "visual": {
@@ -931,6 +936,11 @@
           "criterion": "No axe-core violations in open state",
           "level": "AA",
           "how": "axe-playwright in Storybook test-runner"
+        },
+        "item7": {
+          "criterion": "The title heading level is configurable, and aria-labelledby still points at it",
+          "level": "AA",
+          "how": "Render the title as h3 and check the DOM: the tag is H3 AND the panel aria-labelledby resolves to it"
         }
       },
       "visual": {
@@ -1422,6 +1432,11 @@
           "criterion": "Sin violaciones axe-core en estado abierto",
           "level": "AA",
           "how": "axe-playwright en test-runner de Storybook"
+        },
+        "item7": {
+          "criterion": "El nivel del encabezado del título es configurable, y aria-labelledby sigue apuntando a él",
+          "level": "AA",
+          "how": "Renderizar el título como h3 y comprobar en el DOM: la etiqueta es H3 Y el aria-labelledby del panel resuelve en ella"
         }
       },
       "visual": {

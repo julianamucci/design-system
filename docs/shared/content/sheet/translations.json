@@ -476,7 +476,8 @@
         "item2": "Contraste mínimo 4.5:1 entre texto e fundo (WCAG 2.2 AA)",
         "item3": "role=\"dialog\" presente no SheetContent",
         "item4": "aria-labelledby aponta para SheetTitle",
-        "item5": "aria-describedby aponta para SheetDescription"
+        "item5": "aria-describedby aponta para SheetDescription",
+        "item6": "O nível do cabeçalho do título é configurável (h1–h6) e o aria-labelledby do painel continua apontando para ele — conferido no DOM com o título em h3"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -999,7 +1000,8 @@
         "item2": "Minimum 4.5:1 contrast between text and background (WCAG 2.2 AA)",
         "item3": "role=\"dialog\" present on SheetContent",
         "item4": "aria-labelledby points to SheetTitle",
-        "item5": "aria-describedby points to SheetDescription"
+        "item5": "aria-describedby points to SheetDescription",
+        "item6": "The title heading level is configurable (h1–h6) and the panel aria-labelledby still points at it — checked in the DOM with the title as h3"
       },
       "visual": {
         "title": "Visual Regression",
@@ -1522,7 +1524,8 @@
         "item2": "Contraste mínimo 4.5:1 entre texto y fondo (WCAG 2.2 AA)",
         "item3": "role=\"dialog\" presente en SheetContent",
         "item4": "aria-labelledby apunta a SheetTitle",
-        "item5": "aria-describedby apunta a SheetDescription"
+        "item5": "aria-describedby apunta a SheetDescription",
+        "item6": "El nivel del encabezado del título es configurable (h1–h6) y el aria-labelledby del panel sigue apuntando a él — comprobado en el DOM con el título en h3"
       },
       "visual": {
         "title": "Regresión Visual",
