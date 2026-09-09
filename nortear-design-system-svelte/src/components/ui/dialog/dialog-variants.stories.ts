@@ -9,6 +9,7 @@ import {
   dialogNoFooterSource,
   dialogCustomCloseSource,
   dialogConfirmarEmailSource,
+  dialogHeadingH3Source,
   dialogSource,
 } from './dialog.source';
 import {
@@ -406,6 +407,42 @@ export const ConfirmEmail: Story = {
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const buttons = footer.querySelectorAll<HTMLElement>('button');
       await expect(buttons[buttons.length - 1]).toHaveClass('nds-button-default');
+    });
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item3'],
+    docs: {
+      source: { transform: dialogHeadingH3Source },
+      description: {
+        story:
+          'O painel abre de dentro de uma página cuja seção já está em h2, então o título pede h3. Trocar a tag do cabeçalho não pode romper o aria-labelledby que dá nome ao painel.',
+      },
+    },
+  },
+  args: {
+    open: true,
+    variant: 'default',
+    titleLevel: 3,
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.action'),
+    cancelLabel: t('demonstration.labels.cancel'),
+  },
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('O título sai em h3 e o painel continua nomeado por ele', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

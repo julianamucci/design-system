@@ -31,7 +31,13 @@ export type SheetArgs = {
  */
 type Body = 'nenhum' | 'texto' | 'formulario' | 'perfil' | 'rolagem' | 'navegacao' | 'acoes';
 
-type Options = Partial<SheetArgs> & { body?: Body };
+type Options = Partial<SheetArgs> & {
+  body?: Body;
+  /**
+   * Nível do cabeçalho do título. Ausente, o snippet não escreve nível nenhum.
+   */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+};
 
 const DEFAULT: SheetArgs & { body: Body } = {
   side: 'right',
@@ -171,6 +177,23 @@ function panelBody(body: Body): string {
   return '';
 }
 
+/**
+ * Título do painel, com o nível de cabeçalho quando ele é pedido.
+ *
+ * A delegação vai pelo snippet `child`: nesta lib o `level` sozinho troca o
+ * `aria-level` e mantém a TAG em `div`. Os dois andam juntos para a tag e o
+ * ARIA concordarem. Sem nível pedido nada disso é escrito — valor padrão não
+ * se escreve num exemplo que alguém copia.
+ */
+function panelTitle(title: string, level?: 1 | 2 | 3 | 4 | 5 | 6): string {
+  if (!level) return `<SheetTitle>${title}</SheetTitle>`;
+  return `<SheetTitle level={${level}}>
+        {#snippet child({ props })}
+          <h${level} {...props}>${title}</h${level}>
+        {/snippet}
+      </SheetTitle>`;
+}
+
 /** Composição completa do painel. */
 function panel(o: Options): string {
   const {
@@ -183,6 +206,7 @@ function panel(o: Options): string {
     actionLabel,
     cancelLabel,
     body,
+    titleLevel,
   } = { ...DEFAULT, ...o };
 
   // `open` ausente é o painel NÃO controlado: o gatilho abre e fecha sozinho, e
@@ -267,7 +291,7 @@ function handleSubmit(evento: SubmitEvent) {
   </SheetTrigger>
   <SheetContent${attrs(`side="${side}"`, showCloseButton ? '' : 'showCloseButton={false}')}>
     <SheetHeader>
-      <SheetTitle>${title}</SheetTitle>
+      ${panelTitle(title, titleLevel)}
       <SheetDescription>${description}</SheetDescription>
     </SheetHeader>
 ${panelBody(body)}${footerBlock}  </SheetContent>
@@ -282,6 +306,15 @@ ${panelBody(body)}${footerBlock}  </SheetContent>
  */
 export function sheetSource(_gerado?: string, ctx?: { args?: Partial<SheetArgs> }): string {
   return panel(ctx?.args ?? {});
+}
+
+/**
+ * Painel aberto de dentro de uma seção que já está em `h2`: o título pede `h3`.
+ *
+ * A única diferença para a forma canônica é o nível do cabeçalho.
+ */
+export function sheetHeadingH3Source(): string {
+  return panel({ open: true, titleLevel: 3 });
 }
 
 /** Composição: filtros avançados, com formulário no corpo do painel. */

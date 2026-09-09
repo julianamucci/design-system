@@ -3,6 +3,7 @@ import {
   perfilSheetEditSource,
   sheetBottomPanelSource,
   sheetFiltersAvancadosSource,
+  sheetHeadingH3Source,
   sheetNavegacaoSecundariaSource,
   sheetSource,
   sheetTermosWithScrollSource,
@@ -142,6 +143,7 @@ describe('transforms das stories de composição', () => {
       sheetTermosWithScrollSource(),
       sheetBottomPanelSource(),
       sheetNavegacaoSecundariaSource(),
+      sheetHeadingH3Source(),
     ]) {
       expect(saida).not.toContain('type="submit"');
       expect(saida).not.toContain('handleSubmit');
@@ -171,6 +173,30 @@ describe('transforms das stories de composição', () => {
     expect(saida).not.toContain('Aplicar filtros');
   });
 
+  it('o nível de cabeçalho sai por delegação de elemento, e só ele muda', () => {
+    const saida = sheetHeadingH3Source();
+    // `level` sozinho NÃO troca a tag nesta lib — troca o `aria-level` e deixa
+    // um `div`. Quem devolve o elemento é o snippet `child`, e os dois vão
+    // juntos para a tag e o ARIA concordarem. O snippet é o que se copia:
+    // publicá-lo só com o `level` ensinaria um `div` com cara de cabeçalho.
+    expect(saida).toContain('<SheetTitle level={3}>');
+    expect(saida).toContain('{#snippet child({ props })}');
+    expect(saida).toContain('<h3 {...props}>Filtros avançados</h3>');
+
+    // E nada MAIS muda: desfeito o bloco do título, sobra o snippet canônico.
+    // Sem esta parte o caso passaria com o painel inteiro reescrito, e o
+    // exemplo deixaria de ensinar uma coisa só.
+    expect(
+      saida.replace(
+        `<SheetTitle level={3}>
+        {#snippet child({ props })}
+          <h3 {...props}>Filtros avançados</h3>
+        {/snippet}
+      </SheetTitle>`,
+        '<SheetTitle>Filtros avançados</SheetTitle>',
+      ),
+    ).toBe(sheetSource('', { args: { open: true } }));
+  });
   it('a edição de perfil traz os três campos, na ordem das outras stacks', () => {
     const saida = perfilSheetEditSource();
     expect(saida).toContain('<SheetTitle>Editar perfil</SheetTitle>');

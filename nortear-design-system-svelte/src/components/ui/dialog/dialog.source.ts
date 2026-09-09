@@ -64,6 +64,10 @@ type Frame = {
   state?: string;
   isOpen?: boolean;
   showCloseButton?: boolean;
+  /**
+   * Nível do cabeçalho do título. Ausente, o snippet não escreve nível nenhum.
+   */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   contentClass?: string;
   triggerLabel: string;
   title: string;
@@ -75,6 +79,23 @@ type Frame = {
 };
 
 /**
+ * Título do painel, com o nível de cabeçalho quando ele é pedido.
+ *
+ * A delegação vai pelo snippet `child`: nesta lib o `level` sozinho troca o
+ * `aria-level` e mantém a TAG em `div`. Os dois andam juntos para a tag e o
+ * ARIA concordarem. Sem nível pedido nada disso é escrito — valor padrão não
+ * se escreve num exemplo que alguém copia.
+ */
+function panelTitle(title: string, level?: 1 | 2 | 3 | 4 | 5 | 6): string {
+  if (!level) return `<DialogTitle>${title}</DialogTitle>`;
+  return `<DialogTitle level={${level}}>
+        {#snippet child({ props })}
+          <h${level} {...props}>${title}</h${level}>
+        {/snippet}
+      </DialogTitle>`;
+}
+
+/**
  * Estrutura comum a todas as composições: raiz com estado ligado, gatilho,
  * painel, cabeçalho e — quando existe — corpo e rodapé.
  */
@@ -82,6 +103,7 @@ function dialogo({
   imports,
   isOpen = false,
   showCloseButton = true,
+  titleLevel,
   contentClass,
   triggerLabel,
   title,
@@ -110,7 +132,7 @@ let open = $state(${isOpen});`,
   </DialogTrigger>
   <DialogContent${panelProps}>
     <DialogHeader>
-      <DialogTitle>${title}</DialogTitle>
+      ${panelTitle(title, titleLevel)}
       <DialogDescription>${description}</DialogDescription>
     </DialogHeader>${miolo}
   </DialogContent>
@@ -150,6 +172,22 @@ export function dialogSource(_gerado?: string, ctx?: { args?: Partial<DialogArgs
     title,
     description,
     footer: footerDefault(cancelLabel, actionLabel),
+  });
+}
+
+/**
+ * Painel aberto de dentro de uma seção que já está em `h2`: o título pede `h3`.
+ *
+ * A única diferença para a forma canônica é o nível do cabeçalho.
+ */
+export function dialogHeadingH3Source(): string {
+  return dialogo({
+    isOpen: true,
+    titleLevel: 3,
+    triggerLabel: 'Editar perfil',
+    title: 'Editar perfil',
+    description: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
+    footer: footerDefault('Cancelar', 'Salvar alterações'),
   });
 }
 

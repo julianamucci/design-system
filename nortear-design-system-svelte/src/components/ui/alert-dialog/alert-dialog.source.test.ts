@@ -9,6 +9,7 @@ import {
   alertDialogDescriptionLongaSource,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
+  alertDialogHeadingH3Source,
   alertDialogSource,
 } from './alert-dialog.source';
 
@@ -149,6 +150,30 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('<AlertDialogTitle>Descartar rascunho</AlertDialogTitle>');
   });
 
+  it('o nível de cabeçalho sai por delegação de elemento, e só ele muda', () => {
+    const saida = alertDialogHeadingH3Source();
+    // `level` sozinho NÃO troca a tag nesta lib — troca o `aria-level` e deixa
+    // um `div`. Quem devolve o elemento é o snippet `child`, e os dois vão
+    // juntos para a tag e o ARIA concordarem. O snippet é o que se copia:
+    // publicá-lo só com o `level` ensinaria um `div` com cara de cabeçalho.
+    expect(saida).toContain('<AlertDialogTitle level={3}>');
+    expect(saida).toContain('{#snippet child({ props })}');
+    expect(saida).toContain('<h3 {...props}>Excluir conta</h3>');
+
+    // E nada MAIS muda: desfeito o bloco do título, sobra o snippet canônico.
+    // Sem esta parte o caso passaria com o painel inteiro reescrito, e o
+    // exemplo deixaria de ensinar uma coisa só.
+    expect(
+      saida.replace(
+        `<AlertDialogTitle level={3}>
+        {#snippet child({ props })}
+          <h3 {...props}>Excluir conta</h3>
+        {/snippet}
+      </AlertDialogTitle>`,
+        '<AlertDialogTitle>Excluir conta</AlertDialogTitle>',
+      ),
+    ).toBe(alertDialogSource('', { args: { open: true } }));
+  });
   it('a classe extra chega ao painel e ao bloco de mídia', () => {
     const saida = alertDialogClassNameExtraSource();
     expect(saida).toContain('<AlertDialogContent class="nds-overflow-hidden">');

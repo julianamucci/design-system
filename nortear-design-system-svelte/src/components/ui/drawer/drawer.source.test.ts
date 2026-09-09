@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  drawerHeadingH3Source,
   drawerWithConfirmSource,
   drawerWithFormSource,
   drawerWithScrollSource,
@@ -116,8 +117,42 @@ describe('transforms das stories de composição', () => {
     // que não têm `<form>` seria a mesma promessa vazia em outro lugar.
     expect(drawerWithConfirmSource()).not.toContain('type="submit"');
     expect(drawerWithScrollSource()).not.toContain('type="submit"');
+    expect(drawerHeadingH3Source()).not.toContain('type="submit"');
   });
 
+  it('o nível de cabeçalho sai por delegação de elemento, e só ele muda', () => {
+    const saida = drawerHeadingH3Source();
+    // `level` sozinho NÃO troca a tag nesta lib — troca o `aria-level` e deixa
+    // um `div`. Quem devolve o elemento é o snippet `child`, e os dois vão
+    // juntos para a tag e o ARIA concordarem. O snippet é o que se copia:
+    // publicá-lo só com o `level` ensinaria um `div` com cara de cabeçalho.
+    expect(saida).toContain('<DrawerTitle level={3}>');
+    expect(saida).toContain('{#snippet child({ props })}');
+    expect(saida).toContain('<h3 {...props}>Editar perfil</h3>');
+
+    // E nada MAIS muda: desfeito o bloco do título, sobra o snippet canônico.
+    // Sem esta parte o caso passaria com o painel inteiro reescrito, e o
+    // exemplo deixaria de ensinar uma coisa só.
+    expect(
+      saida.replace(
+        `<DrawerTitle level={3}>
+        {#snippet child({ props })}
+          <h3 {...props}>Editar perfil</h3>
+        {/snippet}
+      </DrawerTitle>`,
+        '<DrawerTitle>Editar perfil</DrawerTitle>',
+      ),
+    ).toBe(drawerSource('', {
+        args: {
+          open: true,
+          triggerLabel: 'Editar perfil',
+          title: 'Editar perfil',
+          description: 'Atualize seus dados.',
+          actionLabel: 'Salvar alterações',
+          cancelLabel: 'Cancelar',
+        },
+      }));
+  });
   it('a confirmação usa o corpo do painel para a mensagem curta', () => {
     const saida = drawerWithConfirmSource();
     expect(saida).toContain('<DrawerBody class="nds-text-body nds-text-muted-foreground">');

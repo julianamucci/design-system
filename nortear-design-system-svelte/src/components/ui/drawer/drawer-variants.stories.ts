@@ -3,9 +3,19 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
-import { drawerSource, drawerWithScrollSource } from './drawer.source';
+import {
+  drawerHeadingH3Source,
+  drawerSource,
+  drawerWithScrollSource,
+} from './drawer.source';
 
+import { useTranslation } from '@/lib/i18n';
+import drawerTranslations from '@shared/content/drawer/translations.json';
 import { figmaDesign } from '@shared/figma/design-links';
+// Os rótulos da story de nível de cabeçalho saem do conteúdo compartilhado.
+// As stories acima seguem com os literais que já tinham: reescrevê-las não é
+// assunto desta entrega.
+const { t } = useTranslation(drawerTranslations);
 const meta: Meta = {
   title: 'Components/Overlay/Drawer/Variants',
   component: DrawerStory,
@@ -215,6 +225,42 @@ export const WithScroll: Story = {
       const boxPanel = panel.getBoundingClientRect();
       await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
       await expect(boxFooter.height).toBeGreaterThan(0);
+    });
+  },
+};
+
+export const HeadingH3: Story = {
+  args: {
+    direction: 'bottom',
+    defaultOpen: true,
+    titleLevel: 3,
+    triggerLabel: t('demonstration.labels.trigger'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.confirm'),
+    cancelLabel: t('demonstration.labels.cancel'),
+  },
+  parameters: {
+    covers: ['accessibility.item3'],
+    docs: {
+      source: { transform: drawerHeadingH3Source },
+      description: {
+        story:
+          'O painel abre de dentro de uma página cuja seção já está em h2, então o título pede h3. Trocar a tag do cabeçalho não pode romper o aria-labelledby que dá nome ao painel.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    const p = await waitForPortal('dialog');
+
+    await step('O título sai em h3 e o painel continua nomeado por ele', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-sheet-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

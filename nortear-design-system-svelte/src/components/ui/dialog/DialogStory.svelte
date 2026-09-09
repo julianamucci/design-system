@@ -44,6 +44,11 @@
      */
     footerCloseLabel?: string;
     showCloseButton?: boolean;
+    /**
+     * Nível do cabeçalho do título. Ausente, o título fica no nível padrão do
+     * primitivo — é o que todas as outras stories deste andaime exercitam.
+     */
+    titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
     variant?: Variant;
     onAction?: () => void;
     onCancel?: () => void;
@@ -59,6 +64,7 @@
     cancelLabel = t('demonstration.labels.cancel'),
     footerCloseLabel = t('demonstration.labels.close'),
     showCloseButton = true,
+    titleLevel,
     variant = 'default',
     onAction,
     onCancel,
@@ -74,7 +80,31 @@
     </DialogTrigger>
     <DialogContent {showCloseButton}>
       <DialogHeader>
-        <DialogTitle>{title}</DialogTitle>
+        <!--
+          O nível do cabeçalho vai pelo snippet `child`, e não pelo `level`
+          sozinho. MEDIDO em 2026-09-09, bits-ui 2.19.0: o `dialog-title.svelte`
+          da lib renderiza `<div {...mergedProps}>` e expressa o nível em
+          `role="heading"` + `aria-level` — então `level={3}` sozinho deixa a
+          TAG em `div`. O leitor de tela anuncia certo, mas não há heading na
+          árvore do documento, e a asserção de `tagName` reprova com
+          `expected 'DIV' to be 'H3'`. Os quatro painéis modais desta stack
+          caem no MESMO arquivo da lib (o alert-dialog o reexporta; o drawer
+          chega nele pelo vaul-svelte), então não é particularidade de um slug.
+
+          `child` é a API de delegação de elemento do bits-ui — a mesma função
+          que as outras libs cumprem sob outro nome —, e é ela que devolve a
+          tag. O `level` vai JUNTO: sem ele o padrão da lib é 2, e o `<h3>`
+          sairia com `aria-level="2"`, com a tag e o ARIA discordando.
+        -->
+        {#if titleLevel}
+          <DialogTitle level={titleLevel}>
+            {#snippet child({ props })}
+              <svelte:element this={`h${titleLevel}`} {...props}>{title}</svelte:element>
+            {/snippet}
+          </DialogTitle>
+        {:else}
+          <DialogTitle>{title}</DialogTitle>
+        {/if}
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
 

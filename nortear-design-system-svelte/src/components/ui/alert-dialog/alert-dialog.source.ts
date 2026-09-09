@@ -31,6 +31,10 @@ type Composition = {
   description: string | null;
   cancelLabel: string;
   actionLabel: string;
+  /**
+   * Nível do cabeçalho do título. Ausente, o snippet não escreve nível nenhum.
+   */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   contentClass?: string;
   mediaClass?: string;
   /** Handler do consumidor no botão de confirmação (nome de função). */
@@ -53,6 +57,23 @@ const DEFAULT: Composition = {
   cancelLabel: 'Cancelar',
   actionLabel: 'Excluir',
 };
+
+/**
+ * Título do painel, com o nível de cabeçalho quando ele é pedido.
+ *
+ * A delegação vai pelo snippet `child`: nesta lib o `level` sozinho troca o
+ * `aria-level` e mantém a TAG em `div`. Os dois andam juntos para a tag e o
+ * ARIA concordarem. Sem nível pedido nada disso é escrito — valor padrão não
+ * se escreve num exemplo que alguém copia.
+ */
+function panelTitle(title: string, level?: 1 | 2 | 3 | 4 | 5 | 6): string {
+  if (!level) return `<AlertDialogTitle>${title}</AlertDialogTitle>`;
+  return `<AlertDialogTitle level={${level}}>
+        {#snippet child({ props })}
+          <h${level} {...props}>${title}</h${level}>
+        {/snippet}
+      </AlertDialogTitle>`;
+}
 
 /**
  * Monta a composição inteira. Os subcomponentes opcionais (mídia, descrição)
@@ -109,7 +130,7 @@ let open = $state(${c.open});${c.declaracoes ? `\n\n${c.declaracoes}` : ''}`;
   </AlertDialogTrigger>
   <AlertDialogContent${attrs(c.contentClass ? `class="${c.contentClass}"` : '')}>
     <AlertDialogHeader>${midia}
-      <AlertDialogTitle>${c.title}</AlertDialogTitle>${descricao}
+      ${panelTitle(c.title, c.titleLevel)}${descricao}
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel${attrs(c.onCancel ? `onclick={${c.onCancel}}` : '')}>${
@@ -149,6 +170,15 @@ export function alertDialogSource(
     cancelLabel: a.cancelLabel ?? DEFAULT.cancelLabel,
     actionLabel: a.actionLabel ?? DEFAULT.actionLabel,
   });
+}
+
+/**
+ * Painel aberto de dentro de uma seção que já está em `h2`: o título pede `h3`.
+ *
+ * A única diferença para a forma canônica é o nível do cabeçalho.
+ */
+export function alertDialogHeadingH3Source(): string {
+  return dialogo({ open: true, titleLevel: 3 });
 }
 
 /** Estado aberto: o valor inicial de `open` já monta o painel na tela. */

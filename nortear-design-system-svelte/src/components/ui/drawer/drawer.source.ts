@@ -54,6 +54,10 @@ type Frame = {
   isOpen?: boolean;
   direction?: DrawerArgs['direction'];
   dismissible?: boolean;
+  /**
+   * Nível do cabeçalho do título. Ausente, o snippet não escreve nível nenhum.
+   */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   triggerLabel: string;
   title: string;
   description: string;
@@ -102,6 +106,23 @@ async function focusSafeExit(event: Event) {
 }`;
 
 /**
+ * Título do painel, com o nível de cabeçalho quando ele é pedido.
+ *
+ * A delegação vai pelo snippet `child`: nesta lib o `level` sozinho troca o
+ * `aria-level` e mantém a TAG em `div`. Os dois andam juntos para a tag e o
+ * ARIA concordarem. Sem nível pedido nada disso é escrito — valor padrão não
+ * se escreve num exemplo que alguém copia.
+ */
+function panelTitle(title: string, level?: 1 | 2 | 3 | 4 | 5 | 6): string {
+  if (!level) return `<DrawerTitle>${title}</DrawerTitle>`;
+  return `<DrawerTitle level={${level}}>
+        {#snippet child({ props })}
+          <h${level} {...props}>${title}</h${level}>
+        {/snippet}
+      </DrawerTitle>`;
+}
+
+/**
  * Estrutura comum a todas as composições: raiz com estado ligado, gatilho,
  * painel, cabeçalho, corpo opcional e rodapé com a ação e a saída.
  */
@@ -110,6 +131,7 @@ function panel({
   isOpen = false,
   direction = 'bottom',
   dismissible = true,
+  titleLevel,
   triggerLabel,
   title,
   description,
@@ -142,7 +164,7 @@ let open = $state(${isOpen});${focusOnSafeExit ? `\n${FOCUS_SCRIPT}` : ''}`,
   </DrawerTrigger>
   <DrawerContent${contentProps}>
     <DrawerHeader>
-      <DrawerTitle>${title}</DrawerTitle>
+      ${panelTitle(title, titleLevel)}
       <DrawerDescription>${description}</DrawerDescription>
     </DrawerHeader>${miolo}
     <DrawerFooter>
@@ -181,6 +203,23 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
     description,
     actionLabel,
     cancelLabel,
+  });
+}
+
+/**
+ * Painel aberto de dentro de uma seção que já está em `h2`: o título pede `h3`.
+ *
+ * A única diferença para a forma canônica é o nível do cabeçalho.
+ */
+export function drawerHeadingH3Source(): string {
+  return panel({
+    isOpen: true,
+    titleLevel: 3,
+    triggerLabel: 'Editar perfil',
+    title: 'Editar perfil',
+    description: 'Atualize seus dados.',
+    actionLabel: 'Salvar alterações',
+    cancelLabel: 'Cancelar',
   });
 }
 

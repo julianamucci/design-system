@@ -40,6 +40,11 @@
     cancelLabel?: string;
     actionLabel?: string;
     tone?: Tone;
+    /**
+     * Nível do cabeçalho do título. Ausente, o título fica no nível padrão do
+     * primitivo — é o que todas as outras stories deste andaime exercitam.
+     */
+    titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
     onConfirm?: () => void;
     onCancel?: () => void;
     onOpenChange?: (open: boolean) => void;
@@ -59,6 +64,7 @@
     cancelLabel = 'Cancelar',
     actionLabel = 'Excluir',
     tone = 'destructive',
+    titleLevel,
     onConfirm,
     onCancel,
     onOpenChange,
@@ -82,7 +88,22 @@
           <TriangleAlert aria-hidden="true" />
         </AlertDialogMedia>
       {/if}
-      <AlertDialogTitle>{title}</AlertDialogTitle>
+      <!--
+        Nível do cabeçalho pelo snippet `child`, e não pelo `level` sozinho:
+        a lib expressa o nível em `role="heading"` + `aria-level` e mantém a
+        TAG em `div`. O `level` vai junto para a tag e o ARIA concordarem. A
+        medição está em DialogStory.svelte — os quatro painéis modais desta
+        stack caem no mesmo arquivo da lib.
+      -->
+      {#if titleLevel}
+        <AlertDialogTitle level={titleLevel}>
+          {#snippet child({ props })}
+            <svelte:element this={`h${titleLevel}`} {...props}>{title}</svelte:element>
+          {/snippet}
+        </AlertDialogTitle>
+      {:else}
+        <AlertDialogTitle>{title}</AlertDialogTitle>
+      {/if}
       <AlertDialogDescription>{description}</AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>

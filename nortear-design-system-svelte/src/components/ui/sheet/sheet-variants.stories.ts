@@ -4,13 +4,19 @@ import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 
 import { expect } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
-import { sheetSource } from './sheet.source';
+import { sheetHeadingH3Source, sheetSource } from './sheet.source';
 
+import { useTranslation } from '@/lib/i18n';
+import sheetTranslations from '@shared/content/sheet/translations.json';
 import { figmaDesign } from '@shared/figma/design-links';
 // As quatro direções são a única variação visual do Sheet, e todas moram no
 // conteúdo (`side`). Cada uma nasce ABERTA: é o estado que a regressão visual
 // captura e o que o axe tem para examinar — fechada, o painel nem está no DOM.
 
+// Os rótulos da story de nível de cabeçalho saem do conteúdo compartilhado.
+// As stories acima seguem com os literais que já tinham: reescrevê-las não é
+// assunto desta entrega.
+const { t } = useTranslation(sheetTranslations);
 const meta: Meta = {
   title: 'Components/Overlay/Sheet/Variants',
   component: SheetStory,
@@ -157,5 +163,40 @@ export const Bottom: Story = {
     await expect(panel).toHaveClass(/nds-sheet-content/);
     await expect(panel).toHaveAccessibleName();
     await borderWaitForEncostar(panel, 'bottom');
+  },
+};
+
+export const HeadingH3: Story = {
+  args: {
+    open: true,
+    titleLevel: 3,
+    triggerLabel: t('demonstration.labels.trigger'),
+    title: t('demonstration.labels.title'),
+    description: t('demonstration.labels.description'),
+    actionLabel: t('demonstration.labels.apply'),
+    cancelLabel: t('demonstration.labels.cancel'),
+  },
+  parameters: {
+    covers: ['accessibility.item4'],
+    docs: {
+      source: { transform: sheetHeadingH3Source },
+      description: {
+        story:
+          'O painel abre de dentro de uma página cuja seção já está em h2, então o título pede h3. Trocar a tag do cabeçalho não pode romper o aria-labelledby que dá nome ao painel.',
+      },
+    },
+  },
+  play: async ({ step }) => {
+    const p = await waitForPortal('dialog');
+
+    await step('O título sai em h3 e o painel continua nomeado por ele', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-sheet-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };

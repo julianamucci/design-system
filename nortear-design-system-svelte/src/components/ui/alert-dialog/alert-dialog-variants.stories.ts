@@ -1,3 +1,5 @@
+import { useTranslation } from '@/lib/i18n';
+import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
@@ -11,6 +13,7 @@ import {
   alertDialogDescriptionLongaSource,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
+  alertDialogHeadingH3Source,
   alertDialogSource,
 } from './alert-dialog.source';
 
@@ -22,6 +25,10 @@ import {
 // Responsive e ExtraClass exercitam robustez, ponto de quebra e
 // extensibilidade. A docs page é a prova: ela tem seção de Variantes e NÃO tem
 // seção de Composições, nem entrada `nav.compositions`.
+// Os rótulos da story de nível de cabeçalho saem do conteúdo compartilhado.
+// As stories acima seguem com os literais que já tinham: reescrevê-las não é
+// assunto desta entrega.
+const { t } = useTranslation(alertDialogTranslations);
 const meta: Meta = {
   title: 'Components/Overlay/AlertDialog/Variants',
   component: AlertDialog,
@@ -357,5 +364,44 @@ export const ExtraClass: Story = {
     const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
     await expect(media).toHaveClass('nds-alert-dialog-media');
     await expect(getComputedStyle(media as HTMLElement).flexShrink).toBe('0');
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item2'],
+    docs: {
+      source: { transform: alertDialogHeadingH3Source },
+      description: {
+        story:
+          'O painel abre de dentro de uma página cuja seção já está em h2, então o título pede h3. Trocar a tag do cabeçalho não pode romper o aria-labelledby que dá nome ao painel.',
+      },
+    },
+  },
+  render: () => ({
+    Component: AlertDialogStory,
+    props: {
+      open: true,
+      titleLevel: 3,
+      triggerLabel: t('demonstration.labels.triggerLabel'),
+      title: t('demonstration.labels.title'),
+      description: t('demonstration.labels.description'),
+      cancelLabel: t('demonstration.labels.cancel'),
+      actionLabel: t('demonstration.labels.action'),
+    },
+  }),
+  play: async ({ step }) => {
+    const p = await within(document.body).findByRole('alertdialog');
+    await waitFor(() => expect(p).toBeVisible());
+
+    await step('O título sai em h3 e o painel continua nomeado por ele', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-alert-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };

@@ -8,6 +8,7 @@ import {
   dialogPreviaDeMidiaSource,
   dialogNoFooterSource,
   dialogCustomCloseSource,
+  dialogHeadingH3Source,
   dialogSource,
 } from './dialog.source';
 
@@ -133,6 +134,7 @@ describe('transforms das stories de composição', () => {
       dialogNoFooterSource(),
       dialogCustomCloseSource(),
       dialogActionDestructiveSource(),
+      dialogHeadingH3Source(),
     ];
     for (const saida of todos) {
       expect(saida).not.toContain('DialogContent scroll');
@@ -202,6 +204,30 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('<Button type="button" variant="outline" {...props}>Cancelar</Button>');
   });
 
+  it('o nível de cabeçalho sai por delegação de elemento, e só ele muda', () => {
+    const saida = dialogHeadingH3Source();
+    // `level` sozinho NÃO troca a tag nesta lib — troca o `aria-level` e deixa
+    // um `div`. Quem devolve o elemento é o snippet `child`, e os dois vão
+    // juntos para a tag e o ARIA concordarem. O snippet é o que se copia:
+    // publicá-lo só com o `level` ensinaria um `div` com cara de cabeçalho.
+    expect(saida).toContain('<DialogTitle level={3}>');
+    expect(saida).toContain('{#snippet child({ props })}');
+    expect(saida).toContain('<h3 {...props}>Editar perfil</h3>');
+
+    // E nada MAIS muda: desfeito o bloco do título, sobra o snippet canônico.
+    // Sem esta parte o caso passaria com o painel inteiro reescrito, e o
+    // exemplo deixaria de ensinar uma coisa só.
+    expect(
+      saida.replace(
+        `<DialogTitle level={3}>
+        {#snippet child({ props })}
+          <h3 {...props}>Editar perfil</h3>
+        {/snippet}
+      </DialogTitle>`,
+        '<DialogTitle>Editar perfil</DialogTitle>',
+      ),
+    ).toBe(dialogSource('', { args: { open: true } }));
+  });
   it('a prévia de mídia dá nome acessível ao bloco e dispensa o rodapé', () => {
     const saida = dialogPreviaDeMidiaSource();
     expect(saida).toContain('aria-label="Imagem ilustrativa de pôr-do-sol"');

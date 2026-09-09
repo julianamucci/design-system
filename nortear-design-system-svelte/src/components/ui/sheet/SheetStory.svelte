@@ -34,6 +34,11 @@
     open?: boolean;
     side?: Side;
     showCloseButton?: boolean;
+    /**
+     * Nível do cabeçalho do título. Ausente, o título fica no nível padrão do
+     * primitivo — é o que todas as outras stories deste andaime exercitam.
+     */
+    titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
     triggerLabel?: string;
     title?: string;
     description?: string;
@@ -50,6 +55,7 @@
     open = $bindable(false),
     side = 'right',
     showCloseButton = true,
+    titleLevel,
     triggerLabel = 'Abrir filtros',
     title = 'Filtros avançados',
     description = 'Configure os filtros para refinar os resultados.',
@@ -108,7 +114,22 @@
         </SheetTrigger>
         <SheetContent {side} {showCloseButton}>
           <SheetHeader>
-            <SheetTitle>{title}</SheetTitle>
+            <!--
+              Nível do cabeçalho pelo snippet `child`, e não pelo `level` sozinho:
+              a lib expressa o nível em `role="heading"` + `aria-level` e mantém a
+              TAG em `div`. O `level` vai junto para a tag e o ARIA concordarem. A
+              medição está em DialogStory.svelte — os quatro painéis modais desta
+              stack caem no mesmo arquivo da lib.
+            -->
+            {#if titleLevel}
+              <SheetTitle level={titleLevel}>
+                {#snippet child({ props })}
+                  <svelte:element this={`h${titleLevel}`} {...props}>{title}</svelte:element>
+                {/snippet}
+              </SheetTitle>
+            {:else}
+              <SheetTitle>{title}</SheetTitle>
+            {/if}
             <SheetDescription>{description}</SheetDescription>
           </SheetHeader>
 
