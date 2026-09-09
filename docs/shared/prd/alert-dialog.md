@@ -199,14 +199,14 @@ para quem importa o namespace inteiro. As stories usam a forma longa.
 No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
 semântica, não só o estilo.
 
-**O nível do cabeçalho do título é customizável em quatro das cinco, cada uma de
-um jeito** — medido na fonte de cada lib, não na documentação delas:
+**O nível do cabeçalho do título é customizável nas cinco, cada uma de um
+jeito** — medido na fonte de cada lib, não na documentação delas:
 
 | stack | mecanismo | padrão |
 |---|---|---|
 | react | prop `render` (`BaseUIComponentProps<'h2'>`) | `h2` |
 | vue | prop `as` (ou `as-child`) | `as: 'h2'` |
-| svelte | prop `level`, numérica | `level = 2` |
+| svelte | snippet `child` + prop `level` | `div` com `aria-level="2"` |
 | angular | seletor por elemento, nos SEIS níveis | o que quem escreve usar |
 | vanilla | opção `titleLevel` da fábrica | `2` |
 
@@ -216,17 +216,28 @@ dona; o vanilla não oferecia nenhum — `createElement('h2')` cravado — e gan
 `titleLevel`, na mesma forma que `createPopoverTitle` e `createCardTitle` já
 tinham.
 
+**A linha do svelte estava ERRADA até 2026-09-09, e foi a story que a corrigiu**:
+`level` sozinho não troca a tag. O título daquela lib renderiza
+`<div role="heading">` e o `level` só alimenta o `aria-level` — e como o mesmo
+componente serve os quatro painéis, não há atalho por slug. Quem entrega o
+cabeçalho de verdade é o snippet `child`, que é a delegação de elemento daquela
+lib, irmã do `render`, do `as` e do `asChild`. Os dois andam juntos: sem
+`level`, um `h3` escrito pelo `child` sairia com `aria-level="2"`, e a tag
+brigaria com o ARIA. A afirmação antiga — "as cinco aceitam qualquer nível pelo
+mecanismo da própria lib" — era verdadeira só no sentido do ARIA, e ninguém
+tinha medido porque nenhuma superfície exercitava a capacidade.
+
 **Por que isso importa**: `heading-order` do axe reprova salto de nível, e o
 painel não sabe de que profundidade da página foi aberto — um diálogo disparado
 de dentro de uma seção já em `h3` precisa sair em `h4`.
 
-> **PENDÊNCIA · 2026-09-08** — a capacidade existe nas cinco e nenhuma superfície
-> a exercita: não há story com o painel aberto dentro de uma seção em `h3`
-> afirmando que o título sai em `h4`. O `heading-order` do axe está verde por
-> não perguntar.
-> **Fecha quando**: existir essa story nas cinco stacks, afirmando as duas
-> metades — o elemento renderizado é o pedido, e o `aria-labelledby` continua
-> apontando para ele.
+**A story existe desde 2026-09-09**: `HeadingH3`, no arquivo de variantes das
+cinco stacks, com o painel aberto na montagem e o título pedido em `h3`. Ela
+afirma as duas metades, e a segunda é a que dá valor à primeira — o elemento
+renderizado é o pedido (`tagName`), e o `aria-labelledby` do painel continua
+resolvendo NELE, com o nome acessível saindo do seu texto. Os dois defeitos que
+ela existe para pegar foram plantados e reprovaram nas cinco: trocar a tag
+mantendo o vínculo, e manter a tag rompendo o vínculo.
 
 ## 8. Acessibilidade
 
