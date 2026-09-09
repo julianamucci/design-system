@@ -449,7 +449,7 @@ export const ExtraClass: Story = {
 // 2026-09-08 e nenhuma story a exercitava.
 export const HeadingH3: Story = {
   parameters: {
-    covers: ["accessibility.item2"],
+    covers: ["accessibility.item2", "accessibility.item9"],
     docs: {
       // O nível do título é a ÚNICA diferença para o snippet canônico — e é
       // justamente ela que o painel Code precisa ensinar.

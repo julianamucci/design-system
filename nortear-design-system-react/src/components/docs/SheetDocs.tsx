@@ -1172,6 +1172,7 @@ export function SheetDocs() {
             { criterion: tContent("testes.accessibility.item3"), level: "4.1.2",    how: tContent("testes.accessibility.item3") },
             { criterion: tContent("testes.accessibility.item4"), level: "1.3.1",    how: tContent("testes.accessibility.item4") },
             { criterion: tContent("testes.accessibility.item5"), level: "1.3.1",    how: tContent("testes.accessibility.item5") },
+            { criterion: tContent("testes.accessibility.item6"), level: "1.3.1",    how: tContent("testes.accessibility.item6") },
           ],
         }}
         visual={{
