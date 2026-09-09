@@ -117,6 +117,20 @@ export type DialogOptions = {
    */
   headerHidden?: boolean;
   showCloseButton?: boolean;
+  /**
+   * Rótulo acessível do botão de fechar do canto.
+   *
+   * Espelha o `closeLabel` das outras quatro stacks e o do `sheet.ts` desta.
+   * Ficou de fora quando a prop foi regularizada nas outras: o literal
+   * sobrevivia aqui em DOIS pontos — o `aria-label` do botão e o `.nds-sr-only`
+   * dentro dele —, na stack que é a referência de contrato do projeto.
+   *
+   * O `sheet.ts` desta stack usa só o `aria-label`; aqui há os dois, como nas
+   * outras quatro. Com `aria-label` presente o nome acessível sai dele e o
+   * `.nds-sr-only` não é lido — a duplicação é padrão do componente nas cinco,
+   * não desvio desta stack, e sair dela é decisão à parte.
+   */
+  closeLabel?: string;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: DialogCloseReason) => void;
   class?: string;
@@ -168,6 +182,7 @@ function createCloseIcon(): SVGSVGElement {
 export function createDialog(options: DialogOptions): DestroyableElement {
   const { trigger, title, titleLevel = 2, description, content, footer, onOpenChange, onClose } = options;
   const showCloseButton = options.showCloseButton !== false;
+  const closeLabel = options.closeLabel ?? 'Fechar';
 
   const id = ++_dialogCounter;
   const titleId = `dialog-title-${id}`;
@@ -264,11 +279,11 @@ export function createDialog(options: DialogOptions): DestroyableElement {
       closeBtn.type = 'button';
       closeBtn.className = 'nds-dialog-close';
       closeBtn.dataset.slot = 'dialog-close';
-      closeBtn.setAttribute('aria-label', 'Fechar');
+      closeBtn.setAttribute('aria-label', closeLabel);
       closeBtn.appendChild(createCloseIcon());
       const srOnly = document.createElement('span');
       srOnly.className = 'nds-sr-only';
-      srOnly.textContent = 'Fechar';
+      srOnly.textContent = closeLabel;
       closeBtn.appendChild(srOnly);
       closeBtn.addEventListener('click', () => closeWithReason('close-button'));
       panelEl.appendChild(closeBtn);

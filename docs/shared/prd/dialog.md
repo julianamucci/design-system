@@ -273,7 +273,7 @@ no botão de fechar ele tem as duas camadas descritas na §5.
 | `onOpenChange` | callback com o novo estado |
 | `showCloseButtonContent` | exibe o X no canto do painel |
 | `showCloseButtonFooter` | exibe um botão de fechar dentro do rodapé, como ação TERCIÁRIA — variante `ghost`, primeiro no DOM (D9) |
-| `closeLabel` | rótulo do botão de fechar — o visível do rodapé e o de leitor de tela do X. **Não existe no vanilla** |
+| `closeLabel` | rótulo do botão de fechar — o visível do rodapé e o de leitor de tela do X |
 | `className` | classes `.nds-*` adicionais |
 
 `closeLabel` existia só no Angular e foi levado a react, vue e svelte em
@@ -281,9 +281,22 @@ no botão de fechar ele tem as duas camadas descritas na §5.
 existente muda. Antes disso o literal ficava cravado DENTRO do primitivo, e quem
 consumisse em outro idioma tinha de reescrever o componente.
 
-**O VANILLA ficou de fora, e ainda está** — medido em 2026-09-08: `dialog.ts`
-crava `'Fechar'` em dois pontos, o `aria-label` do botão e o `.nds-sr-only`
-dentro dele. É a única das cinco sem a opção, e a referência de contrato da casa.
+**O vanilla ficou de fora naquela passagem, e foi fechado em 2026-09-08.** Ele
+cravava `'Fechar'` em dois pontos — o `aria-label` do botão e o `.nds-sr-only`
+dentro dele —, exatamente o defeito que a regularização existia para corrigir,
+sobrevivendo na stack que é a referência de contrato da casa.
+
+**Por que passou**: a §7 afirmava "regularizado nas cinco" quando eram quatro. O
+commit que fez o trabalho tocou react, vue e svelte, e o texto contou o Angular
+(que já tinha) sem conferir o vanilla (que não). Afirmação de cobertura escrita
+a partir do que a passagem FEZ, e não do que ela DEIXOU — some quem nunca entrou
+na lista. É a mesma forma do `source-snippets.test.ts`, que encolheu em silêncio
+quando 28 exports saíram da varredura.
+
+**Conferidos junto, e os três estão certos**: o `sheet.ts` do vanilla já tinha
+`closeLabel`; o `drawer` não gera botão de fechar em stack nenhuma — delega a
+quem compõe, por `data-slot="drawer-close"` —, e o `alert-dialog` não tem botão
+de canto por decisão (D2 do PRD dele).
 Registrado no `FIXES-NEEDED.md`.
 
 Os dois `showCloseButton*` são independentes: um é o X do canto, o outro é uma
