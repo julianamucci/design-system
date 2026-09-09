@@ -34,6 +34,7 @@ O que só existe aqui: o **gesto**. Arrastar o painel para fora da tela o dispen
 | C6 | Painel e véu param de animar sob `prefers-reduced-motion` | `accessibility.item6` |
 | C7 | O corpo rolável entra na ordem de tabulação e recebe `role="group"` quando nomeado | `accessibility.item7` |
 | C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento | `04-padroes-design-sistema.md` §Alinhamento de Grupos de Botões |
+| C9 | Painel com `<form>` tem como submeter: botão de submissão dentro, ou `form="<id>"` fora | `6c1ce87c0` — sem portão automático |
 
 ## 3. Decisões fixadas
 
@@ -122,8 +123,7 @@ permite às outras duas rodarem o gesto que implementam em casa.
 **Nota de 2026-09-08**: esta linha dizia que o valor era "o da lib, LIDO na folha
 que ela injeta". Descrever o próprio contrato como cópia do de uma dependência
 convida a tratá-lo como emprestado — foi assim que o atributo de direção passou
-anos chamando-se `data-vaul-drawer-direction` na folha que as CINCO leem (ver
-D-do-atributo). O valor é `none` porque é o único que entrega `pointermove` ao
+anos chamando-se `data-vaul-drawer-direction` na folha que as CINCO leem (ver D13). O valor é `none` porque é o único que entrega `pointermove` ao
 painel, e isso é verdade independente de quem mais o declare.
 **O que nenhum portão desta casa alcança**: o toque. A suíte dirige um ponteiro de
 mouse, onde `touch-action` não tem efeito. A convivência desta declaração com a
@@ -173,6 +173,30 @@ de quem só quer editar.
 **angular consulta `[ndsDrawerClose]`, não `data-slot`**, porque host binding de
 diretiva disputa o atributo. As cinco `play` de confirmação afirmam qual elemento
 tem o foco **e qual não tem**.
+
+### D13 · O atributo de direção é `data-direction`, e não o nome de uma lib
+
+**Trocada em** 2026-09-08 (`b5724a109` na folha, mais um commit por stack).
+**Estado**: os dezessete seletores da folha leem `[data-direction]`, e as cinco
+stacks emitem esse atributo.
+**Histórico**: até então a folha compartilhada — lida pelas CINCO — se ancorava em
+`data-vaul-drawer-direction`, o nome que a lib de gaveta escreve. As duas stacks
+sem lib tinham de imitar o atributo de uma dependência que elas não usam, e a
+folha do design system só funcionava enquanto aquele nome existisse upstream.
+**Regra que fica**: o contrato de marcação é do design system. Nome de
+dependência entra em `PATCHES.md` quando é divergência intencional, não no
+seletor que as cinco leem.
+
+### D14 · O `<form>` do painel precisa de quem o submeta
+
+**Corrigida em** 2026-09-08 (`6c1ce87c0`), nas cinco.
+**Medição**: o `<form>` estava lá e não havia botão de submissão nenhum nem
+`form="<id>"`. Com dois campos o navegador **não faz submissão implícita**, então
+o Enter num campo não disparava nada — mesmo defeito de teclado que um
+`type="submit"` fora do form produz, só que em silêncio em vez de mentindo.
+**Por que nenhum portão pega**: o markup é válido. Foram doze superfícies em
+cinco stacks — story, snippet do painel Code e docs page —, e o Angular era o
+caso extremo: a story `WithForm` não tinha `<form>` sequer.
 
 ## 4. Anatomia
 
@@ -309,19 +333,22 @@ ligando `aria-describedby`.
 
 ## 9. Analytics
 
-| evento | quando | payload documentado |
+| evento | quando | payload |
 |---|---|---|
 | `drawer_open` | o painel abre | `{ component: "drawer", label, location }` |
-| `drawer_close` | o painel fecha | idem |
+| `drawer_close` | o painel fecha | idem, mais `reason` |
 
-**Duas pendências medidas em 2026-09-07, e ficam registradas porque a revisão não
-as fechou:**
+**`label` carrega a DIREÇÃO** — `bottom`, `right`, `left` ou `top` —, nunca o
+título traduzido, que partiria a mesma série em um valor por idioma no GA4.
 
-1. a prosa de `analytics.description` manda o `label` levar o **título do
-   drawer** — texto traduzido, que divide o mesmo evento em um valor por idioma
-   no GA4. É a mesma correção que hover-card e dropdown-menu já receberam;
-2. dos cinco, **só o Angular dispara** o evento, e ele manda `label: direction`,
-   que é valor estável. As outras quatro anunciam os eventos e não os emitem.
+**`reason` é obrigatório no fechamento**, e tem vocabulário fechado no tipo:
+`escape`, `overlay`, `close-button` ou `api`. É o vocabulário do design
+system, não o da lib — motivo inventado contamina a série, e motivo ausente
+esconde a diferença entre desistir e concluir.
+
+**As duas pendências registradas em 2026-09-07 fecharam em 2026-09-08**: a prosa
+pedia o título traduzido (`2f64c9b2d`), e o evento era disparado só pelo
+Angular. Hoje as cinco disparam.
 
 ## 10. Reconstruir do zero
 
@@ -344,6 +371,8 @@ Ordem: folha → primitivo → alça → cabeçalho, corpo e rodapé → motor d
 | geometria, direções, alça, gesto, rodapé | `docs/shared/styles/nds/drawer.css` |
 | véu, título e descrição (reusados) | `docs/shared/styles/nds/sheet.css` |
 | regra do par de botões | `docs/shared/guidelines/04-padroes-design-sistema.md` |
+| regra do gesto (constantes e as três decisões) | `docs/shared/primitives/drawer-swipe.ts` |
+| fiação do gesto, por stack | `ui/drawer-swipe.ts` no vanilla · diretiva `NdsDrawerSwipe` no angular · a lib nas outras três |
 | texto, props, critérios de teste | `docs/shared/content/drawer/translations.json` |
 | desenho e anotações | Figma, página `Drawer` (conjunto `698:116`) |
 | portões determinísticos | `node scripts/audit.mjs drawer --json` |
