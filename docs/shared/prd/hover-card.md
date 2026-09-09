@@ -251,9 +251,20 @@ Ordem: folha → primitivo → stories → docs page.
 | desenho e anotações | Figma, página `HoverCard` (componente `674:3`) |
 | portões determinísticos | `node scripts/audit.mjs hover-card --json` |
 
-> **PENDÊNCIA · 2026-09-08** — os três arquivos de story do Angular não têm
-> `transform` no painel Code. Não é do componente: é da página que o documenta.
-> **Fecha quando**: `audit.mjs hover-card` não reportar `story_file_sem_transform`.
+> **FECHADA · 2026-09-09** — a pendência de 2026-09-08 (os três arquivos de
+> story do Angular sem `transform` no painel Code). `audit.mjs hover-card` não
+> reporta mais `story_file_sem_transform`.
 >
-> *Metade fechada em 2026-09-08*: a docs page do Angular renderizava 3 dos 5
+> *Primeira metade, 2026-09-08*: a docs page do Angular renderizava 3 dos 5
 > itens de `usage.guidelines` e passou a renderizar os cinco.
+>
+> *Segunda metade, 2026-09-09*: o Angular passou de 1 construtor para 12
+> stories a **dez construtores** em `hover-card.source.ts`, um por story, com as
+> doze stories fiadas — a proporção que esta campanha mediu em tooltip, sheet,
+> dropdown-menu, context-menu e drawer. `hover-card.source.test.ts` guarda os
+> dez com **32 casos**. A única exceção é declarada e tem a premissa verificada:
+> States/Closed, States/Open e Compositions/UserProfile renderizam o mesmo markup
+> e compartilham `hoverCardPerfilSource` — como nas outras quatro stacks —, e um
+> caso compara os três templates entre si, reprovando nomeando a story que
+> divergir. Outro caso cobra que todo par story×transform esteja na tabela, de
+> modo que story nova sem construtor reprova em vez de herdar em silêncio.

@@ -9,6 +9,14 @@ import {
   waitForQuantidade,
   panelsAbertos,
 } from './hover-card.fixtures';
+import {
+  hoverCardClassNameExtraSource,
+  hoverCardDefinicaoSource,
+  hoverCardLadosSource,
+  hoverCardMetricaSource,
+  hoverCardPerfilSource,
+  hoverCardPreviaDeLinkSource,
+} from './hover-card.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os padrões de conteúdo que o cartão hospeda. Todos seguem a mesma regra: o
@@ -28,6 +36,11 @@ const meta: Meta = {
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
+      // O painel Code imprime o `template` da story literalmente — com o
+      // `[defaultOpen]` que só serve à captura visual. O transform devolve o
+      // componente que se escreve. Vale para UserProfile, que renderiza o
+      // markup canônico; as outras cinco declaram o seu.
+      source: { transform: hoverCardPerfilSource },
       description: {
         component:
           'Perfil, preview de link, definição de termo, métrica explicada, lados de abertura ' +
@@ -90,6 +103,7 @@ export const LinkPreview: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: hoverCardPreviaDeLinkSource },
       description: {
         story:
           'Cabeçalho com a origem, título do destino e uma linha de descrição. Reduz o clique ' +
@@ -139,6 +153,7 @@ export const TermDefinition: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: hoverCardDefinicaoSource },
       description: {
         story:
           'Sigla no meio da prosa abre o termo por extenso e a definição em uma frase. ' +
@@ -201,6 +216,7 @@ export const TermDefinition: Story = {
 export const ExplainedMetric: Story = {
   parameters: {
     docs: {
+      source: { transform: hoverCardMetricaSource },
       description: {
         story:
           'Valor de painel com o nome completo da métrica e os limiares. A cor semântica fica ' +
@@ -250,6 +266,7 @@ export const Sides: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: hoverCardLadosSource },
       description: {
         story:
           'Os quatro lados de abertura. O lado é uma PREFERÊNCIA: quando não cabe, o cartão ' +
@@ -352,6 +369,7 @@ export const ExtraPanelClass: Story = {
     // resultante, não só o atributo.
     covers: ['visual.item5'],
     docs: {
+      source: { transform: hoverCardClassNameExtraSource },
       description: {
         story:
           'O painel nasce dentro do portal, então não existe elemento em que quem compõe ' +

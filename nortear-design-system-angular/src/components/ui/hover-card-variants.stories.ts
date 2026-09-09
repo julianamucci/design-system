@@ -3,6 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { NDS_HOVER_CARD } from './hover-card';
 import { waitForOpen, waitForClosed, panelOpen } from './hover-card.fixtures';
+import { hoverCardWaitCurtaSource, hoverCardWaitDefaultSource } from './hover-card.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
@@ -23,6 +24,11 @@ const meta: Meta = {
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
+      // O painel Code imprime o `template` da story literalmente — com o
+      // `[defaultOpen]` que só serve à captura e com o andaime do renderer. O
+      // transform devolve o componente que se escreve. Vale para Default; a
+      // outra story declara o seu.
+      source: { transform: hoverCardWaitDefaultSource },
       description: {
         component:
           'As duas configurações de tempo. Padrão usa a espera do próprio gatilho; ' +
@@ -84,6 +90,7 @@ export const WithShortDelay: Story = {
   parameters: {
     covers: ['functional.item1'],
     docs: {
+      source: { transform: hoverCardWaitCurtaSource },
       description: {
         story:
           'Espera curta (150ms para abrir, 100ms para fechar) para previews que o leitor ' +

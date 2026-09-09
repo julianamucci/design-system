@@ -13,6 +13,7 @@ import {
   panelOpen,
   contrastRatio,
 } from './hover-card.fixtures';
+import { hoverCardControlledSource, hoverCardPerfilSource } from './hover-card.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
@@ -30,6 +31,10 @@ const meta: Meta = {
     // Sem argTypes nestas stories: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
+      // Closed e Open renderizam o MESMO markup — a menção que revela o perfil.
+      // O que as separa é interação, e interação não aparece em snippet, então
+      // as duas publicam o construtor canônico. Controlled declara o seu.
+      source: { transform: hoverCardPerfilSource },
       description: {
         component:
           'Fechado, aberto e controlado. O painel só existe no DOM enquanto o cartão está ' +
@@ -190,6 +195,7 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
+      source: { transform: hoverCardControlledSource },
       description: {
         story:
           'Estado vindo de fora. Útil quando outra parte da tela precisa saber que o cartão ' +
