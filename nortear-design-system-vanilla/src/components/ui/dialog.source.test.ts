@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   dialogWithBodyScrollableSnippet,
   dialogWithFormSnippet,
+  dialogHeadingH3Source,
   dialogSnippet,
   dialogSource,
   dialogSourceWith,
@@ -105,6 +106,19 @@ describe('dialogSourceCom', () => {
     const code = transform('', { args: { title: 'Editar perfil' } });
     expect(code).toContain("title: 'Remover item da lista?'");
     expect(code).not.toContain('footer');
+  });
+});
+
+describe('dialogHeadingH3Source', () => {
+  it('imprime o nível do título que a story pede', () => {
+    expect(dialogHeadingH3Source('', {})).toContain('titleLevel: 3');
+  });
+
+  it('e o nível padrão continua fora do snippet', () => {
+    // A fábrica assume `2`. Repetir o padrão ensinaria ruído e apagaria a
+    // informação de que existe um padrão — é a mesma regra do `showCloseButton`.
+    expect(dialogSnippet()).not.toContain('titleLevel');
+    expect(dialogSnippet({ titleLevel: 2 })).not.toContain('titleLevel');
   });
 });
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   drawerWithFormSnippet,
+  drawerHeadingH3Source,
   drawerSnippet,
   drawerSource,
   drawerSourceWith,
@@ -108,6 +109,19 @@ describe('drawerSourceCom', () => {
     const code = transform('', { args: { direction: 'left' } });
     expect(code).toContain("direction: 'top'");
     expect(code).toContain('dismissible: false');
+  });
+});
+
+describe('drawerHeadingH3Source', () => {
+  it('imprime o nível do título que a story pede', () => {
+    expect(drawerHeadingH3Source('', {})).toContain('titleLevel: 3');
+  });
+
+  it('e o nível padrão continua fora do snippet', () => {
+    // A fábrica assume `2`. Repetir o padrão ensinaria ruído e apagaria a
+    // informação de que existe um padrão — é a mesma regra do `direction`.
+    expect(drawerSnippet()).not.toContain('titleLevel');
+    expect(drawerSnippet({ titleLevel: 2 })).not.toContain('titleLevel');
   });
 });
 

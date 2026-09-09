@@ -32,6 +32,8 @@ export type DrawerSnippetAction = {
 export type DrawerSnippetOptions = {
   triggerLabel?: string;
   title?: string;
+  /** Nível do cabeçalho do título. `2` é o padrão da fábrica. */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   /** Texto do parágrafo que ocupa o corpo. */
   bodyText?: string;
@@ -156,6 +158,8 @@ function linesComuns(o: DrawerSnippetOptions, content: string, temRodape: boolea
   return options([
     ['trigger', button({ label: o.triggerLabel ?? 'Abrir drawer', variant: 'outline' })],
     ['title', text(o.title ?? 'Editar perfil')],
+    // `2` é o nível que a fábrica assume, e padrão não entra no snippet.
+    ['titleLevel', o.titleLevel && o.titleLevel !== 2 ? String(o.titleLevel) : undefined],
     [
       'description',
       o.description === '' ? undefined : text(o.description ?? 'Atualize seus dados pessoais.'),
@@ -212,6 +216,23 @@ export const drawerSource: SourceTransform<DrawerSnippetOptions> = (_gerado, ctx
 export function drawerSourceWith(fixas: DrawerSnippetOptions): SourceTransform<DrawerSnippetOptions> {
   return (_gerado, ctx) => drawerSnippet({ ...ctx.args, ...fixas });
 }
+
+/**
+ * Transform da story que abre a gaveta com o título em `h3`.
+ *
+ * Mesma chamada da direção padrão — o que muda é UMA opção. A fábrica assume
+ * `2`, e é a página que decide: dentro de uma seção que já está em `h2`, o
+ * painel precisa entrar em `h3` para não pular nível. As demais opções repetem
+ * o que a story renderiza, porque o painel Code é o que se copia.
+ */
+export const drawerHeadingH3Source: SourceTransform<DrawerSnippetOptions> = drawerSourceWith({
+  titleLevel: 3,
+  triggerLabel: 'Abrir',
+  title: 'Detalhes do pedido',
+  description: 'Pedido #4287 confirmado em 15 de março.',
+  bodyText: 'Conteúdo do painel.',
+  footer: [{ label: 'Fechar', variant: 'outline', close: true }],
+});
 
 // ─── Segunda forma: corpo com formulário ─────────────────────────────────────
 

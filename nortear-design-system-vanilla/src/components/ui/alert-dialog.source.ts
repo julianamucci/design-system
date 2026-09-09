@@ -24,6 +24,8 @@ export type AlertDialogSnippetOptions = {
   triggerVariant?: 'destructive' | 'default' | 'outline';
   triggerLabel?: string;
   title?: string;
+  /** Nível do cabeçalho do título. `2` é o padrão da fábrica. */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   /** Descrição — string vazia mostra a composição sem descrição. */
   description?: string;
   cancelLabel?: string;
@@ -81,6 +83,8 @@ media.appendChild(createAlertIcon('warning'));`
     'trigger,',
     ...options([
       ['title', text(o.title ?? DEFAULTS.title)],
+      // `2` é o nível que a fábrica assume, e padrão não entra no snippet.
+      ['titleLevel', o.titleLevel && o.titleLevel !== 2 ? String(o.titleLevel) : undefined],
       ['description', description ? text(description) : undefined],
     ]),
     ...(o.showMedia ? ['media,'] : []),
@@ -118,3 +122,14 @@ export function alertDialogSourceWith(
 ): SourceTransform<AlertDialogSnippetOptions> {
   return (_gerado, ctx) => alertDialogSnippet({ ...ctx.args, ...fixas });
 }
+
+/**
+ * Transform da story que abre o painel com o título em `h3`.
+ *
+ * Mesma composição da confirmação destrutiva — o que muda é UMA opção. A
+ * fábrica assume `2`, e é a página que decide: dentro de uma seção que já está
+ * em `h2`, o painel precisa entrar em `h3` para não pular nível. O
+ * `defaultOpen` acompanha as demais composições deste arquivo.
+ */
+export const alertDialogHeadingH3Source: SourceTransform<AlertDialogSnippetOptions> =
+  alertDialogSourceWith({ defaultOpen: true, titleLevel: 3 });

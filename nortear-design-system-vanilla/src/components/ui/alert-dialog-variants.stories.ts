@@ -4,7 +4,11 @@ import { within, expect, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
 import { buildDemo } from './alert-dialog.fixtures';
-import { alertDialogSource, alertDialogSourceWith } from './alert-dialog.source';
+import {
+  alertDialogHeadingH3Source,
+  alertDialogSource,
+  alertDialogSourceWith,
+} from './alert-dialog.source';
 import { createAlertIcon } from './alert';
 import { createButton } from './button';
 
@@ -97,6 +101,54 @@ export const Destructive: Story = {
     // Cancel em outline é a hierarquia: uma ação destrutiva e uma saída neutra.
     const cancel = within(dialog).getByRole('button', { name: /^Cancelar$/i });
     await expect(cancel).toHaveClass('nds-button-outline');
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item2'],
+    // Override de story: o nível do título não passa por control nenhum, e o
+    // snippet do meta mostraria a composição no nível padrão — que é justamente
+    // o que esta story existe para NÃO ter.
+    docs: {
+      source: { transform: alertDialogHeadingH3Source },
+      description: {
+        story:
+          'Aberto de dentro de uma página cuja seção já está em h2, o painel pede o título em h3 para não pular nível. Trocar a tag não pode romper o aria-labelledby: o nome acessível continua saindo do mesmo elemento.',
+      },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
+    const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
+    const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
+
+    // A fábrica é chamada direto, e não pelo `buildDemo`: o construtor da
+    // demonstração serve a três arquivos e não carrega o nível do título, que é
+    // o único assunto desta story.
+    return createAlertDialog({
+      trigger,
+      title: 'Excluir conta',
+      titleLevel: 3,
+      description:
+        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+      cancelButton,
+      actionButton,
+      defaultOpen: true,
+    });
+  },
+  play: async ({ step }) => {
+    const p = await waitForPortal('alertdialog');
+
+    await step('O título vira h3 sem soltar o vínculo do nome acessível', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-alert-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };
 

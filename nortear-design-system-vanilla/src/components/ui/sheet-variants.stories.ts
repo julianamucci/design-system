@@ -4,7 +4,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import { createSheet, type SheetSide } from './sheet';
 import { makeBody, makeFooter } from './sheet.fixtures';
-import { sheetSource, sheetSourceWith } from './sheet.source';
+import { sheetHeadingH3Source, sheetSource, sheetSourceWith } from './sheet.source';
 import { createButton } from './button';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -43,12 +43,15 @@ function buildSheetSide(opts: {
   triggerLabel: string;
   title: string;
   description: string;
+  /** Sem valor, a fábrica assume `2` — que é o que as quatro direções usam. */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 }): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: opts.triggerLabel });
   const sheet = createSheet({
     trigger,
     side: opts.side,
     title: opts.title,
+    titleLevel: opts.titleLevel,
     description: opts.description,
     // Corpo e rodapé canônicos — os mesmos que o painel Code publica.
     content: makeBody(),
@@ -184,5 +187,42 @@ export const Bottom: Story = {
     await expect(panel).toHaveAttribute('data-side', 'bottom');
     await expect(panel).toHaveClass(/nds-sheet-content/);
     await borderWaitForEncostar(panel, 'bottom');
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item4'],
+    // Override de story: o nível do título não passa por control neste arquivo,
+    // e o snippet do meta mostraria o painel no nível padrão — que é justamente
+    // o que esta story existe para NÃO ter.
+    docs: {
+      source: { transform: sheetHeadingH3Source },
+      description: {
+        story:
+          'Aberto de dentro de uma página cuja seção já está em h2, o painel pede o título em h3 para não pular nível. Trocar a tag não pode romper o aria-labelledby: o nome acessível continua saindo do mesmo elemento.',
+      },
+    },
+  },
+  render: () =>
+    buildSheetSide({
+      side: 'right',
+      titleLevel: 3,
+      triggerLabel: 'Abrir filtros',
+      title: 'Filtros avançados',
+      description: 'Configure os filtros para refinar os resultados.',
+    }),
+  play: async ({ step }) => {
+    const p = await waitForPortal('dialog');
+
+    await step('O título vira h3 sem soltar o vínculo do nome acessível', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-sheet-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createDrawer, type DrawerDirection } from './drawer';
-import { drawerSource, drawerSourceWith } from './drawer.source';
+import { drawerHeadingH3Source, drawerSource, drawerSourceWith } from './drawer.source';
 import { createButton } from './button';
 import { buildDrawerFooter, buildDrawerWrapper, openPeloTrigger } from './drawer.fixtures';
 
@@ -29,7 +29,13 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildVariant(direction: DrawerDirection, title: string, descricao: string): HTMLElement {
+function buildVariant(
+  direction: DrawerDirection,
+  title: string,
+  descricao: string,
+  /** Sem valor, a fábrica assume `2` — que é o que as quatro direções usam. */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6,
+): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: 'Abrir' });
 
   const content = document.createElement('div');
@@ -44,6 +50,7 @@ function buildVariant(direction: DrawerDirection, title: string, descricao: stri
     trigger,
     direction,
     title: title,
+    titleLevel,
     description: descricao,
     content,
     footer,
@@ -84,6 +91,37 @@ export const Bottom: Story = {
       // outras. Contraste e cor do painel são verificados pelo axe da story.
       const thumb = panel.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(thumb).display).toBe('block');
+    });
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item3'],
+    // Override de story: o nível do título não passa por control neste arquivo,
+    // e o snippet do meta mostraria o painel no nível padrão — que é justamente
+    // o que esta story existe para NÃO ter.
+    docs: {
+      source: { transform: drawerHeadingH3Source },
+      description: {
+        story:
+          'Aberto de dentro de uma página cuja seção já está em h2, o painel pede o título em h3 para não pular nível. Trocar a tag não pode romper o aria-labelledby: o nome acessível continua saindo do mesmo elemento.',
+      },
+    },
+  },
+  render: () =>
+    buildVariant('bottom', 'Detalhes do pedido', 'Pedido #4287 confirmado em 15 de março.', 3),
+  play: async ({ canvasElement, step }) => {
+    const p = await openPeloTrigger(canvasElement);
+
+    await step('O título vira h3 sem soltar o vínculo do nome acessível', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-sheet-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

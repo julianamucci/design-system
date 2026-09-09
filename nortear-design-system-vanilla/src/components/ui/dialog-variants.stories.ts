@@ -4,6 +4,7 @@ import { createDialog } from './dialog';
 import {
   dialogWithBodyScrollableSource,
   dialogWithFormSource,
+  dialogHeadingH3Source,
   dialogSource,
   dialogSourceWith,
 } from './dialog.source';
@@ -104,6 +105,49 @@ export const Default: Story = {
       const footerStyle = getComputedStyle(footer);
       await expect(footerStyle.borderBottomLeftRadius).toBe(panelStyle.borderBottomLeftRadius);
       await expect(footerStyle.borderBottomRightRadius).toBe(panelStyle.borderBottomRightRadius);
+    });
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item3'],
+    // Override de story: o nível do título não passa por control nenhum, e o
+    // snippet do meta mostraria a composição no nível padrão — que é justamente
+    // o que esta story existe para NÃO ter.
+    docs: {
+      source: { transform: dialogHeadingH3Source },
+      description: {
+        story:
+          'Aberto de dentro de uma página cuja seção já está em h2, o painel pede o título em h3 para não pular nível. Trocar a tag não pode romper o aria-labelledby: o nome acessível continua saindo do mesmo elemento.',
+      },
+    },
+  },
+  render: () =>
+    mountOpen(
+      createDialog({
+        trigger: createButton({
+          variant: 'outline',
+          label: t('demonstration.labels.triggerLabel'),
+        }),
+        title: t('demonstration.labels.title'),
+        titleLevel: 3,
+        description: 'Atualize suas informações pessoais.',
+        content: makeBody('Os campos estariam aqui em uma aplicação real.'),
+        footer: makeFooter(t('demonstration.labels.cancel'), t('demonstration.labels.action')),
+      }),
+    ),
+  play: async ({ step }) => {
+    const p = await waitForOpen();
+
+    await step('O título vira h3 sem soltar o vínculo do nome acessível', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });
   },
 };

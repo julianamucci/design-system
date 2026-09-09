@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   SHEET_BODY_TEXT,
   sheetControlledSnippet,
+  sheetHeadingH3Source,
   sheetSnippet,
   sheetSource,
   sheetSourceWith,
@@ -225,6 +226,19 @@ describe('sheetSourceCom', () => {
   });
 });
 
+describe('sheetHeadingH3Source', () => {
+  it('imprime o nível do título que a story pede', () => {
+    expect(sheetHeadingH3Source('', {})).toContain('titleLevel: 3');
+  });
+
+  it('e o nível padrão continua fora do snippet', () => {
+    // A fábrica assume `2`. Repetir o padrão ensinaria ruído e apagaria a
+    // informação de que existe um padrão — é a mesma regra do `side: 'right'`.
+    expect(sheetSnippet()).not.toContain('titleLevel');
+    expect(sheetSnippet({ titleLevel: 2 })).not.toContain('titleLevel');
+  });
+});
+
 describe('sheetControladoSnippet', () => {
   it('abre pelo gatilho interno — a fábrica não expõe prop de estado', () => {
     const code = sheetControlledSnippet();
@@ -265,6 +279,10 @@ describe('coerência dos snippets', () => {
   it('não referencia símbolo que o próprio snippet não declara', () => {
     expect(referenciasSoltas(sheetSnippet({ body: 'form' }))).toEqual([]);
     expect(referenciasSoltas(sheetControlledSnippet())).toEqual([]);
+    // Construtor de story entra na varredura como os demais: o que fica de fora
+    // da lista sai da medição sem uma palavra, e foi assim que uma varredura
+    // desta casa encolheu 28 exports com a suíte verde.
+    expect(referenciasSoltas(sheetHeadingH3Source('', {}))).toEqual([]);
   });
 
   it('mostra showCloseButton só quando ele é desligado', () => {

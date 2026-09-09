@@ -21,6 +21,8 @@ export type DialogSnippetAction = {
 export type DialogSnippetOptions = {
   triggerLabel?: string;
   title?: string;
+  /** Nível do cabeçalho do título. `2` é o padrão da fábrica. */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   /** Texto do parágrafo que ocupa o corpo. */
   bodyText?: string;
@@ -94,6 +96,9 @@ function linesComuns(o: DialogSnippetOptions, content: string): string[] {
   return options([
     ['trigger', button({ label: o.triggerLabel ?? 'Editar perfil', variant: 'outline' })],
     ['title', text(o.title ?? 'Editar perfil')],
+    // `2` é o nível que a fábrica assume, e padrão não entra no snippet: quem
+    // repete o padrão ensina ruído e apaga a informação de que existe um.
+    ['titleLevel', o.titleLevel && o.titleLevel !== 2 ? String(o.titleLevel) : undefined],
     [
       'description',
       o.description === '' ? undefined : text(o.description ?? 'Atualize suas informações pessoais.'),
@@ -139,6 +144,17 @@ export const dialogSource: SourceTransform<DialogSnippetOptions> = (_gerado, ctx
 export function dialogSourceWith(fixas: DialogSnippetOptions): SourceTransform<DialogSnippetOptions> {
   return (_gerado, ctx) => dialogSnippet({ ...ctx.args, ...fixas });
 }
+
+/**
+ * Transform da story que abre o painel com o título em `h3`.
+ *
+ * Mesma chamada da composição padrão — o que muda é UMA opção. A fábrica assume
+ * `2`, e é a página que decide: dentro de uma seção que já está em `h2`, o
+ * painel precisa entrar em `h3` para não pular nível.
+ */
+export const dialogHeadingH3Source: SourceTransform<DialogSnippetOptions> = dialogSourceWith({
+  titleLevel: 3,
+});
 
 // ─── Segunda forma: corpo com formulário ─────────────────────────────────────
 

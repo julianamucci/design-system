@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  alertDialogHeadingH3Source,
   alertDialogSnippet,
   alertDialogSource,
   alertDialogSourceWith,
@@ -99,6 +100,19 @@ describe('alertDialogSource', () => {
     expect(
       alertDialogSource('<div data-slot="alert-dialog" data-dialog-id="3">', {}),
     ).not.toContain('data-dialog-id');
+  });
+});
+
+describe('alertDialogHeadingH3Source', () => {
+  it('imprime o nível do título que a story pede', () => {
+    expect(alertDialogHeadingH3Source('', {})).toContain('titleLevel: 3');
+  });
+
+  it('e o nível padrão continua fora do snippet', () => {
+    // A fábrica assume `2`. Repetir o padrão ensinaria ruído e apagaria a
+    // informação de que existe um padrão — é a mesma regra do `defaultOpen`.
+    expect(alertDialogSnippet()).not.toContain('titleLevel');
+    expect(alertDialogSnippet({ titleLevel: 2 })).not.toContain('titleLevel');
   });
 });
 

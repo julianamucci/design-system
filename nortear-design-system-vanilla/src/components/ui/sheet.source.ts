@@ -32,6 +32,8 @@ export type SheetSnippetOptions = {
   triggerLabel?: string;
   side?: SheetSide;
   title?: string;
+  /** Nível do cabeçalho do título. `2` é o padrão da fábrica. */
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   body?: SheetBody;
   /** Rótulos do rodapé. `false` monta o painel SEM rodapé. */
@@ -263,6 +265,8 @@ function panelLines(o: SheetSnippetOptions, trigger: string, rodapeRef?: string)
     // `right` é o padrão da fábrica e não entra no snippet.
     ['side', o.side && o.side !== 'right' ? text(o.side) : undefined],
     ['title', text(o.title ?? 'Filtros avançados')],
+    // `2` é o nível que a fábrica assume, e padrão não entra no snippet.
+    ['titleLevel', o.titleLevel && o.titleLevel !== 2 ? String(o.titleLevel) : undefined],
     [
       'description',
       o.description === ''
@@ -350,6 +354,17 @@ export const sheetSource: SourceTransform<SheetSnippetOptions> = (_gerado, ctx) 
 export function sheetSourceWith(fixas: SheetSnippetOptions): SourceTransform<SheetSnippetOptions> {
   return (_gerado, ctx) => sheetSnippet({ ...ctx.args, ...fixas });
 }
+
+/**
+ * Transform da story que abre o painel com o título em `h3`.
+ *
+ * Mesma chamada do painel canônico — o que muda é UMA opção. A fábrica assume
+ * `2`, e é a página que decide: dentro de uma seção que já está em `h2`, o
+ * painel precisa entrar em `h3` para não pular nível.
+ */
+export const sheetHeadingH3Source: SourceTransform<SheetSnippetOptions> = sheetSourceWith({
+  titleLevel: 3,
+});
 
 /** Transform de story para a abertura comandada de fora. */
 export function sheetSourceControlled(
