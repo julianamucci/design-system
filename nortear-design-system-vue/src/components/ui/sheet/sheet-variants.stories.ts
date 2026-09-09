@@ -209,7 +209,7 @@ export const Bottom: Story = {
 // que nada impedia uma regressão de voltar a cravar o nível.
 export const HeadingH3: Story = {
   parameters: {
-    covers: ['accessibility.item4'],
+    covers: ['accessibility.item4', 'accessibility.item6'],
     docs: {
       // O nível É o assunto: a transform do meta mostra o padrão, que é
       // justamente o que esta story não usa.

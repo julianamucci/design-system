@@ -564,7 +564,7 @@ const functionalTestItems = computed(() => [1, 2, 3, 4].map((i) => ({
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
-const a11yTestItems = computed(() => [1, 2, 3, 4, 5].map((i) => ({
+const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6].map((i) => ({
   criterion: tContent(`testes.accessibility.item${i}`),
   level: 'WCAG 2.2 AA',
   how: tNav('common.howToVerify'),

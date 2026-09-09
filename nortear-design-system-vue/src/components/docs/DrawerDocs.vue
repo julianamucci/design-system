@@ -121,7 +121,7 @@ function entriesFromDict<K extends string>(
  * (número de critério, nome do verificador) e identificador não se traduz.
  * Item novo que chegue além da lista cai no par padrão em vez de sumir.
  */
-const A11Y_TEST_LEVELS = ['AA', '4.1.2', '1.3.1', '2.1.1', '2.4.3', '1.4.3', '2.1.1', '2.5.7'];
+const A11Y_TEST_LEVELS = ['AA', '4.1.2', '1.3.1', '2.1.1', '2.4.3', '1.4.3', '2.1.1', '2.5.7', '1.3.1'];
 const A11Y_TEST_HOW = [
   'axe-core',
   'DevTools a11y tree',
@@ -131,6 +131,7 @@ const A11Y_TEST_HOW = [
   'Contrast checker',
   'Keyboard test',
   'Keyboard test',
+  'DevTools a11y tree',
 ];
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────

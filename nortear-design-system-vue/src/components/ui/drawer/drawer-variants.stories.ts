@@ -304,7 +304,7 @@ export const WithScroll: Story = {
 // que nada impedia uma regressão de voltar a cravar o nível.
 export const HeadingH3: Story = {
   parameters: {
-    covers: ['accessibility.item3'],
+    covers: ['accessibility.item3', 'accessibility.item9'],
     docs: {
       // O nível É o assunto: a transform do meta mostra o padrão, que é
       // justamente o que esta story não usa.
