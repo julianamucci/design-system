@@ -148,6 +148,24 @@ painel que flutua sobre o texto, não um painel de trabalho.
 Popover — evitar corrida entre opacidade zero na entrada e checagem síncrona de
 visibilidade.
 
+**`prefers-reduced-motion` é atendido pela camada de TOKEN, e a ausência de um
+bloco `@media` nesta folha NÃO é defeito** — foi relatada como tal duas vezes,
+em 2026-09-08 e 2026-09-09, sempre pela mesma leitura: `hover-card.css` é a
+única da categoria sem o bloco, e as outras oito têm. Sob a preferência,
+`docs/shared/tokens/motion.css` zera a escada inteira de `--duration-*`, e a
+transição da saída usa `var(--duration-fast)`. Medido em 2026-09-09 em motor de
+CSS real (Chromium com `reducedMotion: 'reduce'`, lendo `getComputedStyle`):
+este painel para, junto com os outros 21 alvos de overlay sondados.
+
+Os blocos por folha das vizinhas são redundância, e vários deles não seguram
+nada: a guarda do popover mira `.nds-popover-content`, (0,1,0), contra uma
+declaração em `.nds-popover-content[data-ending-style]`, (0,2,0), e perde no
+cascata — `@media` não acrescenta especificidade. Ninguém tinha notado porque a
+camada de token já fazia o trabalho. O único caso que o token não alcança é
+duração LITERAL, fora de `var(--duration-*)`; aqui não é o caso, e as duas
+utilitárias que estavam nessa situação foram corrigidas no fim de
+`utilities.css`.
+
 ## 6. Estados
 
 | estado | quando ocorre | o que muda |

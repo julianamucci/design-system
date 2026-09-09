@@ -120,7 +120,26 @@
 .nds-hover-card-content.nds-hover-card-content {
   max-width: none;
 }
-/* Entrada aparece direto; saída animada (evita corrida com toBeVisible). */
+/* Entrada aparece direto; saída animada (evita corrida com toBeVisible).
+ *
+ * NÃO FALTA UM BLOCO `@media (prefers-reduced-motion: reduce)` AQUI, e esta
+ * folha ser a única da categoria sem um já foi relatada como defeito duas
+ * vezes. Quem para o movimento nesta casa é a camada de TOKEN: sob a
+ * preferência, `docs/shared/tokens/motion.css` zera a escada inteira de
+ * `--duration-*`, e a transição abaixo usa `var(--duration-fast)`. Medido em
+ * 2026-09-09 num motor de CSS real com a preferência emulada: este painel para,
+ * junto com os outros 21 alvos de overlay sondados.
+ *
+ * Os blocos por folha das vizinhas são cinto e suspensório — e vários deles não
+ * seguram nada: a guarda do popover (`popover.css`) mira
+ * `.nds-popover-content`, (0,1,0), contra uma declaração em
+ * `.nds-popover-content[data-ending-style]`, (0,2,0), e perde no cascata.
+ * `@media` não acrescenta especificidade. Ninguém tinha notado porque a camada
+ * de token já fazia o trabalho.
+ *
+ * O caso que a guarda de token NÃO cobre é duração LITERAL, fora de
+ * `var(--duration-*)` — ver o bloco no fim de `utilities.css`. Aqui não é o
+ * caso. */
 .nds-hover-card-content[data-ending-style] {
   opacity: 0;
   transform: scale(0.95);

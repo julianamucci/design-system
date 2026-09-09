@@ -638,3 +638,39 @@
  * pintava peças diferentes. O estado indeterminado agora sai de
  * `[data-indeterminate]` e a cor de `[data-variant]`, ambos em `progress.css`,
  * onde o seletor conhece a peça que está pintando. */
+
+/* ── Movimento contínuo sob prefers-reduced-motion ────────────────────────────
+ *
+ * Quem para o movimento nesta casa é a camada de TOKEN: sob
+ * `prefers-reduced-motion: reduce`, `docs/shared/tokens/motion.css` zera a
+ * escada inteira de `--duration-*`. Todo movimento declarado com
+ * `var(--duration-*)` para sozinho, sem bloco por folha — medido em 2026-09-09
+ * num motor de CSS real com a preferência emulada, em 28 declarações.
+ *
+ * O que a guarda de token NÃO alcança é duração LITERAL, e `.nds-animate-spin`
+ * e `.nds-animate-pulse` cravam `1s` e `2s` porque nenhum degrau da escada
+ * serve a um ciclo contínuo. Na mesma medição elas foram as duas ÚNICAS que
+ * continuavam animando: as gêmeas `.nds-spin` (button.css),
+ * `.nds-toast-icon-spin`, `.nds-skeleton` e `.nds-input-otp-caret` já paravam,
+ * cada uma pelo bloco da própria folha.
+ *
+ * ESTE BLOCO MORA NO FIM DO ARQUIVO, E ISSO É O CONSERTO, NÃO ARRUMAÇÃO.
+ * A primeira tentativa acrescentou as duas classes ao bloco de
+ * `.nds-animate-in`/`.nds-animate-out`, lá em cima — e ficou INERTE: aquele
+ * bloco vem ANTES das duas declarações, a especificidade é igual (0,1,0), e com
+ * especificidade igual quem vem depois vence. `@media` não acrescenta
+ * especificidade. O bloco de cima funciona porque as classes dele são
+ * declaradas acima dele; estas duas não são. Guarda de movimento tem de vir
+ * depois do que ela desliga.
+ *
+ * `animation: none` e não duração zero: com `infinite`, duração zero reinicia o
+ * ciclo sem parar — que é o piscar que a preferência pede para evitar. Mesma
+ * escolha que `motion.css` já documenta.
+ *
+ * Ao acrescentar utilitária de movimento com duração literal, ela entra aqui. */
+@media (prefers-reduced-motion: reduce) {
+  .nds-animate-spin,
+  .nds-animate-pulse {
+    animation: none;
+  }
+}
