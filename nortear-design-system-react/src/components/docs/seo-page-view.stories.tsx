@@ -53,6 +53,17 @@ function PaginaQueReRenderiza() {
       { name: "page_view" },
     ],
   });
+  // O `setState` em cascata é o MOTOR desta story, não um descuido: ela existe
+  // para provar que quatro renders produzem UM `page_view`, e re-render em
+  // cascata é exatamente o que o realce de seção ativa provoca ao rolar a
+  // página real. Sem a cascata não há o que medir.
+  //
+  // A regra está certa em geral — cascata de render é defeito quase sempre —, e
+  // por isso a supressão é de UMA linha, com o motivo escrito. Mesma forma que
+  // o `CarouselDocs.tsx` já usa para esta mesma regra, onde o `setState` no
+  // callback do Embla é o padrão da lib.
+  //
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { if (n < RENDERS - 1) setN((v) => v + 1); }, [n]);
   return <p data-renders={n}>renders: {n + 1}</p>;
 }
