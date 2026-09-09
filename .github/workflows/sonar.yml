@@ -19,10 +19,16 @@ name: SonarQube (informative)
 # Sem ele, scan quebrado fica VERMELHO e visível, e o gate continua não
 # bloqueando, que era o objetivo desde o começo.
 #
-# A causa provável daquelas falhas está do lado do Sonar, não daqui: com a
-# Automatic Analysis LIGADA, a análise por CI é recusada. As duas não convivem,
-# e desligar a automática em Administration > Analysis Method é o que libera
-# esta.
+# A CAUSA, e a primeira hipótese estava errada. Chutei conflito com a Automatic
+# Analysis; ela já estava desligada. O que a cronologia diz é pior para mim: a
+# última análise que existiu foi a do commit ANTERIOR ao que criou o passo de
+# instalação aqui embaixo. Depois dele, nenhuma. O passo que eu acrescentei para
+# a análise medir MAIS é o que a fez parar de medir.
+#
+# `npm ci --dry-run` fecha exit 0 nas cinco, mas isso foi medido no Windows e o
+# runner é Linux — e `--ignore-scripts` entrou na mesma mudança. Enquanto não
+# houver o log da job, a hipótese fica sem prova, e é por isso que o passo virou
+# best-effort em vez de eu adivinhar o conserto.
 #
 # O CodeQL continua onde está e NÃO é substituído. Os dois se sobrepõem em
 # segurança, e divergem no resto: o CodeQL segue fluxo de dados entre arquivos e
@@ -83,13 +89,40 @@ jobs:
         # `--ignore-scripts` porque `postinstall` aqui é `patch-package`, e
         # patch de comportamento de runtime não muda o que o analisador lê.
         # Poupa tempo e tira uma fonte de falha que não diz nada sobre o código.
+        #
+        # BEST-EFFORT, e por medição: a última análise que existiu foi a do
+        # commit ANTERIOR ao que criou este passo. Depois dele, nenhuma. Não sei
+        # ainda qual das cinco instalações quebra no runner — `npm ci --dry-run`
+        # fecha exit 0 aqui, mas isto é Windows e lá é Linux, e `--ignore-scripts`
+        # é mais uma variável que entrou junto.
+        #
+        # O que não pode acontecer é o que aconteceu: um passo de MELHORIA matar
+        # a análise inteira. Sem `node_modules` a análise perde as regras de
+        # tipo; sem análise nenhuma, perde tudo. Falhar aqui degrada, e a
+        # degradação é anunciada no passo abaixo — declarada, nunca silenciosa.
+        id: deps
         if: env.SONAR_TOKEN != ''
+        continue-on-error: true
         run: |
           for dir in nortear-design-system-*/; do
             echo "::group::npm ci — ${dir}"
             (cd "$dir" && npm ci --ignore-scripts)
             echo "::endgroup::"
           done
+
+      - name: Aviso — análise sem informação de tipo
+        if: env.SONAR_TOKEN != '' && steps.deps.outcome == 'failure'
+        run: |
+          {
+            echo "## SonarQube: análise DEGRADADA"
+            echo ""
+            echo "A instalação das dependências falhou, então o SonarJS não monta"
+            echo "o programa TypeScript e as regras que dependem de TIPO foram"
+            echo "PULADAS. O relatório sobe, mas mediu menos do que parece."
+            echo ""
+            echo "Abra o passo \`Dependências das cinco stacks\` acima para ver"
+            echo "qual stack quebrou."
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Análise
         # Sem a chave o passo é PULADO, não reprovado. Vale para dois casos
