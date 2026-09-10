@@ -17,7 +17,7 @@ Browser
 ├── lucide (ícones vanilla)
 ├── Apache ECharts (gráficos)
 ├── DOMPurify (sanitização de innerHTML, chamada no call site)
-├── Zod (validação de schema)
+├── createFormField e createFieldset (costura de a11y — sem biblioteca de formulário)
 └── @storybook/html-vite (documentação)
 ```
 
@@ -195,11 +195,11 @@ container.appendChild(span);
 | Framework | Vanilla TypeScript | Zero overhead, máxima interoperabilidade |
 | Storybook | @storybook/html-vite | Suporte nativo a HTML puro |
 | Styling | CSS standalone (`.nds-*`) | Independência total de frameworks CSS |
-| State | data-* attributes + Custom Events | Sem dependências externas |
-| Forms | HTML nativo + Zod | Validação tipada sem dependência de framework |
+| State | atributos data-* + callback nas opções | Sem dependências externas — nenhuma fábrica despacha `CustomEvent` |
+| Forms | HTML nativo + createFormField | sem biblioteca de formulário nem de validação por schema |
 | Icons | lucide (vanilla) | Leve, tree-shakeable |
 | Visual regression | Chromatic | Integrado ao Storybook |
-| A11y | axe-playwright | Testes em browser real |
+| A11y | axe, pelo `@storybook/addon-a11y` | Testes em browser real |
 
 ---
 

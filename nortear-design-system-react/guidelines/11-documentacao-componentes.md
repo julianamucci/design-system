@@ -929,7 +929,7 @@ Componentes como **Calendar** (`react-day-picker v9`: `Calendar`, `CalendarDayBu
 9. **`DocsDoDont`** — pares canônicos: (a) com `locale={ptBR}` vs sem locale (fallback para inglês); (b) `disabled={{ before: new Date() }}` vs validar só no submit.
 10. **`DocsNotes`** — 4 tips críticas:
     - `locale` vem de **`react-day-picker/locale`**; o `format()` do DatePicker vem de **`date-fns/locale`** — pacotes diferentes, ambos precisam configuração
-    - Integração com React Hook Form via `FormField` + `field.value`/`field.onChange` — `zodResolver` valida `Date` nativamente
+    - Em formulário, o Calendar é o controle dentro de um `FormField`; valor e validação são de quem compõe — o design system não traz biblioteca de formulário
     - `numberOfMonths={2}` em `mode="range"` reduz cliques em reservas longas
     - `initialFocus` dentro de Popover move foco ao abrir — melhora UX por teclado
 11. **Stories** — criar 4 arquivos: `calendar.stories.tsx` (Playground com `mode="single"` + `tags: ["autodocs"]` + `withAutoDocsTab(CalendarDocs)`), `calendar-modos.stories.tsx` (Single, Multiple, Range), `calendar-layouts.stories.tsx` (CaptionLabel, CaptionDropdown, TwoMonths, WithWeekNumber), `calendar-estados.stories.tsx` (Selected, Disabled, Today, WithOutsideDays, RangeWithMiddle). **Não criar** `calendar-variantes.stories.tsx` nem `calendar-tamanhos.stories.tsx` (sem cva, sem size). Nomear o grupo como "Modos" ou "Composições" em `DocsVariants`, não "Variantes". Apenas o arquivo principal leva `tags: ["autodocs"]`.

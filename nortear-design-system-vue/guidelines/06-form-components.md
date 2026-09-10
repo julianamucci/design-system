@@ -131,40 +131,37 @@ Popover
 
 ## Form
 
-**Propósito**: wrapper de acessibilidade e gerenciamento de estado para formulários, integrado com Vee-validate e Zod.
+**Propósito**: a costura de acessibilidade em volta de um campo — rótulo, descrição e mensagem ligados ao controle. O **estado** do formulário não mora aqui: valor, `touched`, `dirty` e erros de validação são da biblioteca que a aplicação escolher, e o design system não traz nenhuma, nem de formulário nem de validação por schema.
 
-**API e exemplos**: `src/components/ui/form/form.vue` + stories + `FormDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**API e exemplos**: `src/components/ui/form/FormField.vue` e `Fieldset.vue` + stories + `FormDocs.vue` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Estrutura de subcomponentes**:
+**Peças**:
 
 ```
-Form
-└── FormField (control, name)
-    └── FormItem
-        ├── FormLabel
-        ├── FormControl   (injeta aria-invalid + aria-describedby automaticamente)
-        │   └── [Input | Select | Checkbox | Switch | …]
-        ├── FormDescription
-        └── FormMessage   (erro do Zod — visível apenas com erro)
+<FormField>
+├── rótulo            <label for> apontando para o controle
+├── [controle]        Input, Select, Textarea… — id gerado quando falta
+├── descrição         id próprio, no aria-describedby do controle
+└── mensagem de erro  id próprio, no aria-describedby, aria-live="polite"
+
+<Fieldset>
+├── legenda
+└── [campos]
 ```
 
-**Regras**:
-- Sempre usar `Form > FormField > FormItem` — nunca criar campos fora desta estrutura
-- `FormDescription` substitui qualquer helper text customizado
-- `FormMessage` exibe o erro do Zod — não criar mensagens de erro paralelas
-- `FormControl` injeta `aria-invalid` e `aria-describedby` automaticamente — não adicionar manualmente
-- Submit bloqueado enquanto submetendo
-- Para formulários multi-etapa, validar apenas os campos da etapa atual antes de avançar (não submeter o form inteiro entre etapas)
+**O que o campo faz sozinho**: liga o `for` do rótulo ao `id` do controle; põe descrição e mensagem no `aria-describedby` do controle; anuncia a mensagem quando ela aparece, com `aria-live="polite"`; marca o rótulo com `data-error`, que é o que a folha usa para pintá-lo.
 
-**UX Writing das mensagens de erro** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
+**O que é de quem compõe**:
 
-**Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
+- **`aria-invalid`**. O campo não tem fonte de verdade sobre validade, e escrevê-lo apagaria o que quem monta o formulário tivesse escrito. Nenhuma das cinco stacks o escreve
+- validar, e decidir quando a mensagem aparece
+- bloquear o submit enquanto envia; em formulário de várias etapas, validar só os campos da etapa atual antes de avançar
 
-| Evento | Quando |
-|--------|--------|
-| `form_submit` | Após validação bem-sucedida |
-| `form_error` | Quando o resolver rejeita o submit |
-| `form_abandon` | Ao sair sem submeter |
+**Até 2026-09-10 esta seção descrevia outro componente** — "integrada com Vee-validate e Zod" —, com uma árvore de peças (`FormItem`, `FormControl`, `FormMessage`…) que não existe em stack nenhuma. Ensinava também que o `aria-invalid` era injetado sozinho e que não se devia escrevê-lo: seguida ao pé da letra, a regra produzia campo inválido anunciado como válido. O `vee-validate`, o `@vee-validate/zod` e o `zod` saíram do `package.json` no mesmo dia — nenhum era importado.
+
+**UX Writing das mensagens de erro** (ver `05-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
+
+**Analytics** (ver `07-analytics.md`): `form_submit` depois de a validação aprovar, `form_error` quando ela rejeita o submit, `form_abandon` ao sair sem submeter.
 
 ---
 
@@ -480,7 +477,7 @@ O texto de busca e o filtro moram na RAIZ porque as duas coisas são lidas por m
 - `.nds-min-h-30` como altura mínima padrão (120px, ~3 linhas). Sem utilitário, o mínimo é ~64px
 - A altura **não** acompanha o conteúdo: passando das linhas visíveis, o texto rola. Campo maior se pede por `rows` ou por `.nds-min-h-*`
 - Contador de caracteres com `aria-live="polite"` — anuncia ao leitor de tela sem interromper
-- `maxLength` no elemento + validação Zod — defesa em profundidade
+- `maxLength` no elemento + a validação de quem compõe — defesa em profundidade
 
 **Acessibilidade**: `aria-invalid` aplicado automaticamente pelo `FormControl` dentro de `FormField`.
 

@@ -2,7 +2,7 @@
 
 Este arquivo define as regras para tornar as páginas do projeto encontráveis por mecanismos de busca tradicionais (Google, Bing) e por IAs generativas (ChatGPT, Gemini, Claude, Perplexity). Os dois objetivos se complementam mas têm exigências distintas — este arquivo cobre ambos.
 
-> **Relação com outros arquivos**: title e description são textos voltados ao usuário. Siga as regras de linguagem do arquivo `19-tom-de-voz.md` ao escrevê-los.
+> **Relação com outros arquivos**: title e description são textos voltados ao usuário. Siga as regras de linguagem do arquivo `05-tom-de-voz.md` ao escrevê-los.
 
 ---
 
@@ -90,7 +90,7 @@ Execute esta sequência ao documentar uma nova página:
 ✅ **Obrigatório:**
 - Escrever para humanos — o texto deve fazer sentido fora do contexto técnico
 - Refletir exatamente o conteúdo real da página
-- Usar linguagem natural, clara e descritiva (ver `19-tom-de-voz.md`)
+- Usar linguagem natural, clara e descritiva (ver `05-tom-de-voz.md`)
 - Priorizar a intenção de busca sobre o encaixe de palavras-chave
 
 ---
@@ -134,7 +134,7 @@ Aparece abaixo do title nos resultados de busca. É o principal argumento para o
 
 | Contexto | ❌ Errado | ✅ Correto |
 |----------|----------|-----------|
-| Button | "O melhor componente de botão." | "Documentação do Button: 6 variantes, 4 tamanhos, estados interativos, acessibilidade WCAG e exemplos com React Hook Form." |
+| Button | "O melhor componente de botão." | "Documentação do Button: 6 variantes, 4 tamanhos, estados interativos, acessibilidade WCAG e exemplos de composição." |
 | Dialog | "Veja como usar o Dialog." | "Como implementar o Dialog: composição de subcomponentes, foco gerenciado, variantes de confirmação e exemplos controlados." |
 
 ---

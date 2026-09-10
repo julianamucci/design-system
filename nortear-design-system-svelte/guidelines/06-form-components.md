@@ -41,33 +41,39 @@
 
 ---
 
-## Form (Superforms + Zod)
+## Form
 
-**Propósito**: formulários com validação tipada, error handling e UX de acessibilidade.
+**Propósito**: a costura de acessibilidade em volta de um campo — rótulo, descrição e mensagem ligados ao controle. O **estado** do formulário não mora aqui: valor, `touched`, `dirty` e erros de validação são da biblioteca que a aplicação escolher, e o design system não traz nenhuma, nem de formulário nem de validação por schema.
 
-**Stack obrigatória**: `sveltekit-superforms` + `Zod` (via `zodClient`).
+**API e exemplos**: `src/components/ui/form/form-field.svelte` e `form-fieldset.svelte` + stories + `FormDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**API e exemplos**: `src/components/ui/form/` + stories + `FormDocs.svelte` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
-
-**Estrutura**:
+**Peças**:
 
 ```
-<form use:enhance>
-└── Field group
-    ├── Label (for="<id>")
-    ├── Input (id, aria-describedby, aria-invalid)
-    └── Mensagem de erro (id, role="alert")
+<FormField>
+├── rótulo            <label for> apontando para o controle
+├── [controle]        Input, Select, Textarea… — id gerado quando falta
+├── descrição         id próprio, no aria-describedby do controle
+└── mensagem de erro  id próprio, no aria-describedby, aria-live="polite"
+
+<Fieldset>
+├── legenda
+└── [campos]
 ```
 
-**Regras**:
-- Schema Zod é a fonte de verdade — mensagens em pt-BR
-- Cada campo associa `Label[for]` ao `Input[id]`
-- Mensagens de erro têm `id` referenciado por `aria-describedby` do campo
+**O que o campo faz sozinho**: liga o `for` do rótulo ao `id` do controle; põe descrição e mensagem no `aria-describedby` do controle; anuncia a mensagem quando ela aparece, com `aria-live="polite"`; marca o rótulo com `data-error`, que é o que a folha usa para pintá-lo.
 
-**Acessibilidade**:
-- `aria-describedby` apontando para o ID da mensagem de erro
-- `aria-invalid="true"` no campo com erro
-- `role="alert"` na mensagem de erro para anunciar ao leitor de tela
+**O que é de quem compõe**:
+
+- **`aria-invalid`**. O campo não tem fonte de verdade sobre validade, e escrevê-lo apagaria o que quem monta o formulário tivesse escrito. Nenhuma das cinco stacks o escreve
+- validar, e decidir quando a mensagem aparece
+- bloquear o submit enquanto envia; em formulário de várias etapas, validar só os campos da etapa atual antes de avançar
+
+**Até 2026-09-10 esta seção descrevia outro componente** — "Superforms + Zod", com `role="alert"` na mensagem —, com uma árvore de peças (`FormItem`, `FormControl`, `FormMessage`…) que não existe em stack nenhuma. Ensinava também que o `aria-invalid` era injetado sozinho e que não se devia escrevê-lo: seguida ao pé da letra, a regra produzia campo inválido anunciado como válido. O `sveltekit-superforms`, o `formsnap` e o `zod` saíram do `package.json` no mesmo dia — nenhum era importado; o wrapper preso a eles já tinha saído antes.
+
+**UX Writing das mensagens de erro** (ver `05-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
+
+**Analytics** (ver `07-analytics.md`): `form_submit` depois de a validação aprovar, `form_error` quando ela rejeita o submit, `form_abandon` ao sair sem submeter.
 
 ---
 

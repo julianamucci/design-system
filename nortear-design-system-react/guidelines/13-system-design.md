@@ -38,7 +38,7 @@ Este documento descreve o **System Design** (Design de Sistemas) do projeto, foc
 ├─────────────────────────────────────────┤
 │  Lucide React (Ícones)                  │
 │  Apache ECharts (Gráficos)              │
-│  React Hook Form (Formulários)          │
+│  FormField e Fieldset (a11y do campo)   │
 └─────────────────────────────────────────┘
 ```
 

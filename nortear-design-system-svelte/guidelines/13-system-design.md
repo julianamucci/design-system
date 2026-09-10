@@ -20,8 +20,8 @@ Browser
 ├── Bits UI (Primitivos Acessíveis)
 │   ├── Dialog, Dropdown, Select, etc.
 │   └── WAI-ARIA Compliance
-├── lucide-svelte (Ícones)
-├── Superforms + Zod (Formulários)
+├── @lucide/svelte (Ícones)
+├── FormField e Fieldset (costura de a11y — sem biblioteca de formulário)
 └── svelte-sonner (Toasts)
 ```
 
@@ -177,8 +177,8 @@ document.documentElement.classList.add('dark');
 | Styling | CSS standalone .nds-* | Performance, DX |
 | State (i18n) | $state em módulo | Leve, sem boilerplate |
 | State (tema) | Storybook toolbar | Persistido via `globals` na URL |
-| Forms | Superforms + Zod | TypeScript end-to-end |
-| Icons | lucide-svelte | Leve, tree-shakeable |
+| Forms | FormField + Fieldset, sem biblioteca de formulário | o estado é da biblioteca que a aplicação escolher |
+| Icons | @lucide/svelte | Leve, tree-shakeable |
 | Components | Bits UI | Acessibilidade, customização |
 | Visual regression | Chromatic | Integrado ao Storybook |
 | A11y | axe-playwright | Testes em browser real |

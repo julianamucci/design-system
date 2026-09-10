@@ -2,7 +2,7 @@
 
 A acessibilidade é a primeira premissa do projeto e a base das outras duas: um produto que não pode ser usado por todos não pode ser rastreado por todos nem indexado com precisão. Este arquivo define as regras obrigatórias para garantir que cada produto construído com estes componentes seja acessível a qualquer pessoa, independente de deficiência ou contexto de uso.
 
-> **Relação com outros arquivos**: `12-documentacao-componentes.md` define como documentar acessibilidade por componente (seções 12 e 15). `16-padroes-design-sistema.md` define a implementação técnica de focus, motion e layout acessível. `19-tom-de-voz.md` define linguagem simples. `21-analytics.md` define rastreamento. Este arquivo é a referência conceitual e de regras — os outros implementam.
+> **Relação com outros arquivos**: O `11-documentacao-componentes.md` de cada stack define como documentar acessibilidade por componente. `04-padroes-design-sistema.md` define a implementação técnica de focus, motion e layout acessível. `05-tom-de-voz.md` define linguagem simples. `07-analytics.md` define rastreamento. Este arquivo é a referência conceitual e de regras — os outros implementam.
 
 ---
 
@@ -177,7 +177,9 @@ Daltonismo afeta aproximadamente 8% dos homens e 0.5% das mulheres. Os tipos mai
 - Padrões ou traços em gráficos quando as séries são diferenciadas apenas por cor
 - Sublinhado em links — não depender apenas da cor para identificar que é clicável
 
-> **`aria-invalid` — manual vs automático**: dentro de `FormField + FormControl` (arquivo 06), o `FormControl` injeta `aria-invalid` e `aria-describedby` automaticamente — não adicionar manualmente. Fora de `FormField` (campo avulso, sem React Hook Form), adicionar `aria-invalid="true"` e `aria-errormessage="id-da-mensagem"` manualmente conforme o exemplo acima.
+> **`aria-invalid` é sempre de quem compõe.** O `FormField` (arquivo 06) liga o rótulo ao controle, põe descrição e mensagem no `aria-describedby` e anuncia a mensagem com `aria-live="polite"` — mas **não** escreve `aria-invalid`, em nenhuma das cinco stacks, porque o campo não sabe se o valor é válido. Quem valida marca `aria-invalid="true"` no controle, dentro ou fora de um `FormField`, conforme o exemplo acima.
+>
+> Até 2026-09-10 esta nota dizia o contrário — que um `FormControl` injetava o atributo sozinho e que não se devia escrevê-lo. Esse `FormControl` não existe em stack nenhuma, e a biblioteca de formulário que a nota supunha também não: seguida ao pé da letra, a regra deixava campo inválido anunciado como válido.
 
 ---
 
@@ -247,7 +249,7 @@ Deficiência auditiva impacta principalmente conteúdo de mídia. Para interface
 A maior parcela de usuários — dislexia, TDAH, deficiência intelectual, demência, ansiedade, autismo. As regras abaixo beneficiam todos os usuários, não apenas quem tem diagnóstico.
 
 **Linguagem simples:**
-- Seguir as regras de tom e vocabulário do arquivo `19-tom-de-voz.md`
+- Seguir as regras de tom e vocabulário do arquivo `05-tom-de-voz.md`
 - Mensagens de erro: causa + orientação, sem jargão técnico (ver arquivo 19, seção "Tom de erro")
 - Labels descritivos — nunca depender apenas de placeholder para identificar o campo
 
@@ -351,7 +353,7 @@ const navigateTo = (page: string, pageTitle: string) => {
     main?.focus();
   });
 
-  // 3. Registrar como pageview no analytics (ver 21-analytics.md)
+  // 3. Registrar como pageview no analytics (ver 07-analytics.md)
   track('page_view', {
     component: 'spa-navigation',
     location: page,
@@ -562,7 +564,7 @@ Para produtos que targetam públicos com baixa visão, considerar a media query 
 O rastreamento não pode comprometer a acessibilidade, e deve capturar a experiência de todos os usuários:
 
 - O valor de `data-track-label` deve ser idêntico ao `aria-label` ou ao texto visível — analytics e leitor de tela devem descrever a mesma ação
-- O listener global de `click` do arquivo `21-analytics.md` não captura ativações por teclado (`Enter`/`Space`) em elementos não-nativos — adicionar listener de `keydown` para esses casos
+- O listener global de `click` do arquivo `07-analytics.md` não captura ativações por teclado (`Enter`/`Space`) em elementos não-nativos — adicionar listener de `keydown` para esses casos
 - Eventos de analytics devem incluir a navegação virtual da SPA como pageview (ver seção "Anúncio de mudança de página" acima)
 - Erros de acessibilidade detectados por axe-core em CI devem bloquear o merge assim como falhas de teste funcional
 
@@ -619,7 +621,7 @@ className="focus-visible:ring-4"
 className="focus-visible:ring-ring/50"
 ```
 
-A variável `--ring` deve sempre ter 100% de opacidade (sem `/50` ou `/30`) — ver `16-padroes-design-sistema.md`.
+A variável `--ring` deve sempre ter 100% de opacidade (sem `/50` ou `/30`) — ver `04-padroes-design-sistema.md`.
 
 ---
 

@@ -194,36 +194,39 @@ O campo de texto mora DENTRO de `combobox-chips`, e não ao lado dela. A caixa d
 
 ---
 
-## Form (HTML nativo + Zod)
+## Form
 
-**Propósito**: agrupar inputs e validar via Zod. Forms em vanilla TS usam `<form>` nativo + validação manual no submit.
+**Propósito**: a costura de acessibilidade em volta de um campo — rótulo, descrição e mensagem ligados ao controle. O **estado** do formulário não mora aqui: valor, `touched`, `dirty` e erros de validação são da biblioteca que a aplicação escolher, e o design system não traz nenhuma, nem de formulário nem de validação por schema.
 
-**API e exemplos**: `src/components/ui/form.ts` + stories + `FormDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**API e exemplos**: `src/components/ui/form.ts` (`createFormField`, `createFieldset`) + stories + `FormDocs.ts` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Estrutura**:
+**Peças**:
 
 ```
-form .nds-stack (noValidate, data-spacing="md")
-├── Input fields (cada um com errorId)
-├── submit button
-└── erros inline (inseridos via showFieldError)
+createFormField({ label, description, error, input })
+├── rótulo            <label for> apontando para o controle
+├── [controle]        Input, Select, Textarea… — id gerado quando falta
+├── descrição         id próprio, no aria-describedby do controle
+└── mensagem de erro  id próprio, no aria-describedby, aria-live="polite"
+
+createFieldset({ legend, children })
+├── legenda
+└── [campos]
 ```
 
-**Regras**:
-- `form.noValidate = true` — validação é responsabilidade do Zod, não do browser
-- Schema Zod com mensagens em português
-- No submit: `e.preventDefault()` → limpar erros anteriores → `schema.safeParse()` → exibir erros por campo ou chamar `onSubmit`
-- Erros são `<p role="alert" id="${fieldId}-error">` inseridos imediatamente após o input
-- Limpar `aria-invalid` e `aria-describedby` ao limpar erros
-- Estado de loading durante submit: desabilitar botão + exibir spinner
+**O que o campo faz sozinho**: liga o `for` do rótulo ao `id` do controle; põe descrição e mensagem no `aria-describedby` do controle; anuncia a mensagem quando ela aparece, com `aria-live="polite"`; marca o rótulo com `data-error`, que é o que a folha usa para pintá-lo.
 
-**Acessibilidade**:
-- Cada erro com `role="alert"` (live region)
-- `aria-invalid="true"` no campo com erro
-- `aria-describedby` apontando ao ID do erro
-- Foco no primeiro campo com erro após submit inválido
+**O que é de quem compõe**:
 
-**Analytics**: emitir `form_submit` com `{ form_id, valid: boolean, error_fields?: string[] }`.
+- **`aria-invalid`**. O campo não tem fonte de verdade sobre validade, e escrevê-lo apagaria o que quem monta o formulário tivesse escrito. Nenhuma das cinco stacks o escreve
+- validar, e decidir quando a mensagem aparece
+- bloquear o submit enquanto envia; em formulário de várias etapas, validar só os campos da etapa atual antes de avançar
+
+**Até 2026-09-10 esta seção descrevia outro componente** — "HTML nativo + Zod", com `role="alert"` na mensagem e validação por `schema.safeParse()` —, com uma árvore de peças (`FormItem`, `FormControl`, `FormMessage`…) que não existe em stack nenhuma. Ensinava também que o `aria-invalid` era injetado sozinho e que não se devia escrevê-lo: seguida ao pé da letra, a regra produzia campo inválido anunciado como válido. O `zod` saiu do `package.json` no mesmo dia — não era importado em lugar nenhum.
+
+**UX Writing das mensagens de erro** (ver `05-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
+
+**Analytics** (ver `07-analytics.md`): `form_submit` depois de a validação aprovar, `form_error` quando ela rejeita o submit, `form_abandon` ao sair sem submeter.
 
 ---
 

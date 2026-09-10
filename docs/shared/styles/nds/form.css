@@ -24,10 +24,10 @@
   gap: var(--spacing-1-5);              /* 6px */
 }
 
-/* Estado de erro vindo das libs de form (vee-validate data-error, formsnap data-fs-error) */
-.nds-form-label[data-error="true"],
-.nds-form-label[data-fs-error]:not([data-fs-error="false"]),
-.nds-form-legend[data-fs-error]:not([data-fs-error="false"]) {
+/* Estado de erro: o FormField marca o rótulo com `data-error`, nas cinco stacks.
+ * Os seletores de `data-fs-error` saíram em 2026-09-10 — eram do Formsnap, que
+ * deixou o projeto, e ninguém mais escrevia o atributo (a legenda nunca o teve). */
+.nds-form-label[data-error="true"] {
   color: hsl(var(--destructive));
 }
 

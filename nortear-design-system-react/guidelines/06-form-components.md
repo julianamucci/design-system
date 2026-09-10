@@ -130,39 +130,37 @@ Popover
 
 ## Form
 
-**Propósito**: wrapper de acessibilidade e gerenciamento de estado para formulários, integrado com **React Hook Form** + **Zod**.
+**Propósito**: a costura de acessibilidade em volta de um campo — rótulo, descrição e mensagem ligados ao controle. O **estado** do formulário não mora aqui: valor, `touched`, `dirty` e erros de validação são da biblioteca que a aplicação escolher, e o design system não traz nenhuma, nem de formulário nem de validação por schema.
 
-**API e exemplos**: `src/components/ui/form.tsx` + stories + `FormDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
+**API e exemplos**: `src/components/ui/form.tsx` (`FormField`, `Fieldset`) + stories + `FormDocs.tsx` (renderizada na aba Docs do Storybook). Esta guideline cobre apenas decisões e regras.
 
-**Estrutura de subcomponentes**:
+**Peças**:
+
 ```
-Form
-└── FormField                  (conecta ao campo do RHF via control + name)
-    └── FormItem               (container do campo)
-        ├── FormLabel          (label acessível, associação automática)
-        ├── FormControl        (injeta aria-invalid + aria-describedby)
-        │   └── [Input | Select | Checkbox | Switch | ...]
-        ├── FormDescription    (helper text)
-        └── FormMessage        (erro do Zod — visível apenas com erro)
+<FormField>
+├── rótulo            <label for> apontando para o controle
+├── [controle]        Input, Select, Textarea… — id gerado quando falta
+├── descrição         id próprio, no aria-describedby do controle
+└── mensagem de erro  id próprio, no aria-describedby, aria-live="polite"
+
+<Fieldset>
+├── legenda
+└── [campos]
 ```
 
-**Regras**:
-- Sempre usar `Form > FormField > FormItem` — nunca criar campos fora desta estrutura.
-- `FormDescription` substitui qualquer helper text customizado.
-- `FormMessage` exibe o erro do Zod — não criar mensagens de erro paralelas.
-- `FormControl` injeta `aria-invalid` e `aria-describedby` automaticamente — não adicionar manualmente.
-- Submit bloqueado com `form.formState.isSubmitting`.
-- Validação via `zodResolver(schema)` no `useForm`.
+**O que o campo faz sozinho**: liga o `for` do rótulo ao `id` do controle; põe descrição e mensagem no `aria-describedby` do controle; anuncia a mensagem quando ela aparece, com `aria-live="polite"`; marca o rótulo com `data-error`, que é o que a folha usa para pintá-lo.
 
-**UX Writing das mensagens de erro** (ver `docs/shared/guidelines/05-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
+**O que é de quem compõe**:
 
-**Analytics**:
+- **`aria-invalid`**. O campo não tem fonte de verdade sobre validade, e escrevê-lo apagaria o que quem monta o formulário tivesse escrito. Nenhuma das cinco stacks o escreve
+- validar, e decidir quando a mensagem aparece
+- bloquear o submit enquanto envia; em formulário de várias etapas, validar só os campos da etapa atual antes de avançar
 
-| Evento | Quando |
-|---|---|
-| `form_submit` | Após validação bem-sucedida no `onSubmit` |
-| `form_error` | Quando RHF rejeita submit (handler `onError`) |
-| `form_abandon` | Ao sair sem submeter |
+**Até 2026-09-10 esta seção descrevia outro componente** — "integrada com React Hook Form + Zod" —, com uma árvore de peças (`FormItem`, `FormControl`, `FormMessage`…) que não existe em stack nenhuma. Ensinava também que o `aria-invalid` era injetado sozinho e que não se devia escrevê-lo: seguida ao pé da letra, a regra produzia campo inválido anunciado como válido. O React Hook Form nem estava instalado, e o `zod` saiu do `package.json` no mesmo dia — não era importado em lugar nenhum.
+
+**UX Writing das mensagens de erro** (ver `05-tom-de-voz.md`): causa + orientação, sem culpar — "Email inválido. Use o formato nome@dominio.com", nunca "Campo inválido".
+
+**Analytics** (ver `07-analytics.md`): `form_submit` depois de a validação aprovar, `form_error` quando ela rejeita o submit, `form_abandon` ao sair sem submeter.
 
 ---
 
@@ -479,7 +477,7 @@ Nos dois casos os botões de limpar e de abrir a lista ficam na primeira linha �
 **Regras**:
 - `min-height` de ~120px (~3 linhas) como altura mínima padrão.
 - Contador de caracteres com `aria-live="polite"` — anuncia ao leitor de tela sem interromper.
-- `maxLength` no elemento + validação Zod — defesa em profundidade.
+- `maxLength` no elemento + a validação de quem compõe — defesa em profundidade.
 
 **Acessibilidade**: `aria-invalid` aplicado automaticamente pelo `FormControl` dentro de `FormField`.
 

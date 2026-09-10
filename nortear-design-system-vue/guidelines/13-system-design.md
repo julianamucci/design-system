@@ -27,7 +27,7 @@ Este documento descreve o System Design do projeto para Vue 3.
 │  └── WAI-ARIA Compliance                │
 ├─────────────────────────────────────────┤
 │  lucide-vue-next (Ícones)               │
-│  Vee-Validate + Zod (Formulários)       │
+│  FormField e Fieldset (a11y do campo)   │
 │  vue-sonner (Toast notifications)       │
 └─────────────────────────────────────────┘
 ```
@@ -80,22 +80,16 @@ pages.
 
 ---
 
-## Formulários (Vee-Validate + Zod)
+## Formulários
 
-```vue
-<script setup lang="ts">
-import { useForm } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
+O design system não traz biblioteca de formulário nem de validação por schema.
+O `FormField` e o `Fieldset` fazem a costura de acessibilidade em volta do campo,
+e o estado — valor, erros de validação, submit — é da biblioteca que a
+aplicação escolher. Ver `06-form-components.md` §Form.
 
-const schema = toTypedSchema(z.object({
-  email: z.string().email('Email inválido.'),
-}))
-
-const { handleSubmit, errors } = useForm({ validationSchema: schema })
-const onSubmit = handleSubmit((values) => console.log(values))
-</script>
-```
+Até 2026-09-10 esta seção ensinava `useForm` do Vee-Validate com um schema do
+Zod. Nenhum dos dois era importado em lugar nenhum de `src/`, e os dois saíram do
+`package.json` naquele dia.
 
 ---
 

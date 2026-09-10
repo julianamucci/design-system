@@ -31,7 +31,6 @@
     "@tiptap/extension-text-align": "3.31.3",
     "@tiptap/pm": "3.31.3",
     "@tiptap/starter-kit": "3.31.3",
-    "@vee-validate/zod": "^4.15.1",
     "@vueuse/core": "^14.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -50,12 +49,10 @@
     "reka-ui": "^2.10.1",
     "tslib": "^2.8.1",
     "vaul-vue": "^0.4.1",
-    "vee-validate": "^4.15.1",
     "vue": "^3.5.40",
     "vue-echarts": "^8.0.1",
     "vue-input-otp": "^0.4.0",
-    "vue-sonner": "^2.0.9",
-    "zod": "^3.25.76"
+    "vue-sonner": "^2.0.9"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.2.1",

@@ -11,8 +11,8 @@ guidelines compartilhadas e não se repete aqui — ver a tabela no fim.
 > que a função já acrescenta. Nas seções próprias da stack os erros eram outros e
 > igualmente medidos: ícones de `lucide-svelte` (a stack importa de
 > `@lucide/svelte`), componentes em `$lib/components/ui` (zero imports; são 478 de
-> `@/components/ui`), formulários com Superforms + Zod (Superforms nem está
-> instalado), gatilhos com `asChild` (a composição do bits-ui 2 é o snippet
+> `@/components/ui`), formulários com Superforms + Zod (declarados, e
+> nenhum importado — saíram do `package.json` em 2026-09-10), gatilhos com `asChild` (a composição do bits-ui 2 é o snippet
 > `child`) e SEO por `useSeoEffect` (a stack exporta `applySeo`).
 
 ---

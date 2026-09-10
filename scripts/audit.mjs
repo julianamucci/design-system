@@ -1928,6 +1928,16 @@ const DEAD_LIB_RX = [
   // seguir não obtém estilo nenhum. O `\btailwind\b` não pegava, porque a
   // diretiva não nomeia a lib.
   { rx: /@apply\b/, label: '@apply (diretiva do Tailwind, que o projeto não tem)' },
+  // Bibliotecas de formulário e de schema que saíram em 2026-09-10. Estavam
+  // declaradas — `zod` em quatro stacks, `vee-validate` e `@vee-validate/zod`
+  // no Vue — e não eram importadas em lugar nenhum de `src/`, nem do
+  // `docs/shared`. Os `RULES.md` e as guidelines de formulário continuavam a
+  // ensiná-las, junto com Superforms e React Hook Form, que nem instalados
+  // estavam: quem seguisse a guideline reinstalaria o que acabou de sair.
+  { rx: /\bzod\b/i, label: 'Zod' },
+  { rx: /\bvee-validate\b|@vee-validate\//i, label: 'Vee-Validate' },
+  { rx: /\bsuperforms\b/i, label: 'Superforms' },
+  { rx: /react[-\s]hook[-\s]form|@hookform\//i, label: 'React Hook Form' },
 ];
 
 /**

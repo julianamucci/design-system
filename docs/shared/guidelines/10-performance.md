@@ -53,7 +53,6 @@ Para garantir tree-shaking:
 | `lucide-react/vue/svelte` | ~200B por ícone | Importar ícones individualmente, nunca `import * from 'lucide-*'` |
 | `class-variance-authority` | ~1.5KB | OK — essencial para variantes |
 | `clsx` | ~500B | OK — usado em `cn()` (clsx puro) |
-| `zod` | ~14KB | Importar apenas esquemas necessários |
 | `pinia` / `zustand` | ~1-2KB | OK — state management essencial |
 
 ### Análise de bundle
@@ -278,7 +277,7 @@ const handleResize = useMemo(
 
 ### Web Workers
 
-Para operações pesadas (parsing de JSON grande, validação complexa com Zod), considere Web Workers. Não é necessário para a maioria dos componentes do design system.
+Para operações pesadas (parsing de JSON grande, validação complexa), considere Web Workers. Não é necessário para a maioria dos componentes do design system.
 
 ---
 
