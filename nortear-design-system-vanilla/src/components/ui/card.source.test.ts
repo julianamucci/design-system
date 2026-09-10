@@ -25,12 +25,21 @@ describe('cardSnippet', () => {
 
   it('omite o que já é padrão da fábrica', () => {
     const code = cardSnippet();
-    // `default` no tamanho e nível 3 no título são o padrão.
+    // `default` no tamanho é o padrão da fábrica e some do snippet.
     expect(code).not.toContain('size:');
-    expect(code).not.toContain('level:');
     expect(code).not.toContain('createCardFooter');
     expect(code).not.toContain('createCardAction');
     expect(cardSnippet({ size: 'default' })).toBe(code);
+  });
+
+  it('ENSINA o nível do título, porque a story o passa', () => {
+    // O default da fábrica virou `<div>` neutro em 2026-09-09, alinhando com
+    // react, vue e svelte — antes era `h3` fixo. Com o default neutro, um
+    // snippet sem `level` passaria a ensinar um título SEM semântica de
+    // cabeçalho enquanto a prévia ao lado renderiza um `h3`, que é a forma
+    // exata do defeito que esta campanha mais encontrou. Os snippets das outras
+    // quatro stacks já traziam `as="h3"`.
+    expect(cardSnippet()).toContain('level: 3');
   });
 
   it('mostra o tamanho compacto quando a story o usa', () => {
@@ -77,7 +86,7 @@ describe('cardSource', () => {
     });
     expect(noArgs).not.toBe(withArgs);
     expect(withArgs).toContain("size: 'sm'");
-    expect(withArgs).toContain("createCardTitle({ text: 'Assinantes ativos' })");
+    expect(withArgs).toContain("createCardTitle({ text: 'Assinantes ativos', level: 3 })");
     expect(withArgs).toContain("valor.textContent = '8.742';");
     expect(withArgs).toContain('createCardFooter');
   });
@@ -94,7 +103,7 @@ describe('cardSourceCom', () => {
     const transform = cardSourceWith({ size: 'sm' });
     const code = transform('', { args: { size: 'default', title: 'Outro título' } });
     expect(code).toContain("size: 'sm'");
-    expect(code).toContain("createCardTitle({ text: 'Outro título' })");
+    expect(code).toContain("createCardTitle({ text: 'Outro título', level: 3 })");
   });
 });
 

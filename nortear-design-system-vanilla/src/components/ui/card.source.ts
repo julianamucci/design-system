@@ -93,7 +93,7 @@ foto.style.objectFit = 'cover';`,
   const header = [
     'const cabecalho = createCardHeader();',
     'cabecalho.append(',
-    `  createCardTitle({ text: ${text(title)} }),`,
+    `  createCardTitle({ text: ${text(title)}, level: 3 }),`,
     `  createCardDescription({ text: ${text(descricao)} }),`,
     ');',
   ];

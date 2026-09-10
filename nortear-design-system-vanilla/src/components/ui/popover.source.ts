@@ -135,7 +135,7 @@ conteudo.append(
       'createPopoverTitle',
       options([
         ['text', text(o.title ?? TITLE_DEFAULT)],
-        ['level', o.titleLevel && o.titleLevel !== 4 ? String(o.titleLevel) : undefined],
+        ['level', o.titleLevel && o.titleLevel !== 2 ? String(o.titleLevel) : undefined],
       ]),
     ),
     '  ',

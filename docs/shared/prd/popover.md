@@ -140,6 +140,37 @@ um passo a mais — a lib escreve `aria-controls=""`, e vazio é pior que ausent
 como componentes; no vanilla quem compunha montava a `<div>` e escrevia a classe
 à mão, e o `data-slot` documentado não saía em lugar nenhum.
 
+### D10 · O título sai em `h2`, e `level` × `titleLevel` NÃO é divergência
+
+**Fixada em** 2026-09-09.
+
+**O nível.** `createPopoverTitle` saía em `<h4>` e passou a sair em `<h2>`. As
+outras quatro anunciam nível 2: o React pelo `Popover.Title` do base-ui, que
+renderiza `<h2>`; Vue e Svelte por `role="heading" aria-level="2"` escrito à mão
+em 2026-08-15 justamente para casar com ele; o Angular deixa a tag para quem
+consome. O `h4` entrou quatro dias depois disso, em `a8ef7a15c` — a passagem que
+deu ao vanilla a CAPACIDADE de trocar o nível e, junto, escolheu um valor sem
+comparar com o que as outras anunciavam. O 4 nunca teve justificativa escrita, e
+nada reprovava porque qualquer nível é HTML válido.
+
+**Os dois nomes de opção são a MESMA regra, e isto está escrito aqui porque já
+foi relatado como defeito três vezes.** O nome é relativo ao que a peça monta:
+
+| a fábrica monta | a opção se chama | exemplos |
+|---|---|---|
+| só o título | `level` | `createPopoverTitle`, `createCardTitle` |
+| o componente inteiro, com o título como um campo entre vários | `titleLevel` | `createDialog`, `createSheet`, `createDrawer`, `createAlertDialog` |
+
+`createCardTitle({ titleLevel })` leria "title title level". A mesma regra vale
+fora do vanilla: no Svelte o wrapper de story usa `titleLevel` e o snippet emite
+`level`, que é o nome da prop do bits — escopos diferentes, nomes diferentes, sem
+divergência.
+
+**Os defaults também não são arbitrários entre si**: overlay que interrompe a
+página sai em `h2` (dialog, sheet, drawer, alert-dialog e agora o popover), e
+card — que é conteúdo EM FLUXO — não afirma nível nenhum, saindo `<div>` como
+nas outras quatro.
+
 ## 4. Anatomia
 
 ```

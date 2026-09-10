@@ -40,7 +40,17 @@ export interface CardHeaderOptions {
 
 export interface CardTitleOptions {
   text?: string;
-  /** Heading level rendered (default: 3). */
+  /**
+   * Nível do cabeçalho. **Sem ele o título sai `<div>`**, neutro, sem forçar
+   * hierarquia de headings — passe `1..6` quando o título do card for um
+   * heading real na hierarquia da página.
+   *
+   * Era `h3` fixo por padrão, e isso divergia das outras quatro: react, vue e
+   * svelte defaultam `as` para `div`, com este mesmo texto no docblock, e o
+   * Angular deixa o elemento para quem consome. Card é conteúdo EM FLUXO, e um
+   * `h3` que ninguém pediu entra no sumário da página no lugar errado — o
+   * default seguro é não afirmar nível nenhum.
+   */
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   class?: string;
   /** @deprecated Apelido de `class`. */
@@ -97,10 +107,10 @@ export function createCardHeader(options: CardHeaderOptions = {}): HTMLElement {
 }
 
 export function createCardTitle(options: CardTitleOptions = {}): HTMLElement {
-  const { text = '', level = 3 } = options;
+  const { text = '', level } = options;
   const className = options.class ?? options.className;
 
-  const el = document.createElement(`h${level}`);
+  const el = document.createElement(level ? `h${level}` : 'div');
   el.setAttribute('data-slot', 'card-title');
   el.className = cn('nds-card-title', className);
   if (text) el.textContent = text;

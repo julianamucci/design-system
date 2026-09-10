@@ -147,10 +147,7 @@ export const Form: Story = {
     content.dataset.spacing = 'md';
     content.addEventListener('submit', (e) => e.preventDefault());
 
-    const title = document.createElement('h4');
-    title.className = 'nds-popover-title';
-    title.dataset.slot = 'popover-title';
-    title.textContent = 'Editar perfil';
+    const title = createPopoverTitle({ text: 'Editar perfil' });
     content.appendChild(title);
 
     const nameRow = document.createElement('div');

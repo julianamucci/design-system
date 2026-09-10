@@ -202,15 +202,23 @@ export function createPopoverHeader(options: PopoverPartOptions = {}): HTMLEleme
 /**
  * Título do painel.
  *
- * Sai como `<h4>` por padrão: o painel é um `role="dialog"`, e é este elemento
+ * Sai como `<h2>` por padrão: o painel é um `role="dialog"`, e é este elemento
  * que o `aria-labelledby` do painel encontra sozinho — a fábrica procura um
  * cabeçalho antes de cair no nome do gatilho. `level` troca a profundidade para
  * quem precisa encaixar na hierarquia da página.
+ *
+ * **Era `h4` até 2026-09-09, e o 4 nunca teve justificativa escrita.** As outras
+ * quatro anunciam NÍVEL 2: react pelo `Popover.Title` do base-ui, que renderiza
+ * `<h2>`; vue e svelte por `role="heading" aria-level="2"` escrito à mão em
+ * 2026-08-15 justamente para casar com ele. O `h4` entrou quatro dias depois,
+ * em `a8ef7a15c` — a passagem que deu ao vanilla a CAPACIDADE de trocar o
+ * nível, e que junto escolheu um valor sem comparar com o que as outras
+ * anunciavam. Nada reprovava: qualquer nível é HTML válido.
  */
 export type PopoverTitleOptions = PopoverPartOptions & { level?: 1 | 2 | 3 | 4 | 5 | 6 };
 
 export function createPopoverTitle(options: PopoverTitleOptions = {}): HTMLElement {
-  const { level = 4 } = options;
+  const { level = 2 } = options;
   return createParte(`h${level}` as keyof HTMLElementTagNameMap, 'popover-title', 'nds-popover-title', options);
 }
 

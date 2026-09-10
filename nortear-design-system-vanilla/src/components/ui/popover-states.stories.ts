@@ -194,10 +194,7 @@ export const Focused: Story = {
     content.className = 'nds-stack';
     content.dataset.spacing = 'sm';
 
-    const title = document.createElement('h4');
-    title.className = 'nds-popover-title';
-    title.dataset.slot = 'popover-title';
-    title.textContent = 'Confirmar alteração';
+    const title = createPopoverTitle({ text: 'Confirmar alteração' });
     content.appendChild(title);
 
     const actions = document.createElement('div');
