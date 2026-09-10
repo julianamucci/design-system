@@ -71,6 +71,25 @@
   font-size: var(--text-control);
 
   /*
+   * Elevação da família MODAL, e o drawer é modal: `--elevation-xl`.
+   *
+   * Até 2026-09-10 este painel não tinha sombra nenhuma (era a D7 do PRD), com
+   * o motivo de que ele encosta na borda da tela e quem o separa do fundo é o
+   * véu. A dona fixou a regra da categoria inteira nesse dia — card `sm`,
+   * flutuante interativo `md`, flutuante passivo `lg`, modal e drawer `xl` —, e
+   * o drawer passou a ser medido como os outros painéis que interrompem a página.
+   *
+   * A sombra é DIRECIONAL (as camadas descem em y), e isso tem uma consequência
+   * que vale saber ao olhar a tela: no drawer de baixo quase toda ela cai fora do
+   * viewport, e o que se vê é a borda de cima; no de cima ela desce sobre o
+   * conteúdo e fica bem mais visível. É o mesmo token nos quatro lados — a
+   * diferença é geometria, não regra.
+   *
+   * Portão: `elevacao_fora_do_mapa`.
+   */
+  box-shadow: var(--elevation-xl);
+
+  /*
    * Sem isto o arraste por toque não existe: o navegador trata o movimento como
    * rolagem da página e nunca entrega os `pointermove` ao painel. As três
    * stacks que rodam lib de gesto já recebiam esta declaração da própria lib;

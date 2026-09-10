@@ -580,7 +580,7 @@ export interface AlertDialogOptions {
             { token: '--foreground',             value: '.nds-alert-dialog-content',     description: t('tokens.table.contentForeground') },
             { token: '--border',                 value: '.nds-alert-dialog-content',     description: t('tokens.table.border') },
             { token: '--radius-card',            value: '.nds-alert-dialog-content',     description: t('tokens.table.radius') },
-            { token: '--elevation-lg',           value: '.nds-alert-dialog-content',     description: t('tokens.table.elevation') },
+            { token: '--elevation-xl',           value: '.nds-alert-dialog-content',     description: t('tokens.table.elevation') },
             { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: t('tokens.table.padding') },
             { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: t('tokens.table.mutedForeground') },
             { token: '--muted',                  value: '.nds-alert-dialog-media',       description: t('tokens.table.mediaBg') },

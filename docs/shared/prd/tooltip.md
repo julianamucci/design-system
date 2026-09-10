@@ -130,7 +130,7 @@ Fonte: `docs/shared/styles/nds/tooltip.css`.
 | raio | — | `--radius-sm` |
 | tamanho de texto | 12px | `--text-control-sm` |
 | entrelinha | 1.4 | **literal** |
-| sombra | — | `--elevation-xl` |
+| sombra | — | `--elevation-lg` — flutuante passivo; era `xl` até 2026-09-10 |
 | camada | — | `--z-tooltip` |
 | seta | 10×5px | **literais** — base e altura do triângulo |
 

@@ -95,7 +95,8 @@ expressa consulta de mídia.
 
 ### D4 · O fio de 1px é SOMBRA, não borda
 
-**Estado**: `box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1), var(--elevation-lg)`.
+**Estado**: `box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1), var(--elevation-xl)`.
+**Elevação `xl` desde 2026-09-10** — era `lg`. Regra da categoria fixada pela dona: card `sm` · flutuante interativo `md` · flutuante passivo `lg` · modal e drawer `xl`.
 **Consequência**: é traço de fora, sem ocupar espaço no layout. No Figma isso é
 contorno externo de 1px, não borda.
 **Contraste**: o Sheet usa um fio equivalente, mas **literal** — preto a 5%, sem
@@ -255,7 +256,7 @@ Fonte: `docs/shared/styles/nds/dialog.css`.
 | padding | 16px | `--spacing-4` |
 | gap do painel | 16px | `--spacing-4` |
 | raio | reto abaixo de 40rem, depois card | `--radius-none` e `--radius-card` — ver D3 |
-| fio + elevação | 1px a 10% + lg | `--foreground` e `--elevation-lg` — ver D4 |
+| fio + elevação | 1px a 10% + xl | `--foreground` e `--elevation-xl` — ver D4 |
 | gap do cabeçalho | 6px na base, 8px no composto | `--spacing-1-5` e `--spacing-2` — ver D8 |
 | título | 16px, peso médio, entrelinha 1 | `--text-control-lg`, `--font-weight-medium`, cor `--foreground` |
 | descrição | 14px, entrelinha 1.5 | `--text-control`, cor `--muted-foreground` |

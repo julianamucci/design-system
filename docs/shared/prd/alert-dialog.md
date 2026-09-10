@@ -147,7 +147,7 @@ Fonte: `docs/shared/styles/nds/alert-dialog.css`.
 | gap do painel | 16px | `--spacing-4` |
 | borda | 1px | `--border` |
 | raio | — | `--radius-card` |
-| sombra | — | `--elevation-lg` |
+| sombra | — | `--elevation-xl` — modal; era `lg` até 2026-09-10 |
 | gap do cabeçalho | 8px | `--spacing-2` |
 | título | 18px, semi-bold, entrelinha 1, tracking -0.025em | `--text-control-xl` |
 | descrição | 14px, entrelinha 1.5 | `--text-control`, cor `--muted-foreground` |

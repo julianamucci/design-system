@@ -895,6 +895,39 @@ Problemas de overflow são comuns em layouts flex e grid. Aplique as seguintes r
 <div className="nds-card nds-shadow-sm">
 ```
 
+### Qual degrau, por tipo de superfície
+
+Fixado em 2026-09-10. O degrau não é escolha de cada componente: sai do **tipo**
+de superfície, e a altura sobe com o quanto ela se separa da página.
+
+| tipo | degrau | componentes |
+|---|---|---|
+| card, sobre o background | `--elevation-sm` | card |
+| flutuante interativo | `--elevation-md` | popover, dropdown-menu (e context-menu, menubar), select, combobox, navigation-menu, o seletor do calendário, o popover do composer |
+| flutuante passivo | `--elevation-lg` | hover-card, tooltip |
+| modal (todos) e drawer | `--elevation-xl` | dialog, alert-dialog, sheet, drawer |
+
+**Interativo × passivo** é o que separa `md` de `lg`: o interativo recebe foco e
+aceita ação; o passivo só acompanha o que está embaixo e some quando o ponteiro
+sai. O passivo sobe mais porque flutua SOBRE o conteúdo que descreve, e precisa
+se descolar dele.
+
+**O Command não tem degrau próprio.** A paleta mora dentro de um Dialog e herda
+a elevação dele — modal, `xl`.
+
+**O Toast está fora da regra, esperando decisão.** Ele é flutuante e não prende
+foco, mas carrega ação ("desfazer" é o caso comum) — não cabe com clareza nem
+em interativo nem em passivo. Mantém `--elevation-xl`, que é o que tinha.
+
+**A sombra é direcional**: as camadas dos tokens descem em y. Num painel que
+encosta na borda de baixo da tela (o drawer de baixo), quase toda a sombra cai
+fora do viewport. É o mesmo token; a diferença é geometria.
+
+Portão: `elevacao_fora_do_mapa`, em `scripts/audit.mjs`. Ele reprova folha
+classificada que lê degrau diferente do seu tipo, e folha que lê elevação sem
+estar classificada — é o segundo caso que impede o próximo componente de escolher
+o degrau em silêncio.
+
 ---
 
 ## Motion e Animações

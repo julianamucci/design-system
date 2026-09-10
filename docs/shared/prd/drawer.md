@@ -106,11 +106,21 @@ aparece.
 inline — proibido no projeto — e as outras stacks não resolviam, então conteúdo
 longo empurrava o rodapé com os botões para fora da tela.
 
-### D7 · O painel não tem sombra
+### D7 · O painel tem sombra `xl`, como toda a família modal
 
-**Estado**: `drawer.css` não declara `box-shadow` em lugar nenhum.
-**Por quê**: o painel encosta na borda da tela e quem o separa do fundo é o véu.
-**Cuidado ao desenhar**: é diferente do Sheet, que tem fio de 1px mais elevação.
+**Estado desde 2026-09-10**: `box-shadow: var(--elevation-xl)` em `.nds-drawer-content`.
+**Por quê**: a dona fixou nesse dia a regra de elevação da categoria inteira —
+card `sm` · flutuante interativo `md` · flutuante passivo `lg` · modal e drawer `xl` —, e o drawer entrou como os outros painéis que interrompem a página.
+**A sombra é direcional**: as camadas do token descem em y. No drawer de baixo
+quase toda ela cai fora do viewport e o que se vê é a borda de cima; no de cima
+ela desce sobre o conteúdo e fica bem mais visível. É o mesmo token nos quatro
+lados — a diferença é geometria, não regra.
+
+**Histórico — revertido em 2026-09-10.** Até então o painel não tinha sombra
+nenhuma, com o motivo de que ele encosta na borda da tela e quem o separa do
+fundo é o véu. Fica o registro porque o argumento não era ruim; ele perdeu para
+a consistência da categoria, e quem quiser revisitá-lo precisa revisitar a
+regra inteira, não só o drawer.
 
 ### D8 · `touch-action: none` é o que faz o gesto existir
 
@@ -235,7 +245,7 @@ Fonte: `docs/shared/styles/nds/drawer.css`.
 | gap do rodapé | 8px | `--spacing-2` |
 | camada | — | `--z-modal` |
 
-**Sem sombra** (D7).
+**Sombra `--elevation-xl`** (D7, revertida em 2026-09-10).
 
 **O título e a descrição não estão nesta tabela de propósito**: eles são regra do
 `sheet.css` (`.nds-sheet-title` e `.nds-sheet-description`), reusada aqui. Os

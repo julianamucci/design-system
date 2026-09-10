@@ -983,7 +983,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
       { token: '--popover',            propriedade: 'background-color', k: 'background' },
       { token: '--popover-foreground', propriedade: 'color',            k: 'foreground' },
       { token: '--border',             propriedade: 'border',           k: 'border'     },
-      { token: '--elevation-xl',       propriedade: 'box-shadow',       k: 'shadow'     },
+      { token: '--elevation-lg',       propriedade: 'box-shadow',       k: 'shadow'     },
       { token: '--radius',             propriedade: 'border-radius',    k: 'rounded'    },
       { token: '--spacing-4',          propriedade: 'padding',          k: 'padding'    },
       { token: '--hover-card-width',   propriedade: 'width',            k: 'width'      },

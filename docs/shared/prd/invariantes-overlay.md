@@ -58,18 +58,48 @@ prioridade, porque é a ordem do custo quando ele quebra.
 | invariante | PRDs que o escrevem | portão |
 |---|---|---|
 | Movimento para sob `prefers-reduced-motion` | 9 | `movimento_sem_guarda_eficaz` |
-| Elevação e sombra por camada | 9 | parcial — `prd_token_sem_lastro`, `token_table_row_incoerente` |
+| Elevação por tipo de superfície | 9 | `elevacao_fora_do_mapa` — e `prd_token_sem_lastro` confere cada PRD contra a folha |
 | `reason` no evento de fechamento | 5 | `reason_parcial_entre_stacks` |
 | Nível do cabeçalho do título | 5 | `nivel_de_titulo_divergente` |
 | Cadeia de `transform-origin` por lib | 4 | `cadeia_transform_origin_sem_bits` · `_premissa` · `_nao_declarada` |
-| Largura como custom property com default em `:root` | 4 | parcial — `undocumented_component_var` |
+| Largura como custom property com default em `:root` | 3 | não é invariante da categoria — ver abaixo |
 | Anel de foco | 4 | `focus_ring_sobrescrito` · `focus_ring_translucido` |
 | Modalidade (`aria-modal`) e o que ela liga | 3 | `modalidade_sem_condicao` (metade — ver abaixo) |
-| O `<form>` e o rodapé | 3 | parcial — `submit_fora_do_form` (metade retratada por falso positivo) |
+| O `<form>` e o rodapé | 3 | `submit_fora_do_form` no conteúdo compartilhado · play lendo `button.form` no código, nas cinco |
 | Vocabulário do payload | 2+ | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` · `location_fora_do_vocabulario` · `campo_de_payload_morto` |
 | O véu não desfoca o fundo | 2 | `veu_com_desfoque` |
 | Corpo é `flex: 1 1 auto`, nunca o atalho | 2 | `corpo_com_atalho_flex` |
 | Ordem dos botões no rodapé | 2 | play, nas cinco — **só no dialog**; o drawer não a assere em stack nenhuma |
+
+### Os três que estavam marcados "parcial", relidos em 2026-09-10
+
+O rótulo tinha saído do NOME das regras vizinhas, não do que elas cobram. Lidas
+as regras, eram três casos diferentes:
+
+- **O `<form>` e o rodapé nunca foi parcial.** O `submit_fora_do_form` cobra o
+  conteúdo compartilhado, onde cada chave de snippet é um bloco contíguo e a
+  contagem de `<form>` é confiável. A varredura do código das stacks foi escrita
+  e RETIRADA em 2026-09-08 (16 achados, a maioria falsa), e o próprio audit diz
+  que essa metade ficou com a suíte, lendo `button.form`. Conferido: essa
+  asserção existe nas cinco. É o mesmo desenho da ordem do rodapé — audit onde a
+  checagem estática é confiável, suíte onde não é.
+- **A elevação era parcial de verdade, porque a regra não estava escrita.** Os
+  degraus seguiam um padrão, mas ele só existia espalhado em nove PRDs, cada um
+  dizendo o próprio valor; o `prd_token_sem_lastro` conferia cada documento
+  contra a própria folha, que é coerência de documento, não de categoria. A dona
+  fixou a regra no mesmo dia — card `sm`, flutuante interativo `md`, flutuante
+  passivo `lg`, modal e drawer `xl` — e ela divergia do código em SEIS folhas
+  (dialog, alert-dialog e sheet estavam em `lg`; hover-card e tooltip em `xl`; o
+  drawer não tinha sombra). As seis foram alinhadas, a regra foi para
+  `04-padroes-design-sistema.md`, e o portão `elevacao_fora_do_mapa` passou a
+  cobrá-la. Medido em Chromium com o tema ativo: os dez painéis pintam o degrau
+  do seu tipo.
+- **A largura não é invariante da categoria.** Só três dos nove têm largura como
+  custom property (`sheet`, `drawer`, `hover-card`), e o popover é exceção
+  declarada (D6). Os outros cinco não fixam largura desse jeito. É um padrão de
+  três painéis — e o `undocumented_component_var` cobra só que um gancho
+  DECLARADO seja documentado, não que ele exista. Fica aqui como decisão de três
+  PRDs, sem portão de categoria, porque não há categoria para cobrar.
 
 ### O que cada portão novo NÃO cobre
 
@@ -105,9 +135,9 @@ mecanismo:
    passivo, e fechar é quase sempre "o ponteiro saiu".
 2. **A ordem do rodapé do drawer** não é asserida em stack nenhuma, enquanto a
    do dialog é asserida nas cinco. É play, não regra de audit.
-3. **Três invariantes com cobertura PARCIAL** — elevação, largura como custom
-   property, e o `<form>` com o rodapé. Nenhum é o eixo desta rodada, e cada um
-   precisa de medição própria antes de virar regra.
+3. **O Toast não foi classificado** pela regra de elevação — é flutuante e não
+   prende foco, mas carrega ação. Mantém `xl` até decisão da dona, declarado em
+   `ELEVACAO_FORA_DA_REGRA` para não virar achado nem sumir da vista.
 
 ## O que este arquivo NÃO promete
 

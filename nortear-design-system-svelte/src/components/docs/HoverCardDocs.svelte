@@ -780,7 +780,7 @@ interface HoverCardContentProps {
       { token: '--popover',            value: 'background-color', description: $tStore('tokens.table.background.part') },
       { token: '--popover-foreground', value: 'color',            description: $tStore('tokens.table.foreground.part') },
       { token: '--border',             value: 'border',           description: $tStore('tokens.table.border.part')     },
-      { token: '--elevation-xl',       value: 'box-shadow',       description: $tStore('tokens.table.shadow.part')     },
+      { token: '--elevation-lg',       value: 'box-shadow',       description: $tStore('tokens.table.shadow.part')     },
       { token: '--radius',             value: 'border-radius',    description: $tStore('tokens.table.rounded.part')    },
       { token: '--spacing-4',          value: 'padding',          description: $tStore('tokens.table.padding.part')    },
       { token: '--hover-card-width',   value: 'width',            description: $tStore('tokens.table.width.part')      },

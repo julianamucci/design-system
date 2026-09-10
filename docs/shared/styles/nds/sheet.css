@@ -106,7 +106,7 @@
 
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  box-shadow: 0 0 0 1px hsl(0 0% 0% / 0.05), var(--elevation-lg);
+  box-shadow: 0 0 0 1px hsl(0 0% 0% / 0.05), var(--elevation-xl);
 }
 
 /* ── Sides ───────────────────────────────────────────────────────────────── */

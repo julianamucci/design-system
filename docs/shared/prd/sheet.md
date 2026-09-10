@@ -75,9 +75,9 @@ de uma caixa sem altura.
 para ele poder encolher quando houver teto.
 **Mesmo defeito já medido no Drawer**, e pela mesma razão.
 
-### D4 · O fio de 1px é literal, e a sombra é `Elevacao/lg`
+### D4 · O fio de 1px é literal, e a sombra é `Elevacao/xl`
 
-**Estado**: `box-shadow: 0 0 0 1px hsl(0 0% 0% / 0.05), var(--elevation-lg)`. O
+**Estado**: `box-shadow: 0 0 0 1px hsl(0 0% 0% / 0.05), var(--elevation-xl)`. Era `lg` até 2026-09-10, quando a dona fixou a regra da categoria: card `sm` · flutuante interativo `md` · flutuante passivo `lg` · modal e drawer `xl`. O
 fio é preto a 5% cravado na folha, sem token por trás.
 **Para revisitar**: tokenizar o fio muda os cinco painéis da família de uma vez.
 

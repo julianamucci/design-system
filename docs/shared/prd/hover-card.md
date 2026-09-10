@@ -149,10 +149,10 @@ lista abaixo é toda ela.
 | texto | — | `--popover-foreground` |
 | borda | 1px | `--border` |
 | raio | — | `--radius` |
-| sombra | — | `--elevation-xl` |
+| sombra | — | `--elevation-lg` — flutuante passivo; era `xl` até 2026-09-10 |
 | camada | — | `--z-popover` |
 
-**A sombra é `xl`**, a mesma do Tooltip e mais alta que a do Popover (`md`): é um
+**A sombra é `lg`**, a mesma do Tooltip e mais alta que a do Popover (`md`): é um
 painel que flutua sobre o texto, não um painel de trabalho.
 
 **Animação**: só a saída anima (`data-ending-style`), pelo mesmo motivo do

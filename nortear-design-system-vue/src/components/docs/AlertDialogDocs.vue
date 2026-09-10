@@ -301,7 +301,7 @@ const tokenRows = computed(() => [
   { token: '--foreground',             value: '.nds-alert-dialog-content',     description: tContent('tokens.table.contentForeground')     },
   { token: '--border',                 value: '.nds-alert-dialog-content',     description: tContent('tokens.table.border')                },
   { token: '--radius-card',            value: '.nds-alert-dialog-content',     description: tContent('tokens.table.radius')                },
-  { token: '--elevation-lg',           value: '.nds-alert-dialog-content',     description: tContent('tokens.table.elevation')             },
+  { token: '--elevation-xl',           value: '.nds-alert-dialog-content',     description: tContent('tokens.table.elevation')             },
   { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: tContent('tokens.table.padding')               },
   { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: tContent('tokens.table.mutedForeground')       },
   { token: '--muted',                  value: '.nds-alert-dialog-media',       description: tContent('tokens.table.mediaBg')               },

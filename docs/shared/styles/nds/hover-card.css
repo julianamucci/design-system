@@ -59,7 +59,7 @@
   color: hsl(var(--popover-foreground));
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius);
-  box-shadow: var(--elevation-xl);
+  box-shadow: var(--elevation-lg);
 
   /* A cadeia tem de citar as TRÊS libs, e faltava a do Svelte — com um nome que
    * a analogia erraria.
@@ -79,8 +79,9 @@
    *
    * Sem o degrau do bits, só o SVELTE perdia a origem direcional — o cartão
    * crescia do centro em vez de crescer do gatilho, em silêncio. Mesmo defeito
-   * que tooltip e popover carregavam; continua aberto em dropdown-menu,
-   * navigation-menu e select. */
+   * que tooltip e popover carregavam; dropdown-menu e select foram fechados em
+   * 2026-09-09, e o navigation-menu é exceção declarada — o bits não publica
+   * origem para ele. Portão: `cadeia_transform_origin_sem_bits`. */
   transform-origin: var(--transform-origin, var(--reka-hover-card-content-transform-origin, var(--bits-link-preview-content-transform-origin, center)));
 }
 

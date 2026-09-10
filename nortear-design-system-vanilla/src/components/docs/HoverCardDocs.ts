@@ -764,7 +764,7 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
             { token: '--popover',            value: 'background-color', description: t('tokens.table.background.part') },
             { token: '--popover-foreground', value: 'color',            description: t('tokens.table.foreground.part') },
             { token: '--border',             value: 'border',           description: t('tokens.table.border.part')     },
-            { token: '--elevation-xl',       value: 'box-shadow',       description: t('tokens.table.shadow.part')     },
+            { token: '--elevation-lg',       value: 'box-shadow',       description: t('tokens.table.shadow.part')     },
             { token: '--radius',             value: 'border-radius',    description: t('tokens.table.rounded.part')    },
             { token: '--spacing-4',          value: 'padding',          description: t('tokens.table.padding.part')    },
             { token: '--hover-card-width',   value: 'width',            description: t('tokens.table.width.part')      },

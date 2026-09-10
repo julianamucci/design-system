@@ -77,7 +77,7 @@
 
   background-color: hsl(var(--popover));
   color: hsl(var(--popover-foreground));
-  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1), var(--elevation-lg);
+  box-shadow: 0 0 0 1px hsl(var(--foreground) / 0.1), var(--elevation-xl);
   border-radius: var(--radius-none);
 }
 

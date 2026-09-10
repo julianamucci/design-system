@@ -70,7 +70,7 @@
   border: 1px solid hsl(var(--border));
   border-radius: var(--radius-card);
   padding: var(--spacing-6);                      /* 24px */
-  box-shadow: var(--elevation-lg);
+  box-shadow: var(--elevation-xl);
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */

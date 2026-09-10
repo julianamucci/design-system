@@ -3262,6 +3262,119 @@ function auditModalidadeNaoModal() {
   return violations;
 }
 
+/**
+ * Elevação por TIPO de superfície — regra fixada pela dona em 2026-09-10.
+ *
+ *   card, sobre o background          `--elevation-sm`
+ *   flutuante interativo              `--elevation-md`
+ *   flutuante passivo                 `--elevation-lg`
+ *   modal (todos) e drawer            `--elevation-xl`
+ *
+ * Antes desta regra a elevação existia só como decisão avulsa em cada PRD, e o
+ * `prd_token_sem_lastro` conferia cada documento contra a própria folha — que é
+ * coerência de DOCUMENTO, não de categoria. Um overlay novo podia escolher
+ * qualquer degrau, registrar no próprio PRD e passar. Foi o que o inventário de
+ * invariantes marcou como "parcial" (`docs/shared/prd/invariantes-overlay.md`).
+ *
+ * A regra reprova em dois sentidos:
+ *   · folha classificada que lê degrau diferente do seu tipo, ou mais de um;
+ *   · folha que lê elevação e NÃO está classificada — é isto que impede o
+ *     próximo componente de escolher o degrau em silêncio.
+ *
+ * `calendar` e `composer` entram como flutuante interativo pelo que pintam: o
+ * `::picker(select)` do cabeçalho do calendário e o `.nds-composer-trigger-
+ * popover`. Classificação minha, a partir da regra da dona — se ela discordar,
+ * é esta tabela que muda.
+ */
+const ELEVACAO_POR_TIPO = {
+  sm: { tipo: 'card, sobre o background', folhas: ['card'] },
+  md: {
+    tipo: 'flutuante interativo',
+    folhas: ['popover', 'dropdown-menu', 'select', 'combobox', 'navigation-menu', 'calendar', 'composer'],
+  },
+  lg: { tipo: 'flutuante passivo', folhas: ['hover-card', 'tooltip'] },
+  xl: { tipo: 'modal e drawer', folhas: ['dialog', 'alert-dialog', 'sheet', 'drawer'] },
+};
+
+/** Folhas que leem elevação por outro motivo, com o motivo. */
+const ELEVACAO_FORA_DA_REGRA = {
+  colors: 'mostruário da fundação de cores — exibe os quatro degraus lado a lado, é o ponto',
+  utilities: 'utilitárias `.nds-shadow-*` e afins — quem escolhe o degrau é quem aplica a classe',
+  // A paleta NÃO tem superfície própria: mora dentro do Dialog
+  // (`.nds-command-dialog-content`) e herda a elevação dele, que é `xl` pela
+  // regra. O `md` que aparece nesta folha é do popup do COMBOBOX, co-localizado
+  // aqui ("aqui só o popup, o input inline…"). A primeira versão desta regra
+  // classificou `command` como flutuante interativo e PASSOU — pelo motivo
+  // errado: conferia que a folha lia `md`, e quem lia era outra peça. Medido
+  // em Chromium com o tema ativo: `.nds-command` sozinho computa sombra nenhuma.
+  command: 'sem superfície própria — herda a do Dialog, onde mora; o `md` da folha é do combobox',
+  // PENDENTE DE DECISÃO: o toast não cabe com clareza em nenhum tipo da regra.
+  // É flutuante e não prende foco (passivo?), mas carrega ação — "desfazer" é o
+  // caso comum — (interativo?). Fica em `xl`, que é o que tinha, até a dona
+  // decidir; declarado aqui para não virar achado nem sumir da vista.
+  toast: 'PENDENTE — não classificado pela regra de 2026-09-10; mantém `xl` até decisão',
+};
+
+function auditElevacaoPorTipo() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+
+  const esperado = {};
+  for (const [degrau, { tipo, folhas }] of Object.entries(ELEVACAO_POR_TIPO)) {
+    for (const f of folhas) esperado[f] = { degrau, tipo };
+  }
+
+  for (const caminho of walkDir(dir, ['.css'])) {
+    const arquivo = basename(caminho, '.css');
+    if (ELEVACAO_FORA_DA_REGRA[arquivo]) continue;
+    const bruto = readFile(caminho);
+    if (!bruto) continue;
+    const limpo = bruto.replace(/\/\*[\s\S]*?\*\//g, (s) => s.replace(/[^\n]/g, ' '));
+    const lidos = [...new Set([...limpo.matchAll(/var\(--elevation-([a-z0-9]+)/g)].map((m) => m[1]))];
+    const rel = relative(ROOT, caminho);
+    const regra = esperado[arquivo];
+
+    if (!regra) {
+      if (!lidos.length) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: rel, line: 1, rule: 'elevacao_fora_do_mapa',
+        message: `${arquivo}.css lê --elevation-${lidos.join(', --elevation-')} e não está classificada `
+          + 'na regra de elevação por tipo — classifique em ELEVACAO_POR_TIPO, ou declare o motivo em '
+          + 'ELEVACAO_FORA_DA_REGRA',
+      });
+      continue;
+    }
+
+    const errados = lidos.filter((d) => d !== regra.degrau);
+    if (lidos.includes(regra.degrau) && !errados.length) continue;
+    const idx = limpo.search(/var\(--elevation-/);
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: rel, line: idx < 0 ? 1 : limpo.slice(0, idx).split('\n').length,
+      rule: 'elevacao_fora_do_mapa',
+      message: lidos.length
+        ? `${arquivo} é ${regra.tipo} e deveria ler --elevation-${regra.degrau}; lê `
+          + `--elevation-${lidos.join(', --elevation-')}`
+        : `${arquivo} é ${regra.tipo} e não lê elevação nenhuma — deveria ler --elevation-${regra.degrau}`,
+    });
+  }
+
+  // Premissa do mapa: toda folha classificada existe. Sem isto, renomear uma
+  // folha a tira da regra em silêncio — que é como a lista de exclusão desta
+  // casa apodreceu uma vez.
+  for (const f of Object.keys(esperado)) {
+    if (existsSync(join(dir, `${f}.css`))) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: relative(ROOT, dir), line: 1, rule: 'elevacao_fora_do_mapa',
+      message: `${f}.css está na regra de elevação e não existe — atualize ELEVACAO_POR_TIPO`,
+    });
+  }
+
+  return violations;
+}
+
 function auditDeadLibInfra() {
   const violations = [];
   const targets = [
@@ -8786,7 +8899,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

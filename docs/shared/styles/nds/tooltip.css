@@ -49,7 +49,7 @@
   font-size: var(--text-control-sm);                            /* 12px */
   line-height: 1.4;
   pointer-events: none;
-  box-shadow: var(--elevation-xl);
+  box-shadow: var(--elevation-lg);
 
   /* A cadeia tem de citar as TRÊS libs, e faltava a do Svelte.
    *

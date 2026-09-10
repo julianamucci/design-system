@@ -676,7 +676,7 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
       { token: '--destructive',            k: 'destructive',           target: '.nds-button-destructive' },
       // O painel usa o raio do Card, não o raio de controle.
       { token: '--radius-card',            k: 'radius',                target: '.nds-alert-dialog-content' },
-      { token: '--elevation-lg',           k: 'elevation',             target: '.nds-alert-dialog-content' },
+      { token: '--elevation-xl',           k: 'elevation',             target: '.nds-alert-dialog-content' },
       { token: '--muted',                  k: 'mediaBg',               target: '.nds-alert-dialog-media' },
       { token: '--spacing-6',              k: 'padding',               target: '.nds-alert-dialog-content' },
     ].map(({ token, k, target }) => ({
