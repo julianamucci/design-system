@@ -20,7 +20,12 @@ escolher. É irmão do Dialog, e o que os separa não é estilo — é decisão.
 | Escape | fecha | **fecha**, e equivale a cancelar |
 | botão de fechar no canto | tem | **não tem** |
 | rodapé | opcional | **obrigatório** — é a única saída visível |
-| desfoque do véu | tem | não tem |
+
+A linha "desfoque do véu — tem × não tem" saiu desta tabela em 2026-09-10: ela
+descrevia o Dialog até 2026-09-08, quando o desfoque foi retirado de lá, e ficou
+dois dias afirmando uma diferença que não existia mais — com a D8 deste mesmo
+arquivo já dizendo o contrário. Hoje nenhum véu desfoca, e esta tabela só lista
+o que SEPARA os irmãos.
 
 As duas folhas são irmãs de código também: `alert-dialog.css` consome as
 keyframes `nds-dialog-fade-in` / `-fade-out` declaradas em `dialog.css`.

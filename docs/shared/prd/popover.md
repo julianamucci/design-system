@@ -218,8 +218,15 @@ Fonte: `docs/shared/styles/nds/popover.css`.
 | peso do título | 500 | `--font-weight-medium` |
 | camada | — | `--z-popover` |
 
-**A sombra é `md`**, não a `xl` do Tooltip e do HoverCard: é um painel mais baixo
-na pilha, e a folha diz isso.
+**A sombra é `md` porque o Popover é flutuante INTERATIVO** — recebe foco e
+aceita ação. O degrau sai do tipo de superfície, pela regra da categoria em
+`04-padroes-design-sistema.md` §Qual degrau, e é cobrado por
+`elevacao_fora_do_mapa`.
+
+Esta linha dizia "não a `xl` do Tooltip e do HoverCard" e ficou errada no dia em
+que os dois desceram para `lg` (2026-09-10): descrevia os vizinhos, então nada
+que tocasse aquelas folhas passava por aqui. Agora ela cita a regra, que é o que
+de fato decide o degrau.
 
 **Animação**: só a SAÍDA anima (`data-ending-style`: opacidade e `scale(0.95)`,
 `--duration-fast`). A entrada aparece direto, para evitar corrida entre

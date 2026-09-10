@@ -168,7 +168,26 @@ Fonte: `docs/shared/styles/nds/command.css`.
 | separador | 1px | `--border` — ver D8 |
 | item desabilitado | 50% de opacidade | — |
 
-**Sem borda, sem sombra e sem camada próprias**: quem hospeda resolve.
+**Sem borda, sem sombra e sem camada próprias**: quem hospeda resolve. Isso vale
+para a superfície `.nds-command` — e é preciso dizer, porque quem abre
+`command.css` encontra `--z-popover` e `--elevation-md` e conclui o contrário.
+
+**Essas duas leituras são do Combobox, não do Command.** A folha carrega, no
+fim, um bloco `.nds-combobox-*` — o popup, o campo, o viewport e o aviso de vazio
+—, e o Combobox tem conteúdo e folha próprios (`combobox.css`).
+
+> **PENDÊNCIA · 2026-09-10** — três classes do Combobox são declaradas nas DUAS
+> folhas: `.nds-combobox-list`, `.nds-combobox-input` e `.nds-combobox-empty`. E
+> não concordam: em `.nds-combobox-list`, o `combobox.css` pede `overflow-y: auto`
+> e o teto dinâmico que a lib publica, enquanto o `command.css` pede
+> `overflow: hidden` e `18rem` fixo. O `index.css` importa `combobox.css` na linha
+> 62 e `command.css` na 63, então com especificidade igual **quem vence é a
+> ordem de import** — o mesmo desenho do `@keyframes nds-spin` duplicado que o
+> `utilities.css` registra como armadilha. Não corrigido aqui: tirar o bloco do
+> `command.css` muda o que o Combobox renderiza, e isso pede medição na tela e os
+> cinco `build-storybook`.
+> **Fecha quando**: `grep -c "^\.nds-combobox" docs/shared/styles/nds/command.css`
+> der zero, com o comportamento de rolagem do popup conferido na tela.
 
 ## 6. Estados
 

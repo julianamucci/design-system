@@ -2,8 +2,13 @@
 
 Levantado em 2026-09-10, sobre os **nove PRDs de overlay** (`dialog`,
 `alert-dialog`, `sheet`, `drawer`, `popover`, `hover-card`, `tooltip`,
-`dropdown-menu`, `command`) e as **115 regras** de `scripts/audit.mjs` — 121
-depois das seis que este levantamento produziu.
+`dropdown-menu`, `command`) e as **115 regras** de `scripts/audit.mjs` — 122
+depois das sete que este levantamento produziu: as seis dos invariantes que
+estavam descobertos, mais o `elevacao_fora_do_mapa`, que nasceu depois, quando a
+regra de elevação foi fixada.
+
+> O cabeçalho dizia "121 depois das seis" enquanto a tabela abaixo já listava o
+> sétimo portão — corrigido em 2026-09-10, contando no arquivo.
 
 > A primeira redação dizia 111, e o número saiu de um `grep` cujo conjunto de
 > caracteres não tinha dígitos: nomes como `ga4_in_preview_head` ficaram de fora
@@ -69,7 +74,7 @@ prioridade, porque é a ordem do custo quando ele quebra.
 | Vocabulário do payload | 2+ | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` · `location_fora_do_vocabulario` · `campo_de_payload_morto` |
 | O véu não desfoca o fundo | 2 | `veu_com_desfoque` |
 | Corpo é `flex: 1 1 auto`, nunca o atalho | 2 | `corpo_com_atalho_flex` |
-| Ordem dos botões no rodapé | 2 | play, nas cinco — **só no dialog**; o drawer não a assere em stack nenhuma |
+| Ordem dos botões no rodapé | 2 | play, nas cinco — **só no dialog**; no drawer, o DOM renderizado não é asserido em stack nenhuma (o snippet é, no vue) |
 
 ### Os três que estavam marcados "parcial", relidos em 2026-09-10
 
@@ -125,8 +130,13 @@ Os sete que estavam sem portão foram fechados em 2026-09-10 — seis com regra
 nova no `audit.mjs`, cada uma provada replantando o defeito, e o sétimo medido
 como já coberto pela suíte. Sobra uma, e ela é de conteúdo, não de mecanismo:
 
-1. **A ordem do rodapé do drawer** não é asserida em stack nenhuma, enquanto a
-   do dialog é asserida nas cinco. É play, não regra de audit.
+1. **A ordem do rodapé do drawer** não é asserida no DOM renderizado em stack
+   nenhuma, enquanto a do dialog é asserida nas cinco. É play, não regra de
+   audit. O que existe é a metade do SNIPPET, e só no vue:
+   `drawer.source.test.ts` ("a saída vem PRIMEIRO no rodapé, e a ação primária
+   depois") — é o mesmo caso que o D3 do `drawer.md` registra como tendo cobrado
+   a ordem INVERTIDA, virado para a certa. Snippet certo não prova story certa:
+   foi exatamente a divergência entre superfícies que o D3 mediu.
 
 O `reason` parcial, que o portão acusou no dia em que nasceu (7 achados), foi
 fechado no mesmo dia pelas duas metades: o hover-card perdeu o campo, e o popover

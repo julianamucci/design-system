@@ -230,7 +230,7 @@ stack a inventar a sua.
 ## 4. Anatomia
 
 ```
-dialog-overlay                véu; único da família com desfoque (D5)
+dialog-overlay                véu, sem desfoque (D5)
 dialog-content                role="dialog" · aria-modal="true" · centralizado por translate
 ├── dialog-header             coluna
 │   ├── dialog-title

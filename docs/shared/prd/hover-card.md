@@ -276,16 +276,24 @@ motivo de esta seção existir.
 de `utilities.css`. Ao acrescentar movimento a qualquer folha desta categoria, a
 regra é uma só: declare a duração por token, e ela para de graça.
 
-> **PENDÊNCIA · 2026-09-09** — a inércia por especificidade não é só do popover.
-> Medido lendo os seletores: em `dialog.css` a guarda mira `.nds-dialog-overlay,
-> .nds-dialog-content` (0,1,0) contra declarações em `[data-state]`/`[data-closed]`
-> (0,2,0), e em `dropdown-menu.css` a guarda mira `.nds-dropdown-menu-content`
-> contra declarações em `[data-state]`. As duas perdem, pelo mesmo motivo. Não
-> há consequência hoje — o token já parou o movimento —, mas são guardas que
-> anunciam proteção que não dão, e a próxima duração literal cai no vão.
-> **Fecha quando**: cada bloco `@media (prefers-reduced-motion)` das folhas de
-> Overlay mirar seletor de especificidade igual ou maior que a declaração que
-> pretende anular, OU as guardas inertes forem removidas com o motivo escrito.
+**E isso tem portão desde 2026-09-10**: `movimento_sem_guarda_eficaz` reprova
+duração literal em qualquer folha compartilhada que não tenha guarda de
+`prefers-reduced-motion` — e reprova também a guarda que existe mas PERDE, por
+especificidade menor ou por vir antes com especificidade igual. Movimento por
+`var(--duration-*)` fica de fora de propósito, porque a camada de token já o
+alcança.
+
+> **PENDÊNCIA · 2026-09-09** — três guardas de overlay não seguram nada, por
+> especificidade: `popover.css`, `dialog.css` e `dropdown-menu.css` miram a
+> classe nua (0,1,0) contra declarações em `[data-state]`, `[data-closed]` ou
+> `[data-ending-style]` (0,2,0), e perdem.
+> **Estreitada em 2026-09-10, porque metade fechou.** O que esta linha temia —
+> "a próxima duração literal cai no vão" — passou a ser cobrado pelo
+> `movimento_sem_guarda_eficaz`, que reprova exatamente a guarda que perde. O que
+> sobra é enfeite: três blocos que anunciam proteção sobre movimento que o token
+> já para, e que o portão não acusa porque ali não há duração literal.
+> **Fecha quando**: as três guardas forem removidas com o motivo escrito na
+> folha, ou passarem a mirar seletor que vença a declaração.
 
 ## 9. Analytics
 
