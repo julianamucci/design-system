@@ -30,6 +30,33 @@ import { fileURLToPath } from 'node:url';
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const STACKS = ['react', 'vue', 'svelte', 'vanilla', 'angular'];
 
+// CAMPO de payload não é NOME de evento, e o sublinhado não separa os dois.
+//
+// A coleta abaixo lê tudo que está dentro de `<code>` e trata como evento o
+// que tiver sublinhado. O comentário original apostava em duas premissas, e
+// as duas são falsas: que campo aparece sem `<code>` (o próprio hover-card
+// escreve `<code>location</code>`) e que campo não tem sublinhado
+// (`trigger_label` tem). O que segurava a regra era só a segunda, e ela caiu
+// no dia em que a prosa do hover-card passou a nomear o campo certo — o
+// portão acusou `trigger_label` como evento não tipado nas CINCO stacks,
+// com o campo tipado e correto em todas.
+//
+// Exclusão DECLARADA, como manda a regra da casa: são os campos de payload
+// que o vocabulário deste projeto usa. Campo novo entra aqui; o que não
+// estiver declarado continua sendo cobrado como evento.
+//
+// E a lista tem PREMISSA CONFERIDA, por `campo_de_payload_morto` logo
+// abaixo — porque ela já apodreceu uma vez. Em 2026-09-09 a unificação do
+// vocabulário renomeou `trigger_label` para `trigger_id` em toda a árvore
+// e esta linha ficou para trás: a exclusão passou a proteger um nome que
+// não existe mais, e o nome vivo voltou a ser acusado como evento não
+// tipado. Junto saíram `track_id` e `item_id`, que nunca foram campo em
+// stack nenhuma nem apareceram no conteúdo — entraram na lista por
+// suposição, e exclusão suposta é exatamente o que a regra da casa proíbe.
+const CAMPOS_DE_PAYLOAD = new Set([
+  'trigger_id', 'field_name', 'section_id', 'component_name', 'page_title',
+]);
+
 const stackDir = (stack) => `nortear-design-system-${stack}`;
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -641,24 +668,6 @@ function auditAnalytics(slug) {
     const eventsInTr = new Set();
     const EVENT_RX = /^[a-z]+_[a-z_]+$/;
 
-    // CAMPO de payload não é NOME de evento, e o sublinhado não separa os dois.
-    //
-    // A coleta abaixo lê tudo que está dentro de `<code>` e trata como evento o
-    // que tiver sublinhado. O comentário original apostava em duas premissas, e
-    // as duas são falsas: que campo aparece sem `<code>` (o próprio hover-card
-    // escreve `<code>location</code>`) e que campo não tem sublinhado
-    // (`trigger_label` tem). O que segurava a regra era só a segunda, e ela caiu
-    // no dia em que a prosa do hover-card passou a nomear o campo certo — o
-    // portão acusou `trigger_label` como evento não tipado nas CINCO stacks,
-    // com o campo tipado e correto em todas.
-    //
-    // Exclusão DECLARADA, como manda a regra da casa: são os campos de payload
-    // que o vocabulário deste projeto usa. Campo novo entra aqui; o que não
-    // estiver declarado continua sendo cobrado como evento.
-    const CAMPOS_DE_PAYLOAD = new Set([
-      'trigger_label', 'field_name', 'section_id', 'component_name',
-      'page_title', 'track_id', 'item_id',
-    ]);
     try {
       const json = JSON.parse(trContent);
       for (const locale of Object.keys(json)) {
@@ -2684,6 +2693,75 @@ function auditCadeiaTransformOrigin() {
  * mandar o texto do gatilho, e texto traduzido parte o evento em um valor por
  * idioma; `trigger_label` guardava metade do convite no nome.
  */
+/**
+ * Nome declarado em `CAMPOS_DE_PAYLOAD` que não é campo de payload em stack
+ * nenhuma — ou seja, exclusão que não exclui nada.
+ *
+ * É o irmão de premissa da lista, e existe porque ela apodreceu em silêncio.
+ * A regra da casa manda declarar toda exclusão de portão E conferir a premissa
+ * de cada uma; sem o segundo passo a lista vira o `source-snippets.test.ts` de
+ * novo — encolhe, deixa de medir, e a suíte segue verde.
+ *
+ * Medido em 2026-09-09, no dia seguinte ao da lista nascer: dos sete nomes,
+ * TRÊS não existiam. O `trigger_label` tinha sido renomeado para `trigger_id`
+ * na unificação do vocabulário, e a lista ficou para trás — a exclusão passou
+ * a proteger um nome morto enquanto o nome vivo voltava a ser acusado como
+ * evento não tipado. O `track_id` e o `item_id` nunca foram campo em stack
+ * alguma nem apareceram no conteúdo: entraram por suposição.
+ *
+ * Falha nos DOIS sentidos, e é isso que a torna útil:
+ *
+ *   - nome MORTO protege algo que não existe, e o nome vivo volta a ser
+ *     cobrado sem que ninguém entenda por quê;
+ *   - nome que virou EVENTO de verdade deixaria de ser cobrado para sempre,
+ *     que é o oposto do que a exclusão existe para fazer.
+ *
+ * Lê as cinco stacks porque campo pode existir só onde o evento existe.
+ */
+function auditCampoDePayloadMorto() {
+  const violations = [];
+  for (const nome of CAMPOS_DE_PAYLOAD) {
+    let vivoComoCampo = false;
+    let vivoComoEvento = false;
+    for (const stack of STACKS) {
+      const conteudo = readFile(join(ROOT, stackDir(stack), 'src', 'lib', 'analytics.ts'));
+      if (!conteudo) continue;
+      // Sem expressão regular de propósito: montar uma por concatenação exige
+      // barra invertida escapada, e foi exatamente isso que quebrou esta regra
+      // na primeira gravação — o `\\s+` virou `\s+` no arquivo, a regex passou a
+      // procurar a letra "s", e os CINCO nomes foram reportados como mortos com
+      // sete declarações vivas na árvore. Comparação de string não tem esse vão.
+      for (const linha of conteudo.split('\n')) {
+        const semEspaco = linha.trim();
+        const recuada = linha.length > semEspaco.length;
+        if (recuada && (semEspaco.startsWith(nome + '?:') || semEspaco.startsWith(nome + ':'))) {
+          // campo é declarado recuado, dentro do corpo de um evento
+          if (!linha.startsWith('  ' + nome)) vivoComoCampo = true;
+        }
+        if (linha.startsWith('  ' + nome + ': {')) vivoComoEvento = true;
+      }
+    }
+    if (vivoComoEvento) {
+      violations.push({
+        category: 'analytics', severity: 'high', slug: '_infra', stack: 'shared',
+        file: 'scripts/audit.mjs', rule: 'campo_de_payload_morto',
+        message:
+          '`' + nome + '` está em CAMPOS_DE_PAYLOAD e é NOME DE EVENTO tipado — a ' +
+          'exclusão o isenta de ser cobrado, que é o oposto do que ela existe para fazer',
+      });
+    } else if (!vivoComoCampo) {
+      violations.push({
+        category: 'analytics', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: 'scripts/audit.mjs', rule: 'campo_de_payload_morto',
+        message:
+          '`' + nome + '` está em CAMPOS_DE_PAYLOAD e não é campo de payload em stack ' +
+          'alguma — exclusão que não exclui nada; renomeie-a ou remova-a',
+      });
+    }
+  }
+  return violations;
+}
+
 function auditVocabularioPayload() {
   const violations = [];
   const arquivos = [
@@ -8244,7 +8322,7 @@ if (!category || category === 'security') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'analytics') {
-  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload()];
+  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload(), ...auditCampoDePayloadMorto()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 // `sandbox_dead_class` saiu daqui em 2026-09-02, junto com o objeto que ele
