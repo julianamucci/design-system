@@ -88,6 +88,11 @@ const meta: Meta = {
       description: 'Callback do botão de confirmação.',
       table: { type: { summary: '() => void' } },
     },
+    onOpenChange: {
+      control: false,
+      description: 'Callback de mudança de estado. No fechamento, recebe o motivo: escape, overlay, close-button ou api.',
+      table: { type: { summary: '(open: boolean, reason?: PopoverCloseReason) => void' } },
+    },
     onCancel: {
       control: false,
       description: 'Callback do botão que fecha o painel por dentro.',
@@ -107,6 +112,7 @@ const meta: Meta = {
     variant: 'withTitle',
     onAction: fn(),
     onCancel: fn(),
+    onOpenChange: fn(),
   },
 };
 
@@ -184,6 +190,9 @@ export const Playground: Story = {
           throw new Error('focus did not return to trigger');
         }
       });
+      // O bits-ui não publica o motivo em `onOpenChange`: o painel o ANOTA e a
+      // raiz o entrega junto. É isto que prova o caminho inteiro.
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'escape');
     });
 
     await step('6. Clicar fora fecha o painel', async () => {
@@ -206,6 +215,7 @@ export const Playground: Story = {
       }
       await expect(body.queryByRole('dialog')).toBeNull();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
     });
 
     await step('7. Cancelar (PopoverClose) fecha o painel por dentro', async () => {
@@ -215,6 +225,10 @@ export const Playground: Story = {
       await userEvent.click(cancelar);
       await closed();
       await expect(args.onCancel).toHaveBeenCalled();
+      // A única stack com a peça de fechar E sem motivo vindo da lib — então é
+      // a única onde `close-button` depende da ORDEM entre o nosso handler e o
+      // fechamento interno. Esta asserção é quem mede a ordem.
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'close-button');
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

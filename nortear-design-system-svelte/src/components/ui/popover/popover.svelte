@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Popover as PopoverPrimitive } from "bits-ui";
-	import { createContextoPopover } from "./context.svelte.js";
+	import { createContextoPopover, type PopoverCloseReason } from "./context.svelte.js";
 
 	/**
 	 * MODAL OU NÃO-MODAL — versão curta. O bloco canônico é o cabeçalho do
@@ -35,10 +35,37 @@
 		 * não entra no spread abaixo.
 		 */
 		modal = false,
+		/**
+		 * Chamado a cada mudança de estado — e no FECHAMENTO chega também o
+		 * motivo, no vocabulário do design system. É a forma de base-ui
+		 * (`onOpenChange(open, detalhes)`) e radix-ng (`evento.reason`): o motivo
+		 * viaja com a mudança DESTA instância.
+		 */
+		onOpenChange,
 		...restProps
-	}: PopoverPrimitive.RootProps & { modal?: boolean } = $props();
+	}: Omit<PopoverPrimitive.RootProps, "onOpenChange"> & {
+		modal?: boolean;
+		onOpenChange?: (open: boolean, reason?: PopoverCloseReason) => void;
+	} = $props();
 
-	createContextoPopover(() => modal === true);
+	let motivoPendente: PopoverCloseReason | null = null;
+
+	createContextoPopover(
+		() => modal === true,
+		(reason) => {
+			motivoPendente = reason;
+		},
+	);
+
+	function aoMudar(o: boolean) {
+		// `api` é o padrão para o que não foi gesto — o formulário que salvou e
+		// fechou cai aqui, e é por isso que NÃO é `close-button` como no drawer:
+		// com ele, "concluiu" chegaria ao relatório como "apertou fechar".
+		const reason = o ? undefined : (motivoPendente ?? "api");
+		// Limpa nos dois sentidos: anotação que não virou fechamento não vaza.
+		motivoPendente = null;
+		onOpenChange?.(o, reason);
+	}
 </script>
 
-<PopoverPrimitive.Root bind:open {...restProps} />
+<PopoverPrimitive.Root bind:open onOpenChange={aoMudar} {...restProps} />

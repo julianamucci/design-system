@@ -26,3 +26,4 @@ export {
 	Close as PopoverClose,
 	Portal as PopoverPortal,
 };
+export type { PopoverCloseReason } from "./context.svelte.js";

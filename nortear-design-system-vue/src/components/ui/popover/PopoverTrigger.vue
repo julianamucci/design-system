@@ -1,12 +1,23 @@
 <script setup lang="ts">
 import type { PopoverTriggerProps } from 'reka-ui'
 import type { ComponentPublicInstance } from 'vue'
-import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { inject, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { PopoverTrigger } from 'reka-ui'
+import { POPOVER_CLOSE_REASON } from './popover.context'
 
 const props = defineProps<PopoverTriggerProps>()
 
 const triggerRef = ref<ComponentPublicInstance | null>(null)
+
+// Clique no gatilho com o painel aberto fecha — e é `overlay`, não `api`. O
+// drawer manda esse caminho para `api` porque ali o gatilho fica coberto pelo
+// véu; o popover é não-modal, o gatilho continua clicável, e o clique é vontade
+// de quem usa. Lê `data-state` do próprio elemento para saber se estava aberto.
+const anotarMotivo = inject(POPOVER_CLOSE_REASON, () => {})
+function aoClicar(evento: MouseEvent) {
+  const el = evento.currentTarget as HTMLElement | null
+  if (el?.dataset.state === 'open') anotarMotivo('overlay')
+}
 let observer: MutationObserver | null = null
 
 // `aria-controls` VAZIO é pior que ausente.
@@ -62,6 +73,7 @@ onBeforeUnmount(() => {
     ref="triggerRef"
     data-slot="popover-trigger"
     v-bind="props"
+    @click="aoClicar"
   >
     <slot />
   </PopoverTrigger>

@@ -8,6 +8,7 @@
     PopoverTitle,
     PopoverDescription,
     PopoverClose,
+    type PopoverCloseReason,
   } from '@/components/ui/popover';
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
@@ -15,6 +16,28 @@
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
+
+  /**
+   * Abertura e fechamento de qualquer popover VIVO desta página.
+   *
+   * Eram doze `track` escritos à mão, um por instância, e nenhum mandava o
+   * motivo do fechamento — o bits-ui não o publica em `onOpenChange`. Agora a
+   * raiz do popover o entrega (o painel, o gatilho e o botão de fechar o
+   * anotam), e um helper só evita que a próxima mudança de payload precise de
+   * doze edições iguais, que é como uma delas acaba esquecida.
+   *
+   * `triggerId` é id estável em kebab-case, igual nas cinco stacks; `location`
+   * diz de qual seção o exemplo saiu.
+   */
+  function rastrearPopover(triggerId: string, location: string) {
+    return (open: boolean, reason?: PopoverCloseReason) => {
+      if (open) {
+        track('popover_open', { component: 'popover', trigger_id: triggerId, location });
+        return;
+      }
+      track('popover_close', { component: 'popover', reason: reason ?? 'api', location });
+    };
+  }
   import { createActiveSection } from '@/lib/use-active-section.svelte';
   import DOMPurify from 'dompurify';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
@@ -287,9 +310,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster" data-spacing="sm" data-justify="center">
-      <Popover onOpenChange={(o: boolean) => (o
-        ? track('popover_open', { component: 'popover', trigger_id: 'demo', location: 'docs_demo' })
-        : track('popover_close', { component: 'popover', location: 'docs_demo' }))}>
+      <Popover onOpenChange={rastrearPopover('demo', 'docs_demo')}>
         <PopoverTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
@@ -414,9 +435,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet doPair1()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'par1-do', location: 'docs_do_dont' })
-      : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
+    <Popover onOpenChange={rastrearPopover('par1-do', 'docs_do_dont')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
@@ -434,9 +453,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     <!-- Sem título: o painel cai no nome de reserva herdado do gatilho, que
          mantém o axe verde mas devolve ao leitor o rótulo do botão em vez do
          assunto do painel — exatamente o que a legenda critica. -->
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'par1-dont', location: 'docs_do_dont' })
-      : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
+    <Popover onOpenChange={rastrearPopover('par1-dont', 'docs_do_dont')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
@@ -448,9 +465,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Popover>
   {/snippet}
   {#snippet doPair2()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'par2-do', location: 'docs_do_dont' })
-      : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
+    <Popover onOpenChange={rastrearPopover('par2-do', 'docs_do_dont')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
@@ -466,9 +481,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {#snippet dontPair2()}
     <!-- Painel idêntico ao do par correto: o que reprova aqui é só o rótulo do
          gatilho, que não diz o que o clique faz. -->
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'par2-dont', location: 'docs_do_dont' })
-      : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
+    <Popover onOpenChange={rastrearPopover('par2-dont', 'docs_do_dont')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('doDont.pair2.dontTrigger')}</Button>
@@ -500,9 +513,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet variantDefault()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'default', location: 'docs_variantes' })
-      : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
+    <Popover onOpenChange={rastrearPopover('default', 'docs_variantes')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
@@ -517,9 +528,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </Popover>
   {/snippet}
   {#snippet variantWithTitle()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'with-title', location: 'docs_variantes' })
-      : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
+    <Popover onOpenChange={rastrearPopover('with-title', 'docs_variantes')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.title')}</Button>
@@ -673,9 +682,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet compEditProfile()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'edit-profile', location: 'docs_composicoes' })
-      : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
+    <Popover onOpenChange={rastrearPopover('edit-profile', 'docs_composicoes')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
@@ -703,9 +710,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compTableFilter()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'table-filter', location: 'docs_composicoes' })
-      : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
+    <Popover onOpenChange={rastrearPopover('table-filter', 'docs_composicoes')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('variants.compositions.tableFilter.trigger')}</Button>
@@ -738,9 +743,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compColorPicker()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'color-picker', location: 'docs_composicoes' })
-      : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
+    <Popover onOpenChange={rastrearPopover('color-picker', 'docs_composicoes')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('variants.compositions.colorPicker.trigger')}</Button>
@@ -766,9 +769,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compQuickSettings()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'quick-settings', location: 'docs_composicoes' })
-      : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
+    <Popover onOpenChange={rastrearPopover('quick-settings', 'docs_composicoes')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('variants.compositions.quickSettings.trigger')}</Button>
@@ -795,9 +796,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet variantForm()}
-    <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_id: 'form', location: 'docs_variantes' })
-      : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
+    <Popover onOpenChange={rastrearPopover('form', 'docs_variantes')}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>

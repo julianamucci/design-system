@@ -6,8 +6,7 @@
     PopoverHeader,
     PopoverTitle,
     PopoverDescription,
-    PopoverClose,
-  } from './index';
+    PopoverClose, type PopoverCloseReason } from './index';
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
@@ -47,6 +46,8 @@
     panelLabel?: string;
     onAction?: () => void;
     onCancel?: () => void;
+    /** Mudança de estado — no fechamento, com o motivo do design system. */
+    onOpenChange?: (open: boolean, reason?: PopoverCloseReason) => void;
   }
   // `defaultOpen` não existe no bits-ui nem no vaul-svelte: a prop era
   // passada, ignorada, e o overlay nunca abria. A API real é `open`
@@ -72,6 +73,7 @@
     panelLabel = undefined,
     onAction,
     onCancel,
+    onOpenChange,
   }: Props = $props();
 
   /**
@@ -103,7 +105,7 @@
 
 <div class="nds-stack" data-align="center" data-spacing="md" style="contain: layout">
   {#key `${side}-${align}-${defaultOpen}-${variant}`}
-      <Popover bind:open {modal}>
+      <Popover bind:open {modal} {onOpenChange}>
         <PopoverTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{triggerLabel}</Button>

@@ -705,10 +705,14 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
    * seção cravada aqui dentro, as seis responderiam "veio da demonstração".
    * `docs_demo` é herança do vocabulário do GA4, não exceção de estilo.
    *
-   * O output escolhido é `onOpenChange`, não `openChange`: o segundo é o model
-   * do `open` e entrega só o booleano, enquanto o primeiro traz a CAUSA
-   * (`trigger-hover`, `escape-key`, `outside-press`) — que é justamente o que
-   * `hover_card_close.reason` existe para registrar.
+   * O output é `onOpenChange`, não `openChange`: o segundo é o model do `open`
+   * e entrega só o booleano. O primeiro traz também a CAUSA, que até 2026-09-10
+   * ia como `hover_card_close.reason` — e o campo SAIU, por decisão da dona.
+   * Esta era a única das cinco stacks que o mandava, com o valor cru do radix-ng
+   * (`trigger-hover`, `escape-key`, `outside-press`), num componente passivo em
+   * que fechar é quase sempre "o ponteiro saiu": quebra que ninguém ia usar,
+   * preenchida por uma stack em cinco. O popover, que aceita formulário e onde
+   * desistiu × concluiu é pergunta de produto, ficou com o campo.
    */
   protected onChange(triggerId: string, section: string, event: RdxPreviewCardOpenChange): void {
     if (event.open) {
@@ -721,7 +725,6 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
     }
     track('hover_card_close', {
       component: 'hover-card',
-      reason: event.reason,
       location: section,
     });
   }

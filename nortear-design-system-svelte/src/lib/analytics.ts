@@ -391,14 +391,20 @@ interface AnalyticsEvents {
   /** Disparado quando um HoverCard fecha. */
   hover_card_close: {
     component: string;
-    reason?: string;
     location?: string;
   };
 
   /** Disparado quando um Popover fecha. */
   popover_close: {
     component: string;
-    reason?: string;
+    /**
+     * Por qual caminho fechou, no vocabulário do DESIGN SYSTEM — as mesmas
+     * quatro palavras do `drawer_close`. OBRIGATÓRIO: campo opcional preenchido
+     * por parte das stacks é amostra enviesada com cara de completa, e no GA4
+     * não separa "motivo desconhecido" de "stack que não reporta".
+     * `api` é o fechamento por código — onde cai "salvou e fechou".
+     */
+    reason: 'escape' | 'overlay' | 'close-button' | 'api';
     location?: string;
   };
 

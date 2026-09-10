@@ -292,17 +292,24 @@ regra é uma só: declare a duração por token, e ela para de graça.
 | evento | quando | payload |
 |---|---|---|
 | `hover_card_open` | o cartão abre | `{ component: "hover-card", trigger_id, location }` |
-| `hover_card_close` | o cartão fecha | `{ component: "hover-card", reason?, location }` |
+| `hover_card_close` | o cartão fecha | `{ component: "hover-card", location }` |
 
 `trigger_id` é id estável em kebab-case, igual nas cinco, **nunca** o texto do
 gatilho traduzido — ver D7. A espera de abertura serve de filtro contra hover de
 baixa intenção, então não há necessidade de filtrar de novo no consumidor.
 
-**O fechamento NÃO leva `trigger_id`**, e esta linha já esteve errada aqui: o
-tipo tem `reason`, não o id do gatilho. Quem publica motivo é o `radix-ng`, então
-só o **angular** preenche o campo; as outras quatro mandam `{ component, location }`
-e ele SAI. É a mesma regra do Popover com outro recorte de lib — lá quem publica
-é o `base-ui` e a `reka-ui` não. Ausente é honesto; inventado contamina a série.
+**O fechamento leva só `component` e `location`** — nem `trigger_id`, nem
+`reason`.
+
+**`reason` SAIU em 2026-09-10**, por decisão da dona. O campo ia em 1 de 5
+stacks — só o angular, com o valor cru do `radix-ng` (`trigger-hover`,
+`escape-key`, `outside-press`) —, e isso é amostra enviesada com cara de completa:
+o GA4 não separa "motivo desconhecido" de "stack que não reporta". A saída
+coerente era espalhar ou remover, e espalhar exigiria um vocabulário novo mais
+a tradução nas cinco. Removido porque o componente é PASSIVO: fechar é quase
+sempre "o ponteiro saiu", e ninguém ia agir sobre a quebra. O popover, que
+aceita formulário e onde desistiu × concluiu é pergunta de produto, ficou com o
+campo — obrigatório e fechado. Portão: `reason_parcial_entre_stacks`.
 
 A mesma afirmação falsa vivia em mais duas superfícies, e as três foram
 corrigidas juntas em 2026-09-09: as tabelas de analytics do **react** e do

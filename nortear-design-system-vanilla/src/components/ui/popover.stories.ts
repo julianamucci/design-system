@@ -239,6 +239,8 @@ export const Playground: Story = {
       // Sem painel não há id para apontar, e o atributo some junto.
       await expect(trigger.getAttribute('aria-controls')).toBeNull();
       await expect(trigger).toHaveFocus();
+      // O motivo chega com a mudança, no vocabulário do design system.
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'escape');
     });
 
     await step('Clicar fora fecha o painel', async () => {
@@ -248,6 +250,7 @@ export const Playground: Story = {
         if (panel()) throw new Error('popover ainda aberto');
       });
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

@@ -8,6 +8,7 @@ import {
   createPopoverHeader,
   createPopoverTitle,
   createPopoverDescription,
+  type PopoverCloseReason,
 } from '@/components/ui/popover';
 import { createButton } from '@/components/ui/button';
 import { createInput } from '@/components/ui/input';
@@ -79,12 +80,17 @@ function priorityLabel(raw: string): string {
  * `triggerId` é um identificador estável e não o texto traduzido: o rótulo
  * viraria três valores distintos no GA4, um por idioma.
  */
-function trackPopoverOpenChange(triggerId: string, location: string): (open: boolean) => void {
-  return (open) => {
+function trackPopoverOpenChange(
+  triggerId: string,
+  location: string,
+): (open: boolean, reason?: PopoverCloseReason) => void {
+  return (open, reason) => {
     if (open) {
       track('popover_open', { component: 'popover', trigger_id: triggerId, location });
     } else {
-      track('popover_close', { component: 'popover', location });
+      // O motivo vem da FÁBRICA, que conhece o caminho do fechamento; `api` é o
+      // padrão dela para tudo que não foi gesto — e aqui também, por segurança.
+      track('popover_close', { component: 'popover', reason: reason ?? 'api', location });
     }
   };
 }

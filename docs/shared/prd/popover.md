@@ -317,17 +317,53 @@ segura, está por extenso em `hover-card.md` §8.
 | evento | quando | payload |
 |---|---|---|
 | `popover_open` | o painel abre | `{ component: "popover", trigger_id, location }` |
-| `popover_close` | o painel fecha | `{ component: "popover", reason?, location }` |
+| `popover_close` | o painel fecha | `{ component: "popover", reason, location }` — `reason` obrigatório, ver abaixo |
 
 **`trigger_id` é id estável em kebab-case**, igual nas cinco stacks, nunca o
 texto traduzido — traduzido, o mesmo evento vira três valores no GA4 e a série
 não junta. `location` diz de qual seção o exemplo saiu; a demonstração herda
 `docs_demo` e as demais seções se nomeiam.
 
-**`reason` é opcional por medição, não por descuido**: o `base-ui` publica o
-motivo real (`outside-press`, `escape-key`, `focus-out`…) e ele vai no payload; a
-`reka-ui` não publica motivo, e ali o campo SAI. Ausente é honesto; inventado
-contamina a série — havia um `"user"` cravado no react, e ele foi removido.
+**`reason` é OBRIGATÓRIO, fechado e do design system** — desde 2026-09-10, por
+decisão da dona: `escape | overlay | close-button | api`, as mesmas quatro
+palavras do `drawer_close`, para a família ser uma dimensão só no GA4.
+
+| motivo | caminho |
+|---|---|
+| `escape` | tecla Escape |
+| `overlay` | saiu do painel sem decidir nada — clique fora, foco que saiu, ou clique no gatilho de novo |
+| `close-button` | controle de fechar explícito (existe no react, no svelte e no angular) |
+| `api` | fechado por código — é aqui que cai "salvou e fechou" |
+
+**Duas diferenças deliberadas em relação ao drawer**, e as duas vêm de o popover
+ser não-modal:
+
+- **`trigger-press` vai para `overlay`, não para `api`.** O drawer o manda para
+  `api` porque lá o gatilho fica coberto pelo véu e só código fecha por ele;
+  aqui o gatilho continua clicável, e clicar de novo é vontade de quem usa.
+- **O padrão é `api`, não `close-button`.** Os formulários do popover fecham POR
+  CÓDIGO ao salvar; com o padrão do drawer, "concluiu" chegaria ao relatório
+  como "apertou o botão de fechar" — apagando o sinal que justifica o campo
+  existir, que é desistiu × concluiu.
+
+**Como cada stack chega ao motivo**, porque só duas o recebem pronto:
+
+| stack | caminho |
+|---|---|
+| react, angular | a lib entrega o motivo cru; `popoverCloseReason`, exportada do primitivo, traduz |
+| vanilla | a fábrica conhece todos os caminhos e o passa em `onOpenChange(open, reason)` |
+| vue, svelte | a lib NÃO publica o motivo; o painel, o gatilho e o botão de fechar o ANOTAM pelo contexto, e a raiz o entrega junto com a mudança de estado |
+
+**Histórico — revertido em 2026-09-10.** Até então a linha dizia "`reason` é
+opcional por medição, não por descuido": o `base-ui` publicava o motivo e ele ia
+no payload, a `reka-ui` não publicava e o campo saía. O argumento de que
+cravar um valor seria inventar dado estava certo; o que o derrubou foi medir
+duas coisas. Primeiro, o campo ia em 2 de 5 stacks — amostra enviesada com cara
+de completa, em que o GA4 não separa "motivo desconhecido" de "stack que não
+reporta". Segundo, as duas que mandavam repassavam o valor CRU da lib, e os
+vocabulários da `base-ui` e do `radix-ng` só se sobrepõem em parte: a série não
+juntava nem entre elas. O gesto, porém, é observável sem a lib — é o que o
+drawer do vue e do svelte já fazia. Portão: `reason_parcial_entre_stacks`.
 
 ## 10. Reconstruir do zero
 

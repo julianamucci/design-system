@@ -9,7 +9,7 @@ import {
 } from 'reka-ui'
 import { computed, inject, onBeforeUnmount, onMounted, ref, useAttrs } from 'vue'
 import { cn } from '@/lib/utils'
-import { POPOVER_MODAL } from './popover.context'
+import { POPOVER_CLOSE_REASON, POPOVER_MODAL } from './popover.context'
 
 defineOptions({
   inheritAttrs: false,
@@ -37,6 +37,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
  * renderiza é o modal, com `trap-focus` ligado —, então o anúncio é verdadeiro.
  */
 const modal = inject(POPOVER_MODAL, computed(() => false))
+// Anota o motivo para a raiz; inerte quando o painel é usado sem ela.
+const anotarMotivo = inject(POPOVER_CLOSE_REASON, () => {})
 const ariaModal = computed(() => (modal.value ? 'true' : undefined))
 
 // Sem nome acessível de reserva aqui: a lib já aponta o `aria-labelledby` do
@@ -158,6 +160,9 @@ onBeforeUnmount(() => {
       ref="panelRef"
       data-slot="popover-content"
       v-bind="{ ...$attrs, ...forwarded }"
+      @escape-key-down="anotarMotivo('escape')"
+      @pointer-down-outside="anotarMotivo('overlay')"
+      @focus-outside="anotarMotivo('overlay')"
       :aria-modal="ariaModal"
       :class="cn( 'nds-popover-content', props.class, )"
     >

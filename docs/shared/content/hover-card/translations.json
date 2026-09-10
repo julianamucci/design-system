@@ -348,7 +348,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>hover_card_open</code> e <code>hover_card_close</code>. Útil para medir engajamento com previews. Na abertura o payload é <code>component='hover-card'</code>, <code>trigger_id</code> (id estável em kebab-case, nunca o texto traduzido) e <code>location</code>; no fechamento, <code>component</code> e <code>location</code>, mais <code>reason</code> onde a lib publicar o motivo. Disparar via callback de mudança no consumidor — evite trackear em hover de baixa intenção (use openDelay como filtro natural)."
+      "description": "Eventos relevantes: <code>hover_card_open</code> e <code>hover_card_close</code>. Útil para medir engajamento com previews. Na abertura o payload é <code>component='hover-card'</code>, <code>trigger_id</code> (id estável em kebab-case, nunca o texto traduzido) e <code>location</code>; no fechamento, <code>component</code> e <code>location</code>. Disparar via callback de mudança no consumidor — evite trackear em hover de baixa intenção (use openDelay como filtro natural)."
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -793,7 +793,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>hover_card_open</code> and <code>hover_card_close</code>. Useful to measure preview engagement. On open the payload is <code>component='hover-card'</code>, <code>trigger_id</code> (a stable kebab-case id, never the translated text) and <code>location</code>; on close, <code>component</code> and <code>location</code>, plus <code>reason</code> where the library publishes one. Dispatch via the change callback in the consumer — avoid tracking low-intent hovers (use openDelay as natural filter)."
+      "description": "Relevant events: <code>hover_card_open</code> and <code>hover_card_close</code>. Useful to measure preview engagement. On open the payload is <code>component='hover-card'</code>, <code>trigger_id</code> (a stable kebab-case id, never the translated text) and <code>location</code>; on close, <code>component</code> and <code>location</code>. Dispatch via the change callback in the consumer — avoid tracking low-intent hovers (use openDelay as natural filter)."
     },
     "testes": {
       "title": "Test Criteria",
@@ -1238,7 +1238,7 @@
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>hover_card_open</code> y <code>hover_card_close</code>. Útil para medir engagement con previews. Al abrir el payload es <code>component='hover-card'</code>, <code>trigger_id</code> (id estable en kebab-case, nunca el texto traducido) y <code>location</code>; al cerrar, <code>component</code> y <code>location</code>, más <code>reason</code> donde la librería publique el motivo. Dispara vía el callback de cambio en el consumidor — evita trackear hover de baja intención (usa openDelay como filtro natural)."
+      "description": "Eventos relevantes: <code>hover_card_open</code> y <code>hover_card_close</code>. Útil para medir engagement con previews. Al abrir el payload es <code>component='hover-card'</code>, <code>trigger_id</code> (id estable en kebab-case, nunca el texto traducido) y <code>location</code>; al cerrar, <code>component</code> y <code>location</code>. Dispara vía el callback de cambio en el consumidor — evita trackear hover de baja intención (usa openDelay como filtro natural)."
     },
     "testes": {
       "title": "Criterios de Test",

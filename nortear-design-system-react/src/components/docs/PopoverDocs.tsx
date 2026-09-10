@@ -7,6 +7,7 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { popoverCloseReason } from "@/components/ui/popover-close-reason";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -123,7 +124,10 @@ const SWATCH_COLORS = [
  *
  * O motivo do fechamento vem do EVENTO da lib — `trigger-press`,
  * `outside-press`, `escape-key`, `focus-out` —, não de um `"user"` cravado, que
- * fingia um motivo em vez de reportar o real.
+ * fingia um motivo em vez de reportar o real. E ele é TRADUZIDO para o
+ * vocabulário do design system por `popoverCloseReason`: repassar o valor cru
+ * mandava ao GA4 o jargão da base-ui (`imperative-action`, `list-navigation`),
+ * que as outras quatro stacks não falam — a série não juntava.
  */
 type PopoverOpenChange = NonNullable<ComponentProps<typeof Popover>["onOpenChange"]>;
 
@@ -140,7 +144,7 @@ const rastrearPopover =
     }
     track("popover_close", {
       component: "popover",
-      reason: evento?.reason ?? "unknown",
+      reason: popoverCloseReason(evento?.reason),
       location,
     });
   };

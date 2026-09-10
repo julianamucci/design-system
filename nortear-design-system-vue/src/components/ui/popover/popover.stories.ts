@@ -200,6 +200,9 @@ export const Playground: Story = {
       await closed();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await waitFor(() => expect(trigger).toHaveFocus());
+      // A reka-ui não publica o motivo em `update:open`: o painel o ANOTA e a
+      // raiz o emite junto. É isto que prova o caminho inteiro.
+      await expect(spy).toHaveBeenLastCalledWith(false, 'escape');
     });
 
     await step('Clicar fora fecha o painel', async () => {
@@ -207,6 +210,7 @@ export const Playground: Story = {
       await userEvent.click(canvas.getByTestId('area-externa'));
       await closed();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(spy).toHaveBeenLastCalledWith(false, 'overlay');
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

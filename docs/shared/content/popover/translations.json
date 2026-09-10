@@ -417,8 +417,8 @@
           "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
-          "trigger": "Popover fecha (Escape, clique fora ou ação)",
-          "payload": "{ component: \"popover\", reason, location }"
+          "trigger": "Popover fecha — por Escape, clique fora ou no gatilho, botão de fechar, ou pelo código (ao salvar, por exemplo)",
+          "payload": "{ component: \"popover\", reason: \"escape\" | \"overlay\" | \"close-button\" | \"api\", location }"
         }
       }
     },
@@ -918,8 +918,8 @@
           "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
-          "trigger": "Popover closes (Escape, click outside or action)",
-          "payload": "{ component: \"popover\", reason, location }"
+          "trigger": "Popover closes — by Escape, click outside or on the trigger, the close button, or by code (on save, for instance)",
+          "payload": "{ component: \"popover\", reason: \"escape\" | \"overlay\" | \"close-button\" | \"api\", location }"
         }
       }
     },
@@ -1419,8 +1419,8 @@
           "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
-          "trigger": "El popover se cierra (Escape, clic fuera o acción)",
-          "payload": "{ component: \"popover\", reason, location }"
+          "trigger": "El popover se cierra — por Escape, clic fuera o en el disparador, el botón de cerrar, o por código (al guardar, por ejemplo)",
+          "payload": "{ component: \"popover\", reason: \"escape\" | \"overlay\" | \"close-button\" | \"api\", location }"
         }
       }
     },

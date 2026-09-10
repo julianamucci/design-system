@@ -108,6 +108,8 @@ export type PopoverAlign = 'start' | 'center' | 'end';
  */
 export type PopoverModal = boolean | 'trap-focus';
 
+export { popoverCloseReason, type PopoverCloseReason } from './popover-close-reason';
+
 // ─── NdsPopoverContent ────────────────────────────────────────────────────────
 
 /**

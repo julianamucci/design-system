@@ -17,7 +17,7 @@ import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { toPlainText } from '@/lib/strip-html';
-import { NDS_POPOVER } from '@/components/ui/popover';
+import { NDS_POPOVER, popoverCloseReason } from '@/components/ui/popover';
 import { NdsButton } from '@/components/ui/button';
 import { NdsCheckbox } from '@/components/ui/checkbox';
 import { NdsInput } from '@/components/ui/input';
@@ -820,7 +820,9 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
     }
     track('popover_close', {
       component: 'popover',
-      reason: evento.reason,
+      // Traduzido para o vocabulário do design system: o valor cru do radix-ng
+      // mandava ao GA4 um jargão que as outras quatro stacks não falam.
+      reason: popoverCloseReason(evento.reason),
       location: secao,
     });
   }

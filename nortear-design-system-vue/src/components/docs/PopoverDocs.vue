@@ -10,8 +10,7 @@ import {
   PopoverDescription,
   PopoverHeader,
   PopoverTitle,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+  PopoverTrigger, type PopoverCloseReason } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -158,7 +157,12 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
  * `docs_demo`, e as demais seções se nomeiam, senão todo preview da página
  * chegaria ao relatório como se fosse a demonstração.
  */
-function handlePopoverOpenChange(triggerId: string, location: string, open: boolean) {
+function handlePopoverOpenChange(
+  triggerId: string,
+  location: string,
+  open: boolean,
+  reason?: PopoverCloseReason,
+) {
   if (open) {
     track('popover_open', {
       component: 'popover',
@@ -166,12 +170,14 @@ function handlePopoverOpenChange(triggerId: string, location: string, open: bool
       location,
     });
   } else {
-    // Sem `reason`: a reka-ui não publica o motivo do fechamento em
-    // `@update:open`, e o campo é opcional no tipo. Cravar 'user' aqui seria
-    // fingir um dado — o mesmo defeito que o react carregava e que esta rodada
-    // removeu. Campo ausente é honesto; campo inventado contamina a série.
+    // O motivo chega da RAIZ do popover. A reka-ui não o publica em
+    // `update:open`, e até 2026-09-10 este fechamento saía SEM `reason` por isso
+    // — com a justificativa correta de que cravar um valor seria inventar dado.
+    // O gesto, porém, é observável: o painel e o gatilho o anotam, e a raiz o
+    // emite junto. `api` só por segurança, se a raiz não estiver na árvore.
     track('popover_close', {
       component: 'popover',
+      reason: reason ?? 'api',
       location,
     });
   }
@@ -556,7 +562,7 @@ const a11yCritCols = computed(() => ({
         data-justify="center"
         data-spacing="sm"
       >
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('demo', 'docs_demo', open)">
+        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('demo', 'docs_demo', open, reason)">
           <PopoverTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -679,7 +685,7 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('par1-do', 'docs_do_dont', open)">
+        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('par1-do', 'docs_do_dont', open, reason)">
           <PopoverTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -704,7 +710,7 @@ const a11yCritCols = computed(() => ({
           rótulo do botão em vez do assunto do painel — exatamente o que a
           legenda ao lado critica.
         -->
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('par1-dont', 'docs_do_dont', open)">
+        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('par1-dont', 'docs_do_dont', open, reason)">
           <PopoverTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -718,7 +724,7 @@ const a11yCritCols = computed(() => ({
         </Popover>
       </template>
       <template #do-preview-1>
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('par2-do', 'docs_do_dont', open)">
+        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('par2-do', 'docs_do_dont', open, reason)">
           <PopoverTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.form.trigger') }}
@@ -735,7 +741,7 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-1>
         <!-- Mesmo painel do lado bom: o que muda é só o rótulo do gatilho. -->
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('par2-dont', 'docs_do_dont', open)">
+        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('par2-dont', 'docs_do_dont', open, reason)">
           <PopoverTrigger as-child>
             <Button variant="outline">
               {{ tContent('doDont.pair2.dontTrigger') }}
@@ -770,7 +776,7 @@ const a11yCritCols = computed(() => ({
         deveria estar acontecendo.
       -->
       <template #variant-preview-0>
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('default', 'docs_variantes', open)">
+        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('default', 'docs_variantes', open, reason)">
           <PopoverTrigger as-child>
             <Button
               variant="outline"
@@ -793,7 +799,7 @@ const a11yCritCols = computed(() => ({
         </Popover>
       </template>
       <template #variant-preview-1>
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('with-title', 'docs_variantes', open)">
+        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('with-title', 'docs_variantes', open, reason)">
           <PopoverTrigger as-child>
             <Button
               variant="outline"
@@ -815,7 +821,7 @@ const a11yCritCols = computed(() => ({
         </Popover>
       </template>
       <template #variant-preview-2>
-        <Popover @update:open="(open: boolean) => handlePopoverOpenChange('form', 'docs_variantes', open)">
+        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('form', 'docs_variantes', open, reason)">
           <PopoverTrigger as-child>
             <Button
               variant="outline"
@@ -894,7 +900,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('edit-profile', 'docs_composicoes', open)">
+          <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('edit-profile', 'docs_composicoes', open, reason)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -958,7 +964,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('table-filter', 'docs_composicoes', open)">
+          <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('table-filter', 'docs_composicoes', open, reason)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -1031,7 +1037,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('color-picker', 'docs_composicoes', open)">
+          <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('color-picker', 'docs_composicoes', open, reason)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -1072,7 +1078,7 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean) => handlePopoverOpenChange('quick-settings', 'docs_composicoes', open)">
+          <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('quick-settings', 'docs_composicoes', open, reason)">
             <PopoverTrigger as-child>
               <Button
                 variant="outline"

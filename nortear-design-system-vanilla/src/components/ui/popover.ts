@@ -150,7 +150,11 @@ export type PopoverOptions = {
    * anti-exemplo do Do & Don't precisa continuar mostrando.
    */
   ariaLabel?: string;
-  onOpenChange?: (open: boolean) => void;
+  /**
+   * Chamado a cada mudança de estado. No FECHAMENTO chega também o motivo, no
+   * vocabulário do design system — ver `PopoverCloseReason`.
+   */
+  onOpenChange?: (open: boolean, reason?: PopoverCloseReason) => void;
   class?: string;
 };
 
@@ -215,6 +219,24 @@ export function createPopoverHeader(options: PopoverPartOptions = {}): HTMLEleme
  * nível, e que junto escolheu um valor sem comparar com o que as outras
  * anunciavam. Nada reprovava: qualquer nível é HTML válido.
  */
+/**
+ * Por qual caminho o painel fechou — no vocabulário do DESIGN SYSTEM, não no da
+ * lib. As mesmas quatro palavras do `drawer_close`, para a família inteira ser
+ * uma dimensão só no GA4:
+ *
+ *   escape        tecla Escape
+ *   overlay       saiu do painel sem decidir nada: clique fora, foco que saiu,
+ *                 ou clique no gatilho de novo
+ *   close-button  controle de fechar explícito dentro do painel
+ *   api           fechado por código — é aqui que cai "salvou e fechou"
+ *
+ * `api` é o padrão, e não `close-button` como no drawer: os formulários do
+ * popover fecham POR CÓDIGO ao salvar, e com o padrão do drawer "concluiu"
+ * chegaria ao relatório como "apertou o botão de fechar" — apagando o sinal que
+ * justifica o campo existir (desistiu × concluiu).
+ */
+export type PopoverCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+
 export type PopoverTitleOptions = PopoverPartOptions & { level?: 1 | 2 | 3 | 4 | 5 | 6 };
 
 export function createPopoverTitle(options: PopoverTitleOptions = {}): HTMLElement {
@@ -372,7 +394,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     notificar(true);
   }
 
-  function close(): void {
+  function close(reason: PopoverCloseReason = 'api'): void {
     if (!isOpen) return;
 
     // Se o foco estava dentro do painel — ou já se perdeu para o <body> —, ele
@@ -405,12 +427,12 @@ export function createPopover(options: PopoverOptions): PopoverElement {
 
     if (focusEstavaInside) trigger.focus();
 
-    notificar(false);
+    notificar(false, reason);
   }
 
-  function setOpen(next: boolean): void {
+  function setOpen(next: boolean, reason: PopoverCloseReason = 'api'): void {
     if (next) open();
-    else close();
+    else close(reason);
   }
 
   /**
@@ -420,8 +442,8 @@ export function createPopover(options: PopoverOptions): PopoverElement {
    * quem chama, e o aviso já saiu na intenção. Sem esta cerca, um
    * `onOpenChange` que responde com `setOpen()` receberia o evento duas vezes.
    */
-  function notificar(isOpen: boolean): void {
-    if (!controlled) onOpenChange?.(isOpen);
+  function notificar(isOpen: boolean, reason?: PopoverCloseReason): void {
+    if (!controlled) onOpenChange?.(isOpen, isOpen ? undefined : reason);
   }
 
   /**
@@ -430,12 +452,12 @@ export function createPopover(options: PopoverOptions): PopoverElement {
    * Controlado, ela só é anunciada: quem manda no estado é quem chama. Não
    * controlado, ela é executada — e `open`/`close` anunciam por conta própria.
    */
-  function pedirChange(next: boolean): void {
+  function pedirChange(next: boolean, reason: PopoverCloseReason = 'api'): void {
     if (controlled) {
-      onOpenChange?.(next);
+      onOpenChange?.(next, next ? undefined : reason);
       return;
     }
-    setOpen(next);
+    setOpen(next, reason);
   }
 
   function handleKeydown(e: KeyboardEvent): void {
@@ -443,7 +465,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
       e.preventDefault();
       // `close()` já devolve o foco ao gatilho quando ele estava dentro do
       // painel, que é sempre o caso vindo do Escape.
-      pedirChange(false);
+      pedirChange(false, 'escape');
       return;
     }
 
@@ -471,13 +493,18 @@ export function createPopover(options: PopoverOptions): PopoverElement {
   function handleOutsideClick(e: MouseEvent): void {
     const target = e.target as Node;
     if (!panelEl?.contains(target) && !trigger.contains(target)) {
-      pedirChange(false);
+      pedirChange(false, 'overlay');
     }
   }
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    pedirChange(!isOpen);
+    // Fechar clicando no gatilho de novo é `overlay` — "saí do painel sem
+    // decidir nada" —, e NÃO `api`. O drawer manda esse caminho para `api`
+    // porque ali o gatilho fica coberto pelo véu e só código fecha por ele; o
+    // popover é não-modal, o gatilho continua clicável, e o clique é vontade de
+    // quem usa. O motivo só é lido no fechamento.
+    pedirChange(!isOpen, 'overlay');
   });
 
   // O painel mora em portal no body: quando o wrapper sai do DOM — troca de

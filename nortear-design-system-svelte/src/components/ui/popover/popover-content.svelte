@@ -34,6 +34,11 @@
 		trapFocus = undefined,
 		preventScroll = undefined,
 		portalProps,
+		// Destacados para COMPOR com a anotação do motivo: sem isto, o handler
+		// de quem consome sobrescreveria o nosso, ou o nosso o dele.
+		onEscapeKeydown,
+		onInteractOutside,
+		onFocusOutside,
 		...restProps
 	}: Omit<PopoverPrimitive.ContentProps, "trapFocus" | "preventScroll"> & {
 		trapFocus?: boolean;
@@ -81,6 +86,18 @@
 		preventScroll={effectivePreventScroll}
 		aria-modal={modal ? "true" : undefined}
 		class={cn("nds-popover-content", className)}
+		onEscapeKeydown={(e) => {
+			contexto?.anotarMotivo("escape");
+			onEscapeKeydown?.(e);
+		}}
+		onInteractOutside={(e) => {
+			contexto?.anotarMotivo("overlay");
+			onInteractOutside?.(e);
+		}}
+		onFocusOutside={(e) => {
+			contexto?.anotarMotivo("overlay");
+			onFocusOutside?.(e);
+		}}
 		{...restProps}
 	/>
 </PopoverPortal>
