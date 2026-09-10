@@ -123,18 +123,15 @@ arquivo existe para evitar.
 
 Os sete que estavam sem portão foram fechados em 2026-09-10 — seis com regra
 nova no `audit.mjs`, cada uma provada replantando o defeito, e o sétimo medido
-como já coberto pela suíte. Sobram duas coisas, e as duas são de conteúdo, não de
-mecanismo:
+como já coberto pela suíte. Sobra uma, e ela é de conteúdo, não de mecanismo:
 
-1. **O `reason` está parcial, e o portão novo ACUSA isso** — 7 achados no dia em
-   que nasceu: `hover_card_close` falta em quatro stacks e `popover_close` em
-   três. O portão está certo e a árvore é que está errada. Fechar tem duas
-   metades: o popover adota a forma do drawer (motivos observáveis no wrapper,
-   sem apoio de lib — é o que o drawer prova), e o hover-card é decisão da dona,
-   entre espalhar o campo ou removê-lo. Remover é defensável: o componente é
-   passivo, e fechar é quase sempre "o ponteiro saiu".
-2. **A ordem do rodapé do drawer** não é asserida em stack nenhuma, enquanto a
+1. **A ordem do rodapé do drawer** não é asserida em stack nenhuma, enquanto a
    do dialog é asserida nas cinco. É play, não regra de audit.
+
+O `reason` parcial, que o portão acusou no dia em que nasceu (7 achados), foi
+fechado no mesmo dia pelas duas metades: o hover-card perdeu o campo, e o popover
+passou a mandá-lo nas cinco — obrigatório, fechado, com as quatro palavras do
+drawer. `reason_parcial_entre_stacks` em zero.
 
 O Toast, que ficou pendente na regra de elevação, foi decidido pela dona no
 mesmo dia: `xl`. O motivo é de camada, não de interação — `--z-toast` (1080)
