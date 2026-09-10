@@ -215,16 +215,28 @@ interface AnalyticsEvents {
     location?: string;
   };
 
-  /** Disparado ao selecionar um item do Command via clique ou Enter. */
+  /**
+   * Disparado ao selecionar um item do Command via clique ou Enter.
+   *
+   * `component` e `location` entraram em 2026-09-10, por decisão da dona: eram os
+   * dois únicos eventos da categoria Overlay sem eles. `location` é obrigatório
+   * para não virar amostra parcial — campo que parte das stacks preenche não
+   * separa, no GA4, "sem seção" de "stack que não manda".
+   */
   command_item_select: {
+    component: 'command';
     label: string;
     group: string;
-    pattern: 'inline' | 'combobox' | 'palette';
+    /** `combobox` saiu: o Combobox é componente próprio e nenhuma stack o monta sobre o Command. */
+    pattern: 'inline' | 'palette';
+    location: string;
   };
 
-  /** Disparado ao abrir o command palette (botão ou atalho Cmd+K). */
+  /** Disparado ao abrir o command palette (botão ou atalho Ctrl+K). */
   command_palette_open: {
+    component: 'command';
     trigger: 'keyboard' | 'button';
+    location: string;
   };
 
   /** Disparado quando um DropdownMenu abre. */

@@ -1,6 +1,6 @@
 # PRD — Command
 
-> **Estado descrito**: 2026-09-07, revisado em 2026-09-10 (ver §12).
+> **Estado descrito**: 2026-09-07, revisado em 2026-09-10 (pipeline `fix` — ver §12).
 > **⚠ Escrito ANTES da revisão serial deste componente.** Espere que decisões
 > mudem — e quando mudarem, a linha se move para o histórico com a nova data e a
 > nova medição, em vez de ser reescrita por cima.
@@ -33,11 +33,16 @@ que a hospeda.
 |---|---|---|
 | C1 | O filtro mantém `aria-selected` e o papel de opção em cada item; o que sai do filtro deixa a lista | `accessibility.item1` |
 | C2 | Setas movem o destaque; Enter seleciona o item em destaque | `accessibility.keyboard.arrowDown/enter` |
-| C3 | `Escape` fecha o Dialog ou Popover que hospeda e devolve o foco ao gatilho | `accessibility.keyboard.escape` |
-| C4 | Tab move o foco entre elementos FORA da paleta — a lista não é percorrida por Tab | `accessibility.keyboard.tab` |
+| C3 | `Escape` fecha o Dialog ou Popover que hospeda e devolve o foco ao gatilho; sem hospedeiro (uso inline), o foco fica no campo e a busca não muda | `accessibility.keyboard.escape` |
+| C4 | Tab move o foco entre elementos FORA da paleta — a lista não é percorrida por Tab: não é parada de Tab (sem `tabindex`, ou `-1` onde a lib o põe), e o clique nela não tira o foco do campo | `accessibility.keyboard.tab` |
 | C5 | O atalho exibido no item é só visual: registrar a tecla é da aplicação, e o texto do atalho entra no nome do comando | `accessibility.item2` |
 | C6 | Dentro do Dialog, título e descrição ficam em `sr-only` e precisam de valores descritivos | `accessibility.item3` |
 | C7 | O campo de busca não tem altura fixa | ver D5 |
+| C8 | As setas param nas pontas da lista — a de baixo no último item não volta ao primeiro | story `WithDisabledItems` |
+| C9 | O filtro compara a busca com o valor e o rótulo do item, nunca com o texto do atalho | story `WithShortcuts` ("ctrl" → nenhum resultado) |
+| C10 | A lista se chama pelo placeholder do campo | story `Playground` |
+| C11 | O separador some quando um dos lados fica sem item (react e svelte o tiram em qualquer busca — padrão da lib, aceito) | stories `Playground` e `WithGroups` ("badge") |
+| C12 | O campo inline não rouba o foco ao montar; só a paleta aberta num Dialog foca o campo sozinha | story `Playground` |
 
 ## 3. Decisões fixadas
 
@@ -61,8 +66,12 @@ os dois juntos quando um mudar:
   **1,38:1**. O anel sumiria justamente no modo em que o problema é maior.
   `--accent-foreground` é, por definição, o que se lê sobre o accent: **4,66:1**
   no pior dos seis pares de tema e modo, contra os 3:1 da WCAG 1.4.11;
-- **por que interno**: a lista tem `padding: 4px` e `overflow-y: auto` — anel
-  externo é recortado nas laterais e nos itens das pontas.
+- **por que interno**: quem consome pode pôr o item direto na lista, sem grupo
+  (só a fábrica do vanilla sempre embrulha), e a lista **não tem padding** e
+  recorta (`overflow-y: auto`, `overflow-x: hidden`) — anel externo some nas
+  laterais e nos itens das pontas. Dentro de um grupo, os 4px de padding dele até
+  comportariam o anel. As stories e as docs pages usam sempre grupo, com ou sem
+  cabeçalho; o anel interno é o que não depende disso.
 
 ### D3 · O item selecionado é `--accent` a 10%
 
@@ -101,7 +110,8 @@ que o navegador não vai mostrar.
 ### D8 · O separador é `--border`
 
 **Estado**: `--border` aqui; **`--muted`** no DropdownMenu. Dois menus, dois
-tokens. Ele também rasga o padding do grupo com margem negativa de `--spacing-1`.
+tokens. Sem margem: nas cinco stacks o separador é filho da LISTA, que não tem
+padding, e o traço já cruza a lista de ponta a ponta (ver o histórico).
 
 ### D9 · Dentro do Dialog, `translate` — nunca `transform`
 
@@ -113,12 +123,23 @@ vez de uma vencer — o painel saía deslocado -100% na horizontal, quase inteir
 para fora da tela pela esquerda. Usando a mesma propriedade, esta regra
 sobrescreve (o `command.css` carrega depois do `dialog.css`) e sobra só o que se
 queria: centro na horizontal, 33% do topo.
-**Vale para as quatro stacks web** — nenhuma escapava.
+**Vale para as cinco stacks** — nenhuma escapava.
 
 ### D10 · O raio do item é raio aninhado
 
-**Estado**: `--radius-sm`, que é `--radius` (10) menos o padding do grupo
-(`--spacing-1`, 4). Mudar o padding sem mudar o raio faz os cantos derivarem.
+**Estado**: `--radius-sm`, que é `--radius` (**14px**) menos **4px**: 10px. O
+inset que o raio aninhado desconta é o padding do grupo (`--spacing-1`, 4px).
+**Os 4px do token são LITERAIS** (`tokens.css:222`), não `--spacing-1`: hoje os
+dois coincidem, e mudar um não muda o outro — os cantos derivam em silêncio.
+
+### D11 · O primeiro item fica em destaque sozinho
+
+**Estado**: ao abrir e a cada busca, o primeiro item HABILITADO fica em
+destaque — digitar e apertar Enter executa. Depois disso, setas e ponteiro.
+**Decisão da dona, 2026-09-10.** Antes, cada lib fazia de um jeito: cmdk e bits
+destacavam ao montar e a cada busca; a reka, só depois de digitar; vanilla e
+angular nunca, e Enter sem seta não fazia nada. É o que as paletas de referência
+fazem, e é o que o cmdk e o bits já faziam.
 
 ## 4. Anatomia
 
@@ -135,7 +156,7 @@ command                       flex column, 100%×100%, overflow hidden
     │       ├── [rótulo]
     │       ├── command-shortcut    exclui o tique (D7)
     │       └── command-item-check  tique à direita
-    ├── command-separator      rasga o padding do grupo (D8)
+    ├── command-separator      filho da lista, de ponta a ponta (D8)
     └── command-empty          aviso de busca sem resultado
 ```
 
@@ -181,9 +202,9 @@ o portão `seletor_em_duas_folhas` reprova a volta.
 | estado | quando ocorre | o que muda |
 |---|---|---|
 | Item padrão | — | sem preenchimento |
-| Item selecionado | seta ou ponteiro | accent a 10%, texto `--accent-foreground`, anel interno |
+| Item em destaque | seta ou ponteiro | accent a 10%, texto `--accent-foreground`, anel interno — é o que o Enter ativa |
 | Item desabilitado | `aria-disabled` ou `data-disabled` | 50% de opacidade, sem ponteiro nem teclado |
-| Item filtrado para fora | `hidden` | sai da lista — e depende da regra de D6 |
+| Item filtrado para fora | filtro | sai da lista: desmontado em quatro stacks; no angular fica com `hidden`, e aí depende da regra de D6 |
 | Item marcado | `data-checked` | tique à direita, salvo se houver atalho (D7) |
 | Vazio | filtro sem resultado | o aviso ocupa a lista |
 
@@ -191,7 +212,7 @@ o portão `seletor_em_duas_folhas` reprova a volta.
 
 | prop | o que faz |
 |---|---|
-| `commandFilter` | filtro customizado `(value, search, keywords) => number`; 0 esconde |
+| `commandFilter` | filtro customizado: recebe o valor do item e a busca e decide se o item fica. A assinatura é da stack — número (0 esconde) no react e no svelte, booleano no angular; vue e vanilla não expõem a prop |
 | `commandValue` | valor controlado do item em destaque |
 | `commandOnValueChange` | callback ao mudar o destaque |
 | `inputPlaceholder` | placeholder do campo |
@@ -200,13 +221,48 @@ o portão `seletor_em_duas_folhas` reprova a volta.
 | `itemDisabled` | desabilita o item |
 | `dialogTitle` | título do Dialog hospedeiro, em `sr-only` |
 | `dialogDescription` | descrição do Dialog hospedeiro, em `sr-only` |
-| `dialogShowCloseButton` | exibe o X do Dialog; padrão `false` |
+| `dialogShowCloseButton` | exibe o X do Dialog; padrão `false` no `CommandDialog` (react, vue, svelte). Vanilla e angular compõem com o Dialog, cujo padrão é `true` — a paleta passa `false` explicitamente |
 
 ### Divergência de forma, registrada
 
 O `cmdk` gera o cabeçalho de grupo com o atributo `[cmdk-group-heading]`, não com
 uma classe — por isso a folha estiliza o cabeçalho **por atributo** além da
 classe. Não é preferência: é o que a lib emite.
+
+**Atalhos de estilo vim, desligados.** O cmdk e o bits ligam por padrão
+Ctrl+N/J/P/K para mover o destaque. Na docs page isso colidia com o atalho da
+paleta: no inline do react e do svelte, Ctrl+K subia o destaque E abria a paleta
+ao mesmo tempo. As duas stacks desligam (`vimBindings={false}`); as outras três
+nunca tiveram.
+
+**Grupo sem cabeçalho não se anuncia como grupo.** Vanilla e vue nunca põem o
+papel; cmdk, bits e radix-ng põem `role="group"` fixo no nó dos itens, com ou sem
+cabeçalho, e nenhuma das três deixa desligar por prop. React tira o papel num
+efeito de layout depois de montar (e o devolve se o cabeçalho chegar), svelte
+desenha o nó pelo snippet `child` sem ele, angular o condiciona ao `heading`.
+Grupo anônimo seria um "grupo" sem nome lido a cada item.
+
+**C9 no react e no svelte precisa de ajuda.** cmdk e bits filtram só pelo
+`value` (e `keywords`) quando ele existe, e com `value` de id "arq" não achava
+"Novo arquivo". No react, o `CommandItem` passa o RÓTULO — o texto dos filhos sem
+o `CommandShortcut` — como palavra-chave ao cmdk. No svelte isso não funciona: o
+bits 2.19 registra as `keywords` na primeira rodada do item, antes de o nó
+existir, e não as regrava depois (`command.svelte.js`, `CommandItemState` e
+`registerValue`). Lá o rótulo entra no FILTRO da raiz, lido de um registro que
+cada item alimenta com o próprio nó (`command-context.ts`), somado às `keywords`
+de quem consome. Limite medido e documentado no arquivo: item que nasce escondido
+por uma busca inicial que só o rótulo casaria não tem de onde ler até a busca
+mudar — nenhuma story ou docs page cai nisso.
+
+**O ponteiro que sai da lista**: no vue e no angular (reka, radix-ng) o destaque
+é apagado, e o Enter não faz nada até a próxima busca ou seta; cmdk e bits
+mantêm o último item apontado. Aceito como divergência de lib — o D11 fala de
+abrir e de buscar, e nenhum texto das docs promete o que acontece aqui.
+
+**Home e End**: react, vue e svelte movem o destaque para as pontas (vem das
+libs — no bits, `kbd.HOME`/`kbd.END` no `command.svelte.js`); vanilla e angular
+não. Aceito como divergência de lib — o padrão ARIA de
+listbox trata as duas teclas como opcionais, e nenhum texto das docs as promete.
 
 ### Peças, por stack
 
@@ -256,24 +312,22 @@ segura, está por extenso em `hover-card.md` §8.
 
 | evento | quando | payload |
 |---|---|---|
-| `command_item_select` | item selecionado por clique ou Enter | `{ label, group, pattern }` |
-| `command_palette_open` | a paleta abre, por botão ou por atalho | `{ trigger: "keyboard" \| "button" }` |
+| `command_item_select` | item selecionado por clique ou Enter | `{ component: "command", label, group, pattern, location }` |
+| `command_palette_open` | a paleta abre, por botão ou por atalho | `{ component: "command", trigger: "keyboard" \| "button", location }` |
 
-`pattern` separa as três montagens — `inline`, `combobox`, `palette` — e é o que
-permite ler a mesma seleção em contextos diferentes sem misturar as séries.
+`pattern` separa as duas montagens — `inline` e `palette` — e é o que permite ler
+a mesma seleção em contextos diferentes sem misturar as séries. `label` é o
+VALOR do item e `group` a chave estável do grupo, nunca o texto traduzido.
 
-**Os dois eventos são os únicos da categoria sem `component` e sem `location`.**
-Todos os outros oito overlays se identificam no payload e dizem de que seção da
-página saíram; estes não. Medido em 2026-09-09, e fica registrado como o que é:
-uma assimetria observável que ninguém decidiu, não uma escolha com motivo.
+`component` e `location` são obrigatórios no tipo, como os outros oito overlays
+os mandam; `location` é a seção da docs page de onde o gesto saiu.
 
-> **PENDÊNCIA · 2026-09-09** — o `command_palette_open` é disparado por quatro
-> stacks. O **vanilla** anuncia o evento na tabela de analytics da docs page
-> (`analytics.table.paletteOpen`) e nunca o emite: não há `track` dele no
-> `CommandDocs.ts`, nem demonstração de paleta que abra. A página promete uma
-> medição que a stack de referência não entrega.
-> **Fecha quando**: `grep -c "command_palette_open"` no `CommandDocs.ts` do
-> vanilla for maior que zero, com a chamada ligada à abertura real da paleta.
+**Ctrl+K nas cinco docs pages.** A demonstração da paleta exibe a dica do
+atalho, então a página responde a ela: o ouvinte vive enquanto a página está
+montada, só ABRE (nunca alterna) e emite `trigger: "keyboard"`. Dica que a
+página não honra é uma promessa falsa na frente de quem está aprendendo o
+componente.
+
 
 ## 10. Reconstruir do zero
 
@@ -329,3 +383,60 @@ Por que nada reprovou: as dez asserções do Combobox sobre o vazio eram
 (seletor idêntico em duas folhas; 4 achados com o bloco replantado, 0 sem ele).
 Na mesma varredura, seis utilitários repetidos entre `typography.css`/`colors.css`
 e `utilities.css` saíram da cópia que nunca valia — mudança zero por construção.
+
+**2026-09-10 · afirmações que as cinco stacks seguiam e a folha desmentia**
+(Check 14 da pipeline):
+
+- D2 dizia que o anel é interno porque "a lista tem `padding: 4px`". A lista não
+  tem padding; o motivo real é o item poder morar fora de grupo.
+- D8 dizia que o separador "rasga o padding do grupo" com margem de −4px. Nas
+  cinco ele é filho da lista, sem padding a rasgar; a margem saiu (o traço já
+  cruzava a lista, recortado pelo `overflow-x: hidden` — mudança zero).
+- D10 dizia `--radius` (10). É 14px; 10px é o `--radius-sm`.
+- O item desabilitado declarava `cursor: not-allowed` junto de
+  `pointer-events: none`: o cursor nunca aparecia, e sustentava o texto "cursor
+  não permitido" das docs. Saiu da folha e do texto.
+- "Filtro fuzzy" em seis chaves do conteúdo: vanilla, vue e angular filtram por
+  trecho. Passou a "filtro por texto".
+
+**2026-09-10 · fechou a pendência do `command_palette_open` no vanilla** (aberta
+em 2026-09-09: a página anunciava o evento e nunca o emitia, e não havia paleta
+que abrisse). O `CommandDocs.ts` ganhou a paleta real num Dialog — gatilho
+outline com o `kbd` dentro, título e descrição em `sr-only` —, o Ctrl+K da
+página e o evento nas duas aberturas (`trigger: "button"` / `"keyboard"`,
+`location: "docs_demo"`). O atalho abre o Dialog por um clique que não borbulha,
+para o rastreamento automático da demonstração não contá-lo como clique de
+alguém.
+
+**2026-09-10 · os primitivos passaram a cumprir o mesmo contrato** (C8–C12
+nasceram aqui, cada um com story que o cobra). O que cada stack mudou, e como:
+
+- **as cinco**: a lista cancela `mousedown`, e o clique num item — inclusive
+  desabilitado, inclusive cabeçalho — não tira o foco do campo (D1). Antes, o
+  clique em item desabilitado mandava o foco para o `body` no vanilla (fora do
+  modal, dentro do Dialog); no react ia para a lista (`tabIndex={-1}` do cmdk);
+  no vue, para o próprio item; no svelte iria para o `body` assim que o
+  contorno do `role` tirou o `tabindex` da raiz;
+- **vanilla**: a lista deixou de ser parada de Tab (`tabindex="0"`); Escape no
+  uso inline não faz mais `blur` — o foco fica e a busca não muda;
+- **react**: a marca de escolhido só em item marcável (reservava 16px em todos);
+  a lista se chama pelo placeholder (era "Suggestions", em inglês, do cmdk);
+- **vue**: o ponteiro move o destaque (`highlightOnHover` estava desligado); o
+  campo inline não rouba foco; o filtro casa com rótulo e valor, não com o
+  `textContent` que incluía o atalho; o separador some com um lado vazio. E dois
+  defeitos que a medição não tinha visto: o Vue converte prop booleana ausente em
+  `false`, e todo item ganhava a marca invisível de 16px — o mesmo defeito do
+  react, por outro caminho; e grupo sem cabeçalho quebrava;
+- **svelte**: o bits injeta `role="application"` e `tabindex=-1` na raiz e não
+  deixa sobrescrever; a raiz agora é desenhada pelo snippet `child`, sem os dois;
+- **angular**: `loopFocus` é próprio do `NdsCommand`, padrão `false`, com a seta
+  barrada em captura nas pontas (a lib não oferece mudar o padrão dela); o atalho
+  sai do filtro pelo atributo `rdxAutocompleteItemIndicator`, que o radix-ng
+  descarta ao montar o texto do item — **seletor interno da lib**, guardado pelas
+  stories `WithShortcuts` e `CommandPalette`; o separador some por `hidden`.
+
+**2026-09-10 · analytics, por decisão da dona**: `component` e `location` entram
+nos dois eventos (a assimetria medida em 2026-09-09 deixou de ser "não
+decidida"); `combobox` sai de `pattern`, porque nenhuma stack monta o Combobox
+sobre o Command e o valor não podia ser emitido; o Ctrl+K passa a valer nas cinco
+docs pages.

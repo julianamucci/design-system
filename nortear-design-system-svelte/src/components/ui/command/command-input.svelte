@@ -2,13 +2,23 @@
 	import { Command as CommandPrimitive } from "bits-ui";
 	import { cn } from "@/lib/utils.js";
 	import SearchIcon from '@lucide/svelte/icons/search';
+	import { useCommandSearchContext } from "./command-context.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		value = $bindable(""),
+		placeholder,
 		...restProps
 	}: CommandPrimitive.InputProps = $props();
+
+	// O placeholder também nomeia a lista (ver `command-context.ts`). `pre`
+	// para a lista receber o nome antes da primeira pintura depois de mudar —
+	// trocar de idioma não pode deixar um quadro com o nome antigo.
+	const search = useCommandSearchContext();
+	$effect.pre(() => {
+		if (search) search.placeholder = placeholder ?? undefined;
+	});
 </script>
 
 <!--
@@ -33,6 +43,7 @@
 	<CommandPrimitive.Input
 		bind:ref
 		bind:value
+		{placeholder}
 		data-slot="command-input"
 		class={cn("nds-command-input", className)}
 		{...restProps}

@@ -2,12 +2,14 @@
 	import { Command as CommandPrimitive } from "bits-ui";
 	import { cn } from "@/lib/utils.js";
 	import CheckIcon from '@lucide/svelte/icons/check';
+	import { useCommandLabelRegistry } from "./command-context.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		children,
 		checked,
+		value,
 		...restProps
 	}: CommandPrimitive.ItemProps & {
 		/**
@@ -17,6 +19,24 @@
 		 */
 		checked?: boolean;
 	} = $props();
+
+	/**
+	 * O nó do comando vai para o registro de rótulos da raiz, e é de lá que o
+	 * filtro tira o rótulo para comparar com a busca (C9) — ver
+	 * `command-context.ts`. `ref` vira `null` quando o filtro desmonta o
+	 * comando; o registro guarda o último rótulo lido.
+	 */
+	const labels = useCommandLabelRegistry();
+
+	$effect(() => {
+		if (value) labels?.track(value, ref);
+	});
+	$effect(() => {
+		const registered = value;
+		return () => {
+			if (registered) labels?.forget(registered);
+		};
+	});
 </script>
 
 <CommandPrimitive.Item
@@ -24,6 +44,7 @@
 	data-slot="command-item"
 	data-checked={checked === undefined ? undefined : String(checked)}
 	class={cn("nds-command-item", className)}
+	{value}
 	{...restProps}
 >
 	{@render children?.()}

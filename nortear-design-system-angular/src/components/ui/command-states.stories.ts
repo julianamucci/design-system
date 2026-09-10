@@ -1,13 +1,57 @@
+import { Directive, ElementRef, afterNextRender, inject, input } from '@angular/core';
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_COMMAND } from './command';
+import {
+  commandCheckedItemSource,
+  commandEmptyStateSource,
+  commandItemDisabledSource,
+  commandLongListSource,
+} from './command.source';
+import {
+  WRAPPER,
+  NO_RESULT,
+  commandItem,
+  waitForHighlight,
+  waitForOptions,
+  emptyRegion,
+  resetSearch,
+} from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
+
+/**
+ * Faz o campo NASCER com uma busca digitada.
+ *
+ * Escrever o `value` não basta: o primitivo só filtra o que a pessoa digitou
+ * (um valor que chegou por binding é tratado como seleção já feita, e a lista
+ * fica inteira). O evento `input` é o mesmo caminho de uma tecla, e é depois do
+ * primeiro render porque antes dele o campo ainda não está ligado ao primitivo.
+ *
+ * Diretiva local, e não export do fixtures: é andaime de UMA story, e um
+ * `EmptyState` que nasce vazio fotografaria a lista cheia no Chromatic se a
+ * play não rodasse.
+ */
+@Directive({ selector: 'input[ndsInitialSearch]', standalone: true })
+class NdsInitialSearch {
+  readonly ndsInitialSearch = input('');
+
+  constructor() {
+    const field = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
+    afterNextRender(() => {
+      const query = this.ndsInitialSearch();
+      if (!query) return;
+      field.value = query;
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+}
+
 const meta: Meta = {
   title: 'Components/Overlay/Command/States',
   tags: ['overlay'],
-  decorators: [moduleMetadata({ imports: [...NDS_COMMAND] })],
+  decorators: [moduleMetadata({ imports: [...NDS_COMMAND, NdsInitialSearch] })],
   parameters: {
     design: figmaDesign('command'),
     layout: 'centered',
@@ -30,94 +74,87 @@ type Story = StoryObj;
 
 export const EmptyState: Story = {
   // `functional.item1` também é daqui: a metade "a frase de vazio aparece
-  // quando nada sobra" é verificada nesta story, e não no Playground — lá ela
-  // era a mesma asserção escrita duas vezes.
-  parameters: { covers: ['functional.item1', 'visual.item2'] },
+  // quando nada sobra" é a que esta story fotografa.
+  parameters: {
+    covers: ['functional.item1', 'visual.item2'],
+    docs: { source: { transform: commandEmptyStateSource } },
+  },
+  // A busca já nasce sem correspondência: é o estado que esta story documenta,
+  // e o quadro que o Chromatic captura.
   render: () => ({
     template: `
-      <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+      <div class="${WRAPPER}">
         <nds-command>
-          <input ndsCommandInput placeholder="Buscar componente..." />
+          <input ndsCommandInput placeholder="Buscar componente..." ndsInitialSearch="xyznotfound" />
 
           <div ndsCommandList>
-            <div ndsCommandGroup heading="Componentes">
+            <div ndsCommandGroup>
               <div ndsCommandItem value="button">Button</div>
               <div ndsCommandItem value="input">Input</div>
+              <div ndsCommandItem value="separator">Separator</div>
             </div>
           </div>
 
-          <div ndsCommandEmpty>Nenhum resultado encontrado.</div>
+          <div ndsCommandEmpty>${NO_RESULT}</div>
         </nds-command>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
     const field = canvas.getByRole('combobox');
-    const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
+    const list = canvas.getByRole('listbox');
+    const empty = emptyRegion(canvasElement);
 
-    // Idempotente: a busca parte sempre do zero — a play REEXECUTA no mesmo
-    // DOM, e esta story TERMINA com texto no campo.
-    await userEvent.clear(field);
-    // Com o campo vazio há dois comandos. Os itens só se registram no render
-    // seguinte ao da montagem, e sem esta espera a contagem de zero logo
-    // adiante passaria só por ter chegado cedo demais.
-    await waitFor(async () => {
-      await expect(canvas.getAllByRole('option')).toHaveLength(2);
+    await step('Buscando "xyznotfound" não sobra nenhum comando', async () => {
+      // Idempotente: a play REEXECUTA no mesmo DOM, e a busca parte do zero.
+      await userEvent.clear(field);
+      await userEvent.type(field, 'xyznotfound');
+      await waitForOptions(canvasElement, 0);
     });
 
-    await step('Buscando "xyz", nenhum comando sobra e a lista fica vazia', async () => {
-      await userEvent.type(field, 'xyz');
+    await step('A frase é anunciada, não só desenhada', async () => {
       await waitFor(async () => {
-        await expect(canvas.queryAllByRole('option')).toHaveLength(0);
+        await expect(empty).toBeVisible();
       });
-      // O grupo se recolhe junto — cabeçalho sem itens embaixo é ruído.
-      await expect(root.querySelector<HTMLElement>('[data-slot="command-group"]'))
-        .not.toBeVisible();
-    });
-
-    await step('A frase é ANUNCIADA, não só desenhada', async () => {
-      await expect(vazio).toBeVisible();
-      await expect(vazio).toHaveTextContent('Nenhum resultado encontrado.');
-      await expect(vazio).toHaveClass(/nds-command-empty/);
-      await expect(vazio).toHaveAttribute('data-empty', '');
-      // Região viva montada o tempo todo: é a mudança DENTRO dela que o leitor
-      // de tela anuncia, e criá-la só quando a busca esvazia não anunciaria
-      // nada — quem usa leitor digitaria no vazio sem saber que não achou.
-      await expect(vazio).toHaveAttribute('role', 'status');
-      await expect(vazio).toHaveAttribute('aria-live', 'polite');
-      await expect(vazio).toHaveAttribute('aria-atomic', 'true');
-    });
-
-    await step('A região viva não é filha do listbox', async () => {
+      await expect(empty).toHaveTextContent(NO_RESULT);
+      await expect(empty).toHaveClass(/nds-command-empty/);
+      await expect(empty).toHaveAttribute('data-empty', '');
+      // Sem a região viva, quem usa leitor de tela digitaria no vazio sem nunca
+      // saber que a busca não achou nada.
+      await expect(empty).toHaveAttribute('role', 'status');
+      await expect(empty).toHaveAttribute('aria-live', 'polite');
+      await expect(empty).toHaveAttribute('aria-atomic', 'true');
       // `role="status"` dentro de `role="listbox"` é filho não permitido, e o
       // axe reprova por aria-required-children.
-      const list = canvas.getByRole('listbox');
-      await expect(list.contains(vazio)).toBe(false);
+      await expect(list.contains(empty)).toBe(false);
+      // Sem opção na tela não há destaque: o campo não aponta para nada.
+      await expect(field).not.toHaveAttribute('aria-activedescendant');
     });
 
-    await step('Apagar a busca traz os comandos, e a região viva volta a zero', async () => {
+    await step('Apagar a busca traz os 3 comandos de volta, com o primeiro em destaque', async () => {
       await userEvent.clear(field);
+      await waitForOptions(canvasElement, 3);
       await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(2);
+        await expect(empty).not.toHaveAttribute('data-empty');
       });
+      // A busca nova põe o primeiro comando em destaque (D11) — Enter aqui já
+      // executaria "Button".
+      await waitForHighlight(field, 'Button');
       // Continua no DOM (é o que preserva o anúncio), mas sem a classe que
       // traz 24px de respiro em cima e embaixo.
-      await expect(vazio).not.toHaveAttribute('data-empty');
-      await expect(vazio).not.toHaveClass(/nds-command-empty/);
-      await expect(vazio.getBoundingClientRect().height).toBe(0);
+      await expect(empty).not.toHaveClass(/nds-command-empty/);
+      await expect(empty.getBoundingClientRect().height).toBe(0);
     });
 
-    await step('E a story termina SEM resultados — é o quadro que o Chromatic tira', async () => {
-      // Terminar cheia faria a foto do estado vazio ser a foto do estado
-      // cheio: o Chromatic captura o FIM da play, não o meio.
-      await userEvent.type(field, 'xyz');
+    await step('A story termina SEM resultados', async () => {
+      // O Chromatic fotografa o estado final: terminar com a lista cheia
+      // capturaria outra story.
+      await userEvent.type(field, 'xyznotfound');
+      await waitForOptions(canvasElement, 0);
       await waitFor(async () => {
-        await expect(canvas.queryAllByRole('option')).toHaveLength(0);
+        await expect(empty).toHaveAttribute('data-empty', '');
       });
-      await expect(vazio).toBeVisible();
-      await expect(vazio).toHaveAttribute('data-empty', '');
     });
   },
 };
@@ -125,78 +162,93 @@ export const EmptyState: Story = {
 // ─── Comando desabilitado ─────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item4', 'visual.item4'],
+    docs: { source: { transform: commandItemDisabledSource } },
+  },
   render: () => ({
     props: { last: '' },
     template: `
-      <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
-        <nds-command>
+      <div class="${WRAPPER}">
+        <nds-command (itemSelect)="last = $event.value">
           <input ndsCommandInput placeholder="Buscar comando..." />
 
           <div ndsCommandList>
-            <div ndsCommandGroup heading="Arquivo">
-              <div ndsCommandItem value="novo" (onSelect)="last = $event.value">Novo</div>
-              <div ndsCommandItem value="arquivar" [disabled]="true" (onSelect)="last = $event.value">Arquivar</div>
-              <div ndsCommandItem value="renomear" (onSelect)="last = $event.value">Renomear</div>
+            <div ndsCommandGroup>
+              <div ndsCommandItem value="novo">Novo</div>
+              <div ndsCommandItem value="arquivar" [disabled]="true">Arquivar</div>
+              <div ndsCommandItem value="renomear">Renomear</div>
             </div>
           </div>
 
-          <div ndsCommandEmpty>Nenhum resultado encontrado.</div>
+          <div ndsCommandEmpty>${NO_RESULT}</div>
         </nds-command>
       </div>
 
-      <p data-testid="escolhido">{{ last }}</p>
+      <p data-testid="chosen">{{ last }}</p>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const field = canvas.getByRole('combobox');
-    const escolhido = canvas.getByTestId('escolhido');
+    const chosen = canvas.getByTestId('chosen');
 
     await userEvent.clear(field);
-    await waitFor(async () => {
-      await expect(canvas.getAllByRole('option')).toHaveLength(3);
-    });
-
-    const arquivar = canvas.getByRole('option', { name: 'Arquivar' });
+    await waitForOptions(canvasElement, 3);
+    const archive = commandItem(canvasElement, 'arquivar');
 
     await step('O estado chega ao markup e ao desenho', async () => {
       // Sob JIT o componente renderiza no default e `[disabled]="true"` nunca
       // chegaria (armadilha 1) — a asserção é o que impede isso de voltar.
-      await expect(arquivar).toHaveAttribute('aria-disabled', 'true');
-      await expect(arquivar).toHaveAttribute('data-disabled', '');
-      const computedStyle = getComputedStyle(arquivar);
+      await expect(archive).toHaveAttribute('aria-disabled', 'true');
+      await expect(archive).toHaveAttribute('data-disabled', '');
+      // O que a pessoa percebe é o item apagado e não reagir ao ponteiro. Um
+      // `cursor` declarado aqui nunca apareceria: com `pointer-events: none` o
+      // ponteiro não pousa no item, e é por isso que a folha não o declara.
+      const computedStyle = getComputedStyle(archive);
       await expect(computedStyle.pointerEvents).toBe('none');
       await expect(Number.parseFloat(computedStyle.opacity)).toBeLessThan(1);
-      // O contrato diz "cursor não permitido", e a folha entrega os dois: o
-      // `pointer-events: none` barra o clique, e o `cursor` é o que a pessoa vê
-      // antes de tentar. Sem esta linha, metade do item ficava sem verificação.
-      await expect(computedStyle.cursor).toBe('not-allowed');
     });
 
     await step('Clicar não executa o comando', async () => {
       // `pointerEventsCheck: 0` porque a folha bloqueia o ponteiro: sem isso o
       // user-event recusa o clique antes de o componente ter chance de errar.
-      await userEvent.click(arquivar, { pointerEventsCheck: 0 });
-      await expect(escolhido).toHaveTextContent('');
+      await userEvent.click(archive, { pointerEventsCheck: 0 });
+      await expect(chosen).toHaveTextContent('');
     });
 
     await step('As setas pulam o comando desabilitado', async () => {
+      await resetSearch(canvasElement, field, 3);
       field.focus();
-      await userEvent.keyboard('{ArrowDown}');
-      await waitFor(async () => {
-        const active = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
-        await expect(active).toHaveTextContent('Novo');
-      });
+      // O primeiro já está em destaque (D11); a travessia parte dele.
+      await waitForHighlight(field, 'Novo');
 
       await userEvent.keyboard('{ArrowDown}');
+      // "Arquivar" não é destino de navegação — quem usa teclado nunca para
+      // num comando que não pode executar.
+      await waitForHighlight(field, 'Renomear');
+      await expect(archive).toHaveAttribute('aria-selected', 'false');
+    });
+
+    await step('Enter no comando habilitado seguinte executa normalmente', async () => {
+      await userEvent.keyboard('{Enter}');
       await waitFor(async () => {
-        const active = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
-        // "Arquivar" não é destino de navegação — quem usa teclado nunca para
-        // num comando que não pode executar.
-        await expect(active).toHaveTextContent('Renomear');
+        await expect(chosen).toHaveTextContent('renomear');
       });
-      await expect(arquivar).toHaveAttribute('aria-selected', 'false');
+    });
+
+    await step('Busca que começa num desabilitado destaca o primeiro HABILITADO', async () => {
+      // "ar" deixa Arquivar (desabilitado) e Renomear, nessa ordem. O destaque
+      // automático (D11) é do primeiro que o Enter consegue executar — nunca
+      // de um comando que não roda.
+      await userEvent.clear(field);
+      await userEvent.type(field, 'ar');
+      await waitForOptions(canvasElement, 2);
+      await waitForHighlight(field, 'Renomear');
+      await expect(archive).toHaveAttribute('aria-selected', 'false');
+
+      await userEvent.clear(field);
+      await waitForOptions(canvasElement, 3);
     });
   },
 };
@@ -204,14 +256,17 @@ export const ItemDisabled: Story = {
 // ─── Comando marcado ──────────────────────────────────────────────────────────
 
 export const CheckedItem: Story = {
-  // `visual.item5` é "estado disabled E estado checked": o quadro do
+  // `visual.item4` é "estado disabled E estado checked": o quadro do
   // desabilitado está em `ItemDisabled`, o do marcado é este. Declarar só lá
   // deixava metade do item sem story declarada — e esta não interage, então o
   // Chromatic fotografa exatamente a marca acesa.
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: { source: { transform: commandCheckedItemSource } },
+  },
   render: () => ({
     template: `
-      <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+      <div class="${WRAPPER}">
         <nds-command>
           <input ndsCommandInput placeholder="Buscar tema..." />
 
@@ -219,81 +274,89 @@ export const CheckedItem: Story = {
             <div ndsCommandGroup heading="Aparência">
               <div ndsCommandItem value="claro" [checked]="true">Claro</div>
               <div ndsCommandItem value="escuro" [checked]="false">Escuro</div>
-              <div ndsCommandItem value="sistema" [checked]="true" textValue="Sistema">Sistema <span ndsCommandShortcut>Ctrl+S</span></div>
+              <div ndsCommandItem value="sistema" [checked]="true">Sistema <span ndsCommandShortcut>Ctrl+S</span></div>
             </div>
           </div>
 
-          <div ndsCommandEmpty>Nenhum resultado encontrado.</div>
+          <div ndsCommandEmpty>${NO_RESULT}</div>
         </nds-command>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const field = canvas.getByRole('combobox');
 
-    await waitFor(async () => {
-      await expect(canvas.getAllByRole('option')).toHaveLength(3);
-    });
+    await userEvent.clear(field);
+    await waitForOptions(canvasElement, 3);
 
-    const light = canvas.getByRole('option', { name: 'Claro' });
-    const escuro = canvas.getByRole('option', { name: 'Escuro' });
-    const sistema = canvas.getByRole('option', { name: 'Sistema Ctrl+S' });
-    const marca = (item: HTMLElement) =>
+    const light = commandItem(canvasElement, 'claro');
+    const dark = commandItem(canvasElement, 'escuro');
+    const system = commandItem(canvasElement, 'sistema');
+    const checkOf = (item: HTMLElement) =>
       getComputedStyle(item.querySelector<HTMLElement>('.nds-command-item-check')!);
 
     await step('O estado chega ao markup', async () => {
       await expect(light).toHaveAttribute('data-checked', 'true');
-      await expect(escuro).toHaveAttribute('data-checked', 'false');
+      await expect(dark).toHaveAttribute('data-checked', 'false');
     });
 
-    await step('O check aparece só no comando marcado', async () => {
+    await step('A marca aparece só no comando marcado', async () => {
       // O ícone fica no DOM nos dois casos — é a opacidade que muda, para a
       // largura do item não pular a cada troca.
-      await expect(marca(light).opacity).toBe('1');
-      await expect(marca(escuro).opacity).toBe('0');
+      await expect(checkOf(light).opacity).toBe('1');
+      await expect(checkOf(dark).opacity).toBe('0');
     });
 
-    await step('Com atalho no item, o check some', async () => {
+    await step('Com atalho no item, a marca some', async () => {
       // Os dois disputariam a borda direita. A folha resolve por `:has()`, e a
       // guideline é escolher um dos dois por item.
-      await expect(sistema).toHaveAttribute('data-checked', 'true');
-      await expect(marca(sistema).display).toBe('none');
+      await expect(system).toHaveAttribute('data-checked', 'true');
+      await expect(checkOf(system).display).toBe('none');
     });
 
     await step('O atalho faz parte do nome do comando', async () => {
       // Sem isso o leitor anunciaria "Sistema" e a pessoa nunca saberia que há
       // uma tecla — o atalho é informação, não decoração.
-      const atalho = sistema.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
-      await expect(atalho.getAttribute('aria-hidden')).toBeNull();
-      await expect(atalho).toHaveClass(/nds-command-shortcut/);
+      const shortcut = system.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+      await expect(shortcut).toHaveClass(/nds-command-shortcut/);
+      await expect(shortcut.getAttribute('aria-hidden')).toBeNull();
+      await expect(system).toHaveAccessibleName(/Ctrl\+S/);
     });
   },
 };
 
 // ─── Lista longa ──────────────────────────────────────────────────────────────
 
+const LONG_COMPONENT_NAMES = [
+  'Accordion', 'Alert', 'AlertDialog', 'AspectRatio', 'Avatar',
+  'Badge', 'Breadcrumb', 'Button', 'Calendar', 'Card',
+  'Carousel', 'Chart', 'Checkbox', 'Collapsible', 'Command',
+  'ContextMenu', 'DataTable', 'DatePicker', 'Dialog', 'Drawer',
+  'DropdownMenu', 'Form', 'HoverCard', 'Input', 'InputOTP',
+  'Label', 'Menubar', 'NavigationMenu', 'Pagination', 'Popover',
+];
+
 export const LongList: Story = {
+  parameters: { docs: { source: { transform: commandLongListSource } } },
   render: () => ({
     props: {
-      comandos: Array.from({ length: 24 }, (_v, i) => ({
-        value: `comando-${i + 1}`,
-        label: `Comando ${i + 1}`,
-      })),
+      components: LONG_COMPONENT_NAMES.map((label) => ({ value: label.toLowerCase(), label })),
     },
     template: `
-      <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+      <div class="${WRAPPER}">
         <nds-command>
-          <input ndsCommandInput placeholder="Buscar comando..." />
+          <input ndsCommandInput placeholder="Buscar componente..." />
 
           <div ndsCommandList>
-            <div ndsCommandGroup heading="Todos">
-              @for (c of comandos; track c.value) {
-                <div ndsCommandItem [value]="c.value" [textValue]="c.label">{{ c.label }}</div>
+            <div ndsCommandGroup heading="Componentes">
+              @for (c of components; track c.value) {
+                <div ndsCommandItem [value]="c.value">{{ c.label }}</div>
               }
             </div>
           </div>
 
-          <div ndsCommandEmpty>Nenhum resultado encontrado.</div>
+          <div ndsCommandEmpty>${NO_RESULT}</div>
         </nds-command>
       </div>
     `,
@@ -304,9 +367,7 @@ export const LongList: Story = {
     const field = canvas.getByRole('combobox');
 
     await userEvent.clear(field);
-    await waitFor(async () => {
-      await expect(canvas.getAllByRole('option')).toHaveLength(24);
-    });
+    await waitForOptions(canvasElement, 30);
 
     await step('A lista rola em vez de esticar a paleta', async () => {
       // 300px de teto na folha: sem ele a paleta cresceria para fora da tela e
@@ -315,17 +376,17 @@ export const LongList: Story = {
       await expect(getComputedStyle(list).overflowY).toBe('auto');
     });
 
-    await step('Digitar reduz a lista', async () => {
-      await userEvent.type(field, 'comando 1');
-      await waitFor(async () => {
-        // 1, 10 a 19 e 21 não casam com "comando 1" no fim — sobram 1 e 10..19.
-        await expect(canvas.getAllByRole('option')).toHaveLength(11);
-      });
-
+    await step('Buscando "dialog" sobram 2 — Dialog e AlertDialog', async () => {
       await userEvent.clear(field);
-      await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(24);
-      });
+      await userEvent.type(field, 'dialog');
+      await waitForOptions(canvasElement, 2);
+      await expect(commandItem(canvasElement, 'dialog')).toBeVisible();
+      await expect(commandItem(canvasElement, 'alertdialog')).toBeVisible();
+    });
+
+    await step('A story termina com a lista inteira', async () => {
+      await userEvent.clear(field);
+      await waitForOptions(canvasElement, 30);
     });
   },
 };

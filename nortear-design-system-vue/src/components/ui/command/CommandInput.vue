@@ -5,23 +5,44 @@ import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { SearchIcon } from 'lucide-vue-next'
 import { ListboxFilter, useForwardProps } from 'reka-ui'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch, watchEffect } from 'vue'
 import { cn } from '@/lib/utils'
-import { useCommand } from './index'
+import { useCommand, useCommandDialog } from './index'
 
 defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps<ListboxFilterProps & {
+const props = withDefaults(defineProps<ListboxFilterProps & {
   class?: HTMLAttributes['class']
-}>()
+  /**
+   * Texto do campo, e o nome acessível do campo E da lista. Declarado como prop
+   * (e não lido de `$attrs`) porque a lista, irmã do campo, precisa acompanhá-lo
+   * quando ele muda — `$attrs` não é reativo fora do template.
+   */
+  placeholder?: string
+}>(), {
+  // Sem este `undefined` o Vue converte a prop booleana ausente em `false`, e a
+  // ausência deixaria de significar "decida pelo hospedeiro".
+  autoFocus: undefined,
+})
 
 const delegatedProps = reactiveOmit(props, 'class')
 
 const forwardedProps = useForwardProps(delegatedProps)
 
-const { filterState, listId } = useCommand()
+const { filterState, listId, searchLabel } = useCommand()
+
+// Só a paleta aberta num `CommandDialog` foca o campo ao montar. Inline, o campo
+// roubava o foco da página inteira no instante em que montava — inclusive na
+// docs page, que abria rolada até a demonstração.
+const dialogContext = useCommandDialog(null)
+const autoFocus = computed(() => props.autoFocus ?? dialogContext?.autoFocusInput ?? false)
+
+// O placeholder nomeia também a lista (`CommandList` lê daqui).
+watchEffect(() => {
+  searchLabel.value = props.placeholder
+})
 
 // A busca mora no estado do `Command` (é ele que filtra), e o `v-model` interno
 // abaixo vencia o `model-value` escrito por quem consome — a prop era aceita e
@@ -55,8 +76,8 @@ const noResults = computed(
 )
 watch(
   noResults,
-  async (vazio) => {
-    if (!vazio) return
+  async (isEmpty) => {
+    if (!isEmpty) return
     await nextTick()
     root.value
       ?.querySelector('[data-slot="command-input"]')
@@ -88,12 +109,13 @@ watch(
       v-bind="{ ...forwardedProps, ...$attrs }"
       v-model="filterState.search"
       data-slot="command-input"
-      auto-focus
+      :placeholder="placeholder"
+      :auto-focus="autoFocus"
       role="combobox"
       aria-autocomplete="list"
       aria-expanded="true"
       :aria-controls="listId"
-      :aria-label="($attrs['aria-label'] as string) || ($attrs.placeholder as string) || 'Buscar'"
+      :aria-label="($attrs['aria-label'] as string) || placeholder || 'Buscar'"
       :class="cn('nds-command-input', props.class)"
     />
   </div>

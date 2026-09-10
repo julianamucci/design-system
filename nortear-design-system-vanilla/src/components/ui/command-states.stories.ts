@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
-import { createCommand } from './command';
+import { createCommand, type CommandItem } from './command';
 import { commandSource, commandSourceWith } from './command.source';
-import { WRAPPER, comando, regiaoVazia, zerarSearch, mountInline } from './command.fixtures';
+import { NO_RESULT, WRAPPER, comando, regiaoVazia, zerarSearch, mountInline } from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -85,6 +85,9 @@ export const EmptyState: Story = {
       await userEvent.clear(field);
       await userEvent.type(field, 'xyznotfound');
       await expect(canvas.queryAllByRole('option')).toHaveLength(0);
+      // Sem item na tela não há destaque: `aria-activedescendant` apontando
+      // para um nó que o filtro removeu é violação de verdade.
+      await expect(field).not.toHaveAttribute('aria-activedescendant');
     });
 
     await step('A frase é anunciada, não só desenhada', async () => {
@@ -107,6 +110,13 @@ export const EmptyState: Story = {
       await expect(canvas.getAllByRole('option')).toHaveLength(3);
       await expect(vazio).not.toHaveAttribute('data-empty');
       await expect(vazio).not.toHaveClass(/nds-command-empty/);
+      // A busca apagada é uma busca nova: o primeiro comando volta a ficar em
+      // destaque (D11).
+      await expect(comando(canvasElement, 'button')).toHaveAttribute('aria-selected', 'true');
+      await expect(field).toHaveAttribute(
+        'aria-activedescendant',
+        comando(canvasElement, 'button').id,
+      );
     });
 
     await step('A story termina SEM resultados', async () => {
@@ -115,6 +125,7 @@ export const EmptyState: Story = {
       await userEvent.type(field, 'xyznotfound');
       await expect(canvas.queryAllByRole('option')).toHaveLength(0);
       await expect(vazio).toHaveAttribute('data-empty', '');
+      await expect(field).not.toHaveAttribute('aria-activedescendant');
     });
   },
 };
@@ -186,7 +197,7 @@ export const ItemDisabled: Story = {
     await step('As setas pulam o comando desabilitado', async () => {
       await zerarSearch(field);
       field.focus();
-      await userEvent.keyboard('{ArrowDown}');
+      // Com a busca zerada, o destaque já está no primeiro habilitado (D11).
       await expect(
         document.getElementById(field.getAttribute('aria-activedescendant')!),
       ).toHaveTextContent('Novo');
@@ -205,6 +216,26 @@ export const ItemDisabled: Story = {
       await userEvent.keyboard('{Enter}');
       await expect(onChooseWithDisabled.mock.calls.length).toBe(antes + 1);
       await expect(onChooseWithDisabled.mock.calls[antes][0]).toBe('renomear');
+    });
+
+    await step('Buscando "ar", o destaque pula o desabilitado que vem primeiro', async () => {
+      // D11 fala do primeiro HABILITADO: "ar" casa com Arquivar (desabilitado)
+      // e Renomear, e quem acende é Renomear — Enter logo depois o executa.
+      await userEvent.clear(field);
+      await userEvent.type(field, 'ar');
+      await expect(canvas.getAllByRole('option')).toHaveLength(2);
+      await expect(arquivar()).toHaveAttribute('aria-selected', 'false');
+      await expect(comando(canvasElement, 'renomear')).toHaveAttribute('aria-selected', 'true');
+      await expect(field).toHaveAttribute(
+        'aria-activedescendant',
+        comando(canvasElement, 'renomear').id,
+      );
+
+      const antes = onChooseWithDisabled.mock.calls.length;
+      await userEvent.keyboard('{Enter}');
+      await expect(onChooseWithDisabled.mock.calls[antes][0]).toBe('renomear');
+      // A escolha zera a busca: a story termina com os três comandos.
+      await expect(canvas.getAllByRole('option')).toHaveLength(3);
     });
   },
 };
@@ -306,16 +337,27 @@ const COMPONENTES_LONGOS = [
   'Label', 'Menubar', 'NavigationMenu', 'Pagination', 'Popover',
 ];
 
+const LONG_LIST_ITEMS: CommandItem[] = COMPONENTES_LONGOS.map((label) => ({
+  value: label.toLowerCase(),
+  label,
+  group: 'Componentes',
+}));
+
 export const LongList: Story = {
-  render: () =>
-    mountInline(
-      COMPONENTES_LONGOS.map((label) => ({
-        value: label.toLowerCase(),
-        label,
-        group: 'Componentes',
-      })),
-      'Buscar componente...'
-    ),
+  parameters: {
+    // Sem override, o painel Code caía na lista canônica do meta: cinco
+    // comandos para uma story cujo assunto são os trinta.
+    docs: {
+      source: {
+        transform: commandSourceWith({
+          placeholder: 'Buscar componente...',
+          emptyMessage: NO_RESULT,
+          items: LONG_LIST_ITEMS,
+        }),
+      },
+    },
+  },
+  render: () => mountInline(LONG_LIST_ITEMS, 'Buscar componente...'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const field = canvas.getByRole('combobox');
@@ -337,6 +379,24 @@ export const LongList: Story = {
       await expect(canvas.getAllByRole('option')).toHaveLength(2);
       await expect(comando(canvasElement, 'dialog')).toBeVisible();
       await expect(comando(canvasElement, 'alertdialog')).toBeVisible();
+      // O primeiro resultado, na ordem da lista, fica em destaque (D11).
+      await expect(comando(canvasElement, 'alertdialog')).toHaveAttribute('aria-selected', 'true');
+    });
+
+    await step('Rolada a lista, uma busca volta ao topo: o destaque fica à vista', async () => {
+      // D11 destaca o primeiro resultado, e ele só serve se estiver na tela.
+      // A lista rolada até o fim guardaria o `scrollTop` depois do filtro, e o
+      // item em destaque ficaria acima da borda visível.
+      await userEvent.clear(field);
+      list.scrollTop = list.scrollHeight;
+      await expect(list.scrollTop).toBeGreaterThan(0);
+
+      // "c" deixa a lista ainda maior que o teto — é o caso em que o
+      // `scrollTop` sobreviveria.
+      await userEvent.type(field, 'c');
+      await expect(list.scrollHeight).toBeGreaterThan(list.clientHeight);
+      await expect(list.scrollTop).toBe(0);
+      await expect(comando(canvasElement, 'accordion')).toHaveAttribute('aria-selected', 'true');
     });
 
     await step('A story termina com a lista inteira', async () => {

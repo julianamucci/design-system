@@ -34,10 +34,12 @@ onUnmounted(() => {
     Sem `heading` o rótulo não é renderizado, e o `aria-labelledby` que o
     primitivo escreve sozinho passa a apontar para um id que não existe. O
     `null` REMOVE o atributo (atributo fantasma é referência quebrada na árvore
-    de acessibilidade); grupo sem rótulo simplesmente não tem nome.
+    de acessibilidade). E o `role="group"` sai junto, como no Vanilla: grupo sem
+    nome é só a caixa que dá o respiro de 4px aos comandos — anunciado, seria
+    um "grupo" anônimo a mais entre a lista e cada opção.
   -->
   <ListboxGroup
-    v-bind="{ ...delegatedProps, ...(heading ? {} : { 'aria-labelledby': null }) }"
+    v-bind="{ ...delegatedProps, ...(heading ? {} : { 'aria-labelledby': null, 'role': null }) }"
     :id="id"
     data-slot="command-group"
     :class="cn('nds-command-group', props.class)"

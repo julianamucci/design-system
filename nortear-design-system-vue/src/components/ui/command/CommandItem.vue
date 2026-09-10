@@ -5,11 +5,11 @@ import type { HTMLAttributes } from 'vue'
 import { reactiveOmit, useCurrentElement } from '@vueuse/core'
 import { CheckIcon } from 'lucide-vue-next'
 import { ListboxItem, injectListboxRootContext, useForwardProps, useId } from 'reka-ui'
-import { computed, onMounted, onUnmounted, ref, watchEffect } from 'vue'
+import { computed, onMounted, onUnmounted, onUpdated, ref, watchEffect } from 'vue'
 import { cn } from '@/lib/utils'
 import { useCommand, useCommandGroup } from './index'
 
-const props = defineProps<ListboxItemProps & {
+const props = withDefaults(defineProps<ListboxItemProps & {
   class?: HTMLAttributes['class']
   /**
    * Estado de marcação. `undefined` = o item não é marcável e não ganha marca;
@@ -18,7 +18,13 @@ const props = defineProps<ListboxItemProps & {
    * cada troca.
    */
   checked?: boolean
-}>()
+}>(), {
+  // Sem este `undefined` o Vue converte a prop booleana AUSENTE em `false`, e
+  // todo comando virava "marcável e desmarcado": a marca invisível de 16px
+  // entrava em cada linha, reservando a borda direita para um estado que o
+  // item nunca assume. Era o defeito que o comentário do template diz evitar.
+  checked: undefined,
+})
 const emits = defineEmits<ListboxItemEmits>()
 
 type CommandSelectEvent = ListboxItemEmits['select'][0]
@@ -34,7 +40,9 @@ const forwarded = useForwardProps(delegatedProps)
 
 const id = useId()
 const { filterState, allItems, allGroups } = useCommand()
-const groupContext = useCommandGroup()
+// `null` como reserva: o comando pode morar direto na lista, fora de grupo. Sem
+// ela a injeção lançava erro e o item só existia dentro de um `CommandGroup`.
+const groupContext = useCommandGroup(null)
 const listboxContext = injectListboxRootContext()
 
 const isRender = computed(() => {
@@ -100,12 +108,40 @@ function onSelect(event: CommandSelectEvent) {
   emits('select', event)
 }
 
+/*
+ * O que o filtro compara com a busca: o RÓTULO, sem o atalho, e o `value` —
+ * o mesmo par que o Vanilla usa. Antes era o `textContent` do item inteiro, e
+ * o texto do atalho entrava junto: buscar "ctrl" trazia todo comando que tinha
+ * atalho, e nenhum deles se chama assim.
+ *
+ * O rótulo fica guardado porque o filtro desmonta o item que não casa: lido na
+ * hora da busca, o de um item fora da tela já não existiria. É relido a cada
+ * atualização do item, que é quando o texto pode ter mudado (troca de idioma).
+ */
+let labelText = ''
+
+function readLabel() {
+  const el = currentElement.value
+  if (!(el instanceof HTMLElement)) return
+  const copy = el.cloneNode(true) as HTMLElement
+  copy.querySelectorAll('[data-slot="command-shortcut"]').forEach(node => node.remove())
+  labelText = copy.textContent?.trim() ?? ''
+}
+
+function searchableTexts(): string[] {
+  const value = props.value
+  const valueText = typeof value === 'string' || typeof value === 'number' ? String(value) : ''
+  return [labelText, valueText].filter(Boolean)
+}
+
+onUpdated(readLabel)
+
 onMounted(() => {
   if (!(currentElement.value instanceof HTMLElement))
     return
 
-  // textValue to perform filter
-  allItems.value.set(id, currentElement.value.textContent ?? (props.value?.toString() ?? ''))
+  readLabel()
+  allItems.value.set(id, searchableTexts)
 
   const groupId = groupContext?.id
   if (groupId) {

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createCommand, type CommandItem } from './command';
 import { commandSource } from './command.source';
+import { separadores, zerarSearch } from './command.fixtures';
 import { createCommandDocs } from '@/components/docs/CommandDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -62,19 +63,6 @@ type Story = StoryObj<CommandArgs>;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * Deixa a busca vazia E o destaque zerado.
- *
- * O item em destaque só volta a "nenhum" num re-render do filtro, e
- * `userEvent.clear` num campo JÁ vazio não dispara `input`. No REPLAY (a play
- * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
- * primeira seta partiria do meio da lista.
- */
-async function zerarSearch(field: HTMLElement): Promise<void> {
-  await userEvent.type(field, 'zzz');
-  await userEvent.clear(field);
-}
-
 function buildItems(withGroups: boolean): CommandItem[] {
   const componentes = withGroups ? 'Componentes' : undefined;
   const utilitarios = withGroups ? 'Utilitários' : undefined;
@@ -117,6 +105,38 @@ export const Playground: Story = {
     const field = canvas.getByRole('combobox');
     const list = canvas.getByRole('listbox');
     const spy = args.onSelect as unknown as ReturnType<typeof fn>;
+    /** O item que o `aria-activedescendant` do campo aponta — ou `null`. */
+    const highlighted = (): HTMLElement | null => {
+      const id = field.getAttribute('aria-activedescendant');
+      return id ? document.getElementById(id) : null;
+    };
+
+    await step('O campo inline não rouba o foco ao montar', async () => {
+      // C12. Espera de RELÓGIO, e não `waitFor`: a condição é a AUSÊNCIA do
+      // foco, e o `waitFor` passaria na primeira tentativa, antes de um foco
+      // agendado para depois da montagem ter chance de chegar. 50ms cobrem com
+      // folga esse foco tardio. Vem antes de tudo porque o primeiro `userEvent`
+      // da play já foca o campo. Só a paleta aberta num Dialog foca a busca
+      // sozinha — o lado que a story CommandPalette prova.
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      await expect(field).not.toHaveFocus();
+      await expect(root.contains(document.activeElement)).toBe(false);
+    });
+
+    await step('Ao montar, o primeiro comando já está em destaque', async () => {
+      // D11: digitar e apertar Enter executa, sem seta no meio. O destaque é o
+      // atributo que a folha pinta E o item que o `aria-activedescendant`
+      // aponta — os dois juntos, senão o anel mente para um dos lados.
+      const options = canvas.getAllByRole('option');
+      await expect(options).toHaveLength(5);
+      await expect(options[0]).toHaveTextContent('Button');
+      await expect(options[0]).toHaveAttribute('aria-selected', 'true');
+      await expect(highlighted()).toBe(options[0]);
+      // Um destaque por vez.
+      for (const other of options.slice(1)) {
+        await expect(other).toHaveAttribute('aria-selected', 'false');
+      }
+    });
 
     // A busca começa sempre vazia: a play REEXECUTA no mesmo DOM.
     await userEvent.clear(field);
@@ -152,7 +172,11 @@ export const Playground: Story = {
       await expect(options).toHaveLength(5);
       await expect(options[0]).toHaveClass(/nds-command-item/);
       await expect(options[0]).toHaveAttribute('data-slot', 'command-item');
-      await expect(options[0]).toHaveAttribute('aria-selected', 'false');
+      // C1: toda opção CARREGA `aria-selected`. Qual está em destaque é assunto
+      // do passo de montagem, das setas e do ponteiro.
+      for (const option of options) {
+        await expect(option).toHaveAttribute('aria-selected');
+      }
 
       const cabecalhos = root.querySelectorAll<HTMLElement>('.nds-command-group-heading');
       await expect(cabecalhos.length).toBe(args.showGroups ? 2 : 0);
@@ -174,7 +198,60 @@ export const Playground: Story = {
       await userEvent.clear(field);
       await userEvent.type(field, 'sep');
       await expect(canvas.getAllByRole('option')).toHaveLength(1);
-      await expect(canvas.getByRole('option', { name: 'Separator' })).toBeVisible();
+      const onlyMatch = canvas.getByRole('option', { name: 'Separator' });
+      await expect(onlyMatch).toBeVisible();
+      // E o que sobrou já está em destaque (D11).
+      await expect(highlighted()).toBe(onlyMatch);
+    });
+
+    await step('Cada busca destaca o primeiro resultado, e Enter logo depois executa', async () => {
+      // D11. A seta tira o destaque do lugar ANTES, para provar que a busca o
+      // repõe — e não que ele só ficou onde a montagem o deixou.
+      await zerarSearch(field);
+      await userEvent.keyboard('{ArrowDown}{ArrowDown}');
+      await expect(highlighted()).toHaveTextContent('Separator');
+
+      // "c" casa só com os utilitários: cn() e clsx().
+      await userEvent.type(field, 'c');
+      await expect(canvas.getAllByRole('option')).toHaveLength(2);
+      const firstMatch = canvas.getByRole('option', { name: 'cn()' });
+      await expect(firstMatch).toHaveAttribute('aria-selected', 'true');
+      await expect(highlighted()).toBe(firstMatch);
+
+      const antes = spy.mock.calls.length;
+      await userEvent.keyboard('{Enter}');
+      await expect(spy.mock.calls.length).toBe(antes + 1);
+      await expect(spy.mock.calls[antes][0]).toBe('cn');
+      // A escolha zera a busca, e a lista inteira volta com o primeiro em
+      // destaque.
+      await expect(field).toHaveValue('');
+      await expect(canvas.getAllByRole('option')).toHaveLength(5);
+      await expect(highlighted()).toHaveTextContent('Button');
+    });
+
+    await step('O separador some quando um dos lados esvazia', async () => {
+      // C11. O traço marca a fronteira entre dois blocos: sem comando de um dos
+      // lados, não sobra fronteira. Sem grupos (control desligado) a lista é um
+      // bloco só e não há traço em momento nenhum.
+      const bothSidesCount = args.showGroups ? 1 : 0;
+      await zerarSearch(field);
+      await expect(separadores(root)).toHaveLength(bothSidesCount);
+
+      // "n" casa com Button, Input e cn(): os dois lados ficam, o traço fica.
+      await userEvent.type(field, 'n');
+      await expect(canvas.getAllByRole('option')).toHaveLength(3);
+      await expect(separadores(root)).toHaveLength(bothSidesCount);
+
+      // "sep" esvazia os utilitários; "cn" esvazia os componentes.
+      for (const query of ['sep', 'cn']) {
+        await userEvent.clear(field);
+        await userEvent.type(field, query);
+        await expect(canvas.getAllByRole('option')).toHaveLength(1);
+        await expect(separadores(root)).toHaveLength(0);
+      }
+
+      await userEvent.clear(field);
+      await expect(separadores(root)).toHaveLength(bothSidesCount);
     });
 
     await step('Sem correspondência, a frase é ANUNCIADA e não só desenhada', async () => {
@@ -183,6 +260,9 @@ export const Playground: Story = {
 
       const vazio = root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
       await expect(canvas.queryAllByRole('option')).toHaveLength(0);
+      // Sem item na tela não há destaque — e `aria-activedescendant` apontando
+      // para um nó que o filtro removeu é violação de verdade.
+      await expect(field).not.toHaveAttribute('aria-activedescendant');
       await expect(vazio).toHaveAttribute('data-empty', '');
       await expect(vazio).toHaveTextContent(args.emptyMessage);
       // Região viva montada o tempo todo: é a mudança DENTRO dela que o leitor
@@ -208,20 +288,21 @@ export const Playground: Story = {
     });
 
     await step('As setas percorrem a lista sem tirar o foco do campo', async () => {
+      // A precondição é do passo: com a busca zerada o destaque parte do
+      // primeiro comando (D11), e não do que a rodada anterior deixou.
       await zerarSearch(field);
       field.focus();
+      const first = highlighted()!;
+      await expect(first).toHaveTextContent('Button');
+
       await userEvent.keyboard('{ArrowDown}');
 
       // O foco NÃO se move: é o que permite continuar digitando enquanto se
       // navega, e é por isso que o destaque precisa de aria-activedescendant.
       await expect(field).toHaveFocus();
-      const first = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
-      await expect(first).toHaveAttribute('role', 'option');
-      await expect(first).toHaveAttribute('aria-selected', 'true');
-      await expect(first).toHaveTextContent('Button');
-
-      await userEvent.keyboard('{ArrowDown}');
-      const segundo = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
+      const segundo = highlighted()!;
+      await expect(segundo).toHaveAttribute('role', 'option');
+      await expect(segundo).toHaveAttribute('aria-selected', 'true');
       await expect(segundo).toHaveTextContent('Input');
       // Um destaque por vez.
       await expect(first).toHaveAttribute('aria-selected', 'false');
@@ -236,33 +317,59 @@ export const Playground: Story = {
       // destaque é apontado por `aria-activedescendant`. Por isso o anel é
       // ligado ao ATRIBUTO, e não a `:focus-visible`, que nunca dispararia.
       //
-      // O passo estabelece a própria precondição, e não herda o destaque que o
-      // anterior deixou.
+      // O passo estabelece a própria precondição: a busca zerada põe o
+      // destaque no primeiro comando, e o anel tem de aparecer já ali, sem
+      // seta nenhuma.
       await zerarSearch(field);
-      field.focus();
-      await userEvent.keyboard('{ArrowDown}');
-      const emDestaque = document.getElementById(field.getAttribute('aria-activedescendant')!)!;
-      await expect(getComputedStyle(emDestaque).outlineStyle).toBe('solid');
-      await expect(getComputedStyle(emDestaque).outlineWidth).toBe('2px');
+      const inHighlight = highlighted()!;
+      await expect(getComputedStyle(inHighlight).outlineStyle).toBe('solid');
+      await expect(getComputedStyle(inHighlight).outlineWidth).toBe('2px');
+    });
+
+    await step('O ponteiro move o destaque', async () => {
+      // D1: o item sob o ponteiro é o que o Enter ativa — o desenho e o teclado
+      // apontam para o mesmo comando.
+      await zerarSearch(field);
+      const target = canvas.getByRole('option', { name: 'clsx()' });
+      await userEvent.hover(target);
+      await expect(target).toHaveAttribute('aria-selected', 'true');
+      await expect(highlighted()).toBe(target);
+      await expect(canvas.getByRole('option', { name: 'Button' })).toHaveAttribute(
+        'aria-selected',
+        'false',
+      );
+      // Pousar o ponteiro não é clicar: o foco segue no campo.
+      await expect(field).toHaveFocus();
+
+      const antes = spy.mock.calls.length;
+      await userEvent.keyboard('{Enter}');
+      await expect(spy.mock.calls.length).toBe(antes + 1);
+      await expect(spy.mock.calls[antes][0]).toBe('clsx');
     });
 
     await step('Enter escolhe o comando em destaque e zera a busca', async () => {
       // O passo estabelece a própria precondição: nada de herdar o destaque que
-      // o passo anterior deixou.
+      // o passo anterior deixou. A seta leva o destaque ao segundo comando —
+      // Enter escolhe o que está em destaque, e não o primeiro da lista.
       await zerarSearch(field);
       field.focus();
       await userEvent.keyboard('{ArrowDown}');
+      await expect(highlighted()).toHaveTextContent('Input');
 
       const antes = spy.mock.calls.length;
       await userEvent.keyboard('{Enter}');
 
       await expect(spy.mock.calls.length).toBe(antes + 1);
-      await expect(spy.mock.calls[antes][0]).toBe('button');
+      await expect(spy.mock.calls[antes][0]).toBe('input');
       // A busca volta ao zero para o próximo comando — o campo não pode virar o
       // nome do que acabou de rodar.
       await expect(field).toHaveValue('');
       await expect(canvas.getAllByRole('option')).toHaveLength(5);
-      await expect(field).not.toHaveAttribute('aria-activedescendant');
+      // A busca zerada é uma busca nova: o destaque volta ao primeiro (D11), e
+      // o `aria-activedescendant` aponta para um nó da lista REDESENHADA.
+      const afterReset = highlighted()!;
+      await expect(afterReset).toHaveTextContent('Button');
+      await expect(list.contains(afterReset)).toBe(true);
       // E a lista continua aberta: a paleta não tem estado fechado.
       await expect(field).toHaveAttribute('aria-expanded', 'true');
     });
@@ -276,6 +383,34 @@ export const Playground: Story = {
       await expect(spy.mock.calls[antes][0]).toBe('cn');
       await expect(field).toHaveValue('');
       await expect(canvas.getAllByRole('option')).toHaveLength(5);
+    });
+
+    await step('Escape no uso inline não tira o foco do campo', async () => {
+      // Sem hospedeiro não há o que fechar: a pessoa continua onde estava. O
+      // Escape é do Dialog que hospeda a paleta, e quem prova esse lado é a
+      // story CommandPalette.
+      await userEvent.clear(field);
+      await userEvent.type(field, 'in');
+      await userEvent.keyboard('{Escape}');
+      await expect(field).toHaveFocus();
+
+      await userEvent.clear(field);
+      await expect(canvas.getAllByRole('option')).toHaveLength(5);
+    });
+
+    await step('Tab sai da paleta: a lista não é parada de Tab', async () => {
+      // Quem percorre os comandos são as setas, com o foco no campo. Uma lista
+      // com `tabindex="0"` virava uma segunda parada sem função — dentro dela
+      // as setas não fazem nada, porque quem as escuta é o campo.
+      //
+      // É o ÚLTIMO passo de propósito: a play termina com o foco fora da
+      // paleta, e é isso que deixa o passo de C12, o primeiro, valer também no
+      // replay, que reexecuta no mesmo DOM.
+      await expect(list.tabIndex).toBeLessThan(0);
+      field.focus();
+      await userEvent.tab();
+      await expect(list).not.toHaveFocus();
+      await expect(root.contains(document.activeElement)).toBe(false);
     });
   },
 };

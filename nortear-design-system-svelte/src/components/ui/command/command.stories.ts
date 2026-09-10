@@ -4,10 +4,15 @@ import { userEvent, within, waitFor, expect, fn } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import CommandDocs from '@/components/docs/CommandDocs.svelte';
 import { Root as Command } from '@/components/ui/command';
-import CommandStory from './CommandStory.svelte';
-import { commandSource } from './command.source';
+import CommandInlineStory from './CommandInlineStory.svelte';
+import { commandSource, PLAYGROUND_ITEMS } from './command.source';
+import { highlightedOf, separatorsOf } from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
+
+/** Espera de relógio: para provar que algo NÃO aconteceu, sem `waitFor`. */
+const settle = (ms = 50) => new Promise<void>((resolve) => setTimeout(resolve, ms));
+
 const meta: Meta = {
   title: 'Components/Overlay/Command',
   component: Command,
@@ -20,7 +25,7 @@ const meta: Meta = {
       source: { transform: commandSource },
       description: {
         component:
-          'Interface de busca e seleção rápida com filtro fuzzy integrado. Suporta uso inline e command palette.',
+          'Interface de busca e seleção rápida com filtro por texto integrado. Suporta uso inline e command palette.',
       },
     },
   },
@@ -70,8 +75,9 @@ export const Playground: Story = {
     covers: ['functional.item1', 'functional.item2', 'accessibility.item1', 'accessibility.item2'],
   },
   render: (args) => ({
-    Component: CommandStory,
-    props: { ...args },
+    Component: CommandInlineStory,
+    // A lista é a mesma que `commandSource` escreve no painel Code.
+    props: { ...args, items: PLAYGROUND_ITEMS },
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
@@ -79,11 +85,34 @@ export const Playground: Story = {
     const field = canvas.getByRole('combobox');
     const list = canvas.getByRole('listbox');
     const spy = args.onItemSelect as unknown as ReturnType<typeof fn>;
+    const options = () => canvas.getAllByRole('option');
+
+    await step('O campo inline não rouba o foco ao montar', async () => {
+      // Antes de qualquer gesto da play — o `clear` abaixo foca o campo. Espera
+      // de relógio, e não `waitFor`: o que se prova é que o foco NÃO chegou, e
+      // uma espera por condição passaria na primeira leitura. Só a paleta
+      // aberta num Dialog foca o campo sozinha (C12).
+      await settle();
+      await expect(field).not.toHaveFocus();
+    });
 
     // A play REEXECUTA no mesmo DOM: a busca parte sempre do zero.
     await userEvent.clear(field);
     await waitFor(async () => {
-      await expect(canvas.getAllByRole('option')).toHaveLength(5);
+      await expect(options()).toHaveLength(5);
+    });
+
+    await step('Ao montar, o primeiro comando já está em destaque', async () => {
+      // Sem seta nenhuma: o destaque nasce no primeiro comando habilitado, e é
+      // ele que um Enter imediato executa (D11).
+      await waitFor(async () => {
+        await expect(options()[0]).toHaveAttribute('aria-selected', 'true');
+      });
+      await expect(highlightedOf(field)).toBe(options()[0]);
+      // Um destaque por vez.
+      await expect(
+        canvasElement.querySelectorAll('[role="option"][aria-selected="true"]'),
+      ).toHaveLength(1);
     });
 
     await step('O markup é o mesmo das outras stacks', async () => {
@@ -117,8 +146,23 @@ export const Playground: Story = {
       // Id órfão o axe reprova, e era o que acontecia quando o `aria-controls`
       // vinha do wrapper da story em vez do componente.
       await expect(document.getElementById(controlled!)).toBe(list);
-      // Nome da lista em português: o default da lib é "Suggestions...".
-      await expect(list).toHaveAttribute('aria-label', 'Resultados da busca');
+      // A lista se chama como o campo: o placeholder, que é a frase que a
+      // pessoa acabou de ler em cima dela. O default da lib é "Suggestions...",
+      // em inglês em qualquer idioma — e o desta stack era um texto cravado em
+      // português, também em qualquer idioma.
+      await expect(list).toHaveAttribute('aria-label', args.placeholder as string);
+    });
+
+    await step('A raiz não tem papel nem parada de foco', async () => {
+      // A lib põe `role="application"` e `tabindex="-1"` na raiz, e o
+      // componente os remove (ver `command.svelte`). O primeiro desliga os
+      // atalhos do leitor de tela na região inteira; o segundo fazia um clique
+      // no cabeçalho do grupo levar o foco do campo para um `<div>` sem nome.
+      await expect(root.getAttribute('role')).toBeNull();
+      await expect(root.getAttribute('tabindex')).toBeNull();
+      // É a raiz DA LIB, com o ouvinte de teclado dela: a tecla sobe do campo
+      // por bolha até aqui, e as setas dos passos abaixo provam que chega.
+      await expect(root).toHaveAttribute('data-command-root');
     });
 
     await step('Cada comando é uma opção, e o divisor não é', async () => {
@@ -152,6 +196,35 @@ export const Playground: Story = {
         '[data-slot="command-group"][data-value="Utilitários"]',
       )!;
       await expect(utilitarios).not.toBeVisible();
+      // E o traço vai junto: com um dos lados vazio não sobra fronteira para
+      // marcar (C11). Nesta lib ele sai em qualquer busca — padrão aceito.
+      await expect(separatorsOf(root)).toHaveLength(0);
+    });
+
+    await step('Depois de uma busca, o primeiro comando que sobrou fica em destaque', async () => {
+      // "t" deixa três comandos, e a lib os reordena pela pontuação: o
+      // destaque vai para o primeiro da lista NOVA, não fica no que estava
+      // (D11). Por posição de DOM, e não por nome, porque a ordem é da lib.
+      await userEvent.clear(field);
+      await userEvent.type(field, 't');
+      await waitFor(async () => {
+        await expect(options()).toHaveLength(3);
+      });
+      await waitFor(async () => {
+        await expect(options()[0]).toHaveAttribute('aria-selected', 'true');
+      });
+      await expect(highlightedOf(field)).toBe(options()[0]);
+    });
+
+    await step('Digitar e apertar Enter executa, sem passar pelas setas', async () => {
+      // É o gesto inteiro da paleta para quem sabe o nome do comando (D11).
+      await userEvent.clear(field);
+      const before = spy.mock.calls.length;
+      await userEvent.type(field, 'inp{Enter}');
+      await waitFor(async () => {
+        await expect(spy.mock.calls.length).toBe(before + 1);
+      });
+      await expect(spy.mock.calls[before][0]).toBe('input');
     });
 
     await step('Sem correspondência, a frase é ANUNCIADA e não só desenhada', async () => {
@@ -190,6 +263,8 @@ export const Playground: Story = {
       // mas sem a classe que traz 24px de respiro em cima e embaixo.
       await expect(vazio).not.toHaveClass(/nds-command-empty/);
       await expect(vazio.getBoundingClientRect().height).toBe(0);
+      // Os dois grupos de volta, e o traço entre eles (C11).
+      await expect(separatorsOf(root)).toHaveLength(1);
     });
 
     await step('As setas percorrem a lista sem tirar o foco do campo', async () => {
@@ -197,7 +272,6 @@ export const Playground: Story = {
       // Precondição própria: Home fixa o destaque no primeiro comando da ordem
       // de DOM, seja qual for o estado que a rodada anterior deixou.
       await userEvent.keyboard('{Home}');
-      const options = () => canvas.getAllByRole('option');
       await waitFor(async () => {
         await expect(options()[0]).toHaveAttribute('aria-selected', 'true');
       });
@@ -222,6 +296,34 @@ export const Playground: Story = {
       await userEvent.keyboard('{ArrowUp}');
       await waitFor(async () => {
         await expect(first).toHaveAttribute('aria-selected', 'true');
+      });
+    });
+
+    await step('Ctrl+K no campo não move o destaque', async () => {
+      // A lib liga por padrão atalhos de estilo vim — Ctrl+K sobe, Ctrl+J e
+      // Ctrl+N descem — e Ctrl+K é o atalho que abre a paleta na docs page: a
+      // mesma tecla subia o destaque E abria a paleta. O componente os
+      // desliga (ver `command.svelte`).
+      field.focus();
+      await userEvent.keyboard('{ArrowDown}');
+      const second = options()[1];
+      await waitFor(async () => {
+        await expect(second).toHaveAttribute('aria-selected', 'true');
+      });
+
+      await userEvent.keyboard('{Control>}k{/Control}');
+      // Espera de relógio: prova que o destaque NÃO se moveu.
+      await settle();
+      await expect(second).toHaveAttribute('aria-selected', 'true');
+
+      await userEvent.keyboard('{Control>}j{/Control}');
+      await settle();
+      await expect(second).toHaveAttribute('aria-selected', 'true');
+
+      // De volta ao primeiro, que é de onde os passos seguintes partem.
+      await userEvent.keyboard('{ArrowUp}');
+      await waitFor(async () => {
+        await expect(options()[0]).toHaveAttribute('aria-selected', 'true');
       });
     });
 
@@ -250,6 +352,19 @@ export const Playground: Story = {
       await expect(field).toHaveAttribute('aria-expanded', 'true');
     });
 
+    await step('O ponteiro também move o destaque', async () => {
+      // O comando sob o ponteiro é o que o Enter ativa — o desenho e o teclado
+      // apontam para o mesmo comando, e o anel acende pelo mesmo atributo (D1).
+      const target = canvas.getByRole('option', { name: 'clsx()' });
+      await userEvent.hover(target);
+      await waitFor(async () => {
+        await expect(target).toHaveAttribute('aria-selected', 'true');
+      });
+      await expect(highlightedOf(field)).toBe(target);
+      // Pousar o ponteiro não tira o foco do campo.
+      await expect(field).toHaveFocus();
+    });
+
     await step('Clicar num comando também o escolhe', async () => {
       const antes = spy.mock.calls.length;
       await userEvent.click(canvas.getByRole('option', { name: 'cn()' }));
@@ -258,6 +373,35 @@ export const Playground: Story = {
         await expect(spy.mock.calls.length).toBe(antes + 1);
       });
       await expect(spy.mock.calls[antes][0]).toBe('cn');
+      // O clique não tira o foco do campo: a lista cancela o `mousedown`, e a
+      // próxima seta continua valendo.
+      await expect(field).toHaveFocus();
+    });
+
+    await step('Tab sai da paleta: a lista não é parada de Tab', async () => {
+      // Quem percorre os comandos são as setas, com o foco no campo. Uma lista
+      // parada de Tab seria uma segunda parada sem função — dentro dela as
+      // setas não fazem nada, porque quem as escuta é o campo (C4).
+      await expect(list.tabIndex).toBeLessThan(0);
+      field.focus();
+      await userEvent.tab();
+      await expect(list).not.toHaveFocus();
+      await expect(root.contains(document.activeElement)).toBe(false);
+    });
+
+    await step('Escape no uso inline não tira o foco do campo', async () => {
+      // Sem hospedeiro não há o que fechar: a pessoa continua onde estava. O
+      // Escape é do Dialog que hospeda a paleta, e quem prova esse lado é a
+      // story CommandPalette (C3).
+      await userEvent.clear(field);
+      await userEvent.type(field, 'in');
+      await userEvent.keyboard('{Escape}');
+      await expect(field).toHaveFocus();
+
+      await userEvent.clear(field);
+      await waitFor(async () => {
+        await expect(canvas.getAllByRole('option')).toHaveLength(5);
+      });
     });
   },
 };

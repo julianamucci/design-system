@@ -25,7 +25,8 @@
  * sem ela o nó continua na árvore de acessibilidade com altura zero.
  *
  * Tokens: --popover, --popover-foreground, --foreground, --muted-foreground,
- *         --accent, --accent-foreground, --border, --radius, --spacing-*
+ *         --accent, --accent-foreground, --border, --radius, --radius-sm,
+ *         --spacing-*
  */
 
 .nds-command {
@@ -117,7 +118,10 @@
   padding-inline: var(--spacing-2);
   padding-block: var(--spacing-1-5);
 
-  border-radius: var(--radius-sm); /* Ri = Re − inset: radius (10) − spacing-1 (4) */
+  /* Ri = Re − inset: `--radius` (14px) − 4px = 10px, e o inset é o padding do
+     grupo. Os 4px do token são LITERAIS, não `--spacing-1`: hoje os dois
+     coincidem, mas mudar um não muda o outro. */
+  border-radius: var(--radius-sm);
   font-size: var(--text-control);                             /* 14px */
   cursor: pointer;
   user-select: none;
@@ -163,19 +167,24 @@
  * definição, o que se lê sobre o accent: 4,66:1 no pior dos seis pares de tema
  * e modo, contra os 3:1 que a WCAG 1.4.11 pede.
  *
- * INTERNO porque a lista tem `padding: 4px` e `overflow-y: auto`: anel externo
- * é recortado nas laterais e nos itens das pontas. */
+ * INTERNO porque quem consome pode pôr o item direto na lista, sem grupo, e a
+ * lista não tem padding e recorta (`overflow-y: auto`, `overflow-x: hidden`):
+ * anel externo sumiria nas laterais e nos itens das pontas. Dentro de um grupo
+ * os 4px de padding dele até comportariam o anel; o interno não depende disso. */
 .nds-command-item[aria-selected="true"],
 .nds-command-item[data-selected="true"] {
   outline: 2px solid hsl(var(--accent-foreground));
   outline-offset: -2px;
 }
 
+/* Sem `cursor: not-allowed`: com `pointer-events: none` no mesmo elemento o
+ * ponteiro nunca pousa nele, e o cursor declarado não aparece nunca. Morava aqui
+ * e sustentava o texto "cursor não permitido" das docs — que ninguém via. O que
+ * a pessoa percebe é a opacidade e o item não reagir; é o que o PRD §6 diz. */
 .nds-command-item[aria-disabled="true"],
 .nds-command-item[data-disabled]:not([data-disabled="false"]) {
   pointer-events: none;
   opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .nds-command-item svg {
@@ -211,9 +220,12 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* Sem margem negativa. Havia uma `margin-inline` de −4px para "rasgar o padding
+ * do grupo", mas nas cinco stacks o separador é filho da LISTA, que não tem
+ * padding e recorta o que passa (`overflow-x: hidden`): a margem não tinha o
+ * que rasgar, e o traço já cruza a lista de ponta a ponta. */
 .nds-command-separator {
   height: 1px;
-  margin-inline: calc(var(--spacing-1) * -1);
   background-color: hsl(var(--border));
 }
 
@@ -265,7 +277,7 @@
    * propriedade, esta regra sobrescreve (command.css carrega depois de
    * dialog.css) e sobra só o que se queria: centro na horizontal, 33% do topo.
    *
-   * Vale para as quatro stacks web — nenhuma escapava. */
+   * Vale para as cinco stacks — nenhuma escapava. */
   translate: -50% 0;
   overflow: hidden;
   padding: 0;

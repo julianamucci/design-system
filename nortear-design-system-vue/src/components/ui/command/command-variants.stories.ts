@@ -8,8 +8,10 @@ import {
   CommandItem,
   CommandList,
   CommandSeparator,
+  CommandShortcut,
 } from '@/components/ui/command';
 import { commandWithGroupsSource } from './command.source';
+import { FRAME, GROUPED_BLOCKS, LIST_TEMPLATE, NO_RESULT, visibleSeparators } from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 /*
@@ -47,36 +49,24 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// ─── Grupos e divisor ─────────────────────────────────────────────────────────
+// ─── Com grupos ───────────────────────────────────────────────────────────────
 
 export const WithGroups: Story = {
   parameters: { covers: ['visual.item1'] },
   render: () => ({
     components: {
-      Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator,
+      Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
+      CommandSeparator, CommandShortcut,
+    },
+    setup() {
+      return { blocks: GROUPED_BLOCKS, select: () => {} };
     },
     template: `
-      <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+      <div class="${FRAME}">
         <Command>
           <CommandInput placeholder="Buscar componente..." />
-
-          <CommandList>
-            <CommandGroup heading="Componentes">
-              <CommandItem value="button">Button</CommandItem>
-              <CommandItem value="input">Input</CommandItem>
-              <CommandItem value="select">Select</CommandItem>
-            </CommandGroup>
-
-            <CommandSeparator />
-
-            <CommandGroup heading="Utilitários">
-              <CommandItem value="separator">Separator</CommandItem>
-              <CommandItem value="badge">Badge</CommandItem>
-              <CommandItem value="avatar">Avatar</CommandItem>
-            </CommandGroup>
-          </CommandList>
-
-          <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+          ${LIST_TEMPLATE}
+          <CommandEmpty>${NO_RESULT}</CommandEmpty>
         </Command>
       </div>
     `,
@@ -88,53 +78,61 @@ export const WithGroups: Story = {
 
     await userEvent.clear(field);
     await waitFor(async () => {
-      // Com o campo vazio, os seis comandos dos dois grupos aparecem.
-      await expect(canvas.getAllByRole('option')).toHaveLength(6);
+      await expect(canvas.getAllByRole('option')).toHaveLength(7);
     });
 
-    await step('Cada grupo é um grupo nomeado pelo próprio cabeçalho', async () => {
-      const groups = canvas.getAllByRole('group');
-      await expect(groups).toHaveLength(2);
+    await step('Cada grupo é nomeado pelo próprio cabeçalho', async () => {
+      const headings = root.querySelectorAll<HTMLElement>('.nds-command-group-heading');
+      await expect(headings).toHaveLength(2);
       await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
       await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
-
-      const cabecalhos = root.querySelectorAll<HTMLElement>('.nds-command-group-heading');
-      await expect(cabecalhos).toHaveLength(2);
-      await expect(cabecalhos[0]).toHaveAttribute('data-slot', 'command-group-heading');
-      // Cabeçalho não é comando: ele nomeia o grupo, não executa nada.
-      await expect(cabecalhos[0].getAttribute('role')).not.toBe('option');
+      // O cabeçalho NÃO é uma opção — o erro clássico deste componente é
+      // deixá-lo entrar na lista e virar destino de navegação.
+      await expect(headings[0].getAttribute('role')).not.toBe('option');
+      const names = canvas.getAllByRole('option').map((option) => option.textContent?.trim());
+      await expect(names).not.toContain('Componentes');
     });
 
-    await step('O divisor não é um comando nem um filho do listbox', async () => {
-      const divisor = root.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
-      await expect(divisor).toHaveClass(/nds-command-separator/);
-      // ARIA só admite `option` e `group` dentro de um listbox; o divisor sai da
-      // árvore em vez de virar filho ilegal.
-      await expect(divisor).toHaveAttribute('aria-hidden', 'true');
-      await expect(divisor.getAttribute('role')).not.toBe('separator');
+    await step('Um divisor separa os dois grupos, fora da árvore', async () => {
+      const separators = visibleSeparators(root);
+      await expect(separators).toHaveLength(1);
+      await expect(separators[0]).toHaveClass(/nds-command-separator/);
+      await expect(separators[0]).toHaveAttribute('aria-hidden', 'true');
+      // Só `option` e `group` são filhos permitidos de um listbox.
+      await expect(canvas.queryAllByRole('separator')).toHaveLength(0);
     });
 
-    await step('O filtro atravessa os dois grupos', async () => {
-      await userEvent.type(field, 'a');
-
-      // Buscando "a": Separator, Badge e Avatar (Utilitários) e nada de
-      // Componentes — o filtro não respeita fronteira de grupo.
+    await step('Buscando "n" o filtro atravessa os dois grupos — sobram 3', async () => {
+      await userEvent.clear(field);
+      await userEvent.type(field, 'n');
+      // Button e Input (Componentes) + cn() (Utilitários).
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(3);
       });
-      const groups = root.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
-      await expect(groups[0]).not.toBeVisible();
-      await expect(groups[1]).toBeVisible();
+      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
+      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
+      await expect(visibleSeparators(root)).toHaveLength(1);
     });
 
-    await step('A story termina no estado padrão — é o quadro documentado', async () => {
+    await step('Buscando "badge" sobra 1 comando e nenhum divisor', async () => {
+      await userEvent.clear(field);
+      await userEvent.type(field, 'badge');
+      await waitFor(async () => {
+        await expect(canvas.getAllByRole('option')).toHaveLength(1);
+      });
+      // Um grupo só na tela: divisor sem nada de um dos lados seria ruído.
+      await waitFor(async () => {
+        await expect(visibleSeparators(root)).toHaveLength(0);
+      });
+      await expect(canvas.queryAllByRole('group')).toHaveLength(1);
+    });
+
+    await step('A story termina no estado padrão, com os 7 comandos', async () => {
       await userEvent.clear(field);
       await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(6);
+        await expect(canvas.getAllByRole('option')).toHaveLength(7);
       });
-      const groups = root.querySelectorAll<HTMLElement>('[data-slot="command-group"]');
-      await expect(groups[0]).toBeVisible();
-      await expect(groups[1]).toBeVisible();
+      await expect(visibleSeparators(root)).toHaveLength(1);
     });
   },
 };

@@ -2,11 +2,16 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  Directive,
+  ElementRef,
   OnDestroy,
   TemplateRef,
   ViewEncapsulation,
+  afterNextRender,
   computed,
   effect,
+  inject,
+  input,
   signal,
   viewChild,
 } from '@angular/core';
@@ -16,6 +21,11 @@ import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_COMMAND, type CommandSelectDetails } from '@/components/ui/command';
+import {
+  commandDemoInlineSource,
+  commandDemoPaletteSource,
+  commandWithGroupsSource,
+} from '@/components/ui/command.source';
 import { NDS_DIALOG } from '@/components/ui/dialog';
 import { NdsButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
@@ -82,17 +92,19 @@ const INTERFACE_CODE = `// A paleta é uma combobox filtrável, e é isso que o 
   hostDirectives: [
     { directive: RdxAutocompleteRoot,
       inputs: ['value', 'defaultValue', 'filter', 'locale', 'limit',
-               'loopFocus', 'disabled', 'autoHighlight', 'highlightItemOnHover'],
+               'disabled', 'highlightItemOnHover'],
       outputs: ['valueChange'] },
   ],
 })
 export class NdsCommand {
   readonly itemSelect = output<CommandSelectDetails>();
+  // Próprio da paleta, e não do primitivo: lá o padrão é laçar.
+  readonly loopFocus = input(false, { transform: booleanAttribute });
 }
 
 export interface CommandSelectDetails {
   value: string;   // o [value] do comando — estável, é o que vai ao analytics
-  label: string;   // o texto visível
+  label: string;   // o texto do comando, sem o atalho
 }
 
 // O item nunca recebe foco: o destaque é virtual e o campo de busca guarda
@@ -108,34 +120,6 @@ export class NdsCommandItem {
   readonly onSelect = output<CommandSelectDetails>();
 }`;
 
-// O snippet compartilhado descreve `<button ndsCommandItem>` e um output
-// `(select)`. Aqui o comando é `<div>` — a folha `.nds-command-item` não zera a
-// aparência nativa de botão, e um `<button>` ali apareceria com fundo e borda
-// do navegador (mesmo caminho do DropdownMenu e do ContextMenu). O output se
-// chama `onSelect` para não colidir com o evento `select` do DOM.
-const ANATOMY_CODE = `<nds-command (itemSelect)="executar($event)">
-  <input ndsCommandInput placeholder="Buscar..." />
-
-  <div ndsCommandList>
-    <div ndsCommandGroup heading="Componentes">
-      <div ndsCommandItem value="button" textValue="Button" (onSelect)="abrir('button')">
-        Button
-        <span ndsCommandShortcut>Ctrl+B</span>
-      </div>
-      <div ndsCommandItem value="input">Input</div>
-    </div>
-
-    <div ndsCommandSeparator></div>
-
-    <div ndsCommandGroup heading="Utilitários">
-      <div ndsCommandItem value="cn">cn()</div>
-    </div>
-  </div>
-
-  <!-- Fora da lista: role="status" não é filho permitido de role="listbox" -->
-  <div ndsCommandEmpty>Nenhum resultado encontrado.</div>
-</nds-command>`;
-
 const IMPORT_CODE = `import { NDS_COMMAND } from '@/components/ui/command';`;
 
 const IMPORT_DIALOG_CODE = `import { NDS_COMMAND } from '@/components/ui/command';
@@ -145,11 +129,66 @@ import { NDS_DIALOG } from '@/components/ui/dialog';
 // moldura, e o CSS compartilhado já tem a classe que junta os dois.
 // <div ndsDialogContent class="nds-command-dialog-content" [showCloseButton]="false">`;
 
-const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar é
-   redefinir o token, não sobrescrever a regra. */
-.tema-compacto {
-  --radius: 0.375rem;
-}`;
+/** Chave de grupo que vai ao analytics — estável, nunca o cabeçalho traduzido. */
+type GroupKey = 'components' | 'utils';
+
+/** Grupo de cada comando, por lista: o mesmo `value` muda de grupo entre elas. */
+type ListGroups = Readonly<Record<string, GroupKey>>;
+
+/**
+ * A demonstração e a paleta dela: Button e Input em Componentes, Separator em
+ * Utilitários. Os cartões Inline e Command palette de Variantes desenham a
+ * mesma lista — o que se compara entre os cartões é o ARRANJO, não os comandos.
+ */
+const DEMO_GROUPS: ListGroups = {
+  button: 'components',
+  input: 'components',
+  separator: 'utils',
+};
+
+/** O cartão Com grupos — a mesma lista da story WithGroups. */
+const WITH_GROUPS_CARD_GROUPS: ListGroups = {
+  button: 'components',
+  input: 'components',
+  badge: 'components',
+  separator: 'components',
+  cn: 'utils',
+  clsx: 'utils',
+  twmerge: 'utils',
+};
+
+/** O par 1 de Do & Don't: dois componentes, sem cabeçalho. */
+const DO_DONT_GROUPS: ListGroups = {
+  button: 'components',
+  input: 'components',
+};
+
+/**
+ * Faz o campo NASCER com uma busca digitada — o par 1 de Do & Don't compara
+ * justamente a paleta sem resultado.
+ *
+ * Escrever o `value` não basta: o primitivo só filtra o que a pessoa digitou (um
+ * valor que chega por binding é tratado como seleção feita, e a lista fica
+ * inteira). O evento `input` é o mesmo caminho de uma tecla, e vai depois do
+ * primeiro render porque antes dele o campo ainda não está ligado ao primitivo.
+ *
+ * Exportada só porque o `ngc` exige: o type-check do template importa a classe
+ * de cada diretiva com input ligado, e sem `export` ele reprova com NG3004.
+ */
+@Directive({ selector: 'input[ndsDocsInitialSearch]', standalone: true })
+export class NdsDocsInitialSearch {
+  readonly ndsDocsInitialSearch = input('');
+
+  constructor() {
+    const field = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
+    afterNextRender(() => {
+      const query = this.ndsDocsInitialSearch();
+      if (!query) return;
+      field.value = query;
+      field.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+}
 
 @Component({
   selector: 'nds-command-docs',
@@ -157,22 +196,34 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    ...NDS_COMMAND, ...NDS_DIALOG, NdsButton,
+    ...NDS_COMMAND, ...NDS_DIALOG, NdsButton, NdsDocsInitialSearch,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
     NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics, NdsDocsTestes,
   ],
+  // O Ctrl+K da página: a demonstração exibe a dica do atalho, então a página
+  // responde a ela. Ouvinte de `host`, e não `addEventListener` à mão: sai
+  // junto com o componente, sem limpeza que alguém possa esquecer.
+  host: {
+    '(window:keydown)': 'openFromShortcut($event)',
+  },
   template: `
-    <!-- A metade "do" mostra a região de vazio; a "don't" a omite, e é essa
-         ausência que a legenda descreve. -->
+    <!-- Par 1: os dois lados JÁ nascem com a mesma busca sem resultado. O que
+         muda é haver ou não uma frase para ler: a "don't" omite a região de
+         vazio, e é essa ausência que a legenda descreve. -->
     <ng-template #tplDoDont1Do>
       <div class="nds-w-full nds-border-default nds-rounded-md">
-        <nds-command>
-          <input ndsCommandInput [placeholder]="t('demonstration.labels.searchPlaceholder')" />
+        <nds-command (itemSelect)="trackSelect($event, doDontGroups, 'inline', 'docs_do_dont')">
+          <input
+            ndsCommandInput
+            ndsDocsInitialSearch="xyz"
+            [placeholder]="t('demonstration.labels.searchPlaceholder')"
+          />
           <div ndsCommandList>
             <div ndsCommandGroup>
               <div ndsCommandItem value="button">{{ t('demonstration.labels.itemButton') }}</div>
+              <div ndsCommandItem value="input">{{ t('demonstration.labels.itemInput') }}</div>
             </div>
           </div>
           <div ndsCommandEmpty>{{ t('demonstration.labels.emptyMessage') }}</div>
@@ -182,21 +233,27 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
 
     <ng-template #tplDoDont1Dont>
       <div class="nds-w-full nds-border-default nds-rounded-md">
-        <nds-command>
-          <input ndsCommandInput [placeholder]="t('demonstration.labels.searchPlaceholder')" />
+        <nds-command (itemSelect)="trackSelect($event, doDontGroups, 'inline', 'docs_do_dont')">
+          <input
+            ndsCommandInput
+            ndsDocsInitialSearch="xyz"
+            [placeholder]="t('demonstration.labels.searchPlaceholder')"
+          />
           <div ndsCommandList>
             <div ndsCommandGroup>
               <div ndsCommandItem value="button">{{ t('demonstration.labels.itemButton') }}</div>
+              <div ndsCommandItem value="input">{{ t('demonstration.labels.itemInput') }}</div>
             </div>
           </div>
         </nds-command>
       </div>
     </ng-template>
 
+    <!-- Par 2: o mesmo gatilho, com e sem a tecla DENTRO dele. -->
     <ng-template #tplDoDont2Do>
       <button ndsButton variant="outline">
         {{ t('demonstration.labels.openPalette') }}
-        <span ndsCommandShortcut>{{ t('demonstration.labels.shortcutKey') }}</span>
+        <kbd class="nds-kbd">{{ t('demonstration.labels.shortcutKey') }}</kbd>
       </button>
     </ng-template>
 
@@ -204,55 +261,15 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
       <button ndsButton variant="outline">{{ t('demonstration.labels.openPalette') }}</button>
     </ng-template>
 
+    <!-- Cartões de Variantes. Inline e Command palette desenham a lista da
+         DEMONSTRAÇÃO, cada um no seu arranjo; Com grupos é a story homônima.
+         O bloco de código abaixo de cada um publica a mesma lista que o cartão
+         desenha — o que se copia é o que se vê. A moldura é a das paletas
+         desenhadas direto na página: sem borda nem sombra próprias, quem dá o
+         quadro é o container (PRD, §1). -->
     <ng-template #tplVarInline>
-      <div class="nds-w-full nds-border-default nds-rounded-md">
-        <nds-command>
-          <input ndsCommandInput [placeholder]="t('demonstration.labels.searchPlaceholder')" />
-          <div ndsCommandList>
-            <div ndsCommandGroup>
-              <div ndsCommandItem value="button">{{ t('demonstration.labels.itemButton') }}</div>
-              <div ndsCommandItem value="input">{{ t('demonstration.labels.itemInput') }}</div>
-              <div ndsCommandItem value="separator">{{ t('demonstration.labels.itemSeparator') }}</div>
-            </div>
-          </div>
-          <div ndsCommandEmpty>{{ t('demonstration.labels.emptyMessage') }}</div>
-        </nds-command>
-      </div>
-    </ng-template>
-
-    <ng-template #tplVarPalette>
-      <div ndsDialog>
-        <button ndsDialogTrigger ndsButton variant="outline">
-          {{ t('demonstration.labels.openPalette') }}
-          <span ndsCommandShortcut>{{ t('demonstration.labels.shortcutKey') }}</span>
-        </button>
-
-        <ng-template ndsDialogPortal>
-          <div ndsDialogOverlay></div>
-          <div ndsDialogContent class="nds-command-dialog-content" [showCloseButton]="false">
-            <h3 ndsDialogTitle class="nds-sr-only">{{ t('demonstration.labels.dialogTitle') }}</h3>
-            <p ndsDialogDescription class="nds-sr-only">
-              {{ t('demonstration.labels.dialogDescription') }}
-            </p>
-
-            <nds-command>
-              <input ndsCommandInput [placeholder]="t('demonstration.labels.searchPlaceholder')" />
-              <div ndsCommandList>
-                <div ndsCommandGroup [heading]="t('demonstration.labels.groupComponents')">
-                  <div ndsCommandItem value="button">{{ t('demonstration.labels.itemButton') }}</div>
-                  <div ndsCommandItem value="input">{{ t('demonstration.labels.itemInput') }}</div>
-                </div>
-              </div>
-              <div ndsCommandEmpty>{{ t('demonstration.labels.emptyMessage') }}</div>
-            </nds-command>
-          </div>
-        </ng-template>
-      </div>
-    </ng-template>
-
-    <ng-template #tplVarWithGroups>
-      <div class="nds-w-full nds-border-default nds-rounded-md">
-        <nds-command>
+      <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+        <nds-command (itemSelect)="trackSelect($event, demoGroups, 'inline', 'docs_variantes')">
           <input ndsCommandInput [placeholder]="t('demonstration.labels.searchPlaceholder')" />
           <div ndsCommandList>
             <div ndsCommandGroup [heading]="t('demonstration.labels.groupComponents')">
@@ -264,6 +281,70 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
 
             <div ndsCommandGroup [heading]="t('demonstration.labels.groupUtils')">
               <div ndsCommandItem value="separator">{{ t('demonstration.labels.itemSeparator') }}</div>
+            </div>
+          </div>
+          <div ndsCommandEmpty>{{ t('demonstration.labels.emptyMessage') }}</div>
+        </nds-command>
+      </div>
+    </ng-template>
+
+    <!-- Retrato do padrão: o gatilho e, embaixo, a paleta como ela fica dentro
+         do Dialog. A paleta que abre de verdade é a da demonstração; aqui as
+         duas peças ficam lado a lado, para comparar com os outros cartões. O
+         gatilho é ESTÁTICO — não abre nada —, e por isso não leva
+         aria-haspopup nem aria-expanded: anunciaria um diálogo que não existe. -->
+    <ng-template #tplVarPalette>
+      <div class="nds-stack nds-p-2" data-spacing="xs" data-align="start">
+        <button ndsButton variant="outline">
+          {{ t('demonstration.labels.openPalette') }}
+          <kbd class="nds-kbd">{{ t('demonstration.labels.shortcutKey') }}</kbd>
+        </button>
+
+        <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+          <nds-command (itemSelect)="trackSelect($event, demoGroups, 'palette', 'docs_variantes')">
+            <input ndsCommandInput [placeholder]="t('demonstration.labels.searchPlaceholder')" />
+            <div ndsCommandList>
+              <div ndsCommandGroup [heading]="t('demonstration.labels.groupComponents')">
+                <div ndsCommandItem value="button">
+                  {{ t('demonstration.labels.itemButton') }}
+                  <span ndsCommandShortcut>Ctrl+B</span>
+                </div>
+                <div ndsCommandItem value="input">
+                  {{ t('demonstration.labels.itemInput') }}
+                  <span ndsCommandShortcut>Ctrl+I</span>
+                </div>
+              </div>
+
+              <div ndsCommandSeparator></div>
+
+              <div ndsCommandGroup [heading]="t('demonstration.labels.groupUtils')">
+                <div ndsCommandItem value="separator">{{ t('demonstration.labels.itemSeparator') }}</div>
+              </div>
+            </div>
+            <div ndsCommandEmpty>{{ t('demonstration.labels.emptyMessage') }}</div>
+          </nds-command>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #tplVarWithGroups>
+      <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+        <nds-command (itemSelect)="trackSelect($event, withGroupsCardGroups, 'inline', 'docs_variantes')">
+          <input ndsCommandInput [placeholder]="t('demonstration.labels.searchPlaceholder')" />
+          <div ndsCommandList>
+            <div ndsCommandGroup [heading]="t('demonstration.labels.groupComponents')">
+              <div ndsCommandItem value="button">{{ t('demonstration.labels.itemButton') }}</div>
+              <div ndsCommandItem value="input">{{ t('demonstration.labels.itemInput') }}</div>
+              <div ndsCommandItem value="badge">Badge</div>
+              <div ndsCommandItem value="separator">{{ t('demonstration.labels.itemSeparator') }}</div>
+            </div>
+
+            <div ndsCommandSeparator></div>
+
+            <div ndsCommandGroup [heading]="t('demonstration.labels.groupUtils')">
+              <div ndsCommandItem value="cn">cn()</div>
+              <div ndsCommandItem value="clsx">clsx()</div>
+              <div ndsCommandItem value="twmerge">twMerge()</div>
             </div>
           </div>
           <div ndsCommandEmpty>{{ t('demonstration.labels.emptyMessage') }}</div>
@@ -288,8 +369,9 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-stack nds-w-full" data-spacing="md">
+            <!-- 1. Inline: sem ícone e sem atalho. -->
             <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
-              <nds-command (itemSelect)="registrarEscolha($event, 'inline')">
+              <nds-command (itemSelect)="trackSelect($event, demoGroups, 'inline', 'docs_demo')">
                 <input
                   ndsCommandInput
                   [placeholder]="t('demonstration.labels.searchPlaceholder')"
@@ -318,12 +400,19 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
               </nds-command>
             </div>
 
-            <!-- O mesmo miolo dentro de um Dialog: é o padrão command palette,
-                 e a dica do atalho fica no gatilho para a pessoa descobri-lo. -->
-            <div ndsDialog (openChange)="registrarAberturaDaPaleta($event)">
-              <button ndsDialogTrigger ndsButton variant="outline">
+            <!-- 2. A paleta de verdade, num Dialog: abre pelo gatilho ou pelo
+                 Ctrl+K da página, e escolher um comando executa e fecha. A dica
+                 da tecla fica DENTRO do gatilho — o nome acessível do botão sai
+                 do texto visível, então não há aria-label por cima dele. -->
+            <div ndsDialog [open]="paletteOpen()" (openChange)="paletteOpen.set($event)">
+              <button
+                ndsDialogTrigger
+                ndsButton
+                variant="outline"
+                (click)="trackButtonOpen('docs_demo')"
+              >
                 {{ t('demonstration.labels.openPalette') }}
-                <span ndsCommandShortcut>{{ t('demonstration.labels.shortcutKey') }}</span>
+                <kbd class="nds-kbd">{{ t('demonstration.labels.shortcutKey') }}</kbd>
               </button>
 
               <ng-template ndsDialogPortal>
@@ -340,7 +429,7 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
                     {{ t('demonstration.labels.dialogDescription') }}
                   </p>
 
-                  <nds-command (itemSelect)="registrarEscolha($event, 'palette')">
+                  <nds-command (itemSelect)="selectInPalette($event)">
                     <input
                       ndsCommandInput
                       [placeholder]="t('demonstration.labels.searchPlaceholder')"
@@ -350,9 +439,19 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
                       <div ndsCommandGroup [heading]="t('demonstration.labels.groupComponents')">
                         <div ndsCommandItem value="button">
                           {{ t('demonstration.labels.itemButton') }}
+                          <span ndsCommandShortcut>Ctrl+B</span>
                         </div>
                         <div ndsCommandItem value="input">
                           {{ t('demonstration.labels.itemInput') }}
+                          <span ndsCommandShortcut>Ctrl+I</span>
+                        </div>
+                      </div>
+
+                      <div ndsCommandSeparator></div>
+
+                      <div ndsCommandGroup [heading]="t('demonstration.labels.groupUtils')">
+                        <div ndsCommandItem value="separator">
+                          {{ t('demonstration.labels.itemSeparator') }}
                         </div>
                       </div>
                     </div>
@@ -369,7 +468,7 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -399,7 +498,7 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
           [items]="variantItems()"
           componentSlug="command"
           id="variantes"
-          language="html"
+          language="ts"
         />
 
         <nds-docs-states
@@ -421,7 +520,7 @@ const CUSTOMIZATION_CODE = `/* A paleta lê os tokens do tema — personalizar �
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
-          [customizationCode]="customizationCode"
+          [customizationCode]="t('tokens.customizationCode')"
         />
 
         <nds-docs-accessibility
@@ -466,12 +565,20 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
-  protected readonly customizationCode = CUSTOMIZATION_CODE;
   protected readonly importCode = IMPORT_CODE;
   protected readonly importDialogCode = IMPORT_DIALOG_CODE;
 
+  protected readonly demoGroups = DEMO_GROUPS;
+  protected readonly withGroupsCardGroups = WITH_GROUPS_CARD_GROUPS;
+  protected readonly doDontGroups = DO_DONT_GROUPS;
+
   protected readonly activeSection = signal<string | undefined>(undefined);
+
+  /**
+   * A paleta da demonstração — a única da página que abre num Dialog, e é ela
+   * que o Ctrl+K abre. O cartão de Variantes a desenha aberta, sem Dialog.
+   */
+  protected readonly paletteOpen = signal(false);
 
   private readonly tplDoDont1Do = viewChild.required<TemplateRef<unknown>>('tplDoDont1Do');
   private readonly tplDoDont1Dont = viewChild.required<TemplateRef<unknown>>('tplDoDont1Dont');
@@ -543,22 +650,35 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
+  /**
+   * Os três padrões de `variants.items`. Nome e descrição vêm do conteúdo
+   * compartilhado; o id do toggle de código é a CHAVE, que não muda com o
+   * idioma; e o código publica a mesma lista que o cartão desenha.
+   *
+   * O "quando usar" (`variants.items.<k>.use`, hoje só em `withGroups`) entra
+   * na descrição com o rótulo comum da stack — a mesma costura que o container
+   * de composições faz, feita aqui porque o de variantes não tem o campo.
+   */
   protected readonly variantItems = computed(() => {
-    dict();
+    const d = dict();
+    const useWhenLabel = tNav('common.useWhen');
     return [
-      { key: 'inline',     tpl: this.tplVarInline()     },
-      { key: 'palette',    tpl: this.tplVarPalette()    },
-      { key: 'withGroups', tpl: this.tplVarWithGroups() },
-    ].map(({ key, tpl }) => ({
-      // As chaves de `variants.items` não têm forma única: `inline` e
-      // `palette` são string solta; `withGroups` é objeto com
-      // `name`/`description`. Tentar a string primeiro e cair no objeto evita
-      // a chave crua aparecendo escrita na tela.
-      name: valueOuField(`variants.items.${key}`, 'name') || defaultName(key),
-      description: valueOuField(`variants.items.${key}`, 'description'),
-      trackId: key,
-      preview: tpl,
-    }));
+      { key: 'inline',     tpl: this.tplVarInline(),     code: commandDemoInlineSource() },
+      { key: 'palette',    tpl: this.tplVarPalette(),    code: commandDemoPaletteSource() },
+      { key: 'withGroups', tpl: this.tplVarWithGroups(), code: commandWithGroupsSource() },
+    ].map(({ key, tpl, code }) => {
+      const description = stripHtml(t(`variants.items.${key}.description`));
+      const use = d[`variants.items.${key}.use`];
+      return {
+        name: stripHtml(t(`variants.items.${key}.name`)),
+        description: use
+          ? `${description}<br><br><strong>${useWhenLabel}</strong> ${stripHtml(use)}`
+          : description,
+        trackId: key,
+        code,
+        preview: tpl,
+      };
+    });
   });
 
   protected readonly statesCols = computed(() => {
@@ -572,7 +692,9 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
 
   protected readonly stateItems = computed(() => {
     dict();
-    return ['empty', 'selected', 'disabled', 'loading', 'longList'].map((k) => ({
+    // Ordem das cinco stacks: o destaque vem logo depois do vazio — é o estado
+    // em que a paleta NASCE (D11), antes de qualquer gesto.
+    return ['empty', 'highlighted', 'selected', 'disabled', 'loading', 'longList'].map((k) => ({
       label: t(`states.${k}.label`),
       trigger: toPlainText(t(`states.${k}.trigger`)),
       behavior: toPlainText(t(`states.${k}.behavior`)),
@@ -602,32 +724,12 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
         title: t('props.commandTitle'),
         cols,
         items: [
-          line('filter', 'commandFilter', '(valor, busca, paraTexto) => boolean', '—'),
+          line('filter', 'commandFilter', '(value, search, toText) => boolean', '—'),
           line('value', 'commandValue', 'model<string>', `''`),
           line('valueChange', 'commandOnValueChange', 'output<string>', '—'),
-          {
-            name: 'itemSelect',
-            type: 'output<CommandSelectDetails>',
-            defaultValue: '—',
-            required: not,
-            description:
-              'Emitido a cada comando escolhido, por clique ou por Enter, com o valor e o rótulo.',
-          },
-          {
-            name: 'loopFocus',
-            type: 'boolean',
-            defaultValue: 'true',
-            required: not,
-            description:
-              'A seta para baixo no último comando volta ao primeiro em vez de parar.',
-          },
-          {
-            name: 'limit',
-            type: 'number',
-            defaultValue: '-1',
-            required: not,
-            description: 'Teto de comandos exibidos. Negativo não limita.',
-          },
+          line('itemSelect', 'commandItemSelect', 'output<CommandSelectDetails>', '—'),
+          line('loopFocus', 'commandLoopFocus', 'boolean', 'false'),
+          line('limit', 'commandLimit', 'number', '-1'),
         ],
       },
       {
@@ -635,14 +737,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           line('placeholder', 'inputPlaceholder', 'string', '—'),
-          {
-            name: 'label',
-            type: 'string',
-            defaultValue: 'placeholder',
-            required: not,
-            description:
-              'Nome acessível do campo e da lista. Vazio, o placeholder faz esse papel.',
-          },
+          line('label', 'inputLabel', 'string', 'placeholder'),
         ],
       },
       {
@@ -652,32 +747,24 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
           line('value', 'itemValue', 'string', '—'),
           line('(onSelect)', 'itemOnSelect', 'output<CommandSelectDetails>', '—'),
           line('disabled', 'itemDisabled', 'boolean', 'false'),
-          {
-            name: 'textValue',
-            type: 'string',
-            defaultValue: 'texto do elemento',
-            required: not,
-            description:
-              'Texto usado pelo filtro. Necessário quando o comando traz um atalho, que entraria na busca junto.',
-          },
-          {
-            name: 'checked',
-            type: 'boolean | undefined',
-            // '—' e não a string 'undefined': a coluna é lida por quem
-            // consome, e o contrato de docs proíbe 'undefined' escrito na tela.
-            defaultValue: '—',
-            required: not,
-            description:
-              'Indefinido, o comando não é marcável. Definido, vira data-checked e o comando ganha a marca de escolhido.',
-          },
+          line('textValue', 'textValue', 'string', '—'),
+          // '—' e não a string 'undefined': a coluna é lida por quem consome, e
+          // o contrato de docs proíbe 'undefined' escrito na tela.
+          line('checked', 'checked', 'boolean | undefined', '—'),
         ],
       },
       {
+        // A paleta não tem Dialog próprio: estas são as entradas do `ndsDialog`
+        // e do `ndsDialogContent` que a hospedam, com os padrões DELES. Título
+        // e descrição são o TEXTO projetado em `ndsDialogTitle` e
+        // `ndsDialogDescription` — o tipo é o do conteúdo, `string`.
         title: t('props.commandDialogTitle'),
         cols,
         items: [
-          line('title', 'dialogTitle', 'conteúdo de h2/h3', '—'),
-          line('description', 'dialogDescription', 'conteúdo de p', '—'),
+          line('open', 'open', 'boolean', 'false'),
+          line('(openChange)', 'onOpenChange', 'output<boolean>', '—'),
+          line('title', 'dialogTitle', 'string', '—'),
+          line('description', 'dialogDescription', 'string', '—'),
           line('showCloseButton', 'dialogShowCloseButton', 'boolean', 'true'),
         ],
       },
@@ -706,6 +793,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
     return [
       { token: '--popover',            k: 'popoverBg',   target: '.nds-command' },
       { token: '--popover-foreground', k: 'popoverFg',   target: '.nds-command' },
+      { token: '--foreground',         k: 'groupFg',     target: '.nds-command-group' },
       { token: '--muted-foreground',   k: 'mutedFg',     target: '.nds-command-group-heading' },
       { token: '--border',             k: 'inputBorder', target: '.nds-command-input-wrapper' },
       // O destaque é pintado pelo seletor de estado, não pela classe base — a
@@ -713,10 +801,10 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       { token: '--accent',             k: 'selectedBg',  target: '.nds-command-item[aria-selected="true"]' },
       { token: '--accent-foreground',  k: 'selectedFg',  target: '.nds-command-item[aria-selected="true"]' },
       { token: '--border',             k: 'border',      target: '.nds-command-separator' },
-      // Só o container lê `--radius`. O item usa `--radius-sm`, calculado como
-      // raio interno (raio externo menos o inset), então citá-lo aqui daria a
-      // entender que os dois seguem o mesmo token.
+      // Dois raios, e não um: o container lê `--radius` e o item lê
+      // `--radius-sm`, o raio aninhado (raio externo menos o inset do grupo).
       { token: '--radius',             k: 'radius',      target: '.nds-command' },
+      { token: '--radius-sm',          k: 'radiusSm',    target: '.nds-command-item' },
     ].map(({ token, k, target }) => ({
       token,
       value: target,
@@ -726,23 +814,18 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
 
   protected readonly a11yItems = computed(() => {
     dict();
-    return [
-      ...[1, 2, 3].map((i) => t(`accessibility.item${i}`)),
-      ...['roleListbox', 'roleOption', 'ariaSelected', 'srOnly'].map(
-        (k) => t(`accessibility.aria.${k}`),
-      ),
-    ];
+    return [1, 2, 3].map((i) => t(`accessibility.item${i}`));
   });
 
   protected readonly keyboardItems = computed(() => {
     dict();
     return [
-      { key: '↓',       description: toPlainText(t('accessibility.keyboard.arrowDown')) },
-      { key: '↑',       description: toPlainText(t('accessibility.keyboard.arrowUp')) },
-      { key: 'Enter',   description: toPlainText(t('accessibility.keyboard.enter')) },
-      { key: 'Esc',     description: toPlainText(t('accessibility.keyboard.escape')) },
-      { key: 'Tab',     description: toPlainText(t('accessibility.keyboard.tab')) },
-      { key: 'Cmd + K', description: toPlainText(t('accessibility.keyboard.cmdK')) },
+      { key: 'Arrow Down', description: toPlainText(t('accessibility.keyboard.arrowDown')) },
+      { key: 'Arrow Up',   description: toPlainText(t('accessibility.keyboard.arrowUp')) },
+      { key: 'Enter',      description: toPlainText(t('accessibility.keyboard.enter')) },
+      { key: 'Escape',     description: toPlainText(t('accessibility.keyboard.escape')) },
+      { key: 'Tab',        description: toPlainText(t('accessibility.keyboard.tab')) },
+      { key: 'Ctrl+K',     description: toPlainText(t('accessibility.keyboard.cmdK')) },
     ];
   });
 
@@ -815,11 +898,14 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      // Aqui os itens são string solta, não a trinca criterion/level/how.
+      // Aqui os itens são string solta, não a trinca criterion/level/how. A
+      // coluna "Como verificar" é a mesma nas cinco stacks: o conteúdo não
+      // separa o método por critério, e inventar um por linha seria dizer mais
+      // do que o texto compartilhado diz.
       items: numberedItems(d, 'testes.accessibility').map((text) => ({
         criterion: toPlainText(text),
-        level: '',
-        how: '',
+        level: 'AA',
+        how: 'axe-core / manual',
       })),
     };
   });
@@ -840,19 +926,52 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   /**
    * A docs page É o produto consumidor: o evento disparado aqui é de verdade.
    *
-   * O payload leva o `value` do comando, nunca o rótulo traduzido — senão o
-   * mesmo comando vira três eventos distintos no GA4, um por idioma.
+   * O payload leva o `value` do comando e a CHAVE do grupo, nunca o rótulo nem
+   * o cabeçalho traduzidos — senão o mesmo comando vira três eventos distintos
+   * no GA4, um por idioma. `location` é a seção onde a paleta mora.
    */
-  protected registrarEscolha(
-    detalhe: CommandSelectDetails,
-    padrao: 'inline' | 'palette',
+  protected trackSelect(
+    details: CommandSelectDetails,
+    groups: ListGroups,
+    pattern: 'inline' | 'palette',
+    location: string,
   ): void {
-    track('command_item_select', { label: detalhe.value, group: 'command-docs', pattern: padrao });
+    track('command_item_select', {
+      component: 'command',
+      label: details.value,
+      group: groups[details.value] ?? '',
+      pattern,
+      location,
+    });
   }
 
-  /** Só a abertura interessa; o fechamento não é adoção de nada. */
-  protected registrarAberturaDaPaleta(isOpen: boolean): void {
-    if (isOpen) track('command_palette_open', { trigger: 'button' });
+  /** Escolher na paleta da demonstração executa e FECHA — é o contrato da paleta. */
+  protected selectInPalette(details: CommandSelectDetails): void {
+    this.trackSelect(details, DEMO_GROUPS, 'palette', 'docs_demo');
+    this.paletteOpen.set(false);
+  }
+
+  /**
+   * Abertura pelo gatilho. Ouvido no clique, e não na mudança de estado do
+   * Dialog: a mudança também acontece quando o Ctrl+K abre, e aí o mesmo gesto
+   * sairia contado duas vezes, uma com cada `trigger`.
+   */
+  protected trackButtonOpen(location: string): void {
+    track('command_palette_open', { component: 'command', trigger: 'button', location });
+  }
+
+  /**
+   * Ctrl+K (ou Cmd+K) em qualquer ponto da página abre a paleta da
+   * demonstração. Só ABRE: com a paleta já aberta, a tecla não faz nada —
+   * nem fecha, nem empilha uma segunda por cima.
+   */
+  protected openFromShortcut(event: KeyboardEvent): void {
+    if (event.key.toLowerCase() !== 'k' || !(event.ctrlKey || event.metaKey)) return;
+    // Sem isto o navegador leva o Ctrl+K para a barra de endereço.
+    event.preventDefault();
+    if (this.paletteOpen()) return;
+    this.paletteOpen.set(true);
+    track('command_palette_open', { component: 'command', trigger: 'keyboard', location: 'docs_demo' });
   }
 
   private observer: { disconnect: () => void } | undefined;
@@ -893,30 +1012,6 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.observer?.disconnect();
   }
-}
-
-/** Nome de exibição dos dois padrões, que o conteúdo compartilhado não nomeia. */
-const DEFAULT_NAMES: Record<string, string> = {
-  inline: 'Inline',
-  palette: 'Command Palette',
-};
-
-function defaultName(key: string): string {
-  return DEFAULT_NAMES[key] ?? key;
-}
-
-/**
- * Lê uma chave que pode ser string solta OU objeto com campos.
- *
- * `t()` devolve a própria chave quando ela aponta para um objeto — e é assim
- * que a chave crua acaba escrita na tela, sem erro nenhum.
- */
-function valueOuField(base: string, field: string): string {
-  const direto = t(base);
-  if (direto !== base) return direto;
-  const key = `${base}.${field}`;
-  const ofField = t(key);
-  return ofField === key ? '' : ofField;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */

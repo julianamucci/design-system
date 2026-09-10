@@ -1,7 +1,9 @@
 // ─── Andaime compartilhado das stories do Command ─────────────────────────────
 //
-// As três stories da paleta (variants, states, compositions) montavam a mesma
-// lista inline e procuravam os mesmos nós com cópias próprias dos helpers. Uma
+// Os quatro arquivos de story da paleta (o principal, variants, states e
+// compositions) montavam a mesma lista inline e procuravam os mesmos nós com
+// cópias próprias dos helpers — o `zerarSearch` do Playground foi a última a
+// sair, em 2026-09-10. Uma
 // cópia por arquivo é dívida mecânica enquanto os corpos coincidem — e vira
 // defeito silencioso no dia em que alguém corrige um e não os outros, que é o
 // que `fixture_duplicada_entre_stories` mede.
@@ -29,12 +31,12 @@ export const regiaoVazia = (root: ParentNode): HTMLElement =>
   root.querySelector<HTMLElement>('[data-slot="command-empty"]')!;
 
 /**
- * Deixa a busca vazia E o destaque zerado.
+ * Deixa a busca vazia E o destaque de volta no primeiro comando habilitado.
  *
- * O item em destaque só volta a "nenhum" num re-render do filtro, e
+ * O destaque só volta ao primeiro (PRD, D11) num re-render do filtro, e
  * `userEvent.clear` num campo JÁ vazio não dispara `input`. No REPLAY (a play
- * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria, e a
- * primeira seta partiria do meio da lista.
+ * reexecuta no mesmo DOM) o destaque da rodada anterior sobreviveria — deixado
+ * por seta ou ponteiro —, e a primeira seta partiria do meio da lista.
  */
 export async function zerarSearch(field: HTMLElement): Promise<void> {
   await userEvent.type(field, 'zzz');

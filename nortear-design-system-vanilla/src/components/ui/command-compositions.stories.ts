@@ -11,6 +11,7 @@ import {
   comando,
   separadores,
   searchOf,
+  regiaoVazia,
   zerarSearch,
   mountInline,
 } from './command.fixtures';
@@ -71,12 +72,7 @@ export const WithSeparator: Story = {
         transform: commandSourceWith({
           placeholder: 'Buscar comando...',
           emptyMessage: NO_RESULT,
-          items: [
-            { value: 'novo', label: 'Novo arquivo' },
-            { value: 'abrir', label: 'Abrir recente' },
-            { type: 'separator' },
-            { value: 'sair', label: 'Sair' },
-          ],
+          items: ITEMS_WITH_TRACO,
         }),
       },
       description: {
@@ -120,6 +116,17 @@ export const WithSeparator: Story = {
 };
 
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
+//
+// Uma lista só, lida pelo `render` e pela transform do painel Code. Até
+// 2026-09-10 eram duas cópias, e o snippet publicava três comandos enquanto a
+// story desenhava quatro — o "Abrir" só existia na tela.
+
+const ITEMS_WITH_SHORTCUTS: CommandItem[] = [
+  { value: 'novo',         label: 'Novo arquivo', group: 'Arquivo',    shortcut: 'Ctrl+N' },
+  { value: 'abrir',        label: 'Abrir',        group: 'Arquivo',    shortcut: 'Ctrl+O' },
+  { value: 'salvar',       label: 'Salvar',       group: 'Arquivo',    shortcut: 'Ctrl+S' },
+  { value: 'preferencias', label: 'Preferências', group: 'Aplicativo' },
+];
 
 export const WithShortcuts: Story = {
   parameters: {
@@ -128,25 +135,12 @@ export const WithShortcuts: Story = {
         transform: commandSourceWith({
           placeholder: 'Buscar comando...',
           emptyMessage: NO_RESULT,
-          items: [
-            { value: 'novo', label: 'Novo arquivo', group: 'Arquivo', shortcut: 'Ctrl+N' },
-            { value: 'salvar', label: 'Salvar', group: 'Arquivo', shortcut: 'Ctrl+S' },
-            { value: 'preferencias', label: 'Preferências', group: 'Aplicativo' },
-          ],
+          items: ITEMS_WITH_SHORTCUTS,
         }),
       },
     },
   },
-  render: () =>
-    mountInline(
-      [
-        { value: 'novo',     label: 'Novo arquivo', group: 'Arquivo', shortcut: 'Ctrl+N' },
-        { value: 'abrir',    label: 'Abrir',        group: 'Arquivo', shortcut: 'Ctrl+O' },
-        { value: 'salvar',   label: 'Salvar',       group: 'Arquivo', shortcut: 'Ctrl+S' },
-        { value: 'preferencias', label: 'Preferências', group: 'Aplicativo' },
-      ],
-      'Buscar comando...'
-    ),
+  render: () => mountInline(ITEMS_WITH_SHORTCUTS, 'Buscar comando...'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const field = canvas.getByRole('combobox');
@@ -190,6 +184,23 @@ export const WithShortcuts: Story = {
       await expect(
         comando(canvasElement, 'salvar').querySelector('[data-slot="command-shortcut"]'),
       ).not.toBeNull();
+      // O que sobrou já está em destaque (D11): "sal" + Enter salva.
+      await expect(comando(canvasElement, 'salvar')).toHaveAttribute('aria-selected', 'true');
+      await userEvent.clear(field);
+      await expect(canvas.getAllByRole('option')).toHaveLength(4);
+    });
+
+    await step('Buscando "ctrl" não sobra nada: o atalho fica fora do filtro', async () => {
+      // C9. O filtro compara a busca com o valor e o rótulo do comando, nunca
+      // com o texto do atalho — senão "ctrl" traria os três comandos de
+      // Arquivo, embora nenhum deles se chame assim. O atalho entra no NOME
+      // acessível (C5), não na busca.
+      await userEvent.clear(field);
+      await userEvent.type(field, 'ctrl');
+      await expect(canvas.queryAllByRole('option')).toHaveLength(0);
+      await expect(regiaoVazia(canvasElement)).toHaveAttribute('data-empty', '');
+      await expect(regiaoVazia(canvasElement)).toHaveTextContent(NO_RESULT);
+
       await userEvent.clear(field);
       await expect(canvas.getAllByRole('option')).toHaveLength(4);
     });
@@ -200,6 +211,17 @@ export const WithShortcuts: Story = {
 
 const onListSelect = fn();
 
+// Mesma forma da lista acima: uma cópia só para a tela e para o painel Code, que
+// antes mostrava três comandos (um desabilitado) contra os seis da tela.
+const ITEMS_WITH_DISABLED: CommandItem[] = [
+  { value: 'button', label: 'Button', group: 'Componentes' },
+  { value: 'input',  label: 'Input',  group: 'Componentes', disabled: true },
+  { value: 'badge',  label: 'Badge',  group: 'Componentes' },
+  { value: 'select', label: 'Select', group: 'Componentes', disabled: true },
+  { value: 'cn',     label: 'cn()',   group: 'Utilitários' },
+  { value: 'clsx',   label: 'clsx()', group: 'Utilitários', disabled: true },
+];
+
 export const WithDisabledItems: Story = {
   parameters: {
     docs: {
@@ -207,28 +229,12 @@ export const WithDisabledItems: Story = {
         transform: commandSourceWith({
           placeholder: 'Buscar...',
           emptyMessage: NO_RESULT,
-          items: [
-            { value: 'button', label: 'Button', group: 'Componentes' },
-            { value: 'input', label: 'Input', group: 'Componentes', disabled: true },
-            { value: 'cn', label: 'cn()', group: 'Utilitários' },
-          ],
+          items: ITEMS_WITH_DISABLED,
         }),
       },
     },
   },
-  render: () =>
-    mountInline(
-      [
-        { value: 'button', label: 'Button',      group: 'Componentes' },
-        { value: 'input',  label: 'Input',       group: 'Componentes', disabled: true },
-        { value: 'badge',  label: 'Badge',       group: 'Componentes' },
-        { value: 'select', label: 'Select',      group: 'Componentes', disabled: true },
-        { value: 'cn',     label: 'cn()',        group: 'Utilitários' },
-        { value: 'clsx',   label: 'clsx()',      group: 'Utilitários', disabled: true },
-      ],
-      'Buscar...',
-      (value) => onListSelect(value),
-    ),
+  render: () => mountInline(ITEMS_WITH_DISABLED, 'Buscar...', (value) => onListSelect(value)),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const field = canvas.getByRole('combobox');
@@ -251,14 +257,34 @@ export const WithDisabledItems: Story = {
       const inHighlight = () =>
         document.getElementById(field.getAttribute('aria-activedescendant')!);
 
-      for (const esperado of ['Button', 'Badge', 'cn()']) {
+      // O destaque já parte do primeiro habilitado (D11); as setas levam aos
+      // outros dois, pulando os desabilitados do meio.
+      await expect(inHighlight()).toHaveTextContent('Button');
+      for (const esperado of ['Badge', 'cn()']) {
         await userEvent.keyboard('{ArrowDown}');
         await expect(inHighlight()).toHaveTextContent(esperado);
       }
-      // Fim da lista: a seta não empurra o destaque para fora nem cai num
-      // comando desabilitado.
+      // Fim da lista (C8): a seta não volta ao primeiro, não empurra o
+      // destaque para fora nem cai num comando desabilitado.
       await userEvent.keyboard('{ArrowDown}');
       await expect(inHighlight()).toHaveTextContent('cn()');
+    });
+
+    await step('Busca que só acha desabilitado não destaca nada', async () => {
+      // D11 fala do primeiro HABILITADO: "in" só casa com Input, que está
+      // desabilitado, então não há destaque — e Enter não tem o que executar.
+      await userEvent.clear(field);
+      await userEvent.type(field, 'in');
+      await expect(canvas.getAllByRole('option')).toHaveLength(1);
+      await expect(comando(canvasElement, 'input')).toHaveAttribute('aria-selected', 'false');
+      await expect(field).not.toHaveAttribute('aria-activedescendant');
+
+      const antes = onListSelect.mock.calls.length;
+      await userEvent.keyboard('{Enter}');
+      await expect(onListSelect.mock.calls.length).toBe(antes);
+
+      await userEvent.clear(field);
+      await expect(canvas.getAllByRole('option')).toHaveLength(6);
     });
 
     await step('Clicar num desabilitado não executa nada', async () => {
@@ -338,6 +364,10 @@ export const CommandPalette: Story = {
       content: cmd,
       onOpenChange: (state) => {
         isOpen = state;
+        // O Dialog reaproveita o mesmo nó a cada abertura: sem isto a paleta
+        // reabria com a busca e o destaque de quando foi fechada. Cada abertura
+        // começa com a busca vazia e o primeiro comando em destaque (D11).
+        if (state) cmd.reset();
       },
     });
 
@@ -402,6 +432,10 @@ export const CommandPalette: Story = {
         await expect(searchOf(p)).toHaveFocus();
       });
       await expect(within(p).getAllByRole('option')).toHaveLength(3);
+      // E o primeiro comando já em destaque (D11): abrir, digitar e Enter.
+      const first = comando(p, 'button');
+      await expect(first).toHaveAttribute('aria-selected', 'true');
+      await expect(searchOf(p)).toHaveAttribute('aria-activedescendant', first.id);
     });
 
     await step('Escape fecha o diálogo e devolve o foco ao gatilho', async () => {
@@ -411,6 +445,34 @@ export const CommandPalette: Story = {
       // Sem `waitFor`: a factory devolve o foco de forma síncrona, e envolver a
       // asserção mascararia um bug de foco real.
       await expect(document.activeElement).toBe(trigger);
+    });
+
+    await step('Reabrir começa do zero: busca vazia e o primeiro comando em destaque', async () => {
+      // D11 vale a CADA abertura. O Dialog reaproveita o nó da paleta, e é o
+      // `reset()` chamado no `onOpenChange` que apaga o que a abertura anterior
+      // deixou — sem ele, a paleta reabriria filtrada em "in", com Input aceso.
+      const p = await abrirDialog(canvasElement);
+      await waitFor(async () => {
+        await expect(searchOf(p)).toHaveFocus();
+      });
+      await userEvent.type(searchOf(p), 'in');
+      await expect(within(p).getAllByRole('option')).toHaveLength(1);
+      await expect(comando(p, 'input')).toHaveAttribute('aria-selected', 'true');
+      await userEvent.keyboard('{Escape}');
+      await waitForClosed();
+
+      const reopened = await abrirDialog(canvasElement);
+      await expect(searchOf(reopened)).toHaveValue('');
+      await expect(within(reopened).getAllByRole('option')).toHaveLength(3);
+      const first = comando(reopened, 'button');
+      await expect(first).toHaveAttribute('aria-selected', 'true');
+      await expect(searchOf(reopened)).toHaveAttribute('aria-activedescendant', first.id);
+      await expect(comando(reopened, 'input')).toHaveAttribute('aria-selected', 'false');
+
+      // Fecha de novo: o passo seguinte prova que o Cmd+K ABRE, e com a paleta
+      // já aberta ele não teria o que provar.
+      await userEvent.keyboard('{Escape}');
+      await waitForClosed();
     });
 
     await step('Cmd+K abre a paleta de qualquer lugar da página', async () => {
@@ -447,7 +509,7 @@ export const CommandPalette: Story = {
     await step('A story termina com a paleta ABERTA', async () => {
       // O Chromatic fotografa o estado final e o axe roda depois da play:
       // terminar fechada capturaria só o gatilho, e o conteúdo compartilhado
-      // declara `visual.item4` sobre o diálogo ABERTO.
+      // declara `visual.item3` sobre o diálogo ABERTO.
       await userEvent.keyboard('{Meta>}k{/Meta}');
       // A espera gateia na OPACIDADE, não só na existência do nó: o painel entra
       // no DOM com `data-state="open"` e opacidade 0, e a animação de entrada a

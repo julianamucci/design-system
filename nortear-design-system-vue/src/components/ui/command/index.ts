@@ -18,7 +18,19 @@ export const [useCommand, provideCommandContext] = createContext<{
    * porque campo e lista são IRMÃOS: nenhum dos dois alcança o id do outro.
    */
   listId: string
-  allItems: Ref<Map<string, string>>
+  /**
+   * Nome acessível da lista: o placeholder do campo de busca, que o
+   * `CommandInput` publica aqui. Os dois são IRMÃOS — a lista não alcança o
+   * campo por conta própria, e sem este canal ela ficava com um nome fixo que
+   * não dizia o que se estava buscando.
+   */
+  searchLabel: Ref<string | undefined>
+  /**
+   * Por item, os textos que o filtro compara com a busca: o rótulo SEM o atalho
+   * e o `value`. É uma função, e não o texto, porque o rótulo é relido a cada
+   * atualização do item (troca de idioma, por exemplo).
+   */
+  allItems: Ref<Map<string, () => string[]>>
   allGroups: Ref<Map<string, Set<string>>>
   filterState: {
     search: string
@@ -29,3 +41,13 @@ export const [useCommand, provideCommandContext] = createContext<{
 export const [useCommandGroup, provideCommandGroupContext] = createContext<{
   id?: string
 }>('CommandGroup')
+
+/**
+ * Marca que a paleta mora num `CommandDialog`. É o único lugar em que o campo
+ * de busca recebe foco sozinho: a paleta acabou de abrir e a pessoa vai
+ * digitar. Inline, na página, o campo NÃO rouba o foco ao montar — tirar a
+ * pessoa de onde ela estava lendo é o defeito que isto evita.
+ */
+export const [useCommandDialog, provideCommandDialogContext] = createContext<{
+  autoFocusInput: boolean
+}>('CommandDialog')

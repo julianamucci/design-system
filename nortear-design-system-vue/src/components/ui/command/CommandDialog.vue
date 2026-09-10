@@ -5,6 +5,7 @@ import { useForwardPropsEmits } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import Command from './Command.vue'
+import { provideCommandDialogContext } from './index'
 
 const props = withDefaults(defineProps<DialogRootProps & {
   title?: string
@@ -19,6 +20,10 @@ const props = withDefaults(defineProps<DialogRootProps & {
 const emits = defineEmits<DialogRootEmits>()
 
 const forwarded = useForwardPropsEmits(props, emits)
+
+// A paleta acabou de abrir e a pessoa vai digitar: aqui, e só aqui, o campo de
+// busca recebe o foco sozinho. O `CommandInput` inline não faz isso.
+provideCommandDialogContext({ autoFocusInput: true })
 </script>
 
 <template>

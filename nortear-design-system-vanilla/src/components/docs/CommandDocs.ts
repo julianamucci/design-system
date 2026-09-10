@@ -2,8 +2,9 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createCommand } from '@/components/ui/command';
+import { createCommand, type CommandElement, type CommandItem } from '@/components/ui/command';
 import { createButton } from '@/components/ui/button';
+import { createDialog } from '@/components/ui/dialog';
 import uiTranslations from '@/i18n/ui.json';
 import commandTranslations from '@shared/content/command/translations.json';
 
@@ -43,7 +44,30 @@ function screenReaderItems(): string[] {
     .filter(([k]) => k !== 'title')
     .map(([, v]) => v);
 }
-const { t, subscribe } = createTranslation(commandTranslations as Record<string, unknown>);
+// Duas propriedades que só esta stack tem — o discriminante `type` da lista e o
+// `group` por item (as outras compõem o grupo como peça). A descrição delas não
+// cabe no conteúdo compartilhado, que é neutro de API, e vive aqui, nos três
+// idiomas; até 2026-09-10 era texto em português fixo na tabela.
+const { t, subscribe } = createTranslation(commandTranslations as Record<string, unknown>, {
+  'pt-BR': {
+    'props.table.entryType':
+      'Discriminante da lista. Com o valor separator, a entrada é só o traço entre dois blocos, sem rótulo nem valor; um traço cujos vizinhos saíram no filtro desaparece com eles.',
+    'props.table.group':
+      'Nome do grupo em que o comando entra; comandos com o mesmo nome dividem um cabeçalho.',
+  },
+  en: {
+    'props.table.entryType':
+      'List discriminant. With the value separator, the entry is only the line between two blocks, with no label or value; a line whose neighbours were filtered out disappears with them.',
+    'props.table.group':
+      'Name of the group the command belongs to; commands with the same name share one heading.',
+  },
+  es: {
+    'props.table.entryType':
+      'Discriminante de la lista. Con el valor separator, la entrada es solo la línea entre dos bloques, sin etiqueta ni valor; una línea cuyos vecinos salieron del filtro desaparece con ellos.',
+    'props.table.group':
+      'Nombre del grupo al que pertenece el comando; los comandos con el mismo nombre comparten un encabezado.',
+  },
+});
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -58,90 +82,220 @@ function priorityLabel(raw: string): string {
 }
 
 /**
+ * A SEÇÃO onde o elemento está — nunca uma constante no topo do arquivo.
+ *
+ * A demonstração, as Variantes e o Do & Don't renderizam paleta VIVA, e escolher
+ * um comando ali é tão real quanto na demonstração. Cravar `docs_demo` em tudo
+ * juntaria três seções num balde só no GA4 (guideline 07).
+ */
+type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
+
+/** Chave ESTÁVEL do grupo, a que vai para o payload — nunca o nome traduzido. */
+type GroupKey = 'components' | 'utils';
+
+/**
+ * Comando de exemplo: o que a fábrica recebe, mais a chave do grupo.
+ *
+ * `group` é o texto do cabeçalho, traduzido, e muda com o idioma; `groupKey` é o
+ * que o GA4 recebe, e não muda. Até 2026-09-10 o payload levava o RÓTULO e o
+ * nome do grupo traduzidos — a mesma escolha virava três séries, uma por idioma.
+ * Onde o exemplo não desenha cabeçalho (o par de Do & Don't), a chave continua
+ * a do grupo a que o comando pertence na demonstração.
+ */
+type DocsItem = CommandItem & { groupKey: GroupKey };
+
+type TrackedCommandOptions = {
+  items: DocsItem[];
+  emptyMessage: string;
+  pattern: 'inline' | 'palette';
+  location: DocsLocation;
+  /** O que acontece depois de medir — a paleta no Dialog fecha aqui. */
+  afterSelect?: () => void;
+};
+
+/**
+ * A paleta que mede cada escolha: `label` é o VALOR do comando e `group` a
+ * chave estável do grupo (PRD §9).
+ */
+function trackedCommand(opts: TrackedCommandOptions): CommandElement {
+  return createCommand({
+    placeholder: t('demonstration.labels.searchPlaceholder'),
+    emptyMessage: opts.emptyMessage,
+    items: opts.items,
+    onSelect: (value) => {
+      const item = opts.items.find((i) => i.value === value);
+      if (!item) return;
+      track('command_item_select', {
+        component: 'command',
+        label: value,
+        group: item.groupKey,
+        pattern: opts.pattern,
+        location: opts.location,
+      });
+      opts.afterSelect?.();
+    },
+  });
+}
+
+/**
+ * Moldura das paletas desenhadas direto na página — a paleta não tem borda nem
+ * sombra próprias (PRD §1). Sem sombra no par de Do & Don't, onde o quadro é
+ * comparação e não vitrine.
+ */
+function framed(content: HTMLElement, shadow = true): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = shadow
+    ? 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md'
+    : 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
+  wrap.appendChild(content);
+  return wrap;
+}
+
+/** Os comandos da demonstração inline: dois grupos, sem ícone e sem atalho. */
+function inlineItems(): DocsItem[] {
+  const components = t('demonstration.labels.groupComponents');
+  const utils = t('demonstration.labels.groupUtils');
+  return [
+    { value: 'button',    label: t('demonstration.labels.itemButton'),    group: components, groupKey: 'components' },
+    { value: 'input',     label: t('demonstration.labels.itemInput'),     group: components, groupKey: 'components' },
+    { value: 'separator', label: t('demonstration.labels.itemSeparator'), group: utils,      groupKey: 'utils'      },
+  ];
+}
+
+/**
+ * Os comandos da paleta: os mesmos da inline, com o atalho de cada um.
+ *
+ * O atalho é só desenho (contrato C5) — ninguém registra Ctrl+B aqui, e o texto
+ * dele entra no nome acessível do comando.
+ */
+function paletteItems(): DocsItem[] {
+  const [button, input, separator] = inlineItems();
+  return [
+    { ...button, shortcut: 'Ctrl+B' },
+    { ...input,  shortcut: 'Ctrl+I' },
+    separator,
+  ];
+}
+
+/**
  * Gatilho da paleta — o botão REAL, e não um `<div>` que se parece com um.
  *
- * A medida do gatilho sai de `.nds-button`, que é a folha do design system.
- * Antes o bloco era um `<div>` com `padding` cravado no `style`: a declaração
- * vencia a folha e saía do tema, da densidade e da escala de tipo — e, pior,
- * ensinava a construir um controle sem papel de botão, que o teclado não
- * alcança. As outras stacks já usam o botão do sistema aqui.
+ * Mesma forma da story `CommandPalette`: botão outline com o texto visível e a
+ * dica do atalho num `<kbd>` DENTRO dele. Sem `aria-label`: o nome acessível sai
+ * do texto que se vê (WCAG 2.5.3), e a dica entra nele junto.
  */
-function buildPaletteTrigger(withShortcut: boolean): HTMLElement {
+function buildPaletteTrigger(withShortcut: boolean): HTMLButtonElement {
   const trigger = createButton({
     variant: 'outline',
-    class: 'nds-cluster nds-w-full',
+    label: t('demonstration.labels.openPalette'),
   });
-  trigger.dataset.spacing = 'xs';
-  trigger.dataset.justify = 'between';
-
-  // Lupa decorativa, montada por `createElementNS` e não por `innerHTML`:
-  // conteúdo estático não precisa de parser de HTML (guideline 09).
-  const NS = 'http://www.w3.org/2000/svg';
-  const lupa = document.createElementNS(NS, 'svg');
-  lupa.setAttribute('xmlns', NS);
-  lupa.setAttribute('viewBox', '0 0 24 24');
-  lupa.setAttribute('fill', 'none');
-  lupa.setAttribute('stroke', 'currentColor');
-  lupa.setAttribute('stroke-width', '2');
-  lupa.setAttribute('stroke-linecap', 'round');
-  lupa.setAttribute('stroke-linejoin', 'round');
-  lupa.setAttribute('aria-hidden', 'true');
-  const aro = document.createElementNS(NS, 'circle');
-  aro.setAttribute('cx', '11');
-  aro.setAttribute('cy', '11');
-  aro.setAttribute('r', '8');
-  const cabo = document.createElementNS(NS, 'path');
-  cabo.setAttribute('d', 'm21 21-4.3-4.3');
-  lupa.append(aro, cabo);
-  trigger.appendChild(lupa);
-
-  const label = document.createElement('span');
-  label.className = 'nds-flex-1';
-  label.textContent = t('demonstration.labels.openPalette');
-  trigger.appendChild(label);
 
   if (withShortcut) {
-    const tecla = document.createElement('kbd');
-    tecla.className = 'nds-kbd';
-    tecla.textContent = t('demonstration.labels.shortcutKey');
-    trigger.appendChild(tecla);
+    const kbd = document.createElement('kbd');
+    kbd.className = 'nds-kbd';
+    kbd.textContent = t('demonstration.labels.shortcutKey');
+    trigger.appendChild(kbd);
   }
 
   return trigger;
 }
 
-function buildDemoCommand(placeholder: string, withGroups = true): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md';
-  const items = withGroups
-    ? [
-        { value: 'button',    label: t('demonstration.labels.itemButton'),    group: t('demonstration.labels.groupComponents') },
-        { value: 'input',     label: t('demonstration.labels.itemInput'),     group: t('demonstration.labels.groupComponents') },
-        { value: 'separator', label: t('demonstration.labels.itemSeparator'), group: t('demonstration.labels.groupComponents') },
-        { value: 'cn',        label: 'cn()',   group: t('demonstration.labels.groupUtils') },
-        { value: 'clsx',      label: 'clsx()', group: t('demonstration.labels.groupUtils') },
-      ]
-    : [
-        { value: 'button',    label: t('demonstration.labels.itemButton')    },
-        { value: 'input',     label: t('demonstration.labels.itemInput')     },
-        { value: 'separator', label: t('demonstration.labels.itemSeparator') },
-      ];
-  wrap.appendChild(
-    createCommand({
-      placeholder,
-      emptyMessage: t('demonstration.labels.emptyMessage'),
-      items,
-      onSelect: (value) => {
-        const item = items.find((i) => i.value === value);
-        track('command_item_select', {
-          label: item?.label ?? value,
-          group: (item as { group?: string } | undefined)?.group ?? '',
-          pattern: 'inline',
+/**
+ * A paleta de verdade, num Dialog — a pendência de §9 do PRD.
+ *
+ * Até 2026-09-10 a página anunciava `command_palette_open` na tabela de
+ * analytics e não tinha paleta que abrisse: o evento nunca saía. Agora o gatilho
+ * abre o Dialog, o Ctrl+K da página abre o mesmo Dialog, e cada abertura REAL
+ * emite o evento com o `trigger` de onde ela veio.
+ *
+ * `register` entrega à página a função que abre ESTA paleta. A seção é refeita a
+ * cada troca de idioma, e o ouvinte de Ctrl+K — que vive enquanto a página está
+ * montada — passa a abrir sempre a paleta que está na tela.
+ */
+function buildDemoPalette(register: (openByKeyboard: () => void) => void): HTMLElement {
+  const trigger = buildPaletteTrigger(true);
+
+  let isOpen = false;
+  // Quem abriu a paleta. O clique é o caso padrão; o atalho marca antes de abrir.
+  let openedBy: 'button' | 'keyboard' = 'button';
+
+  // A factory do Dialog não expõe `close()`: o véu é o controle de dispensa que
+  // já existe no markup — mesmo caminho da story `CommandPalette`.
+  function closePalette(): void {
+    if (isOpen) document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
+  }
+
+  const content = trackedCommand({
+    items: paletteItems(),
+    emptyMessage: t('demonstration.labels.emptyMessage'),
+    pattern: 'palette',
+    location: 'docs_demo',
+    // Escolher executa, mede e FECHA: a paleta não se fecha sozinha
+    // (usage.guidelines.item2).
+    afterSelect: closePalette,
+  });
+
+  const dialog = createDialog({
+    trigger,
+    // O diálogo precisa de nome, e desenhá-lo em cima da busca seria redundante
+    // para quem enxerga: o cabeçalho sai da tela e fica na árvore (C6).
+    title: t('demonstration.labels.dialogTitle'),
+    description: t('demonstration.labels.dialogDescription'),
+    headerHidden: true,
+    showCloseButton: false,
+    class: 'nds-command-dialog-content',
+    content,
+    onOpenChange: (open) => {
+      isOpen = open;
+      if (open) {
+        // O Dialog reaproveita o mesmo nó a cada abertura: cada uma começa com
+        // a busca vazia e o primeiro comando em destaque (D11), e não com o que
+        // a abertura anterior deixou.
+        content.reset();
+        track('command_palette_open', {
+          component: 'command',
+          trigger: openedBy,
+          location: 'docs_demo',
         });
-      },
-    })
+      }
+      openedBy = 'button';
+    },
+  });
+
+  register(() => {
+    // Só ABRE: com a paleta já aberta, o atalho não faz nada (PRD §9).
+    if (isOpen) return;
+    openedBy = 'keyboard';
+    // Clique SEM propagação: o ouvinte do Dialog está no próprio gatilho, e o
+    // clique sintético não sobe até a seção — onde o rastreamento automático da
+    // demonstração o contaria como um clique de gente no botão.
+    trigger.dispatchEvent(new MouseEvent('click'));
+  });
+
+  return dialog;
+}
+
+/**
+ * A demonstração: a paleta inline e, abaixo, o gatilho da paleta no Dialog.
+ * Nada além disso (contrato da pipeline, 2026-09-10).
+ */
+function buildDemo(register: (openByKeyboard: () => void) => void): HTMLElement {
+  const outer = document.createElement('div');
+  outer.className = 'nds-stack nds-w-full';
+  outer.dataset.spacing = 'lg';
+  outer.dataset.align = 'center';
+  outer.append(
+    framed(
+      trackedCommand({
+        items: inlineItems(),
+        emptyMessage: t('demonstration.labels.emptyMessage'),
+        pattern: 'inline',
+        location: 'docs_demo',
+      }),
+    ),
+    buildDemoPalette(register),
   );
-  return wrap;
+  return outer;
 }
 
 /**
@@ -150,17 +304,17 @@ function buildDemoCommand(placeholder: string, withGroups = true): HTMLElement {
  * continua lá, sem nada para anunciar nem para ler.
  */
 function emptyBuildDemo(emptyMessage: string): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md';
-  wrap.appendChild(
-    createCommand({
-      placeholder: t('demonstration.labels.searchPlaceholder'),
-      emptyMessage,
+  const wrap = framed(
+    trackedCommand({
       items: [
-        { value: 'button', label: t('demonstration.labels.itemButton') },
-        { value: 'input',  label: t('demonstration.labels.itemInput')  },
+        { value: 'button', label: t('demonstration.labels.itemButton'), groupKey: 'components' },
+        { value: 'input',  label: t('demonstration.labels.itemInput'),  groupKey: 'components' },
       ],
-    })
+      emptyMessage,
+      pattern: 'inline',
+      location: 'docs_do_dont',
+    }),
+    false,
   );
 
   const inp = wrap.querySelector('input');
@@ -175,6 +329,26 @@ function emptyBuildDemo(emptyMessage: string): HTMLElement {
 
 export function createCommandDocs(): HTMLElement {
   const cleanups: Array<() => void> = [];
+
+  // ── Ctrl+K ───────────────────────────────────────────────────────────────
+  //
+  // A demonstração exibe a dica do atalho, então a página responde a ela: dica
+  // que a página não honra é uma promessa falsa na frente de quem está
+  // aprendendo o componente (PRD §9). O ouvinte vive enquanto a página está
+  // montada e sai na desmontagem, junto com os outros (`cleanups`, no fim).
+  // Só ABRE a paleta da demonstração — nunca alterna.
+
+  /** Abre a paleta da demonstração que está na tela; trocada a cada re-render. */
+  let openDemoPalette: (() => void) | null = null;
+
+  const onPaletteShortcut = (e: KeyboardEvent): void => {
+    if (e.key.toLowerCase() !== 'k' || !(e.ctrlKey || e.metaKey)) return;
+    // Sem isto o navegador leva o Ctrl+K para a barra de endereço.
+    e.preventDefault();
+    openDemoPalette?.();
+  };
+  window.addEventListener('keydown', onPaletteShortcut);
+  cleanups.push(() => window.removeEventListener('keydown', onPaletteShortcut));
 
   // ── SEO + Analytics ──────────────────────────────────────────────────────
 
@@ -284,7 +458,7 @@ export function createCommandDocs(): HTMLElement {
       case 'demonstracao':
         return createDocsDemonstration({
           title: t('demonstration.title'),
-          demoFactory: () => buildDemoCommand(t('demonstration.labels.searchPlaceholder'), true),
+          demoFactory: () => buildDemo((open) => { openDemoPalette = open; }),
         });
 
       // ─── 2. Anatomia ───────────────────────────────────────────────────
@@ -349,11 +523,13 @@ export function createCommandDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
+              // O mesmo gatilho dos dois lados, com o mesmo texto: o que muda é
+              // só a dica do atalho dentro dele.
               doPreviewFactory: () => {
                 const outer = document.createElement('div');
                 outer.className = 'nds-stack nds-p-2';
                 outer.dataset.spacing = 'xs';
-                outer.style.alignItems = 'flex-start';
+                outer.dataset.align = 'start';
                 outer.appendChild(buildPaletteTrigger(true));
                 return outer;
               },
@@ -361,7 +537,7 @@ export function createCommandDocs(): HTMLElement {
                 const outer = document.createElement('div');
                 outer.className = 'nds-stack nds-p-2';
                 outer.dataset.spacing = 'xs';
-                outer.style.alignItems = 'flex-start';
+                outer.dataset.align = 'start';
                 // Sem dica de atalho: o gatilho não conta que a paleta existe.
                 outer.appendChild(buildPaletteTrigger(false));
                 return outer;
@@ -377,13 +553,74 @@ export function createCommandDocs(): HTMLElement {
           description: t('import.basic'),
           code: `import { createCommand } from '@/components/ui/command';`,
           secondaryDescription: t('import.withDialog'),
-          secondaryCode: `// Padrão command palette — combine Command com Dialog nativo\nimport { createCommand } from '@/components/ui/command';\nimport { createDialog } from '@/components/ui/dialog';`,
+          secondaryCode: `// Padrão command palette — combine Command com o Dialog do sistema\nimport { createButton } from '@/components/ui/button';\nimport { createCommand } from '@/components/ui/command';\nimport { createDialog } from '@/components/ui/dialog';`,
         });
 
       // ─── 6. Variantes (Padrões de Uso) ─────────────────────────────────
+      //
+      // Cada bloco de código publica a MESMA paleta que o cartão desenha — os
+      // comandos, o placeholder e o arranjo de grupos. Até 2026-09-10 o do
+      // cartão palette ensinava "Novo arquivo" em "Ações" enquanto a tela
+      // mostrava Button e Input.
       case 'variantes': {
-        const codeInline = `const cmd = createCommand({\n  placeholder: 'Buscar componente...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes' },\n    { value: 'input',  label: 'Input',  group: 'Componentes' },\n  ],\n  onSelect: (value) => console.log('selected:', value),\n});`;
-        const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes', shortcut: 'Ctrl+B' },\n    // O traço quebra a sequência: o que vem antes e o que vem depois passam\n    // a contar como blocos distintos, e é a fronteira que o CSS desenha.\n    { type: 'separator' },\n    { value: 'novo', label: 'Novo arquivo', group: 'Ações', shortcut: 'Ctrl+N' },\n  ],\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
+        const codeInline = `const cmd = createCommand({
+  placeholder: 'Buscar componente...',
+  emptyMessage: 'Nenhum resultado encontrado.',
+  items: [
+    { value: 'button',    label: 'Button',    group: 'Componentes' },
+    { value: 'input',     label: 'Input',     group: 'Componentes' },
+    { value: 'separator', label: 'Separator', group: 'Utilitários' },
+  ],
+  onSelect: (value) => console.log('selected:', value),
+});`;
+
+        const codePalette = `// Gatilho com a dica do atalho DENTRO dele: o nome acessível sai do texto.
+const trigger = createButton({ variant: 'outline', label: 'Buscar' });
+const hint = document.createElement('kbd');
+hint.className = 'nds-kbd';
+hint.textContent = 'Ctrl+K';
+trigger.append(hint);
+
+const cmd = createCommand({
+  placeholder: 'Buscar componente...',
+  emptyMessage: 'Nenhum resultado encontrado.',
+  items: [
+    { value: 'button',    label: 'Button',    group: 'Componentes', shortcut: 'Ctrl+B' },
+    { value: 'input',     label: 'Input',     group: 'Componentes', shortcut: 'Ctrl+I' },
+    { value: 'separator', label: 'Separator', group: 'Utilitários' },
+  ],
+  onSelect: (value) => {
+    executeAction(value);
+    closePalette();
+  },
+});
+
+const dialog = createDialog({
+  trigger,
+  title: 'Command Palette',
+  description: 'Busque por um comando ou ação...',
+  headerHidden: true,
+  showCloseButton: false,
+  class: 'nds-command-dialog-content',
+  content: cmd,
+  // O Dialog reaproveita o nó: cada abertura começa com a busca vazia e o
+  // primeiro comando em destaque.
+  onOpenChange: (open) => {
+    if (open) cmd.reset();
+  },
+});
+
+// A factory do Dialog não expõe close(): o véu é o controle de dispensa.
+function closePalette() {
+  document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
+}
+
+// Atalho global Ctrl+K / Cmd+K — é de quem consome, componente nenhum o registra.
+window.addEventListener('keydown', (e) => {
+  if (e.key.toLowerCase() !== 'k' || !(e.metaKey || e.ctrlKey)) return;
+  e.preventDefault();
+  trigger.click();
+});`;
 
         const codeWithGroups = `const wrap = document.createElement('div');
 wrap.className = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
@@ -396,9 +633,9 @@ wrap.appendChild(
       { value: 'input',     label: 'Input',     group: 'Componentes' },
       { value: 'badge',     label: 'Badge',     group: 'Componentes' },
       { value: 'separator', label: 'Separator', group: 'Componentes' },
-      { value: 'cn',        label: 'cn()',       group: 'Utilitários' },
-      { value: 'clsx',      label: 'clsx()',     group: 'Utilitários' },
-      { value: 'twmerge',   label: 'twMerge()',  group: 'Utilitários' },
+      { value: 'cn',        label: 'cn()',      group: 'Utilitários' },
+      { value: 'clsx',      label: 'clsx()',    group: 'Utilitários' },
+      { value: 'twmerge',   label: 'twMerge()', group: 'Utilitários' },
     ],
   })
 );`;
@@ -406,41 +643,49 @@ wrap.appendChild(
         return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
+          note: t('variants.note'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'command',
           items: [
             {
-              name: 'inline',
-              description: stripHtml(t('variants.items.inline')),
+              name: stripHtml(t('variants.items.inline.name')),
+              description: stripHtml(t('variants.items.inline.description')),
+              trackId: 'inline',
               code: codeInline,
-              previewFactory: () => buildDemoCommand(t('demonstration.labels.searchPlaceholder'), true),
+              previewFactory: () =>
+                framed(
+                  trackedCommand({
+                    items: inlineItems(),
+                    emptyMessage: t('demonstration.labels.emptyMessage'),
+                    pattern: 'inline',
+                    location: 'docs_variantes',
+                  }),
+                ),
             },
             {
-              name: 'palette',
-              description: stripHtml(t('variants.items.palette')),
+              name: stripHtml(t('variants.items.palette.name')),
+              description: stripHtml(t('variants.items.palette.description')),
+              trackId: 'palette',
               code: codePalette,
+              // Retrato do padrão — o gatilho e, embaixo, o que ele abre. A
+              // paleta que abre de verdade é a da demonstração; aqui o cartão
+              // mostra as duas peças lado a lado, para comparar com os outros.
               previewFactory: () => {
                 const outer = document.createElement('div');
                 outer.className = 'nds-stack nds-p-2';
                 outer.dataset.spacing = 'xs';
-                outer.style.alignItems = 'flex-start';
-                outer.appendChild(buildPaletteTrigger(true));
-                const dialog = document.createElement('div');
-                dialog.className = 'nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md';
-                dialog.appendChild(
-                  createCommand({
-                    placeholder: t('demonstration.labels.dialogDescription'),
-                    emptyMessage: t('demonstration.labels.emptyMessage'),
-                    items: [
-                      { value: 'button', label: t('demonstration.labels.itemButton'), group: t('demonstration.labels.groupComponents'), shortcut: 'Ctrl+B' },
-                      { value: 'input',  label: t('demonstration.labels.itemInput'),  group: t('demonstration.labels.groupComponents'), shortcut: 'Ctrl+I' },
-                      // O traço fecha o bloco de componentes e abre o de utilitários.
-                      { type: 'separator' },
-                      { value: 'cn', label: 'cn()', group: t('demonstration.labels.groupUtils') },
-                    ],
-                  })
+                outer.dataset.align = 'start';
+                outer.append(
+                  buildPaletteTrigger(true),
+                  framed(
+                    trackedCommand({
+                      items: paletteItems(),
+                      emptyMessage: t('demonstration.labels.emptyMessage'),
+                      pattern: 'palette',
+                      location: 'docs_variantes',
+                    }),
+                  ),
                 );
-                outer.appendChild(dialog);
                 return outer;
               },
             },
@@ -451,24 +696,24 @@ wrap.appendChild(
               trackId: 'withGroups',
               code: codeWithGroups,
               previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
-                wrap.appendChild(
-                  createCommand({
-                    placeholder: t('demonstration.labels.searchPlaceholder'),
-                    emptyMessage: t('demonstration.labels.emptyMessage'),
+                const components = t('demonstration.labels.groupComponents');
+                const utils = t('demonstration.labels.groupUtils');
+                return framed(
+                  trackedCommand({
                     items: [
-                      { value: 'button',    label: 'Button',    group: t('demonstration.labels.groupComponents') },
-                      { value: 'input',     label: 'Input',     group: t('demonstration.labels.groupComponents') },
-                      { value: 'badge',     label: 'Badge',     group: t('demonstration.labels.groupComponents') },
-                      { value: 'separator', label: 'Separator', group: t('demonstration.labels.groupComponents') },
-                      { value: 'cn',        label: 'cn()',       group: t('demonstration.labels.groupUtils') },
-                      { value: 'clsx',      label: 'clsx()',     group: t('demonstration.labels.groupUtils') },
-                      { value: 'twmerge',   label: 'twMerge()',  group: t('demonstration.labels.groupUtils') },
+                      { value: 'button',    label: 'Button',    group: components, groupKey: 'components' },
+                      { value: 'input',     label: 'Input',     group: components, groupKey: 'components' },
+                      { value: 'badge',     label: 'Badge',     group: components, groupKey: 'components' },
+                      { value: 'separator', label: 'Separator', group: components, groupKey: 'components' },
+                      { value: 'cn',        label: 'cn()',      group: utils,      groupKey: 'utils'      },
+                      { value: 'clsx',      label: 'clsx()',    group: utils,      groupKey: 'utils'      },
+                      { value: 'twmerge',   label: 'twMerge()', group: utils,      groupKey: 'utils'      },
                     ],
-                  })
+                    emptyMessage: t('demonstration.labels.emptyMessage'),
+                    pattern: 'inline',
+                    location: 'docs_variantes',
+                  }),
                 );
-                return wrap;
               },
             },
           ],
@@ -484,11 +729,20 @@ wrap.appendChild(
             trigger: toPlainText(t('states.cols.trigger')),
             behavior: toPlainText(t('states.cols.behavior')),
           },
+          // `highlighted` (destaque: automático no primeiro habilitado, depois
+          // seta ou ponteiro — D11) e `selected` (marcado) são estados
+          // diferentes, e a tabela mostra os dois. Ordem do contrato: empty,
+          // highlighted, selected, disabled, loading, longList.
           items: [
             {
               label:    t('states.empty.label'),
               trigger:  toPlainText(t('states.empty.trigger')),
               behavior: toPlainText(t('states.empty.behavior')),
+            },
+            {
+              label:    t('states.highlighted.label'),
+              trigger:  toPlainText(t('states.highlighted.trigger')),
+              behavior: toPlainText(t('states.highlighted.behavior')),
             },
             {
               label:    t('states.selected.label'),
@@ -539,7 +793,11 @@ export type CommandItem = {
 };
 
 // Traço entre dois blocos de comandos.
-export type CommandSeparator = { type: 'separator' };`;
+export type CommandSeparator = { type: 'separator' };
+
+// O que createCommand devolve: a raiz, com reset() — busca vazia e o primeiro
+// comando em destaque. Quem hospeda num Dialog o chama a cada abertura.
+export type CommandElement = HTMLElement & { reset: () => void };`;
 
         const propsCols = {
           prop:        t('props.table.prop'),
@@ -548,6 +806,8 @@ export type CommandSeparator = { type: 'separator' };`;
           required:    t('props.table.required'),
           description: t('props.table.description'),
         };
+        const yes = tNav('common.yes');
+        const no = tNav('common.no');
 
         return createDocsProps({
           title: t('props.title'),
@@ -559,24 +819,26 @@ export type CommandSeparator = { type: 'separator' };`;
               title: t('props.commandTitle'),
               cols: propsCols,
               items: [
-                { name: 'placeholder',  type: 'string',                 defaultValue: '"Search…"',           required: 'Não', description: toPlainText(t('props.table.inputPlaceholder')) },
-                { name: 'emptyMessage', type: 'string',                 defaultValue: '"No results found."', required: 'Não', description: 'Frase anunciada pela região viva quando a busca não encontra nada.' },
-                { name: 'items',        type: 'CommandEntry[]',         defaultValue: '—',                   required: 'Sim', description: 'Comandos e traços, na ordem em que aparecem. O traço é uma quebra na sequência: os comandos de um lado e os do outro passam a contar como blocos distintos.' },
-                { name: 'onSelect',     type: '(value: string) => void', defaultValue: '—',                  required: 'Não', description: toPlainText(t('props.table.itemOnSelect')) },
-                { name: 'class',        type: 'string',                 defaultValue: '—',                   required: 'Não', description: toPlainText(t('props.table.className')) },
+                { name: 'placeholder',  type: 'string',                  defaultValue: '"Search…"',           required: no,  description: toPlainText(t('props.table.inputPlaceholder')) },
+                { name: 'emptyMessage', type: 'string',                  defaultValue: '"No results found."', required: no,  description: toPlainText(t('props.table.emptyMessage'))     },
+                { name: 'items',        type: 'CommandEntry[]',          defaultValue: '—',                   required: yes, description: toPlainText(t('props.table.items'))            },
+                { name: 'onSelect',     type: '(value: string) => void', defaultValue: '—',                   required: no,  description: toPlainText(t('props.table.itemOnSelect'))     },
+                { name: 'class',        type: 'string',                  defaultValue: '—',                   required: no,  description: toPlainText(t('props.table.className'))        },
+                // Método do elemento devolvido, e não opção: fica na mesma tabela porque é a API da fábrica.
+                { name: 'reset()',      type: '() => void',              defaultValue: '—',                   required: no,  description: toPlainText(t('props.table.reset'))            },
               ],
             },
             {
               title: t('props.commandItemTitle'),
               cols: propsCols,
               items: [
-                { name: 'type',     type: "'item' | 'separator'", defaultValue: "'item'", required: 'Não', description: 'Discriminante da lista. Com `separator`, a entrada é só o traço e não leva rótulo nem valor. Um traço cujos vizinhos sumiram no filtro desaparece com eles, porque não sobrou fronteira para marcar.' },
-                { name: 'value',    type: 'string',  defaultValue: '—',     required: 'Sim', description: toPlainText(t('props.table.itemValue'))    },
-                { name: 'label',    type: 'string',  defaultValue: '—',     required: 'Sim', description: 'Texto exibido no item.'                  },
-                { name: 'group',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Nome do grupo para agrupar itens.'        },
-                { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.itemDisabled'))  },
-                { name: 'checked',  type: 'boolean', defaultValue: '—',     required: 'Não', description: 'Estado de marcação. Sem valor, o item não é marcável e não ganha a marca à direita.' },
-                { name: 'shortcut', type: 'string',  defaultValue: '—',     required: 'Não', description: 'Atalho exibido à direita. Entra no nome acessível do item e esconde a marca.' },
+                { name: 'type',     type: "'item' | 'separator'", defaultValue: "'item'", required: no,  description: toPlainText(t('props.table.entryType'))    },
+                { name: 'value',    type: 'string',  defaultValue: '—',     required: yes, description: toPlainText(t('props.table.itemValue'))    },
+                { name: 'label',    type: 'string',  defaultValue: '—',     required: yes, description: toPlainText(t('props.table.label'))        },
+                { name: 'group',    type: 'string',  defaultValue: '—',     required: no,  description: toPlainText(t('props.table.group'))        },
+                { name: 'disabled', type: 'boolean', defaultValue: 'false', required: no,  description: toPlainText(t('props.table.itemDisabled')) },
+                { name: 'checked',  type: 'boolean', defaultValue: '—',     required: no,  description: toPlainText(t('props.table.checked'))      },
+                { name: 'shortcut', type: 'string',  defaultValue: '—',     required: no,  description: toPlainText(t('props.table.shortcut'))     },
               ],
             },
           ],
@@ -584,22 +846,7 @@ export type CommandSeparator = { type: 'separator' };`;
       }
 
       // ─── 9. Tokens ─────────────────────────────────────────────────────
-      case 'tokens': {
-        const customizationCode = `/* Em styles.css — sobrescrever tokens semânticos */
-:root {
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
-}
-
-.dark {
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
-}`;
-
+      case 'tokens':
         return createDocsTokens({
           title: t('tokens.title'),
           cols: {
@@ -608,23 +855,25 @@ export type CommandSeparator = { type: 'separator' };`;
             description: t('tokens.table.part'),
           },
           // A coluna do meio traz o SELETOR REAL da folha compartilhada
-          // (`docs/shared/styles/nds/command.css`). Antes trazia `bg-accent`,
-          // `rounded-md / rounded-sm` e companhia — vocabulário do framework
-          // que saiu do projeto, que não casa com nada no CSS de hoje.
+          // (`docs/shared/styles/nds/command.css`), um por linha: o raio da
+          // paleta e o do comando são tokens diferentes (`--radius` e o
+          // aninhado `--radius-sm`, PRD D10), e juntá-los numa linha só
+          // atribuía ao item um token que ele não usa.
           items: [
-            { token: '--popover',            value: '.nds-command',                                description: toPlainText(t('tokens.table.popoverBg'))   },
-            { token: '--popover-foreground', value: '.nds-command',                                description: toPlainText(t('tokens.table.popoverFg'))   },
-            { token: '--muted-foreground',   value: '.nds-command-group-heading',                  description: toPlainText(t('tokens.table.mutedFg'))     },
-            { token: '--border',             value: '.nds-command-input-wrapper',                  description: toPlainText(t('tokens.table.inputBorder')) },
-            { token: '--accent',             value: '.nds-command-item[aria-selected="true"]',     description: toPlainText(t('tokens.table.selectedBg'))  },
-            { token: '--accent-foreground',  value: '.nds-command-item[aria-selected="true"]',     description: toPlainText(t('tokens.table.selectedFg'))  },
-            { token: '--border',             value: '.nds-command-separator',                      description: toPlainText(t('tokens.table.border'))      },
-            { token: '--radius',             value: '.nds-command · .nds-command-item',            description: toPlainText(t('tokens.table.radius'))      },
+            { token: '--popover',            value: '.nds-command',                            description: toPlainText(t('tokens.table.popoverBg'))   },
+            { token: '--popover-foreground', value: '.nds-command',                            description: toPlainText(t('tokens.table.popoverFg'))   },
+            { token: '--foreground',         value: '.nds-command-group',                      description: toPlainText(t('tokens.table.groupFg'))     },
+            { token: '--muted-foreground',   value: '.nds-command-group-heading',              description: toPlainText(t('tokens.table.mutedFg'))     },
+            { token: '--border',             value: '.nds-command-input-wrapper',              description: toPlainText(t('tokens.table.inputBorder')) },
+            { token: '--accent',             value: '.nds-command-item[aria-selected="true"]', description: toPlainText(t('tokens.table.selectedBg'))  },
+            { token: '--accent-foreground',  value: '.nds-command-item[aria-selected="true"]', description: toPlainText(t('tokens.table.selectedFg'))  },
+            { token: '--border',             value: '.nds-command-separator',                  description: toPlainText(t('tokens.table.border'))      },
+            { token: '--radius',             value: '.nds-command',                            description: toPlainText(t('tokens.table.radius'))      },
+            { token: '--radius-sm',          value: '.nds-command-item',                       description: toPlainText(t('tokens.table.radiusSm'))    },
           ],
           customizationTitle: t('tokens.customizationTitle'),
-          customizationCode,
+          customizationCode: t('tokens.customizationCode'),
         });
-      }
 
       // ─── 10. Acessibilidade ────────────────────────────────────────────
       case 'acessibilidade':
@@ -634,14 +883,14 @@ export type CommandSeparator = { type: 'separator' };`;
           title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3].map(i => t(`accessibility.item${i}`)),
-          keyboardTitle: tNav('common.keyboardNav') || 'Navegação por teclado',
+          keyboardTitle: tNav('common.keyboardNav'),
           keyboardItems: [
-            { key: 'Arrow Down',      description: toPlainText(t('accessibility.keyboard.arrowDown')) },
-            { key: 'Arrow Up',      description: toPlainText(t('accessibility.keyboard.arrowUp'))   },
-            { key: 'Enter',  description: toPlainText(t('accessibility.keyboard.enter'))      },
-            { key: 'Escape', description: toPlainText(t('accessibility.keyboard.escape'))     },
-            { key: 'Tab',    description: toPlainText(t('accessibility.keyboard.tab'))        },
-            { key: 'Ctrl+K',    description: toPlainText(t('accessibility.keyboard.cmdK'))       },
+            { key: 'Arrow Down', description: toPlainText(t('accessibility.keyboard.arrowDown')) },
+            { key: 'Arrow Up',   description: toPlainText(t('accessibility.keyboard.arrowUp'))   },
+            { key: 'Enter',      description: toPlainText(t('accessibility.keyboard.enter'))     },
+            { key: 'Escape',     description: toPlainText(t('accessibility.keyboard.escape'))    },
+            { key: 'Tab',        description: toPlainText(t('accessibility.keyboard.tab'))       },
+            { key: 'Ctrl+K',     description: toPlainText(t('accessibility.keyboard.cmdK'))      },
           ],
         });
 
@@ -711,6 +960,7 @@ export type CommandSeparator = { type: 'separator' };`;
           title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
+            description: t('testes.functional.description'),
             cols: {
               action:   tNav('common.userAction'),
               result:   tNav('common.expectedResult'),
@@ -724,6 +974,7 @@ export type CommandSeparator = { type: 'separator' };`;
           },
           accessibility: {
             title: t('testes.accessibility.title'),
+            description: t('testes.accessibility.description'),
             cols: {
               criterion: tNav('common.criterion'),
               level:     'WCAG',
@@ -737,6 +988,7 @@ export type CommandSeparator = { type: 'separator' };`;
           },
           visual: {
             title: t('testes.visual.title'),
+            description: t('testes.visual.description'),
             cols: {
               story:    tNav('common.storyState'),
               priority: tNav('common.priority'),

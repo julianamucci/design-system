@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
@@ -37,7 +37,7 @@ import DocsTestes        from '@/components/docs/shared/sections/DocsTestes.vue'
 
 import uiTranslations from '@/i18n/ui.json';
 import commandTranslations from '@shared/content/command/translations.json';
-import { stripHtml, toPlainText } from '@/lib/strip-html';
+import { toPlainText } from '@/lib/strip-html';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -85,11 +85,9 @@ watch(locale, (newLocale) => {
   track('docs_page_view', {
     component_name: 'command',
     locale: newLocale,
-    page_title: tContent('seo.title'),
+    page_title: `${tContent('title')} · Design System`,
   });
 }, { immediate: true });
-
-// ─── Analytics — section view ─────────────────────────────────────────────────
 
 // ─── Navigation groups ────────────────────────────────────────────────────────
 
@@ -139,40 +137,126 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
     locale: locale.value,
   });
 });
-// ─── Analytics — inline demo ──────────────────────────────────────────────────
 
-function handleInlineSelect(label: string, group: string) {
+// ─── Demonstrações: dados ─────────────────────────────────────────────────────
+
+/** Seção da página de onde o gesto saiu (guideline 07). */
+type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
+
+/** As duas montagens da paleta — é o que separa as séries no GA4. */
+type Pattern = 'inline' | 'palette';
+
+/** Chave estável do grupo — é ela que vai ao GA4, nunca o cabeçalho traduzido. */
+type GroupKey = 'components' | 'utils';
+
+interface DemoItem { value: string; label: string; shortcut?: string }
+interface DemoBlock { key: GroupKey; heading: string; items: DemoItem[] }
+
+// A demonstração inline e a paleta usam os MESMOS comandos (contrato da docs
+// page nas cinco stacks): Componentes com Button e Input, Utilitários com
+// Separator. A paleta acrescenta os atalhos.
+const demoBlocks = computed<DemoBlock[]>(() => [
+  {
+    key: 'components',
+    heading: tContent('demonstration.labels.groupComponents'),
+    items: [
+      { value: 'button', label: tContent('demonstration.labels.itemButton') },
+      { value: 'input',  label: tContent('demonstration.labels.itemInput')  },
+    ],
+  },
+  {
+    key: 'utils',
+    heading: tContent('demonstration.labels.groupUtils'),
+    items: [
+      { value: 'separator', label: tContent('demonstration.labels.itemSeparator') },
+    ],
+  },
+]);
+
+const paletteBlocks = computed<DemoBlock[]>(() => {
+  const shortcuts: Record<string, string> = { button: 'Ctrl+B', input: 'Ctrl+I' };
+  return demoBlocks.value.map((block) => ({
+    ...block,
+    items: block.items.map((item) => ({ ...item, shortcut: shortcuts[item.value] })),
+  }));
+});
+
+// Os nomes de componente e de utilitário não se traduzem; os cabeçalhos, sim.
+const groupedBlocks = computed<DemoBlock[]>(() => [
+  {
+    key: 'components',
+    heading: tContent('demonstration.labels.groupComponents'),
+    items: [
+      { value: 'button',    label: 'Button'    },
+      { value: 'input',     label: 'Input'     },
+      { value: 'badge',     label: 'Badge'     },
+      { value: 'separator', label: 'Separator' },
+    ],
+  },
+  {
+    key: 'utils',
+    heading: tContent('demonstration.labels.groupUtils'),
+    items: [
+      { value: 'cn',      label: 'cn()'      },
+      { value: 'clsx',    label: 'clsx()'    },
+      { value: 'twmerge', label: 'twMerge()' },
+    ],
+  },
+]);
+
+// Par 1 do Do & Don't: os dois lados JÁ nascem com a mesma busca sem
+// correspondência — o que muda é haver ou não uma frase para ler.
+const DO_DONT_SEARCH = 'xyz';
+
+const doDontItems = computed<DemoItem[]>(() => [
+  { value: 'button', label: tContent('demonstration.labels.itemButton') },
+  { value: 'input',  label: tContent('demonstration.labels.itemInput')  },
+]);
+
+// ─── Analytics — seleção ──────────────────────────────────────────────────────
+
+// `label` é o VALOR do comando e `group` a chave do grupo: texto traduzido
+// partiria o mesmo evento em três séries no GA4, uma por idioma.
+function trackSelect(value: string, group: GroupKey, pattern: Pattern, location: DocsLocation) {
   track('command_item_select', {
-    label,
+    component: 'command',
+    label: value,
     group,
-    pattern: 'inline',
+    pattern,
+    location,
   });
 }
 
-// ─── Demo: Command Palette state ──────────────────────────────────────────────
+// ─── Paleta: abrir, escolher, Ctrl+K ──────────────────────────────────────────
 
+// A paleta de verdade é uma só, a da demonstração: o card de Variantes a
+// desenha aberta na página, sem Dialog, e o gatilho dele não abre nada.
 const paletteOpen = ref(false);
 
-function openPalette() {
-  track('command_palette_open', { trigger: 'button' });
+function openPalette(trigger: 'keyboard' | 'button') {
+  // Só ABRE: aberta, o atalho e o gatilho não fazem nada — nem fecham.
+  if (paletteOpen.value) return;
   paletteOpen.value = true;
+  track('command_palette_open', { component: 'command', trigger, location: 'docs_demo' });
 }
 
-const paletteItemMeta: Record<string, { label: string; group: string }> = {
-  button: { label: 'Button', group: 'components' },
-  input: { label: 'Input', group: 'components' },
-  separator: { label: 'Separator', group: 'utils' },
-};
-
-function paletteSelect(value: string) {
+function selectInPalette(value: string, group: GroupKey) {
   paletteOpen.value = false;
-  const meta = paletteItemMeta[value];
-  track('command_item_select', {
-    label: meta?.label ?? value,
-    group: meta?.group ?? 'components',
-    pattern: 'palette',
-  });
+  trackSelect(value, group, 'palette', 'docs_demo');
 }
+
+// A demonstração exibe a dica do atalho, então a página responde a ela. Dica que
+// a página não honra é promessa falsa na frente de quem está aprendendo o
+// componente. O ouvinte vive enquanto a página está montada.
+function onGlobalKeydown(event: KeyboardEvent) {
+  if (event.key.toLowerCase() !== 'k' || !(event.ctrlKey || event.metaKey)) return;
+  // Sem isto o navegador leva o atalho para a barra de endereço.
+  event.preventDefault();
+  openPalette('keyboard');
+}
+
+onMounted(() => window.addEventListener('keydown', onGlobalKeydown));
+onUnmounted(() => window.removeEventListener('keydown', onGlobalKeydown));
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
@@ -188,13 +272,14 @@ const codeImportBasic = `import {
 } from "@/components/ui/command";`;
 
 const codeImportWithDialog = `import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
+  CommandSeparator,
+  CommandShortcut,
 } from "@/components/ui/command";`;
 
 // CommandEmpty fica FORA do CommandList: ele é uma região viva (role="status"),
@@ -203,74 +288,64 @@ const codeInline = `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
     <CommandGroup heading="Componentes">
-      <CommandItem value="button">Button</CommandItem>
-      <CommandItem value="input">Input</CommandItem>
+      <CommandItem value="button" @select="runCommand('button')">Button</CommandItem>
+      <CommandItem value="input" @select="runCommand('input')">Input</CommandItem>
     </CommandGroup>
     <CommandSeparator />
     <CommandGroup heading="Utilitários">
-      <CommandItem value="badge">Badge</CommandItem>
+      <CommandItem value="separator" @select="runCommand('separator')">Separator</CommandItem>
     </CommandGroup>
   </CommandList>
   <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`;
 
-const codePalette = `<script setup>
+const codePalette = `<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from "vue";
+
 const open = ref(false);
+
+// Atalho global: registrado por quem consome, e removido junto com a tela.
+function onKeydown(event: KeyboardEvent) {
+  if (event.key.toLowerCase() !== "k" || !(event.ctrlKey || event.metaKey)) return;
+  event.preventDefault();
+  open.value = true;
+}
+onMounted(() => window.addEventListener("keydown", onKeydown));
+onUnmounted(() => window.removeEventListener("keydown", onKeydown));
+
+function runCommand(value: string) {
+  // roda o comando escolhido, e a paleta fecha
+  open.value = false;
+}
 <\/script>
+
+<Button variant="outline" @click="open = true">
+  Buscar
+  <kbd class="nds-kbd">Ctrl+K</kbd>
+</Button>
 
 <CommandDialog v-model:open="open" title="Command Palette" description="Busque por um comando ou ação...">
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
-    <CommandGroup heading="Ações">
-      <CommandItem value="salvar" @select="() => open = false">
-        Salvar
-        <CommandShortcut>Ctrl+S</CommandShortcut>
+    <CommandGroup heading="Componentes">
+      <CommandItem value="button" @select="runCommand('button')">
+        Button
+        <CommandShortcut>Ctrl+B</CommandShortcut>
       </CommandItem>
+      <CommandItem value="input" @select="runCommand('input')">
+        Input
+        <CommandShortcut>Ctrl+I</CommandShortcut>
+      </CommandItem>
+    </CommandGroup>
+    <CommandSeparator />
+    <CommandGroup heading="Utilitários">
+      <CommandItem value="separator" @select="runCommand('separator')">Separator</CommandItem>
     </CommandGroup>
   </CommandList>
   <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </CommandDialog>`;
 
-const codeCustomizationTokens = `/* Em globals.css */
-:root {
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 47.4% 11.2%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-}
-
-.dark {
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-}`;
-
-const interfaceCode = `// Command (Root)
-interface CommandProps extends ListboxRootProps {
-  class?: string;
-}
-
-// CommandInput
-interface CommandInputProps {
-  placeholder?: string;
-  class?: string;
-}
-
-// CommandItem
-interface CommandItemProps extends ListboxItemProps {
-  checked?: boolean;       // vira data-checked; acende a marca à direita
-  class?: string;
-}
-
-// CommandDialog
-interface CommandDialogProps extends DialogRootProps {
-  title?: string;          // default: "Command Palette"
-  description?: string;    // default: "Search for a command to run..."
-  showCloseButton?: boolean; // default: false
-  class?: string;
-}`;
-
-// ─── Compositions code strings ───────────────────────────────────────────────
-
-const codeCompWithGroups = `<Command>
+const codeWithGroups = `<Command>
   <CommandInput placeholder="Buscar componente..." />
   <CommandList>
     <CommandGroup heading="Componentes">
@@ -289,6 +364,32 @@ const codeCompWithGroups = `<Command>
   <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
 </Command>`;
 
+const interfaceCode = `// Command (Root)
+interface CommandProps extends ListboxRootProps {
+  highlightOnHover?: boolean; // default: true — o ponteiro move o destaque
+  class?: string;
+}
+
+// CommandInput
+interface CommandInputProps extends ListboxFilterProps {
+  placeholder?: string;    // nomeia o campo e a lista
+  class?: string;
+}
+
+// CommandItem
+interface CommandItemProps extends ListboxItemProps {
+  checked?: boolean;       // vira data-checked; acende a marca à direita
+  class?: string;
+}
+
+// CommandDialog
+interface CommandDialogProps extends DialogRootProps {
+  title?: string;          // default: "Command Palette"
+  description?: string;    // default: "Search for a command to run..."
+  showCloseButton?: boolean; // default: false
+  class?: string;
+}`;
+
 // ─── Computed data ────────────────────────────────────────────────────────────
 
 const anatomyItems = computed(() => [
@@ -303,45 +404,37 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item9'),
 ]);
 
+// O `trackId` é a CHAVE da variante: é o que vai ao evento de cópia de código,
+// e o nome exibido muda com o idioma.
 const variantItems = computed(() => [
-  { name: 'inline',   description: stripHtml(tContent('variants.items.inline')),   code: codeInline   },
-  { name: 'palette',  description: stripHtml(tContent('variants.items.palette')),  code: codePalette  },
+  {
+    trackId: 'inline',
+    name: tContent('variants.items.inline.name'),
+    description: tContent('variants.items.inline.description'),
+    code: codeInline,
+  },
+  {
+    trackId: 'palette',
+    name: tContent('variants.items.palette.name'),
+    description: tContent('variants.items.palette.description'),
+    code: codePalette,
+  },
   {
     trackId: 'withGroups',
     name: tContent('variants.items.withGroups.name'),
     description: tContent('variants.items.withGroups.description'),
     useWhen: tContent('variants.items.withGroups.use'),
-    code: codeCompWithGroups,
+    code: codeWithGroups,
   },
 ]);
 
-const stateItems = computed(() => [
-  {
-    label: tContent('states.empty.label'),
-    trigger: toPlainText(tContent('states.empty.trigger')),
-    behavior: toPlainText(tContent('states.empty.behavior')),
-  },
-  {
-    label: tContent('states.selected.label'),
-    trigger: toPlainText(tContent('states.selected.trigger')),
-    behavior: toPlainText(tContent('states.selected.behavior')),
-  },
-  {
-    label: tContent('states.disabled.label'),
-    trigger: toPlainText(tContent('states.disabled.trigger')),
-    behavior: toPlainText(tContent('states.disabled.behavior')),
-  },
-  {
-    label: tContent('states.loading.label'),
-    trigger: toPlainText(tContent('states.loading.trigger')),
-    behavior: toPlainText(tContent('states.loading.behavior')),
-  },
-  {
-    label: tContent('states.longList.label'),
-    trigger: toPlainText(tContent('states.longList.trigger')),
-    behavior: toPlainText(tContent('states.longList.behavior')),
-  },
-]);
+const stateItems = computed(() =>
+  (['empty', 'highlighted', 'selected', 'disabled', 'loading', 'longList'] as const).map((key) => ({
+    label: tContent(`states.${key}.label`),
+    trigger: toPlainText(tContent(`states.${key}.trigger`)),
+    behavior: toPlainText(tContent(`states.${key}.behavior`)),
+  })),
+);
 
 const propCols = computed(() => ({
   prop: tContent('props.table.prop'),
@@ -351,47 +444,51 @@ const propCols = computed(() => ({
   description: tContent('props.table.description'),
 }));
 
+// O filtro desta stack não é substituível por prop: ele compara o rótulo do
+// comando (sem o atalho) e o `value`. A linha `filter` que morava aqui
+// documentava uma prop que o `Command` do Vue não tem.
 const commandPropItems = computed(() => [
-  { name: 'filter',        type: '(value, search, keywords?) => number', defaultValue: 'built-in fuzzy', required: 'Não', description: toPlainText(tContent('props.table.commandFilter'))         },
-  { name: 'modelValue',    type: 'string',                                defaultValue: '""',             required: 'Não', description: toPlainText(tContent('props.table.commandValue'))           },
-  { name: 'onUpdate:modelValue', type: '(value: string) => void',        defaultValue: '—',             required: 'Não', description: toPlainText(tContent('props.table.commandOnValueChange'))   },
-  { name: 'class',         type: 'string',                                defaultValue: '—',             required: 'Não', description: toPlainText(tContent('props.table.className'))              },
+  { name: 'modelValue',  type: 'string',                                                 defaultValue: '""', required: tNav('common.no'), description: toPlainText(tContent('props.table.commandValue'))         },
+  { name: 'onHighlight', type: '(payload: { ref: HTMLElement; value: string }) => void', defaultValue: '—',  required: tNav('common.no'), description: toPlainText(tContent('props.table.commandOnValueChange')) },
+  { name: 'class',       type: 'string',                                                 defaultValue: '—',  required: tNav('common.no'), description: toPlainText(tContent('props.table.className'))            },
 ]);
 
 const commandInputPropItems = computed(() => [
-  { name: 'placeholder', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.inputPlaceholder')) },
-  { name: 'class',       type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.className'))        },
+  { name: 'placeholder', type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(tContent('props.table.inputPlaceholder')) },
+  { name: 'class',       type: 'string', defaultValue: '—', required: tNav('common.no'), description: toPlainText(tContent('props.table.className'))        },
 ]);
 
 const commandItemPropItems = computed(() => [
-  { name: 'value',    type: 'string',              defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.itemValue'))    },
-  { name: 'checked',  type: 'boolean',             defaultValue: '—',     required: 'Não', description: toPlainText(tContent('states.selected.behavior')) },
-  { name: 'disabled', type: 'boolean',             defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.itemDisabled')) },
-  { name: 'onSelect', type: '() => void',          defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.itemOnSelect')) },
-  { name: 'class',    type: 'string',              defaultValue: '—',     required: 'Não', description: toPlainText(tContent('props.table.className'))    },
+  { name: 'value',    type: 'string',                       defaultValue: '—',     required: tNav('common.yes'), description: toPlainText(tContent('props.table.itemValue'))    },
+  { name: 'checked',  type: 'boolean',                      defaultValue: '—',     required: tNav('common.no'),  description: toPlainText(tContent('props.table.checked'))      },
+  { name: 'disabled', type: 'boolean',                      defaultValue: 'false', required: tNav('common.no'),  description: toPlainText(tContent('props.table.itemDisabled')) },
+  { name: 'onSelect', type: '(event: CustomEvent) => void', defaultValue: '—',     required: tNav('common.no'),  description: toPlainText(tContent('props.table.itemOnSelect')) },
+  { name: 'class',    type: 'string',                       defaultValue: '—',     required: tNav('common.no'),  description: toPlainText(tContent('props.table.className'))    },
 ]);
 
 const commandDialogPropItems = computed(() => [
-  { name: 'open',            type: 'boolean',    defaultValue: '—',                        required: 'Não', description: toPlainText(tContent('props.table.commandValue'))              },
-  { name: 'title',           type: 'string',     defaultValue: '"Command Palette"',        required: 'Não', description: toPlainText(tContent('props.table.dialogTitle'))               },
-  { name: 'description',     type: 'string',     defaultValue: '"Search for a command..."', required: 'Não', description: toPlainText(tContent('props.table.dialogDescription'))         },
-  { name: 'showCloseButton', type: 'boolean',    defaultValue: 'false',                    required: 'Não', description: toPlainText(tContent('props.table.dialogShowCloseButton'))     },
-  { name: 'class',           type: 'string',     defaultValue: '—',                        required: 'Não', description: toPlainText(tContent('props.table.className'))                 },
+  { name: 'open',            type: 'boolean',                 defaultValue: '—',                                required: tNav('common.no'), description: toPlainText(tContent('props.table.open'))                  },
+  { name: 'onUpdate:open',   type: '(open: boolean) => void', defaultValue: '—',                                required: tNav('common.no'), description: toPlainText(tContent('props.table.onOpenChange'))          },
+  { name: 'title',           type: 'string',                  defaultValue: '"Command Palette"',                required: tNav('common.no'), description: toPlainText(tContent('props.table.dialogTitle'))           },
+  { name: 'description',     type: 'string',                  defaultValue: '"Search for a command to run..."', required: tNav('common.no'), description: toPlainText(tContent('props.table.dialogDescription'))     },
+  { name: 'showCloseButton', type: 'boolean',                 defaultValue: 'false',                            required: tNav('common.no'), description: toPlainText(tContent('props.table.dialogShowCloseButton')) },
+  { name: 'class',           type: 'string',                  defaultValue: '—',                                required: tNav('common.no'), description: toPlainText(tContent('props.table.className'))             },
 ]);
 
 // A coluna do meio traz SELETOR REAL, lido de `docs/shared/styles/nds/command.css`.
-// O que morava aqui (`bg-popover`, `data-selected:bg-muted`, `rounded-xl`) era
-// vocabulário do framework que saiu do projeto: classe que não existe em lugar
-// nenhum, e customização que ninguém consegue reproduzir.
+// `--radius` é só da caixa da paleta: o comando usa `--radius-sm`, o raio
+// aninhado (PRD, D10).
 const tokenRows = computed(() => [
-  { token: '--popover',            value: '.nds-command',                              description: toPlainText(tContent('tokens.table.popoverBg'))  },
-  { token: '--popover-foreground', value: '.nds-command',                              description: toPlainText(tContent('tokens.table.popoverFg'))  },
-  { token: '--muted-foreground',   value: '.nds-command-group-heading',                description: toPlainText(tContent('tokens.table.mutedFg'))    },
+  { token: '--popover',            value: '.nds-command',                              description: toPlainText(tContent('tokens.table.popoverBg'))   },
+  { token: '--popover-foreground', value: '.nds-command',                              description: toPlainText(tContent('tokens.table.popoverFg'))   },
+  { token: '--foreground',         value: '.nds-command-group',                        description: toPlainText(tContent('tokens.table.groupFg'))     },
+  { token: '--muted-foreground',   value: '.nds-command-group-heading',                description: toPlainText(tContent('tokens.table.mutedFg'))     },
   { token: '--border',             value: '.nds-command-input-wrapper',                description: toPlainText(tContent('tokens.table.inputBorder')) },
   { token: '--accent',             value: '.nds-command-item[aria-selected="true"]',   description: toPlainText(tContent('tokens.table.selectedBg'))  },
   { token: '--accent-foreground',  value: '.nds-command-item[aria-selected="true"]',   description: toPlainText(tContent('tokens.table.selectedFg'))  },
   { token: '--border',             value: '.nds-command-separator',                    description: toPlainText(tContent('tokens.table.border'))      },
-  { token: '--radius',             value: '.nds-command · .nds-command-item',          description: toPlainText(tContent('tokens.table.radius'))      },
+  { token: '--radius',             value: '.nds-command',                              description: toPlainText(tContent('tokens.table.radius'))      },
+  { token: '--radius-sm',          value: '.nds-command-item',                         description: toPlainText(tContent('tokens.table.radiusSm'))    },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -409,7 +506,7 @@ const keyboardItems = computed(() => [
   { key: 'Enter',      description: toPlainText(tContent('accessibility.keyboard.enter'))     },
   { key: 'Escape',     description: toPlainText(tContent('accessibility.keyboard.escape'))    },
   { key: 'Tab',        description: toPlainText(tContent('accessibility.keyboard.tab'))       },
-  { key: 'Ctrl+K',      description: toPlainText(tContent('accessibility.keyboard.cmdK'))      },
+  { key: 'Ctrl+K',     description: toPlainText(tContent('accessibility.keyboard.cmdK'))      },
 ]);
 
 const relatedItems = computed(() => [
@@ -447,12 +544,15 @@ const functionalTestItems = computed(() => [
   { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
 ]);
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1'), level: 'WCAG 2.2', how: 'axe-core' },
-  { criterion: tContent('testes.accessibility.item2'), level: 'WCAG 2.2', how: 'manual' },
-  { criterion: tContent('testes.accessibility.item3'), level: 'WCAG 2.2', how: 'leitor de tela' },
-  { criterion: tContent('testes.accessibility.item4'), level: 'WCAG 2.2', how: 'manual' },
-]);
+// Nível e método como na referência: o critério é AA, e cada linha se verifica
+// pelo axe ou à mão — sem texto de idioma cravado na coluna.
+const a11yTestItems = computed(() =>
+  [1, 2, 3, 4].map((i) => ({
+    criterion: tContent(`testes.accessibility.item${i}`),
+    level: 'AA',
+    how: 'axe-core / manual',
+  })),
+);
 
 const visualTestItems = computed(() => [
   { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
@@ -483,111 +583,77 @@ const visualTestItems = computed(() => [
         class="nds-w-full nds-stack"
         data-spacing="xl"
       >
-        <!-- Demo 1: Inline -->
-        <div
-          class="nds-stack"
-          data-spacing="sm"
-        >
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
-            Inline
-          </p>
-          <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
-            <Command>
-              <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
-              <CommandList>
-                <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
-                  <CommandItem
-                    value="button"
-                    @select="handleInlineSelect(tContent('demonstration.labels.itemButton'), 'components')"
-                  >
-                    {{ tContent('demonstration.labels.itemButton') }}
-                  </CommandItem>
-                  <CommandItem
-                    value="input"
-                    @select="handleInlineSelect(tContent('demonstration.labels.itemInput'), 'components')"
-                  >
-                    {{ tContent('demonstration.labels.itemInput') }}
-                  </CommandItem>
-                </CommandGroup>
-                <CommandSeparator />
-                <CommandGroup :heading="tContent('demonstration.labels.groupUtils')">
-                  <CommandItem
-                    value="separator"
-                    @select="handleInlineSelect(tContent('demonstration.labels.itemSeparator'), 'utils')"
-                  >
-                    {{ tContent('demonstration.labels.itemSeparator') }}
-                  </CommandItem>
-                </CommandGroup>
-              </CommandList>
-              <!-- Fora do CommandList: é uma região viva (role="status"), e
-                   região viva não é filha permitida de role="listbox". -->
-              <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
-            </Command>
-          </div>
-        </div>
-
-        <!-- Demo 3: Command Palette -->
-        <div
-          class="nds-stack"
-          data-spacing="sm"
-        >
-          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">
-            Command Palette
-          </p>
-          <div
-            class="nds-cluster"
-            data-align="center"
-            data-spacing="md"
-          >
-            <Button
-              variant="outline"
-              @click="openPalette"
-            >
-              {{ tContent('demonstration.labels.openPalette') }}
-            </Button>
-            <span
-              class="nds-cluster nds-text-body nds-text-muted-foreground"
-              data-spacing="xs"
-            >
-              {{ tContent('demonstration.labels.shortcutHint') }}
-              <kbd class="nds-kbd">{{ tContent('demonstration.labels.shortcutKey') }}</kbd>
-            </span>
-          </div>
-          <CommandDialog
-            v-model:open="paletteOpen"
-            :title="tContent('demonstration.labels.dialogTitle')"
-            :description="tContent('demonstration.labels.dialogDescription')"
-          >
+        <!-- 1. Inline: sem ícone e sem atalho. -->
+        <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+          <Command>
             <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
             <CommandList>
-              <CommandGroup :heading="tContent('demonstration.labels.groupComponents')">
-                <CommandItem
-                  value="button"
-                  @select="paletteSelect('button')"
-                >
-                  {{ tContent('demonstration.labels.itemButton') }}
-                  <CommandShortcut>Ctrl+B</CommandShortcut>
-                </CommandItem>
-                <CommandItem
-                  value="input"
-                  @select="paletteSelect('input')"
-                >
-                  {{ tContent('demonstration.labels.itemInput') }}
-                </CommandItem>
-              </CommandGroup>
-              <CommandSeparator />
-              <CommandGroup :heading="tContent('demonstration.labels.groupUtils')">
-                <CommandItem
-                  value="separator"
-                  @select="paletteSelect('separator')"
-                >
-                  {{ tContent('demonstration.labels.itemSeparator') }}
-                </CommandItem>
-              </CommandGroup>
+              <template
+                v-for="(block, index) in demoBlocks"
+                :key="block.key"
+              >
+                <CommandSeparator v-if="index > 0" />
+                <CommandGroup :heading="block.heading">
+                  <CommandItem
+                    v-for="item in block.items"
+                    :key="item.value"
+                    :value="item.value"
+                    @select="trackSelect(item.value, block.key, 'inline', 'docs_demo')"
+                  >
+                    {{ item.label }}
+                  </CommandItem>
+                </CommandGroup>
+              </template>
             </CommandList>
+            <!-- Fora do CommandList: é uma região viva (role="status"), e
+                 região viva não é filha permitida de role="listbox". -->
             <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
-          </CommandDialog>
+          </Command>
         </div>
+
+        <!-- 2. Paleta real num Dialog. A dica mora DENTRO do gatilho, e o nome
+             do botão sai do texto visível (WCAG 2.5.3) — sem aria-label. -->
+        <div>
+          <Button
+            variant="outline"
+            aria-haspopup="dialog"
+            :aria-expanded="paletteOpen"
+            @click="openPalette('button')"
+          >
+            {{ tContent('demonstration.labels.openPalette') }}
+            <kbd class="nds-kbd">{{ tContent('demonstration.labels.shortcutKey') }}</kbd>
+          </Button>
+        </div>
+
+        <CommandDialog
+          v-model:open="paletteOpen"
+          :title="tContent('demonstration.labels.dialogTitle')"
+          :description="tContent('demonstration.labels.dialogDescription')"
+        >
+          <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
+          <CommandList>
+            <template
+              v-for="(block, index) in paletteBlocks"
+              :key="block.key"
+            >
+              <CommandSeparator v-if="index > 0" />
+              <CommandGroup :heading="block.heading">
+                <CommandItem
+                  v-for="item in block.items"
+                  :key="item.value"
+                  :value="item.value"
+                  @select="selectInPalette(item.value, block.key)"
+                >
+                  {{ item.label }}
+                  <CommandShortcut v-if="item.shortcut">
+                    {{ item.shortcut }}
+                  </CommandShortcut>
+                </CommandItem>
+              </CommandGroup>
+            </template>
+          </CommandList>
+          <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
+        </CommandDialog>
       </div>
     </DocsDemonstration>
 
@@ -639,22 +705,29 @@ const visualTestItems = computed(() => [
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
-      <!-- Pair 1: CommandEmpty -->
+      <!-- Par 1: a MESMA busca sem correspondência dos dois lados — o "don't"
+           omite o CommandEmpty e fica em branco. Apagada a busca, os dois
+           lados são paletas de verdade, e a escolha é rastreada como as outras. -->
       <template #do-preview-0>
         <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md">
           <Command>
             <CommandInput
-              placeholder="zzz"
-              model-value="zzz"
+              :placeholder="tContent('demonstration.labels.searchPlaceholder')"
+              :model-value="DO_DONT_SEARCH"
             />
             <CommandList>
-              <CommandGroup heading="Componentes">
-                <CommandItem value="button">
-                  Button
+              <CommandGroup>
+                <CommandItem
+                  v-for="item in doDontItems"
+                  :key="item.value"
+                  :value="item.value"
+                  @select="trackSelect(item.value, 'components', 'inline', 'docs_do_dont')"
+                >
+                  {{ item.label }}
                 </CommandItem>
               </CommandGroup>
             </CommandList>
-            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+            <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
           </Command>
         </div>
       </template>
@@ -662,13 +735,18 @@ const visualTestItems = computed(() => [
         <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md">
           <Command>
             <CommandInput
-              placeholder="zzz"
-              model-value="zzz"
+              :placeholder="tContent('demonstration.labels.searchPlaceholder')"
+              :model-value="DO_DONT_SEARCH"
             />
             <CommandList>
-              <CommandGroup heading="Componentes">
-                <CommandItem value="button">
-                  Button
+              <CommandGroup>
+                <CommandItem
+                  v-for="item in doDontItems"
+                  :key="item.value"
+                  :value="item.value"
+                  @select="trackSelect(item.value, 'components', 'inline', 'docs_do_dont')"
+                >
+                  {{ item.label }}
                 </CommandItem>
               </CommandGroup>
             </CommandList>
@@ -676,34 +754,16 @@ const visualTestItems = computed(() => [
         </div>
       </template>
 
-      <!-- Pair 2: shortcut hint -->
+      <!-- Par 2: o mesmo gatilho, com e sem a dica do atalho dentro dele. -->
       <template #do-preview-1>
-        <div
-          class="nds-cluster"
-          data-align="center"
-          data-spacing="sm"
-        >
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            Buscar
-          </Button>
-          <span
-            class="nds-cluster nds-text-body nds-text-muted-foreground"
-            data-spacing="xs"
-          >
-            Pressione
-            <kbd class="nds-kbd">Ctrl+K</kbd>
-          </span>
-        </div>
+        <Button variant="outline">
+          {{ tContent('demonstration.labels.openPalette') }}
+          <kbd class="nds-kbd">{{ tContent('demonstration.labels.shortcutKey') }}</kbd>
+        </Button>
       </template>
       <template #dont-preview-1>
-        <Button
-          variant="outline"
-          size="sm"
-        >
-          Buscar
+        <Button variant="outline">
+          {{ tContent('demonstration.labels.openPalette') }}
         </Button>
       </template>
     </DocsDoDont>
@@ -726,75 +786,101 @@ const visualTestItems = computed(() => [
       :items="variantItems"
       :note="tContent('variants.note')"
     >
-      <!-- inline preview -->
+      <!-- inline -->
       <template #variant-preview-0>
         <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
           <Command>
-            <CommandInput placeholder="Buscar componente..." />
+            <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
             <CommandList>
-              <CommandGroup heading="Componentes">
-                <CommandItem value="button">
-                  Button
-                </CommandItem>
-                <CommandItem value="input">
-                  Input
-                </CommandItem>
-              </CommandGroup>
+              <template
+                v-for="(block, index) in demoBlocks"
+                :key="block.key"
+              >
+                <CommandSeparator v-if="index > 0" />
+                <CommandGroup :heading="block.heading">
+                  <CommandItem
+                    v-for="item in block.items"
+                    :key="item.value"
+                    :value="item.value"
+                    @select="trackSelect(item.value, block.key, 'inline', 'docs_variantes')"
+                  >
+                    {{ item.label }}
+                  </CommandItem>
+                </CommandGroup>
+              </template>
             </CommandList>
-            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
+            <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
           </Command>
         </div>
       </template>
 
-      <!-- palette preview -->
+      <!-- palette: retrato do padrão — o gatilho e, embaixo, o que ele abre,
+           desenhado na página como fica dentro do Dialog. A paleta que abre de
+           verdade é a da demonstração. O gatilho daqui não abre nada, e por
+           isso não leva `aria-haspopup` nem `aria-expanded`: anunciaria um
+           diálogo que não existe. -->
       <template #variant-preview-1>
         <div
-          class="nds-cluster"
-          data-align="center"
-          data-spacing="sm"
+          class="nds-stack nds-p-2"
+          data-spacing="xs"
+          data-align="start"
         >
-          <Button
-            variant="outline"
-            size="sm"
-          >
-            Buscar
+          <Button variant="outline">
+            {{ tContent('demonstration.labels.openPalette') }}
+            <kbd class="nds-kbd">{{ tContent('demonstration.labels.shortcutKey') }}</kbd>
           </Button>
-          <kbd class="nds-kbd">Ctrl+K</kbd>
+          <div class="nds-w-full nds-max-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+            <Command>
+              <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
+              <CommandList>
+                <template
+                  v-for="(block, index) in paletteBlocks"
+                  :key="block.key"
+                >
+                  <CommandSeparator v-if="index > 0" />
+                  <CommandGroup :heading="block.heading">
+                    <CommandItem
+                      v-for="item in block.items"
+                      :key="item.value"
+                      :value="item.value"
+                      @select="trackSelect(item.value, block.key, 'palette', 'docs_variantes')"
+                    >
+                      {{ item.label }}
+                      <CommandShortcut v-if="item.shortcut">
+                        {{ item.shortcut }}
+                      </CommandShortcut>
+                    </CommandItem>
+                  </CommandGroup>
+                </template>
+              </CommandList>
+              <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
+            </Command>
+          </div>
         </div>
       </template>
 
-      <!-- withGroups preview -->
+      <!-- withGroups -->
       <template #variant-preview-2>
         <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
           <Command>
-            <CommandInput placeholder="Buscar componente..." />
+            <CommandInput :placeholder="tContent('demonstration.labels.searchPlaceholder')" />
             <CommandList>
-              <CommandGroup heading="Componentes">
-                <CommandItem value="button">
-                  Button
-                </CommandItem>
-                <CommandItem value="input">
-                  Input
-                </CommandItem>
-                <CommandItem value="badge">
-                  Badge
-                </CommandItem>
-                <CommandItem value="separator">
-                  Separator
-                </CommandItem>
-              </CommandGroup>
-              <CommandSeparator />
-              <CommandGroup heading="Utilitários">
-                <CommandItem value="cn">
-                  cn()
-                </CommandItem>
-                <CommandItem value="clsx">
-                  clsx()
-                </CommandItem>
-                <CommandItem value="twmerge">
-                  twMerge()
-                </CommandItem>
-              </CommandGroup>
+              <template
+                v-for="(block, index) in groupedBlocks"
+                :key="block.key"
+              >
+                <CommandSeparator v-if="index > 0" />
+                <CommandGroup :heading="block.heading">
+                  <CommandItem
+                    v-for="item in block.items"
+                    :key="item.value"
+                    :value="item.value"
+                    @select="trackSelect(item.value, block.key, 'inline', 'docs_variantes')"
+                  >
+                    {{ item.label }}
+                  </CommandItem>
+                </CommandGroup>
+              </template>
             </CommandList>
             <CommandEmpty>{{ tContent('demonstration.labels.emptyMessage') }}</CommandEmpty>
           </Command>
@@ -829,7 +915,7 @@ const visualTestItems = computed(() => [
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
@@ -839,6 +925,7 @@ const visualTestItems = computed(() => [
       :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
+      :keyboard-title="tNav('common.keyboardNav')"
       :keyboard-items="keyboardItems"
     />
 
@@ -857,7 +944,6 @@ const visualTestItems = computed(() => [
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :title="tContent('analytics.title')"
-      :description="tContent('analytics.description')"
       :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />

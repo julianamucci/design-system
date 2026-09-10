@@ -54,7 +54,8 @@
 //    Sem ele a navegação por teclado é um silêncio: a pessoa digita, aperta a
 //    seta e não ouve nada. E apontar para um nó que o filtro já removeu é
 //    violação de verdade — por isso `renderList` remove o atributo antes de
-//    redesenhar, e `setActive(-1)` o remove de novo.
+//    redesenhar e só o devolve apontando para um item da rodada nova; sem item
+//    habilitado na tela (busca vazia, ou só desabilitados), fica sem.
 //
 // 3. **`aria-selected` acompanha o DESTAQUE, não a última escolha.** Numa
 //    paleta os dois papéis não coincidem: o item apontado pelo
@@ -88,14 +89,11 @@
 //      (c) fica FORA do listbox, porque `role="status"` não é filho permitido
 //          de `role="listbox"` (axe, `aria-required-children`).
 //
-//    **DIVERGÊNCIA ABERTA, decisão da dona.** vanilla, vue e angular cumprem
-//    (a)+(b)+(c). react e svelte NÃO anunciam — e
-//    `accessibility.screenReader.onFilter` do conteúdo compartilhado promete a
-//    região viva nas CINCO docs pages. Os dois caminhos estão medidos e não
-//    exigem fork: no react, `useCommandState` é exportado pelo cmdk; no svelte,
-//    `Command.Root` aceita `onStateChange`, que entrega `filtered.count`.
-//    Registrado em PATCHES.md#command-listbox-children e no docblock das duas
-//    stacks.
+//    As cinco stacks cumprem (a)+(b)+(c) desde 2026-09-02: as duas que ficavam
+//    de fora trocaram o vazio da lib por um `role="status"` próprio, montado o
+//    tempo todo e irmão da lista, e o estado do filtro vem da própria lib, sem
+//    fork. O histórico, com a medição do axe em navegador que encerrou o caso,
+//    está em PATCHES.md#command-listbox-children.
 //
 // 7. **O atalho NÃO recebe `aria-hidden`.** Ele faz parte do nome da opção
 //    ("Buscar, Ctrl K"), que é o que dá serventia ao atalho para quem usa
@@ -104,6 +102,43 @@
 //
 // 8. **O item desabilitado nunca é destino da seta**, e a lista de navegáveis é
 //    separada da de visíveis justamente para isso.
+//
+// 9. **A lista NÃO é parada de Tab** (contrato C4). Sem `tabindex`: quem
+//    percorre os comandos são as setas, com o foco no campo, e um Tab a partir
+//    dele sai da paleta. Até 2026-09-10 a lista carregava `tabindex="0"` e virava
+//    uma segunda parada sem função — dentro dela as setas não fazem nada, porque
+//    quem as escuta é o campo. O axe não cobra foco na lista que rola: a regra
+//    `scrollable-region-focusable` dispensa o listbox que um combobox controla
+//    por `aria-controls`, que é exatamente o caso aqui.
+//    E o ponteiro também não tira o foco do campo: o `mousedown` na lista tem o
+//    padrão cancelado, então clicar num comando — ou no desabilitado, que deixa
+//    o clique cair no grupo — não manda o foco para o `body`. Sem isso, dentro
+//    do Dialog o foco escaparia do painel modal.
+//
+// 10. **Escape é do HOSPEDEIRO, não da paleta** (contrato C3). O campo não trata
+//    a tecla: dentro do Dialog, o ouvinte dele fecha e devolve o foco ao
+//    gatilho; no uso inline não há o que fechar, e o foco FICA no campo, com a
+//    busca intacta. Até 2026-09-10 o Escape fazia `blur()` e o foco caía no
+//    `body` — a pessoa perdia o lugar sem nada ter fechado. Limpar a busca foi
+//    considerado e recusado: nenhuma das outras quatro libs o faz, e apagar o
+//    que a pessoa digitou não é o que "sair" quer dizer quando não há de onde
+//    sair. O evento segue sem `preventDefault` e sem `stopPropagation`, para o
+//    hospedeiro recebê-lo.
+//
+// 11. **O primeiro item HABILITADO já nasce em destaque** (PRD, D11 — decisão
+//    da dona, 2026-09-10). Ao montar, a cada busca e depois de cada escolha
+//    (que zera a busca), `renderList` põe o destaque no primeiro navegável:
+//    digitar e apertar Enter executa, sem seta no meio. Até então esta fábrica
+//    nunca destacava sozinha, e Enter sem seta não fazia nada — o oposto das
+//    paletas de referência e do que cmdk e bits já faziam. Depois disso, setas
+//    e ponteiro movem o destaque como antes. A lista volta ao topo junto, para
+//    o item destacado estar à vista; e sem `scrollIntoView`, que numa busca
+//    rolaria também a PÁGINA em volta.
+//    A decisão vale também a CADA ABERTURA (dona, 2026-09-10), e a fábrica não
+//    sabe quando o hospedeiro abre: por isso a raiz devolvida carrega
+//    `reset()`, que limpa a busca e redesenha, e quem hospeda a paleta num
+//    Dialog o chama no `onOpenChange(true)`. Sem ele o nó reaproveitado
+//    reabria com a busca e o destaque de quando foi fechado.
 
 import { cn } from '@/lib/utils';
 
@@ -152,6 +187,21 @@ export type CommandOptions = {
   items: CommandEntry[];
   onSelect?: (value: string) => void;
   class?: string;
+};
+
+/** A raiz devolvida, com o verbo que devolve a paleta ao estado de abertura. */
+export type CommandElement = HTMLElement & {
+  /**
+   * Limpa a busca e redesenha a lista: o destaque volta ao primeiro comando
+   * habilitado e a lista ao topo (D11). Não mexe no foco nem chama `onSelect`.
+   *
+   * Existe para o hospedeiro chamar a CADA abertura. As fábricas de Dialog,
+   * Popover e afins reaproveitam o mesmo nó de conteúdo entre uma abertura e a
+   * outra, e sem isto a paleta reabria com a busca e o destaque de quando foi
+   * fechada — nas stacks com lib o conteúdo desmonta ao fechar e começa do zero
+   * sozinho.
+   */
+  reset: () => void;
 };
 
 // ─── Ícones ───────────────────────────────────────────────────────────────────
@@ -207,7 +257,7 @@ function createCheckIcon(): SVGSVGElement {
 
 // ─── createCommand ────────────────────────────────────────────────────────────
 
-export function createCommand(options: CommandOptions): HTMLElement {
+export function createCommand(options: CommandOptions): CommandElement {
   const {
     placeholder = 'Search…',
     emptyMessage = 'No results found.',
@@ -255,7 +305,9 @@ export function createCommand(options: CommandOptions): HTMLElement {
   list.id = _listboxId;
   list.setAttribute('role', 'listbox');
   list.setAttribute('aria-label', placeholder || 'Resultados');
-  list.setAttribute('tabindex', '0');
+  // Sem `tabindex` (item 9 do bloco acima): a lista não é parada de Tab.
+  // O foco mora no campo, e o clique na lista não o tira de lá.
+  list.addEventListener('mousedown', (e) => e.preventDefault());
   root.appendChild(list);
 
   // Região viva de "sem resultados" — montada de uma vez, fora do listbox.
@@ -394,6 +446,12 @@ export function createCommand(options: CommandOptions): HTMLElement {
       list.appendChild(groupEl);
       groupIndex += 1;
     });
+
+    // D11 (item 11 do bloco acima): o primeiro habilitado fica em destaque, e
+    // a lista volta ao topo para ele estar à vista. Só desabilitados na tela →
+    // `navigableItems` vazia → nenhum destaque.
+    list.scrollTop = 0;
+    setActive(0, false);
   }
 
   function buildItemEl(item: CommandItem): HTMLElement {
@@ -433,7 +491,12 @@ export function createCommand(options: CommandOptions): HTMLElement {
     return el;
   }
 
-  function setActive(index: number): void {
+  /**
+   * Põe o destaque no navegável de índice `index` (-1 ou fora da faixa: nenhum).
+   * `scroll` traz o item à vista — desligado no destaque automático de
+   * `renderList`, que já devolve a lista ao topo.
+   */
+  function setActive(index: number, scroll = true): void {
     const target = index >= 0 ? navigableItems[index] ?? null : null;
 
     for (const el of visibleItems) {
@@ -441,7 +504,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
     }
 
     if (target) {
-      target.scrollIntoView({ block: 'nearest' });
+      if (scroll) target.scrollIntoView({ block: 'nearest' });
       // Sem isto o leitor de tela não tem como dizer QUAL comando está em
       // destaque: o foco nunca sai do campo de busca.
       input.setAttribute('aria-activedescendant', target.id);
@@ -452,10 +515,15 @@ export function createCommand(options: CommandOptions): HTMLElement {
     }
   }
 
-  function selectItem(value: string): void {
-    onSelect?.(value);
+  /** Busca vazia e lista redesenhada — o estado de abertura (D11). */
+  function reset(): void {
     input.value = '';
     renderList('');
+  }
+
+  function selectItem(value: string): void {
+    onSelect?.(value);
+    reset();
   }
 
   input.addEventListener('input', () => renderList(input.value));
@@ -471,11 +539,13 @@ export function createCommand(options: CommandOptions): HTMLElement {
       e.preventDefault();
       const el = navigableItems[activeIndex];
       if (el) selectItem(el.dataset.value!);
-    } else if (e.key === 'Escape') {
-      input.blur();
     }
+    // Escape não é tratado aqui (item 10 do bloco acima): é do hospedeiro, e
+    // no uso inline o foco fica no campo.
   });
 
   renderList('');
-  return root;
+  // `Object.assign` e não um `as`: o verbo entra no tipo do próprio alvo — a
+  // mesma forma do `setOpen` do Collapsible e dos verbos do Combobox.
+  return Object.assign(root, { reset });
 }

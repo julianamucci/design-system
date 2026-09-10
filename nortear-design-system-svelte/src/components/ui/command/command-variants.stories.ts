@@ -2,8 +2,9 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, waitFor, expect } from 'storybook/test';
 import { Root as Command } from '@/components/ui/command';
-import CommandComposicaoGruposStory from './CommandComposicaoGruposStory.svelte';
-import { commandWithGroupsSource } from './command.source';
+import CommandInlineStory from './CommandInlineStory.svelte';
+import { commandWithGroupsSource, GROUPED_ITEMS, NO_RESULT } from './command.source';
+import { separatorsOf } from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 /*
@@ -48,8 +49,8 @@ export const WithGroups: Story = {
     docs: { source: { transform: commandWithGroupsSource } },
   },
   render: () => ({
-    Component: CommandComposicaoGruposStory,
-    props: {},
+    Component: CommandInlineStory,
+    props: { placeholder: 'Buscar componente...', emptyMessage: NO_RESULT, items: GROUPED_ITEMS },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -72,36 +73,55 @@ export const WithGroups: Story = {
     await step('O cabeçalho não é opção da lista', async () => {
       // Cabeçalho navegável seria pior que inútil: a seta pararia nele como se
       // fosse comando. Os 7 contados acima são exatamente os comandos.
-      const cabecalhos = root.querySelectorAll('.nds-command-group-heading');
-      await expect(cabecalhos).toHaveLength(2);
-      for (const header of cabecalhos) {
-        await expect(header.getAttribute('role')).not.toBe('option');
+      const headings = root.querySelectorAll('.nds-command-group-heading');
+      await expect(headings).toHaveLength(2);
+      for (const heading of headings) {
+        await expect(heading.getAttribute('role')).not.toBe('option');
       }
+      const names = canvas.getAllByRole('option').map((option) => option.textContent?.trim());
+      await expect(names).not.toContain('Componentes');
     });
 
     await step('O divisor é desenho, não estrutura', async () => {
-      const divisor = root.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
-      await expect(divisor).toHaveClass(/nds-command-separator/);
+      await expect(separatorsOf(root)).toHaveLength(1);
+      const divider = separatorsOf(root)[0];
+      await expect(divider).toHaveClass(/nds-command-separator/);
       // `role="separator"` não é filho permitido de um listbox; quem separa os
       // blocos para quem não vê a tela é o rótulo do grupo.
-      await expect(divisor).toHaveAttribute('aria-hidden', 'true');
+      await expect(divider).toHaveAttribute('aria-hidden', 'true');
       await expect(canvas.queryAllByRole('separator')).toHaveLength(0);
     });
 
-    await step('O filtro atravessa os grupos', async () => {
+    await step('Buscando "n" o filtro atravessa os dois grupos — sobram 3', async () => {
+      await userEvent.clear(field);
       await userEvent.type(field, 'n');
       await waitFor(async () => {
-        // Buscando "n": button, input (Componentes) e cn (Utilitários).
+        // Button e Input (Componentes) + cn() (Utilitários).
         await expect(canvas.getAllByRole('option')).toHaveLength(3);
       });
       await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
       await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
+    });
 
-      // A story TERMINA com a lista inteira: é o quadro de `visual.item1`.
+    await step('Buscando "badge" sobra 1 comando e nenhum divisor', async () => {
+      await userEvent.clear(field);
+      await userEvent.type(field, 'badge');
+      await waitFor(async () => {
+        await expect(canvas.getAllByRole('option')).toHaveLength(1);
+      });
+      // Um grupo só na tela: divisor sem nada de um dos lados seria ruído. O
+      // grupo que esvaziou fica `hidden`, fora da árvore.
+      await expect(separatorsOf(root)).toHaveLength(0);
+      await expect(canvas.queryAllByRole('group')).toHaveLength(1);
+    });
+
+    await step('A story termina no estado padrão, com os 7 comandos', async () => {
+      // É o quadro de `visual.item1`.
       await userEvent.clear(field);
       await waitFor(async () => {
         await expect(canvas.getAllByRole('option')).toHaveLength(7);
       });
+      await expect(separatorsOf(root)).toHaveLength(1);
     });
   },
 };

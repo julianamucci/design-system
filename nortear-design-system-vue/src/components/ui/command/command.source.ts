@@ -8,33 +8,88 @@
  * A paleta é composição de call site: raiz, campo de busca, lista com grupos e
  * a região de "nenhum resultado" FORA da lista. A tag da raiz sozinha não
  * ensinaria nenhuma dessas posições.
+ *
+ * Os comandos saem de `command.fixtures.ts`, os MESMOS dados que as stories
+ * desenham: o painel não tem como mostrar uma lista e a story outra.
  */
-import { attrBool, asCode, indentar, text, vueSnippet, type SourceTransform } from '@/lib/story-source';
+import { asCode, indentar, text, vueSnippet, type SourceTransform } from '@/lib/story-source';
+import {
+  CHECKED_BLOCKS,
+  DISABLED_ITEM_BLOCKS,
+  DISABLED_ITEMS_BLOCKS,
+  EMPTY_STATE_BLOCKS,
+  FRAME,
+  GROUPED_BLOCKS,
+  LONG_LIST_NAMES,
+  NO_RESULT,
+  PALETTE_BLOCKS,
+  PALETTE_DESCRIPTION,
+  PALETTE_TITLE,
+  PLAYGROUND_BLOCKS,
+  SEPARATOR_BLOCKS,
+  SHORTCUT_BLOCKS,
+  type CommandBlock,
+  type CommandEntry,
+} from './command.fixtures';
 
 export type CommandArgs = {
   placeholder: string;
   emptyMessage: string;
   showGroups: boolean;
-  highlightOnHover: boolean;
 };
 
-/** Import do design system, com as peças que cada arranjo usa. */
-function importing(...names: string[]): string {
+/** Nome da função que quem consome escreve para rodar o comando escolhido. */
+const RUN = 'runCommand';
+
+const RUN_FUNCTION = `function ${RUN}(value: string) {
+  // roda o comando escolhido
+}`;
+
+/** Import do design system, só com as peças que o arranjo usa. */
+function importing(names: string[]): string {
   return `import {
 ${names.map((name) => `  ${name},`).join('\n')}
 } from '@/components/ui/command'`;
 }
 
-const PARTS_BASICAS = ['Command', 'CommandEmpty', 'CommandGroup', 'CommandInput', 'CommandItem', 'CommandList'];
+/** As peças que uma lista de blocos usa, na ordem alfabética do import. */
+function partsFor(blocks: CommandBlock[], root: 'Command' | 'CommandDialog'): string[] {
+  const parts = new Set([root, 'CommandEmpty', 'CommandGroup', 'CommandInput', 'CommandItem', 'CommandList']);
+  if (blocks.length > 1) parts.add('CommandSeparator');
+  if (blocks.some((block) => block.items.some((item) => item.shortcut))) parts.add('CommandShortcut');
+  return [...parts].sort();
+}
 
 /**
- * A moldura da paleta inline: largura, borda e sombra são do call site, não do
- * componente — a raiz não desenha caixa nenhuma sozinha.
+ * Um comando. `checked` só é escrito quando o comando É marcável: ausente e
+ * `false` são coisas diferentes, e o `false` ensina o segundo caso.
  */
-function frame(interior: string): string {
-  return `<div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
-${indentar(interior, 2)}
-</div>`;
+function itemMarkup(item: CommandEntry, withHandler: boolean): string {
+  const attributes = [
+    `value="${item.value}"`,
+    item.disabled ? 'disabled' : '',
+    item.checked === undefined ? '' : `:checked="${item.checked}"`,
+    withHandler ? `@select="${RUN}('${item.value}')"` : '',
+  ].filter(Boolean).join(' ');
+
+  if (!item.shortcut) return `<CommandItem ${attributes}>${item.label}</CommandItem>`;
+  return `<CommandItem ${attributes}>
+  ${item.label}
+  <CommandShortcut>${item.shortcut}</CommandShortcut>
+</CommandItem>`;
+}
+
+/** Os blocos da lista: um grupo por bloco, um traço entre dois blocos. */
+function listMarkup(blocks: CommandBlock[], withHandler: boolean): string {
+  return blocks
+    .map((block) => {
+      const opening = block.heading ? `<CommandGroup heading="${block.heading}">` : '<CommandGroup>';
+      const items = block.items.map((item) => itemMarkup(item, withHandler)).join('\n');
+      return `${opening}
+${indentar(items, 2)}
+</CommandGroup>`;
+    })
+    .join('\n\n<CommandSeparator />\n\n');
 }
 
 /**
@@ -44,27 +99,35 @@ ${indentar(interior, 2)}
  * é filho permitido de `role="listbox"`, e dentro dela o axe reprova por
  * `aria-required-children`.
  */
-function palette(options: {
-  root?: string;
-  placeholder: string;
-  list: string;
-  vazio?: string;
-}): string {
-  const { root = '', placeholder, list, vazio = 'Nenhum resultado encontrado.' } = options;
-  const abertura = root ? `<Command ${root}>` : '<Command>';
-  return `${abertura}
+function palette(options: { root?: 'Command' | 'CommandDialog'; rootAttributes?: string; placeholder: string; list: string; empty?: string }): string {
+  const { root = 'Command', rootAttributes = '', placeholder, list, empty = NO_RESULT } = options;
+  const opening = rootAttributes ? `<${root}\n${indentar(rootAttributes, 2)}\n>` : `<${root}>`;
+  return `${opening}
   <CommandInput placeholder="${placeholder}" />
 
   <CommandList>
 ${indentar(list, 4)}
   </CommandList>
 
-  <CommandEmpty>${vazio}</CommandEmpty>
-</Command>`;
+  <CommandEmpty>${empty}</CommandEmpty>
+</${root}>`;
+}
+
+/** A moldura da paleta inline: largura, borda e sombra são do call site. */
+function frame(interior: string): string {
+  return `<div class="${FRAME}">
+${indentar(interior, 2)}
+</div>`;
+}
+
+/** Paleta inline a partir dos blocos — o arranjo de quase toda story. */
+function inlineSnippet(blocks: CommandBlock[], placeholder: string, withHandler = false): string {
+  const script = withHandler ? `${importing(partsFor(blocks, 'Command'))}\n\n${RUN_FUNCTION}` : importing(partsFor(blocks, 'Command'));
+  return vueSnippet(script, frame(palette({ placeholder, list: listMarkup(blocks, withHandler) })));
 }
 
 /**
- * Playground: o campo, dois grupos separados por um divisor e cinco comandos.
+ * Playground: o campo, dois grupos separados por um traço e cinco comandos.
  *
  * Os controls de texto passam por `asCode`/`text`, que descartam o que não
  * for string — o Storybook troca arg de ação por um espião, e o corpo do mock
@@ -74,43 +137,24 @@ ${indentar(list, 4)}
  * que cabeçalho ausente, e o componente remove o `aria-labelledby` quando não há
  * rótulo, em vez de deixar a referência apontando para um id inexistente.
  */
-export const commandSource: SourceTransform<CommandArgs> = (_gerado, ctx) => {
+export const commandSource: SourceTransform<CommandArgs> = (_generated, ctx) => {
   const args = ctx?.args ?? {};
   const placeholder = text(asCode(args.placeholder), 'Buscar componente...');
-  const vazio = asCode(args.emptyMessage) ?? 'Nenhum resultado encontrado.';
-  const withGroups = args.showGroups !== false;
-  const title = (name: string) => (withGroups ? ` heading="${name}"` : '');
+  const empty = asCode(args.emptyMessage) ?? NO_RESULT;
+  const blocks = args.showGroups === false
+    ? PLAYGROUND_BLOCKS.map((block) => ({ ...block, heading: undefined }))
+    : PLAYGROUND_BLOCKS;
 
   return vueSnippet(
-    `${importing(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut')}
-
-function executar(valor: string) {
-  // roda o comando escolhido e devolve o foco para onde ele age
-}`,
-    frame(
-      palette({
-        root: attrBool('highlight-on-hover', args.highlightOnHover, false),
-        placeholder,
-        vazio,
-        list: `<CommandGroup${title('Componentes')}>
-  <CommandItem value="button" @select="executar('button')">
-    Button
-    <CommandShortcut>Ctrl+B</CommandShortcut>
-  </CommandItem>
-  <CommandItem value="input" @select="executar('input')">Input</CommandItem>
-  <CommandItem value="separator" @select="executar('separator')">Separator</CommandItem>
-</CommandGroup>
-
-<CommandSeparator />
-
-<CommandGroup${title('Utilitários')}>
-  <CommandItem value="cn" @select="executar('cn')">cn()</CommandItem>
-  <CommandItem value="clsx" @select="executar('clsx')">clsx()</CommandItem>
-</CommandGroup>`,
-      }),
-    ),
+    `${importing(partsFor(blocks, 'Command'))}\n\n${RUN_FUNCTION}`,
+    frame(palette({ placeholder, empty, list: listMarkup(blocks, true) })),
   );
 };
+
+/** Grupos nomeados com um traço entre eles — a variante `withGroups`. */
+export function commandWithGroupsSource(): string {
+  return inlineSnippet(GROUPED_BLOCKS, 'Buscar componente...');
+}
 
 /**
  * Sem resultados: nada de especial a escrever no call site — o componente
@@ -118,18 +162,7 @@ function executar(valor: string) {
  * a POSIÇÃO dela, fora da lista.
  */
 export function commandEmptySource(): string {
-  return vueSnippet(
-    importing(...PARTS_BASICAS),
-    frame(
-      palette({
-        placeholder: 'Buscar componente...',
-        list: `<CommandGroup heading="Componentes">
-  <CommandItem value="button">Button</CommandItem>
-  <CommandItem value="input">Input</CommandItem>
-</CommandGroup>`,
-      }),
-    ),
-  );
+  return inlineSnippet(EMPTY_STATE_BLOCKS, 'Buscar componente...');
 }
 
 /**
@@ -138,81 +171,45 @@ export function commandEmptySource(): string {
  * nada escrito aqui.
  */
 export function commandItemDisabledSource(): string {
-  return vueSnippet(
-    `import { ref } from 'vue'
-${importing(...PARTS_BASICAS)}
-
-const ultimo = ref('')`,
-    `<div class="nds-stack" data-spacing="sm">
-${indentar(
-  frame(
-    palette({
-      placeholder: 'Buscar comando...',
-      list: `<CommandGroup heading="Arquivo">
-  <CommandItem value="novo" @select="ultimo = 'novo'">Novo</CommandItem>
-  <CommandItem value="arquivar" disabled @select="ultimo = 'arquivar'">Arquivar</CommandItem>
-  <CommandItem value="renomear" @select="ultimo = 'renomear'">Renomear</CommandItem>
-</CommandGroup>`,
-    }),
-  ),
-  2,
-)}
-
-  <p class="nds-text-body nds-text-muted-foreground">{{ ultimo }}</p>
-</div>`,
-  );
+  return inlineSnippet(DISABLED_ITEM_BLOCKS, 'Buscar comando...', true);
 }
 
 /**
- * Comando marcado. `checked` ausente e `checked` falso são coisas DIFERENTES:
- * sem a prop o comando não é marcável e não reserva espaço para a marca; com
- * `false` ele é marcável e está desmarcado. Por isso o `false` entra escrito.
+ * Comando marcado. Sem a prop o comando não é marcável e não reserva espaço
+ * para a marca; com `false` ele é marcável e está desmarcado.
  *
  * O item com atalho não leva marca: os dois disputariam a borda direita, e a
  * regra é escolher um dos dois por comando.
  */
 export function commandItemCheckedSource(): string {
-  return vueSnippet(
-    importing(...PARTS_BASICAS, 'CommandShortcut'),
-    frame(
-      palette({
-        placeholder: 'Buscar tema...',
-        list: `<CommandGroup heading="Aparência">
-  <CommandItem value="claro" :checked="true">Claro</CommandItem>
-  <CommandItem value="escuro" :checked="false">Escuro</CommandItem>
-  <CommandItem value="sistema" :checked="true">
-    Sistema
-    <CommandShortcut>Ctrl+S</CommandShortcut>
-  </CommandItem>
-</CommandGroup>`,
-      }),
-    ),
-  );
+  return inlineSnippet(CHECKED_BLOCKS, 'Buscar tema...');
 }
 
 /**
- * Grupos nomeados com divisor entre eles. O divisor não é comando nem filho da
- * lista para a árvore de acessibilidade — o componente o esconde dela, porque
- * um listbox só admite `option` e `group`.
+ * Lista longa. Trinta comandos se escrevem com `v-for`, e a lista rola sozinha
+ * — o teto de altura é da folha, não do call site.
  */
-export function commandWithGroupsSource(): string {
+export function commandLongListSource(): string {
+  const names = LONG_LIST_NAMES.map((name) => `'${name}'`);
+  const rows: string[] = [];
+  for (let i = 0; i < names.length; i += 5) rows.push(`  ${names.slice(i, i + 5).join(', ')},`);
   return vueSnippet(
-    importing(...PARTS_BASICAS, 'CommandSeparator'),
+    `${importing(['Command', 'CommandEmpty', 'CommandGroup', 'CommandInput', 'CommandItem', 'CommandList'])}
+
+const componentNames = [
+${rows.join('\n')}
+]`,
     frame(
       palette({
         placeholder: 'Buscar componente...',
         list: `<CommandGroup heading="Componentes">
-  <CommandItem value="button">Button</CommandItem>
-  <CommandItem value="input">Input</CommandItem>
-  <CommandItem value="select">Select</CommandItem>
-</CommandGroup>
-
-<CommandSeparator />
-
-<CommandGroup heading="Utilitários">
-  <CommandItem value="separator">Separator</CommandItem>
-  <CommandItem value="badge">Badge</CommandItem>
-  <CommandItem value="avatar">Avatar</CommandItem>
+  <CommandItem
+    v-for="name in componentNames"
+    :key="name"
+    :value="name.toLowerCase()"
+  >
+    {{ name }}
+  </CommandItem>
 </CommandGroup>`,
       }),
     ),
@@ -224,41 +221,20 @@ export function commandWithGroupsSource(): string {
  * acessível, e quem ouve a lista descobre a tecla junto com o comando.
  */
 export function commandWithShortcutsSource(): string {
-  return vueSnippet(
-    importing(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut'),
-    frame(
-      palette({
-        placeholder: 'Buscar ação...',
-        list: `<CommandGroup heading="Ações">
-  <CommandItem value="novo-arquivo">
-    Novo arquivo
-    <CommandShortcut>Ctrl+N</CommandShortcut>
-  </CommandItem>
-  <CommandItem value="abrir">
-    Abrir
-    <CommandShortcut>Ctrl+O</CommandShortcut>
-  </CommandItem>
-  <CommandItem value="salvar">
-    Salvar
-    <CommandShortcut>Ctrl+S</CommandShortcut>
-  </CommandItem>
-</CommandGroup>
+  return inlineSnippet(SHORTCUT_BLOCKS, 'Buscar comando...');
+}
 
-<CommandSeparator />
+/**
+ * Traço entre dois blocos SEM cabeçalho. Ele some junto com os comandos quando
+ * o filtro esvazia um dos lados — o componente decide, nada a escrever aqui.
+ */
+export function commandWithSeparatorSource(): string {
+  return inlineSnippet(SEPARATOR_BLOCKS, 'Buscar comando...');
+}
 
-<CommandGroup heading="Editar">
-  <CommandItem value="desfazer">
-    Desfazer
-    <CommandShortcut>Ctrl+Z</CommandShortcut>
-  </CommandItem>
-  <CommandItem value="refazer">
-    Refazer
-    <CommandShortcut>Ctrl+Shift+Z</CommandShortcut>
-  </CommandItem>
-</CommandGroup>`,
-      }),
-    ),
-  );
+/** Vários comandos desabilitados: as setas percorrem só os habilitados. */
+export function commandWithDisabledItemsSource(): string {
+  return inlineSnippet(DISABLED_ITEMS_BLOCKS, 'Buscar...', true);
 }
 
 /**
@@ -266,74 +242,48 @@ export function commandWithShortcutsSource(): string {
  * leitor de tela vê — o diálogo precisa de nome, e a paleta não tem cabeçalho
  * visível.
  *
- * O Cmd+K não é de componente nenhum: é ouvinte de janela, e quem o registra é
+ * O Ctrl+K não é de componente nenhum: é ouvinte de janela, e quem o registra é
  * quem consome. `onUnmounted` remove — sem isso o atalho sobrevive à tela que o
- * criou. A dica visível no gatilho é o que faz o atalho ser descoberto.
+ * criou. A dica fica DENTRO do gatilho: é o texto visível que nomeia o botão, e
+ * a dica é o que faz o atalho ser descoberto.
  */
 export function commandPaletteSource(): string {
   return vueSnippet(
     `import { onMounted, onUnmounted, ref } from 'vue'
 import { Button } from '@/components/ui/button'
-${importing('CommandDialog', 'CommandEmpty', 'CommandGroup', 'CommandInput', 'CommandItem', 'CommandList', 'CommandSeparator', 'CommandShortcut')}
+${importing(partsFor(PALETTE_BLOCKS, 'CommandDialog'))}
 
-const aberto = ref(false)
-const ultimo = ref('')
+const open = ref(false)
 
-function aoTeclar(evento: KeyboardEvent) {
-  if (evento.key.toLowerCase() !== 'k' || !(evento.metaKey || evento.ctrlKey)) return
+function onKeydown(event: KeyboardEvent) {
+  if (event.key.toLowerCase() !== 'k' || !(event.metaKey || event.ctrlKey)) return
   // Sem isto o navegador leva o atalho para a barra de endereço.
-  evento.preventDefault()
-  aberto.value = true
+  event.preventDefault()
+  open.value = true
 }
 
-onMounted(() => window.addEventListener('keydown', aoTeclar))
-onUnmounted(() => window.removeEventListener('keydown', aoTeclar))
+onMounted(() => window.addEventListener('keydown', onKeydown))
+onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 
-function executar(valor: string) {
-  ultimo.value = valor
-  aberto.value = false
+function ${RUN}(value: string) {
+  // roda o comando escolhido, e a paleta fecha
+  open.value = false
 }`,
-    `<div class="nds-stack" data-align="center" data-spacing="md">
-  <Button
-    variant="outline"
-    aria-haspopup="dialog"
-    :aria-expanded="aberto"
-    @click="aberto = true"
-  >
-    Buscar
-    <kbd class="nds-kbd">Ctrl+K</kbd>
-  </Button>
+    `<Button
+  variant="outline"
+  aria-haspopup="dialog"
+  :aria-expanded="open"
+  @click="open = true"
+>
+  Buscar
+  <kbd class="nds-kbd">Ctrl+K</kbd>
+</Button>
 
-  <CommandDialog
-    v-model:open="aberto"
-    title="Command Palette"
-    description="Busque por um comando ou ação..."
-  >
-    <CommandInput placeholder="Buscar componente..." />
-
-    <CommandList>
-      <CommandGroup heading="Componentes">
-        <CommandItem value="button" @select="executar('button')">
-          Button
-          <CommandShortcut>Ctrl+B</CommandShortcut>
-        </CommandItem>
-        <CommandItem value="input" @select="executar('input')">
-          Input
-          <CommandShortcut>Ctrl+I</CommandShortcut>
-        </CommandItem>
-      </CommandGroup>
-
-      <CommandSeparator />
-
-      <CommandGroup heading="Utilitários">
-        <CommandItem value="separator" @select="executar('separator')">Separator</CommandItem>
-      </CommandGroup>
-    </CommandList>
-
-    <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
-  </CommandDialog>
-
-  <p class="nds-text-body nds-text-muted-foreground">{{ ultimo }}</p>
-</div>`,
+${palette({
+  root: 'CommandDialog',
+  rootAttributes: `v-model:open="open"\ntitle="${PALETTE_TITLE}"\ndescription="${PALETTE_DESCRIPTION}"`,
+  placeholder: 'Buscar componente...',
+  list: listMarkup(PALETTE_BLOCKS, true),
+})}`,
   );
 }

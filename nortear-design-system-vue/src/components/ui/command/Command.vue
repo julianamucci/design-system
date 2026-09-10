@@ -7,8 +7,13 @@ import { reactive, ref, watch } from 'vue'
 import { cn } from '@/lib/utils'
 import { provideCommandContext } from './index'
 
+// `highlightOnHover` vem ligado: o ponteiro move o destaque (PRD, D1), como no
+// Vanilla. O padrão da lib é `false`, e com ele o item sob o mouse ganhava o
+// fundo do `:hover` mas não o anel nem o `aria-selected` — o Enter ativava um
+// item e o desenho apontava outro.
 const props = withDefaults(defineProps<ListboxRootProps & { class?: HTMLAttributes['class'] }>(), {
   modelValue: '',
+  highlightOnHover: true,
 })
 
 const emits = defineEmits<ListboxRootEmits>()
@@ -17,8 +22,9 @@ const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-const allItems = ref<Map<string, string>>(new Map())
+const allItems = ref<Map<string, () => string[]>>(new Map())
 const allGroups = ref<Map<string, Set<string>>>(new Map())
+const searchLabel = ref<string>()
 
 const listId = useId(undefined, 'nds-command-list')
 
@@ -47,8 +53,8 @@ function filterItems() {
   let itemCount = 0
 
   // Check which items should be included
-  for (const [id, value] of allItems.value) {
-    const score = contains(value, filterState.search)
+  for (const [id, readTexts] of allItems.value) {
+    const score = readTexts().some(text => contains(text, filterState.search))
     filterState.filtered.items.set(id, score ? 1 : 0)
     if (score)
       itemCount++
@@ -73,6 +79,7 @@ watch(() => filterState.search, () => {
 
 provideCommandContext({
   listId,
+  searchLabel,
   allItems,
   allGroups,
   filterState,
@@ -106,11 +113,17 @@ provideCommandContext({
       o deriva do modelo e marca o destaque só com `data-highlighted`, que
       nenhuma regra da folha alcança);
     · `CommandSeparator` vira decorativo, porque o primitivo emite
-      `role="separator"`, filho não permitido de `listbox`;
+      `role="separator"`, filho não permitido de `listbox` — e SOME quando um
+      dos lados esvazia no filtro, porque não sobra fronteira para marcar;
     · `CommandEmpty` fica FORA do `CommandList`, montado o tempo todo, com
       `role="status"` + `aria-live` + `aria-atomic` — a única região viva do
-      componente, e justificada no bloco canônico (item 6). Esta stack CUMPRE o
-      contrato; react e svelte ainda não.
+      componente, e justificada no bloco canônico (item 6);
+    · a lista é nomeada pelo placeholder do campo, que o `CommandInput`
+      publica na raiz (`searchLabel`);
+    · o filtro compara o rótulo SEM o atalho e o `value` do item — o texto do
+      atalho não é nome de comando, e "ctrl" não pode trazer a lista inteira;
+    · `CommandList` põe o destaque no primeiro comando HABILITADO ao montar e a
+      cada busca (PRD, D11) — a lib só o fazia depois de uma tecla digitada.
 -->
 
 <template>

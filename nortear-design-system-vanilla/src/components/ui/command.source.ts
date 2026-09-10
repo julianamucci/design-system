@@ -12,6 +12,8 @@ import {
 
 /** Um comando da lista, na forma que a fábrica aceita. */
 export type CommandItemSnippet = {
+  /** Ausente vale por `'item'`, como na fábrica. */
+  type?: 'item';
   value: string;
   label: string;
   group?: string;
@@ -34,19 +36,30 @@ export type CommandSnippetOptions = {
   onSelect?: string;
 };
 
-/** Lista canônica: dois blocos nomeados, que é o arranjo mais comum da paleta. */
+/**
+ * Lista canônica: a MESMA que o Playground desenha (`buildItems` em
+ * `command.stories.ts`), dois blocos nomeados.
+ *
+ * Até 2026-09-10 esta lista tinha três comandos e o Playground cinco: o painel
+ * Code da story mais aberta do componente publicava uma paleta diferente da que
+ * estava na tela. Mudou um lado, mude o outro.
+ */
 function itemsDefault(withGroups: boolean): CommandEntrySnippet[] {
   const componentes = withGroups ? 'Componentes' : undefined;
   const utilitarios = withGroups ? 'Utilitários' : undefined;
   return [
     { value: 'button', label: 'Button', group: componentes },
     { value: 'input', label: 'Input', group: componentes },
+    { value: 'separator', label: 'Separator', group: componentes },
     { value: 'cn', label: 'cn()', group: utilitarios },
+    { value: 'clsx', label: 'clsx()', group: utilitarios },
   ];
 }
 
 function literalDoItem(entry: CommandEntrySnippet): string {
-  if ('type' in entry) return "{ type: 'separator' }";
+  // Pelo VALOR do discriminante, e não pela presença da chave: um comando pode
+  // declarar `type: 'item'` e continua sendo comando.
+  if (entry.type === 'separator') return "{ type: 'separator' }";
   const partes = [`value: ${text(entry.value)}`, `label: ${text(entry.label)}`];
   if (entry.group) partes.push(`group: ${text(entry.group)}`);
   if (entry.shortcut) partes.push(`shortcut: ${text(entry.shortcut)}`);
@@ -93,6 +106,10 @@ export function commandSnippet(o: CommandSnippetOptions = {}): string {
  * Forma própria pelo mesmo motivo do arranjo acima, mais o atalho global: o
  * Cmd+K não é nativo de componente nenhum, é um ouvinte de janela que quem
  * consome registra.
+ *
+ * A dica do atalho vai DENTRO do gatilho e a classe do painel entra na chamada,
+ * como na story: sem a `.nds-command-dialog-content` o painel usa o
+ * centramento do Dialog comum, com padding, e não o de paleta (PRD D9).
  */
 export function commandEmDialogSnippet(o: CommandSnippetOptions = {}): string {
   return snippet(
@@ -101,7 +118,13 @@ export function commandEmDialogSnippet(o: CommandSnippetOptions = {}): string {
       importing('command', 'createCommand'),
       importing('dialog', 'createDialog'),
     ].join('\n'),
-    "const gatilho = createButton({ variant: 'outline', label: 'Buscar' });",
+    [
+      "const gatilho = createButton({ variant: 'outline', label: 'Buscar' });",
+      "const dica = document.createElement('kbd');",
+      "dica.className = 'nds-kbd';",
+      "dica.textContent = 'Ctrl+K';",
+      'gatilho.append(dica);',
+    ].join('\n'),
     `const paleta = ${callLine('createCommand', paletteOptions(o))};`,
     `const dialogo = ${callLine('createDialog', options([
       ['trigger', 'gatilho'],
@@ -109,12 +132,17 @@ export function commandEmDialogSnippet(o: CommandSnippetOptions = {}): string {
       ['description', text('Busque por um comando ou ação...')],
       ['headerHidden', 'true'],
       ['showCloseButton', 'false'],
+      ['class', text('nds-command-dialog-content')],
       ['content', 'paleta'],
+      ['onOpenChange', '(open) => { if (open) paleta.reset(); }'],
     ]))};`,
     [
       '// O diálogo precisa de nome, e desenhá-lo em cima da busca seria',
       '// redundante para quem enxerga: `headerHidden` tira o cabeçalho da tela',
       '// e o mantém na árvore de acessibilidade.',
+      '',
+      '// O Dialog reaproveita o nó da paleta: `reset()` a cada abertura começa',
+      '// com a busca vazia e o primeiro comando em destaque.',
       '',
       '// O atalho global é de quem consome — componente nenhum o registra.',
       "window.addEventListener('keydown', (e) => {",

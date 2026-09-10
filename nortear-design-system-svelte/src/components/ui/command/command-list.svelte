@@ -1,16 +1,44 @@
 <script lang="ts">
 	import { Command as CommandPrimitive } from "bits-ui";
 	import { cn } from "@/lib/utils.js";
+	import { useCommandSearchContext } from "./command-context.js";
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		children,
-		// O default da lib é "Suggestions..." — nome acessível em inglês num
-		// produto em português. Quem consome pode sobrescrever.
-		"aria-label": ariaLabel = "Resultados da busca",
+		"aria-label": ariaLabel,
+		onmousedown,
 		...restProps
 	}: CommandPrimitive.ListProps = $props();
+
+	/**
+	 * O ponteiro não tira o foco do campo — a forma do Vanilla, que cancela o
+	 * `mousedown` na lista.
+	 *
+	 * Os itens não são focáveis (D1), e o `mousedown` num elemento não focável
+	 * leva o foco para o ancestral focável mais próximo. Até 2026-09-10 esse
+	 * ancestral era a raiz, que a lib marcava com `tabindex="-1"` e que também
+	 * escutava as setas; sem ele (ver `command.svelte`), o foco cairia no
+	 * `body` e a próxima seta não moveria nada. Cancelar o `mousedown` mantém o
+	 * foco onde a paleta o quer, no campo — o `click` continua disparando, e é
+	 * ele que escolhe o comando. O manipulador de quem consome roda antes.
+	 */
+	function handleMousedown(event: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
+		onmousedown?.(event);
+		event.preventDefault();
+	}
+
+	/**
+	 * O nome da lista é o placeholder do campo — a forma do Vanilla (ver
+	 * `command-context.ts`). O default da lib é "Suggestions...", em inglês em
+	 * qualquer idioma; o desta stack era "Resultados da busca", em português em
+	 * qualquer idioma. Quem consome ainda pode nomear à mão.
+	 *
+	 * O último recurso, sem placeholder nenhum, é o mesmo do Vanilla.
+	 */
+	const search = useCommandSearchContext();
+	const listName = $derived(ariaLabel ?? (search?.placeholder || "Resultados"));
 </script>
 
 <!--
@@ -36,7 +64,8 @@
 <CommandPrimitive.List
 	bind:ref
 	data-slot="command-list"
-	aria-label={ariaLabel}
+	aria-label={listName}
+	onmousedown={handleMousedown}
 	class={cn("nds-command-list", className)}
 	{...restProps}
 >

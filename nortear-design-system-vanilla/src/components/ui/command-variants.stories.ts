@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import type { CommandItem } from './command';
-import { commandSource } from './command.source';
-import { separadores, mountInline } from './command.fixtures';
+import { commandSource, commandSourceWith } from './command.source';
+import { NO_RESULT, separadores, mountInline } from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 /*
@@ -51,7 +51,20 @@ const ITEMS_AGRUPADOS: CommandItem[] = [
 ];
 
 export const WithGroups: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    // Sem override, o painel Code caía na lista canônica do meta — cinco
+    // comandos contra os sete que esta story desenha.
+    docs: {
+      source: {
+        transform: commandSourceWith({
+          placeholder: 'Buscar componente...',
+          emptyMessage: NO_RESULT,
+          items: ITEMS_AGRUPADOS,
+        }),
+      },
+    },
+  },
   render: () => mountInline(ITEMS_AGRUPADOS, 'Buscar componente...'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -96,6 +109,11 @@ export const WithGroups: Story = {
       // Um grupo só na tela: divisor sem nada de um dos lados seria ruído.
       await expect(separadores(canvasElement)).toHaveLength(0);
       await expect(canvas.queryAllByRole('group')).toHaveLength(1);
+      // E o que sobrou já está em destaque (D11): "badge" + Enter o executa.
+      await expect(canvas.getByRole('option', { name: 'Badge' })).toHaveAttribute(
+        'aria-selected',
+        'true',
+      );
     });
 
     await step('A story termina no estado padrão, com os 7 comandos', async () => {

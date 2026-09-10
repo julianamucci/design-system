@@ -2,8 +2,20 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_COMMAND } from './command';
+import { commandWithGroupsSource } from './command.source';
+import { WRAPPER, NO_RESULT, waitForOptions, visibleSeparators } from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
+/*
+ * As VARIANTES da paleta são as entradas de `variants.items` do conteúdo
+ * compartilhado — inline, command palette e com grupos. `inline` é o próprio
+ * Playground e `palette` depende do Dialog, então mora em Compositions; o que
+ * sobra para cá é a lista dividida em grupos.
+ *
+ * Havia aqui uma story `Inline` que repetia o Playground com um grupo a menos:
+ * a mesma peça em dois lugares da barra lateral, e só nesta stack. O grupo sai
+ * do ARQUIVO, e o arquivo sai do conteúdo: `-variants` espelha `variants.items`.
+ */
 const meta: Meta = {
   title: 'Components/Overlay/Command/Variants',
   tags: ['overlay'],
@@ -16,10 +28,8 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'A paleta não tem variante visual por prop — o que muda entre os padrões é a ' +
-          'composição. Aqui ficam os dois arranjos inline: lista corrida e lista dividida ' +
-          'em grupos. O arranjo flutuante (command palette) está em Compositions, ' +
-          'porque depende do Dialog.',
+          'A paleta não tem variante visual por prop — o que muda entre os arranjos é a ' +
+          'composição. Aqui fica a lista dividida em grupos nomeados, com divisor entre eles.',
       },
     },
   },
@@ -28,59 +38,16 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Inline ───────────────────────────────────────────────────────────────────
-
-export const Inline: Story = {
-  render: () => ({
-    template: `
-      <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
-        <nds-command>
-          <input ndsCommandInput placeholder="Buscar componente..." />
-
-          <div ndsCommandList>
-            <div ndsCommandGroup>
-              <div ndsCommandItem value="button">Button</div>
-              <div ndsCommandItem value="input">Input</div>
-              <div ndsCommandItem value="separator">Separator</div>
-            </div>
-          </div>
-
-          <div ndsCommandEmpty>Nenhum resultado encontrado.</div>
-        </nds-command>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
-
-    await step('Grupo único dispensa cabeçalho', async () => {
-      // A guideline é essa: rótulo de grupo só quando há mais de um grupo,
-      // senão ele repete o que o campo de busca já diz.
-      await expect(root.querySelectorAll('.nds-command-group-heading')).toHaveLength(0);
-      // Os itens se registram no render seguinte ao da montagem.
-      await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(3);
-      });
-    });
-
-    await step('A lista fica no fluxo da página, sem portal', async () => {
-      // É o que separa o padrão inline dos outros dois: nada é teleportado
-      // para o `body`, então a paleta rola junto com a seção onde vive.
-      const list = canvas.getByRole('listbox');
-      await expect(root.contains(list)).toBe(true);
-      await expect(within(document.body).getAllByRole('listbox')).toHaveLength(1);
-    });
-  },
-};
-
 // ─── Com grupos ───────────────────────────────────────────────────────────────
 
 export const WithGroups: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: commandWithGroupsSource } },
+  },
   render: () => ({
     template: `
-      <div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
+      <div class="${WRAPPER}">
         <nds-command>
           <input ndsCommandInput placeholder="Buscar componente..." />
 
@@ -88,6 +55,7 @@ export const WithGroups: Story = {
             <div ndsCommandGroup heading="Componentes">
               <div ndsCommandItem value="button">Button</div>
               <div ndsCommandItem value="input">Input</div>
+              <div ndsCommandItem value="badge">Badge</div>
               <div ndsCommandItem value="separator">Separator</div>
             </div>
 
@@ -96,58 +64,73 @@ export const WithGroups: Story = {
             <div ndsCommandGroup heading="Utilitários">
               <div ndsCommandItem value="cn">cn()</div>
               <div ndsCommandItem value="clsx">clsx()</div>
+              <div ndsCommandItem value="twmerge">twMerge()</div>
             </div>
           </div>
 
-          <div ndsCommandEmpty>Nenhum resultado encontrado.</div>
+          <div ndsCommandEmpty>${NO_RESULT}</div>
         </nds-command>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const root = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
     const field = canvas.getByRole('combobox');
 
+    // Os itens se registram no render seguinte ao da montagem, e a play
+    // REEXECUTA no mesmo DOM: a busca parte sempre do zero.
     await userEvent.clear(field);
+    await waitForOptions(canvasElement, 7);
 
     await step('Cada grupo é nomeado pelo próprio cabeçalho', async () => {
+      const headings = canvasElement.querySelectorAll<HTMLElement>('.nds-command-group-heading');
+      await expect(headings).toHaveLength(2);
       // Sem o `aria-labelledby` o leitor anuncia "grupo" e a pessoa não sabe
       // de qual bloco se trata.
-      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeTruthy();
-      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeTruthy();
+      await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
+      await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
+      // O cabeçalho NÃO é uma opção — o erro clássico deste componente é
+      // deixá-lo entrar na lista e virar destino de navegação.
+      await expect(headings[0].getAttribute('role')).toBeNull();
+      const names = canvas.getAllByRole('option').map((o) => o.textContent?.trim());
+      await expect(names).not.toContain('Componentes');
     });
 
-    await step('O cabeçalho não é opção da lista', async () => {
-      // Cabeçalho navegável seria pior que inútil: a seta pararia nele como se
-      // fosse comando, e o filtro o traria como resultado.
+    await step('Um divisor separa os dois grupos, fora da árvore', async () => {
       await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(5);
+        await expect(visibleSeparators(canvasElement)).toHaveLength(1);
       });
-    });
-
-    await step('O divisor é desenho, não estrutura', async () => {
-      const divisor = root.querySelector<HTMLElement>('[data-slot="command-separator"]')!;
-      await expect(divisor).toHaveClass(/nds-command-separator/);
-      // `role="separator"` não é filho permitido de um listbox; quem separa os
-      // blocos para quem não vê a tela é o rótulo do grupo.
-      await expect(divisor).toHaveAttribute('aria-hidden', 'true');
+      await expect(visibleSeparators(canvasElement)[0]).toHaveAttribute('aria-hidden', 'true');
+      // Só `option` e `group` são filhos permitidos de um listbox.
       await expect(canvas.queryAllByRole('separator')).toHaveLength(0);
     });
 
-    await step('O filtro atravessa os grupos', async () => {
+    await step('Buscando "n" o filtro atravessa os dois grupos — sobram 3', async () => {
+      await userEvent.clear(field);
       await userEvent.type(field, 'n');
-
-      await waitFor(async () => {
-        // "Button", "Input" e "cn()" — dois grupos ao mesmo tempo.
-        await expect(canvas.getAllByRole('option')).toHaveLength(3);
-      });
+      // Button e Input (Componentes) + cn() (Utilitários).
+      await waitForOptions(canvasElement, 3);
       await expect(canvas.getByRole('group', { name: 'Componentes' })).toBeVisible();
       await expect(canvas.getByRole('group', { name: 'Utilitários' })).toBeVisible();
+      await expect(visibleSeparators(canvasElement)).toHaveLength(1);
+    });
 
+    await step('Buscando "badge" sobra 1 comando e nenhum divisor', async () => {
       await userEvent.clear(field);
+      await userEvent.type(field, 'badge');
+      await waitForOptions(canvasElement, 1);
+      // Um grupo só na tela: divisor sem nada de um dos lados seria ruído.
       await waitFor(async () => {
-        await expect(canvas.getAllByRole('option')).toHaveLength(5);
+        await expect(visibleSeparators(canvasElement)).toHaveLength(0);
+      });
+      await expect(canvas.queryAllByRole('group')).toHaveLength(1);
+    });
+
+    await step('A story termina no estado padrão, com os 7 comandos', async () => {
+      await userEvent.clear(field);
+      await waitForOptions(canvasElement, 7);
+      await waitFor(async () => {
+        await expect(visibleSeparators(canvasElement)).toHaveLength(1);
       });
     });
   },

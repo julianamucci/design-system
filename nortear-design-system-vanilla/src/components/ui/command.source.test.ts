@@ -37,6 +37,14 @@ describe('commandSnippet', () => {
     expect(commandSnippet({ showGroups: false })).not.toContain('group:');
   });
 
+  it('a lista padrão é a do Playground — os cinco comandos que a story desenha', () => {
+    const code = commandSnippet();
+    for (const label of ['Button', 'Input', 'Separator', 'cn()', 'clsx()']) {
+      expect(code).toContain(`label: '${label}'`);
+    }
+    expect(code.match(/value: '/g)).toHaveLength(5);
+  });
+
   it('mostra as chaves de item que a story exercita', () => {
     const code = commandSnippet({
       items: [
@@ -74,6 +82,22 @@ describe('commandEmDialogSnippet', () => {
     expect(code).toContain('showCloseButton: false');
     expect(code).toContain("window.addEventListener('keydown'");
     expect(code).not.toContain('dialog.fixtures');
+  });
+
+  it('põe a dica do atalho dentro do gatilho e a classe de paleta no painel, como a story', () => {
+    const code = commandEmDialogSnippet();
+    expect(code).toContain("document.createElement('kbd')");
+    expect(code).toContain("dica.className = 'nds-kbd';");
+    expect(code).toContain('gatilho.append(dica);');
+    expect(code).toContain("class: 'nds-command-dialog-content'");
+  });
+
+  it('reinicia a paleta a cada abertura, como a story (D11)', () => {
+    // O Dialog reaproveita o nó: sem o reset o leitor copiaria uma paleta que
+    // reabre com a busca e o destaque de quando foi fechada.
+    expect(commandEmDialogSnippet()).toContain(
+      'onOpenChange: (open) => { if (open) paleta.reset(); }',
+    );
   });
 });
 
