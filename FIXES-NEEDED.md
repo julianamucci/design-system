@@ -1769,7 +1769,23 @@ sheet), dão 21 falhas dos dois lados. São o backlog de overlay.
 
 ---
 
-## `ComponentDemo` do Vue e do Svelte ainda com Tailwind inerte (2026-08-08)
+## `ComponentDemo` do Vue e do Svelte com Tailwind inerte: RESOLVIDO (2026-08-08 · conferido em 2026-09-09)
+
+A marcação que este item nomeia não existe mais: `grep` por
+`flex items-center justify-center p-4` no `src/` do Vue e do Svelte devolve
+ZERO, e as duas stacks usam `.nds-docs-demo` (vue 5 arquivos, svelte 3). A
+correção descrita abaixo aconteceu; ninguém voltou para fechar a linha.
+
+Achado numa varredura das mensagens de commit por defeito medido e adiado, em
+2026-09-09. Vale registrar o método, porque ele é o que distingue item fechado
+de item aberto: **conferi a MARCAÇÃO, não o nome do arquivo.** Procurar por
+`ComponentDemo` no Vue e no Svelte devolve zero também — mas por outro motivo, o
+de a peça ter sido renomeada para `DocsDemonstration`. Fechar por aí seria
+acertar pelo motivo errado, e na próxima vez erraria.
+
+Texto original abaixo, preservado.
+
+### (registro original)
 
 O React teve isso corrigido (seção acima). O Vue e o Svelte não:
 
