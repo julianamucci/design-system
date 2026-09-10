@@ -2725,7 +2725,7 @@ function auditCadeiaTransformOrigin() {
  *  - `rotulo_de_rastreio_texto` — literal sem forma de id, chamada de tradução,
  *    ou variável cujo nome diz que é texto (`label`, `name`, `title`, `text`).
  *  - `rotulo_de_rastreio_premissa` — a forma de id NÃO é copiada aqui: é lida de
- *    `docs/shared/primitives/rotulo-de-rastreio.ts`, a mesma régua que o
+ *    `docs/shared/primitives/track-label.ts`, a mesma régua que o
  *    rastreador usa. Se a leitura falhar, o portão reprova em vez de seguir com
  *    uma cópia que envelheceria calada.
  *  - `data_track_tipo_invalido` — `data-track` com valor fora dos seis tipos que
@@ -2815,15 +2815,15 @@ const TIPOS_DE_RASTREIO = new Set(['nav', 'demo', 'variant', 'code', 'related', 
 
 function auditRastreioDocs() {
   const violations = [];
-  const primitiva = join(ROOT, 'docs', 'shared', 'primitives', 'rotulo-de-rastreio.ts');
-  const casada = (readFile(primitiva) || '').match(/const FORMA_DE_ID = \/(.+)\/;/);
+  const primitiva = join(ROOT, 'docs', 'shared', 'primitives', 'track-label.ts');
+  const casada = (readFile(primitiva) || '').match(/const ID_SHAPE = \/(.+)\/;/);
   let forma = null;
   try { forma = casada ? new RegExp(casada[1]) : null; } catch { forma = null; }
   if (!forma) {
     violations.push({
       category: 'analytics', severity: 'high', slug: '_infra', stack: 'shared',
       file: relative(ROOT, primitiva), rule: 'rotulo_de_rastreio_premissa',
-      message: 'FORMA_DE_ID não pôde ser lida da primitiva — sem ela o portão de rótulo não tem régua, '
+      message: 'ID_SHAPE não pôde ser lida da primitiva — sem ela o portão de rótulo não tem régua, '
         + 'e ele a lê de lá justamente para não manter uma cópia',
     });
     return violations;

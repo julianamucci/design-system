@@ -1,5 +1,5 @@
 /**
- * rotulo-de-rastreio.ts — decide o `label` dos eventos `docs_*`.
+ * track-label.ts — decide o `label` dos eventos `docs_*`.
  *
  * O `label` é ID ESTÁVEL, nunca texto. Decisão da dona em 2026-09-10.
  *
@@ -30,13 +30,13 @@
  * O que ela recusa é exatamente o que chegava: "Salvar" (maiúscula inicial),
  * "Copiar código" (espaço e acento), "Ver variant destructive" (espaço).
  */
-const FORMA_DE_ID = /^[a-z0-9][a-zA-Z0-9]*(?:[-_.:][a-zA-Z0-9]+)*$/;
+const ID_SHAPE = /^[a-z0-9][a-zA-Z0-9]*(?:[-_.:][a-zA-Z0-9]+)*$/;
 
-export function ehIdEstavel(valor: string | null | undefined): valor is string {
-  return typeof valor === 'string' && FORMA_DE_ID.test(valor);
+export function isStableId(value: string | null | undefined): value is string {
+  return typeof value === 'string' && ID_SHAPE.test(value);
 }
 
-export interface RotuloResolvido {
+export interface ResolvedTrackLabel {
   /** O que vai para o payload: sempre um id estável, ou `''` se não houver nenhum. */
   label: string;
   /**
@@ -44,23 +44,23 @@ export interface RotuloResolvido {
    * de id. Existe para o console de `?debugAnalytics=1` avisar — sem ele, o
    * descarte seria silencioso, e call site com texto passaria despercebido.
    */
-  descartado?: string;
+  rejected?: string;
 }
 
 /**
- * @param declarado    o `data-track-label` lido do elemento (ou `null`).
- * @param alternativas ids de reserva, em ordem de preferência — o segmento
+ * @param declared     o `data-track-label` lido do elemento (ou `null`).
+ * @param fallbacks    ids de reserva, em ordem de preferência — o segmento
  *                     `element` do `data-track-id`, o `data-slot`. Só entra o
  *                     primeiro que tiver forma de id.
  */
-export function resolverRotulo(
-  declarado: string | null | undefined,
-  ...alternativas: Array<string | null | undefined>
-): RotuloResolvido {
-  const reserva = alternativas.find(ehIdEstavel) ?? '';
-  if (declarado === null || declarado === undefined || declarado === '') {
-    return { label: reserva };
+export function resolveTrackLabel(
+  declared: string | null | undefined,
+  ...fallbacks: Array<string | null | undefined>
+): ResolvedTrackLabel {
+  const fallback = fallbacks.find(isStableId) ?? '';
+  if (declared === null || declared === undefined || declared === '') {
+    return { label: fallback };
   }
-  if (ehIdEstavel(declarado)) return { label: declarado };
-  return { label: reserva, descartado: declarado };
+  if (isStableId(declared)) return { label: declared };
+  return { label: fallback, rejected: declared };
 }

@@ -17,8 +17,8 @@
  */
 
 import { track } from './analytics';
-import { resolverRotulo } from '@shared/primitives/rotulo-de-rastreio';
-import { avisarRotuloDescartado } from '@shared/primitives/analytics-debug';
+import { resolveTrackLabel } from '@shared/primitives/track-label';
+import { warnRejectedTrackLabel } from '@shared/primitives/analytics-debug';
 
 export interface MountDocsTrackingOptions {
   /** Slug do componente. Se omitido, é derivado do `?id=` do iframe do
@@ -86,8 +86,8 @@ export function mountDocsTracking(
     // quem clicou, partindo o mesmo clique em um valor por idioma no GA4. Agora
     // sai do atributo declarado SE ele tiver forma de id; senão, do segmento
     // estável do `data-track-id`. Texto não é mais lido. A decisão de qual valor
-    // vale mora em `@shared/primitives/rotulo-de-rastreio`, igual nas cinco.
-    let rotulo = resolverRotulo(trigger.getAttribute('data-track-label'), element, section);
+    // vale mora em `@shared/primitives/track-label`, igual nas cinco.
+    let resolved = resolveTrackLabel(trigger.getAttribute('data-track-label'), element, section);
 
     // Container auto-instrumentado (ex.: área de demonstração): resolve o
     // elemento interativo REALMENTE clicado; cliques no vazio são ignorados.
@@ -96,14 +96,14 @@ export function mountDocsTracking(
     if (trigger.hasAttribute('data-track-container')) {
       const interactive = target.closest<HTMLElement>(INTERACTIVE_SELECTOR);
       if (!interactive || !trigger.contains(interactive)) return;
-      rotulo = resolverRotulo(
+      resolved = resolveTrackLabel(
         interactive.getAttribute('data-track-label'),
         interactive.getAttribute('data-slot'),
       );
-      element = interactive.id || rotulo.label || element;
+      element = interactive.id || resolved.label || element;
     }
-    if (rotulo.descartado !== undefined) avisarRotuloDescartado(rotulo.descartado, rotulo.label);
-    const label = rotulo.label;
+    if (resolved.rejected !== undefined) warnRejectedTrackLabel(resolved.rejected, resolved.label);
+    const label = resolved.label;
 
     switch (type) {
       case 'nav':

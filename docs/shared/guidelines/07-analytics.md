@@ -336,7 +336,7 @@ Como funciona hoje:
 
 Duas camadas guardam a regra:
 
-- **O rastreador recusa**, em tempo de execução, o `data-track-label` sem forma de id, troca pelo id estável e segue — o GA4 nunca recebe o texto. Com `?debugAnalytics=1` a recusa aparece no console, para o call site não ficar escondido. A decisão mora em `docs/shared/primitives/rotulo-de-rastreio.ts`, a mesma nas cinco stacks.
+- **O rastreador recusa**, em tempo de execução, o `data-track-label` sem forma de id, troca pelo id estável e segue — o GA4 nunca recebe o texto. Com `?debugAnalytics=1` a recusa aparece no console, para o call site não ficar escondido. A decisão mora em `docs/shared/primitives/track-label.ts`, a mesma nas cinco stacks.
 - **O portão reprova antes**: `rotulo_de_rastreio_texto` acusa literal sem forma de id, chamada de tradução e variável de texto em `data-track-label`. Ele lê a forma de id da própria primitiva — `rotulo_de_rastreio_premissa` reprova se não conseguir, em vez de manter uma cópia.
 
 **Onde chamar `track()`:** NUNCA dentro do componente de seção ou da docs page. O helper `src/lib/docs-tracking.ts` (único por stack) é quem chama `track()` — os section containers só adicionam os `data-track*`.
