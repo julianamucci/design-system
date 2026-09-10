@@ -137,8 +137,9 @@ via e o invariante continuava sem dono.
 Invariante desse eixo não tem casa em documento: o que o mantém verdadeiro nos
 nove componentes ao mesmo tempo é um PORTÃO.
 [invariantes-overlay.md](invariantes-overlay.md) lista os treze da categoria, com
-quem os escreve e quem os cobra — e os **seis sem portão nenhum**, que são a
-previsão do próximo relato.
+quem os escreve e quem os cobra. Os **sete que estavam descobertos ganharam
+regra em 2026-09-10** — seis no `audit.mjs` e um já coberto pela suíte; o que
+sobra aberto está na última seção de lá.
 
 ## Índice
 

@@ -2814,6 +2814,454 @@ function auditVocabularioPayload() {
   return violations;
 }
 
+/**
+ * Invariantes da categoria Overlay que vivem na FOLHA.
+ *
+ * Os três desta função saem do inventário em `docs/shared/prd/invariantes-overlay.md`,
+ * que existe porque um invariante de categoria não tem casa em documento: o PRD é
+ * um componente × cinco stacks, a guideline é uma stack × muitos componentes, e o
+ * que atravessa muitos componentes E muitas stacks só se mantém verdadeiro por
+ * portão. Medido entre 03/09 e 10/09: três achados voltaram como "defeito novo"
+ * duas ou três vezes cada, por agentes diferentes.
+ *
+ * ── 1. Movimento com duração LITERAL precisa de guarda que VENÇA ─────────────
+ *
+ * Quem para o movimento nesta casa é a camada de token: sob
+ * `prefers-reduced-motion`, `docs/shared/tokens/motion.css` zera a escada inteira
+ * de `--duration-*`. Duração literal escapa disso e precisa de bloco próprio.
+ *
+ * E o bloco tem de VENCER, que é a metade que ninguém via: `@media` não
+ * acrescenta especificidade, então uma guarda em `.nds-x` perde para uma
+ * declaração em `.nds-x[data-open]`, e com especificidade igual quem vem depois
+ * no arquivo ganha. Medido em 2026-09-09: a primeira correção das duas
+ * utilitárias contínuas ficou INERTE por ordem, e as guardas de `dialog.css` e
+ * `dropdown-menu.css` perdem por especificidade desde sempre — ninguém tinha
+ * visto porque ali elas já eram redundantes.
+ *
+ * ── 2. O véu não desfoca ────────────────────────────────────────────────────
+ *
+ * `dialog.css` D5 e `alert-dialog.css` D8. O desfoque saiu em 2026-09-08 por
+ * decisão da dona; a regra existe para ele não voltar por simetria com alguma
+ * referência externa.
+ *
+ * ── 3. O corpo rolável é `flex: 1 1 auto`, nunca o atalho ───────────────────
+ *
+ * `sheet` D3 e `drawer` D6, este último MEDIDO. `flex: 1` expande para
+ * `flex-basis: 0%`, e um corpo com base zero ignora a altura do conteúdo — o
+ * painel encolhe em vez de rolar. O escopo é o corpo dos painéis de overlay e
+ * só: `flex: 1` aparece em mais de vinte folhas legitimamente, e proibir a
+ * forma no repositório inteiro despejaria backlog sobre trabalho correto.
+ */
+const OVERLAY_FOLHAS = [
+  'dialog', 'alert-dialog', 'sheet', 'drawer',
+  'popover', 'hover-card', 'tooltip', 'dropdown-menu', 'command',
+];
+
+/** Duração literal que pode ficar sem guarda, com o motivo. */
+const MOVIMENTO_SEM_GUARDA_OK = {
+  // nenhuma hoje — a lista existe para a exceção ser DECLARADA quando aparecer,
+  // e não descoberta num comentário solto
+};
+
+function especificidadeCss(seletor) {
+  const s = seletor.replace(/::[a-z-]+/g, '').replace(/:(?:not|is|where)\([^)]*\)/g, '');
+  const ids = (s.match(/#[\w-]+/g) || []).length;
+  const classes = (s.match(/\.[\w-]+/g) || []).length
+    + (s.match(/\[[^\]]+\]/g) || []).length
+    + (s.match(/:[a-z-]+(?:\([^)]*\))?/g) || []).length;
+  const tipos = (s.match(/(?:^|[\s>+~])[a-zA-Z][\w-]*/g) || []).length;
+  return [ids, classes, tipos];
+}
+const venceOuEmpata = (a, b) => (a[0] - b[0] || a[1] - b[1] || a[2] - b[2]) >= 0;
+
+/** Corta os blocos `prefers-reduced-motion` contando chaves, e devolve os dois lados. */
+function separaGuardaDeMovimento(css) {
+  const guardas = [];
+  let resto = '';
+  let i = 0;
+  while (i < css.length) {
+    const abre = css.indexOf('@media', i);
+    if (abre === -1) { resto += css.slice(i); break; }
+    const chave = css.indexOf('{', abre);
+    if (chave === -1) { resto += css.slice(i); break; }
+    const condicao = css.slice(abre, chave);
+    let nivel = 1;
+    let j = chave + 1;
+    while (j < css.length && nivel > 0) {
+      if (css[j] === '{') nivel++;
+      else if (css[j] === '}') nivel--;
+      j++;
+    }
+    const corpo = css.slice(chave + 1, j - 1);
+    if (/prefers-reduced-motion/.test(condicao)) {
+      resto += css.slice(i, abre);
+      guardas.push({ corpo, fim: j });
+    } else {
+      resto += css.slice(i, abre) + corpo;
+    }
+    i = j;
+  }
+  return { guardas, resto };
+}
+
+function regrasCss(css) {
+  const saida = [];
+  const re = /([^{}]+)\{([^{}]*)\}/g;
+  let m;
+  while ((m = re.exec(css))) {
+    // A posição é a da CHAVE, não a do começo do trecho: `[^{}]+` engole tudo
+    // desde a regra anterior, então `m.index` aponta para o fim da vizinha e a
+    // primeira regra de qualquer arquivo saía como "linha 1". Portão que aponta
+    // a linha errada manda quem lê para o lugar errado, que é meio caminho para
+    // ele ser ignorado.
+    saida.push({ sel: m[1].trim(), corpo: m[2], index: m.index + m[1].length });
+  }
+  return saida;
+}
+
+function auditInvariantesOverlayCss() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+
+  for (const caminho of walkDir(dir, ['.css'])) {
+    const bruto = readFile(caminho);
+    if (!bruto) continue;
+    const rel = relative(ROOT, caminho);
+    const arquivo = basename(caminho, '.css');
+    // comentário fora, e preservando as quebras para a linha continuar certa
+    const limpo = bruto.replace(/\/\*[\s\S]*?\*\//g, (s) => s.replace(/[^\n]/g, ' '));
+    const linhaDe = (idx) => limpo.slice(0, idx).split('\n').length;
+
+    // ── 1. movimento com duração literal ──────────────────────────────────
+    const { guardas, resto } = separaGuardaDeMovimento(limpo);
+    const zeradores = [];
+    for (const g of guardas) {
+      for (const r of regrasCss(g.corpo)) {
+        const zera = [];
+        if (/transition[a-z-]*\s*:\s*none|transition-duration\s*:\s*0/.test(r.corpo)) zera.push('transition');
+        if (/animation[a-z-]*\s*:\s*none|animation-duration\s*:\s*0/.test(r.corpo)) zera.push('animation');
+        if (!zera.length) continue;
+        for (const um of r.sel.split(',').map((x) => x.trim()).filter(Boolean)) {
+          zeradores.push({ sel: um, zera, fim: g.fim });
+        }
+      }
+    }
+
+    for (const r of regrasCss(resto)) {
+      if (r.sel.startsWith('@') || /^\s*(?:from|to|\d+%)\s*$/.test(r.sel)) continue;
+      for (const prop of ['transition', 'animation']) {
+        const decl = new RegExp(`(?:^|[\\s;])${prop}(?:-[a-z]+)?\\s*:\\s*([^;]*)`).exec(r.corpo);
+        if (!decl || /^\s*none\s*$/.test(decl[1])) continue;
+        const valor = decl[1];
+        if (/var\(--duration/.test(valor)) continue; // a camada de token alcança
+        const temTempo = [...valor.matchAll(/(?:^|[\s,(])(\d+(?:\.\d+)?)(m?s)(?=$|[\s,)])/g)]
+          .some((x) => parseFloat(x[1]) > 0);
+        if (!temTempo) continue;
+
+        for (const alvo of r.sel.split(',').map((x) => x.trim()).filter(Boolean)) {
+          if (MOVIMENTO_SEM_GUARDA_OK[`${arquivo}|${alvo}`]) continue;
+          const candidatas = zeradores.filter(
+            (z) => z.zera.includes(prop) && (alvo === z.sel || alvo.startsWith(z.sel)),
+          );
+          const eficaz = candidatas.some(
+            (z) => venceOuEmpata(especificidadeCss(z.sel), especificidadeCss(alvo))
+              && (especificidadeCss(z.sel).join() !== especificidadeCss(alvo).join() || z.fim > r.index),
+          );
+          if (eficaz) continue;
+          violations.push({
+            category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+            file: rel, line: linhaDe(r.index), rule: 'movimento_sem_guarda_eficaz',
+            message: candidatas.length
+              ? `\`${alvo}\` declara ${prop} com duração literal e a guarda de prefers-reduced-motion `
+                + 'NÃO vence (especificidade menor, ou vem antes no arquivo com especificidade igual)'
+              : `\`${alvo}\` declara ${prop} com duração literal e não tem guarda de `
+                + 'prefers-reduced-motion — a camada de token só alcança `var(--duration-*)`',
+          });
+        }
+      }
+    }
+
+    if (!OVERLAY_FOLHAS.includes(arquivo)) continue;
+
+    // ── 2. o véu não desfoca ──────────────────────────────────────────────
+    for (const r of regrasCss(limpo)) {
+      if (!/-overlay|-backdrop/.test(r.sel)) continue;
+      if (!/backdrop-filter\s*:|filter\s*:\s*blur/.test(r.corpo)) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: rel, line: linhaDe(r.index), rule: 'veu_com_desfoque',
+        message: `\`${r.sel.split(',')[0].trim()}\` desfoca o fundo — nenhum véu desta família desfoca `
+          + '(dialog D5, alert-dialog D8), e o desfoque saiu em 2026-09-08 por decisão da dona',
+      });
+    }
+
+    // ── 3. o corpo rolável não usa o atalho ───────────────────────────────
+    for (const r of regrasCss(limpo)) {
+      if (!/-body\b/.test(r.sel)) continue;
+      if (!/(?:^|[\s;])flex\s*:\s*1\s*;/.test(r.corpo)) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: rel, line: linhaDe(r.index), rule: 'corpo_com_atalho_flex',
+        message: `\`${r.sel.split(',')[0].trim()}\` usa o atalho \`flex: 1\`, que expande para `
+          + '`flex-basis: 0%`: o corpo passa a ignorar a altura do conteúdo e o painel encolhe em vez '
+          + 'de rolar. A forma é `flex: 1 1 auto` (sheet D3, drawer D6 — este medido)',
+      });
+    }
+  }
+
+  return violations;
+}
+
+/**
+ * `reason` no evento de fechamento: ou todas as stacks que disparam mandam, ou
+ * nenhuma manda.
+ *
+ * O defeito que esta regra cobre NÃO é ausência — é **amostra enviesada com cara
+ * de completa**. Campo opcional preenchido por parte das stacks produz, no GA4,
+ * uma quebra por `reason` em que não há como separar "fechou por motivo
+ * desconhecido" de "fechou numa stack que não reporta". Nada no payload avisa, e
+ * a série parece só menor, nunca errada.
+ *
+ * Medido em 2026-09-10: `drawer_close` manda nas cinco, com vocabulário fechado
+ * e campo obrigatório no tipo — é o modelo. `hover_card_close` manda em 1 de 5.
+ * `popover_close` manda em 2 de 5, e só o Svelte tem 12 call sites sem o campo.
+ *
+ * A regra compara com quem DISPARA, não com as cinco: componente que uma stack
+ * não demonstra não deve reprovar por isso. E ela aceita o zero — evento em que
+ * nenhuma manda `reason` é decisão coerente, e é o que `hover_card_close` vira
+ * se a dona decidir remover em vez de espalhar.
+ *
+ * Leitor próprio, e não o `extractTrackPayloads` compartilhado: aquele corta o
+ * primeiro argumento no primeiro vírgula e devolve a expressão inteira quando o
+ * nome do evento é ternário — `track(open ? 'dialog_open' : 'dialog_close', …)`,
+ * que é a forma do React. Para as mensagens dele isso não importa; para contar
+ * cobertura por evento, importa.
+ */
+const EVENTOS_DE_FECHAMENTO = [
+  'dialog_close', 'drawer_close', 'popover_close', 'hover_card_close', 'menu_close',
+];
+
+function chamadasDeTrackComEventos(txt) {
+  const saida = [];
+  const re = /\btrack\s*\(/g;
+  let m;
+  while ((m = re.exec(txt)) !== null) {
+    let i = m.index + m[0].length;
+    let nivel = 1;
+    while (i < txt.length && nivel > 0) {
+      const c = txt[i];
+      if (c === '(') nivel++;
+      else if (c === ')') nivel--;
+      i++;
+    }
+    const args = txt.slice(m.index + m[0].length, i - 1);
+    const virgula = args.indexOf(',');
+    if (virgula < 0) continue;
+    // TODOS os literais do primeiro argumento: um na forma simples, dois no ternário
+    const eventos = [...args.slice(0, virgula).matchAll(/['"]([a-z_]+)['"]/g)].map((x) => x[1]);
+    if (!eventos.length) continue;
+    saida.push({
+      eventos,
+      payload: args.slice(virgula + 1),
+      line: txt.slice(0, m.index).split('\n').length,
+    });
+  }
+  return saida;
+}
+
+// `reason:` OU a forma ABREVIADA `{ …, reason, location }`, que é como o vanilla
+// manda a do drawer. Medir só a primeira dava 4/5 num evento que é 5/5.
+const TEM_REASON_RX = /(?:^|[\s,{])reason\s*(?::|,|\}|$)/m;
+
+function auditReasonParcial() {
+  const violations = [];
+  const porEvento = {};
+
+  for (const stack of STACKS) {
+    for (const file of globStack(stack, 'components/docs', null)) {
+      const norm = file.replace(/\\/g, '/');
+      if (/\.(stories|test|spec)\./.test(norm) || norm.endsWith('.mdx')) continue;
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const conteudo = stripComments(bruto);
+
+      for (const c of chamadasDeTrackComEventos(conteudo)) {
+        for (const ev of c.eventos) {
+          if (!EVENTOS_DE_FECHAMENTO.includes(ev)) continue;
+          porEvento[ev] ??= {};
+          porEvento[ev][stack] ??= { total: 0, comReason: 0, exemplo: null };
+          const d = porEvento[ev][stack];
+          d.total++;
+          if (TEM_REASON_RX.test(c.payload)) d.comReason++;
+          else if (!d.exemplo) d.exemplo = { file: relative(ROOT, file), line: c.line };
+        }
+      }
+    }
+  }
+
+  for (const [ev, porStack] of Object.entries(porEvento)) {
+    const disparam = Object.keys(porStack);
+    const com = disparam.filter((s) => porStack[s].comReason > 0);
+    const sem = disparam.filter((s) => porStack[s].comReason === 0);
+    if (!com.length || !sem.length) continue; // todas ou nenhuma: coerente
+
+    for (const stack of sem) {
+      const onde = porStack[stack].exemplo;
+      violations.push({
+        category: 'analytics', severity: 'medium', slug: '_infra', stack,
+        file: onde?.file ?? '(desconhecido)', line: onde?.line ?? 1,
+        rule: 'reason_parcial_entre_stacks',
+        message: `\`${ev}\` leva \`reason\` em ${com.length} de ${disparam.length} stacks que o disparam `
+          + `(${com.join(', ')}) e não aqui — quebra por reason no GA4 não separa "motivo desconhecido" `
+          + 'de "stack que não reporta". Ou todas mandam, ou nenhuma manda',
+      });
+    }
+  }
+
+  return violations;
+}
+
+/**
+ * Nível padrão do cabeçalho do título, nas fábricas do vanilla.
+ *
+ * O nível é configurável nas cinco, cada uma pelo mecanismo da própria lib
+ * (`render` no base-ui, `as` na reka, `level` no bits, a tag no seletor do
+ * radix-ng). O que diverge em silêncio é o DEFAULT, porque qualquer nível é
+ * HTML válido e nenhum compilador olha.
+ *
+ * Medido em 2026-09-09: `createPopoverTitle` saía em `h4` enquanto as outras
+ * quatro anunciavam nível 2 — o `h4` entrou quatro dias DEPOIS de vue e svelte
+ * fixarem `aria-level="2"` para casar com o base-ui, numa passagem que deu ao
+ * vanilla a capacidade de trocar o nível e escolheu um valor sem comparar. O
+ * mesmo assunto foi relatado três vezes como defeito.
+ *
+ * O escopo é o vanilla porque é onde o default é ESCRITO: nas outras quatro ele
+ * vem da lib e não há linha para conferir. Vanilla é a referência da casa, e é
+ * dele que as outras derivam.
+ *
+ * `card` NÃO entra: card é conteúdo em fluxo, e o default dele é não afirmar
+ * nível nenhum (`<div>`), igual a react, vue e svelte. É outro invariante.
+ */
+const NIVEL_PADRAO_ESPERADO = {
+  'dialog.ts': { opcao: 'titleLevel', nivel: 2 },
+  'alert-dialog.ts': { opcao: 'titleLevel', nivel: 2 },
+  'sheet.ts': { opcao: 'titleLevel', nivel: 2 },
+  'drawer.ts': { opcao: 'titleLevel', nivel: 2 },
+  'popover.ts': { opcao: 'level', nivel: 2 },
+};
+
+function auditNivelDeTituloPadrao() {
+  const violations = [];
+  const dir = join(ROOT, stackDir('vanilla'), 'src', 'components', 'ui');
+
+  for (const [arquivo, { opcao, nivel }] of Object.entries(NIVEL_PADRAO_ESPERADO)) {
+    const caminho = join(dir, arquivo);
+    const bruto = readFile(caminho);
+    if (!bruto) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'vanilla',
+        file: relative(ROOT, caminho), line: 1, rule: 'nivel_de_titulo_divergente',
+        message: `${arquivo} está no mapa de níveis padrão e não existe — atualize o mapa`,
+      });
+      continue;
+    }
+    const conteudo = stripComments(bruto);
+    const re = new RegExp(`\\b${opcao}\\s*=\\s*([1-6])\\b`);
+    const m = re.exec(conteudo);
+    if (!m) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'vanilla',
+        file: relative(ROOT, caminho), line: 1, rule: 'nivel_de_titulo_divergente',
+        message: `não achei o default de \`${opcao}\` em ${arquivo} — ou a opção foi renomeada, `
+          + 'ou o default deixou de ser escrito, e nos dois casos o mapa precisa saber',
+      });
+      continue;
+    }
+    if (Number(m[1]) === nivel) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'vanilla',
+      file: relative(ROOT, caminho),
+      line: conteudo.slice(0, m.index).split('\n').length,
+      rule: 'nivel_de_titulo_divergente',
+      message: `\`${opcao}\` sai em h${m[1]} e a família anuncia nível ${nivel} — nenhum compilador vê `
+        + 'isto porque qualquer nível é HTML válido, e este assunto já voltou como achado novo três vezes',
+    });
+  }
+
+  return violations;
+}
+
+/**
+ * A família NÃO-modal não pode anunciar `aria-modal` sem condição.
+ *
+ * `popover`, `hover-card`, `tooltip` e `dropdown-menu` são não-modais por
+ * padrão (popover D1). `aria-modal` manda o leitor de tela ignorar o resto da
+ * página — num painel que o Tab atravessa, isso é mentir sobre o escopo.
+ *
+ * O popover ganhou `modal` como prop entregue nas cinco (D2), e no modo modal o
+ * atributo é correto. Por isso a regra não proíbe o atributo: proíbe atribuir a
+ * ele o LITERAL `true`.
+ *
+ * A primeira versão procurava a palavra `modal` na mesma linha da atribuição, e
+ * era estreita demais: o Vue liga `:aria-modal="ariaModal"`, com `ariaModal`
+ * sendo um `computed` derivado de `modal` vinte linhas acima. A condição existe,
+ * só não cabe numa linha — e a regra reprovava o arquivo mais correto dos cinco.
+ * Perguntar pelo literal resolve sem heurística: quem escreve uma EXPRESSÃO
+ * (ternário, computed, variável) já decidiu condicionar; quem escreve `true`
+ * decidiu anunciar sempre.
+ *
+ * METADE NÃO COBERTA, e declarada para não parecer esquecimento: o inverso — a
+ * família modal ter de anunciar `aria-modal` — não é conferível assim. O React
+ * também escreve o atributo sob condição (`modal === true ? …`), então "sem
+ * condição" não separa modal de não-modal naquele lado. Ali quem mede é a suíte
+ * de navegador, que já assere `toHaveAttribute('aria-modal', 'true')`.
+ */
+const NAO_MODAIS = ['popover', 'hover-card', 'tooltip', 'dropdown-menu'];
+
+function auditModalidadeNaoModal() {
+  const violations = [];
+
+  for (const stack of STACKS) {
+    const base = join(ROOT, stackDir(stack), 'src', 'components', 'ui');
+    for (const file of walkDir(base, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const norm = file.replace(/\\/g, '/');
+      // story, teste, fixture e snippet ASSERTAM o atributo — `toHaveAttribute`
+      // não é atribuição, e contá-la reprovaria a prova de que a regra vale
+      if (/\.(stories|test|spec|source|fixtures)\.|Story\.|\.source\./.test(norm)) continue;
+      const alvo = NAO_MODAIS.find((c) => new RegExp(`/${c}(\\.|/|-)`).test(norm));
+      if (!alvo) continue;
+
+      const conteudo = stripComments(readFile(file) ?? '');
+      conteudo.split('\n').forEach((linha, i) => {
+        if (!/aria-modal/.test(linha)) return;
+        // O VALOR atribuído, nas três formas das cinco stacks: atributo de JSX
+        // e de template (`aria-modal={…}` / `:aria-modal="…"`) e `setAttribute`.
+        const m = /aria-modal["']?\s*(?:=|:)\s*(\{[^}]*\}|"[^"]*"|'[^']*')|['"]aria-modal['"]\s*,\s*([^),]+)/
+          .exec(linha);
+        if (!m) return;
+        const valor = (m[1] ?? m[2] ?? '').trim().replace(/^[{"']|[}"']$/g, '').trim();
+        // DUAS testemunhas, e nenhuma serve sozinha — as duas formas legítimas
+        // desta casa passam por caminhos opostos. O Vue condiciona pelo VALOR
+        // (`:aria-modal="ariaModal"`, um computed de `modal`), e o vanilla
+        // condiciona a LINHA mantendo o literal
+        // (`if (modal) panelEl.setAttribute('aria-modal', 'true')`). Exigir só o
+        // valor não-literal reprova o vanilla; exigir só a palavra na linha
+        // reprova o Vue. Reprova quem falha nas duas.
+        if (valor !== 'true') return;
+        if (/\bmodal\b/.test(linha.replace(/aria-modal/g, ''))) return;
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, file), line: i + 1, rule: 'modalidade_sem_condicao',
+          message: `${alvo} anuncia \`aria-modal\` sem depender da prop \`modal\` — o atributo manda o `
+            + 'leitor de tela ignorar o resto da página, e este painel é atravessável por Tab por padrão',
+        });
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditDeadLibInfra() {
   const violations = [];
   const targets = [
@@ -8322,7 +8770,7 @@ if (!category || category === 'security') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'analytics') {
-  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload(), ...auditCampoDePayloadMorto()];
+  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload(), ...auditCampoDePayloadMorto(), ...auditReasonParcial()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 // `sandbox_dead_class` saiu daqui em 2026-09-02, junto com o objeto que ele
@@ -8338,7 +8786,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

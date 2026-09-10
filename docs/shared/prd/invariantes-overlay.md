@@ -2,7 +2,14 @@
 
 Levantado em 2026-09-10, sobre os **nove PRDs de overlay** (`dialog`,
 `alert-dialog`, `sheet`, `drawer`, `popover`, `hover-card`, `tooltip`,
-`dropdown-menu`, `command`) e as **111 regras** de `scripts/audit.mjs`.
+`dropdown-menu`, `command`) e as **115 regras** de `scripts/audit.mjs` — 121
+depois das seis que este levantamento produziu.
+
+> A primeira redação dizia 111, e o número saiu de um `grep` cujo conjunto de
+> caracteres não tinha dígitos: nomes como `ga4_in_preview_head` ficaram de fora
+> da contagem. Fica registrado porque é a mesma família dos dois cuidados da
+> seção de método — um padrão que erra por menos parece confirmar o que se
+> esperava, e ninguém confere um número que já bate com a expectativa.
 
 ## Por que este arquivo existe
 
@@ -50,46 +57,57 @@ prioridade, porque é a ordem do custo quando ele quebra.
 
 | invariante | PRDs que o escrevem | portão |
 |---|---|---|
-| Movimento para sob `prefers-reduced-motion` | 9 | **nenhum** |
+| Movimento para sob `prefers-reduced-motion` | 9 | `movimento_sem_guarda_eficaz` |
 | Elevação e sombra por camada | 9 | parcial — `prd_token_sem_lastro`, `token_table_row_incoerente` |
-| `reason` no evento de fechamento | 5 | **nenhum** |
-| Nível do cabeçalho do título | 5 | **nenhum** |
+| `reason` no evento de fechamento | 5 | `reason_parcial_entre_stacks` |
+| Nível do cabeçalho do título | 5 | `nivel_de_titulo_divergente` |
 | Cadeia de `transform-origin` por lib | 4 | `cadeia_transform_origin_sem_bits` · `_premissa` · `_nao_declarada` |
 | Largura como custom property com default em `:root` | 4 | parcial — `undocumented_component_var` |
 | Anel de foco | 4 | `focus_ring_sobrescrito` · `focus_ring_translucido` |
-| Modalidade (`aria-modal`) e o que ela liga | 3 | **nenhum** |
+| Modalidade (`aria-modal`) e o que ela liga | 3 | `modalidade_sem_condicao` (metade — ver abaixo) |
 | O `<form>` e o rodapé | 3 | parcial — `submit_fora_do_form` (metade retratada por falso positivo) |
 | Vocabulário do payload | 2+ | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` · `location_fora_do_vocabulario` · `campo_de_payload_morto` |
-| O véu não desfoca o fundo | 2 | **nenhum** |
-| Corpo é `flex: 1 1 auto`, nunca o atalho | 2 | **nenhum** |
-| Ordem dos botões no rodapé | 2 | **nenhum** |
+| O véu não desfoca o fundo | 2 | `veu_com_desfoque` |
+| Corpo é `flex: 1 1 auto`, nunca o atalho | 2 | `corpo_com_atalho_flex` |
+| Ordem dos botões no rodapé | 2 | play, nas cinco — **só no dialog**; o drawer não a assere em stack nenhuma |
 
-## A previsão
+### O que cada portão novo NÃO cobre
 
-**Seis invariantes sem portão nenhum**, e eles são a lista dos próximos relatos.
-Dois deles já geraram relato repetido antes de ganharem regra — o padrão não é
-hipótese, é histórico.
+Declarado aqui porque metade coberta que se anuncia inteira é o defeito que este
+arquivo existe para evitar.
 
-Por retorno sobre custo:
+- **`modalidade_sem_condicao`** cobre um lado só: a família NÃO-modal não pode
+  atribuir `aria-modal` ao literal `true` sem condição. O inverso — a família
+  modal ter de anunciá-lo — não é conferível assim, porque o React também
+  escreve o atributo sob condição (`modal === true ? …`), e ali "sem condição"
+  deixa de separar as duas famílias. Naquele lado quem mede é a suíte, que já
+  assere `toHaveAttribute('aria-modal', 'true')`.
+- **`nivel_de_titulo_divergente`** lê o default no vanilla, que é onde ele está
+  ESCRITO. Nas outras quatro o default vem da lib e não há linha para conferir.
+- **Ordem do rodapé** não ganhou regra de audit de propósito: a asserção de
+  ordem de DOM na play é mais forte que qualquer regex, e já existe nas cinco
+  para o dialog. Escrever uma regra estática ao lado dela seria duplicar por
+  baixo. O que falta é a mesma asserção no drawer, que hoje nenhuma stack faz.
 
-1. **Movimento reduzido** (9 componentes). O maior alcance e o mais barato de
-   cobrar: duração que não vem de `var(--duration-*)` tem de aparecer num bloco
-   de `prefers-reduced-motion` que a zere. Estado medido em 2026-09-10: 6
-   animações com duração literal e 5 com token, **todas guardadas** — o portão
-   é seguro de regressão, não conserto.
-2. **`reason` no fechamento** (5). Hoje o `drawer` é o modelo — campo
-   obrigatório, vocabulário fechado (`escape | overlay | close-button | api`),
-   as cinco stacks disparam. O `hover-card` manda em 1 de 5 e o `popover` em 2
-   de 5, com 12 call sites sem o campo só no Svelte. Campo opcional preenchido
-   por parte das stacks é pior que campo ausente: no GA4 não há como separar
-   "fechou por motivo desconhecido" de "fechou numa stack que não reporta".
-3. **Nível do cabeçalho** (5). Importa onde o outline da página continua vivo —
-   `popover`, `hover-card`, `dropdown-menu`, `command` —, e quase não importa
-   nos quatro painéis com `aria-modal`, onde a tecnologia assistiva escopa a
-   pessoa para dentro.
-4. **Modalidade** (3), **véu sem desfoque** (2), **`flex: 1 1 auto`** (2) e
-   **ordem do rodapé** (2) — os quatro são declarações de uma linha, e nenhum
-   tem hoje quem os replante.
+## O que sobrou aberto
+
+Os sete que estavam sem portão foram fechados em 2026-09-10 — seis com regra
+nova no `audit.mjs`, cada uma provada replantando o defeito, e o sétimo medido
+como já coberto pela suíte. Sobram três coisas, e todas são de conteúdo, não de
+mecanismo:
+
+1. **O `reason` está parcial, e o portão novo ACUSA isso** — 7 achados no dia em
+   que nasceu: `hover_card_close` falta em quatro stacks e `popover_close` em
+   três. O portão está certo e a árvore é que está errada. Fechar tem duas
+   metades: o popover adota a forma do drawer (motivos observáveis no wrapper,
+   sem apoio de lib — é o que o drawer prova), e o hover-card é decisão da dona,
+   entre espalhar o campo ou removê-lo. Remover é defensável: o componente é
+   passivo, e fechar é quase sempre "o ponteiro saiu".
+2. **A ordem do rodapé do drawer** não é asserida em stack nenhuma, enquanto a
+   do dialog é asserida nas cinco. É play, não regra de audit.
+3. **Três invariantes com cobertura PARCIAL** — elevação, largura como custom
+   property, e o `<form>` com o rodapé. Nenhum é o eixo desta rodada, e cada um
+   precisa de medição própria antes de virar regra.
 
 ## O que este arquivo NÃO promete
 
