@@ -1,6 +1,6 @@
 # Tom de Voz — Guia de Escrita para Interfaces
 
-Este arquivo define a personalidade, o nível de formalidade e os padrões de linguagem usados em todos os textos de interface do produto. As regras aqui complementam as **regras estruturais** definidas na seção 4 do arquivo `12-documentacao-componentes.md` — leia as duas em conjunto ao documentar um componente.
+Este arquivo define a personalidade, o nível de formalidade e os padrões de linguagem usados em todos os textos de interface do produto.
 
 > **Relação com o arquivo 12**: o arquivo 12 define *como formatar* o texto (capitalização, pontuação, limites de caracteres). Este arquivo define *como soar* — a personalidade por trás das palavras.
 
@@ -241,7 +241,7 @@ Estrutura: **adjetivo ou substantivo**, 1–2 palavras, sem verbo, sem ponto fin
 
 ## Aplicação nos Componentes com UX Writing
 
-Referência rápida de como o tom se aplica a cada componente com texto obrigatório (definidos na seção 4 do arquivo `12-documentacao-componentes.md`):
+Referência rápida de como o tom se aplica a cada componente com texto obrigatório:
 
 | Componente | Tom | Observação |
 |------------|-----|------------|
@@ -336,7 +336,6 @@ Para outros indicadores de estado (ex: "feature presente" na seção de acessibi
 
 | Arquivo | O que define | Relação com este arquivo |
 |---------|-------------|--------------------------|
-| `12-documentacao-componentes.md` seção 4 | Regras estruturais de escrita (formato, capitalização, pontuação, limites) | Base obrigatória — aplique antes das regras deste arquivo |
 | `06-form-components.md` | Labels e placeholders específicos de cada componente de formulário | Terminologia específica deve ser consistente com este arquivo |
 | `07-feedback-components.md` | Alert, Badge, Progress, Sonner | Tom de feedback deve seguir as seções "Confirmação", "Aviso" e "Erro" deste arquivo |
 | `18-overlay.md` | a categoria Overlay, nas cinco stacks | Títulos e descrições de overlays seguem as seções "Ação" e "Diálogo" deste arquivo |

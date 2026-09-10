@@ -395,7 +395,7 @@ export function ComponentDocs() {
           {/* Conteúdo */}
         </section>
 
-        {/* Notas e Dicas - ver padrão canônico em 12-documentacao-componentes.md, seção 14 */}
+        {/* Notas e Dicas - ver padrão canônico no 11-documentacao-componentes.md da stack, seção 14 */}
         <section className="space-y-4">
           <h2 className="mb-4">Notas e Dicas</h2>
           <ComponentDemo>
@@ -467,7 +467,7 @@ coincidem, trocando um alinhamento correto por um desencontro sem ganho.
 
 ### Seção "Notas e Dicas" - Padrão Visual
 
-> **O padrão canônico desta seção está definido em `12-documentacao-componentes.md`, seção 14. O arquivo 12 é a fonte da verdade — consulte-o para o template completo.**
+> **O padrão canônico desta seção está no `11-documentacao-componentes.md` de cada stack, que é a fonte da verdade — consulte-o para o template completo.**
 
 **Estrutura obrigatória** (conforme arquivo 12):
 
@@ -1214,7 +1214,7 @@ export function ExampleDocs() {
           </ComponentDemo>
         </section>
 
-        {/* Notas e Dicas — padrão canônico: 12-documentacao-componentes.md, seção 14 */}
+        {/* Notas e Dicas — padrão canônico: 11-documentacao-componentes.md da stack, seção 14 */}
         <section>
           <h2 className="mb-4">Notas e Dicas</h2>
           <ComponentDemo>
@@ -1253,7 +1253,7 @@ export function ExampleDocs() {
 - Aplicar focus-visible em componentes interativos
 - Manter `--ring` com 100% de opacidade
 - Usar múltiplos de 8px para espaçamento
-- Preservar estrutura de 15 seções em páginas de documentação (conforme `12-documentacao-componentes.md`)
+- Preservar estrutura de 15 seções em páginas de documentação (conforme o `11-documentacao-componentes.md` de cada stack)
 - Aplicar estilo padronizado em "Notas e Dicas"
 - Usar `duration-150/300/500` mapeados aos tokens `--transition-*`
 - Adicionar `motion-reduce:transition-none` em transições customizadas

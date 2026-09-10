@@ -21,7 +21,7 @@ Os secundários seguem por ordem de importância, do primário para longe.
 
 A ordem não é escolha de cada componente: ela sai da variante, e a variante sai
 da importância da ação. A tabela é a de
-[`<stack>/guidelines/06-form-components.md`](../../nortear-design-system-vanilla/guidelines/06-form-components.md),
+[`<stack>/guidelines/06-form-components.md`](../../../nortear-design-system-vanilla/guidelines/06-form-components.md),
 seção "Variantes":
 
 | variante | importância | posição no DOM | onde aparece |

@@ -6405,47 +6405,74 @@ function auditGuidelinesDeStack() {
       continue;
     }
     const arquivos = [join(raizStack, 'CLAUDE.md'), ...walkDir(dir, ['.md'])].filter(existsSync);
-    for (const arquivo of arquivos) {
-      const conteudo = readFile(arquivo) || '';
-      const pasta = join(arquivo, '..');
-      const rel = relative(ROOT, arquivo);
-      const linhas = conteudo.split('\n');
-      let emBloco = false;
-      for (let i = 0; i < linhas.length; i++) {
-        if (/^\s*```/.test(linhas[i])) { emBloco = !emBloco; continue; }
-        if (emBloco) continue;
-        const linha = linhas[i];
-        const alvos = [];
-        for (const m of linha.matchAll(/\]\(([^)\s]+)\)/g)) alvos.push({ alvo: m[1], link: true });
-        for (const m of linha.matchAll(/`([^`\s]+)`/g)) {
-          const c = m[1];
-          // Entre crases, só o que TEM CARA de caminho do repo: começa em `./` ou
-          // `../` e termina em extensão ou em `/`, ou tem mais de um segmento;
-          // ou é um `.md` nomeado. `./accordion` — um segmento, sem extensão — é
-          // especificador de import num exemplo, não arquivo, e portão que casa
-          // palavra solta mede prosa.
-          const relativo = /^\.\.?\//.test(c)
-            && (/\/$/.test(c) || /\.[a-z]{2,4}$/.test(c) || /^\.\.?\/[^/]+\/[^/]/.test(c));
-          if (relativo || /^[\w.-]+(?:\/[\w.<>{}*-]+)*\.md$/.test(c)) alvos.push({ alvo: c, link: false });
-        }
-        for (const { alvo, link } of alvos) {
-          if (/^(?:https?:|mailto:|#)/.test(alvo) || /[<>{}*]/.test(alvo)) continue;
-          const caminho = alvo.split('#')[0];
-          if (!caminho) continue;
-          // Guideline compartilhada citada pelo nome (`09-seguranca-xss.md`) é
-          // referência legítima, e a pasta dela entra como base.
-          const bases = link
-            ? [pasta]
-            : [pasta, raizStack, join(raizStack, 'guidelines'), ROOT, join(ROOT, 'docs', 'shared', 'guidelines')];
-          if (bases.some((b) => existsSync(join(b, caminho)))) continue;
-          violations.push({
-            category: 'quality', severity: 'medium', slug: '_infra', stack,
-            file: rel, line: i + 1, rule: 'link_quebrado_em_guideline',
-            message: `${link ? 'link' : 'caminho'} \`${alvo}\` não resolve `
-              + (link ? 'a partir da pasta do arquivo' : 'nem da pasta, nem da raiz da stack, nem da raiz do repo'),
-          });
-        }
-      }
+    const bases = [raizStack, dir, ROOT, join(ROOT, 'docs', 'shared', 'guidelines')];
+    for (const arquivo of arquivos) violations.push(...linksQuebrados(arquivo, stack, bases));
+  }
+
+  // As guidelines COMPARTILHADAS entram desde 2026-09-10. A `05-tom-de-voz`
+  // apontava três vezes para a "seção 4 de `12-documentacao-componentes.md`",
+  // arquivo que não existe em stack nenhuma, e nada via — o portão só varria as
+  // pastas de stack. Aqui, nome solto de guideline de stack (`06-form-components.md`)
+  // é referência legítima ao arquivo de categoria, e resolve se existir em
+  // QUALQUER uma das cinco.
+  const compartilhadas = join(ROOT, 'docs', 'shared', 'guidelines');
+  const basesCompartilhadas = [
+    ROOT, compartilhadas,
+    join(ROOT, 'docs', 'shared', 'prd'), join(ROOT, 'docs', 'shared', 'skill-refs'), join(ROOT, '.claude', 'commands'),
+    ...STACKS.flatMap((s) => [join(ROOT, stackDir(s)), join(ROOT, stackDir(s), 'guidelines')]),
+  ];
+  for (const arquivo of walkDir(compartilhadas, ['.md'])) {
+    violations.push(...linksQuebrados(arquivo, 'shared', basesCompartilhadas));
+  }
+  return violations;
+}
+
+/**
+ * Links e caminhos de um `.md` que não resolvem. Link Markdown resolve a partir
+ * da pasta do arquivo, como o leitor clica; caminho entre crases resolve a partir
+ * da pasta ou de uma das `bases` do escopo, porque a prosa usa as várias formas.
+ */
+function linksQuebrados(arquivo, stack, bases) {
+  const violations = [];
+  const conteudo = readFile(arquivo) || '';
+  const pasta = join(arquivo, '..');
+  const rel = relative(ROOT, arquivo);
+  const linhas = conteudo.split('\n');
+  let emBloco = false;
+  for (let i = 0; i < linhas.length; i++) {
+    if (/^\s*```/.test(linhas[i])) { emBloco = !emBloco; continue; }
+    if (emBloco) continue;
+    const linha = linhas[i];
+    const alvos = [];
+    for (const m of linha.matchAll(/\]\(([^)\s]+)\)/g)) alvos.push({ alvo: m[1], link: true });
+    for (const m of linha.matchAll(/`([^`\s]+)`/g)) {
+      const c = m[1];
+      // Entre crases, só o que TEM CARA de caminho do repo: começa em `./` ou
+      // `../` e termina em extensão ou em `/`, ou tem mais de um segmento;
+      // ou é um `.md` nomeado. `./accordion` — um segmento, sem extensão — é
+      // especificador de import num exemplo, não arquivo, e portão que casa
+      // palavra solta mede prosa.
+      const relativo = /^\.\.?\//.test(c)
+        && (/\/$/.test(c) || /\.[a-z]{2,4}$/.test(c) || /^\.\.?\/[^/]+\/[^/]/.test(c));
+      if (relativo || /^[\w.-]+(?:\/[\w.<>{}*-]+)*\.md$/.test(c)) alvos.push({ alvo: c, link: false });
+    }
+    for (const { alvo, link } of alvos) {
+      if (/^(?:https?:|mailto:|#)/.test(alvo) || /[<>{}*]/.test(alvo)) continue;
+      const caminho = alvo.split('#')[0];
+      if (!caminho) continue;
+      const onde = link ? [pasta] : [pasta, ...bases];
+      if (onde.some((b) => existsSync(join(b, caminho)))) continue;
+      // Entre crases, a menção a arquivo que SAIU é registro, não ponteiro — "o
+      // índice `Guidelines.md` (que saiu)". Mesma janela de três linhas e mesma
+      // lista de negação do `dead_lib_in_infra`. Link Markdown não tem essa
+      // folga: link é para clicar, e link quebrado reprova sempre.
+      if (!link && NEGATED_MENTION_RX.test(linhas.slice(Math.max(0, i - 1), i + 2).join(' '))) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack,
+        file: rel, line: i + 1, rule: 'link_quebrado_em_guideline',
+        message: `${link ? 'link' : 'caminho'} \`${alvo}\` não resolve `
+          + (link ? 'a partir da pasta do arquivo' : 'a partir da pasta nem de nenhuma base do escopo'),
+      });
     }
   }
   return violations;

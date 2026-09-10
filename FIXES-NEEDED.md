@@ -34,7 +34,7 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 16 itens
+## Aberto de verdade — 20 itens
 
 ### Precisam de decisão da dona (2)
 
@@ -43,7 +43,7 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
-### Dívida de fundação, sem dono de componente (13)
+### Dívida de fundação, sem dono de componente (15)
 - [ ] **O `toggle-group` do Vanilla ganhou três capacidades que as outras quatro stacks não têm.** (Aberto em 2026-08-27, ao montar a barra do protótipo de editor.) Vanilla é a referência, então a divergência é dívida de porte, não decisão:
 
   | capacidade | por que existe |
@@ -197,6 +197,20 @@ histórico; a lista de cima é o que está por fazer.
   **O que NÃO entrou, e continua aberto**: não existe item de `testes.*` sobre o nível do cabeçalho em nenhum dos quatro `translations.json` — o `covers` das 20 stories aponta para o item de `aria-labelledby`, que é metade do que elas afirmam. Criar o item é trabalho de conteúdo compartilhado.
 
 - [x] **O `closeLabel` do Dialog chegou a quatro stacks, e o Vanilla ficou com "Fechar" cravado.** **Resolvido em 2026-09-08**, no mesmo dia em que foi aberto: o vanilla ganhou `closeLabel` em `DialogOptions`, alimentando o `aria-label` e o `.nds-sr-only`. Os três vizinhos que a entrada mandava conferir foram medidos e estão certos — o `sheet.ts` já tinha, o `drawer` não gera botão de fechar em stack nenhuma (delega por `data-slot`), e o `alert-dialog` não tem botão de canto por decisão.
+- [ ] **O `RULES.md` do Angular manda todo componente de UI usar `ViewEncapsulation.None`, e 85 dos 157 `@Component` de `src/components/ui/` não usam.** (Aberto em 2026-09-10, ao enxugar os `RULES.md`.) Medido: 72 com a opção, 85 sem. Não investigado — parte dos 85 pode ser envoltório de story ou fixture, que não precisa dela, e a regra pode precisar dizer isso em vez de "todo". O risco do componente real sem ela é o encapsulamento reescrever os seletores e o CSS global compartilhado deixar de alcançar o que ele pinta.
+
+  Para fechar: separar os 85 entre componente e andaime, e ou pôr a opção nos componentes, ou estreitar a regra — com um portão que cobre a lista declarada.
+
+- [ ] **No rastreio das demonstrações auto-instrumentadas, o `element_id` ainda pode vir de um `id` gerado pela lib.** (Aberto em 2026-09-10, ao tornar o `label` dos eventos `docs_*` estável.) No modo contêiner (`data-track-container`), o rastreador das cinco stacks faz `element = interactive.id || resolved.label || element`. O `label` passou a ser id estável; o `interactive.id`, não — base-ui, reka, bits e radix-ng geram ids por instância (`:r3:`, `reka-…-v-0`), que mudam entre renderizações e entre stacks, e o mesmo clique vira um `element_id` diferente em cada uma.
+
+  Para fechar: aceitar o `id` só quando ele tiver forma de id (a `isStableId` de `docs/shared/primitives/track-label.ts` já existe) e não tiver cara de gerado; senão cair no `data-slot`, como o `label`.
+
+### Divergência cross-stack de demonstração (2)
+
+- [ ] **O "Salvar" da demonstração do Dialog fecha o painel no Angular e não fecha no React, no Vue e no Svelte.** (Aberto em 2026-09-10, ao unificar o `reason` do `dialog_close`.) No Angular a ação é também parte de fechar e levanta a bandeira de confirmação — o fechamento sai com `reason: "api"`. Nas outras três ela só dispara `dialog_action` e o diálogo continua aberto; quem fecha é o Cancelar (`close-button`). No vanilla não foi medido. É comportamento de DEMONSTRAÇÃO, não do componente — mas é o que o leitor vê como "o jeito certo", e a série de `reason` de uma stack não é comparável à da outra.
+
+- [ ] **A demonstração do Sonner no React tem 6 botões; nas outras quatro, 10.** (Aberto em 2026-09-10, ao completar o rastreio do Sonner.) Faltam no React "com descrição", "com ação", "promessa" e "persistente". O rastreio está completo nos 6 que existem (`docs_demo_click` e `toast_demo_triggered`, com os mesmos ids das outras stacks); o que falta é o conteúdo da demonstração.
+
 ### Divergência cross-stack do carrossel (3)
 
 - [ ] **`class` do `CarouselContent` cai em nós diferentes.** Nas três stacks com lib vai para o **track**; no Vanilla e no Angular vai para o **recorte**. Três primitivos a mexer, com Chromatic a reboque.
