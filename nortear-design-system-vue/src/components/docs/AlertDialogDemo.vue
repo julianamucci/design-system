@@ -7,6 +7,7 @@
  * inteira ao carregar. Os previews (demonstração, do & don't, variantes)
  * mostram o botão; o diálogo só aparece após o clique.
  */
+import { computed } from 'vue';
 import { track } from '@/lib/analytics';
 import {
   AlertDialog,
@@ -31,10 +32,27 @@ const props = withDefaults(defineProps<{
   triggerVariant?: 'default' | 'destructive' | 'outline';
   /** `destructive` pinta a ação primária com o tom de risco. */
   tone?: 'default' | 'destructive';
+  /**
+   * Seção da docs page onde o preview está (`docs_demo`, `docs_variantes`,
+   * `docs_do_dont`). Obrigatória: o mesmo demo serve três seções, e um valor
+   * fixo aqui dentro mandaria todo clique como se viesse da demonstração.
+   */
+  location: string;
+  /**
+   * Rótulo estável do evento. Sem ele, sai do tom (`destructive` / `neutral`);
+   * o Do & Don't passa o do par (`pair1-do`, `pair2-dont`…, as chaves `doDont.pair*` do conteúdo), porque ali o tom não
+   * distingue o exemplo certo do errado.
+   */
+  trackLabel?: string;
 }>(), {
   triggerVariant: 'destructive',
   tone: 'default',
+  trackLabel: undefined,
 });
+
+const label = computed(
+  () => props.trackLabel ?? (props.tone === 'destructive' ? 'destructive' : 'neutral'),
+);
 
 // Rótulo estável: o título é texto traduzido e quebraria a agregação no GA4
 // (um rótulo por idioma para o mesmo demo).
@@ -44,7 +62,11 @@ const props = withDefaults(defineProps<{
 // Cancelar (`close-button`, que é o que sobra) e a ação que CONFIRMA — `api`,
 // "fechou por decisão de dentro". A ação e o Cancelar são partes de fechar da
 // lib; sem marcar a confirmação antes, "confirmou" chegaria ao relatório como
-// "apertou o botão de fechar".
+// "apertou o botão de fechar". A marca chega ANTES do fechamento porque o
+// wrapper da ação entrega o `@click` na captura (`AlertDialogAction.vue`) — e
+// não por esta demo ser não controlada, que era o que a sustentava até
+// 2026-09-10: no modo controlado a lib emite a mudança síncrona, dentro do
+// próprio fechamento.
 type AlertDialogCloseReason = 'escape' | 'close-button' | 'api';
 let pendingCloseReason: AlertDialogCloseReason | null = null;
 
@@ -53,17 +75,20 @@ const closeWatch = {
 };
 
 function handleOpenChange(open: boolean) {
-  const label = props.tone === 'destructive' ? 'destructive' : 'neutral';
   if (open) {
     pendingCloseReason = null;
-    track('dialog_open', { component: 'alert-dialog', label, location: 'docs_demo' });
+    track('dialog_open', {
+      component: 'alert-dialog',
+      label: label.value,
+      location: props.location,
+    });
     return;
   }
   track('dialog_close', {
     component: 'alert-dialog',
-    label,
+    label: label.value,
     reason: pendingCloseReason ?? 'close-button',
-    location: 'docs_demo',
+    location: props.location,
   });
   pendingCloseReason = null;
 }
@@ -72,8 +97,8 @@ function handleConfirm() {
   pendingCloseReason = 'api';
   track('dialog_confirm', {
     component: 'alert-dialog',
-    label: props.tone === 'destructive' ? 'destructive' : 'neutral',
-    location: 'docs_demo',
+    label: label.value,
+    location: props.location,
   });
 }
 </script>

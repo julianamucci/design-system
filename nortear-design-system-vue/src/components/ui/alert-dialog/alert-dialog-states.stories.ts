@@ -14,6 +14,7 @@ import {
   AlertDialogTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import {
   alertDialogOpenSource,
   alertDialogCanceladoSource,
@@ -21,6 +22,22 @@ import {
   alertDialogControlledSource,
   alertDialogClosedSource,
 } from './alert-dialog.source';
+import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
+
+/**
+ * Rótulos das stories de estado (as cinco, Closed incluída): o
+ * conjunto destrutivo de `demonstration.labels`, o MESMO que a docs page lê. A
+ * story é fixture e fica presa a pt-BR de propósito — quem resolve o idioma de
+ * quem lê é a docs page, e uma play que dependesse do seletor procuraria um
+ * nome diferente a cada rodada.
+ *
+ * O gatilho e o título dizem o mesmo ("Excluir conta"), e a ação diz só o verbo
+ * ("Excluir"): as queries por botão desambiguam por nome exato.
+ */
+const L = alertDialogTranslations['pt-BR'].demonstration.labels;
+const TRIGGER_NAME = new RegExp(`^${L.triggerLabel}$`, 'i');
+const ACTION_NAME = new RegExp(`^${L.action}$`, 'i');
+const CANCEL_NAME = new RegExp(`^${L.cancel}$`, 'i');
 
 const meta = {
   title: 'Components/Overlay/AlertDialog/States',
@@ -51,15 +68,14 @@ type Story = StoryObj<typeof meta>;
  * reexecuta a play no MESMO DOM: na segunda rodada o diálogo já foi fechado
  * pelos passos anteriores e o passo de abertura media o vazio.
  */
-async function ensureOpen(canvas: ReturnType<typeof within>) {
-  const body = within(document.body);
+async function ensureOpen(trigger: HTMLElement) {
   // querySelector e não queryByRole: numa rodada do arquivo inteiro sobra o
   // portal da story anterior por alguns quadros, e queryByRole estoura em
   // "multiple elements" antes de a limpeza acontecer.
   if (!document.querySelector('[role="alertdialog"]')) {
-    await userEvent.click(canvas.getByRole('button', { name: /Excluir item/i, hidden: true }));
+    await userEvent.click(trigger);
   }
-  return body.findByRole('alertdialog');
+  return waitForPortal('alertdialog');
 }
 
 const sharedComponents = {
@@ -82,6 +98,7 @@ const onConfirmSpy = fn();
 const onCancelSpy = fn();
 const onCancelActionSpy = fn();
 const onOpenChangeSpy = fn();
+const onControlledActionSpy = fn();
 
 export const Closed: Story = {
   parameters: {
@@ -94,18 +111,16 @@ export const Closed: Story = {
     template: `
       <AlertDialog>
         <AlertDialogTrigger as-child>
-          <Button variant="destructive">Excluir item</Button>
+          <Button variant="destructive">${L.triggerLabel}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-            <AlertDialogDescription>Esta ação não pode ser desfeita.</AlertDialogDescription>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction variant="destructive">
-              Excluir
-            </AlertDialogAction>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">${L.action}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -114,7 +129,7 @@ export const Closed: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
-    const trigger = canvas.getByRole('button', { name: /Excluir item/i });
+    const trigger = canvas.getByRole('button', { name: TRIGGER_NAME });
     await expect(trigger).toBeVisible();
     await expect(body.queryByRole('alertdialog')).not.toBeInTheDocument();
   },
@@ -123,13 +138,16 @@ export const Closed: Story = {
 export const Open: Story = {
   parameters: {
     // A story termina com o diálogo aberto: é sobre ela que o addon-a11y roda
-    // a varredura axe (contraste incluído) do estado aberto.
-    covers: ['functional.item6', 'accessibility.item6', 'accessibility.item7'],
+    // a varredura axe (contraste incluído) do estado aberto. Teclado, véu e
+    // retorno de foco são das outras stories deste arquivo e do Playground.
+    covers: ['accessibility.item6', 'accessibility.item7'],
     docs: {
-      // O painel nasce aberto: é o atributo na raiz que a do meta não tem.
+      // Sai igual ao da do meta (o fechado): o `default-open` que abre esta
+      // story é andaime de captura e não entra no trecho. Declarado por nome
+      // para que a igualdade seja uma asserção do teste de unidade, e não sorte.
       source: { transform: alertDialogOpenSource },
       description: {
-        story: 'Diálogo aberto com `defaultOpen`. Captura visual no Chromatic.',
+        story: 'Diálogo aberto: o painel com o par Cancelar + Ação e o foco inicial no Cancelar. Captura visual no Chromatic.',
       },
     },
   },
@@ -138,87 +156,36 @@ export const Open: Story = {
     template: `
       <AlertDialog default-open>
         <AlertDialogTrigger as-child>
-          <Button variant="destructive">Excluir item</Button>
+          <Button variant="destructive">${L.triggerLabel}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir item permanentemente?</AlertDialogTitle>
-            <AlertDialogDescription>
-              O item será removido de forma definitiva e não poderá ser recuperado.
-            </AlertDialogDescription>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction variant="destructive">
-              Excluir
-            </AlertDialogAction>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">${L.action}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const body = within(document.body);
-    // `hidden: true`: a story nasce com o diálogo aberto, então o conteúdo do
-    // canvas já está fora da árvore de acessibilidade (aria-hidden) quando a
-    // play começa. O nó continua sendo o mesmo trigger para foco e clique.
-    const trigger = canvas.getByRole('button', {
-      name: /Excluir item/i,
-      hidden: true,
-    });
-
-    await step('Diálogo já nasce aberto e com foco no Cancel', async () => {
-      const dialog = await body.findByRole('alertdialog');
+  play: async ({ step }) => {
+    await step('Conteúdo aberto traz título e descrição', async () => {
+      const dialog = await waitForPortal('alertdialog');
       // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
       // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
       await waitFor(() => expect(dialog).toBeVisible());
-      const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
-      await waitFor(() => expect(cancel).toHaveFocus());
+      await expect(dialog).toHaveTextContent(L.title);
+      await expect(dialog).toHaveTextContent(L.description);
     });
 
-    await step('Tab leva o foco ao Action e Enter o ativa, fechando o diálogo', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
-      await userEvent.tab();
-      await expect(action).toHaveFocus();
-
-      await userEvent.keyboard('{Enter}');
+    await step('Foco inicial no Cancelar', async () => {
+      const dialog = await waitForPortal('alertdialog');
       await waitFor(() =>
-        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
+        expect(within(dialog).getByRole('button', { name: CANCEL_NAME })).toHaveFocus(),
       );
-      await waitFor(() => expect(trigger).toHaveFocus());
-    });
-
-    await step('Space no Cancel também ativa o botão e fecha o diálogo', async () => {
-      await userEvent.click(trigger);
-      const dialog = await body.findByRole('alertdialog');
-      await waitFor(() => expect(dialog).toBeVisible());
-
-      const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
-      await waitFor(() => expect(cancel).toHaveFocus());
-      await userEvent.keyboard(' ');
-      await waitFor(() =>
-        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
-      );
-    });
-
-    await step('Reabre para deixar o estado aberto na captura visual', async () => {
-      await userEvent.click(trigger);
-      const dialog = await body.findByRole('alertdialog');
-      await waitFor(() => expect(dialog).toBeVisible());
-    });
-
-    // O overlay do alertdialog é inerte por decisão de acessibilidade (WAI-ARIA
-    // APG: a decisão precisa ser explícita), então clicar fora NÃO cancela.
-    // O reka-ui faz isso com withModifiers(() => {}, ['prevent']) no
-    // onInteractOutside. Mesma asserção nas 4 stacks.
-    await step('Clique no overlay não fecha o diálogo', async () => {
-      const overlay = document.querySelector<HTMLElement>('[data-slot="alert-dialog-overlay"]');
-      await expect(overlay).toBeInTheDocument();
-      await userEvent.click(overlay!);
-      const dialog = await body.findByRole('alertdialog');
-      await waitFor(() => expect(dialog).toBeVisible());
     });
   },
 };
@@ -229,7 +196,9 @@ export const Confirmed: Story = {
     docs: {
       // O handler do consumidor na ação é o assunto, e ele não existe na do meta.
       source: { transform: alertDialogConfirmadoSource },
-      description: { story: 'Clique em Action dispara o handler e fecha o diálogo.' },
+      description: {
+        story: 'A ação, por clique ou por Enter, dispara o handler, fecha o diálogo e devolve o foco ao gatilho.',
+      },
     },
   },
   render: () => ({
@@ -243,20 +212,20 @@ export const Confirmed: Story = {
     template: `
       <AlertDialog default-open>
         <AlertDialogTrigger as-child>
-          <Button variant="destructive">Excluir item</Button>
+          <Button variant="destructive">${L.triggerLabel}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-            <AlertDialogDescription>Esta ação é permanente.</AlertDialogDescription>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               @click="onConfirm"
             >
-              Excluir
+              ${L.action}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -268,23 +237,34 @@ export const Confirmed: Story = {
     const body = within(document.body);
     // `hidden: true`: a story nasce aberta, então o trigger já está sob
     // aria-hidden quando a play começa. Continua sendo o mesmo nó para o foco.
-    const trigger = canvas.getByRole('button', { name: /Excluir item/i, hidden: true });
+    const trigger = canvas.getByRole('button', { name: TRIGGER_NAME, hidden: true });
+    onConfirmSpy.mockClear();
 
-    await step('Diálogo começa aberto', async () => {
-      const dialog = await ensureOpen(canvas);
-      // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
-      // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
-      await waitFor(() => expect(dialog).toBeVisible());
-    });
-
-    await step('Clique em Excluir dispara o handler do consumidor', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
-      await userEvent.click(action);
+    await step('Clique na ação dispara o handler, fecha e devolve o foco ao gatilho', async () => {
+      const dialog = await ensureOpen(trigger);
+      await userEvent.click(within(dialog).getByRole('button', { name: ACTION_NAME }));
       await waitFor(() => expect(onConfirmSpy).toHaveBeenCalledTimes(1));
+      await waitFor(() =>
+        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
+      );
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
 
-    await step('Confirmar fecha o diálogo e devolve o foco ao trigger', async () => {
+    await step('Enter na ação confirma pelo teclado e devolve o foco ao gatilho', async () => {
+      // Reabre pelo gatilho (e não por estado) para que o retorno de foco tenha
+      // de onde partir.
+      await userEvent.click(trigger);
+      const dialog = await waitForPortal('alertdialog');
+      const action = within(dialog).getByRole('button', { name: ACTION_NAME });
+      // O foco entra no Cancelar; Tab leva à ação.
+      await waitFor(() =>
+        expect(within(dialog).getByRole('button', { name: CANCEL_NAME })).toHaveFocus(),
+      );
+      await userEvent.tab();
+      await expect(action).toHaveFocus();
+
+      await userEvent.keyboard('{Enter}');
+      await waitFor(() => expect(onConfirmSpy).toHaveBeenCalledTimes(2));
       await waitFor(() =>
         expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
       );
@@ -295,11 +275,13 @@ export const Confirmed: Story = {
 
 export const Cancelled: Story = {
   parameters: {
+    covers: ['functional.item3'],
     docs: {
-      // Duas saídas com handler cada uma, e sem gatilho: composição diferente
-      // da do meta em raiz e em rodapé.
+      // Duas saídas com handler cada uma: é o que a do meta não tem.
       source: { transform: alertDialogCanceladoSource },
-      description: { story: 'Cancel é clicado — diálogo fecha sem executar ação.' },
+      description: {
+        story: 'O Cancelar, por clique ou por Espaço, fecha sem executar a ação e devolve o foco ao gatilho.',
+      },
     },
   },
   render: () => ({
@@ -309,20 +291,24 @@ export const Cancelled: Story = {
       onCancelActionSpy.mockClear();
       return { onCancel: onCancelSpy, onAction: onCancelActionSpy };
     },
+    // O gatilho existe para que o retorno de foco ao fechar tenha destino.
     template: `
       <AlertDialog default-open>
+        <AlertDialogTrigger as-child>
+          <Button variant="destructive">${L.triggerLabel}</Button>
+        </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
-            <AlertDialogDescription>Esta ação é permanente.</AlertDialogDescription>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel @click="onCancel">Cancelar</AlertDialogCancel>
+            <AlertDialogCancel @click="onCancel">${L.cancel}</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               @click="onAction"
             >
-              Excluir
+              ${L.action}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -332,26 +318,36 @@ export const Cancelled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
+    // `hidden: true`: a story nasce aberta, então o trigger já está sob
+    // aria-hidden quando a play começa.
+    const trigger = canvas.getByRole('button', { name: TRIGGER_NAME, hidden: true });
+    onCancelSpy.mockClear();
+    onCancelActionSpy.mockClear();
 
-    await step('Diálogo começa aberto', async () => {
-      const dialog = await ensureOpen(canvas);
-      // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
-      // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
-      await waitFor(() => expect(dialog).toBeVisible());
-    });
-
-    await step('Clique em Cancelar dispara só o handler de cancelamento', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
-      await userEvent.click(cancel);
+    await step('Clique no Cancelar fecha sem executar a ação e devolve o foco', async () => {
+      const dialog = await ensureOpen(trigger);
+      await userEvent.click(within(dialog).getByRole('button', { name: CANCEL_NAME }));
       await waitFor(() => expect(onCancelSpy).toHaveBeenCalledTimes(1));
       await expect(onCancelActionSpy).not.toHaveBeenCalled();
-    });
-
-    await step('Cancelar fecha o diálogo', async () => {
       await waitFor(() =>
         expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
       );
+      await waitFor(() => expect(trigger).toHaveFocus());
+    });
+
+    await step('Espaço no Cancelar focado cancela pelo teclado', async () => {
+      await userEvent.click(trigger);
+      const dialog = await waitForPortal('alertdialog');
+      const cancel = within(dialog).getByRole('button', { name: CANCEL_NAME });
+      await waitFor(() => expect(cancel).toHaveFocus());
+
+      await userEvent.keyboard(' ');
+      await waitFor(() => expect(onCancelSpy).toHaveBeenCalledTimes(2));
+      await expect(onCancelActionSpy).not.toHaveBeenCalled();
+      await waitFor(() =>
+        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
+      );
+      await waitFor(() => expect(trigger).toHaveFocus());
     });
   },
 };
@@ -364,7 +360,8 @@ export const Controlled: Story = {
       // o estado num `ref`: script e marcação que a do meta não tem.
       source: { transform: alertDialogControlledSource },
       description: {
-        story: 'Abertura controlada por estado externo via `open` + `onUpdate:open`.',
+        story:
+          'Abertura comandada pelo estado de quem consome: o botão fica fora do componente, e cada fechamento chega como pedido de mudança que o pai aplica.',
       },
     },
   },
@@ -373,31 +370,28 @@ export const Controlled: Story = {
     setup() {
       const open = ref(false);
       onOpenChangeSpy.mockClear();
+      onControlledActionSpy.mockClear();
       const onOpenChange = (value: boolean) => {
         onOpenChangeSpy(value);
         open.value = value;
       };
-      return { open, onOpenChange };
+      return { open, onOpenChange, onAction: onControlledActionSpy };
     },
+    // A ação não fecha por conta própria: ela pede o fechamento pelo mesmo
+    // evento de mudança que o Cancelar e o Escape, e o pai o aplica. O handler
+    // dela está aqui só para a play conferir a ORDEM (último passo).
     template: `
       <div class="nds-stack" data-spacing="sm">
-        <Button variant="destructive" @click="open = true">Abrir via estado externo</Button>
+        <Button variant="destructive" @click="open = true">${L.triggerLabel}</Button>
         <AlertDialog :open="open" @update:open="onOpenChange">
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Controlado pelo pai</AlertDialogTitle>
-              <AlertDialogDescription>
-                Este diálogo é comandado por estado externo via open e update:open.
-              </AlertDialogDescription>
+              <AlertDialogTitle>${L.title}</AlertDialogTitle>
+              <AlertDialogDescription>${L.description}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Fechar</AlertDialogCancel>
-              <AlertDialogAction
-                variant="destructive"
-                @click="open = false"
-              >
-                Confirmar
-              </AlertDialogAction>
+              <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+              <AlertDialogAction variant="destructive" @click="onAction">${L.action}</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -407,19 +401,41 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
+    // Guardado como nó: com o diálogo aberto o botão de fora recebe
+    // aria-hidden, e uma nova query por role não o encontraria.
+    const trigger = canvas.getByRole('button', { name: TRIGGER_NAME });
 
-    await step('Clique no trigger externo abre o diálogo', async () => {
-      const trigger = canvas.getByRole('button', { name: /Abrir via estado externo/i });
+    await step('O botão de fora abre o diálogo pelo estado', async () => {
       await userEvent.click(trigger);
-      const dialog = await body.findByRole('alertdialog');
-      // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
-      // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
+      const dialog = await waitForPortal('alertdialog');
       await waitFor(() => expect(dialog).toBeVisible());
     });
 
-    await step('Escape emite a mudança de estado e o pai fecha o diálogo', async () => {
+    await step('Escape pede o fechamento, o pai fecha e o foco volta ao botão', async () => {
       await userEvent.keyboard('{Escape}');
       await waitFor(() => expect(onOpenChangeSpy).toHaveBeenCalledWith(false));
+      await waitFor(() =>
+        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
+      );
+      await waitFor(() => expect(trigger).toHaveFocus());
+    });
+
+    // Neste modo o pedido de mudança sai SÍNCRONO de dentro do fechamento da
+    // lib. Se o clique de quem consome chegasse depois dele, quem marca a
+    // confirmação no clique (a docs page, para o `reason` do `dialog_close`)
+    // receberia o fechamento antes da marca. O wrapper entrega o clique na
+    // captura; esta é a prova de que a ordem vale no modo em que ela importa.
+    await step('A ação avisa quem consome ANTES de pedir o fechamento', async () => {
+      onOpenChangeSpy.mockClear();
+      onControlledActionSpy.mockClear();
+      await userEvent.click(trigger);
+      const dialog = await waitForPortal('alertdialog');
+      await userEvent.click(within(dialog).getByRole('button', { name: ACTION_NAME }));
+      await waitFor(() => expect(onOpenChangeSpy).toHaveBeenCalledWith(false));
+      await expect(onControlledActionSpy).toHaveBeenCalledTimes(1);
+      await expect(onControlledActionSpy.mock.invocationCallOrder[0]).toBeLessThan(
+        onOpenChangeSpy.mock.invocationCallOrder[0],
+      );
       await waitFor(() =>
         expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
       );

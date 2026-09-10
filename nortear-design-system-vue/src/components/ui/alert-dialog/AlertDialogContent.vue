@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AlertDialogContentEmits, AlertDialogContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { computed, onScopeDispose, provide, ref, useAttrs } from 'vue'
+import { computed, onScopeDispose, provide, ref } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import {
   AlertDialogContent,
@@ -25,13 +25,13 @@ const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 
-// PATCH: a11y — nome acessível de fallback quando o consumidor não renderiza
-// AlertDialogTitle (ver PATCHES.md#vue-alert-dialog-fallback-label)
-// O Title é obrigatório e já alimenta o aria-labelledby, então isto só entra em
-// composição fora do contrato — por isso o ramo não tem story.
-const attrs = useAttrs()
-/* v8 ignore next */
-const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'AlertDialog'))
+// O nome acessível vem SÓ do título (C2). O primitivo liga `aria-labelledby` ao
+// id do título sempre — com ou sem título renderizado (`DialogContentImpl`) —,
+// e por isso este wrapper não declara nome nenhum. Até 2026-09-10 havia aqui um
+// `aria-label="AlertDialog"` de fallback cuja condição olhava os atributos de
+// quem consome, e não o que o primitivo liga: saía em TODO painel, em inglês,
+// ao lado do `aria-labelledby`. Painel sem título é composição fora do contrato,
+// e o próprio primitivo avisa disso em desenvolvimento.
 
 // A descrição é opcional. O primitivo desta stack, porém, gera o id da descrição
 // sempre e liga `aria-describedby` a ele mesmo quando ninguém a renderiza — o
@@ -68,7 +68,7 @@ const noDescription = computed(() =>
     />
     <AlertDialogContent
       data-slot="alert-dialog-content"
-      v-bind="{ 'aria-modal': 'true', 'aria-label': fallbackLabel, ...noDescription, ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-modal': 'true', ...noDescription, ...$attrs, ...forwarded }"
       :class="cn( 'nds-alert-dialog-content', props.class, )"
     >
       <slot />

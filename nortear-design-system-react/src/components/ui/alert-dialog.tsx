@@ -24,7 +24,24 @@ import { Button } from "@/components/ui/button"
  * Corolário: a saída visível é o par Cancel + Action do rodapé, e por isso o
  * rodapé não é opcional aqui — este componente não tem X no canto, ao
  * contrário do Dialog.
+ *
+ *   · FOCO INICIAL NO CANCELAR, por escolha do componente (D3 do PRD). O
+ *     padrão da lib é o primeiro tabulável — que só coincidia com o Cancelar
+ *     porque ele vem antes da ação no rodapé — e, na abertura por TOQUE, o
+ *     próprio painel (`createDefaultInitialFocus`, para não subir o teclado
+ *     virtual). Mecanismo: o Content cria uma ref, entrega-a ao Cancel por
+ *     contexto e a passa em `initialFocus`. Sem Cancel montado a ref fica
+ *     vazia, e a lib cai no comportamento padrão.
  */
+
+/**
+ * Ponte entre o Content, que decide o foco inicial, e o Cancel, que é o alvo.
+ * Não exportado: é costura interna, e export extra num arquivo de componente
+ * quebra o fast refresh.
+ */
+const AlertDialogCancelRefContext =
+  React.createContext<React.RefObject<HTMLButtonElement | null> | null>(null)
+
 function AlertDialog({ ...props }: AlertDialogPrimitive.Root.Props) {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />
 }
@@ -83,6 +100,7 @@ function AlertDialogContent({
   className,
   ...props
 }: AlertDialogPrimitive.Popup.Props) {
+  const cancelRef = React.useRef<HTMLButtonElement | null>(null)
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
@@ -92,16 +110,22 @@ function AlertDialogContent({
         node_modules). Quem cumpre o contrato de markup do design system é este
         wrapper. Aqui o atributo é incondicional: a raiz do alert dialog não
         expõe `modal` — ela é sempre modal, por definição do papel.
+
+        `initialFocus` vem ANTES do spread: é o padrão do componente, e quem
+        consome ainda pode trocá-lo explicitamente.
       */}
-      <AlertDialogPrimitive.Popup
-        data-slot="alert-dialog-content"
-        className={cn(
-          "nds-alert-dialog-content",
-          className
-        )}
-        aria-modal="true"
-        {...props}
-      />
+      <AlertDialogCancelRefContext.Provider value={cancelRef}>
+        <AlertDialogPrimitive.Popup
+          data-slot="alert-dialog-content"
+          className={cn(
+            "nds-alert-dialog-content",
+            className
+          )}
+          aria-modal="true"
+          initialFocus={cancelRef}
+          {...props}
+        />
+      </AlertDialogCancelRefContext.Provider>
     </AlertDialogPortal>
   )
 }
@@ -207,18 +231,33 @@ function AlertDialogAction({
   )
 }
 
+// O Cancel pendura no botão a ref que o Content passa em `initialFocus` (D3),
+// sem tomar o lugar da `ref` de quem consome: as duas recebem o mesmo nó.
 function AlertDialogCancel({
   className,
   variant = "outline",
   size = "default",
+  ref,
   ...props
 }: AlertDialogPrimitive.Close.Props &
-  Pick<React.ComponentProps<typeof Button>, "variant" | "size">) {
+  Pick<React.ComponentProps<typeof Button>, "variant" | "size"> & {
+    ref?: React.Ref<HTMLButtonElement>
+  }) {
+  const initialFocusRef = React.useContext(AlertDialogCancelRefContext)
+  const composedRef = React.useCallback(
+    (node: HTMLButtonElement | null) => {
+      if (initialFocusRef) initialFocusRef.current = node
+      if (typeof ref === "function") ref(node)
+      else if (ref) ref.current = node
+    },
+    [initialFocusRef, ref]
+  )
   return (
     <AlertDialogPrimitive.Close
       data-slot="alert-dialog-cancel"
       className={cn(className)}
       render={<Button variant={variant} size={size} />}
+      ref={composedRef}
       {...props}
     />
   )

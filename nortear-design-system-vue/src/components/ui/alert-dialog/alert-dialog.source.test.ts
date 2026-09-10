@@ -125,25 +125,49 @@ describe('transforms das stories de estado', () => {
     expect(saida).toContain('<AlertDialogTrigger as-child>');
   });
 
-  it('o aberto vem de um atributo na raiz, não de clique na play', () => {
-    expect(alertDialogOpenSource()).toContain('<AlertDialog default-open>');
+  it('o aberto é a confirmação canônica: o trecho não nasce aberto', () => {
+    // A story abre na montagem para a captura; quem copia quer o diálogo
+    // comandado pelo gatilho, não aberto sobre a página.
+    expect(alertDialogOpenSource()).toBe(alertDialogSource());
+    expect(alertDialogOpenSource()).toContain('<AlertDialog>');
+    // E por isso igual ao fechado: o que separa os dois estados é o clique no
+    // gatilho, que não se escreve.
+    expect(alertDialogOpenSource()).toBe(alertDialogClosedSource());
+  });
+
+  it('as stories de estado usam o conjunto destrutivo de demonstration.labels', () => {
+    for (const fn of [
+      alertDialogClosedSource,
+      alertDialogOpenSource,
+      alertDialogConfirmadoSource,
+      alertDialogCanceladoSource,
+      alertDialogControlledSource,
+    ]) {
+      const saida = fn();
+      expect(saida).toContain('<AlertDialogTitle>Excluir conta</AlertDialogTitle>');
+      expect(saida).toContain('<AlertDialogCancel');
+      expect(saida).toContain('>Excluir</AlertDialogAction>');
+      // Título em pergunta e "Fechar" como Cancelar são o que o Do & Don't
+      // reprova; o exemplo não pode ensinar os dois.
+      expect(saida).not.toMatch(/<AlertDialogTitle>[^<]*\?<\/AlertDialogTitle>/);
+      expect(saida).not.toContain('>Fechar<');
+    }
   });
 
   it('o confirmado põe o handler na ação, e o fechamento não é escrito', () => {
     const saida = alertDialogConfirmadoSource();
-    expect(saida).toContain('<AlertDialogAction variant="destructive" @click="excluirItem">');
-    expect(saida).toContain('function excluirItem() {');
+    expect(saida).toContain('<AlertDialogAction variant="destructive" @click="excluirConta">');
+    expect(saida).toContain('function excluirConta() {');
     // Quem fecha é o componente: escrever um fechamento manual ensinaria a
     // duplicar o que já acontece.
     expect(saida).not.toContain('open = false');
   });
 
-  it('o cancelado dá handler às duas saídas, e a ação não roda por ele', () => {
+  it('o cancelado dá handler às duas saídas, e o gatilho existe para receber o foco de volta', () => {
     const saida = alertDialogCanceladoSource();
     expect(saida).toContain('<AlertDialogCancel @click="aoDesistir">Cancelar</AlertDialogCancel>');
     expect(saida).toContain('function aoDesistir() {');
-    // A story não renderiza gatilho: o painel nasce aberto.
-    expect(saida).not.toContain('AlertDialogTrigger');
+    expect(saida).toContain('<AlertDialogTrigger as-child>');
   });
 
   it('o controlado leva o estado e o gatilho para fora do componente', () => {
@@ -152,9 +176,31 @@ describe('transforms das stories de estado', () => {
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain(':open="aberto"');
     expect(saida).toContain('@update:open="aberto = $event"');
-    expect(saida).toContain('<Button variant="destructive" @click="aberto = true">');
+    expect(saida).toContain('<Button variant="destructive" @click="aberto = true">Excluir conta</Button>');
     // O gatilho do componente não convive com o botão externo neste modo.
     expect(saida).not.toContain('AlertDialogTrigger');
+    // A ação já pede o fechamento pelo evento de mudança: escrever outro
+    // ensinaria a fechar duas vezes.
+    expect(saida).not.toContain('aberto = false');
+  });
+
+  it('nenhum trecho fixo escreve default-open', () => {
+    for (const fn of [
+      alertDialogClosedSource,
+      alertDialogOpenSource,
+      alertDialogConfirmadoSource,
+      alertDialogCanceladoSource,
+      alertDialogControlledSource,
+      alertDialogWithIconSource,
+      alertDialogDestructiveSource,
+      alertDialogHeadingH3Source,
+      alertDialogNeutralSource,
+      alertDialogDescriptionLongaSource,
+      alertDialogNoDescriptionSource,
+      alertDialogClassNameExtraSource,
+    ]) {
+      expect(fn()).not.toContain('default-open');
+    }
   });
 });
 

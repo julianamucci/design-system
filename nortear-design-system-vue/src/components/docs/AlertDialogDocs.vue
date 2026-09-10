@@ -133,6 +133,15 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 // Todos os previews usam AlertDialogDemo, que renderiza o gatilho fechado. Não
 // usar `default-open` aqui: o AlertDialog é modal e em portal, então um preview
 // aberto cobre a docs page inteira no load.
+//
+// Cada preview diz em que SEÇÃO está (`location`): o mesmo demo serve a
+// demonstração, as variantes e o Do & Don't, e o clique em qualquer um deles é
+// tão real quanto o da demonstração.
+
+/** Rótulo de exemplo — só os de `demonstration.labels`; nenhum inventado aqui. */
+function label(key: string): string {
+  return tContent(`demonstration.labels.${key}`);
+}
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
@@ -156,71 +165,101 @@ import {
   // ...
 } from "@/components/ui/alert-dialog";`;
 
-const codeDestructive = `<AlertDialog>
+// Os trechos das variantes mostram o MESMO texto do preview ao lado: os rótulos
+// de `demonstration.labels`, no idioma de quem lê. Texto próprio aqui divergia
+// do preview e voltava ao título em forma de pergunta que o Do & Don't reprova.
+const codeDestructive = computed(() => `<AlertDialog>
   <AlertDialogTrigger as-child>
-    <Button variant="destructive">Excluir conta</Button>
+    <Button variant="destructive">${label('triggerLabel')}</Button>
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
+      <AlertDialogTitle>${label('title')}</AlertDialogTitle>
       <AlertDialogDescription>
-        Todos os dados serão removidos. Esta ação não pode ser desfeita.
+        ${label('description')}
       </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction variant="destructive">
-        Excluir conta
-      </AlertDialogAction>
+      <AlertDialogCancel>${label('cancel')}</AlertDialogCancel>
+      <AlertDialogAction variant="destructive">${label('action')}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
-</AlertDialog>`;
+</AlertDialog>`);
 
-const codeDefault = `<AlertDialog>
+const codeDefault = computed(() => `<AlertDialog>
   <AlertDialogTrigger as-child>
-    <Button variant="outline">Sair da conta</Button>
+    <Button variant="outline">${label('neutralTriggerLabel')}</Button>
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Sair da conta?</AlertDialogTitle>
+      <AlertDialogTitle>${label('neutralTitle')}</AlertDialogTitle>
       <AlertDialogDescription>
-        Você precisará entrar novamente para acessar seus dados.
+        ${label('neutralDescription')}
       </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction>Sair</AlertDialogAction>
+      <AlertDialogCancel>${label('cancel')}</AlertDialogCancel>
+      <AlertDialogAction>${label('neutralAction')}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
-</AlertDialog>`;
+</AlertDialog>`);
 
-const codeCustomizationTokens = `/* Em globals.css — override do AlertDialog via tokens */
-:root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --border: 240 5.9% 90%;
-  --destructive: 0 84% 60%;
-  --radius: 0.5rem;
-}
+const interfaceCode = `import type { HTMLAttributes } from 'vue'
+import type { ButtonVariants } from '@/components/ui/button'
 
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --destructive: 0 62.8% 30.6%;
-}`;
-
-const interfaceCode = `// AlertDialog (Root)
+// AlertDialog (Root) — v-model:open
 interface AlertDialogProps {
   open?: boolean;
   defaultOpen?: boolean;
   'onUpdate:open'?: (open: boolean) => void;
 }
 
-// AlertDialogTrigger / AlertDialogAction / AlertDialogCancel
-interface TriggerProps { asChild?: boolean; class?: string }
-interface ActionProps  { onClick?: (e: MouseEvent) => void; class?: string }
-interface CancelProps  { onClick?: (e: MouseEvent) => void; class?: string }`;
+// AlertDialogTrigger
+interface AlertDialogTriggerProps {
+  asChild?: boolean;
+  class?: HTMLAttributes['class'];
+}
+
+// AlertDialogContent — portal, véu e role="alertdialog" já incluídos
+interface AlertDialogContentProps {
+  class?: HTMLAttributes['class'];
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+}
+
+// AlertDialogHeader / AlertDialogFooter / AlertDialogMedia
+interface AlertDialogSectionProps {
+  class?: HTMLAttributes['class'];
+}
+
+// AlertDialogTitle — o nível do cabeçalho troca por \`as\`
+interface AlertDialogTitleProps {
+  as?: string; // padrão 'h2' — 'h3', 'h4'…
+  asChild?: boolean;
+  class?: HTMLAttributes['class'];
+}
+
+// AlertDialogDescription — opcional; sem ela, o painel não declara descrição
+interface AlertDialogDescriptionProps {
+  as?: string; // padrão 'p'
+  asChild?: boolean;
+  class?: HTMLAttributes['class'];
+}
+
+// AlertDialogAction
+interface AlertDialogActionProps {
+  variant?: ButtonVariants['variant']; // padrão 'default'
+  size?: ButtonVariants['size'];
+  onClick?: (event: MouseEvent) => void;
+  class?: HTMLAttributes['class'];
+}
+
+// AlertDialogCancel
+interface AlertDialogCancelProps {
+  variant?: ButtonVariants['variant']; // padrão 'outline'
+  size?: ButtonVariants['size'];
+  onClick?: (event: MouseEvent) => void;
+  class?: HTMLAttributes['class'];
+}`;
 
 // ─── Computed data ────────────────────────────────────────────────────────────
 
@@ -241,12 +280,12 @@ const variantItems = computed(() => [
   {
     name: 'destructive',
     description: stripHtml(tContent('variants.items.destructive')),
-    code: codeDestructive,
+    code: codeDestructive.value,
   },
   {
     name: 'default',
     description: stripHtml(tContent('variants.items.default')),
-    code: codeDefault,
+    code: codeDefault.value,
   },
 ]);
 
@@ -264,34 +303,39 @@ const propCols = computed(() => ({
   description: tContent('props.table.description'),
 }));
 
+// A coluna Obrigatório sai do vocabulário da interface, nos três idiomas —
+// "Sim"/"Não" cravados ficavam em português para quem lê em inglês ou espanhol.
+const yes = computed(() => tNav('common.yes'));
+const no = computed(() => tNav('common.no'));
+
 const rootProps = computed(() => [
-  { name: 'open',         type: 'boolean',                    defaultValue: '—',      required: 'Não', description: toPlainText(tContent('props.table.open'))         },
-  { name: 'defaultOpen',  type: 'boolean',                    defaultValue: 'false',  required: 'Não', description: toPlainText(tContent('props.table.defaultOpen')) },
-  { name: 'onUpdate:open',type: '(open: boolean) => void',    defaultValue: '—',      required: 'Não', description: toPlainText(tContent('props.table.onOpenChange'))},
-  { name: 'default slot', type: 'VNode',                      defaultValue: '—',      required: 'Sim', description: toPlainText(tContent('props.table.children'))    },
+  { name: 'open',         type: 'boolean',                    defaultValue: '—',      required: no.value,  description: toPlainText(tContent('props.table.open'))         },
+  { name: 'defaultOpen',  type: 'boolean',                    defaultValue: 'false',  required: no.value,  description: toPlainText(tContent('props.table.defaultOpen')) },
+  { name: 'onUpdate:open',type: '(open: boolean) => void',    defaultValue: '—',      required: no.value,  description: toPlainText(tContent('props.table.onOpenChange'))},
+  { name: 'default slot', type: 'VNode',                      defaultValue: '—',      required: yes.value, description: toPlainText(tContent('props.table.children'))    },
 ]);
 
 const triggerProps = computed(() => [
-  { name: 'asChild',      type: 'boolean', defaultValue: 'false', required: 'Não', description: toPlainText(tContent('props.table.asChild'))  },
-  { name: 'class',        type: 'string',  defaultValue: '—',     required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',   defaultValue: '—',     required: 'Sim', description: toPlainText(tContent('props.table.children')) },
+  { name: 'asChild',      type: 'boolean', defaultValue: 'false', required: no.value,  description: toPlainText(tContent('props.table.asChild'))  },
+  { name: 'class',        type: 'string',  defaultValue: '—',     required: no.value,  description: tContent('props.table.className')            },
+  { name: 'default slot', type: 'VNode',   defaultValue: '—',     required: yes.value, description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const contentProps = computed(() => [
-  { name: 'class',        type: 'string', defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',  defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
+  { name: 'class',        type: 'string', defaultValue: '—', required: no.value,  description: tContent('props.table.className')            },
+  { name: 'default slot', type: 'VNode',  defaultValue: '—', required: yes.value, description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const actionProps = computed(() => [
-  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onClick'))  },
-  { name: 'class',        type: 'string',                  defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
+  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: no.value,  description: toPlainText(tContent('props.table.onClick'))  },
+  { name: 'class',        type: 'string',                  defaultValue: '—', required: no.value,  description: tContent('props.table.className')            },
+  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: yes.value, description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const cancelProps = computed(() => [
-  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText(tContent('props.table.onClick'))  },
-  { name: 'class',        type: 'string',                  defaultValue: '—', required: 'Não', description: tContent('props.table.className')            },
-  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: 'Sim', description: toPlainText(tContent('props.table.children')) },
+  { name: 'onClick',      type: '(e: MouseEvent) => void', defaultValue: '—', required: no.value,  description: toPlainText(tContent('props.table.onClick'))  },
+  { name: 'class',        type: 'string',                  defaultValue: '—', required: no.value,  description: tContent('props.table.className')            },
+  { name: 'default slot', type: 'VNode',                   defaultValue: '—', required: yes.value, description: toPlainText(tContent('props.table.children')) },
 ]);
 
 const tokenRows = computed(() => [
@@ -305,6 +349,7 @@ const tokenRows = computed(() => [
   { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: tContent('tokens.table.padding')               },
   { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: tContent('tokens.table.mutedForeground')       },
   { token: '--muted',                  value: '.nds-alert-dialog-media',       description: tContent('tokens.table.mediaBg')               },
+  { token: '--radius-md',              value: '.nds-alert-dialog-media',       description: tContent('tokens.table.mediaRadius')           },
   // A ação herda o tom do Button: o tom destrutivo vem da variante, não deste CSS.
   // `--destructive-foreground` não tem linha porque não tem leitor: a variante
   // destrutiva é soft (fundo suave com o rótulo na PRÓPRIA cor semântica), e
@@ -405,6 +450,7 @@ const a11yCritCols = computed(() => ({
           :cancel-label="tContent('demonstration.labels.cancel')"
           :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
+          location="docs_demo"
         />
 
         <AlertDialogDemo
@@ -414,6 +460,7 @@ const a11yCritCols = computed(() => ({
           :description="tContent('demonstration.labels.neutralDescription')"
           :cancel-label="tContent('demonstration.labels.cancel')"
           :action-label="tContent('demonstration.labels.neutralAction')"
+          location="docs_demo"
         />
       </div>
     </DocsDemonstration>
@@ -497,6 +544,12 @@ const a11yCritCols = computed(() => ({
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!--
+        Par 1 é sobre TEXTO: os dois lados têm o mesmo gatilho e o mesmo tom, e só
+        o que está escrito no painel muda (`doDont.pair1.dontExample`). Par 2 é
+        sobre TOM: os dois lados têm o mesmo texto e as duas saídas (C7), e só a
+        variante da ação muda.
+      -->
       <template #do-preview-0>
         <AlertDialogDemo
           :trigger-label="tContent('demonstration.labels.triggerLabel')"
@@ -506,16 +559,21 @@ const a11yCritCols = computed(() => ({
           :cancel-label="tContent('demonstration.labels.cancel')"
           :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
+          location="docs_do_dont"
+          track-label="pair1-do"
         />
       </template>
       <template #dont-preview-0>
         <AlertDialogDemo
-          trigger-label="Excluir"
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
           trigger-variant="destructive"
-          title="Tem certeza?"
-          description="Deseja continuar?"
-          cancel-label="Não"
-          action-label="OK"
+          :title="tContent('doDont.pair1.dontExample.title')"
+          :description="tContent('doDont.pair1.dontExample.description')"
+          :cancel-label="tContent('doDont.pair1.dontExample.cancel')"
+          :action-label="tContent('doDont.pair1.dontExample.action')"
+          tone="destructive"
+          location="docs_do_dont"
+          track-label="pair1-dont"
         />
       </template>
       <template #do-preview-1>
@@ -527,16 +585,21 @@ const a11yCritCols = computed(() => ({
           :cancel-label="tContent('demonstration.labels.cancel')"
           :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
+          location="docs_do_dont"
+          track-label="pair2-do"
         />
       </template>
       <template #dont-preview-1>
         <AlertDialogDemo
-          trigger-label="Excluir"
+          :trigger-label="tContent('demonstration.labels.triggerLabel')"
           trigger-variant="destructive"
-          title="Excluir projeto"
-          description="O projeto será removido permanentemente."
-          cancel-label="Cancelar"
-          action-label="Confirmar"
+          :title="tContent('demonstration.labels.title')"
+          :description="tContent('demonstration.labels.description')"
+          :cancel-label="tContent('demonstration.labels.cancel')"
+          :action-label="tContent('demonstration.labels.action')"
+          tone="default"
+          location="docs_do_dont"
+          track-label="pair2-dont"
         />
       </template>
     </DocsDoDont>
@@ -565,6 +628,7 @@ const a11yCritCols = computed(() => ({
           :cancel-label="tContent('demonstration.labels.cancel')"
           :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
+          location="docs_variantes"
         />
       </template>
       <template #variant-preview-1>
@@ -575,6 +639,7 @@ const a11yCritCols = computed(() => ({
           :description="tContent('demonstration.labels.neutralDescription')"
           :cancel-label="tContent('demonstration.labels.cancel')"
           :action-label="tContent('demonstration.labels.neutralAction')"
+          location="docs_variantes"
         />
       </template>
     </DocsVariants>
@@ -615,7 +680,7 @@ const a11yCritCols = computed(() => ({
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomizationTokens"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ───────────────────────────────────────── -->

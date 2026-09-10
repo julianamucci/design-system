@@ -507,15 +507,15 @@ Componentes como **Badge** usam a factory vanilla-TS `createBadge({ variant?, cl
 Componentes como **AlertDialog** (implementação vanilla-TS com foco-trap manual e `role="alertdialog"`) são overlays de decisão forçada — sem `cva()`; severidade vem da factory do Button usada em Trigger/Action.
 
 1. **Sem `cva()`** — sem prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `default`). A factory aceita `defaultOpen`, que é como as capturas visuais nascem com o modal aberto — não é preciso simular o clique no gatilho.
-2. **`DocsAnatomy`** — 10 items: Root (wrapper), Trigger (button), Content (dialog), Header, Title (`h2`), Description (`p`, **opcional**), Footer, Cancel (button), Action (button), Media (bloco de ícone, opcional). `structureCode` mostra a estrutura HTML gerada.
-3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`.
-4. **`DocsProps`** — 5 tables: `createAlertDialog({ trigger, title, description?, media?, cancelButton, actionButton, defaultOpen?, onOpenChange?, class? })`, `createAlertDialogTrigger`, `createAlertDialogContent({ className })`, `createAlertDialogAction({ onClick, className })`, `createAlertDialogCancel({ onClick, className })`. `description` é **opcional**: sem ela o painel não declara `aria-describedby`.
-5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, radius.
+2. **`DocsAnatomy`** — 10 items: Root (wrapper), Trigger (button), Content (dialog), Header, Title (`h2` por padrão; `titleLevel` troca o nível), Description (`p`, **opcional**), Footer, Cancel (button), Action (button), Media (bloco de ícone, opcional). `structureCode` mostra a estrutura HTML gerada.
+3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`. A fábrica não recebe `open`: a linha `controlled` e `testes.functional.item7` passam por override da página, que diz o que a fábrica entrega (o callback de mudança).
+4. **`DocsProps`** — as tabelas listam OPÇÕES da fábrica, nunca as do `createButton`: a raiz com o que é do diálogo inteiro (`title`, `titleLevel`, `description`, `media`, `defaultOpen`, `onOpenChange`, `onClose`), cada peça com a opção que a monta (`trigger`, `class` do painel, `actionButton`, `cancelButton`) e uma tabela para `createAlertDialogMedia({ class })`. `description` é **opcional**: sem ela o painel não declara `aria-describedby`.
+5. **`DocsTokens`** — os tokens que `alert-dialog.css` lê; `node scripts/tabela-tokens.mjs alert-dialog` confere a tabela contra a folha nos dois sentidos. A personalização vem de `tokens.customizationCode`.
 6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
 7. **`DocsAccessibility`** — `role="alertdialog"` + `aria-modal="true"` aplicados pela factory. Focus trap manual via listeners `keydown` em Tab/Shift+Tab. Foco inicial no Cancel; `Escape` fecha.
-8. **Stories** — omitir `alert-dialog-tamanhos` e `alert-dialog-variantes`. Abrir programaticamente com `queueMicrotask(() => trigger.click())` nas stories que precisam do modal visível para Chromatic. Arquivos: `.stories.ts`, `-composicoes`, `-estados`.
+8. **Stories** — arquivos `.stories.ts`, `-states` e `-variants`. As que precisam do modal visível para o Chromatic nascem abertas por `defaultOpen`, e nenhuma transform imprime a opção no painel Code: é andaime da captura, não o que quem copia escreve.
 9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco ao trigger; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
-10. **Analytics de produto** — além dos eventos de docs: `dialog_open { component, location, label }`, `dialog_confirm { ... }`, `dialog_close { ..., trigger: "cancel_button" | "escape" }`.
+10. **Analytics de produto** — além dos eventos de docs: `dialog_open`, `dialog_confirm` e `dialog_close`, todos com `{ component, label, location }`; o `dialog_close` leva o `reason` que o `onClose` da fábrica entrega (`escape`, `close-button`, `api`). `location` é a SEÇÃO do preview, por parâmetro.
 
 ### Containers Passivos Stateless (padrão AspectRatio)
 

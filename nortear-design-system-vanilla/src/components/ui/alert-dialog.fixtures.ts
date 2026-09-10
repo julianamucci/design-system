@@ -20,7 +20,11 @@
  * produzia, então nenhum call site mudou o que renderiza.
  */
 
-import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
+import {
+  createAlertDialog,
+  createAlertDialogMedia,
+  type AlertDialogCloseReason,
+} from './alert-dialog';
 import { createAlertIcon } from './alert';
 import { createButton, type ButtonVariant } from './button';
 
@@ -56,6 +60,8 @@ export interface AlertDialogDemoOptions {
   onConfirm?: () => void;
   onCancel?: () => void;
   onOpenChange?: (open: boolean) => void;
+  /** Motivo do fechamento — repassado à opção de mesmo nome da fábrica. */
+  onClose?: (reason: AlertDialogCloseReason) => void;
 }
 
 /** Trigger + painel completo, com as duas saídas no rodapé. */
@@ -102,5 +108,6 @@ export function buildDemo(o: AlertDialogDemoOptions): HTMLElement {
     defaultOpen,
     class: o.class,
     onOpenChange: o.onOpenChange,
+    onClose: o.onClose,
   });
 }

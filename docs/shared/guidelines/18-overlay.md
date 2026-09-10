@@ -176,9 +176,11 @@ trava de rolagem — **não** armadilha de foco (D1 do `dropdown-menu.md`).
 
 ## Título
 
-O título do painel sai em **`h2` por padrão, nas cinco**, e aceita qualquer
-nível de `h1` a `h6`. Cada stack chega lá pelo mecanismo da própria lib — a
-tabela "Nível do título, por stack" está no PRD de cada painel.
+O título do painel sai em **`h2` por padrão**, e aceita qualquer nível de `h1`
+a `h6`. Cada stack chega lá pelo mecanismo da própria lib — a tabela "Nível do
+título, por stack" está no PRD de cada painel. No angular não há padrão a
+herdar: o SELETOR carrega o elemento (`h2[ndsAlertDialogTitle]`), então o nível
+é o que quem escreve usa — e todos os exemplos da stack usam `h2`.
 
 **O nome da opção é relativo ao escopo da fábrica, e isso não é divergência** —
 já foi relatado como tal três vezes. No vanilla, fábrica que monta só o título
@@ -282,7 +284,7 @@ evitar.
 | Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` · `location_fora_do_vocabulario` · `campo_de_payload_morto` · `rotulo_de_rastreio_texto` | — |
 | O véu não desfoca | aqui, §Véu | `veu_com_desfoque` | — |
 | Corpo é `flex: 1 1 auto` | aqui, §O corpo que rola | `corpo_com_atalho_flex` | — |
-| Ordem dos botões no rodapé | `02-alinhamento-botoes.md` | play, nas cinco, **só no Dialog** | no Drawer, o DOM renderizado não é asserido em stack nenhuma; o snippet é, no Vue (`drawer.source.test.ts`) |
+| Ordem dos botões no rodapé | `02-alinhamento-botoes.md` | play, nas cinco, no Dialog e no AlertDialog (story `Responsive`: ordem no DOM e `column-reverse` no mobile) | no Drawer, o DOM renderizado não é asserido em stack nenhuma; o snippet é, no Vue (`drawer.source.test.ts`) |
 | A regra de categoria não volta a ser copiada por stack | aqui | `guideline_de_stack_repete_categoria` | compara títulos de seção; cópia sem o título escapa |
 
 A **largura como custom property com default em `:root`** não entra: só três dos

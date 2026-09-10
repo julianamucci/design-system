@@ -17,6 +17,10 @@ import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_ALERT_DIALOG } from '@/components/ui/alert-dialog';
+import {
+  alertDialogDestructiveSource,
+  alertDialogNeutralSource,
+} from '@/components/ui/alert-dialog.source';
 import { NdsButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
@@ -42,34 +46,41 @@ import {
 
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 
+// Os overrides vão POR IDIOMA, nunca em '*': prosa em português servida às
+// páginas em inglês e espanhol é o mesmo defeito que o override existe para
+// evitar. As três chaves descrevem o que só existe nesta stack:
+//
+//  · `className` — o texto compartilhado diz "classes extras no elemento", o
+//    que vale para header, título, descrição e rodapé, mas não para o painel:
+//    ele é portalado de dentro do template do componente, então classe posta em
+//    <nds-alert-dialog> cai no HOST, que fica na página. A entrada panelClass é
+//    a rota real;
+//  · `disabled` — entrada do gatilho, que o conteúdo compartilhado não
+//    descreve porque nas outras stacks ela vem do botão composto;
+//  · `modalFixed` — a linha `modal` da tabela, que aqui não é entrada: a
+//    variante do primitivo a fixa, e expor uma entrada que não muda nada seria
+//    mentir na tabela.
 const { t, dict } = useTranslation(alertDialogTranslations as Record<string, unknown>, {
-  '*': {
-    // O conteúdo descreve props na API do React. Aqui `asChild` não existe — a
-    // composição é diretiva de atributo no próprio elemento — e `className`
-    // não é input: o Angular mescla o `class` escrito no elemento.
-    'props.table.asChild':
-      'Não existe nesta stack: a diretiva vai no próprio elemento, sem wrapper.',
-    'props.table.children': 'Conteúdo projetado — em Angular, o que está entre as tags.',
-  },
-  // Este par sai do '*' e vai por idioma: prosa em português servida às páginas
-  // em inglês e espanhol é o mesmo defeito que o override existe para evitar.
-  //
-  // E o texto anterior era FALSO para o painel. Ele dizia "classes extras vão
-  // no atributo class do elemento" — o que vale para header, título, descrição
-  // e rodapé, mas não para o painel: ele é portalado de dentro do template do
-  // componente, então classe posta em <nds-alert-dialog> cai no HOST, que fica
-  // na página. O input panelClass é a rota real, e existe desde esta revisão.
   'pt-BR': {
     'props.table.className':
       'Nas peças internas, classes extras vão no atributo class do próprio elemento, e o Angular as mescla com a base. Para o painel, que é portalado, use a entrada panelClass da raiz.',
+    'props.table.disabled': 'Desabilita o gatilho: o diálogo não abre por ele.',
+    'props.table.modalFixed':
+      'Não é entrada nesta stack. A modalidade é fixada pelo componente, junto com o papel alertdialog e a recusa de fechar por clique fora.',
   },
   en: {
     'props.table.className':
       'On the inner parts, extra classes go on the element class attribute and Angular merges them with the base. For the panel, which is portalled, use the root panelClass input.',
+    'props.table.disabled': 'Disables the trigger: the dialog does not open from it.',
+    'props.table.modalFixed':
+      'Not an input in this stack. Modality is fixed by the component, together with the alertdialog role and the refusal to close on an outside click.',
   },
   es: {
     'props.table.className':
       'En las piezas internas, las clases extra van en el atributo class del propio elemento y Angular las combina con la base. Para el panel, que es portalizado, usa la entrada panelClass de la raíz.',
+    'props.table.disabled': 'Deshabilita el disparador: el diálogo no se abre desde él.',
+    'props.table.modalFixed':
+      'No es una entrada en este stack. La modalidad la fija el componente, junto con el rol alertdialog y el rechazo a cerrar con un clic fuera.',
   },
 });
 
@@ -104,60 +115,42 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const INTERFACE_CODE = `// O que separa este componente do Dialog não é input: é PERFIL,
-// fixado na construção pela variante do primitivo. Ninguém que consome
-// consegue afrouxar por engano.
+/**
+ * A API que quem compõe USA — entradas, saídas e as peças —, e não a
+ * configuração interna do componente. Mesmas linhas da tabela de propriedades,
+ * `panelClass` incluída.
+ */
+const INTERFACE_CODE = `// <nds-alert-dialog> — a raiz: o que se liga no template.
+interface NdsAlertDialogApi {
+  open: boolean;                  // [open] + (openChange), ou [(open)] — controlado
+  defaultOpen: boolean;           // estado inicial, modo não controlado (false)
+  panelClass: string;             // classe extra no painel, que é portalado
+
+  openChange: (open: boolean) => void;
+  onOpenChange: (change: { open: boolean; reason: string }) => void; // com o motivo
+  onOpenChangeComplete: (open: boolean) => void;                     // fim da animação
+}
+
+// As peças são diretivas no próprio elemento, sem wrapper:
+//   button[ndsAlertDialogTrigger]        [disabled]
+//   ng-template[ndsAlertDialogContent]   o painel, instanciado na abertura
+//   div[ndsAlertDialogHeader]            div[ndsAlertDialogMedia]
+//   h1…h6[ndsAlertDialogTitle]           p[ndsAlertDialogDescription]
+//   div[ndsAlertDialogFooter]
+//   button[ndsAlertDialogCancel]         button[ndsAlertDialogAction]  (click)
+//
+// Papel alertdialog, modalidade e a recusa de fechar por clique fora são do
+// componente: não há entrada para afrouxá-los.`;
+
+const IMPORT_CODE = `import { NDS_ALERT_DIALOG } from '@/components/ui/alert-dialog';`;
+
+/** O gatilho é um `ndsButton`: quem compõe importa os dois e os declara no componente. */
+const IMPORT_WITH_TRIGGER_CODE = `import { NDS_ALERT_DIALOG } from '@/components/ui/alert-dialog';
+import { NdsButton } from '@/components/ui/button';
+
 @Component({
-  selector: 'nds-alert-dialog',
-  providers: [
-    provideRdxDialogVariant({
-      role: 'alertdialog',                    // leitor lê a descrição junto do título
-      forceModal: true,                       // foco preso, rolagem travada
-      forcePointerDismissalDisabled: true,    // clique fora não fecha; Escape ainda fecha
-    }),
-  ],
-  hostDirectives: [
-    { directive: RdxDialogRoot,
-      inputs: ['open', 'defaultOpen'],        // sem \`modal\`: a variante o fixa
-      outputs: ['openChange', 'onOpenChange', 'onOpenChangeComplete'] },
-  ],
-})
-export class NdsAlertDialog {}`;
-
-const ANATOMY_CODE = `<nds-alert-dialog>
-  <button ndsAlertDialogTrigger ndsButton variant="destructive">
-    Excluir conta
-  </button>
-
-  <!-- O painel é ng-template, não elemento projetado: nó projetado pertence
-       à view de quem consome, e o portal removeria o DOM sem destruir as
-       diretivas — o foco nunca voltaria ao gatilho. -->
-  <ng-template ndsAlertDialogContent>
-    <div ndsAlertDialogHeader>
-      <h2 ndsAlertDialogTitle>Excluir conta</h2>
-      <p ndsAlertDialogDescription>
-        Todos os seus dados serão removidos permanentemente.
-      </p>
-    </div>
-
-    <div ndsAlertDialogFooter>
-      <!-- Cancelar vem ANTES no DOM: é onde o foco pousa ao abrir. -->
-      <button ndsAlertDialogCancel ndsButton variant="outline">Cancelar</button>
-      <button ndsAlertDialogAction ndsButton variant="destructive" (click)="excluir()">
-        Excluir
-      </button>
-    </div>
-  </ng-template>
-</nds-alert-dialog>`;
-
-const CUSTOMIZATION_CODE = `/* O painel e o overlay leem os tokens do tema —
-   personalizar é redefinir o token, não sobrescrever a regra. */
-.tema-critico {
-  --destructive: 0 72% 51%;
-  --destructive-foreground: 0 0% 98%;
-}`;
-
-type DemoAlert = 'destructive' | 'neutral';
+  imports: [NDS_ALERT_DIALOG, NdsButton],
+})`;
 
 /** Razões do primitivo mapeadas para o vocabulário estável do GA4 — igual ao Dialog. */
 const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
@@ -177,8 +170,15 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
     NdsDocsRelated, NdsDocsNotes, NdsDocsAnalytics, NdsDocsTestes,
   ],
   template: `
+    <!-- Os quatro previews do Do & Don't e os dois das Variantes são o
+         componente VIVO, e rastreiam como a demonstração: um clique ali é tão
+         real quanto lá. O que muda é o location, que sai da seção onde o
+         elemento está — nunca de constante no topo do arquivo. -->
+
+    <!-- Par 1, faça: título nomeia a ação, descrição diz a consequência, a
+         ação repete o verbo. -->
     <ng-template #tplDoDont1Do>
-      <nds-alert-dialog>
+      <nds-alert-dialog (onOpenChange)="trackOpenChange('pair1-do', 'docs_do_dont', $event)">
         <button ndsAlertDialogTrigger ndsButton variant="destructive">
           {{ t('demonstration.labels.triggerLabel') }}
         </button>
@@ -191,7 +191,12 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
             <button ndsAlertDialogCancel ndsButton variant="outline">
               {{ t('demonstration.labels.cancel') }}
             </button>
-            <button ndsAlertDialogAction ndsButton variant="destructive">
+            <button
+              ndsAlertDialogAction
+              ndsButton
+              variant="destructive"
+              (click)="trackConfirmation('pair1-do', 'docs_do_dont')"
+            >
               {{ t('demonstration.labels.action') }}
             </button>
           </div>
@@ -199,67 +204,39 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
       </nds-alert-dialog>
     </ng-template>
 
+    <!-- Par 1, não faça: título em pergunta e botões genéricos. O texto é o
+         exemplo do próprio conteúdo compartilhado; a severidade fica igual à do
+         "faça", para que a única diferença entre os dois seja a redação. -->
     <ng-template #tplDoDont1Dont>
-      <nds-alert-dialog>
+      <nds-alert-dialog (onOpenChange)="trackOpenChange('pair1-dont', 'docs_do_dont', $event)">
         <button ndsAlertDialogTrigger ndsButton variant="destructive">
           {{ t('demonstration.labels.triggerLabel') }}
         </button>
         <ng-template ndsAlertDialogContent>
           <div ndsAlertDialogHeader>
-            <h2 ndsAlertDialogTitle>{{ t('demonstration.labels.title') }}</h2>
-            <p ndsAlertDialogDescription>{{ t('demonstration.labels.title') }}</p>
-          </div>
-          <div ndsAlertDialogFooter>
-            <button ndsAlertDialogCancel ndsButton variant="outline">Não</button>
-            <button ndsAlertDialogAction ndsButton variant="destructive">Sim</button>
-          </div>
-        </ng-template>
-      </nds-alert-dialog>
-    </ng-template>
-
-    <ng-template #tplDoDont2Do>
-      <nds-alert-dialog>
-        <button ndsAlertDialogTrigger ndsButton variant="outline">
-          {{ t('demonstration.labels.neutralTriggerLabel') }}
-        </button>
-        <ng-template ndsAlertDialogContent>
-          <div ndsAlertDialogHeader>
-            <h2 ndsAlertDialogTitle>{{ t('demonstration.labels.neutralTitle') }}</h2>
-            <p ndsAlertDialogDescription>{{ t('demonstration.labels.neutralDescription') }}</p>
+            <h2 ndsAlertDialogTitle>{{ t('doDont.pair1.dontExample.title') }}</h2>
+            <p ndsAlertDialogDescription>{{ t('doDont.pair1.dontExample.description') }}</p>
           </div>
           <div ndsAlertDialogFooter>
             <button ndsAlertDialogCancel ndsButton variant="outline">
-              {{ t('demonstration.labels.cancel') }}
+              {{ t('doDont.pair1.dontExample.cancel') }}
             </button>
-            <button ndsAlertDialogAction ndsButton>
-              {{ t('demonstration.labels.neutralAction') }}
-            </button>
-          </div>
-        </ng-template>
-      </nds-alert-dialog>
-    </ng-template>
-
-    <ng-template #tplDoDont2Dont>
-      <nds-alert-dialog>
-        <button ndsAlertDialogTrigger ndsButton variant="outline">
-          {{ t('demonstration.labels.neutralTriggerLabel') }}
-        </button>
-        <ng-template ndsAlertDialogContent>
-          <div ndsAlertDialogHeader>
-            <h2 ndsAlertDialogTitle>{{ t('demonstration.labels.neutralTitle') }}</h2>
-            <p ndsAlertDialogDescription>{{ t('demonstration.labels.neutralDescription') }}</p>
-          </div>
-          <div ndsAlertDialogFooter>
-            <button ndsAlertDialogAction ndsButton variant="destructive">
-              {{ t('demonstration.labels.neutralAction') }}
+            <button
+              ndsAlertDialogAction
+              ndsButton
+              variant="destructive"
+              (click)="trackConfirmation('pair1-dont', 'docs_do_dont')"
+            >
+              {{ t('doDont.pair1.dontExample.action') }}
             </button>
           </div>
         </ng-template>
       </nds-alert-dialog>
     </ng-template>
 
-    <ng-template #tplVarDestructive>
-      <nds-alert-dialog>
+    <!-- Par 2, faça: gatilho destrutivo, ação destrutiva. -->
+    <ng-template #tplDoDont2Do>
+      <nds-alert-dialog (onOpenChange)="trackOpenChange('pair2-do', 'docs_do_dont', $event)">
         <button ndsAlertDialogTrigger ndsButton variant="destructive">
           {{ t('demonstration.labels.triggerLabel') }}
         </button>
@@ -272,7 +249,68 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
             <button ndsAlertDialogCancel ndsButton variant="outline">
               {{ t('demonstration.labels.cancel') }}
             </button>
-            <button ndsAlertDialogAction ndsButton variant="destructive">
+            <button
+              ndsAlertDialogAction
+              ndsButton
+              variant="destructive"
+              (click)="trackConfirmation('pair2-do', 'docs_do_dont')"
+            >
+              {{ t('demonstration.labels.action') }}
+            </button>
+          </div>
+        </ng-template>
+      </nds-alert-dialog>
+    </ng-template>
+
+    <!-- Par 2, não faça: gatilho destrutivo com a ação na variante padrão.
+         O Cancelar continua lá: o erro que o par mostra é de severidade, e um
+         rodapé sem saída segura seria outro erro, que o componente não admite. -->
+    <ng-template #tplDoDont2Dont>
+      <nds-alert-dialog (onOpenChange)="trackOpenChange('pair2-dont', 'docs_do_dont', $event)">
+        <button ndsAlertDialogTrigger ndsButton variant="destructive">
+          {{ t('demonstration.labels.triggerLabel') }}
+        </button>
+        <ng-template ndsAlertDialogContent>
+          <div ndsAlertDialogHeader>
+            <h2 ndsAlertDialogTitle>{{ t('demonstration.labels.title') }}</h2>
+            <p ndsAlertDialogDescription>{{ t('demonstration.labels.description') }}</p>
+          </div>
+          <div ndsAlertDialogFooter>
+            <button ndsAlertDialogCancel ndsButton variant="outline">
+              {{ t('demonstration.labels.cancel') }}
+            </button>
+            <button
+              ndsAlertDialogAction
+              ndsButton
+              (click)="trackConfirmation('pair2-dont', 'docs_do_dont')"
+            >
+              {{ t('demonstration.labels.action') }}
+            </button>
+          </div>
+        </ng-template>
+      </nds-alert-dialog>
+    </ng-template>
+
+    <ng-template #tplVarDestructive>
+      <nds-alert-dialog (onOpenChange)="trackOpenChange('destructive', 'docs_variantes', $event)">
+        <button ndsAlertDialogTrigger ndsButton variant="destructive">
+          {{ t('demonstration.labels.triggerLabel') }}
+        </button>
+        <ng-template ndsAlertDialogContent>
+          <div ndsAlertDialogHeader>
+            <h2 ndsAlertDialogTitle>{{ t('demonstration.labels.title') }}</h2>
+            <p ndsAlertDialogDescription>{{ t('demonstration.labels.description') }}</p>
+          </div>
+          <div ndsAlertDialogFooter>
+            <button ndsAlertDialogCancel ndsButton variant="outline">
+              {{ t('demonstration.labels.cancel') }}
+            </button>
+            <button
+              ndsAlertDialogAction
+              ndsButton
+              variant="destructive"
+              (click)="trackConfirmation('destructive', 'docs_variantes')"
+            >
               {{ t('demonstration.labels.action') }}
             </button>
           </div>
@@ -281,7 +319,7 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
     </ng-template>
 
     <ng-template #tplVarDefault>
-      <nds-alert-dialog>
+      <nds-alert-dialog (onOpenChange)="trackOpenChange('neutral', 'docs_variantes', $event)">
         <button ndsAlertDialogTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.neutralTriggerLabel') }}
         </button>
@@ -294,7 +332,11 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
             <button ndsAlertDialogCancel ndsButton variant="outline">
               {{ t('demonstration.labels.cancel') }}
             </button>
-            <button ndsAlertDialogAction ndsButton>
+            <button
+              ndsAlertDialogAction
+              ndsButton
+              (click)="trackConfirmation('neutral', 'docs_variantes')"
+            >
               {{ t('demonstration.labels.neutralAction') }}
             </button>
           </div>
@@ -318,8 +360,8 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div class="nds-cluster" data-spacing="md">
-            <nds-alert-dialog (onOpenChange)="onDemoOpenChange('destructive', $event)">
+          <div class="nds-cluster" data-spacing="md" data-justify="center">
+            <nds-alert-dialog (onOpenChange)="trackOpenChange('destructive', 'docs_demo', $event)">
               <button ndsAlertDialogTrigger ndsButton variant="destructive">
                 {{ t('demonstration.labels.triggerLabel') }}
               </button>
@@ -336,7 +378,7 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
                     ndsAlertDialogAction
                     ndsButton
                     variant="destructive"
-                    (click)="trackConfirmation('destructive')"
+                    (click)="trackConfirmation('destructive', 'docs_demo')"
                   >
                     {{ t('demonstration.labels.action') }}
                   </button>
@@ -344,7 +386,7 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
               </ng-template>
             </nds-alert-dialog>
 
-            <nds-alert-dialog (onOpenChange)="onDemoOpenChange('neutral', $event)">
+            <nds-alert-dialog (onOpenChange)="trackOpenChange('neutral', 'docs_demo', $event)">
               <button ndsAlertDialogTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.neutralTriggerLabel') }}
               </button>
@@ -359,7 +401,7 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
                   <button ndsAlertDialogCancel ndsButton variant="outline">
                     {{ t('demonstration.labels.cancel') }}
                   </button>
-                  <button ndsAlertDialogAction ndsButton (click)="trackConfirmation('neutral')">
+                  <button ndsAlertDialogAction ndsButton (click)="trackConfirmation('neutral', 'docs_demo')">
                     {{ t('demonstration.labels.neutralAction') }}
                   </button>
                 </div>
@@ -371,7 +413,8 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
         <nds-docs-anatomy
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
-          [structureCode]="anatomyCode"
+          [structureLabel]="t('anatomy.structureLabel')"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -387,8 +430,11 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
         <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="tNav('nav.import')"
+          [title]="t('import.title')"
+          [description]="t('import.basic')"
           [code]="importCode"
+          [secondaryDescription]="t('import.withTrigger')"
+          [secondaryCode]="importWithTriggerCode"
           componentSlug="alert-dialog"
           language="ts"
         />
@@ -399,7 +445,7 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
           [items]="variantItems()"
           componentSlug="alert-dialog"
           id="variantes"
-          language="html"
+          language="ts"
         />
 
         <nds-docs-states
@@ -421,7 +467,7 @@ const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' |
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
-          [customizationCode]="customizationCode"
+          [customizationCode]="t('tokens.customizationCode')"
         />
 
         <nds-docs-accessibility
@@ -466,9 +512,8 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
-  protected readonly customizationCode = CUSTOMIZATION_CODE;
-  protected readonly importCode = `import { NDS_ALERT_DIALOG } from '@/components/ui/alert-dialog';`;
+  protected readonly importCode = IMPORT_CODE;
+  protected readonly importWithTriggerCode = IMPORT_WITH_TRIGGER_CODE;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -564,14 +609,21 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
+  /**
+   * O código de cada variante é o MESMO construtor que o painel Code das stories
+   * usa — uma cópia só, com o texto do preview ao lado e a guarda do
+   * `alert-dialog.source.test.ts`. Chamado dentro do `computed` que lê `dict()`,
+   * acompanha a troca de idioma.
+   */
   protected readonly variantItems = computed(() => {
     dict();
     return [
-      { key: 'destructive', tpl: this.tplVarDestructive() },
-      { key: 'default',     tpl: this.tplVarDefault()     },
-    ].map(({ key, tpl }) => ({
+      { key: 'destructive', tpl: this.tplVarDestructive(), code: alertDialogDestructiveSource() },
+      { key: 'default',     tpl: this.tplVarDefault(),     code: alertDialogNeutralSource()     },
+    ].map(({ key, tpl, code }) => ({
       name: key,
       description: t(`variants.items.${key}`),
+      code,
       trackId: key,
       preview: tpl,
     }));
@@ -604,12 +656,14 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
       required: t('props.table.required'),
       description: t('props.table.description'),
     };
-    const not = tNav('common.no');
-    const line = (name: string, key: string, type: string, padrao: string) => ({
+    // Nenhuma entrada desta tabela é obrigatória; o rótulo vem do ui.json, e
+    // não de um "Não" cravado, porque a página também abre em inglês e espanhol.
+    const no = tNav('common.no');
+    const line = (name: string, key: string, type: string, defaultValue: string) => ({
       name,
-      type: type,
-      defaultValue: padrao,
-      required: not,
+      type,
+      defaultValue,
+      required: no,
       description: toPlainText(t(`props.table.${key}`)),
     });
 
@@ -618,33 +672,30 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
         title: t('props.rootTitle'),
         cols,
         items: [
-          line('open', 'open', 'model<boolean>', '—'),
+          line('open', 'open', 'model<boolean>', 'false'),
           line('defaultOpen', 'defaultOpen', 'boolean', 'false'),
           line('openChange', 'onOpenChange', 'output<boolean>', '—'),
-          {
-            name: 'modal',
-            type: '—',
-            defaultValue: 'true',
-            required: not,
-            // Não é omissão: é o ponto do componente. Expor um input que a
-            // variante ignora seria mentir na tabela.
-            description:
-              'Não é input aqui. A modalidade é fixada pela variante do componente, junto com o papel alertdialog e a recusa de fechar por clique fora.',
-          },
+          line('panelClass', 'className', 'string', "''"),
+          // Não é omissão: é o ponto do componente. A linha existe para dizer
+          // que `modal` NÃO é entrada aqui — quem procura por ela na tabela
+          // acha o porquê.
+          line('modal', 'modalFixed', '—', 'true'),
         ],
       },
       {
         title: t('props.triggerTitle'),
         cols,
         items: [
-          line('disabled', 'asChild', 'boolean', 'false'),
+          line('disabled', 'disabled', 'boolean', 'false'),
           line('class', 'className', 'string', '—'),
         ],
       },
       {
+        // O painel é o `ng-template` marcado: o que está dentro dele é o
+        // conteúdo, e só é instanciado na abertura.
         title: t('props.contentTitle'),
         cols,
-        items: [line('(conteúdo)', 'children', 'ng-template', '—')],
+        items: [line('ndsAlertDialogContent', 'children', 'ng-template', '—')],
       },
       {
         title: t('props.actionTitle'),
@@ -686,6 +737,7 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
       { token: '--radius-card',            k: 'radius',                target: '.nds-alert-dialog-content' },
       { token: '--elevation-xl',           k: 'elevation',             target: '.nds-alert-dialog-content' },
       { token: '--muted',                  k: 'mediaBg',               target: '.nds-alert-dialog-media' },
+      { token: '--radius-md',              k: 'mediaRadius',           target: '.nds-alert-dialog-media' },
       { token: '--spacing-6',              k: 'padding',               target: '.nds-alert-dialog-content' },
     ].map(({ token, k, target }) => ({
       token,
@@ -706,7 +758,7 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
       { key: 'Shift+Tab', description: toPlainText(t('accessibility.keyboard.shiftTab')) },
       { key: 'Enter',     description: toPlainText(t('accessibility.keyboard.enter')) },
       { key: 'Space',     description: toPlainText(t('accessibility.keyboard.space')) },
-      { key: 'Esc',       description: toPlainText(t('accessibility.keyboard.escape')) },
+      { key: 'Escape',    description: toPlainText(t('accessibility.keyboard.escape')) },
     ];
   });
 
@@ -803,39 +855,44 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   });
 
   /**
-   * A demonstração dispara evento de produto de verdade — a docs page É o
-   * produto consumidor deste design system.
+   * A confirmação de um diálogo VIVO da página — a docs page É o produto
+   * consumidor deste design system.
+   *
+   * `label` é a chave estável do exemplo, nunca o texto traduzido (o mesmo
+   * evento viraria três valores no GA4, um por idioma). `location` é a SEÇÃO
+   * onde o elemento está — `docs_demo`, `docs_variantes`, `docs_do_dont` — e vem
+   * do call site: com um valor cravado aqui, o funil somaria três seções numa.
    */
-  protected trackConfirmation(qual: DemoAlert): void {
+  protected trackConfirmation(label: string, location: string): void {
     // `dialog_confirm` e não um evento novo: é o que a tabela de analytics do
     // conteúdo compartilhado documenta, e ele já existe tipado em AnalyticsEvents.
     // Levanta a bandeira ANTES do fechamento: o `(click)` de quem consome roda
     // antes do listener de `host` da diretiva de fechar (armadilha 10 do
     // CLAUDE.md desta stack), igual ao Dialog.
     this.confirmed = true;
-    track('dialog_confirm', { component: 'alert-dialog', label: qual, location: 'docs_demo' });
+    track('dialog_confirm', { component: 'alert-dialog', label, location });
   }
 
   /**
-   * `dialog_open` e `dialog_close` da demonstração. Esta era a única das cinco
-   * stacks em que o AlertDialog não disparava nenhum dos dois — só o
-   * `dialog_confirm`, e sem `label` nem `location`.
+   * `dialog_open` e `dialog_close` de todo diálogo vivo da página, com o mesmo
+   * `label` e `location` da confirmação.
    *
    * O motivo segue o vocabulário do design system (`18-overlay.md` §Analytics).
    * A ação que confirma e o Cancelar são as duas partes de fechar, e o radix-ng
    * entrega `close-press` para as duas; sem a bandeira, "confirmou" chegaria
-   * ao relatório como "apertou o botão de fechar". Clique fora não fecha este
-   * componente, então `overlay` não aparece.
+   * ao relatório como "apertou o botão de fechar". O Escape chega como
+   * `escape-key` e sai como `escape`. Clique fora não fecha este componente,
+   * então `overlay` não aparece.
    */
-  protected onDemoOpenChange(qual: DemoAlert, evento: RdxDialogOpenChange): void {
-    if (evento.open) {
+  protected trackOpenChange(label: string, location: string, event: RdxDialogOpenChange): void {
+    if (event.open) {
       this.confirmed = false;
-      track('dialog_open', { component: 'alert-dialog', label: qual, location: 'docs_demo' });
+      track('dialog_open', { component: 'alert-dialog', label, location });
       return;
     }
-    const reason = this.confirmed ? 'api' : (ALERT_CLOSE_REASON[evento.reason] ?? 'api');
+    const reason = this.confirmed ? 'api' : (ALERT_CLOSE_REASON[event.reason] ?? 'api');
     this.confirmed = false;
-    track('dialog_close', { component: 'alert-dialog', label: qual, reason, location: 'docs_demo' });
+    track('dialog_close', { component: 'alert-dialog', label, reason, location });
   }
 
   private confirmed = false;

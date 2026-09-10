@@ -80,9 +80,28 @@ const getNavGroups = (t: (key: string) => string) => [
   },
 ];
 
+/**
+ * `location` responde DE ONDE VEIO o clique, e por isso chega por prop, vinda
+ * da seção que monta o preview — nunca constante no topo do arquivo. As quatro
+ * chamadas desta página mandavam `docs_demo`, inclusive as de Variantes e de
+ * Do & Don't, que renderizam componente vivo tanto quanto a Demonstração. O
+ * vocabulário é `docs_<section-id>` (`docs/shared/guidelines/07-analytics.md`).
+ */
+type DocsLocation = "docs_demo" | "docs_variantes" | "docs_do_dont";
+
 // Os previews renderizam SEMPRE o gatilho fechado: o AlertDialog vive num
 // portal com overlay modal, e um preview aberto cobriria a página no load.
-type DestructiveDemoProps = {
+type AlertDialogDemoProps = {
+  /**
+   * Id ESTÁVEL do cenário no payload. O título chega traduzido, e texto
+   * traduzido parte um evento em três valores no GA4 (um por idioma).
+   */
+  label: string;
+  location: DocsLocation;
+  /** Variante do Button no gatilho. */
+  triggerVariant: "destructive" | "outline";
+  /** Variante do Button na ação; sem ela, a padrão do Button. */
+  actionVariant?: "destructive";
   triggerLabel: string;
   title: string;
   description: string;
@@ -90,22 +109,35 @@ type DestructiveDemoProps = {
   action: string;
 };
 
-function DestructiveDemo({ triggerLabel, title, description, cancel, action }: DestructiveDemoProps) {
+// Um só construtor para os seis previews: o que muda entre eles é o texto e as
+// variantes do Button — o componente, a fiação de eventos e as duas saídas do
+// rodapé (C7) são sempre os mesmos.
+function AlertDialogDemo({
+  label,
+  location,
+  triggerVariant,
+  actionVariant,
+  triggerLabel,
+  title,
+  description,
+  cancel,
+  action,
+}: AlertDialogDemoProps) {
   return (
     <AlertDialog
       onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
-          // Identificador estável: o título é texto traduzido e quebraria a
-          // agregação no GA4 (um rótulo por idioma para o mesmo demo).
           component: "alert-dialog",
-          label: "destructive",
+          label,
+          // Escape chega aqui como `escape-key` e sai `escape`; o Cancelar,
+          // como `close-button`; a ação, como `api` pela marca abaixo.
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
-          location: "docs_demo",
+          location,
         })
       }
     >
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">{triggerLabel}</Button>
+        <Button variant={triggerVariant}>{triggerLabel}</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -115,61 +147,15 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action }: D
         <AlertDialogFooter>
           <AlertDialogCancel>{cancel}</AlertDialogCancel>
           <AlertDialogAction
-            variant="destructive"
+            variant={actionVariant}
             onClick={() => {
+              // A marca vem ANTES do fechamento: sem ela a lib entrega o mesmo
+              // motivo do Cancelar, e a confirmação viraria `close-button`.
               markConfirmation()
               track("dialog_confirm", {
                 component: "alert-dialog",
-                label: "destructive",
-                location: "docs_demo",
-              })
-            }}
-          >
-            {action}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}
-
-type NeutralDemoProps = {
-  triggerLabel: string;
-  title: string;
-  description: string;
-  cancel: string;
-  action: string;
-};
-
-function NeutralDemo({ triggerLabel, title, description, cancel, action }: NeutralDemoProps) {
-  return (
-    <AlertDialog
-      onOpenChange={(open, details) =>
-        track(open ? "dialog_open" : "dialog_close", {
-          component: "alert-dialog",
-          label: "neutral",
-          ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
-          location: "docs_demo",
-        })
-      }
-    >
-      <AlertDialogTrigger asChild>
-        <Button variant="outline">{triggerLabel}</Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{cancel}</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => {
-              markConfirmation()
-              track("dialog_confirm", {
-                component: "alert-dialog",
-                label: "neutral",
-                location: "docs_demo",
+                label,
+                location,
               })
             }}
           >
@@ -235,6 +221,31 @@ export function AlertDialogDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
+  // Os dois conjuntos de `demonstration.labels`: a confirmação destrutiva e a
+  // neutra. Todo preview vivo da página sai de um deles — ou, no "não faça" do
+  // par 1, de `doDont.pair1.dontExample`, que é o texto que o par existe para
+  // reprovar.
+  const destructiveLabels = {
+    triggerLabel: tContent("demonstration.labels.triggerLabel"),
+    title: tContent("demonstration.labels.title"),
+    description: tContent("demonstration.labels.description"),
+    cancel: tContent("demonstration.labels.cancel"),
+    action: tContent("demonstration.labels.action"),
+  };
+  const neutralLabels = {
+    triggerLabel: tContent("demonstration.labels.neutralTriggerLabel"),
+    title: tContent("demonstration.labels.neutralTitle"),
+    description: tContent("demonstration.labels.neutralDescription"),
+    cancel: tContent("demonstration.labels.cancel"),
+    action: tContent("demonstration.labels.neutralAction"),
+  };
+
+  // Coluna "Obrigatório" das tabelas de props: rótulo de interface, então vem
+  // do dicionário da página e segue o idioma — literal aqui ficava em português
+  // nos três.
+  const yes = tNav("common.yes");
+  const no = tNav("common.no");
+
   const codeImportBasic = `import {
   AlertDialog,
   AlertDialogAction,
@@ -254,73 +265,85 @@ import {
   AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";`;
 
-  const codeDestructive = `<AlertDialog>
+  // O código de cada card de Variantes sai do MESMO conjunto de rótulos que o
+  // preview ao lado renderiza, no idioma corrente: texto cravado aqui ficava em
+  // português nos três idiomas e se afastava do preview a cada revisão do
+  // conteúdo compartilhado.
+  const variantCode = (
+    labels: typeof destructiveLabels,
+    triggerVariant: "destructive" | "outline",
+    actionVariant?: "destructive",
+  ) => `<AlertDialog>
   <AlertDialogTrigger asChild>
-    <Button variant="destructive">Excluir conta</Button>
+    <Button variant="${triggerVariant}">${labels.triggerLabel}</Button>
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Excluir conta</AlertDialogTitle>
+      <AlertDialogTitle>${labels.title}</AlertDialogTitle>
       <AlertDialogDescription>
-        Todos os seus dados serão removidos permanentemente.
+        ${labels.description}
       </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction variant="destructive">
-        Excluir
-      </AlertDialogAction>
+      <AlertDialogCancel>${labels.cancel}</AlertDialogCancel>
+      <AlertDialogAction${actionVariant ? ` variant="${actionVariant}"` : ""}>${labels.action}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
 </AlertDialog>`;
 
-  const codeDefault = `<AlertDialog>
-  <AlertDialogTrigger asChild>
-    <Button variant="outline">Sair da conta</Button>
-  </AlertDialogTrigger>
-  <AlertDialogContent>
-    <AlertDialogHeader>
-      <AlertDialogTitle>Sair da conta</AlertDialogTitle>
-      <AlertDialogDescription>
-        Você precisará entrar novamente para acessar seus dados.
-      </AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction>Sair</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>`;
+  const codeDestructive = variantCode(destructiveLabels, "destructive", "destructive");
+  const codeDefault = variantCode(neutralLabels, "outline");
 
-  const codeCustomizationTokens = `/* globals.css */
-:root {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 3.9%;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 89.8%;
-  --muted-foreground: 0 0% 45.1%;
-  --radius: 0.5rem;
-}`;
+  // A assinatura que o componente de fato expõe: o callback de mudança recebe
+  // também os detalhes do evento, a ação e o cancelar herdam `variant`/`size`
+  // do Button, o título troca de nível por `render`, e a mídia é peça própria.
+  const interfaceCode = `import type { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog";
+import type { Button } from "@/components/ui/button";
 
-  const interfaceCode = `// AlertDialog (Root)
+type ButtonProps = React.ComponentProps<typeof Button>;
+
+// AlertDialog (Root)
 interface AlertDialogProps {
   open?: boolean;
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  onOpenChange?: (
+    open: boolean,
+    eventDetails: AlertDialogPrimitive.Root.ChangeEventDetails,
+  ) => void;
   children: React.ReactNode;
 }
 
 // AlertDialogTrigger
 interface AlertDialogTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   asChild?: boolean;
+  render?: React.ReactElement;
 }
 
 // AlertDialogContent
 interface AlertDialogContentProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-// AlertDialogAction / AlertDialogCancel
-interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}`;
+// AlertDialogHeader / AlertDialogFooter / AlertDialogMedia
+interface AlertDialogSectionProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+// AlertDialogTitle
+interface AlertDialogTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
+  render?: React.ReactElement; // <h3 />, <h4 />…
+}
+
+// AlertDialogDescription
+interface AlertDialogDescriptionProps extends React.HTMLAttributes<HTMLParagraphElement> {}
+
+// AlertDialogAction
+interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonProps["variant"];
+  size?: ButtonProps["size"];
+}
+
+// AlertDialogCancel
+interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: ButtonProps["variant"]; // "outline"
+  size?: ButtonProps["size"]; // "default"
+}`;
 
   return (
     <DocsPageLayout
@@ -337,19 +360,18 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
     >
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-cluster" data-spacing="md" data-justify="center">
-          <DestructiveDemo
-            triggerLabel={tContent("demonstration.labels.triggerLabel")}
-            title={tContent("demonstration.labels.title")}
-            description={tContent("demonstration.labels.description")}
-            cancel={tContent("demonstration.labels.cancel")}
-            action={tContent("demonstration.labels.action")}
+          <AlertDialogDemo
+            label="destructive"
+            location="docs_demo"
+            triggerVariant="destructive"
+            actionVariant="destructive"
+            {...destructiveLabels}
           />
-          <NeutralDemo
-            triggerLabel={tContent("demonstration.labels.neutralTriggerLabel")}
-            title={tContent("demonstration.labels.neutralTitle")}
-            description={tContent("demonstration.labels.neutralDescription")}
-            cancel={tContent("demonstration.labels.cancel")}
-            action={tContent("demonstration.labels.neutralAction")}
+          <AlertDialogDemo
+            label="neutral"
+            location="docs_demo"
+            triggerVariant="outline"
+            {...neutralLabels}
           />
         </div>
       </DocsDemonstration>
@@ -461,32 +483,29 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <DestructiveDemo
-                triggerLabel={tContent("demonstration.labels.triggerLabel")}
-                title={tContent("demonstration.labels.title")}
-                description={tContent("demonstration.labels.description")}
-                cancel={tContent("demonstration.labels.cancel")}
-                action={tContent("demonstration.labels.action")}
+              <AlertDialogDemo
+                label="pair1-do"
+                location="docs_do_dont"
+                triggerVariant="destructive"
+                actionVariant="destructive"
+                {...destructiveLabels}
               />
             ),
+            // O par 1 é sobre ESCRITA: o "não faça" muda só o texto — título em
+            // pergunta e botões genéricos —, com o mesmo gatilho e as mesmas
+            // variantes do "faça", para que a comparação ensine uma coisa só.
             dontPreview: (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">Excluir</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Essa ação irá excluir os dados.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Não</AlertDialogCancel>
-                    <AlertDialogAction>Sim</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <AlertDialogDemo
+                label="pair1-dont"
+                location="docs_do_dont"
+                triggerVariant="destructive"
+                actionVariant="destructive"
+                triggerLabel={destructiveLabels.triggerLabel}
+                title={tContent("doDont.pair1.dontExample.title")}
+                description={tContent("doDont.pair1.dontExample.description")}
+                cancel={tContent("doDont.pair1.dontExample.cancel")}
+                action={tContent("doDont.pair1.dontExample.action")}
+              />
             ),
             doCaption: toPlainText(tContent("doDont.pair1.do")),
             dontCaption: toPlainText(tContent("doDont.pair1.dont")),
@@ -495,32 +514,23 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <DestructiveDemo
-                triggerLabel={tContent("demonstration.labels.triggerLabel")}
-                title={tContent("demonstration.labels.title")}
-                description={tContent("demonstration.labels.description")}
-                cancel={tContent("demonstration.labels.cancel")}
-                action={tContent("demonstration.labels.action")}
+              <AlertDialogDemo
+                label="pair2-do"
+                location="docs_do_dont"
+                triggerVariant="destructive"
+                actionVariant="destructive"
+                {...destructiveLabels}
               />
             ),
+            // O par 2 é sobre SEVERIDADE: mesmo texto, mesmo Cancelar (C7), e a
+            // ação na variante padrão sob um gatilho destrutivo.
             dontPreview: (
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive">Excluir conta</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Todos os seus dados serão removidos permanentemente.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction>Excluir</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <AlertDialogDemo
+                label="pair2-dont"
+                location="docs_do_dont"
+                triggerVariant="destructive"
+                {...destructiveLabels}
+              />
             ),
             doCaption: toPlainText(tContent("doDont.pair2.do")),
             dontCaption: toPlainText(tContent("doDont.pair2.dont")),
@@ -545,12 +555,12 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             description: stripHtml(tContent("variants.items.destructive")),
             code: codeDestructive,
             preview: (
-              <DestructiveDemo
-                triggerLabel={tContent("demonstration.labels.triggerLabel")}
-                title={tContent("demonstration.labels.title")}
-                description={tContent("demonstration.labels.description")}
-                cancel={tContent("demonstration.labels.cancel")}
-                action={tContent("demonstration.labels.action")}
+              <AlertDialogDemo
+                label="destructive"
+                location="docs_variantes"
+                triggerVariant="destructive"
+                actionVariant="destructive"
+                {...destructiveLabels}
               />
             ),
           },
@@ -559,12 +569,11 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             description: stripHtml(tContent("variants.items.default")),
             code: codeDefault,
             preview: (
-              <NeutralDemo
-                triggerLabel={tContent("demonstration.labels.neutralTriggerLabel")}
-                title={tContent("demonstration.labels.neutralTitle")}
-                description={tContent("demonstration.labels.neutralDescription")}
-                cancel={tContent("demonstration.labels.cancel")}
-                action={tContent("demonstration.labels.neutralAction")}
+              <AlertDialogDemo
+                label="neutral"
+                location="docs_variantes"
+                triggerVariant="outline"
+                {...neutralLabels}
               />
             ),
           },
@@ -600,10 +609,10 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "open",         type: "boolean",                  defaultValue: "—",       required: "Não", description: toPlainText(tContent("props.table.open")) },
-              { name: "defaultOpen",  type: "boolean",                  defaultValue: "false",   required: "Não", description: tContent("props.table.defaultOpen") },
-              { name: "onOpenChange", type: "(open: boolean) => void",  defaultValue: "—",       required: "Não", description: tContent("props.table.onOpenChange") },
-              { name: "children",     type: "React.ReactNode",          defaultValue: "—",       required: "Sim", description: tContent("props.table.children") },
+              { name: "open",         type: "boolean",                  defaultValue: "—",       required: no,    description: toPlainText(tContent("props.table.open")) },
+              { name: "defaultOpen",  type: "boolean",                  defaultValue: "false",   required: no,    description: tContent("props.table.defaultOpen") },
+              { name: "onOpenChange", type: "(open: boolean, eventDetails) => void", defaultValue: "—",       required: no,    description: tContent("props.table.onOpenChange") },
+              { name: "children",     type: "React.ReactNode",          defaultValue: "—",       required: yes,   description: tContent("props.table.children") },
             ],
           },
           {
@@ -616,9 +625,9 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "asChild",   type: "boolean",             defaultValue: "false", required: "Não", description: toPlainText(tContent("props.table.asChild")) },
-              { name: "className", type: "string",              defaultValue: "—",     required: "Não", description: tContent("props.table.className") },
-              { name: "children",  type: "React.ReactNode",     defaultValue: "—",     required: "Sim", description: tContent("props.table.children") },
+              { name: "asChild",   type: "boolean",             defaultValue: "false", required: no,    description: toPlainText(tContent("props.table.asChild")) },
+              { name: "className", type: "string",              defaultValue: "—",     required: no,    description: tContent("props.table.className") },
+              { name: "children",  type: "React.ReactNode",     defaultValue: "—",     required: yes,   description: tContent("props.table.children") },
             ],
           },
           {
@@ -631,8 +640,8 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "className", type: "string",          defaultValue: "—", required: "Não", description: tContent("props.table.className") },
-              { name: "children",  type: "React.ReactNode", defaultValue: "—", required: "Sim", description: tContent("props.table.children") },
+              { name: "className", type: "string",          defaultValue: "—", required: no,    description: tContent("props.table.className") },
+              { name: "children",  type: "React.ReactNode", defaultValue: "—", required: yes,   description: tContent("props.table.children") },
             ],
           },
           {
@@ -645,9 +654,9 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "onClick",   type: "(e: MouseEvent) => void", defaultValue: "—", required: "Não", description: tContent("props.table.onClick") },
-              { name: "className", type: "string",                   defaultValue: "—", required: "Não", description: tContent("props.table.className") },
-              { name: "children",  type: "React.ReactNode",          defaultValue: "—", required: "Sim", description: tContent("props.table.children") },
+              { name: "onClick",   type: "(e: MouseEvent) => void", defaultValue: "—", required: no,    description: tContent("props.table.onClick") },
+              { name: "className", type: "string",                   defaultValue: "—", required: no,    description: tContent("props.table.className") },
+              { name: "children",  type: "React.ReactNode",          defaultValue: "—", required: yes,   description: tContent("props.table.children") },
             ],
           },
           {
@@ -660,9 +669,9 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
               description: tContent("props.table.description"),
             },
             items: [
-              { name: "onClick",   type: "(e: MouseEvent) => void", defaultValue: "—", required: "Não", description: tContent("props.table.onClick") },
-              { name: "className", type: "string",                   defaultValue: "—", required: "Não", description: tContent("props.table.className") },
-              { name: "children",  type: "React.ReactNode",          defaultValue: "—", required: "Sim", description: tContent("props.table.children") },
+              { name: "onClick",   type: "(e: MouseEvent) => void", defaultValue: "—", required: no,    description: tContent("props.table.onClick") },
+              { name: "className", type: "string",                   defaultValue: "—", required: no,    description: tContent("props.table.className") },
+              { name: "children",  type: "React.ReactNode",          defaultValue: "—", required: yes,   description: tContent("props.table.children") },
             ],
           },
         ]}
@@ -689,6 +698,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
           { token: "--spacing-6",              value: ".nds-alert-dialog-content",     description: tContent("tokens.table.padding") },
           { token: "--muted-foreground",       value: ".nds-alert-dialog-description", description: tContent("tokens.table.mutedForeground") },
           { token: "--muted",                  value: ".nds-alert-dialog-media",       description: tContent("tokens.table.mediaBg") },
+          { token: "--radius-md",              value: ".nds-alert-dialog-media",       description: tContent("tokens.table.mediaRadius") },
           // A ação herda o tom do Button: o tom destrutivo vem da variante, não deste CSS.
           // `--destructive-foreground` não tem linha porque não tem leitor: a variante
           // destrutiva é soft (fundo suave com o rótulo na PRÓPRIA cor semântica), e
@@ -696,7 +706,7 @@ interface AlertDialogActionProps extends React.ButtonHTMLAttributes<HTMLButtonEl
           { token: "--destructive",            value: ".nds-button-destructive",       description: tContent("tokens.table.destructive") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
-        customizationCode={codeCustomizationTokens}
+        customizationCode={tContent("tokens.customizationCode")}
       />
 
       <DocsAccessibility

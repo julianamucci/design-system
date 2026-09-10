@@ -187,7 +187,7 @@ Esses elementos disparam o evento do produto (`button_click`, `tooltip_view`,
 | Evento | Quando disparar | Payload adicional |
 |--------|----------------|-------------------|
 | `dialog_open` | Quando o overlay é exibido | `label` (título) |
-| `dialog_close` | Quando fechado sem confirmar | `label`, `trigger` ("escape" \| "backdrop" \| "cancel_button") |
+| `dialog_close` | Quando fechado, por qualquer caminho | `label`, `location`, `reason` (`"escape"` \| `"close-button"` \| `"api"`; o Dialog, que fecha pelo véu, soma `"overlay"`) |
 | `dialog_confirm` | Quando a ação principal é confirmada | `label` |
 
 ---

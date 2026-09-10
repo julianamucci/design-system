@@ -12,12 +12,11 @@
   import { Button } from '@/components/ui/button';
 
   // A descrição é opcional (anatomy.item6 do conteúdo compartilhado). Este
-  // wrapper existe porque ela precisa estar ausente DESDE A MONTAGEM, e não
-  // removida depois: o primitivo desta stack grava o id da descrição no estado
-  // da raiz e não o apaga ao destruí-la, então tirar o parágrafo em tempo de
-  // execução deixaria `aria-describedby` apontando para um id que não existe
-  // mais. Nascendo sem descrição, o id nunca é gravado e o atributo nunca é
-  // declarado — que é o comportamento correto e o que a story mede.
+  // wrapper é a composição SEM o subcomponente de descrição — a mesma que o
+  // painel Code da story publica —, com os rótulos próprios do caso: o título
+  // sozinho já diz o que se perde. Sem descrição registrada o painel não
+  // declara `aria-describedby` (ver alert-dialog-description-registry.ts), e é
+  // isso que a story mede.
   interface Props {
     open?: boolean;
     triggerLabel?: string;

@@ -9,6 +9,12 @@
  * desestruturado (`tone`, `showMedia`, `triggerLabel`…) e um `key` de
  * remontagem que só existe para o control `defaultOpen` fazer efeito na tela.
  * Nada disso é composição que alguém escreva.
+ *
+ * `defaultOpen` só entra no trecho do PLAYGROUND, e só quando quem lê liga o
+ * control — o trecho acompanha os controls, e o padrão (fechado) não emite
+ * nada. Nas outras stories ele existe para a captura e a `play` encontrarem o
+ * painel na tela: é andaime, não ensinamento, e nenhuma transform delas o
+ * declara — quem cola quer o diálogo comandado pelo gatilho.
  */
 import {
   attrs,
@@ -32,7 +38,21 @@ export type AlertDialogArgs = {
   actionLabel: string;
 };
 
-const TONS = ['destructive', 'default'] as const;
+const TONES = ['destructive', 'default'] as const;
+const TRIGGER_VARIANTS = ['destructive', 'default', 'outline'] as const;
+
+/**
+ * Rótulos da confirmação destrutiva canônica — os mesmos de
+ * `demonstration.labels` no conteúdo compartilhado.
+ */
+const DEFAULT_LABELS = {
+  triggerLabel: 'Excluir conta',
+  title: 'Excluir conta',
+  description:
+    'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+  cancelLabel: 'Cancelar',
+  actionLabel: 'Excluir',
+} as const;
 
 /**
  * Bloco de import montado a partir das peças REALMENTE usadas.
@@ -51,24 +71,30 @@ import { Button } from "@/components/ui/button";`;
 
 type Confirm = {
   tone?: AlertDialogArgs['tone'];
+  /** Só o Playground passa, e só com o control ligado. */
   defaultOpen?: boolean;
-  midia?: boolean;
+  /**
+   * Variante do gatilho, quando ela NÃO acompanha o tom — a confirmação neutra
+   * abre por um botão `outline`, e a ação fica na variante padrão.
+   */
+  triggerVariant?: (typeof TRIGGER_VARIANTS)[number];
+  media?: boolean;
   triggerLabel?: string;
   title?: string;
   description?: string | null;
   cancelLabel?: string;
   actionLabel?: string;
   /** Classe extra no painel — só a story de extensibilidade usa. */
-  classeContent?: string;
+  contentClass?: string;
   /** Classe extra no bloco de mídia — idem. */
-  classeMidia?: string;
+  mediaClass?: string;
   /** Tag do título quando o contexto da página exige outro nível de cabeçalho. */
   titleTag?: string;
   /** `onClick` do consumidor, quando a story é sobre o callback. */
   onAction?: string;
   onCancel?: string;
   /** Declarações que o markup referencia — handler nomeado, estado. */
-  preambulo?: string;
+  preamble?: string;
 };
 
 /** Peças sempre presentes numa confirmação com gatilho próprio. */
@@ -87,32 +113,37 @@ const PARTS_BASE = [
  * A confirmação inteira: gatilho, painel, título, descrição e as DUAS saídas.
  *
  * Cancel vem antes de Action no DOM de propósito — é a ordem que põe a saída
- * segura primeiro na tabulação e, abaixo de 40rem, embaixo na pilha.
+ * segura primeiro na tabulação e, abaixo de 40rem, embaixo na pilha. O foco
+ * inicial no Cancel NÃO depende dessa ordem: é o componente que o escolhe.
  */
 function confirm({
   tone,
   defaultOpen,
-  midia = false,
-  triggerLabel = 'Excluir conta',
-  title = 'Excluir conta',
-  description = 'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
-  cancelLabel = 'Cancelar',
-  actionLabel = 'Excluir',
-  classeContent,
-  classeMidia,
+  triggerVariant,
+  media = false,
+  triggerLabel = DEFAULT_LABELS.triggerLabel,
+  title = DEFAULT_LABELS.title,
+  description = DEFAULT_LABELS.description,
+  cancelLabel = DEFAULT_LABELS.cancelLabel,
+  actionLabel = DEFAULT_LABELS.actionLabel,
+  contentClass,
+  mediaClass,
   titleTag,
   onAction,
   onCancel,
-  preambulo,
+  preamble,
 }: Confirm): string {
-  const variantButton = attrs(propOption('variant', tone, TONS, 'default'));
-  const blockMidia = midia
-    ? `<AlertDialogMedia${classeMidia ? ` className="${classeMidia}"` : ''}>
+  const actionVariant = attrs(propOption('variant', tone, TONES, 'default'));
+  const triggerButtonVariant = triggerVariant
+    ? attrs(propOption('variant', triggerVariant, TRIGGER_VARIANTS, 'default'))
+    : actionVariant;
+  const mediaBlock = media
+    ? `<AlertDialogMedia${mediaClass ? ` className="${mediaClass}"` : ''}>
   <TriangleAlert aria-hidden="true" />
 </AlertDialogMedia>
 `
     : '';
-  const blockDescription =
+  const descriptionBlock =
     description === null
       ? ''
       : `
@@ -121,27 +152,27 @@ function confirm({
 </AlertDialogDescription>`;
 
   const markup = `<AlertDialog${attrs(propBool('defaultOpen', defaultOpen))}>
-  <AlertDialogTrigger render={<Button${variantButton} />}>
+  <AlertDialogTrigger render={<Button${triggerButtonVariant} />}>
     ${triggerLabel}
   </AlertDialogTrigger>
-  <AlertDialogContent${classeContent ? ` className="${classeContent}"` : ''}>
+  <AlertDialogContent${contentClass ? ` className="${contentClass}"` : ''}>
     <AlertDialogHeader>
-${indentar(`${blockMidia}<AlertDialogTitle${titleTag ? ` render={<${titleTag} />}` : ''}>${title}</AlertDialogTitle>${blockDescription}`, '      ')}
+${indentar(`${mediaBlock}<AlertDialogTitle${titleTag ? ` render={<${titleTag} />}` : ''}>${title}</AlertDialogTitle>${descriptionBlock}`, '      ')}
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel${onCancel ? ` onClick={${onCancel}}` : ''}>${cancelLabel}</AlertDialogCancel>
-      <AlertDialogAction${variantButton}${onAction ? ` onClick={${onAction}}` : ''}>${actionLabel}</AlertDialogAction>
+      <AlertDialogAction${actionVariant}${onAction ? ` onClick={${onAction}}` : ''}>${actionLabel}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
 </AlertDialog>`;
 
   const parts: string[] = [...PARTS_BASE];
   if (description !== null) parts.push('AlertDialogDescription');
-  if (midia) parts.push('AlertDialogMedia');
-  const imports = midia
+  if (media) parts.push('AlertDialogMedia');
+  const imports = media
     ? `${importingParts(parts)}\nimport { TriangleAlert } from "lucide-react";`
     : importingParts(parts);
-  const header = preambulo ? `${imports}\n\n${preambulo}` : imports;
+  const header = preamble ? `${imports}\n\n${preamble}` : imports;
 
   return jsxSnippet(header, markup);
 }
@@ -152,55 +183,32 @@ ${indentar(`${blockMidia}<AlertDialogTitle${titleTag ? ` render={<${titleTag} />
  * Lê os controls do Playground; nos arquivos que desligam os controls cai nos
  * padrões, que são exatamente a confirmação destrutiva canônica. `tone` vira a
  * variante do Button em DOIS lugares (trigger e ação), que é o acoplamento que
- * a story demonstra e o painel escondia.
+ * a story demonstra e o painel escondia. `defaultOpen` entra só quando o
+ * control está ligado — ver o cabeçalho do módulo.
  */
-export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx) => {
+export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_generated, ctx) => {
   const args = ctx?.args ?? {};
   return confirm({
     tone: typeof args.tone === 'string' ? (args.tone as AlertDialogArgs['tone']) : 'destructive',
-    defaultOpen: typeof args.defaultOpen === 'boolean' ? args.defaultOpen : undefined,
-    midia: args.showMedia === true,
-    triggerLabel: childText(args.triggerLabel, 'Excluir conta'),
-    title: childText(args.title, 'Excluir conta'),
-    description: childText(
-      args.description,
-      'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
-    ),
-    cancelLabel: childText(args.cancelLabel, 'Cancelar'),
-    actionLabel: childText(args.actionLabel, 'Excluir'),
+    defaultOpen: args.defaultOpen === true,
+    media: args.showMedia === true,
+    triggerLabel: childText(args.triggerLabel, DEFAULT_LABELS.triggerLabel),
+    title: childText(args.title, DEFAULT_LABELS.title),
+    description: childText(args.description, DEFAULT_LABELS.description),
+    cancelLabel: childText(args.cancelLabel, DEFAULT_LABELS.cancelLabel),
+    actionLabel: childText(args.actionLabel, DEFAULT_LABELS.actionLabel),
   });
 };
-
-/**
- * Já montado aberto: `defaultOpen` é o assunto DESTA story, e o arquivo de
- * estados desliga os controls — sem isto o painel mostraria a forma fechada.
- *
- * É a única transform que o declara. Nas outras stories o `defaultOpen` do
- * `render` existe só para a captura e a `play` encontrarem o painel na tela —
- * andaime, não ensinamento: quem cola quer o diálogo comandado pelo gatilho.
- */
-export function alertDialogOpenSource(): string {
-  return confirm({
-    tone: 'destructive',
-    defaultOpen: true,
-    triggerLabel: 'Excluir item',
-    title: 'Excluir item permanentemente?',
-    description:
-      'O item será removido de forma definitiva e não poderá ser recuperado.',
-  });
-}
 
 /**
  * Confirmar executa E fecha: o `onClick` do consumidor roda antes do
  * fechamento, então não existe um segundo handler para "fechar depois".
  */
-export function alertDialogConfirmadoSource(): string {
+export function alertDialogConfirmedSource(): string {
   return confirm({
     tone: 'destructive',
-    title: 'Confirmar exclusão',
-    description: 'Esta ação é permanente e não poderá ser desfeita.',
-    preambulo: 'const excluirConta = () => remover(contaId);',
-    onAction: 'excluirConta',
+    preamble: 'const deleteAccount = () => removeAccount(accountId);',
+    onAction: 'deleteAccount',
   });
 }
 
@@ -208,23 +216,22 @@ export function alertDialogConfirmadoSource(): string {
  * Cancelar também aceita `onClick` — e o ponto da story é que a ação
  * destrutiva NÃO roda por esse caminho.
  */
-export function alertDialogCanceladoSource(): string {
+export function alertDialogCancelledSource(): string {
   return confirm({
     tone: 'destructive',
-    title: 'Confirmar exclusão',
-    description: 'Esta ação é permanente e não poderá ser desfeita.',
-    preambulo: `const registrarDesistencia = () => rastrear("exclusao_cancelada");
-const excluirConta = () => remover(contaId);`,
-    onCancel: 'registrarDesistencia',
-    onAction: 'excluirConta',
+    preamble: `const logCancellation = () => logEvent("account_deletion_cancelled");
+const deleteAccount = () => removeAccount(accountId);`,
+    onCancel: 'logCancellation',
+    onAction: 'deleteAccount',
   });
 }
 
 /**
  * Modo controlado: quem manda é o estado do pai, e o diálogo não tem Trigger
  * nenhum — o botão que abre vive fora da raiz. `onOpenChange` é o componente
- * PEDINDO a mudança (Escape, saída pelo Cancel), não a confirmação de que ela
- * ocorreu.
+ * PEDINDO a mudança (Escape, saída pelo Cancel ou pela ação), não a
+ * confirmação de que ela ocorreu; por isso a ação não precisa de um
+ * `setOpen(false)` próprio.
  */
 export function alertDialogControlledSource(): string {
   return jsxSnippet(
@@ -240,24 +247,22 @@ ${importingParts([
   'AlertDialogTitle',
 ])}
 
-const [aberto, setAberto] = useState(false);`,
+const [open, setOpen] = useState(false);`,
     `<div className="nds-stack" data-spacing="sm">
-  <Button variant="destructive" onClick={() => setAberto(true)}>
-    Abrir via estado externo
+  <Button variant="destructive" onClick={() => setOpen(true)}>
+    ${DEFAULT_LABELS.triggerLabel}
   </Button>
-  <AlertDialog open={aberto} onOpenChange={setAberto}>
+  <AlertDialog open={open} onOpenChange={setOpen}>
     <AlertDialogContent>
       <AlertDialogHeader>
-        <AlertDialogTitle>Controlado pelo pai</AlertDialogTitle>
+        <AlertDialogTitle>${DEFAULT_LABELS.title}</AlertDialogTitle>
         <AlertDialogDescription>
-          Este diálogo é comandado por estado externo.
+          ${DEFAULT_LABELS.description}
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogCancel>Fechar</AlertDialogCancel>
-        <AlertDialogAction variant="destructive" onClick={() => setAberto(false)}>
-          Confirmar
-        </AlertDialogAction>
+        <AlertDialogCancel>${DEFAULT_LABELS.cancelLabel}</AlertDialogCancel>
+        <AlertDialogAction variant="destructive">${DEFAULT_LABELS.actionLabel}</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>
@@ -267,25 +272,40 @@ const [aberto, setAberto] = useState(false);`,
 
 /**
  * Bloco de mídia: precisa ser o PRIMEIRO filho do header — é dessa ordem que
- * dependem o `:has()` que centraliza o painel e a leitura ícone → título →
- * descrição. O ícone sai da árvore de acessibilidade; quem nomeia é o título.
+ * dependem o `:has()` que centraliza a CAIXA do ícone no mobile e a leitura
+ * ícone → título → descrição. O ícone sai da árvore de acessibilidade; quem
+ * nomeia é o título.
  */
 export function alertDialogWithIconSource(): string {
-  return confirm({ tone: 'destructive', midia: true });
+  return confirm({ tone: 'destructive', media: true });
 }
 
 /**
- * Confirmação neutra: sem `variant`, trigger e ação herdam os tokens padrão do
- * Button. O arquivo desliga os controls, então o `tone` do `meta` não chega
- * aqui — e o padrão dele é o destrutivo.
+ * Confirmação neutra: o gatilho abre por um botão `outline` e a ação herda os
+ * tokens padrão do Button. O arquivo desliga os controls, então o `tone` do
+ * `meta` não chega aqui — e o padrão dele é o destrutivo.
  */
 export function alertDialogNeutralSource(): string {
   return confirm({
     tone: 'default',
+    triggerVariant: 'outline',
     triggerLabel: 'Sair da conta',
     title: 'Sair da conta',
     description: 'Você precisará entrar novamente para acessar seus dados.',
     actionLabel: 'Sair',
+  });
+}
+
+/**
+ * Descrição longa: a mesma confirmação destrutiva, com o texto que ocupa mais
+ * de uma linha. Sem esta transform o painel cairia na do `meta` e mostraria a
+ * descrição CURTA — justamente o contrário do que a story mede.
+ */
+export function alertDialogLongDescriptionSource(): string {
+  return confirm({
+    tone: 'destructive',
+    description:
+      'Todos os seus dados, arquivos enviados, integrações ativas e o histórico completo de faturamento serão removidos permanentemente dos nossos servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança fica disponível depois da confirmação.',
   });
 }
 
@@ -313,9 +333,9 @@ export function alertDialogNoDescriptionSource(): string {
 export function alertDialogClassNameExtraSource(): string {
   return confirm({
     tone: 'destructive',
-    midia: true,
-    classeContent: 'nds-overflow-hidden',
-    classeMidia: 'nds-shrink-0',
+    media: true,
+    contentClass: 'nds-overflow-hidden',
+    mediaClass: 'nds-shrink-0',
   });
 }
 

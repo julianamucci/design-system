@@ -1,16 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertDialogOpenSource,
-  alertDialogCanceladoSource,
+  alertDialogCancelledSource,
   alertDialogClassNameExtraSource,
   alertDialogHeadingH3Source,
   alertDialogWithIconSource,
-  alertDialogConfirmadoSource,
+  alertDialogConfirmedSource,
   alertDialogControlledSource,
+  alertDialogLongDescriptionSource,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
   alertDialogSource,
 } from './alert-dialog.source';
+
+/** Todos os construtores do módulo — as varreduras abaixo passam por cada um. */
+const ALL = [
+  alertDialogSource,
+  alertDialogCancelledSource,
+  alertDialogClassNameExtraSource,
+  alertDialogWithIconSource,
+  alertDialogConfirmedSource,
+  alertDialogControlledSource,
+  alertDialogHeadingH3Source,
+  alertDialogLongDescriptionSource,
+  alertDialogNeutralSource,
+  alertDialogNoDescriptionSource,
+];
 
 describe('alertDialogSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
@@ -60,13 +74,17 @@ describe('alertDialogSource', () => {
     expect(saida.indexOf('<AlertDialogMedia')).toBeLessThan(saida.indexOf('<AlertDialogTitle>'));
   });
 
-  it('defaultOpen só entra quando difere do padrão', () => {
-    expect(alertDialogSource(undefined, { args: { defaultOpen: false } })).toContain(
-      '<AlertDialog>',
-    );
+  it('defaultOpen acompanha o control: entra só quando quem lê o liga', () => {
+    // O trecho acompanha os controls. O padrão (fechado) não emite nada, e sem
+    // args — as stories dos outros dois arquivos — também não.
     expect(alertDialogSource(undefined, { args: { defaultOpen: true } })).toContain(
       '<AlertDialog defaultOpen>',
     );
+    for (const args of [{ defaultOpen: false }, {}]) {
+      const saida = alertDialogSource(undefined, { args });
+      expect(saida).toContain('<AlertDialog>');
+      expect(saida).not.toContain('defaultOpen');
+    }
   });
 
   it('os rótulos dos controls chegam ao snippet', () => {
@@ -94,33 +112,20 @@ describe('alertDialogSource', () => {
 });
 
 describe('estados', () => {
-  it('o aberto declara defaultOpen, que é o que a story mede', () => {
-    expect(alertDialogOpenSource()).toContain('<AlertDialog defaultOpen>');
-  });
-
   it('confirmar recebe onClick e o handler é declarado no próprio snippet', () => {
-    const saida = alertDialogConfirmadoSource();
-    expect(saida).toContain('const excluirConta =');
-    expect(saida).toContain('<AlertDialogAction variant="destructive" onClick={excluirConta}>');
+    const saida = alertDialogConfirmedSource();
+    expect(saida).toContain('const deleteAccount =');
+    expect(saida).toContain('<AlertDialogAction variant="destructive" onClick={deleteAccount}>');
   });
 
   it('cancelar também recebe onClick, e a ação destrutiva continua na sua saída', () => {
-    const saida = alertDialogCanceladoSource();
-    expect(saida).toContain('<AlertDialogCancel onClick={registrarDesistencia}>');
-    expect(saida).toContain('onClick={excluirConta}');
+    const saida = alertDialogCancelledSource();
+    expect(saida).toContain('<AlertDialogCancel onClick={logCancellation}>');
+    expect(saida).toContain('onClick={deleteAccount}');
   });
 
-  it('só a story do aberto declara defaultOpen — nas outras ele é andaime de captura', () => {
-    for (const fn of [
-      alertDialogCanceladoSource,
-      alertDialogClassNameExtraSource,
-      alertDialogWithIconSource,
-      alertDialogConfirmadoSource,
-      alertDialogHeadingH3Source,
-      alertDialogNeutralSource,
-      alertDialogNoDescriptionSource,
-    ]) {
-      expect(fn()).toContain('<AlertDialog>');
+  it('sem o control, nenhum trecho declara defaultOpen — nas stories ele é andaime de captura', () => {
+    for (const fn of ALL) {
       expect(fn()).not.toContain('defaultOpen');
     }
   });
@@ -128,8 +133,27 @@ describe('estados', () => {
   it('o controlado não tem Trigger: o gatilho vive fora da raiz', () => {
     const saida = alertDialogControlledSource();
     expect(saida).toContain('import { useState } from "react";');
-    expect(saida).toContain('<AlertDialog open={aberto} onOpenChange={setAberto}>');
+    expect(saida).toContain('<AlertDialog open={open} onOpenChange={setOpen}>');
     expect(saida).not.toContain('AlertDialogTrigger');
+  });
+
+  it('as confirmações das stories de estado usam o conjunto destrutivo da demonstração', () => {
+    // Título que nomeia a ação, Cancelar como saída segura — nada de título em
+    // pergunta nem de "Fechar" no lugar do Cancelar.
+    for (const fn of [
+      alertDialogConfirmedSource,
+      alertDialogCancelledSource,
+      alertDialogControlledSource,
+    ]) {
+      const saida = fn();
+      expect(saida).toContain('<AlertDialogTitle>Excluir conta</AlertDialogTitle>');
+      expect(saida).toContain(
+        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+      );
+      expect(saida).toMatch(/>Cancelar<\/AlertDialogCancel>/);
+      expect(saida).not.toContain('Fechar');
+      expect(saida).not.toContain('?</AlertDialogTitle>');
+    }
   });
 });
 
@@ -146,6 +170,20 @@ describe('composições', () => {
     expect(saida).toContain('>Sair</AlertDialogAction>');
   });
 
+  it('a confirmação neutra abre por um gatilho outline, como a story renderiza', () => {
+    const saida = alertDialogNeutralSource();
+    expect(saida).toContain('render={<Button variant="outline" />}');
+    expect(saida).toContain('<AlertDialogAction>Sair</AlertDialogAction>');
+  });
+
+  it('a descrição longa tem painel próprio, e não a descrição curta do meta', () => {
+    const saida = alertDialogLongDescriptionSource();
+    expect(saida).toContain('nenhuma cópia de segurança');
+    expect(saida).not.toContain(
+      'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+    );
+  });
+
   it('sem descrição o snippet nem importa a peça — a ausência é o assunto', () => {
     const saida = alertDialogNoDescriptionSource();
     expect(saida).not.toContain('AlertDialogDescription');
@@ -159,18 +197,7 @@ describe('composições', () => {
   });
 
   it('nenhum snippet ensina o andaime da story', () => {
-    for (const fn of [
-      alertDialogSource,
-      alertDialogOpenSource,
-      alertDialogCanceladoSource,
-      alertDialogClassNameExtraSource,
-      alertDialogWithIconSource,
-      alertDialogConfirmadoSource,
-      alertDialogControlledSource,
-      alertDialogHeadingH3Source,
-      alertDialogNeutralSource,
-      alertDialogNoDescriptionSource,
-    ]) {
+    for (const fn of ALL) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');
       expect(saida).not.toContain('triggerLabel');

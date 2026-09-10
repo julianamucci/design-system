@@ -1,4 +1,11 @@
 // Snippet do painel Code do AlertDialog — ver `@/lib/story-source`.
+//
+// Nenhuma transform de story fixa `defaultOpen`. As stories de variantes e de
+// estado nascem abertas para a captura e a `play` encontrarem o painel — é
+// andaime, não ensinamento: quem cola quer o diálogo comandado pelo gatilho,
+// e um diálogo de confirmação de produção não nasce aberto. O único caminho
+// que ainda imprime a opção é o control `defaultOpen` do Playground, porque ali
+// quem liga é o leitor.
 
 import {
   callLine,
@@ -11,7 +18,7 @@ import {
 } from '@/lib/story-source';
 
 /** Variante do Button usada no gatilho e na ação. */
-export type AlertDialogTom = 'destructive' | 'default';
+export type AlertDialogSnippetTone = 'destructive' | 'default';
 
 export type AlertDialogSnippetOptions = {
   /**
@@ -19,7 +26,7 @@ export type AlertDialogSnippetOptions = {
    * variante do Button do gatilho e da ação, exatamente como os controls da
    * story fazem.
    */
-  tone?: AlertDialogTom;
+  tone?: AlertDialogSnippetTone;
   /** Variante do gatilho, quando ela não acompanha o tom (confirmação neutra). */
   triggerVariant?: 'destructive' | 'default' | 'outline';
   triggerLabel?: string;
@@ -32,6 +39,8 @@ export type AlertDialogSnippetOptions = {
   actionLabel?: string;
   /** Bloco de ícone no topo do header (`createAlertDialogMedia`). */
   showMedia?: boolean;
+  /** Classe extra na caixa do ícone — só vale com `showMedia`. */
+  mediaClass?: string;
   defaultOpen?: boolean;
   class?: string;
   /**
@@ -52,7 +61,7 @@ const DEFAULTS = {
 
 /** A composição real: três botões, o bloco opcional de mídia e a fábrica. */
 export function alertDialogSnippet(o: AlertDialogSnippetOptions = {}): string {
-  const tone: AlertDialogTom = o.tone ?? 'destructive';
+  const tone: AlertDialogSnippetTone = o.tone ?? 'destructive';
   const actionVariant = tone === 'destructive' ? 'destructive' : 'default';
   const triggerVariant = o.triggerVariant ?? actionVariant;
   const description = o.description ?? DEFAULTS.description;
@@ -71,8 +80,9 @@ export function alertDialogSnippet(o: AlertDialogSnippetOptions = {}): string {
     `const actionButton = createButton({ variant: ${text(actionVariant)}, label: ${text(o.actionLabel ?? DEFAULTS.actionLabel)} });`,
   ].join('\n');
 
+  const mediaOptions = o.mediaClass ? `{ class: ${text(o.mediaClass)} }` : '';
   const media = o.showMedia
-    ? `const media = createAlertDialogMedia();
+    ? `const media = createAlertDialogMedia(${mediaOptions});
 media.appendChild(createAlertIcon('warning'));`
     : '';
 
@@ -128,8 +138,7 @@ export function alertDialogSourceWith(
  *
  * Mesma composição da confirmação destrutiva — o que muda é UMA opção. A
  * fábrica assume `2`, e é a página que decide: dentro de uma seção que já está
- * em `h2`, o painel precisa entrar em `h3` para não pular nível. O
- * `defaultOpen` acompanha as demais composições deste arquivo.
+ * em `h2`, o painel precisa entrar em `h3` para não pular nível.
  */
 export const alertDialogHeadingH3Source: SourceTransform<AlertDialogSnippetOptions> =
-  alertDialogSourceWith({ defaultOpen: true, titleLevel: 3 });
+  alertDialogSourceWith({ titleLevel: 3 });

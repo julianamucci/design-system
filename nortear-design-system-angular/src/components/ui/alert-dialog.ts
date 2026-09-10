@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Directive,
+  ElementRef,
   TemplateRef,
   ViewEncapsulation,
   computed,
@@ -107,11 +109,15 @@ export class NdsAlertDialogContent {
         [attr.data-state]="state()"
       ></div>
 
+      <!-- (openAutoFocus) é o gancho que o primitivo expõe para escolher onde
+           o foco pousa na abertura: é por ele que o Cancelar recebe o foco
+           (D3), e não pela ordem do DOM. -->
       <div
         rdxDialogPopup
         [class]="panelClasses()"
         data-slot="alert-dialog-content"
         [attr.data-state]="state()"
+        (openAutoFocus)="focusCancel($event)"
       >
         <ng-container [ngTemplateOutlet]="panel()!.tpl" />
       </div>
@@ -153,6 +159,44 @@ export class NdsAlertDialog {
    * vindo do primitivo — este atributo é adição, não substituição.
    */
   protected readonly state = computed(() => (this.root.isOpen() ? 'open' : 'closed'));
+
+  /**
+   * O Cancelar do painel aberto, registrado pela própria diretiva.
+   *
+   * Registro, e não consulta ao DOM: o painel mora num `ng-template` portalado,
+   * e a diretiva é quem sabe quando o botão existe e quando deixou de existir.
+   */
+  private cancelButton: HTMLElement | null = null;
+
+  /** Chamado pelo `NdsAlertDialogCancel`; devolve a função que desfaz o registro. */
+  registerCancel(button: HTMLElement): () => void {
+    this.cancelButton = button;
+    return () => {
+      if (this.cancelButton === button) this.cancelButton = null;
+    };
+  }
+
+  /**
+   * Foco inicial no Cancelar, por escolha EXPLÍCITA (D3 do PRD).
+   *
+   * Sem isto o foco ia ao primeiro focável do painel — que É o Cancelar só
+   * enquanto ele vier antes da ação no rodapé. Reordenar o rodapé mudaria o foco
+   * sem que nada reprovasse; e na abertura por TOQUE o primitivo foca o painel,
+   * não o botão (para o teclado virtual não subir por cima dele). A decisão vale
+   * nos dois casos: Enter apertado por reflexo tem que cair na saída segura.
+   *
+   * O primitivo avisa a abertura por `openAutoFocus` com um evento cancelável;
+   * cancelá-lo é o contrato para dizer "eu escolho o alvo". Quem assina antes
+   * — o gerenciador de foco, no toque — já agiu quando este roda, então este é o
+   * que vale. Sem Cancelar registrado (composição que viola o C7), fica o padrão
+   * do primitivo.
+   */
+  protected focusCancel(event: Event): void {
+    const cancel = this.cancelButton;
+    if (!cancel) return;
+    event.preventDefault();
+    cancel.focus();
+  }
 }
 
 /** Abre o diálogo. Compõe com `ndsButton` no mesmo elemento. */
@@ -174,18 +218,19 @@ export class NdsAlertDialogTrigger {}
 export class NdsAlertDialogHeader {}
 
 /**
- * Bloco de ícone acima do título.
+ * Caixa do ícone acima do título.
  *
- * `aria-hidden` porque o ícone repete o que o título já diz — e num
- * `alertdialog` o título é lido de imediato. Um ícone anunciado ali seria a
- * terceira voz na mesma frase.
+ * O `aria-hidden` é do ÍCONE, não desta caixa — o `svg[ndsAlertIcon]` já o
+ * traz. O ícone repete o que o título diz, e num `alertdialog` o título é lido
+ * de imediato: anunciado, ele seria a terceira voz na mesma frase. Esconder a
+ * caixa inteira, que era o que este host fazia, levaria junto qualquer coisa
+ * que quem compõe pusesse ali para ser lida.
  */
 @Directive({
   selector: 'div[ndsAlertDialogMedia]',
   standalone: true,
   host: {
     class: 'nds-alert-dialog-media',
-    'aria-hidden': 'true',
     '[attr.data-slot]': '"alert-dialog-media"',
   },
 })
@@ -237,9 +282,16 @@ export class NdsAlertDialogDescription {}
 export class NdsAlertDialogFooter {}
 
 /**
- * Sai sem fazer nada. Vem ANTES da ação no DOM, e isso não é ordem visual: é
- * onde o foco pousa ao abrir. Num diálogo de destruição, a tecla Enter apertada
- * por reflexo tem que cair na saída segura.
+ * Sai sem fazer nada.
+ *
+ * É o alvo do foco inicial (D3), e por escolha: a diretiva se registra na raiz,
+ * e a raiz a foca na abertura — ver `NdsAlertDialog.focusCancel`. Num diálogo
+ * de destruição, a tecla Enter apertada por reflexo tem que cair na saída
+ * segura, venha a abertura do mouse, do teclado ou do toque.
+ *
+ * Continua vindo ANTES da ação no DOM, mas por outro motivo: é a ordem de
+ * leitura e de tabulação, e é sobre ela que a folha trabalha (`column-reverse`
+ * no estreito, a ação à direita no largo).
  */
 @Directive({
   selector: 'button[ndsAlertDialogCancel]',
@@ -247,7 +299,14 @@ export class NdsAlertDialogFooter {}
   hostDirectives: [RdxDialogClose],
   host: { '[attr.data-slot]': '"alert-dialog-cancel"' },
 })
-export class NdsAlertDialogCancel {}
+export class NdsAlertDialogCancel {
+  constructor() {
+    const root = inject(NdsAlertDialog, { optional: true });
+    const button = inject<ElementRef<HTMLButtonElement>>(ElementRef).nativeElement;
+    const unregister = root?.registerCancel(button);
+    if (unregister) inject(DestroyRef).onDestroy(unregister);
+  }
+}
 
 /**
  * Confirma e fecha.

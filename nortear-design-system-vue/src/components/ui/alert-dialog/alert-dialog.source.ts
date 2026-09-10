@@ -4,6 +4,11 @@
  * Módulo de TS puro, sem import de `.vue`: é o que deixa as funções rodarem no
  * projeto `unit` do vitest. A saída do painel não chega ao DOM durante a `play`,
  * então este é o único lugar em que elas têm guarda.
+ *
+ * Nenhum trecho FIXO escreve `default-open`: quem copia quer o diálogo comandado
+ * pelo gatilho, e não nascendo aberto sobre a página. O atributo nas stories é
+ * andaime de captura e de `play`, não ensinamento. Só o Playground o escreve,
+ * e só quando quem lê liga o control.
  */
 import {
   attr,
@@ -14,6 +19,7 @@ import {
   vueSnippet,
   type SourceTransform,
 } from '@/lib/story-source';
+import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
 
 export type AlertDialogArgs = {
   defaultOpen: boolean;
@@ -26,6 +32,13 @@ export type AlertDialogArgs = {
   cancelLabel: string;
   actionLabel: string;
 };
+
+/**
+ * Rótulos de exemplo: saem do MESMO `translations.json` que a docs page e as
+ * stories leem (`demonstration.labels`), presos a pt-BR — o painel Code é
+ * fixture, e o idioma de quem lê é resolvido pela docs page.
+ */
+const L = alertDialogTranslations['pt-BR'].demonstration.labels;
 
 /**
  * A composição inteira, do jeito que o contrato do componente a exige: gatilho,
@@ -52,6 +65,22 @@ type Composition = {
   cancelar: { label: string; evento?: string };
   acao: { label: string; variant?: string; evento?: string };
 };
+
+/**
+ * A confirmação destrutiva canônica, com o conjunto destrutivo de
+ * `demonstration.labels`. É a base das stories de estado e da maioria das
+ * variantes: o que cada uma ensina é o que ela ACRESCENTA a esta base.
+ */
+function destructive(extra: Partial<Composition> = {}): Composition {
+  return {
+    trigger: { label: L.triggerLabel, variant: 'destructive' },
+    title: L.title,
+    descricao: L.description,
+    cancelar: { label: L.cancel },
+    acao: { label: L.action, variant: 'destructive' },
+    ...extra,
+  };
+}
 
 /** Import do design system, com só os subcomponentes que a composição usa. */
 function importDialog(c: Composition): string {
@@ -96,8 +125,8 @@ function dialogo(c: Composition): string {
   lines.push(`  <AlertDialogContent${attrs(c.panel)}>`, '    <AlertDialogHeader>');
 
   if (c.midia) {
-    // A mídia é o PRIMEIRO filho do cabeçalho: dessa ordem dependem tanto a
-    // centralização do CSS quanto a leitura ícone → título → descrição.
+    // A mídia é o PRIMEIRO filho do cabeçalho: é a ordem de leitura ícone →
+    // título → descrição. (O `:has()` da folha a acha em qualquer posição.)
     lines.push(
       `      <AlertDialogMedia${attrs(c.midia.className)}>`,
       '        <TriangleAlert aria-hidden="true" />',
@@ -131,9 +160,6 @@ function snippet(c: Composition, extras: string[] = [], state = ''): string {
   return vueSnippet(script, dialogo(c));
 }
 
-const DESCRIPTION_DEFAULT =
-  'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.';
-
 /**
  * Forma canônica: o gatilho abre, o painel confirma, e as duas saídas ficam no
  * rodapé. A severidade é uma escolha só — ela vale para o gatilho e para a ação,
@@ -150,12 +176,12 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
       attrBool('default-open', args.defaultOpen, false),
       attrBool('unmount-on-hide', args.unmountOnHide, true),
     ],
-    trigger: { label: asCode(args.triggerLabel) ?? 'Excluir conta', variant: tom },
+    trigger: { label: asCode(args.triggerLabel) ?? L.triggerLabel, variant: tom },
     midia: args.showMedia === true ? {} : undefined,
-    title: asCode(args.title) ?? 'Excluir conta',
-    descricao: asCode(args.description) ?? DESCRIPTION_DEFAULT,
-    cancelar: { label: asCode(args.cancelLabel) ?? 'Cancelar' },
-    acao: { label: asCode(args.actionLabel) ?? 'Excluir', variant: tom },
+    title: asCode(args.title) ?? L.title,
+    descricao: asCode(args.description) ?? L.description,
+    cancelar: { label: asCode(args.cancelLabel) ?? L.cancel },
+    acao: { label: asCode(args.actionLabel) ?? L.action, variant: tom },
   });
 };
 
@@ -164,46 +190,28 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
  * gatilho está na tela, e o painel só existe depois do clique.
  */
 export function alertDialogClosedSource(): string {
-  return snippet({
-    trigger: { label: 'Excluir item', variant: 'destructive' },
-    title: 'Confirmar exclusão',
-    descricao: 'Esta ação não pode ser desfeita.',
-    cancelar: { label: 'Cancelar' },
-    acao: { label: 'Excluir', variant: 'destructive' },
-  });
+  return snippet(destructive());
 }
 
 /**
- * Aberto na montagem: `default-open` é o modo não controlado, e a partir daí o
- * estado é do próprio componente.
+ * Aberto: o estado que o gatilho produz. O foco inicial vai para Cancelar, não
+ * para a ação destrutiva — é decisão do componente, e não há prop a escrever
+ * para obtê-la.
  *
- * O foco inicial vai para Cancelar, não para a ação destrutiva — é decisão do
- * componente, e não há prop a escrever para obtê-la.
+ * A story nasce aberta para a captura; o trecho não, pela regra do cabeçalho.
  */
 export function alertDialogOpenSource(): string {
-  return snippet({
-    root: ['default-open'],
-    trigger: { label: 'Excluir item', variant: 'destructive' },
-    title: 'Excluir item permanentemente?',
-    descricao: 'O item será removido de forma definitiva e não poderá ser recuperado.',
-    cancelar: { label: 'Cancelar' },
-    acao: { label: 'Excluir', variant: 'destructive' },
-  });
+  return snippet(destructive());
 }
 
 /** Confirmação: o handler da ação roda, e o fechamento vem do componente. */
 export function alertDialogConfirmadoSource(): string {
   return snippet(
-    {
-      root: ['default-open'],
-      trigger: { label: 'Excluir item', variant: 'destructive' },
-      title: 'Confirmar exclusão',
-      descricao: 'Esta ação é permanente.',
-      cancelar: { label: 'Cancelar' },
-      acao: { label: 'Excluir', variant: 'destructive', evento: '@click="excluirItem"' },
-    },
+    destructive({
+      acao: { label: L.action, variant: 'destructive', evento: '@click="excluirConta"' },
+    }),
     [],
-    `function excluirItem() {
+    `function excluirConta() {
   // O painel se fecha sozinho e devolve o foco ao gatilho; aqui fica o efeito
   // da confirmação.
 }`,
@@ -217,19 +225,16 @@ export function alertDialogConfirmadoSource(): string {
  */
 export function alertDialogCanceladoSource(): string {
   return snippet(
-    {
-      root: ['default-open'],
-      title: 'Confirmar exclusão',
-      descricao: 'Esta ação é permanente.',
-      cancelar: { label: 'Cancelar', evento: '@click="aoDesistir"' },
-      acao: { label: 'Excluir', variant: 'destructive', evento: '@click="excluirItem"' },
-    },
+    destructive({
+      cancelar: { label: L.cancel, evento: '@click="aoDesistir"' },
+      acao: { label: L.action, variant: 'destructive', evento: '@click="excluirConta"' },
+    }),
     [],
     `function aoDesistir() {
-  // A ação não roda: o painel fecha e nada é executado.
+  // A ação não roda: o painel fecha, o foco volta ao gatilho e nada é executado.
 }
 
-function excluirItem() {
+function excluirConta() {
   // Só chega aqui pelo botão de confirmação.
 }`,
   );
@@ -239,15 +244,15 @@ function excluirItem() {
  * Abertura controlada: o estado sai do componente e passa a ser de quem
  * consome. O par escrito aberto — `:open` mais o evento — mostra os dois lados
  * do vínculo, e é o mesmo que `v-model:open`.
+ *
+ * A ação não escreve fechamento: ela pede o fechamento pelo mesmo evento de
+ * mudança que o Cancelar e o Escape, e o vínculo acima o aplica.
  */
 export function alertDialogControlledSource(): string {
-  const composition: Composition = {
+  const composition = destructive({
     root: [':open="aberto"', '@update:open="aberto = $event"'],
-    title: 'Controlado pelo pai',
-    descricao: 'Este diálogo é comandado por estado externo.',
-    cancelar: { label: 'Fechar' },
-    acao: { label: 'Confirmar', variant: 'destructive', evento: '@click="aberto = false"' },
-  };
+    trigger: undefined,
+  });
   return vueSnippet(
     `${importDialog(composition)}
 import { Button } from '@/components/ui/button'
@@ -255,7 +260,7 @@ import { ref } from 'vue'
 
 const aberto = ref(false)`,
     `<div class="nds-stack" data-spacing="sm">
-  <Button variant="destructive" @click="aberto = true">Abrir via estado externo</Button>
+  <Button variant="destructive" @click="aberto = true">${L.triggerLabel}</Button>
 ${indentar(dialogo(composition))}
 </div>`,
   );
@@ -266,15 +271,7 @@ ${indentar(dialogo(composition))}
  * painel é o título, por `aria-labelledby`.
  */
 export function alertDialogWithIconSource(): string {
-  return snippet({
-    root: ['default-open'],
-    trigger: { label: 'Excluir conta', variant: 'destructive' },
-    midia: {},
-    title: 'Excluir conta',
-    descricao: DESCRIPTION_DEFAULT,
-    cancelar: { label: 'Cancelar' },
-    acao: { label: 'Excluir', variant: 'destructive' },
-  });
+  return snippet(destructive({ midia: {} }));
 }
 
 /**
@@ -283,14 +280,7 @@ export function alertDialogWithIconSource(): string {
  * decisão.
  */
 export function alertDialogDestructiveSource(): string {
-  return snippet({
-    root: ['default-open'],
-    trigger: { label: 'Excluir conta', variant: 'destructive' },
-    title: 'Excluir conta',
-    descricao: DESCRIPTION_DEFAULT,
-    cancelar: { label: 'Cancelar' },
-    acao: { label: 'Excluir', variant: 'destructive' },
-  });
+  return snippet(destructive());
 }
 
 /**
@@ -304,15 +294,7 @@ export function alertDialogDestructiveSource(): string {
  * apontando para este mesmo elemento, e o nome acessível continua saindo dele.
  */
 export function alertDialogHeadingH3Source(): string {
-  return snippet({
-    root: ['default-open'],
-    trigger: { label: 'Excluir conta', variant: 'destructive' },
-    titleProps: 'as="h3"',
-    title: 'Excluir conta',
-    descricao: DESCRIPTION_DEFAULT,
-    cancelar: { label: 'Cancelar' },
-    acao: { label: 'Excluir', variant: 'destructive' },
-  });
+  return snippet(destructive({ titleProps: 'as="h3"' }));
 }
 
 /**
@@ -321,12 +303,11 @@ export function alertDialogHeadingH3Source(): string {
  */
 export function alertDialogNeutralSource(): string {
   return snippet({
-    root: ['default-open'],
-    trigger: { label: 'Sair da conta', variant: 'outline' },
-    title: 'Sair da conta',
-    descricao: 'Você precisará entrar novamente para acessar seus dados.',
-    cancelar: { label: 'Cancelar' },
-    acao: { label: 'Sair' },
+    trigger: { label: L.neutralTriggerLabel, variant: 'outline' },
+    title: L.neutralTitle,
+    descricao: L.neutralDescription,
+    cancelar: { label: L.cancel },
+    acao: { label: L.neutralAction },
   });
 }
 
@@ -335,17 +316,14 @@ export function alertDialogNeutralSource(): string {
  * acessível. Não há prop de tamanho a ajustar.
  */
 export function alertDialogDescriptionLongaSource(): string {
-  return snippet({
-    root: ['default-open'],
-    trigger: { label: 'Excluir conta', variant: 'destructive' },
-    title: 'Excluir conta',
-    descricao: `Todos os seus dados, arquivos enviados, integrações ativas e o histórico
+  return snippet(
+    destructive({
+      descricao: `Todos os seus dados, arquivos enviados, integrações ativas e o histórico
 completo de faturamento serão removidos permanentemente dos nossos
 servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança
 fica disponível depois da confirmação.`,
-    cancelar: { label: 'Cancelar' },
-    acao: { label: 'Excluir', variant: 'destructive' },
-  });
+    }),
+  );
 }
 
 /**
@@ -357,10 +335,9 @@ fica disponível depois da confirmação.`,
  */
 export function alertDialogNoDescriptionSource(): string {
   return snippet({
-    root: ['default-open'],
     trigger: { label: 'Descartar rascunho', variant: 'destructive' },
     title: 'Descartar rascunho',
-    cancelar: { label: 'Cancelar' },
+    cancelar: { label: L.cancel },
     acao: { label: 'Descartar', variant: 'destructive' },
   });
 }
@@ -373,14 +350,10 @@ export function alertDialogNoDescriptionSource(): string {
  * especificidade. Por isso o exemplo se limita a recorte e a encolhimento.
  */
 export function alertDialogClassNameExtraSource(): string {
-  return snippet({
-    root: ['default-open'],
-    trigger: { label: 'Excluir conta', variant: 'destructive' },
-    panel: 'class="nds-overflow-hidden"',
-    midia: { className: 'class="nds-shrink-0"' },
-    title: 'Excluir conta',
-    descricao: DESCRIPTION_DEFAULT,
-    cancelar: { label: 'Cancelar' },
-    acao: { label: 'Excluir', variant: 'destructive' },
-  });
+  return snippet(
+    destructive({
+      panel: 'class="nds-overflow-hidden"',
+      midia: { className: 'class="nds-shrink-0"' },
+    }),
+  );
 }

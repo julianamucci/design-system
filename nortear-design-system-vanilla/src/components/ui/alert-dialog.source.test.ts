@@ -32,7 +32,7 @@ describe('alertDialogSnippet', () => {
     expect(code).not.toContain('media');
   });
 
-  it('mostra o estado inicial aberto e a classe extra quando a story os usa', () => {
+  it('mostra o estado inicial aberto e a classe extra quando o Playground os liga', () => {
     const code = alertDialogSnippet({ defaultOpen: true, class: 'nds-overflow-hidden' });
     expect(code).toContain('defaultOpen: true');
     expect(code).toContain("class: 'nds-overflow-hidden'");
@@ -60,6 +60,15 @@ describe('alertDialogSnippet', () => {
     const without = alertDialogSnippet();
     expect(without).not.toContain('createAlertDialogMedia');
     expect(without).not.toContain('createAlertIcon');
+  });
+
+  it('a classe extra da caixa de mídia sai na opção `class` da sub-fábrica', () => {
+    const code = alertDialogSnippet({ showMedia: true, mediaClass: 'nds-shrink-0' });
+    expect(code).toContain("const media = createAlertDialogMedia({ class: 'nds-shrink-0' });");
+    // `className` era o nome antigo da opção, e não existe mais na fábrica.
+    expect(code).not.toContain('className');
+    // Sem a classe, a chamada fica vazia — não um objeto vazio.
+    expect(alertDialogSnippet({ showMedia: true })).toContain('const media = createAlertDialogMedia();');
   });
 
   it('a descrição é opcional, e sem ela a opção some da chamada', () => {
@@ -108,6 +117,11 @@ describe('alertDialogHeadingH3Source', () => {
     expect(alertDialogHeadingH3Source('', {})).toContain('titleLevel: 3');
   });
 
+  it('e não ensina o diálogo nascendo aberto', () => {
+    // A story nasce aberta para a captura; quem copia o trecho, não.
+    expect(alertDialogHeadingH3Source('', {})).not.toContain('defaultOpen');
+  });
+
   it('e o nível padrão continua fora do snippet', () => {
     // A fábrica assume `2`. Repetir o padrão ensinaria ruído e apagaria a
     // informação de que existe um padrão — é a mesma regra do `defaultOpen`.
@@ -116,7 +130,7 @@ describe('alertDialogHeadingH3Source', () => {
   });
 });
 
-describe('alertDialogSourceCom', () => {
+describe('alertDialogSourceWith', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const transform = alertDialogSourceWith({ defaultOpen: true, tone: 'default' });
     const code = transform('', { args: { defaultOpen: false, tone: 'destructive' } });

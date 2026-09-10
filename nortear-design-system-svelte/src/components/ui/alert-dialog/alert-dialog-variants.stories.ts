@@ -1,4 +1,3 @@
-import { useTranslation } from '@/lib/i18n';
 import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
@@ -6,29 +5,60 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
-import AlertDialogSemDescricaoStory from './AlertDialogSemDescricaoStory.svelte';
+import AlertDialogWithoutDescriptionStory from './AlertDialogWithoutDescriptionStory.svelte';
 import {
   alertDialogClassNameExtraSource,
-  alertDialogWithMidiaSource,
-  alertDialogDescriptionLongaSource,
+  alertDialogWithIconSource,
+  alertDialogLongDescriptionSource,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
   alertDialogHeadingH3Source,
   alertDialogSource,
 } from './alert-dialog.source';
 
-// As sete stories abaixo NÃO são composições, e por isso não moram mais em
+// As oito stories abaixo NÃO são composições, e por isso não moram em
 // -compositions: composição é um arranjo que resolve um caso de uso, e o que
 // há aqui são as formas que um único componente assume. Destructive e Neutral
 // são as duas linhas de `variants.items` do conteúdo compartilhado; WithMedia
 // e WithoutDescription exercitam peças opcionais da anatomia; LongDescription,
 // Responsive e ExtraClass exercitam robustez, ponto de quebra e
-// extensibilidade. A docs page é a prova: ela tem seção de Variantes e NÃO tem
-// seção de Composições, nem entrada `nav.compositions`.
-// Os rótulos da story de nível de cabeçalho saem do conteúdo compartilhado.
-// As stories acima seguem com os literais que já tinham: reescrevê-las não é
-// assunto desta entrega.
-const { t } = useTranslation(alertDialogTranslations);
+// extensibilidade; HeadingH3, o nível do título. A docs page é a prova: ela tem
+// seção de Variantes e NÃO tem seção de Composições, nem entrada
+// `nav.compositions`.
+//
+// A ORDEM de export é a da barra lateral, e é a mesma nas cinco stacks:
+// Destructive, Neutral, WithMedia, WithoutDescription, LongDescription,
+// Responsive, ExtraClass, HeadingH3.
+//
+// Os rótulos saem de `demonstration.labels` — o exemplo da seção Demonstração
+// da docs page. WithoutDescription tem rótulos próprios ("Descartar rascunho"),
+// iguais nas cinco: é o caso em que o título sozinho diz o que se perde.
+//
+// Lidos do bloco pt-BR DIRETO, e não por `useTranslation`: a story é fixture,
+// e as plays comparam com o texto que ela renderiza. Pelo idioma corrente,
+// trocar o idioma da página faria a story renderizar um texto e a play
+// procurar outro.
+const LABELS = alertDialogTranslations['pt-BR'].demonstration.labels;
+const DESTRUCTIVE = {
+  triggerVariant: 'destructive',
+  triggerLabel: LABELS.triggerLabel,
+  title: LABELS.title,
+  description: LABELS.description,
+  cancelLabel: LABELS.cancel,
+  actionLabel: LABELS.action,
+  tone: 'destructive',
+} as const;
+const NEUTRAL = {
+  triggerVariant: 'outline',
+  triggerLabel: LABELS.neutralTriggerLabel,
+  title: LABELS.neutralTitle,
+  description: LABELS.neutralDescription,
+  cancelLabel: LABELS.cancel,
+  actionLabel: LABELS.neutralAction,
+  tone: 'default',
+} as const;
+const exact = (text: string) => new RegExp(`^${text}$`, 'i');
+
 const meta: Meta = {
   title: 'Components/Overlay/AlertDialog/Variants',
   component: AlertDialog,
@@ -45,7 +75,7 @@ const meta: Meta = {
       source: { transform: alertDialogSource },
       description: {
         component:
-          'Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.',
+          'Formas do AlertDialog: confirmação destrutiva, confirmação neutra, peças opcionais, descrição longa, layout responsivo, classe extra e nível do título.',
       },
     },
   },
@@ -53,36 +83,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-export const WithMedia: Story = {
-  parameters: {
-    covers: ['visual.item6'],
-    docs: {
-      source: { transform: alertDialogWithMidiaSource },
-      description: {
-        story:
-          'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
-      },
-    },
-  },
-  // Mesmo wrapper das demais composições, com a mídia ligada — é o caminho que
-  // o control showMedia do Playground exercita.
-  render: () => ({ Component: AlertDialogStory, props: { open: true, showMedia: true } }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('alertdialog');
-    await waitFor(() => expect(dialog).toBeVisible());
-
-    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
-    await expect(media).toHaveClass('nds-alert-dialog-media');
-
-    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
-    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
-    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
-    await expect(header?.firstElementChild).toBe(media);
-    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
-  },
-};
 
 export const Destructive: Story = {
   parameters: {
@@ -96,16 +96,7 @@ export const Destructive: Story = {
   },
   render: () => ({
     Component: AlertDialogStory,
-    props: {
-      open: true,
-      triggerVariant: 'destructive',
-      triggerLabel: 'Excluir conta',
-      title: 'Excluir conta',
-      description: 'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
-      cancelLabel: 'Cancelar',
-      actionLabel: 'Excluir',
-      tone: 'destructive',
-    },
+    props: { open: true, ...DESTRUCTIVE },
   }),
   play: async ({ canvasElement }) => {
     const body = within(document.body);
@@ -113,8 +104,7 @@ export const Destructive: Story = {
     // O painel entra animando (opacity 0 → 1); sem waitFor a asserção roda no
     // primeiro quadro e toBeVisible() reprova por opacity: 0.
     await waitFor(() => expect(dialog).toBeVisible());
-    const action = await body.findByRole('button', { name: /^Excluir$/i });
-    await expect(dialog.contains(action)).toBe(true);
+    const action = within(dialog).getByRole('button', { name: exact(LABELS.action) });
     await expect(action).toHaveClass('nds-button-destructive');
 
     // O gatilho fica sob aria-hidden/inert com o diálogo aberto, então sai das
@@ -124,15 +114,15 @@ export const Destructive: Story = {
       '[data-slot="alert-dialog-trigger"]',
     );
     await expect(trigger).not.toBeNull();
-    await expect(trigger).toHaveTextContent('Excluir conta');
+    await expect(trigger).toHaveTextContent(LABELS.triggerLabel);
     await expect(trigger).toHaveClass('nds-button-destructive');
 
     // O nome acessível do diálogo vem do título: sem ele o leitor anuncia
     // "diálogo" e nada mais.
-    await expect(dialog).toHaveAccessibleName(/Excluir conta/i);
+    await expect(dialog).toHaveAccessibleName(exact(LABELS.title));
 
     // Cancel em outline é a hierarquia: uma ação destrutiva e uma saída neutra.
-    const cancel = within(dialog).getByRole('button', { name: /^Cancelar$/i });
+    const cancel = within(dialog).getByRole('button', { name: exact(LABELS.cancel) });
     await expect(cancel).toHaveClass('nds-button-outline');
   },
 };
@@ -150,28 +140,107 @@ export const Neutral: Story = {
   },
   render: () => ({
     Component: AlertDialogStory,
-    props: {
-      open: true,
-      triggerVariant: 'outline',
-      triggerLabel: 'Sair da conta',
-      title: 'Sair da conta',
-      description: 'Você precisará entrar novamente para acessar seus dados.',
-      cancelLabel: 'Cancelar',
-      actionLabel: 'Sair',
-      tone: 'default',
-    },
+    props: { open: true, ...NEUTRAL },
   }),
-  play: async () => {
+  play: async ({ canvasElement }) => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     // Painel e conteúdo entram animando (opacity 0 → 1); a asserção de
     // visibilidade só é válida depois que a animação termina.
     await waitFor(() => expect(dialog).toBeVisible());
-    const action = await body.findByRole('button', { name: /^Sair$/i });
+    const action = within(dialog).getByRole('button', { name: exact(LABELS.neutralAction) });
     await waitFor(() => expect(action).toBeVisible());
-    // O ponto da variante neutra: a confirmação NÃO herda a severidade destrutiva.
+    // O ponto da variante neutra: a confirmação NÃO herda a severidade
+    // destrutiva — ela é a variante padrão do Button, e isso se confere pela
+    // classe que ela TEM, não só pela que falta.
+    await expect(action).toHaveClass('nds-button-default');
     await expect(action).not.toHaveClass('nds-button-destructive');
-    await expect(dialog).toHaveAccessibleName(/Sair da conta/i);
+
+    const trigger = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="alert-dialog-trigger"]',
+    );
+    await expect(trigger).toHaveClass('nds-button-outline');
+    await expect(dialog).toHaveAccessibleName(exact(LABELS.neutralTitle));
+  },
+};
+
+export const WithMedia: Story = {
+  parameters: {
+    covers: ['visual.item6'],
+    docs: {
+      source: { transform: alertDialogWithIconSource },
+      description: {
+        story:
+          'Bloco de mídia no topo do header. Com ele, a caixa do ícone centraliza no mobile e volta à esquerda a partir de 40rem; o texto do header centraliza no mobile com ou sem mídia.',
+      },
+    },
+  },
+  // Mesmo wrapper das demais formas, com a mídia ligada — é o caminho que o
+  // control showMedia do Playground exercita.
+  render: () => ({
+    Component: AlertDialogStory,
+    props: { open: true, showMedia: true, ...DESTRUCTIVE },
+  }),
+  play: async () => {
+    const body = within(document.body);
+    const dialog = await body.findByRole('alertdialog');
+    await waitFor(() => expect(dialog).toBeVisible());
+
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass('nds-alert-dialog-media');
+
+    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
+    // título logo em seguida (ícone → título → descrição)
+    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+    await expect(header?.firstElementChild).toBe(media);
+    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+  },
+};
+
+// testes.accessibility.item8 — a descrição é opcional (anatomy.item6), e o
+// caminho sem ela precisa de uma story: enquanto nenhuma omitia, a única prova
+// de que o componente aguenta era a assinatura. O que se mede aqui não é a
+// ausência do parágrafo — é que o painel deixa de declarar `aria-describedby`
+// em vez de apontar para um id que não existe, o que o axe reprova em
+// `aria-valid-attr-value` e o leitor de tela anuncia como nada.
+export const WithoutDescription: Story = {
+  parameters: {
+    covers: ['accessibility.item8'],
+    docs: {
+      source: { transform: alertDialogNoDescriptionSource },
+      description: {
+        story:
+          'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
+      },
+    },
+  },
+  // Wrapper próprio: é a composição sem o subcomponente de descrição, com os
+  // rótulos do caso. Ver AlertDialogWithoutDescriptionStory.svelte.
+  render: () => ({ Component: AlertDialogWithoutDescriptionStory, props: { open: true } }),
+  play: async ({ step }) => {
+    const body = within(document.body);
+
+    await step('O painel abre sem descrição e mantém o nome acessível', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await waitFor(() => expect(dialog).toBeVisible());
+      await expect(
+        dialog.querySelector('[data-slot="alert-dialog-description"]'),
+      ).toBeNull();
+      await expect(dialog).toHaveAccessibleName(/Descartar rascunho/i);
+    });
+
+    await step('Nenhum aria-describedby pendurado', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await expect(dialog).not.toHaveAttribute('aria-describedby');
+      await expect(dialog).toHaveAccessibleDescription('');
+    });
+
+    await step('As duas saídas continuam presentes e alcançáveis', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const scope = within(dialog);
+      await expect(scope.getByRole('button', { name: exact(LABELS.cancel) })).toBeInTheDocument();
+      await expect(scope.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
+    });
   },
 };
 
@@ -180,7 +249,7 @@ export const LongDescription: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: alertDialogDescriptionLongaSource },
+      source: { transform: alertDialogLongDescriptionSource },
       description: {
         story:
           'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
@@ -191,14 +260,9 @@ export const LongDescription: Story = {
     Component: AlertDialogStory,
     props: {
       open: true,
-      triggerVariant: 'destructive',
-      triggerLabel: 'Excluir conta',
-      title: 'Excluir conta',
+      ...DESTRUCTIVE,
       description:
         'Todos os seus dados, arquivos enviados, integrações ativas e o histórico completo de faturamento serão removidos permanentemente dos nossos servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança fica disponível depois da confirmação.',
-      cancelLabel: 'Cancelar',
-      actionLabel: 'Excluir',
-      tone: 'destructive',
     },
   }),
   play: async ({ step }) => {
@@ -226,54 +290,6 @@ export const LongDescription: Story = {
   },
 };
 
-// testes.accessibility.item8 — a descrição é opcional (anatomy.item6), e o
-// caminho sem ela precisa de uma story: enquanto nenhuma omitia, a única prova
-// de que o componente aguenta era a assinatura. O que se mede aqui não é a
-// ausência do parágrafo — é que o painel deixa de declarar `aria-describedby`
-// em vez de apontar para um id que não existe, o que o axe reprova em
-// `aria-valid-attr-value` e o leitor de tela anuncia como nada.
-export const WithoutDescription: Story = {
-  parameters: {
-    covers: ['accessibility.item8'],
-    docs: {
-      source: { transform: alertDialogNoDescriptionSource },
-      description: {
-        story:
-          'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
-      },
-    },
-  },
-  // Wrapper próprio: a composição precisa nascer sem o subcomponente de
-  // descrição, não perdê-lo depois. Ver o comentário em
-  // AlertDialogSemDescricaoStory.svelte.
-  render: () => ({ Component: AlertDialogSemDescricaoStory, props: { open: true } }),
-  play: async ({ step }) => {
-    const body = within(document.body);
-
-    await step('O painel abre sem descrição e mantém o nome acessível', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      await waitFor(() => expect(dialog).toBeVisible());
-      await expect(
-        dialog.querySelector('[data-slot="alert-dialog-description"]'),
-      ).toBeNull();
-      await expect(dialog).toHaveAccessibleName(/Descartar rascunho/i);
-    });
-
-    await step('Nenhum aria-describedby pendurado', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      await expect(dialog).not.toHaveAttribute('aria-describedby');
-      await expect(dialog).toHaveAccessibleDescription('');
-    });
-
-    await step('As duas saídas continuam presentes e alcançáveis', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      const scope = within(dialog);
-      await expect(scope.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
-      await expect(scope.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
-    });
-  },
-};
-
 // testes.visual.item5 — layout responsivo. O empilhamento dos botões vem de
 // `flex-direction: column-reverse` abaixo de 40rem (nds/alert-dialog.css), então
 // a captura precisa acontecer numa viewport estreita: daí os viewports do
@@ -293,23 +309,13 @@ export const Responsive: Story = {
     docs: {
       description: {
         story:
-          'Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
+          'Abaixo de 40rem o footer empilha os botões em column-reverse e o texto do header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
       },
     },
   },
   render: () => ({
     Component: AlertDialogStory,
-    props: {
-      open: true,
-      triggerVariant: 'destructive',
-      triggerLabel: 'Excluir conta',
-      title: 'Excluir conta',
-      description:
-        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
-      cancelLabel: 'Cancelar',
-      actionLabel: 'Excluir',
-      tone: 'destructive',
-    },
+    props: { open: true, ...DESTRUCTIVE },
   }),
   play: async ({ step }) => {
     const body = within(document.body);
@@ -320,14 +326,14 @@ export const Responsive: Story = {
       await expect(footer).not.toBeNull();
       await expect(footer).toHaveClass('nds-alert-dialog-footer');
 
-    // A story fixa a viewport em 320px. Abaixo de 40rem o footer empilha em
-    // column-reverse — sem medir isso, a story só DESCREVIA o responsivo.
-    await expect(window.matchMedia('(min-width: 40rem)').matches).toBe(false);
-    await expect(getComputedStyle(footer!).flexDirection).toBe('column-reverse');
+      // A story fixa a viewport em 320px. Abaixo de 40rem o footer empilha em
+      // column-reverse — sem medir isso, a story só DESCREVIA o responsivo.
+      await expect(window.matchMedia('(min-width: 40rem)').matches).toBe(false);
+      await expect(getComputedStyle(footer!).flexDirection).toBe('column-reverse');
       const labels = Array.from(footer!.querySelectorAll('button')).map((b) =>
         b.textContent?.trim(),
       );
-      await expect(labels).toEqual(['Cancelar', 'Excluir']);
+      await expect(labels).toEqual([LABELS.cancel, LABELS.action]);
     });
 
     await step('Painel respeita a margem lateral em qualquer largura', async () => {
@@ -351,7 +357,13 @@ export const ExtraClass: Story = {
   },
   render: () => ({
     Component: AlertDialogStory,
-    props: { open: true, showMedia: true, contentClass: 'nds-overflow-hidden', mediaClass: 'nds-shrink-0' },
+    props: {
+      open: true,
+      ...DESTRUCTIVE,
+      showMedia: true,
+      contentClass: 'nds-overflow-hidden',
+      mediaClass: 'nds-shrink-0',
+    },
   }),
   play: async () => {
     const dialog = await within(document.body).findByRole('alertdialog');
@@ -380,15 +392,7 @@ export const HeadingH3: Story = {
   },
   render: () => ({
     Component: AlertDialogStory,
-    props: {
-      open: true,
-      titleLevel: 3,
-      triggerLabel: t('demonstration.labels.triggerLabel'),
-      title: t('demonstration.labels.title'),
-      description: t('demonstration.labels.description'),
-      cancelLabel: t('demonstration.labels.cancel'),
-      actionLabel: t('demonstration.labels.action'),
-    },
+    props: { open: true, titleLevel: 3, ...DESTRUCTIVE },
   }),
   play: async ({ step }) => {
     const p = await within(document.body).findByRole('alertdialog');
@@ -400,6 +404,9 @@ export const HeadingH3: Story = {
       const heading = document.getElementById(id!);
       await expect(heading).not.toBeNull();
       await expect(heading!.tagName).toBe('H3');
+      // A tag e o ARIA saem do mesmo `level`: um h3 anunciado como nível 2
+      // seria o cabeçalho brigando com ele mesmo.
+      await expect(heading).toHaveAttribute('aria-level', '3');
       await expect(heading!.classList.contains('nds-alert-dialog-title')).toBe(true);
       await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
     });

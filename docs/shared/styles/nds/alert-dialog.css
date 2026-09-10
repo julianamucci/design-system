@@ -1,25 +1,28 @@
 /*
  * ─── nds-alert-dialog ──────────────────────────────────────────────────────
- * Componente standalone — zero dependência externa de CSS.
+ * Consome keyframes de DUAS folhas vizinhas: o véu usa `nds-dialog-fade-in/out`
+ * (dialog.css) e o painel usa `nds-animate-in/out` (utilities.css).
  *
  * Estrutura (portal — root é body):
  *   <div class="nds-alert-dialog-overlay" />
- *   <div class="nds-alert-dialog-content" role="alertdialog" aria-modal="true">
+ *   <div class="nds-alert-dialog-content" role="alertdialog" aria-modal="true"
+ *        aria-labelledby="…" [aria-describedby="…" — só com descrição]>
  *     <div class="nds-alert-dialog-header">
- *       <h2 class="nds-alert-dialog-title">Título</h2>
- *       <p  class="nds-alert-dialog-description">Descrição</p>
+ *       [<div class="nds-alert-dialog-media"><svg aria-hidden="true"/></div>]
+ *       <h2 class="nds-alert-dialog-title">Excluir conta</h2>
+ *       [<p class="nds-alert-dialog-description">Descrição</p>]
  *     </div>
  *     <div class="nds-alert-dialog-footer">
- *       <button>Cancelar</button>
- *       <button>Confirmar</button>
+ *       <button>Cancelar</button>   ← foco inicial (D3)
+ *       <button>Excluir</button>
  *     </div>
  *   </div>
  *
  * ─── Dialog × AlertDialog ───────────────────────────────────────────────────
  *
- * As duas folhas são irmãs: as keyframes de fade abaixo vêm de dialog.css
- * (nds-dialog-fade-in / -fade-out), declaradas lá e consumidas aqui. O que as
- * separa não é estilo, é decisão — e está escrito nos dois docblocks:
+ * As duas folhas são irmãs: o véu consome as keyframes de fade de dialog.css
+ * (nds-dialog-fade-in / -fade-out), declaradas lá. O que as separa não é
+ * estilo, é decisão — e está escrito nos dois docblocks:
  *
  *   · papel: role="alertdialog" aqui, role="dialog" lá;
  *   · Sem overlay-click-to-close: a decisão é crítica e exige escolha
@@ -39,8 +42,11 @@
  *     ser, o que é exatamente como comentário apodrece: ele descrevia o
  *     VIZINHO, então nada que tocasse o vizinho passava por aqui.
  *
- * Tokens: --background, --foreground, --muted-foreground, --border,
- *         --spacing-*
+ * Tokens: --overlay, --background, --foreground, --muted-foreground, --border,
+ *         --muted, --radius-card, --radius-md, --elevation-xl,
+ *         --z-modal-backdrop, --z-modal, --text-control, --text-control-xl,
+ *         --font-weight-semi-bold, --duration-spring, --ease-spring,
+ *         --duration-base, --ease-exit, --spacing-*
  */
 
 /* ── Overlay ─────────────────────────────────────────────────────────────── */
@@ -90,7 +96,7 @@
 /* ── Title ───────────────────────────────────────────────────────────────── */
 .nds-alert-dialog-title {
   margin: 0;
-  font-size: var(--text-control-xl);                            /* 18px — text-lg */
+  font-size: var(--text-control-xl);                            /* 18px */
   font-weight: var(--font-weight-semi-bold, 600);
   line-height: 1;
   letter-spacing: -0.025em;
@@ -121,8 +127,9 @@
 
 /*
  * ─── nds-alert-dialog composite ─────────────────────────────────────────────
- * Animação de entrada/saída para libs headless (data-open/data-closed, reusa as
- * keyframes de nds-dialog) e bloco de mídia (ícone) no header.
+ * Animação de entrada/saída para libs headless (data-open/data-closed — o véu
+ * reusa as keyframes de nds-dialog, o painel as de nds-animate) e bloco de mídia
+ * (ícone) no header.
  *
  * NÃO há eixo de tamanho: o painel tem uma largura só (max-width 32rem) e se
  * adapta por viewport, não por prop. Existiu um `data-size="sm"` de 20rem com
@@ -213,15 +220,17 @@
   height: var(--spacing-6);
 }
 
-/* Header com mídia centraliza no mobile */
+/* Com mídia, a CAIXA do ícone centraliza no mobile e volta à esquerda a partir
+ * de 40rem. O TEXTO não é assunto desta regra: o cabeçalho já o centraliza no
+ * mobile com ou sem mídia (regra do header, acima) — o `:has()` só existe
+ * porque a caixa é `inline-flex` num flex em coluna, e sem `align-items` ela
+ * ficaria à esquerda embaixo de um título centralizado. */
 .nds-alert-dialog-header:has(.nds-alert-dialog-media) {
   align-items: center;
-  text-align: center;
 }
 
 @media (min-width: 40rem) {
   .nds-alert-dialog-header:has(.nds-alert-dialog-media) {
     align-items: flex-start;
-    text-align: left;
   }
 }

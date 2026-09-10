@@ -22,7 +22,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { alertDialogSource } from './alert-dialog.source';
 
 // Args da raiz + args que montam a composição. Os segundos ficam na categoria
-// "Demonstração" — mesmos nomes, ordem e valores nas 4 stacks, para o painel de
+// "Demonstração" — mesmos nomes, ordem e valores nas cinco stacks, para o painel de
 // controls ser o mesmo em qualquer Storybook do design system.
 type PlaygroundArgs = {
   defaultOpen: boolean;
@@ -88,7 +88,7 @@ const meta = {
     showMedia: {
       control: 'boolean',
       description:
-        'Bloco de ícone no topo do header (AlertDialogMedia). Quando presente, o CSS centraliza header e texto.',
+        'Bloco de ícone no topo do header (AlertDialogMedia). Quando presente, a caixa do ícone centraliza no mobile e volta à esquerda a partir de 40rem; o texto do header centraliza no mobile com ou sem ela.',
       ...DEMO,
     },
     triggerLabel: { control: 'text', description: 'Rótulo do botão que abre o diálogo.', ...DEMO },
@@ -256,6 +256,12 @@ export const Playground: Story = {
       await expect(description!.id).not.toBe('');
       await expect(dialog).toHaveAttribute('aria-labelledby', title!.id);
       await expect(dialog).toHaveAttribute('aria-describedby', description!.id);
+      // O nome vem SÓ do título (C2). Até 2026-09-10 o wrapper punha também um
+      // `aria-label="AlertDialog"` de fallback em todo painel, em inglês, porque
+      // a condição olhava os atributos de quem consome e não o `aria-labelledby`
+      // que o primitivo liga sempre.
+      await expect(dialog).not.toHaveAttribute('aria-label');
+      await expect(dialog).toHaveAccessibleName(args.title);
       await expect(title).toHaveTextContent(/^Excluir conta$/i);
       await expect(description).toHaveTextContent(/removidos permanentemente/i);
     });
@@ -267,8 +273,8 @@ export const Playground: Story = {
         await expect(media).toBeNull();
         return;
       }
-      // A mídia é o PRIMEIRO filho do header: é dessa ordem que dependem o
-      // :has() do CSS e a ordem de leitura ícone → título → descrição.
+      // A mídia é o PRIMEIRO filho do header: é a ordem de leitura ícone →
+      // título → descrição. (O :has() da folha a acha em qualquer posição.)
       const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
       await expect(header!.firstElementChild).toBe(media);
       await expect(media!.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');

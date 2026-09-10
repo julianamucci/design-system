@@ -467,18 +467,18 @@ Componentes como **Badge** (single root `<div>`) são rótulos visuais compactos
 
 ### Componentes Modais de Confirmação (padrão AlertDialog)
 
-Componentes como **AlertDialog** (implementado sobre bits-ui) são overlays de decisão forçada — não possuem `cva()` próprio; severidade vem do `Button` usado em Trigger/Action.
+Componentes como **AlertDialog** (implementado sobre bits-ui) são overlays de decisão forçada — não possuem `cva()` próprio; severidade vem do `Button` usado em Trigger/Action. O que o componente É — contrato, decisões, peças e API — está em [`../../docs/shared/prd/alert-dialog.md`](../../docs/shared/prd/alert-dialog.md); aqui fica só como a docs page e as stories o apresentam.
 
-1. **Sem `cva()`** — sem prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `default`). Cada `preview` (snippet Svelte) usa `defaultOpen={true}` no Root para Chromatic capturar o modal aberto.
-2. **`DocsAnatomy`** — 9 items: Root, Trigger, Content, Header, Title, Description, Footer, Cancel, Action. `structureCode` mostra a estrutura aninhada.
+1. **Sem `cva()`** — sem prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `default`). Os previews renderizam o gatilho FECHADO: com o painel aberto, o véu modal cobriria a página no load.
+2. **`DocsAnatomy`** — 10 items: Root, Trigger, Content, Header, Title (`h2` por padrão; `level` troca a tag e o `aria-level` juntos), Description (`p`, **opcional**), Footer, Cancel, Action, Media (bloco de ícone, opcional). `structureCode` sai de `anatomy.structureCode`.
 3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`.
-4. **`DocsProps`** — 5 tables: Root (`open`, `defaultOpen`, `onOpenChange`), Trigger (`asChild` via `<AlertDialogTrigger asChild let:builder>`), Content (`class`), Action (`on:click`, `class`), Cancel (`on:click`, `class`). Em Svelte 5, `defaultOpen` é uncontrolled; passar `open` força modo controlado.
-5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, radius.
+4. **`DocsProps`** — 5 tables: Root (`open` bindável, `onOpenChange`, `children` — **não há `defaultOpen`** nesta stack: o estado inicial sai do próprio `open`), Trigger (`child` snippet, `class`), Content (`class`), Action (`onclick`, `class`), Cancel (`onclick`, `class`). A coluna Obrigatório usa `tNav('common.yes'/'common.no')`; a descrição, a chave compartilhada.
+5. **`DocsTokens`** — os tokens que `alert-dialog.css` lê; `node scripts/tabela-tokens.mjs alert-dialog` confere a tabela contra a folha nos dois sentidos. A personalização vem de `tokens.customizationCode`.
 6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
-7. **`DocsAccessibility`** — `role="alertdialog"` anuncia imediatamente. Foco inicial no Cancel.
-8. **Stories** — omitir `alert-dialog-sizes` e `alert-dialog-variants`. Usar `AlertDialogStory.svelte` wrapper com prop `defaultOpen` para Chromatic capturar o modal visível. Arquivos: `.stories.ts`, `-compositions`, `-states`.
-9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
-10. **Analytics de produto** — além dos eventos de docs: `dialog_open { component, location, label }`, `dialog_confirm { ... }`, `dialog_close { ..., trigger: "cancel_button" | "escape" }`.
+7. **`DocsAccessibility`** — `role="alertdialog"` + `aria-modal="true"`. Foco inicial no Cancel, por escolha explícita do wrapper do Content (não pela ordem do DOM); `Escape` fecha.
+8. **Stories** — arquivos `.stories.ts`, `-states` e `-variants`, sobre os wrappers `AlertDialogStory.svelte`, `AlertDialogControlledStory.svelte` e `AlertDialogWithoutDescriptionStory.svelte`. As que precisam do modal visível para o Chromatic nascem com `open: true`, e nenhuma transform publica `$state(true)` no painel Code — só o Playground, quando quem lê liga o control `open`: é andaime da captura, não o que quem copia escreve.
+9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco ao trigger; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
+10. **Analytics de produto** — além dos eventos de docs: `dialog_open`, `dialog_confirm` e `dialog_close`, todos com `{ component, label, location }`; o `dialog_close` leva `reason` (`escape`, `close-button`, `api`). `location` é a SEÇÃO do preview e chega por prop ao `AlertDialogDemo.svelte`, o preview vivo de Demonstração, Variantes e Do & Don't.
 
 ### Containers Passivos Stateless (padrão AspectRatio)
 

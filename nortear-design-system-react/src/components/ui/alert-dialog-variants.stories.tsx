@@ -21,20 +21,23 @@ import alertDialogTranslations from "@shared/content/alert-dialog/translations.j
 import {
   alertDialogClassNameExtraSource,
   alertDialogWithIconSource,
+  alertDialogLongDescriptionSource,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
   alertDialogHeadingH3Source,
   alertDialogSource,
 } from "./alert-dialog.source";
 
-// As sete stories abaixo NÃO são composições, e por isso não moram mais em
+// As oito stories abaixo NÃO são composições, e por isso não moram mais em
 // -compositions: composição é um arranjo que resolve um caso de uso, e o que
-// há aqui são as formas que um único componente assume. Destructive e Neutral
-// são as duas linhas de `variants.items` do conteúdo compartilhado; WithMedia
-// e WithoutDescription exercitam peças opcionais da anatomia; LongDescription,
+// há aqui são as formas que um único componente assume. A ORDEM de export é a
+// da barra lateral, igual nas cinco stacks: Destructive e Neutral são as duas
+// linhas de `variants.items` do conteúdo compartilhado; WithMedia e
+// WithoutDescription exercitam peças opcionais da anatomia; LongDescription,
 // Responsive e ExtraClass exercitam robustez, ponto de quebra e
-// extensibilidade. A docs page é a prova: ela tem seção de Variantes e NÃO tem
-// seção de Composições, nem entrada `nav.compositions`.
+// extensibilidade; HeadingH3, o nível do título escolhido por quem compõe. A
+// docs page é a prova: ela tem seção de Variantes e NÃO tem seção de
+// Composições, nem entrada `nav.compositions`.
 const meta = {
   title: "Components/Overlay/AlertDialog/Variants",
   tags: ["overlay"],
@@ -48,7 +51,7 @@ const meta = {
       source: { transform: alertDialogSource },
       description: {
         component:
-          "Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.",
+          "As formas que o AlertDialog assume: confirmação destrutiva e neutra, peças opcionais (mídia e descrição), descrição longa, layout responsivo, classe extra e nível do título.",
       },
     },
   },
@@ -56,55 +59,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-export const WithMedia: Story = {
-  parameters: {
-    covers: ["visual.item6"],
-    docs: {
-      // O AlertDialogMedia é uma peça a mais no header, e o `meta` não a monta.
-      source: { transform: alertDialogWithIconSource },
-      description: {
-        story:
-          "Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.",
-      },
-    },
-  },
-  render: () => (
-    <AlertDialog defaultOpen>
-      <AlertDialogTrigger asChild>
-        <Button variant="destructive">Excluir conta</Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogMedia>
-            <TriangleAlert aria-hidden="true" />
-          </AlertDialogMedia>
-          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-          <AlertDialogDescription>
-            Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  ),
-  play: async () => {
-    const dialog = await waitForPortal("alertdialog");
-    await expect(dialog).toBeVisible();
-
-    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
-    await expect(media).toHaveClass("nds-alert-dialog-media");
-
-    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
-    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
-    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
-    await expect(header?.firstElementChild).toBe(media);
-    await expect(media?.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
-  },
-};
 
 // Mesmo exemplo da seção Variantes / destructive da docs page.
 export const Destructive: Story = {
@@ -211,14 +165,15 @@ export const Neutral: Story = {
   },
 };
 
-// testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
-export const LongDescription: Story = {
+export const WithMedia: Story = {
   parameters: {
-    covers: ["visual.item4"],
+    covers: ["visual.item6"],
     docs: {
+      // O AlertDialogMedia é uma peça a mais no header, e o `meta` não a monta.
+      source: { transform: alertDialogWithIconSource },
       description: {
         story:
-          "Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.",
+          "Bloco de mídia no topo do header. No mobile a caixa do ícone centraliza; a partir de 40rem ela volta à esquerda. O texto do cabeçalho não depende dela.",
       },
     },
   },
@@ -229,12 +184,12 @@ export const LongDescription: Story = {
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
+          <AlertDialogMedia>
+            <TriangleAlert aria-hidden="true" />
+          </AlertDialogMedia>
           <AlertDialogTitle>Excluir conta</AlertDialogTitle>
           <AlertDialogDescription>
-            Todos os seus dados, arquivos enviados, integrações ativas e o histórico
-            completo de faturamento serão removidos permanentemente dos nossos
-            servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança
-            fica disponível depois da confirmação.
+            Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -244,28 +199,18 @@ export const LongDescription: Story = {
       </AlertDialogContent>
     </AlertDialog>
   ),
-  play: async ({ step }) => {
-    await step("Descrição longa continua ligada por aria-describedby", async () => {
-      const dialog = await waitForPortal("alertdialog");
-      const description = dialog.querySelector<HTMLElement>(
-        '[data-slot="alert-dialog-description"]',
-      );
-      await expect(description).not.toBeNull();
-      await expect(dialog).toHaveAttribute("aria-describedby", description!.id);
-      await expect(dialog).toHaveAccessibleDescription(/nenhuma cópia de segurança/i);
-    });
+  play: async () => {
+    const dialog = await waitForPortal("alertdialog");
+    await expect(dialog).toBeVisible();
 
-    await step("Descrição ocupa mais de uma linha sem estourar o painel", async () => {
-      const dialog = await waitForPortal("alertdialog");
-      const description = dialog.querySelector<HTMLElement>(
-        '[data-slot="alert-dialog-description"]',
-      )!;
-      const lineHeight = parseFloat(getComputedStyle(description).lineHeight);
-      await expect(description.getBoundingClientRect().height).toBeGreaterThan(
-        lineHeight * 1.5,
-      );
-      await expect(description.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
-    });
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass("nds-alert-dialog-media");
+
+    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
+    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
+    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+    await expect(header?.firstElementChild).toBe(media);
+    await expect(media?.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   },
 };
 
@@ -330,6 +275,67 @@ export const WithoutDescription: Story = {
   },
 };
 
+// testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
+export const LongDescription: Story = {
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      // O texto longo é o assunto: sem esta transform o painel cairia na do
+      // `meta` e mostraria a descrição curta.
+      source: { transform: alertDialogLongDescriptionSource },
+      description: {
+        story:
+          "Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.",
+      },
+    },
+  },
+  render: () => (
+    <AlertDialog defaultOpen>
+      <AlertDialogTrigger asChild>
+        <Button variant="destructive">Excluir conta</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Excluir conta</AlertDialogTitle>
+          <AlertDialogDescription>
+            Todos os seus dados, arquivos enviados, integrações ativas e o histórico
+            completo de faturamento serão removidos permanentemente dos nossos
+            servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança
+            fica disponível depois da confirmação.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  ),
+  play: async ({ step }) => {
+    await step("Descrição longa continua ligada por aria-describedby", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      const description = dialog.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-description"]',
+      );
+      await expect(description).not.toBeNull();
+      await expect(dialog).toHaveAttribute("aria-describedby", description!.id);
+      await expect(dialog).toHaveAccessibleDescription(/nenhuma cópia de segurança/i);
+    });
+
+    await step("Descrição ocupa mais de uma linha sem estourar o painel", async () => {
+      const dialog = await waitForPortal("alertdialog");
+      const description = dialog.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-description"]',
+      )!;
+      const lineHeight = parseFloat(getComputedStyle(description).lineHeight);
+      await expect(description.getBoundingClientRect().height).toBeGreaterThan(
+        lineHeight * 1.5,
+      );
+      await expect(description.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
+    });
+  },
+};
+
 // testes.visual.item5 — layout responsivo. O empilhamento dos botões vem de
 // `flex-direction: column-reverse` abaixo de 40rem (nds/alert-dialog.css), então
 // a captura precisa acontecer numa viewport estreita: daí os viewports do
@@ -349,7 +355,7 @@ export const Responsive: Story = {
     docs: {
       description: {
         story:
-          "Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.",
+          "Abaixo de 40rem o footer empilha os botões em column-reverse e o texto do header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.",
       },
     },
   },
@@ -381,10 +387,10 @@ export const Responsive: Story = {
       await expect(footer).not.toBeNull();
       await expect(footer).toHaveClass("nds-alert-dialog-footer");
 
-    // A story fixa a viewport em 320px. Abaixo de 40rem o footer empilha em
-    // column-reverse — sem medir isso, a story só DESCREVIA o responsivo.
-    await expect(window.matchMedia("(min-width: 40rem)").matches).toBe(false);
-    await expect(getComputedStyle(footer!).flexDirection).toBe("column-reverse");
+      // A story fixa a viewport em 320px. Abaixo de 40rem o footer empilha em
+      // column-reverse — sem medir isso, a story só DESCREVIA o responsivo.
+      await expect(window.matchMedia("(min-width: 40rem)").matches).toBe(false);
+      await expect(getComputedStyle(footer!).flexDirection).toBe("column-reverse");
       const labels = Array.from(footer!.querySelectorAll("button")).map((b) =>
         b.textContent?.trim(),
       );

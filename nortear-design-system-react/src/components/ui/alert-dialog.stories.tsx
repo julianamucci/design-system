@@ -22,7 +22,7 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { alertDialogSource } from "./alert-dialog.source";
 
 // Args da raiz + args que montam a composição. Os segundos ficam na categoria
-// "Demonstração" — mesmos nomes, ordem e valores nas 4 stacks, para o painel de
+// "Demonstração" — mesmos nomes, ordem e valores nas cinco stacks, para o painel de
 // controls ser o mesmo em qualquer Storybook do design system.
 type PlaygroundArgs = ComponentProps<typeof AlertDialog> & {
   tone: "destructive" | "default";
@@ -110,7 +110,7 @@ const meta = {
     showMedia: {
       control: "boolean",
       description:
-        "Bloco de ícone no topo do header (AlertDialogMedia). Quando presente, o CSS centraliza header e texto.",
+        "Bloco de ícone no topo do header (AlertDialogMedia). Quando presente, a caixa do ícone centraliza no mobile; o texto do header não depende dela.",
       ...DEMO,
     },
     triggerLabel: { control: "text", description: "Rótulo do botão que abre o diálogo.", ...DEMO },
@@ -264,8 +264,9 @@ export const Playground: Story = {
     await step("Foco inicial em Cancelar, não na ação destrutiva", async () => {
       // accessibility.item3 e functional.item1 prometem a saída SEGURA como
       // foco inicial: o Enter apertado por reflexo num diálogo de destruição
-      // não pode cair no botão que destrói. As cinco stacks entregam — medido
-      // pela sonda, era o Svelte que caía no painel.
+      // não pode cair no botão que destrói. É escolha do componente
+      // (`initialFocus` no Cancel), não herança da ordem do rodapé — o caminho
+      // do toque, onde as duas coisas divergem, está na story Open.
       const dialog = await waitForPortal("alertdialog");
       const cancel = within(dialog).getByRole("button", { name: /^Cancelar$/i });
       const action = within(dialog).getByRole("button", { name: /^Excluir$/i });

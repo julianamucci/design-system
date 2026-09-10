@@ -22,15 +22,19 @@
     triggerVariant?: 'default' | 'destructive' | 'outline' | 'ghost' | 'secondary' | 'link';
     title?: string;
     /**
-     * Descrição do diálogo. A descrição é opcional no design system, mas este
-     * wrapper sempre a renderiza **de propósito**: o primitivo desta stack grava
-     * o id da descrição no estado da raiz e NÃO o apaga ao destruí-la (conferido
-     * em `bits-ui/dist/bits/dialog/dialog.svelte.js`), então remover o parágrafo
-     * em tempo de execução deixaria o painel apontando para um id ausente. Quem
-     * exercita o caminho sem descrição é `AlertDialogSemDescricaoStory.svelte`,
-     * que nasce sem ela.
+     * Descrição do diálogo — opcional (D4). Vazia, o subcomponente sai da
+     * composição, e pode sair com o painel aberto: apagar o texto no control do
+     * Playground tira o `aria-describedby` junto (ver
+     * `alert-dialog-description-registry.ts`).
      */
     description?: string;
+    /**
+     * Caixa reativa que, quando traz texto (ou `''`), vence `description` — lida
+     * por DENTRO deste componente, então trocar o valor muda a descrição com o
+     * painel aberto, sem remontar nada. Só o Playground passa; ver
+     * `alert-dialog-runtime-description.svelte.ts`.
+     */
+    descriptionOverride?: { current: string | undefined };
     /** Bloco de ícone no topo do header. É o control showMedia do Playground. */
     showMedia?: boolean;
     /** Classe extra no painel — o caminho de extensibilidade documentado. */
@@ -41,7 +45,7 @@
     actionLabel?: string;
     tone?: Tone;
     /**
-     * Nível do cabeçalho do título. Ausente, o título fica no nível padrão do
+     * Nível do cabeçalho do título. Ausente, o título fica no `h2` padrão do
      * primitivo — é o que todas as outras stories deste andaime exercitam.
      */
     titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -58,6 +62,7 @@
     triggerVariant = 'destructive',
     title = 'Excluir conta',
     description = 'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+    descriptionOverride,
     showMedia = false,
     contentClass,
     mediaClass,
@@ -73,6 +78,7 @@
   // Variante do Button, não classe de fundo crua: bg-destructive e
   // text-destructive-foreground saíram com o Tailwind e não têm CSS.
   const actionVariant = $derived(tone === 'destructive' ? 'destructive' : 'default');
+  const shownDescription = $derived(descriptionOverride?.current ?? description);
 </script>
 
 <AlertDialog bind:open {onOpenChange}>
@@ -89,22 +95,13 @@
         </AlertDialogMedia>
       {/if}
       <!--
-        Nível do cabeçalho pelo snippet `child`, e não pelo `level` sozinho:
-        a lib expressa o nível em `role="heading"` + `aria-level` e mantém a
-        TAG em `div`. O `level` vai junto para a tag e o ARIA concordarem. A
-        medição está em DialogStory.svelte — os quatro painéis modais desta
-        stack caem no mesmo arquivo da lib.
+        O `level` do primitivo troca a TAG e o `aria-level` juntos (ver
+        alert-dialog-title.svelte); ausente, vale o `h2` padrão.
       -->
-      {#if titleLevel}
-        <AlertDialogTitle level={titleLevel}>
-          {#snippet child({ props })}
-            <svelte:element this={`h${titleLevel}`} {...props}>{title}</svelte:element>
-          {/snippet}
-        </AlertDialogTitle>
-      {:else}
-        <AlertDialogTitle>{title}</AlertDialogTitle>
+      <AlertDialogTitle level={titleLevel}>{title}</AlertDialogTitle>
+      {#if shownDescription}
+        <AlertDialogDescription>{shownDescription}</AlertDialogDescription>
       {/if}
-      <AlertDialogDescription>{description}</AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel onclick={onCancel}>{cancelLabel}</AlertDialogCancel>

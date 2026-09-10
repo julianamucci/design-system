@@ -11,17 +11,41 @@ import {
 } from './alert-dialog.source';
 import { createAlertIcon } from './alert';
 import { createButton } from './button';
+import alertDialogTranslations from '@shared/content/alert-dialog/translations.json';
+
+/**
+ * Rótulos de exemplo: `demonstration.labels`, o mesmo conteúdo da seção
+ * Demonstração da docs page. Preso a pt-BR de propósito — a story não passa por
+ * i18n, e uma play que dependesse do seletor de idioma procuraria um nome
+ * diferente a cada rodada. Até 2026-09-10 este arquivo cravava os valores, e
+ * era o único das cinco stacks a fazer isso.
+ */
+const LABELS = alertDialogTranslations['pt-BR'].demonstration.labels;
+
+/**
+ * Descrição da `LongDescription`. Fica numa constante porque o painel Code tem
+ * de mostrar ESTA — a transform do meta cairia na descrição curta, e o trecho
+ * da story que existe para a descrição longa ensinava a curta.
+ */
+const LONG_DESCRIPTION =
+  'Todos os seus dados, arquivos enviados, integrações ativas e o histórico completo de faturamento serão removidos permanentemente dos nossos servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança fica disponível depois da confirmação.';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
-// As sete stories abaixo NÃO são composições, e por isso não moram mais em
+// As oito stories abaixo NÃO são composições, e por isso não moram mais em
 // -compositions: composição é um arranjo que resolve um caso de uso, e o que
 // há aqui são as formas que um único componente assume. Destructive e Neutral
 // são as duas linhas de `variants.items` do conteúdo compartilhado; WithMedia
 // e WithoutDescription exercitam peças opcionais da anatomia; LongDescription,
 // Responsive e ExtraClass exercitam robustez, ponto de quebra e
-// extensibilidade. A docs page é a prova: ela tem seção de Variantes e NÃO tem
+// extensibilidade; HeadingH3, o nível do título. A ORDEM de export é essa, e é
+// ela que decide a barra lateral — a mesma nas cinco stacks. A docs page é a
+// prova de que não são composições: ela tem seção de Variantes e NÃO tem
 // seção de Composições, nem entrada `nav.compositions`.
+//
+// Nenhuma transform deste arquivo imprime `defaultOpen`. Todas as stories
+// nascem abertas porque é o estado que as capturas visuais precisam, e isso é
+// andaime: quem copia o trecho quer o diálogo comandado pelo gatilho.
 const meta: Meta = {
   tags: ['overlay'],
   title: 'Components/Overlay/AlertDialog/Variants',
@@ -34,7 +58,7 @@ const meta: Meta = {
       source: { transform: alertDialogSource },
       description: {
         component:
-          'Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.',
+          'As formas do componente: confirmação destrutiva e neutra, bloco de mídia, sem descrição, descrição longa, layout responsivo, classe extra e título em outro nível.',
       },
     },
   },
@@ -46,17 +70,15 @@ type Story = StoryObj;
 // ─── Stories ──────────────────────────────────────────────────────────────────
 //
 // O construtor da demonstração vem de `alert-dialog.fixtures.ts`. Todas as
-// composições deste arquivo passam `defaultOpen: true` — é o estado que as
+// stories deste arquivo passam `defaultOpen: true` — é o estado que as
 // capturas visuais precisam — e a variante do trigger explicitamente, porque
 // aqui ela é parte do assunto (a confirmação neutra usa `outline`).
 
 export const Destructive: Story = {
   parameters: {
     covers: ['visual.item2'],
-    // Override de story: todas as composições deste arquivo nascem abertas, e
-    // `defaultOpen` não passa por control nenhum aqui.
+    // Sem override: a confirmação destrutiva é exatamente o trecho do meta.
     docs: {
-      source: { transform: alertDialogSourceWith({ defaultOpen: true }) },
       description: {
         story:
           'Action e trigger usam a variante destructive do Button. Use para ações irreversíveis.',
@@ -65,13 +87,12 @@ export const Destructive: Story = {
   },
   render: () =>
     buildDemo({
-      triggerLabel: 'Excluir conta',
+      triggerLabel: LABELS.triggerLabel,
       triggerVariant: 'destructive',
-      title: 'Excluir conta',
-      description:
-        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
-      cancelLabel: 'Cancelar',
-      actionLabel: 'Excluir',
+      title: LABELS.title,
+      description: LABELS.description,
+      cancelLabel: LABELS.cancel,
+      actionLabel: LABELS.action,
       tone: 'destructive',
       defaultOpen: true,
     }),
@@ -81,7 +102,7 @@ export const Destructive: Story = {
     // no DOM mas ainda conta como invisível. waitFor passa no primeiro tick
     // quando não há animação, então serve aos dois ambientes.
     await waitFor(() => expect(dialog).toBeVisible());
-    const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
+    const action = within(dialog).getByRole('button', { name: LABELS.action });
     await expect(action).toHaveClass('nds-button-destructive');
 
     // O gatilho fica sob aria-hidden/inert com o diálogo aberto, então sai das
@@ -91,114 +112,16 @@ export const Destructive: Story = {
       '[data-slot="alert-dialog-trigger"]',
     );
     await expect(trigger).not.toBeNull();
-    await expect(trigger).toHaveTextContent('Excluir conta');
+    await expect(trigger).toHaveTextContent(LABELS.triggerLabel);
     await expect(trigger).toHaveClass('nds-button-destructive');
 
     // O nome acessível do diálogo vem do título: sem ele o leitor anuncia
     // "diálogo" e nada mais.
-    await expect(dialog).toHaveAccessibleName(/Excluir conta/i);
+    await expect(dialog).toHaveAccessibleName(LABELS.title);
 
     // Cancel em outline é a hierarquia: uma ação destrutiva e uma saída neutra.
-    const cancel = within(dialog).getByRole('button', { name: /^Cancelar$/i });
+    const cancel = within(dialog).getByRole('button', { name: LABELS.cancel });
     await expect(cancel).toHaveClass('nds-button-outline');
-  },
-};
-
-export const HeadingH3: Story = {
-  parameters: {
-    covers: ['accessibility.item2', 'accessibility.item9'],
-    // Override de story: o nível do título não passa por control nenhum, e o
-    // snippet do meta mostraria a composição no nível padrão — que é justamente
-    // o que esta story existe para NÃO ter.
-    docs: {
-      source: { transform: alertDialogHeadingH3Source },
-      description: {
-        story:
-          'Aberto de dentro de uma página cuja seção já está em h2, o painel pede o título em h3 para não pular nível. Trocar a tag não pode romper o aria-labelledby: o nome acessível continua saindo do mesmo elemento.',
-      },
-    },
-  },
-  render: () => {
-    const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
-    const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
-    const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
-
-    // A fábrica é chamada direto, e não pelo `buildDemo`: o construtor da
-    // demonstração serve a três arquivos e não carrega o nível do título, que é
-    // o único assunto desta story.
-    return createAlertDialog({
-      trigger,
-      title: 'Excluir conta',
-      titleLevel: 3,
-      description:
-        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
-      cancelButton,
-      actionButton,
-      defaultOpen: true,
-    });
-  },
-  play: async ({ step }) => {
-    const p = await waitForPortal('alertdialog');
-
-    await step('O título vira h3 sem soltar o vínculo do nome acessível', async () => {
-      const id = p.getAttribute('aria-labelledby');
-      await expect(id).toBeTruthy();
-      const heading = document.getElementById(id!);
-      await expect(heading).not.toBeNull();
-      await expect(heading!.tagName).toBe('H3');
-      await expect(heading!.classList.contains('nds-alert-dialog-title')).toBe(true);
-      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
-    });
-  },
-};
-
-export const WithMedia: Story = {
-  parameters: {
-    covers: ['visual.item6'],
-    // Override de story: o bloco de mídia É o assunto, e ele é uma sub-fábrica
-    // que o snippet do meta não mostraria.
-    docs: {
-      source: { transform: alertDialogSourceWith({ defaultOpen: true, showMedia: true }) },
-      description: {
-        story:
-          'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
-      },
-    },
-  },
-  render: () => {
-    const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
-    const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
-    const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
-
-    // createAlertIcon já devolve o svg com aria-hidden; o CSS do media
-    // dimensiona qualquer svg filho em 24px.
-    const media = createAlertDialogMedia();
-    media.appendChild(createAlertIcon('warning'));
-
-    const dialog = createAlertDialog({
-      trigger,
-      title: 'Excluir conta',
-      description:
-        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
-      media,
-      cancelButton,
-      actionButton,
-      defaultOpen: true,
-    });
-    return dialog;
-  },
-  play: async () => {
-    const dialog = await waitForPortal('alertdialog');
-    await waitFor(() => expect(dialog).toBeVisible());
-
-    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
-    await expect(media).toHaveClass('nds-alert-dialog-media');
-
-    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
-    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
-    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
-    await expect(header?.firstElementChild).toBe(media);
-    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   },
 };
 
@@ -210,13 +133,12 @@ export const Neutral: Story = {
     docs: {
       source: {
         transform: alertDialogSourceWith({
-          defaultOpen: true,
           tone: 'default',
           triggerVariant: 'outline',
-          triggerLabel: 'Sair da conta',
-          title: 'Sair da conta',
-          description: 'Você precisará entrar novamente para acessar seus dados.',
-          actionLabel: 'Sair',
+          triggerLabel: LABELS.neutralTriggerLabel,
+          title: LABELS.neutralTitle,
+          description: LABELS.neutralDescription,
+          actionLabel: LABELS.neutralAction,
         }),
       },
       description: {
@@ -227,65 +149,90 @@ export const Neutral: Story = {
   },
   render: () =>
     buildDemo({
-      triggerLabel: 'Sair da conta',
+      triggerLabel: LABELS.neutralTriggerLabel,
       triggerVariant: 'outline',
-      title: 'Sair da conta',
-      description:
-        'Você precisará entrar novamente para acessar seus dados.',
-      cancelLabel: 'Cancelar',
-      actionLabel: 'Sair',
+      title: LABELS.neutralTitle,
+      description: LABELS.neutralDescription,
+      cancelLabel: LABELS.cancel,
+      actionLabel: LABELS.neutralAction,
       tone: 'default',
       defaultOpen: true,
     }),
-  play: async () => {
+  play: async ({ canvasElement }) => {
     const dialog = await waitForPortal('alertdialog');
     // A entrada é animada (opacity 0 → 1): no primeiro quadro o painel já está
     // no DOM mas ainda conta como invisível.
     await waitFor(() => expect(dialog).toBeVisible());
-    const action = within(dialog).getByRole('button', { name: /^Sair$/i });
+    const action = within(dialog).getByRole('button', { name: LABELS.neutralAction });
     await waitFor(() => expect(action).toBeVisible());
     // Confirmação não destrutiva: a ação usa a variante default do Button.
     await expect(action).toHaveClass('nds-button-default');
+
+    // O gatilho da confirmação neutra é outline — metade do que a descrição
+    // promete, e a metade que a Destructive também confere no dela. Fica sob o
+    // diálogo aberto, então a busca é pelo slot, não por role.
+    const trigger = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="alert-dialog-trigger"]',
+    );
+    await expect(trigger).not.toBeNull();
+    await expect(trigger).toHaveTextContent(LABELS.neutralTriggerLabel);
+    await expect(trigger).toHaveClass('nds-button-outline');
+
+    // O nome acessível do painel vem do título.
+    await expect(dialog).toHaveAccessibleName(LABELS.neutralTitle);
+
+    // Cancelar continua outline: a saída neutra não muda com o tom da ação.
+    const cancel = within(dialog).getByRole('button', { name: LABELS.cancel });
+    await expect(cancel).toHaveClass('nds-button-outline');
   },
 };
 
-// testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
-export const LongDescription: Story = {
+export const WithMedia: Story = {
   parameters: {
-    covers: ['visual.item4'],
-    // Override de story: nasce aberta, como as demais composições.
+    covers: ['visual.item6'],
+    // Override de story: o bloco de mídia é o assunto, e ele é uma sub-fábrica
+    // que o snippet do meta não mostraria.
     docs: {
-      source: { transform: alertDialogSourceWith({ defaultOpen: true }) },
+      source: { transform: alertDialogSourceWith({ showMedia: true }) },
       description: {
         story:
-          'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
+          'Bloco de mídia no topo do header. Abaixo de 40rem a caixa do ícone centraliza, acompanhando o texto do cabeçalho; a partir de 40rem vai à esquerda.',
       },
     },
   },
-  render: () =>
-    buildDemo({
-      triggerLabel: 'Excluir conta',
-      triggerVariant: 'destructive',
-      title: 'Excluir conta',
-      description:
-        'Todos os seus dados, arquivos enviados, integrações ativas e o histórico completo de faturamento serão removidos permanentemente dos nossos servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança fica disponível depois da confirmação.',
-      cancelLabel: 'Cancelar',
-      actionLabel: 'Excluir',
-      tone: 'destructive',
+  render: () => {
+    const trigger = createButton({ variant: 'destructive', label: LABELS.triggerLabel });
+    const cancelButton = createButton({ variant: 'outline', label: LABELS.cancel });
+    const actionButton = createButton({ variant: 'destructive', label: LABELS.action });
+
+    // createAlertIcon já devolve o svg com aria-hidden; o CSS do media
+    // dimensiona qualquer svg filho em 24px.
+    const media = createAlertDialogMedia();
+    media.appendChild(createAlertIcon('warning'));
+
+    return createAlertDialog({
+      trigger,
+      title: LABELS.title,
+      description: LABELS.description,
+      media,
+      cancelButton,
+      actionButton,
       defaultOpen: true,
-    }),
+    });
+  },
   play: async () => {
     const dialog = await waitForPortal('alertdialog');
+    await waitFor(() => expect(dialog).toBeVisible());
 
-    const description = dialog.querySelector<HTMLElement>('[data-slot="alert-dialog-description"]');
-    await expect(description).not.toBeNull();
-    await expect(dialog).toHaveAttribute('aria-describedby', description!.id);
-    await expect(dialog).toHaveAccessibleDescription(/nenhuma cópia de segurança/i);
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass('nds-alert-dialog-media');
 
-    // Ocupa mais de uma linha sem estourar a largura do painel.
-    const lineHeight = parseFloat(getComputedStyle(description!).lineHeight);
-    await expect(description!.getBoundingClientRect().height).toBeGreaterThan(lineHeight * 1.5);
-    await expect(description!.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
+    // A mídia precisa ser o PRIMEIRO filho do header: é dessa ordem que sai a
+    // leitura ícone → título → descrição. O :has() da folha não depende dela —
+    // só centraliza a caixa do ícone no mobile.
+    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+    await expect(header?.firstElementChild).toBe(media);
+    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   },
 };
 
@@ -303,7 +250,6 @@ export const WithoutDescription: Story = {
     docs: {
       source: {
         transform: alertDialogSourceWith({
-          defaultOpen: true,
           description: '',
           triggerLabel: 'Descartar rascunho',
           title: 'Descartar rascunho',
@@ -318,7 +264,7 @@ export const WithoutDescription: Story = {
   },
   render: () => {
     const trigger = createButton({ variant: 'destructive', label: 'Descartar rascunho' });
-    const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
+    const cancelButton = createButton({ variant: 'outline', label: LABELS.cancel });
     const actionButton = createButton({ variant: 'destructive', label: 'Descartar' });
     // `description` fica de fora da chamada — é assim que o consumidor omite.
     return createAlertDialog({
@@ -342,8 +288,48 @@ export const WithoutDescription: Story = {
 
     // As duas saídas continuam presentes — omitir a descrição não mexe no rodapé.
     const escopo = within(dialog);
-    await expect(escopo.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
-    await expect(escopo.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
+    await expect(escopo.getByRole('button', { name: LABELS.cancel })).toBeInTheDocument();
+    await expect(escopo.getByRole('button', { name: 'Descartar' })).toBeInTheDocument();
+  },
+};
+
+// testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
+export const LongDescription: Story = {
+  parameters: {
+    covers: ['visual.item4'],
+    // Override de story: a descrição longa É o assunto. Sem ela o painel Code
+    // caía na transform do meta e mostrava a descrição curta.
+    docs: {
+      source: { transform: alertDialogSourceWith({ description: LONG_DESCRIPTION }) },
+      description: {
+        story:
+          'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
+      },
+    },
+  },
+  render: () =>
+    buildDemo({
+      triggerLabel: LABELS.triggerLabel,
+      triggerVariant: 'destructive',
+      title: LABELS.title,
+      description: LONG_DESCRIPTION,
+      cancelLabel: LABELS.cancel,
+      actionLabel: LABELS.action,
+      tone: 'destructive',
+      defaultOpen: true,
+    }),
+  play: async () => {
+    const dialog = await waitForPortal('alertdialog');
+
+    const description = dialog.querySelector<HTMLElement>('[data-slot="alert-dialog-description"]');
+    await expect(description).not.toBeNull();
+    await expect(dialog).toHaveAttribute('aria-describedby', description!.id);
+    await expect(dialog).toHaveAccessibleDescription(/nenhuma cópia de segurança/i);
+
+    // Ocupa mais de uma linha sem estourar a largura do painel.
+    const lineHeight = parseFloat(getComputedStyle(description!).lineHeight);
+    await expect(description!.getBoundingClientRect().height).toBeGreaterThan(lineHeight * 1.5);
+    await expect(description!.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
   },
 };
 
@@ -363,25 +349,23 @@ export const Responsive: Story = {
     ],
     covers: ['visual.item5'],
     chromatic: { viewports: [375] },
-    // Override de story: nasce aberta, como as demais composições. O
-    // empilhamento é media query — não há opção da fábrica para mostrar.
+    // Sem override: o empilhamento é media query — não há opção da fábrica
+    // para mostrar, e o trecho é o do meta.
     docs: {
-      source: { transform: alertDialogSourceWith({ defaultOpen: true }) },
       description: {
         story:
-          'Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
+          'Abaixo de 40rem o footer empilha os botões em column-reverse e o texto do cabeçalho centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
       },
     },
   },
   render: () =>
     buildDemo({
-      triggerLabel: 'Excluir conta',
+      triggerLabel: LABELS.triggerLabel,
       triggerVariant: 'destructive',
-      title: 'Excluir conta',
-      description:
-        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
-      cancelLabel: 'Cancelar',
-      actionLabel: 'Excluir',
+      title: LABELS.title,
+      description: LABELS.description,
+      cancelLabel: LABELS.cancel,
+      actionLabel: LABELS.action,
       tone: 'destructive',
       defaultOpen: true,
     }),
@@ -399,7 +383,7 @@ export const Responsive: Story = {
     const labels = Array.from(footer!.querySelectorAll('button')).map((b) =>
       b.textContent?.trim()
     );
-    await expect(labels).toEqual(['Cancelar', 'Excluir']);
+    await expect(labels).toEqual([LABELS.cancel, LABELS.action]);
 
     // Painel respeita a margem lateral em qualquer largura.
     const rect = dialog.getBoundingClientRect();
@@ -413,31 +397,30 @@ export const Responsive: Story = {
 // e ao bloco de mídia era a prosa da docs page.
 export const ExtraClass: Story = {
   parameters: {
-    // Override de story: a classe extra no painel É o assunto, e ela só aparece
-    // na chamada da fábrica.
+    // Override de story: as classes extras são o assunto, e elas só aparecem
+    // nas chamadas das fábricas — a do painel e a da caixa de mídia.
     docs: {
       source: {
         transform: alertDialogSourceWith({
-          defaultOpen: true,
           showMedia: true,
+          mediaClass: 'nds-shrink-0',
           class: 'nds-overflow-hidden',
         }),
       },
       description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
   },
   render: () => {
-    const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });
-    const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
-    const actionButton = createButton({ variant: 'destructive', label: 'Excluir' });
+    const trigger = createButton({ variant: 'destructive', label: LABELS.triggerLabel });
+    const cancelButton = createButton({ variant: 'outline', label: LABELS.cancel });
+    const actionButton = createButton({ variant: 'destructive', label: LABELS.action });
 
-    const media = createAlertDialogMedia({ className: 'nds-shrink-0' });
+    const media = createAlertDialogMedia({ class: 'nds-shrink-0' });
     media.appendChild(createAlertIcon('warning'));
 
     return createAlertDialog({
       trigger,
-      title: 'Excluir conta',
-      description:
-        'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+      title: LABELS.title,
+      description: LABELS.description,
       media,
       cancelButton,
       actionButton,
@@ -456,5 +439,52 @@ export const ExtraClass: Story = {
     const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
     await expect(media).toHaveClass('nds-alert-dialog-media');
     await expect(getComputedStyle(media as HTMLElement).flexShrink).toBe('0');
+  },
+};
+
+export const HeadingH3: Story = {
+  parameters: {
+    covers: ['accessibility.item2', 'accessibility.item9'],
+    // Override de story: o nível do título não passa por control nenhum, e o
+    // snippet do meta mostraria a composição no nível padrão — que é justamente
+    // o que esta story existe para NÃO ter.
+    docs: {
+      source: { transform: alertDialogHeadingH3Source },
+      description: {
+        story:
+          'Aberto de dentro de uma página cuja seção já está em h2, o painel pede o título em h3 para não pular nível. Trocar a tag não pode romper o aria-labelledby: o nome acessível continua saindo do mesmo elemento.',
+      },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'destructive', label: LABELS.triggerLabel });
+    const cancelButton = createButton({ variant: 'outline', label: LABELS.cancel });
+    const actionButton = createButton({ variant: 'destructive', label: LABELS.action });
+
+    // A fábrica é chamada direto, e não pelo `buildDemo`: o construtor da
+    // demonstração serve a três arquivos e não carrega o nível do título, que é
+    // o único assunto desta story.
+    return createAlertDialog({
+      trigger,
+      title: LABELS.title,
+      titleLevel: 3,
+      description: LABELS.description,
+      cancelButton,
+      actionButton,
+      defaultOpen: true,
+    });
+  },
+  play: async ({ step }) => {
+    const p = await waitForPortal('alertdialog');
+
+    await step('O título vira h3 sem soltar o vínculo do nome acessível', async () => {
+      const id = p.getAttribute('aria-labelledby');
+      await expect(id).toBeTruthy();
+      const heading = document.getElementById(id!);
+      await expect(heading).not.toBeNull();
+      await expect(heading!.tagName).toBe('H3');
+      await expect(heading!.classList.contains('nds-alert-dialog-title')).toBe(true);
+      await expect(p).toHaveAccessibleName(heading!.textContent!.trim());
+    });
   },
 };

@@ -1,18 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from '@/components/ui/alert-dialog';
-  import AlertDialogStory from '@/components/ui/alert-dialog/AlertDialogStory.svelte';
-  import { Button } from '@/components/ui/button';
+  import AlertDialogDemo from '@/components/docs/AlertDialogDemo.svelte';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
   import { track } from '@/lib/analytics';
@@ -130,63 +118,47 @@ import {
   // ...
 } from "@/components/ui/alert-dialog";`;
 
-  const codeDestructive = `<AlertDialog>
+  // Os trechos das Variantes mostram o MESMO exemplo do preview ao lado, no
+  // idioma da página: rótulos de `demonstration.labels`, nada escrito aqui.
+  const codeDestructive = $derived(`<AlertDialog>
   <AlertDialogTrigger>
     {#snippet child({ props })}
-      <Button variant="destructive" {...props}>Excluir conta</Button>
+      <Button {...props} variant="destructive">${$tStore('demonstration.labels.triggerLabel')}</Button>
     {/snippet}
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Excluir sua conta?</AlertDialogTitle>
+      <AlertDialogTitle>${$tStore('demonstration.labels.title')}</AlertDialogTitle>
       <AlertDialogDescription>
-        Todos os dados serão removidos. Esta ação não pode ser desfeita.
+        ${$tStore('demonstration.labels.description')}
       </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction variant="destructive">
-        Excluir
-      </AlertDialogAction>
+      <AlertDialogCancel>${$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
+      <AlertDialogAction variant="destructive">${$tStore('demonstration.labels.action')}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
-</AlertDialog>`;
+</AlertDialog>`);
 
-  const codeDefault = `<AlertDialog>
+  const codeDefault = $derived(`<AlertDialog>
   <AlertDialogTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" {...props}>Sair da conta</Button>
+      <Button {...props} variant="outline">${$tStore('demonstration.labels.neutralTriggerLabel')}</Button>
     {/snippet}
   </AlertDialogTrigger>
   <AlertDialogContent>
     <AlertDialogHeader>
-      <AlertDialogTitle>Sair da conta?</AlertDialogTitle>
+      <AlertDialogTitle>${$tStore('demonstration.labels.neutralTitle')}</AlertDialogTitle>
       <AlertDialogDescription>
-        Você precisará entrar novamente para acessar seus dados.
+        ${$tStore('demonstration.labels.neutralDescription')}
       </AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
-      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-      <AlertDialogAction>Sair</AlertDialogAction>
+      <AlertDialogCancel>${$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
+      <AlertDialogAction>${$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
-</AlertDialog>`;
-
-  const codeCustomizationTokens = `/* Em globals.css — override do AlertDialog via tokens */
-:root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --border: 240 5.9% 90%;
-  --destructive: 0 84% 60%;
-  --radius: 0.5rem;
-}
-
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --destructive: 0 62.8% 30.6%;
-}`;
+</AlertDialog>`);
 
   // `defaultOpen` não entra: a raiz desta stack não tem a prop — ela seria
   // aceita e ignorada em silêncio. O estado inicial sai do próprio `open`, que
@@ -196,13 +168,17 @@ import {
 interface AlertDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onOpenChangeComplete?: (open: boolean) => void;
   children?: Snippet;
 }
 
+// AlertDialogTitle: <h1>…<h6>, aria-level = level
+interface TitleProps { level?: 1 | 2 | 3 | 4 | 5 | 6 /* = 2 */; class?: string }
+
 // AlertDialogTrigger / AlertDialogAction / AlertDialogCancel
-interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string, any> }]> }
-interface ActionProps  { onclick?: (e: MouseEvent) => void; class?: string }
-interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
+interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string, unknown> }]> }
+interface ActionProps  { variant?: ButtonVariant /* = "default" */; size?: ButtonSize; onclick?: (e: MouseEvent) => void; class?: string }
+interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: ButtonSize; onclick?: (e: MouseEvent) => void; class?: string }`;
 
   const propsTableCols = $derived({
     prop: $tStore('props.table.prop'),
@@ -211,32 +187,25 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
     required: $tStore('props.table.required'),
     description: $tStore('props.table.description'),
   });
-  // O `onOpenChange` da lib não diz por que o diálogo fechou, e o `dialog_close`
-  // exige `reason` (`18-overlay.md` §Analytics). Três caminhos fecham este
-  // componente, e nenhum é o clique fora: `Escape` (anunciado pela lib), o
-  // Cancelar (`close-button`, que é o que sobra) e a ação que CONFIRMA — `api`,
-  // "fechou por decisão de dentro". A ação e o Cancelar são partes de fechar da
-  // lib; sem marcar a confirmação antes, "confirmou" chegaria ao relatório como
-  // "apertou o botão de fechar". Uma variável basta: o diálogo é modal.
-  type DemoCloseReason = 'escape' | 'close-button' | 'api';
-  let demoCloseReason: DemoCloseReason | null = null;
 
-  const closeWatch = { onEscapeKeydown: () => { demoCloseReason = 'escape'; } };
-
-  function trackDemoAlert(label: 'destructive' | 'neutral', open: boolean): void {
-    if (open) {
-      demoCloseReason = null;
-      track('dialog_open', { component: 'alert-dialog', label, location: 'docs_demo' });
-      return;
-    }
-    track('dialog_close', { component: 'alert-dialog', label, reason: demoCloseReason ?? 'close-button', location: 'docs_demo' });
-    demoCloseReason = null;
-  }
-
-  function confirmDemoAlert(label: 'destructive' | 'neutral'): void {
-    demoCloseReason = 'api';
-    track('dialog_confirm', { component: 'alert-dialog', label, location: 'docs_demo' });
-  }
+  // Os dois exemplos da página, só com os rótulos de `demonstration.labels`.
+  // Todo preview VIVO — Demonstração, Variantes e Do & Don't — é o
+  // `AlertDialogDemo`, que rastreia abertura, confirmação e fechamento; a SEÇÃO
+  // (`location`) e a variante dos botões ficam com quem monta cada um.
+  const destructiveLabels = $derived({
+    triggerLabel: $tStore('demonstration.labels.triggerLabel'),
+    title: $tStore('demonstration.labels.title'),
+    description: $tStore('demonstration.labels.description'),
+    cancelLabel: $tStore('demonstration.labels.cancel'),
+    actionLabel: $tStore('demonstration.labels.action'),
+  });
+  const neutralLabels = $derived({
+    triggerLabel: $tStore('demonstration.labels.neutralTriggerLabel'),
+    title: $tStore('demonstration.labels.neutralTitle'),
+    description: $tStore('demonstration.labels.neutralDescription'),
+    cancelLabel: $tStore('demonstration.labels.cancel'),
+    actionLabel: $tStore('demonstration.labels.neutralAction'),
+  });
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
@@ -252,43 +221,8 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md">
-      <AlertDialog onOpenChange={(o: boolean) => trackDemoAlert('destructive', o)}>
-        <AlertDialogTrigger>
-          {#snippet child({ props })}
-            <Button variant="destructive" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
-          {/snippet}
-        </AlertDialogTrigger>
-        <AlertDialogContent {...closeWatch}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{$tStore('demonstration.labels.title')}</AlertDialogTitle>
-            <AlertDialogDescription>{$tStore('demonstration.labels.description')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onclick={() => confirmDemoAlert('destructive')}>
-              {$tStore('demonstration.labels.action')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      <AlertDialog onOpenChange={(o: boolean) => trackDemoAlert('neutral', o)}>
-        <AlertDialogTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" {...props}>{$tStore('demonstration.labels.neutralTriggerLabel')}</Button>
-          {/snippet}
-        </AlertDialogTrigger>
-        <AlertDialogContent {...closeWatch}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{$tStore('demonstration.labels.neutralTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{$tStore('demonstration.labels.neutralDescription')}</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onclick={() => confirmDemoAlert('neutral')}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertDialogDemo {...destructiveLabels} location="docs_demo" triggerVariant="destructive" tone="destructive" />
+      <AlertDialogDemo {...neutralLabels} location="docs_demo" triggerVariant="outline" tone="default" />
     </div>
   </DocsDemonstration>
 
@@ -443,49 +377,49 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         title: $tStore('props.rootTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'open',         type: 'boolean',                     defaultValue: '—',      required: 'Não', description: toPlainText($tStore('props.table.open'))         },
+          { name: 'open',         type: 'boolean',                     defaultValue: '—',      required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.open'))         },
           // `defaultOpen` não entra: não existe na API desta stack — a raiz
           // expõe `open`, `onOpenChange` e `onOpenChangeComplete`, e a prop era
           // aceita e ignorada em silêncio. O estado inicial sai do próprio
           // `open`, que é bindável. Documentar prop que o componente ignora é
           // prometer o que o produto não cumpre.
-          { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',      required: 'Não', description: toPlainText($tStore('props.table.onOpenChange'))},
-          { name: 'children',     type: 'Snippet',                     defaultValue: '—',      required: 'Sim', description: toPlainText($tStore('props.table.children'))    },
+          { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',      required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.onOpenChange'))},
+          { name: 'children',     type: 'Snippet',                     defaultValue: '—',      required: $tNavStore('common.yes'), description: toPlainText($tStore('props.table.children'))    },
         ],
       },
       {
         title: $tStore('props.triggerTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'child',    type: 'Snippet<[{ props }]>', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.asChild'))  },
-          { name: 'class',    type: 'string',               defaultValue: '—', required: 'Não', description: $tStore('props.table.className')            },
-          { name: 'children', type: 'Snippet',              defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.children')) },
+          { name: 'child',    type: 'Snippet<[{ props }]>', defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.asChild'))  },
+          { name: 'class',    type: 'string',               defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.className')            },
+          { name: 'children', type: 'Snippet',              defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.children')) },
         ],
       },
       {
         title: $tStore('props.contentTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'class',    type: 'string',  defaultValue: '—', required: 'Não', description: $tStore('props.table.className')            },
-          { name: 'children', type: 'Snippet', defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.children')) },
+          { name: 'class',    type: 'string',  defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.className')            },
+          { name: 'children', type: 'Snippet', defaultValue: '—', required: $tNavStore('common.yes'), description: toPlainText($tStore('props.table.children')) },
         ],
       },
       {
         title: $tStore('props.actionTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'onclick',  type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.onClick'))  },
-          { name: 'class',    type: 'string',                  defaultValue: '—', required: 'Não', description: $tStore('props.table.className')            },
-          { name: 'children', type: 'Snippet',                 defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.children')) },
+          { name: 'onclick',  type: '(e: MouseEvent) => void', defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.onClick'))  },
+          { name: 'class',    type: 'string',                  defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.className')            },
+          { name: 'children', type: 'Snippet',                 defaultValue: '—', required: $tNavStore('common.yes'), description: toPlainText($tStore('props.table.children')) },
         ],
       },
       {
         title: $tStore('props.cancelTitle'),
         cols: propsTableCols,
         items: [
-          { name: 'onclick',  type: '(e: MouseEvent) => void', defaultValue: '—', required: 'Não', description: toPlainText($tStore('props.table.onClick'))  },
-          { name: 'class',    type: 'string',                  defaultValue: '—', required: 'Não', description: $tStore('props.table.className')            },
-          { name: 'children', type: 'Snippet',                 defaultValue: '—', required: 'Sim', description: toPlainText($tStore('props.table.children')) },
+          { name: 'onclick',  type: '(e: MouseEvent) => void', defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.table.onClick'))  },
+          { name: 'class',    type: 'string',                  defaultValue: '—', required: $tNavStore('common.no'), description: $tStore('props.table.className')            },
+          { name: 'children', type: 'Snippet',                 defaultValue: '—', required: $tNavStore('common.yes'), description: toPlainText($tStore('props.table.children')) },
         ],
       },
     ]}
@@ -513,13 +447,14 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
       { token: '--spacing-6',              value: '.nds-alert-dialog-content',     description: $tStore('tokens.table.padding')               },
       { token: '--muted-foreground',       value: '.nds-alert-dialog-description', description: $tStore('tokens.table.mutedForeground')       },
       { token: '--muted',                  value: '.nds-alert-dialog-media',       description: $tStore('tokens.table.mediaBg')               },
+      { token: '--radius-md',              value: '.nds-alert-dialog-media',       description: $tStore('tokens.table.mediaRadius')           },
       // `--destructive-foreground` não tem linha porque não tem leitor: a variante
       // destrutiva é soft (fundo suave com o rótulo na PRÓPRIA cor semântica), e
       // nenhuma regra de button.css lê o par `-foreground`. Ver button.css:16-18.
       { token: '--destructive',            value: '.nds-button-destructive',       description: $tStore('tokens.table.destructive')           },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={codeCustomizationTokens}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
@@ -629,73 +564,41 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
   />
 
   <!--
-    Previews renderizam o gatilho fechado: com `open` o overlay modal cobriria
-    a página inteira no load.
+    Previews do Do & Don't e das Variantes: o `AlertDialogDemo`, vivo e
+    rastreado, com a seção de cada um.
   -->
+  <!-- Par 1 — só a REDAÇÃO muda; a severidade é a mesma dos dois lados. -->
   {#snippet doPair1()}
-    <AlertDialogStory
-      triggerLabel={$tStore('demonstration.labels.triggerLabel')}
-      triggerVariant="destructive"
-      title={$tStore('demonstration.labels.title')}
-      description={$tStore('demonstration.labels.description')}
-      cancelLabel={$tStore('demonstration.labels.cancel')}
-      actionLabel={$tStore('demonstration.labels.action')}
-      tone="destructive"
-    />
+    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" trackLabel="pair1-do" triggerVariant="destructive" tone="destructive" />
   {/snippet}
   {#snippet dontPair1()}
-    <AlertDialogStory
-      triggerLabel="Excluir"
+    <AlertDialogDemo
+      triggerLabel={destructiveLabels.triggerLabel}
+      title={$tStore('doDont.pair1.dontExample.title')}
+      description={$tStore('doDont.pair1.dontExample.description')}
+      cancelLabel={$tStore('doDont.pair1.dontExample.cancel')}
+      actionLabel={$tStore('doDont.pair1.dontExample.action')}
+      location="docs_do_dont"
+      trackLabel="pair1-dont"
       triggerVariant="destructive"
-      title="Tem certeza?"
-      description="Deseja continuar?"
-      cancelLabel="Não"
-      actionLabel="OK"
-      tone="default"
-    />
-  {/snippet}
-  {#snippet doPair2()}
-    <AlertDialogStory
-      triggerLabel={$tStore('demonstration.labels.triggerLabel')}
-      triggerVariant="destructive"
-      title={$tStore('demonstration.labels.title')}
-      description={$tStore('demonstration.labels.description')}
-      cancelLabel={$tStore('demonstration.labels.cancel')}
-      actionLabel={$tStore('demonstration.labels.action')}
       tone="destructive"
     />
+  {/snippet}
+  <!--
+    Par 2 — só a VARIANTE da ação muda; texto igual e Cancelar nos dois lados,
+    porque rodapé sem Cancelar violaria o contrato (C7), e não é o que o par
+    ensina.
+  -->
+  {#snippet doPair2()}
+    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" trackLabel="pair2-do" triggerVariant="destructive" tone="destructive" />
   {/snippet}
   {#snippet dontPair2()}
-    <AlertDialogStory
-      triggerLabel="Excluir projeto"
-      triggerVariant="destructive"
-      title="Excluir projeto"
-      description="O projeto será removido permanentemente."
-      cancelLabel="Cancelar"
-      actionLabel="Confirmar"
-      tone="default"
-    />
+    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" trackLabel="pair2-dont" triggerVariant="destructive" tone="default" />
   {/snippet}
   {#snippet variantDestructive()}
-    <AlertDialogStory
-      triggerLabel={$tStore('demonstration.labels.triggerLabel')}
-      triggerVariant="destructive"
-      title={$tStore('demonstration.labels.title')}
-      description={$tStore('demonstration.labels.description')}
-      cancelLabel={$tStore('demonstration.labels.cancel')}
-      actionLabel={$tStore('demonstration.labels.action')}
-      tone="destructive"
-    />
+    <AlertDialogDemo {...destructiveLabels} location="docs_variantes" triggerVariant="destructive" tone="destructive" />
   {/snippet}
   {#snippet variantDefault()}
-    <AlertDialogStory
-      triggerLabel={$tStore('demonstration.labels.neutralTriggerLabel')}
-      triggerVariant="outline"
-      title={$tStore('demonstration.labels.neutralTitle')}
-      description={$tStore('demonstration.labels.neutralDescription')}
-      cancelLabel={$tStore('demonstration.labels.cancel')}
-      actionLabel={$tStore('demonstration.labels.neutralAction')}
-      tone="default"
-    />
+    <AlertDialogDemo {...neutralLabels} location="docs_variantes" triggerVariant="outline" tone="default" />
   {/snippet}
 </DocsPageLayout>

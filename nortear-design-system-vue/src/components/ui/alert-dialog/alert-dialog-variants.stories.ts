@@ -1,5 +1,6 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { ref } from 'vue';
 import { within, expect, waitFor } from 'storybook/test';
 import {
   AlertDialog,
@@ -16,6 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { TriangleAlert } from 'lucide-vue-next';
 import {
+  alertDialogSource,
   alertDialogClassNameExtraSource,
   alertDialogWithIconSource,
   alertDialogDescriptionLongaSource,
@@ -33,15 +35,23 @@ import alertDialogTranslations from '@shared/content/alert-dialog/translations.j
  * dependesse do seletor procuraria um nome diferente a cada rodada.
  */
 const L = alertDialogTranslations['pt-BR'].demonstration.labels;
+const ACTION_NAME = new RegExp(`^${L.action}$`, 'i');
+const CANCEL_NAME = new RegExp(`^${L.cancel}$`, 'i');
 
-// As sete stories abaixo NÃO são composições, e por isso não moram mais em
+// Em escopo de módulo pela mesma razão dos spies das stories de estado: o
+// `setup()` só devolve bindings para o template, e a play precisa da mesma
+// referência para tirar a descrição com o painel aberto.
+const longDescriptionShown = ref(true);
+
+// As oito stories abaixo NÃO são composições, e por isso não moram em
 // -compositions: composição é um arranjo que resolve um caso de uso, e o que
-// há aqui são as formas que um único componente assume. Destructive e Neutral
-// são as duas linhas de `variants.items` do conteúdo compartilhado; WithMedia
-// e WithoutDescription exercitam peças opcionais da anatomia; LongDescription,
-// Responsive e ExtraClass exercitam robustez, ponto de quebra e
-// extensibilidade. A docs page é a prova: ela tem seção de Variantes e NÃO tem
-// seção de Composições, nem entrada `nav.compositions`.
+// há aqui são as formas que um único componente assume. A ORDEM de export é a
+// da barra lateral, e é a mesma nas cinco stacks: Destructive e Neutral (as
+// duas linhas de `variants.items` do conteúdo compartilhado); WithMedia e
+// WithoutDescription (peças opcionais da anatomia); LongDescription,
+// Responsive e ExtraClass (robustez, ponto de quebra e extensibilidade); e
+// HeadingH3 (nível do título). A docs page é a prova: ela tem seção de
+// Variantes e NÃO tem seção de Composições, nem entrada `nav.compositions`.
 const meta = {
   title: 'Components/Overlay/AlertDialog/Variants',
   component: AlertDialog,
@@ -52,10 +62,12 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: alertDialogWithIconSource },
+      // A canônica: a confirmação destrutiva sem mídia. Cada story que
+      // acrescenta algum trecho (ícone, classe, nível) declara o seu.
+      source: { transform: alertDialogSource },
       description: {
         component:
-          'Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.',
+          'As formas que o AlertDialog assume: confirmação destrutiva e neutra, peças opcionais (mídia e descrição), descrição longa, layout responsivo, classe extra e nível do título.',
       },
     },
   },
@@ -79,63 +91,12 @@ const sharedComponents = {
   TriangleAlert,
 };
 
-export const WithMedia: Story = {
-  parameters: {
-    covers: ['visual.item6'],
-    docs: {
-      description: {
-        story:
-          'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
-      },
-    },
-  },
-  render: () => ({
-    components: sharedComponents,
-    template: `
-      <AlertDialog default-open>
-        <AlertDialogTrigger as-child>
-          <Button variant="destructive">Excluir conta</Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogMedia>
-              <TriangleAlert aria-hidden="true" />
-            </AlertDialogMedia>
-            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-            <AlertDialogDescription>
-              Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    `,
-  }),
-  play: async () => {
-    const body = within(document.body);
-    const dialog = await body.findByRole('alertdialog');
-    await waitFor(() => expect(dialog).toBeVisible());
-
-    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
-    await expect(media).toHaveClass('nds-alert-dialog-media');
-
-    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
-    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
-    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
-    await expect(header?.firstElementChild).toBe(media);
-    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
-  },
-};
-
 export const Destructive: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
       // A ausência do bloco de mídia É o assunto aqui: a severidade vem só das
-      // variantes do gatilho e da ação, e a do meta traz o ícone.
+      // variantes do gatilho e da ação.
       source: { transform: alertDialogDestructiveSource },
       description: {
         story:
@@ -148,20 +109,16 @@ export const Destructive: Story = {
     template: `
       <AlertDialog default-open>
         <AlertDialogTrigger as-child>
-          <Button variant="destructive">Excluir conta</Button>
+          <Button variant="destructive">${L.triggerLabel}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-            <AlertDialogDescription>
-              Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction variant="destructive">
-              Excluir
-            </AlertDialogAction>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">${L.action}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -174,7 +131,7 @@ export const Destructive: Story = {
     // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
     await waitFor(() => expect(dialog).toBeVisible());
 
-    const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
+    const action = within(dialog).getByRole('button', { name: ACTION_NAME });
     await expect(action).toHaveClass('nds-button-destructive');
 
     // O gatilho fica sob aria-hidden/inert com o diálogo aberto, então sai das
@@ -184,22 +141,22 @@ export const Destructive: Story = {
       '[data-slot="alert-dialog-trigger"]',
     );
     await expect(trigger).not.toBeNull();
-    await expect(trigger).toHaveTextContent('Excluir conta');
+    await expect(trigger).toHaveTextContent(L.triggerLabel);
     await expect(trigger).toHaveClass('nds-button-destructive');
 
     // O nome acessível do diálogo vem do título: sem ele o leitor anuncia
     // "diálogo" e nada mais.
-    await expect(dialog).toHaveAccessibleName(/Excluir conta/i);
+    await expect(dialog).toHaveAccessibleName(L.title);
 
     // Cancel em outline é a hierarquia: uma ação destrutiva e uma saída neutra.
-    const cancel = within(dialog).getByRole('button', { name: /^Cancelar$/i });
+    const cancel = within(dialog).getByRole('button', { name: CANCEL_NAME });
     await expect(cancel).toHaveClass('nds-button-outline');
 
     // Guideline: Cancel sempre antes de Action no DOM.
     const labels = within(dialog)
       .getAllByRole('button')
       .map((b) => b.textContent?.trim());
-    await expect(labels).toEqual(['Cancelar', 'Excluir']);
+    await expect(labels).toEqual([L.cancel, L.action]);
   },
 };
 
@@ -221,54 +178,59 @@ export const Neutral: Story = {
     template: `
       <AlertDialog default-open>
         <AlertDialogTrigger as-child>
-          <Button variant="outline">Sair da conta</Button>
+          <Button variant="outline">${L.neutralTriggerLabel}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Sair da conta</AlertDialogTitle>
-            <AlertDialogDescription>
-              Você precisará entrar novamente para acessar seus dados.
-            </AlertDialogDescription>
+            <AlertDialogTitle>${L.neutralTitle}</AlertDialogTitle>
+            <AlertDialogDescription>${L.neutralDescription}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction>Sair</AlertDialogAction>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction>${L.neutralAction}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     `,
   }),
-  play: async () => {
+  play: async ({ canvasElement }) => {
     const body = within(document.body);
     const dialog = await body.findByRole('alertdialog');
     // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
     // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
     await waitFor(() => expect(dialog).toBeVisible());
 
-    const action = within(dialog).getByRole('button', { name: /^Sair$/i });
-    await waitFor(() => expect(action).toBeVisible());
-    // A severidade vem do Button: na composição neutra o Action não pode
-    // herdar os tokens destrutivos.
+    const action = within(dialog).getByRole('button', {
+      name: new RegExp(`^${L.neutralAction}$`, 'i'),
+    });
+    // A severidade vem do Button: na composição neutra a ação fica na variante
+    // PADRÃO — não basta não ser destrutiva, tem de ser a que o conteúdo
+    // compartilhado nomeia (`variants.items.default`).
+    await expect(action).toHaveClass('nds-button-default');
     await expect(action).not.toHaveClass('nds-button-destructive');
+
+    // O gatilho neutro fica no contorno: nada nesta composição anuncia risco.
+    const trigger = canvasElement.querySelector<HTMLElement>(
+      '[data-slot="alert-dialog-trigger"]',
+    );
+    await expect(trigger).toHaveClass('nds-button-outline');
 
     const labels = within(dialog)
       .getAllByRole('button')
       .map((b) => b.textContent?.trim());
-    await expect(labels).toEqual(['Cancelar', 'Sair']);
+    await expect(labels).toEqual([L.cancel, L.neutralAction]);
   },
 };
 
-// testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
-export const LongDescription: Story = {
+export const WithMedia: Story = {
   parameters: {
-    covers: ['visual.item4'],
+    covers: ['visual.item6'],
     docs: {
-      // O tamanho do texto É o assunto: um resumo de uma linha, como o da do
-      // meta, não mostraria o painel crescendo.
-      source: { transform: alertDialogDescriptionLongaSource },
+      // O bloco de mídia É o assunto, e a canônica do meta não o tem.
+      source: { transform: alertDialogWithIconSource },
       description: {
         story:
-          'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
+          'Bloco de mídia no topo do header. No mobile é a CAIXA do ícone que centraliza, e ela volta à esquerda a partir de 40rem; o texto do header já centraliza no mobile com ou sem ela.',
       },
     },
   },
@@ -277,52 +239,37 @@ export const LongDescription: Story = {
     template: `
       <AlertDialog default-open>
         <AlertDialogTrigger as-child>
-          <Button variant="destructive">Excluir conta</Button>
+          <Button variant="destructive">${L.triggerLabel}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-            <AlertDialogDescription>
-              Todos os seus dados, arquivos enviados, integrações ativas e o histórico
-              completo de faturamento serão removidos permanentemente dos nossos
-              servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança
-              fica disponível depois da confirmação.
-            </AlertDialogDescription>
+            <AlertDialogMedia>
+              <TriangleAlert aria-hidden="true" />
+            </AlertDialogMedia>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction variant="destructive">
-              Excluir
-            </AlertDialogAction>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">${L.action}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     `,
   }),
-  play: async ({ step }) => {
+  play: async () => {
     const body = within(document.body);
+    const dialog = await body.findByRole('alertdialog');
+    await waitFor(() => expect(dialog).toBeVisible());
 
-    await step('Descrição longa continua ligada por aria-describedby', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      const description = dialog.querySelector<HTMLElement>(
-        '[data-slot="alert-dialog-description"]',
-      );
-      await expect(description).not.toBeNull();
-      await expect(dialog).toHaveAttribute('aria-describedby', description!.id);
-      await expect(dialog).toHaveAccessibleDescription(/nenhuma cópia de segurança/i);
-    });
+    const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
+    await expect(media).toHaveClass('nds-alert-dialog-media');
 
-    await step('Descrição ocupa mais de uma linha sem estourar o painel', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      const description = dialog.querySelector<HTMLElement>(
-        '[data-slot="alert-dialog-description"]',
-      )!;
-      const lineHeight = parseFloat(getComputedStyle(description).lineHeight);
-      await expect(description.getBoundingClientRect().height).toBeGreaterThan(
-        lineHeight * 1.5,
-      );
-      await expect(description.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
-    });
+    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
+    // título logo em seguida (o :has() da folha a acharia em qualquer posição)
+    const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
+    await expect(header?.firstElementChild).toBe(media);
+    await expect(media?.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
   },
 };
 
@@ -357,7 +304,7 @@ export const WithoutDescription: Story = {
             <AlertDialogTitle>Descartar rascunho</AlertDialogTitle>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
             <AlertDialogAction variant="destructive">Descartar</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -385,8 +332,98 @@ export const WithoutDescription: Story = {
     await step('As duas saídas continuam presentes e alcançáveis', async () => {
       const dialog = await body.findByRole('alertdialog');
       const scope = within(dialog);
-      await expect(scope.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
+      await expect(scope.getByRole('button', { name: CANCEL_NAME })).toBeInTheDocument();
       await expect(scope.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
+    });
+  },
+};
+
+// testes.visual.item4 — descrição longa (mais de uma linha) sem quebrar o painel.
+export const LongDescription: Story = {
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      // O tamanho do texto É o assunto: um resumo de uma linha, como o da do
+      // meta, não mostraria o painel crescendo.
+      source: { transform: alertDialogDescriptionLongaSource },
+      description: {
+        story:
+          'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    setup() {
+      longDescriptionShown.value = true;
+      return { shown: longDescriptionShown };
+    },
+    template: `
+      <AlertDialog default-open>
+        <AlertDialogTrigger as-child>
+          <Button variant="destructive">${L.triggerLabel}</Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription v-if="shown">
+              Todos os seus dados, arquivos enviados, integrações ativas e o histórico
+              completo de faturamento serão removidos permanentemente dos nossos
+              servidores. Esta ação não pode ser desfeita e nenhuma cópia de segurança
+              fica disponível depois da confirmação.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">${L.action}</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    `,
+  }),
+  play: async ({ step }) => {
+    const body = within(document.body);
+
+    await step('Descrição longa continua ligada por aria-describedby', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const description = dialog.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-description"]',
+      );
+      await expect(description).not.toBeNull();
+      await expect(dialog).toHaveAttribute('aria-describedby', description!.id);
+      await expect(dialog).toHaveAccessibleDescription(/nenhuma cópia de segurança/i);
+    });
+
+    await step('Descrição ocupa mais de uma linha sem estourar o painel', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const description = dialog.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-description"]',
+      )!;
+      const lineHeight = parseFloat(getComputedStyle(description).lineHeight);
+      await expect(description.getBoundingClientRect().height).toBeGreaterThan(
+        lineHeight * 1.5,
+      );
+      await expect(description.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
+    });
+
+    // A razão do registro da descrição (PRD D4): o primitivo guarda o id da
+    // descrição para sempre, então a descrição que SAI com o painel aberto
+    // deixaria o `aria-describedby` apontando para um nó que não existe mais.
+    // Quem desfaz o registro é a própria descrição ao desmontar.
+    await step('Descrição removida com o painel aberto: o atributo sai junto, sem id órfão', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const id = dialog.getAttribute('aria-describedby');
+      await expect(id).toBeTruthy();
+
+      longDescriptionShown.value = false;
+      await waitFor(() => expect(dialog).not.toHaveAttribute('aria-describedby'));
+      await expect(document.getElementById(id!)).toBeNull();
+      await expect(dialog).toHaveAccessibleDescription('');
+
+      // Devolvida, ela volta a nomear a descrição — e a captura sai completa.
+      longDescriptionShown.value = true;
+      await waitFor(() => expect(dialog).toHaveAttribute('aria-describedby', id!));
+      await expect(document.getElementById(id!)).toHaveClass('nds-alert-dialog-description');
     });
   },
 };
@@ -409,11 +446,11 @@ export const Responsive: Story = {
     chromatic: { viewports: [375] },
     docs: {
       // A marcação é a mesma da confirmação destrutiva — o que muda é a largura
-      // da tela, que não se escreve no snippet; a do meta traria o ícone a mais.
+      // da tela, que não se escreve no snippet.
       source: { transform: alertDialogDestructiveSource },
       description: {
         story:
-          'Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
+          'Abaixo de 40rem o footer empilha os botões em column-reverse e o texto do header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
       },
     },
   },
@@ -422,20 +459,16 @@ export const Responsive: Story = {
     template: `
       <AlertDialog default-open>
         <AlertDialogTrigger as-child>
-          <Button variant="destructive">Excluir conta</Button>
+          <Button variant="destructive">${L.triggerLabel}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-            <AlertDialogDescription>
-              Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction variant="destructive">
-              Excluir
-            </AlertDialogAction>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">${L.action}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -452,14 +485,14 @@ export const Responsive: Story = {
       await expect(footer).not.toBeNull();
       await expect(footer).toHaveClass('nds-alert-dialog-footer');
 
-    // A story fixa a viewport em 320px. Abaixo de 40rem o footer empilha em
-    // column-reverse — sem medir isso, a story só DESCREVIA o responsivo.
-    await expect(window.matchMedia('(min-width: 40rem)').matches).toBe(false);
-    await expect(getComputedStyle(footer!).flexDirection).toBe('column-reverse');
+      // A story fixa a viewport em 320px. Abaixo de 40rem o footer empilha em
+      // column-reverse — sem medir isso, a story só DESCREVIA o responsivo.
+      await expect(window.matchMedia('(min-width: 40rem)').matches).toBe(false);
+      await expect(getComputedStyle(footer!).flexDirection).toBe('column-reverse');
       const labels = Array.from(footer!.querySelectorAll('button')).map((b) =>
         b.textContent?.trim(),
       );
-      await expect(labels).toEqual(['Cancelar', 'Excluir']);
+      await expect(labels).toEqual([L.cancel, L.action]);
     });
 
     await step('Painel respeita a margem lateral em qualquer largura', async () => {
@@ -485,21 +518,19 @@ export const ExtraClass: Story = {
     template: `
       <AlertDialog default-open>
         <AlertDialogTrigger as-child>
-          <Button variant="destructive">Excluir conta</Button>
+          <Button variant="destructive">${L.triggerLabel}</Button>
         </AlertDialogTrigger>
         <AlertDialogContent class="nds-overflow-hidden">
           <AlertDialogHeader>
             <AlertDialogMedia class="nds-shrink-0">
               <TriangleAlert aria-hidden="true" />
             </AlertDialogMedia>
-            <AlertDialogTitle>Excluir conta</AlertDialogTitle>
-            <AlertDialogDescription>
-              Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.
-            </AlertDialogDescription>
+            <AlertDialogTitle>${L.title}</AlertDialogTitle>
+            <AlertDialogDescription>${L.description}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction variant="destructive">Excluir</AlertDialogAction>
+            <AlertDialogCancel>${L.cancel}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">${L.action}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

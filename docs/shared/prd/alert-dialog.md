@@ -1,6 +1,7 @@
 # PRD — AlertDialog
 
-> **Estado descrito**: 2026-09-07.
+> **Estado descrito**: 2026-09-07, revisado em 2026-09-10 (pipeline `fix` — D3,
+> D4, D6, §5, §7, §8 e §9 mudaram, cada um com a linha antiga registrada no lugar).
 > **⚠ Escrito ANTES da revisão serial deste componente.** Espere que decisões
 > mudem — e quando mudarem, a linha se move para o histórico com a nova data e a
 > nova medição, em vez de ser reescrita por cima.
@@ -27,8 +28,10 @@ dois dias afirmando uma diferença que não existia mais — com a D8 deste mesm
 arquivo já dizendo o contrário. Hoje nenhum véu desfoca, e esta tabela só lista
 o que SEPARA os irmãos.
 
-As duas folhas são irmãs de código também: `alert-dialog.css` consome as
-keyframes `nds-dialog-fade-in` / `-fade-out` declaradas em `dialog.css`.
+As duas folhas são irmãs de código também: o VÉU do `alert-dialog.css` consome
+as keyframes `nds-dialog-fade-in` / `-fade-out` declaradas em `dialog.css`; o
+PAINEL usa `nds-animate-in` / `-out`, de `utilities.css` — o mesmo movimento do
+alert dispensável.
 
 ## 2. Contrato de comportamento
 
@@ -67,10 +70,28 @@ terceira saída ambígua — some com a decisão sem dizer qual foi.
 
 ### D3 · O foco inicial vai ao Cancelar
 
-**Estado**: não ao primeiro focável, e não à ação.
+**Estado**: não ao primeiro focável, e não à ação — ao Cancelar, por escolha
+EXPLÍCITA nas cinco stacks.
 **Por quê**: evita confirmação acidental de quem aperta Enter por reflexo. É a
 única peça da família em que o foco inicial é escolhido, e não herdado da ordem
 do DOM.
+**Como cada stack escolhe**:
+
+| stack | mecanismo |
+|---|---|
+| vanilla | a fábrica chama `cancelButton.focus()` ao abrir |
+| react | o Content passa ao `initialFocus` da base-ui uma ref que o Cancel entrega por contexto interno |
+| vue | a reka registra o Cancel no painel (`onCancelElementChange`) e o foca ao abrir |
+| svelte | o painel procura o botão pelo slot do Cancelar ao abrir |
+| angular | o `NdsAlertDialogCancel` se registra na raiz, que o foca no `(openAutoFocus)` do `rdxDialogPopup`, cancelando o evento |
+
+Vale também na abertura por TOQUE, em que a base-ui e o radix-ng focariam o
+painel; a story `Open` do react cobre esse caminho.
+
+**Até 2026-09-10 isto era verdade em três stacks**: react e angular chegavam ao
+Cancelar pela ORDEM do DOM (ele vem antes da ação no rodapé), e a base-ui ainda
+foca o painel, e não o botão, quando a abertura vem de toque. Reordenar o rodapé
+ou abrir pelo toque mudava o foco sem que nada reprovasse.
 
 ### D4 · A descrição é OPCIONAL
 
@@ -82,6 +103,11 @@ Corrigidas cinco chaves nos três idiomas, e o caminho ganhou contrato
 quebrava — o `DialogContentImpl` da reka gera o id da descrição sempre e ligava
 `aria-describedby` a um id inexistente (a própria lib avisa disso em
 desenvolvimento). Corrigido no wrapper, por registro da descrição.
+**O Svelte tinha a mesma falha, latente** (medida em 2026-09-10): a bits grava o
+id da descrição na raiz e não o apaga quando ela sai, e o valor dela vence o de
+quem consome. Removida a descrição com o painel aberto, o `aria-describedby`
+ficava apontando para um id sumido. Desde então a descrição do wrapper é um
+`<p>` próprio que se registra no painel, como no Vue.
 
 ### D5 · Não há eixo de tamanho
 
@@ -96,10 +122,16 @@ documentava.
 
 **Estado**: caixa de 40px com raio `--radius-md` e fundo `--muted`, ícone de 24px
 dentro, margem inferior de 8px.
-**Comportamento**: `:has(.nds-alert-dialog-media)` centraliza o cabeçalho no
-mobile e o devolve à esquerda a partir de 40rem.
+**Comportamento**: `:has(.nds-alert-dialog-media)` centraliza a CAIXA do ícone no
+mobile e a devolve à esquerda a partir de 40rem. O TEXTO do cabeçalho não depende
+dela: ele já é centralizado no mobile, com ou sem mídia, pela regra do próprio
+cabeçalho.
 **Por que `:has()` e não uma classe**: a presença do ícone é o que decide, e quem
 compõe não precisa lembrar de marcar o cabeçalho.
+**Até 2026-09-10 esta linha dizia que o `:has()` centralizava o cabeçalho** — e a
+frase se espalhou para quatro stories e para `testes.visual.item6`. A regra
+repetia `text-align` à toa; saiu, com o estilo computado medido idêntico antes e
+depois, nas duas larguras, com e sem mídia.
 
 ### D7 · A superfície é `--background`, e a família não concorda
 
@@ -165,7 +197,8 @@ Fonte: `docs/shared/styles/nds/alert-dialog.css`.
 do Dialog, que é reto abaixo de 40rem.
 
 **Animação**: entrada com `--duration-spring` e `--ease-spring`; saída com
-`--duration-base` e `--ease-exit`. As keyframes vêm de `dialog.css`.
+`--duration-base` e `--ease-exit`. As keyframes do véu vêm de `dialog.css`
+(`nds-dialog-fade-*`); as do painel, de `utilities.css` (`nds-animate-*`).
 
 ## 6. Estados
 
@@ -178,17 +211,22 @@ do Dialog, que é reto abaixo de 40rem.
 
 Não há estado de tamanho nem de tom (D5).
 
+A tabela de "Configurações" da docs page (`states.*`) é outro recorte, e os dois
+convivem de propósito: esta lista o que muda NA TELA; aquela, como quem usa chega
+a cada situação (fechado, aberto, confirmação, cancelamento, controlado).
+
 ## 7. API
 
 | prop | o que faz |
 |---|---|
-| `open` | estado controlado |
-| `defaultOpen` | estado inicial não controlado |
-| `onOpenChange` | callback com o novo estado |
-| `optionalDescription` | texto de apoio; sem ele o diálogo não declara descrição (D4) |
-| `asChild` | compõe com um filho (ex.: Button) sem renderizar wrapper |
-| `onClick` | callback da confirmação ou do cancelamento; o diálogo fecha depois de disparar |
-| `className` | classes adicionais |
+| `open` | estado controlado — react, vue (`v-model:open`), svelte (`bind:open`), angular; **o vanilla não tem** |
+| `defaultOpen` | estado inicial não controlado — **o svelte não tem** (o `open` dele é bindável) |
+| `onOpenChange` | callback com o novo estado — no vue é `update:open`, no angular `(openChange)` |
+| `description` | texto de apoio, opcional; sem ele o diálogo não declara descrição (D4). Nas stacks de peças, é a peça Description |
+| `asChild` | compõe com um filho sem renderizar wrapper — **só react e vue**; o svelte delega pelo snippet `child` |
+| `onClick` | callback da confirmação ou do cancelamento — `onClick` no react, `@click` no vue, `onclick` no svelte, `(click)` no angular; no vanilla, o `onClick` dos botões que a fábrica recebe. O diálogo fecha depois de disparar |
+| `className` / `class` | classes adicionais, que se SOMAM às do componente — `className` no react, `class` nas outras (inclusive `createAlertDialogMedia`, que recebia `className` até 2026-09-10). No angular o PAINEL recebe classe pela entrada `panelClass` da raiz, porque o conteúdo é um `ng-template` |
+| `onClose` | callback com o motivo do fechamento (`escape` · `close-button` · `api`) — **só o vanilla**; nas outras quatro o motivo sai do mecanismo de cada lib |
 
 ### Peças, por stack
 
@@ -216,7 +254,7 @@ jeito** — medido na fonte de cada lib, não na documentação delas:
 |---|---|---|
 | react | prop `render` (`BaseUIComponentProps<'h2'>`) | `h2` |
 | vue | prop `as` (ou `as-child`) | `as: 'h2'` |
-| svelte | snippet `child` + prop `level` | `div` com `aria-level="2"` |
+| svelte | prop `level` do wrapper — ele escreve a tag pelo snippet `child` da lib, e o `aria-level` sai do mesmo valor | `h2` |
 | angular | seletor por elemento, nos SEIS níveis | o que quem escreve usar |
 | vanilla | opção `titleLevel` da fábrica | `2` |
 
@@ -249,7 +287,10 @@ lib, irmã do `render`, do `as` e do `asChild`. Os dois andam juntos: sem
 `level`, um `h3` escrito pelo `child` sairia com `aria-level="2"`, e a tag
 brigaria com o ARIA. A afirmação antiga — "as cinco aceitam qualquer nível pelo
 mecanismo da própria lib" — era verdadeira só no sentido do ARIA, e ninguém
-tinha medido porque nenhuma superfície exercitava a capacidade.
+tinha medido porque nenhuma superfície exercitava a capacidade. **Desde
+2026-09-10 o wrapper faz a delegação por dentro**: `level` sozinho entrega a tag
+certa, e o padrão virou `h2` de verdade — até então era `div` com
+`aria-level="2"`, e a guideline 18 já dizia "h2 por padrão, nas cinco".
 
 **Por que isso importa**: `heading-order` do axe reprova salto de nível, e o
 painel não sabe de que profundidade da página foi aberto — um diálogo disparado
@@ -277,11 +318,13 @@ o botão focado; Escape fecha sem executar a ação.
 - não se põe um X no canto (D2);
 - não se dá foco inicial à ação (D3).
 
-**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
-para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
-`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
-mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
-segura, está por extenso em `hover-card.md` §8.
+**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e aqui DUAS
+camadas seguram. A de token: a folha declara duração só por `var(--duration-*)`,
+e `docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. E a
+da própria folha: o bloco `@media` vem DEPOIS das regras de animação, com os
+mesmos seletores e a mesma especificidade, e por isso vence. Não é uma das
+guardas inertes que o `hover-card.md` §8 descreve — esta linha dizia que era, e
+copiava a explicação do vizinho sem medir a folha daqui.
 
 ## 9. Analytics
 
@@ -300,9 +343,20 @@ identificada no payload.
 três palavras aparecem, porque clique fora não fecha este componente (D1):
 `escape`; `close-button` para o Cancelar; e `api` para a ação que confirma. A
 ação e o Cancelar são as duas partes de fechar da lib, e a lib entrega o mesmo
-motivo para as duas — por isso, nas cinco stacks, a demonstração marca a
-confirmação ANTES de o diálogo fechar. Sem a marca, "confirmou a exclusão"
+motivo para as duas — por isso, nas quatro stacks com lib, a demonstração marca
+a confirmação ANTES de o diálogo fechar. Sem a marca, "confirmou a exclusão"
 chegaria ao relatório como "apertou o botão de fechar".
+
+**No vanilla quem entrega o motivo é a própria fábrica**, pela opção
+`onClose(reason)` (desde 2026-09-10): ela sabe qual botão fechou, e por isso a
+demonstração de lá não precisa marcar a confirmação — o `dialog_confirm` sai do
+clique da ação, registrado antes do fechamento. **Até essa data o Escape do
+vanilla fechava sem `dialog_close` nenhum**: o fechamento era rastreado à mão
+nos cliques dos dois botões.
+
+**Rótulos estáveis nas cinco**: `destructive` e `neutral` na demonstração e em
+Variantes; `pair1-do`, `pair1-dont`, `pair2-do`, `pair2-dont` no Do & Don't —
+batendo com as chaves `doDont.pair1/pair2` do conteúdo.
 
 **Até 2026-09-10 esta linha dizia "fecha sem executar"**, e o conteúdo
 compartilhado documentava um campo `trigger` com `"cancel_button"` que nenhuma
@@ -320,15 +374,19 @@ Ordem: folha → primitivo → cabeçalho e rodapé → mídia → stories → d
 - **A descrição é opcional, e o Vue precisa de cuidado** (D4): a reka gera o id
   sempre, então o wrapper tem de registrar a descrição em vez de deixar o
   `aria-describedby` apontar para o vazio.
-- **As keyframes vêm de `dialog.css`** — não duplique.
-- **O alinhamento do cabeçalho depende de `:has()`** (D6), não de classe.
+- **As keyframes vêm das vizinhas** — o véu, de `dialog.css`; o painel, de
+  `utilities.css`. Não duplique.
+- **A caixa de mídia se alinha por `:has()`** (D6), não por classe; o texto do
+  cabeçalho se centraliza no mobile sem ela.
+- **O foco inicial no Cancelar é EXPLÍCITO** (D3) — não confie na ordem do
+  rodapé.
 
 ## 11. Onde está a verdade
 
 | assunto | arquivo |
 |---|---|
 | geometria, mídia, decisões de saída | `docs/shared/styles/nds/alert-dialog.css` |
-| keyframes de entrada e saída | `docs/shared/styles/nds/dialog.css` |
+| keyframes de entrada e saída | `docs/shared/styles/nds/dialog.css` (véu) e `utilities.css` (painel) |
 | texto, props, critérios de teste | `docs/shared/content/alert-dialog/translations.json` |
 | desenho e anotações | Figma, página `AlertDialog` (componente `212:3`) |
 | portões determinísticos | `node scripts/audit.mjs alert-dialog --json` |

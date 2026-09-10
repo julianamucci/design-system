@@ -19,6 +19,11 @@ const props = withDefaults(
   },
 )
 
+// PATCH: bugfix — clique de quem consome antes do fechamento do primitivo (ver PATCHES.md#vue-alert-dialog-click-order)
+// Mesma ordem da `AlertDialogAction`: o clique de quem consome é entregue na
+// captura, antes do fechamento do primitivo — ver o comentário de lá.
+const emit = defineEmits<{ click: [event: MouseEvent] }>()
+
 const delegatedProps = reactiveOmit(props, 'class', 'variant', 'size')
 </script>
 
@@ -27,6 +32,7 @@ const delegatedProps = reactiveOmit(props, 'class', 'variant', 'size')
     data-slot="alert-dialog-cancel"
     v-bind="delegatedProps"
     :class="cn( '', buttonVariants({ variant, size }), props.class, )"
+    @click.capture="emit('click', $event)"
   >
     <slot />
   </AlertDialogCancel>

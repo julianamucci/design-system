@@ -8,8 +8,15 @@
   //
   // O botão externo escreve `open` direto, sem passar pelo callback: o pai já
   // sabe da abertura, porque foi ele que a causou. `onOpenChange` é o
-  // componente PEDINDO a mudança, e por isso só dispara na saída (Escape,
-  // clique fora, Cancel). Mesma fiação do React e do Vue.
+  // componente PEDINDO a mudança, e por isso só dispara na saída — Escape,
+  // Cancelar ou a ação que confirma (o clique no véu não fecha, D1).
+  //
+  // A ação NÃO escreve `open = false`: ela já fecha pelo `Dialog.Close` da lib,
+  // e o `handleClose` de lá sai cedo quando `open` já é falso — escrever antes
+  // engolia o `onOpenChange(false)` da confirmação, e o pai nunca sabia.
+  //
+  // Rótulos padrão: o conjunto destrutivo de `demonstration.labels`, o mesmo
+  // das outras stories de estado.
   import {
     AlertDialog,
     AlertDialogAction,
@@ -32,11 +39,11 @@
   }
 
   const {
-    triggerLabel = 'Abrir via estado externo',
-    title = 'Controlado pelo pai',
-    description = 'Este diálogo é comandado por estado externo via bind:open.',
-    cancelLabel = 'Fechar',
-    actionLabel = 'Confirmar',
+    triggerLabel = 'Excluir conta',
+    title = 'Excluir conta',
+    description = 'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
+    cancelLabel = 'Cancelar',
+    actionLabel = 'Excluir',
     onOpenChange,
   }: Props = $props();
 
@@ -59,9 +66,7 @@
       </AlertDialogHeader>
       <AlertDialogFooter>
         <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
-        <AlertDialogAction variant="destructive" onclick={() => (open = false)}>
-          {actionLabel}
-        </AlertDialogAction>
+        <AlertDialogAction variant="destructive">{actionLabel}</AlertDialogAction>
       </AlertDialogFooter>
     </AlertDialogContent>
   </AlertDialog>

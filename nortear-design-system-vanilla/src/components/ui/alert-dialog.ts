@@ -43,6 +43,12 @@ import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 // ─── Os outros comportamentos ───────────────────────────────────────────────
 //   - Focus trap (Tab/Shift+Tab) entre cancel e action.
 //   - Restaura foco no elemento anterior ao fechar.
+//   - Diz POR ONDE fechou (`onClose(reason)`), no vocabulário da família:
+//     `escape`, `close-button` para o Cancel, `api` para a Action e para a
+//     destruição com o painel aberto. As libs das outras quatro stacks
+//     entregam o mesmo motivo para Cancel e Action, e por isso a demonstração
+//     delas marca a confirmação antes de fechar; aqui a fábrica sabe qual botão
+//     foi, e o motivo já sai certo.
 //   - Trava a rolagem da página enquanto aberto — as outras quatro caem da
 //     lib (base-ui useScrollLock, reka-ui useBodyScrollLock, bits-ui
 //     ScrollLock, radix-ng useScrollLock), e a contagem daqui vive em
@@ -57,6 +63,12 @@ const EXIT_FALLBACK_MS = 300;
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+/**
+ * Por onde o diálogo fechou. É o vocabulário do `DialogCloseReason` sem
+ * `'overlay'`: o véu deste componente não fecha (D1 do PRD).
+ */
+export type AlertDialogCloseReason = 'escape' | 'close-button' | 'api';
+
 export type AlertDialogOptions = {
   trigger: HTMLElement;
   title: string;
@@ -67,9 +79,11 @@ export type AlertDialogOptions = {
    * profundidade da página foi aberto: um diálogo disparado de dentro de uma
    * seção que já está em `h3` precisa sair em `h4`. As quatro stacks com lib
    * já trocavam o nível pelo mecanismo da própria lib — `render` no base-ui,
-   * `as` na reka, `level` no bits, seletor por elemento no radix-ng —, e esta
-   * era a única sem a opção. Mesma forma de `createPopoverTitle` e de
-   * `createCardTitle`, que já a tinham.
+   * `as` na reka, snippet `child` com `level` no bits (o `level` sozinho só
+   * muda o `aria-level`), seletor por elemento no radix-ng —, e esta era a
+   * única sem a opção. O nome é o das fábricas que montam o componente
+   * inteiro (`createDialog`, `createSheet`, `createDrawer`); a que monta só o
+   * título chama a opção de `level` (`createPopoverTitle`, `createCardTitle`).
    */
   titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
@@ -88,11 +102,23 @@ export type AlertDialogOptions = {
    */
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Motivo do fechamento: `'escape'`, `'close-button'` (Cancel) ou `'api'`
+   * (Action, ou o wrapper saindo da página com o painel aberto). Dispara uma
+   * vez por fechamento, ANTES do `onOpenChange(false)` — mesma ordem do
+   * `createDialog`. É o que alimenta o `reason` do `dialog_close`.
+   */
+  onClose?: (reason: AlertDialogCloseReason) => void;
   class?: string;
 };
 
 export interface AlertDialogMediaOptions {
-  className?: string;
+  /**
+   * Classes extras na caixa do ícone. `class`, como a opção de `createAlertDialog`
+   * e da maioria das fábricas desta stack — era `className` até 2026-09-10, a
+   * única da dupla com o nome do react.
+   */
+  class?: string;
 }
 
 /**
@@ -100,10 +126,9 @@ export interface AlertDialogMediaOptions {
  * dimensiona qualquer `svg` filho em 24px (`--spacing-6`).
  */
 export function createAlertDialogMedia(options: AlertDialogMediaOptions = {}): HTMLElement {
-  const { className } = options;
   const el = document.createElement('div');
   el.dataset.slot = 'alert-dialog-media';
-  el.className = cn('nds-alert-dialog-media', className);
+  el.className = cn('nds-alert-dialog-media', options.class);
   return el;
 }
 
@@ -122,7 +147,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 // ─── createAlertDialog ───────────────────────────────────────────────────────
 
 export function createAlertDialog(options: AlertDialogOptions): DestroyableElement {
-  const { trigger, title, titleLevel = 2, description, media, cancelButton, actionButton, onOpenChange } = options;
+  const { trigger, title, titleLevel = 2, description, media, cancelButton, actionButton, onOpenChange, onClose } = options;
 
   const id = ++_alertDialogCounter;
   const titleId = `alert-dialog-title-${id}`;
@@ -142,7 +167,8 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
   // não o alteravam e o snippet congelava nesses controls.
   wrapper.dataset.dialogId = String(id);
   // O trigger abre um diálogo: anuncia isso antes do clique. O aria-expanded
-  // acompanha a abertura, como base-ui, reka-ui e bits-ui fazem sozinhas.
+  // acompanha a abertura, como base-ui, reka-ui, bits-ui e radix-ng fazem
+  // sozinhas.
   trigger.dataset.slot = 'alert-dialog-trigger';
   trigger.setAttribute('aria-haspopup', 'dialog');
   trigger.setAttribute('aria-expanded', 'false');
@@ -162,8 +188,9 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     overlayEl.className = 'nds-alert-dialog-overlay';
     overlayEl.dataset.slot = 'alert-dialog-overlay';
     // data-state: é o gancho das animações em alert-dialog.css. As libs
-    // headless das outras 3 stacks emitem esse atributo sozinhas; aqui a
-    // factory precisa emitir. Sem ele o overlay/painel aparecia e sumia seco.
+    // headless das outras quatro stacks marcam o estado sozinhas (cada uma
+    // com a sua convenção, todas cobertas pela folha); aqui a factory precisa
+    // emitir. Sem ele o overlay/painel aparecia e sumia seco.
     overlayEl.dataset.state = 'open';
 
     panelEl = document.createElement('div');
@@ -184,8 +211,10 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     headerEl.className = 'nds-alert-dialog-header';
     headerEl.dataset.slot = 'alert-dialog-header';
 
-    // A mídia vem ANTES do título: o seletor `:has(.nds-alert-dialog-media)`
-    // centraliza o header, e a ordem de leitura é ícone → título → descrição.
+    // A mídia vem ANTES do título: a ordem de leitura é ícone → título →
+    // descrição, e o ícone fica no topo. O `:has(.nds-alert-dialog-media)` da
+    // folha não depende da ordem — ele só centraliza a CAIXA do ícone no
+    // mobile; o texto do cabeçalho já é centralizado pela regra do header.
     if (media) headerEl.appendChild(media);
 
     const titleEl = document.createElement(`h${titleLevel}`);
@@ -231,28 +260,33 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     onOpenChange?.(true);
   }
 
-  function close(): void {
+  function close(reason: AlertDialogCloseReason): void {
     const saindo = [overlayEl, panelEl].filter((el): el is HTMLElement => el !== null);
-    // Solta as referências já: um segundo close() (ESC durante a saída, por
-    // exemplo) não deve reagendar a remoção nem chamar onOpenChange de novo.
+
+    // Já fechado: nada a fazer, e isso inclui NÃO avisar ninguém. Durante a
+    // animação de saída o Cancel e a Action ainda estão na tela, e um segundo
+    // clique chegava aqui. A guarda morava no MEIO da função, depois do
+    // `onOpenChange(false)` e da devolução de foco — o docblock prometia que o
+    // segundo close() não chamaria onOpenChange de novo, e ele chamava. Com o
+    // `onClose`, seria também um segundo `dialog_close` no GA4. Destravar a
+    // rolagem aqui soltaria ainda a trava de outro painel empilhado por cima:
+    // a contagem é do documento e não sabe de quem é cada solta.
+    /* v8 ignore next -- sem story: exercitar exige clicar num botão que está
+       saindo, dentro dos 200ms da animação. */
+    if (saindo.length === 0) return;
+
+    // Solta as referências já: é o que faz um segundo close() cair na guarda
+    // acima em vez de reagendar a remoção.
     overlayEl = null;
     panelEl = null;
 
-    // Só destrava se HAVIA o que fechar: a contagem é do documento, e um
-    // segundo close() (ESC durante a saída) soltaria a trava de outro painel
-    // empilhado por cima. O contador ignora solta sem trava, mas não sabe
-    // distinguir de quem ela é.
-    if (saindo.length > 0) unlockBodyScroll();
+    unlockBodyScroll();
     trigger.setAttribute('aria-expanded', 'false');
     document.removeEventListener('keydown', handleKeydown);
     previousFocus?.focus();
+    onClose?.(reason);
     onOpenChange?.(false);
 
-    /* v8 ignore next -- guarda de dupla finalização: close() já zerou as
-       referências, então o segundo close (ESC durante a saída) não tem o que
-       remover. Sem story: exercitar exige encadear dois fechamentos no mesmo
-       quadro. */
-    if (saindo.length === 0) return;
     saindo.forEach((el) => { el.dataset.state = 'closed'; });
 
     // Sem animação de saída (prefers-reduced-motion, ou ambiente que não
@@ -294,13 +328,13 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
 
   function handleKeydown(e: KeyboardEvent): void {
     // Escape fecha sem executar a ação. É o que a docs page documenta em
-    // accessibility.keyboard.escape, o que as outras três stacks fazem (as libs
-    // implementam) e o que o padrão alertdialog do WAI-ARIA APG especifica.
+    // accessibility.keyboard.escape, o que as outras quatro stacks fazem (as
+    // libs implementam) e o que o padrão alertdialog do WAI-ARIA APG especifica.
     // Havia aqui um comentário chamando a ausência de "decisão deliberada" —
     // era divergência silenciosa: nada além deste arquivo a sustentava.
     if (e.key === 'Escape' && panelEl) {
       e.preventDefault();
-      close();
+      close('escape');
       return;
     }
     if (e.key === 'Tab' && panelEl) {
@@ -318,8 +352,12 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     }
   }
 
-  cancelButton.addEventListener('click', close);
-  actionButton.addEventListener('click', close);
+  // Os botões chegam prontos, então o `onClick` que quem consome passou ao
+  // `createButton` já está registrado e roda ANTES destes: a confirmação
+  // acontece antes do fechamento, e o `dialog_confirm` chega ao GA4 antes do
+  // `dialog_close` que ele provoca.
+  cancelButton.addEventListener('click', () => close('close-button'));
+  actionButton.addEventListener('click', () => close('api'));
 
   trigger.addEventListener('click', open);
 
@@ -331,7 +369,7 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
   // deixar de existir, e aí o painel portalado sobrevivia com o `keydown`
   // preso. A forma compartilhada só conta a saída depois de ter visto a entrada.
   const destruivel = tornarDestruivel(wrapper, wrapper, () => {
-    if (panelEl) close();
+    if (panelEl) close('api');
   });
 
   // O wrapper só entra na página depois que a factory retorna: o microtask

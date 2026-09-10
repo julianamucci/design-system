@@ -1,12 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertDialogOpenSource,
-  alertDialogCanceladoSource,
+  alertDialogCancelledSource,
   alertDialogClassNameExtraSource,
-  alertDialogWithMidiaSource,
-  alertDialogConfirmadoSource,
+  alertDialogWithIconSource,
+  alertDialogConfirmedSource,
   alertDialogControlledSource,
-  alertDialogDescriptionLongaSource,
+  alertDialogLongDescriptionSource,
   alertDialogNeutralSource,
   alertDialogNoDescriptionSource,
   alertDialogHeadingH3Source,
@@ -58,8 +57,8 @@ describe('alertDialogSource', () => {
   });
 
   it('o control de severidade some quando é o valor padrão do Button', () => {
-    const neutro = alertDialogSource('', { args: { tone: 'default' } });
-    expect(neutro).not.toContain('variant=');
+    const neutral = alertDialogSource('', { args: { tone: 'default' } });
+    expect(neutral).not.toContain('variant=');
     expect(alertDialogSource('', { args: { tone: 'destructive' } })).toContain(
       'variant="destructive"',
     );
@@ -80,7 +79,7 @@ describe('alertDialogSource', () => {
   });
 
   it('os rótulos dos controls chegam aos quatro pontos de texto', () => {
-    const saida = alertDialogSource('', {
+    const output = alertDialogSource('', {
       args: {
         triggerLabel: 'Arquivar projeto',
         title: 'Arquivar projeto?',
@@ -89,94 +88,125 @@ describe('alertDialogSource', () => {
         actionLabel: 'Arquivar',
       },
     });
-    expect(saida).toContain('>Arquivar projeto</Button>');
-    expect(saida).toContain('<AlertDialogTitle>Arquivar projeto?</AlertDialogTitle>');
-    expect(saida).toContain('<AlertDialogDescription>O projeto sai da lista ativa.');
-    expect(saida).toContain('<AlertDialogCancel>Voltar</AlertDialogCancel>');
-    expect(saida).toContain('>Arquivar</AlertDialogAction>');
+    expect(output).toContain('>Arquivar projeto</Button>');
+    expect(output).toContain('<AlertDialogTitle>Arquivar projeto?</AlertDialogTitle>');
+    expect(output).toContain('<AlertDialogDescription>O projeto sai da lista ativa.');
+    expect(output).toContain('<AlertDialogCancel>Voltar</AlertDialogCancel>');
+    expect(output).toContain('>Arquivar</AlertDialogAction>');
   });
 });
 
 describe('transforms das stories de estado', () => {
-  it('o estado aberto monta o painel já na montagem', () => {
-    const saida = alertDialogOpenSource();
-    expect(saida).toContain('let open = $state(true);');
-    expect(saida).toContain('Excluir item permanentemente?');
+  it('nenhuma transform publica o diálogo nascendo aberto', () => {
+    // Quem cola quer o diálogo comandado pelo gatilho; o painel aberto das
+    // stories é andaime da captura e da play, não ensinamento. O único
+    // `$state(true)` possível é o do Playground com o control `open` ligado.
+    const closedOutputs = [
+      alertDialogSource(),
+      alertDialogConfirmedSource(),
+      alertDialogCancelledSource(),
+      alertDialogControlledSource(),
+      alertDialogWithIconSource(),
+      alertDialogNeutralSource(),
+      alertDialogLongDescriptionSource(),
+      alertDialogNoDescriptionSource(),
+      alertDialogClassNameExtraSource(),
+      alertDialogHeadingH3Source(),
+    ];
+    for (const output of closedOutputs) {
+      expect(output).toContain('let open = $state(false);');
+      expect(output).not.toContain('$state(true)');
+    }
   });
 
   it('a confirmação declara o handler que o botão de ação aciona', () => {
-    const saida = alertDialogConfirmadoSource();
-    expect(saida).toContain('function excluirItem()');
-    expect(saida).toContain('onclick={excluirItem}');
+    const output = alertDialogConfirmedSource();
+    expect(output).toContain('function deleteAccount()');
+    expect(output).toContain('onclick={deleteAccount}');
   });
 
   it('o cancelamento tem handler nas duas saídas, e só a de cancelar dispensa a ação', () => {
-    const saida = alertDialogCanceladoSource();
-    expect(saida).toContain('<AlertDialogCancel onclick={manterItem}>');
-    expect(saida).toContain('onclick={excluirItem}');
+    const output = alertDialogCancelledSource();
+    expect(output).toContain('<AlertDialogCancel onclick={keepAccount}>');
+    expect(output).toContain('onclick={deleteAccount}');
   });
 
   it('o modo controlado tira o gatilho de dentro do diálogo', () => {
-    const saida = alertDialogControlledSource();
-    expect(saida).not.toContain('AlertDialogTrigger');
-    expect(saida).toContain('onclick={() => (open = true)}');
-    expect(saida).toContain('onOpenChange=');
+    const output = alertDialogControlledSource();
+    expect(output).not.toContain('AlertDialogTrigger');
+    expect(output).toContain('onclick={() => (open = true)}');
+    expect(output).toContain('onOpenChange=');
+  });
+
+  it('no modo controlado a ação fecha pela lib, sem escrever o estado antes', () => {
+    // Escrever `open = false` na ação faz a lib achar o diálogo já fechado e
+    // sair sem chamar `onOpenChange` — a confirmação sumia do callback do pai.
+    const output = alertDialogControlledSource();
+    expect(output).toContain('<AlertDialogAction variant="destructive">Excluir</AlertDialogAction>');
+    expect(output).not.toContain('open = false');
+  });
+
+  it('o modo controlado usa os rótulos canônicos, sem "Fechar" no lugar de Cancelar', () => {
+    const output = alertDialogControlledSource();
+    expect(output).toContain('<AlertDialogTitle>Excluir conta</AlertDialogTitle>');
+    expect(output).toContain('<AlertDialogCancel>Cancelar</AlertDialogCancel>');
+    expect(output).not.toContain('Fechar');
+    expect(output).not.toContain('bind:open.');
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('a composição com mídia traz o bloco de ícone no topo do header', () => {
-    const saida = alertDialogWithMidiaSource();
-    expect(saida).toContain('<AlertDialogMedia>');
-    expect(saida).toContain('<TriangleAlert aria-hidden="true" />');
+    const output = alertDialogWithIconSource();
+    expect(output).toContain('<AlertDialogMedia>');
+    expect(output).toContain('<TriangleAlert aria-hidden="true" />');
   });
 
   it('a confirmação neutra não herda a severidade destrutiva', () => {
-    const saida = alertDialogNeutralSource();
-    expect(saida).toContain('variant="outline"');
-    expect(saida).toContain('<AlertDialogAction>Sair</AlertDialogAction>');
-    expect(saida).not.toContain('destructive');
+    const output = alertDialogNeutralSource();
+    expect(output).toContain('variant="outline"');
+    expect(output).toContain('<AlertDialogAction>Sair</AlertDialogAction>');
+    expect(output).not.toContain('destructive');
   });
 
   it('a descrição longa continua num único subcomponente de descrição', () => {
-    const saida = alertDialogDescriptionLongaSource();
-    expect(saida).toContain('nenhuma cópia de segurança');
-    expect(saida.match(/<AlertDialogDescription>/g)).toHaveLength(1);
+    const output = alertDialogLongDescriptionSource();
+    expect(output).toContain('nenhuma cópia de segurança');
+    expect(output.match(/<AlertDialogDescription>/g)).toHaveLength(1);
   });
 
   it('sem descrição, nem o subcomponente nem o import sobram', () => {
-    const saida = alertDialogNoDescriptionSource();
-    expect(saida).not.toContain('AlertDialogDescription');
-    expect(saida).toContain('<AlertDialogTitle>Descartar rascunho</AlertDialogTitle>');
+    const output = alertDialogNoDescriptionSource();
+    expect(output).not.toContain('AlertDialogDescription');
+    expect(output).toContain('<AlertDialogTitle>Descartar rascunho</AlertDialogTitle>');
   });
 
-  it('o nível de cabeçalho sai por delegação de elemento, e só ele muda', () => {
-    const saida = alertDialogHeadingH3Source();
-    // `level` sozinho NÃO troca a tag nesta lib — troca o `aria-level` e deixa
-    // um `div`. Quem devolve o elemento é o snippet `child`, e os dois vão
-    // juntos para a tag e o ARIA concordarem. O snippet é o que se copia:
-    // publicá-lo só com o `level` ensinaria um `div` com cara de cabeçalho.
-    expect(saida).toContain('<AlertDialogTitle level={3}>');
-    expect(saida).toContain('{#snippet child({ props })}');
-    expect(saida).toContain('<h3 {...props}>Excluir conta</h3>');
+  it('o control de descrição apagado tira o subcomponente, como na tela', () => {
+    const output = alertDialogSource('', { args: { description: '' } });
+    expect(output).not.toContain('AlertDialogDescription');
+  });
 
-    // E nada MAIS muda: desfeito o bloco do título, sobra o snippet canônico.
-    // Sem esta parte o caso passaria com o painel inteiro reescrito, e o
-    // exemplo deixaria de ensinar uma coisa só.
+  it('o nível de cabeçalho sai pelo `level` do primitivo, e só ele muda', () => {
+    const output = alertDialogHeadingH3Source();
+    // O `level` do wrapper troca a TAG e o `aria-level` juntos — quem copia
+    // não precisa delegar elemento nenhum, e o exemplo não ensina o snippet
+    // `child` que o wrapper já escreve por dentro.
+    expect(output).toContain('<AlertDialogTitle level={3}>Excluir conta</AlertDialogTitle>');
+    expect(output).not.toContain('<h3');
+
+    // E nada MAIS muda: desfeito o nível, sobra o snippet canônico. Sem esta
+    // parte o caso passaria com o painel inteiro reescrito, e o exemplo
+    // deixaria de ensinar uma coisa só.
     expect(
-      saida.replace(
-        `<AlertDialogTitle level={3}>
-        {#snippet child({ props })}
-          <h3 {...props}>Excluir conta</h3>
-        {/snippet}
-      </AlertDialogTitle>`,
+      output.replace(
+        '<AlertDialogTitle level={3}>Excluir conta</AlertDialogTitle>',
         '<AlertDialogTitle>Excluir conta</AlertDialogTitle>',
       ),
-    ).toBe(alertDialogSource('', { args: { open: true } }));
+    ).toBe(alertDialogSource());
   });
   it('a classe extra chega ao painel e ao bloco de mídia', () => {
-    const saida = alertDialogClassNameExtraSource();
-    expect(saida).toContain('<AlertDialogContent class="nds-overflow-hidden">');
-    expect(saida).toContain('<AlertDialogMedia class="nds-shrink-0">');
+    const output = alertDialogClassNameExtraSource();
+    expect(output).toContain('<AlertDialogContent class="nds-overflow-hidden">');
+    expect(output).toContain('<AlertDialogMedia class="nds-shrink-0">');
   });
 });

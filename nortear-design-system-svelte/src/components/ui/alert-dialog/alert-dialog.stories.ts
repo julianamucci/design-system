@@ -7,9 +7,10 @@ import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogDocs from '@/components/docs/AlertDialogDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { alertDialogSource } from './alert-dialog.source';
+import { runtimeDescription } from './alert-dialog-runtime-description.svelte';
 
 // Args que montam a composição ficam na categoria "Demonstração" — mesmos nomes,
-// ordem e valores nas 4 stacks, para o painel de controls ser o mesmo em
+// ordem e valores nas cinco stacks, para o painel de controls ser o mesmo em
 // qualquer Storybook do design system.
 const DEMO = { table: { category: 'Demonstração' } } as const;
 
@@ -61,7 +62,7 @@ const meta: Meta = {
     showMedia: {
       control: 'boolean',
       description:
-        'Bloco de ícone no topo do header (AlertDialogMedia). Quando presente, o CSS centraliza header e texto.',
+        'Bloco de ícone no topo do header (AlertDialogMedia). Quando presente, a caixa do ícone centraliza no mobile e volta à esquerda a partir de 40rem.',
       ...DEMO,
     },
     triggerLabel: { control: 'text', description: 'Rótulo do botão que abre o diálogo.', ...DEMO },
@@ -119,6 +120,7 @@ export const Playground: Story = {
       'accessibility.item4',
       'accessibility.item5',
       'visual.item1',
+      'accessibility.item8',
     ],
   },
   render: (args) => ({
@@ -136,11 +138,16 @@ export const Playground: Story = {
       actionLabel: args.actionLabel,
       onConfirm: playgroundConfirm,
       onCancel: playgroundCancel,
+      // Só a play escreve nesta caixa — é o que tira a descrição com o painel
+      // aberto, sem remontar. Ver alert-dialog-runtime-description.svelte.ts.
+      descriptionOverride: runtimeDescription,
     },
   }),
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);
+    // A caixa da descrição em execução é de módulo: começa sempre neutra.
+    runtimeDescription.current = undefined;
 
     await step('Trigger está presente no DOM', async () => {
       const trigger = canvas.getByRole('button', { name: /^Excluir conta$/i });
@@ -174,10 +181,16 @@ export const Playground: Story = {
       const describedBy = dialog.getAttribute('aria-describedby');
       await expect(labelledBy).toBeTruthy();
       await expect(describedBy).toBeTruthy();
-      await expect(document.getElementById(labelledBy!)).toHaveTextContent(/^Excluir conta$/i);
-      await expect(document.getElementById(describedBy!)).toHaveTextContent(
-        /removidos permanentemente/i
-      );
+      const heading = document.getElementById(labelledBy!);
+      await expect(heading).toHaveTextContent(/^Excluir conta$/i);
+      // O título é um cabeçalho de verdade, `h2` por padrão, com o ARIA
+      // concordando com a tag (ver alert-dialog-title.svelte); a descrição é
+      // parágrafo, como a folha documenta.
+      await expect(heading!.tagName).toBe('H2');
+      await expect(heading).toHaveAttribute('aria-level', '2');
+      const description = document.getElementById(describedBy!);
+      await expect(description).toHaveTextContent(/removidos permanentemente/i);
+      await expect(description!.tagName).toBe('P');
       await expect(dialog).toHaveAccessibleName(/Excluir conta/i);
     });
 
@@ -231,6 +244,33 @@ export const Playground: Story = {
         await userEvent.tab();
         await expect(dialog.contains(document.activeElement)).toBe(true);
       }
+    });
+
+    // PRD D4: a lib guarda o id da descrição mesmo depois que ela sai, e o
+    // painel ficava apontando para um id que não existe mais. O registro da
+    // descrição é o que resolve — e só se prova tirando-a com o painel ABERTO.
+    await step('Descrição removida com o painel aberto leva o aria-describedby junto', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const describedBy = dialog.getAttribute('aria-describedby');
+      await expect(describedBy).toBeTruthy();
+
+      runtimeDescription.current = '';
+      try {
+        await waitFor(() => expect(dialog).not.toHaveAttribute('aria-describedby'));
+        // Nenhum id órfão: o alvo antigo saiu do documento e o painel não o cita.
+        await expect(document.getElementById(describedBy!)).toBeNull();
+        await expect(dialog).toHaveAccessibleDescription('');
+        await expect(dialog.querySelector('[data-slot="alert-dialog-description"]')).toBeNull();
+      } finally {
+        // Devolve a descrição antes de sair do passo, falhe ou não: a caixa é
+        // de módulo, e o replay da play reencontraria o painel sem ela.
+        runtimeDescription.current = undefined;
+      }
+
+      // E ela VOLTA pelo mesmo registro, apontando para o parágrafo novo.
+      await waitFor(() => expect(dialog).toHaveAttribute('aria-describedby'));
+      const restored = document.getElementById(dialog.getAttribute('aria-describedby')!);
+      await expect(restored).toHaveTextContent(/removidos permanentemente/i);
     });
 
     await step('Escape fecha o diálogo e devolve o foco ao trigger', async () => {

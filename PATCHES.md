@@ -34,7 +34,7 @@ Este arquivo registra toda divergência intencional entre este design system e s
 >
 > **Breaking changes de comportamento cross-stack pós-migração nova (2026-04-21):**
 > - **React (base-ui):** `asChild` prop removido — usar `render={<Component />}` prop. `Accordion` usa `aria-disabled` em vez de atributo `disabled` nativo.
-> - **Svelte (bits-ui 2.18):** `AlertDialogAction` **não fecha automaticamente** o dialog — consumidor precisa fazer `open = false` no handler. `Accordion` não aceita mais `defaultValue` — usar `bind:value`.
+> - **Svelte (bits-ui 2.18):** `AlertDialogAction` **não fecha automaticamente** o dialog — consumidor precisa fazer `open = false` no handler. *(Resolvido no wrapper: hoje a Action renderiza `Dialog.Close` e fecha pelo caminho oficial — `alert-dialog-action.svelte`.)* `Accordion` não aceita mais `defaultValue` — usar `bind:value`.
 > - **Vue (reka-ui 2.9.6):** `AvatarImage` força `role="img"` no `<img>` — alt vazio (`alt=""`) causa violação `aria-allowed-role`. Sempre usar alt descritivo.
 > - **Todas stacks:** variante `destructive` agora é soft (`bg-destructive/10 text-destructive`) em vez de sólida. Mudança visual esperada.
 
@@ -188,7 +188,7 @@ onClose?: (reason: SheetCloseReason) => void;
 
 **Motivo:** o evento `dialog_close` do catálogo tipado tem campo `reason`, e o Dialog factory já expõe `onClose(reason)` — o Sheet era o único overlay sem isso, deixando o analytics das docs pages sem distinguir escape/overlay/botão. Mudança aditiva; `onOpenChange(false)` continua disparando após `onClose`.
 
-**Verificação após bump:** n/a (sem upstream). Manter paridade de assinatura com `DialogCloseReason` se o Dialog ganhar novos motivos. Obs.: o AlertDialog **não** recebe este patch — não fecha por Escape/overlay por design (canônico), então `close-button`/action cobrem todos os caminhos.
+**Verificação após bump:** n/a (sem upstream). Manter paridade de assinatura com `DialogCloseReason` se o Dialog ganhar novos motivos. Obs.: o AlertDialog **não** recebe este patch — ele não fecha por clique no véu (D1 do `prd/alert-dialog.md`), e os três caminhos que fecham são Cancelar (`close-button`), a ação (`api`) e Escape (`escape`, que equivale a cancelar). Esta linha dizia que ele não fechava por Escape, o que nunca foi o comportamento documentado.
 
 ### vanilla/tooltip — `onShow` na exibição real {#vanilla-tooltip-onshow}
 
@@ -484,26 +484,18 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 **Verificação após bump:** n/a (sem upstream no Alert). Manter o default em `'alert'` — trocá-lo seria breaking. Story `SemAnuncio` (arquivo de estados do Alert nas 4 stacks) trava as duas pontas: `role="note"` explícito e default `alert` quando a prop é omitida.
 
-### vue/alert-dialog — `aria-label` de fallback no Content {#vue-alert-dialog-fallback-label}
+### vue/alert-dialog — `aria-label` de fallback no Content — RETIRADO em 2026-09-10 {#vue-alert-dialog-fallback-label}
 
 - **Arquivo:** `nortear-design-system-vue/src/components/ui/alert-dialog/AlertDialogContent.vue`
 - **Categoria:** a11y
-- **Data:** 2026-08-06 (registro; o código é de 2026-05, commit f04827e7)
+- **Data:** 2026-08-06 (registro; código de 2026-05, commit f04827e7) · retirado em 2026-09-10
 - **Upstream ref:** — (comportamento do `reka-ui`, não bug)
 
-**Antes (upstream):**
-```vue
-<AlertDialogContent v-bind="{ ...$attrs, ...forwarded }">
-```
+**O que existia:** `v-bind="{ 'aria-label': fallbackLabel, ...$attrs, ...forwarded }"`, com `fallbackLabel = attrs['aria-labelledby'] ? undefined : 'AlertDialog'`.
 
-**Depois (custom):**
-```vue
-<AlertDialogContent v-bind="{ 'aria-label': fallbackLabel, ...$attrs, ...forwarded }">
-```
+**Por que saiu:** a premissa estava errada. O `reka-ui` NÃO emite `aria-labelledby` só quando existe um `AlertDialogTitle`: o `DialogContentImpl` gera o id do título sempre e liga `aria-labelledby` a ele em todo painel, com ou sem título (medido por SSR no reka-ui 2.10.4). A condição olhava os atributos de QUEM CONSOME, que nunca trazem `aria-labelledby`, então o "fallback" saía em TODO painel — `aria-label="AlertDialog"`, em inglês, ao lado do `aria-labelledby`. O ramo que o `v8 ignore` chamava de "sem story" era o caminho padrão. Painel sem título é composição fora do contrato (C2, `anatomy.item5`), e a própria lib avisa em desenvolvimento; o vanilla, que é a referência, não emite nome de fallback.
 
-**Motivo:** o `reka-ui` só emite `aria-labelledby` quando existe um `AlertDialogTitle`; sem ele o painel fica sem nome acessível e o axe reprova por `aria-dialog-name`. O fallback entrega o nome mínimo. É a única stack com essa rede — base-ui, bits-ui e a factory Vanilla deixam o painel sem nome se o consumidor omitir o Title, o que o contrato documentado proíbe (`anatomy.item5`: título obrigatório).
-
-**Verificação após bump:** conferir se o reka-ui passou a emitir um nome padrão. O ramo não tem story (o Title está em todas), então está declarado com `v8 ignore` — se o fallback sair, o ignore sai junto.
+**Verificação após bump:** nenhuma — o wrapper não declara mais nome. A story `Playground` do vue afirma `not.toHaveAttribute('aria-label')` e o nome acessível igual ao título.
 
 ### vanilla/alert-dialog — `defaultOpen` na factory {#vanilla-alert-dialog-defaultopen}
 
@@ -517,6 +509,89 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 **Motivo:** `defaultOpen` está na tabela de props compartilhada e existe em React, Vue e Svelte; só o Vanilla não expunha. As stories abriam o diálogo com `queueMicrotask(() => trigger.click())` — truque que não é API e que nenhuma documentação descrevia. Não há equivalente para `open` controlado: o estado de abertura continua sendo da factory, e a story `Controlled` declara isso em `coversNotApplicable`.
 
 **Verificação após bump:** n/a (sem upstream). Se a factory ganhar modo controlado, rever o `coversNotApplicable` de `functional.item7` nas stories de estados.
+
+### vanilla/alert-dialog — `onClose(reason)`, e `class` na mídia {#vanilla-alert-dialog-onclose}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/alert-dialog.ts`
+- **Categoria:** api
+- **Data:** 2026-09-10
+- **Upstream ref:** — (stack standalone)
+
+**Depois:** opção `onClose(reason)`, com `'escape' | 'close-button' | 'api'`, disparada uma vez por fechamento e ANTES de `onOpenChange(false)` — a mesma ordem do `createDialog`. A guarda de "já fechado" subiu para o topo do `close()`: um segundo clique durante a animação de saída disparava o callback de novo. E `createAlertDialogMedia` passou a receber `class`, como `createAlertDialog` e a maioria das fábricas — recebia `className`. **Quebra quem usava `className`**; o único chamador era a story `ExtraClass`.
+
+**Motivo:** o Escape do vanilla fechava sem `dialog_close` nenhum — a docs page rastreava o fechamento à mão nos cliques dos dois botões, e a fábrica era a única peça que sabia qual caminho fechou. O Sheet já tinha `onClose(reason)` (entrada acima).
+
+**Verificação após bump:** n/a (sem upstream). Manter o vocabulário igual ao `DialogCloseReason`, sem o `overlay` (clique no véu não fecha este componente).
+
+### react/alert-dialog — foco inicial no Cancelar por `initialFocus` {#react-alert-dialog-initialfocus}
+
+- **Arquivo:** `nortear-design-system-react/src/components/ui/alert-dialog.tsx`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** comportamento da `@base-ui/react` (`utils/popups/popupStoreUtils.js`)
+
+**Depois:** o Content passa ao `initialFocus` da lib uma ref que o Cancel entrega por um contexto interno, não exportado; quem consome ainda pode trocar.
+
+**Motivo:** a base-ui foca o primeiro tabbable — o Cancelar chegava ao foco pela ORDEM do rodapé, não por escolha (D3 do `prd/alert-dialog.md`) — e, na abertura por toque, foca o painel em vez de um botão.
+
+**Verificação após bump:** a story `Open` abre pelo toque e confere o foco no Cancelar; se a lib mudar a assinatura de `initialFocus`, é ela que reprova.
+
+### vue/alert-dialog — descrição por registro {#vue-alert-dialog-description-registry}
+
+- **Arquivo:** `nortear-design-system-vue/src/components/ui/alert-dialog/AlertDialogContent.vue` e `AlertDialogDescription.vue`
+- **Categoria:** a11y
+- **Data:** 2026-08-17 (código) · registrado em 2026-09-10 — ficou quase um mês sem entrada
+- **Upstream ref:** comportamento do `reka-ui` (`DialogContentImpl`)
+
+**Depois:** a descrição se registra no painel enquanto está montada, e o `aria-describedby` só é ligado quando ela existe.
+
+**Motivo:** a reka gera o id da descrição sempre e liga `aria-describedby` a ele mesmo sem descrição — um id inexistente, que a própria lib avisa em desenvolvimento. É a D4: a descrição é opcional.
+
+**Verificação após bump:** a story `WithoutDescription` confere a ausência do atributo, e a play de remoção com o painel aberto confere que ele some sem deixar id órfão.
+
+### vue/alert-dialog — clique de quem consome antes do fechamento {#vue-alert-dialog-click-order}
+
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/alert-dialog/AlertDialogAction.vue`, `AlertDialogCancel.vue`
+- **Categoria:** bugfix
+- **Data:** 2026-09-10
+- **Upstream ref:** — (ordem de ouvintes do `reka-ui`, não bug da lib)
+
+**Antes:** o `@click` de quem consome chegava ao `AlertDialogAction`/`Cancel` do primitivo como atributo repassado, e o Vue o soma DEPOIS do `onClick` do `DialogClose`, que fecha o diálogo.
+
+**Depois:** o wrapper declara `click` em `defineEmits` e o entrega em `@click.capture` — na captura, antes do ouvinte do primitivo no mesmo elemento.
+
+**Motivo:** no modo controlado, o `useVModel` do `DialogRoot` não é passivo e emite `update:open(false)` SÍNCRONO dentro do fechamento: quem consome recebia o fechamento antes do próprio clique. Marcar a confirmação no clique (a docs page faz isso para o `reason` do `dialog_close`) virava `close-button`. No modo não controlado a lib adia o evento, e a ordem só dava certo por acaso. Alinha também o que `props.table.onClick` promete ("o diálogo fecha depois de disparar").
+
+**Verificação após bump:** a story `Controlled` (estados, vue) confere `invocationCallOrder` do handler da ação contra o `update:open(false)`. Se o `DialogClose` passar a entregar o clique de quem consome primeiro, o `.capture` pode sair.
+
+### svelte/alert-dialog — descrição própria, título pelo `child` e foco no Cancelar {#svelte-alert-dialog-wrappers}
+
+- **Arquivo:** `nortear-design-system-svelte/src/components/ui/alert-dialog/` (`alert-dialog-description.svelte`, `alert-dialog-description-registry.ts`, `alert-dialog-content.svelte`, `alert-dialog-title.svelte`)
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** comportamento do `bits-ui`
+
+**Depois:**
+- a descrição é um `<p>` próprio que se registra no painel, e o painel declara `aria-describedby` pelo registro;
+- o título sai em `<h2>` por padrão, escrito pelo snippet `child` da lib, com `level` trocando a tag e o `aria-level` juntos;
+- o painel procura o botão pelo slot do Cancelar e o foca ao abrir (`focusSafeExit`), dependendo do tempo do FocusScope da lib.
+
+**Motivo:** a bits grava o id da descrição na raiz e não o apaga quando ela sai, e o valor dela vence o de quem consome — descrição removida com o painel aberto deixava `aria-describedby` órfão. O título da lib é `div[role=heading]`, e o padrão prometido é `h2`. O foco inicial precisa ser escolha, não herança (D3).
+
+**Verificação após bump:** `HeadingH3` (tag e `aria-level`), `WithoutDescription` e a play de remoção da descrição, e a story `Open` (foco no Cancelar sem clique).
+
+### angular/alert-dialog — foco inicial no Cancelar pelo `openAutoFocus` {#angular-alert-dialog-focuscancel}
+
+- **Arquivo:** `nortear-design-system-angular/src/components/ui/alert-dialog.ts`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** comportamento do `@radix-ng/primitives` (dialog)
+
+**Depois:** o `NdsAlertDialogCancel` se registra na raiz; a raiz escuta `(openAutoFocus)` no `rdxDialogPopup`, cancela o evento e foca o Cancelar. Sem Cancel montado, vale o padrão da lib.
+
+**Motivo:** o Cancelar chegava ao foco pela ordem do DOM (D3), e na abertura por toque o gerenciador de foco da lib foca o painel.
+
+**Verificação após bump:** a story `Open` confere o foco no Cancelar, inclusive na abertura por toque.
 
 ---
 
@@ -601,12 +676,11 @@ Diferenças de saída que vêm da lib primitiva e que **entregam o mesmo resulta
 para o usuário**. Ficam registradas para que uma auditoria cross-stack não as
 trate como bug e "alinhe" na força.
 
-### alert-dialog — `aria-modal` só em bits-ui e Vanilla
+### alert-dialog — `aria-modal`: divergência ENCERRADA
 
-- **Onde:** `role="alertdialog"` do painel, nas 4 stacks.
-- **Divergência:** `bits-ui` (Svelte) e a factory Vanilla emitem `aria-modal="true"`. `@base-ui/react` e `reka-ui` não emitem: marcam todo o resto da página com `aria-hidden` (base-ui soma `data-base-ui-inert`), que é a técnica mais nova e mais confiável de isolamento.
-- **Por que não alinhar:** as duas técnicas entregam o mesmo isolamento para leitor de tela; forçar `aria-modal` em base-ui/reka duplicaria a semântica sem ganho, e remover dos outros dois perderia isolamento onde o `aria-hidden` não é aplicado. As play functions asseveram o mecanismo de cada stack e os comentários explicam qual é.
-- **Rever se:** base-ui ou reka passarem a emitir `aria-modal`, ou se o axe passar a exigir o atributo.
+- **Onde:** `role="alertdialog"` do painel, nas cinco stacks.
+- **Estado hoje:** as cinco emitem `aria-modal="true"`. `bits-ui` e a factory vanilla, de origem; `@base-ui/react` e `reka-ui` isolam o resto da página com `aria-hidden`/`inert` e não emitem o atributo, então os wrappers do react (`alert-dialog.tsx`) e do vue (`AlertDialogContent.vue`) o forçam; o angular também o tem.
+- **Por que esta entrada mudou:** ela dizia "só em bits-ui e Vanilla — não alinhar", e ficou de pé depois que os wrappers passaram a forçar o atributo. A regra de categoria (`guidelines/18-overlay.md`, §Modalidade) assere `aria-modal="true"` na suíte, e é ela que vale.
 
 ## Bugs upstream conhecidos (sem patch aplicado)
 

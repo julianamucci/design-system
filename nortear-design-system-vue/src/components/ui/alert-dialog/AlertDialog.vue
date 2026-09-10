@@ -12,9 +12,14 @@
  *     `pointerDownOutside` e `interactOutside`. Não é prop de quem consome.
  *   · ESCAPE FECHA, e equivale a cancelar — a camada de dispensa do Dialog
  *     continua valendo.
- *   · O foco entra no CANCEL: `onOpenAutoFocus` do primitivo o busca por
- *     contexto. Num diálogo de destruição, o Enter por reflexo tem de cair na
- *     saída segura.
+ *   · O foco entra no CANCEL, por escolha EXPLÍCITA e não pela ordem do DOM
+ *     (D3): o `AlertDialogCancel` do primitivo se registra no contexto do
+ *     painel (`onCancelElementChange`), e o `onOpenAutoFocus` do
+ *     `AlertDialogContent` foca ESSE elemento no `nextTick`, depois do foco
+ *     automático do trap. Reordenar o rodapé não muda o destino, e não há
+ *     caminho diferente para abertura por toque. Conferido no reka-ui 2.10.4
+ *     (`AlertDialog/AlertDialogContent.js`). Num diálogo de destruição, o
+ *     Enter por reflexo tem de cair na saída segura.
  *
  * Corolário: a saída visível é o par Cancel + Action do rodapé, e por isso o
  * rodapé não é opcional aqui — este componente não tem X no canto.

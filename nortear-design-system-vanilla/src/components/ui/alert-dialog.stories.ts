@@ -6,6 +6,7 @@ import { buildDemo } from './alert-dialog.fixtures';
 import { alertDialogSource } from './alert-dialog.source';
 import { createAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import type { AlertDialogCloseReason } from './alert-dialog';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -20,10 +21,11 @@ type AlertDialogArgs = {
   tone: 'destructive' | 'default';
   class?: string;
   onOpenChange?: (open: boolean) => void;
+  onClose?: (reason: AlertDialogCloseReason) => void;
 };
 
 // Args que montam a composição ficam na categoria "Demonstração" — mesmos nomes,
-// ordem e valores nas 4 stacks, para o painel de controls ser o mesmo em
+// ordem e valores nas cinco stacks, para o painel de controls ser o mesmo em
 // qualquer Storybook do design system.
 const DEMO = { table: { category: 'Demonstração' } } as const;
 
@@ -55,6 +57,12 @@ const meta: Meta<AlertDialogArgs> = {
       description: 'Callback disparado quando o diálogo abre ou fecha.',
       table: { type: { summary: '(open: boolean) => void' } },
     },
+    onClose: {
+      control: false,
+      description:
+        "Callback com o motivo do fechamento: 'escape', 'close-button' (Cancelar) ou 'api' (ação que confirma). Dispara antes do onOpenChange(false).",
+      table: { type: { summary: "(reason: 'escape' | 'close-button' | 'api') => void" } },
+    },
 
     tone: {
       control: 'select',
@@ -65,7 +73,7 @@ const meta: Meta<AlertDialogArgs> = {
     showMedia: {
       control: 'boolean',
       description:
-        'Bloco de ícone no topo do header (createAlertDialogMedia). Quando presente, o CSS centraliza header e texto.',
+        'Bloco de ícone no topo do header (createAlertDialogMedia). Abaixo de 40rem a caixa do ícone centraliza, acompanhando o texto do cabeçalho; a partir de 40rem vai à esquerda.',
       ...DEMO,
     },
     triggerLabel: { control: 'text', description: 'Rótulo do botão que abre o diálogo.', ...DEMO },
@@ -93,6 +101,7 @@ const meta: Meta<AlertDialogArgs> = {
     class: '',
     // Popula a aba Actions e deixa a play verificar cada transição de abertura.
     onOpenChange: fn(),
+    onClose: fn(),
     tone: 'destructive',
     showMedia: false,
     triggerLabel: 'Excluir conta',
@@ -135,7 +144,9 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const body = within(document.body);
     const onOpenChange = args.onOpenChange as unknown as ReturnType<typeof fn>;
+    const onClose = args.onClose as unknown as ReturnType<typeof fn>;
     onOpenChange.mockClear();
+    onClose.mockClear();
 
     await step('Trigger está presente e anuncia que abre um diálogo', async () => {
       const trigger = canvas.getByRole('button', { name: /^Excluir conta$/i });
@@ -198,8 +209,9 @@ export const Playground: Story = {
         await expect(media).toBeNull();
         return;
       }
-      // A mídia é o PRIMEIRO filho do header: é dessa ordem que dependem o
-      // :has() do CSS e a ordem de leitura ícone → título → descrição.
+      // A mídia é o PRIMEIRO filho do header: é dela que depende a ordem de
+      // leitura ícone → título → descrição. O :has() da folha não depende da
+      // ordem — ele só centraliza a caixa do ícone no mobile.
       const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
       await expect(header!.firstElementChild).toBe(media);
       await expect(media!.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
@@ -238,7 +250,7 @@ export const Playground: Story = {
       await expect(body.queryByRole('alertdialog')).toBeInTheDocument();
     });
 
-    await step('Clique em Cancelar fecha e devolve o foco ao trigger', async () => {
+    await step('Clique em Cancelar fecha, devolve o foco e informa o motivo', async () => {
       const dialog = await waitForPortal('alertdialog');
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
@@ -247,6 +259,10 @@ export const Playground: Story = {
       await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());
       await expect(canvas.getByRole('button', { name: /^Excluir conta$/i })).toHaveFocus();
       await expect(onOpenChange).toHaveBeenCalledWith(false);
+      // O motivo é o que alimenta o `reason` do dialog_close: o Cancelar é o
+      // botão de fechar deste componente, que não tem X no canto.
+      await expect(onClose).toHaveBeenCalledTimes(1);
+      await expect(onClose).toHaveBeenCalledWith('close-button');
     });
   },
 };
