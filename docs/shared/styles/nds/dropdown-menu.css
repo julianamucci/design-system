@@ -130,13 +130,25 @@
 }
 
 /* Content composto: scroll interno + dimensões do positioner + animação.
- * Fallbacks em cadeia: base-ui → reka (dropdown/context/menubar). */
+ * Fallbacks em cadeia: base-ui → reka (dropdown/context/menubar) → bits.
+ *
+ * ESTA FOLHA VESTE QUATRO PEÇAS DO BITS, e é por isso que a cadeia é longa:
+ * `.nds-dropdown-menu-content` é usada pelo dropdown, pelo context-menu e pelo
+ * menubar, e os submenus dos três entram por outro nome ainda. Medido no
+ * bits-ui 2.19.0: `getFloatingContentCSSVars(nome)` escreve
+ * `--bits-${nome}-content-transform-origin`, e é chamado com `"dropdown-menu"`,
+ * `"context-menu"`, `"menubar"` e `"menu"` (este último nos sub-contents).
+ *
+ * Sem os quatro degraus a cadeia caía em `center` no Svelte, e o menu crescia do
+ * MEIO em vez de crescer do gatilho. Nada reprovava: `center` é fallback válido,
+ * e por isso a omissão é silenciosa — foi relatada como achado novo duas vezes.
+ * Portão: `cadeia_transform_origin_sem_bits`. */
 .nds-dropdown-menu-content {
   max-height: var(--available-height, var(--reka-dropdown-menu-content-available-height, var(--reka-context-menu-content-available-height, var(--reka-menubar-content-available-height))));
   width: var(--anchor-width, var(--reka-dropdown-menu-trigger-width, auto));
   overflow-x: hidden;
   overflow-y: auto;
-  transform-origin: var(--transform-origin, var(--reka-dropdown-menu-content-transform-origin, var(--reka-context-menu-content-transform-origin, var(--reka-menubar-content-transform-origin, center))));
+  transform-origin: var(--transform-origin, var(--reka-dropdown-menu-content-transform-origin, var(--reka-context-menu-content-transform-origin, var(--reka-menubar-content-transform-origin, var(--bits-dropdown-menu-content-transform-origin, var(--bits-context-menu-content-transform-origin, var(--bits-menubar-content-transform-origin, var(--bits-menu-content-transform-origin, center))))))));
 }
 
 /* Sem animação de saída: manter o menu montado durante transição de

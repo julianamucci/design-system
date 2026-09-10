@@ -212,7 +212,15 @@
     0 0 0 1px hsl(var(--foreground) / 0.1),
     var(--elevation-md);
 
-  transform-origin: var(--transform-origin, var(--reka-select-content-transform-origin, center));
+  /* Cadeia por lib: base-ui → reka → bits. O degrau do bits faltava, e o painel
+   * do Svelte crescia do CENTRO em vez de crescer do gatilho — sem nada
+   * reprovar, porque `center` é fallback válido. O prefixo já era conhecido
+   * duas regras abaixo, em `.nds-select-viewport`, que lê
+   * `--bits-select-anchor-width`: o que faltou não foi descobrir a lib, foi
+   * completar esta linha. Medido no bits-ui 2.19.0, onde
+   * `getFloatingContentCSSVars` é chamado com `"select"`.
+   * Portão: `cadeia_transform_origin_sem_bits`. */
+  transform-origin: var(--transform-origin, var(--reka-select-content-transform-origin, var(--bits-select-content-transform-origin, center)));
 }
 
 /* Viewport interno: acompanha as dimensões do trigger/anchor (reka popper,

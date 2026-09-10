@@ -2497,6 +2497,161 @@ function auditDocsSmokeCobertura() {
   return violations;
 }
 
+/**
+ * Cadeia de `transform-origin` que esquece o degrau do bits-ui.
+ *
+ * Painel flutuante cresce a partir da borda encostada no gatilho, e cada lib
+ * headless publica essa origem numa custom property com o SEU prefixo. A folha
+ * compartilhada enumera as libs em cadeia até cair em `center`, que é o certo
+ * para vanilla (não anima a entrada) e angular (radix-ng não publica origem).
+ *
+ * O DEFEITO É SILENCIOSO, e é essa a razão desta regra existir. `center` é
+ * fallback válido: quando o degrau do bits falta, o painel do Svelte cresce do
+ * MEIO em vez de crescer do gatilho, nenhum compilador vê, nenhuma suíte
+ * reprova e nenhuma folha fica vermelha. Some da vista até alguém abrir o
+ * Storybook do Svelte e comparar com outra stack.
+ *
+ * História, porque ela explica o formato: a cadeia nasceu na migração do Vue
+ * (base-ui → reka → center), sem bits, em SEIS folhas de uma vez. Em 2026-09-03
+ * o conserto do tooltip mediu as seis e deixou as outras cinco escritas na
+ * mensagem do commit como fora de escopo. Dali em diante elas foram sendo
+ * consertadas UMA POR RODADA, quando a revisão daquele componente chegava —
+ * popover em 09-05, hover-card em 09-06, dropdown-menu e select em 09-09 — e no
+ * meio disso a mesma omissão foi relatada como achado novo três vezes. Backlog
+ * que mora em mensagem de commit não é lido por ninguém; portão é.
+ *
+ * Os nomes NÃO se derivam do nome do componente, e essa é a armadilha: no bits
+ * o hover-card chama-se `link-preview`, e uma folha só pode vestir várias peças
+ * (o `dropdown-menu.css` veste dropdown, context-menu, menubar e os submenus dos
+ * três). Por isso o mapa é DECLARADO e a premissa dele é conferida contra o
+ * pacote instalado.
+ */
+const CADEIA_ORIGEM_BITS = {
+  'popover.css': { seletor: '.nds-popover-content', nomes: ['popover'] },
+  'tooltip.css': { seletor: '.nds-tooltip-content', nomes: ['tooltip'] },
+  'hover-card.css': { seletor: '.nds-hover-card-content', nomes: ['link-preview'] },
+  'select.css': { seletor: '.nds-select-content', nomes: ['select'] },
+  'dropdown-menu.css': {
+    seletor: '.nds-dropdown-menu-content',
+    nomes: ['dropdown-menu', 'context-menu', 'menubar', 'menu'],
+  },
+};
+
+/** Folha com cadeia que NÃO leva degrau do bits — exceção declarada, com o porquê. */
+const CADEIA_ORIGEM_SEM_BITS = {
+  'navigation-menu.css':
+    'o bits-ui não publica origem para o navigation-menu: nenhuma chamada de '
+    + '`getFloatingContentCSSVars` no pacote dele (medido na 2.19.0)',
+};
+
+function auditCadeiaTransformOrigin() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+
+  // Premissa das entradas do mapa: o nome ainda existe no pacote instalado. Se
+  // o bits renomear uma peça, é AQUI que se descobre — e não numa folha que
+  // passou a cair em `center` sem avisar. Melhor esforço: fora de um checkout
+  // com `node_modules` do svelte não há o que conferir, e a ausência do pacote
+  // não é defeito do repositório.
+  // Escopo `dist/bits`, e NÃO o pacote inteiro — mas com `.js` junto do
+  // `.svelte`, e isso foi aprendido reprovando: a primeira versão varria só
+  // `.svelte` e acusou `select.css` de declarar um nome inexistente. O nome
+  // existe; ele só não chega por literal solto. O `select` do bits decide entre
+  // duas peças na mesma chamada — `getFloatingContentCSSVars(this.root.isCombobox
+  // ? "combobox" : "select")`, em `dist/bits/select/select.svelte.js` — então o
+  // padrão tem de colher QUALQUER literal dentro dos parênteses, não só o
+  // primeiro argumento.
+  const pacote = join(ROOT, stackDir('svelte'), 'node_modules', 'bits-ui', 'dist', 'bits');
+  let publicados = null;
+  try {
+    const arquivos = walkDir(pacote, ['.svelte', '.js']);
+    if (arquivos.length) {
+      publicados = new Set();
+      for (const f of arquivos) {
+        const txt = readFile(f);
+        if (!txt || !txt.includes('getFloatingContentCSSVars')) continue;
+        for (const chamada of txt.matchAll(/getFloatingContentCSSVars\(([^)]*)\)/g)) {
+          for (const lit of chamada[1].matchAll(/"([a-z-]+)"/g)) publicados.add(lit[1]);
+        }
+      }
+    }
+  } catch { /* sem pacote: segue sem a conferência de premissa */ }
+
+  for (const arquivo of Object.keys(CADEIA_ORIGEM_BITS)) {
+    const { seletor, nomes } = CADEIA_ORIGEM_BITS[arquivo];
+    const caminho = join(dir, arquivo);
+    const conteudo = readFile(caminho);
+    if (!conteudo) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, caminho), line: 1, rule: 'cadeia_transform_origin_sem_bits',
+        message: `${arquivo} está declarada no mapa de cadeias e não existe — atualize o mapa`,
+      });
+      continue;
+    }
+    const semComentario = conteudo.replace(/\/\*[\s\S]*?\*\//g, '');
+
+    // a linha da cadeia, e não o arquivo inteiro: comentário já saiu, mas outra
+    // regra do mesmo arquivo pode declarar `transform-origin` estático
+    const linha = semComentario
+      .split('\n')
+      .find((l) => /transform-origin:\s*var\(/.test(l));
+    if (!linha) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, caminho), line: 1, rule: 'cadeia_transform_origin_sem_bits',
+        message: `${arquivo} deveria ter cadeia de transform-origin em ${seletor} e não tem`,
+      });
+      continue;
+    }
+    const nLinha = semComentario.split('\n').indexOf(linha) + 1;
+
+    for (const nome of nomes) {
+      const prop = `--bits-${nome}-content-transform-origin`;
+      if (!linha.includes(prop)) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: relative(ROOT, caminho), line: nLinha, rule: 'cadeia_transform_origin_sem_bits',
+          message: `a cadeia de ${seletor} não enumera ${prop} — no Svelte o painel cai em `
+            + '`center` e cresce do meio em vez de crescer do gatilho, sem nada reprovar',
+        });
+      }
+      if (publicados && !publicados.has(nome)) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: relative(ROOT, caminho), line: nLinha, rule: 'cadeia_transform_origin_premissa',
+          message: `o mapa declara "${nome}" para ${arquivo}, e o bits-ui instalado não publica `
+            + 'esse nome — ou a peça foi renomeada, ou a entrada do mapa nunca valeu',
+        });
+      }
+    }
+  }
+
+  // Folha flutuante NOVA tem de se declarar: no mapa, ou na lista de exceções
+  // com motivo. Sem isto a regra mediria só o que já conhece, que é exatamente
+  // como a omissão original atravessou seis folhas sem ninguém ver.
+  for (const caminho of walkDir(dir, ['.css'])) {
+    const arquivo = basename(caminho);
+    if (CADEIA_ORIGEM_BITS[arquivo] || CADEIA_ORIGEM_SEM_BITS[arquivo]) continue;
+    const conteudo = readFile(caminho);
+    if (!conteudo) continue;
+    const semComentario = conteudo.replace(/\/\*[\s\S]*?\*\//g, '');
+    // só cadeia POR LIB: `transform-origin: center` e afins não são cadeia
+    const m = /transform-origin:\s*var\(--(?:transform-origin|reka-|bits-)[^;]*;/.exec(semComentario);
+    if (!m) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: relative(ROOT, caminho), line: semComentario.slice(0, m.index).split('\n').length,
+      rule: 'cadeia_transform_origin_nao_declarada',
+      message: `${arquivo} tem cadeia de transform-origin por lib e não está declarada em `
+        + 'CADEIA_ORIGEM_BITS nem em CADEIA_ORIGEM_SEM_BITS — declare os nomes do bits, ou a '
+        + 'exceção com o motivo',
+    });
+  }
+
+  return violations;
+}
+
 function auditDeadLibInfra() {
   const violations = [];
   const targets = [
@@ -8021,7 +8176,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

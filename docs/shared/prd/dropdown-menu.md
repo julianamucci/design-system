@@ -132,6 +132,29 @@ item" — e texto localizado divide o mesmo evento em um valor por idioma no GA4
 contradição estava no conteúdo que ENSINA, não no código que envia, e por isso
 sobreviveria a qualquer correção de stack.
 
+### D11 · A cadeia de `transform-origin` enumera QUATRO peças do bits
+
+**Corrigida em** 2026-09-09.
+**Medição**: a cadeia caía em `center` no Svelte, e o menu crescia do MEIO em vez
+de crescer do gatilho. Medido no Storybook do Svelte com o painel aberto:
+`transform-origin` resolvia em `64px 48.5px` numa caixa de 128×97 — o centro
+exato. Depois do conserto, `0px 0px`, a borda encostada no gatilho.
+
+**Por que quatro nomes**: por D9. Esta folha veste dropdown, context-menu e
+menubar, e os submenus dos três entram por outro nome ainda. No bits-ui 2.19.0
+`getFloatingContentCSSVars(nome)` escreve `--bits-${nome}-content-transform-origin`
+e é chamado com `"dropdown-menu"`, `"context-menu"`, `"menubar"` e `"menu"`. Os
+nomes não se derivam do nome do componente — no bits o hover-card chama-se
+`link-preview`.
+
+**Por que demorou**: a cadeia nasceu sem o degrau do bits na migração do Vue, em
+seis folhas de uma vez. O conserto do tooltip (2026-09-03) mediu as seis e
+deixou as outras cinco escritas na mensagem do commit, como fora de escopo —
+daí em diante foi uma por rodada, e a mesma omissão voltou como achado novo três
+vezes. `center` é fallback válido, então nada reprovava. Agora reprova:
+`cadeia_transform_origin_sem_bits`, com conferência de premissa contra o pacote
+instalado.
+
 ## 4. Anatomia
 
 ```
