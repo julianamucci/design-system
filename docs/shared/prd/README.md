@@ -134,12 +134,18 @@ setembro de 2026, quando três achados voltaram como "defeito novo" duas ou trê
 vezes cada, por agentes diferentes, porque cada rodada consertava a instância que
 via e o invariante continuava sem dono.
 
-Invariante desse eixo não tem casa em documento: o que o mantém verdadeiro nos
-nove componentes ao mesmo tempo é um PORTÃO.
-[invariantes-overlay.md](invariantes-overlay.md) lista os treze da categoria, com
-quem os escreve e quem os cobra. Os **sete que estavam descobertos ganharam
-regra em 2026-09-10** — seis no `audit.mjs` e um já coberto pela suíte; o que
-sobra aberto está na última seção de lá.
+Esse eixo **tem** casa, e ela é `docs/shared/guidelines/`: regra que vale igual
+nas cinco stacks e em muitos componentes. A de Overlay está em
+[`18-overlay.md`](../guidelines/18-overlay.md), que termina na tabela dos
+invariantes da categoria — onde a regra está escrita, qual portão a cobra e o
+que ele não cobre. O que mantém um invariante verdadeiro nos nove componentes ao
+mesmo tempo é o portão; o documento diz qual é.
+
+O inventário nasceu neste diretório, como `invariantes-overlay.md`, e saiu dele
+em 2026-09-10: esta pasta é **um arquivo por componente** — o hook de
+pre-commit trata cada nome aqui como slug —, e um documento de categoria dentro
+dela ficava fora do alcance de quem lê por assunto e do pacote que o Flutter
+consome, que publica `guidelines/` e não `prd/`.
 
 ## Índice
 

@@ -464,6 +464,6 @@ Ordem: folha → primitivo → cabeçalho, corpo e rodapé → botão de fechar 
 |---|---|
 | geometria, rodapé, raio, rolagem | `docs/shared/styles/nds/dialog.css` |
 | texto, props, critérios de teste | `docs/shared/content/dialog/translations.json` |
-| regras globais da família | `nortear-design-system-vanilla/guidelines/10-overlay-components.md` |
+| regras globais da família | `docs/shared/guidelines/18-overlay.md` |
 | desenho e anotações | Figma, página `Dialog` (componente `692:53`) |
 | portões determinísticos | `node scripts/audit.mjs dialog --json` |

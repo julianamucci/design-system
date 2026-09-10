@@ -39,35 +39,31 @@ O que muda de framework para framework. Copiar do pacote mais próximo e **adapt
 
 ## 2. Inventário obrigatório da stack nova
 
-### 2.1 `guidelines/` — 16 arquivos, os mesmos nomes
+### 2.1 `guidelines/` — só o que é da stack
 
-Medido: react, vue, svelte e vanilla têm **exatamente os mesmos 16 nomes**. O tamanho varia muito (react 5.062 linhas, vanilha 2.588, svelte 2.448) — o que não varia é o conjunto de nomes.
+A pasta tem de **existir** antes dos componentes: é essa a lição do Angular, que nasceu sem ela e ficou invisível para toda regra que a varre. O que vai dentro é o que é **específico da stack** — build e configuração, mecânica da lib, sintaxe de template, API de componente, stories e docs page. Regra que vale igual nas cinco mora UMA vez em `docs/shared/guidelines/`, inclusive regra de categoria (`17-componentes-conversacionais.md`, `18-overlay.md`).
+
+Como referência de forma, as stacks maduras têm, em 2026-09-10:
 
 ```
+RULES.md                              regras próprias da stack — o ponto de partida
 01-regras-gerais.md
-02-template-caracteres-especiais.md     (react usa 02-jsx-caracteres-especiais.md)
+02-template-caracteres-especiais.md   (react: 02-jsx-caracteres-especiais.md)
 03-sistema-design.md
-04-layout-components.md
-05-navigation-components.md
-06-form-components.md
-07-feedback-components.md
-08-display-components.md
-09-disclosure-components.md
-10-overlay-components.md
+04- a 09-*-components.md              uma por categoria, enquanto a categoria não migra para docs/shared
+10-overlay-components.md              só angular e vanilla, e só com mecânica — a regra é da 18-overlay.md
 11-documentacao-componentes.md
 12-arquitetura-projeto.md
-12-block-components.md                  (vazio nas cinco — ver nota)
 13-system-design.md
-Guidelines.md
-RULES.md
 ```
 
-**Nome fora desse conjunto fica invisível para a auditoria.** Duas regras varrem este diretório:
+**Não há conjunto obrigatório de nomes, e isso é deliberado.** Esta seção exigia "16 arquivos, os mesmos nomes" e afirmava que nome fora do conjunto ficava invisível para a auditoria. Medido em 2026-09-10, era falso: nenhuma regra lia os nomes — `dead_lib_in_infra` e `catalogo_duplicado_com_prd` leem qualquer `.md` da pasta, e `code_in_component_guideline` filtra só pelo prefixo `04-` a `10-`. E a exigência produziu o contrário do que prometia: cinco arquivos de zero byte (`12-block-components.md`, "mantido para o conjunto ficar comparável") e cinco cópias de cada guideline de categoria, com o mesmo assunto escrito de cinco jeitos — quatro das cinco de overlay afirmavam `--card` para os painéis, que nenhuma folha lê.
 
-- `dead_lib_in_infra` — vocabulário morto (biblioteca que saiu do projeto) em qualquer `.md` daqui
-- `code_in_component_guideline` — **bloco de código de implementação em `04-` a `10-`**. Guideline de componente traz propósito, árvore ASCII, tabelas e regras; o código vive no componente e no `translations.json`, que não envelhecem juntos. Modelo canônico: `## DataTable` em `08-display-components.md`
+O que é portão agora:
 
-Nota sobre `12-block-components.md`: existe com **zero bytes** nas cinco stacks e o número 12 está duplicado (com `12-arquitetura-projeto.md`). É resíduo, não padrão. Mantido por ora para o conjunto ficar comparável; se for removido, remova nas cinco de uma vez.
+- **`guidelines_de_stack_ausente`** — reprova a stack sem a pasta. Antes dele, as três varreduras faziam `if (!existsSync(dir)) continue`, e a stack sem pasta continuava pulada em silêncio, exatamente como no incidente
+- **`link_quebrado_em_guideline`** — todo link relativo da pasta e do `CLAUDE.md` da stack precisa resolver. No dia em que nasceu achou 49, entre eles os 21 do índice `Guidelines.md` (que saiu) e a primeira regra dos cinco `CLAUDE.md`, que mandava o agente para `./components/ui/` em vez de `./src/components/ui/`
+- **`dead_lib_in_infra`** e **`code_in_component_guideline`**, como antes
 
 ### 2.2 `CLAUDE.md` — ponteiro, não manual
 
@@ -164,10 +160,8 @@ Comparar os nomes, não o conteúdo. O que está em 4 de 4 e falta na nova é de
 ```bash
 NOVA=nortear-design-system-<nova>
 
-# guidelines: tem de dar 16, com os mesmos nomes
-for s in react vue svelte vanilla $NOVA; do
-  echo -n "$s: "; ls nortear-design-system-${s#nortear-design-system-}/guidelines/*.md 2>/dev/null | wc -l
-done
+# guidelines: a pasta existe e os links resolvem — é o que os portões cobram
+node scripts/audit.mjs --all --category quality --json | grep -E "guidelines_de_stack_ausente|link_quebrado_em_guideline"
 
 # lib, .storybook e sections: diff de nomes contra o vanilla
 for d in src/lib .storybook src/components/docs/shared/sections; do

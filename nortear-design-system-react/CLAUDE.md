@@ -1,21 +1,31 @@
-# Design System React — Guidelines
+# Design System Nortear — React
 
-Siga estritamente as regras em `guidelines/RULES.md` antes de qualquer tarefa.
+Leia primeiro o [`CLAUDE.md` da raiz](../CLAUDE.md): as convenções cross-stack (conteúdo compartilhado, `.nds-*`, SEO, analytics) e as regras de trabalho valem aqui sem alteração. Este arquivo é ponteiro — o que é operacional mora na guideline do assunto, onde quem procura pelo assunto o encontra.
 
-**Componentes existentes têm prioridade absoluta sobre código inline.** Antes de escrever qualquer elemento HTML (`<div>`, `<button>`, `<table>`, `<kbd>`, etc.), verifique se existe um componente em `./components/ui/` que atenda ao caso. Se existir, use-o — sem exceção.
+**Stack**: React 19 + `@base-ui/react` (Vaul no Drawer) + `lucide-react` + CSS `.nds-*`. Porta **6006**.
 
-**Arquitetura**: `guidelines/12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE.md` (o Storybook é a única interface; não existe sandbox de aplicação — componente novo entra por story).
+**Comandos**: `npm run storybook` · `npm run build` é `tsc -b`, sem emitir nada · `npm run build-storybook` empacota, e é o único que resolve `@import` de CSS. Qual rodar para cada mudança está no `CLAUDE.md` da raiz, em "A verificação sai da MUDANÇA".
 
-Para detalhes de implementação de componentes:
-- `guidelines/04-layout-components.md` a `guidelines/10-overlay-components.md`
-- **`../docs/shared/prd/<slug>.md`** — o que o componente É hoje: contrato, decisões com data e medição, tokens, e os nomes de peça das CINCO stacks. Onde existe PRD, a guideline guarda só a regra da CATEGORIA; o catálogo por componente saiu de lá (portão `catalogo_duplicado_com_prd`)
-- `guidelines/11-documentacao-componentes.md` (estrutura de ComponentDocs + stories)
+**Componentes existentes têm prioridade absoluta sobre código inline.** Antes de escrever qualquer elemento HTML (`<div>`, `<button>`, `<table>`, `<kbd>`), verifique se existe um componente em `./src/components/ui/` que atenda ao caso. Se existir, use — sem exceção.
 
-Guidelines compartilhadas (todas as stacks):
-- `../docs/shared/guidelines/01-acessibilidade.md`
-- `../docs/shared/guidelines/04-padroes-design-sistema.md`
-- `../docs/shared/guidelines/05-tom-de-voz.md`
-- `../docs/shared/guidelines/06-seo-geo.md`
-- `../docs/shared/guidelines/07-analytics.md`
-- `../docs/shared/guidelines/08-docs-pages-foundations.md`
-- `../docs/shared/guidelines/12-tokenizacao-dimensoes.md` — dimensões em token, e a **regra canônica de `style` inline com valor de design**: proibido nas cinco stacks, em primitivo, story e docs page. Portão `inline_style_design_value` do `audit.mjs`.
+**Onde está cada coisa**:
+
+- o que é **desta stack** → [`guidelines/RULES.md`](guidelines/RULES.md) e a tabela abaixo
+- o que vale **nas cinco** → [`../docs/shared/guidelines/`](../docs/shared/guidelines/) — o `RULES.md` aponta a de cada assunto
+- o que cada **componente** É — contrato, decisões com data e medição, tokens, peças das cinco stacks → `../docs/shared/prd/<slug>.md`, onde o PRD existe
+
+| `guidelines/` | assunto |
+|---|---|
+| [`RULES.md`](guidelines/RULES.md) | regras próprias desta stack — comece por aqui |
+| [`01-regras-gerais.md`](guidelines/01-regras-gerais.md) | regras gerais de implementação na stack |
+| [`02-jsx-caracteres-especiais.md`](guidelines/02-jsx-caracteres-especiais.md) | caracteres especiais no template |
+| [`03-sistema-design.md`](guidelines/03-sistema-design.md) | o sistema de design aplicado na stack — cores, tipografia, temas |
+| [`04-layout-components.md`](guidelines/04-layout-components.md) | componentes de layout |
+| [`05-navigation-components.md`](guidelines/05-navigation-components.md) | componentes de navegação |
+| [`06-form-components.md`](guidelines/06-form-components.md) | componentes de formulário |
+| [`07-feedback-components.md`](guidelines/07-feedback-components.md) | componentes de feedback |
+| [`08-display-components.md`](guidelines/08-display-components.md) | componentes de exibição |
+| [`09-disclosure-components.md`](guidelines/09-disclosure-components.md) | componentes de divulgação |
+| [`11-documentacao-componentes.md`](guidelines/11-documentacao-componentes.md) | docs page e stories |
+| [`12-arquitetura-projeto.md`](guidelines/12-arquitetura-projeto.md) | arquitetura, build e Storybook |
+| [`13-system-design.md`](guidelines/13-system-design.md) | padrões de código |

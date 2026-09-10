@@ -1,6 +1,6 @@
 # Arquitetura do Projeto — Design System Nortear (Storybook-Centric)
 
-> **Referência primária:** o índice em `Guidelines.md` — ele aponta a guideline de cada assunto antes de qualquer tarefa de documentação ou stories.
+> **Referência primária:** o `CLAUDE.md` da stack — a tabela dele aponta a guideline de cada assunto antes de qualquer tarefa de documentação ou stories.
 
 ---
 

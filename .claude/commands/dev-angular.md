@@ -24,7 +24,7 @@ O usuário invocou o comando com: **$ARGUMENTS**
    - `12-arquitetura-projeto.md` — `noEmit`/AOT, extração de documentação desligada, pré-empacotamento do Radix NG
    - `11-documentacao-componentes.md` — painel Code, função em `args`, containers de seção
    - `02-template-caracteres-especiais.md` — `@`, `{{`, expressão sem globais
-   - `RULES.md` e `Guidelines.md` — o índice e as regras duras
+   - `RULES.md` — as regras próprias da stack; o índice dos arquivos é a tabela do `CLAUDE.md` do pacote
    O `CLAUDE.md` do pacote é só o ponteiro para esses arquivos.
 3. UI primitive: `nortear-design-system-angular/src/components/ui/<slug>.ts`
 4. `docs/shared/content/<slug>/translations.json`

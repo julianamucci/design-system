@@ -1,162 +1,86 @@
-# Rules — Design System Documentation Project (Vue)
+# Rules — Design System Nortear (Vue)
 
-Estas regras se aplicam a **todas** as interações neste projeto, sem exceção. Consulte os arquivos de referência listados em cada seção para detalhes de implementação.
+O que é **específico do Vue**. Tudo o que vale igual nas cinco stacks está nas
+guidelines compartilhadas e não se repete aqui — ver a tabela no fim.
+
+> Enxugado em 2026-09-10. Este arquivo tinha doze seções, e sete eram cópia das
+> guidelines compartilhadas, reescritas de cinco jeitos (uma por stack) e com
+> erros que a original não tinha: espaçamento "em múltiplos de 8px" (a base é
+> 4px), painéis de overlay em `--card` (nenhuma folha lê), `data-track-label`
+> igual ao texto visível (é id estável), formulários com Vee-Validate + Zod
+> (nenhum dos dois é importado em `src/`) e exemplo de título de SEO com o sufixo
+> que o `useSeoEffect` já acrescenta. Cópia de regra transversal é o que
+> envelhece: a original é corrigida, e a cópia fica.
 
 ---
 
 ## 1. Stack obrigatória
 
-- **Componentes**: usar exclusivamente os de `./components/ui` (Reka UI)
-- **Estilos**: o vocabulário é `.nds-*`, definido em `docs/shared/styles/nds/` e importado pelo `./styles/globals.css` — nunca valor de desenho em `style` inline
-- **Ícones**: exclusivamente `lucide-vue-next` — zero exceções
-- **Formulários**: Vee-Validate + Zod — estrutura de campos via composables do vee-validate
-- **Tipografia**: fonte do sistema definida no CSS base. A escala tipográfica vem das classes `.nds-text-*` da folha `typography.css` — não recriar tamanho nem altura de linha com utilitária avulsa
+- **Componentes**: os de `./src/components/ui/`, construídos sobre `reka-ui` — o Drawer usa `vaul-vue` — mais o CSS `.nds-*` compartilhado
+- **Estilos**: o vocabulário é `.nds-*`, de `docs/shared/styles/nds/`, importado pelo `./src/styles/globals.css`. Valor de desenho nunca vai em `style` inline — regra canônica em `12-tokenizacao-dimensoes.md`
+- **Ícones**: exclusivamente `lucide-vue-next`
+- **Formulários**: `FormField` e `Fieldset`, de `./src/components/ui/form/` — composição própria, sem biblioteca de formulário nem de validação por schema. `vee-validate` e `@vee-validate/zod` estão no `package.json` e não são importados em lugar nenhum de `src/`
+- **Estado global**: Pinia. A docs page lê o idioma de `useTranslation()`, **nunca** de uma store — foi um crash em produção
+- **Tipografia**: a escala vem das classes `.nds-text-*` de `typography.css`; não recriar tamanho nem altura de linha com utilitária avulsa
 
 ---
 
-## 2. Cores e tokens CSS
+## 2. Templates Vue — caracteres especiais
 
-Formato obrigatório: **HSL sem vírgulas** (`220 44% 57%`). Proibidos: rgba, oklch, hex.
-
-Tokens de superfície. **Não existe utilitária de cor de superfície** — quem lê o token é a folha do componente:
-- Painéis de conteúdo (Dialog, Sheet, Drawer, Card): `--card` / `--card-foreground`, lidos por `.nds-card`, `.nds-dialog-content`, `.nds-sheet-content`, `.nds-drawer-content`
-- Menus e overlays flutuantes (DropdownMenu, ContextMenu, Popover, HoverCard, Command, Tooltip): `--popover` / `--popover-foreground`, lidos por `.nds-dropdown-menu-content`, `.nds-popover-content`, `.nds-hover-card-content`, `.nds-command`, `.nds-tooltip-content`
-- Inputs: `--input` no fundo e `--border` na borda, lidos por `.nds-input`, `.nds-textarea`, `.nds-select-trigger`
-
-Tokens de cor de estado aplicados via `class` — nunca via prop inexistente:
-- Warning/Success em Alert: **prop** `variant="warning"` / `variant="success"` (desde PATCHES.md#alert-five-variants — nunca via class). Badge não tem essas variantes; caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc., ver guideline 04 §Tokens de Componente)
-
-Referência completa: `03-sistema-design.md` e `../../docs/shared/guidelines/04-padroes-design-sistema.md`.
-
----
-
-## 3. Acessibilidade — WCAG 2.2 AA obrigatório
-
-**As três premissas do projeto, em ordem de prioridade:**
-1. **Acessível** — WCAG 2.2 AA, todos os tipos de deficiência
-2. **Rastreável** — analytics em toda a jornada
-3. **Indexável** — SEO + GEO
-
-Regras permanentes:
-- `aria-label` contextual em todos os elementos interativos ambíguos: formato `"[verbo] [objeto] [identificador]"`
-- Ícones decorativos: sempre `aria-hidden="true"`
-- Ícones funcionais (sem texto adjacente): `aria-label` obrigatório no elemento pai
-- Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto
-- Toda animação personalizada tem de parar sob `prefers-reduced-motion`. As folhas de componente já trazem o próprio `@media`; utilitária de animação avulsa (`.nds-animate-pulse`, `.nds-animate-spin`) NÃO para sozinha — nesse caso, somar `.nds-motion-reduce-none`
-- Anel de foco obrigatório: `.nds-focus-ring` — 2px de espessura, cor cheia de `--ring`, sem opacidade, com afastamento. Quando o anel precisa ficar por dentro da caixa, `.nds-focus-ring-inset`
-- `DialogTitle` e `DialogDescription` obrigatórios em todo Dialog, Sheet, Drawer
-- `TableCaption` obrigatório em toda Table (pode ficar visualmente oculto com `.nds-sr-only`)
-- `scope="col"` em todo cabeçalho de coluna de tabela
-
-Referência completa: `../../docs/shared/guidelines/01-acessibilidade.md`.
-
----
-
-## 4. Templates Vue — caracteres especiais
-
-Proibidos em conteúdo de texto de template Vue: `<` `>` `&` `"` `'`
-
-Usar entidades HTML: `&lt;` `&gt;` `&amp;` `&quot;` `&#39;`
+Proibidos em conteúdo de texto de template: `<` `>` `&` `"` `'`. Usar entidades
+HTML: `&lt;` `&gt;` `&amp;` `&quot;` `&#39;`.
 
 ```html
 <!-- ❌ <span>Valor A > Valor B</span> -->
 <!-- ✅ <span>Valor A &gt; Valor B</span> -->
 ```
 
----
-
-## 5. Alinhamento de botões
-
-- Primário sempre à **direita** — `.nds-cluster` com `data-justify="end"`, ou `.nds-spacer-start` no próprio botão primário, que o empurra para a direita
-- DOM segue a ordem visual — inverter a ordem só no estilo é **proibido**
-- Ordem no DOM: `[secundário] [primário]` — confirmação sempre à direita
+Referência: `02-template-caracteres-especiais.md`.
 
 ---
 
-## 6. Edições parciais — preservação de conteúdo
-
-Ao editar qualquer seção de um arquivo existente:
-- Preservar **todos** os imports, mesmo os não usados na seção editada
-- Preservar exports, interfaces e props intactos
-- Não modificar código fora do escopo solicitado
-
-Referência: `../../docs/shared/guidelines/03-edicoes-parciais.md`.
-
----
-
-## 7. Componentes — regras de API (Reka UI)
+## 3. Componentes — regras de API (Reka UI)
 
 Nunca inventar props que não existem. Casos frequentes:
 
 | Componente | Prop inexistente | Correto |
 |------------|-----------------|---------|
-| Badge | `size` | dimensão única; caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc., guideline 04) |
+| Badge | `size` | dimensão única; caso pontual sobrescreve as vars internas escopadas (`--badge-bg` etc.) |
 | Drawer | prop `side` | `direction` no `<Drawer>` |
 | Select | busca integrada | usar Combobox |
 
 > **O Avatar TEM prop `size`.** Esta tabela já a listava como inexistente, mandando dimensionar por variável escopada. É falso: `size` aceita `sm` (24px), `md` (32px, padrão), `lg` (40px), `xl` (48px) e `2xl` (64px), chega ao DOM como `data-size` e a folha `.nds-avatar[data-size]` deriva dela também as iniciais, o badge de status e o contador do grupo. `--avatar-size` continua existindo, mas como escape para medida fora dos cinco presets — não como o caminho normal.
 
-Triggers de overlays sempre com `as-child`:
-`CollapsibleTrigger`, `DialogTrigger`, `SheetTrigger`, `AlertDialogTrigger`, `DropdownMenuTrigger`, `PopoverTrigger`, `TooltipTrigger`
+Gatilhos de overlay compõem com `as-child`:
+`CollapsibleTrigger`, `DialogTrigger`, `SheetTrigger`, `AlertDialogTrigger`, `DropdownMenuTrigger`, `PopoverTrigger`, `TooltipTrigger`.
 
-Referência por categoria: `04-layout-components.md` a `10-overlay-components.md`.
-
----
-
-## 8. Analytics
-
-Tracking na **camada de produto** — nunca dentro de `/components/ui/`.
-
-Formato de evento: `objeto_ação` em snake_case inglês (ex: `button_click`, `dialog_open`).
-
-Payload base obrigatório: `{ component, variant?, location, label? }`
-
-`data-track-label` deve ser idêntico ao `aria-label` ou texto visível do elemento.
-
-Não rastrear `value` de campos sensíveis (senha, CPF, cartão).
-
-Referência completa: `../../docs/shared/guidelines/07-analytics.md`.
+O que cada componente É — contrato, decisões, tokens, peças das cinco stacks — está em `../../docs/shared/prd/<slug>.md` quando o PRD existe, e nas guidelines de categoria (`04-` a `09-`) quando ainda não.
 
 ---
 
-## 9. Navegação — Storybook como única interface
+## 4. Stories, docs page e SEO
 
-A **única** interface desta stack é o Storybook (`npm run storybook`, porta 6007). Não existe sandbox de aplicação: um componente entra na documentação ao ganhar sua docs page e suas stories, e nada mais precisa ser registrado.
-
-O artefato publicável sai de `npm run build-storybook` (`storybook-static/`). `npm run build` é `vue-tsc -b` — só checa tipos, não emite, e não abre folha de estilo nem compila template SFC; para essas duas coisas, o portão é o `build-storybook`. Não existem `npm run dev` nem `npm run preview`.
-
-Referência: `12-arquitetura-projeto.md`.
-
----
-
-## 10. Tom de voz
-
-Tratamento: **"você"** — nunca "tu", "o usuário", "deve-se".
-
-Nível: semi-formal. Nem burocrático, nem coloquial.
-
-Referência completa: `../../docs/shared/guidelines/05-tom-de-voz.md`.
+- O Storybook é a **única** interface (`npm run storybook`, porta 6007). Componente novo entra por story; não há sandbox de aplicação, nem `dev` nem `preview`. Detalhe em `12-arquitetura-projeto.md`
+- `npm run build` é `vue-tsc -b`: só checa tipos, não emite. Quem empacota o SFC e resolve `@import` de CSS é o `npm run build-storybook`, que produz o `storybook-static/` publicado
+- Stories importam de `@storybook/vue3-vite`; a docs page é `*Docs.vue`, com o conteúdo em `docs/shared/content/<slug>/translations.json`
+- SEO: o composable `useSeoEffect`, de `@/lib/use-seo`. O `seo.title` do conteúdo vai **sem** o sufixo "· Design System" — o composable o acrescenta
 
 ---
 
-## 11. SEO e GEO (Storybook iframe)
+## Regras transversais — onde estão
 
-Todo ComponentDocs usa o composable `useSeoEffect` de `@/lib/use-seo.ts`. Ele detecta o iframe do Storybook e escreve no documento pai automaticamente.
+Valem nas cinco stacks e moram em `docs/shared/guidelines/`:
 
-```ts
-useSeoEffect({ title: 'Button — Formulários · DS', description: '...', locale: 'pt-BR', componentSlug: 'button' })
-```
-
-Referência completa: `../../docs/shared/guidelines/06-seo-geo.md`.
-
----
-
-## 12. Arquitetura — restrições
-
-- Máximo de componentes por arquivo: manter pequeno e extrair helpers para arquivos separados
-- `Toaster` (vue-sonner) no root — `position="top-right"`
-- Espaçamento: múltiplos de 8px
-- Composables em `/src/composables/` — prefixo `use`
-- Tipos TypeScript em `/src/types/` quando compartilhados
-
-Referência: `12-arquitetura-projeto.md` e `13-system-design.md`.
+| assunto | guideline |
+|---|---|
+| acessibilidade (WCAG 2.2 AA, anel de foco) | [01-acessibilidade.md](../../docs/shared/guidelines/01-acessibilidade.md) |
+| alinhamento de botões | [02-alinhamento-botoes.md](../../docs/shared/guidelines/02-alinhamento-botoes.md) |
+| edições parciais | [03-edicoes-parciais.md](../../docs/shared/guidelines/03-edicoes-parciais.md) |
+| cores, tokens, elevação, camadas | [04-padroes-design-sistema.md](../../docs/shared/guidelines/04-padroes-design-sistema.md) |
+| tom de voz | [05-tom-de-voz.md](../../docs/shared/guidelines/05-tom-de-voz.md) |
+| SEO e GEO | [06-seo-geo.md](../../docs/shared/guidelines/06-seo-geo.md) |
+| analytics — eventos, payload, `data-track*` | [07-analytics.md](../../docs/shared/guidelines/07-analytics.md) |
+| sanitização de HTML dinâmico | [09-seguranca-xss.md](../../docs/shared/guidelines/09-seguranca-xss.md) |
+| dimensões em token, `style` inline | [12-tokenizacao-dimensoes.md](../../docs/shared/guidelines/12-tokenizacao-dimensoes.md) |
+| movimento e `prefers-reduced-motion` | [13-animacao.md](../../docs/shared/guidelines/13-animacao.md) |
+| regras da categoria Overlay | [18-overlay.md](../../docs/shared/guidelines/18-overlay.md) |

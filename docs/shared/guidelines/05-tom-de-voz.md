@@ -339,4 +339,4 @@ Para outros indicadores de estado (ex: "feature presente" na seção de acessibi
 | `12-documentacao-componentes.md` seção 4 | Regras estruturais de escrita (formato, capitalização, pontuação, limites) | Base obrigatória — aplique antes das regras deste arquivo |
 | `06-form-components.md` | Labels e placeholders específicos de cada componente de formulário | Terminologia específica deve ser consistente com este arquivo |
 | `07-feedback-components.md` | Alert, Badge, Progress, Sonner | Tom de feedback deve seguir as seções "Confirmação", "Aviso" e "Erro" deste arquivo |
-| `10-overlay-components.md` | Dialog, Drawer, Sheet, Tooltip | Títulos e descrições de overlays seguem as seções "Ação" e "Diálogo" deste arquivo |
+| `18-overlay.md` | a categoria Overlay, nas cinco stacks | Títulos e descrições de overlays seguem as seções "Ação" e "Diálogo" deste arquivo |

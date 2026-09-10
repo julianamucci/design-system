@@ -340,7 +340,7 @@ afirmação de pé em `usage.guidelines.item2`, sob o título "Guidelines
 Obrigatórias", que renderiza acima. A página passou a se contradizer com os
 papéis trocados, nos três idiomas, e nenhum portão viu.
 
-Três verificações antes de fechar a edição:
+Cinco verificações antes de fechar a edição:
 
 1. `grep` da afirmação corrigida no `translations.json` inteiro — a frase costuma
    estar em duas ou três chaves, e `seo.*` entra na varredura;
@@ -351,7 +351,11 @@ Três verificações antes de fechar a edição:
    satisfez o `Fecha quando` de alguma delas;
 4. a mesma frase fora do conteúdo compartilhado — `description.component` de
    `*.stories.*` guarda cópias antigas, e no popover duas stacks carregavam a
-   frase errada onde as outras três não tinham descrição nenhuma.
+   frase errada onde as outras três não tinham descrição nenhuma;
+5. no componente de Overlay, a tabela de invariantes de
+   `docs/shared/guidelines/18-overlay.md` — achado que cai numa linha dela não é
+   defeito novo, e relatá-lo como novo foi o que fez três assuntos voltarem duas
+   ou três vezes cada.
 
 ---
 

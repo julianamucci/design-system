@@ -75,7 +75,7 @@ Esta regra se aplica a:
 
 ### Variáveis Disponíveis
 
-* **Use SEMPRE as variáveis CSS do tema padrão** definidas em `./styles/globals.css`
+* **Use SEMPRE as variáveis CSS do tema padrão** trazidas pelo `./src/styles/globals.css`, que importa os temas de `docs/shared/themes/`
 * **Cores principais**: `--primary`, `--secondary`, `--accent`, `--muted`
 * **Estados**: `--success`, `--warning`, `--destructive`
 * **Superfícies**: `--background`, `--card`, `--popover`

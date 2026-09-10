@@ -1,7 +1,7 @@
 # Regras Gerais Obrigatórias (Nortear — Angular)
 
 * **SEU PAPEL**: manter a consistência do projeto seguindo ESTRITAMENTE o que está nas guidelines. NUNCA invente seções, estruturas ou padrões que não estejam documentados. SEMPRE consulte as guidelines antes de criar ou modificar qualquer componente.
-* **É OBRIGATÓRIO usar os componentes de `./components/ui`** — antes de escrever qualquer elemento HTML (`<div>`, `<button>`, `<table>`, `<kbd>`), verifique se existe diretiva ou componente que atenda ao caso. Se existir, use-o — sem exceção.
+* **É OBRIGATÓRIO usar os componentes de `./src/components/ui`** — antes de escrever qualquer elemento HTML (`<div>`, `<button>`, `<table>`, `<kbd>`), verifique se existe diretiva ou componente que atenda ao caso. Se existir, use-o — sem exceção.
 * **É OBRIGATÓRIO usar as classes `.nds-*`** de `docs/shared/styles/nds/` — CSS standalone e global; classe sem o prefixo `nds-` é inerte em runtime.
 * **É OBRIGATÓRIO usar APENAS ícones do pacote `lucide`** (agnóstico de framework) — nunca `lucide-angular`, que declara peer `@angular/core: 13.x - 21.x` e conflita com o Angular 22.
 * **É OBRIGATÓRIO que todo painel de conteúdo (Dialog, Sheet, Drawer, Card) use `--card` / `--card-foreground`**; menus e overlays flutuantes usam `--popover` / `--popover-foreground`.

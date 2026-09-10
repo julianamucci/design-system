@@ -1,25 +1,31 @@
-# Design System Vue — Guidelines
+# Design System Nortear — Vue
 
-Siga estritamente as regras em `guidelines/RULES.md` antes de qualquer tarefa.
+Leia primeiro o [`CLAUDE.md` da raiz](../CLAUDE.md): as convenções cross-stack (conteúdo compartilhado, `.nds-*`, SEO, analytics) e as regras de trabalho valem aqui sem alteração. Este arquivo é ponteiro — o que é operacional mora na guideline do assunto, onde quem procura pelo assunto o encontra.
 
-**Componentes existentes têm prioridade absoluta sobre código inline.** Antes de escrever qualquer elemento HTML (`<div>`, `<button>`, `<table>`, `<kbd>`, etc.), verifique se existe um componente em `./components/ui/` que atenda ao caso. Se existir, use-o — sem exceção.
+**Stack**: Vue 3 + `reka-ui` (`vaul-vue` no Drawer) + Pinia + `lucide-vue-next` + CSS `.nds-*`. Porta **6007**.
 
-**Stack**: Vue 3 + Reka UI + Vee-validate + Pinia + lucide-vue-next + CSS standalone `.nds-*`.
+**Comandos**: `npm run storybook` · `npm run build` é `vue-tsc -b`, sem emitir nada · `npm run build-storybook` empacota, e é o único que resolve `@import` de CSS. Qual rodar para cada mudança está no `CLAUDE.md` da raiz, em "A verificação sai da MUDANÇA".
 
-**Arquitetura**: `guidelines/12-arquitetura-projeto.md` e `STORYBOOK-ARCHITECTURE-VUE.md`. O Storybook é a **única** interface desta stack — não existe sandbox de aplicação.
+**Componentes existentes têm prioridade absoluta sobre código inline.** Antes de escrever qualquer elemento HTML (`<div>`, `<button>`, `<table>`, `<kbd>`), verifique se existe um componente em `./src/components/ui/` que atenda ao caso. Se existir, use — sem exceção.
 
-**Comandos**: `npm run storybook` (porta 6007) para desenvolver; `npm run build-storybook` para empacotar — é ele que produz `storybook-static/`, o artefato que o `vercel.json` publica, e é o único portão que compila template SFC e resolve `@import` de CSS. `npm run build` é `vue-tsc -b`: só checa tipos, não emite. Não existem `dev` nem `preview`.
+**Onde está cada coisa**:
 
-Para detalhes de implementação de componentes:
-- `guidelines/04-layout-components.md` a `guidelines/10-overlay-components.md`
-- **`../docs/shared/prd/<slug>.md`** — o que o componente É hoje: contrato, decisões com data e medição, tokens, e os nomes de peça das CINCO stacks. Onde existe PRD, a guideline guarda só a regra da CATEGORIA; o catálogo por componente saiu de lá (portão `catalogo_duplicado_com_prd`)
-- `guidelines/11-documentacao-componentes.md` (estrutura de ComponentDocs + stories)
+- o que é **desta stack** → [`guidelines/RULES.md`](guidelines/RULES.md) e a tabela abaixo
+- o que vale **nas cinco** → [`../docs/shared/guidelines/`](../docs/shared/guidelines/) — o `RULES.md` aponta a de cada assunto
+- o que cada **componente** É — contrato, decisões com data e medição, tokens, peças das cinco stacks → `../docs/shared/prd/<slug>.md`, onde o PRD existe
 
-Guidelines compartilhadas (todas as stacks):
-- `../docs/shared/guidelines/01-acessibilidade.md`
-- `../docs/shared/guidelines/04-padroes-design-sistema.md`
-- `../docs/shared/guidelines/05-tom-de-voz.md`
-- `../docs/shared/guidelines/06-seo-geo.md`
-- `../docs/shared/guidelines/07-analytics.md`
-- `../docs/shared/guidelines/08-docs-pages-foundations.md`
-- `../docs/shared/guidelines/12-tokenizacao-dimensoes.md` — dimensões em token, e a **regra canônica de `style` inline com valor de design**: proibido nas cinco stacks, em primitivo, story e docs page. Portão `inline_style_design_value` do `audit.mjs`.
+| `guidelines/` | assunto |
+|---|---|
+| [`RULES.md`](guidelines/RULES.md) | regras próprias desta stack — comece por aqui |
+| [`01-regras-gerais.md`](guidelines/01-regras-gerais.md) | regras gerais de implementação na stack |
+| [`02-template-caracteres-especiais.md`](guidelines/02-template-caracteres-especiais.md) | caracteres especiais no template |
+| [`03-sistema-design.md`](guidelines/03-sistema-design.md) | o sistema de design aplicado na stack — cores, tipografia, temas |
+| [`04-layout-components.md`](guidelines/04-layout-components.md) | componentes de layout |
+| [`05-navigation-components.md`](guidelines/05-navigation-components.md) | componentes de navegação |
+| [`06-form-components.md`](guidelines/06-form-components.md) | componentes de formulário |
+| [`07-feedback-components.md`](guidelines/07-feedback-components.md) | componentes de feedback |
+| [`08-display-components.md`](guidelines/08-display-components.md) | componentes de exibição |
+| [`09-disclosure-components.md`](guidelines/09-disclosure-components.md) | componentes de divulgação |
+| [`11-documentacao-componentes.md`](guidelines/11-documentacao-componentes.md) | docs page e stories |
+| [`12-arquitetura-projeto.md`](guidelines/12-arquitetura-projeto.md) | arquitetura, build e Storybook |
+| [`13-system-design.md`](guidelines/13-system-design.md) | padrões de código |

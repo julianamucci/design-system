@@ -2,7 +2,7 @@
 
 * **SEU PAPEL**: Manter a consistência do projeto seguindo ESTRITAMENTE o que está definido nas guidelines. NUNCA invente seções, estruturas ou padrões que não estejam documentados. SEMPRE consulte as guidelines antes de criar ou modificar qualquer componente.
 * **É OBRIGATÓRIO usar os componentes da pasta `@/components/ui`** — import de pasta com export nomeado: `import { Button } from '@/components/ui/button'`
-* **É OBRIGATÓRIO usar os estilos do arquivo `./styles/globals.css`**
+* **É OBRIGATÓRIO usar os estilos do arquivo `./src/styles/globals.css`**
 * **É OBRIGATÓRIO usar APENAS ícones da biblioteca `lucide-svelte` para TODOS os ícones do projeto**
 * **É OBRIGATÓRIO que todos os dialogs/modais usem as variáveis `--card` para background e `--card-foreground` para foreground**
 * **É OBRIGATÓRIO que todo componente interativo aplique a classe `.nds-focus-ring`** — é ela que desenha o anel de foco do sistema, com **2px de espessura** e afastamento do contorno. O anel é do sistema, não do componente: reimplementar por componente é como as espessuras divergem.

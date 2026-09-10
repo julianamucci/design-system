@@ -60,7 +60,7 @@ As 5 stacks têm cópia própria dessas guidelines. Leia a da **stack Vanilla** 
 | Feedback | `nortear-design-system-vanilla/guidelines/07-feedback-components.md` |
 | Display | `nortear-design-system-vanilla/guidelines/08-display-components.md` |
 | Disclosure | `nortear-design-system-vanilla/guidelines/09-disclosure-components.md` |
-| Overlay | `nortear-design-system-vanilla/guidelines/10-overlay-components.md` |
+| Overlay | `docs/shared/guidelines/18-overlay.md` — a regra da categoria, uma vez para as cinco stacks |
 
 ### Guidelines a atualizar
 

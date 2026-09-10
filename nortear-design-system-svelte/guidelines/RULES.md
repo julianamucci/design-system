@@ -1,93 +1,53 @@
-# Rules — Design System Documentation Project (Svelte)
+# Rules — Design System Nortear (Svelte)
 
-Estas regras se aplicam a **todas** as interações neste projeto, sem exceção. Consulte os arquivos de referência listados em cada seção para detalhes de implementação.
+O que é **específico do Svelte**. Tudo o que vale igual nas cinco stacks está nas
+guidelines compartilhadas e não se repete aqui — ver a tabela no fim.
+
+> Enxugado em 2026-09-10. Este arquivo tinha doze seções, e sete eram cópia das
+> guidelines compartilhadas, reescritas de cinco jeitos (uma por stack) e com
+> erros que a original não tinha: espaçamento "em múltiplos de 8px" (a base é
+> 4px), painéis de overlay em `--card` (nenhuma folha lê), `data-track-label`
+> igual ao texto visível (é id estável), e exemplo de título de SEO com o sufixo
+> que a função já acrescenta. Nas seções próprias da stack os erros eram outros e
+> igualmente medidos: ícones de `lucide-svelte` (a stack importa de
+> `@lucide/svelte`), componentes em `$lib/components/ui` (zero imports; são 478 de
+> `@/components/ui`), formulários com Superforms + Zod (Superforms nem está
+> instalado), gatilhos com `asChild` (a composição do bits-ui 2 é o snippet
+> `child`) e SEO por `useSeoEffect` (a stack exporta `applySeo`).
 
 ---
 
 ## 1. Stack obrigatória
 
-- **Componentes**: usar exclusivamente os de `$lib/components/ui` (Bits UI)
-- **Estilos**: usar `./styles/globals.css` — nunca CSS inline arbitrário
-- **Ícones**: exclusivamente `lucide-svelte` — zero exceções
-- **Formulários**: Superforms + Zod — validação tipada com schema Zod
+- **Componentes**: os de `./src/components/ui/`, importados por `@/components/ui/…`, construídos sobre `bits-ui` — o Drawer usa `vaul-svelte` — mais o CSS `.nds-*` compartilhado
+- **Estilos**: classes `.nds-*` de `docs/shared/styles/nds/`, importadas pelo `./src/styles/globals.css`. Valor de desenho nunca vai em `style` inline — regra canônica em `12-tokenizacao-dimensoes.md`
+- **Ícones**: exclusivamente `@lucide/svelte`, por caminho de ícone (`@lucide/svelte/icons/check`)
+- **Formulários**: `FormField` e `Fieldset`, de `./src/components/ui/form/` — composição própria, sem biblioteca de formulário nem de validação por schema
 - **Tipografia**: a escada de texto vem dos tokens (`--text-h1` … `--text-label`) e os elementos HTML já a herdam do CSS base. Não escrever tamanho nem `line-height` por cima: a escada responde ao eixo de fonte e à densidade, e um valor cravado sai fora dos dois
 
 ---
 
-## 2. Cores e tokens CSS
+## 2. Templates Svelte — caracteres especiais
 
-Formato obrigatório: **HSL sem vírgulas** (`220 44% 57%`). Proibidos: rgba, oklch, hex.
-
-Tokens de superfície — não há classe utilitária de cor de fundo; quem aplica é a
-folha do componente, lendo o token:
-- Painéis de conteúdo (Dialog, Sheet, Drawer, Card): `--card` / `--card-foreground`
-- Menus e overlays flutuantes (DropdownMenu, Popover, Tooltip, etc.): `--popover` / `--popover-foreground`
-- Inputs: `--input` no fundo, `--border` no contorno
-
-Tokens de cor de estado aplicados via `class` — nunca via prop inexistente:
-- Warning/Success em Alert: **prop** `variant="warning"` / `variant="success"` (desde PATCHES.md#alert-five-variants — nunca via class). Badge também: `variant="warning"` / `variant="success"` / `variant="info"` — nele a cor sai na BORDA, não no preenchimento (ver guideline 07 §Badge). Caso pontual sobrescreve a var interna escopada (`--badge-border`, ver `07-feedback-components.md` §Badge)
-
-Referência completa: `03-sistema-design.md` e `../../docs/shared/guidelines/04-padroes-design-sistema.md`.
-
----
-
-## 3. Acessibilidade — WCAG 2.2 AA obrigatório
-
-**As três premissas do projeto, em ordem de prioridade:**
-1. **Acessível** — WCAG 2.2 AA, todos os tipos de deficiência
-2. **Rastreável** — analytics em toda a jornada
-3. **Indexável** — SEO + GEO
-
-Regras permanentes:
-- `aria-label` contextual em todos os elementos interativos ambíguos: formato `"[verbo] [objeto] [identificador]"`
-- Ícones decorativos: sempre `aria-hidden="true"`
-- Ícones funcionais (sem texto adjacente): `aria-label` obrigatório no elemento pai
-- Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto
-- Toda animação personalizada tem de parar sob `prefers-reduced-motion` — as folhas `.nds-*` já param as suas; o que se escreve por fora é responsabilidade de quem escreveu
-- Anel de foco obrigatório: classe `.nds-focus-ring`, com 2px de espessura e o token `--ring` em cor cheia — sem opacidade
-- `Dialog.Title` e `Dialog.Description` obrigatórios em todo Dialog, Sheet, Drawer (Bits UI)
-- `TableCaption` obrigatório em toda Table — pode ficar fora da tela (`.nds-sr-only`), nunca ausente
-- `scope="col"` em todo cabeçalho de coluna de tabela
-
-Referência completa: `../../docs/shared/guidelines/01-acessibilidade.md`.
-
----
-
-## 4. Templates Svelte — caracteres especiais
-
-Proibidos em conteúdo de texto literal em templates Svelte: `<` `>` `&` `"` `'`
-
-Usar entidades HTML: `&lt;` `&gt;` `&amp;` `&quot;` `&#39;`
+Proibidos em conteúdo de texto literal: `<` `>` `&` `"` `'`. Usar entidades HTML:
+`&lt;` `&gt;` `&amp;` `&quot;` `&#39;`. Expressão `{variavel}` é segura — o
+compilador escapa.
 
 ```svelte
 <!-- ❌ <span>Valor A > Valor B</span> -->
 <!-- ✅ <span>Valor A &gt; Valor B</span> -->
 ```
 
-Expressões Svelte `{variavel}` são seguras — o compilador escapa automaticamente.
+**Expressão que é string literal não é tradução.** `{('demonstration.labels.x')}`
+é Svelte válido, o `svelte-check` fecha sem erro, e a página renderiza o NOME DA
+CHAVE. Onde a mudança é de fiação de i18n, o portão que enxerga é o `eslint`
+(`svelte/no-useless-mustaches`), não o build.
+
+Referência: `02-template-caracteres-especiais.md`.
 
 ---
 
-## 5. Alinhamento de botões
-
-- Primário sempre à **direita** — o alinhamento sai do `.nds-cluster` que agrupa os botões, com `data-justify="end"`
-- DOM segue a ordem visual — inverter a direção do flex é **proibido**: o leitor de tela e o Tab andam pela ordem do DOM, e ela passaria a discordar do que se vê
-- Ordem no DOM: `[secundário] [primário]` — confirmação sempre à direita
-
----
-
-## 6. Edições parciais — preservação de conteúdo
-
-Ao editar qualquer seção de um arquivo existente:
-- Preservar **todos** os imports, mesmo os não usados na seção editada
-- Preservar exports, interfaces e props intactos
-- Não modificar código fora do escopo solicitado
-
-Referência: `../../docs/shared/guidelines/03-edicoes-parciais.md`.
-
----
-
-## 7. Componentes — regras de API (Bits UI)
+## 3. Componentes — regras de API (Bits UI)
 
 Nunca inventar props que não existem. Casos frequentes:
 
@@ -98,73 +58,44 @@ Nunca inventar props que não existem. Casos frequentes:
 | Select | busca integrada | usar Combobox |
 
 **O Avatar TEM prop `size`** — `sm` / `md` / `lg` / `xl` / `2xl`, com o padrão em
-`md`. A regra antiga mandava o contrário e proibia a API que o componente
-realmente expõe. O preset não escreve uma altura: a folha deriva dele o diâmetro,
-o corpo das iniciais, o selo de status e o recuo do grupo empilhado — e é por isso
-que fixar altura por fora desalinha os três últimos. Detalhe em
+`md`. O preset não escreve uma altura: a folha deriva dele o diâmetro, o corpo das
+iniciais, o selo de status e o recuo do grupo empilhado — e é por isso que fixar
+altura por fora desalinha os três últimos. Detalhe em
 `08-display-components.md` §Avatar.
 
-Triggers de overlays sempre com `asChild` quando necessário:
-`Collapsible.Trigger`, `Dialog.Trigger`, `Sheet.Trigger`, `AlertDialog.Trigger`, `DropdownMenu.Trigger`, `Popover.Trigger`, `Tooltip.Trigger`
+**Gatilho de overlay compõe pelo snippet `child`**, que é a delegação de elemento
+do bits-ui 2: o gatilho entrega as props de acessibilidade e o elemento alvo as
+espalha — `{#snippet child({ props })}<Button {...props}>…</Button>{/snippet}`.
+Não é `asChild` nem o `builders` do bits-ui antigo. Vale para
+`Collapsible.Trigger`, `Dialog.Trigger`, `Sheet.Trigger`, `AlertDialog.Trigger`,
+`DropdownMenu.Trigger`, `Popover.Trigger` e `Tooltip.Trigger`.
 
-Referência por categoria: `04-layout-components.md` a `10-overlay-components.md`.
-
----
-
-## 8. Analytics
-
-Tracking na **camada de produto** — nunca dentro de `$lib/components/ui/`.
-
-Formato de evento: `objeto_ação` em snake_case inglês (ex: `button_click`, `dialog_open`).
-
-Payload base obrigatório: `{ component, variant?, location, label? }`
-
-`data-track-label` deve ser idêntico ao `aria-label` ou texto visível do elemento.
-
-Não rastrear `value` de campos sensíveis (senha, CPF, cartão).
-
-Referência completa: `../../docs/shared/guidelines/07-analytics.md`.
+O que cada componente É — contrato, decisões, tokens, peças das cinco stacks — está em `../../docs/shared/prd/<slug>.md` quando o PRD existe, e nas guidelines de categoria (`04-` a `09-`) quando ainda não.
 
 ---
 
-## 9. Navegação — Storybook como interface única
+## 4. Stories, docs page e SEO
 
-A documentação vive no **Storybook** (`npm run storybook`, porta 6008), e não há outra interface: o sandbox de aplicação foi removido em 2026-09-02. Componente novo é adicionado **criando stories** — é o que o torna alcançável.
-
-A navegação é a sidebar do Storybook, ordenada pelo `storySort`. Não usar `navigateTo` nem roteamento SPA para documentação.
-
-Referência: `12-arquitetura-projeto.md`.
+- O Storybook é a **única** interface (`npm run storybook`, porta 6008). Componente novo entra por story; não há sandbox de aplicação. Detalhe em `12-arquitetura-projeto.md`
+- Stories importam de `@storybook/svelte-vite`; a docs page é `*Docs.svelte`, com o conteúdo em `docs/shared/content/<slug>/translations.json`
+- SEO: a função `applySeo`, de `@/lib/use-seo`. O `seo.title` do conteúdo vai **sem** o sufixo "· Design System" — a função o acrescenta
 
 ---
 
-## 10. Tom de voz
+## Regras transversais — onde estão
 
-Tratamento: **"você"** — nunca "tu", "o usuário", "deve-se".
+Valem nas cinco stacks e moram em `docs/shared/guidelines/`:
 
-Nível: semi-formal. Nem burocrático, nem coloquial.
-
-Referência completa: `../../docs/shared/guidelines/05-tom-de-voz.md`.
-
----
-
-## 11. SEO e GEO (Storybook iframe)
-
-Todo ComponentDocs usa o composable `useSeoEffect` de `$lib/use-seo.ts`. Ele detecta o iframe do Storybook e escreve no documento pai automaticamente.
-
-```ts
-useSeoEffect({ title: 'Button — Formulários · DS', description: '...', locale: 'pt-BR', componentSlug: 'button' })
-```
-
-Referência completa: `../../docs/shared/guidelines/06-seo-geo.md`.
-
----
-
-## 12. Arquitetura — restrições
-
-- Máximo de componentes por arquivo: manter pequeno e extrair helpers para arquivos separados
-- `Toaster` (svelte-sonner) no root — `position="bottom-right"`
-- Espaçamento: múltiplos de 8px
-- Stores e lógica compartilhada em `/src/lib/` — arquivos `.svelte.ts` para stores reativas com runes
-- Tipos TypeScript em `/src/lib/types.ts` ou arquivos `.d.ts` quando compartilhados
-
-Referência: `12-arquitetura-projeto.md` e `13-system-design.md`.
+| assunto | guideline |
+|---|---|
+| acessibilidade (WCAG 2.2 AA, anel de foco) | [01-acessibilidade.md](../../docs/shared/guidelines/01-acessibilidade.md) |
+| alinhamento de botões | [02-alinhamento-botoes.md](../../docs/shared/guidelines/02-alinhamento-botoes.md) |
+| edições parciais | [03-edicoes-parciais.md](../../docs/shared/guidelines/03-edicoes-parciais.md) |
+| cores, tokens, elevação, camadas | [04-padroes-design-sistema.md](../../docs/shared/guidelines/04-padroes-design-sistema.md) |
+| tom de voz | [05-tom-de-voz.md](../../docs/shared/guidelines/05-tom-de-voz.md) |
+| SEO e GEO | [06-seo-geo.md](../../docs/shared/guidelines/06-seo-geo.md) |
+| analytics — eventos, payload, `data-track*` | [07-analytics.md](../../docs/shared/guidelines/07-analytics.md) |
+| sanitização de HTML dinâmico | [09-seguranca-xss.md](../../docs/shared/guidelines/09-seguranca-xss.md) |
+| dimensões em token, `style` inline | [12-tokenizacao-dimensoes.md](../../docs/shared/guidelines/12-tokenizacao-dimensoes.md) |
+| movimento e `prefers-reduced-motion` | [13-animacao.md](../../docs/shared/guidelines/13-animacao.md) |
+| regras da categoria Overlay | [18-overlay.md](../../docs/shared/guidelines/18-overlay.md) |

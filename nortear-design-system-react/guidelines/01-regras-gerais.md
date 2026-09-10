@@ -1,8 +1,8 @@
 # Regras Gerais Obrigatórias
 
 * **SEU PAPEL**: Manter a consistência do projeto seguindo ESTRITAMENTE o que está definido nas guidelines. NUNCA invente seções, estruturas ou padrões que não estejam documentados. SEMPRE consulte as guidelines antes de criar ou modificar qualquer componente.
-* **É OBRIGATÓRIO usar os componentes da pasta `./components/ui`**
-* **É OBRIGATÓRIO usar os estilos do arquivo `./styles/globals.css`**
+* **É OBRIGATÓRIO usar os componentes da pasta `./src/components/ui`**
+* **É OBRIGATÓRIO usar os estilos do arquivo `./src/styles/globals.css`**
 * **É OBRIGATÓRIO usar APENAS ícones da biblioteca lucide-react para TODOS os ícones do projeto**
 * **É OBRIGATÓRIO que todos os dialogs/modais usem as variáveis `--card` para background e `--card-foreground` para foreground**
 * **É OBRIGATÓRIO que todo componente interativo tenha anel de foco em `:focus-visible`, com 2px de espessura** — a utilitária `.nds-focus-ring` é quem entrega isso, com o halo de `--background` por fora para o anel sobreviver a qualquer superfície

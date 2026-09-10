@@ -2959,7 +2959,7 @@ function auditVocabularioPayload() {
 /**
  * Invariantes da categoria Overlay que vivem na FOLHA.
  *
- * Os três desta função saem do inventário em `docs/shared/prd/invariantes-overlay.md`,
+ * Os três desta função saem do inventário em `docs/shared/guidelines/18-overlay.md (§Invariantes)`,
  * que existe porque um invariante de categoria não tem casa em documento: o PRD é
  * um componente × cinco stacks, a guideline é uma stack × muitos componentes, e o
  * que atravessa muitos componentes E muitas stacks só se mantém verdadeiro por
@@ -3489,7 +3489,7 @@ function auditModalidadeNaoModal() {
  * `prd_token_sem_lastro` conferia cada documento contra a própria folha — que é
  * coerência de DOCUMENTO, não de categoria. Um overlay novo podia escolher
  * qualquer degrau, registrar no próprio PRD e passar. Foi o que o inventário de
- * invariantes marcou como "parcial" (`docs/shared/prd/invariantes-overlay.md`).
+ * invariantes marcou como "parcial" (`docs/shared/guidelines/18-overlay.md (§Invariantes)`).
  *
  * A regra reprova em dois sentidos:
  *   · folha classificada que lê degrau diferente do seu tipo, ou mais de um;
@@ -6275,6 +6275,158 @@ function auditStorybookInfra() {
         file: relative(ROOT, preview), rule: 'theme_channel_missing',
         message: 'preview sem listener de GLOBALS_UPDATED no nível do módulo — só decorator + useEffect não reverte o tema para Default, porque o renderer pula o re-render nesse caso',
       });
+    }
+  }
+  return violations;
+}
+
+/**
+ * A pasta `guidelines/` de cada stack existe, e o que ela e o `CLAUDE.md` da
+ * stack apontam RESOLVE.
+ *
+ * Duas regras, e as duas substituem uma exigência que nunca foi portão.
+ *
+ * `guidelines_de_stack_ausente` — a lição do Angular, que nasceu SEM a pasta e
+ * ficou invisível para toda regra que a varre. Ela foi escrita como "16 arquivos
+ * com os mesmos nomes em toda stack", e nada cobrava isso: medido em 2026-09-10,
+ * `dead_lib_in_infra` e `catalogo_duplicado_com_prd` leem qualquer `.md` da
+ * pasta, e `code_in_component_guideline` filtra só pelo prefixo `04-` a `10-`.
+ * Enquanto isso, as três varreduras faziam `if (!existsSync(dir)) continue` —
+ * a stack sem a pasta continuava pulada em SILÊNCIO, exatamente como no
+ * incidente. A exigência dos nomes produziu cinco arquivos de zero byte e cinco
+ * cópias divergentes de cada guideline de categoria; a proteção que importava
+ * não existia. Esta regra é ela.
+ *
+ * `link_quebrado_em_guideline` — link Markdown relativo resolve a partir da
+ * pasta do arquivo, como o leitor clica; caminho entre crases resolve a partir
+ * da pasta, da raiz da stack ou da raiz do repo, porque a prosa usa as três
+ * formas. Medido no dia em que nasceu: 21 links quebrados em três `Guidelines.md`
+ * (o `../../../` sai do repositório), e a PRIMEIRA regra dos cinco `CLAUDE.md` de
+ * stack mandava o agente para `./components/ui/`, que não existe em nenhuma — é
+ * `./src/components/ui/`. Nada disso aparecia em build, suíte ou audit.
+ */
+function auditGuidelinesDeStack() {
+  const violations = [];
+  for (const stack of STACKS) {
+    const raizStack = join(ROOT, stackDir(stack));
+    const dir = join(raizStack, 'guidelines');
+    if (!existsSync(dir)) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, dir), rule: 'guidelines_de_stack_ausente',
+        message: 'a stack não tem guidelines/ — as regras que varrem a pasta a pulam sem aviso, '
+          + 'que foi como o Angular ficou invisível para a auditoria',
+      });
+      continue;
+    }
+    const arquivos = [join(raizStack, 'CLAUDE.md'), ...walkDir(dir, ['.md'])].filter(existsSync);
+    for (const arquivo of arquivos) {
+      const conteudo = readFile(arquivo) || '';
+      const pasta = join(arquivo, '..');
+      const rel = relative(ROOT, arquivo);
+      const linhas = conteudo.split('\n');
+      let emBloco = false;
+      for (let i = 0; i < linhas.length; i++) {
+        if (/^\s*```/.test(linhas[i])) { emBloco = !emBloco; continue; }
+        if (emBloco) continue;
+        const linha = linhas[i];
+        const alvos = [];
+        for (const m of linha.matchAll(/\]\(([^)\s]+)\)/g)) alvos.push({ alvo: m[1], link: true });
+        for (const m of linha.matchAll(/`([^`\s]+)`/g)) {
+          const c = m[1];
+          // Entre crases, só o que TEM CARA de caminho do repo: começa em `./` ou
+          // `../` e termina em extensão ou em `/`, ou tem mais de um segmento;
+          // ou é um `.md` nomeado. `./accordion` — um segmento, sem extensão — é
+          // especificador de import num exemplo, não arquivo, e portão que casa
+          // palavra solta mede prosa.
+          const relativo = /^\.\.?\//.test(c)
+            && (/\/$/.test(c) || /\.[a-z]{2,4}$/.test(c) || /^\.\.?\/[^/]+\/[^/]/.test(c));
+          if (relativo || /^[\w.-]+(?:\/[\w.<>{}*-]+)*\.md$/.test(c)) alvos.push({ alvo: c, link: false });
+        }
+        for (const { alvo, link } of alvos) {
+          if (/^(?:https?:|mailto:|#)/.test(alvo) || /[<>{}*]/.test(alvo)) continue;
+          const caminho = alvo.split('#')[0];
+          if (!caminho) continue;
+          // Guideline compartilhada citada pelo nome (`09-seguranca-xss.md`) é
+          // referência legítima, e a pasta dela entra como base.
+          const bases = link
+            ? [pasta]
+            : [pasta, raizStack, join(raizStack, 'guidelines'), ROOT, join(ROOT, 'docs', 'shared', 'guidelines')];
+          if (bases.some((b) => existsSync(join(b, caminho)))) continue;
+          violations.push({
+            category: 'quality', severity: 'medium', slug: '_infra', stack,
+            file: rel, line: i + 1, rule: 'link_quebrado_em_guideline',
+            message: `${link ? 'link' : 'caminho'} \`${alvo}\` não resolve `
+              + (link ? 'a partir da pasta do arquivo' : 'nem da pasta, nem da raiz da stack, nem da raiz do repo'),
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
+/**
+ * A regra de categoria mora UMA vez, em `docs/shared/guidelines/`, e a
+ * guideline de stack não volta a copiá-la.
+ *
+ * Até 2026-09-10 a regra de Overlay vivia em cinco `10-overlay-components.md`,
+ * uma por stack, com 3% de linhas de stack e o resto o mesmo assunto escrito
+ * cinco vezes — que discordavam (quatro afirmavam `--card` nos painéis, que
+ * nenhuma folha lê). Ela foi para a `18-overlay.md`, e a `10` sobreviveu só no
+ * Angular e no vanilla, com mecânica. Sem portão, a cópia volta: alguém acrescenta
+ * "Camadas" à `10` do Angular porque é onde procurou primeiro, e em dois meses são
+ * cinco de novo.
+ *
+ * Compara os TÍTULOS de seção da guideline de stack com os da compartilhada, e
+ * recusa título cujo assunto é da categoria. É título, não prosa — casar palavra
+ * num título de seção mede o que deve medir. O que escapa, e fica declarado na
+ * `18-overlay.md`: cópia que não traz o título junto.
+ *
+ * O mapa é declarado, e a premissa dele é conferida: guideline compartilhada que
+ * sumir reprova, em vez de o portão passar a comparar contra nada.
+ */
+const CATEGORIA_COMPARTILHADA = {
+  '18-overlay.md': {
+    deStack: '10-overlay-components.md',
+    assuntos: /\b(?:superficie|tokens? de fundo|veu|camadas|elevacao|modalidade|analytics|invariantes|qual componente)\b/,
+  },
+};
+
+function auditGuidelineRepeteCategoria() {
+  const violations = [];
+  const norm = (t) => t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ').trim();
+  const titulos = (texto) => [...texto.matchAll(/^#{2,4}\s+(.+)$/gm)].map((m) => ({ cru: m[1].trim(), n: norm(m[1]) }));
+
+  for (const [compartilhada, { deStack, assuntos }] of Object.entries(CATEGORIA_COMPARTILHADA)) {
+    const caminho = join(ROOT, 'docs', 'shared', 'guidelines', compartilhada);
+    const texto = readFile(caminho);
+    if (!texto) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, caminho), rule: 'guideline_de_stack_repete_categoria',
+        message: `${compartilhada} não existe — o portão compararia as guidelines de stack contra nada`,
+      });
+      continue;
+    }
+    const daCategoria = new Set(titulos(texto).map((t) => t.n));
+    for (const stack of STACKS) {
+      const arquivo = join(ROOT, stackDir(stack), 'guidelines', deStack);
+      const conteudo = readFile(arquivo);
+      if (!conteudo) continue;
+      const linhas = conteudo.split('\n');
+      for (const t of titulos(conteudo)) {
+        const repetido = daCategoria.has(t.n);
+        if (!repetido && !assuntos.test(t.n)) continue;
+        const linha = linhas.findIndex((l) => /^#{2,4}\s/.test(l) && l.includes(t.cru)) + 1;
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack,
+          file: relative(ROOT, arquivo), line: linha || undefined, rule: 'guideline_de_stack_repete_categoria',
+          message: `seção "${t.cru}" ${repetido ? `repete um título de ${compartilhada}` : 'trata de assunto da categoria'} — `
+            + `a regra de categoria mora em docs/shared/guidelines/${compartilhada}; aqui fica só a mecânica desta stack`,
+        });
+      }
     }
   }
   return violations;
@@ -9112,7 +9264,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

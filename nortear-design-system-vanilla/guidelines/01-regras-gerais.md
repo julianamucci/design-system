@@ -83,20 +83,16 @@ dialog.setAttribute('data-state', 'closed');
 // [data-state="closed"] { display: none; }
 ```
 
-## Comunicação entre componentes: Custom Events
+## Comunicação entre componentes: callback nas opções
 
-```ts
-// Disparar evento
-btn.dispatchEvent(new CustomEvent('ds:dialog-open', {
-  bubbles: true,
-  detail: { dialogId: 'confirm-delete' }
-}));
+A fábrica recebe o callback na criação e o chama quando o estado muda —
+`onOpenChange`, `onSelect`, `onClose`. É o padrão em 68 arquivos de
+`src/components/ui/`.
 
-// Escutar evento
-document.addEventListener('ds:dialog-open', (e: CustomEvent) => {
-  openDialog(e.detail.dialogId);
-});
-```
+**Não há `CustomEvent`.** Esta seção ensinava a disparar um `ds:dialog-open` com
+`dispatchEvent` e escutá-lo no `document`; medido em 2026-09-10, nenhuma fábrica
+despacha evento, e o `ds:dialog-open` não existe em lugar nenhum do código. Era
+padrão de outra época, ensinado como regra da stack de referência.
 
 ## Ícones com lucide (vanilla)
 

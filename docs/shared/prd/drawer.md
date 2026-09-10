@@ -33,7 +33,7 @@ O que só existe aqui: o **gesto**. Arrastar o painel para fora da tela o dispen
 | C5 | O arraste dispensa o painel, e é EXTRA de ponteiro — nunca o único caminho | `accessibility.items.item5` |
 | C6 | Painel e véu param de animar sob `prefers-reduced-motion` | `accessibility.items.item6` |
 | C7 | O corpo rolável entra na ordem de tabulação e recebe `role="group"` quando nomeado | `accessibility.items.item7` |
-| C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento — regra em `02-alinhamento-botoes.md` | no SNIPPET, `drawer.source.test.ts` do vue; no DOM renderizado, — (nenhuma stack assere; aberto em `invariantes-overlay.md`) |
+| C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento — regra em `02-alinhamento-botoes.md` | no SNIPPET, `drawer.source.test.ts` do vue; no DOM renderizado, — (nenhuma stack assere; aberto na `18-overlay.md`) |
 | C9 | Painel com `<form>` tem como submeter: botão de submissão dentro, ou `form="<id>"` fora | `6c1ce87c0` — sem portão automático |
 
 ## 3. Decisões fixadas

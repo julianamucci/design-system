@@ -77,8 +77,8 @@ Alert (variant)
 
 ## Componentes de outra categoria
 
-O **AlertDialog** é um overlay, e mora em [`10-overlay-components.md`](10-overlay-components.md)
-— as regras da categoria — e em
+O **AlertDialog** é um overlay, e mora em
+[`18-overlay.md`](../../docs/shared/guidelines/18-overlay.md) — as regras da categoria — e em
 [`docs/shared/prd/alert-dialog.md`](../../docs/shared/prd/alert-dialog.md), que é
 onde estão a estrutura, os tokens, as decisões e os nomes de peça das cinco
 stacks.

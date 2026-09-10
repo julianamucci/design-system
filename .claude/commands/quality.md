@@ -639,6 +639,16 @@ Drawer, duas pendências de analytics que já tinham fechado. Ninguém reverteu
 nada — só ninguém releu. Se o seu trabalho satisfaz o `Fecha quando`, feche a
 linha; se fecha metade, estreite-a e diga o que fechou.
 
+**Componente de Overlay: leia também `docs/shared/guidelines/18-overlay.md`.** É
+a regra da categoria, uma vez só para as cinco stacks, e ela termina na tabela
+dos invariantes — onde cada regra está escrita, qual portão a cobra e o que ele
+não cobre. Antes de relatar um achado, confira se ele cai numa linha dessa
+tabela: se cai, não é defeito novo — é o portão da linha que precisa de dentes,
+ou a coluna "o que NÃO cobre" que precisa crescer. Foi a falta disso que fez a
+cadeia de `transform-origin`, a guarda de movimento reduzido e o nome da opção de
+nível de título voltarem como "achado novo" duas ou três vezes cada, por
+agentes diferentes.
+
 **3b. Acessibilidade na docs page**:
 - Documenta navegação por teclado
 - Lista atributos ARIA obrigatórios

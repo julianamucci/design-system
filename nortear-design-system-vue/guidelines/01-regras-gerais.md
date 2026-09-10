@@ -1,8 +1,8 @@
 # Regras Gerais Obrigatórias (Vue)
 
 * **SEU PAPEL**: Manter a consistência do projeto seguindo ESTRITAMENTE o que está definido nas guidelines. NUNCA invente seções, estruturas ou padrões que não estejam documentados. SEMPRE consulte as guidelines antes de criar ou modificar qualquer componente.
-* **É OBRIGATÓRIO usar os componentes da pasta `./components/ui`**
-* **É OBRIGATÓRIO usar os estilos do arquivo `./styles/globals.css`**
+* **É OBRIGATÓRIO usar os componentes da pasta `./src/components/ui`**
+* **É OBRIGATÓRIO usar os estilos do arquivo `./src/styles/globals.css`**
 * **É OBRIGATÓRIO usar APENAS ícones da biblioteca `lucide-vue-next` para TODOS os ícones do projeto**
 * **É OBRIGATÓRIO que todos os dialogs/modais usem as variáveis `--card` para background e `--card-foreground` para foreground**
 * **É OBRIGATÓRIO que todos os componentes interativos tenham anel de `focus-visible` com 2px de espessura — a utilitária é `.nds-focus-ring` (`.nds-focus-ring-inset` quando o anel precisa ficar por dentro da caixa)**
