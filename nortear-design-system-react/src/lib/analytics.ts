@@ -148,7 +148,7 @@ interface AnalyticsEvents {
     label?: string;
     /** Id ESTÁVEL de quem abriu, nunca o texto do gatilho (ver guideline 07). */
     trigger_id?: string;
-    reason?: "escape" | "overlay" | "close-button" | "action" | "user" | "unknown";
+    reason: "escape" | "overlay" | "close-button" | "api";
     location?: string;
   };
 

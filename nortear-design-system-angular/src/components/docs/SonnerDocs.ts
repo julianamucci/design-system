@@ -256,6 +256,8 @@ const TYPE_CODE: Record<string, string> = {
                     ndsButton
                     variant="outline"
                     size="sm"
+                    data-track="demo"
+                    [attr.data-track-id]="'sonner:demo:' + trigger.type"
                     (click)="dispararTipo(trigger.type)"
                   >
                     {{ trigger.label }}
@@ -269,16 +271,16 @@ const TYPE_CODE: Record<string, string> = {
             <div class="nds-stack" data-spacing="sm">
               <span class="nds-text-caption">{{ t('states.title') }}</span>
               <div class="nds-cluster" data-spacing="sm">
-                <button ndsButton variant="outline" size="sm" (click)="dispararComDescricao()">
+                <button ndsButton variant="outline" size="sm" data-track="demo" data-track-id="sonner:demo:with-description" (click)="dispararComDescricao()">
                   {{ t('demonstration.labels.triggerWithDescription') }}
                 </button>
-                <button ndsButton variant="outline" size="sm" (click)="dispararComAcao()">
+                <button ndsButton variant="outline" size="sm" data-track="demo" data-track-id="sonner:demo:with-action" (click)="dispararComAcao()">
                   {{ t('demonstration.labels.triggerWithAction') }}
                 </button>
-                <button ndsButton variant="outline" size="sm" (click)="dispararPromessa()">
+                <button ndsButton variant="outline" size="sm" data-track="demo" data-track-id="sonner:demo:promise" (click)="dispararPromessa()">
                   {{ t('demonstration.labels.triggerPromise') }}
                 </button>
-                <button ndsButton variant="outline" size="sm" (click)="dispararPersistente()">
+                <button ndsButton variant="outline" size="sm" data-track="demo" data-track-id="sonner:demo:persistent" (click)="dispararPersistente()">
                   {{ t('demonstration.labels.triggerPersistent') }}
                 </button>
               </div>
@@ -433,14 +435,14 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   }
 
   protected dispararComDescricao(): void {
-    track('toast_demo_triggered', { toast_type: 'with_description', locale: getLocale() });
+    track('toast_demo_triggered', { toast_type: 'with-description', locale: getLocale() });
     toast.success(t('demonstration.labels.withDescription'), {
       description: t('demonstration.labels.withDescriptionDesc'),
     });
   }
 
   protected dispararComAcao(): void {
-    track('toast_demo_triggered', { toast_type: 'with_action', locale: getLocale() });
+    track('toast_demo_triggered', { toast_type: 'with-action', locale: getLocale() });
     toast(t('demonstration.labels.withAction'), {
       action: {
         label: t('demonstration.labels.withActionLabel'),
@@ -475,13 +477,13 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
 
   /** Contraexemplo do par 1: erro que bloqueia o fluxo — lugar do Alert. */
   protected dispararBloqueante(): void {
-    track('toast_demo_triggered', { toast_type: 'blocking_error', locale: getLocale() });
+    track('toast_demo_triggered', { toast_type: 'blocking-error', locale: getLocale() });
     toast.error(t('demonstration.labels.error'));
   }
 
   /** Contraexemplo do par 2: erro de campo — lugar do FormMessage. */
   protected dispararDeFormulario(): void {
-    track('toast_demo_triggered', { toast_type: 'form_error', locale: getLocale() });
+    track('toast_demo_triggered', { toast_type: 'form-error', locale: getLocale() });
     toast.warning(t('demonstration.labels.warning'));
   }
 

@@ -949,7 +949,7 @@ export interface DialogOptions {
   footer?: HTMLElement;
   showCloseButton?: boolean;
   onOpenChange?: (open: boolean) => void;
-  onClose?: (reason: 'escape' | 'overlay' | 'close-button' | 'action') => void;
+  onClose?: (reason: 'escape' | 'overlay' | 'close-button' | 'api') => void;
   class?: string;
 }`;
 
@@ -975,7 +975,7 @@ export interface DialogOptions {
                 { name: 'footer',          type: 'HTMLElement',                                                          defaultValue: '—',     required: 'Não', description: 'Container das ações (cancel, action).' },
                 { name: 'showCloseButton', type: 'boolean',                                                              defaultValue: 'true',  required: 'Não', description: t('props.table.showCloseButtonContent') },
                 { name: 'onOpenChange',    type: '(open: boolean) => void',                                              defaultValue: '—',     required: 'Não', description: t('props.table.onOpenChange') },
-                { name: 'onClose',         type: "(reason: 'escape' | 'overlay' | 'close-button' | 'action') => void",  defaultValue: '—',     required: 'Não', description: 'Callback com a razão do fechamento — útil para analytics.' },
+                { name: 'onClose',         type: "(reason: 'escape' | 'overlay' | 'close-button' | 'api') => void",  defaultValue: '—',     required: 'Não', description: 'Callback com a razão do fechamento — útil para analytics.' },
                 { name: 'class',           type: 'string',                                                               defaultValue: '—',     required: 'Não', description: t('props.table.className') },
               ],
             },

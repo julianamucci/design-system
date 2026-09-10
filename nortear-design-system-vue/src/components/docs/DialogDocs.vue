@@ -164,12 +164,33 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 // ─── Analytics — demo events ──────────────────────────────────────────────────
 
+// O `update:open` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o
+// `dialog_close` exige `reason`, no vocabulário do design system
+// (`18-overlay.md` §Analytics). Mesma forma do SheetDocs: os dois caminhos que a
+// lib anuncia por evento próprio ficam anotados aqui; o que sobra é o botão de
+// fechar, o X ou o Cancelar. O "Salvar" da demonstração não fecha o painel, então
+// aqui não há caminho para `api`. Uma variável basta: o painel é modal.
+type DialogCloseReason = 'escape' | 'overlay' | 'close-button';
+let pendingCloseReason: DialogCloseReason | null = null;
+
+const closeWatch = {
+  onEscapeKeyDown: () => { pendingCloseReason = 'escape'; },
+  onPointerDownOutside: () => { pendingCloseReason = 'overlay'; },
+};
+
 function handleDemoOpenChange(open: boolean) {
-  track(open ? 'dialog_open' : 'dialog_close', {
+  if (open) {
+    pendingCloseReason = null;
+    track('dialog_open', { component: 'dialog', label: 'title', location: 'docs_demo' });
+    return;
+  }
+  track('dialog_close', {
     component: 'dialog',
     label: 'title',
+    reason: pendingCloseReason ?? 'close-button',
     location: 'docs_demo',
   });
+  pendingCloseReason = null;
 }
 
 function handleDemoAction() {
@@ -579,7 +600,7 @@ const a11yCritCols = computed(() => ({
           <DialogTrigger as-child>
             <Button>{{ tContent('demonstration.labels.triggerLabel') }}</Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent :close-label="tContent('demonstration.labels.close')" v-bind="closeWatch">
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.description') }}</DialogDescription>

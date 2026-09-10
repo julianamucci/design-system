@@ -316,6 +316,11 @@ segura, está por extenso em `hover-card.md` §8.
 traduzido. O evento é o do Dialog de propósito: as duas peças respondem à mesma
 pergunta de produto, e separar as séries esconderia isso.
 
+**`reason` é obrigatório, no vocabulário da família** — `escape`, `overlay`,
+`close-button`, `api` —, com o registro da decisão de 2026-09-10 na §9 do
+[`dialog.md`](dialog.md), que é o dono deste evento. O vanilla chamava a
+confirmação que fecha o painel de `action` até essa data; hoje é `api`.
+
 ## 10. Reconstruir do zero
 
 Ordem: folha (com os defaults em `:root`) → primitivo → cabeçalho e rodapé →

@@ -34,7 +34,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-import { mapCloseReason }    from "@/components/docs/shared/close-reason";
+import { mapCloseReason, markConfirmation } from "@/components/docs/shared/close-reason";
 import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
@@ -116,13 +116,14 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action }: D
           <AlertDialogCancel>{cancel}</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
-            onClick={() =>
+            onClick={() => {
+              markConfirmation()
               track("dialog_confirm", {
                 component: "alert-dialog",
                 label: "destructive",
                 location: "docs_demo",
               })
-            }
+            }}
           >
             {action}
           </AlertDialogAction>
@@ -163,13 +164,14 @@ function NeutralDemo({ triggerLabel, title, description, cancel, action }: Neutr
         <AlertDialogFooter>
           <AlertDialogCancel>{cancel}</AlertDialogCancel>
           <AlertDialogAction
-            onClick={() =>
+            onClick={() => {
+              markConfirmation()
               track("dialog_confirm", {
                 component: "alert-dialog",
                 label: "neutral",
                 location: "docs_demo",
               })
-            }
+            }}
           >
             {action}
           </AlertDialogAction>

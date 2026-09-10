@@ -216,15 +216,28 @@ gatilho, `label` estável e nunca texto — é regra de todos os eventos, e est�
 [`07-analytics.md`](07-analytics.md). O que é desta categoria:
 
 - **O fechamento diz por que fechou**, com `reason` **obrigatório** e de
-  vocabulário do design system, nunca o da lib: `escape`, `overlay`,
-  `close-button`, e uma quarta palavra para "fechou por decisão de dentro". O
-  HoverCard não leva `reason`: é passivo, fechar é quase sempre "o ponteiro
+  vocabulário do design system, nunca o da lib — quatro palavras, iguais em
+  `dialog_close` (Dialog, Sheet, AlertDialog), `drawer_close` e
+  `popover_close`:
+
+  | motivo | caminho |
+  |---|---|
+  | `escape` | tecla Escape |
+  | `overlay` | saiu sem decidir nada — clique fora, foco que saiu |
+  | `close-button` | controle explícito de fechar ou de cancelar |
+  | `api` | fechou por decisão de dentro — a ação que confirma, ou código |
+
+  O HoverCard não leva `reason`: é passivo, fechar é quase sempre "o ponteiro
   saiu", e o campo ia preenchido por uma stack só (ver o `hover-card.md` §9).
-- **A quarta palavra não é a mesma na família.** O `drawer_close` e o
-  `popover_close` dizem `api`; o `dialog_close` — que também é o evento do Sheet
-  e do AlertDialog, com `component` diferente — diz `action`. Os dois nomeiam o
-  mesmo caso ("salvou e fechou"), e numa quebra por `reason` que junte os eventos
-  aparecem como dois valores. Medido em 2026-09-10; a unificação é decisão aberta.
+- **Onde a lib não publica motivo, a docs page o deduz**: anota os eventos de
+  `Escape` e de clique fora do conteúdo, e marca a confirmação ANTES de o painel
+  fechar. A ação que confirma e o cancelar costumam ser partes de fechar da lib,
+  que entrega o mesmo motivo para as duas — sem a marca, "confirmou" chega ao
+  relatório como "apertou o botão de fechar".
+- **Até 2026-09-10 a quarta palavra não era a mesma**: `api` no drawer e no
+  popover, `action` no `dialog_close` — que ainda aceitava `user` e `unknown` no
+  React, era opcional em três stacks e ia vazio no Dialog e no AlertDialog do Vue
+  e do Svelte. A dona decidiu por `api`. Portão: `reason_vocabulario_divergente`.
 
 ## Posicionamento dos flutuantes
 
@@ -260,7 +273,7 @@ evitar.
 |---|---|---|---|
 | Movimento para sob `prefers-reduced-motion` | `13-animacao.md` | `movimento_sem_guarda_eficaz` | duração por token fica de fora de propósito — a camada de token a alcança |
 | Elevação por tipo de superfície | `04-padroes-design-sistema.md` | `elevacao_fora_do_mapa` · `prd_token_sem_lastro` confere cada PRD contra a folha | — |
-| `reason` no fechamento | aqui, §Analytics | `reason_parcial_entre_stacks` | que a quarta palavra seja a mesma em toda a família |
+| `reason` no fechamento | aqui, §Analytics | `reason_parcial_entre_stacks` (presença entre stacks) · `reason_vocabulario_divergente` (obrigatório e com as quatro palavras, em todo `*_close` e todo `*CloseReason`) | que a docs page deduza o motivo CERTO — o portão lê o tipo, não o caminho que o preenche |
 | Nível do título | aqui, §Título | `nivel_de_titulo_divergente` | lê o default no vanilla, onde está ESCRITO; nas outras quatro ele vem da lib |
 | Cadeia de `transform-origin` | aqui, §Posicionamento | `cadeia_transform_origin_sem_bits` · `_premissa` · `_nao_declarada` | `navigation-menu` fica de fora, declarado: o bits não publica origem para ele |
 | Anel de foco | `01-acessibilidade.md` | `focus_ring_sobrescrito` · `focus_ring_translucido` | — |
@@ -282,8 +295,6 @@ invariante de categoria.
 1. **A ordem do rodapé do Drawer** não é asserida no DOM renderizado em stack
    nenhuma, enquanto a do Dialog é asserida nas cinco. É play, não regra de
    audit.
-2. **A quarta palavra do `reason`** — `action` no `dialog_close`, `api` no
-   `drawer_close` e no `popover_close`.
 
 ### Como este inventário foi levantado, para poder ser refeito
 

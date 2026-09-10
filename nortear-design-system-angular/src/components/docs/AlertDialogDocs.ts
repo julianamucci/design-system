@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
+import type { RdxDialogOpenChange } from '@radix-ng/primitives/dialog';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
@@ -156,6 +157,13 @@ const CUSTOMIZATION_CODE = `/* O painel e o overlay leem os tokens do tema —
   --destructive-foreground: 0 0% 98%;
 }`;
 
+type DemoAlert = 'destructive' | 'neutral';
+
+/** Razões do primitivo mapeadas para o vocabulário estável do GA4 — igual ao Dialog. */
+const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
+  'escape-key': 'escape',
+  'close-press': 'close-button',
+};
 @Component({
   selector: 'nds-alert-dialog-docs',
   standalone: true,
@@ -311,7 +319,7 @@ const CUSTOMIZATION_CODE = `/* O painel e o overlay leem os tokens do tema —
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-cluster" data-spacing="md">
-            <nds-alert-dialog>
+            <nds-alert-dialog (onOpenChange)="onDemoOpenChange('destructive', $event)">
               <button ndsAlertDialogTrigger ndsButton variant="destructive">
                 {{ t('demonstration.labels.triggerLabel') }}
               </button>
@@ -328,7 +336,7 @@ const CUSTOMIZATION_CODE = `/* O painel e o overlay leem os tokens do tema —
                     ndsAlertDialogAction
                     ndsButton
                     variant="destructive"
-                    (click)="registrarConfirmacao()"
+                    (click)="trackConfirmation('destructive')"
                   >
                     {{ t('demonstration.labels.action') }}
                   </button>
@@ -336,7 +344,7 @@ const CUSTOMIZATION_CODE = `/* O painel e o overlay leem os tokens do tema —
               </ng-template>
             </nds-alert-dialog>
 
-            <nds-alert-dialog>
+            <nds-alert-dialog (onOpenChange)="onDemoOpenChange('neutral', $event)">
               <button ndsAlertDialogTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.neutralTriggerLabel') }}
               </button>
@@ -351,7 +359,7 @@ const CUSTOMIZATION_CODE = `/* O painel e o overlay leem os tokens do tema —
                   <button ndsAlertDialogCancel ndsButton variant="outline">
                     {{ t('demonstration.labels.cancel') }}
                   </button>
-                  <button ndsAlertDialogAction ndsButton (click)="registrarConfirmacao()">
+                  <button ndsAlertDialogAction ndsButton (click)="trackConfirmation('neutral')">
                     {{ t('demonstration.labels.neutralAction') }}
                   </button>
                 </div>
@@ -798,11 +806,39 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
    * A demonstração dispara evento de produto de verdade — a docs page É o
    * produto consumidor deste design system.
    */
-  protected registrarConfirmacao(): void {
+  protected trackConfirmation(qual: DemoAlert): void {
     // `dialog_confirm` e não um evento novo: é o que a tabela de analytics do
     // conteúdo compartilhado documenta, e ele já existe tipado em AnalyticsEvents.
-    track('dialog_confirm', { component: 'alert-dialog', action: 'confirm' });
+    // Levanta a bandeira ANTES do fechamento: o `(click)` de quem consome roda
+    // antes do listener de `host` da diretiva de fechar (armadilha 10 do
+    // CLAUDE.md desta stack), igual ao Dialog.
+    this.confirmed = true;
+    track('dialog_confirm', { component: 'alert-dialog', label: qual, location: 'docs_demo' });
   }
+
+  /**
+   * `dialog_open` e `dialog_close` da demonstração. Esta era a única das cinco
+   * stacks em que o AlertDialog não disparava nenhum dos dois — só o
+   * `dialog_confirm`, e sem `label` nem `location`.
+   *
+   * O motivo segue o vocabulário do design system (`18-overlay.md` §Analytics).
+   * A ação que confirma e o Cancelar são as duas partes de fechar, e o radix-ng
+   * entrega `close-press` para as duas; sem a bandeira, "confirmou" chegaria
+   * ao relatório como "apertou o botão de fechar". Clique fora não fecha este
+   * componente, então `overlay` não aparece.
+   */
+  protected onDemoOpenChange(qual: DemoAlert, evento: RdxDialogOpenChange): void {
+    if (evento.open) {
+      this.confirmed = false;
+      track('dialog_open', { component: 'alert-dialog', label: qual, location: 'docs_demo' });
+      return;
+    }
+    const reason = this.confirmed ? 'api' : (ALERT_CLOSE_REASON[evento.reason] ?? 'api');
+    this.confirmed = false;
+    track('dialog_close', { component: 'alert-dialog', label: qual, reason, location: 'docs_demo' });
+  }
+
+  private confirmed = false;
 
   private observer: { disconnect: () => void } | undefined;
 

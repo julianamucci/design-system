@@ -429,6 +429,22 @@ respondem à mesma pergunta de produto, e separar as séries esconderia isso. L�
 campo continua sendo `label`, e de propósito: no Sheet ele carrega o LADO
 (`right`, `left`, `bottom`), que não é identificador de gatilho.
 
+**`reason` é obrigatório, com as quatro palavras da família** — `escape`,
+`overlay`, `close-button` e `api`, as mesmas do `drawer_close` e do
+`popover_close` (`18-overlay.md` §Analytics). `api` é "fechou por decisão de
+dentro": a ação que confirma, ou o fechamento por código.
+
+Até 2026-09-10 este evento dizia `action` onde o drawer e o popover diziam
+`api`, e nem era um tipo só: o React aceitava seis palavras (`action`, `user` e
+`unknown` além das três comuns), React, Vue e Svelte deixavam o campo opcional,
+e o Dialog e o AlertDialog do Vue e do Svelte não mandavam motivo nenhum — a lib
+deles não publica, e a docs page não o deduzia. A dona decidiu por `api`, e as
+cinco passaram a mandar o campo nos três componentes que usam este evento. Onde
+a lib não publica motivo, a docs page o anota pelos eventos de `Escape` e de
+clique fora do conteúdo, e marca a confirmação ANTES de o painel fechar — a ação
+e o cancelar são partes de fechar da lib, e sem a marca "confirmou" chegaria ao
+relatório como "apertou o botão de fechar". Portão: `reason_vocabulario_divergente`.
+
 **O campo passou de `label` a `trigger_id` em 2026-09-09**, por decisão da dona,
 e junto foi um defeito de dados que o nome escondia. No vanilla o payload mandava
 `label: opts.triggerLabel`, e `triggerLabel` vinha de

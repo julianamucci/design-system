@@ -159,7 +159,7 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
  * stacks. E é a fila real que desenha: a demonstração precisa mostrar o
  * componente, inclusive o prazo correndo e a pausa no ponteiro.
  */
-function createDemoToastArea(btnConfigs: Array<{ label: string; fn: () => void }>): HTMLElement {
+function createDemoToastArea(btnConfigs: Array<{ id: string; label: string; fn: () => void }>): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.cssText = 'position: relative; contain: layout; min-height: 11.25rem; padding: var(--spacing-6);';
 
@@ -168,16 +168,24 @@ function createDemoToastArea(btnConfigs: Array<{ label: string; fn: () => void }
   btnsRow.dataset.spacing = 'md';
   btnsRow.style.flexWrap = 'wrap';
 
-  for (const { label, fn } of btnConfigs) {
+  for (const { id, label, fn } of btnConfigs) {
+    const btn = createButton({
+      variant: 'outline',
+      label,
+      onClick: () => {
+        // `toast_type` é o id ESTÁVEL do tipo, igual nas cinco stacks. Era o
+        // `label` — o texto traduzido do botão —, e o mesmo disparo virava um
+        // valor por idioma no GA4, justo na stack de referência.
+        track('toast_demo_triggered', { toast_type: id, locale: getLocale() });
+        fn();
+      },
+    });
+    // `docs_demo_click`, pelo rastreador da docs page — o mesmo id do React e do
+    // Svelte. Até 2026-09-10 só essas duas stacks marcavam os botões.
+    btn.dataset.track = 'demo';
+    btn.dataset.trackId = `sonner:demo:${id}`;
     btnsRow.appendChild(
-      createButton({
-        variant: 'outline',
-        label,
-        onClick: () => {
-          track('toast_demo_triggered', { toast_type: label, locale: getLocale() });
-          fn();
-        },
-      }),
+      btn,
     );
   }
 
@@ -286,15 +294,16 @@ export function createSonnerDocs(): HTMLElement {
     switch (id) {
 
       case 'demonstracao': {
-        const demoConfigs: Array<{ label: string; fn: () => void }> = [
-          { label: t('demonstration.labels.triggerDefault'),         fn: () => toast(t('demonstration.labels.default')) },
-          { label: t('demonstration.labels.triggerSuccess'),         fn: () => toast.success(t('demonstration.labels.success')) },
-          { label: t('demonstration.labels.triggerError'),           fn: () => toast.error(t('demonstration.labels.error')) },
-          { label: t('demonstration.labels.triggerWarning'),         fn: () => toast.warning(t('demonstration.labels.warning')) },
-          { label: t('demonstration.labels.triggerInfo'),            fn: () => toast.info(t('demonstration.labels.info')) },
-          { label: t('demonstration.labels.triggerLoading'),         fn: () => toast.loading(t('demonstration.labels.loading')) },
-          { label: t('demonstration.labels.triggerWithDescription'), fn: () => toast.success(t('demonstration.labels.withDescription'), { description: t('demonstration.labels.withDescriptionDesc') }) },
+        const demoConfigs: Array<{ id: string; label: string; fn: () => void }> = [
+          { id: 'default', label: t('demonstration.labels.triggerDefault'),         fn: () => toast(t('demonstration.labels.default')) },
+          { id: 'success', label: t('demonstration.labels.triggerSuccess'),         fn: () => toast.success(t('demonstration.labels.success')) },
+          { id: 'error', label: t('demonstration.labels.triggerError'),           fn: () => toast.error(t('demonstration.labels.error')) },
+          { id: 'warning', label: t('demonstration.labels.triggerWarning'),         fn: () => toast.warning(t('demonstration.labels.warning')) },
+          { id: 'info', label: t('demonstration.labels.triggerInfo'),            fn: () => toast.info(t('demonstration.labels.info')) },
+          { id: 'loading', label: t('demonstration.labels.triggerLoading'),         fn: () => toast.loading(t('demonstration.labels.loading')) },
+          { id: 'with-description', label: t('demonstration.labels.triggerWithDescription'), fn: () => toast.success(t('demonstration.labels.withDescription'), { description: t('demonstration.labels.withDescriptionDesc') }) },
           {
+            id: 'with-action',
             label: t('demonstration.labels.triggerWithAction'),
             fn: () => toast(t('demonstration.labels.withAction'), {
               action: {
@@ -308,6 +317,7 @@ export function createSonnerDocs(): HTMLElement {
             }),
           },
           {
+            id: 'promise',
             label: t('demonstration.labels.triggerPromise'),
             fn: () => toast.promise(
               new Promise<void>((resolve) => setTimeout(resolve, 2000)),
@@ -319,6 +329,7 @@ export function createSonnerDocs(): HTMLElement {
             ),
           },
           {
+            id: 'persistent',
             label: t('demonstration.labels.triggerPersistent'),
             fn: () => toast.error(t('demonstration.labels.persistent'), { duration: Number.POSITIVE_INFINITY }),
           },

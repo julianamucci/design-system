@@ -115,14 +115,14 @@
   function fireLoading() { trackToastDemo('loading'); toast.loading($tStore('demonstration.labels.loading')); }
 
   function fireWithDescription() {
-    trackToastDemo('with_description');
+    trackToastDemo('with-description');
     toast.success($tStore('demonstration.labels.withDescription'), {
       description: $tStore('demonstration.labels.withDescriptionDesc'),
     });
   }
 
   function fireWithAction() {
-    trackToastDemo('with_action');
+    trackToastDemo('with-action');
     toast($tStore('demonstration.labels.withAction'), {
       action: {
         label: $tStore('demonstration.labels.withActionLabel'),

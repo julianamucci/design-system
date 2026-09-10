@@ -74,7 +74,7 @@ import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 
-export type DialogCloseReason = 'escape' | 'overlay' | 'close-button' | 'action';
+export type DialogCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
 
 export type DialogOptions = {
   trigger: HTMLElement;
@@ -370,6 +370,6 @@ export function createDialog(options: DialogOptions): DestroyableElement {
   // O observador anterior se desligava na primeira mutação vista com o wrapper
   // ainda solto, e a guarda deixava de existir antes de servir para algo.
   return tornarDestruivel(wrapper, wrapper, () => {
-    if (panelEl) closeWithReason('action');
+    if (panelEl) closeWithReason('api');
   });
 }

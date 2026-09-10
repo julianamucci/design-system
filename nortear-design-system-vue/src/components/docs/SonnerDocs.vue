@@ -398,6 +398,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:default"
             @click="fireDefault"
           >
             {{ tContent('demonstration.labels.triggerDefault') }}
@@ -405,6 +407,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:success"
             @click="fireSuccess"
           >
             {{ tContent('demonstration.labels.triggerSuccess') }}
@@ -412,6 +416,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:error"
             @click="fireError"
           >
             {{ tContent('demonstration.labels.triggerError') }}
@@ -419,6 +425,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:warning"
             @click="fireWarning"
           >
             {{ tContent('demonstration.labels.triggerWarning') }}
@@ -426,6 +434,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:info"
             @click="fireInfo"
           >
             {{ tContent('demonstration.labels.triggerInfo') }}
@@ -433,6 +443,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:loading"
             @click="fireLoading"
           >
             {{ tContent('demonstration.labels.triggerLoading') }}
@@ -440,6 +452,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:with-description"
             @click="fireWithDescription"
           >
             {{ tContent('demonstration.labels.triggerWithDescription') }}
@@ -447,6 +461,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:with-action"
             @click="fireWithAction"
           >
             {{ tContent('demonstration.labels.triggerWithAction') }}
@@ -454,6 +470,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:promise"
             @click="firePromise"
           >
             {{ tContent('demonstration.labels.triggerPromise') }}
@@ -461,6 +479,8 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
+            data-track="demo"
+            data-track-id="sonner:demo:persistent"
             @click="firePersistent"
           >
             {{ tContent('demonstration.labels.triggerPersistent') }}

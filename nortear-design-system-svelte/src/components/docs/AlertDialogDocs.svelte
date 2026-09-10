@@ -211,6 +211,32 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
     required: $tStore('props.table.required'),
     description: $tStore('props.table.description'),
   });
+  // O `onOpenChange` da lib não diz por que o diálogo fechou, e o `dialog_close`
+  // exige `reason` (`18-overlay.md` §Analytics). Três caminhos fecham este
+  // componente, e nenhum é o clique fora: `Escape` (anunciado pela lib), o
+  // Cancelar (`close-button`, que é o que sobra) e a ação que CONFIRMA — `api`,
+  // "fechou por decisão de dentro". A ação e o Cancelar são partes de fechar da
+  // lib; sem marcar a confirmação antes, "confirmou" chegaria ao relatório como
+  // "apertou o botão de fechar". Uma variável basta: o diálogo é modal.
+  type DemoCloseReason = 'escape' | 'close-button' | 'api';
+  let demoCloseReason: DemoCloseReason | null = null;
+
+  const closeWatch = { onEscapeKeydown: () => { demoCloseReason = 'escape'; } };
+
+  function trackDemoAlert(label: 'destructive' | 'neutral', open: boolean): void {
+    if (open) {
+      demoCloseReason = null;
+      track('dialog_open', { component: 'alert-dialog', label, location: 'docs_demo' });
+      return;
+    }
+    track('dialog_close', { component: 'alert-dialog', label, reason: demoCloseReason ?? 'close-button', location: 'docs_demo' });
+    demoCloseReason = null;
+  }
+
+  function confirmDemoAlert(label: 'destructive' | 'neutral'): void {
+    demoCloseReason = 'api';
+    track('dialog_confirm', { component: 'alert-dialog', label, location: 'docs_demo' });
+  }
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
@@ -226,40 +252,40 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md">
-      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert-dialog', label: 'destructive', location: 'docs_demo' })}>
+      <AlertDialog onOpenChange={(o: boolean) => trackDemoAlert('destructive', o)}>
         <AlertDialogTrigger>
           {#snippet child({ props })}
             <Button variant="destructive" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
           {/snippet}
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent {...closeWatch}>
           <AlertDialogHeader>
             <AlertDialogTitle>{$tStore('demonstration.labels.title')}</AlertDialogTitle>
             <AlertDialogDescription>{$tStore('demonstration.labels.description')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onclick={() => track('dialog_confirm', { component: 'alert-dialog', label: 'destructive', location: 'docs_demo' })}>
+            <AlertDialogAction variant="destructive" onclick={() => confirmDemoAlert('destructive')}>
               {$tStore('demonstration.labels.action')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert-dialog', label: 'neutral', location: 'docs_demo' })}>
+      <AlertDialog onOpenChange={(o: boolean) => trackDemoAlert('neutral', o)}>
         <AlertDialogTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.neutralTriggerLabel')}</Button>
           {/snippet}
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent {...closeWatch}>
           <AlertDialogHeader>
             <AlertDialogTitle>{$tStore('demonstration.labels.neutralTitle')}</AlertDialogTitle>
             <AlertDialogDescription>{$tStore('demonstration.labels.neutralDescription')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert-dialog', label: 'neutral', location: 'docs_demo' })}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
+            <AlertDialogAction onclick={() => confirmDemoAlert('neutral')}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

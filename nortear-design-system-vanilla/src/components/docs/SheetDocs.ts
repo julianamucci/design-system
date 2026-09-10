@@ -138,7 +138,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   // Fechar ao clicar nas ações: dispara click no overlay (close interno da
   // factory). pendingReason sobrepõe o reason 'overlay' desse caminho sintético
   // para que cancel/apply reportem o motivo semântico correto.
-  let pendingReason: 'close-button' | 'action' | null = null;
+  let pendingReason: 'close-button' | 'api' | null = null;
   const closeFromAction = () => {
     const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
     overlay?.click();
@@ -153,7 +153,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
       action: 'apply',
       location: opts.location,
     });
-    pendingReason = 'action';
+    pendingReason = 'api';
     closeFromAction();
   });
 

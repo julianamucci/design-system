@@ -415,7 +415,7 @@ const IMG_CAPA =
   "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='800' height='450' fill='%23cbd5e1'/%3E%3C/svg%3E";
 
 /** Razões do primitivo mapeadas para o vocabulário estável do GA4. */
-const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'action'> = {
+const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
   'escape-key': 'escape',
   'outside-press': 'overlay',
   'focus-out': 'overlay',
@@ -1029,7 +1029,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       // `ndsDialogClose`), então o motivo do primitivo diria "close-button".
       // A bandeira preserva a diferença que interessa ao funil: fechou porque
       // desistiu, ou porque concluiu.
-      reason: this.confirmou ? 'action' : (MOTIVO[evento.reason] ?? 'action'),
+      reason: this.confirmou ? 'api' : (MOTIVO[evento.reason] ?? 'api'),
       location: 'docs_demo',
     });
     this.confirmou = false;
@@ -1055,7 +1055,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     track('dialog_close', {
       component: 'dialog',
       label: qual,
-      reason: MOTIVO[evento.reason] ?? 'action',
+      reason: MOTIVO[evento.reason] ?? 'api',
       location: secao,
     });
   }

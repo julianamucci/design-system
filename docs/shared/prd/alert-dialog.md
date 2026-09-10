@@ -289,10 +289,26 @@ segura, está por extenso em `hover-card.md` §8.
 |---|---|---|
 | `dialog_open` | o diálogo abre | `{ component: "alert-dialog", label, location }` |
 | `dialog_confirm` | a ação é executada | idem |
-| `dialog_close` | fecha sem executar | idem, com o motivo |
+| `dialog_close` | fecha, por qualquer caminho | idem, mais `reason` |
 
-O `component` é `alert_dialog` — mesma família de eventos do Dialog e do Sheet,
-com a peça identificada no payload.
+O `component` é `alert-dialog`, em kebab-case desde a unificação do vocabulário —
+esta linha ainda dizia `alert_dialog` enquanto a tabela logo acima já dizia o
+contrário. Mesma família de eventos do Dialog e do Sheet, com a peça
+identificada no payload.
+
+**`reason` é obrigatório, no vocabulário da família** (`dialog.md` §9). Aqui só
+três palavras aparecem, porque clique fora não fecha este componente (D1):
+`escape`; `close-button` para o Cancelar; e `api` para a ação que confirma. A
+ação e o Cancelar são as duas partes de fechar da lib, e a lib entrega o mesmo
+motivo para as duas — por isso, nas cinco stacks, a demonstração marca a
+confirmação ANTES de o diálogo fechar. Sem a marca, "confirmou a exclusão"
+chegaria ao relatório como "apertou o botão de fechar".
+
+**Até 2026-09-10 esta linha dizia "fecha sem executar"**, e o conteúdo
+compartilhado documentava um campo `trigger` com `"cancel_button"` que nenhuma
+stack mandava. O Angular nem disparava `dialog_open` e `dialog_close` — só o
+`dialog_confirm`, sem `label` e sem `location` —, e o Vue e o Svelte fechavam
+sem motivo.
 
 ## 10. Reconstruir do zero
 

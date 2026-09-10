@@ -317,6 +317,29 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     required: $tStore('props.table.required'),
     description: $tStore('props.table.description'),
   });
+  // O `onOpenChange` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o
+  // `dialog_close` exige `reason`, no vocabulário do design system
+  // (`18-overlay.md` §Analytics). Mesma forma do SheetDocs: os dois caminhos que
+  // a lib anuncia ficam anotados aqui; o que sobra é o botão de fechar, o X ou o
+  // Cancelar. O "Salvar" da demonstração não fecha o painel, então não há caminho
+  // para `api`. Uma variável basta: o painel é modal.
+  type DemoCloseReason = 'escape' | 'overlay' | 'close-button';
+  let demoCloseReason: DemoCloseReason | null = null;
+
+  const closeWatch = {
+    onEscapeKeydown: () => { demoCloseReason = 'escape'; },
+    onInteractOutside: () => { demoCloseReason = 'overlay'; },
+  };
+
+  function trackDemoDialog(open: boolean): void {
+    if (open) {
+      demoCloseReason = null;
+      track('dialog_open', { component: 'dialog', label: 'trigger-label', location: 'docs_demo' });
+      return;
+    }
+    track('dialog_close', { component: 'dialog', label: 'trigger-label', reason: demoCloseReason ?? 'close-button', location: 'docs_demo' });
+    demoCloseReason = null;
+  }
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
@@ -332,13 +355,13 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
-      <Dialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'dialog', label: 'trigger-label', location: 'docs_demo' })}>
+      <Dialog onOpenChange={trackDemoDialog}>
         <DialogTrigger>
           {#snippet child({ props })}
             <Button {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
           {/snippet}
         </DialogTrigger>
-        <DialogContent closeLabel={$tStore('demonstration.labels.close')}>
+        <DialogContent closeLabel={$tStore('demonstration.labels.close')} {...closeWatch}>
           <DialogHeader>
             <DialogTitle>{$tStore('demonstration.labels.title')}</DialogTitle>
             <DialogDescription>{$tStore('demonstration.labels.description')}</DialogDescription>

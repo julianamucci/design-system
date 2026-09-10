@@ -87,7 +87,7 @@ import { cn } from '@/lib/utils';
 export type SheetSide = 'top' | 'right' | 'bottom' | 'left';
 
 /** Caminho que fechou o painel — o vocabulário que o analytics do produto usa. */
-export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'action';
+export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
 
 /**
  * Traduz o motivo do primitivo para o vocabulário do design system.
@@ -107,8 +107,10 @@ export function sheetCloseReason(motivo: RdxDialogOpenChangeReason): SheetCloseR
       return 'overlay';
     case 'close-press':
       return 'close-button';
+    // Sobra o painel fechado por CÓDIGO — é "fechou por decisão de dentro", que
+    // a família chama de `api` desde 2026-09-10 (era `action` só neste evento).
     default:
-      return 'action';
+      return 'api';
   }
 }
 

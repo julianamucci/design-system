@@ -2726,6 +2726,81 @@ function auditCadeiaTransformOrigin() {
  * Linha de comentário (`*`, `//`, `/*`) fica de fora: os docblocks DESCREVEM o
  * atributo, e portão que casa palavra solta mede prosa.
  */
+/**
+ * O `reason` do fechamento tem UM vocabulário na família: `escape`, `overlay`,
+ * `close-button` e `api` — decisão da dona em 2026-09-10, registrada em
+ * `docs/shared/guidelines/18-overlay.md` §Analytics.
+ *
+ * Até ali o `drawer_close` e o `popover_close` diziam `api` para "fechou por
+ * decisão de dentro", e o `dialog_close` — evento também do Sheet e do
+ * AlertDialog — dizia `action`. E o `dialog_close` nem era um tipo só: o React
+ * aceitava seis palavras (`action`, `user`, `unknown` além das três comuns) e
+ * três stacks o deixavam opcional; no Vue e no Svelte o Dialog e o AlertDialog
+ * não mandavam motivo nenhum, e no Angular o AlertDialog nem disparava o evento.
+ * O `reason_parcial_entre_stacks` não via nada disso: ele cobra PRESENÇA do
+ * campo entre stacks, não a palavra.
+ *
+ * Duas checagens:
+ *  - em `AnalyticsEvents`, todo evento `*_close` que tem `reason` o tem
+ *    OBRIGATÓRIO e com exatamente as quatro palavras;
+ *  - todo tipo `*CloseReason` exportado em `src/components/` só usa palavras
+ *    delas — o de um componente que não fecha por clique fora pode ter menos.
+ */
+const VOCABULARIO_DE_FECHAMENTO = ['escape', 'overlay', 'close-button', 'api'];
+
+function auditVocabularioDeFechamento() {
+  const violations = [];
+  const canon = new Set(VOCABULARIO_DE_FECHAMENTO);
+  const palavras = (union) => [...union.matchAll(/['"]([a-z-]+)['"]/g)].map((m) => m[1]);
+  for (const stack of STACKS) {
+    const arq = join(ROOT, stackDir(stack), 'src', 'lib', 'analytics.ts');
+    const txt = readFile(arq) || '';
+    const rel = relative(ROOT, arq);
+    const linhas = txt.split('\n');
+    let evento = null;
+    for (let i = 0; i < linhas.length; i++) {
+      const abre = linhas[i].match(/^  ([a-z_]+): \{/);
+      if (abre) { evento = abre[1]; continue; }
+      if (/^  \};/.test(linhas[i])) { evento = null; continue; }
+      if (!evento || !evento.endsWith('_close')) continue;
+      const campo = linhas[i].match(/^\s+reason(\??):\s*([^;]+);/);
+      if (!campo) continue;
+      const ws = palavras(campo[2]);
+      const fora = ws.filter((w) => !canon.has(w));
+      const faltam = VOCABULARIO_DE_FECHAMENTO.filter((w) => !ws.includes(w));
+      if (campo[1] === '?' || fora.length || faltam.length) {
+        const partes = [];
+        if (campo[1] === '?') partes.push('é opcional — campo que só parte das demos preenche é amostra enviesada');
+        if (fora.length) partes.push(`tem palavra fora do vocabulário (${fora.join(', ')})`);
+        if (faltam.length) partes.push(`não tem ${faltam.join(', ')}`);
+        violations.push({
+          category: 'analytics', severity: 'high', slug: '_infra', stack,
+          file: rel, line: i + 1, rule: 'reason_vocabulario_divergente',
+          message: `${evento}.reason ${partes.join('; ')} — o vocabulário da família é `
+            + VOCABULARIO_DE_FECHAMENTO.join(' | ') + ', obrigatório',
+        });
+      }
+    }
+    for (const f of walkDir(join(ROOT, stackDir(stack), 'src', 'components'), ['.ts', '.tsx'])) {
+      const c = readFile(f) || '';
+      // até o fim da LINHA: o React não usa ponto e vírgula, e `[^;]+` atravessava
+      // o arquivo até o `switch` de baixo, lendo o motivo da LIB como se fosse
+      // palavra do tipo — foi o falso positivo da estreia deste portão.
+      for (const m of c.matchAll(/export type (\w*CloseReason)\s*=\s*([^;\n]+)/g)) {
+        const fora = palavras(m[2]).filter((w) => !canon.has(w));
+        if (!fora.length) continue;
+        violations.push({
+          category: 'analytics', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, f), line: c.slice(0, m.index).split('\n').length, rule: 'reason_vocabulario_divergente',
+          message: `${m[1]} usa palavra fora do vocabulário de fechamento (${fora.join(', ')}) — `
+            + 'é ele que alimenta o reason do evento',
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 const TIPOS_DE_RASTREIO = new Set(['nav', 'demo', 'variant', 'code', 'related', 'link']);
 
 function auditRastreioDocs() {
@@ -9248,7 +9323,7 @@ if (!category || category === 'security') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'analytics') {
-  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload(), ...auditCampoDePayloadMorto(), ...auditReasonParcial(), ...auditRastreioDocs()];
+  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload(), ...auditCampoDePayloadMorto(), ...auditReasonParcial(), ...auditRastreioDocs(), ...auditVocabularioDeFechamento()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 // `sandbox_dead_class` saiu daqui em 2026-09-02, junto com o objeto que ele

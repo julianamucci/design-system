@@ -104,7 +104,7 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
     track('dialog_close', {
       component: 'alert-dialog',
       label,
-      reason: 'action',
+      reason: 'api',
       location: 'docs_demo',
     });
   });

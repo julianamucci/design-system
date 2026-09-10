@@ -38,15 +38,38 @@ const props = withDefaults(defineProps<{
 
 // Rótulo estável: o título é texto traduzido e quebraria a agregação no GA4
 // (um rótulo por idioma para o mesmo demo).
+// O `update:open` da lib não diz por que o diálogo fechou, e o `dialog_close`
+// exige `reason` (`18-overlay.md` §Analytics). Três caminhos fecham este
+// componente, e nenhum deles é o clique fora: `Escape` (anunciado pela lib), o
+// Cancelar (`close-button`, que é o que sobra) e a ação que CONFIRMA — `api`,
+// "fechou por decisão de dentro". A ação e o Cancelar são partes de fechar da
+// lib; sem marcar a confirmação antes, "confirmou" chegaria ao relatório como
+// "apertou o botão de fechar".
+type AlertDialogCloseReason = 'escape' | 'close-button' | 'api';
+let pendingCloseReason: AlertDialogCloseReason | null = null;
+
+const closeWatch = {
+  onEscapeKeyDown: () => { pendingCloseReason = 'escape'; },
+};
+
 function handleOpenChange(open: boolean) {
-  track(open ? 'dialog_open' : 'dialog_close', {
+  const label = props.tone === 'destructive' ? 'destructive' : 'neutral';
+  if (open) {
+    pendingCloseReason = null;
+    track('dialog_open', { component: 'alert-dialog', label, location: 'docs_demo' });
+    return;
+  }
+  track('dialog_close', {
     component: 'alert-dialog',
-    label: props.tone === 'destructive' ? 'destructive' : 'neutral',
+    label,
+    reason: pendingCloseReason ?? 'close-button',
     location: 'docs_demo',
   });
+  pendingCloseReason = null;
 }
 
 function handleConfirm() {
+  pendingCloseReason = 'api';
   track('dialog_confirm', {
     component: 'alert-dialog',
     label: props.tone === 'destructive' ? 'destructive' : 'neutral',
@@ -62,7 +85,7 @@ function handleConfirm() {
         {{ props.triggerLabel }}
       </Button>
     </AlertDialogTrigger>
-    <AlertDialogContent>
+    <AlertDialogContent v-bind="closeWatch">
       <AlertDialogHeader>
         <AlertDialogTitle>{{ props.title }}</AlertDialogTitle>
         <AlertDialogDescription>{{ props.description }}</AlertDialogDescription>
