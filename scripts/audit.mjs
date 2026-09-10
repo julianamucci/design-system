@@ -329,6 +329,29 @@ function filesForSlug(slug, stack) {
   return { ui: uiFiles, docs: docsFiles, all: [...uiFiles, ...docsFiles] };
 }
 
+/**
+ * Arquivos da MESMA pasta que uma docs page importa — o pedaço da página que
+ * mora fora do `*Docs.*` (o `AlertDialogDemo.vue` do vue). Só a pasta da página:
+ * `shared/` e `ui/` são outra coisa, com regras próprias.
+ */
+function importadosDaPasta(pagina) {
+  const content = readFile(pagina);
+  if (!content) return [];
+  const pasta = pagina.slice(0, Math.max(pagina.lastIndexOf('/'), pagina.lastIndexOf('\\')));
+  const saida = [];
+  for (const m of content.matchAll(/from\s+['"](?:\.\/|@\/components\/docs\/)([A-Za-z0-9_-]+)(\.[a-z]+)?['"]/g)) {
+    const exts = m[2] ? [m[2]] : ['.ts', '.tsx', '.vue', '.svelte'];
+    for (const ext of exts) {
+      const alvo = join(pasta, m[1] + ext);
+      if (existsSync(alvo) && !/Docs\./.test(basename(alvo)) && !saida.includes(alvo)) {
+        saida.push(alvo);
+        break;
+      }
+    }
+  }
+  return saida;
+}
+
 // ─── Categorias de audit ────────────────────────────────────────────────────
 
 function auditSecurity(slug) {
@@ -561,78 +584,94 @@ function auditAnalytics(slug) {
   ];
   for (const stack of STACKS) {
     const { docs } = filesForSlug(slug, stack);
-    for (const file of docs) {
-      const content = readFile(file);
-      if (!content) continue;
-      // A varredura é pelo VALOR, não pela chave `location:`.
-      //
-      // A primeira versão desta regra procurava `location[=:]` e nasceu cega
-      // para duas das cinco stacks: vue e angular passam a seção como ARGUMENTO
-      // POSICIONAL (`rastrearSheet('docs_do_dont', 'right', aberto)`,
-      // `aoMudarPainel('right', 'docs_do_dont', ev)`), e ali não existe a
-      // palavra `location` em lugar nenhum. As duas devolviam zero achado, que
-      // em check de PRESENÇA é indistinguível de "conferido, tudo certo" — o
-      // mesmo erro de leitura que já custou caro nesta casa mais de uma vez.
-      // O HÍFEN entra na classe, e ele era um buraco medido: o angular mandava
-      // `location: 'docs-demonstration'` e a varredura procurava `docs[_:]`, de
-      // modo que o valor fora do vocabulário se escondia atrás do separador
-      // errado. Portão que reconhece o valor certo e o valor obviamente errado,
-      // mas não o quase-certo, deixa passar justamente o que ninguém revisa.
-      //
-      // MAS o hífen, posto na varredura por VALOR, abriu falso positivo pior
-      // que o buraco que fechou. `docs-…` é também a forma de `id` de campo —
-      // `<Input id="docs-drawer-name">`, `buildField('Nome', 'docs-drawer-name')`,
-      // `form="docs-sheet-profile"`. Medido: 12 achados no drawer e 8 no sheet,
-      // todos identificador de elemento, nenhum `location`. E o estrago não
-      // parou no ruído: eles entram na contagem de valores distintos, então o
-      // `location_so_da_demo` — que dispara quando TODAS as chamadas mandam o
-      // mesmo valor — deixou de disparar no angular, que manda `docs_demo`
-      // também das Composições. Falso positivo MASCARANDO defeito real.
-      //
-      // Guarda de contexto não resolve sozinho: o valor aparece como argumento
-      // POSICIONAL (`rastrearTooltip("docs_variantes", "default")`), e ali não
-      // há atributo para olhar. Foram três desenhos até este:
-      //
-      //   1. `docs[_:]`      — não vê `docs-demonstration`. Buraco.
-      //   2. `docs[_:-]`     — vê, e vê também todo `id` de campo. 20 falsos
-      //                        positivos medidos, e eles MASCARAVAM um achado.
-      //   3. só com rótulo   — sem falso positivo, mas cego ao posicional com
-      //                        hífen. Medido plantando: passou.
-      //
-      // O quarto é este, e ele distingue pelo SUFIXO em vez do contexto: com
-      // hífen, só casa quando o que vem depois é uma palavra do próprio
-      // vocabulário. `docs-variantes` é seção escrita errado e entra;
-      // `docs-drawer-name` é id de campo e não entra, porque `drawer-name` não
-      // é seção nenhuma. Com sublinhado, a varredura segue ampla — ali a forma
-      // já é a do vocabulário e não colide com id.
-      const HIFEN_DE_SECAO = new RegExp(
-        `["'](${SECOES_DOCS.map((s) => s.replace(/_/g, '-')).join('|')})["']`,
-        'g',
-      );
-      const porValor = [...content.matchAll(/["'](docs[_:][A-Za-z0-9_:-]*)["']/g)];
-      const porHifen = [...content.matchAll(HIFEN_DE_SECAO)];
-      const porRotulo = [...content.matchAll(/location\s*[:=]\s*["'](docs-[A-Za-z0-9_:-]*)["']/g)];
-      const achados = [...porValor, ...porHifen, ...porRotulo]
-        .filter((m) => !EVENTOS_DOCS.includes(m[1]));
-      if (achados.length === 0) continue;
+    for (const pagina of docs) {
+      // A página e os arquivos da MESMA pasta que ela importa formam uma unidade.
+      // O vue do alert-dialog delega a demonstração a `AlertDialogDemo.vue`, e o
+      // `location: 'docs_demo'` cravado morava lá: a regra lia só o `*Docs.*` e
+      // não via nada — medido em 2026-09-10, na Fase B do alert-dialog. Ampliar o
+      // `filesForSlug` mudaria o alcance de TODAS as regras; aqui só esta.
+      const unidade = [pagina, ...importadosDaPasta(pagina)];
+      const achadosDaUnidade = [];
+      for (const file of unidade) {
+        const content = readFile(file);
+        if (!content) continue;
+        // A varredura é pelo VALOR, não pela chave `location:`.
+        //
+        // A primeira versão desta regra procurava `location[=:]` e nasceu cega
+        // para duas das cinco stacks: vue e angular passam a seção como ARGUMENTO
+        // POSICIONAL (`rastrearSheet('docs_do_dont', 'right', aberto)`,
+        // `aoMudarPainel('right', 'docs_do_dont', ev)`), e ali não existe a
+        // palavra `location` em lugar nenhum. As duas devolviam zero achado, que
+        // em check de PRESENÇA é indistinguível de "conferido, tudo certo" — o
+        // mesmo erro de leitura que já custou caro nesta casa mais de uma vez.
+        // O HÍFEN entra na classe, e ele era um buraco medido: o angular mandava
+        // `location: 'docs-demonstration'` e a varredura procurava `docs[_:]`, de
+        // modo que o valor fora do vocabulário se escondia atrás do separador
+        // errado. Portão que reconhece o valor certo e o valor obviamente errado,
+        // mas não o quase-certo, deixa passar justamente o que ninguém revisa.
+        //
+        // MAS o hífen, posto na varredura por VALOR, abriu falso positivo pior
+        // que o buraco que fechou. `docs-…` é também a forma de `id` de campo —
+        // `<Input id="docs-drawer-name">`, `buildField('Nome', 'docs-drawer-name')`,
+        // `form="docs-sheet-profile"`. Medido: 12 achados no drawer e 8 no sheet,
+        // todos identificador de elemento, nenhum `location`. E o estrago não
+        // parou no ruído: eles entram na contagem de valores distintos, então o
+        // `location_so_da_demo` — que dispara quando TODAS as chamadas mandam o
+        // mesmo valor — deixou de disparar no angular, que manda `docs_demo`
+        // também das Composições. Falso positivo MASCARANDO defeito real.
+        //
+        // Guarda de contexto não resolve sozinho: o valor aparece como argumento
+        // POSICIONAL (`rastrearTooltip("docs_variantes", "default")`), e ali não
+        // há atributo para olhar. Foram três desenhos até este:
+        //
+        //   1. `docs[_:]`      — não vê `docs-demonstration`. Buraco.
+        //   2. `docs[_:-]`     — vê, e vê também todo `id` de campo. 20 falsos
+        //                        positivos medidos, e eles MASCARAVAM um achado.
+        //   3. só com rótulo   — sem falso positivo, mas cego ao posicional com
+        //                        hífen. Medido plantando: passou.
+        //
+        // O quarto é este, e ele distingue pelo SUFIXO em vez do contexto: com
+        // hífen, só casa quando o que vem depois é uma palavra do próprio
+        // vocabulário. `docs-variantes` é seção escrita errado e entra;
+        // `docs-drawer-name` é id de campo e não entra, porque `drawer-name` não
+        // é seção nenhuma. Com sublinhado, a varredura segue ampla — ali a forma
+        // já é a do vocabulário e não colide com id.
+        const HIFEN_DE_SECAO = new RegExp(
+          `["'](${SECOES_DOCS.map((s) => s.replace(/_/g, '-')).join('|')})["']`,
+          'g',
+        );
+        const porValor = [...content.matchAll(/["'](docs[_:][A-Za-z0-9_:-]*)["']/g)];
+        const porHifen = [...content.matchAll(HIFEN_DE_SECAO)];
+        const porRotulo = [...content.matchAll(/location\s*[:=]\s*["'](docs-[A-Za-z0-9_:-]*)["']/g)];
+        const achados = [...porValor, ...porHifen, ...porRotulo]
+          .filter((m) => !EVENTOS_DOCS.includes(m[1]));
+        if (achados.length === 0) continue;
 
-      for (const m of achados) {
-        if (SECOES_DOCS.includes(m[1])) continue;
-        violations.push({
-          category: 'analytics', severity: 'medium', slug, stack,
-          file: relative(ROOT, file), line: content.slice(0, m.index).split('\n').length,
-          rule: 'location_fora_do_vocabulario',
-          message: `location "${m[1]}" não está no vocabulário docs_<section-id> — sem um vocabulário só, location, section_id e data-track-id não cruzam no GA4. Detalhe por elemento vai no label, não aqui`,
-        });
+        for (const m of achados) {
+          if (SECOES_DOCS.includes(m[1])) continue;
+          violations.push({
+            category: 'analytics', severity: 'medium', slug, stack,
+            file: relative(ROOT, file), line: content.slice(0, m.index).split('\n').length,
+            rule: 'location_fora_do_vocabulario',
+            message: `location "${m[1]}" não está no vocabulário docs_<section-id> — sem um vocabulário só, location, section_id e data-track-id não cruzam no GA4. Detalhe por elemento vai no label, não aqui`,
+          });
+        }
+
+        for (const m of achados) {
+          achadosDaUnidade.push({ valor: m[1], file, line: content.slice(0, m.index).split('\n').length });
+        }
       }
 
-      const valores = new Set(achados.map((m) => m[1]));
-      if (achados.length >= 3 && valores.size === 1 && valores.has('docs_demo')) {
+      const valores = new Set(achadosDaUnidade.map((a) => a.valor));
+      if (achadosDaUnidade.length >= 3 && valores.size === 1 && valores.has('docs_demo')) {
+        const primeiro = achadosDaUnidade[0];
         violations.push({
           category: 'analytics', severity: 'medium', slug, stack,
-          file: relative(ROOT, file), line: content.slice(0, achados[0].index).split('\n').length,
+          file: relative(ROOT, primeiro.file), line: primeiro.line,
           rule: 'location_so_da_demo',
-          message: `as ${achados.length} chamadas desta docs page mandam "docs_demo" — Variantes, Composições, Estados e Do & Dont renderizam componente VIVO, e clique ali é tão real quanto na demo. O valor sai de ONDE O ELEMENTO ESTÁ, nunca de constante no topo do arquivo`,
+          message: `as ${achadosDaUnidade.length} chamadas desta docs page`
+            + (unidade.length > 1 ? ` (e dos ${unidade.length - 1} arquivo(s) que ela importa da pasta)` : '')
+            + ` mandam "docs_demo" — Variantes, Composições, Estados e Do & Dont renderizam componente VIVO, e clique ali é tão real quanto na demo. O valor sai de ONDE O ELEMENTO ESTÁ, nunca de constante no topo do arquivo`,
         });
       }
     }
@@ -4107,12 +4146,37 @@ function auditDoDontPreview(slug) {
       // de instanciar na própria linha (`buildDoDont(...)` no vanilla). Sem
       // isto a regra acusava imitação onde havia componente vivo — falso
       // positivo medido na primeira rodada, antes de commitar.
+      //
+      // O CORPO do helper vai até a chave que o fecha, e não 40 linhas: o
+      // `buildAlertDialogDemo` do vanilla instancia na 41ª linha dele, e a regra
+      // acusava imitação num preview vivo. E o helper conta usado como CHAMADA
+      // (`helper(`) ou como COMPONENTE (`<Helper`): o react escreve
+      // `<DestructiveDemo …/>`, e só a primeira forma era reconhecida. Os dois
+      // falsos positivos foram medidos em 2026-09-10, na Fase B do alert-dialog.
       const fabricas = new Set();
       for (let n = 0; n < linhas.length; n++) {
         const decl = linhas[n].match(/(?:function|const)[ ]+([A-Za-z_$][A-Za-z0-9_$]*)[ ]*[=(]/);
         if (!decl) continue;
-        if (linhas.slice(n, n + 40).some((l) => l.includes(token))) fabricas.add(decl[1]);
+        let prof = 0;
+        let abriu = false;
+        let fim = n;
+        for (; fim < linhas.length && fim < n + 400; fim++) {
+          // Parêntese conta junto com chave: `const Demo = ({ a }) => (` abre o
+          // corpo com parêntese, e só com chaves a linha fecharia em zero.
+          for (const ch of linhas[fim]) {
+            if (ch === '{' || ch === '(') { prof++; abriu = true; } else if (ch === '}' || ch === ')') prof--;
+          }
+          if (abriu && prof <= 0) break;
+        }
+        // O MAIOR dos dois alcances, e nunca só a profundidade: em
+        // `const plan = (steps, labels = padrao()) =>` os parênteses fecham na
+        // própria linha e o corpo vem na de baixo, sem chave — medido no
+        // agent-plan do vanilla, que a profundidade sozinha dava por imitação.
+        // Com o máximo, a regra só reconhece MAIS helpers que a janela antiga.
+        fim = Math.max(fim, n + 39);
+        if (linhas.slice(n, fim + 1).some((l) => l.includes(token))) fabricas.add(decl[1]);
       }
+      const usaFabrica = (l) => [...fabricas].some((f) => l.includes(f + '(') || new RegExp(`<${f}\\b`).test(l));
 
       // A ÚLTIMA marca não tem marca seguinte, e um teto fixo de 40 linhas
       // fazia a janela dela atravessar o fim da seção e capturar o componente
@@ -4134,8 +4198,7 @@ function auditDoDontPreview(slug) {
         // A janela ignora linha de snippet pelo mesmo motivo: instanciação
         // EXIBIDA ao leitor não prova que o preview instancia.
         const janelaViva = janela.filter((_, i) => !emSnippet[inicio + i]);
-        const viva = janelaViva.some((l) => l.includes(token))
-          || janelaViva.some((l) => [...fabricas].some((f) => l.includes(f + '(')));
+        const viva = janelaViva.some((l) => l.includes(token)) || janelaViva.some(usaFabrica);
         if (viva) vivos += 1;
       }
     }
