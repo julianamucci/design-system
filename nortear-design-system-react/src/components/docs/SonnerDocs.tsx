@@ -226,7 +226,6 @@ interface ToasterProps {
               size="sm"
               data-track="demo"
               data-track-id="sonner:demo:default"
-              data-track-label={tContent("demonstration.labels.triggerDefault")}
               onClick={() => { trackToastDemo("default"); toast(tContent("demonstration.labels.default")); }}
             >
               {tContent("demonstration.labels.triggerDefault")}
@@ -236,7 +235,6 @@ interface ToasterProps {
               size="sm"
               data-track="demo"
               data-track-id="sonner:demo:success"
-              data-track-label={tContent("demonstration.labels.triggerSuccess")}
               onClick={() => { trackToastDemo("success"); toast.success(tContent("demonstration.labels.success")); }}
             >
               {tContent("demonstration.labels.triggerSuccess")}
@@ -246,7 +244,6 @@ interface ToasterProps {
               size="sm"
               data-track="demo"
               data-track-id="sonner:demo:error"
-              data-track-label={tContent("demonstration.labels.triggerError")}
               onClick={() => { trackToastDemo("error"); toast.error(tContent("demonstration.labels.error")); }}
             >
               {tContent("demonstration.labels.triggerError")}
@@ -256,7 +253,6 @@ interface ToasterProps {
               size="sm"
               data-track="demo"
               data-track-id="sonner:demo:warning"
-              data-track-label={tContent("demonstration.labels.triggerWarning")}
               onClick={() => { trackToastDemo("warning"); toast.warning(tContent("demonstration.labels.warning")); }}
             >
               {tContent("demonstration.labels.triggerWarning")}
@@ -266,7 +262,6 @@ interface ToasterProps {
               size="sm"
               data-track="demo"
               data-track-id="sonner:demo:info"
-              data-track-label={tContent("demonstration.labels.triggerInfo")}
               onClick={() => { trackToastDemo("info"); toast.info(tContent("demonstration.labels.info")); }}
             >
               {tContent("demonstration.labels.triggerInfo")}
@@ -276,7 +271,6 @@ interface ToasterProps {
               size="sm"
               data-track="demo"
               data-track-id="sonner:demo:loading"
-              data-track-label={tContent("demonstration.labels.triggerLoading")}
               onClick={() => { trackToastDemo("loading"); toast.loading(tContent("demonstration.labels.loading")); }}
             >
               {tContent("demonstration.labels.triggerLoading")}

@@ -23,8 +23,8 @@
    *
    * Quando `componentSlug` é informado, o botão "Ver código / Ocultar código"
    * de cada variant recebe `data-track="code"` +
-   * `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"` +
-   * `data-track-label="Copiar código"`.
+   * `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"`,
+   * sem `data-track-label` (o `docs_code_copy` não leva rótulo).
    */
   const { title, items, id = 'variantes', note, componentSlug, language = 'svelte', copyLabel, copiedLabel }: {
     title: string;
@@ -71,7 +71,6 @@
               class="nds-px-0"
               data-track="code"
               data-track-id={codeTrackId(item)}
-              data-track-label="Copiar código"
               onclick={() => toggleCode(i)}
             >
               {openStates[i] ? 'Ocultar código' : 'Ver código'}

@@ -58,7 +58,6 @@ export function DocsNav({ groups, activeSection, componentSlug }: DocsNavProps) 
                   aria-current={activeSection === section.id ? 'location' : undefined}
                   data-track="nav"
                   data-track-id={`${slug}:nav:${section.id}`}
-                  data-track-label={section.label}
                 >
                   {section.label}
                 </button>

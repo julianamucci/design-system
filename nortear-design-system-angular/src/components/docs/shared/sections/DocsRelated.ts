@@ -29,7 +29,6 @@ function slugify(s: string): string {
             class="nds-related-card"
             data-track="related"
             [attr.data-track-id]="trackId(item)"
-            [attr.data-track-label]="item.name"
           >
             <span class="nds-related-card-title">{{ item.name }}</span>
             <span class="nds-related-card-description">{{ item.description }}</span>

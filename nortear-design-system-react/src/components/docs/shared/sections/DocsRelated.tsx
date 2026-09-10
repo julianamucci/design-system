@@ -12,8 +12,8 @@ export interface DocsRelatedProps {
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, cada
    * card relacionado recebe `data-track="related"` +
-   * `data-track-id="{slug}:related:{item.name.slug}"` +
-   * `data-track-label={item.name}`. Se ausente, omite `data-track-id`.
+   * `data-track-id="{slug}:related:{item.name.slug}"`,
+   * o rótulo do evento sai do fim do id, nunca do nome exibido. Se ausente, omite `data-track-id`.
    */
   componentSlug?: string;
 }
@@ -41,7 +41,6 @@ export function DocsRelated({ title, items, componentSlug }: DocsRelatedProps) {
               className="nds-related-card"
               data-track="related"
               data-track-id={trackId}
-              data-track-label={item.name}
             >
               <p className="nds-related-card-title">{item.name}</p>
               <p className="nds-related-card-description">{item.description}</p>

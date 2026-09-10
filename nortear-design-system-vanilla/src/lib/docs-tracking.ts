@@ -9,7 +9,7 @@
  *   }, []);
  *
  * Elementos interativos com `data-track="{type}"` + `data-track-id="{structured-id}"`
- * (e opcionalmente `data-track-label`, `data-track-extra`) são rastreados
+ * (e opcionalmente `data-track-label` — id ESTÁVEL, nunca texto —, `data-track-extra`) são rastreados
  * automaticamente. O observer delega o listener ao root — adicionar/remover
  * elementos depois do mount é transparente.
  *
@@ -17,6 +17,8 @@
  */
 
 import { track } from './analytics';
+import { resolverRotulo } from '@shared/primitives/rotulo-de-rastreio';
+import { avisarRotuloDescartado } from '@shared/primitives/analytics-debug';
 
 export interface MountDocsTrackingOptions {
   /** Slug do componente. Se omitido, é derivado do `?id=` do iframe do
@@ -72,25 +74,35 @@ export function mountDocsTracking(
 
     const type = trigger.getAttribute('data-track');
     const id = trigger.getAttribute('data-track-id') ?? '';
-    const labelAttr = trigger.getAttribute('data-track-label') ?? trigger.textContent?.trim() ?? '';
-
     // Extrai o segmento `element` (parte 3 do id estruturado).
     const parts = id.split(':');
     const section = parts[1] ?? '';
     let element = parts.slice(2).join(':');
-    let label = labelAttr;
+
+    // `label` é id ESTÁVEL, nunca texto — decisão de 2026-09-10. Ele saía de
+    // `data-track-label ?? textContent`, e no modo contêiner de
+    // `aria-label ?? textContent`: nas duas rotas, o texto da tela no idioma de
+    // quem clicou, partindo o mesmo clique em um valor por idioma no GA4. Agora
+    // sai do atributo declarado SE ele tiver forma de id; senão, do segmento
+    // estável do `data-track-id`. Texto não é mais lido. A decisão de qual valor
+    // vale mora em `@shared/primitives/rotulo-de-rastreio`, igual nas cinco.
+    let rotulo = resolverRotulo(trigger.getAttribute('data-track-label'), element, section);
 
     // Container auto-instrumentado (ex.: área de demonstração): resolve o
     // elemento interativo REALMENTE clicado; cliques no vazio são ignorados.
+    // O rótulo dele sai do `data-track-label` do próprio elemento ou do
+    // `data-slot`, que é contrato do design system — nunca do `aria-label`.
     if (trigger.hasAttribute('data-track-container')) {
       const interactive = target.closest<HTMLElement>(INTERACTIVE_SELECTOR);
       if (!interactive || !trigger.contains(interactive)) return;
-      label =
-        interactive.getAttribute('aria-label') ??
-        interactive.textContent?.trim().slice(0, 80) ??
-        '';
-      element = interactive.id || label || element;
+      rotulo = resolverRotulo(
+        interactive.getAttribute('data-track-label'),
+        interactive.getAttribute('data-slot'),
+      );
+      element = interactive.id || rotulo.label || element;
     }
+    if (rotulo.descartado !== undefined) avisarRotuloDescartado(rotulo.descartado, rotulo.label);
+    const label = rotulo.label;
 
     switch (type) {
       case 'nav':

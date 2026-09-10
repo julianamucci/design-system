@@ -268,7 +268,6 @@ export function EditorDocs() {
       // do id estruturado vira `element_id`.
       data-track="demo"
       data-track-id={`editor:demonstracao:${key}`}
-      data-track-label={label}
       onClick={apply}
     >
       {label}

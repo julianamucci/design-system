@@ -66,7 +66,6 @@ export interface DocsVariantItem {
                   class="nds-px-0"
                   data-track="code"
                   [attr.data-track-id]="trackId(item)"
-                  data-track-label="Copiar código"
                   (click)="toggle(item.name)"
                 >{{ isOpen(item.name) ? 'Ocultar código' : 'Ver código' }}</button>
 

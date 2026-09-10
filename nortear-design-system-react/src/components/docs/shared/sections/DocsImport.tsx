@@ -11,8 +11,8 @@ export interface DocsImportProps {
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, a raiz
    * dos blocos primário e secundário recebe `data-track="code"` +
-   * `data-track-id="{slug}:code:import-primary"` (ou `import-secondary`) +
-   * `data-track-label="Copiar import"`. O observer garante que só o clique no
+   * `data-track-id="{slug}:code:import-primary"` (ou `import-secondary`),
+   * sem `data-track-label` (o `docs_code_copy` não leva rótulo). O observer garante que só o clique no
    * botão de copiar do CodeBlock conta como `docs_code_copy`.
    */
   componentSlug?: string;
@@ -40,7 +40,6 @@ export function DocsImport({
       ? {
           'data-track': 'code',
           'data-track-id': `${componentSlug}:code:${id}`,
-          'data-track-label': 'Copiar import',
         }
       : {};
   return (

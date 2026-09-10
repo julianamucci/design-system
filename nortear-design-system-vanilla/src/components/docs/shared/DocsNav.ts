@@ -76,7 +76,6 @@ export function createDocsNav(props: DocsNavProps): DocsNavHandle {
       btn.textContent = section.label;
       btn.setAttribute('data-track', 'nav');
       btn.setAttribute('data-track-id', `${slug}:nav:${section.id}`);
-      btn.setAttribute('data-track-label', section.label);
       btn.addEventListener('click', () => goToSection(section.id));
 
       buttons.set(section.id, btn);

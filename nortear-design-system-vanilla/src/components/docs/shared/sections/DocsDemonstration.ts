@@ -17,7 +17,6 @@ export interface DocsDemonstrationProps {
    *       const btn = createButton({ label: 'Salvar' });
    *       btn.setAttribute('data-track', 'demo');
    *       btn.setAttribute('data-track-id', 'alert:demo:save');
-   *       btn.setAttribute('data-track-label', 'Salvar');
    *       return btn;
    *     },
    *   });

@@ -217,73 +217,53 @@ toast.promise(promise, {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div style="contain: layout" class="nds-cluster" data-spacing="md">
       <Button variant="outline" onclick={fireDefault}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-default"
-        data-track-label={$tStore('demonstration.labels.triggerDefault')}>
+        data-track="demo"
+        data-track-id="sonner:demo:default">
         {$tStore('demonstration.labels.triggerDefault')}
       </Button>
       <Button variant="outline" onclick={fireSuccess}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-success"
-        data-track-label={$tStore('demonstration.labels.triggerSuccess')}>
+        data-track="demo"
+        data-track-id="sonner:demo:success">
         {$tStore('demonstration.labels.triggerSuccess')}
       </Button>
       <Button variant="outline" onclick={fireError}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-error"
-        data-track-label={$tStore('demonstration.labels.triggerError')}>
+        data-track="demo"
+        data-track-id="sonner:demo:error">
         {$tStore('demonstration.labels.triggerError')}
       </Button>
       <Button variant="outline" onclick={fireWarning}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-warning"
-        data-track-label={$tStore('demonstration.labels.triggerWarning')}>
+        data-track="demo"
+        data-track-id="sonner:demo:warning">
         {$tStore('demonstration.labels.triggerWarning')}
       </Button>
       <Button variant="outline" onclick={fireInfo}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-info"
-        data-track-label={$tStore('demonstration.labels.triggerInfo')}>
+        data-track="demo"
+        data-track-id="sonner:demo:info">
         {$tStore('demonstration.labels.triggerInfo')}
       </Button>
       <Button variant="outline" onclick={fireLoading}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-loading"
-        data-track-label={$tStore('demonstration.labels.triggerLoading')}>
+        data-track="demo"
+        data-track-id="sonner:demo:loading">
         {$tStore('demonstration.labels.triggerLoading')}
       </Button>
       <Button variant="outline" onclick={fireWithDescription}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-with-description"
-        data-track-label={$tStore('demonstration.labels.triggerWithDescription')}>
+        data-track="demo"
+        data-track-id="sonner:demo:with-description">
         {$tStore('demonstration.labels.triggerWithDescription')}
       </Button>
       <Button variant="outline" onclick={fireWithAction}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-with-action"
-        data-track-label={$tStore('demonstration.labels.triggerWithAction')}>
+        data-track="demo"
+        data-track-id="sonner:demo:with-action">
         {$tStore('demonstration.labels.triggerWithAction')}
       </Button>
       <Button variant="outline" onclick={firePromise}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-promise"
-        data-track-label={$tStore('demonstration.labels.triggerPromise')}>
+        data-track="demo"
+        data-track-id="sonner:demo:promise">
         {$tStore('demonstration.labels.triggerPromise')}
       </Button>
       <Button variant="outline" onclick={firePersistent}
-        data-track="docs_demo_click"
-        data-track-component="sonner"
-        data-track-element-id="trigger-persistent"
-        data-track-label={$tStore('demonstration.labels.triggerPersistent')}>
+        data-track="demo"
+        data-track-id="sonner:demo:persistent">
         {$tStore('demonstration.labels.triggerPersistent')}
       </Button>
     </div>

@@ -69,7 +69,6 @@ export const WithTrackedTrigger: Story = {
         const botao = createButton({ children: 'Salvar' });
         botao.dataset.track = 'demo';
         botao.dataset.trackId = 'button:demo:salvar';
-        botao.dataset.trackLabel = 'Salvar';
         return botao;
       },
     }),

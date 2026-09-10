@@ -371,7 +371,6 @@ export function createMediaPlayerDocs(): HTMLElement {
       // container e dispararia um segundo evento com o rótulo traduzido.
       el.dataset.track = 'demo';
       el.dataset.trackId = `media-player:demonstracao:${key}`;
-      el.dataset.trackLabel = label;
       buttons.push({ key, el });
       controls.appendChild(el);
     }

@@ -25,7 +25,7 @@ export interface DocsVariantsProps {
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, o
    * botão "Ver código / Ocultar código" de cada variant recebe
    * `data-track="code"` + `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"`
-   * + `data-track-label="Copiar código"`.
+   * — sem `data-track-label` (o `docs_code_copy` não leva rótulo).
    * Se ausente, `data-track-id` é omitido e o observer ignora o click.
    */
   componentSlug?: string;
@@ -68,7 +68,6 @@ function VariantCard({ item, componentSlug, language, copyLabel, copiedLabel }: 
             onClick={() => setOpen((v) => !v)}
             data-track="code"
             data-track-id={trackId}
-            data-track-label="Copiar código"
           >
             {open ? 'Ocultar código' : 'Ver código'}
           </Button>

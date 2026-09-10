@@ -246,7 +246,6 @@ interface RadioGroupItemProps {
           aria-label={$tStore('demonstration.labels.groupLabel')}
           data-track="demo"
           data-track-id="radio-group:demo:payment"
-          data-track-label={$tStore('demonstration.labels.groupLabel')}
         >
           <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem value="cartao" id="demo-cartao" />
@@ -273,7 +272,6 @@ interface RadioGroupItemProps {
           aria-label={$tStore('demonstration.labels.deliveryLabel')}
           data-track="demo"
           data-track-id="radio-group:demo:delivery"
-          data-track-label={$tStore('demonstration.labels.deliveryLabel')}
         >
           <div class="nds-cluster" data-spacing="xs">
             <RadioGroupItem value="standard" id="demo-standard" />
@@ -299,7 +297,6 @@ interface RadioGroupItemProps {
           aria-label={$tStore('demonstration.labels.deliveryLabel')}
           data-track="demo"
           data-track-id="radio-group:demo:delivery-desc"
-          data-track-label={$tStore('demonstration.labels.deliveryLabel')}
         >
           <div class="nds-cluster" data-spacing="xs" data-align="start">
             <RadioGroupItem value="standard" id="demo-desc-standard" class="nds-mt-0-5" />

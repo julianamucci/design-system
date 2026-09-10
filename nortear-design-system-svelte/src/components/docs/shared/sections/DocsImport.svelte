@@ -4,7 +4,7 @@
    *
    * Quando `componentSlug` é informado, a raiz de cada CodeBlock recebe
    * `data-track="code"` + `data-track-id="{slug}:code:import-primary"` (ou
-   * `import-secondary`) + `data-track-label="Copiar import"`. A guarda do
+   * `import-secondary`) — sem `data-track-label` (o `docs_code_copy` não leva rótulo). A guarda do
    * observer em `docs-tracking.ts` garante que só o clique no botão de copiar
    * conta como `docs_code_copy`.
    */
@@ -36,7 +36,6 @@
     {copiedLabel}
     data-track={componentSlug ? 'code' : undefined}
     data-track-id={componentSlug ? `${componentSlug}:code:import-primary` : undefined}
-    data-track-label={componentSlug ? 'Copiar import' : undefined}
   />
   {#if secondaryCode}
     {#if secondaryDescription}
@@ -51,7 +50,6 @@
       {copiedLabel}
       data-track={componentSlug ? 'code' : undefined}
       data-track-id={componentSlug ? `${componentSlug}:code:import-secondary` : undefined}
-      data-track-label={componentSlug ? 'Copiar import' : undefined}
     />
   {/if}
 </section>

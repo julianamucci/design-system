@@ -71,7 +71,7 @@ export const WithTrackedTrigger: Story = {
     components: { DocsDemonstration, Button },
     setup: () => ({ args }),
     template: `<DocsDemonstration v-bind="args">
-      <Button data-track="demo" data-track-id="button:demo:salvar" data-track-label="Salvar">Salvar</Button>
+      <Button data-track="demo" data-track-id="button:demo:salvar">Salvar</Button>
     </DocsDemonstration>`,
   }),
 };

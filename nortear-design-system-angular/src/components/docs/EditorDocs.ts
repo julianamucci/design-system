@@ -296,7 +296,6 @@ const DO_DONT_CONTENT = '<p>Ótimo trabalho, obrigado!</p>';
                   [attr.aria-pressed]="control.pressed"
                   data-track="demo"
                   [attr.data-track-id]="'editor:demonstracao:' + control.id"
-                  [attr.data-track-label]="control.label"
                   (click)="onDemoClick(control.id)"
                 >{{ control.label }}</button>
               }

@@ -22,8 +22,8 @@ interface DocsVariantItem {
  *
  * Quando `componentSlug` é informado, o botão "Ver código / Ocultar código" de
  * cada variant recebe `data-track="code"` +
- * `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"` +
- * `data-track-label="Copiar código"`. Se ausente, `data-track-id` é omitido e
+ * `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"`,
+ * sem `data-track-label` (o `docs_code_copy` não leva rótulo). Se ausente, `data-track-id` é omitido e
  * o observer ignora o click.
  */
 const props = withDefaults(defineProps<{
@@ -96,7 +96,6 @@ function trackId(item: DocsVariantItem): string | undefined {
             class="nds-px-0"
             data-track="code"
             :data-track-id="trackId(item)"
-            data-track-label="Copiar código"
             @click="toggleCode(i)"
           >
             {{ openStates[i] ? 'Ocultar código' : 'Ver código' }}

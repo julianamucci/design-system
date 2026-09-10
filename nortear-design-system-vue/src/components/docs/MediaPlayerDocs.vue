@@ -468,7 +468,6 @@ const visualTestItems = computed(() =>
             :aria-pressed="control.pressed"
             data-track="demo"
             :data-track-id="`media-player:demonstracao:${control.key}`"
-            :data-track-label="control.label"
             @click="selectSource(control.key)"
           >
             {{ control.label }}

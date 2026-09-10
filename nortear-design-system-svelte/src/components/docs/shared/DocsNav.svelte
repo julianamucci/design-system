@@ -62,7 +62,6 @@
               aria-current={activeSection === section.id ? 'location' : undefined}
               data-track="nav"
               data-track-id={`${slug}:nav:${section.id}`}
-              data-track-label={section.label}
               onclick={() => goToSection(section.id)}
             >
               {section.label}

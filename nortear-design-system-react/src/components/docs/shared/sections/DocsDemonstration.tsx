@@ -12,7 +12,7 @@ export interface DocsDemonstrationProps {
    *
    * @example
    * <DocsDemonstration title="..." componentSlug="alert">
-   *   <Button data-track="demo" data-track-id="alert:demo:save" data-track-label="Salvar">
+   *   <Button data-track="demo" data-track-id="alert:demo:save">
    *     Salvar
    *   </Button>
    * </DocsDemonstration>

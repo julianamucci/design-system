@@ -2699,6 +2699,143 @@ function auditCadeiaTransformOrigin() {
  * idioma; `trigger_label` guardava metade do convite no nome.
  */
 /**
+ * O rastreio das docs pages por `data-track*`: rótulo que é texto, e tipo que o
+ * rastreador não conhece.
+ *
+ * O `label` dos eventos `docs_*` é id ESTÁVEL, nunca texto — decisão de
+ * 2026-09-10. O rastreador de cada stack já recusa, em tempo de execução, o
+ * `data-track-label` sem forma de id (e avisa no `?debugAnalytics=1`); este
+ * portão pega o call site ANTES, para que a recusa seja rara e não o caminho
+ * normal. Na medição que o originou, dos 89 pontos que escreviam o atributo, 32
+ * chamavam tradução e o resto era literal de tela ("Salvar", "Copiar código")
+ * ou variável de texto (`item.name`, `control.label`).
+ *
+ * Três regras:
+ *
+ *  - `rotulo_de_rastreio_texto` — literal sem forma de id, chamada de tradução,
+ *    ou variável cujo nome diz que é texto (`label`, `name`, `title`, `text`).
+ *  - `rotulo_de_rastreio_premissa` — a forma de id NÃO é copiada aqui: é lida de
+ *    `docs/shared/primitives/rotulo-de-rastreio.ts`, a mesma régua que o
+ *    rastreador usa. Se a leitura falhar, o portão reprova em vez de seguir com
+ *    uma cópia que envelheceria calada.
+ *  - `data_track_tipo_invalido` — `data-track` com valor fora dos seis tipos que
+ *    o rastreador trata. Tipo desconhecido cai no `default` e é ignorado EM
+ *    SILÊNCIO: foi assim que os dez botões da demonstração do Sonner no Svelte,
+ *    com `data-track="docs_demo_click"`, nunca dispararam evento algum.
+ *
+ * Linha de comentário (`*`, `//`, `/*`) fica de fora: os docblocks DESCREVEM o
+ * atributo, e portão que casa palavra solta mede prosa.
+ */
+const TIPOS_DE_RASTREIO = new Set(['nav', 'demo', 'variant', 'code', 'related', 'link']);
+
+function auditRastreioDocs() {
+  const violations = [];
+  const primitiva = join(ROOT, 'docs', 'shared', 'primitives', 'rotulo-de-rastreio.ts');
+  const casada = (readFile(primitiva) || '').match(/const FORMA_DE_ID = \/(.+)\/;/);
+  let forma = null;
+  try { forma = casada ? new RegExp(casada[1]) : null; } catch { forma = null; }
+  if (!forma) {
+    violations.push({
+      category: 'analytics', severity: 'high', slug: '_infra', stack: 'shared',
+      file: relative(ROOT, primitiva), rule: 'rotulo_de_rastreio_premissa',
+      message: 'FORMA_DE_ID não pôde ser lida da primitiva — sem ela o portão de rótulo não tem régua, '
+        + 'e ele a lê de lá justamente para não manter uma cópia',
+    });
+    return violations;
+  }
+
+  const ehTraducao = (expr) => /(?:^|[^\w$.])(?:t|tContent|translate)\(|\$tStore\(|\$t\(/.test(expr);
+  const ehVariavelDeTexto = (expr) => /(?:^|\.)(?:label|name|title|text)\s*$/i.test(expr.trim());
+  const literaisDe = (expr) => [...expr.matchAll(/'([^']*)'|"([^"]*)"/g)].map((x) => x[1] ?? x[2]);
+
+  /** Lê o valor a partir de `ini`: aspas, ou chaves balanceadas. */
+  const lerValor = (linha, ini) => {
+    const abre = linha[ini];
+    if (abre === '"' || abre === "'") {
+      const fim = linha.indexOf(abre, ini + 1);
+      return fim < 0 ? null : { bruto: linha.slice(ini + 1, fim), aspas: true };
+    }
+    if (abre === '{') {
+      let d = 0;
+      for (let k = ini; k < linha.length; k++) {
+        if (linha[k] === '{') d++;
+        else if (linha[k] === '}' && --d === 0) return { bruto: linha.slice(ini + 1, k), aspas: false };
+      }
+    }
+    return null;
+  };
+
+  for (const stack of STACKS) {
+    for (const arquivo of walkDir(join(ROOT, stackDir(stack), 'src'), ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const conteudo = readFile(arquivo);
+      if (!conteudo || !/track/.test(conteudo)) continue;
+      const rel = relative(ROOT, arquivo);
+      const linhas = conteudo.split('\n');
+      for (let i = 0; i < linhas.length; i++) {
+        const linha = linhas[i];
+        if (/^\s*(?:\*|\/\/|\/\*)/.test(linha)) continue;
+
+        // ── o tipo ────────────────────────────────────────────────────────
+        for (const t of linha.matchAll(/(?:\[attr\.data-track\]|\bdata-track)\s*=\s*["']([^"'{}]+)["']|dataset\.track\s*=\s*'([^']+)'|setAttribute\(\s*'data-track'\s*,\s*'([^']+)'/g)) {
+          const tipo = t[1] ?? t[2] ?? t[3];
+          if (!TIPOS_DE_RASTREIO.has(tipo)) {
+            violations.push({
+              category: 'analytics', severity: 'high', slug: '_infra', stack,
+              file: rel, line: i + 1, rule: 'data_track_tipo_invalido',
+              message: `data-track="${tipo}" não é tipo do rastreador (${[...TIPOS_DE_RASTREIO].join(', ')}) — `
+                + 'o clique cai no `default` e é ignorado sem aviso',
+            });
+          }
+        }
+
+        // ── o rótulo ──────────────────────────────────────────────────────
+        if (!/track-label|trackLabel/.test(linha)) continue;
+        let valor = null; // { bruto, literal }
+        const attr = linha.match(/(\[attr\.data-track-label\]|:data-track-label|data-track-label)\s*=\s*/);
+        if (attr && linha[attr.index - 1] !== "'") {
+          const lido = lerValor(linha, attr.index + attr[0].length);
+          if (lido) {
+            // em template de vue/angular, `:x` e `[attr.x]` são expressão mesmo entre aspas
+            const expressao = attr[1] !== 'data-track-label' || !lido.aspas;
+            valor = { bruto: lido.bruto, literal: !expressao };
+          }
+        }
+        if (!valor) {
+          const js = linha.match(/dataset\.trackLabel\s*=\s*(.+?);|setAttribute\(\s*'data-track-label'\s*,\s*(.+?)\)\s*;?|'data-track-label'\s*:\s*(.+?),?\s*$/);
+          if (js) {
+            const expr = (js[1] ?? js[2] ?? js[3]).trim();
+            const soLiteral = expr.match(/^'([^']*)'$|^"([^"]*)"$/);
+            valor = soLiteral ? { bruto: soLiteral[1] ?? soLiteral[2], literal: true } : { bruto: expr, literal: false };
+          }
+        }
+        if (!valor) continue;
+
+        let motivo = null;
+        if (valor.literal) {
+          if (!forma.test(valor.bruto)) motivo = `literal "${valor.bruto}" não tem forma de id`;
+        } else if (ehTraducao(valor.bruto)) {
+          motivo = `\`${valor.bruto.trim()}\` é chamada de tradução`;
+        } else if (ehVariavelDeTexto(valor.bruto)) {
+          motivo = `\`${valor.bruto.trim()}\` é variável de texto`;
+        } else {
+          const ruim = literaisDe(valor.bruto).find((l) => l !== '' && !forma.test(l));
+          if (ruim !== undefined) motivo = `a expressão carrega o literal "${ruim}", que não tem forma de id`;
+        }
+        if (motivo) {
+          violations.push({
+            category: 'analytics', severity: 'high', slug: '_infra', stack,
+            file: rel, line: i + 1, rule: 'rotulo_de_rastreio_texto',
+            message: `data-track-label: ${motivo} — o label dos eventos docs_* é id estável, nunca texto; `
+              + 'se o data-track-id já diz, omita o atributo',
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
+/**
  * Nome declarado em `CAMPOS_DE_PAYLOAD` que não é campo de payload em stack
  * nenhuma — ou seja, exclusão que não exclui nada.
  *
@@ -8959,7 +9096,7 @@ if (!category || category === 'security') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'analytics') {
-  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload(), ...auditCampoDePayloadMorto(), ...auditReasonParcial()];
+  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload(), ...auditCampoDePayloadMorto(), ...auditReasonParcial(), ...auditRastreioDocs()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 // `sandbox_dead_class` saiu daqui em 2026-09-02, junto com o objeto que ele

@@ -202,7 +202,6 @@
             aria-pressed={control.pressed}
             data-track="demo"
             data-track-id={`editor:demonstracao:${control.key}`}
-            data-track-label={control.label}
             onclick={control.apply}
           >
             {control.label}

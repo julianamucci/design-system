@@ -269,7 +269,6 @@ export function createEditorDocs(): HTMLElement {
       // `.closest('[data-track]')`, e a terceira parte do id vira `element_id`.
       el.dataset.track = 'demo';
       el.dataset.trackId = `editor:demonstracao:${key}`;
-      el.dataset.trackLabel = label;
       buttons.push({ key, el, on });
       controls.appendChild(el);
     }

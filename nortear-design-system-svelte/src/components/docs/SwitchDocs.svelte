@@ -221,7 +221,6 @@ interface SwitchProps {
           onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'notifications', value: String(v), location: 'docs_demo' })}
           data-track="demo"
           data-track-id="switch:demo:notifications"
-          data-track-label={$tStore('demonstration.labels.notifications')}
         />
         <Label for="demo-notifications">{$tStore('demonstration.labels.notifications')}</Label>
       </div>
@@ -238,7 +237,6 @@ interface SwitchProps {
           onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'marketing', value: String(v), location: 'docs_demo' })}
           data-track="demo"
           data-track-id="switch:demo:marketing"
-          data-track-label={$tStore('demonstration.labels.marketing')}
         />
       </div>
 
@@ -254,7 +252,6 @@ interface SwitchProps {
           onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'darkMode', value: String(v), location: 'docs_demo' })}
           data-track="demo"
           data-track-id="switch:demo:darkMode"
-          data-track-label={$tStore('demonstration.labels.darkMode')}
         />
       </div>
 
@@ -267,7 +264,6 @@ interface SwitchProps {
           onCheckedChange={(v: boolean) => track('field_change', { component: 'switch', field_name: 'sm', value: String(v), location: 'docs_demo' })}
           data-track="demo"
           data-track-id="switch:demo:sm"
-          data-track-label={$tStore('demonstration.labels.sm')}
         />
         <Label for="demo-sm">{$tStore('demonstration.labels.sm')}</Label>
       </div>

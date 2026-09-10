@@ -297,7 +297,6 @@ interface SelectItemProps {
             aria-label={demoLabels.stateLabel}
             data-track="demo"
             data-track-id="select:demo:state"
-            data-track-label={demoLabels.stateLabel}
           >
             {#if demoStateValue}
               <span>{findLabel(stateOptions, demoStateValue)}</span>
@@ -322,7 +321,6 @@ interface SelectItemProps {
             aria-label={demoLabels.regionLabel}
             data-track="demo"
             data-track-id="select:demo:region"
-            data-track-label={demoLabels.regionLabel}
           >
             {#if demoRegionValue}
               <span>{findLabelInGroups(regionGroups, demoRegionValue)}</span>
@@ -353,7 +351,6 @@ interface SelectItemProps {
             aria-label={demoLabels.stateLabel}
             data-track="demo"
             data-track-id="select:demo:state-sm"
-            data-track-label={demoLabels.stateLabel}
           >
             {#if demoSmValue}
               <span>{findLabel(stateOptions, demoSmValue)}</span>

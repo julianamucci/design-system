@@ -7,8 +7,8 @@ interface DocsRelatedItem { name: string; description: string; path: string }
  * DocsRelated — grid de componentes/páginas relacionadas.
  *
  * Quando `componentSlug` é informado, cada card recebe `data-track="related"`
- * + `data-track-id="{slug}:related:{item.name.slug}"` +
- * `data-track-label={item.name}`. Se ausente, omite `data-track-id`.
+ * + `data-track-id="{slug}:related:{item.name.slug}"`,
+ * o rótulo do evento sai do fim do id, nunca do nome exibido. Se ausente, omite `data-track-id`.
  */
 const props = defineProps<{
   title: string;
@@ -47,7 +47,6 @@ function trackId(name: string): string | undefined {
         class="nds-related-card"
         data-track="related"
         :data-track-id="trackId(item.name)"
-        :data-track-label="item.name"
       >
         <span class="nds-related-card-title">{{ item.name }}</span>
         <span class="nds-related-card-description">{{ item.description }}</span>

@@ -51,7 +51,6 @@ function goToSection(id: string): void {
                 class="nds-docs-nav-button"
                 data-track="nav"
                 [attr.data-track-id]="slug() + ':nav:' + section.id"
-                [attr.data-track-label]="section.label"
                 [attr.aria-current]="section.id === activeSection() ? 'location' : null"
                 (click)="go(section.id)"
               >{{ section.label }}</button>

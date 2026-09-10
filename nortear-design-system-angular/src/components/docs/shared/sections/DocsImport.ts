@@ -23,7 +23,6 @@ import { NdsCodeBlock } from '@/components/ui/code-block';
       <div
         data-track="code"
         [attr.data-track-id]="trackId('import-primary')"
-        data-track-label="Copiar import"
       >
         <nds-code-block
           [code]="code()"
@@ -41,7 +40,6 @@ import { NdsCodeBlock } from '@/components/ui/code-block';
         <div
           data-track="code"
           [attr.data-track-id]="trackId('import-secondary')"
-          data-track-label="Copiar import"
         >
           <nds-code-block
             [code]="secondaryCode()"

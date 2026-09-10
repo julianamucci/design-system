@@ -283,7 +283,7 @@ Todos os elementos interativos das docs pages ganham `data-track*` attributes. O
 
 #### Como instrumentar (padrão obrigatório)
 
-Cada elemento interativo recebe 2-3 atributos:
+Cada elemento interativo recebe dois atributos — `data-track` e `data-track-id`:
 
 ```html
 <!-- DocsNav link -->
@@ -291,14 +291,12 @@ Cada elemento interativo recebe 2-3 atributos:
   href="#anatomia"
   data-track="nav"
   data-track-id="alert:nav:anatomia"
-  data-track-label="Anatomia"
 >Anatomia</a>
 
 <!-- DocsDemonstration botão -->
 <Button
   data-track="demo"
   data-track-id="alert:demo:variant-destructive"
-  data-track-label="Ver variant destructive"
 >Destructive</Button>
 
 <!-- DocsVariants card/código com copy button -->
@@ -312,11 +310,34 @@ Cada elemento interativo recebe 2-3 atributos:
   href="?path=/docs/ui-badge--docs"
   data-track="related"
   data-track-id="alert:related:badge"
-  data-track-label="Badge"
 >Badge</a>
 ```
 
 **Regra de id:** o 3º segmento (`element`) **deve** ser único dentro da seção — permite distinguir "qual botão de demo" foi clicado numa página com múltiplos botões do mesmo tipo.
+
+**`data-track` só aceita os seis tipos da tabela** (`nav`, `demo`, `variant`, `code`, `related`, `link`). Qualquer outro valor cai no `default` do rastreador e é ignorado **em silêncio** — foi assim que os dez botões da demonstração do Sonner no Svelte, com `data-track="docs_demo_click"`, nunca dispararam nada. Portão: `data_track_tipo_invalido`.
+
+#### O `label` é id estável, nunca texto
+
+Decidido em 2026-09-10. O `label` dos eventos `docs_*` é uma dimensão do GA4 como qualquer outra, e a regra é a mesma dos eventos de produto: **valor estável, nunca o texto da tela**. Texto traduzido parte o mesmo clique em um valor por idioma — "Salvar", "Save", "Guardar" — e a série não junta.
+
+Até essa data o rastreador lia `data-track-label ?? textContent`, e nas demonstrações auto-instrumentadas `aria-label ?? textContent`. Os call sites alimentavam o atributo com texto também: dos 89 pontos que o escreviam nas cinco stacks, 32 chamavam tradução e o resto era literal de tela ou variável de texto (`item.name`, `control.label`).
+
+Como funciona hoje:
+
+| de onde o `label` sai | quando |
+|---|---|
+| `data-track-label` do elemento | só se o valor tiver **forma de id** — minúscula no começo, sem espaço, sem acento |
+| o 3º segmento do `data-track-id` | na falta do anterior, ou quando ele é recusado |
+| `data-slot` do elemento clicado | no modo contêiner (`data-track-container`), na falta de `data-track-label` |
+| — | texto (`textContent`, `aria-label`) **nunca** é lido |
+
+**Na prática, omita `data-track-label`.** Quase sempre o `data-track-id` já diz o que foi clicado, e o rótulo sai do fim dele. Use o atributo só quando o rótulo precisar ser um id DIFERENTE do elemento — e nesse caso escreva um id, não uma frase.
+
+Duas camadas guardam a regra:
+
+- **O rastreador recusa**, em tempo de execução, o `data-track-label` sem forma de id, troca pelo id estável e segue — o GA4 nunca recebe o texto. Com `?debugAnalytics=1` a recusa aparece no console, para o call site não ficar escondido. A decisão mora em `docs/shared/primitives/rotulo-de-rastreio.ts`, a mesma nas cinco stacks.
+- **O portão reprova antes**: `rotulo_de_rastreio_texto` acusa literal sem forma de id, chamada de tradução e variável de texto em `data-track-label`. Ele lê a forma de id da própria primitiva — `rotulo_de_rastreio_premissa` reprova se não conseguir, em vez de manter uma cópia.
 
 **Onde chamar `track()`:** NUNCA dentro do componente de seção ou da docs page. O helper `src/lib/docs-tracking.ts` (único por stack) é quem chama `track()` — os section containers só adicionam os `data-track*`.
 

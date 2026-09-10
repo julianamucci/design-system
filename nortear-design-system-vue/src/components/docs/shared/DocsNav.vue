@@ -74,7 +74,6 @@ function scrollTo(id: string) {
             :aria-current="activeSection === section.id ? 'location' : undefined"
             data-track="nav"
             :data-track-id="`${trackSlug}:nav:${section.id}`"
-            :data-track-label="section.label"
             @click="scrollTo(section.id)"
           >
             {{ section.label }}

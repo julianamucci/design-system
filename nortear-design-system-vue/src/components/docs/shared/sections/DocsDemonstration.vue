@@ -10,7 +10,7 @@ import ComponentDemo from '@/components/ComponentDemo.vue';
  *
  * @example
  *   <DocsDemonstration title="..." component-slug="alert">
- *     <Button data-track="demo" data-track-id="alert:demo:save" data-track-label="Salvar">
+ *     <Button data-track="demo" data-track-id="alert:demo:save">
  *       Salvar
  *     </Button>
  *   </DocsDemonstration>

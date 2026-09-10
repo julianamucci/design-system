@@ -9,8 +9,8 @@ export interface DocsRelatedProps {
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, cada
    * card recebe `data-track="related"` +
-   * `data-track-id="{slug}:related:{item.name.slug}"` +
-   * `data-track-label={item.name}`. Se ausente, omite `data-track-id`.
+   * `data-track-id="{slug}:related:{item.name.slug}"`,
+   * o rótulo do evento sai do fim do id, nunca do nome exibido. Se ausente, omite `data-track-id`.
    */
   componentSlug?: string;
 }
@@ -46,7 +46,6 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
     if (props.componentSlug) {
       a.setAttribute('data-track-id', `${props.componentSlug}:related:${slugify(item.name)}`);
     }
-    a.setAttribute('data-track-label', item.name);
     a.innerHTML = `
       <span class="nds-related-card-title">${DOMPurify.sanitize(item.name)}</span>
       <span class="nds-related-card-description">${DOMPurify.sanitize(item.description)}</span>`;

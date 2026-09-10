@@ -8,7 +8,7 @@
    *
    * Quando `componentSlug` é informado, cada card recebe
    * `data-track="related"` + `data-track-id="{slug}:related:{item.name.slug}"`
-   * + `data-track-label={item.name}`.
+   * — o rótulo do evento sai do fim do id, nunca do nome exibido.
    */
   const { title, items, componentSlug }: {
     title: string;
@@ -42,7 +42,6 @@
         class="nds-related-card"
         data-track="related"
         data-track-id={trackId(item.name)}
-        data-track-label={item.name}
       >
       <!-- eslint-enable svelte/no-navigation-without-resolve -->
         <span class="nds-related-card-title">{item.name}</span>

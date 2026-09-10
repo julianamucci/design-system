@@ -359,7 +359,6 @@ export function MediaPlayerDocs() {
       // traduzido. A terceira parte do id estruturado vira `element_id`.
       data-track="demo"
       data-track-id={`media-player:demonstracao:${key}`}
-      data-track-label={label}
       onClick={() => setDemoSource(key)}
     >
       {label}

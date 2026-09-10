@@ -254,7 +254,6 @@
             aria-pressed={demoSource === key}
             data-track="demo"
             data-track-id={`media-player:demonstracao:${key}`}
-            data-track-label={$tStore(`demonstration.labels.${key}`)}
             onclick={() => { demoSource = key; }}
           >
             {$tStore(`demonstration.labels.${key}`)}

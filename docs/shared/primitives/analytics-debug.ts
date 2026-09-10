@@ -102,3 +102,19 @@ export function logarEvento(
   console.log('%c[nds analytics]%c ' + evento + ' — ' + destino,
     'color:#3c6972;font-weight:bold', 'color:inherit', params);
 }
+
+/**
+ * Avisa que um `data-track-label` foi recusado por não ter forma de id.
+ *
+ * O rastreador troca o valor pelo id estável e segue — o GA4 nunca recebe o
+ * texto. Mas trocar em silêncio esconderia o call site que ainda escreve texto,
+ * então, com o console de debug ligado, a troca aparece. Ver
+ * `rotulo-de-rastreio.ts`.
+ */
+export function avisarRotuloDescartado(recusado: string, usado: string): void {
+  if (!debugDeAnalyticsLigado()) return;
+  // eslint-disable-next-line no-console
+  console.warn('%c[nds analytics]%c data-track-label recusado: "' + recusado
+    + '" não é id estável — enviado "' + usado + '"',
+    'color:#3c6972;font-weight:bold', 'color:inherit');
+}

@@ -69,7 +69,7 @@ export const WithTrackedTrigger: Story = {
   render: (args) => ({
     props: args,
     template: `<nds-docs-demonstration [title]="title">
-      <button ndsButton data-track="demo" data-track-id="button:demo:salvar" data-track-label="Salvar">
+      <button ndsButton data-track="demo" data-track-id="button:demo:salvar">
         Salvar
       </button>
     </nds-docs-demonstration>`,

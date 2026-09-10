@@ -197,7 +197,6 @@ interface ToggleProps {
           aria-label={$tStore('demonstration.labels.bold')}
           data-track="demo"
           data-track-id="toggle:demo:bold"
-          data-track-label={$tStore('demonstration.labels.bold')}
         >
           <Bold aria-hidden="true" />
         </Toggle>
@@ -207,7 +206,6 @@ interface ToggleProps {
           aria-label={$tStore('demonstration.labels.italic')}
           data-track="demo"
           data-track-id="toggle:demo:italic"
-          data-track-label={$tStore('demonstration.labels.italic')}
         >
           <Italic aria-hidden="true" />
         </Toggle>
@@ -217,7 +215,6 @@ interface ToggleProps {
           aria-label={$tStore('demonstration.labels.underline')}
           data-track="demo"
           data-track-id="toggle:demo:underline"
-          data-track-label={$tStore('demonstration.labels.underline')}
         >
           <Underline aria-hidden="true" />
         </Toggle>
@@ -230,7 +227,6 @@ interface ToggleProps {
         variant="outline"
         data-track="demo"
         data-track-id="toggle:demo:showHidden"
-        data-track-label={$tStore('demonstration.labels.showHidden')}
       >
         <Eye aria-hidden="true" />
         <span>{$tStore('demonstration.labels.showHidden')}</span>
@@ -244,7 +240,6 @@ interface ToggleProps {
         size="lg"
         data-track="demo"
         data-track-id="toggle:demo:compactView"
-        data-track-label={$tStore('demonstration.labels.compactView')}
       >
         <LayoutGrid aria-hidden="true" />
         <span>{$tStore('demonstration.labels.compactView')}</span>

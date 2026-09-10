@@ -61,7 +61,7 @@ export const WithTrackedTrigger: Story = {
   parameters: { controls: { disable: true } },
   args: {
     children: (
-      <Button data-track="demo" data-track-id="button:demo:salvar" data-track-label="Salvar">
+      <Button data-track="demo" data-track-id="button:demo:salvar">
         Salvar
       </Button>
     ),
