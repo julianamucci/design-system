@@ -3268,7 +3268,7 @@ function auditModalidadeNaoModal() {
  *   card, sobre o background          `--elevation-sm`
  *   flutuante interativo              `--elevation-md`
  *   flutuante passivo                 `--elevation-lg`
- *   modal (todos) e drawer            `--elevation-xl`
+ *   modal (todos), drawer e toast     `--elevation-xl`
  *
  * Antes desta regra a elevação existia só como decisão avulsa em cada PRD, e o
  * `prd_token_sem_lastro` conferia cada documento contra a própria folha — que é
@@ -3293,7 +3293,10 @@ const ELEVACAO_POR_TIPO = {
     folhas: ['popover', 'dropdown-menu', 'select', 'combobox', 'navigation-menu', 'calendar', 'composer'],
   },
   lg: { tipo: 'flutuante passivo', folhas: ['hover-card', 'tooltip'] },
-  xl: { tipo: 'modal e drawer', folhas: ['dialog', 'alert-dialog', 'sheet', 'drawer'] },
+  // O toast entra em `xl` por decisão da dona (2026-09-10), e o motivo é de
+  // CAMADA: `--z-toast` é 1080, acima de `--z-modal` (1050) — ele aparece por
+  // cima de um diálogo aberto, então é a superfície mais alta da pilha.
+  xl: { tipo: 'modal, drawer e toast', folhas: ['dialog', 'alert-dialog', 'sheet', 'drawer', 'toast'] },
 };
 
 /** Folhas que leem elevação por outro motivo, com o motivo. */
@@ -3308,11 +3311,6 @@ const ELEVACAO_FORA_DA_REGRA = {
   // errado: conferia que a folha lia `md`, e quem lia era outra peça. Medido
   // em Chromium com o tema ativo: `.nds-command` sozinho computa sombra nenhuma.
   command: 'sem superfície própria — herda a do Dialog, onde mora; o `md` da folha é do combobox',
-  // PENDENTE DE DECISÃO: o toast não cabe com clareza em nenhum tipo da regra.
-  // É flutuante e não prende foco (passivo?), mas carrega ação — "desfazer" é o
-  // caso comum — (interativo?). Fica em `xl`, que é o que tinha, até a dona
-  // decidir; declarado aqui para não virar achado nem sumir da vista.
-  toast: 'PENDENTE — não classificado pela regra de 2026-09-10; mantém `xl` até decisão',
 };
 
 function auditElevacaoPorTipo() {
@@ -3354,9 +3352,9 @@ function auditElevacaoPorTipo() {
       file: rel, line: idx < 0 ? 1 : limpo.slice(0, idx).split('\n').length,
       rule: 'elevacao_fora_do_mapa',
       message: lidos.length
-        ? `${arquivo} é ${regra.tipo} e deveria ler --elevation-${regra.degrau}; lê `
+        ? `${arquivo} está no tipo «${regra.tipo}» e deveria ler --elevation-${regra.degrau}; lê `
           + `--elevation-${lidos.join(', --elevation-')}`
-        : `${arquivo} é ${regra.tipo} e não lê elevação nenhuma — deveria ler --elevation-${regra.degrau}`,
+        : `${arquivo} está no tipo «${regra.tipo}» e não lê elevação nenhuma — deveria ler --elevation-${regra.degrau}`,
     });
   }
 

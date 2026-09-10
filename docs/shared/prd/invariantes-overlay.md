@@ -123,7 +123,7 @@ arquivo existe para evitar.
 
 Os sete que estavam sem portão foram fechados em 2026-09-10 — seis com regra
 nova no `audit.mjs`, cada uma provada replantando o defeito, e o sétimo medido
-como já coberto pela suíte. Sobram três coisas, e todas são de conteúdo, não de
+como já coberto pela suíte. Sobram duas coisas, e as duas são de conteúdo, não de
 mecanismo:
 
 1. **O `reason` está parcial, e o portão novo ACUSA isso** — 7 achados no dia em
@@ -135,9 +135,11 @@ mecanismo:
    passivo, e fechar é quase sempre "o ponteiro saiu".
 2. **A ordem do rodapé do drawer** não é asserida em stack nenhuma, enquanto a
    do dialog é asserida nas cinco. É play, não regra de audit.
-3. **O Toast não foi classificado** pela regra de elevação — é flutuante e não
-   prende foco, mas carrega ação. Mantém `xl` até decisão da dona, declarado em
-   `ELEVACAO_FORA_DA_REGRA` para não virar achado nem sumir da vista.
+
+O Toast, que ficou pendente na regra de elevação, foi decidido pela dona no
+mesmo dia: `xl`. O motivo é de camada, não de interação — `--z-toast` (1080)
+fica acima de `--z-modal` (1050), então ele aparece por cima de um diálogo
+aberto e é a superfície mais alta da tela.
 
 ## O que este arquivo NÃO promete
 

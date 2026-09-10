@@ -905,7 +905,7 @@ de superfície, e a altura sobe com o quanto ela se separa da página.
 | card, sobre o background | `--elevation-sm` | card |
 | flutuante interativo | `--elevation-md` | popover, dropdown-menu (e context-menu, menubar), select, combobox, navigation-menu, o seletor do calendário, o popover do composer |
 | flutuante passivo | `--elevation-lg` | hover-card, tooltip |
-| modal (todos) e drawer | `--elevation-xl` | dialog, alert-dialog, sheet, drawer |
+| modal (todos), drawer e toast | `--elevation-xl` | dialog, alert-dialog, sheet, drawer, toast |
 
 **Interativo × passivo** é o que separa `md` de `lg`: o interativo recebe foco e
 aceita ação; o passivo só acompanha o que está embaixo e some quando o ponteiro
@@ -915,9 +915,11 @@ se descolar dele.
 **O Command não tem degrau próprio.** A paleta mora dentro de um Dialog e herda
 a elevação dele — modal, `xl`.
 
-**O Toast está fora da regra, esperando decisão.** Ele é flutuante e não prende
-foco, mas carrega ação ("desfazer" é o caso comum) — não cabe com clareza nem
-em interativo nem em passivo. Mantém `--elevation-xl`, que é o que tinha.
+**O Toast é `xl`, e o motivo é de camada, não de interação.** Pela interação
+ele não caberia com clareza em nenhum dos dois flutuantes — não prende foco, mas
+carrega ação ("desfazer" é o caso comum). O que decide é a pilha: `--z-toast`
+(1080) fica acima de `--z-modal` (1050), então o toast aparece por cima de um
+diálogo aberto e é a superfície mais alta da tela. Decidido em 2026-09-10.
 
 **A sombra é direcional**: as camadas dos tokens descem em y. Num painel que
 encosta na borda de baixo da tela (o drawer de baixo), quase toda a sombra cai
