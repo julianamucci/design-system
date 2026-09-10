@@ -151,18 +151,18 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 /**
  * Abertura e fechamento de qualquer popover VIVO desta página.
  *
- * `triggerLabel` é um id estável em kebab-case (`demo`, `par1-do`, `with-title`,
+ * `triggerId` é um id estável em kebab-case (`demo`, `par1-do`, `with-title`,
  * …), fixado igual nas cinco stacks para que a série JUNTE no GA4, e nunca o
  * texto traduzido: o rótulo traduzido partiria o mesmo evento em três valores.
  * `location` diz de qual seção o exemplo saiu — a demonstração herda
  * `docs_demo`, e as demais seções se nomeiam, senão todo preview da página
  * chegaria ao relatório como se fosse a demonstração.
  */
-function handlePopoverOpenChange(triggerLabel: string, location: string, open: boolean) {
+function handlePopoverOpenChange(triggerId: string, location: string, open: boolean) {
   if (open) {
     track('popover_open', {
       component: 'popover',
-      trigger_label: triggerLabel,
+      trigger_id: triggerId,
       location,
     });
   } else {

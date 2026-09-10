@@ -222,7 +222,7 @@ export function createRadioGroupDocs(): HTMLElement {
                     const value = btn.dataset.value ?? '';
                     if (value === previousValue) return;
                     track('radio_change', {
-                      component: 'radio_group',
+                      component: 'radio-group',
                       name,
                       value,
                       previous_value: previousValue || undefined,

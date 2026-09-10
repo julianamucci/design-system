@@ -87,7 +87,7 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
   });
   cancelButton.addEventListener('click', () => {
     track('dialog_close', {
-      component: 'alert_dialog',
+      component: 'alert-dialog',
       label,
       reason: 'close-button',
       location: 'docs_demo',
@@ -95,14 +95,14 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
   });
   actionButton.addEventListener('click', () => {
     track('dialog_confirm', {
-      component: 'alert_dialog',
+      component: 'alert-dialog',
       label,
       location: 'docs_demo',
     });
     // A ação primária também fecha o diálogo — confirm + close (reason
     // 'action'), na mesma ordem das demais stacks.
     track('dialog_close', {
-      component: 'alert_dialog',
+      component: 'alert-dialog',
       label,
       reason: 'action',
       location: 'docs_demo',
@@ -117,7 +117,7 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
     onOpenChange: (open) => {
       if (open) {
         track('dialog_open', {
-          component: 'alert_dialog',
+          component: 'alert-dialog',
           label,
           location: 'docs_demo',
         });

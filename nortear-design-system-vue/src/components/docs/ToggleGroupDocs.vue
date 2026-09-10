@@ -152,7 +152,7 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 function trackDemoGroupChange(fieldName: string, value: string | string[] | undefined) {
   track('field_change', {
-    component: 'toggle_group',
+    component: 'toggle-group',
     field_name: fieldName,
     value: Array.isArray(value) ? value.join(',') : String(value ?? ''),
     location: 'docs_demo',

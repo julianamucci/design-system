@@ -185,7 +185,7 @@
    */
   function trackMenuOpen(menu: string, location: string, open: boolean): void {
     if (!open) return;
-    track('menu_open', { component: 'context_menu', menu, location });
+    track('menu_open', { component: 'context-menu', menu, location });
   }
 
   // ─── State para demos interativos ────────────────────────────────────────────

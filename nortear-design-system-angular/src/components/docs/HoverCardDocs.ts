@@ -714,7 +714,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
     if (event.open) {
       track('hover_card_open', {
         component: 'hover-card',
-        trigger_label: triggerId,
+        trigger_id: triggerId,
         location: section,
       });
       return;
@@ -1067,12 +1067,12 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
     // descrição — e é ela que diz quais são e para que servem. Os dois SAEM
     // desta página: todo cartão vivo, na Demonstração e nas Variantes, passa
     // pelo handler `onChange`. O payload aqui é o que o evento tipado carrega
-    // de fato — `trigger_label` é id estável do gatilho, nunca o texto dele.
+    // de fato — `trigger_id` é id estável do gatilho, nunca o texto dele.
     return [
       {
         event: 'hover_card_open',
         trigger: toPlainText(t('analytics.description')),
-        payload: 'component, trigger_label, location',
+        payload: 'component, trigger_id, location',
       },
       {
         event: 'hover_card_close',

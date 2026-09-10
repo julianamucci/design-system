@@ -353,7 +353,7 @@ const navigateTo = (page: string, pageTitle: string) => {
 
   // 3. Registrar como pageview no analytics (ver 21-analytics.md)
   track('page_view', {
-    component: 'spa_navigation',
+    component: 'spa-navigation',
     location: page,
     label: pageTitle
   });

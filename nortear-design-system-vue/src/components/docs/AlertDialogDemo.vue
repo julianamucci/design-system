@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<{
 // (um rótulo por idioma para o mesmo demo).
 function handleOpenChange(open: boolean) {
   track(open ? 'dialog_open' : 'dialog_close', {
-    component: 'alert_dialog',
+    component: 'alert-dialog',
     label: props.tone === 'destructive' ? 'destructive' : 'neutral',
     location: 'docs_demo',
   });
@@ -48,7 +48,7 @@ function handleOpenChange(open: boolean) {
 
 function handleConfirm() {
   track('dialog_confirm', {
-    component: 'alert_dialog',
+    component: 'alert-dialog',
     label: props.tone === 'destructive' ? 'destructive' : 'neutral',
     location: 'docs_demo',
   });

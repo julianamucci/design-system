@@ -810,7 +810,7 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
   /** O menu abriu — só a abertura interessa, o fechamento não é intenção. */
   protected registrarAbertura(open: boolean): void {
     if (!open) return;
-    track('menu_open', { component: 'context_menu', location: 'docs_demo', menu: 'demo' });
+    track('menu_open', { component: 'context-menu', location: 'docs_demo', menu: 'demo' });
   }
 
   protected registrarEscolha(item: string): void {

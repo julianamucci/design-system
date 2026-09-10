@@ -60,13 +60,13 @@ function priorityLabel(raw: string): string {
 
 // ─── Analytics dos previews ───────────────────────────────────────────────────
 //
-// Todo preview VIVO desta página anuncia abertura e fechamento. `trigger_label`
+// Todo preview VIVO desta página anuncia abertura e fechamento. `trigger_id`
 // carrega um id ESTÁVEL (`user-profile`, `link-preview`…), nunca o texto do
 // gatilho: o texto é traduzido, e mandá-lo partiria um evento em três no GA4.
-function trackHoverCard(triggerLabel: string, location: string) {
+function trackHoverCard(triggerId: string, location: string) {
   return (open: boolean) => {
     if (open) {
-      track('hover_card_open', { component: 'hover-card', trigger_label: triggerLabel, location });
+      track('hover_card_open', { component: 'hover-card', trigger_id: triggerId, location });
     } else {
       track('hover_card_close', { component: 'hover-card', location });
     }
@@ -819,7 +819,7 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
             {
               event: 'hover_card_open',
               trigger: 'onOpenChange(true)',
-              payload: "{ component: 'hover-card', trigger_label, location }",
+              payload: "{ component: 'hover-card', trigger_id, location }",
             },
             {
               event: 'hover_card_close',

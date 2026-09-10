@@ -238,7 +238,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
                 if (!v) return;
                 setDemoAlignment(v);
                 track("field_change", {
-                  component: "toggle_group",
+                  component: "toggle-group",
                   field_name: "alignment",
                   value: v,
                   location: "docs_demo",
@@ -272,7 +272,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
               onValueChange={(v: string[]) => {
                 setDemoFormats(v);
                 track("field_change", {
-                  component: "toggle_group",
+                  component: "toggle-group",
                   field_name: "formatting",
                   value: v.join(","),
                   location: "docs_demo",
@@ -305,7 +305,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
                 if (!v) return;
                 setDemoView(v);
                 track("field_change", {
-                  component: "toggle_group",
+                  component: "toggle-group",
                   field_name: "view_mode",
                   value: v,
                   location: "docs_demo",

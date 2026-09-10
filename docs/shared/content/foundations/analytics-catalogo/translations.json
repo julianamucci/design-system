@@ -274,7 +274,7 @@
           "event": "dialog_open",
           "component": "Dialog, AlertDialog, Sheet, Drawer",
           "when": "Overlay abre.",
-          "extras": "<code>label</code>, <code>trigger_label</code>"
+          "extras": "<code>label</code>, <code>trigger_id</code>"
         },
         "dialogClose": {
           "event": "dialog_close",
@@ -286,7 +286,7 @@
           "event": "dialog_confirm",
           "component": "AlertDialog, Sheet",
           "when": "Ação primária é confirmada.",
-          "extras": "<code>action</code>, <code>trigger_label</code>"
+          "extras": "<code>action</code>, <code>trigger_id</code>"
         },
         "dialogAction": {
           "event": "dialog_action",
@@ -298,7 +298,7 @@
           "event": "popover_open",
           "component": "Popover",
           "when": "Popover abre.",
-          "extras": "<code>trigger_label</code>"
+          "extras": "<code>trigger_id</code>"
         },
         "popoverClose": {
           "event": "popover_close",
@@ -699,7 +699,7 @@
           "event": "dialog_open",
           "component": "Dialog, AlertDialog, Sheet, Drawer",
           "when": "Overlay opens.",
-          "extras": "<code>label</code>, <code>trigger_label</code>"
+          "extras": "<code>label</code>, <code>trigger_id</code>"
         },
         "dialogClose": {
           "event": "dialog_close",
@@ -711,7 +711,7 @@
           "event": "dialog_confirm",
           "component": "AlertDialog, Sheet",
           "when": "Primary action is confirmed.",
-          "extras": "<code>action</code>, <code>trigger_label</code>"
+          "extras": "<code>action</code>, <code>trigger_id</code>"
         },
         "dialogAction": {
           "event": "dialog_action",
@@ -723,7 +723,7 @@
           "event": "popover_open",
           "component": "Popover",
           "when": "Popover opens.",
-          "extras": "<code>trigger_label</code>"
+          "extras": "<code>trigger_id</code>"
         },
         "popoverClose": {
           "event": "popover_close",
@@ -1124,7 +1124,7 @@
           "event": "dialog_open",
           "component": "Dialog, AlertDialog, Sheet, Drawer",
           "when": "El overlay se abre.",
-          "extras": "<code>label</code>, <code>trigger_label</code>"
+          "extras": "<code>label</code>, <code>trigger_id</code>"
         },
         "dialogClose": {
           "event": "dialog_close",
@@ -1136,7 +1136,7 @@
           "event": "dialog_confirm",
           "component": "AlertDialog, Sheet",
           "when": "Se confirma la acción primaria.",
-          "extras": "<code>action</code>, <code>trigger_label</code>"
+          "extras": "<code>action</code>, <code>trigger_id</code>"
         },
         "dialogAction": {
           "event": "dialog_action",
@@ -1148,7 +1148,7 @@
           "event": "popover_open",
           "component": "Popover",
           "when": "El popover se abre.",
-          "extras": "<code>trigger_label</code>"
+          "extras": "<code>trigger_id</code>"
         },
         "popoverClose": {
           "event": "popover_close",

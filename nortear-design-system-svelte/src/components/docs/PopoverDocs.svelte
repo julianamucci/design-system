@@ -288,7 +288,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster" data-spacing="sm" data-justify="center">
       <Popover onOpenChange={(o: boolean) => (o
-        ? track('popover_open', { component: 'popover', trigger_label: 'demo', location: 'docs_demo' })
+        ? track('popover_open', { component: 'popover', trigger_id: 'demo', location: 'docs_demo' })
         : track('popover_close', { component: 'popover', location: 'docs_demo' }))}>
         <PopoverTrigger>
           {#snippet child({ props })}
@@ -415,7 +415,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   {#snippet doPair1()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'par1-do', location: 'docs_do_dont' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'par1-do', location: 'docs_do_dont' })
       : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -435,7 +435,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
          mantém o axe verde mas devolve ao leitor o rótulo do botão em vez do
          assunto do painel — exatamente o que a legenda critica. -->
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'par1-dont', location: 'docs_do_dont' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'par1-dont', location: 'docs_do_dont' })
       : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -449,7 +449,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
   {#snippet doPair2()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'par2-do', location: 'docs_do_dont' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'par2-do', location: 'docs_do_dont' })
       : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -467,7 +467,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     <!-- Painel idêntico ao do par correto: o que reprova aqui é só o rótulo do
          gatilho, que não diz o que o clique faz. -->
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'par2-dont', location: 'docs_do_dont' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'par2-dont', location: 'docs_do_dont' })
       : track('popover_close', { component: 'popover', location: 'docs_do_dont' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -501,7 +501,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   {#snippet variantDefault()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'default', location: 'docs_variantes' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'default', location: 'docs_variantes' })
       : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -518,7 +518,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
   {#snippet variantWithTitle()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'with-title', location: 'docs_variantes' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'with-title', location: 'docs_variantes' })
       : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -674,7 +674,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   {#snippet compEditProfile()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'edit-profile', location: 'docs_composicoes' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'edit-profile', location: 'docs_composicoes' })
       : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -704,7 +704,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   {#snippet compTableFilter()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'table-filter', location: 'docs_composicoes' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'table-filter', location: 'docs_composicoes' })
       : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -739,7 +739,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   {#snippet compColorPicker()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'color-picker', location: 'docs_composicoes' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'color-picker', location: 'docs_composicoes' })
       : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -767,7 +767,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   {#snippet compQuickSettings()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'quick-settings', location: 'docs_composicoes' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'quick-settings', location: 'docs_composicoes' })
       : track('popover_close', { component: 'popover', location: 'docs_composicoes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}
@@ -796,7 +796,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   {#snippet variantForm()}
     <Popover onOpenChange={(o: boolean) => (o
-      ? track('popover_open', { component: 'popover', trigger_label: 'form', location: 'docs_variantes' })
+      ? track('popover_open', { component: 'popover', trigger_id: 'form', location: 'docs_variantes' })
       : track('popover_close', { component: 'popover', location: 'docs_variantes' }))}>
       <PopoverTrigger>
         {#snippet child({ props })}

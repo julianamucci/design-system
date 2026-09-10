@@ -276,7 +276,12 @@ interface CardProps extends React.ComponentProps<"div"> {
             track("button_click", {
               component: "button",
               variant: "outline",
-              label: actionEdit,
+              // Chave estável, nunca `actionEdit`: aquela const vem de
+              // `tContent(...)`, e texto traduzido parte o mesmo evento em um
+              // valor por idioma no GA4. O `i18n_text_in_payload` não pegava
+              // porque lê a chamada de tradução DENTRO do payload e é cego a
+              // indireção de uma variável.
+              label: "edit",
               location: "docs_demo",
             })
           }
@@ -289,7 +294,7 @@ interface CardProps extends React.ComponentProps<"div"> {
             track("button_click", {
               component: "button",
               variant: "default",
-              label: actionSave,
+              label: "save",
               location: "docs_demo",
             })
           }

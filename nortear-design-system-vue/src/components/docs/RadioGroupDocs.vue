@@ -145,7 +145,7 @@ const demoPreviousValues: Record<string, string | undefined> = {};
 
 function handleDemoRadioChange(name: string, value: string) {
   track('radio_change', {
-    component: 'radio_group',
+    component: 'radio-group',
     name,
     value,
     previous_value: demoPreviousValues[name],

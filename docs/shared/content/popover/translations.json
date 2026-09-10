@@ -414,7 +414,7 @@
         "payload": "Payload",
         "popover_open": {
           "trigger": "Usuário clica no trigger e abre o popover",
-          "payload": "{ component: \"popover\", trigger_label, location }"
+          "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
           "trigger": "Popover fecha (Escape, clique fora ou ação)",
@@ -915,7 +915,7 @@
         "payload": "Payload",
         "popover_open": {
           "trigger": "User clicks the trigger and opens the popover",
-          "payload": "{ component: \"popover\", trigger_label, location }"
+          "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
           "trigger": "Popover closes (Escape, click outside or action)",
@@ -1416,7 +1416,7 @@
         "payload": "Payload",
         "popover_open": {
           "trigger": "El usuario hace clic en el trigger y abre el popover",
-          "payload": "{ component: \"popover\", trigger_label, location }"
+          "payload": "{ component: \"popover\", trigger_id, location }"
         },
         "popover_close": {
           "trigger": "El popover se cierra (Escape, clic fuera o acción)",

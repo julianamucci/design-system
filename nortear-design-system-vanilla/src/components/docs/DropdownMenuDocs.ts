@@ -284,7 +284,7 @@ export function createDropdownMenuDocs(): HTMLElement {
       ],
     });
     track('docs_page_view', {
-      component_name: 'dropdown_menu',
+      component_name: 'dropdown-menu',
       locale,
       page_title: `${t('title')} · Design System`,
     });
@@ -1019,7 +1019,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       (id) => updateActiveNav(id),
       (id) => track('docs_section_viewed', {
         section_id: id,
-        component_name: 'dropdown_menu',
+        component_name: 'dropdown-menu',
         locale: getLocale(),
       }),
     );

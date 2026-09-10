@@ -97,7 +97,7 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action }: D
         track(open ? "dialog_open" : "dialog_close", {
           // Identificador estável: o título é texto traduzido e quebraria a
           // agregação no GA4 (um rótulo por idioma para o mesmo demo).
-          component: "alert_dialog",
+          component: "alert-dialog",
           label: "destructive",
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location: "docs_demo",
@@ -118,7 +118,7 @@ function DestructiveDemo({ triggerLabel, title, description, cancel, action }: D
             variant="destructive"
             onClick={() =>
               track("dialog_confirm", {
-                component: "alert_dialog",
+                component: "alert-dialog",
                 label: "destructive",
                 location: "docs_demo",
               })
@@ -145,7 +145,7 @@ function NeutralDemo({ triggerLabel, title, description, cancel, action }: Neutr
     <AlertDialog
       onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
-          component: "alert_dialog",
+          component: "alert-dialog",
           label: "neutral",
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
           location: "docs_demo",
@@ -165,7 +165,7 @@ function NeutralDemo({ triggerLabel, title, description, cancel, action }: Neutr
           <AlertDialogAction
             onClick={() =>
               track("dialog_confirm", {
-                component: "alert_dialog",
+                component: "alert-dialog",
                 label: "neutral",
                 location: "docs_demo",
               })

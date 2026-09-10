@@ -144,14 +144,14 @@ export function HoverCardDocs() {
   // ─── Analytics dos previews vivos ───────────────────────────────────────────
   //
   // Todo preview vivo desta pagina e o produto consumindo o proprio componente.
-  // `trigger_label` carrega id ESTAVEL, nunca o texto do gatilho: traduzido, o
+  // `trigger_id` carrega id ESTAVEL, nunca o texto do gatilho: traduzido, o
   // mesmo evento chegaria ao GA4 partido em tres.
   const trackHoverCard = useCallback(
     (open: boolean, triggerId: string, location: string) => {
       if (open) {
         track("hover_card_open", {
           component: "hover-card",
-          trigger_label: triggerId,
+          trigger_id: triggerId,
           location,
         });
       } else {

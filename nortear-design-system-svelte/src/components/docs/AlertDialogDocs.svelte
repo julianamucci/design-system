@@ -226,7 +226,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md">
-      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'destructive', location: 'docs_demo' })}>
+      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert-dialog', label: 'destructive', location: 'docs_demo' })}>
         <AlertDialogTrigger>
           {#snippet child({ props })}
             <Button variant="destructive" {...props}>{$tStore('demonstration.labels.triggerLabel')}</Button>
@@ -239,14 +239,14 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-            <AlertDialogAction variant="destructive" onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'destructive', location: 'docs_demo' })}>
+            <AlertDialogAction variant="destructive" onclick={() => track('dialog_confirm', { component: 'alert-dialog', label: 'destructive', location: 'docs_demo' })}>
               {$tStore('demonstration.labels.action')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert_dialog', label: 'neutral', location: 'docs_demo' })}>
+      <AlertDialog onOpenChange={(o: boolean) => track(o ? 'dialog_open' : 'dialog_close', { component: 'alert-dialog', label: 'neutral', location: 'docs_demo' })}>
         <AlertDialogTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.neutralTriggerLabel')}</Button>
@@ -259,7 +259,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>{$tStore('demonstration.labels.cancel')}</AlertDialogCancel>
-            <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert_dialog', label: 'neutral', location: 'docs_demo' })}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
+            <AlertDialogAction onclick={() => track('dialog_confirm', { component: 'alert-dialog', label: 'neutral', location: 'docs_demo' })}>{$tStore('demonstration.labels.neutralAction')}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

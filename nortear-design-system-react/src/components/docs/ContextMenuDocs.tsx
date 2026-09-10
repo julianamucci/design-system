@@ -193,7 +193,7 @@ function DemonstracaoPreview({ tContent }: { tContent: (key: string) => string }
       onOpenChange={(open) =>
         open &&
         track("menu_open", {
-          component: "context_menu",
+          component: "context-menu",
           menu: "demo",
           location: "docs_demo",
         })
@@ -324,7 +324,7 @@ export function ContextMenuDocs() {
 
   useEffect(() => {
     track("docs_page_view", {
-      component_name: "context_menu",
+      component_name: "context-menu",
       locale,
       page_title: `${tContent("title")} · Design System`,
     });
@@ -334,7 +334,7 @@ export function ContextMenuDocs() {
     (id: string) => {
       track("docs_section_viewed", {
         section_id: id,
-        component_name: "context_menu",
+        component_name: "context-menu",
         locale,
       });
     },

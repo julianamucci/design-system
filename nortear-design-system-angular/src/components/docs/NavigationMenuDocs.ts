@@ -304,7 +304,7 @@ onNavigate(destino: Destino) {
   // O payload leva o identificador do destino, nunca o rótulo traduzido: o
   // rótulo partiria um evento em três no GA4, um por idioma.
   track('navigation_click', {
-    component: 'navigation_menu',
+    component: 'navigation-menu',
     label: destino.id,
     destination: destino.href,
     location: 'header',
@@ -944,7 +944,7 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
    */
   protected onNavigate(destination: string, href: string): void {
     track('navigation_click', {
-      component: 'navigation_menu',
+      component: 'navigation-menu',
       label: destination,
       destination: href,
       location: 'docs-demonstration',

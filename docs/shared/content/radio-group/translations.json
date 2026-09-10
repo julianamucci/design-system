@@ -358,7 +358,7 @@
         "payload": "Payload",
         "radio_change": {
           "trigger": "Usuário seleciona uma opção diferente",
-          "payload": "{ component: \"radio_group\", name, value, previous_value, location }"
+          "payload": "{ component: \"radio-group\", name, value, previous_value, location }"
         }
       }
     },
@@ -799,7 +799,7 @@
         "payload": "Payload",
         "radio_change": {
           "trigger": "User selects a different option",
-          "payload": "{ component: \"radio_group\", name, value, previous_value, location }"
+          "payload": "{ component: \"radio-group\", name, value, previous_value, location }"
         }
       }
     },
@@ -1240,7 +1240,7 @@
         "payload": "Payload",
         "radio_change": {
           "trigger": "El usuario selecciona una opción diferente",
-          "payload": "{ component: \"radio_group\", name, value, previous_value, location }"
+          "payload": "{ component: \"radio-group\", name, value, previous_value, location }"
         }
       }
     },

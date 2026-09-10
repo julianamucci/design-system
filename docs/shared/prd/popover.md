@@ -279,10 +279,10 @@ fecha e devolve o foco ao gatilho. Enter e Espaço ativam o gatilho.
 
 | evento | quando | payload |
 |---|---|---|
-| `popover_open` | o painel abre | `{ component: "popover", trigger_label, location }` |
+| `popover_open` | o painel abre | `{ component: "popover", trigger_id, location }` |
 | `popover_close` | o painel fecha | `{ component: "popover", reason?, location }` |
 
-**`trigger_label` é id estável em kebab-case**, igual nas cinco stacks, nunca o
+**`trigger_id` é id estável em kebab-case**, igual nas cinco stacks, nunca o
 texto traduzido — traduzido, o mesmo evento vira três valores no GA4 e a série
 não junta. `location` diz de qual seção o exemplo saiu; a demonstração herda
 `docs_demo` e as demais seções se nomeiam.

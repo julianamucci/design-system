@@ -231,7 +231,7 @@ interface ToggleGroupItemProps {
       <ToggleGroup
         type="single"
         bind:value={demoAlignment}
-        onValueChange={(v: string) => track('field_change', { component: 'toggle_group', field_name: 'alignment', value: v, location: 'docs_demo' })}
+        onValueChange={(v: string) => track('field_change', { component: 'toggle-group', field_name: 'alignment', value: v, location: 'docs_demo' })}
         aria-label={$tStore('demonstration.labels.alignmentLabel')}
         data-track="demo"
         data-track-id="toggle-group:demo:alignment"
@@ -251,7 +251,7 @@ interface ToggleGroupItemProps {
       <ToggleGroup
         type="multiple"
         bind:value={demoFormatting}
-        onValueChange={(v: string[]) => track('field_change', { component: 'toggle_group', field_name: 'formatting', value: v.join(','), location: 'docs_demo' })}
+        onValueChange={(v: string[]) => track('field_change', { component: 'toggle-group', field_name: 'formatting', value: v.join(','), location: 'docs_demo' })}
         variant="outline"
         aria-label={$tStore('demonstration.labels.formattingLabel')}
         data-track="demo"
@@ -274,7 +274,7 @@ interface ToggleGroupItemProps {
         orientation="vertical"
         variant="outline"
         bind:value={demoView}
-        onValueChange={(v: string) => track('field_change', { component: 'toggle_group', field_name: 'view', value: v, location: 'docs_demo' })}
+        onValueChange={(v: string) => track('field_change', { component: 'toggle-group', field_name: 'view', value: v, location: 'docs_demo' })}
         aria-label={$tStore('demonstration.labels.viewLabel')}
         data-track="demo"
         data-track-id="toggle-group:demo:view"

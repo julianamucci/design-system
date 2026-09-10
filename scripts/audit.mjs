@@ -2652,6 +2652,90 @@ function auditCadeiaTransformOrigin() {
   return violations;
 }
 
+/**
+ * Vocabulário do payload de analytics: a grafia do `component` e o nome do campo
+ * do gatilho.
+ *
+ * As duas divergências que esta regra fecha viveram meses porque **nenhuma delas
+ * quebra nada**. GA4 aceita qualquer string; o TypeScript tipa `component` como
+ * `string`; a docs page renderiza igual. O preço aparece só na análise, e lá é
+ * caro: `component: 'alert_dialog'` no evento de produto e
+ * `component_name: 'alert-dialog'` no `docs_page_view` são DUAS séries que não
+ * juntam, para o mesmo componente — medido no `AlertDialogDocs.ts` do vanilla,
+ * onde as duas grafias estavam a 55 linhas de distância.
+ *
+ * `component` vai em KEBAB porque segue o slug, e o slug desta casa é kebab: 42
+ * diretórios em `docs/shared/content/` com hífen, zero com underscore. E o
+ * caminho automático não tem escolha — `deriveSlugFromUrl` corta
+ * `ui-alert-dialog--docs` e devolve `alert-dialog` —, então snake no payload
+ * escrito à mão era divergir do que a infraestrutura já emitia sozinha.
+ *
+ * NOME DE EVENTO CONTINUA SNAKE, e a regra não o toca: `alert_dialog_confirm`
+ * está certo. A âncora depois de `component:` existe para isso. Foi exatamente
+ * essa confusão que produziu a divergência — a guideline 07 diz "nunca
+ * kebab-case" na seção de NOMENCLATURA DE EVENTO, e quem leu aquilo como regra
+ * de payload escreveu snake no campo.
+ *
+ * O campo do gatilho é `trigger_id`. Tinha três nomes: `trigger_label`
+ * (popover, hover-card), `trigger_id` (tooltip, sozinho) e `label` (os modais).
+ * Os dois primeiros nasceram no MESMO commit — `fb2ba485d`, 125 arquivos —, o
+ * que diz que a causa não é deriva no tempo e sim não haver nome declarado:
+ * uma passagem só emitiu dois. `id` e não `label` porque `label` convidava a
+ * mandar o texto do gatilho, e texto traduzido parte o evento em um valor por
+ * idioma; `trigger_label` guardava metade do convite no nome.
+ */
+function auditVocabularioPayload() {
+  const violations = [];
+  const arquivos = [
+    ...STACKS.flatMap((s) => walkDir(join(ROOT, stackDir(s), 'src'), ['.ts', '.tsx', '.vue', '.svelte'])),
+    ...walkDir(join(ROOT, 'docs', 'shared', 'content'), ['.json']),
+    ...walkDir(join(ROOT, 'docs', 'shared', 'guidelines'), ['.md']),
+    ...walkDir(join(ROOT, 'docs', 'shared', 'prd'), ['.md']),
+  ];
+
+  for (const file of arquivos) {
+    const bruto = readFile(file);
+    if (!bruto) continue;
+    const rel = relative(ROOT, file);
+    // comentário fora: os docblocks desta casa CITAM as grafias erradas para
+    // explicar por que foram abandonadas, e contá-las seria contar a explicação
+    const conteudo = stripComments(bruto);
+
+    conteudo.split('\n').forEach((linha, i) => {
+      // a folha do audit fala das duas grafias por dever de ofício
+      if (rel.includes('audit.mjs')) return;
+
+      // Documentação precisa NOMEAR o valor errado para ensinar qual é — e sem
+      // esta saída a regra reprova o texto que a explica. Aconteceu na primeira
+      // rodada: cinco achados, todos na guideline e no PRD que acabavam de
+      // documentar a decisão. É a armadilha de portão que casa palavra solta e
+      // acaba medindo prosa, e a saída da casa é exceção DECLARADA, na linha.
+      if (/audit-ignore:\s*vocab-payload\b/.test(linha)) return;
+
+      const kebab = /\b(component|component_name)\s*[:=]\s*(?:['"]|\\")([a-z][a-z0-9]*_[a-z0-9_]+)(?:['"]|\\")/.exec(linha);
+      if (kebab) {
+        violations.push({
+          category: 'analytics', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: rel, line: i + 1, rule: 'component_nao_kebab',
+          message: `\`${kebab[1]}: "${kebab[2]}"\` está em snake_case — o valor segue o slug, que é `
+            + `kebab: "${kebab[2].replace(/_/g, '-')}". Nome de EVENTO continua snake; isto é o valor do campo`,
+        });
+      }
+
+      if (/\btrigger_label\b/.test(linha)) {
+        violations.push({
+          category: 'analytics', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: rel, line: i + 1, rule: 'campo_gatilho_divergente',
+          message: 'o campo do gatilho é `trigger_id`, não `trigger_label` — `label` convidava a mandar '
+            + 'o texto do gatilho, e texto traduzido parte o evento em um valor por idioma no GA4',
+        });
+      }
+    });
+  }
+
+  return violations;
+}
+
 function auditDeadLibInfra() {
   const violations = [];
   const targets = [
@@ -8160,7 +8244,7 @@ if (!category || category === 'security') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'analytics') {
-  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId()];
+  const infra = [...auditAnalyticsInfra(), ...auditAnalyticsPayloads(), ...auditDocsItemTrackId(), ...auditVocabularioPayload()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 // `sandbox_dead_class` saiu daqui em 2026-09-02, junto com o objeto que ele

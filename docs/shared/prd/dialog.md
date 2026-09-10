@@ -378,11 +378,27 @@ ação do rodapé; ao fechar, o foco volta ao gatilho.
 
 | evento | quando | payload |
 |---|---|---|
-| `dialog_open` | abre por gatilho ou estado controlado | `{ component: "dialog", label, location }` |
-| `dialog_close` | fecha | `{ component: "dialog", label, location, reason }` |
+| `dialog_open` | abre por gatilho ou estado controlado | `{ component: "dialog", trigger_id, location }` |
+| `dialog_close` | fecha | `{ component: "dialog", trigger_id, location, reason }` |
 
 O Sheet emite os MESMOS eventos, com `component: "sheet"` — as duas peças
-respondem à mesma pergunta de produto, e separar as séries esconderia isso.
+respondem à mesma pergunta de produto, e separar as séries esconderia isso. Lá o
+campo continua sendo `label`, e de propósito: no Sheet ele carrega o LADO
+(`right`, `left`, `bottom`), que não é identificador de gatilho.
+
+**O campo passou de `label` a `trigger_id` em 2026-09-09**, por decisão da dona,
+e junto foi um defeito de dados que o nome escondia. No vanilla o payload mandava
+`label: opts.triggerLabel`, e `triggerLabel` vinha de
+`t('demonstration.labels.triggerLabel')`: **texto traduzido**, em cinco pontos —
+o mesmo evento virava três valores no GA4, um por idioma, e a série não juntava.
+
+O `i18n_text_in_payload` não pegava porque lê a chamada de tradução DENTRO do
+payload e é cego a indireção de uma variável; o ponto cego já estava documentado
+no `audit.mjs`, e este foi o caso que mostrou o que ele custa. A correção deu à
+factory um `demoId` estável por demo (`default`, `basic`, `destructive`,
+`with-form`, `do-dont-pair1-do`…) e um `actionId` para o `action_label`. Medida a
+extensão do mesmo defeito nas cinco stacks: 8 pontos, em 2 arquivos — este e o
+`CardDocs.tsx` do React, corrigido junto.
 
 ## 10. Reconstruir do zero
 

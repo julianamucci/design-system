@@ -99,7 +99,7 @@ hover-card**, é `link-preview` — o `hover-card-content.svelte` importa
 simetria com tooltip e popover produziria uma variável inexistente, e nada
 reprovaria.
 
-### D7 · Os eventos existem e o campo é `trigger_label`
+### D7 · Os eventos existem e o campo é `trigger_id`
 
 **Fixada em** 2026-09-06 (`30c62422d`), corrigida na prosa em 2026-09-07 (`41e155bc3`).
 **Medição**: a página anunciava `hover_card_open` e `hover_card_close` como
@@ -108,6 +108,17 @@ preview vivo disparava evento algum. O portão não via porque cobrava
 `analytics.table.*`, e este componente anuncia em PROSA.
 **Correção de payload junto**: o conteúdo pedia `label` como "texto do trigger", e
 texto traduzido parte o mesmo evento em um valor por idioma no GA4.
+
+**Renomeada em 2026-09-09**, por decisão da dona: o campo passou a se chamar
+`trigger_id`. O motivo é o próprio defeito que esta decisão consertou — `label`
+convidava a mandar o texto do gatilho, e o nome anterior guardava metade desse
+convite. `trigger_id` diz que é identificador, e não rótulo.
+
+A medição que pesou: o campo tinha TRÊS nomes para o mesmo papel — um aqui e no
+popover, `trigger_id` no tooltip (sozinho) e `label` nos quatro modais e no
+command. Os dois primeiros nasceram no MESMO commit (`fb2ba485d`, 2026-07-27), a
+fiação em massa de 125 arquivos: uma passagem só emitiu dois nomes para o mesmo
+campo, porque nada declarava um. Portão: `campo_gatilho_divergente`.
 
 ## 4. Anatomia
 
@@ -240,10 +251,10 @@ por isso que ele não pode guardar ação.
 
 | evento | quando | payload |
 |---|---|---|
-| `hover_card_open` | o cartão abre | `{ component: "hover-card", trigger_label, location }` |
-| `hover_card_close` | o cartão fecha | `{ component: "hover-card", trigger_label, location }` |
+| `hover_card_open` | o cartão abre | `{ component: "hover-card", trigger_id, location }` |
+| `hover_card_close` | o cartão fecha | `{ component: "hover-card", trigger_id, location }` |
 
-`trigger_label` é id estável em kebab-case, igual nas cinco, **nunca** o texto do
+`trigger_id` é id estável em kebab-case, igual nas cinco, **nunca** o texto do
 gatilho traduzido — ver D7. A espera de abertura serve de filtro contra hover de
 baixa intenção, então não há necessidade de filtrar de novo no consumidor.
 

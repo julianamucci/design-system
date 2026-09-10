@@ -113,7 +113,7 @@ const SWATCH_COLORS = [
 ];
 
 /**
- * Emissor único dos Popovers desta página — `location` e `trigger_label` saem
+ * Emissor único dos Popovers desta página — `location` e `trigger_id` saem
  * do CALL SITE.
  *
  * Constante no topo diria `docs_demo` para a página inteira, e o rótulo cravado
@@ -128,12 +128,12 @@ const SWATCH_COLORS = [
 type PopoverOpenChange = NonNullable<ComponentProps<typeof Popover>["onOpenChange"]>;
 
 const rastrearPopover =
-  (location: string, triggerLabel: string): PopoverOpenChange =>
+  (location: string, triggerId: string): PopoverOpenChange =>
   (open, evento) => {
     if (open) {
       track("popover_open", {
         component: "popover",
-        trigger_label: triggerLabel,
+        trigger_id: triggerId,
         location,
       });
       return;

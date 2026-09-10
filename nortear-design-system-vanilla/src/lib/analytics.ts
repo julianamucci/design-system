@@ -115,7 +115,7 @@ interface AnalyticsEvents {
   };
 
   navigation_click: {
-    component: 'breadcrumb' | 'navigation_menu' | 'sidebar';
+    component: 'breadcrumb' | 'navigation-menu' | 'sidebar';
     label: string;
     destination: string;
     location?: string;
@@ -143,6 +143,8 @@ interface AnalyticsEvents {
   dialog_open: {
     component: string;
     label?: string;
+    /** Id ESTÁVEL de quem abriu, nunca o texto do gatilho (ver guideline 07). */
+    trigger_id?: string;
     location?: string;
   };
 
@@ -150,6 +152,8 @@ interface AnalyticsEvents {
   dialog_close: {
     component: string;
     label?: string;
+    /** Id ESTÁVEL de quem abriu, nunca o texto do gatilho (ver guideline 07). */
+    trigger_id?: string;
     reason: 'escape' | 'overlay' | 'close-button' | 'action';
     location?: string;
   };
@@ -272,7 +276,7 @@ interface AnalyticsEvents {
 
   /** Disparado ao abrir um ContextMenu via right-click. */
   menu_open: {
-    component: 'context_menu';
+    component: 'context-menu';
     location?: string;
     menu?: string;
   };
@@ -314,7 +318,7 @@ interface AnalyticsEvents {
   /** Disparado quando o usuário confirma a ação primária de um Dialog/Sheet/Drawer. */
   dialog_confirm: {
     component: string;
-    trigger_label?: string;
+    trigger_id?: string;
     action?: string;
     label?: string;
     location?: string;
@@ -323,7 +327,7 @@ interface AnalyticsEvents {
   /** Disparado quando o usuário muda de página em Pagination. */
   page_change: {
     component?: string;
-    trigger_label?: string;
+    trigger_id?: string;
     page?: number;
     total_pages?: number;
     location?: string;
@@ -354,20 +358,20 @@ interface AnalyticsEvents {
   /** Disparado quando um Popover abre. */
   popover_open: {
     component: string;
-    trigger_label?: string;
+    trigger_id?: string;
     location?: string;
   };
 
   /**
    * Disparado quando um HoverCard abre.
    *
-   * `trigger_label` é id ESTÁVEL do gatilho, nunca o texto dele: o conteúdo
+   * `trigger_id` é id ESTÁVEL do gatilho, nunca o texto dele: o conteúdo
    * compartilhado documentava `label` com "texto do trigger", e texto traduzido
    * parte o mesmo evento em um valor por idioma no GA4.
    */
   hover_card_open: {
     component: string;
-    trigger_label?: string;
+    trigger_id?: string;
     location?: string;
   };
 

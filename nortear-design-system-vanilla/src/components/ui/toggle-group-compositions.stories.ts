@@ -70,7 +70,7 @@ export const AlignmentBar: Story = {
       defaultValue: 'left',
       'aria-label': 'Alinhamento do texto',
       onValueChange: (value) => {
-        // Em produção, dispara analytics.track('field_change', { component: 'toggle_group', ... })
+        // Em produção, dispara analytics.track('field_change', { component: 'toggle-group', ... })
         console.log('alignment:', value);
       },
     });

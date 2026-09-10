@@ -242,7 +242,7 @@ interface RadioGroupItemProps {
         <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.groupLabel')}</p>
         <RadioGroup
           bind:value={paymentValue}
-          onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'payment', value: v, location: 'docs_demo' })}
+          onValueChange={(v: string) => track('radio_change', { component: 'radio-group', name: 'payment', value: v, location: 'docs_demo' })}
           aria-label={$tStore('demonstration.labels.groupLabel')}
           data-track="demo"
           data-track-id="radio-group:demo:payment"
@@ -268,7 +268,7 @@ interface RadioGroupItemProps {
         <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.deliveryLabel')}</p>
         <RadioGroup
           bind:value={deliveryValue}
-          onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'delivery', value: v, location: 'docs_demo' })}
+          onValueChange={(v: string) => track('radio_change', { component: 'radio-group', name: 'delivery', value: v, location: 'docs_demo' })}
           orientation="horizontal"
           aria-label={$tStore('demonstration.labels.deliveryLabel')}
           data-track="demo"
@@ -295,7 +295,7 @@ interface RadioGroupItemProps {
         <p class="nds-text-body nds-font-semibold">{$tStore('demonstration.labels.deliveryLabel')}</p>
         <RadioGroup
           bind:value={descValue}
-          onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'delivery_desc', value: v, location: 'docs_demo' })}
+          onValueChange={(v: string) => track('radio_change', { component: 'radio-group', name: 'delivery_desc', value: v, location: 'docs_demo' })}
           aria-label={$tStore('demonstration.labels.deliveryLabel')}
           data-track="demo"
           data-track-id="radio-group:demo:delivery-desc"

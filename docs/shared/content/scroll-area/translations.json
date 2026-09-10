@@ -322,7 +322,7 @@
         "payload": "Payload",
         "content_scroll": {
           "trigger": "Conteúdo interno entra no viewport (via IntersectionObserver)",
-          "payload": "{ component: \"scroll_area\", target_id, percent_visible, location }"
+          "payload": "{ component: \"scroll-area\", target_id, percent_visible, location }"
         }
       }
     },
@@ -727,7 +727,7 @@
         "payload": "Payload",
         "content_scroll": {
           "trigger": "Internal content enters viewport (via IntersectionObserver)",
-          "payload": "{ component: \"scroll_area\", target_id, percent_visible, location }"
+          "payload": "{ component: \"scroll-area\", target_id, percent_visible, location }"
         }
       }
     },
@@ -1132,7 +1132,7 @@
         "payload": "Payload",
         "content_scroll": {
           "trigger": "El contenido interno entra en el viewport (vía IntersectionObserver)",
-          "payload": "{ component: \"scroll_area\", target_id, percent_visible, location }"
+          "payload": "{ component: \"scroll-area\", target_id, percent_visible, location }"
         }
       }
     },

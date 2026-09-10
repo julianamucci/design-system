@@ -142,13 +142,13 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 // ─── Analytics dos previews vivos ─────────────────────────────────────────────
 //
 // Todo preview vivo desta página é o produto consumindo o próprio componente.
-// `trigger_label` carrega id ESTÁVEL, nunca o texto do gatilho: traduzido, o
+// `trigger_id` carrega id ESTÁVEL, nunca o texto do gatilho: traduzido, o
 // mesmo evento chegaria ao GA4 partido em três.
 function trackHoverCard(open: boolean, triggerId: string, location: string): void {
   if (open) {
     track('hover_card_open', {
       component: 'hover-card',
-      trigger_label: triggerId,
+      trigger_id: triggerId,
       location,
     });
   } else {

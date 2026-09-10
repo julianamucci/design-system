@@ -160,7 +160,7 @@ function buildDemoMenu(): HTMLElement {
     ],
     onOpenChange: (open) => {
       if (open) {
-        track('menu_open', { component: 'context_menu', location: 'docs_demo', menu: 'demo' });
+        track('menu_open', { component: 'context-menu', location: 'docs_demo', menu: 'demo' });
       }
     },
   });
@@ -243,7 +243,7 @@ export function createContextMenuDocs(): HTMLElement {
       componentSlug: 'context-menu',
     });
     track('docs_page_view', {
-      component_name: 'context_menu',
+      component_name: 'context-menu',
       locale,
       page_title: `${t('title')} · Design System`,
     });
@@ -1009,7 +1009,7 @@ export type ContextMenuOptions = {
       (id) => updateActiveNav(id),
       (id) => track('docs_section_viewed', {
         section_id: id,
-        component_name: 'context_menu',
+        component_name: 'context-menu',
         locale: getLocale(),
       }),
     );

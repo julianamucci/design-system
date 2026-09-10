@@ -244,7 +244,7 @@ interface RadioGroupItemProps {
               value={paymentValue}
               onValueChange={(value: string) => {
                 track("radio_change", {
-                  component: "radio_group",
+                  component: "radio-group",
                   name: "payment_method",
                   value,
                   previous_value: paymentValue || undefined,
@@ -284,7 +284,7 @@ interface RadioGroupItemProps {
               value={deliveryValue}
               onValueChange={(value: string) => {
                 track("radio_change", {
-                  component: "radio_group",
+                  component: "radio-group",
                   name: "delivery_method",
                   value,
                   previous_value: deliveryValue || undefined,

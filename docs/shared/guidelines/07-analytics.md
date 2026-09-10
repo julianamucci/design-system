@@ -47,6 +47,21 @@ Este arquivo define o sistema de eventos de analytics para os componentes do des
 - Sem abreviações: `navigation` e não `nav`, `dropdown` e não `dd`
 - Máximo 3 palavras: `form_field_error` é o limite
 
+> **Esta seção é sobre o NOME DO EVENTO, não sobre o valor do campo `component`.**
+> A distinção parece pedante e custou uma divergência de cinco meses: o nome do
+> evento é `alert_dialog_confirm`, em snake, e o **valor** de `component` é
+> `alert-dialog`, em kebab. Quem lesse "nunca kebab-case" como regra de payload
+> escreveria a grafia com underscore, que foi o que aconteceu.
+>
+> O valor segue o SLUG, e o slug desta casa é kebab: 42 diretórios em
+> `docs/shared/content/` com hífen, zero com underscore. E o caminho automático
+> não tem escolha — `deriveSlugFromUrl` corta `ui-alert-dialog--docs` e devolve
+> `alert-dialog`, então todo evento `docs_*` já emitia kebab enquanto os eventos
+> de produto emitiam snake. Medido em 2026-09-09: o `AlertDialogDocs.ts` do
+> vanilla mandava `component_name: 'alert-dialog'` na linha 145 e a grafia com
+> underscore na 90 — o mesmo componente, duas séries que não juntam no GA4.
+> Portão: `component_nao_kebab`.
+
 ---
 
 ## Estrutura do Payload
@@ -57,7 +72,7 @@ Todo evento deve enviar um payload com duas camadas: propriedades globais (prese
 
 ```typescript
 interface AnalyticsBasePayload {
-  component: string      // Nome do componente em snake_case. Ex: "button", "dialog", "select"
+  component: string      // Slug do componente em kebab-case. Ex: "button", "dialog", "alert-dialog"
   variant?: string       // Variante ativa no momento do evento. Ex: "default", "outline", "destructive"
   location: string       // Identificador da página ou seção onde o componente está. Ex: "header", "checkout_form"
 }
@@ -325,7 +340,7 @@ track("docs_section_viewed", {
 
 // language_switched — no LanguageSwitcher ao trocar locale
 track("language_switched", {
-  component: "language_switcher",
+  component: "language-switcher",
   location: "docs_header",
   previous_language: prevLocale,
   new_language: nextLocale,

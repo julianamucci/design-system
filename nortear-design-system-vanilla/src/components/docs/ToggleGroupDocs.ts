@@ -155,7 +155,7 @@ function buildToggleGroupDemo(opts: {
     onValueChange: (value) => {
       const flat = Array.isArray(value) ? value.join(',') : value;
       track('field_change', {
-        component: 'toggle_group',
+        component: 'toggle-group',
         field_name: opts.fieldName,
         value: flat,
         location: opts.location ?? 'docs_demo',

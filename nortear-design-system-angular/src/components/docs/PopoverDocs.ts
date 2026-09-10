@@ -813,7 +813,7 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
     if (evento.open) {
       track('popover_open', {
         component: 'popover',
-        trigger_label: qual,
+        trigger_id: qual,
         location: secao,
       });
       return;

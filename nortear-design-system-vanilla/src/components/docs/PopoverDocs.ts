@@ -82,7 +82,7 @@ function priorityLabel(raw: string): string {
 function trackPopoverOpenChange(triggerId: string, location: string): (open: boolean) => void {
   return (open) => {
     if (open) {
-      track('popover_open', { component: 'popover', trigger_label: triggerId, location });
+      track('popover_open', { component: 'popover', trigger_id: triggerId, location });
     } else {
       track('popover_close', { component: 'popover', location });
     }

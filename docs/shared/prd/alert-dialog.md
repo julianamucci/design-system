@@ -257,7 +257,7 @@ o botão focado; Escape fecha sem executar a ação.
 
 | evento | quando | payload |
 |---|---|---|
-| `dialog_open` | o diálogo abre | `{ component: "alert_dialog", label, location }` |
+| `dialog_open` | o diálogo abre | `{ component: "alert-dialog", label, location }` |
 | `dialog_confirm` | a ação é executada | idem |
 | `dialog_close` | fecha sem executar | idem, com o motivo |
 

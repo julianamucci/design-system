@@ -241,7 +241,7 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 function handleDemoMenuOpenChange(open: boolean) {
   if (!open) return;
   track('menu_open', {
-    component: 'context_menu',
+    component: 'context-menu',
     location: 'docs_demo',
     menu: 'demo',
   });

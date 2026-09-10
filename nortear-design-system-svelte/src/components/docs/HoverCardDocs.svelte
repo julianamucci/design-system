@@ -114,12 +114,12 @@
 
   // ─── Analytics ───────────────────────────────────────────────────────────────
   //
-  // Todo preview VIVO desta página dispara abertura e fechamento. `trigger_label`
+  // Todo preview VIVO desta página dispara abertura e fechamento. `trigger_id`
   // carrega um id estável (`user-profile`, `link-preview`…), nunca o texto do
   // gatilho: o texto é traduzido, e mandá-lo partiria um evento em três no GA4.
-  function trackHoverCard(open: boolean, triggerLabel: string, location: string) {
+  function trackHoverCard(open: boolean, triggerId: string, location: string) {
     if (open) {
-      track('hover_card_open', { component: 'hover-card', trigger_label: triggerLabel, location });
+      track('hover_card_open', { component: 'hover-card', trigger_id: triggerId, location });
     } else {
       track('hover_card_close', { component: 'hover-card', location });
     }
@@ -845,7 +845,7 @@ interface HoverCardContentProps {
       payload: 'Payload',
     }}
     items={[
-      { event: 'hover_card_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'hover-card', trigger_label, location }" },
+      { event: 'hover_card_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'hover-card', trigger_id, location }" },
       { event: 'hover_card_close', trigger: 'onOpenChange(false)', payload: "{ component: 'hover-card', location }" },
       { event: '—',                trigger: stripHtml($tStore('analytics.description')), payload: '—' },
     ]}

@@ -57,6 +57,18 @@ function priorityLabel(raw: string): string {
 type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_do_dont';
 
 type DialogDemoOptions = {
+  /**
+   * Id ESTÁVEL desta demo, para o payload — nunca o texto do gatilho.
+   *
+   * Existe porque `triggerLabel` e `actionLabel` vêm de `t(...)` e iam direto
+   * para `dialog_open`, `dialog_close` e `dialog_action`: o mesmo evento virava
+   * três valores no GA4, um por idioma, e a série não juntava. O
+   * `i18n_text_in_payload` não pegava — ele lê a chamada de tradução DENTRO do
+   * payload e é cego a `label: opts.triggerLabel`, que é indireção.
+   */
+  demoId: string;
+  /** Id estável da ação primária (`save`, `delete`, `ok`), para `action_label`. */
+  actionId: string;
   triggerLabel: string;
   triggerVariant?: 'default' | 'outline' | 'destructive';
   title: string;
@@ -88,7 +100,7 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
     onClick: () => {
       track('dialog_action', {
         component: 'dialog',
-        action_label: opts.actionLabel,
+        action_label: opts.actionId,
         location: opts.location,
       });
     },
@@ -119,7 +131,7 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
       if (open) {
         track('dialog_open', {
           component: 'dialog',
-          label: opts.triggerLabel,
+          trigger_id: opts.demoId,
           location: opts.location,
         });
       }
@@ -127,7 +139,7 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
     onClose: (reason) => {
       track('dialog_close', {
         component: 'dialog',
-        label: opts.triggerLabel,
+        trigger_id: opts.demoId,
         reason,
         location: opts.location,
       });
@@ -196,7 +208,7 @@ function buildDialogFormDemo(location: DocsLocation): HTMLElement {
       label: actionLabel,
       type: 'submit',
       onClick: () => {
-        track('dialog_action', { component: 'dialog', action_label: actionLabel, location });
+        track('dialog_action', { component: 'dialog', action_label: 'save', location });
       },
     }),
   );
@@ -209,11 +221,11 @@ function buildDialogFormDemo(location: DocsLocation): HTMLElement {
     content: form,
     onOpenChange: (open) => {
       if (open) {
-        track('dialog_open', { component: 'dialog', label: triggerLabel, location });
+        track('dialog_open', { component: 'dialog', trigger_id: 'with-form', location });
       }
     },
     onClose: (reason) => {
-      track('dialog_close', { component: 'dialog', label: triggerLabel, reason, location });
+      track('dialog_close', { component: 'dialog', trigger_id: 'with-form', reason, location });
     },
   });
 }
@@ -323,6 +335,8 @@ export function createDialogDocs(): HTMLElement {
             wrap.style.flexWrap = 'wrap';
             wrap.append(
               buildDialogDemo({
+                demoId: 'default',
+                actionId: 'save',
                 location: 'docs_demo',
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 title: t('demonstration.labels.title'),
@@ -399,6 +413,8 @@ export function createDialogDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: stripHtml(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildDialogDemo({
+                demoId: 'do-dont-pair1-do',
+                actionId: 'save',
                 location: 'docs_do_dont',
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 title: t('demonstration.labels.title'),
@@ -408,6 +424,8 @@ export function createDialogDocs(): HTMLElement {
                 bodyText: 'Os campos estariam aqui em uma aplicação real.',
               }),
               dontPreviewFactory: () => buildDialogDemo({
+                demoId: 'do-dont-pair1-dont',
+                actionId: 'ok',
                 location: 'docs_do_dont',
                 triggerLabel: t('demonstration.labels.vagueTitle'),
                 title: t('demonstration.labels.vagueTitle'),
@@ -423,6 +441,8 @@ export function createDialogDocs(): HTMLElement {
               doCaption: stripHtml(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildDialogDemo({
+                demoId: 'do-dont-pair2-do',
+                actionId: 'save',
                 location: 'docs_do_dont',
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 title: t('demonstration.labels.title'),
@@ -432,6 +452,8 @@ export function createDialogDocs(): HTMLElement {
                 bodyText: '',
               }),
               dontPreviewFactory: () => buildDialogDemo({
+                demoId: 'do-dont-pair2-dont',
+                actionId: 'delete',
                 location: 'docs_do_dont',
                 triggerLabel: t('demonstration.labels.destructiveTitle'),
                 triggerVariant: 'destructive',
@@ -585,6 +607,8 @@ createDialog({
               description: t('variants.items.default'),
               code: codeDefault,
               previewFactory: () => buildDialogDemo({
+                demoId: 'basic',
+                actionId: 'save',
                 location: 'docs_variantes',
                 triggerLabel: t('demonstration.labels.triggerLabel'),
                 title: t('demonstration.labels.title'),
@@ -667,6 +691,8 @@ createDialog({
               description: stripHtml(t('variants.items.withDestructiveAction')),
               code: codeDestructive,
               previewFactory: () => buildDialogDemo({
+                demoId: 'destructive',
+                actionId: 'remove',
                 location: 'docs_variantes',
                 triggerLabel: t('demonstration.labels.removeItemAction'),
                 title: t('demonstration.labels.removeItemTitle'),
@@ -704,6 +730,8 @@ createDialog({
                   }
                 });
                 return buildDialogDemo({
+                demoId: 'scroll-content',
+                actionId: 'continue',
                   location: 'docs_variantes',
                   // Do conteúdo compartilhado, como na story: literal aqui ficava
                   // em português nas três versões da página, e as outras stacks
@@ -743,6 +771,8 @@ createDialog({
   footer: [cancelar, enviar],
 });`,
               previewFactory: () => buildDialogDemo({
+                demoId: 'confirm-email',
+                actionId: 'confirm-email',
                 location: 'docs_variantes',
                 triggerLabel: t('demonstration.labels.confirmEmailAction'),
                 triggerVariant: 'default',
