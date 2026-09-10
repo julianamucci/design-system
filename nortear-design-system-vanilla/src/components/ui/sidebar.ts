@@ -349,7 +349,30 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     root.dataset.slot = 'sidebar';
   }
 
+  /**
+   * O atalho só vale para uma barra que ESTÁ na página.
+   *
+   * O ouvinte vive em `document`, e há uma janela em que ele existe sem a barra
+   * existir: `tornarDestruivel` dá 600ms de graça a uma raiz recém-criada antes
+   * de recolhê-la, justamente para não desmontar quem abre o painel no mesmo
+   * tique da criação. Dentro dessa janela, uma instância criada e descartada
+   * continuava respondendo ao Ctrl+B — e, no ponto de virada estreito,
+   * `alternar()` chama `openGaveta()`, que **pendura overlay e gaveta no
+   * `document.body`**. O resultado é um diálogo modal na tela sem barra
+   * nenhuma por trás, e sem dono para fechá-lo.
+   *
+   * Medido em 2026-09-10, pela `ListenerCleanup`: no instante da bateria de
+   * eventos o documento tinha `raizes=0 gavetas=0`, e logo depois dela
+   * `gavetas=1`. A raiz que montou aquela gaveta não estava no documento.
+   *
+   * `isConnected` e não uma bandeira própria: enquanto a gaveta está aberta a
+   * raiz continua conectada — é o painel que vive no `body`, e o conteúdo volta
+   * para a coluna ao fechar —, então a mesma leitura serve para os dois estados
+   * sem caso especial. É também a mesma pergunta que `varrer()` faz para
+   * decidir a limpeza, o que mantém as duas com um critério só.
+   */
   function handleKeydown(e: KeyboardEvent) {
+    if (!root.isConnected) return;
     if (e.key === SIDEBAR_KEYBOARD_SHORTCUT && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       alternar();
