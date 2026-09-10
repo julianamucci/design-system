@@ -1105,7 +1105,12 @@ function auditAnalyticsPayloads() {
       if (!content) continue;
 
       for (const { payload, line, event } of extractTrackPayloads(content)) {
-        let p = payload;
+        // Comentário fora antes de procurar tradução: o payload do CardDocs do
+        // react explica, num comentário, por que NÃO usa `tContent(...)` — e a
+        // regra reprovava a explicação. Só comentário de bloco e de linha
+        // INTEIRA: `//` no meio da linha pode ser `https://` dentro de string, e
+        // cortar dali até o fim esconderia uma tradução real que viesse depois.
+        let p = payload.replace(/\/\*[\s\S]*?\*\//g, '').replace(/^[ \t]*\/\/[^\n]*$/gm, '');
         for (const key of PAYLOAD_EXEMPT_KEYS) {
           p = p.replace(new RegExp(`${key}\\s*:[^,}]*(,|)`, 'g'), '');
         }
