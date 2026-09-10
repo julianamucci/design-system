@@ -26,13 +26,13 @@ O que só existe aqui: o **gesto**. Arrastar o painel para fora da tela o dispen
 
 | # | o contrato | portão |
 |---|---|---|
-| C1 | O título é obrigatório e vincula `aria-labelledby` automaticamente | `accessibility.item1` |
-| C2 | A descrição é opcional; quando existe, vincula `aria-describedby` | `accessibility.item2` |
-| C3 | O foco fica preso: Tab e Shift+Tab circulam dentro do painel | `accessibility.item3` |
-| C4 | `Escape` fecha quando `dismissible` | `accessibility.item4` |
-| C5 | O arraste dispensa o painel, e é EXTRA de ponteiro — nunca o único caminho | `accessibility.item5` |
-| C6 | Painel e véu param de animar sob `prefers-reduced-motion` | `accessibility.item6` |
-| C7 | O corpo rolável entra na ordem de tabulação e recebe `role="group"` quando nomeado | `accessibility.item7` |
+| C1 | O título é obrigatório e vincula `aria-labelledby` automaticamente | `accessibility.items.item1` |
+| C2 | A descrição é opcional; quando existe, vincula `aria-describedby` | `accessibility.items.item2` |
+| C3 | O foco fica preso: Tab e Shift+Tab circulam dentro do painel | `accessibility.items.item3` |
+| C4 | `Escape` fecha quando `dismissible` | `accessibility.items.item4` |
+| C5 | O arraste dispensa o painel, e é EXTRA de ponteiro — nunca o único caminho | `accessibility.items.item5` |
+| C6 | Painel e véu param de animar sob `prefers-reduced-motion` | `accessibility.items.item6` |
+| C7 | O corpo rolável entra na ordem de tabulação e recebe `role="group"` quando nomeado | `accessibility.items.item7` |
 | C8 | O rodapé põe o primário à direita no horizontal e em cima no empilhamento | `04-padroes-design-sistema.md` §Alinhamento de Grupos de Botões |
 | C9 | Painel com `<form>` tem como submeter: botão de submissão dentro, ou `form="<id>"` fora | `6c1ce87c0` — sem portão automático |
 
@@ -220,7 +220,7 @@ Fonte: `docs/shared/styles/nds/drawer.css`.
 
 | propriedade | valor | token |
 |---|---|---|
-| superfície | — | `--background` |
+| superfície | — | `--background` — três dos quatro painéis modais leem isto; ver `dialog.md` D1 |
 | texto | — | `--foreground` |
 | tamanho de texto do painel | 14px | `--text-control` |
 | borda (só do lado de dentro) | 1px | `--border` |
@@ -304,8 +304,22 @@ jeito** — medido na fonte de cada lib, não na documentação delas:
 As cinco aceitam qualquer nível desde 2026-09-08, e chegaram lá por caminhos
 diferentes. O Angular oferecia só `h2` e `h3` e ganhou os seis por decisão da
 dona; o vanilla não oferecia nenhum — `createElement('h2')` cravado — e ganhou
-`titleLevel`, na mesma forma que `createPopoverTitle` e `createCardTitle` já
-tinham.
+`titleLevel`.
+
+**O nome da opção é relativo ao ESCOPO da fábrica, e isso NÃO é divergência** —
+já foi relatado como tal três vezes. Fábrica que monta só o título usa `level`
+(`createPopoverTitle`, `createCardTitle`); fábrica que monta o componente
+inteiro usa `titleLevel` (`createDialog`, `createSheet`, `createDrawer`,
+`createAlertDialog`), porque `createCardTitle({ titleLevel })` leria "title
+title level". A regra vale fora do vanilla: no Svelte o wrapper de story usa
+`titleLevel` e o snippet emite `level`, que é a prop do bits.
+
+**O DEFAULT, esse era divergência, e fechou em 2026-09-09**: o
+`createPopoverTitle` defaultava `h4` e passou a `2`, alinhando com estas quatro
+fábricas e com o que as outras stacks anunciavam. O `createCardTitle` não tem
+default de nível — sem `level` ele monta `div`, igual a react, vue e svelte no
+card. Citar as duas como precedente de FORMA, que era o que esta linha fazia,
+dizia menos do que parecia: o precedente é do nome, nunca do valor.
 
 **A linha do svelte estava ERRADA até 2026-09-09, e foi a story que a corrigiu**:
 `level` sozinho não troca a tag. O título daquela lib renderiza
@@ -347,6 +361,11 @@ ligando `aria-describedby`.
   de tela ele não existe;
 - animação própria acrescentada por quem consome precisa parar sob
   `prefers-reduced-motion`: o painel e o véu já param, o extra não.
+
+**Movimento reduzido** — o C6 afirma que painel e véu param, e é verdade. Quem o para é a camada de TOKEN: a folha
+declara duração só por `var(--duration-*)`, e `docs/shared/tokens/motion.css`
+zera a escada inteira sob a preferência. O mecanismo está por extenso em
+`hover-card.md` §8.
 
 ## 9. Analytics
 

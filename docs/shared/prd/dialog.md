@@ -38,12 +38,35 @@ reusa as keyframes `nds-dialog-fade-in` / `-fade-out` declaradas aqui.
 
 ## 3. Decisões fixadas
 
-### D1 · A superfície é `--popover`, e as três folhas modais não concordam
+### D1 · A superfície é `--popover`, e o Dialog está sozinho entre QUATRO painéis modais
 
 **Estado**: painel em `--popover` / `--popover-foreground`.
-**Medição registrada** na guideline de overlay: `dialog.css` lê `--popover`,
-enquanto `alert-dialog.css` e `sheet.css` leem `--background`. **Nenhuma** lê
-`--card`, que é o que a guideline pedia antes.
+
+**Medição de 2026-09-09**, lendo a declaração de cada folha:
+
+| folha | superfície do painel |
+|---|---|
+| `dialog.css` | `--popover` |
+| `sheet.css` | `--background` |
+| `alert-dialog.css` | `--background` |
+| `drawer.css` | `--background` |
+
+São **quatro**, e o Dialog é o único fora do consenso. **Nenhuma** lê `--card`.
+
+**Esta contagem já esteve errada aqui, e o modo de errar é o que importa**: a
+linha dizia "as três folhas modais" e ficou de pé depois de o Drawer entrar na
+categoria, porque contava os VIZINHOS — e afirmação sobre o que os outros fazem
+não passa por este arquivo quando um deles muda. É a mesma lição que a D8 do
+`alert-dialog.md` escreveu sobre o desfoque, uma seção antes de esta contagem
+apodrecer do mesmo jeito. A defesa aqui é a tabela: ela nomeia as quatro, então
+uma quinta folha modal que apareça não cabe sem ser escrita.
+
+**O registro é ESTE arquivo, não a guideline.** As versões anteriores desta
+linha e da D7 do `alert-dialog.md` apontavam para "a guideline de overlay" sem
+dizer qual das cinco, e as cinco discordam: em 2026-09-09, quatro delas ainda
+afirmam `--card` para os painéis, que nenhuma folha lê. Ponteiro para fonte que
+se contradiz não é lastro.
+
 **Enquanto a divergência existir**, o que vale é a regra estrutural: a classe do
 painel resolve a superfície, e ninguém pinta fundo por fora.
 **Esta é a decisão mais provável de mudar na revisão** — ela está aberta, não
@@ -334,8 +357,22 @@ jeito** — medido na fonte de cada lib, não na documentação delas:
 As cinco aceitam qualquer nível desde 2026-09-08, e chegaram lá por caminhos
 diferentes. O Angular oferecia só `h2` e `h3` e ganhou os seis por decisão da
 dona; o vanilla não oferecia nenhum — `createElement('h2')` cravado — e ganhou
-`titleLevel`, na mesma forma que `createPopoverTitle` e `createCardTitle` já
-tinham.
+`titleLevel`.
+
+**O nome da opção é relativo ao ESCOPO da fábrica, e isso NÃO é divergência** —
+já foi relatado como tal três vezes. Fábrica que monta só o título usa `level`
+(`createPopoverTitle`, `createCardTitle`); fábrica que monta o componente
+inteiro usa `titleLevel` (`createDialog`, `createSheet`, `createDrawer`,
+`createAlertDialog`), porque `createCardTitle({ titleLevel })` leria "title
+title level". A regra vale fora do vanilla: no Svelte o wrapper de story usa
+`titleLevel` e o snippet emite `level`, que é a prop do bits.
+
+**O DEFAULT, esse era divergência, e fechou em 2026-09-09**: o
+`createPopoverTitle` defaultava `h4` e passou a `2`, alinhando com estas quatro
+fábricas e com o que as outras stacks anunciavam. O `createCardTitle` não tem
+default de nível — sem `level` ele monta `div`, igual a react, vue e svelte no
+card. Citar as duas como precedente de FORMA, que era o que esta linha fazia,
+dizia menos do que parecia: o precedente é do nome, nunca do valor.
 
 **A linha do svelte estava ERRADA até 2026-09-09, e foi a story que a corrigiu**:
 `level` sozinho não troca a tag. O título daquela lib renderiza
@@ -373,6 +410,11 @@ ação do rodapé; ao fechar, o foco volta ao gatilho.
 - não se dispara ação do rodapé no Escape nem no clique do véu — fechar não é
   confirmar;
 - não se deixa o corpo rolável sem o trio de atributos (D7).
+
+**Movimento reduzido** — a §5 e a §6 dizem que a entrada e a saída somem, e é verdade. Quem o para é a camada de TOKEN: a folha
+declara duração só por `var(--duration-*)`, e `docs/shared/tokens/motion.css`
+zera a escada inteira sob a preferência. O mecanismo está por extenso em
+`hover-card.md` §8.
 
 ## 9. Analytics
 

@@ -381,7 +381,9 @@ const noteItems = computed(() => [
 ]);
 
 const analyticsItems = computed(() => [
-  { event: 'hover_card_open / hover_card_close', trigger: stripHtml(tContent('analytics.description')), payload: "{ component: 'hover-card', location, label }" },
+  { event: 'hover_card_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'hover-card', trigger_id, location }" },
+  { event: 'hover_card_close', trigger: 'onOpenChange(false)', payload: "{ component: 'hover-card', location }" },
+  { event: '—',                trigger: stripHtml(tContent('analytics.description')), payload: '—' },
 ]);
 
 const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6].map((i) => ({

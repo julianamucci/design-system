@@ -306,6 +306,12 @@ fecha e devolve o foco ao gatilho. Enter e Espaço ativam o gatilho.
 - não se usa região viva: o painel não é anúncio, ele é alcançado;
 - não se prende o foco por padrão — ver D1.
 
+**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
+para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
+`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
+mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
+segura, está por extenso em `hover-card.md` §8.
+
 ## 9. Analytics
 
 | evento | quando | payload |

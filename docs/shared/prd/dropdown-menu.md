@@ -285,9 +285,41 @@ e segue a página (C2).
 - não se prende o foco: menu não é diálogo (D1);
 - não se anima a saída, para não deixar focus-guard visível ao axe (D5).
 
+**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
+para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
+`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
+mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
+segura, está por extenso em `hover-card.md` §8.
+
 ## 9. Analytics
 
-Payload com valores estáveis, nunca texto localizado (D10).
+Cinco eventos, disparados pelas cinco stacks. Os três primeiros são do menu; os
+dois últimos são do ContextMenu, que mora aqui por D9.
+
+| evento | quando | payload |
+|---|---|---|
+| `dropdown_menu_open` | o menu abre | `{ component: "dropdown-menu", label, location }` |
+| `dropdown_menu_close` | o menu fecha | idem |
+| `dropdown_menu_item_select` | item escolhido | `{ component: "dropdown-menu", label, menu, location }` |
+| `menu_open` | o ContextMenu abre pelo botão direito | `{ component: "context-menu", menu?, location }` |
+| `menu_item_click` | item do ContextMenu escolhido | `{ label, menu, location }` |
+
+**`label` é o VALOR, nunca o rótulo visível** (D10). Na demonstração o item que
+mostra "Configurações" emite `configuracoes`, e o menu inteiro se chama `acoes` —
+é `label` no evento de item e `menu` no de contexto, os dois estáveis. Traduzido,
+o mesmo item viraria três valores no GA4 e a série não juntaria.
+
+Duas assimetrias medidas em 2026-09-09, e ficam registradas porque são
+observáveis e ninguém as decidiu:
+
+- os eventos do ContextMenu se chamam `menu_*`, não `context_menu_*`, enquanto o
+  `component` deles diz `context-menu`. O nome do evento e o valor do campo
+  descrevem a mesma peça com dois vocabulários;
+- `menu_item_click` é o único dos cinco **sem `component`**, então ele não se
+  identifica no payload como os outros quatro fazem.
+
+O **Menubar** não dispara nada. Ele veste esta folha por D9, e nenhum evento
+`menubar_*` existe no tipo — ausência declarada, não esquecimento a preencher.
 
 ## 10. Reconstruir do zero
 

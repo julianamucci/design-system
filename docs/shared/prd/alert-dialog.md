@@ -98,12 +98,17 @@ compõe não precisa lembrar de marcar o cabeçalho.
 
 ### D7 · A superfície é `--background`, e a família não concorda
 
-**Estado**: `--background` / `--foreground` — igual ao Sheet, diferente do Dialog,
-que lê `--popover`.
-**Registrado como pendência** na guideline de overlay: as três folhas de painel
-modal não concordam entre si, e nenhuma lê `--card`, que é o que a guideline pedia
-antes. Enquanto durar, o que vale é a regra estrutural — a classe do painel
-resolve a superfície, e ninguém pinta fundo por fora.
+**Estado**: `--background` / `--foreground` — igual ao Sheet e ao Drawer,
+diferente do Dialog, que lê `--popover`.
+
+**A divergência é de QUATRO folhas, e o registro dela é a D1 do `dialog.md`**,
+onde a tabela nomeia as quatro. Esta linha dizia "as três folhas" e contava sem
+o Drawer; a contagem foi corrigida em 2026-09-09. Aqui fica só o lado deste
+componente — três dos quatro concordam, e o Dialog é o que destoa —, porque
+manter a medição inteira em dois arquivos é ter duas cópias para envelhecer.
+
+Enquanto durar, o que vale é a regra estrutural: a classe do painel resolve a
+superfície, e ninguém pinta fundo por fora.
 
 ### D8 · O véu não desfoca
 
@@ -213,8 +218,22 @@ jeito** — medido na fonte de cada lib, não na documentação delas:
 As cinco aceitam qualquer nível desde 2026-09-08, e chegaram lá por caminhos
 diferentes. O Angular oferecia só `h2` e `h3` e ganhou os seis por decisão da
 dona; o vanilla não oferecia nenhum — `createElement('h2')` cravado — e ganhou
-`titleLevel`, na mesma forma que `createPopoverTitle` e `createCardTitle` já
-tinham.
+`titleLevel`.
+
+**O nome da opção é relativo ao ESCOPO da fábrica, e isso NÃO é divergência** —
+já foi relatado como tal três vezes. Fábrica que monta só o título usa `level`
+(`createPopoverTitle`, `createCardTitle`); fábrica que monta o componente
+inteiro usa `titleLevel` (`createDialog`, `createSheet`, `createDrawer`,
+`createAlertDialog`), porque `createCardTitle({ titleLevel })` leria "title
+title level". A regra vale fora do vanilla: no Svelte o wrapper de story usa
+`titleLevel` e o snippet emite `level`, que é a prop do bits.
+
+**O DEFAULT, esse era divergência, e fechou em 2026-09-09**: o
+`createPopoverTitle` defaultava `h4` e passou a `2`, alinhando com estas quatro
+fábricas e com o que as outras stacks anunciavam. O `createCardTitle` não tem
+default de nível — sem `level` ele monta `div`, igual a react, vue e svelte no
+card. Citar as duas como precedente de FORMA, que era o que esta linha fazia,
+dizia menos do que parecia: o precedente é do nome, nunca do valor.
 
 **A linha do svelte estava ERRADA até 2026-09-09, e foi a story que a corrigiu**:
 `level` sozinho não troca a tag. O título daquela lib renderiza
@@ -252,6 +271,12 @@ o botão focado; Escape fecha sem executar a ação.
 - não se fecha por clique no véu (D1);
 - não se põe um X no canto (D2);
 - não se dá foco inicial à ação (D3).
+
+**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
+para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
+`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
+mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
+segura, está por extenso em `hover-card.md` §8.
 
 ## 9. Analytics
 

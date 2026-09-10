@@ -926,9 +926,19 @@ interface HoverCardContentProps {
         cols={analyticsCols}
         items={[
           {
-            event: "hover_card_open / hover_card_close",
+            event: "hover_card_open",
+            trigger: "onOpenChange(true)",
+            payload: "{ component: 'hover-card', trigger_id, location }",
+          },
+          {
+            event: "hover_card_close",
+            trigger: "onOpenChange(false)",
+            payload: "{ component: 'hover-card', location }",
+          },
+          {
+            event: "—",
             trigger: toPlainText(tContent("analytics.description")),
-            payload: "component, location, label",
+            payload: "—",
           },
         ]}
       />

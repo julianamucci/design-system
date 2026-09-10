@@ -247,16 +247,70 @@ por isso que ele não pode guardar ação.
 - não se usa `aria-labelledby` — trocaria o nome do gatilho (D1);
 - não se depende do cartão como único caminho para a informação.
 
+### Movimento reduzido — o mecanismo da categoria inteira
+
+Fica aqui, por extenso, porque foi neste componente que a leitura errada pousou
+duas vezes. Os outros oito PRDs de Overlay apontam para esta seção.
+
+**Quem para o movimento é a camada de TOKEN, não a folha.** Sob
+`prefers-reduced-motion: reduce`, `docs/shared/tokens/motion.css` zera a escada
+inteira de `--duration-*` — os oito degraus, incluindo `panel` e `spring`, que
+até 2026-09-08 escapavam e eram justamente os de movimento maior. Todo movimento
+declarado com `var(--duration-*)` para sozinho.
+
+**E as nove folhas da categoria declaram movimento só assim**: medido em
+2026-09-09, zero durações literais em `popover`, `hover-card`, `tooltip`,
+`sheet`, `dropdown-menu`, `drawer`, `dialog`, `alert-dialog` e `command`. Logo
+os nove param, e o `b3f525fde` confirmou num motor de CSS real com a preferência
+emulada — 28 declarações lidas por `getComputedStyle`, 22 alvos de overlay.
+
+**O bloco `@media` por folha é cinto e suspensório, e alguns não seguram nada.**
+A guarda do `popover.css` mira `.nds-popover-content`, (0,1,0), contra uma
+declaração em `.nds-popover-content[data-ending-style]`, (0,2,0), e perde no
+cascata — `@media` não acrescenta especificidade. Esta folha não tem bloco
+próprio, e isso **não é defeito**: já foi relatado como tal duas vezes, e é o
+motivo de esta seção existir.
+
+**O caso que a guarda de token NÃO cobre é duração literal**, fora de
+`var(--duration-*)` — nenhum overlay tem, e o tratamento dos que têm vive no fim
+de `utilities.css`. Ao acrescentar movimento a qualquer folha desta categoria, a
+regra é uma só: declare a duração por token, e ela para de graça.
+
+> **PENDÊNCIA · 2026-09-09** — a inércia por especificidade não é só do popover.
+> Medido lendo os seletores: em `dialog.css` a guarda mira `.nds-dialog-overlay,
+> .nds-dialog-content` (0,1,0) contra declarações em `[data-state]`/`[data-closed]`
+> (0,2,0), e em `dropdown-menu.css` a guarda mira `.nds-dropdown-menu-content`
+> contra declarações em `[data-state]`. As duas perdem, pelo mesmo motivo. Não
+> há consequência hoje — o token já parou o movimento —, mas são guardas que
+> anunciam proteção que não dão, e a próxima duração literal cai no vão.
+> **Fecha quando**: cada bloco `@media (prefers-reduced-motion)` das folhas de
+> Overlay mirar seletor de especificidade igual ou maior que a declaração que
+> pretende anular, OU as guardas inertes forem removidas com o motivo escrito.
+
 ## 9. Analytics
 
 | evento | quando | payload |
 |---|---|---|
 | `hover_card_open` | o cartão abre | `{ component: "hover-card", trigger_id, location }` |
-| `hover_card_close` | o cartão fecha | `{ component: "hover-card", trigger_id, location }` |
+| `hover_card_close` | o cartão fecha | `{ component: "hover-card", reason?, location }` |
 
 `trigger_id` é id estável em kebab-case, igual nas cinco, **nunca** o texto do
 gatilho traduzido — ver D7. A espera de abertura serve de filtro contra hover de
 baixa intenção, então não há necessidade de filtrar de novo no consumidor.
+
+**O fechamento NÃO leva `trigger_id`**, e esta linha já esteve errada aqui: o
+tipo tem `reason`, não o id do gatilho. Quem publica motivo é o `radix-ng`, então
+só o **angular** preenche o campo; as outras quatro mandam `{ component, location }`
+e ele SAI. É a mesma regra do Popover com outro recorte de lib — lá quem publica
+é o `base-ui` e a `reka-ui` não. Ausente é honesto; inventado contamina a série.
+
+A mesma afirmação falsa vivia em mais duas superfícies, e as três foram
+corrigidas juntas em 2026-09-09: as tabelas de analytics do **react** e do
+**vue** anunciavam um campo `label` que nenhuma stack emite e nenhum tipo
+declara — as duas colapsavam os dois eventos numa linha só —, e a descrição do
+conteúdo compartilhado pedia `trigger_id` como obrigatório nos DOIS eventos.
+Svelte e vanilla já traziam a forma certa, uma linha por evento, e foi a delas
+que as outras duas passaram a seguir.
 
 ## 10. Reconstruir do zero
 

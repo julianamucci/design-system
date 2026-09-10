@@ -240,11 +240,34 @@ devolve o foco, Tab percorre o que está FORA da paleta.
   aqui;
 - não se confia no atalho exibido para registrar a tecla (C5).
 
+**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
+para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
+`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
+mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
+segura, está por extenso em `hover-card.md` §8.
+
 ## 9. Analytics
 
 | evento | quando | payload |
 |---|---|---|
 | `command_item_select` | item selecionado por clique ou Enter | `{ label, group, pattern }` |
+| `command_palette_open` | a paleta abre, por botão ou por atalho | `{ trigger: "keyboard" \| "button" }` |
+
+`pattern` separa as três montagens — `inline`, `combobox`, `palette` — e é o que
+permite ler a mesma seleção em contextos diferentes sem misturar as séries.
+
+**Os dois eventos são os únicos da categoria sem `component` e sem `location`.**
+Todos os outros oito overlays se identificam no payload e dizem de que seção da
+página saíram; estes não. Medido em 2026-09-09, e fica registrado como o que é:
+uma assimetria observável que ninguém decidiu, não uma escolha com motivo.
+
+> **PENDÊNCIA · 2026-09-09** — o `command_palette_open` é disparado por quatro
+> stacks. O **vanilla** anuncia o evento na tabela de analytics da docs page
+> (`analytics.table.paletteOpen`) e nunca o emite: não há `track` dele no
+> `CommandDocs.ts`, nem demonstração de paleta que abra. A página promete uma
+> medição que a stack de referência não entrega.
+> **Fecha quando**: `grep -c "command_palette_open"` no `CommandDocs.ts` do
+> vanilla for maior que zero, com a chamada ligada à abertura real da paleta.
 
 ## 10. Reconstruir do zero
 

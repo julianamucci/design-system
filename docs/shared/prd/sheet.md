@@ -169,7 +169,7 @@ Fonte: `docs/shared/styles/nds/sheet.css`.
 | propriedade | valor | token |
 |---|---|---|
 | véu | 80% de opacidade | `--overlay` |
-| superfície do painel | — | `--background` |
+| superfície do painel | — | `--background` — três dos quatro painéis modais leem isto; ver `dialog.md` D1 |
 | texto | — | `--foreground` |
 | padding do painel | 24px | `--spacing-6` |
 | gap do painel | 16px | `--spacing-4` |
@@ -246,8 +246,22 @@ jeito** — medido na fonte de cada lib, não na documentação delas:
 As cinco aceitam qualquer nível desde 2026-09-08, e chegaram lá por caminhos
 diferentes. O Angular oferecia só `h2` e `h3` e ganhou os seis por decisão da
 dona; o vanilla não oferecia nenhum — `createElement('h2')` cravado — e ganhou
-`titleLevel`, na mesma forma que `createPopoverTitle` e `createCardTitle` já
-tinham.
+`titleLevel`.
+
+**O nome da opção é relativo ao ESCOPO da fábrica, e isso NÃO é divergência** —
+já foi relatado como tal três vezes. Fábrica que monta só o título usa `level`
+(`createPopoverTitle`, `createCardTitle`); fábrica que monta o componente
+inteiro usa `titleLevel` (`createDialog`, `createSheet`, `createDrawer`,
+`createAlertDialog`), porque `createCardTitle({ titleLevel })` leria "title
+title level". A regra vale fora do vanilla: no Svelte o wrapper de story usa
+`titleLevel` e o snippet emite `level`, que é a prop do bits.
+
+**O DEFAULT, esse era divergência, e fechou em 2026-09-09**: o
+`createPopoverTitle` defaultava `h4` e passou a `2`, alinhando com estas quatro
+fábricas e com o que as outras stacks anunciavam. O `createCardTitle` não tem
+default de nível — sem `level` ele monta `div`, igual a react, vue e svelte no
+card. Citar as duas como precedente de FORMA, que era o que esta linha fazia,
+dizia menos do que parecia: o precedente é do nome, nunca do valor.
 
 **A linha do svelte estava ERRADA até 2026-09-09, e foi a story que a corrigiu**:
 `level` sozinho não troca a tag. O título daquela lib renderiza
@@ -284,6 +298,12 @@ título e `aria-describedby` para a descrição — os dois obrigatórios.
 precisa de papel, e nome em elemento sem papel é atributo proibido — o leitor de
 tela o descarta. É `group` e não `region` porque marco aninhado num diálogo já
 nomeado só engorda a lista de marcos.
+
+**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
+para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
+`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
+mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
+segura, está por extenso em `hover-card.md` §8.
 
 ## 9. Analytics
 

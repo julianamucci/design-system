@@ -208,6 +208,12 @@ está. O balão não entra na ordem de tabulação.
   `aria-label` é obrigatório no botão, e o balão é complemento;
 - em touch não há hover, então nenhuma informação essencial mora aqui.
 
+**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
+para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
+`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
+mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
+segura, está por extenso em `hover-card.md` §8.
+
 ## 9. Analytics
 
 | evento | quando | payload |
