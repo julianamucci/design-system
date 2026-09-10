@@ -72,20 +72,23 @@
 .nds-font-bold     { font-weight: 700; }
 .nds-font-mono     { font-family: ui-monospace, Menlo, Monaco, "Cascadia Code", "Roboto Mono", monospace; }
 
+/* `.nds-tracking-tight`, `.nds-tracking-wider`, `.nds-leading-relaxed` e
+ * `.nds-uppercase` moram em `utilities.css`, e só lá. Eram declarados nas duas
+ * folhas com o mesmo valor, e a cópia daqui nunca valia: `utilities.css` vem por
+ * ÚLTIMO no `index.css`, depois de todas as folhas de componente, e é essa
+ * posição que faz o utilitário vencer a regra de um componente. Portão:
+ * `seletor_em_duas_folhas`. */
+
 /* ── Tracking ──────────────────────────────────────────────────────────────── */
-.nds-tracking-tight  { letter-spacing: -0.025em; }
 .nds-tracking-normal { letter-spacing: 0; }
-.nds-tracking-wider  { letter-spacing: 0.05em; }
 
 /* ── Leading ───────────────────────────────────────────────────────────────── */
 .nds-leading-none    { line-height: 1; }
 .nds-leading-tight   { line-height: 1.25; }
 .nds-leading-normal  { line-height: 1.5; }
-.nds-leading-relaxed { line-height: 1.625; }
 .nds-leading-loose   { line-height: 2; }
 
 /* ── Transforms ────────────────────────────────────────────────────────────── */
-.nds-uppercase  { text-transform: uppercase; }
 .nds-capitalize { text-transform: capitalize; }
 .nds-italic     { font-style: italic; }
 

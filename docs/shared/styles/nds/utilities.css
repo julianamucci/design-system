@@ -395,7 +395,6 @@
 
 /* ── bordas / sombras / opacidade ────────────────────────────────────────── */
 .nds-border-dashed { border-style: dashed; }
-.nds-border-soft   { border-color: hsl(var(--border) / 0.5); }
 .nds-opacity-50    { opacity: 0.5; }
 .nds-opacity-70    { opacity: 0.7; }
 
@@ -429,7 +428,6 @@
 
 /* ── estados hover (complementam os de colors.css) ───────────────────────── */
 .nds-hover-text-accent-foreground:hover { color: hsl(var(--accent-foreground)); }
-.nds-hover-bg-accent:hover { background-color: hsl(var(--accent) / 0.1); }
 .nds-hover-bg-muted-80:hover { background-color: hsl(var(--muted) / 0.8); }
 .nds-hover-bg-muted-foreground-50:hover { background-color: hsl(var(--muted-foreground) / 0.5); }
 .nds-hover-bg-destructive-90:hover { background-color: hsl(var(--destructive) / 0.9); }

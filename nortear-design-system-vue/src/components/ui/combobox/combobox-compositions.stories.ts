@@ -154,6 +154,9 @@ export const CustomFilter: Story = {
       });
       const empty = canvasElement.querySelector('[data-slot="combobox-empty"]');
       await expect(empty).toHaveTextContent('Nenhum resultado');
+      // VISÍVEL, e não só escrito: `toHaveTextContent` passa com `display: none`,
+      // e foi assim que o aviso ficou escondido em quatro stacks sem nada reprovar.
+      await expect(empty).toBeVisible();
     });
 
     await step('A contagem de opções obedece ao predicado', async () => {

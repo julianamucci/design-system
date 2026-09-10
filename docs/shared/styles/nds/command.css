@@ -275,74 +275,13 @@
   height: auto;
 }
 
-/*
- * ─── nds-combobox ───────────────────────────────────────────────────────────
- * Combobox (input + lista filtrável em popup). Reusa nds-select-item/-separator
- * e nds-command-group; aqui só o popup, o input inline, o viewport e o empty.
- */
-
-.nds-combobox-list {
-  position: relative;
-  z-index: var(--z-popover);
-  min-width: 9rem;
-  max-height: 18rem;                              /* 288px — max-h-72 */
-  width: var(--reka-combobox-trigger-width, auto);
-  overflow: hidden;
-
-  background-color: hsl(var(--popover));
-  color: hsl(var(--popover-foreground));
-  border-radius: var(--radius);
-  box-shadow:
-    0 0 0 1px hsl(var(--foreground) / 0.1),
-    var(--elevation-md);
-}
-
-.nds-combobox-input {
-  flex: 1;
-  outline: 0;
-  background: transparent;
-  border: 0;
-  font-family: inherit;
-  font-size: var(--text-control);
-  color: inherit;
-}
-
-.nds-combobox-input:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.nds-combobox-trigger svg:not([class*="size-"]) {
-  width: var(--spacing-4);
-  height: var(--spacing-4);
-}
-
-.nds-combobox-viewport {
-  max-height: calc(18rem - var(--size-lg));
-  overflow-y: auto;
-  padding: var(--spacing-1);
-  scroll-padding-block: var(--spacing-1);
-}
-
-.nds-combobox-viewport[data-empty] {
-  padding: 0;
-}
-
-/* Empty: só aparece quando a lista está vazia */
-.nds-combobox-empty {
-  display: none;
-  width: 100%;
-  justify-content: center;
-  padding-block: var(--spacing-2);
-  text-align: center;
-  font-size: var(--text-control);
-  color: hsl(var(--muted-foreground));
-}
-
-[data-empty] .nds-combobox-empty,
-.nds-combobox-empty[data-visible] {
-  display: flex;
-}
+/* O Combobox NÃO mora aqui — a folha dele é `combobox.css`. Até 2026-09-10 esta
+ * folha carregava um bloco `.nds-combobox-*` de uma arquitetura anterior, e como
+ * o `index.css` a importa DEPOIS da do Combobox, vencia a própria folha dele em
+ * toda propriedade repetida. Medido: o "nenhum resultado" saía `display: none`
+ * em quatro das cinco stacks, e a lista com mais de oito opções não rolava pela
+ * roda do mouse. Classe de um componente se declara na folha dele e só nela —
+ * o portão `seletor_em_duas_folhas` reprova o caminho de volta. */
 
 @media (prefers-reduced-motion: reduce) {
   .nds-command-item {

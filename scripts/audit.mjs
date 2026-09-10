@@ -3013,6 +3013,79 @@ function auditInvariantesOverlayCss() {
 }
 
 /**
+ * O MESMO seletor declarado em duas folhas do `docs/shared/styles/nds/`.
+ *
+ * Com especificidade igual, quem vence é a ordem do `@import` no `index.css` — e
+ * isso não aparece para quem abre uma folha só. Medido em 2026-09-10: o
+ * `command.css` carregava um bloco `.nds-combobox-*` de uma arquitetura anterior,
+ * importado DEPOIS do `combobox.css`, e vencia a folha do próprio Combobox. O
+ * aviso de "nenhum resultado" saía `display: none` em quatro das cinco stacks e a
+ * lista com mais de oito opções não rolava pela roda do mouse. As dez asserções
+ * do Combobox sobre o vazio eram `toHaveTextContent`, que passa com o elemento
+ * escondido — nenhuma suíte, nenhum build e nenhum axe podia reprovar.
+ *
+ * A forma PRECISA é seletor idêntico, e não "classe cujo prefixo é de outra
+ * folha": essa segunda leitura foi medida e descartada — 41 achados em 9 pares,
+ * quase todos sobreposição por contexto de propósito (`.nds-composer-rail
+ * .nds-button`, especificidade maior, vence por desenho) ou prefixo que engana
+ * (`.nds-sidebar-layout` é do layout).
+ *
+ * Só regra de nível superior: dentro de `@media`/`@supports` a repetição é o
+ * mecanismo (guarda de movimento, modo escuro), não conflito.
+ */
+function auditSeletorEmDuasFolhas() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  const porSeletor = new Map();
+
+  for (const caminho of walkDir(dir, ['.css'])) {
+    const bruto = readFile(caminho);
+    if (!bruto) continue;
+    const rel = relative(ROOT, caminho);
+    const limpo = bruto.replace(/\/\*[\s\S]*?\*\//g, (s) => s.replace(/[^\n]/g, ' '));
+    let prof = 0;
+    let inicio = 0;
+    for (let i = 0; i < limpo.length; i++) {
+      const ch = limpo[i];
+      if (ch === '{') {
+        const cabeca = limpo.slice(inicio, i).trim();
+        if (prof === 0 && !cabeca.startsWith('@')) {
+          const linha = limpo.slice(0, i).split('\n').length;
+          for (const um of cabeca.split(',')) {
+            const sel = um.trim().replace(/\s+/g, ' ');
+            if (!sel.includes('.nds-')) continue;
+            const lista = porSeletor.get(sel) ?? [];
+            lista.push({ rel, linha });
+            porSeletor.set(sel, lista);
+          }
+        }
+        prof++;
+        inicio = i + 1;
+      } else if (ch === '}') {
+        prof--;
+        inicio = i + 1;
+      } else if (ch === ';' && prof === 0) {
+        inicio = i + 1;
+      }
+    }
+  }
+
+  for (const [sel, onde] of porSeletor) {
+    const arquivos = [...new Set(onde.map((o) => o.rel))];
+    if (arquivos.length < 2) continue;
+    const ultimo = onde.at(-1);
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: ultimo.rel, line: ultimo.linha, rule: 'seletor_em_duas_folhas',
+      message: `\`${sel}\` é declarado em ${arquivos.length} folhas (${onde.map((o) => `${basename(o.rel)}:${o.linha}`).join(', ')}) `
+        + '— com especificidade igual vence a ordem do @import, que ninguém vê abrindo uma folha só. '
+        + 'Declare na folha do dono e só nela',
+    });
+  }
+  return violations;
+}
+
+/**
  * `reason` no evento de fechamento: ou todas as stacks que disparam mandam, ou
  * nenhuma manda.
  *
@@ -8897,7 +8970,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

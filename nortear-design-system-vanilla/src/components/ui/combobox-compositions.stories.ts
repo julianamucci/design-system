@@ -118,6 +118,9 @@ export const CustomFilter: Story = {
       const emptyEl = canvasElement.querySelector('[data-slot="combobox-empty"]');
       await expect(emptyEl).not.toBeNull();
       await expect(emptyEl).toHaveTextContent('Nenhum resultado');
+      // VISÍVEL, e não só escrito: `toHaveTextContent` passa com `display: none`,
+      // e foi assim que o aviso ficou escondido em quatro stacks sem nada reprovar.
+      await expect(emptyEl).toBeVisible();
     });
 
     await step('O mesmo texto no INÍCIO do rótulo casa', async () => {

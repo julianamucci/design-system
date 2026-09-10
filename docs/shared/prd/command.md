@@ -1,6 +1,6 @@
 # PRD — Command
 
-> **Estado descrito**: 2026-09-07.
+> **Estado descrito**: 2026-09-07, revisado em 2026-09-10 (ver §12).
 > **⚠ Escrito ANTES da revisão serial deste componente.** Espere que decisões
 > mudem — e quando mudarem, a linha se move para o histórico com a nova data e a
 > nova medição, em vez de ser reescrita por cima.
@@ -168,26 +168,13 @@ Fonte: `docs/shared/styles/nds/command.css`.
 | separador | 1px | `--border` — ver D8 |
 | item desabilitado | 50% de opacidade | — |
 
-**Sem borda, sem sombra e sem camada próprias**: quem hospeda resolve. Isso vale
-para a superfície `.nds-command` — e é preciso dizer, porque quem abre
-`command.css` encontra `--z-popover` e `--elevation-md` e conclui o contrário.
+**Sem borda, sem sombra e sem camada próprias**: quem hospeda resolve. A folha
+não declara camada nem degrau de elevação; dentro do Dialog, a paleta herda a
+elevação `xl` dele (regra de elevação por tipo de superfície, 2026-09-10).
 
-**Essas duas leituras são do Combobox, não do Command.** A folha carrega, no
-fim, um bloco `.nds-combobox-*` — o popup, o campo, o viewport e o aviso de vazio
-—, e o Combobox tem conteúdo e folha próprios (`combobox.css`).
-
-> **PENDÊNCIA · 2026-09-10** — três classes do Combobox são declaradas nas DUAS
-> folhas: `.nds-combobox-list`, `.nds-combobox-input` e `.nds-combobox-empty`. E
-> não concordam: em `.nds-combobox-list`, o `combobox.css` pede `overflow-y: auto`
-> e o teto dinâmico que a lib publica, enquanto o `command.css` pede
-> `overflow: hidden` e `18rem` fixo. O `index.css` importa `combobox.css` na linha
-> 62 e `command.css` na 63, então com especificidade igual **quem vence é a
-> ordem de import** — o mesmo desenho do `@keyframes nds-spin` duplicado que o
-> `utilities.css` registra como armadilha. Não corrigido aqui: tirar o bloco do
-> `command.css` muda o que o Combobox renderiza, e isso pede medição na tela e os
-> cinco `build-storybook`.
-> **Fecha quando**: `grep -c "^\.nds-combobox" docs/shared/styles/nds/command.css`
-> der zero, com o comportamento de rolagem do popup conferido na tela.
+A folha também não declara classe de nenhum outro componente — o bloco
+`.nds-combobox-*` que morava no fim dela saiu em 2026-09-10 (ver o histórico), e
+o portão `seletor_em_duas_folhas` reprova a volta.
 
 ## 6. Estados
 
@@ -310,3 +297,35 @@ hospedeiro (Dialog) → stories → docs page.
 | texto, props, critérios de teste | `docs/shared/content/command/translations.json` |
 | desenho e anotações | Figma, página `Command` (componente `702:8`) |
 | portões determinísticos | `node scripts/audit.mjs command --json` |
+
+## 12. Histórico
+
+**2026-09-10 · o bloco `.nds-combobox-*` saiu do `command.css`** — fechava a
+pendência aberta no mesmo dia. Oito regras de uma arquitetura anterior do
+Combobox, importadas DEPOIS do `combobox.css` (linhas 62 e 63 do `index.css`), e
+por isso vencendo a folha do próprio Combobox em toda propriedade repetida.
+A pendência lia o caso como "valor duplicado"; a medição achou dois defeitos
+visíveis, com a marcação real de cada stack contra as folhas reais:
+
+- o aviso de "nenhum resultado" saía `display: none` em **quatro das cinco**
+  stacks (vanilla, vue, svelte e angular — a regra só o mostrava sob um
+  `[data-empty]` ANCESTRAL, e só a base-ui marca o popup assim). Em vue e angular
+  isso calava também a região viva que existe para anunciá-lo;
+- a lista com 30 opções media 998px de conteúdo em 288px de caixa, com
+  `overflow: hidden`: a roda do mouse deixava `scrollTop` em 0, e da nona opção
+  em diante nada se alcançava pelo ponteiro.
+
+Depois: aviso visível nas cinco (64px, os 24px de respiro que o `combobox.css`
+pede) e a lista rolando (`scrollTop` 400 com a mesma roda). O teto passou a ser
+a altura disponível que a lib publica, com `18rem` de reserva — a mesma cadeia do
+`select.css` e do `dropdown-menu.css`; o `18rem` cravado era sobra, não decisão.
+Nenhuma regra do bloco precisava ficar: o viewport não é usado por stack
+nenhuma, `[data-visible]` não é escrito por ninguém, e o ícone do gatilho já é
+medido por `.nds-combobox-icon`, que as cinco usam.
+
+Por que nada reprovou: as dez asserções do Combobox sobre o vazio eram
+`toHaveTextContent`, que passa com o elemento escondido. Ganharam
+`toBeVisible()`, e o mecanismo ganhou o portão `seletor_em_duas_folhas`
+(seletor idêntico em duas folhas; 4 achados com o bloco replantado, 0 sem ele).
+Na mesma varredura, seis utilitários repetidos entre `typography.css`/`colors.css`
+e `utilities.css` saíram da cópia que nunca valia — mudança zero por construção.

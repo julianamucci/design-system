@@ -222,6 +222,9 @@ export const EmptyResult: Story = {
       const empty = canvasElement.querySelector('[data-slot="combobox-empty"]');
       await expect(empty).not.toBeNull();
       await expect(empty).toHaveTextContent('Nenhum resultado');
+      // VISÍVEL, e não só escrito: `toHaveTextContent` passa com `display: none`,
+      // e foi assim que o aviso ficou escondido em quatro stacks sem nada reprovar.
+      await expect(empty).toBeVisible();
       // Região viva: o elemento fica montado e o que entra é o CONTEÚDO —
       // criar a região no instante da mudança não anuncia nada.
       await expect(empty).toHaveAttribute('role', 'status');

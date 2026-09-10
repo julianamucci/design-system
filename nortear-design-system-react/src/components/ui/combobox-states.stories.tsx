@@ -103,6 +103,9 @@ export const EmptyResult: Story = {
         const empty = document.body.querySelector('[data-slot="combobox-empty"]');
         await expect(empty).not.toBeNull();
         await expect(empty).toHaveTextContent(EMPTY_MESSAGE);
+        // VISÍVEL, e não só escrito: `toHaveTextContent` passa com `display: none`,
+        // e foi assim que o aviso ficou escondido em quatro stacks sem nada reprovar.
+        await expect(empty).toBeVisible();
       });
       await expect(field).toHaveAttribute("aria-expanded", "true");
     });

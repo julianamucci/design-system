@@ -24,6 +24,10 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 //       <button class="nds-combobox-clear" data-slot="combobox-clear">
 //       <button class="nds-combobox-trigger" data-slot="combobox-trigger">
 //     <input type="hidden" data-slot="combobox-hidden-input">
+//     <div class="nds-combobox-positioner" data-slot="combobox-positioner">  ← só aberta
+//       <div class="nds-combobox-popup" data-slot="combobox-popup">
+//         <div class="nds-combobox-list" data-slot="combobox-list" role="listbox">
+//         <div data-slot="combobox-empty" role="status">  ← IRMÃ da lista (ver mountList)
 //
 // `role="combobox"` vai no INPUT, não num wrapper — é o padrão ARIA 1.2. O foco
 // NUNCA sai do input enquanto a lista navega: a opção ativa é apontada por
@@ -246,6 +250,7 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
   let activeIndex = -1;
   let positioner: HTMLElement | null = null;
   let list: HTMLElement | null = null;
+  let emptyEl: HTMLElement | null = null;
   /** Itens visíveis na ordem em que estão na lista — é sobre eles que a seta anda. */
   let visible: ComboboxItem[] = [];
 
@@ -481,7 +486,23 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
     list.setAttribute('role', 'listbox');
     if (multiple) list.setAttribute('aria-multiselectable', 'true');
 
-    popup.appendChild(list);
+    // O aviso de vazio é IRMÃO da lista, e não filho: `role="listbox"` só aceita
+    // `option` e `group`, e o axe reprova a lista inteira por um texto dentro
+    // dela. É a forma das outras quatro stacks. Ficou escondido até 2026-09-10
+    // porque o `command.css` dava `display: none` ao aviso — com a regra fora, o
+    // axe passou a vê-lo, e a medição mostrou que o defeito era da marcação.
+    //
+    // Montado enquanto a caixa está aberta, com o CONTEÚDO entrando e saindo:
+    // região viva criada no instante em que a busca esvazia não anuncia nada. A
+    // classe entra e sai junto, porque os 24px de respiro dela deixariam um vão
+    // embaixo da lista cheia.
+    emptyEl = document.createElement('div');
+    emptyEl.dataset.slot = 'combobox-empty';
+    emptyEl.setAttribute('role', 'status');
+    emptyEl.setAttribute('aria-live', 'polite');
+    emptyEl.setAttribute('aria-atomic', 'true');
+
+    popup.append(list, emptyEl);
     positioner.appendChild(popup);
     root.appendChild(positioner);
   }
@@ -494,13 +515,13 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
     visible = query ? items.filter((i) => filter(i, query)) : [...items];
 
     list.textContent = '';
+    const empty = visible.length === 0;
+    if (emptyEl) {
+      emptyEl.classList.toggle('nds-combobox-empty', empty);
+      emptyEl.textContent = empty ? emptyMessage : '';
+    }
 
-    if (visible.length === 0) {
-      const emptyEl = document.createElement('div');
-      emptyEl.className = 'nds-combobox-empty';
-      emptyEl.dataset.slot = 'combobox-empty';
-      emptyEl.textContent = emptyMessage;
-      list.appendChild(emptyEl);
+    if (empty) {
       activeIndex = -1;
       input.removeAttribute('aria-activedescendant');
       return;
@@ -614,6 +635,7 @@ export function createCombobox(options: ComboboxOptions): ComboboxElement {
     positioner?.remove();
     positioner = null;
     list = null;
+    emptyEl = null;
     activeIndex = -1;
     input.setAttribute('aria-expanded', 'false');
     input.removeAttribute('aria-activedescendant');

@@ -133,6 +133,9 @@ export const CustomFilter: Story = {
       const empty = document.body.querySelector('[data-slot="combobox-empty"]');
       await expect(empty).not.toBeNull();
       await expect(empty).toHaveTextContent('Nenhum resultado');
+      // VISÍVEL, e não só escrito: `toHaveTextContent` passa com `display: none`,
+      // e foi assim que o aviso ficou escondido em quatro stacks sem nada reprovar.
+      await expect(empty).toBeVisible();
     });
 
     await step('O que casa no INÍCIO continua sendo achado', async () => {
