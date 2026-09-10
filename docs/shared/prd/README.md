@@ -125,6 +125,21 @@ Story, fixture, snippet e teste não disparam o hook: eles mudam como o componen
 PRD afirma, `PRD_SKIP=1 git commit …` pula só esse guarda — `--no-verify`
 desligaria também o de teste silenciado, e não é o caminho.
 
+## O terceiro eixo, e o inventário que o cobre
+
+Os dois eixos descritos acima — PRD como *um componente × cinco stacks*,
+guideline como *uma stack × muitos componentes* — deixam um de fora: **uma regra
+× muitos componentes × cinco stacks**. É o eixo que produziu a repetição de
+setembro de 2026, quando três achados voltaram como "defeito novo" duas ou três
+vezes cada, por agentes diferentes, porque cada rodada consertava a instância que
+via e o invariante continuava sem dono.
+
+Invariante desse eixo não tem casa em documento: o que o mantém verdadeiro nos
+nove componentes ao mesmo tempo é um PORTÃO.
+[invariantes-overlay.md](invariantes-overlay.md) lista os treze da categoria, com
+quem os escreve e quem os cobra — e os **seis sem portão nenhum**, que são a
+previsão do próximo relato.
+
 ## Índice
 
 Começando pela categoria Overlay, na ordem em que a revisão serial fechou cada um.
