@@ -17,6 +17,17 @@ const emits = defineEmits<MenubarRadioItemEmits>()
 const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+/**
+ * Escolher uma opção NÃO fecha o menu — mesma decisão e mesmo mecanismo do
+ * `MenubarCheckboxItem.vue`, e como no vanilla e no react, que deixam o painel
+ * aberto depois da escolha. O ouvinte de quem consome vem no `forwarded` e roda
+ * antes deste, com o evento intacto; a lib aplica o valor de qualquer jeito.
+ */
+// PATCH: bugfix — escolher não fecha o menu, como no vanilla (ver PATCHES.md#vue-menu-select-keeps-open)
+function keepMenuOpen(event: Event) {
+  event.preventDefault()
+}
 </script>
 
 <template>
@@ -24,6 +35,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     data-slot="menubar-radio-item"
     v-bind="forwarded"
     :class="cn('nds-dropdown-menu-radio-item', props.class)"
+    @select="keepMenuOpen"
   >
     <span
       class="nds-dropdown-menu-item-indicator"

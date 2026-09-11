@@ -59,14 +59,11 @@ export const Closed: Story = {
 export const Open: Story = {
   args: { defaultOpen: true, variant: 'default', triggerLabel: 'Mais ações' },
   parameters: {
-    covers: ['functional.item2', 'accessibility.item3'],
-    // Medido pela sonda desta rodada: a busca por digitação do primitivo não
-    // move o foco neste stack, com o menu aberto e o foco num item. Não há prop
-    // nossa que ligue — declarar cobertura aqui faria o auditor mentir.
-    coversNotApplicable: {
-      'accessibility.item4':
-        'a busca por digitação do primitivo não responde neste stack; setas e Home/End são verificados aqui',
-    },
+    // `accessibility.item4` era `coversNotApplicable` — "a busca por digitação
+    // do primitivo não responde neste stack". Respondia: faltava ao painel o
+    // `id` que a lib compara para decidir se a tecla é busca (ver
+    // `dropdown-menu-content.svelte`). O passo da letra, abaixo, é o que cobra.
+    covers: ['functional.item2', 'accessibility.item3', 'accessibility.item4'],
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -106,6 +103,16 @@ export const Open: Story = {
       await expect(document.activeElement).toBe(items[2]);
       await userEvent.keyboard('{Home}');
       await expect(document.activeElement).toBe(items[0]);
+    });
+
+    await step('Digitar uma letra salta para o item que começa com ela', async () => {
+      // Typeahead: numa lista de ações longa é o que evita percorrer item por
+      // item. Sem ele a letra não faz nada e o foco fica onde estava — por isso
+      // a asserção compara com OUTRO item, e não com "mudou de lugar".
+      await userEvent.keyboard('e');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(items[2]);
+      });
     });
 
     await step('O item em foco é o único destacado', async () => {

@@ -28,8 +28,20 @@
 	 * aperta a seta e verifica onde o foco pousa. Medido na fonte em 2026-09-02.
 	 */
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
+	import { setDropdownMenuRoot } from "./tab-leaves-menu";
 
-	let { open = $bindable(false), ...restProps }: DropdownMenuPrimitive.RootProps = $props();
+	let { open = $bindable(false), onOpenChange, ...restProps }: DropdownMenuPrimitive.RootProps = $props();
+
+	// A raiz, para o Tab que a lib deixa sem fechar quando o gatilho é a última
+	// parada da página — ver `tab-leaves-menu.ts`. O `onOpenChange` sai do
+	// `restProps` só para que o fechamento vindo daqui também avise quem consome.
+	setDropdownMenuRoot({
+		isOpen: () => open,
+		close: () => {
+			open = false;
+			onOpenChange?.(false);
+		},
+	});
 </script>
 
-<DropdownMenuPrimitive.Root bind:open {...restProps} />
+<DropdownMenuPrimitive.Root bind:open {onOpenChange} {...restProps} />

@@ -260,3 +260,92 @@ export const Playground: Story = {
     });
   },
 };
+
+/**
+ * Um `Tab` de teclado, DESPACHADO À MÃO no elemento em foco.
+ *
+ * `userEvent.keyboard('{Tab}')` e `userEvent.tab()` MOVEM O FOCO primeiro e só
+ * então anunciam a tecla — medido no popover desta stack, e registrado no menu
+ * de contexto. Aqui isso mediria outra coisa: quem decide o Tab é o `keydown` do
+ * PAINEL, e com o foco já fora dele a tecla nunca chega. Despachar reproduz a
+ * ordem do teclado real — `keydown` no item em foco primeiro.
+ */
+function pressTab(shift = false): void {
+  document.activeElement?.dispatchEvent(
+    new KeyboardEvent('keydown', { key: 'Tab', shiftKey: shift, bubbles: true, cancelable: true }),
+  );
+}
+
+export const TabLeavesMenubar: Story = {
+  args: { neighbors: 'both', defaultValue: undefined, demonstration: 'default' },
+  parameters: { controls: { disable: true } },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const bar = canvas.getByRole('menubar');
+    const [fileTrigger] = within(bar).getAllByRole('menuitem');
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+
+    const openWithItemFocused = async () => {
+      await waitFor(async () => {
+        await expect(getComputedStyle(fileTrigger).pointerEvents).not.toBe('none');
+      });
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+    };
+
+    await step('Tab sai da barra inteira e fecha o menu aberto', async () => {
+      await openWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      // Os outros gatilhos têm `tabindex="-1"`: o próximo ponto é o vizinho da
+      // BARRA. Quem conduz é a própria lib (`handleTabKeyDown`).
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after);
+      });
+    });
+
+    await step('Shift+Tab sai para o ponto ANTERIOR à barra', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before);
+      });
+    });
+  },
+};
+
+/**
+ * O gatilho do menu aberto como ÚLTIMA parada da página. É o ramo em que a lib
+ * barra o Tab e não fecha (`handleTabKeyDown` só chama `body.focus()`), e o foco
+ * ficava preso no menu — ver `dropdown-menu/tab-leaves-menu.ts`.
+ */
+export const TabAtPageEnd: Story = {
+  args: { neighbors: 'before', defaultValue: undefined, demonstration: 'default' },
+  parameters: { controls: { disable: true } },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const bar = canvas.getByRole('menubar');
+    const [fileTrigger] = within(bar).getAllByRole('menuitem');
+
+    await step('Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho', async () => {
+      await waitFor(async () => {
+        await expect(getComputedStyle(fileTrigger).pointerEvents).not.toBe('none');
+      });
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(fileTrigger);
+      });
+    });
+  },
+};

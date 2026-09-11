@@ -314,15 +314,15 @@
       "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via role=menubar/menu/menuitem), 2.1.1 (operável por teclado: setas, Enter, ESC, Home/End, typeahead), 2.4.3 (foco retorna ao trigger ao fechar), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>Menubar</code> recebe <code>role=\"menubar\"</code>; coordena foco entre Triggers via setas Esquerda/Direita.",
-        "item2": "<code>MenubarTrigger</code> recebe <code>aria-haspopup=\"menu\"</code> e <code>aria-expanded</code>; é parte do menubar (não Tab estopa).",
+        "item2": "<code>MenubarTrigger</code> recebe <code>aria-haspopup=\"menu\"</code> e <code>aria-expanded</code>; é parte do menubar, que é uma parada só de tabulação: o Tab não para em cada gatilho.",
         "item3": "Setas Esquerda/Direita movem entre Triggers; Enter/Space/Seta-baixo abre o menu; ESC fecha.",
         "item4": "Dentro do Content: setas Cima/Baixo navegam Items; Seta Direita abre submenu; Seta Esquerda fecha submenu ou volta para Trigger anterior.",
         "item5": "Typeahead: digitar letra move foco para Item começando com essa letra.",
-        "item6": "Tab sai do Menubar inteiro (move para próximo elemento focável da página)."
+        "item6": "Tab sai do Menubar inteiro e fecha o menu aberto, inclusive a partir de um submenu: o foco vai ao próximo ponto de tabulação depois da barra (Shift+Tab: ao anterior); se a barra for o último, volta ao gatilho do menu que estava aberto."
       },
       "keyboard": {
         "title": "Navegação por Teclado",
-        "tab": "Tab — entra no Menubar (foca primeiro Trigger) ou sai dele.",
+        "tab": "Tab — entra no Menubar pelo gatilho que tem a vez (o primeiro, até outro ser usado) ou sai dele; com um menu aberto, sair também o fecha.",
         "arrowsHorizontal": "← / → — move entre Triggers; abre menu adjacente se um já estiver aberto.",
         "arrowsVertical": "↑ / ↓ — abre menu (se Trigger focado) ou navega Items (se Content aberto).",
         "enter": "Enter / Space — ativa Trigger ou Item.",
@@ -406,8 +406,8 @@
           "priority": "high"
         },
         "item5": {
-          "action": "Seta Direita em SubTrigger",
-          "result": "Abre SubContent",
+          "action": "Seta para a direita no item que abre o submenu; depois seta para a esquerda ou Escape dentro dele",
+          "result": "O submenu abre e o foco vai ao primeiro item dele; a seta para a esquerda ou o Escape fecham só o submenu e devolvem o foco ao item que o abriu, e o menu segue aberto",
           "priority": "high"
         },
         "item6": {
@@ -821,15 +821,15 @@
       "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via role=menubar/menu/menuitem), 2.1.1 (keyboard operable: arrows, Enter, ESC, Home/End, typeahead), 2.4.3 (focus returns to trigger on close), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>Menubar</code> gets <code>role=\"menubar\"</code>; coordinates focus between Triggers via Left/Right arrows.",
-        "item2": "<code>MenubarTrigger</code> gets <code>aria-haspopup=\"menu\"</code> and <code>aria-expanded</code>; is part of menubar (Tab doesn't stop on each).",
+        "item2": "<code>MenubarTrigger</code> gets <code>aria-haspopup=\"menu\"</code> and <code>aria-expanded</code>; it is part of the menubar, which is a single tab stop: Tab does not stop on each trigger.",
         "item3": "Left/Right arrows move between Triggers; Enter/Space/Down arrow opens menu; ESC closes.",
         "item4": "Inside Content: Up/Down arrows navigate Items; Right arrow opens submenu; Left arrow closes submenu or returns to previous Trigger.",
         "item5": "Typeahead: typing a letter moves focus to Item starting with that letter.",
-        "item6": "Tab leaves the entire Menubar (moves to next focusable element on the page)."
+        "item6": "Tab leaves the entire Menubar and closes the open menu, including from a submenu: focus moves to the next tab stop after the bar (Shift+Tab: the previous one); if the bar is the last stop, focus returns to the trigger of the menu that was open."
       },
       "keyboard": {
         "title": "Keyboard Navigation",
-        "tab": "Tab — enters Menubar (focuses first Trigger) or leaves it.",
+        "tab": "Tab — enters the Menubar at the trigger whose turn it is (the first, until another is used) or leaves it; with a menu open, leaving also closes it.",
         "arrowsHorizontal": "← / → — moves between Triggers; opens adjacent menu if one is already open.",
         "arrowsVertical": "↑ / ↓ — opens menu (if Trigger focused) or navigates Items (if Content open).",
         "enter": "Enter / Space — activates Trigger or Item.",
@@ -913,8 +913,8 @@
           "priority": "high"
         },
         "item5": {
-          "action": "Right arrow on SubTrigger",
-          "result": "Opens SubContent",
+          "action": "Right arrow on the item that opens the submenu; then left arrow or Escape inside it",
+          "result": "The submenu opens and focus moves to its first item; the left arrow or Escape close only the submenu and return focus to the item that opened it, and the menu stays open",
           "priority": "high"
         },
         "item6": {
@@ -1328,15 +1328,15 @@
       "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía role=menubar/menu/menuitem), 2.1.1 (operable por teclado: flechas, Enter, ESC, Home/End, typeahead), 2.4.3 (foco vuelve al trigger al cerrar), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>Menubar</code> recibe <code>role=\"menubar\"</code>; coordina foco entre Triggers vía flechas Izquierda/Derecha.",
-        "item2": "<code>MenubarTrigger</code> recibe <code>aria-haspopup=\"menu\"</code> y <code>aria-expanded</code>; es parte del menubar (Tab no se detiene en cada uno).",
+        "item2": "<code>MenubarTrigger</code> recibe <code>aria-haspopup=\"menu\"</code> y <code>aria-expanded</code>; es parte del menubar, que es una sola parada de tabulación: Tab no se detiene en cada disparador.",
         "item3": "Flechas Izquierda/Derecha mueven entre Triggers; Enter/Space/Flecha-abajo abre el menú; ESC cierra.",
         "item4": "Dentro del Content: flechas Arriba/Abajo navegan Items; Flecha Derecha abre submenú; Flecha Izquierda cierra submenú o vuelve al Trigger anterior.",
         "item5": "Typeahead: escribir letra mueve foco al Item que comienza con esa letra.",
-        "item6": "Tab sale del Menubar entero (mueve al siguiente elemento focuseable de la página)."
+        "item6": "Tab sale del Menubar entero y cierra el menú abierto, incluso desde un submenú: el foco pasa a la siguiente parada de tabulación después de la barra (Shift+Tab: la anterior); si la barra es la última, vuelve al disparador del menú que estaba abierto."
       },
       "keyboard": {
         "title": "Navegación por Teclado",
-        "tab": "Tab — entra al Menubar (enfoca primer Trigger) o sale.",
+        "tab": "Tab — entra al Menubar por el disparador que tiene el turno (el primero, hasta que se use otro) o sale de él; con un menú abierto, salir también lo cierra.",
         "arrowsHorizontal": "← / → — mueve entre Triggers; abre menú adyacente si uno ya está abierto.",
         "arrowsVertical": "↑ / ↓ — abre menú (si Trigger enfocado) o navega Items (si Content abierto).",
         "enter": "Enter / Space — activa Trigger o Item.",
@@ -1420,8 +1420,8 @@
           "priority": "high"
         },
         "item5": {
-          "action": "Flecha Derecha en SubTrigger",
-          "result": "Abre SubContent",
+          "action": "Flecha derecha en el ítem que abre el submenú; después flecha izquierda o Escape dentro de él",
+          "result": "El submenú se abre y el foco va a su primer ítem; la flecha izquierda o Escape cierran solo el submenú y devuelven el foco al ítem que lo abrió, y el menú sigue abierto",
           "priority": "high"
         },
         "item6": {

@@ -24,6 +24,14 @@
  * - Nenhuma região viva. Menu não é anúncio: quem narra a mudança de foco é o
  *   percurso do próprio leitor de tela, e um `aria-live` aqui duplicaria a fala.
  *
+ * O TAB, nesta fábrica (C2 do PRD): fecha — o menu não prende o foco — e o foco
+ * segue a página a partir do GATILHO: o próximo ponto de tabulação depois dele
+ * (Shift+Tab: o anterior), e o próprio gatilho quando ele é a última parada.
+ * Nunca o fim do documento, onde o painel vive em portal. Vale dentro do
+ * submenu também, e ali fecha a árvore inteira. A conta, e a medição que a
+ * justifica, moram em `@/lib/tabbable`, compartilhada com o `context-menu` e o
+ * `menubar`.
+ *
  * O item DESABILITADO: a seta POUSA nele, nas cinco.
  *
  *   DECISÃO tomada em 2026-09-02, e não mais uma divergência aceita. A WAI-ARIA
@@ -109,6 +117,7 @@ import {
   type FloatingSide,
 } from '@/lib/floating';
 import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
+import { isPlainTab, tabExitTarget } from '@/lib/tabbable';
 
 export type DropdownMenuSide = FloatingSide;
 export type DropdownMenuAlign = FloatingAlign;
@@ -302,6 +311,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     panelIdPrefix: `${menuId}-sub`,
     getItems: getMenuItems,
     sideOffset,
+    // `data-state` no sub-gatilho: é o que a folha lê para mantê-lo destacado
+    // com o submenu aberto e o foco já dentro dele — sem isto o destaque sumia.
+    writeStateAttr: true,
   });
 
   const wrapper = document.createElement('div');
@@ -742,7 +754,20 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     } else if (e.key === 'End') {
       e.preventDefault();
       menuItems[menuItems.length - 1]?.focus();
-    } else if (e.key === 'Tab') {
+    } else if (isPlainTab(e)) {
+      // Menu não prende o foco (C2): Tab fecha e o foco segue a página a partir
+      // do GATILHO — vale também com o foco num submenu, que o ouvinte do
+      // `document` recebe igual, e aí fecha a árvore inteira. A tecla é
+      // consumida porque o painel vive em portal no fim do `body`: deixada ao
+      // navegador, ela partia de lá, e o Tab saía do documento e o Shift+Tab
+      // caía na última parada da página (medido; ver `@/lib/tabbable`).
+      //
+      // O foco vai ANTES de o painel sair, para não passar pelo `<body>` no
+      // meio. E vai mesmo no modo controlado, em que o fechamento é só
+      // anunciado: quem chama pode demorar a fechar, e o foco não espera no
+      // menu por isso — esperar seria a armadilha que C2 proíbe.
+      e.preventDefault();
+      tabExitTarget(e, trigger).focus();
       pedirChange(false);
     } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && /\S/.test(e.key)) {
       e.preventDefault();

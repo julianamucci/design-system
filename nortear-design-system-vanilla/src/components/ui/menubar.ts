@@ -40,6 +40,7 @@
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
+import { isPlainTab, tabExitTarget } from '@/lib/tabbable';
 import { Check, Minus } from 'lucide';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -246,6 +247,31 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     isOpen.trigger.dataset.state = 'closed';
     isOpen.trigger.setAttribute('aria-expanded', 'false');
     isOpen = null;
+  }
+
+  /**
+   * Tab com um menu aberto: fecha a barra e o foco sai dela (C2 do PRD do
+   * DropdownMenu, e o menubar da WAI-ARIA APG). Menu não prende o foco.
+   *
+   * O destino é contado a partir da BARRA, e não do gatilho: ela é uma parada
+   * só, então o Tab vai ao primeiro ponto depois dela e o Shift+Tab ao último
+   * antes dela. Sem vizinho, o foco volta ao gatilho do menu que estava aberto —
+   * que segue sendo a parada itinerante da barra.
+   *
+   * A tecla é consumida. Deixada ao navegador, medido: o menu ficava ABERTO com
+   * o foco fora dele; o Shift+Tab parava no gatilho da própria barra; e no
+   * submenu, que vive em portal, o foco saía pelo fim do documento.
+   *
+   * O foco vai ANTES de fechar: esconder o painel com o item focado dentro
+   * mandaria o foco ao `<body>` no meio do caminho.
+   */
+  function leaveByTab(e: KeyboardEvent): void {
+    if (!isOpen) return;
+    e.preventDefault();
+    const openTrigger = isOpen.trigger;
+    tabExitTarget(e, root, openTrigger).focus();
+    closeAll();
+    moverTabulacao(openTrigger);
   }
 
   function openMenu(index: number, focus: 'item' | 'gatilho' | 'nenhum'): void {
@@ -563,6 +589,12 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     // vive no `body`, então o evento nunca sobe até `root`.
     if (options.submenu) {
       panel.addEventListener('keydown', (e) => {
+        // O Tab também precisa ser atendido AQUI, pelo mesmo motivo: sem esta
+        // linha ele saía pelo fim do documento, com os dois painéis abertos.
+        if (isPlainTab(e)) {
+          leaveByTab(e);
+          return;
+        }
         submenu.handleKeydown(e);
       });
     }
@@ -629,6 +661,13 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   // move o foco entre gatilhos e, com um menu já aberto, TROCA o menu aberto —
   // o gesto de aplicação desktop.
   root.addEventListener('keydown', (e) => {
+    // Chega aqui o Tab do painel de topo (aninhado na barra) e o do gatilho com
+    // menu aberto. Com a barra fechada, `leaveByTab` não age: a barra é uma
+    // parada só e o Tab do navegador já sai dela para o lugar certo.
+    if (isPlainTab(e)) {
+      leaveByTab(e);
+      return;
+    }
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'Escape') return;
 
     if (e.key === 'Escape') {

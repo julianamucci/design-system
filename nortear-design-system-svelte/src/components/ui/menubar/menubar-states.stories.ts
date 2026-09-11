@@ -199,7 +199,7 @@ export const CheckboxChecked: Story = {
       await waitFor(async () => {
         await expect(regua.getAttribute('aria-checked')).toBe('false');
       });
-      await expect(document.body.contains(menu)).toBe(true);
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
     });
   },
 };

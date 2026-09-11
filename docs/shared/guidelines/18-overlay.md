@@ -219,13 +219,14 @@ gatilho, `label` estável e nunca texto — é regra de todos os eventos, e est�
 
 - **O fechamento diz por que fechou**, com `reason` **obrigatório** e de
   vocabulário do design system, nunca o da lib — quatro palavras, iguais em
-  `dialog_close` (Dialog, Sheet, AlertDialog), `drawer_close` e
-  `popover_close`:
+  `dialog_close` (Dialog, Sheet, AlertDialog), `drawer_close`,
+  `popover_close` e `context_menu_close` (este nunca emite `close-button`: o
+  menu não tem controle de fechar):
 
   | motivo | caminho |
   |---|---|
   | `escape` | tecla Escape |
-  | `overlay` | saiu sem decidir nada — clique fora, foco que saiu |
+  | `overlay` | saiu sem decidir nada — clique fora, foco que saiu (o Tab num menu) |
   | `close-button` | controle explícito de fechar ou de cancelar |
   | `api` | fechou por decisão de dentro — a ação que confirma, ou código |
 
@@ -277,8 +278,8 @@ evitar.
 | Elevação por tipo de superfície | `04-padroes-design-sistema.md` | `elevacao_fora_do_mapa` · `prd_token_sem_lastro` confere cada PRD contra a folha | — |
 | `reason` no fechamento | aqui, §Analytics | `reason_parcial_entre_stacks` (presença entre stacks) · `reason_vocabulario_divergente` (obrigatório e com as quatro palavras, em todo `*_close` e todo `*CloseReason`) | que a docs page deduza o motivo CERTO — o portão lê o tipo, não o caminho que o preenche |
 | Nível do título | aqui, §Título | `nivel_de_titulo_divergente` | lê o default no vanilla, onde está ESCRITO; nas outras quatro ele vem da lib |
-| Cadeia de `transform-origin` | aqui, §Posicionamento | `cadeia_transform_origin_sem_bits` · `_premissa` · `_nao_declarada` | `navigation-menu` fica de fora, declarado: o bits não publica origem para ele |
-| Anel de foco | `01-acessibilidade.md` | `focus_ring_sobrescrito` · `focus_ring_translucido` | — |
+| Cadeia de `transform-origin` | aqui, §Posicionamento | `cadeia_transform_origin_sem_bits` · `_premissa` · `_nao_declarada` | `navigation-menu` fica de fora, declarado: o bits não publica origem para ele. E o portão lê a cadeia da FOLHA, não se a stack escreve a variável: o ContextMenu do vanilla não escrevia `--transform-origin` nenhum e caía em `center` (medido em 2026-09-10) |
+| Anel de foco | `01-acessibilidade.md` | `focus_ring_sobrescrito` · `focus_ring_translucido` | a AUSÊNCIA do anel numa peça irmã: checkbox, rádio e sub-gatilho dos menus declaravam `outline: 0` sem regra de foco, nas cinco stacks, até 2026-09-10. A varredura "outline zerado sem anel" foi medida e ainda não é portão: dos 14 candidatos restantes, a maioria é campo cuja caixa desenha o anel por `:focus-within` ou peça que não recebe foco — a regra precisa nascer com essas exceções declaradas |
 | Modalidade | aqui, §Modalidade | `modalidade_sem_condicao` | só a família NÃO-modal; o inverso é da suíte, que assere `aria-modal="true"` |
 | O `<form>` e o rodapé | aqui, §Formulário | `submit_fora_do_form` no conteúdo compartilhado; play lendo `button.form`, nas cinco | a varredura do código das stacks foi retirada em 2026-09-08 (a maioria dos achados era falsa) |
 | Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` · `location_fora_do_vocabulario` · `campo_de_payload_morto` · `rotulo_de_rastreio_texto` | — |

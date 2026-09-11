@@ -8,6 +8,7 @@ import {
   useForwardProps,
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
+import { useMenubarTabLeaves } from './tab-leaves-menu'
 
 defineOptions({
   inheritAttrs: false,
@@ -25,6 +26,9 @@ const props = withDefaults(
 const delegatedProps = reactiveOmit(props, 'class')
 
 const forwardedProps = useForwardProps(delegatedProps)
+
+// PATCH: a11y — Tab sai da barra pelo vizinho do gatilho, não pelo fim do documento (ver PATCHES.md#vue-menu-tab-leaves)
+const { onKeydownCapture } = useMenubarTabLeaves()
 </script>
 
 <template>
@@ -33,6 +37,7 @@ const forwardedProps = useForwardProps(delegatedProps)
       data-slot="menubar-content"
       v-bind="{ ...$attrs, ...forwardedProps }"
       :class="cn('nds-dropdown-menu-content', props.class)"
+      @keydown.capture="onKeydownCapture"
     >
       <slot />
     </MenubarContent>

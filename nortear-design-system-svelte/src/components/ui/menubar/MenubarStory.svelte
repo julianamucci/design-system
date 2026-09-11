@@ -17,6 +17,7 @@
     MenubarSubTrigger,
     MenubarSubContent,
   } from './index';
+  import { Button } from '@/components/ui/button';
 
   type Variant = 'default' | 'destructive';
   type Demonstration =
@@ -37,6 +38,12 @@
     demonstration?: Demonstration;
     /** Espião de escolha de item — a story o passa para a aba Actions. */
     onSelect?: (label: string) => void;
+    /**
+     * Botões vizinhos da barra, que dão DESTINO ao Tab que sai dela. `'both'`
+     * põe um antes e outro depois; `'before'` só o de antes — o gatilho vira a
+     * ÚLTIMA parada da página, o caso em que a lib não fechava.
+     */
+    neighbors?: 'both' | 'before';
   }
 
   let {
@@ -47,6 +54,7 @@
     variant = 'default',
     demonstration = 'default',
     onSelect = () => {},
+    neighbors = undefined,
   }: Props = $props();
 
   // Os mesmos dados das outras quatro stacks: a story é o que o Chromatic
@@ -84,7 +92,8 @@
   let theme = $state('light');
 </script>
 
-<div style="contain: layout">
+<div class={neighbors ? 'nds-cluster' : undefined} data-spacing={neighbors ? 'md' : undefined} style="contain: layout">
+  {#if neighbors}<Button variant="ghost">Antes</Button>{/if}
   {#key `${defaultValue}-${loop}-${variant}-${demonstration}`}
     <Menubar value={defaultValue ?? ''} {loop}>
       {#if demonstration === 'shortcuts'}
@@ -229,4 +238,5 @@
       {/if}
     </Menubar>
   {/key}
+  {#if neighbors === 'both'}<Button variant="ghost">Depois</Button>{/if}
 </div>

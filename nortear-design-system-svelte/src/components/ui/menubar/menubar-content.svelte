@@ -3,6 +3,8 @@
 	import MenubarPortal from "./menubar-portal.svelte";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ComponentProps } from "svelte";
+	import { closeAfterTab } from "@/components/ui/dropdown-menu/tab-leaves-menu";
+	import { useMenubarRoot } from "./tab-leaves-menu";
 
 	/**
 	 * O `id` do painel é NOSSO, e é carimbado no elemento à mão.
@@ -37,6 +39,7 @@
 		side = "bottom",
 		portalProps,
 		id = `nds-menubar-content-${uid}`,
+		onkeydown,
 		...restProps
 	}: MenubarPrimitive.ContentProps & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof MenubarPortal>>;
@@ -45,6 +48,16 @@
 	$effect(() => {
 		if (ref && !ref.id) ref.id = id;
 	});
+
+	const root = useMenubarRoot();
+
+	// O `onkeydown` de quem consome segue primeiro; o Tab que a lib deixa aberto
+	// fecha depois dela — ver `dropdown-menu/tab-leaves-menu.ts`.
+	// PATCH: bugfix — Tab com o gatilho na ponta da página prendia o foco (ver PATCHES.md#svelte-menu-tab-edge)
+	function handleKeydown(event: Parameters<NonNullable<typeof onkeydown>>[0]) {
+		onkeydown?.(event);
+		closeAfterTab(event, root);
+	}
 </script>
 
 <MenubarPortal {...portalProps}>
@@ -57,6 +70,7 @@
 		{side}
 		{sideOffset}
 		class={cn("nds-dropdown-menu-content", className)}
+		onkeydown={handleKeydown}
 		{...restProps}
 	/>
 </MenubarPortal>

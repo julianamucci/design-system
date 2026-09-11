@@ -2,12 +2,26 @@
 	import { Menubar as MenubarPrimitive } from "bits-ui";
 	import { cn } from "@/lib/utils.js";
 	import MenubarPortal from "./menubar-portal.svelte";
+	import { closeAfterTab } from "@/components/ui/dropdown-menu/tab-leaves-menu";
+	import { useMenubarRoot } from "./tab-leaves-menu";
 
 	let {
 		ref = $bindable(null),
 		class: className,
+		onkeydown,
 		...restProps
 	}: MenubarPrimitive.SubContentProps = $props();
+
+	const root = useMenubarRoot();
+
+	// O portal tira este painel da árvore DOM do raiz: o Tab apertado aqui não
+	// passa pelo ouvinte de lá. O mesmo fechamento — ver
+	// `dropdown-menu/tab-leaves-menu.ts`.
+	// PATCH: bugfix — Tab com o gatilho na ponta da página prendia o foco (ver PATCHES.md#svelte-menu-tab-edge)
+	function handleKeydown(event: Parameters<NonNullable<typeof onkeydown>>[0]) {
+		onkeydown?.(event);
+		closeAfterTab(event, root);
+	}
 </script>
 
 <!--
@@ -28,6 +42,7 @@
 		bind:ref
 		data-slot="menubar-sub-content"
 		class={cn("nds-dropdown-menu-content", className)}
+		onkeydown={handleKeydown}
 		{...restProps}
 	/>
 </MenubarPortal>

@@ -29,8 +29,8 @@ const meta = {
       source: { transform: dropdownMenuSource },
       description: {
         component:
-          'Menu suspenso acionado por botão. Renderiza em portal com role=menu, foco preso ' +
-          'enquanto aberto e navegação por teclado. Suporta items, checkbox-items, radio-groups, ' +
+          'Menu suspenso acionado por botão. Renderiza em portal com role=menu, recebe o foco ' +
+          'ao abrir e é navegado pelas setas; Tab sai do menu e o fecha. Suporta items, checkbox-items, radio-groups, ' +
           'submenus, separators, labels e shortcuts.',
       },
     },
@@ -147,6 +147,130 @@ export const Playground: Story = {
       await waitForPortal('menu');
 
       await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('menu');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
+      });
+    });
+  },
+};
+
+/**
+ * Um `Tab` de teclado, DESPACHADO À MÃO no elemento em foco.
+ *
+ * `userEvent.keyboard('{Tab}')` e `userEvent.tab()` MOVEM O FOCO primeiro e só
+ * então anunciam a tecla — medido no popover do svelte, e registrado no menu de
+ * contexto de lá. Aqui isso mediria outra coisa: quem decide o Tab é o `keydown`
+ * do PAINEL, e com o foco já fora dele a tecla nunca chega. Despachar reproduz a
+ * ordem do teclado real — `keydown` no item em foco primeiro.
+ */
+function pressTab(shift = false): void {
+  document.activeElement?.dispatchEvent(
+    new KeyboardEvent('keydown', { key: 'Tab', shiftKey: shift, bubbles: true, cancelable: true }),
+  );
+}
+
+export const TabLeavesMenu: Story = {
+  parameters: {
+    // O menu é MODAL aqui, que é o padrão: é no modal que a lib prende o Tab.
+    controls: { disable: true },
+  },
+  render: () => ({
+    components: { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Button },
+    template: `
+      <div class="nds-cluster nds-min-h-80" data-spacing="md" style="contain: layout">
+        <Button variant="ghost">Antes</Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">Abrir menu</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="start">
+            <DropdownMenuItem>Perfil</DropdownMenuItem>
+            <DropdownMenuItem>Configurações</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Button variant="ghost">Depois</Button>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: 'Abrir menu' });
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+
+    const openWithItemFocused = async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+    };
+
+    await step('Aberto, o menu segue modal: véu de interação e trava de rolagem (D1)', async () => {
+      await openWithItemFocused();
+      // É o que `modal` quer dizer neste componente — e é o que se perderia se o
+      // Tab fosse consertado desligando `modal`.
+      await expect(document.body.style.pointerEvents).toBe('none');
+      await expect(getComputedStyle(document.body).overflow).toBe('hidden');
+    });
+
+    await step('Tab sai do menu, fecha e segue para o próximo ponto da página', async () => {
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // O próximo ponto é o vizinho do GATILHO, não o fim do documento, onde o
+      // painel vive em portal.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after);
+      });
+      await expect(getComputedStyle(document.body).overflow).not.toBe('hidden');
+    });
+
+    await step('Shift+Tab sai para o ponto ANTERIOR ao gatilho', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before);
+      });
+    });
+  },
+};
+
+/**
+ * O gatilho como ÚLTIMA parada da página: não há vizinho para onde levar o foco.
+ * O Tab tem de fechar do mesmo jeito — preso, ele seria a armadilha que C2 proíbe
+ * —, e o foco volta ao gatilho pelo caminho da lib.
+ */
+export const TabAtPageEnd: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    components: { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Button },
+    template: `
+      <div class="nds-cluster nds-min-h-80" data-spacing="md" style="contain: layout">
+        <Button variant="ghost">Antes</Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">Abrir menu</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="start">
+            <DropdownMenuItem>Perfil</DropdownMenuItem>
+            <DropdownMenuItem>Configurações</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: 'Abrir menu' });
+
+    await step('Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho', async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+
+      pressTab();
       await waitForPortalGone('menu');
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await waitFor(async () => {

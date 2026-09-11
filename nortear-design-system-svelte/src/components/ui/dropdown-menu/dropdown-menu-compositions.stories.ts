@@ -138,6 +138,10 @@ export const WithRadioGroup: Story = {
         await expect(dark).toHaveAttribute('aria-checked', 'true');
         await expect(light).toHaveAttribute('aria-checked', 'false');
       });
+      // Escolher não fecha, como no vanilla e no react. A lib fecha por padrão, e
+      // sem esta linha a story passava com o menu já fechado: o item guarda o
+      // último `aria-checked` mesmo fora do documento.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
     });
   },
 };
@@ -182,6 +186,18 @@ export const WithSubmenu: Story = {
           menu.getBoundingClientRect().right - 8,
         );
       });
+    });
+
+    await step('O submenu é um painel próprio, fora do pai — e o pai não rola', async () => {
+      const submenu = body.getAllByRole('menu')[1];
+      // Sem portal o painel filho nascia dentro do pai, que tem `overflow-y:
+      // auto`: o pai passava a rolar e o axe acusava região rolável sem foco
+      // (`scrollable-region-focusable`).
+      await expect(menu.contains(submenu)).toBe(false);
+      await expect(submenu.getAttribute('data-slot')).toBe('dropdown-menu-sub-content');
+      // Sem a classe do painel o submenu flutuava sem fundo, borda nem sombra.
+      await expect(submenu.classList.contains('nds-dropdown-menu-content')).toBe(true);
+      await expect(menu.scrollHeight).toBeLessThanOrEqual(menu.clientHeight);
     });
   },
 };

@@ -34,6 +34,15 @@ function Menubar({ className, ...props }: MenubarPrimitive.Props) {
   )
 }
 
+/**
+ * Um menu da barra — é um `DropdownMenu`, e herda dele o Tab que SAI da barra
+ * (C2 do `prd/dropdown-menu.md`): Tab e Shift+Tab num item, do painel ou de um
+ * submenu, fecham o menu inteiro e levam o foco ao ponto de tabulação vizinho
+ * do gatilho. Como os outros gatilhos têm `tabindex="-1"` (a barra é UMA
+ * parada), o destino fica fora da barra. Sem a herança, a base-ui deixava o
+ * menu aberto com o foco no gatilho no Shift+Tab. O conserto e a medição estão
+ * em `dropdown-menu.tsx`; o portão, em `TabLeavesMenubar` e `TabAtPageEnd`.
+ */
 function MenubarMenu({ ...props }: React.ComponentProps<typeof DropdownMenu>) {
   return <DropdownMenu data-slot="menubar-menu" {...props} />
 }

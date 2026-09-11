@@ -10,6 +10,8 @@
 		class: className,
 		checked = $bindable(false),
 		indeterminate = $bindable(false),
+		// PATCH: bugfix — marcar não fecha o menu, como no vanilla (ver PATCHES.md#svelte-menu-select-keeps-open)
+		closeOnSelect = false,
 		inset,
 		children: childrenProp,
 		...restProps
@@ -19,10 +21,20 @@
 	} = $props();
 </script>
 
+<!--
+	Alternar NÃO fecha o menu — como no vanilla e no react. A bits nasce com
+	`closeOnSelect` ligado em todo item, inclusive nos de marcação, e isso ficou
+	escondido enquanto a folha animava a saída: o painel seguia montado durante a
+	animação, e a play que conferia "continua aberto" passava dentro dessa janela.
+	Sem a animação (D5), o menu sumia a cada marcação. Quem marca uma preferência
+	quer marcar a próxima. Quem consome religa pela mesma prop, e o `onSelect`
+	dele continua chegando à lib por `restProps`.
+-->
 <MenubarPrimitive.CheckboxItem
 	bind:ref
 	bind:checked
 	bind:indeterminate
+	{closeOnSelect}
 	data-slot="menubar-checkbox-item"
 	data-inset={inset}
 	class={cn("nds-dropdown-menu-checkbox-item", className)}

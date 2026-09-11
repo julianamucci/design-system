@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Menubar as MenubarPrimitive } from "bits-ui";
 	import { cn } from "@/lib/utils.js";
+	import { setMenubarRoot } from "./tab-leaves-menu";
 
 	/**
 	 * `value` declarado como bindable — e não `defaultValue`.
@@ -20,13 +21,27 @@
 		ref = $bindable(null),
 		value = $bindable(""),
 		class: className,
+		onValueChange,
 		...restProps
 	}: MenubarPrimitive.RootProps = $props();
+
+	// A raiz, para o Tab que a lib deixa sem fechar quando o gatilho do menu
+	// aberto é a última parada da página — ver `tab-leaves-menu.ts`. O
+	// `onValueChange` sai do `restProps` só para que o fechamento vindo daqui
+	// também avise quem consome.
+	setMenubarRoot({
+		isOpen: () => value !== "",
+		close: () => {
+			value = "";
+			onValueChange?.("");
+		},
+	});
 </script>
 
 <MenubarPrimitive.Root
 	bind:ref
 	bind:value
+	{onValueChange}
 	data-slot="menubar"
 	class={cn("nds-menubar", className)}
 	{...restProps}

@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar, type MenubarAlign, type MenubarSide } from './menubar';
-import { embrulhar, triggersOf, panelOpen } from './menubar.fixtures';
+import { embrulhar, triggersOf, panelOpen, waitForPanel } from './menubar.fixtures';
 import { menubarSource } from './menubar.source';
 import { createMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { pressTab } from '@/lib/press-tab';
+import { createButton } from './button';
 
 // ─── Dados da barra ───────────────────────────────────────────────────────────
 //
@@ -292,6 +294,143 @@ export const Playground: Story = {
         await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
         await expect(panelOpen(canvasElement)).toBeNull();
       });
+    });
+  },
+};
+
+// ─── Tab sai da barra ─────────────────────────────────────────────────────────
+
+/**
+ * Cena do Tab: um botão antes e, opcionalmente, um depois da BARRA. O menu
+ * Arquivo traz um submenu, porque o Tab dentro do painel filho — que vive em
+ * portal no `body` — é um dos casos do contrato.
+ */
+function buildTabScene(withAfter: boolean): HTMLElement {
+  const bar = createMenubar([
+    {
+      label: 'Arquivo',
+      items: [
+        { label: 'Novo' },
+        { label: 'Abrir' },
+        { type: 'submenu', label: 'Exportar', items: [{ label: 'PDF' }, { label: 'Imagem' }] },
+      ],
+    },
+    { label: 'Editar', items: [{ label: 'Desfazer' }, { label: 'Refazer' }] },
+  ]);
+
+  const row = document.createElement('div');
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'md';
+  row.append(createButton({ variant: 'ghost', label: 'Antes' }), bar);
+  if (withAfter) row.append(createButton({ variant: 'ghost', label: 'Depois' }));
+  return embrulhar(row, '260px');
+}
+
+/**
+ * Menu não prende o foco (C2 do PRD do DropdownMenu, e o menubar da WAI-ARIA
+ * APG): com um menu aberto, Tab fecha a barra e o foco sai dela. A barra é UMA
+ * parada, então o destino é contado a partir dela, e não do gatilho.
+ *
+ * O Tab é despachado à mão (`@/lib/press-tab`): evento sintético não tem ação
+ * padrão, então o foco só chega ao vizinho se a BARRA o levar. Antes da
+ * correção nada escutava o Tab aqui: o menu ficava aberto com o foco fora dele.
+ */
+export const TabLeavesMenubar: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => buildTabScene(true),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const bar = canvas.getByRole('menubar');
+    const [fileTrigger, editTrigger] = triggersOf(bar);
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+    const openMenus = () => document.querySelectorAll('[role="menu"]:not([hidden])');
+
+    const openWithItemFocused = async () => {
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      const panel = await waitForPanel(canvasElement);
+      within(panel).getAllByRole('menuitem')[0].focus();
+      await expect(panel.contains(document.activeElement)).toBe(true);
+      return panel;
+    };
+
+    await step('Tab fecha o menu e o foco vai ao ponto DEPOIS da barra', async () => {
+      await openWithItemFocused();
+      pressTab();
+      // Síncrono de propósito: fechar e mover o foco são o mesmo gesto.
+      await expect(openMenus()).toHaveLength(0);
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(after);
+      // A barra continua sendo uma parada só, e é o gatilho do menu que estava
+      // aberto que a representa — é por ele que o Shift+Tab volta.
+      await expect(triggersOf(bar).filter((g) => g.tabIndex === 0)).toHaveLength(1);
+      await expect(fileTrigger.tabIndex).toBe(0);
+    });
+
+    await step('Shift+Tab fecha o menu e o foco vai ao ponto ANTES da barra', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await expect(openMenus()).toHaveLength(0);
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      // Não o gatilho da própria barra, que é onde o Tab do navegador parava.
+      await expect(document.activeElement).toBe(before);
+    });
+
+    await step('Com o foco no gatilho e o menu aberto, Tab também sai da barra', async () => {
+      // A seta horizontal troca o menu aberto e deixa o foco no GATILHO vizinho,
+      // com o painel dele aberto. O Tab dali também fecha — sem isto o foco saía
+      // e o menu ficava na tela.
+      await openWithItemFocused();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(document.activeElement).toBe(editTrigger));
+      await expect(editTrigger.getAttribute('aria-expanded')).toBe('true');
+
+      pressTab();
+      await expect(openMenus()).toHaveLength(0);
+      await expect(editTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(after);
+    });
+
+    await step('Tab dentro do submenu fecha a barra INTEIRA e sai dela', async () => {
+      const panel = await openWithItemFocused();
+      within(panel).getByRole('menuitem', { name: 'Exportar' }).focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(openMenus()).toHaveLength(2));
+      const sub = document.querySelector<HTMLElement>('[data-slot="menubar-sub-content"]')!;
+      await waitFor(() => expect(sub.contains(document.activeElement)).toBe(true));
+
+      pressTab();
+      // O painel filho vive no `body`, e o Tab dele nunca subia até a barra: os
+      // dois painéis ficavam abertos e o foco saía pelo fim do documento.
+      await expect(openMenus()).toHaveLength(0);
+      await expect(sub.isConnected).toBe(false);
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(after);
+    });
+  },
+};
+
+/**
+ * A barra como ÚLTIMA parada da página: não há vizinho depois dela. O Tab fecha
+ * do mesmo jeito — preso, ele seria a armadilha que C2 proíbe —, e o foco volta
+ * ao gatilho do menu que estava aberto, em vez de sair do documento.
+ */
+export const TabAtPageEnd: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => buildTabScene(false),
+  play: async ({ canvasElement, step }) => {
+    const bar = within(canvasElement).getByRole('menubar');
+    const [fileTrigger] = triggersOf(bar);
+
+    await step('Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho', async () => {
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      const panel = await waitForPanel(canvasElement);
+      within(panel).getAllByRole('menuitem')[0].focus();
+
+      pressTab();
+      await expect(panelOpen(canvasElement)).toBeNull();
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(fileTrigger);
     });
   },
 };

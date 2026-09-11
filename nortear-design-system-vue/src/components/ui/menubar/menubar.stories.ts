@@ -8,6 +8,7 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from './index';
+import { Button } from '@/components/ui/button';
 import MenubarDocs from '@/components/docs/MenubarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
@@ -309,6 +310,127 @@ export const Playground: Story = {
       await userEvent.click(arquivo);
       await waitForPortalGone('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+    });
+  },
+};
+
+/**
+ * Um `Tab` de teclado, DESPACHADO À MÃO no elemento em foco.
+ *
+ * `userEvent.keyboard('{Tab}')` e `userEvent.tab()` MOVEM O FOCO primeiro e só
+ * então anunciam a tecla — medido no popover do svelte, e registrado no menu de
+ * contexto de lá. Aqui isso mediria outra coisa: quem decide o Tab é o `keydown`
+ * do PAINEL, e com o foco já fora dele a tecla nunca chega. Despachar reproduz a
+ * ordem do teclado real — `keydown` no item em foco primeiro.
+ */
+function pressTab(shift = false): void {
+  document.activeElement?.dispatchEvent(
+    new KeyboardEvent('keydown', { key: 'Tab', shiftKey: shift, bubbles: true, cancelable: true }),
+  );
+}
+
+export const TabLeavesMenubar: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    components: { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger, Button },
+    setup() {
+      return { menus: MENUS.slice(0, 2) };
+    },
+    template: `
+      <div class="nds-cluster nds-min-h-80" data-spacing="md" style="contain: layout">
+        <Button variant="ghost">Antes</Button>
+        <Menubar>
+          <MenubarMenu v-for="m in menus" :key="m.value" :value="m.value">
+            <MenubarTrigger>{{ m.label }}</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem v-for="i in m.items" :key="i.label">{{ i.label }}</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+        <Button variant="ghost">Depois</Button>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const bar = canvas.getByRole('menubar');
+    const [fileTrigger] = within(bar).getAllByRole('menuitem');
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+
+    const openWithItemFocused = async () => {
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+    };
+
+    await step('Tab sai da barra inteira e fecha o menu aberto', async () => {
+      await openWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      // O próximo ponto é o vizinho da BARRA — e não o `<body>`, que é onde o
+      // foco caía partindo do painel em portal no fim do documento.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after);
+      });
+    });
+
+    await step('Shift+Tab sai para o ponto ANTERIOR à barra', async () => {
+      // Sem o ouvinte, Shift+Tab caía no botão DEPOIS da barra: a ordem de
+      // tabulação partia do painel, que vive no fim do documento.
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before);
+      });
+    });
+  },
+};
+
+/**
+ * O gatilho do menu aberto como ÚLTIMA parada da página: não há vizinho para
+ * onde levar o foco. O Tab tem de fechar do mesmo jeito, e o foco volta ao
+ * gatilho pelo caminho da lib.
+ */
+export const TabAtPageEnd: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    components: { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger, Button },
+    setup() {
+      return { menus: MENUS.slice(0, 2) };
+    },
+    template: `
+      <div class="nds-cluster nds-min-h-80" data-spacing="md" style="contain: layout">
+        <Button variant="ghost">Antes</Button>
+        <Menubar>
+          <MenubarMenu v-for="m in menus" :key="m.value" :value="m.value">
+            <MenubarTrigger>{{ m.label }}</MenubarTrigger>
+            <MenubarContent>
+              <MenubarItem v-for="i in m.items" :key="i.label">{{ i.label }}</MenubarItem>
+            </MenubarContent>
+          </MenubarMenu>
+        </Menubar>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const bar = within(canvasElement).getByRole('menubar');
+    const [fileTrigger] = within(bar).getAllByRole('menuitem');
+
+    await step('Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho', async () => {
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(fileTrigger);
+      });
     });
   },
 };

@@ -126,25 +126,50 @@ export const WithSubmenu: Story = {
       </nds-menubar>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const body = within(document.body);
     const menu = await waitForPortal('menu');
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
+    const barTrigger = within(within(canvasElement).getByRole('menubar')).getByRole('menuitem', {
+      name: 'Arquivo',
+    });
+    const submenu = () =>
+      document.querySelector<HTMLElement>('[data-slot="menubar-sub-content"]');
+    const firstSubItem = () =>
+      submenu()?.querySelector<HTMLElement>('[data-slot="menubar-item"]') ?? null;
+
+    // Só o submenu fechou: o painel pai é o MESMO nó de antes, segue no
+    // documento, e o gatilho da barra continua aberto. Numa barra a seta
+    // esquerda também é "vá ao menu vizinho" — é esta conferência que separa
+    // fechar o submenu de trocar de menu.
+    const parentStillOpen = async () => {
+      await waitFor(() => expect(body.getAllByRole('menu')).toHaveLength(1));
+      await expect(menu.isConnected).toBe(true);
+      await expect(barTrigger.getAttribute('aria-expanded')).toBe('true');
+      await expect(barTrigger.getAttribute('data-state')).toBe('open');
+    };
 
     await step('O sub-gatilho anuncia que abre outro menu', async () => {
       await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
       await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      // Fechado, não há painel: apontar para um `id` que saiu do documento é
+      // pior que não apontar.
+      await expect(subTrigger.getAttribute('aria-owns')).toBeNull();
     });
 
-    await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu', async () => {
-      // Idempotente: só navega e abre quando ainda está fechado.
+    await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu e o foco ENTRA nele', async () => {
+      // Idempotente: só navega quando o submenu ainda está fechado. A seta
+      // direita vai sempre — com o submenu já aberto, ela ainda tem de levar o
+      // foco para dentro, que é o caso que a lib não cobre sozinha.
       if (subTrigger.getAttribute('aria-expanded') !== 'true') {
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(async () => {
           await expect(document.activeElement).toBe(subTrigger);
         });
-        await userEvent.keyboard('{ArrowRight}');
+      } else {
+        subTrigger.focus();
       }
+      await userEvent.keyboard('{ArrowRight}');
 
       await waitFor(async () => {
         await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
@@ -152,17 +177,62 @@ export const WithSubmenu: Story = {
         // distingue submenu de troca de menu.
         await expect(body.getAllByRole('menu')).toHaveLength(2);
       });
+      // Abrir sem entrar deixaria a pessoa vendo um painel que a seta seguinte
+      // não percorre. Era o defeito deste stack (WCAG 2.1.1): a seta abria e o
+      // foco ficava no sub-gatilho.
+      await waitFor(() => expect(document.activeElement).toBe(firstSubItem()));
+    });
+
+    await step('O sub-gatilho aponta para ESTE painel pelo aria-owns', async () => {
+      // O painel é portalado para fora da barra, então `aria-expanded` sozinho
+      // diz que ABRIU sem dizer O QUÊ. Quem devolve a relação é `aria-owns` — e
+      // ele tem de apontar para o painel aberto, não para um id qualquer.
+      const panel = submenu()!;
+      await expect(panel.id).not.toBe('');
+      await expect(subTrigger.getAttribute('aria-owns')).toBe(panel.id);
     });
 
     await step('O submenu traz os próprios itens e abre AO LADO do pai', async () => {
-      const submenu = body.getAllByRole('menu').find((m) => m !== menu)!;
-      await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(EXPORTACOES.length);
-      await expect(submenu.getAttribute('data-slot')).toBe('menubar-sub-content');
+      const panel = submenu()!;
+      await expect(within(panel).getAllByRole('menuitem')).toHaveLength(EXPORTACOES.length);
       // `side="right"` é o padrão do submenu neste stack: um submenu que nasce
       // embaixo cobriria os irmãos do item que o abriu.
-      await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+      await expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(
         menu.getBoundingClientRect().left,
       );
+    });
+
+    await step('Seta esquerda fecha SÓ o submenu e devolve o foco ao sub-gatilho', async () => {
+      await expect(document.activeElement).toBe(firstSubItem());
+      await userEvent.keyboard('{ArrowLeft}');
+
+      await waitFor(() => expect(subTrigger.getAttribute('aria-expanded')).toBe('false'));
+      // Fechou: a ligação sai junto com o painel.
+      await expect(subTrigger.getAttribute('aria-owns')).toBeNull();
+      await waitFor(() => expect(document.activeElement).toBe(subTrigger));
+      await parentStillOpen();
+    });
+
+    await step('Escape dentro do submenu fecha SÓ o submenu, com o mesmo destino', async () => {
+      // O foco está no sub-gatilho (passo anterior): a seta reabre e entra.
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(document.activeElement).toBe(firstSubItem()));
+
+      // Escape fecha o nível mais fundo, não o menu da barra: o painel do
+      // submenu precisa ser FILHO do pai na árvore flutuante para a lib saber
+      // que existe um nível a quem ceder.
+      await userEvent.keyboard('{Escape}');
+
+      await waitFor(() => expect(subTrigger.getAttribute('aria-expanded')).toBe('false'));
+      await waitFor(() => expect(document.activeElement).toBe(subTrigger));
+      await parentStillOpen();
+    });
+
+    await step('A story termina com o submenu ABERTO', async () => {
+      // `visual.item4` descreve o menu com o submenu aberto: é esse o estado
+      // que o Chromatic fotografa.
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(document.activeElement).toBe(firstSubItem()));
     });
   },
 };

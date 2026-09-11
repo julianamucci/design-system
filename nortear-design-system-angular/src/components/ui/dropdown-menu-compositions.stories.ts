@@ -248,42 +248,104 @@ export const WithSubmenu: Story = {
       </nds-dropdown-menu>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const body = within(document.body);
     const menu = await waitForPortal('menu');
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
+    const rootTrigger = within(canvasElement).getByRole('button', { name: 'Arquivo' });
+    const submenu = () =>
+      document.querySelector<HTMLElement>('[data-slot="dropdown-menu-sub-content"]');
+    const firstSubItem = () =>
+      submenu()?.querySelector<HTMLElement>('[data-slot="dropdown-menu-item"]') ?? null;
+
+    // Só o submenu fechou: o painel pai é o MESMO nó de antes, segue no
+    // documento, e o gatilho da raiz continua anunciando o menu aberto.
+    const rootStillOpen = async () => {
+      await waitFor(() => expect(body.getAllByRole('menu')).toHaveLength(1));
+      await expect(menu.isConnected).toBe(true);
+      await expect(rootTrigger.getAttribute('aria-expanded')).toBe('true');
+    };
 
     await step('O sub-gatilho anuncia que abre um menu', async () => {
       await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
       await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      // Fechado, não há painel: apontar para um `id` que saiu do documento é
+      // pior que não apontar.
+      await expect(subTrigger.getAttribute('aria-owns')).toBeNull();
     });
 
-    await step('A seta para a direita abre o submenu', async () => {
-      // Idempotente: a seta só é enviada com o submenu fechado.
-      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
-        subTrigger.focus();
-        await userEvent.keyboard('{ArrowRight}');
-      }
+    await step('A seta para a direita abre o submenu e o foco ENTRA nele', async () => {
+      // Sem guarda de idempotência: com o submenu já aberto, a mesma seta ainda
+      // tem de levar o foco para dentro — é o caso que a lib não cobre sozinha.
+      subTrigger.focus();
+      await userEvent.keyboard('{ArrowRight}');
 
       await waitFor(async () => {
         await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
         await expect(body.getAllByRole('menu')).toHaveLength(2);
       });
+      // Abrir sem entrar deixaria a pessoa vendo um painel que a seta seguinte
+      // não percorre. Era o defeito deste stack (WCAG 2.1.1): a seta abria e o
+      // foco ficava no sub-gatilho.
+      await waitFor(() => expect(document.activeElement).toBe(firstSubItem()));
+    });
+
+    await step('O sub-gatilho aponta para ESTE painel pelo aria-owns', async () => {
+      // O painel é portalado para fora da árvore do menu, então `aria-expanded`
+      // sozinho diz que ABRIU sem dizer O QUÊ. Quem devolve a relação é
+      // `aria-owns` — e ele tem de apontar para o painel aberto, não para um id
+      // qualquer.
+      const panel = submenu()!;
+      await expect(panel.id).not.toBe('');
+      await expect(subTrigger.getAttribute('aria-owns')).toBe(panel.id);
     });
 
     await step('O submenu abre AO LADO, não por cima do menu pai', async () => {
-      const submenu = body.getAllByRole('menu')[1];
-      await expect(within(submenu).getAllByRole('menuitem')).toHaveLength(2);
+      const panel = submenu()!;
+      await expect(within(panel).getAllByRole('menuitem')).toHaveLength(2);
       // A comparação é com a borda DIREITA do pai. Comparar com a ESQUERDA —
       // como estava — passa com os dois painéis perfeitamente empilhados, que é
       // exatamente o defeito que a asserção deveria pegar. O posicionador
       // coloca o popup em passo assíncrono, daí o `waitFor` em volta da medida:
       // ler a caixa no tick da abertura devolve a posição de partida.
       await waitFor(async () => {
-        await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+        await expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(
           menu.getBoundingClientRect().right - 8,
         );
       });
+    });
+
+    await step('Seta esquerda fecha SÓ o submenu e devolve o foco ao sub-gatilho', async () => {
+      await expect(document.activeElement).toBe(firstSubItem());
+      await userEvent.keyboard('{ArrowLeft}');
+
+      await waitFor(() => expect(subTrigger.getAttribute('aria-expanded')).toBe('false'));
+      // Fechou: a ligação sai junto com o painel.
+      await expect(subTrigger.getAttribute('aria-owns')).toBeNull();
+      await waitFor(() => expect(document.activeElement).toBe(subTrigger));
+      await rootStillOpen();
+    });
+
+    await step('Escape dentro do submenu fecha SÓ o submenu, com o mesmo destino', async () => {
+      // O foco está no sub-gatilho (passo anterior): a seta reabre e entra.
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(document.activeElement).toBe(firstSubItem()));
+
+      // Escape é o nível mais fundo que fecha, não o menu inteiro: o painel do
+      // submenu precisa ser FILHO do pai na árvore flutuante para a lib saber
+      // que existe um nível a quem ceder.
+      await userEvent.keyboard('{Escape}');
+
+      await waitFor(() => expect(subTrigger.getAttribute('aria-expanded')).toBe('false'));
+      await waitFor(() => expect(document.activeElement).toBe(subTrigger));
+      await rootStillOpen();
+    });
+
+    await step('A story termina com o submenu ABERTO', async () => {
+      // `visual.item4` descreve o SubContent aberto: é esse o estado que o
+      // Chromatic fotografa.
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(document.activeElement).toBe(firstSubItem()));
     });
   },
 };

@@ -28,6 +28,7 @@ import {
   computed,
   contentChild,
   effect,
+  forwardRef,
   inject,
   input,
   ViewEncapsulation,
@@ -53,6 +54,13 @@ import {
   injectRdxMenuGroupContext,
   isIndeterminate,
 } from '@radix-ng/primitives/menu';
+import {
+  NDS_SUBMENU_PANEL,
+  NdsMenuPopupScope,
+  NdsSubmenuKeyboardEntry,
+  NdsSubmenuOwnsPanel,
+  type NdsSubmenuPanel,
+} from './menu-popup-scope';
 
 // ─── DropdownMenu ─────────────────────────────────────────────────────────────
 //
@@ -101,12 +109,42 @@ import {
 // nenhum na tela. Com `<ng-template>`, quem monta e desmonta é o portal, e todo
 // o ciclo (foco inicial, devolução do foco, dispensa) volta a valer.
 //
-// O preço, conhecido e registrado: a injeção de dependência de uma view
-// embutida sobe pela árvore de DECLARAÇÃO, não pela de inserção — então os itens
-// procuram a lista composta (`RdxCompositeList`, que vive no popup) a partir de
-// `<nds-dropdown-menu>` e não a encontram. O primitivo tem caminho para isso: o
-// popup cai na varredura do DOM (`getDomMenuItems`) e setas, Home/End e
-// typeahead continuam funcionando, com o realce vindo do foco em vez do índice.
+// O preço, e como está pago: a injeção de dependência de uma view embutida sobe
+// pela árvore de DECLARAÇÃO, não pela de inserção — os itens procuravam a lista
+// composta (`RdxCompositeList`) e o nó da árvore flutuante, que vivem no POPUP, a
+// partir de `<nds-dropdown-menu>`. Setas e typeahead sobreviviam pela varredura
+// do DOM, mas o painel do submenu nascia como raiz solta, e não como filho do
+// menu que o abriu: a seta direita abria o submenu e o foco não entrava, e a
+// seta esquerda e o Escape lá dentro não tinham o que fechar (WCAG 2.1.1,
+// registrado em 2026-09-02).
+//
+// Fechado em 2026-09-10, em duas partes, com as peças de `menu-popup-scope.ts`
+// que o ContextMenu e o Menubar também usam:
+//
+//   · o popup entrega o PRÓPRIO injetor ao miolo (`NdsMenuPopupScope` +
+//     `[ngTemplateOutletInjector]`, no template da raiz abaixo) — os itens se
+//     registram na lista do painel em que estão, e o painel do submenu acha o
+//     painel pai na árvore flutuante. Com isso a seta esquerda e o Escape dentro
+//     do submenu fecham SÓ o submenu e devolvem o foco ao sub-gatilho, que é o
+//     que o Vanilla faz;
+//   · o sub-gatilho leva o foco ao primeiro item do submenu na seta direita
+//     (`NdsSubmenuKeyboardEntry`), também quando o ponteiro já tinha aberto o
+//     painel — caso em que a lib abre mão de mover o foco.
+//
+// E o sub-gatilho diz QUAL painel abre: `aria-owns` apontando para o painel
+// portalado, só enquanto ele está aberto (`NdsSubmenuOwnsPanel`, com o `id` que
+// a raiz do submenu dá ao painel). A lib escreve `aria-haspopup` e
+// `aria-expanded`, e para aí.
+//
+// A story `WithSubmenu` aperta as três teclas, confere onde o foco pousa e para
+// onde o `aria-owns` aponta.
+//
+// E o Tab (C2), na mesma peça do popup: fecha o menu INTEIRO, também de dentro
+// do submenu, e o foco segue a página a partir do gatilho — o próximo ponto de
+// tabulação (Shift+Tab: o anterior), ou o próprio gatilho se ele for a última
+// parada. A lib fechava só o nível em foco e devolvia o foco ao gatilho, então
+// Tab e Shift+Tab davam no mesmo lugar. Stories `TabLeavesMenu` e
+// `TabAtPageEnd`.
 
 /** Lado preferido de abertura do popup em relação ao gatilho. */
 export type DropdownMenuSide = 'top' | 'bottom' | 'left' | 'right';
@@ -160,7 +198,7 @@ export class NdsDropdownMenuContent {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [RdxMenuPortal, RdxMenuPositioner, RdxMenuPopup, NgTemplateOutlet],
+  imports: [RdxMenuPortal, RdxMenuPositioner, RdxMenuPopup, NdsMenuPopupScope, NgTemplateOutlet],
   hostDirectives: [
     {
       directive: RdxMenuRoot,
@@ -168,6 +206,10 @@ export class NdsDropdownMenuContent {
       outputs: ['openChange'],
     },
   ],
+  // O `id` do painel do submenu, para o sub-gatilho apontar
+  // (`NdsSubmenuOwnsPanel`). O menu de topo também fornece, e ninguém o lê: todo
+  // sub-gatilho acha antes a raiz do próprio submenu.
+  providers: [{ provide: NDS_SUBMENU_PANEL, useExisting: forwardRef(() => NdsDropdownMenu) }],
   host: {
     '[attr.data-slot]': '"dropdown-menu"',
   },
@@ -196,20 +238,46 @@ export class NdsDropdownMenuContent {
       >
         <div
           rdxMenuPopup
+          ndsMenuPopupScope
+          #scope="ndsMenuPopupScope"
           class="nds-dropdown-menu-content"
           [attr.data-slot]="slotDoPopup()"
+          [attr.id]="submenuPanelId()"
         >
-          <ng-container [ngTemplateOutlet]="templateDoConteudo()" />
+          <!--
+            O injetor DESTE painel, para o miolo dele: os itens se registram na
+            lista deste painel, e um submenu declarado aqui dentro acha este
+            painel como pai na árvore flutuante. Serve à raiz e ao submenu, que
+            são o mesmo componente.
+          -->
+          <ng-container
+            [ngTemplateOutlet]="templateDoConteudo()"
+            [ngTemplateOutletInjector]="scope.injector"
+          />
         </div>
       </div>
     </ng-template>
   `,
 })
-export class NdsDropdownMenu {
+export class NdsDropdownMenu implements NdsSubmenuPanel {
   private readonly root = inject(RdxMenuRoot, { self: true });
 
   /** O `<ng-template>` que quem consome declarou dentro desta raiz. */
   private readonly content = contentChild(NdsDropdownMenuContent);
+
+  /**
+   * `id` do painel do SUBMENU — existe para o sub-gatilho ter para onde apontar.
+   *
+   * O painel é portalado para o `<body>`: não é descendente do item que o
+   * abriu, e sem este `id` nada no documento liga um ao outro. O menu de topo
+   * não o usa — o gatilho dele não aponta para o painel —, então o painel de
+   * topo segue sem `id`.
+   */
+  readonly panelId = injectId('nds-dropdown-menu-sub-content-');
+
+  protected readonly submenuPanelId = computed<string | null>(() =>
+    this.root.isSubmenu() ? this.panelId : null,
+  );
 
   protected readonly templateDoConteudo = computed<TemplateRef<unknown> | null>(
     () => this.content()?.tpl ?? null,
@@ -493,6 +561,14 @@ export class NdsDropdownMenuIcon {
  *
  * O chevron entra pelo template do componente, como no React, para quem escreve
  * não precisar lembrar de colocá-lo.
+ *
+ * Teclado, pelo contrato do Vanilla: seta direita, Enter e Espaço abrem o
+ * submenu e põem o foco no primeiro item dele. Enter e Espaço são da lib; a seta
+ * direita tem a garantia de `NdsSubmenuKeyboardEntry`, que vem DEPOIS do
+ * `RdxMenuSubTrigger` na lista para o ouvinte dela rodar depois do da lib.
+ *
+ * E o `aria-owns` que liga o item ao painel portalado, só com ele aberto, vem de
+ * `NdsSubmenuOwnsPanel` — a lib não escreve essa ligação.
  */
 @Component({
   selector: 'div[ndsDropdownMenuSubTrigger]',
@@ -502,6 +578,8 @@ export class NdsDropdownMenuIcon {
   imports: [NdsDropdownMenuIcon],
   hostDirectives: [
     { directive: RdxMenuSubTrigger, inputs: ['disabled', 'openOnHover', 'label'] },
+    NdsSubmenuKeyboardEntry,
+    NdsSubmenuOwnsPanel,
   ],
   host: {
     // Ver a nota do popup: o primitivo varre `[rdxMenuSubTrigger]` no DOM para

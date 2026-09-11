@@ -421,8 +421,9 @@ describe('composições', () => {
 
   it('dropdownMenuWithSubmenuSource publica a tríade do segundo nível', () => {
     // `<nds-dropdown-menu-sub>` guarda o estado, o sub-gatilho é o item que
-    // abre, e o `ndsDropdownMenuSubContent` é o painel filho. O chevron e o par
-    // `aria-haspopup`/`aria-expanded` entram pelo componente: nada disso pede
+    // abre, e o `ndsDropdownMenuSubContent` é o painel filho. O chevron,
+    // `aria-haspopup`, `aria-expanded` e — porque o painel é portalado — o
+    // `aria-owns` que aponta para ele entram pelo componente: nada disso pede
     // prop, e escrever uma ensinaria API que não existe.
     const code = dropdownMenuWithSubmenuSource();
     expect(code).toContain('<nds-dropdown-menu-sub>');
@@ -431,6 +432,7 @@ describe('composições', () => {
     expect(code).toContain('<ng-template ndsDropdownMenuSubContent>');
     expect(code).not.toContain('aria-haspopup');
     expect(code).not.toContain('aria-expanded');
+    expect(code).not.toContain('aria-owns');
     // DOIS itens no submenu, como a `play` da story afirma, mais o item do menu
     // pai que fica de fora dele.
     expect(code).toContain('<div ndsDropdownMenuItem>Renomear</div>');

@@ -144,3 +144,92 @@ export const Playground: Story = {
     });
   },
 };
+
+/**
+ * Um `Tab` de teclado, DESPACHADO À MÃO no elemento em foco.
+ *
+ * `userEvent.keyboard('{Tab}')` e `userEvent.tab()` MOVEM O FOCO primeiro e só
+ * então anunciam a tecla — medido no popover desta stack, e registrado no menu
+ * de contexto. Aqui isso mediria outra coisa: quem decide o Tab é o `keydown` do
+ * PAINEL, e com o foco já fora dele a tecla nunca chega. Despachar reproduz a
+ * ordem do teclado real — `keydown` no item em foco primeiro.
+ */
+function pressTab(shift = false): void {
+  document.activeElement?.dispatchEvent(
+    new KeyboardEvent('keydown', { key: 'Tab', shiftKey: shift, bubbles: true, cancelable: true }),
+  );
+}
+
+export const TabLeavesMenu: Story = {
+  args: { neighbors: 'both', triggerLabel: 'Abrir menu' },
+  parameters: { controls: { disable: true } },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: 'Abrir menu' });
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+
+    const openWithItemFocused = async () => {
+      // A camada dismissível prende `pointer-events: none` no gatilho enquanto o
+      // menu desmonta — clicar antes da limpeza estoura (ver o Playground).
+      await waitFor(async () => {
+        await expect(getComputedStyle(trigger).pointerEvents).not.toBe('none');
+      });
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+    };
+
+    await step('Tab sai do menu, fecha e segue para o próximo ponto da página', async () => {
+      await openWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // O próximo ponto é o vizinho do GATILHO, não o fim do documento, onde o
+      // painel vive em portal. Quem conduz é a própria lib (`handleTabKeyDown`).
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after);
+      });
+    });
+
+    await step('Shift+Tab sai para o ponto ANTERIOR ao gatilho', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before);
+      });
+    });
+  },
+};
+
+/**
+ * O gatilho como ÚLTIMA parada da página. É o ramo em que a lib barra o Tab e
+ * não fecha (`handleTabKeyDown` só chama `body.focus()`), e o foco ficava preso
+ * no menu — ver `tab-leaves-menu.ts`.
+ */
+export const TabAtPageEnd: Story = {
+  args: { neighbors: 'before', triggerLabel: 'Abrir menu' },
+  parameters: { controls: { disable: true } },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: 'Abrir menu' });
+
+    await step('Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho', async () => {
+      await waitFor(async () => {
+        await expect(getComputedStyle(trigger).pointerEvents).not.toBe('none');
+      });
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(trigger);
+      });
+    });
+  },
+};

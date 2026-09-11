@@ -5,6 +5,8 @@
 
 	let {
 		ref = $bindable(null),
+		// PATCH: bugfix — escolher não fecha o menu, como no vanilla (ver PATCHES.md#svelte-menu-select-keeps-open)
+		closeOnSelect = false,
 		class: className,
 		inset,
 		children: childrenProp,
@@ -14,8 +16,14 @@
 	} = $props();
 </script>
 
+<!--
+	Escolher uma opção NÃO fecha o menu, pelo mesmo motivo do item de marcação
+	(ver `menubar-checkbox-item.svelte`) e como no vanilla e no react, que deixam
+	o painel aberto depois da escolha. Quem consome religa pela mesma prop.
+-->
 <MenubarPrimitive.RadioItem
 	bind:ref
+	{closeOnSelect}
 	data-slot="menubar-radio-item"
 	data-inset={inset}
 	class={cn("nds-dropdown-menu-radio-item", className)}

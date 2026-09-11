@@ -595,7 +595,7 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 ### react/context-menu — Tab fecha o menu e o foco segue a página (a base-ui prende o foco) {#react-context-menu-tab-exit}
 
-- **Arquivos:** `nortear-design-system-react/src/components/ui/context-menu.tsx` (+ `menu-tab-exit.ts`)
+- **Arquivos:** `nortear-design-system-react/src/components/ui/context-menu.tsx` (+ `menu-tab-exit.ts`, compartilhado com o DropdownMenu — ver `#react-dropdown-menu-tab-exit`)
 - **Categoria:** a11y
 - **Data:** 2026-09-10
 - **Upstream ref:** `@base-ui/react` — `menu/popup/MenuPopup.js` passa `modal: isContextMenu` ao `FloatingFocusManager`
@@ -620,6 +620,21 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 **Motivo:** D8 do `prd/dropdown-menu.md`, e decisão da dona de 2026-09-10 — as outras quatro stacks já tinham o estado misto. `MenuCheckboxItem.js:94-98` aplica as props de fora depois do `aria-checked` interno.
 
 **Verificação após bump:** a story `CheckboxIndeterminate`, primeiro passo (`mixed`/`true`/`false`). Se a lib passar a sobrescrever `aria-checked`, ou ganhar `indeterminate` nativo, rever.
+
+### react/dropdown-menu + menubar — Tab sai do menu pelo vizinho do gatilho {#react-dropdown-menu-tab-exit}
+
+- **Arquivos:** `nortear-design-system-react/src/components/ui/dropdown-menu.tsx` (+ `menu-tab-exit.ts`); o `menubar.tsx` herda pelo `MenubarMenu`, que é um `DropdownMenu`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `@base-ui/react` 1.7.0 — `menu/popup/MenuPopup.js` (`modal: isContextMenu`, `previousFocusableElement: activeTriggerElement`) e as âncoras de foco de `floating-ui-react/components/FloatingFocusManager.js`
+
+**Antes (medido com teclado real):** a lib deixa o Tab para o navegador e para as âncoras de foco. Tab e Tab no submenu acertavam. Shift+Tab mandava o foco ao próprio gatilho — no Menubar, com o menu ABERTO; Shift+Tab no submenu fechava só o submenu; e no DropdownMenu, com o gatilho como última parada, o Tab dava a volta até o início da página.
+
+**Depois:** o `DropdownMenuContent` ouve Tab e Shift+Tab (painel raiz e de submenu), faz `preventDefault` e `event.preventBaseUIHandler()`; a raiz calcula o próximo (ou anterior) ponto de tabulação a partir do GATILHO (`tabbableBeside`; os outros gatilhos da barra têm `tabindex="-1"`, então o destino fica fora dela), fecha o menu inteiro pelo `actionsRef` e foca o destino. Sem destino, a lib devolve o foco ao gatilho. O motivo `imperative-action` vira `focus-out`, o mesmo que a lib já entregava no Tab que acertava. O `modal` da raiz (véu) fica intacto.
+
+**Motivo:** C2 e D1 do `prd/dropdown-menu.md` — menu não prende o foco, e Tab segue o percurso da página a partir do gatilho.
+
+**Verificação após bump:** `TabLeavesMenu`/`TabAtPageEnd` (dropdown-menu.stories) e `TabLeavesMenubar`/`TabAtPageEnd` (menubar.stories) — reprovam sem o conserto, medido. Se a lib passar a conduzir o Shift+Tab e o Tab da última parada, saem o handler, o `TabExitContext` e o registro do gatilho.
 
 ### angular/dropdown-menu + menubar + context-menu — o foco entra no submenu pela seta direita {#angular-dropdown-menu-submenu-entry}
 
@@ -753,6 +768,77 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 **Motivo:** C4 do `prd/dropdown-menu.md` — typeahead, padrão de menu da WAI-ARIA APG.
 
 **Verificação após bump:** o passo "Digitar salta para o item…" do Playground. Se o painel passar a sair com o `id` que o bits guardou, o `$effect` sai.
+
+### svelte/dropdown-menu — `id` no painel raiz (typeahead) {#svelte-menu-content-id}
+
+- **Arquivo:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/dropdown-menu-content.svelte`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `bits-ui` 2.19.0 — `popper-layer-inner.svelte` consome o `id`; `menu.svelte.js:861` compara com ele
+
+**Antes:** o painel nascia sem `id`, `isKeydownInside` era sempre falso e a letra digitada não movia o foco (C4). A story `Open` declarava a busca como não aplicável em vez de reprovar.
+
+**Depois:** o wrapper gera um id estável (`$props.id()`, sobrescrevível), passa à lib e o escreve no nó recebido por `ref`. Mesmo conserto de `menubar-content.svelte` e de `context-menu-content.svelte` (`#svelte-context-menu-content-id`).
+
+**Motivo:** C4 do `prd/dropdown-menu.md` — typeahead, padrão de menu da WAI-ARIA APG.
+
+**Verificação após bump:** o passo "Digitar uma letra…" da story `Open` (dropdown-menu-states).
+
+### svelte/dropdown-menu + menubar — `closeOnSelect = false` nos itens de marcação e rádio {#svelte-menu-select-keeps-open}
+
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/dropdown-menu-checkbox-item.svelte`, `dropdown-menu-radio-item.svelte`, `menubar/menubar-checkbox-item.svelte`, `menubar/menubar-radio-item.svelte`
+- **Categoria:** bugfix
+- **Data:** 2026-09-10
+- **Upstream ref:** padrão `closeOnSelect = true` do `bits-ui` (`menu-checkbox-item.svelte:20`, `menu-radio-item.svelte:18`; o fechamento sai de `menu.svelte.js:1064`)
+
+**Depois:** o wrapper declara `closeOnSelect = false` e o repassa; quem consome religa pela mesma prop, e o `onSelect` dele segue por `restProps`.
+
+**Motivo:** o vanilla e o react deixam o painel aberto ao marcar e ao escolher rádio. O fechamento ficou escondido enquanto a folha animava a saída (D5): medido em par, com a regra de saída antiga reinjetada a story passa.
+
+**Verificação após bump:** With Checkbox Items / With Radio Group (compositions) e Checkbox Checked (menubar-states) afirmam `queryAllByRole('menu')` com 1 menu depois do clique — `document.body.contains(menu)` não tem dentes no bits, porque o nó fechado continua no DOM.
+
+### svelte/dropdown-menu + menubar — Tab com o gatilho na ponta da página {#svelte-menu-tab-edge}
+
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/` (`tab-leaves-menu.ts`, `dropdown-menu.svelte`, `dropdown-menu-content.svelte`, `dropdown-menu-sub-content.svelte`) e `menubar/` (`tab-leaves-menu.ts`, `menubar.svelte`, `menubar-content.svelte`, `menubar-sub-content.svelte`)
+- **Categoria:** bugfix
+- **Data:** 2026-09-10
+- **Upstream ref:** `bits-ui/dist/bits/menu/menu.svelte.js:816-848` (`handleTabKeyDown`, ramo `else`)
+
+**Antes:** quando o gatilho era a última (ou, no Shift+Tab, a primeira) parada da página, `getTabbableFrom` não achava ninguém e a lib só chamava `body.focus()`: a tecla ficava barrada e o menu, aberto.
+
+**Depois:** a raiz publica `isOpen`/`close` por contexto; os painéis encadeiam `closeAfterTab` depois do `onkeydown` de quem consome e, numa microtask, fecham a raiz se a lib a deixou aberta (avisando `onOpenChange`/`onValueChange`). Mesmo desenho do `#svelte-context-menu-tab-last-stop`.
+
+**Motivo:** C2 do `prd/dropdown-menu.md` — Tab fecha e segue a página.
+
+**Verificação após bump:** `TabAtPageEnd` nas duas stories (reprova sem o conserto, medido).
+
+### vue/dropdown-menu + menubar — marcar e escolher não fecham o menu {#vue-menu-select-keeps-open}
+
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/dropdown-menu/DropdownMenuCheckboxItem.vue`, `DropdownMenuRadioItem.vue`, `menubar/MenubarCheckboxItem.vue`, `menubar/MenubarRadioItem.vue`
+- **Categoria:** bugfix
+- **Data:** 2026-09-10
+- **Upstream ref:** `reka-ui` — `Menu/MenuItem.js:37-47` fecha o menu no tique seguinte ao `select`, a menos que o evento volte com `preventDefault`
+
+**Depois:** o wrapper ouve `select` e faz `preventDefault` depois do ouvinte de quem consome, que chega pelo `forwarded` (no `MenubarCheckboxItem`, `handleSelect` emite e depois previne). A alternância não depende do evento: a lib troca o valor de qualquer jeito.
+
+**Motivo:** a reka fecha em toda escolha, inclusive nos itens de marcação e de rádio; o vanilla e o react deixam o painel aberto. Ficou escondido enquanto a folha animava a saída (D5). Mesmo conserto do `#vue-context-menu-keep-open`.
+
+**Verificação após bump:** With Checkbox Items / With Radio Group (compositions) e Checkbox Checked (menubar-states) afirmam `queryAllByRole('menu')` com 1 menu depois do clique.
+
+### vue/dropdown-menu + menubar — Tab sai do menu pelo vizinho do gatilho {#vue-menu-tab-leaves}
+
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/dropdown-menu/` (`tab-leaves-menu.ts`, `DropdownMenuContent.vue`, `DropdownMenuSubContent.vue`) e `menubar/` (`tab-leaves-menu.ts`, `MenubarContent.vue`, `MenubarSubContent.vue`)
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `reka-ui/dist/Menu/MenuContentImpl.js:210` (`preventDefault` no Tab com a raiz modal)
+
+**Antes (medido com teclado real):** o DropdownMenu modal prendia Tab e Shift+Tab, com o foco no item e o menu aberto. O Menubar fechava, mas o foco ia ao `<body>` (Tab) ou ao elemento DEPOIS da barra (Shift+Tab), porque a ordem de tabulação partia do portal no fim do documento.
+
+**Depois:** ouvinte de CAPTURA nos painéis raiz e de submenu. No DropdownMenu, fecha pela raiz e aplica o destino (o ponto de tabulação vizinho do gatilho) no `closeAutoFocus`, com `modal` intacto — véu e trava de rolagem se mantêm (D1). No Menubar, que a lib monta não modal, move o foco para o destino e a lib fecha pelo `focusOutside`. Sem destino, fecha e o foco volta ao gatilho.
+
+**Motivo:** C2 e D1 do `prd/dropdown-menu.md`. O destino segue o `handleTabKeyDown` do bits-ui.
+
+**Verificação após bump:** `TabLeavesMenu`/`TabAtPageEnd` (dropdown-menu.stories) e `TabLeavesMenubar`/`TabAtPageEnd` (menubar.stories). Se a reka parar de barrar o Tab e passar a conduzir o foco, o ouvinte sai.
 
 ---
 

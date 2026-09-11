@@ -3,7 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR, type MenubarItemVariant } from './menubar';
 import { menubarPlaygroundSource, type MenubarArgs } from './menubar.source';
+import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { pressTab } from '@/lib/press-tab';
 import { NdsMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -55,7 +57,9 @@ const MENUS: MenuDemo[] = [
 const meta: Meta<MenubarArgs> = {
   title: 'Components/Navigation/Menubar',
   tags: ['autodocs', 'navigation'],
-  decorators: [moduleMetadata({ imports: [...NDS_MENUBAR] })],
+  // `NdsButton` serve aos vizinhos das stories de Tab — um ponto de tabulação
+  // antes e outro depois da barra.
+  decorators: [moduleMetadata({ imports: [...NDS_MENUBAR, NdsButton] })],
   parameters: {
     layout: 'centered',
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
@@ -295,6 +299,148 @@ export const Playground: Story = {
       await userEvent.click(arquivo);
       await waitForPortalVanish('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+    });
+  },
+};
+
+// ─── Tab sai da barra ─────────────────────────────────────────────────────────
+
+/**
+ * Menu não prende o foco (C2 do PRD do DropdownMenu, que vale para os menus da
+ * barra): Tab fecha o menu aberto e o foco segue a página a partir da BARRA —
+ * que é uma parada só —, e não de um gatilho vizinho. Shift+Tab vai ao que vem
+ * antes dela. Dentro do submenu, fecha o menu INTEIRO.
+ *
+ * Antes da correção (medido com teclado real em 2026-09-10), a lib fechava o
+ * menu e o foco VOLTAVA ao gatilho: Tab e Shift+Tab davam no mesmo lugar, e no
+ * submenu só o submenu fechava. O Tab é despachado à mão (`@/lib/press-tab`),
+ * então o foco só chega ao vizinho se o menu o levar.
+ */
+export const TabLeavesMenubar: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    template: `
+      <div class="nds-cluster" data-spacing="md">
+        <button ndsButton variant="ghost">Antes</button>
+        <nds-menubar>
+          <nds-menubar-menu>
+            <button ndsMenubarTrigger>Arquivo</button>
+            <ng-template ndsMenubarContent>
+              <div ndsMenubarItem>Novo</div>
+              <div ndsMenubarItem>Abrir</div>
+              <nds-menubar-sub>
+                <div ndsMenubarSubTrigger>Exportar</div>
+                <ng-template ndsMenubarSubContent>
+                  <div ndsMenubarItem>PDF</div>
+                  <div ndsMenubarItem>CSV</div>
+                </ng-template>
+              </nds-menubar-sub>
+            </ng-template>
+          </nds-menubar-menu>
+          <nds-menubar-menu>
+            <button ndsMenubarTrigger>Editar</button>
+            <ng-template ndsMenubarContent>
+              <div ndsMenubarItem>Desfazer</div>
+              <div ndsMenubarItem>Refazer</div>
+            </ng-template>
+          </nds-menubar-menu>
+        </nds-menubar>
+        <button ndsButton variant="ghost">Depois</button>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const bar = canvas.getByRole('menubar');
+    const [fileTrigger] = within(bar).getAllByRole('menuitem');
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+
+    const openWithItemFocused = async () => {
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+      return menu;
+    };
+
+    await step('Tab sai da barra inteira e fecha o menu aberto', async () => {
+      await openWithItemFocused();
+      pressTab();
+      await waitForPortalVanish('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      // O próximo ponto é o vizinho da BARRA: nem o gatilho "Editar", que é da
+      // mesma parada, nem o gatilho de onde o menu saiu, que era onde a lib
+      // devolvia o foco.
+      await waitFor(() => expect(document.activeElement).toBe(after));
+    });
+
+    await step('Shift+Tab sai para o ponto ANTERIOR à barra', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalVanish('menu');
+      await waitFor(() => expect(document.activeElement).toBe(before));
+    });
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e sai da barra', async () => {
+      const menu = await openWithItemFocused();
+      within(menu).getByRole('menuitem', { name: 'Exportar' }).focus();
+      await userEvent.keyboard('{ArrowRight}');
+      const submenu = () => document.querySelector<HTMLElement>('[data-slot="menubar-sub-content"]');
+      await waitFor(() => expect(submenu()?.contains(document.activeElement)).toBe(true));
+
+      pressTab();
+      // Os DOIS painéis: fechar só o submenu deixaria o foco num menu que a
+      // pessoa quis deixar para trás.
+      await waitForPortalVanish('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(() => expect(document.activeElement).toBe(after));
+    });
+  },
+};
+
+/**
+ * A barra como ÚLTIMA parada da página: não há vizinho para onde levar o foco.
+ * O Tab tem de fechar do mesmo jeito, e o foco volta ao gatilho do menu que
+ * estava aberto — nunca ao `<body>`, nem à barra, que não recebe foco.
+ */
+export const TabAtPageEnd: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    template: `
+      <div class="nds-cluster" data-spacing="md">
+        <button ndsButton variant="ghost">Antes</button>
+        <nds-menubar>
+          <nds-menubar-menu>
+            <button ndsMenubarTrigger>Arquivo</button>
+            <ng-template ndsMenubarContent>
+              <div ndsMenubarItem>Novo</div>
+              <div ndsMenubarItem>Abrir</div>
+            </ng-template>
+          </nds-menubar-menu>
+          <nds-menubar-menu>
+            <button ndsMenubarTrigger>Editar</button>
+            <ng-template ndsMenubarContent>
+              <div ndsMenubarItem>Desfazer</div>
+            </ng-template>
+          </nds-menubar-menu>
+        </nds-menubar>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const bar = within(canvasElement).getByRole('menubar');
+    const [fileTrigger] = within(bar).getAllByRole('menuitem');
+
+    await step('Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho', async () => {
+      if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+
+      pressTab();
+      await waitForPortalVanish('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(() => expect(document.activeElement).toBe(fileTrigger));
     });
   },
 };

@@ -18,11 +18,7 @@ import {
   DropdownMenuTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import {
-  waitForPortal,
-  FOCUS_RULE_GUARDA,
-  LIST_RULE_SCROLL,
-} from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
   dropdownMenuWithShortcutsSource,
   dropdownMenuWithChoiceUnicaSource,
@@ -246,6 +242,10 @@ export const WithRadioGroup: Story = {
         await expect(escuro).toHaveAttribute('aria-checked', 'true');
         await expect(light).toHaveAttribute('aria-checked', 'false');
       });
+      // Escolher não fecha, como no vanilla e no react. A lib fecha por padrão, e
+      // sem esta linha a story passava com o menu já fechado: o item guarda o
+      // último `aria-checked` mesmo fora do documento.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
     });
   },
 };
@@ -256,15 +256,9 @@ export const WithSubmenu: Story = {
     // O segundo nível é a tríade Sub/SubTrigger/SubContent, que o snippet do
     // meta esconderia por inteiro.
     docs: { source: { transform: dropdownMenuWithSubmenuSource } },
-    // Com o submenu ABERTO — que é o estado que `visual.item4` documenta — o
-    // primitivo recalcula a altura disponível do menu PAI e ele passa a rolar.
-    // O axe então cobra foco na região rolável, e não tem como enxergar que num
-    // `role="menu"` o acesso por teclado vem das SETAS: todo item é
-    // `tabindex="-1"` por definição do padrão, e é a navegação por seta que
-    // rola o item para dentro da vista. A exceção vale só aqui, e o passo
-    // "o menu pai realmente rola" abaixo é o que impede que ela cubra, no
-    // futuro, uma lista curta que passou a rolar sem motivo.
-    a11y: { config: { rules: [FOCUS_RULE_GUARDA, LIST_RULE_SCROLL] } },
+    // Sem exceção de `scrollable-region-focusable` aqui. Ela existiu enquanto o
+    // painel do submenu nascia DENTRO do painel pai (sem portal) e o fazia
+    // rolar; o último passo da play é o que impede a rolagem de voltar.
   },
   render: () => ({
     components: componentes,
@@ -324,11 +318,15 @@ export const WithSubmenu: Story = {
       });
     });
 
-    await step('O menu pai realmente rola — é o que justifica a exceção do axe', async () => {
-      // Guarda da exceção declarada no `parameters.a11y` desta story. Se um dia
-      // o menu pai deixar de transbordar, esta asserção cai e a exceção precisa
-      // sair junto — exceção que ninguém revisita vira exceção permanente.
-      await expect(menu.scrollHeight).toBeGreaterThan(menu.clientHeight);
+    await step('O submenu é um painel próprio, fora do pai — e o pai não rola', async () => {
+      const submenu = body.getAllByRole('menu')[1];
+      // Sem portal o painel filho nascia dentro do pai, que tem `overflow-y:
+      // auto`: o pai passava a rolar e o axe acusava região rolável sem foco.
+      await expect(menu.contains(submenu)).toBe(false);
+      await expect(submenu.getAttribute('data-slot')).toBe('dropdown-menu-sub-content');
+      // Sem a classe do painel o submenu flutuava sem fundo, borda nem sombra.
+      await expect(submenu.classList.contains('nds-dropdown-menu-content')).toBe(true);
+      await expect(menu.scrollHeight).toBeLessThanOrEqual(menu.clientHeight);
     });
   },
 };

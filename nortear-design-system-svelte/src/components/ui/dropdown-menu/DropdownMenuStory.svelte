@@ -39,6 +39,12 @@
     open?: boolean;
     triggerLabel?: string;
     variant?: Variant;
+    /**
+     * Botões vizinhos do gatilho, que dão DESTINO ao Tab que sai do menu.
+     * `'both'` põe um antes e outro depois; `'before'` só o de antes — o gatilho
+     * vira a ÚLTIMA parada da página, o caso em que a lib não fechava.
+     */
+    neighbors?: 'both' | 'before';
   }
   // `defaultOpen` não existe no bits-ui nem no vaul-svelte: a prop era
   // passada, ignorada, e o overlay nunca abria. A API real é `open`
@@ -53,6 +59,7 @@
     open = $bindable(defaultOpen),
     triggerLabel = 'Mais ações',
     variant = 'default',
+    neighbors = undefined,
   }: Props = $props();
 
   // states for interactive variants
@@ -62,7 +69,8 @@
   let appearance = $state('light');
 </script>
 
-<div style="contain: layout">
+<div class={neighbors ? 'nds-cluster' : undefined} data-spacing={neighbors ? 'md' : undefined} style="contain: layout">
+  {#if neighbors}<Button variant="ghost">Antes</Button>{/if}
   {#key `${side}-${align}-${defaultOpen}-${variant}`}
       <!--
         Sem `modal`: a prop não existe na API deste primitivo — era passada,
@@ -199,4 +207,5 @@
         </DropdownMenuContent>
       </DropdownMenu>
   {/key}
+  {#if neighbors === 'both'}<Button variant="ghost">Depois</Button>{/if}
 </div>

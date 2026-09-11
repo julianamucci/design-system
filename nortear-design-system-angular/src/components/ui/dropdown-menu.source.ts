@@ -385,9 +385,10 @@ export function dropdownMenuWithRadioSource(): string {
  *
  * A tríade é obrigatória: `<nds-dropdown-menu-sub>` guarda o estado, o
  * `ndsDropdownMenuSubTrigger` é o item que abre, e o `ndsDropdownMenuSubContent`
- * é o painel filho. O chevron entra pelo componente e o par
- * `aria-haspopup`/`aria-expanded` também — a seta para a direita entra, a da
- * esquerda volta, e nada disso pede prop.
+ * é o painel filho. O chevron entra pelo componente, e o ARIA também:
+ * `aria-haspopup`, `aria-expanded` e o `aria-owns` que liga o item ao painel
+ * portalado — a seta para a direita entra, a da esquerda volta, e nada disso
+ * pede prop.
  */
 export function dropdownMenuWithSubmenuSource(): string {
   return simpleMenu(

@@ -11,8 +11,12 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
   MenubarTrigger,
 } from "./menubar"
+import { Button } from "./button"
 import { menubarSource } from "./menubar.source"
 import { MenubarDocs } from "@/components/docs/MenubarDocs"
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab"
@@ -314,6 +318,167 @@ export const Playground: Story = {
       await userEvent.click(arquivo)
       await waitForPortalGone("menu")
       await expect(arquivo.getAttribute("aria-expanded")).toBe("false")
+    })
+  },
+}
+
+/**
+ * Um `Tab` de teclado, DESPACHADO À MÃO no elemento em foco.
+ *
+ * Quem decide o Tab é o `keydown` do PAINEL, no wrapper do DropdownMenu, que o
+ * `MenubarMenu` compõe — a lib o deixa para o navegador. Um `keydown`
+ * despachado não tem ação padrão: o navegador não move o foco, e as âncoras de
+ * foco da lib em volta do portal não entram em jogo. O que a story mede é que o
+ * wrapper é dono da tecla. A medição das três entradas (teclado real, o
+ * `userEvent.tab()` e este despacho) está no `pressTab` de
+ * `dropdown-menu.stories.tsx`.
+ */
+function pressTab(shift = false): void {
+  document.activeElement?.dispatchEvent(
+    new KeyboardEvent("keydown", { key: "Tab", shiftKey: shift, bubbles: true, cancelable: true }),
+  )
+}
+
+/**
+ * Dois menus da barra, e um submenu no primeiro: o bastante para a barra ter
+ * um gatilho fora da ordem de tabulação (`Editar`, `tabindex="-1"`) e para o
+ * Tab sair de dentro de um submenu.
+ */
+function TabBar({ withAfter }: { withAfter: boolean }) {
+  return (
+    <div className="nds-cluster nds-min-h-80" data-spacing="md" style={{ contain: "layout" }}>
+      <Button variant="ghost">Antes</Button>
+      <Menubar>
+        <MenubarMenu>
+          <MenubarTrigger>{MENUS[0].label}</MenubarTrigger>
+          <MenubarContent>
+            <MenubarItem>{MENUS[0].items[0].label}</MenubarItem>
+            <MenubarSub>
+              <MenubarSubTrigger>Exportar</MenubarSubTrigger>
+              <MenubarSubContent>
+                <MenubarItem>PDF</MenubarItem>
+                <MenubarItem>CSV</MenubarItem>
+              </MenubarSubContent>
+            </MenubarSub>
+          </MenubarContent>
+        </MenubarMenu>
+        <MenubarMenu>
+          <MenubarTrigger>{MENUS[1].label}</MenubarTrigger>
+          <MenubarContent>
+            {MENUS[1].items.map((item) => (
+              <MenubarItem key={item.label}>{item.label}</MenubarItem>
+            ))}
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+      {withAfter ? <Button variant="ghost">Depois</Button> : null}
+    </div>
+  )
+}
+
+export const TabLeavesMenubar: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => <TabBar withAfter />,
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement)
+    const bar = canvas.getByRole("menubar")
+    const [fileTrigger] = within(bar).getAllByRole("menuitem")
+    const before = canvas.getByRole("button", { name: "Antes" })
+    const after = canvas.getByRole("button", { name: "Depois" })
+    const body = within(document.body)
+
+    const openWithItemFocused = async () => {
+      if (fileTrigger.getAttribute("aria-expanded") !== "true") await userEvent.click(fileTrigger)
+      const menu = await waitForPortal("menu")
+      within(menu).getAllByRole("menuitem")[0].focus()
+      await expect(menu.contains(document.activeElement)).toBe(true)
+    }
+
+    const openSubmenuWithItemFocused = async () => {
+      await openWithItemFocused()
+      const subTrigger = within(await waitForPortal("menu")).getByRole("menuitem", {
+        name: "Exportar",
+      })
+      subTrigger.focus()
+      await userEvent.keyboard("{ArrowRight}")
+      await waitFor(async () => {
+        await expect(body.getAllByRole("menu")).toHaveLength(2)
+      })
+      const submenu = body.getAllByRole("menu")[1]
+      within(submenu).getAllByRole("menuitem")[0].focus()
+      await expect(submenu.contains(document.activeElement)).toBe(true)
+    }
+
+    await step("Tab sai da barra inteira e fecha o menu aberto", async () => {
+      await openWithItemFocused()
+      pressTab()
+      await waitForPortalGone("menu")
+      await expect(fileTrigger.getAttribute("aria-expanded")).toBe("false")
+      // O próximo ponto é o vizinho da BARRA: o outro gatilho está fora da
+      // ordem de tabulação, e o painel vive em portal no fim do documento.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after)
+      })
+    })
+
+    await step("Shift+Tab sai para o ponto ANTERIOR à barra", async () => {
+      // Sem o wrapper, o menu ficava ABERTO com o foco no gatilho: a âncora de
+      // foco antes do painel manda o Shift+Tab para ele.
+      await openWithItemFocused()
+      pressTab(true)
+      await waitForPortalGone("menu")
+      await expect(fileTrigger.getAttribute("aria-expanded")).toBe("false")
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before)
+      })
+    })
+
+    await step("Tab dentro do submenu fecha o menu INTEIRO", async () => {
+      await openSubmenuWithItemFocused()
+      pressTab()
+      // Nenhum painel sobra aberto — nem o do submenu, nem o do menu da barra.
+      await waitForPortalGone("menu")
+      await expect(fileTrigger.getAttribute("aria-expanded")).toBe("false")
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after)
+      })
+    })
+
+    await step("Shift+Tab dentro do submenu também fecha tudo", async () => {
+      // Sem o wrapper, a lib fechava só o submenu e focava o sub-gatilho.
+      await openSubmenuWithItemFocused()
+      pressTab(true)
+      await waitForPortalGone("menu")
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before)
+      })
+    })
+  },
+}
+
+/**
+ * O gatilho do menu aberto como ÚLTIMA parada da página: não há vizinho para
+ * onde levar o foco. O Tab tem de fechar do mesmo jeito, e o foco volta ao
+ * gatilho pelo caminho da lib.
+ */
+export const TabAtPageEnd: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => <TabBar withAfter={false} />,
+  play: async ({ canvasElement, step }) => {
+    const bar = within(canvasElement).getByRole("menubar")
+    const [fileTrigger] = within(bar).getAllByRole("menuitem")
+
+    await step("Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho", async () => {
+      if (fileTrigger.getAttribute("aria-expanded") !== "true") await userEvent.click(fileTrigger)
+      const menu = await waitForPortal("menu")
+      within(menu).getAllByRole("menuitem")[0].focus()
+
+      pressTab()
+      await waitForPortalGone("menu")
+      await expect(fileTrigger.getAttribute("aria-expanded")).toBe("false")
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(fileTrigger)
+      })
     })
   },
 }

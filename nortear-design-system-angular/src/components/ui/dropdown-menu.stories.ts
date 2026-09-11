@@ -5,6 +5,7 @@ import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 import { dropdownMenuPlaygroundSource, type DropdownMenuArgs } from './dropdown-menu.source';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { pressTab } from '@/lib/press-tab';
 import { NdsDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -148,6 +149,136 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
+    });
+  },
+};
+
+// ─── Tab sai do menu ──────────────────────────────────────────────────────────
+
+/**
+ * Menu não prende o foco (C2 e D1 do PRD): Tab fecha o menu e o foco segue a
+ * página a partir do GATILHO — o próximo ponto de tabulação depois dele, ou o
+ * anterior no Shift+Tab. Dentro do submenu, fecha o menu INTEIRO.
+ *
+ * Antes da correção (medido com teclado real em 2026-09-10), a lib fechava o
+ * menu e o foco VOLTAVA ao gatilho: Tab e Shift+Tab davam no mesmo lugar, e no
+ * submenu só o submenu fechava. O Tab é despachado à mão (`@/lib/press-tab`),
+ * então o foco só chega ao vizinho se o menu o levar.
+ *
+ * Modal, que é o padrão: o que se prova aqui vale com o véu de interação e a
+ * trava de rolagem ligados — `modal` não quer dizer armadilha de foco (D1).
+ */
+export const TabLeavesMenu: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    template: `
+      <div class="nds-cluster" data-spacing="md">
+        <button ndsButton variant="ghost">Antes</button>
+        <nds-dropdown-menu>
+          <button ndsDropdownMenuTrigger ndsButton variant="outline">Abrir menu</button>
+
+          <ng-template ndsDropdownMenuContent>
+            <div ndsDropdownMenuItem>Perfil</div>
+            <div ndsDropdownMenuItem>Configurações</div>
+
+            <nds-dropdown-menu-sub>
+              <div ndsDropdownMenuSubTrigger>Exportar</div>
+
+              <ng-template ndsDropdownMenuSubContent>
+                <div ndsDropdownMenuItem>PDF</div>
+                <div ndsDropdownMenuItem>CSV</div>
+              </ng-template>
+            </nds-dropdown-menu-sub>
+          </ng-template>
+        </nds-dropdown-menu>
+        <button ndsButton variant="ghost">Depois</button>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: 'Abrir menu' });
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+
+    const openWithItemFocused = async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+      return menu;
+    };
+
+    await step('Tab fecha o menu e o foco vai ao ponto DEPOIS do gatilho', async () => {
+      await openWithItemFocused();
+      pressTab();
+      await waitForPortalVanish('menu');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
+      // O próximo ponto é o vizinho do GATILHO, não o fim do documento, onde o
+      // painel vive em portal — e não o próprio gatilho, que era onde a lib
+      // devolvia o foco.
+      await waitFor(() => expect(document.activeElement).toBe(after));
+    });
+
+    await step('Shift+Tab fecha o menu e o foco vai ao ponto ANTES do gatilho', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalVanish('menu');
+      await waitFor(() => expect(document.activeElement).toBe(before));
+    });
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e segue do gatilho', async () => {
+      const menu = await openWithItemFocused();
+      within(menu).getByRole('menuitem', { name: 'Exportar' }).focus();
+      await userEvent.keyboard('{ArrowRight}');
+      const submenu = () =>
+        document.querySelector<HTMLElement>('[data-slot="dropdown-menu-sub-content"]');
+      await waitFor(() => expect(submenu()?.contains(document.activeElement)).toBe(true));
+
+      pressTab();
+      // Os DOIS painéis: fechar só o submenu deixaria o foco num menu que a
+      // pessoa quis deixar para trás.
+      await waitForPortalVanish('menu');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(() => expect(document.activeElement).toBe(after));
+    });
+  },
+};
+
+/**
+ * O gatilho como ÚLTIMA parada da página: não há vizinho para onde levar o foco.
+ * O Tab tem de fechar do mesmo jeito — preso, ele seria a armadilha que C2
+ * proíbe —, e o foco volta ao gatilho, nunca ao `<body>`.
+ */
+export const TabAtPageEnd: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => ({
+    template: `
+      <div class="nds-cluster" data-spacing="md">
+        <button ndsButton variant="ghost">Antes</button>
+        <nds-dropdown-menu>
+          <button ndsDropdownMenuTrigger ndsButton variant="outline">Abrir menu</button>
+
+          <ng-template ndsDropdownMenuContent>
+            <div ndsDropdownMenuItem>Perfil</div>
+            <div ndsDropdownMenuItem>Configurações</div>
+          </ng-template>
+        </nds-dropdown-menu>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: 'Abrir menu' });
+
+    await step('Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho', async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      const menu = await waitForPortal('menu');
+      within(menu).getAllByRole('menuitem')[0].focus();
+
+      pressTab();
+      await waitForPortalVanish('menu');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(() => expect(document.activeElement).toBe(trigger));
     });
   },
 };

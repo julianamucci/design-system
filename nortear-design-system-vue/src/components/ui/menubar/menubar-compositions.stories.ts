@@ -302,7 +302,7 @@ export const WithCheckboxItems: Story = {
     });
 
     await step('Marcar não fecha o menu — quem marca uma quer marcar a próxima', async () => {
-      await expect(document.body.contains(menu)).toBe(true);
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
       const other = boxes[EXIBICOES.indexOf('Grade')];
       await expect(other.getAttribute('aria-checked')).toBe('false');
     });
@@ -379,6 +379,10 @@ export const WithRadioGroup: Story = {
         await expect(escuro.getAttribute('aria-checked')).toBe('true');
       });
       await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+      // Escolher não fecha, como no vanilla e no react. A lib fecha por padrão, e
+      // sem esta linha a story passava com o menu já fechado: a opção guarda o
+      // último `aria-checked` mesmo fora do documento.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
     });
   },
 };

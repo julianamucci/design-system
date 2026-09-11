@@ -5,6 +5,8 @@ import { dropdownMenuSource } from './dropdown-menu.source';
 import { createButton } from './button';
 import { createDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { pressTab } from '@/lib/press-tab';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -169,6 +171,132 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
+    });
+  },
+};
+
+// ─── Tab sai do menu ──────────────────────────────────────────────────────────
+
+/**
+ * Cena do Tab: um botão antes e, opcionalmente, um depois do gatilho — os dois
+ * vizinhos que o foco tem de encontrar. O menu traz um submenu, porque o Tab
+ * dentro do painel filho é um dos casos do contrato.
+ */
+function buildTabScene(withAfter: boolean): HTMLElement {
+  const container = document.createElement('div');
+  // `contain` é mecânica de layout, não valor de design.
+  container.style.contain = 'layout';
+  container.className = 'nds-cluster nds-min-h-80';
+  container.dataset.spacing = 'md';
+
+  const trigger = createButton({ variant: 'outline', label: 'Abrir menu' });
+  const menu = createDropdownMenu({
+    trigger,
+    items: [
+      { type: 'item', label: 'Perfil', value: 'profile' },
+      { type: 'item', label: 'Configurações', value: 'settings' },
+      {
+        type: 'submenu',
+        label: 'Compartilhar',
+        value: 'share',
+        items: [
+          { type: 'item', label: 'Por e-mail', value: 'email' },
+          { type: 'item', label: 'Por link', value: 'link' },
+        ],
+      },
+    ],
+  });
+
+  container.append(createButton({ variant: 'ghost', label: 'Antes' }), menu);
+  if (withAfter) container.append(createButton({ variant: 'ghost', label: 'Depois' }));
+  return container;
+}
+
+/** Os painéis de menu no documento — o raiz e o do submenu vivem no `body`. */
+const openMenus = () => within(document.body).queryAllByRole('menu');
+
+/** Abre pelo gatilho (se preciso) e põe o foco no primeiro item do menu. */
+async function openWithItemFocused(trigger: HTMLElement): Promise<HTMLElement> {
+  if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+  const menu = await waitForPortal('menu');
+  within(menu).getAllByRole('menuitem')[0].focus();
+  await expect(menu.contains(document.activeElement)).toBe(true);
+  return menu;
+}
+
+/**
+ * Menu não prende o foco (C2 do PRD): Tab fecha e o foco segue a página a partir
+ * do GATILHO, não do fim do documento, onde o painel vive em portal.
+ *
+ * O Tab é despachado à mão (`@/lib/press-tab`): evento sintético não tem ação
+ * padrão, então o foco só chega ao vizinho se o MENU o levar. Antes da correção
+ * esta story reprovava nos três passos — o menu fechava, mas quem movia o foco
+ * era o navegador, a partir do fim do `body`.
+ */
+export const TabLeavesMenu: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => buildTabScene(true),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: 'Abrir menu' });
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+
+    await step('Tab fecha o menu e o foco vai ao ponto DEPOIS do gatilho', async () => {
+      await openWithItemFocused(trigger);
+      pressTab();
+      // Síncrono de propósito: fechar e mover o foco são o mesmo gesto, e uma
+      // espera aqui esconderia um foco que passasse pelo `<body>` no caminho.
+      await expect(openMenus()).toHaveLength(0);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(document.activeElement).toBe(after);
+      // O menu é modal por padrão: a trava de rolagem sai junto.
+      await expect(document.body.style.overflow).not.toBe('hidden');
+    });
+
+    await step('Shift+Tab fecha o menu e o foco vai ao ponto ANTES do gatilho', async () => {
+      await openWithItemFocused(trigger);
+      pressTab(true);
+      await expect(openMenus()).toHaveLength(0);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(document.activeElement).toBe(before);
+    });
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e segue do gatilho', async () => {
+      const menu = await openWithItemFocused(trigger);
+      within(menu).getByRole('menuitem', { name: 'Compartilhar' }).focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(openMenus()).toHaveLength(2));
+      const sub = document.querySelector<HTMLElement>('[data-slot="dropdown-menu-sub-content"]')!;
+      await waitFor(() => expect(sub.contains(document.activeElement)).toBe(true));
+
+      pressTab();
+      // Os dois painéis: fechar só o filho deixaria o raiz aberto com o foco
+      // fora dele.
+      await expect(openMenus()).toHaveLength(0);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(document.activeElement).toBe(after);
+    });
+  },
+};
+
+/**
+ * O gatilho como ÚLTIMA parada da página: não há vizinho depois dele. O Tab
+ * fecha do mesmo jeito — preso, ele seria a armadilha que C2 proíbe —, e o foco
+ * volta ao gatilho em vez de sair do documento.
+ */
+export const TabAtPageEnd: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => buildTabScene(false),
+  play: async ({ canvasElement, step }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: 'Abrir menu' });
+
+    await step('Sem próxima parada, Tab ainda fecha o menu e o foco volta ao gatilho', async () => {
+      await openWithItemFocused(trigger);
+      pressTab();
+      await expect(openMenus()).toHaveLength(0);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(document.activeElement).toBe(trigger);
     });
   },
 };

@@ -28,6 +28,26 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
  * é o valor que este componente já recebe.
  */
 const misto = computed(() => props.modelValue === 'indeterminate')
+
+/**
+ * Alternar NÃO fecha o menu — como no vanilla e no react.
+ *
+ * A reka fecha em toda escolha, inclusive nos itens de marcação: o `MenuItem`
+ * emite `select` e, no tique seguinte, chama `rootContext.onClose()` a menos que
+ * o evento tenha voltado com `preventDefault`. Isso ficou escondido enquanto a
+ * folha animava a saída: o painel seguia montado durante a animação e a play
+ * que conferia "continua aberto" passava dentro dessa janela. Sem a animação
+ * (D5), o menu sumia a cada marcação.
+ *
+ * Quem consome ouve `select` pelo `forwarded`, que o Vue soma ANTES deste
+ * ouvinte — o evento chega intacto, e o `preventDefault` só diz à lib para não
+ * fechar. A alternância em si não depende dele: a lib troca o valor de qualquer
+ * jeito.
+ */
+// PATCH: bugfix — marcar não fecha o menu, como no vanilla (ver PATCHES.md#vue-menu-select-keeps-open)
+function keepMenuOpen(event: Event) {
+  event.preventDefault()
+}
 </script>
 
 <template>
@@ -35,6 +55,7 @@ const misto = computed(() => props.modelValue === 'indeterminate')
     data-slot="dropdown-menu-checkbox-item"
     v-bind="forwarded"
     :class="cn('nds-dropdown-menu-checkbox-item', props.class)"
+    @select="keepMenuOpen"
   >
     <span
       class="nds-dropdown-menu-item-indicator"
