@@ -255,6 +255,10 @@ relatado. É o modo do dia a dia da revisão componente a componente.
 ```
 Fase A (serial):
   0. Apagar .pipeline-context/ inteira e recriar vazia (Princípio 5)
+  0b. FAMÍLIA: se algum PRD declara `<!-- prd-familia: … -->` com o slug (ou é
+      o PRD do slug e declara membros), a passagem EXPANDE para todos os
+      membros — ver "A família é a unidade", abaixo. Daqui em diante, <slug>
+      quer dizer "cada membro".
   1. node scripts/audit.mjs <slug> --json > .pipeline-context/scan-<slug>.json
   2. Gerar .pipeline-context/<slug>.md
 
@@ -263,6 +267,9 @@ Fase B (1 agent, serial — MEDIÇÃO, e é ela que muda tudo):
                         e o CHECK 14 (Passo 2b): as cinco concordam com a
                         FOLHA e com o PRD? — é o único em que "as cinco fazem
                         igual" é motivo para olhar, não para relaxar
+                        Em família, a medição tem um terceiro eixo: membro ×
+                        membro (payload, ids, contrato, cobertura) — é nele
+                        que a divergência de família mora
 
 Fase C (até 5 agents em PARALELO — FIX-MODE, com a lista da Fase B em mãos):
   /quality <slug>       sempre
@@ -274,6 +281,8 @@ Fase C (até 5 agents em PARALELO — FIX-MODE, com a lista da Fase B em mãos):
 Fase D (serial — PORTÃO, bloqueia o avanço):
   node scripts/audit.mjs <slug> --json     (re-scan pós-fix)
   npm test -- <slug>   nas stacks tocadas
+  mudou `*.source.ts`? → também a varredura `source-snippets.test.ts` da
+                        stack (projeto unit): o filtro por slug NÃO a alcança
   Falha → corrige e repete. Item aplicado sem re-verificação não conta.
 
 Fase E (1 agent — VERIFICAÇÃO):
@@ -281,6 +290,27 @@ Fase E (1 agent — VERIFICAÇÃO):
 
 Fase F: commits por assunto
 ```
+
+**A família é a unidade, não o slug.** DropdownMenu, ContextMenu e Menubar
+vestem uma folha, um PRD (`dropdown-menu.md`, D9) e um vocabulário de eventos:
+são três componentes × cinco stacks, e uma passagem por slug enxerga um terço
+disso. Medido em 2026-09-11, depois de quatro rodadas no DropdownMenu, uma no
+Menubar e três no ContextMenu: o anel ausente em três peças, o destaque com
+dois pesos, o Tab mandando o foco para o lugar errado nas quinze
+implementações, o id do menu em `label` num evento e em `menu` no outro, e as
+prévias de Variantes sem rastreio — cada passagem consertou o seu membro e
+registrou o dos vizinhos como "decisão da passagem do X", que já tinha
+acontecido ou nunca veio. Três consequências:
+
+- **a passagem expande para a família** (Fase A.0b) — contrato, medição,
+  agentes e suítes cobrem todos os membros, e a Fase F commita por assunto;
+- **PENDÊNCIA de PRD de família não se endereça a outra passagem.** Ela fecha
+  na rodada, ou vira pergunta à dona na hora. "É decisão da passagem do X"
+  num PRD que descreve X é a porta por onde as duas pendências de 2026-09-10
+  saíram sem dono;
+- **a guarda do PRD e o portão `contrato_de_familia_sem_teste` leem a mesma
+  declaração** (`<!-- prd-familia: … -->`): mexer num membro cobra o PRD, e cada
+  linha do §2 aponta o item de `testes.*` que a verifica em cada membro.
 
 **Por que cross-stack roda DUAS vezes, e por que a primeira é no começo.** Em
 `audit` ele vem por último, e está certo: sem correção acontecendo, medir antes

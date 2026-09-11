@@ -202,12 +202,15 @@ Process rules, each learned from a concrete failure. They bind the orchestrator 
 
 - **The repository is public.** Never commit measurement IDs, tokens or credentials — GA4 IDs live in `manager-head.html`, which is why that file must not carry a real ID in a commit.
 - **Close every known pendency of a component in the same pass.** When a component is under review, resolve all of its open items across the five stacks; do not record them in `FIXES-NEEDED.md` and move on. Only a decision that is genuinely the user's may stay open, and it is asked for on the spot. The goal is finishing the list with every component correct in every stack.
+
+  **And the unit is the FAMILY when a PRD declares one** (`<!-- prd-familia: … -->` — today `dropdown-menu.md` also describes ContextMenu and Menubar). A pass on any member covers every member; a PRD `PENDÊNCIA` is never addressed to "the pass of the sibling". Measured on 2026-09-11: after eight passes across the three menus, the family still had the Tab destination wrong in all fifteen implementations, the menu id in `label` on one event and `menu` on the next, and two pendencies addressed to passes that had already happened. Full rule in `.claude/commands/pipeline.md`, "A família é a unidade".
 - **A verificação sai da MUDANÇA, não do hábito.** Antes de rodar qualquer coisa, responda em uma frase: *que portão veria este defeito?* Rode esse, e só esse. Em 2026-08-23 troquei a URL de um link e pedi 15 portões e 9 suítes: **118 minutos** para uma mudança de seis arquivos cujo único risco real era resolução de módulo. Bastavam os cinco builds e o teste novo — sete minutos. O escopo grande não era cautela, era o reflexo de quem vinha de lotes de 1.200 arquivos com falha invisível.
 
   | o que mudou | o que rodar |
   |---|---|
   | texto de `translations.json` | `audit.mjs` — texto não compila |
   | um componente `ui/<slug>` | build da stack + a suíte **daquele slug** |
+  | um `*.source.ts` (painel Code) | o teste dele + a varredura `source-snippets.test.ts` da stack (projeto unit) — o filtro por slug **não** a alcança, e 28 falhas passaram assim em 2026-09-10 |
   | CSS compartilhado `.nds-*` | as stories que usam a classe, nas cinco |
   | módulo TS novo em `docs/shared/` | os cinco **builds** (resolução de módulo) + o teste do próprio módulo |
   | **folha CSS** nova em `docs/shared/` | os cinco **`build-storybook`** — ver a nota abaixo: desde 2026-09-02 o `build` não resolve mais `@import` de CSS |

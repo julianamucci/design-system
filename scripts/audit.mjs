@@ -547,6 +547,23 @@ function auditPerformance(slug) {
   return violations;
 }
 
+/**
+ * A dívida declarada do `location_so_da_demo` com limiar de um literal — lida
+ * uma vez. Arquivo ausente ou ilegível vira lista vazia: a regra passa a cobrar
+ * todas as páginas, que é o lado seguro de errar.
+ */
+let _dividaLocationSoDaDemo = null;
+function DIVIDA_LOCATION_SO_DA_DEMO() {
+  if (_dividaLocationSoDaDemo) return _dividaLocationSoDaDemo;
+  try {
+    const bruto = JSON.parse(readFile(join(ROOT, 'docs', 'shared', 'primitives', 'location-so-da-demo-divida.json')) || '{}');
+    _dividaLocationSoDaDemo = new Set(Object.keys(bruto.paginas || {}));
+  } catch {
+    _dividaLocationSoDaDemo = new Set();
+  }
+  return _dividaLocationSoDaDemo;
+}
+
 function auditAnalytics(slug) {
   const violations = [];
   // ── `location` diz a SEÇÃO, e por muito tempo disse sempre a mesma ─────────
@@ -663,6 +680,32 @@ function auditAnalytics(slug) {
       }
 
       const valores = new Set(achadosDaUnidade.map((a) => a.valor));
+      const soDemo = achadosDaUnidade.length >= 1 && valores.size === 1 && valores.has('docs_demo');
+      const chaveDivida = `${stack}/${basename(pagina)}`;
+      // O limiar de TRÊS literais era o buraco, medido em 2026-09-11: a página
+      // que centraliza o rastreio num helper escreve `docs_demo` uma ou duas
+      // vezes — e é justamente o padrão que esta regra condena ("constante no
+      // topo"). O DropdownMenu tinha dois nas cinco stacks, com um comentário
+      // dizendo que Variantes e Do & Don't não rastreavam, e passou por quatro
+      // revisões. Com o limiar em um, ~70 páginas reprovariam de uma vez; elas
+      // estão DECLARADAS em `location-so-da-demo-divida.json`, que só encolhe:
+      // página nova ou consertada que volte a mandar só `docs_demo` reprova, e
+      // página da lista que deixou de mandar também — a entrada tem de sair.
+      if (soDemo && achadosDaUnidade.length < 3 && !DIVIDA_LOCATION_SO_DA_DEMO().has(chaveDivida)) {
+        const primeiro = achadosDaUnidade[0];
+        violations.push({
+          category: 'analytics', severity: 'medium', slug, stack,
+          file: relative(ROOT, primeiro.file), line: primeiro.line,
+          rule: 'location_so_da_demo',
+          message: `todo location desta docs page é "docs_demo" (${achadosDaUnidade.length} literal(is), provavelmente num helper de rastreio) — as prévias vivas de Variantes, Composições e Do & Dont ou não rastreiam ou dizem que vieram da demo. A seção sai do chamador, nunca de valor fixo dentro do helper`,
+        });
+      } else if (!soDemo && DIVIDA_LOCATION_SO_DA_DEMO().has(chaveDivida)) {
+        violations.push({
+          category: 'analytics', severity: 'medium', slug, stack,
+          file: 'docs/shared/primitives/location-so-da-demo-divida.json', rule: 'location_so_da_demo',
+          message: `${chaveDivida} está na lista de dívida e não manda mais só "docs_demo" — a dívida foi paga; remova a entrada`,
+        });
+      }
       if (achadosDaUnidade.length >= 3 && valores.size === 1 && valores.has('docs_demo')) {
         const primeiro = achadosDaUnidade[0];
         violations.push({
@@ -1331,7 +1374,11 @@ function auditDocsItemTrackId() {
         if (full.some(v => v === undefined)) continue;
         const folha = full.every(v => typeof v === 'string');
         const paiObj = parent.every(v => v && typeof v === 'object' && !Array.isArray(v));
-        const chave = (folha && /^(name|label|title)$/.test(last) && paiObj && parts.length >= 2)
+        // `variants.names.<card>` é um MAPA de nomes: ali a última parte é a chave
+        // do card mesmo quando o card se chama `label` — sem esta saída, o card
+        // `label` do ContextMenu era lido como "campo de rótulo do item `names`"
+        const mapaDeNomes = parts[parts.length - 2] === 'names';
+        const chave = (folha && /^(name|label|title)$/.test(last) && paiObj && parts.length >= 2 && !mapaDeNomes)
           ? parts[parts.length - 2] : last;
         const holder = LOCALES.map(L => _walk(dict[L], chave === last ? parts.slice(0, -1) : parts.slice(0, -2)));
         if (!holder.every(h => h && typeof h === 'object' && Object.prototype.hasOwnProperty.call(h, chave))) continue;
@@ -2794,35 +2841,82 @@ function auditCadeiaTransformOrigin() {
  * O `reason_parcial_entre_stacks` não via nada disso: ele cobra PRESENÇA do
  * campo entre stacks, não a palavra.
  *
- * Duas checagens:
- *  - em `AnalyticsEvents`, todo evento `*_close` que tem `reason` o tem
- *    OBRIGATÓRIO e com exatamente as quatro palavras;
+ * Três checagens:
+ *  - em `AnalyticsEvents`, todo evento `*_close` TEM `reason` — a ausência
+ *    também reprova, salvo exceção declarada em `FECHAMENTO_SEM_REASON`;
+ *  - quando tem, o tem OBRIGATÓRIO e com exatamente as quatro palavras;
  *  - todo tipo `*CloseReason` exportado em `src/components/` só usa palavras
  *    delas — o de um componente que não fecha por clique fora pode ter menos.
+ *
+ * A primeira checagem nasceu em 2026-09-11, e a falta dela era o buraco: esta
+ * função pulava o evento que não declarava o campo, e "sem reason" passava como
+ * coerente. O `dropdown_menu_close` ficou assim enquanto o `context_menu_close`,
+ * irmão da mesma folha e do mesmo PRD, ganhava o campo — e a divergência foi
+ * registrada como pendência para uma passagem que já tinha acontecido.
+ *
+ * A leitura aceita as duas formas de declaração: o bloco (`evento: { … }`) e a
+ * UNIÃO discriminada (`evento:` e ramos `| { … }` de uma linha), que o
+ * `dialog_close` adotou em 2026-09-10. A versão anterior lia só o bloco, e a
+ * união do Dialog saiu do alcance dela sem ninguém notar.
  */
 const VOCABULARIO_DE_FECHAMENTO = ['escape', 'overlay', 'close-button', 'api'];
+
+/** `*_close` que não leva `reason` DE PROPÓSITO — com o motivo e a premissa. */
+const FECHAMENTO_SEM_REASON = {
+  hover_card_close: {
+    motivo: 'o HoverCard é passivo: fechar é quase sempre "o ponteiro saiu", e o campo ia preenchido por uma stack só',
+    premissa: { arquivo: 'docs/shared/guidelines/18-overlay.md', presente: /O HoverCard não leva `reason`/ },
+  },
+};
 
 function auditVocabularioDeFechamento() {
   const violations = [];
   const canon = new Set(VOCABULARIO_DE_FECHAMENTO);
   const palavras = (union) => [...union.matchAll(/['"]([a-z-]+)['"]/g)].map((m) => m[1]);
+  for (const [evento, { premissa }] of Object.entries(FECHAMENTO_SEM_REASON)) {
+    if (premissa.presente.test(readFile(join(ROOT, premissa.arquivo)) || '')) continue;
+    violations.push({
+      category: 'analytics', severity: 'high', slug: '_infra', stack: 'shared',
+      file: 'scripts/audit.mjs', rule: 'reason_vocabulario_divergente',
+      message: `a exceção de ${evento} em FECHAMENTO_SEM_REASON caiu: ${premissa.arquivo} não declara mais a ausência — o evento passa a precisar de reason`,
+    });
+  }
   for (const stack of STACKS) {
     const arq = join(ROOT, stackDir(stack), 'src', 'lib', 'analytics.ts');
     const txt = readFile(arq) || '';
     const rel = relative(ROOT, arq);
     const linhas = txt.split('\n');
-    let evento = null;
+    // cada evento, com as linhas do seu corpo: vai do nome até o próximo nome de
+    // evento no mesmo recuo (ou o fim da interface)
+    const eventos = [];
     for (let i = 0; i < linhas.length; i++) {
-      const abre = linhas[i].match(/^  ([a-z_]+): \{/);
-      if (abre) { evento = abre[1]; continue; }
-      if (/^  \};/.test(linhas[i])) { evento = null; continue; }
-      if (!evento || !evento.endsWith('_close')) continue;
-      const campo = linhas[i].match(/^\s+reason(\??):\s*([^;]+);/);
-      if (!campo) continue;
-      const ws = palavras(campo[2]);
-      const fora = ws.filter((w) => !canon.has(w));
-      const faltam = VOCABULARIO_DE_FECHAMENTO.filter((w) => !ws.includes(w));
-      if (campo[1] === '?' || fora.length || faltam.length) {
+      const abre = linhas[i].match(/^  ([a-z_]+):/);
+      if (abre) eventos.push({ nome: abre[1], inicio: i, fim: linhas.length });
+      else if (/^\}/.test(linhas[i]) && eventos.length && eventos.at(-1).fim === linhas.length) eventos.at(-1).fim = i;
+    }
+    for (let k = 0; k < eventos.length - 1; k++) eventos[k].fim = Math.min(eventos[k].fim, eventos[k + 1].inicio);
+
+    for (const { nome: evento, inicio, fim } of eventos) {
+      if (!evento.endsWith('_close')) continue;
+      const campos = [];
+      for (let i = inicio; i < fim; i++) {
+        for (const c of linhas[i].matchAll(/\breason(\??):\s*([^;}]+)[;}]/g)) campos.push({ c, i });
+      }
+      if (campos.length === 0) {
+        if (FECHAMENTO_SEM_REASON[evento]) continue;
+        violations.push({
+          category: 'analytics', severity: 'high', slug: '_infra', stack,
+          file: rel, line: inicio + 1, rule: 'reason_vocabulario_divergente',
+          message: `${evento} não tem reason — todo fechamento diz por que fechou, com `
+            + VOCABULARIO_DE_FECHAMENTO.join(' | ') + '. Se a ausência é de propósito, declare em FECHAMENTO_SEM_REASON com a premissa',
+        });
+        continue;
+      }
+      for (const { c: campo, i } of campos) {
+        const ws = palavras(campo[2]);
+        const fora = ws.filter((w) => !canon.has(w));
+        const faltam = VOCABULARIO_DE_FECHAMENTO.filter((w) => !ws.includes(w));
+        if (campo[1] !== '?' && !fora.length && !faltam.length) continue;
         const partes = [];
         if (campo[1] === '?') partes.push('é opcional — campo que só parte das demos preenche é amostra enviesada');
         if (fora.length) partes.push(`tem palavra fora do vocabulário (${fora.join(', ')})`);
@@ -4246,6 +4340,95 @@ function auditDoDontPreview(slug) {
   return violations;
 }
 
+/**
+ * O contrato de uma FAMÍLIA chega a cada membro — ou declara por que não.
+ *
+ * Um PRD pode descrever mais de um componente: o `dropdown-menu.md` descreve
+ * também o ContextMenu e o Menubar (D9 — mesma folha, mesmo contrato), e
+ * declara isso numa linha `<!-- prd-familia: context-menu menubar -->`. As
+ * linhas do §2 (C1, C2…) valem para os três, mas a revisão era feita por slug:
+ * cada passagem conferia o contrato no SEU membro, e o dos vizinhos ficava
+ * para uma passagem que, em quatro rodadas, nunca veio. Medido em 2026-09-11 —
+ * o C2 (Tab segue a página a partir do gatilho) estava escrito no PRD e
+ * NENHUMA das 15 implementações o cumpria; as stories conferiam que o foco não
+ * ficava preso, não aonde ele ia.
+ *
+ * A regra fecha a matriz por composição. Cada linha do §2 aponta, na coluna do
+ * portão, o item de `testes.*` que verifica aquele contrato em CADA membro —
+ * `menubar: functional.item14` — ou `membro: n/a (motivo)`. Esta regra confere
+ * que o item existe no conteúdo do membro; o `contract_divergent`, que já
+ * existia, cobra que as cinco stacks o cubram numa story. Membro sem apontador,
+ * apontador para item inexistente e `n/a` sem motivo reprovam.
+ */
+function auditContratoDeFamilia() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'prd');
+  if (!existsSync(dir)) return violations;
+  for (const prd of walkDir(dir, ['.md'])) {
+    const texto = readFile(prd) || '';
+    const familia = texto.match(/^<!-- prd-familia: (.+) -->$/m);
+    if (!familia) continue;
+    const membros = [basename(prd, '.md'), ...familia[1].trim().split(/\s+/)];
+    const rel = relative(ROOT, prd);
+    const secao = texto.match(/^## 2\.[^\n]*\n([\s\S]*?)(?=^## 3\.)/m);
+    if (!secao) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared', file: rel,
+        rule: 'contrato_de_familia_sem_teste', message: 'PRD de família sem §2 legível — a regra não tem contrato para conferir',
+      });
+      continue;
+    }
+    const ids = Object.fromEntries(membros.map((m) => [m, new Set(contractIds(m))]));
+    const linhas = secao[1].split('\n');
+    for (let i = 0; i < linhas.length; i++) {
+      const cel = linhas[i].match(/^\|\s*(C\d+)\s*\|(.*)\|([^|]*)\|\s*$/);
+      if (!cel) continue;
+      const [, contrato, , portao] = cel;
+      const linhaNoArquivo = texto.slice(0, texto.indexOf(linhas[i])).split('\n').length;
+      for (const membro of membros) {
+        const m = portao.match(new RegExp(`\`?${membro}\`?\\s*:\\s*([^·]+)`));
+        if (!m) {
+          violations.push({
+            category: 'quality', severity: 'high', slug: '_infra', stack: 'shared', file: rel, line: linhaNoArquivo,
+            rule: 'contrato_de_familia_sem_teste',
+            message: `${contrato} não diz qual item de testes.* verifica o contrato no ${membro} — aponte \`${membro}: functional.itemN\` ou declare \`${membro}: n/a (motivo)\``,
+          });
+          continue;
+        }
+        const alvo = m[1].trim();
+        if (/^n\/a\b/.test(alvo)) {
+          if (!/\(.{8,}\)/.test(alvo)) {
+            violations.push({
+              category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared', file: rel, line: linhaNoArquivo,
+              rule: 'contrato_de_familia_sem_teste',
+              message: `${contrato} declara n/a no ${membro} sem o motivo entre parênteses`,
+            });
+          }
+          continue;
+        }
+        const apontados = [...alvo.matchAll(/\b((?:functional|accessibility|visual)\.item\d+)\b/g)].map((x) => x[1]);
+        if (apontados.length === 0) {
+          violations.push({
+            category: 'quality', severity: 'high', slug: '_infra', stack: 'shared', file: rel, line: linhaNoArquivo,
+            rule: 'contrato_de_familia_sem_teste',
+            message: `${contrato} aponta "${alvo}" no ${membro}, que não é item de testes.* — use functional.itemN ou accessibility.itemN`,
+          });
+          continue;
+        }
+        for (const id of apontados) {
+          if (ids[membro].has(id)) continue;
+          violations.push({
+            category: 'quality', severity: 'high', slug: '_infra', stack: 'shared', file: rel, line: linhaNoArquivo,
+            rule: 'contrato_de_familia_sem_teste',
+            message: `${contrato} aponta testes.${id} no ${membro}, que não existe em docs/shared/content/${membro}/translations.json`,
+          });
+        }
+      }
+    }
+  }
+  return violations;
+}
+
 function auditContractCoverage(slug) {
   const ids = contractIds(slug);
   if (ids.length === 0) return [];
@@ -5470,9 +5653,12 @@ function auditTaxonomy(slug) {
   // a página ensinava como padrão o que proibia três seções abaixo. A decisão
   // foi manter a variante e nomear o painel por `aria-label`, o que pede um
   // texto por variante. Sem esta linha a regra o lê como variante solta.
+  // `names` é da mesma espécie do `panelLabels`: um texto por variante, para os
+  // cards cuja entrada em `items` é só a descrição (string) — o ContextMenu
+  // mostrava a chave crua ("default", "label") como título até 2026-09-11.
   const HEADERS = new Set(['title', 'cols', 'note', 'items', 'styles', 'sizes',
     'compositions', 'compositionsTitle', 'visualTitle', 'description',
-    'stylesTitle', 'sizesTitle', 'panelLabels']);
+    'stylesTitle', 'sizesTitle', 'panelLabels', 'names']);
   // `variants.items` guarda STRING; `compositions` e `states` guardam OBJETO.
   // Para inventariar chaves, aceite as duas formas — filtrar por objeto aqui
   // descartava os items inteiros e a comparação de duplicidade nunca rodava.
@@ -9719,7 +9905,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

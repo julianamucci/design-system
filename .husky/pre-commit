@@ -54,8 +54,18 @@ if [ "$PRD_SKIP" != "1" ]; then
     if [ "$SLUG" = "README" ]; then continue; fi
     if printf '%s\n' "$ALL_STAGED" | grep -qx "$PRD"; then continue; fi
 
+    # Um PRD pode descrever uma FAMÍLIA — o `dropdown-menu.md` descreve também o
+    # ContextMenu e o Menubar (D9: mesma folha, mesmo contrato). Os membros são
+    # declarados no próprio PRD, numa linha `<!-- prd-familia: a b -->`. Sem
+    # isto a guarda casava só o nome do arquivo, e mudar o ContextMenu ou o
+    # Menubar nunca cobrava o PRD que os descreve — medido em 2026-09-11, quando
+    # o PRD afirmava que o Menubar não dispara eventos e o conteúdo dele
+    # prometia três.
+    FAMILIA=$(sed -n 's/^<!-- prd-familia: \(.*\) -->$/\1/p' "$PRD" | head -1)
+    SLUGS=$(printf '%s %s' "$SLUG" "$FAMILIA" | tr -s ' ' '\n' | grep -v '^$' | paste -sd'|' -)
+
     DESCRITOS=$(printf '%s\n' "$ALL_STAGED" \
-      | grep -E "^(docs/shared/styles/nds/${SLUG}\.css|docs/shared/content/${SLUG}/|nortear-design-system-[a-z]+/src/components/ui/${SLUG}[./-])" \
+      | grep -E "^(docs/shared/styles/nds/(${SLUGS})\.css|docs/shared/content/(${SLUGS})/|nortear-design-system-[a-z]+/src/components/ui/(${SLUGS})[./-])" \
       | grep -vE '\.(stories|fixtures|source|test|spec)\.' || true)
 
     if [ -n "$DESCRITOS" ]; then
