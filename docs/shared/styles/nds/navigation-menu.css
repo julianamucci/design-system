@@ -162,6 +162,24 @@
   color: hsl(var(--accent-foreground));
 }
 
+/*
+ * Anel de foco das três peças focáveis — gatilho, link da barra e item do
+ * painel. As três declaram `outline: 0` na regra base, e até 2026-09-10 o foco
+ * pelo teclado só pintava o fundo a 10%, sem anel nenhum, nas cinco stacks
+ * (WCAG 2.4.7). Achado pelo portão `anel_de_foco_ausente`.
+ *
+ * A forma é a dos menus (`prd/dropdown-menu.md` D2): interno, porque o painel
+ * recorta, e em `--accent-foreground`, que é a cor que se lê sobre o accent —
+ * o `--ring` quase some sobre ele no escuro. O texto da peça já usa essa cor
+ * sobre esse fundo e passa 4,5:1; o anel, na mesma cor, passa os 3:1 da 1.4.11.
+ */
+.nds-navigation-menu-trigger:focus-visible,
+.nds-navigation-menu-link:focus-visible,
+.nds-navigation-menu-child:focus-visible {
+  outline: 2px solid hsl(var(--accent-foreground));
+  outline-offset: -2px;
+}
+
 .nds-navigation-menu-child-label {
   font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);

@@ -7874,6 +7874,157 @@ function auditFocusRingTranslucido() {
 }
 
 /**
+ * Peça que zera o `outline` e não desenha anel NENHUM quando recebe o foco.
+ *
+ * As duas regras irmãs acima medem anel que EXISTE — apagado por especificidade
+ * (`focus_ring_sobrescrito`) ou fraco demais (`focus_ring_translucido`). Esta
+ * mede a AUSÊNCIA, que nenhuma das duas via: não há regra de foco para ler.
+ * Medido em 2026-09-10, na pipeline do ContextMenu — o item de marcação, o de
+ * rádio e o sub-gatilho dos três menus declaravam `outline: 0` e, focados pelo
+ * teclado, só mudavam de fundo, nas cinco stacks (WCAG 2.4.7). Corrigidos ali,
+ * a mesma varredura achou mais 14 candidatos, e ficou escrita na guideline
+ * 18-overlay como "medida e ainda não portão". Virou portão no mesmo dia, e na
+ * primeira rodada achou o navigation-menu com o mesmo defeito em três peças.
+ *
+ * O que conta como ANEL: regra cujo seletor fala de foco (`:focus`,
+ * `:focus-visible`, `:focus-within`, `[data-highlighted]`) e cujo corpo declara
+ * `outline` que não seja 0/none, `box-shadow` que não seja none, ou borda. O
+ * anel é atribuído ao SUJEITO do seletor, não à última classe citada: em
+ * `.nds-input-group:has(.nds-input-group-control:focus-visible)` quem acende é o
+ * grupo — ler a última classe dava o anel ao controle e acusava o grupo.
+ *
+ * O que é CANDIDATO: regra base de uma classe só (`.nds-x { … outline: 0 }`).
+ *
+ * Os candidatos que NÃO são defeito estão em `ANEL_DE_FOCO_EXCECOES`, cada um
+ * com o motivo e com uma PREMISSA conferida em arquivo: se a premissa cair (o
+ * contêiner perder o `:focus-within`, a lib passar a pôr o botão na ordem de
+ * tabulação), a exceção deixa de valer e a regra reprova. E exceção que não
+ * exclui nada — a peça ganhou anel ou deixou de zerar o outline — também
+ * reprova: lista de exclusão apodrece calada, e é assim que um portão encolhe.
+ */
+const ANEL_DE_FOCO_EXCECOES = {
+  'nds-combobox-input': {
+    motivo: 'o anel é do invólucro, no :focus-within — o campo não desenha o próprio',
+    premissa: { arquivo: 'docs/shared/styles/nds/combobox.css', presente: /\.nds-combobox-input-wrapper:focus-within\s*\{[^}]*(?:outline|box-shadow|border(?:-color)?)\s*:/ },
+  },
+  'nds-composer-input': {
+    motivo: 'o anel é do campo em volta (.nds-composer-field), no :focus-within',
+    premissa: { arquivo: 'docs/shared/styles/nds/composer.css', presente: /\.nds-composer-field:focus-within\s*\{[^}]*(?:outline|box-shadow|border(?:-color)?)\s*:/ },
+  },
+  'nds-tags-input-input': {
+    motivo: 'o anel é da caixa de etiquetas, no :focus-within',
+    premissa: { arquivo: 'docs/shared/styles/nds/tags-input.css', presente: /\.nds-tags-input:focus-within\s*\{[^}]*(?:outline|box-shadow|border(?:-color)?)\s*:/ },
+  },
+  'nds-command-item': {
+    motivo: 'o item nunca recebe foco de DOM (aria-activedescendant); o anel acende no aria-selected — prd/command.md D1',
+    premissa: { arquivo: 'docs/shared/styles/nds/command.css', presente: /\.nds-command-item\[aria-selected="true"\][^{]*\{[^}]*outline\s*:\s*2px/ },
+  },
+  'nds-command-input': {
+    motivo: 'campo de texto que é a ÚNICA parada de foco da paleta: ele recebe o foco na abertura e o mantém enquanto as setas movem o destaque, e o cursor de texto é o indicador. Anel no campo é decisão de desenho ainda não tomada — ver o relatório de 2026-09-10',
+    premissa: { arquivo: 'nortear-design-system-vanilla/src/components/ui/command.ts', presente: /aria-activedescendant/ },
+  },
+  'nds-dropdown-menu-positioner': {
+    motivo: 'invólucro de posicionamento da lib; o foco vai para o painel dentro dele (role="menu"), que tem o seu próprio foco',
+    premissa: { arquivo: 'nortear-design-system-react/src/components/ui/dropdown-menu.tsx', presente: /Positioner[\s\S]{0,200}"nds-dropdown-menu-positioner"/ },
+  },
+  'nds-navigation-menu-popup': {
+    motivo: 'contêiner do painel; quem recebe foco são os links e itens dentro dele, que têm anel',
+    premissa: { arquivo: 'nortear-design-system-react/src/components/ui/navigation-menu.tsx', presente: /Popup[\s\S]{0,200}"nds-navigation-menu-popup"/ },
+  },
+  'nds-number-field-decrement': {
+    motivo: 'fora da ordem de tabulação por padrão APG de spinbutton: o teclado age pelas setas no campo, que tem anel',
+    premissa: { arquivo: 'nortear-design-system-vue/node_modules/reka-ui/dist/NumberField/NumberFieldDecrement.js', presente: /tabindex:\s*"-1"/, externo: true },
+  },
+  'nds-number-field-increment': {
+    motivo: 'fora da ordem de tabulação por padrão APG de spinbutton: o teclado age pelas setas no campo, que tem anel',
+    premissa: { arquivo: 'nortear-design-system-vue/node_modules/reka-ui/dist/NumberField/NumberFieldIncrement.js', presente: /tabindex:\s*"-1"/, externo: true },
+  },
+  'nds-sidebar-rail': {
+    motivo: 'tabindex="-1" e aria-hidden de propósito: faz o mesmo que o gatilho, que já está na ordem de tabulação e tem anel',
+    premissa: { arquivo: 'nortear-design-system-vanilla/src/components/ui/sidebar.ts', presente: /btn\.tabIndex\s*=\s*-1/ },
+  },
+};
+
+function auditAnelDeFocoAusente() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  if (!existsSync(dir)) return violations;
+
+  const FOCO = /:focus|\[data-highlighted/;
+  const desenha = (corpo) =>
+    /outline\s*:\s*(?!0\s*[;}]|0$|none)/.test(corpo)
+    || /box-shadow\s*:\s*(?!none)/.test(corpo)
+    || /border(?:-color)?\s*:/.test(corpo);
+  // o sujeito: a última classe FORA de parênteses — `:has(…)`, `:not(…)` e afins
+  // falam de outro elemento
+  const sujeito = (sel) => {
+    let s = sel;
+    for (let i = 0; i < 3; i++) s = s.replace(/\([^()]*\)/g, '');
+    const m = s.match(/\.(nds-[a-z0-9-]+)/g);
+    return m ? m[m.length - 1].slice(1) : null;
+  };
+
+  const candidatos = new Map();   // classe -> arquivo
+  const comAnel = new Set();
+  for (const file of walkDir(dir, ['.css'])) {
+    const src = (readFile(file) || '').replace(/\/\*[\s\S]*?\*\//g, '');
+    const rel = relative(ROOT, file);
+    for (const m of src.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      const corpo = m[2];
+      for (const sel of m[1].split(',').map((x) => x.trim()).filter(Boolean)) {
+        if (FOCO.test(sel) && desenha(corpo)) {
+          const alvo = sujeito(sel);
+          if (alvo) comAnel.add(alvo);
+        }
+        const base = sel.match(/^\.(nds-[a-z0-9-]+)$/);
+        if (base && /outline\s*:\s*(?:0|none)\s*(?:;|$)/m.test(corpo)) candidatos.set(base[1], rel);
+      }
+    }
+  }
+
+  for (const [classe, rel] of candidatos) {
+    if (comAnel.has(classe)) continue;
+    const excecao = ANEL_DE_FOCO_EXCECOES[classe];
+    if (!excecao) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: rel, rule: 'anel_de_foco_ausente',
+        message: `.${classe} zera o outline e nenhuma regra de foco desenha anel nela — focada pelo teclado, a peça não mostra onde o foco está (WCAG 2.4.7). Dê a ela um :focus-visible, ou, se ela não recebe foco ou o anel é de um contêiner, declare a exceção em ANEL_DE_FOCO_EXCECOES com a premissa`,
+      });
+      continue;
+    }
+    const { arquivo, presente, externo } = excecao.premissa;
+    const alvo = readFile(join(ROOT, arquivo));
+    if (!alvo) {
+      if (externo) continue;   // pacote não instalado neste checkout: sem o que conferir
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: 'scripts/audit.mjs', rule: 'anel_de_foco_ausente',
+        message: `a exceção de .${classe} confere a premissa em ${arquivo}, que não existe — atualize a exceção ou remova-a`,
+      });
+      continue;
+    }
+    if (!presente.test(externo ? alvo : alvo.replace(/\/\*[\s\S]*?\*\//g, ''))) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: rel, rule: 'anel_de_foco_ausente',
+        message: `a exceção de .${classe} caiu: a premissa (${excecao.motivo}) não se confirma mais em ${arquivo} — a peça voltou a ser um foco sem anel`,
+      });
+    }
+  }
+
+  for (const classe of Object.keys(ANEL_DE_FOCO_EXCECOES)) {
+    if (candidatos.has(classe) && !comAnel.has(classe)) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: 'scripts/audit.mjs', rule: 'anel_de_foco_ausente',
+      message: `a exceção de .${classe} não exclui nada — a peça ${comAnel.has(classe) ? 'ganhou anel' : 'não zera mais o outline ou não existe'}; remova a entrada`,
+    });
+  }
+  return violations;
+}
+
+/**
  * `@keyframes` de mesmo nome definido em mais de um arquivo.
  *
  * Nome de keyframes é global e NÃO colide com aviso: o último a ser importado
@@ -9440,7 +9591,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
