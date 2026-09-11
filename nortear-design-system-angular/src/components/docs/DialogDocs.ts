@@ -414,8 +414,11 @@ const COMPOSITION_CODE = {
 const IMG_CAPA =
   "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='800' height='450' fill='%23cbd5e1'/%3E%3C/svg%3E";
 
+/** A seção onde o exemplo vivo mora — vira o `location` do evento. */
+type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_do_dont';
+
 /** Razões do primitivo mapeadas para o vocabulário estável do GA4. */
-const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
+const CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
   'escape-key': 'escape',
   'outside-press': 'overlay',
   'focus-out': 'overlay',
@@ -441,7 +444,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
          documentação inalcançável. O que o card mostra é o gatilho. -->
 
     <ng-template #tplDoDont1Do>
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('par1_do', 'docs_do_dont', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('do-dont-pair1-do', 'docs_do_dont', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -452,7 +455,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton>{{ t('demonstration.labels.action') }}</button>
+              <button ndsButton (click)="onExampleAction('save', 'docs_do_dont')">{{ t('demonstration.labels.action') }}</button>
             </div>
           </div>
         </ng-template>
@@ -469,7 +472,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
            expressão regular para dentro de um componente vivo fazia a página
            renderizar de verdade o que a tabela ao lado condena — além de
            prender o rótulo à pontuação de uma string traduzida. -->
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('par1_dont', 'docs_do_dont', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('do-dont-pair1-dont', 'docs_do_dont', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.vagueTitle') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -480,7 +483,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton>OK</button>
+              <button ndsButton (click)="onExampleAction('ok', 'docs_do_dont')">OK</button>
             </div>
           </div>
         </ng-template>
@@ -488,7 +491,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('par2_do', 'docs_do_dont', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('do-dont-pair2-do', 'docs_do_dont', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -499,7 +502,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton>{{ t('demonstration.labels.action') }}</button>
+              <button ndsButton (click)="onExampleAction('save', 'docs_do_dont')">{{ t('demonstration.labels.action') }}</button>
             </div>
           </div>
         </ng-template>
@@ -510,7 +513,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
       <!-- Confirmação destrutiva num Dialog: o leitor de tela anuncia
            "diálogo" e não "alerta", e o foco inicial cai no primeiro focável em
            vez de no Cancelar. -->
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('par2_dont', 'docs_do_dont', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('do-dont-pair2-dont', 'docs_do_dont', $event)">
         <button ndsDialogTrigger ndsButton variant="destructive">{{ t('demonstration.labels.destructiveTitle') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -521,7 +524,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton variant="destructive">{{ t('demonstration.labels.destructiveTitle') }}</button>
+              <button ndsButton variant="destructive" (click)="onExampleAction('delete', 'docs_do_dont')">{{ t('demonstration.labels.destructiveTitle') }}</button>
             </div>
           </div>
         </ng-template>
@@ -529,7 +532,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
     </ng-template>
 
     <ng-template #tplVarDefault>
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('default', 'docs_variantes', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('basic', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -540,7 +543,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton>{{ t('demonstration.labels.action') }}</button>
+              <button ndsButton (click)="onExampleAction('save', 'docs_variantes')">{{ t('demonstration.labels.action') }}</button>
             </div>
           </div>
         </ng-template>
@@ -548,7 +551,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
     </ng-template>
 
     <ng-template #tplVarWithForm>
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_form', 'docs_variantes', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('with-form', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.triggerLabel') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -571,7 +574,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
               </div>
               <div ndsDialogFooter>
                 <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-                <button ndsButton type="submit">{{ t('demonstration.labels.action') }}</button>
+                <button ndsButton type="submit" (click)="onExampleAction('save', 'docs_variantes')">{{ t('demonstration.labels.action') }}</button>
               </div>
             </form>
           </div>
@@ -580,7 +583,10 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
     </ng-template>
 
     <ng-template #tplVarWithScrollContent>
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_scroll_content', 'docs_variantes', $event)">
+      <!-- 'scroll-content' é o id deste exemplo, o dos termos. O "Aceitar" fica
+           sem dialog_action, como na página de referência: lá ele não é
+           rastreado. -->
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('scroll-content', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.termsTitle') }}</button>
         <ng-template ndsDialogPortal>
           <!-- Quem rola é o CORPO: o painel fica parado e centralizado, e o
@@ -622,7 +628,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
            nenhuma ação para confirmar a edição, que é o contrário do que a
            composição ensina — e divergia das outras stacks. O corpo diz por
            onde se fecha, já que não há rodapé para dizê-lo. -->
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('no_footer', 'docs_variantes', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('no-footer', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.aboutTitle') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -644,7 +650,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
            com a variante destructive pintava de perigo uma ação que não destrói
            nada, e contradizia o snippet ao lado, que já mostrava "Remover
            item". Destrutivo é para o que destrói. -->
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('with_destructive_action', 'docs_variantes', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('destructive', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.removeItemAction') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -655,7 +661,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton variant="destructive">{{ t('demonstration.labels.removeItemAction') }}</button>
+              <button ndsButton variant="destructive" (click)="onExampleAction('remove', 'docs_variantes')">{{ t('demonstration.labels.removeItemAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -671,8 +677,12 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
            antes do ng-content e em ghost — a variante da ação terciária pela
            tabela da guideline 06. A ordem de DOM é a da guideline 04 —
            secundários primeiro, primária por último; a folha põe o primeiro
-           embaixo no empilhamento e à esquerda no lado a lado. -->
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('custom_close_in_footer', 'docs_variantes', $event)">
+           embaixo no empilhamento e à esquerda no lado a lado.
+
+           O trigger_id é 'custom-close-in-footer'. Até 2026-09-10 este exemplo
+           mandava 'scroll-content', o id do exemplo dos termos, copiado de uma
+           página de referência que tinha trocado os dois. -->
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('custom-close-in-footer', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.guideTrigger') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -686,7 +696,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
             </div>
             <div ndsDialogFooter [showCloseButton]="true" [closeLabel]="t('demonstration.labels.close')">
               <button ndsButton variant="outline">{{ t('demonstration.labels.back') }}</button>
-              <button ndsButton>{{ t('demonstration.labels.continueAction') }}</button>
+              <button ndsButton (click)="onExampleAction('continue', 'docs_variantes')">{{ t('demonstration.labels.continueAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -700,7 +710,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
            docs_code_copy. Usá-lo como texto de botão misturava dado de
            analytics com interface — e ainda punha "Confirmação de e-mail" num
            botão de ação. O texto agora é o mesmo do snippet ao lado. -->
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('confirm_email', 'docs_variantes', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('confirm-email', 'docs_variantes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('demonstration.labels.confirmEmailTitle') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -716,7 +726,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
             </div>
             <div ndsDialogFooter>
               <button ndsDialogClose ndsButton variant="outline">{{ t('demonstration.labels.cancel') }}</button>
-              <button ndsButton>{{ t('demonstration.labels.confirmEmailAction') }}</button>
+              <button ndsButton (click)="onExampleAction('confirm-email', 'docs_variantes')">{{ t('demonstration.labels.confirmEmailAction') }}</button>
             </div>
           </div>
         </ng-template>
@@ -724,7 +734,9 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
     </ng-template>
 
     <ng-template #tplCompProfileEdit>
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('profile_edit', 'docs_composicoes', $event)">
+      <!-- Abrir e fechar rastreiam; o "Salvar" não, como na página de
+           referência. -->
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('profile-edit', 'docs_composicoes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('variants.compositions.profileEdit.name') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -759,7 +771,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
     </ng-template>
 
     <ng-template #tplCompMediaPreview>
-      <div ndsDialog (onOpenChange)="aoMudarNoExemplo('media_preview', 'docs_composicoes', $event)">
+      <div ndsDialog (onOpenChange)="onExampleOpenChange('media-preview', 'docs_composicoes', $event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ t('variants.compositions.mediaPreview.name') }}</button>
         <ng-template ndsDialogPortal>
           <div ndsDialogOverlay></div>
@@ -796,7 +808,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
 
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
-          <div ndsDialog (onOpenChange)="aoMudarNaDemo($event)">
+          <div ndsDialog (onOpenChange)="onDemoOpenChange($event)">
             <button ndsDialogTrigger ndsButton variant="outline">
               {{ t('demonstration.labels.triggerLabel') }}
             </button>
@@ -840,7 +852,7 @@ const MOTIVO: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
                          ndsDialogClose) e agora também submete — clique e Enter
                          percorrem o mesmo caminho, porque o Enter num campo
                          dispara um clique no botão padrão do form. -->
-                    <button ndsDialogClose ndsButton type="submit" (click)="aoConfirmar()">
+                    <button ndsDialogClose ndsButton type="submit" (click)="onDemoConfirm()">
                       {{ t('demonstration.labels.action') }}
                     </button>
                   </div>
@@ -1011,53 +1023,66 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
    * UI é o que a regra `analytics_in_ui_primitive` proíbe — a instrumentação
    * pertence a quem consome.
    */
-  protected aoMudarNaDemo(evento: RdxDialogOpenChange): void {
-    if (evento.open) {
+  protected onDemoOpenChange(event: RdxDialogOpenChange): void {
+    if (event.open) {
       track('dialog_open', {
         component: 'dialog',
-        // Valor estável, nunca o texto traduzido: o mesmo evento viraria três
-        // valores no GA4, um por idioma.
-        label: 'editar_perfil',
+        // Id estável da demo (PRD §9), nunca o texto traduzido do gatilho: o
+        // mesmo evento viraria três valores no GA4, um por idioma.
+        trigger_id: 'default',
         location: 'docs_demo',
       });
       return;
     }
     track('dialog_close', {
       component: 'dialog',
-      label: 'editar_perfil',
+      trigger_id: 'default',
       // A ação primária fecha pelo mesmo caminho do botão X (é um
       // `ndsDialogClose`), então o motivo do primitivo diria "close-button".
       // A bandeira preserva a diferença que interessa ao funil: fechou porque
       // desistiu, ou porque concluiu.
-      reason: this.confirmou ? 'api' : (MOTIVO[evento.reason] ?? 'api'),
+      reason: this.confirmed ? 'api' : (CLOSE_REASON[event.reason] ?? 'api'),
       location: 'docs_demo',
     });
-    this.confirmou = false;
+    this.confirmed = false;
   }
 
   /**
    * Analytics dos exemplos VIVOS das outras seções.
    *
    * `location` sai de ONDE O ELEMENTO ESTÁ, e por isso vem como argumento: o Do
-   * & Don't, as Variantes e as Composições instanciam o componente de verdade,
-   * e um clique ali é tão real quanto o da demonstração. Com `docs_demo` cravado
-   * em tudo, o funil somava quatro seções numa só — é o que a regra
-   * `location_so_da_demo` do `audit.mjs` mede.
+   * & Don't e as Variantes instanciam o componente de verdade, e um clique ali
+   * é tão real quanto o da demonstração. Com `docs_demo` cravado em tudo, o
+   * funil somava as seções numa só — é o que a regra `location_so_da_demo` do
+   * `audit.mjs` mede.
    *
-   * `qual` é identificador estável do exemplo, nunca o texto traduzido: um único
-   * evento viraria três valores no GA4, um por idioma.
+   * `triggerId` é o id estável do exemplo, do vocabulário da página de
+   * referência (`basic`, `with-form`, `do-dont-pair1-do`…) — nunca o texto
+   * traduzido, que viraria três valores no GA4, um por idioma. O tipo de
+   * `dialog_open` exige o campo e proíbe `label` quando a peça é o Dialog.
    */
-  protected aoMudarNoExemplo(qual: string, secao: string, evento: RdxDialogOpenChange): void {
-    if (evento.open) {
-      track('dialog_open', { component: 'dialog', label: qual, location: secao });
+  protected onExampleOpenChange(
+    triggerId: string,
+    location: DocsLocation,
+    event: RdxDialogOpenChange,
+  ): void {
+    if (event.open) {
+      track('dialog_open', { component: 'dialog', trigger_id: triggerId, location });
       return;
     }
     track('dialog_close', {
       component: 'dialog',
-      label: qual,
-      reason: MOTIVO[evento.reason] ?? 'api',
-      location: secao,
+      trigger_id: triggerId,
+      // A primária dos exemplos NÃO fecha o painel (não é `ndsDialogClose`),
+      // então o motivo do primitivo é o que houve de fato.
+      reason: CLOSE_REASON[event.reason] ?? 'api',
+      location,
     });
+  }
+
+  /** A ação primária de um exemplo — `actionId` estável, nunca o rótulo do botão. */
+  protected onExampleAction(actionId: string, location: DocsLocation): void {
+    track('dialog_action', { component: 'dialog', action_label: actionId, location });
   }
 
   /**
@@ -1065,16 +1090,16 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
    * fechar (armadilha 10 do CLAUDE.md deste stack). É o que garante que a
    * bandeira já esteja de pé quando o fechamento dispara.
    */
-  protected aoConfirmar(): void {
-    this.confirmou = true;
+  protected onDemoConfirm(): void {
+    this.confirmed = true;
     track('dialog_action', {
       component: 'dialog',
-      action_label: 'salvar_alteracoes',
+      action_label: 'save',
       location: 'docs_demo',
     });
   }
 
-  private confirmou = false;
+  private confirmed = false;
 
   protected readonly navGroups = computed(() => {
     dict();

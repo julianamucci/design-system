@@ -2,7 +2,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createDialog } from '@/components/ui/dialog';
+import { createDialog, type DialogOptions } from '@/components/ui/dialog';
 import { createButton } from '@/components/ui/button';
 import { createInput } from '@/components/ui/input';
 import { createLabel } from '@/components/ui/label';
@@ -88,6 +88,30 @@ type DialogDemoOptions = {
   location: DocsLocation;
 };
 
+/**
+ * Os dois ganchos de rastreio de UMA prévia — abertura e fechamento com o id
+ * estável dela (`prd/dialog.md` §9: o Dialog manda `trigger_id`, nunca texto).
+ *
+ * Existe porque metade das prévias da página não passa por `buildDialogDemo`:
+ * a de rolagem, a sem rodapé e as duas composições chamavam `createDialog`
+ * direto e abriam sem deixar rastro. E o id da de fechar próprio estava trocado
+ * — ela mandava `scroll-content`, que é o nome da de rolagem —, então as
+ * quatro stacks que copiaram o vanilla herdaram a troca (medido em 2026-09-10).
+ */
+function dialogTracking(
+  triggerId: string,
+  location: DocsLocation,
+): Pick<DialogOptions, 'onOpenChange' | 'onClose'> {
+  return {
+    onOpenChange: (open) => {
+      if (open) track('dialog_open', { component: 'dialog', trigger_id: triggerId, location });
+    },
+    onClose: (reason) => {
+      track('dialog_close', { component: 'dialog', trigger_id: triggerId, reason, location });
+    },
+  };
+}
+
 function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
   const trigger = createButton({
     variant: opts.triggerVariant ?? 'outline',
@@ -127,23 +151,7 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
     // E a ORDEM é a do sistema: secundários primeiro, PRIMÁRIA por último.
     footer: [...(opts.leadingActions ?? []), cancel, action],
     showCloseButton: opts.showCloseButton,
-    onOpenChange: (open) => {
-      if (open) {
-        track('dialog_open', {
-          component: 'dialog',
-          trigger_id: opts.demoId,
-          location: opts.location,
-        });
-      }
-    },
-    onClose: (reason) => {
-      track('dialog_close', {
-        component: 'dialog',
-        trigger_id: opts.demoId,
-        reason,
-        location: opts.location,
-      });
-    },
+    ...dialogTracking(opts.demoId, opts.location),
   });
 }
 
@@ -219,14 +227,7 @@ function buildDialogFormDemo(location: DocsLocation): HTMLElement {
     title: t('demonstration.labels.title'),
     description: t('demonstration.labels.description'),
     content: form,
-    onOpenChange: (open) => {
-      if (open) {
-        track('dialog_open', { component: 'dialog', trigger_id: 'with-form', location });
-      }
-    },
-    onClose: (reason) => {
-      track('dialog_close', { component: 'dialog', trigger_id: 'with-form', reason, location });
-    },
+    ...dialogTracking('with-form', location),
   });
 }
 
@@ -659,6 +660,7 @@ createDialog({
                     }),
                     createButton({ label: t('demonstration.labels.accept') }),
                   ],
+                  ...dialogTracking('scroll-content', 'docs_variantes'),
                 });
               },
             },
@@ -683,6 +685,7 @@ createDialog({
                   title: t('demonstration.labels.aboutTitle'),
                   description: t('demonstration.labels.aboutDescription'),
                   content: body,
+                  ...dialogTracking('no-footer', 'docs_variantes'),
                 });
               },
             },
@@ -730,7 +733,7 @@ createDialog({
                   }
                 });
                 return buildDialogDemo({
-                demoId: 'scroll-content',
+                demoId: 'custom-close-in-footer',
                 actionId: 'continue',
                   location: 'docs_variantes',
                   // Do conteúdo compartilhado, como na story: literal aqui ficava
@@ -881,6 +884,7 @@ createDialog({
                   title: t('demonstration.labels.title'),
                   description: 'Atualize suas informações pessoais.',
                   content: form,
+                  ...dialogTracking('profile-edit', 'docs_composicoes'),
                 });
               },
             },
@@ -916,6 +920,7 @@ media.style.placeItems = 'center';
                   title: 'Capa do post',
                   description: 'Pré-visualização em tamanho real.',
                   content: media,
+                  ...dialogTracking('media-preview', 'docs_composicoes'),
                 });
               },
             },

@@ -747,7 +747,11 @@ function auditAnalytics(slug) {
       for (const event of eventsInTr) {
         // Pula eventos de docs que são universais
         if (['docs_page_view', 'docs_section_viewed', 'language_switched', 'page_view'].includes(event)) continue;
-        const typedRe = new RegExp(`^\\s*${event}\\s*:\\s*\\{`, 'm');
+        // `{` do objeto, ou `|` da união discriminada — `dialog_open` e
+        // `dialog_close` viraram união em 2026-09-10 (o campo depende do
+        // `component`), e a leitura que só aceitava `{` passou a acusá-los como
+        // não tipados nas cinco stacks
+        const typedRe = new RegExp(`^\\s*${event}\\s*:\\s*[{|]`, 'm');
         if (!typedRe.test(analytics)) {
           violations.push({
             category: 'analytics', severity: 'medium', slug, stack,
@@ -8025,6 +8029,115 @@ function auditAnelDeFocoAusente() {
 }
 
 /**
+ * Peça pintada por `[data-highlighted]` sem o `:hover` par na mesma folha.
+ *
+ * Medido em 2026-09-10 no `dropdown-menu.css`, a folha dos três menus: só o item
+ * comum tinha `:hover`. Marcação, rádio, sub-gatilho e a variante destrutiva
+ * pintavam por `:focus` e `[data-highlighted]`, e nas quatro stacks de lib o
+ * defeito não aparecia, porque a lib escreve `[data-highlighted]` na passagem do
+ * ponteiro. As fábricas do vanilla não escutam ponteiro nos itens: ali o mouse
+ * sobre uma marcação não pintava nada, e sobre o item destrutivo pintava o
+ * accent a 20% da regra do item comum — contra a D4 do `prd/dropdown-menu.md`.
+ * Defeito com cara de correto: aparece só na stack de referência, e só no mouse.
+ *
+ * O que conta: seletor que termina em `[data-highlighted]` e pinta fundo. O par é
+ * o MESMO seletor com `:hover` no lugar, em qualquer regra da folha que também
+ * pinte fundo — `.nds-x[data-variant="y"][data-highlighted]` pede
+ * `.nds-x[data-variant="y"]:hover`, não o `:hover` da peça base, que pinta outra
+ * cor.
+ *
+ * As exceções são peças cuja fábrica do vanilla destaca por ponteiro: nelas o
+ * `[data-highlighted]` já é o hover nas cinco. A premissa é o ouvinte, conferido
+ * no arquivo — se a fábrica deixar de escutar, a exceção cai e a regra reprova.
+ */
+const DESTAQUE_SEM_HOVER_EXCECOES = {
+  'nds-select-item': {
+    motivo: 'a fábrica do vanilla destaca o item no mousemove',
+    premissa: { arquivo: 'nortear-design-system-vanilla/src/components/ui/select.ts', presente: /addEventListener\(\s*['"]mousemove['"][\s\S]{0,80}destacar\(/ },
+  },
+  'nds-combobox-item': {
+    motivo: 'a fábrica do vanilla destaca a opção no mouseenter',
+    premissa: { arquivo: 'nortear-design-system-vanilla/src/components/ui/combobox.ts', presente: /addEventListener\(\s*['"]mouseenter['"][\s\S]{0,40}highlight\(/ },
+  },
+};
+
+function auditDestaqueSemHover() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  if (!existsSync(dir)) return violations;
+
+  const pinta = (corpo) => /background(?:-color)?\s*:/.test(corpo);
+  const destacadas = new Map();   // classe -> [{ peca, rel, temHover }]
+  for (const file of walkDir(dir, ['.css'])) {
+    const src = (readFile(file) || '').replace(/\/\*[\s\S]*?\*\//g, '');
+    const rel = relative(ROOT, file);
+    const seletores = [];
+    for (const m of src.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      if (!pinta(m[2])) continue;
+      for (const sel of m[1].split(',').map((x) => x.trim()).filter(Boolean)) seletores.push(sel);
+    }
+    const comHover = new Set(seletores.filter((s) => s.endsWith(':hover')).map((s) => s.slice(0, -':hover'.length)));
+    for (const sel of seletores) {
+      const m = sel.match(/^(\.(nds-[a-z0-9-]+)(?:\[[^\]]+\])*?)\[data-highlighted\]$/);
+      if (!m) continue;
+      const lista = destacadas.get(m[2]) ?? [];
+      lista.push({ peca: m[1], rel, temHover: comHover.has(m[1]) });
+      destacadas.set(m[2], lista);
+    }
+  }
+
+  // Premissa do próprio portão: se nenhuma folha casar, o seletor mudou de
+  // forma e a regra passaria a medir nada.
+  if (destacadas.size === 0) {
+    violations.push({
+      category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+      file: 'scripts/audit.mjs', rule: 'destaque_sem_hover',
+      message: 'nenhuma peça pintada por [data-highlighted] foi encontrada nas folhas — a leitura do seletor deixou de casar, e o portão não mede mais nada',
+    });
+    return violations;
+  }
+
+  for (const [classe, pecas] of destacadas) {
+    const faltando = pecas.filter((p) => !p.temHover);
+    const excecao = DESTAQUE_SEM_HOVER_EXCECOES[classe];
+    if (excecao) {
+      const alvo = readFile(join(ROOT, excecao.premissa.arquivo));
+      if (!alvo || !excecao.premissa.presente.test(alvo.replace(/\/\*[\s\S]*?\*\//g, ''))) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+          file: pecas[0].rel, rule: 'destaque_sem_hover',
+          message: `a exceção de .${classe} caiu: a premissa (${excecao.motivo}) não se confirma mais em ${excecao.premissa.arquivo} — sem ela o mouse não pinta a peça no vanilla`,
+        });
+      } else if (faltando.length === 0) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: 'scripts/audit.mjs', rule: 'destaque_sem_hover',
+          message: `a exceção de .${classe} não exclui nada — a peça já tem :hover; remova a entrada`,
+        });
+      }
+      continue;
+    }
+    for (const p of faltando) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: p.rel, rule: 'destaque_sem_hover',
+        message: `${p.peca}[data-highlighted] pinta o destaque e ${p.peca}:hover não existe na folha — nas stacks de lib a passagem do ponteiro escreve [data-highlighted], no vanilla só o :hover pinta. Acrescente o :hover na mesma regra, ou, se a fábrica do vanilla destaca por ponteiro, declare a exceção em DESTAQUE_SEM_HOVER_EXCECOES com a premissa`,
+      });
+    }
+  }
+
+  for (const classe of Object.keys(DESTAQUE_SEM_HOVER_EXCECOES)) {
+    if (destacadas.has(classe)) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: 'scripts/audit.mjs', rule: 'destaque_sem_hover',
+      message: `a exceção de .${classe} não exclui nada — nenhuma folha pinta essa peça por [data-highlighted]; remova a entrada`,
+    });
+  }
+  return violations;
+}
+
+/**
  * `@keyframes` de mesmo nome definido em mais de um arquivo.
  *
  * Nome de keyframes é global e NÃO colide com aviso: o último a ser importado
@@ -9591,7 +9704,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

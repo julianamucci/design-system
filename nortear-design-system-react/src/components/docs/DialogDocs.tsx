@@ -92,9 +92,74 @@ const getNavGroups = (t: (key: string) => string) => [
  * cruzava com nada. O vocabulário é `docs_<section-id>`
  * (`docs/shared/guidelines/07-analytics.md`).
  */
-type DocsLocation = "docs_demo" | "docs_variantes" | "docs_do_dont";
+type DocsLocation = "docs_demo" | "docs_variantes" | "docs_do_dont" | "docs_composicoes";
+
+/**
+ * Id ESTÁVEL de cada prévia viva, no vocabulário do vanilla (`demoId` em
+ * `DialogDocs.ts` de lá) — nunca o texto do gatilho, que chega traduzido e
+ * partiria o evento em três valores no GA4.
+ *
+ * O campo é `trigger_id`, e o tipo do evento o EXIGE para `component: "dialog"`
+ * e proíbe `label` (`prd/dialog.md` §9). Até 2026-09-10 esta página mandava o
+ * id no campo `label` — o nome que o AlertDialog e o Sheet usam de propósito, e
+ * que o Dialog abandonou em 2026-09-09 —, e só dos dois lados "do" do Do &
+ * Don't, com ids de par (`do-dont-pair1`) que não diziam o lado. A lista é fechada
+ * para que um id fora do vocabulário das outras stacks reprove no build, e não
+ * no relatório.
+ *
+ * Cobre as DEZ prévias da página, como o vanilla (`dialogTracking`). Até
+ * 2026-09-10 o "sem rodapé", o "fechar próprio" e as duas composições abriam
+ * sem rastro, porque o vanilla não lhes dava id — e o id do "fechar próprio"
+ * de lá era `scroll-content`, trocado com o da prévia de rolagem.
+ */
+type DialogTriggerId =
+  | "default"
+  | "basic"
+  | "with-form"
+  | "scroll-content"
+  | "no-footer"
+  | "destructive"
+  | "custom-close-in-footer"
+  | "confirm-email"
+  | "profile-edit"
+  | "media-preview"
+  | "do-dont-pair1-do"
+  | "do-dont-pair1-dont"
+  | "do-dont-pair2-do"
+  | "do-dont-pair2-dont";
+
+/** Id estável da ação primária, para o `action_label` — o mesmo do vanilla. */
+type DialogActionId = "save" | "ok" | "delete" | "remove" | "continue" | "confirm-email";
+
+/**
+ * O `onOpenChange` que rastreia abrir e fechar de UMA prévia.
+ *
+ * Duas chamadas, e não uma com o nome do evento no ternário: o payload de cada
+ * evento é outro tipo — o fechamento exige `reason` —, e a união só confere o
+ * campo quando o nome é literal.
+ */
+function trackOpenChange(triggerId: DialogTriggerId, location: DocsLocation) {
+  return (open: boolean, details?: { reason?: string }) => {
+    if (open) {
+      track("dialog_open", { component: "dialog", trigger_id: triggerId, location });
+      return;
+    }
+    track("dialog_close", {
+      component: "dialog",
+      trigger_id: triggerId,
+      reason: mapCloseReason(details?.reason),
+      location,
+    });
+  };
+}
+
+/** Clique na ação primária do rodapé, pelo id estável da ação. */
+function trackAction(actionId: DialogActionId, location: DocsLocation) {
+  track("dialog_action", { component: "dialog", action_label: actionId, location });
+}
 
 type DemoProps = {
+  triggerId: DialogTriggerId;
   triggerLabel: string;
   title: string;
   description: string;
@@ -129,24 +194,17 @@ type FormDemoProps = DemoProps & {
   sampleName: string;
 };
 
-function DefaultDemo({ triggerLabel, title, description, cancel, action, location, footerNote, closeLabel, defaultOpen }: DemoProps) {
+function DefaultDemo({ triggerId, triggerLabel, title, description, cancel, action, location, footerNote, closeLabel, defaultOpen }: DemoProps) {
   return (
     <Dialog
       defaultOpen={defaultOpen}
-      onOpenChange={(open, details) =>
-        track(open ? "dialog_open" : "dialog_close", {
-          component: "dialog",
-          // Identificador do CENÁRIO, não o título. `title` chega traduzido, e
-          // texto traduzido em payload parte um evento em três valores no GA4 —
-          // a agregação some. Quem diz a seção é `location`; este campo diz
-          // qual demo. O `i18n_text_in_payload` não via este ponto porque o
-          // texto chegava por prop: o portão lê a chamada de tradução DENTRO do
-          // payload, e a indireção o cega.
-          label: "default",
-          ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
-          location,
-        })
-      }
+      // Identificador do CENÁRIO, não o título. `title` chega traduzido, e texto
+      // traduzido em payload parte um evento em três valores no GA4 — a
+      // agregação some. Quem diz a seção é `location`; `trigger_id` diz qual
+      // prévia. O `i18n_text_in_payload` não via este ponto porque o texto
+      // chegava por prop: o portão lê a chamada de tradução DENTRO do payload,
+      // e a indireção o cega.
+      onOpenChange={trackOpenChange(triggerId, location)}
     >
       <DialogTrigger render={<Button variant="outline" />}>{triggerLabel}</DialogTrigger>
       <DialogContent closeLabel={closeLabel}>
@@ -164,37 +222,18 @@ function DefaultDemo({ triggerLabel, title, description, cancel, action, locatio
         )}
         <DialogFooter>
           <DialogClose render={<Button variant="outline" />}>{cancel}</DialogClose>
-          <Button
-            onClick={() =>
-              track("dialog_action", {
-                component: "dialog",
-                // Mesma razão do `label`: `action` chega traduzido por prop.
-                action_label: "save",
-                location,
-              })
-            }
-          >
-            {action}
-          </Button>
+          {/* Mesma razão do `trigger_id`: `action` chega traduzido por prop. */}
+          <Button onClick={() => trackAction("save", location)}>{action}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
 
-function FormDemo({ triggerLabel, title, description, cancel, action, location, footerNote, closeLabel, fieldName, fieldEmail, sampleName }: FormDemoProps) {
+function FormDemo({ triggerId, triggerLabel, title, description, cancel, action, location, footerNote, closeLabel, fieldName, fieldEmail, sampleName }: FormDemoProps) {
   return (
-    <Dialog
-      onOpenChange={(open, details) =>
-        track(open ? "dialog_open" : "dialog_close", {
-          component: "dialog",
-          // Ver a nota em `DefaultDemo`: cenário, não título traduzido.
-          label: "with-form",
-          ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
-          location,
-        })
-      }
-    >
+    // Ver a nota em `DefaultDemo`: cenário, não título traduzido.
+    <Dialog onOpenChange={trackOpenChange(triggerId, location)}>
       <DialogTrigger render={<Button variant="outline" />}>{triggerLabel}</DialogTrigger>
       <DialogContent closeLabel={closeLabel}>
         <DialogHeader>
@@ -206,12 +245,8 @@ function FormDemo({ triggerLabel, title, description, cancel, action, location, 
           data-spacing="sm"
           onSubmit={(e) => {
             e.preventDefault();
-            track("dialog_action", {
-              component: "dialog",
-              // Mesma razão do `label`: `action` chega traduzido por prop.
-                action_label: "save",
-              location,
-            });
+            // Mesma razão do `trigger_id`: `action` chega traduzido por prop.
+            trackAction("save", location);
           }}
         >
           <div className="nds-stack" data-spacing="xs">
@@ -469,6 +504,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-cluster" data-justify="center" data-spacing="md" style={{ flexWrap: "wrap" }}>
           <DefaultDemo
+            triggerId="default"
             location="docs_demo"
             footerNote={tContent("demonstration.labels.footerNote")}
             triggerLabel={tContent("demonstration.labels.triggerLabel")}
@@ -478,7 +514,13 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             action={tContent("demonstration.labels.action")}
             closeLabel={tContent("demonstration.labels.close")}
           />
+          {/*
+            O vanilla mostra UM painel na Demonstração; este segundo é o mesmo
+            exemplo da variante com formulário, e por isso leva o id dela —
+            `location` é quem separa as duas séries.
+          */}
           <FormDemo
+            triggerId="with-form"
             location="docs_demo"
             footerNote={tContent("demonstration.labels.footerNote")}
             triggerLabel={tContent("demonstration.labels.triggerLabel")}
@@ -614,17 +656,11 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
+            // Os QUATRO lados rastreiam, com o id de cada um: o contraexemplo
+            // é componente vivo como o exemplo, e quem abre o lado errado para
+            // ver o defeito é tão leitor quanto quem abre o certo.
             doPreview: (
-              <Dialog
-                onOpenChange={(open, details) =>
-                  track(open ? "dialog_open" : "dialog_close", {
-                    component: "dialog",
-                    label: "do-dont-pair1",
-                    ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
-                    location: "docs_do_dont",
-                  })
-                }
-              >
+              <Dialog onOpenChange={trackOpenChange("do-dont-pair1-do", "docs_do_dont")}>
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.triggerLabel")}
                 </DialogTrigger>
@@ -639,13 +675,15 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button>{tContent("demonstration.labels.action")}</Button>
+                    <Button onClick={() => trackAction("save", "docs_do_dont")}>
+                      {tContent("demonstration.labels.action")}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
             ),
             dontPreview: (
-              <Dialog>
+              <Dialog onOpenChange={trackOpenChange("do-dont-pair1-dont", "docs_do_dont")}>
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.vagueTitle")}
                 </DialogTrigger>
@@ -663,7 +701,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                   */}
                   <DialogFooter>
                     <DialogClose render={<Button variant="outline" />}>Não</DialogClose>
-                    <Button>OK</Button>
+                    <Button onClick={() => trackAction("ok", "docs_do_dont")}>OK</Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -675,16 +713,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Dialog
-                onOpenChange={(open, details) =>
-                  track(open ? "dialog_open" : "dialog_close", {
-                    component: "dialog",
-                    label: "do-dont-pair2",
-                    ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
-                    location: "docs_do_dont",
-                  })
-                }
-              >
+              <Dialog onOpenChange={trackOpenChange("do-dont-pair2-do", "docs_do_dont")}>
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.triggerLabel")}
                 </DialogTrigger>
@@ -699,13 +728,15 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button>{tContent("demonstration.labels.action")}</Button>
+                    <Button onClick={() => trackAction("save", "docs_do_dont")}>
+                      {tContent("demonstration.labels.action")}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
             ),
             dontPreview: (
-              <Dialog>
+              <Dialog onOpenChange={trackOpenChange("do-dont-pair2-dont", "docs_do_dont")}>
                 <DialogTrigger render={<Button variant="destructive" />}>
                   {tContent("demonstration.labels.destructiveTitle")}
                 </DialogTrigger>
@@ -722,7 +753,9 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button variant="destructive">Excluir</Button>
+                    <Button variant="destructive" onClick={() => trackAction("delete", "docs_do_dont")}>
+                      Excluir
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -753,6 +786,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             code: codeDefault,
             preview: (
               <DefaultDemo
+                triggerId="basic"
                 location="docs_variantes"
                 triggerLabel={tContent("demonstration.labels.triggerLabel")}
                 title={tContent("demonstration.labels.title")}
@@ -769,6 +803,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             code: codeWithForm,
             preview: (
               <FormDemo
+                triggerId="with-form"
                 location="docs_variantes"
                 triggerLabel={tContent("demonstration.labels.triggerLabel")}
                 title={tContent("demonstration.labels.title")}
@@ -786,7 +821,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             name: "withScrollContent",
             description: stripHtml(tContent("variants.items.withScrollContent")),
             preview: (
-              <Dialog>
+              // `scroll-content` é o id que o vanilla declara para esta
+              // variante. A ação "Aceitar" fica sem `dialog_action`: o vanilla
+              // não a rastreia, e o vocabulário de ações não tem id para ela.
+              <Dialog onOpenChange={trackOpenChange("scroll-content", "docs_variantes")}>
                 {/* "Ver termos" segue literal: não há chave de gatilho para o
                     cenário de termos no conteúdo compartilhado. */}
                 <DialogTrigger render={<Button variant="outline" />}>
@@ -847,8 +885,11 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             name: "noFooter",
             description: stripHtml(tContent("variants.items.noFooter")),
             code: codeNoFooter,
+            // Sem ação a rastrear — não há rodapé —, mas abrir e fechar contam:
+            // é aqui que o `reason` diz por onde o leitor sai de um painel sem
+            // botão próprio.
             preview: (
-              <Dialog>
+              <Dialog onOpenChange={trackOpenChange("no-footer", "docs_variantes")}>
                 {/* O gatilho REPETE o título: não há ação a nomear depois. */}
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.aboutTitle")}
@@ -877,7 +918,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             name: "withDestructiveAction",
             description: stripHtml(tContent("variants.items.withDestructiveAction")),
             preview: (
-              <Dialog>
+              <Dialog onOpenChange={trackOpenChange("destructive", "docs_variantes")}>
                 {/* "Remover" (gatilho) não tem chave — só a ação do rodapé tem. */}
                 <DialogTrigger render={<Button variant="outline" />}>Remover</DialogTrigger>
                 <DialogContent closeLabel={tContent("demonstration.labels.close")}>
@@ -891,7 +932,10 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button variant="destructive">
+                    <Button
+                      variant="destructive"
+                      onClick={() => trackAction("remove", "docs_variantes")}
+                    >
                       {tContent("demonstration.labels.removeItemAction")}
                     </Button>
                   </DialogFooter>
@@ -903,8 +947,12 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
             name: "customCloseInFooter",
             description: stripHtml(tContent("variants.items.customCloseInFooter")),
             code: codeCustomCloseInFooter,
+            // `custom-close-in-footer`, o id que o vanilla corrigiu em
+            // 2026-09-10 — antes ele mandava `scroll-content` daqui, o id da
+            // prévia de rolagem. O "Fechar" do rodapé chega ao `reason` como
+            // `close-button`, pela mesma dedução dos outros painéis.
             preview: (
-              <Dialog>
+              <Dialog onOpenChange={trackOpenChange("custom-close-in-footer", "docs_variantes")}>
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.guideTrigger")}
                 </DialogTrigger>
@@ -941,7 +989,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <Button variant="outline">
                       {tContent("demonstration.labels.back")}
                     </Button>
-                    <Button>
+                    <Button onClick={() => trackAction("continue", "docs_variantes")}>
                       {tContent("demonstration.labels.continueAction")}
                     </Button>
                   </DialogFooter>
@@ -973,7 +1021,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
   </DialogContent>
 </Dialog>`,
             preview: (
-              <Dialog>
+              <Dialog onOpenChange={trackOpenChange("confirm-email", "docs_variantes")}>
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.confirmEmailAction")}
                 </DialogTrigger>
@@ -994,7 +1042,9 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     <DialogClose render={<Button variant="outline" />}>
                       {tContent("demonstration.labels.cancel")}
                     </DialogClose>
-                    <Button>{tContent("demonstration.labels.confirmEmailAction")}</Button>
+                    <Button onClick={() => trackAction("confirm-email", "docs_variantes")}>
+                      {tContent("demonstration.labels.confirmEmailAction")}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
@@ -1003,6 +1053,12 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         ]}
       />
 
+      {/*
+        As duas composições rastreiam abrir e fechar com `location:
+        "docs_composicoes"`, como no vanilla. Nenhuma manda `dialog_action`: a
+        de mídia não tem rodapé, e o "Salvar" do perfil também não é rastreado
+        lá.
+      */}
       <DocsCompositions
         title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
@@ -1035,7 +1091,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
   </DialogContent>
 </Dialog>`,
             preview: (
-              <Dialog>
+              <Dialog onOpenChange={trackOpenChange("profile-edit", "docs_composicoes")}>
                 <DialogTrigger render={<Button variant="outline" />}>
                   {tContent("demonstration.labels.triggerLabel")}
                 </DialogTrigger>
@@ -1096,7 +1152,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
   </DialogContent>
 </Dialog>`,
             preview: (
-              <Dialog>
+              <Dialog onOpenChange={trackOpenChange("media-preview", "docs_composicoes")}>
                 {/* Cenário de mídia sem chave no conteúdo compartilhado:
                     gatilho, título e descrição seguem literais. */}
                 <DialogTrigger render={<Button variant="outline" />}>Pré-visualizar</DialogTrigger>

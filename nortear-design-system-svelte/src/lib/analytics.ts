@@ -119,23 +119,24 @@ interface AnalyticsEvents {
     location?: string;
   };
 
-  dialog_open: {
-    component: string;
-    label?: string;
-    /** Id ESTÁVEL de quem abriu, nunca o texto do gatilho (ver guideline 07). */
-    trigger_id?: string;
-    location?: string;
-  };
+  /**
+   * Abertura de Dialog, AlertDialog e Sheet — a mesma pergunta de produto, e a
+   * peça vai no `component`. O campo que diz QUEM abriu depende da peça, e é o
+   * tipo que cobra (§9 de `prd/dialog.md`, `prd/alert-dialog.md` e
+   * `prd/sheet.md`): o Dialog manda `trigger_id`, o id estável da demo
+   * (`default`, `do-dont-pair1-do`…); o AlertDialog e o Sheet mandam `label` —
+   * no Sheet, o lado. Até 2026-09-10 os dois campos eram opcionais, e o Dialog
+   * de quatro stacks mandava `label` (no Angular, `par1_do`) contra o PRD:
+   * o tipo aceitava tudo, e nenhum portão via.
+   */
+  dialog_open:
+    | { component: 'dialog'; trigger_id: string; location: string; label?: never }
+    | { component: 'alert-dialog' | 'sheet'; label: string; location: string; trigger_id?: never };
 
-  /** Disparado quando o Dialog fecha (Escape, overlay, close-button ou ação). */
-  dialog_close: {
-    component: string;
-    label?: string;
-    /** Id ESTÁVEL de quem abriu, nunca o texto do gatilho (ver guideline 07). */
-    trigger_id?: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
-    location?: string;
-  };
+  /** Fechamento, por qualquer caminho — mesmos campos da abertura, mais o `reason`. */
+  dialog_close:
+    | { component: 'dialog'; trigger_id: string; reason: 'escape' | 'overlay' | 'close-button' | 'api'; location: string; label?: never }
+    | { component: 'alert-dialog' | 'sheet'; label: string; reason: 'escape' | 'overlay' | 'close-button' | 'api'; location: string; trigger_id?: never };
 
   /** Disparado ao clicar na ação primária do DialogFooter. */
   dialog_action: {

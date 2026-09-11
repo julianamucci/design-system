@@ -162,14 +162,30 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   });
 });
 
-// ─── Analytics — demo events ──────────────────────────────────────────────────
+// ─── Analytics — eventos dos diálogos vivos ───────────────────────────────────
+
+/**
+ * A SEÇÃO onde o diálogo está — nunca uma constante no topo do arquivo.
+ *
+ * Variantes e Do & Don't montam diálogos VIVOS, e abrir um deles é tão real
+ * quanto abrir o da demonstração. Até 2026-09-10 só a demonstração rastreava, e
+ * sempre com `docs_demo`: o GA4 não sabia onde o leitor de fato experimentou o
+ * componente (`07-analytics.md`, "`location` nas docs pages").
+ *
+ * As DEZ prévias rastreiam, como no vanilla (`dialogTracking`): até 2026-09-10
+ * a de rolagem, a sem rodapé e as duas composições abriam sem rastro, e a do
+ * fechar próprio mandava `scroll-content` — o id da de rolagem, copiado de um
+ * vanilla que o tinha trocado.
+ */
+type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont' | 'docs_composicoes';
 
 // O `update:open` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o
 // `dialog_close` exige `reason`, no vocabulário do design system
 // (`18-overlay.md` §Analytics). Mesma forma do SheetDocs: os dois caminhos que a
 // lib anuncia por evento próprio ficam anotados aqui; o que sobra é o botão de
-// fechar, o X ou o Cancelar. O "Salvar" da demonstração não fecha o painel, então
-// aqui não há caminho para `api`. Uma variável basta: o painel é modal.
+// fechar, o X ou o Cancelar. Nenhuma ação primária desta página fecha o painel,
+// então aqui não há caminho para `api`. Uma variável serve a todos os diálogos:
+// o painel é modal, e só um fica aberto por vez.
 type DialogCloseReason = 'escape' | 'overlay' | 'close-button';
 let pendingCloseReason: DialogCloseReason | null = null;
 
@@ -178,26 +194,34 @@ const closeWatch = {
   onPointerDownOutside: () => { pendingCloseReason = 'overlay'; },
 };
 
-function handleDemoOpenChange(open: boolean) {
+/**
+ * `triggerId` é o id ESTÁVEL da prévia, no vocabulário que o vanilla fixou
+ * (`demoId` em `DialogDocs.ts`): `default`, `basic`, `do-dont-pair1-do`… Nunca o
+ * texto do gatilho, que é traduzido e partiria o evento em três no GA4. O tipo
+ * cobra o campo: o Dialog manda `trigger_id` e não pode mandar `label`
+ * (`prd/dialog.md` §9).
+ */
+function trackOpenChange(triggerId: string, location: DocsLocation, open: boolean) {
   if (open) {
     pendingCloseReason = null;
-    track('dialog_open', { component: 'dialog', label: 'title', location: 'docs_demo' });
+    track('dialog_open', { component: 'dialog', trigger_id: triggerId, location });
     return;
   }
   track('dialog_close', {
     component: 'dialog',
-    label: 'title',
+    trigger_id: triggerId,
     reason: pendingCloseReason ?? 'close-button',
-    location: 'docs_demo',
+    location,
   });
   pendingCloseReason = null;
 }
 
-function handleDemoAction() {
+/** `actionId` é o id estável da ação primária (`save`, `remove`, `ok`), nunca o rótulo. */
+function trackAction(actionId: string, location: DocsLocation) {
   track('dialog_action', {
     component: 'dialog',
-    action_label: 'action',
-    location: 'docs_demo',
+    action_label: actionId,
+    location,
   });
 }
 // ─── Code strings ─────────────────────────────────────────────────────────────
@@ -596,11 +620,14 @@ const a11yCritCols = computed(() => ({
         data-spacing="md"
         style="flex-wrap: wrap"
       >
-        <Dialog @update:open="handleDemoOpenChange">
+        <Dialog @update:open="trackOpenChange('default', 'docs_demo', $event)">
           <DialogTrigger as-child>
             <Button>{{ tContent('demonstration.labels.triggerLabel') }}</Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')" v-bind="closeWatch">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.description') }}</DialogDescription>
@@ -626,7 +653,7 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button @click="handleDemoAction">
+              <Button @click="trackAction('save', 'docs_demo')">
                 {{ tContent('demonstration.labels.action') }}
               </Button>
             </DialogFooter>
@@ -718,13 +745,16 @@ const a11yCritCols = computed(() => ({
       ]"
     >
       <template #do-preview-0>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('do-dont-pair1-do', 'docs_do_dont', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.description') }}</DialogDescription>
@@ -735,42 +765,55 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>{{ tContent('demonstration.labels.action') }}</Button>
+              <Button @click="trackAction('save', 'docs_do_dont')">
+                {{ tContent('demonstration.labels.action') }}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </template>
       <template #dont-preview-0>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('do-dont-pair1-dont', 'docs_do_dont', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.vagueTitle') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.vagueTitle') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.vagueDescription') }}</DialogDescription>
             </DialogHeader>
+            <!-- O "OK" é o defeito que a legenda nomeia, e por isso é literal
+                 nos três idiomas. O cancelar sai da chave, como no vanilla: o
+                 "Não" cravado aqui ficava em português nas três versões. -->
             <DialogFooter>
               <DialogClose as-child>
                 <Button variant="outline">
-                  Não
+                  {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>OK</Button>
+              <Button @click="trackAction('ok', 'docs_do_dont')">
+                OK
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </template>
       <template #do-preview-1>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('do-dont-pair2-do', 'docs_do_dont', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>Atualize seu nome e email.</DialogDescription>
@@ -781,19 +824,24 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>{{ tContent('demonstration.labels.action') }}</Button>
+              <Button @click="trackAction('save', 'docs_do_dont')">
+                {{ tContent('demonstration.labels.action') }}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </template>
       <template #dont-preview-1>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('do-dont-pair2-dont', 'docs_do_dont', $event)">
           <DialogTrigger as-child>
             <Button variant="destructive">
               {{ tContent('demonstration.labels.destructiveTitle') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.destructiveTitle') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.destructiveDescription') }}</DialogDescription>
@@ -804,7 +852,10 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button variant="destructive">
+              <Button
+                variant="destructive"
+                @click="trackAction('delete', 'docs_do_dont')"
+              >
                 {{ tContent('demonstration.labels.destructiveTitle') }}
               </Button>
             </DialogFooter>
@@ -832,13 +883,16 @@ const a11yCritCols = computed(() => ({
       :note="stripHtml(tContent('variants.note'))"
     >
       <template #variant-preview-0>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('basic', 'docs_variantes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
@@ -849,29 +903,36 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>{{ tContent('demonstration.labels.action') }}</Button>
+              <Button @click="trackAction('save', 'docs_variantes')">
+                {{ tContent('demonstration.labels.action') }}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </template>
       <template #variant-preview-1>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('with-form', 'docs_variantes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.description') }}</DialogDescription>
             </DialogHeader>
             <!-- O rodapé fica DENTRO do form (D10): `type="submit"` fora dele é
-                 botão inerte — não submete, e o Enter num campo não faz nada. -->
+                 botão inerte — não submete, e o Enter num campo não faz nada.
+                 A ação é rastreada no `submit`, e não no clique: o Enter num
+                 campo também submete, e é a mesma ação primária. -->
             <form
               class="nds-stack"
               data-spacing="sm"
-              @submit.prevent
+              @submit.prevent="trackAction('save', 'docs_variantes')"
             >
               <div
                 class="nds-stack"
@@ -908,7 +969,9 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-2>
-        <Dialog>
+        <!-- `scroll-content` é o id desta prévia. O "Aceitar" fica sem
+             `dialog_action`, como no vanilla: lá ele não é rastreado. -->
+        <Dialog @update:open="trackOpenChange('scroll-content', 'docs_variantes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.termsTitle') }}
@@ -920,6 +983,7 @@ const a11yCritCols = computed(() => ({
           <DialogContent
             class="nds-max-w-md"
             :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
           >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.termsTitle') }}</DialogTitle>
@@ -958,13 +1022,16 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-3>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('no-footer', 'docs_variantes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.aboutTitle') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.aboutTitle') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.aboutDescription') }}</DialogDescription>
@@ -980,13 +1047,16 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-4>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('destructive', 'docs_variantes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.removeItemAction') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.removeItemTitle') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.removeItemDescription') }}</DialogDescription>
@@ -997,21 +1067,30 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button variant="destructive">
+              <Button
+                variant="destructive"
+                @click="trackAction('remove', 'docs_variantes')"
+              >
                 {{ tContent('demonstration.labels.removeItemAction') }}
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </template>
+      <!-- `custom-close-in-footer`: até 2026-09-10 esta prévia mandava
+           `scroll-content`, copiado de um vanilla que tinha trocado os ids — e
+           juntava no GA4 dois exemplos numa série só. -->
       <template #variant-preview-5>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('custom-close-in-footer', 'docs_variantes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.guideTrigger') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :show-close-button="false">
+          <DialogContent
+            :show-close-button="false"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.guideTitle') }}</DialogTitle>
               <DialogDescription>{{ tContent('demonstration.labels.guideDescription') }}</DialogDescription>
@@ -1039,19 +1118,24 @@ const a11yCritCols = computed(() => ({
               <Button variant="outline">
                 {{ tContent('demonstration.labels.back') }}
               </Button>
-              <Button>{{ tContent('demonstration.labels.continueAction') }}</Button>
+              <Button @click="trackAction('continue', 'docs_variantes')">
+                {{ tContent('demonstration.labels.continueAction') }}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
       </template>
       <template #variant-preview-6>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('confirm-email', 'docs_variantes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.confirmEmailTitle') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.confirmEmailTitle') }}</DialogTitle>
               <DialogDescription>Verifique o endereço antes de enviar o link de acesso.</DialogDescription>
@@ -1065,7 +1149,9 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </DialogClose>
-              <Button>{{ tContent('demonstration.labels.confirmEmailAction') }}</Button>
+              <Button @click="trackAction('confirm-email', 'docs_variantes')">
+                {{ tContent('demonstration.labels.confirmEmailAction') }}
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -1080,13 +1166,17 @@ const a11yCritCols = computed(() => ({
       :items="compositionItems"
     >
       <template #variant-preview-0>
-        <Dialog>
+        <!-- Abrir e fechar rastreiam; o "Salvar" não, como no vanilla. -->
+        <Dialog @update:open="trackOpenChange('profile-edit', 'docs_composicoes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.triggerLabel') }}
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>{{ tContent('demonstration.labels.title') }}</DialogTitle>
               <DialogDescription>Atualize suas informações pessoais.</DialogDescription>
@@ -1127,13 +1217,16 @@ const a11yCritCols = computed(() => ({
         </Dialog>
       </template>
       <template #variant-preview-1>
-        <Dialog>
+        <Dialog @update:open="trackOpenChange('media-preview', 'docs_composicoes', $event)">
           <DialogTrigger as-child>
             <Button variant="outline">
               Capa do post
             </Button>
           </DialogTrigger>
-          <DialogContent :close-label="tContent('demonstration.labels.close')">
+          <DialogContent
+            :close-label="tContent('demonstration.labels.close')"
+            v-bind="closeWatch"
+          >
             <DialogHeader>
               <DialogTitle>Capa do post</DialogTitle>
               <DialogDescription>Pré-visualização em tamanho real.</DialogDescription>

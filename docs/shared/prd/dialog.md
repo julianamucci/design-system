@@ -445,6 +445,31 @@ clique fora do conteúdo, e marca a confirmação ANTES de o painel fechar — a
 e o cancelar são partes de fechar da lib, e sem a marca "confirmou" chegaria ao
 relatório como "apertou o botão de fechar". Portão: `reason_vocabulario_divergente`.
 
+**Desde 2026-09-10 quem cobra o campo é o TIPO.** `dialog_open` e
+`dialog_close` são uma união discriminada pelo `component` nas cinco
+`analytics.ts`: `dialog` exige `trigger_id` e proíbe `label`; `alert-dialog` e
+`sheet` exigem `label` e proíbem `trigger_id`; `location` é obrigatório nas três.
+Até ali os dois campos eram opcionais, e um dia depois da decisão abaixo o
+Dialog de quatro stacks ainda mandava `label` — no Angular com os valores
+`par1_do`/`par2_dont`. Nenhum portão via: o tipo aceitava tudo. Plantada a
+união, o `npm run build` reprovou exatamente esses pontos, e mais um
+`component` alargado para `string` no AlertDialog do vanilla.
+
+**Os ids da página, iguais nas cinco** — um por prévia, e toda prévia viva rastreia:
+
+| prévia | `trigger_id` | `location` |
+|---|---|---|
+| demonstração | `default` | `docs_demo` |
+| Do & Don't, par 1 e par 2 | `do-dont-pair1-do` · `do-dont-pair1-dont` · `do-dont-pair2-do` · `do-dont-pair2-dont` | `docs_do_dont` |
+| Variantes | `basic` · `with-form` · `scroll-content` · `no-footer` · `destructive` · `custom-close-in-footer` · `confirm-email` | `docs_variantes` |
+| Composições | `profile-edit` · `media-preview` | `docs_composicoes` |
+
+Até 2026-09-10 metade disso não existia: a prévia de rolagem, a sem rodapé e
+as duas composições abriam sem deixar rastro no vanilla, e a de fechar próprio
+mandava `scroll-content` — o nome da de rolagem. Três stacks copiaram a troca, a
+quarta pôs o id no lugar certo e deixou a outra muda. A série `scroll-content`
+anterior a essa data é a do guia com "Fechar" próprio, não a de rolagem.
+
 **O campo passou de `label` a `trigger_id` em 2026-09-09**, por decisão da dona,
 e junto foi um defeito de dados que o nome escondia. No vanilla o payload mandava
 `label: opts.triggerLabel`, e `triggerLabel` vinha de

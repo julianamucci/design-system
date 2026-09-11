@@ -149,7 +149,7 @@ type AlertDialogDemoOptions = {
  * fechamento que ela provoca.
  */
 function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
-  const payload = { component: 'alert-dialog', label: opts.label, location: opts.location };
+  const payload = { component: 'alert-dialog' as const, label: opts.label, location: opts.location };
   return createAlertDialog({
     trigger: createButton({ variant: opts.triggerVariant, label: opts.triggerLabel }),
     title: opts.title,
