@@ -97,7 +97,7 @@ Menubar (aria-label="Menu principal")
 - Atalhos: teclas escritas por extenso (`Ctrl`, `Shift`, `Alt`), compostas com `+` e sem espaço — `Ctrl+S`, `Ctrl+Shift+Z`. Nada de glifo de macOS: ele não se digita em Windows nem em Linux.
 
 **Analytics** (ver `docs/shared/guidelines/07-analytics.md`):
-- Evento: `menu_item_click` com `label` (texto do item) e `menu` (nome do menu pai).
+- Não dispara evento hoje — ausência declarada no PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9. Se passar a disparar, será `menubar_item_select` (padrão da família: `dropdown_menu_*`, `context_menu_*`), com `label` = valor ESTÁVEL do item, nunca o texto traduzido.
 
 ---
 
@@ -323,7 +323,7 @@ Tabs
 | Componente | Evento | Payload obrigatório |
 |------------|--------|---------------------|
 | Breadcrumb | `navigation_click` | `label`, `destination` |
-| Menubar | `menu_item_click` | `label`, `menu` |
+| Menubar | — (não rastreado; ver PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9) | — |
 | Navigation Menu | `navigation_click` | `label`, `destination` |
 | Pagination | `page_change` | `page`, `total_pages` |
 | Stepper | `step_change` | `step`, `total_steps`, `direction` |

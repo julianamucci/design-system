@@ -10,6 +10,7 @@ import {
   contextMenuItemRecuadoSource,
   contextMenuMarkupMistaSource,
   contextMenuPaletteDarkSource,
+  contextMenuSnippet,
   contextMenuSource,
 } from './context-menu.source';
 
@@ -21,7 +22,6 @@ import {
   ContextMenu,
   ContextMenuTrigger,
   ContextMenuContent,
-  ContextMenuGroup,
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuShortcut,
@@ -38,13 +38,11 @@ import {
       Clique com o botão direito aqui
     </ContextMenuTrigger>
     <ContextMenuContent>
-      <ContextMenuGroup>
-        <ContextMenuItem>
-          Editar
-          <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-        </ContextMenuItem>
-        <ContextMenuItem>Duplicar</ContextMenuItem>
-      </ContextMenuGroup>
+      <ContextMenuItem>
+        Editar
+        <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
+      </ContextMenuItem>
+      <ContextMenuItem>Duplicar</ContextMenuItem>
       <ContextMenuSeparator />
       <ContextMenuItem variant="destructive">
         Excluir
@@ -79,6 +77,31 @@ import {
     );
   });
 
+  it('cada `show*` desligado tira a peça do snippet, e o import acompanha', () => {
+    // O snippet é o da prévia: um trecho com a peça que a tela não desenha
+    // ensinaria outro menu.
+    const noShortcuts = contextMenuSource('', { args: { showShortcuts: false } });
+    expect(noShortcuts).not.toContain('ContextMenuShortcut');
+    expect(noShortcuts).toContain('<ContextMenuItem>Editar</ContextMenuItem>');
+
+    const noSeparator = contextMenuSource('', { args: { showSeparator: false } });
+    expect(noSeparator).not.toContain('ContextMenuSeparator');
+    expect(noSeparator).toContain('variant="destructive"');
+
+    const noDestructive = contextMenuSource('', { args: { showDestructive: false } });
+    expect(noDestructive).not.toContain('Excluir');
+    expect(noDestructive).not.toContain('Delete');
+    expect(noDestructive).toContain('<ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>');
+  });
+
+  it('não abre grupo em volta das ações — grupo sem rótulo não tem nome', () => {
+    // A lib escreve `aria-labelledby` em todo grupo; sem rótulo dentro, ele
+    // aponta para um id que não existe. O Vanilla só abre grupo onde há rótulo.
+    for (const args of [{}, { showShortcuts: false }, { showSeparator: false }]) {
+      expect(contextMenuSource('', { args })).not.toContain('ContextMenuGroup');
+    }
+  });
+
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
     // `onOpenChange` é `fn()` no meta; qualquer arg pode chegar como função no
     // painel, e o corpo do mock apareceria como se fosse o exemplo.
@@ -93,6 +116,10 @@ describe('transforms das stories de estado', () => {
     const saida = contextMenuItemDisabledSource();
     expect(saida).toContain('<ContextMenuItem disabled>Duplicar</ContextMenuItem>');
     expect(saida).toContain('<ContextMenuItem variant="destructive" disabled>Excluir</ContextMenuItem>');
+    // Sem atalho, como na prévia: o assunto é o item indisponível.
+    expect(saida).not.toContain('ContextMenuShortcut');
+    // E sem grupo: não há rótulo que o nomeie.
+    expect(saida).not.toContain('ContextMenuGroup');
   });
 
   it('o recuo mora no rótulo e no item, e convive com a variante', () => {
@@ -108,6 +135,7 @@ describe('transforms das stories de estado', () => {
     const saida = contextMenuItemDestructiveSource();
     expect(saida).toContain('<ContextMenuItem variant="destructive">');
     expect(saida).not.toContain('variant="default"');
+    expect(saida).not.toContain('ContextMenuGroup');
   });
 
   it('os três estados da marcação aparecem lado a lado', () => {
@@ -119,6 +147,13 @@ describe('transforms das stories de estado', () => {
     expect(saida).toContain('<ContextMenuCheckboxItem :checked="false">Grade');
     // A prop é `checked`; `model-value` é da lib por baixo e o item não a lê.
     expect(saida).not.toContain('model-value');
+  });
+
+  it('o rótulo da marcação mora DENTRO do grupo que ele nomeia', () => {
+    const saida = contextMenuMarkupMistaSource();
+    expect(saida).toContain(`      <ContextMenuGroup>
+        <ContextMenuLabel>Mostrar na tela</ContextMenuLabel>`);
+    expect(saida).toContain('ContextMenuGroup,');
   });
 
   it('a paleta escura não muda uma linha do markup', () => {
@@ -142,9 +177,10 @@ describe('transforms das stories de composição', () => {
   it('a marcação liga o par completo: prop de entrada e evento de volta', () => {
     const saida = contextMenuWithMarkupSource();
     expect(saida).toContain(`import { ref } from 'vue'`);
-    expect(saida).toContain('const mostrarReguas = ref(true)');
+    // Os mesmos estados iniciais da prévia: grade desmarcada, réguas marcadas.
+    expect(saida).toContain('const showGrid = ref(false)\nconst showRulers = ref(true)');
     // Só `:checked` prenderia o item ao valor inicial.
-    expect(saida).toContain('<ContextMenuCheckboxItem v-model:checked="mostrarGrade">');
+    expect(saida).toContain('<ContextMenuCheckboxItem v-model:checked="showGrid">');
     expect(saida).not.toContain('<ContextMenuCheckboxItem :checked=');
   });
 
@@ -153,6 +189,17 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain(`const layout = ref('grid')`);
     expect(saida).toContain('<ContextMenuRadioGroup v-model="layout">');
     expect(saida).toContain('<ContextMenuRadioItem value="columns">Colunas</ContextMenuRadioItem>');
+  });
+
+  it('na escolha única há UM grupo só: o de rádio, com o rótulo dentro dele', () => {
+    // O grupo de rádio já é um grupo por baixo. Um `ContextMenuGroup` em volta
+    // seria o segundo, e o de dentro ficaria com `aria-labelledby` pendurado —
+    // o rótulo pegaria o id do grupo de fora.
+    const saida = contextMenuWithChoiceUnicaSource();
+    expect(saida).not.toContain('ContextMenuGroup');
+    expect(saida).toContain(`      <ContextMenuRadioGroup v-model="layout">
+        <ContextMenuLabel>Layout</ContextMenuLabel>
+        <ContextMenuRadioItem value="grid">Grade</ContextMenuRadioItem>`);
   });
 
   it('o submenu é a tríade completa, com o conteúdo dentro dela', () => {
@@ -171,8 +218,59 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('<ContextMenuLabel>Ações</ContextMenuLabel>');
     expect(saida).toContain('<ContextMenuLabel>Visualização</ContextMenuLabel>');
     expect(saida).toContain('<ContextMenuLabel>Layout</ContextMenuLabel>');
-    // Três grupos, três separadores entre eles e a ação perigosa no fim.
+    // Três grupos, três separadores entre eles e a ação perigosa no fim. O de
+    // escolha única é o próprio grupo de rádio, e o rótulo mora dentro dele.
     expect([...saida.matchAll(/<ContextMenuSeparator \/>/g)].length).toBe(3);
-    expect([...saida.matchAll(/<ContextMenuGroup>/g)].length).toBe(3);
+    expect([...saida.matchAll(/<ContextMenuGroup>/g)].length).toBe(2);
+    expect(saida).toContain(`<ContextMenuRadioGroup v-model="layout">
+        <ContextMenuLabel>Layout</ContextMenuLabel>`);
+    // Um `ref` por `v-model`, na ordem em que aparecem.
+    expect(saida).toContain(`const showGrid = ref(true)\nconst layout = ref('grid')`);
+  });
+});
+
+describe('contextMenuSnippet — o menu descrito por dados', () => {
+  it('imprime os rótulos que recebe: o código diz o que a prévia diz, em qualquer idioma', () => {
+    const saida = contextMenuSnippet({
+      triggerLabel: 'Right-click here',
+      entries: [
+        { kind: 'item', label: 'Edit' },
+        { kind: 'separator' },
+        { kind: 'item', label: 'Delete', destructive: true },
+      ],
+    });
+    expect(saida).toContain('\n      Right-click here\n');
+    expect(saida).toContain('<ContextMenuItem>Edit</ContextMenuItem>');
+    expect(saida).toContain('<ContextMenuItem variant="destructive">Delete</ContextMenuItem>');
+    expect(saida).not.toContain('Editar');
+    expect(saida).not.toContain('Clique com o botão direito aqui');
+  });
+
+  it('importa só as peças usadas, e só declara `ref` quando há `v-model`', () => {
+    const saida = contextMenuSnippet({ entries: [{ kind: 'item', label: 'Edit' }] });
+    expect(saida).toContain(`import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+} from '@/components/ui/context-menu'`);
+    expect(saida).not.toContain(`from 'vue'`);
+  });
+
+  it('o rótulo recuado leva `inset`, e o grupo sempre tem rótulo', () => {
+    const saida = contextMenuSnippet({
+      entries: [
+        {
+          kind: 'group',
+          label: 'Actions',
+          inset: true,
+          entries: [{ kind: 'item', label: 'Edit', inset: true }],
+        },
+      ],
+    });
+    expect(saida).toContain(`      <ContextMenuGroup>
+        <ContextMenuLabel inset>Actions</ContextMenuLabel>
+        <ContextMenuItem inset>Edit</ContextMenuItem>
+      </ContextMenuGroup>`);
   });
 });

@@ -378,7 +378,7 @@ track("language_switched", {
 | Alert | `alert_dismiss` | Medir taxa de descarte de alertas importantes |
 | Sonner / Toast | `toast_action_click` | Quando o toast tem ação (ex: "Desfazer") |
 | Collapsible | `collapsible_toggle` | Quando o conteúdo tem importância na jornada |
-| Menubar | `menu_item_click` | `label`, `menu` (nome do menu pai) |
+| Menubar | `menubar_item_select` | `label`, `menu` (nome do menu pai) — no padrão da família (`dropdown_menu_*`, `context_menu_*`); hoje o Menubar não dispara nada |
 
 ---
 
@@ -474,7 +474,7 @@ type EventName =
   | "slide_change"
   | "navigation_click" | "breadcrumb_ellipsis_open"
   | "tooltip_view" | "alert_dismiss" | "toast_action_click"
-  | "collapsible_toggle" | "menu_item_click"
+  | "collapsible_toggle" | "context_menu_item_select"
   | "docs_page_view" | "docs_section_viewed" | "language_switched"
   | "docs_nav_click" | "docs_demo_click" | "docs_variant_click"
   | "docs_code_copy" | "docs_related_click" | "docs_link_click";

@@ -1,17 +1,58 @@
 <script setup lang="ts">
-import type { ContextMenuRootEmits, ContextMenuRootProps } from 'reka-ui'
-import { ContextMenuRoot, useForwardPropsEmits } from 'reka-ui'
+import type { ContextMenuRootProps } from 'reka-ui'
+import { ContextMenuRoot, useForwardProps } from 'reka-ui'
+import { provide } from 'vue'
+import { CONTEXT_MENU_CLOSE, type ContextMenuCloseReason } from './context-menu.context'
 
 const props = defineProps<ContextMenuRootProps>()
-const emits = defineEmits<ContextMenuRootEmits>()
 
-const forwarded = useForwardPropsEmits(props, emits)
+/**
+ * `update:open` ganha o MOTIVO como segundo argumento no fechamento — a forma
+ * que o Popover desta stack já tem, e a que base-ui (`onOpenChange(open,
+ * detalhes)`) e radix-ng (`evento.reason`) entregam de fábrica. O motivo viaja
+ * junto com a mudança de estado DAQUELA instância, e é ele que o
+ * `context_menu_close` precisa: sem ele a docs page mandaria o fechamento sem
+ * `reason` ou inventaria um.
+ */
+const emits = defineEmits<{
+  'update:open': [value: boolean, reason?: ContextMenuCloseReason]
+}>()
+
+const forwarded = useForwardProps(props)
+
+let pendingReason: ContextMenuCloseReason | null = null
+let tabTarget: HTMLElement | null = null
+
+function handleOpenChange(open: boolean) {
+  // `api` é o padrão: é o que sobra quando nenhum gesto de saída foi visto, e o
+  // único caminho que fecha sem gesto de saída é a escolha de um item.
+  const reason = open ? undefined : (pendingReason ?? 'api')
+  // Limpa nos dois sentidos: uma anotação que não resultou em fechamento não
+  // pode vazar para o próximo.
+  pendingReason = null
+  if (open) tabTarget = null
+  emits('update:open', open, reason)
+}
+
+// O painel vive em portal e não é descendente de template desta raiz, mas o
+// `provide` alcança porque a árvore de COMPONENTES continua a mesma — é o mesmo
+// caminho que a própria reka-ui usa para levar estado ao conteúdo.
+provide(CONTEXT_MENU_CLOSE, {
+  note: (reason) => { pendingReason = reason },
+  setTabTarget: (target) => { tabTarget = target },
+  takeTabTarget: () => {
+    const target = tabTarget
+    tabTarget = null
+    return target
+  },
+})
 </script>
 
 <template>
   <ContextMenuRoot
     data-slot="context-menu"
     v-bind="forwarded"
+    @update:open="handleOpenChange"
   >
     <slot />
   </ContextMenuRoot>

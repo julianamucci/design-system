@@ -2565,8 +2565,9 @@ function auditDocsSmokeCobertura() {
  *
  * Painel flutuante cresce a partir da borda encostada no gatilho, e cada lib
  * headless publica essa origem numa custom property com o SEU prefixo. A folha
- * compartilhada enumera as libs em cadeia até cair em `center`, que é o certo
- * para vanilla (não anima a entrada) e angular (radix-ng não publica origem).
+ * compartilhada enumera as libs em cadeia até cair em `center`. O vanilla não
+ * tem lib: o menu de contexto e os submenus dele escrevem `--transform-origin`
+ * à mão (desde 2026-09-10), e os demais painéis do vanilla não animam a entrada.
  *
  * O DEFEITO É SILENCIOSO, e é essa a razão desta regra existir. `center` é
  * fallback válido: quando o degrau do bits falta, o painel do Svelte cresce do

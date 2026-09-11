@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { FOCUS_RULE_GUARDA, waitForPortal } from "@/lib/wait-for-portal";
 import { gestoOpen, brilho } from "@shared/testing/context-menu-area";
+import { formaDoIndicador, ehTraco, ehTique } from "@shared/testing/menu-checkbox-indicator";
 import { AreaTrigger } from "./context-menu.fixtures";
 import {
   ContextMenu,
@@ -9,6 +10,7 @@ import {
   ContextMenuGroup,
   ContextMenuLabel,
   ContextMenuItem,
+  ContextMenuCheckboxItem,
   ContextMenuSeparator,
   ContextMenuShortcut,
 } from "@/components/ui/context-menu";
@@ -16,6 +18,7 @@ import {
   contextMenuItemDisabledSource,
   contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
+  contextMenuCheckboxIndeterminateSource,
   contextMenuDarkPaletteSource,
   contextMenuSource,
 } from "./context-menu.source";
@@ -37,7 +40,7 @@ const meta = {
       source: { transform: contextMenuSource },
       description: {
         component:
-          "Estados do ContextMenu: item desabilitado, item recuado, item destrutivo e a paleta escura.",
+          "Estados do ContextMenu: item desabilitado, item recuado, item destrutivo, marcação mista e a paleta escura.",
       },
     },
   },
@@ -56,30 +59,16 @@ export const ItemDisabled: Story = {
     // `disabled` é prop do ITEM: sem o override o snippet não mostraria onde a
     // prop entra, que é o assunto da story.
     docs: { source: { transform: contextMenuItemDisabledSource } },
-    // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
-    // estados. `checked` é booleano, o payload da mudança é booleano, o estado
-    // exposto ao indicador é booleano e os únicos atributos de dado são
-    // `data-checked` e `data-unchecked` — não existe terceiro valor. A caixa de
-    // seleção avulsa da MESMA lib tem `indeterminate`; o item de menu não.
-    coversNotApplicable: {
-      "functional.item11":
-        "o item de marcação do menu neste primitivo é de dois estados — prop, payload e estado do indicador são booleanos, sem terceiro valor para anunciar como misto",
-    },
   },
   render: () => (
     <ContextMenu>
       <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
-        <ContextMenuGroup>
-          <ContextMenuItem data-testid="primeiro">
-            Editar
-            <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-          </ContextMenuItem>
-          <ContextMenuItem disabled data-testid="off">
-            Duplicar
-          </ContextMenuItem>
-          <ContextMenuItem data-testid="ultimo">Renomear</ContextMenuItem>
-        </ContextMenuGroup>
+        <ContextMenuItem data-testid="primeiro">Editar</ContextMenuItem>
+        <ContextMenuItem disabled data-testid="off">
+          Duplicar
+        </ContextMenuItem>
+        <ContextMenuItem data-testid="ultimo">Renomear</ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive" disabled data-testid="perigo-off">
           Excluir
@@ -195,13 +184,11 @@ export const ItemDestructive: Story = {
     <ContextMenu>
       <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
-        <ContextMenuGroup>
-          <ContextMenuItem data-testid="normal">
-            Editar
-            <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-          </ContextMenuItem>
-          <ContextMenuItem>Duplicar</ContextMenuItem>
-        </ContextMenuGroup>
+        <ContextMenuItem data-testid="normal">
+          Editar
+          <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
+        </ContextMenuItem>
+        <ContextMenuItem>Duplicar</ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive" data-testid="perigo">
           Excluir permanentemente
@@ -225,6 +212,77 @@ export const ItemDestructive: Story = {
       await expect(getComputedStyle(target("perigo")).color).not.toBe(
         getComputedStyle(target("normal")).color,
       );
+    });
+  },
+};
+
+// ─── Marcação mista ───────────────────────────────────────────────────────────
+//
+// Story SEM interação no item, de propósito. O que ela declara vale na abertura,
+// e o primeiro clique num item misto o resolve para marcado — uma play que
+// clicasse aqui mediria outro estado no REPLAY do painel Interactions, que
+// reexecuta no mesmo DOM. Os três itens são controlados e sem callback: a
+// abertura é o único gesto, e cada rodada mede exatamente o mesmo.
+
+export const CheckboxIndeterminate: Story = {
+  parameters: {
+    covers: ["functional.item11"],
+    // O item de marcação e o estado misto são o assunto: o snippet do `meta`
+    // só tem itens de ação.
+    docs: { source: { transform: contextMenuCheckboxIndeterminateSource } },
+  },
+  render: () => (
+    <ContextMenu>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
+      <ContextMenuContent>
+        <ContextMenuGroup>
+          <ContextMenuLabel>Mostrar na tela</ContextMenuLabel>
+          <ContextMenuCheckboxItem checked={false} indeterminate>
+            Colunas
+          </ContextMenuCheckboxItem>
+          <ContextMenuCheckboxItem checked>Régua</ContextMenuCheckboxItem>
+          <ContextMenuCheckboxItem checked={false}>Grade</ContextMenuCheckboxItem>
+        </ContextMenuGroup>
+      </ContextMenuContent>
+    </ContextMenu>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const area = () => within(canvasElement).getByTestId("area");
+    const menu = await gestoOpen(area());
+    const canvas = within(menu);
+    const misto = canvas.getByRole("menuitemcheckbox", { name: "Colunas" });
+    const checked = canvas.getByRole("menuitemcheckbox", { name: "Régua" });
+    const desmarcado = canvas.getByRole("menuitemcheckbox", { name: "Grade" });
+
+    await step("O estado misto é anunciado como misto, e não como marcado", async () => {
+      // O item da lib é de dois estados e escreve `aria-checked` sozinho; o
+      // `"mixed"` vem do wrapper. Se a lib passar a sobrescrevê-lo, é aqui que
+      // fica vermelho — e os dois outros estados provam que o atributo não
+      // sumiu de quem não é misto.
+      await expect(misto.getAttribute("aria-checked")).toBe("mixed");
+      await expect(checked.getAttribute("aria-checked")).toBe("true");
+      await expect(desmarcado.getAttribute("aria-checked")).toBe("false");
+    });
+
+    await step("O misto desenha traço; o marcado, tique", async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
+      // nos dois estados — o defeito — esta asserção fica vermelha.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(checked);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step("O traço mora no indicador do item, como o tique", async () => {
+      await expect(
+        misto.querySelector('[data-slot="context-menu-checkbox-item-indicator"] svg'),
+      ).not.toBeNull();
+    });
+
+    await step("O desmarcado continua sem glifo nenhum", async () => {
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };

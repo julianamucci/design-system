@@ -7,6 +7,11 @@
   let { state = 'disabled' as State }: { state?: State } = $props();
 </script>
 
+<!--
+  Conteúdo de cada estado = o do vanilla. Rótulo só dentro de grupo, que é onde
+  ele nomeia alguma coisa; e grupo só com rótulo, porque sem nome ele não agrupa
+  nada para quem ouve.
+-->
 {#snippet area()}
   <ContextMenu.Trigger
     class={AREA_CLICK_DIREITO}
@@ -22,13 +27,11 @@
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>
-      <ContextMenu.Group>
-        <ContextMenu.Item data-testid="primeiro">Editar</ContextMenu.Item>
-        <ContextMenu.Item disabled data-testid="off">Duplicar</ContextMenu.Item>
-        <ContextMenu.Item data-testid="ultimo">Renomear</ContextMenu.Item>
-      </ContextMenu.Group>
+      <ContextMenu.Item data-testid="edit">Editar</ContextMenu.Item>
+      <ContextMenu.Item disabled data-testid="off">Duplicar</ContextMenu.Item>
+      <ContextMenu.Item data-testid="rename">Renomear</ContextMenu.Item>
       <ContextMenu.Separator />
-      <ContextMenu.Item variant="destructive" disabled data-testid="perigo-off">
+      <ContextMenu.Item variant="destructive" disabled data-testid="danger-off">
         Excluir
       </ContextMenu.Item>
     </ContextMenu.Content>
@@ -38,9 +41,11 @@
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>
-      <ContextMenu.Label inset>Arquivo</ContextMenu.Label>
-      <ContextMenu.Item data-testid="normal">Editar</ContextMenu.Item>
-      <ContextMenu.Item inset data-testid="recuado">Duplicar</ContextMenu.Item>
+      <ContextMenu.Group>
+        <ContextMenu.Label inset>Arquivo</ContextMenu.Label>
+        <ContextMenu.Item data-testid="plain">Editar</ContextMenu.Item>
+        <ContextMenu.Item inset data-testid="inset">Duplicar</ContextMenu.Item>
+      </ContextMenu.Group>
       <ContextMenu.Separator />
       <ContextMenu.Item inset variant="destructive">Excluir</ContextMenu.Item>
     </ContextMenu.Content>
@@ -50,13 +55,13 @@
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>
-      <ContextMenu.Item data-testid="normal">
+      <ContextMenu.Item data-testid="plain">
         Editar
         <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
       </ContextMenu.Item>
       <ContextMenu.Item>Duplicar</ContextMenu.Item>
       <ContextMenu.Separator />
-      <ContextMenu.Item variant="destructive" data-testid="perigo">
+      <ContextMenu.Item variant="destructive" data-testid="danger">
         Excluir permanentemente
         <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
       </ContextMenu.Item>
@@ -67,10 +72,12 @@
   <ContextMenu.Root>
     {@render area()}
     <ContextMenu.Content>
-      <ContextMenu.Label>Mostrar na tela</ContextMenu.Label>
-      <ContextMenu.CheckboxItem indeterminate>Colunas</ContextMenu.CheckboxItem>
-      <ContextMenu.CheckboxItem checked>Régua</ContextMenu.CheckboxItem>
-      <ContextMenu.CheckboxItem>Grade</ContextMenu.CheckboxItem>
+      <ContextMenu.Group>
+        <ContextMenu.Label>Mostrar na tela</ContextMenu.Label>
+        <ContextMenu.CheckboxItem indeterminate>Colunas</ContextMenu.CheckboxItem>
+        <ContextMenu.CheckboxItem checked>Régua</ContextMenu.CheckboxItem>
+        <ContextMenu.CheckboxItem>Grade</ContextMenu.CheckboxItem>
+      </ContextMenu.Group>
     </ContextMenu.Content>
   </ContextMenu.Root>
 

@@ -39,8 +39,14 @@ export function menuOpen(): HTMLElement | null {
 
 /** Fecha o menu se estiver aberto — precondição própria, sobrevive ao replay. */
 export async function closeMenu(): Promise<void> {
-  if (!menuOpen()) return;
-  await userEvent.keyboard('{Escape}');
+  // Escape dentro do submenu fecha SÓ o submenu (C5). O replay do painel
+  // Interactions reexecuta a play no mesmo DOM, e pode partir de um submenu
+  // aberto e focado: aí o primeiro Escape fecha o submenu e o segundo, a raiz.
+  // Três tentativas cobrem o único nível de submenu que o design system admite.
+  for (let attempt = 0; attempt < 3 && menuOpen(); attempt++) {
+    await userEvent.keyboard('{Escape}');
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
   await waitFor(() => {
     if (menuOpen()) throw new Error('o menu continua aberto depois do Escape');
   });

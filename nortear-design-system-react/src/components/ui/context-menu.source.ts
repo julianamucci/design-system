@@ -14,6 +14,9 @@ import { childText, jsxSnippet, type SourceTransform } from '@/lib/story-source'
 
 export type ContextMenuArgs = {
   triggerLabel: string;
+  showDestructive: boolean;
+  showSeparator: boolean;
+  showShortcuts: boolean;
 };
 
 const LABEL_DEFAULT = 'Clique com o botão direito aqui';
@@ -49,41 +52,56 @@ ${parts.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/context-menu";`;
 }
 
+/** O item com atalho, ou o item simples quando o control desliga os atalhos. */
+function shortcutItem(label: string, shortcut: string | false, extra = ''): string {
+  if (!shortcut) return `    <ContextMenuItem${extra}>${label}</ContextMenuItem>`;
+  return `    <ContextMenuItem${extra}>
+      ${label}
+      <ContextMenuShortcut>${shortcut}</ContextMenuShortcut>
+    </ContextMenuItem>`;
+}
+
 /**
  * Transform do `meta` — vale para todas as stories do arquivo.
  *
- * Ensina o arranjo canônico: a área que responde ao gesto, um grupo de ações
- * com atalho, o divisor e a ação destrutiva. O atalho fica DENTRO do item e sem
+ * Ensina o arranjo canônico: a área que responde ao gesto, as ações com atalho,
+ * o divisor e a ação destrutiva — e segue os controls do Playground, que ligam
+ * e desligam cada uma dessas partes. O atalho fica DENTRO do item e sem
  * `aria-hidden`, porque "Excluir, Delete" é o nome útil — escondido, o atalho só
  * existe para quem enxerga.
+ *
+ * Os `show*` que não chegam (as stories dos outros arquivos não os têm) valem
+ * `true`: o padrão do Playground, e o menu canônico.
  */
 export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx) => {
-  const label = childText(ctx?.args?.triggerLabel, LABEL_DEFAULT);
+  const args = ctx?.args ?? {};
+  const label = childText(args.triggerLabel, LABEL_DEFAULT);
+  const withShortcuts = args.showShortcuts !== false;
+  const withSeparator = args.showSeparator !== false;
+  const withDestructive = args.showDestructive !== false;
+
+  const lines = [
+    shortcutItem('Editar', withShortcuts && 'Ctrl+E'),
+    shortcutItem('Duplicar', false),
+    withSeparator && '    <ContextMenuSeparator />',
+    withDestructive && shortcutItem('Excluir', withShortcuts && 'Delete', ' variant="destructive"'),
+  ].filter(Boolean);
+
+  const parts = [
+    'ContextMenu',
+    'ContextMenuContent',
+    'ContextMenuItem',
+    withSeparator && 'ContextMenuSeparator',
+    withShortcuts && 'ContextMenuShortcut',
+    'ContextMenuTrigger',
+  ].filter((part): part is string => Boolean(part));
+
   return jsxSnippet(
-    importDe(
-      'ContextMenu',
-      'ContextMenuContent',
-      'ContextMenuGroup',
-      'ContextMenuItem',
-      'ContextMenuSeparator',
-      'ContextMenuShortcut',
-      'ContextMenuTrigger',
-    ),
+    importDe(...parts),
     `<ContextMenu>
 ${area(label)}
   <ContextMenuContent>
-    <ContextMenuGroup>
-      <ContextMenuItem>
-        Editar
-        <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-      </ContextMenuItem>
-      <ContextMenuItem>Duplicar</ContextMenuItem>
-    </ContextMenuGroup>
-    <ContextMenuSeparator />
-    <ContextMenuItem variant="destructive">
-      Excluir
-      <ContextMenuShortcut>Delete</ContextMenuShortcut>
-    </ContextMenuItem>
+${lines.join('\n')}
   </ContextMenuContent>
 </ContextMenu>`,
   );
@@ -160,9 +178,9 @@ ${area(LABEL_DEFAULT)}
 }
 
 /**
- * Com marcação: `ContextMenuCheckboxItem` é de DOIS estados — `checked` é
- * booleano, o payload da mudança é booleano, e não existe terceiro valor para
- * anunciar como misto. O estado vive fora do menu, que só avisa a troca.
+ * Com marcação: o estado vive fora do menu, que só avisa a troca. O snippet
+ * ensina os dois estados de uso corrente; o misto (`indeterminate`) tem story e
+ * snippet próprios — `contextMenuCheckboxIndeterminateSource`.
  */
 export function contextMenuWithMarkupSource(): string {
   return jsxSnippet(
@@ -209,38 +227,76 @@ ${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
  * Com escolha única: quem guarda o valor é o `ContextMenuRadioGroup`, e cada
  * opção declara o seu `value`. É o papel do grupo que faz o leitor de tela
  * anunciar "opção 2 de 3" em vez de três marcações independentes.
+ *
+ * O rótulo mora DENTRO do grupo de escolha única, e não num `ContextMenuGroup`
+ * em volta: o `Menu.RadioGroup` da base-ui já é `role="group"` e é ele quem o
+ * rótulo nomeia (`aria-labelledby`). Embrulhado num segundo grupo, o leitor de
+ * tela anunciava dois — o de fora com nome, o de dentro anônimo.
  */
 export function contextMenuWithChoiceUnicaSource(): string {
   return jsxSnippet(
     `${importDe(
   'ContextMenu',
   'ContextMenuContent',
-  'ContextMenuGroup',
   'ContextMenuLabel',
   'ContextMenuRadioGroup',
   'ContextMenuRadioItem',
   'ContextMenuTrigger',
 )}
 import { useState } from "react";`,
-    `function MenuDeZoom() {
-  const [zoom, setZoom] = useState("100");
+    `function MenuDeLayout() {
+  const [layout, setLayout] = useState("grid");
 
   return (
     <ContextMenu>
 ${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
       <ContextMenuContent>
-        <ContextMenuGroup>
-          <ContextMenuLabel>Zoom</ContextMenuLabel>
-          <ContextMenuRadioGroup value={zoom} onValueChange={(valor) => setZoom(valor)}>
-            <ContextMenuRadioItem value="75">75%</ContextMenuRadioItem>
-            <ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>
-            <ContextMenuRadioItem value="150">150%</ContextMenuRadioItem>
-          </ContextMenuRadioGroup>
-        </ContextMenuGroup>
+        <ContextMenuRadioGroup value={layout} onValueChange={(valor) => setLayout(valor)}>
+          <ContextMenuLabel>Layout</ContextMenuLabel>
+          <ContextMenuRadioItem value="grid">Grade</ContextMenuRadioItem>
+          <ContextMenuRadioItem value="list">Lista</ContextMenuRadioItem>
+          <ContextMenuRadioItem value="columns">Colunas</ContextMenuRadioItem>
+        </ContextMenuRadioGroup>
       </ContextMenuContent>
     </ContextMenu>
   );
 }`,
+  );
+}
+
+/**
+ * Marcação mista: os três estados de um item de marcação lado a lado.
+ *
+ * Misto quer dizer "alguns dos filhos" e desenha traço; marcado desenha tique.
+ * Os três vão por extenso de propósito — o assunto é o CONTRASTE entre eles, e
+ * omitir o desmarcado apagaria metade da lição.
+ *
+ * `indeterminate` é prop do wrapper, e controlada: o primeiro clique chama
+ * `onCheckedChange(true)`, e é ali que quem guarda o estado tira o misto.
+ */
+export function contextMenuCheckboxIndeterminateSource(): string {
+  return jsxSnippet(
+    importDe(
+      'ContextMenu',
+      'ContextMenuCheckboxItem',
+      'ContextMenuContent',
+      'ContextMenuGroup',
+      'ContextMenuLabel',
+      'ContextMenuTrigger',
+    ),
+    `<ContextMenu>
+${area(LABEL_DEFAULT)}
+  <ContextMenuContent>
+    <ContextMenuGroup>
+      <ContextMenuLabel>Mostrar na tela</ContextMenuLabel>
+      <ContextMenuCheckboxItem checked={false} indeterminate>
+        Colunas
+      </ContextMenuCheckboxItem>
+      <ContextMenuCheckboxItem checked>Régua</ContextMenuCheckboxItem>
+      <ContextMenuCheckboxItem checked={false}>Grade</ContextMenuCheckboxItem>
+    </ContextMenuGroup>
+  </ContextMenuContent>
+</ContextMenu>`,
   );
 }
 
@@ -289,23 +345,16 @@ export function contextMenuItemDisabledSource(): string {
     importDe(
       'ContextMenu',
       'ContextMenuContent',
-      'ContextMenuGroup',
       'ContextMenuItem',
       'ContextMenuSeparator',
-      'ContextMenuShortcut',
       'ContextMenuTrigger',
     ),
     `<ContextMenu>
 ${area(LABEL_DEFAULT)}
   <ContextMenuContent>
-    <ContextMenuGroup>
-      <ContextMenuItem>
-        Editar
-        <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-      </ContextMenuItem>
-      <ContextMenuItem disabled>Duplicar</ContextMenuItem>
-      <ContextMenuItem>Renomear</ContextMenuItem>
-    </ContextMenuGroup>
+    <ContextMenuItem>Editar</ContextMenuItem>
+    <ContextMenuItem disabled>Duplicar</ContextMenuItem>
+    <ContextMenuItem>Renomear</ContextMenuItem>
     <ContextMenuSeparator />
     <ContextMenuItem variant="destructive" disabled>
       Excluir
@@ -328,7 +377,6 @@ export function contextMenuItemDestructiveSource(): string {
     importDe(
       'ContextMenu',
       'ContextMenuContent',
-      'ContextMenuGroup',
       'ContextMenuItem',
       'ContextMenuSeparator',
       'ContextMenuShortcut',
@@ -337,13 +385,11 @@ export function contextMenuItemDestructiveSource(): string {
     `<ContextMenu>
 ${area(LABEL_DEFAULT)}
   <ContextMenuContent>
-    <ContextMenuGroup>
-      <ContextMenuItem>
-        Editar
-        <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-      </ContextMenuItem>
-      <ContextMenuItem>Duplicar</ContextMenuItem>
-    </ContextMenuGroup>
+    <ContextMenuItem>
+      Editar
+      <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
+    </ContextMenuItem>
+    <ContextMenuItem>Duplicar</ContextMenuItem>
     <ContextMenuSeparator />
     <ContextMenuItem variant="destructive">
       Excluir permanentemente
@@ -416,7 +462,7 @@ export function contextMenuCompletoSource(): string {
 import { useState } from "react";`,
     `function MenuDoCanvas() {
   const [grade, setGrade] = useState(true);
-  const [zoom, setZoom] = useState("100");
+  const [layout, setLayout] = useState("grid");
 
   return (
     <ContextMenu>
@@ -447,13 +493,11 @@ ${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
           </ContextMenuCheckboxItem>
         </ContextMenuGroup>
         <ContextMenuSeparator />
-        <ContextMenuGroup>
-          <ContextMenuLabel>Zoom</ContextMenuLabel>
-          <ContextMenuRadioGroup value={zoom} onValueChange={(valor) => setZoom(valor)}>
-            <ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>
-            <ContextMenuRadioItem value="150">150%</ContextMenuRadioItem>
-          </ContextMenuRadioGroup>
-        </ContextMenuGroup>
+        <ContextMenuRadioGroup value={layout} onValueChange={(valor) => setLayout(valor)}>
+          <ContextMenuLabel>Layout</ContextMenuLabel>
+          <ContextMenuRadioItem value="grid">Grade</ContextMenuRadioItem>
+          <ContextMenuRadioItem value="list">Lista</ContextMenuRadioItem>
+        </ContextMenuRadioGroup>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive">
           Excluir
@@ -464,4 +508,172 @@ ${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
   );
 }`,
   );
+}
+
+// ─── O menu como DADO: uma lista monta a prévia e imprime o código ────────────
+//
+// Os cards de Variantes da docs page tinham um literal de código ao lado de
+// cada prévia, em português: a prévia saía do conteúdo compartilhado, no idioma
+// de quem lê, e o código mostrava "Editar" para quem via "Edit". É o desenho
+// do vanilla (`variantMenu` + `contextMenuSnippet`): a MESMA lista de entradas
+// vira o menu vivo e o trecho que se copia, então os dois não têm como divergir
+// — nem de idioma, nem de estrutura.
+
+/**
+ * Item de ação. `value` é o id ESTÁVEL do item — é o que o evento de escolha
+ * manda ao GA4 —, e o snippet não o imprime: o item de ação não tem `value`.
+ */
+export type ContextMenuActionEntry = {
+  kind: 'item';
+  label: string;
+  value: string;
+  shortcut?: string;
+  destructive?: boolean;
+  inset?: boolean;
+};
+
+/**
+ * Item de marcação. `value` é o id estável e também dá NOME ao estado no
+ * snippet: `show-grid` vira `const [showGrid, setShowGrid]`.
+ */
+export type ContextMenuCheckboxEntry = {
+  kind: 'checkbox';
+  label: string;
+  value: string;
+  checked: boolean;
+};
+
+/**
+ * Uma entrada do menu. O grupo de escolha única carrega o PRÓPRIO rótulo: é o
+ * `ContextMenuRadioGroup` que o rótulo nomeia, sem `ContextMenuGroup` em volta
+ * — dois grupos aninhados anunciavam um deles anônimo.
+ */
+export type ContextMenuEntry =
+  | ContextMenuActionEntry
+  | ContextMenuCheckboxEntry
+  | { kind: 'separator' }
+  | { kind: 'submenu'; label: string; items: ContextMenuActionEntry[] }
+  | {
+      kind: 'group';
+      label: string;
+      inset?: boolean;
+      items: Array<ContextMenuActionEntry | ContextMenuCheckboxEntry>;
+    }
+  | {
+      kind: 'radio-group';
+      label: string;
+      /** Id estável do grupo, nome do estado no snippet e prefixo do evento. */
+      value: string;
+      /** A opção marcada ao montar. */
+      selected: string;
+      options: Array<{ label: string; value: string }>;
+    };
+
+/** `show-grid` → `showGrid`: o nome do estado sai do id estável. */
+function stateName(value: string): string {
+  return value.replace(/-([a-z0-9])/g, (_, letter: string) => letter.toUpperCase());
+}
+
+function setterName(state: string): string {
+  return `set${state.charAt(0).toUpperCase()}${state.slice(1)}`;
+}
+
+/**
+ * Texto de JSX. O rótulo vem do conteúdo compartilhado, e um `{` ou um `<`
+ * nele quebraria o trecho copiado — nesse caso ele vai como string entre chaves.
+ */
+function jsxText(text: string): string {
+  return /[{}<>]/.test(text) ? `{${JSON.stringify(text)}}` : text;
+}
+
+function actionLines(entry: ContextMenuActionEntry, pad: string): string[] {
+  const open = `<ContextMenuItem${entry.inset ? ' inset' : ''}${
+    entry.destructive ? ' variant="destructive"' : ''
+  }>`;
+  if (!entry.shortcut) return [`${pad}${open}${jsxText(entry.label)}</ContextMenuItem>`];
+  return [
+    `${pad}${open}`,
+    `${pad}  ${jsxText(entry.label)}`,
+    `${pad}  <ContextMenuShortcut>${jsxText(entry.shortcut)}</ContextMenuShortcut>`,
+    `${pad}</ContextMenuItem>`,
+  ];
+}
+
+function entryLines(entry: ContextMenuEntry, pad: string): string[] {
+  switch (entry.kind) {
+    case 'item':
+      return actionLines(entry, pad);
+    case 'separator':
+      return [`${pad}<ContextMenuSeparator />`];
+    case 'checkbox': {
+      const state = stateName(entry.value);
+      return [
+        `${pad}<ContextMenuCheckboxItem checked={${state}} onCheckedChange={${setterName(state)}}>`,
+        `${pad}  ${jsxText(entry.label)}`,
+        `${pad}</ContextMenuCheckboxItem>`,
+      ];
+    }
+    case 'submenu':
+      return [
+        `${pad}<ContextMenuSub>`,
+        `${pad}  <ContextMenuSubTrigger>${jsxText(entry.label)}</ContextMenuSubTrigger>`,
+        `${pad}  <ContextMenuSubContent>`,
+        ...entry.items.flatMap((item) => actionLines(item, `${pad}    `)),
+        `${pad}  </ContextMenuSubContent>`,
+        `${pad}</ContextMenuSub>`,
+      ];
+    case 'group':
+      return [
+        `${pad}<ContextMenuGroup>`,
+        `${pad}  <ContextMenuLabel${entry.inset ? ' inset' : ''}>${jsxText(entry.label)}</ContextMenuLabel>`,
+        ...entry.items.flatMap((item) => entryLines(item, `${pad}  `)),
+        `${pad}</ContextMenuGroup>`,
+      ];
+    case 'radio-group': {
+      const state = stateName(entry.value);
+      return [
+        `${pad}<ContextMenuRadioGroup value={${state}} onValueChange={${setterName(state)}}>`,
+        `${pad}  <ContextMenuLabel>${jsxText(entry.label)}</ContextMenuLabel>`,
+        ...entry.options.map(
+          (option) =>
+            `${pad}  <ContextMenuRadioItem value=${JSON.stringify(option.value)}>${jsxText(option.label)}</ContextMenuRadioItem>`,
+        ),
+        `${pad}</ContextMenuRadioGroup>`,
+      ];
+    }
+  }
+}
+
+/** O `useState` de cada marcação e de cada grupo de escolha única, na ordem do menu. */
+function stateLines(entries: readonly ContextMenuEntry[]): string[] {
+  return entries.flatMap((entry) => {
+    if (entry.kind === 'checkbox') {
+      const state = stateName(entry.value);
+      return [`const [${state}, ${setterName(state)}] = useState(${entry.checked});`];
+    }
+    if (entry.kind === 'radio-group') {
+      const state = stateName(entry.value);
+      return [`const [${state}, ${setterName(state)}] = useState(${JSON.stringify(entry.selected)});`];
+    }
+    if (entry.kind === 'group') return stateLines(entry.items);
+    return [];
+  });
+}
+
+/**
+ * O trecho de JSX do menu descrito por `entries`, com os rótulos EXATAMENTE
+ * como chegam — quem chama os lê do conteúdo compartilhado, no idioma da
+ * página. Os estados de marcação e de escolha única entram antes do menu.
+ */
+export function contextMenuJsx(triggerLabel: string, entries: readonly ContextMenuEntry[]): string {
+  const state = stateLines(entries);
+  const menu = [
+    '<ContextMenu>',
+    `  <ContextMenuTrigger>${jsxText(triggerLabel)}</ContextMenuTrigger>`,
+    '  <ContextMenuContent>',
+    ...entries.flatMap((entry) => entryLines(entry, '    ')),
+    '  </ContextMenuContent>',
+    '</ContextMenu>',
+  ].join('\n');
+  return state.length > 0 ? `${state.join('\n')}\n\n${menu}` : menu;
 }

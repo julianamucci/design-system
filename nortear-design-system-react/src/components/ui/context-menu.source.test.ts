@@ -7,9 +7,12 @@ import {
   contextMenuItemDisabledSource,
   contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
+  contextMenuCheckboxIndeterminateSource,
   contextMenuWithShortcutSource,
   contextMenuDarkPaletteSource,
   contextMenuSource,
+  contextMenuJsx,
+  type ContextMenuActionEntry,
 } from './context-menu.source';
 
 const ALL = [
@@ -22,6 +25,7 @@ const ALL = [
   contextMenuItemDisabledSource,
   contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
+  contextMenuCheckboxIndeterminateSource,
   contextMenuCompletoSource,
 ];
 
@@ -78,21 +82,64 @@ describe('contextMenuSource', () => {
   it('a ação destrutiva se declara pela variante, e não pela cor', () => {
     expect(contextMenuSource()).toContain('<ContextMenuItem variant="destructive">');
   });
+
+  it('segue os controls do Playground, e a importação acompanha o que sobrou', () => {
+    // Sem atalho, sem divisor e sem o destrutivo, o snippet não pode importar
+    // peça que não usa — o lint de quem copia acusaria import morto.
+    const saida = contextMenuSource(undefined, {
+      args: { showShortcuts: false, showSeparator: false, showDestructive: false },
+    });
+    expect(saida).not.toContain('ContextMenuShortcut');
+    expect(saida).not.toContain('ContextMenuSeparator');
+    expect(saida).not.toContain('Excluir');
+    expect(saida).toContain('<ContextMenuItem>Editar</ContextMenuItem>');
+    expect(saida).toContain('<ContextMenuItem>Duplicar</ContextMenuItem>');
+  });
+
+  it('sem os controls, publica o menu canônico inteiro', () => {
+    const saida = contextMenuSource();
+    expect(saida).toContain('<ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>');
+    expect(saida).toContain('<ContextMenuSeparator />');
+    // O Playground não embrulha as ações num grupo sem rótulo: é o menu do vanilla.
+    expect(saida).not.toContain('ContextMenuGroup');
+  });
 });
 
 describe('composições', () => {
-  it('a marcação é controlada de fora, e é de dois estados', () => {
+  it('a marcação é controlada de fora', () => {
     const saida = contextMenuWithMarkupSource();
     expect(saida).toContain('checked={grade}');
     expect(saida).toContain('onCheckedChange={(valor) => setGrade(valor)}');
-    // Não existe terceiro valor neste primitivo — nada de estado misto.
+    // O misto tem snippet próprio; este ensina os dois estados de uso corrente.
     expect(saida).not.toContain('indeterminate');
   });
 
+  it('o misto é prop do item, ao lado dos dois outros estados', () => {
+    // O assunto é o contraste: marcado, desmarcado e misto no mesmo menu.
+    const saida = contextMenuCheckboxIndeterminateSource();
+    expect(saida).toContain('<ContextMenuCheckboxItem checked={false} indeterminate>');
+    expect(saida).toContain('<ContextMenuCheckboxItem checked>Régua</ContextMenuCheckboxItem>');
+    expect(saida).toContain('<ContextMenuCheckboxItem checked={false}>Grade</ContextMenuCheckboxItem>');
+  });
+
   it('a escolha única guarda o valor no grupo, e cada opção declara o seu', () => {
+    // Layout Grade/Lista/Colunas, o conteúdo do vanilla — não o Zoom de antes.
     const saida = contextMenuWithChoiceUnicaSource();
-    expect(saida).toContain('<ContextMenuRadioGroup value={zoom} onValueChange={(valor) => setZoom(valor)}>');
-    expect(saida).toContain('<ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>');
+    expect(saida).toContain('<ContextMenuRadioGroup value={layout} onValueChange={(valor) => setLayout(valor)}>');
+    expect(saida).toContain('<ContextMenuRadioItem value="grid">Grade</ContextMenuRadioItem>');
+    expect(saida).toContain('<ContextMenuRadioItem value="columns">Colunas</ContextMenuRadioItem>');
+    expect(saida).not.toContain('Zoom');
+  });
+
+  it('o rótulo nomeia o PRÓPRIO grupo de escolha única, sem grupo em volta', () => {
+    // `Group > Label + RadioGroup` fazia dois `role="group"` aninhados, o de
+    // dentro sem nome. O rótulo vai dentro do `ContextMenuRadioGroup`, que é
+    // quem ele nomeia — e o `ContextMenuGroup` sai até da importação.
+    const saida = contextMenuWithChoiceUnicaSource();
+    // A abertura do grupo ocupa a linha inteira — o `=>` do callback impede
+    // casar a tag por `[^>]*` —, e o rótulo é a PRIMEIRA coisa dentro dele.
+    expect(saida).toMatch(/<ContextMenuRadioGroup [^\n]*\n\s*<ContextMenuLabel>Layout<\/ContextMenuLabel>/);
+    expect(saida).not.toContain('ContextMenuGroup');
   });
 
   it('o submenu traz as três peças juntas', () => {
@@ -122,6 +169,88 @@ describe('composições', () => {
     // Três divisores: um por bloco, como a story afirma.
     expect(saida.match(/<ContextMenuSeparator \/>/g)).toHaveLength(3);
   });
+
+  it('no menu completo, o bloco de escolha única também é UM grupo só', () => {
+    const saida = contextMenuCompletoSource();
+    // A abertura do grupo ocupa a linha inteira — o `=>` do callback impede
+    // casar a tag por `[^>]*` —, e o rótulo é a PRIMEIRA coisa dentro dele.
+    expect(saida).toMatch(/<ContextMenuRadioGroup [^\n]*\n\s*<ContextMenuLabel>Layout<\/ContextMenuLabel>/);
+    expect(saida).not.toMatch(/<ContextMenuGroup>\s*<ContextMenuLabel>Layout/);
+  });
+});
+
+describe('contextMenuJsx — o menu como dado', () => {
+  const edit: ContextMenuActionEntry = { kind: 'item', label: 'Edit', value: 'edit' };
+
+  it('imprime os rótulos exatamente como chegam, no idioma de quem lê', () => {
+    // O defeito era o código em português ao lado da prévia em inglês.
+    const saida = contextMenuJsx('Right-click here', [
+      { ...edit, shortcut: 'Ctrl+E' },
+      { kind: 'separator' },
+      { kind: 'item', label: 'Delete', value: 'delete', destructive: true },
+    ]);
+    expect(saida).toContain('<ContextMenuTrigger>Right-click here</ContextMenuTrigger>');
+    expect(saida).toContain('      Edit\n      <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>');
+    expect(saida).toContain('<ContextMenuItem variant="destructive">Delete</ContextMenuItem>');
+    expect(saida).not.toMatch(/Editar|Excluir|Clique/);
+    // Item de ação não tem `value`: o id estável é do evento, não do snippet.
+    expect(saida).not.toContain('value=');
+  });
+
+  it('a escolha única sai como UM grupo nomeado pelo rótulo, com o estado antes', () => {
+    const saida = contextMenuJsx('Area', [
+      {
+        kind: 'radio-group',
+        label: 'Layout',
+        value: 'layout',
+        selected: 'grid',
+        options: [
+          { label: 'Grid', value: 'grid' },
+          { label: 'List', value: 'list' },
+        ],
+      },
+    ]);
+    expect(saida.startsWith('const [layout, setLayout] = useState("grid");\n\n<ContextMenu>')).toBe(true);
+    expect(saida).toContain(
+      '    <ContextMenuRadioGroup value={layout} onValueChange={setLayout}>\n'
+        + '      <ContextMenuLabel>Layout</ContextMenuLabel>\n'
+        + '      <ContextMenuRadioItem value="grid">Grid</ContextMenuRadioItem>',
+    );
+    expect(saida).not.toContain('ContextMenuGroup');
+  });
+
+  it('a marcação dentro de grupo ganha um estado por item, nomeado pelo id', () => {
+    const saida = contextMenuJsx('Area', [
+      {
+        kind: 'group',
+        label: 'View',
+        items: [
+          { kind: 'checkbox', label: 'Show grid', value: 'show-grid', checked: false },
+          { kind: 'checkbox', label: 'Show rulers', value: 'show-rulers', checked: true },
+        ],
+      },
+    ]);
+    expect(saida).toContain('const [showGrid, setShowGrid] = useState(false);');
+    expect(saida).toContain('const [showRulers, setShowRulers] = useState(true);');
+    expect(saida).toContain('<ContextMenuCheckboxItem checked={showGrid} onCheckedChange={setShowGrid}>');
+    expect(saida).toMatch(/<ContextMenuGroup>\s*<ContextMenuLabel>View<\/ContextMenuLabel>/);
+  });
+
+  it('o submenu recua os itens dentro do painel filho', () => {
+    const saida = contextMenuJsx('Area', [
+      { kind: 'submenu', label: 'Share', items: [{ kind: 'item', label: 'By email', value: 'share-email' }] },
+    ]);
+    expect(saida).toContain(
+      '      <ContextMenuSubTrigger>Share</ContextMenuSubTrigger>\n'
+        + '      <ContextMenuSubContent>\n'
+        + '        <ContextMenuItem>By email</ContextMenuItem>',
+    );
+  });
+
+  it('rótulo com chave ou sinal de tag vai como string, sem quebrar o JSX', () => {
+    const saida = contextMenuJsx('Area', [{ kind: 'item', label: 'A <b> {x}', value: 'x' }]);
+    expect(saida).toContain('<ContextMenuItem>{"A <b> {x}"}</ContextMenuItem>');
+  });
 });
 
 describe('estados do item', () => {
@@ -129,6 +258,8 @@ describe('estados do item', () => {
     const saida = contextMenuItemDisabledSource();
     expect(saida).toContain('<ContextMenuItem disabled>Duplicar</ContextMenuItem>');
     expect(saida).toContain('<ContextMenuItem variant="destructive" disabled>');
+    // A story não tem atalho em item nenhum; o snippet também não.
+    expect(saida).not.toContain('<ContextMenuShortcut>');
   });
 
   it('a paleta escura não é prop do menu, e o item desabilitado está lá', () => {

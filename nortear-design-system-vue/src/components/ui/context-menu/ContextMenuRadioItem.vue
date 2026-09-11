@@ -17,6 +17,17 @@ const emits = defineEmits<ContextMenuRadioItemEmits>()
 const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+/**
+ * Escolher uma opção NÃO fecha o menu — mesma decisão e mesmo mecanismo do
+ * `ContextMenuCheckboxItem.vue`: a reka fecha em toda escolha a menos que o
+ * `select` volte com `preventDefault`. O ouvinte de quem consome vem no
+ * `forwarded` e roda antes deste, com o evento intacto.
+ */
+function keepOpen(event: Event) {
+  // PATCH: bugfix — a reka fecha o menu em toda escolha; escolher a opção não fecha (ver PATCHES.md#vue-context-menu-keep-open)
+  event.preventDefault()
+}
 </script>
 
 <template>
@@ -24,6 +35,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     data-slot="context-menu-radio-item"
     v-bind="forwarded"
     :class="cn('nds-dropdown-menu-radio-item', props.class)"
+    @select="keepOpen"
   >
     <span
       class="nds-dropdown-menu-item-indicator"

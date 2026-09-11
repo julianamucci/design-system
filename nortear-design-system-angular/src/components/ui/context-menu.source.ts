@@ -65,8 +65,12 @@ import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
 
 export type ContextMenuArgs = {
   triggerLabel: string;
+  showDestructive: boolean;
+  showSeparator: boolean;
+  showShortcuts: boolean;
   areaClasse: string;
   onSelect: (item: string) => void;
+  onOpenChange: (open: boolean) => void;
 };
 
 /** Rótulo da moldura quando o control não trouxer texto. */
@@ -125,30 +129,46 @@ function simpleMenu(items: string, label = LABEL_DEFAULT): string {
  * O painel Code imprime o `template` da story como está escrito — com os
  * bindings ligados aos args e ao espião da `play`. Isso é o andaime da story,
  * não o que alguém escreve para usar o menu. O `transform` devolve o uso real,
- * com o rótulo atual do control já resolvido (ver a nota em
- * `separator.stories.ts`).
+ * com os controls já resolvidos (ver a nota em `separator.stories.ts`): o
+ * rótulo da área e os três `show*`, que tiram do menu o atalho, a divisória e a
+ * saída destrutiva. O snippet escreve só o que o preview mostra — um `@if` aqui
+ * ensinaria um menu condicional que ninguém pediu.
  */
 export function contextMenuPlaygroundSource(
   _gerado?: string,
   ctx: { args?: Partial<ContextMenuArgs> } = {},
 ): string {
-  const { triggerLabel = LABEL_DEFAULT } = ctx.args ?? {};
+  const {
+    triggerLabel = LABEL_DEFAULT,
+    showDestructive = true,
+    showSeparator = true,
+    showShortcuts = true,
+  } = ctx.args ?? {};
 
-  return simpleMenu(
-    `        <div ndsContextMenuItem>
-          Editar
-          <span ndsContextMenuShortcut>Ctrl+E</span>
-        </div>
-        <div ndsContextMenuItem>Duplicar</div>
+  const blocks = [
+    `${itemWithShortcut('Editar', showShortcuts ? 'Ctrl+E' : undefined)}
+        <div ndsContextMenuItem>Duplicar</div>`,
+  ];
+  if (showSeparator) blocks.push('        <div ndsContextMenuSeparator></div>');
+  if (showDestructive) {
+    blocks.push(
+      itemWithShortcut('Excluir', showShortcuts ? 'Delete' : undefined, ' variant="destructive"'),
+    );
+  }
 
-        <div ndsContextMenuSeparator></div>
+  return simpleMenu(blocks.join('\n\n'), triggerLabel);
+}
 
-        <div ndsContextMenuItem variant="destructive">
-          Excluir
-          <span ndsContextMenuShortcut>Delete</span>
-        </div>`,
-    triggerLabel,
-  );
+/**
+ * Um item de ação, com o atalho DENTRO dele quando há atalho — é assim que ele
+ * entra no nome acessível. Sem atalho o item cabe numa linha só.
+ */
+function itemWithShortcut(label: string, shortcut?: string, attrs = ''): string {
+  if (!shortcut) return `        <div ndsContextMenuItem${attrs}>${label}</div>`;
+  return `        <div ndsContextMenuItem${attrs}>
+          ${label}
+          <span ndsContextMenuShortcut>${shortcut}</span>
+        </div>`;
 }
 
 // ─── Estados ──────────────────────────────────────────────────────────────────
@@ -163,13 +183,13 @@ export function contextMenuPlaygroundSource(
  *
  * `disabled` entra como atributo simples: a prop tem transformação booleana, e
  * escrever o binding por extenso só acrescentaria cerimônia ao caso comum.
+ *
+ * Sem atalho, como o conteúdo do Vanilla: o assunto é o item indisponível, e o
+ * atalho no primeiro item era a única diferença entre as cinco.
  */
 export function contextMenuItemDisabledSource(): string {
   return simpleMenu(
-    `        <div ndsContextMenuItem>
-          Editar
-          <span ndsContextMenuShortcut>Ctrl+E</span>
-        </div>
+    `        <div ndsContextMenuItem>Editar</div>
         <div ndsContextMenuItem disabled>Duplicar</div>
         <div ndsContextMenuItem>Renomear</div>
 
@@ -239,13 +259,19 @@ export function contextMenuItemDestructiveSource(): string {
  * O valor entra FIXO, e não ligado a um sinal: o primeiro clique num item misto
  * o resolve para marcado, que é outro assunto — e a story ao lado não interage
  * com os itens justamente por isso.
+ *
+ * O rótulo mora DENTRO do grupo, e é o nome dele: rótulo solto entre itens é
+ * texto que o leitor de tela anuncia sem dizer a que se aplica (a folha
+ * compartilhada chama isso de padrão errado).
  */
 export function contextMenuCheckboxIndeterminateSource(): string {
   return simpleMenu(
-    `        <div ndsContextMenuLabel>Mostrar na tela</div>
-        <div ndsContextMenuCheckboxItem [checked]="'indeterminate'">Colunas</div>
-        <div ndsContextMenuCheckboxItem [checked]="true">Régua</div>
-        <div ndsContextMenuCheckboxItem [checked]="false">Grade</div>`,
+    `        <div ndsContextMenuGroup>
+          <div ndsContextMenuLabel>Mostrar na tela</div>
+          <div ndsContextMenuCheckboxItem [checked]="'indeterminate'">Colunas</div>
+          <div ndsContextMenuCheckboxItem [checked]="true">Régua</div>
+          <div ndsContextMenuCheckboxItem [checked]="false">Grade</div>
+        </div>`,
   );
 }
 
@@ -305,21 +331,24 @@ export function contextMenuWithShortcutSource(): string {
  * única, onde o valor mora no grupo.
  *
  * As duas pontas são ligadas: `[checked]` entra e `(checkedChange)` volta.
- * Ligar só a primeira prenderia o item ao valor inicial.
+ * Ligar só a primeira prenderia o item ao valor inicial. E o rótulo mora dentro
+ * de `ndsContextMenuGroup`, que é o que o faz NOMEAR os dois itens.
  */
 export function contextMenuWithCheckboxSource(): string {
   return example(
-    menu(`        <div ndsContextMenuLabel>Visualização</div>
-        <div
-          ndsContextMenuCheckboxItem
-          [checked]="showGrid()"
-          (checkedChange)="showGrid.set($event)"
-        >Mostrar grade</div>
-        <div
-          ndsContextMenuCheckboxItem
-          [checked]="showRulers()"
-          (checkedChange)="showRulers.set($event)"
-        >Mostrar réguas</div>`),
+    menu(`        <div ndsContextMenuGroup>
+          <div ndsContextMenuLabel>Visualização</div>
+          <div
+            ndsContextMenuCheckboxItem
+            [checked]="showGrid()"
+            (checkedChange)="showGrid.set($event)"
+          >Mostrar grade</div>
+          <div
+            ndsContextMenuCheckboxItem
+            [checked]="showRulers()"
+            (checkedChange)="showRulers.set($event)"
+          >Mostrar réguas</div>
+        </div>`),
     `  readonly showGrid = signal(false);
   readonly showRulers = signal(true);`,
   );
@@ -330,12 +359,14 @@ export function contextMenuWithCheckboxSource(): string {
  *
  * É o que separa a escolha única da marcação — escolher um item desmarca o
  * anterior sem que ninguém escreva essa regra. Cada opção só declara o `value`
- * que representa, e o rótulo fica FORA do grupo, como a story ao lado o põe.
+ * que representa, e o rótulo fica DENTRO do grupo: o grupo de escolha única já
+ * é `role="group"`, e o rótulo é o nome dele. Solto antes do grupo, era texto
+ * que o leitor de tela anunciava sem dizer a que se aplicava.
  */
 export function contextMenuWithRadioGroupSource(): string {
   return example(
-    menu(`        <div ndsContextMenuLabel>Layout</div>
-        <div ndsContextMenuRadioGroup [value]="layout()" (valueChange)="layout.set($event)">
+    menu(`        <div ndsContextMenuRadioGroup [value]="layout()" (valueChange)="layout.set($event)">
+          <div ndsContextMenuLabel>Layout</div>
           <div ndsContextMenuRadioItem value="grid">Grade</div>
           <div ndsContextMenuRadioItem value="list">Lista</div>
           <div ndsContextMenuRadioItem value="columns">Colunas</div>
@@ -352,11 +383,13 @@ export function contextMenuWithRadioGroupSource(): string {
  * é o painel filho — outro `<ng-template>`, pelo mesmo motivo do miolo de cima.
  * O chevron entra pelo componente, e o ARIA também: `aria-haspopup`,
  * `aria-expanded` e o `aria-owns` que liga o item ao painel portalado. A seta
- * para a direita entra, o Escape volta, e nada disso pede prop.
+ * para a direita leva o foco ao primeiro item do painel filho, a esquerda o
+ * devolve ao sub-gatilho, e nada disso pede prop.
  */
 export function contextMenuWithSubmenuSource(): string {
   return simpleMenu(
     `        <div ndsContextMenuItem>Editar</div>
+        <div ndsContextMenuItem>Duplicar</div>
 
         <div ndsContextMenuSub>
           <div ndsContextMenuSubTrigger>Compartilhar</div>

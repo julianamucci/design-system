@@ -2,7 +2,14 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createContextMenu } from '@/components/ui/context-menu';
+import {
+  createContextMenu,
+  type ContextMenuCloseReason,
+  type ContextMenuItemDef,
+  type ContextMenuOptions,
+} from '@/components/ui/context-menu';
+import { contextMenuEntriesFrom, contextMenuSnippet } from '@/components/ui/context-menu.source';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
 import { toPlainText } from '@/lib/strip-html';
@@ -43,7 +50,38 @@ function screenReaderItems(): string[] {
     .filter(([k]) => k !== 'title')
     .map(([, v]) => v);
 }
-const { t, subscribe } = createTranslation(contextMenuTranslations as Record<string, unknown>);
+// Opções que só esta stack tem.
+//
+// `trigger`, `items`, `onClose`, `radioValue`, `type` e o `items` do submenu são
+// a API da FÁBRICA — as outras stacks compõem peças e não têm linha para elas no
+// conteúdo compartilhado. Ficam no override, e não em texto fixo na tabela:
+// presas em pt-BR apareciam em português nas versões en e es da página.
+const { t, subscribe } = createTranslation(contextMenuTranslations as Record<string, unknown>, {
+  'pt-BR': {
+    'props.items.trigger': 'Elemento que captura o gesto — clique direito, tecla de menu ou Shift+F10 sobre ele. A fábrica lhe dá parada de tabulação se ele não tiver.',
+    'props.items.items': 'Lista de itens, separadores, rótulos e submenus do menu.',
+    'props.items.onClose': 'Disparado a cada fechamento, antes do callback de mudança, com o motivo: escape, overlay (clique fora ou Tab) ou api (item escolhido).',
+    'props.items.radioValue': 'Valor corrente do grupo de escolha única — ele vive no menu, não em cada item.',
+    'props.items.type': 'Tipo do item. "submenu" exige a lista de itens; "radio" exige o valor.',
+    'props.items.subItems': 'Itens do submenu, quando o tipo é "submenu".',
+  },
+  en: {
+    'props.items.trigger': 'Element that captures the gesture — right-click, the menu key or Shift+F10 on it. The factory gives it a tab stop if it has none.',
+    'props.items.items': 'List of items, separators, labels and submenus in the menu.',
+    'props.items.onClose': 'Fired on every close, before the change callback, with the reason: escape, overlay (click outside or Tab) or api (item chosen).',
+    'props.items.radioValue': 'Current value of the single-choice group — it lives in the menu, not in each item.',
+    'props.items.type': 'Item type. "submenu" requires the item list; "radio" requires the value.',
+    'props.items.subItems': 'Submenu items, when the type is "submenu".',
+  },
+  es: {
+    'props.items.trigger': 'Elemento que captura el gesto — clic derecho, tecla de menú o Shift+F10 sobre él. La fábrica le da una parada de tabulación si no la tiene.',
+    'props.items.items': 'Lista de ítems, separadores, rótulos y submenús del menú.',
+    'props.items.onClose': 'Se dispara en cada cierre, antes del callback de cambio, con el motivo: escape, overlay (clic fuera o Tab) o api (ítem elegido).',
+    'props.items.radioValue': 'Valor actual del grupo de selección única — vive en el menú, no en cada ítem.',
+    'props.items.type': 'Tipo del ítem. "submenu" exige la lista de ítems; "radio" exige el valor.',
+    'props.items.subItems': 'Ítems del submenú, cuando el tipo es "submenu".',
+  },
+});
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -56,6 +94,34 @@ const priorityKeyMap: Record<string, string> = {
 function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
+
+// Nível WCAG e forma de verificar cada critério de acessibilidade, por índice —
+// a MESMA lista nas cinco stacks. São identificadores (número de critério,
+// consulta da suíte, regra do axe), e identificador não se traduz: por isso
+// ficam aqui e não no conteúdo compartilhado. Item além da lista cai no par
+// padrão em vez de sumir.
+const A11Y_TEST_LEVELS = [
+  'AA',
+  '4.1.2 · A',
+  '4.1.2 · A',
+  '4.1.2 · A',
+  '4.1.2 · A',
+  '4.1.2 · A',
+  '2.1.1 · A',
+  '1.4.3 · AA',
+  '2.1.1 · A',
+];
+const A11Y_TEST_HOW = [
+  'axe-core',
+  "getByRole('menu')",
+  "getAllByRole('menuitem')",
+  "getAllByRole('menuitemcheckbox') · aria-checked",
+  "getAllByRole('menuitemradio') · aria-checked",
+  'aria-disabled',
+  'Escape · document.activeElement',
+  'axe-core · color-contrast',
+  'ArrowDown · document.activeElement',
+];
 
 /**
  * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
@@ -121,48 +187,120 @@ function makeTriggerArea(label: string): HTMLElement {
   return el;
 }
 
-function buildDemoMenu(): HTMLElement {
-  const trigger = makeTriggerArea(t('demonstration.labels.triggerLabel'));
-  // O payload carrega o ID ESTÁVEL do item, nunca o rótulo traduzido. Rótulo
-  // localizado parte o mesmo evento em um valor por idioma no GA4 — "Excluir",
-  // "Delete" e "Eliminar" viram três linhas do que é uma ação só. É o que as
-  // outras quatro stacks já mandam.
-  const trackItem = (id: string) => () => {
-    track('menu_item_click', { label: id, menu: 'demo', location: 'docs_demo' });
-  };
-  return createContextMenu({
-    trigger,
-    // Os ATALHOS entram porque a demonstração é a mesma exemplo nas cinco: sem
-    // eles esta era a única que não mostrava a coluna de atalho, e o
-    // `demonstration_labels_divergent` mediu a diferença pelo rótulo que faltava
-    // (`deleteShortcut`). Rótulo de demonstração sai do conteúdo compartilhado,
-    // nunca de literal — é ele que faz as cinco mostrarem o mesmo menu.
-    //
-    // "Compartilhar" é SUBMENU, e não item plano. As quatro outras stacks
-    // abrem `shareEmail` e `shareLink` a partir dele desde sempre; aqui o item
-    // era plano porque a fábrica ainda não tinha submenu, e as duas chaves
-    // ficavam no conteúdo compartilhado sem ninguém para lê-las. A fábrica
-    // ganhou `type: 'submenu'` nesta campanha, e a limitação deixou de existir.
-    items: [
-      { type: 'item',      label: t('demonstration.labels.edit'),      value: 'edit',      shortcut: t('demonstration.labels.editShortcut'),   onClick: trackItem('edit') },
-      { type: 'item',      label: t('demonstration.labels.duplicate'), value: 'duplicate', onClick: trackItem('duplicate') },
-      {
-        type: 'submenu',
-        label: t('demonstration.labels.share'),
-        value: 'share',
-        items: [
-          { type: 'item', label: t('demonstration.labels.shareEmail'), value: 'share-email', onClick: trackItem('share-email') },
-          { type: 'item', label: t('demonstration.labels.shareLink'),  value: 'share-link',  onClick: trackItem('share-link')  },
-        ],
+// ─── Rastreamento das prévias vivas ───────────────────────────────────────────
+
+/**
+ * Onde cada prévia viva mora — o `location` dos três eventos é a SEÇÃO da
+ * página onde o menu está (guideline 07), nunca o texto dela.
+ */
+type PreviewLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
+
+/**
+ * Pendura o `context_menu_item_select` em cada item escolhível — ação, marcação
+ * e rádio, dentro de submenu também. O `label` do evento é o `value` do item,
+ * que é ESTÁVEL: rótulo traduzido parte o mesmo evento em um valor por idioma
+ * no GA4 — "Excluir", "Delete" e "Eliminar" viram três linhas de uma ação só.
+ */
+function withItemTracking(
+  defs: ContextMenuItemDef[],
+  menu: string,
+  location: PreviewLocation,
+): ContextMenuItemDef[] {
+  return defs.map((def) => {
+    const type = def.type ?? 'item';
+    if (type === 'submenu') {
+      return { ...def, items: withItemTracking(def.items ?? [], menu, location) };
+    }
+    if (type === 'separator' || type === 'label' || !def.value) return def;
+    const label = def.value;
+    return {
+      ...def,
+      onClick: () => {
+        def.onClick?.();
+        track('context_menu_item_select', { component: 'context-menu', label, menu, location });
       },
-      { type: 'separator' },
-      { type: 'item',      label: t('demonstration.labels.delete'),    value: 'delete',    shortcut: t('demonstration.labels.deleteShortcut'), variant: 'destructive', onClick: trackItem('delete') },
-    ],
+    };
+  });
+}
+
+/**
+ * A abertura e o fechamento de uma prévia VIVA, para espalhar nas opções da
+ * fábrica.
+ *
+ * Toda prévia desta página rastreia — demonstração, Variantes e Do & Don't. Até
+ * 2026-09-10 só a demonstração o fazia, e as treze prévias das outras duas
+ * seções abriam, escolhiam e fechavam sem deixar rastro. `menu` é o id estável
+ * de cada prévia (`demo`, `with-checkbox`, `pair1-do`…), e o fechamento leva o
+ * motivo que só a fábrica conhece: `escape`, `overlay` (clique fora ou Tab) ou
+ * `api` (item escolhido).
+ */
+function menuTracking(
+  menu: string,
+  location: PreviewLocation,
+): Pick<ContextMenuOptions, 'onOpenChange' | 'onClose'> {
+  return {
     onOpenChange: (open) => {
-      if (open) {
-        track('menu_open', { component: 'context-menu', location: 'docs_demo', menu: 'demo' });
-      }
+      if (open) track('context_menu_open', { component: 'context-menu', menu, location });
     },
+    onClose: (reason: ContextMenuCloseReason) => {
+      track('context_menu_close', { component: 'context-menu', menu, reason, location });
+    },
+  };
+}
+
+// ─── Itens das prévias ────────────────────────────────────────────────────────
+//
+// Rótulo do conteúdo compartilhado, nunca literal — é ele que faz as cinco
+// stacks mostrarem o mesmo menu nos três idiomas —, e `value` estável, que é o
+// que o evento de escolha manda. Uma função por item, e não uma constante,
+// porque o rótulo é lido no idioma do MOMENTO em que a prévia é montada.
+
+function itemEdit(extra: Partial<ContextMenuItemDef> = {}): ContextMenuItemDef {
+  return { type: 'item', label: t('demonstration.labels.edit'), value: 'edit', ...extra };
+}
+
+function itemDuplicate(extra: Partial<ContextMenuItemDef> = {}): ContextMenuItemDef {
+  return { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate', ...extra };
+}
+
+function itemDelete(extra: Partial<ContextMenuItemDef> = {}): ContextMenuItemDef {
+  return { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', ...extra };
+}
+
+/** "Compartilhar" é SUBMENU nas cinco stacks, com os dois destinos dentro. */
+function itemShare(): ContextMenuItemDef {
+  return {
+    type: 'submenu',
+    label: t('demonstration.labels.share'),
+    value: 'share',
+    items: [
+      { type: 'item', label: t('demonstration.labels.shareEmail'), value: 'share-email' },
+      { type: 'item', label: t('demonstration.labels.shareLink'), value: 'share-link' },
+    ],
+  };
+}
+
+const SEPARATOR: ContextMenuItemDef = { type: 'separator' };
+
+function buildDemoMenu(): HTMLElement {
+  // Os ATALHOS entram porque a demonstração é o mesmo exemplo nas cinco: sem
+  // eles esta era a única que não mostrava a coluna de atalho, e o
+  // `demonstration_labels_divergent` mediu a diferença pelo rótulo que faltava
+  // (`deleteShortcut`).
+  return createContextMenu({
+    trigger: makeTriggerArea(t('demonstration.labels.triggerLabel')),
+    items: withItemTracking(
+      [
+        itemEdit({ shortcut: t('demonstration.labels.editShortcut') }),
+        itemDuplicate(),
+        itemShare(),
+        SEPARATOR,
+        itemDelete({ shortcut: t('demonstration.labels.deleteShortcut'), variant: 'destructive' }),
+      ],
+      'demo',
+      'docs_demo',
+    ),
+    ...menuTracking('demo', 'docs_demo'),
   });
 }
 
@@ -185,33 +323,21 @@ function makePlainArea(label: string): HTMLElement {
   return el;
 }
 
-function buildSimpleTriggerArea(label: string): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-cluster nds-p-4';
-  wrap.dataset.align = 'center';
-  wrap.dataset.justify = 'center';
-  wrap.appendChild(makeTriggerArea(label));
-  return wrap;
-}
-
 /**
- * Prévia que monta o COMPONENTE de verdade — a forma que as outras quatro
- * stacks já usavam nesta página.
+ * Prévia que monta o COMPONENTE de verdade, centrada no card.
  *
- * Antes desta passada as prévias e os trechos de código desenhavam painel,
- * item, separador e indicador à mão, com `min-width`, `padding`, `margin` e
- * cor cravados em `style` inline: dezesseis declarações que saíam do tema, da
- * densidade e da escala de tipo. Pior que o estilo era a semântica — havia
- * `<li role="menuitem">` SOLTO, fora de qualquer `role="menu"`, que é órfão
- * para o leitor de tela e viola `aria-required-parent` —, e pior ainda era o
- * fato de a fábrica JÁ entregar tudo isso: marcação, escolha única, submenu,
- * atalho, recuo e variante destrutiva são tipos de item, não markup de quem
- * consome. A página ensinava a contornar um componente completo.
+ * Antes da passada de 2026-09-02 as prévias desenhavam painel, item, separador
+ * e indicador à mão, com dimensões e cor cravadas em `style` inline e
+ * `<li role="menuitem">` SOLTO, fora de qualquer `role="menu"` — órfão para o
+ * leitor de tela. Marcação, escolha única, submenu, atalho, recuo e variante
+ * destrutiva são tipos de item da fábrica, não markup de quem consome.
  */
 function buildMenuPreview(options: {
-  label?: string;
-  items: Parameters<typeof createContextMenu>[0]['items'];
+  items: ContextMenuItemDef[];
+  menu: string;
+  location: PreviewLocation;
   radioValue?: string;
+  trigger?: HTMLElement;
 }): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-cluster nds-w-full';
@@ -219,12 +345,100 @@ function buildMenuPreview(options: {
   wrap.dataset.justify = 'center';
   wrap.appendChild(
     createContextMenu({
-      trigger: makeTriggerArea(options.label ?? t('demonstration.labels.triggerLabel')),
-      items: options.items,
+      trigger: options.trigger ?? makeTriggerArea(t('demonstration.labels.triggerLabel')),
+      items: withItemTracking(options.items, options.menu, options.location),
       radioValue: options.radioValue,
+      ...menuTracking(options.menu, options.location),
     }),
   );
   return wrap;
+}
+
+/**
+ * Os sete cards de Variantes, pela CHAVE do conteúdo compartilhado.
+ *
+ * A mesma lista monta a prévia e imprime o código (`contextMenuEntriesFrom`), e
+ * é isso que impede os dois de divergirem: até 2026-09-10 cada card tinha um
+ * literal de código ao lado da prévia, e três deles envelheceram sozinhos — o
+ * de marcação com os estados trocados, o de escolha única com "Zoom" na tela e
+ * "Layout" no código, e o padrão mostrando um menu no código e nenhum na prévia
+ * (a área sem fábrica abria o menu NATIVO do navegador).
+ */
+type VariantKey =
+  | 'default'
+  | 'destructive'
+  | 'label'
+  | 'withCheckbox'
+  | 'withRadio'
+  | 'withSubmenu'
+  | 'withShortcuts';
+
+function variantMenu(key: VariantKey): { items: ContextMenuItemDef[]; radioValue?: string } {
+  switch (key) {
+    case 'default':
+      return { items: [itemEdit(), itemDuplicate()] };
+    case 'destructive':
+      return { items: [itemEdit(), SEPARATOR, itemDelete({ variant: 'destructive' })] };
+    case 'label':
+      return {
+        items: [
+          { type: 'label', label: t('demonstration.labels.groupActions'), inset: true },
+          itemEdit({ inset: true }),
+          itemDuplicate({ inset: true }),
+        ],
+      };
+    case 'withCheckbox':
+      return {
+        items: [
+          { type: 'label', label: t('demonstration.labels.groupView') },
+          { type: 'checkbox', label: t('demonstration.labels.showGrid'), value: 'show-grid', checked: false },
+          { type: 'checkbox', label: t('demonstration.labels.showRulers'), value: 'show-rulers', checked: true },
+        ],
+      };
+    case 'withRadio':
+      return {
+        radioValue: 'layout-grid',
+        items: [
+          { type: 'label', label: t('demonstration.labels.groupLayout') },
+          { type: 'radio', label: t('demonstration.labels.layoutGrid'), value: 'layout-grid' },
+          { type: 'radio', label: t('demonstration.labels.layoutList'), value: 'layout-list' },
+          { type: 'radio', label: t('demonstration.labels.layoutColumns'), value: 'layout-columns' },
+        ],
+      };
+    case 'withSubmenu':
+      return { items: [itemEdit(), itemDuplicate(), itemShare()] };
+    case 'withShortcuts':
+      return {
+        items: [
+          itemEdit({ shortcut: t('demonstration.labels.editShortcut') }),
+          itemDuplicate({ shortcut: t('demonstration.labels.duplicateShortcut') }),
+          SEPARATOR,
+          itemDelete({ shortcut: t('demonstration.labels.deleteShortcut'), variant: 'destructive' }),
+        ],
+      };
+  }
+}
+
+/** A chave do card em kebab — é o `menu` dos eventos (`with-checkbox`…). */
+function variantMenuId(key: VariantKey): string {
+  return key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+}
+
+function variantPreview(key: VariantKey): HTMLElement {
+  return buildMenuPreview({
+    ...variantMenu(key),
+    menu: variantMenuId(key),
+    location: 'docs_variantes',
+  });
+}
+
+function variantCode(key: VariantKey): string {
+  const { items, radioValue } = variantMenu(key);
+  return contextMenuSnippet({
+    triggerLabel: t('demonstration.labels.triggerLabel'),
+    items: contextMenuEntriesFrom(items),
+    radioValue,
+  });
 }
 
 // ─── createContextMenuDocs ────────────────────────────────────────────────────
@@ -241,6 +455,10 @@ export function createContextMenuDocs(): HTMLElement {
       description: t('seo.description'),
       locale,
       componentSlug: 'context-menu',
+      // O resumo e as entidades para os mecanismos de IA existiam no conteúdo
+      // compartilhado e não chegavam a lugar nenhum: a página não os passava.
+      aiSummary: t('seo.aiSummary'),
+      aiEntities: t('seo.aiEntities'),
     });
     track('docs_page_view', {
       component_name: 'context-menu',
@@ -376,6 +594,9 @@ export function createContextMenuDocs(): HTMLElement {
         });
 
       // ── 4. Do & Don't ────────────────────────────────────────────────────
+      //
+      // Cada par muda UMA coisa entre os dois lados, e é a coisa de que a
+      // legenda fala; o resto é igual, para que a diferença se leia sozinha.
       case 'do-dont':
         return createDocsDoDont({
           title: t('doDont.title'),
@@ -385,36 +606,27 @@ export function createContextMenuDocs(): HTMLElement {
               dontLabel:    tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              // O menu contextual COM um caminho visível ao lado — o assunto
-              // mais importante deste componente é que o gesto nunca seja o
-              // único caminho.
+              // O MESMO menu nos dois lados; o que muda é a alternativa
+              // visível. Até 2026-09-10 o lado "evite" mostrava outro menu, só
+              // com Excluir — e aí a diferença entre os dois deixava de ser a
+              // alternativa, que é o assunto do par.
               doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster nds-w-full';
+                const wrap = buildMenuPreview({
+                  items: [itemEdit(), itemDelete({ variant: 'destructive' })],
+                  menu: 'pair1-do',
+                  location: 'docs_do_dont',
+                });
                 wrap.dataset.spacing = 'sm';
-                wrap.dataset.align = 'center';
-                wrap.dataset.justify = 'center';
                 wrap.appendChild(
-                  createContextMenu({
-                    trigger: makeTriggerArea(t('demonstration.labels.triggerLabel')),
-                    items: [
-                      { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
-                      { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', variant: 'destructive' },
-                    ],
-                  }),
+                  createButton({ variant: 'outline', size: 'sm', label: t('demonstration.labels.edit') }),
                 );
-                const alternativa = document.createElement('button');
-                alternativa.type = 'button';
-                alternativa.className = 'nds-button nds-button-outline nds-button-sm';
-                alternativa.textContent = t('demonstration.labels.edit');
-                wrap.appendChild(alternativa);
                 return wrap;
               },
               dontPreviewFactory: () =>
                 buildMenuPreview({
-                  items: [
-                    { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', variant: 'destructive' },
-                  ],
+                  items: [itemEdit(), itemDelete({ variant: 'destructive' })],
+                  menu: 'pair1-dont',
+                  location: 'docs_do_dont',
                 }),
             },
             {
@@ -422,35 +634,22 @@ export function createContextMenuDocs(): HTMLElement {
               dontLabel:    tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
+              // A mesma ação destrutiva nos dois lados. À esquerda, na variante
+              // destrutiva e separada por uma linha; à direita, na variante
+              // padrão e no meio da lista — é o que a legenda descreve. O lado
+              // "evite" era um submenu aninhado, que é assunto de `notes.tip3`
+              // e não deste par.
               doPreviewFactory: () =>
                 buildMenuPreview({
-                  items: [
-                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
-                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate' },
-                    { type: 'separator' },
-                    { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', variant: 'destructive' },
-                  ],
+                  items: [itemEdit(), itemDuplicate(), SEPARATOR, itemDelete({ variant: 'destructive' })],
+                  menu: 'pair2-do',
+                  location: 'docs_do_dont',
                 }),
-              // Submenu dentro de submenu — o anti-padrão que `notes.tip3` nomeia.
               dontPreviewFactory: () =>
                 buildMenuPreview({
-                  items: [
-                    {
-                      type: 'submenu',
-                      label: t('demonstration.labels.share'),
-                      value: 'share',
-                      items: [
-                        {
-                          type: 'submenu',
-                          label: t('demonstration.labels.shareLink'),
-                          value: 'share-link',
-                          items: [
-                            { type: 'item', label: t('demonstration.labels.shareEmail'), value: 'share-email' },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
+                  items: [itemEdit(), itemDelete(), itemDuplicate()],
+                  menu: 'pair2-dont',
+                  location: 'docs_do_dont',
                 }),
             },
             {
@@ -465,27 +664,17 @@ export function createContextMenuDocs(): HTMLElement {
               // existe e ninguém tem como saber.
               doPreviewFactory: () =>
                 buildMenuPreview({
-                  items: [
-                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
-                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate' },
-                  ],
+                  items: [itemEdit(), itemDuplicate()],
+                  menu: 'pair3-do',
+                  location: 'docs_do_dont',
                 }),
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster nds-w-full';
-                wrap.dataset.align = 'center';
-                wrap.dataset.justify = 'center';
-                wrap.appendChild(
-                  createContextMenu({
-                    trigger: makePlainArea(t('demonstration.labels.areaNoHint')),
-                    items: [
-                      { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
-                      { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate' },
-                    ],
-                  }),
-                );
-                return wrap;
-              },
+              dontPreviewFactory: () =>
+                buildMenuPreview({
+                  items: [itemEdit(), itemDuplicate()],
+                  menu: 'pair3-dont',
+                  location: 'docs_do_dont',
+                  trigger: makePlainArea(t('demonstration.labels.areaNoHint')),
+                }),
             },
           ],
         });
@@ -512,201 +701,71 @@ createContextMenu({
         });
 
       // ── 6. Variantes ─────────────────────────────────────────────────────
-      case 'variantes': {
-        // Os trechos abaixo ensinam a API DA FÁBRICA, e não markup montado à
-        // mão. Antes desta passada eles mostravam `<li>` construído item a
-        // item — com classes do Tailwind, que saiu do projeto e por isso
-        // renderizam sem estilo nenhum; com `aria-hidden` no atalho, que
-        // contradiz `accessibility.screenReader.shortcuts` e as asserções das
-        // cinco stacks; e com dimensões cravadas em `style` inline. Tudo isso
-        // já é tipo de item na fábrica, e quem copiava recebia o contrário do
-        // contrato.
-        const codeDefault = `const trigger = document.createElement('div');
-trigger.textContent = 'Clique com o botão direito';
-
-createContextMenu({
-  trigger,
-  items: [
-    { type: 'item', label: 'Editar',      value: 'edit'      },
-    { type: 'item', label: 'Duplicar',    value: 'duplicate' },
-    { type: 'separator' },
-    { type: 'item', label: 'Excluir',     value: 'delete'    },
-  ],
-});`;
-
-        const codeDestructive = `// A variante é do ITEM, não classe de cor escrita à mão: é ela que liga
-// o data-variant, e é o data-variant que a folha compartilhada lê.
-{ type: 'item', label: 'Excluir', value: 'delete', variant: 'destructive' }`;
-
-        const codeLabel = `// Rótulo de grupo, não interativo. inset alinha com os itens que têm
-// indicador à esquerda.
-{ type: 'label', label: 'Ações', inset: true }`;
-
-        const codeCompCheckbox = `// Marcação: a fábrica emite role="menuitemcheckbox", aria-checked e o
-// indicador. indeterminate anuncia "mixed" e desenha traço, não tique.
-createContextMenu({
-  trigger,
-  items: [
-    { type: 'label',    label: 'Visualização' },
-    { type: 'checkbox', label: 'Mostrar grade',  value: 'grade',  checked: false,
-      onCheckedChange: (checked) => console.log('grade', checked) },
-    { type: 'checkbox', label: 'Mostrar réguas', value: 'reguas', checked: true },
-  ],
-});`;
-
-        const codeCompRadio = `// Escolha única: o valor corrente vive no MENU (radioValue), não em cada
-// item. Marcar uma opção não fecha o menu.
-createContextMenu({
-  trigger,
-  radioValue: 'grid',
-  onRadioChange: (value) => console.log('layout', value),
-  items: [
-    { type: 'label', label: 'Layout' },
-    { type: 'radio', label: 'Grade',   value: 'grid'    },
-    { type: 'radio', label: 'Lista',   value: 'list'    },
-    { type: 'radio', label: 'Colunas', value: 'columns' },
-  ],
-});`;
-
-        const codeCompSubmenu = `// Submenu: um item com items. A fábrica cuida de aria-haspopup,
-// aria-expanded, do posicionamento à direita e das setas.
-createContextMenu({
-  trigger,
-  items: [
-    { type: 'item',    label: 'Editar', value: 'edit' },
-    { type: 'submenu', label: 'Compartilhar', value: 'share', items: [
-      { type: 'item', label: 'Por e-mail', value: 'share-email' },
-      { type: 'item', label: 'Por link',   value: 'share-link'  },
-    ]},
-  ],
-});`;
-
-        const codeCompShortcuts = `// O atalho é campo do item. NÃO leva aria-hidden: "Excluir, Delete" é o
-// nome útil, e escondê-lo deixaria a pessoa sem saber que o atalho existe.
-// A tecla de verdade continua sendo um listener de quem monta a tela.
-createContextMenu({
-  trigger,
-  items: [
-    { type: 'item', label: 'Editar',   value: 'edit',      shortcut: 'Ctrl+E'  },
-    { type: 'item', label: 'Duplicar', value: 'duplicate', shortcut: 'Ctrl+D'  },
-    { type: 'separator' },
-    { type: 'item', label: 'Excluir',  value: 'delete',    shortcut: 'Delete',
-      variant: 'destructive' },
-  ],
-});`;
-
+      //
+      // Sete cards, e o `name`/`trackId` de cada um é a CHAVE do conteúdo — é
+      // ela que vira o `snippet_id` do toggle de código e o `menu` dos eventos
+      // da prévia. Nome traduzido ali partiria o mesmo card em três valores no
+      // GA4. Prévia e código saem da mesma lista (`variantMenu`).
+      case 'variantes':
         return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
+          note: t('variants.note'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'context-menu',
           items: [
             {
               name: 'default',
               description: t('variants.items.default'),
-              code: codeDefault,
-              previewFactory: () => buildSimpleTriggerArea(t('demonstration.labels.triggerLabel')),
+              code: variantCode('default'),
+              previewFactory: () => variantPreview('default'),
             },
             {
               name: 'destructive',
               description: t('variants.items.destructive'),
-              code: codeDestructive,
-              previewFactory: () =>
-                buildMenuPreview({
-                  items: [
-                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
-                    { type: 'separator' },
-                    { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', variant: 'destructive' },
-                  ],
-                }),
+              code: variantCode('destructive'),
+              previewFactory: () => variantPreview('destructive'),
             },
             {
               name: 'label',
               description: t('variants.items.label'),
-              code: codeLabel,
-              previewFactory: () =>
-                buildMenuPreview({
-                  items: [
-                    { type: 'label', label: 'Ações', inset: true },
-                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit', inset: true },
-                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate', inset: true },
-                  ],
-                }),
+              code: variantCode('label'),
+              previewFactory: () => variantPreview('label'),
             },
             {
               name: t('variants.items.withCheckbox.name'),
               trackId: 'withCheckbox',
               description: t('variants.items.withCheckbox.description'),
               useWhen: t('variants.items.withCheckbox.use'),
-              code: codeCompCheckbox,
-              previewFactory: () =>
-                buildMenuPreview({
-                  items: [
-                    { type: 'label', label: 'Visualização' },
-                    { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: true },
-                    { type: 'checkbox', label: 'Mostrar réguas', value: 'reguas', checked: false },
-                  ],
-                }),
+              code: variantCode('withCheckbox'),
+              previewFactory: () => variantPreview('withCheckbox'),
             },
             {
               name: t('variants.items.withRadio.name'),
               trackId: 'withRadio',
               description: t('variants.items.withRadio.description'),
               useWhen: t('variants.items.withRadio.use'),
-              code: codeCompRadio,
-              previewFactory: () =>
-                buildMenuPreview({
-                  radioValue: '100',
-                  items: [
-                    { type: 'label', label: 'Zoom' },
-                    { type: 'radio', label: '75%',  value: '75'  },
-                    { type: 'radio', label: '100%', value: '100' },
-                    { type: 'radio', label: '150%', value: '150' },
-                  ],
-                }),
+              code: variantCode('withRadio'),
+              previewFactory: () => variantPreview('withRadio'),
             },
             {
               name: t('variants.items.withSubmenu.name'),
               trackId: 'withSubmenu',
               description: t('variants.items.withSubmenu.description'),
               useWhen: t('variants.items.withSubmenu.use'),
-              code: codeCompSubmenu,
-              previewFactory: () =>
-                buildMenuPreview({
-                  items: [
-                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit' },
-                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate' },
-                    {
-                      type: 'submenu',
-                      label: t('demonstration.labels.share'),
-                      value: 'share',
-                      items: [
-                        { type: 'item', label: t('demonstration.labels.shareEmail'), value: 'share-email' },
-                        { type: 'item', label: t('demonstration.labels.shareLink'), value: 'share-link' },
-                      ],
-                    },
-                  ],
-                }),
+              code: variantCode('withSubmenu'),
+              previewFactory: () => variantPreview('withSubmenu'),
             },
             {
               name: t('variants.items.withShortcuts.name'),
               trackId: 'withShortcuts',
               description: t('variants.items.withShortcuts.description'),
               useWhen: t('variants.items.withShortcuts.use'),
-              code: codeCompShortcuts,
-              previewFactory: () =>
-                buildMenuPreview({
-                  items: [
-                    { type: 'item', label: t('demonstration.labels.edit'), value: 'edit', shortcut: 'Ctrl+E' },
-                    { type: 'item', label: t('demonstration.labels.duplicate'), value: 'duplicate', shortcut: 'Ctrl+D' },
-                    { type: 'separator' },
-                    { type: 'item', label: t('demonstration.labels.delete'), value: 'delete', shortcut: 'Delete', variant: 'destructive' },
-                  ],
-                }),
+              code: variantCode('withShortcuts'),
+              previewFactory: () => variantPreview('withShortcuts'),
             },
           ],
         });
-      }
 
       // ── 7. Estados ───────────────────────────────────────────────────────
       case 'estados':
@@ -723,6 +782,9 @@ createContextMenu({
             { label: t('states.focused.label'),  trigger: toPlainText(t('states.focused.trigger')), behavior: toPlainText(t('states.focused.behavior'))},
             { label: t('states.disabled.label'), trigger: toPlainText(t('states.disabled.trigger')),behavior: toPlainText(t('states.disabled.behavior'))},
             { label: t('states.checked.label'),  trigger: toPlainText(t('states.checked.trigger')), behavior: toPlainText(t('states.checked.behavior'))},
+            // O estado misto é da fábrica desde a revisão de 2026-09-02
+            // (`indeterminate`), e a tabela não o listava.
+            { label: t('states.mixed.label'),    trigger: toPlainText(t('states.mixed.trigger')),   behavior: toPlainText(t('states.mixed.behavior'))},
             { label: t('states.subOpen.label'),  trigger: toPlainText(t('states.subOpen.trigger')), behavior: toPlainText(t('states.subOpen.behavior'))},
           ],
         });
@@ -733,8 +795,7 @@ createContextMenu({
         // `components/ui/context-menu.ts`. A versão anterior parava em
         // `'item' | 'separator' | 'label'` e omitia marcação, escolha única,
         // submenu, atalho, recuo e variante — a página prometia MENOS do que o
-        // componente entrega, e por isso os trechos ao lado ensinavam a montar
-        // à mão o que já existia.
+        // componente entrega.
         const interfaceCode = `// createContextMenu(options)
 export type ContextMenuItemDef = {
   type?:           'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
@@ -752,10 +813,13 @@ export type ContextMenuItemDef = {
   onIndeterminateChange?: (indeterminate: boolean) => void;
 };
 
+export type ContextMenuCloseReason = 'escape' | 'overlay' | 'api';
+
 export type ContextMenuOptions = {
   trigger:        HTMLElement;
   items:          ContextMenuItemDef[];
   onOpenChange?:  (open: boolean) => void;
+  onClose?:       (reason: ContextMenuCloseReason) => void;
   radioValue?:    string;
   onRadioChange?: (value: string) => void;
   class?:         string;
@@ -769,6 +833,14 @@ export type ContextMenuOptions = {
           description: t('props.table.description'),
         };
 
+        // "Sim"/"Não" do vocabulário comum da página, e não literal: a coluna
+        // saía em português nos três idiomas.
+        const yes = tNav('common.yes');
+        const no = tNav('common.no');
+
+        // Toda descrição sai de `props.items.*`: as genéricas do conteúdo
+        // compartilhado, e as que só esta fábrica tem do override no topo do
+        // arquivo, nos três idiomas. Nenhuma fica cravada em pt-BR na tabela.
         return createDocsProps({
           title: t('props.title'),
           tables: [
@@ -776,30 +848,32 @@ export type ContextMenuOptions = {
               title: t('props.rootTitle'),
               cols: propsCols,
               items: [
-                { name: 'trigger',       type: 'HTMLElement',             defaultValue: '—', required: 'Sim', description: 'Elemento que captura o gesto — clique direito, tecla de menu ou Shift+F10 sobre ele.' },
-                { name: 'items',         type: 'ContextMenuItemDef[]',    defaultValue: '—', required: 'Sim', description: 'Lista de itens, separadores, rótulos e submenus do menu.' },
-                { name: 'onOpenChange',  type: '(open: boolean) => void', defaultValue: '—', required: 'Não', description: t('props.items.onOpenChange') },
-                { name: 'radioValue',    type: 'string',                  defaultValue: '—', required: 'Não', description: 'Valor corrente do grupo de escolha única — ele vive no menu, não em cada item.' },
-                { name: 'onRadioChange', type: '(value: string) => void', defaultValue: '—', required: 'Não', description: 'Disparado quando outra opção de escolha única passa a valer.' },
-                { name: 'class',         type: 'string',                  defaultValue: '—', required: 'Não', description: 'Classes extras aplicadas ao painel do menu.' },
+                { name: 'trigger',       type: 'HTMLElement',             defaultValue: '—', required: yes, description: toPlainText(t('props.items.trigger')) },
+                { name: 'items',         type: 'ContextMenuItemDef[]',    defaultValue: '—', required: yes, description: toPlainText(t('props.items.items')) },
+                { name: 'onOpenChange',  type: '(open: boolean) => void', defaultValue: '—', required: no,  description: toPlainText(t('props.items.onOpenChange')) },
+                { name: 'onClose',       type: "(reason: 'escape' | 'overlay' | 'api') => void", defaultValue: '—', required: no, description: toPlainText(t('props.items.onClose')) },
+                { name: 'radioValue',    type: 'string',                  defaultValue: '—', required: no,  description: toPlainText(t('props.items.radioValue')) },
+                { name: 'onRadioChange', type: '(value: string) => void', defaultValue: '—', required: no,  description: toPlainText(t('props.items.onValueChange')) },
+                { name: 'class',         type: 'string',                  defaultValue: '—', required: no,  description: toPlainText(t('props.items.class')) },
               ],
             },
             {
               title: t('props.itemTitle'),
               cols: propsCols,
               items: [
-                { name: 'type',          type: '"item" | "separator" | "label" | "checkbox" | "radio" | "submenu"', defaultValue: '"item"', required: 'Não', description: 'Tipo do item. "submenu" exige items; "radio" exige value.' },
-                { name: 'label',         type: 'string',                       defaultValue: '—',     required: 'Não', description: 'Texto exibido no item ou no rótulo.' },
-                { name: 'value',         type: 'string',                       defaultValue: '—',     required: 'Não', description: t('props.items.value') },
-                { name: 'disabled',      type: 'boolean',                      defaultValue: 'false', required: 'Não', description: t('props.items.disabled') },
-                { name: 'inset',         type: 'boolean',                      defaultValue: 'false', required: 'Não', description: 'Recuo à esquerda, para alinhar com itens que têm indicador.' },
-                { name: 'variant',       type: '"default" | "destructive"',    defaultValue: '"default"', required: 'Não', description: 'Só em item de ação: "destructive" pinta o item com a cor de alerta.' },
-                { name: 'shortcut',      type: 'string',                       defaultValue: '—',     required: 'Não', description: 'Atalho exibido à direita do rótulo, e lido junto dele — não é escondido do leitor de tela.' },
-                { name: 'checked',       type: 'boolean',                      defaultValue: 'false', required: 'Não', description: 'Estado inicial de um item de marcação.' },
-                { name: 'indeterminate', type: 'boolean',                      defaultValue: 'false', required: 'Não', description: 'Estado misto de um item de marcação: anunciado como "mixed" e desenhado com traço. O primeiro clique o resolve para marcado.' },
-                { name: 'items',         type: 'ContextMenuItemDef[]',         defaultValue: '—',     required: 'Não', description: 'Itens do submenu, quando o tipo é "submenu".' },
-                { name: 'onClick',       type: '() => void',                   defaultValue: '—',     required: 'Não', description: t('props.items.onSelect') },
-                { name: 'onCheckedChange', type: '(checked: boolean) => void', defaultValue: '—',     required: 'Não', description: 'Disparado a cada alternância de um item de marcação.' },
+                { name: 'type',          type: '"item" | "separator" | "label" | "checkbox" | "radio" | "submenu"', defaultValue: '"item"', required: no, description: toPlainText(t('props.items.type')) },
+                { name: 'label',         type: 'string',                       defaultValue: '—',         required: no, description: toPlainText(t('props.items.label')) },
+                { name: 'value',         type: 'string',                       defaultValue: '—',         required: no, description: toPlainText(t('props.items.value')) },
+                { name: 'disabled',      type: 'boolean',                      defaultValue: 'false',     required: no, description: toPlainText(t('props.items.disabled')) },
+                { name: 'inset',         type: 'boolean',                      defaultValue: 'false',     required: no, description: toPlainText(t('props.items.inset')) },
+                { name: 'variant',       type: '"default" | "destructive"',    defaultValue: '"default"', required: no, description: toPlainText(t('props.items.variant')) },
+                { name: 'shortcut',      type: 'string',                       defaultValue: '—',         required: no, description: toPlainText(t('props.items.shortcut')) },
+                { name: 'checked',       type: 'boolean',                      defaultValue: 'false',     required: no, description: toPlainText(t('props.items.checked')) },
+                { name: 'indeterminate', type: 'boolean',                      defaultValue: 'false',     required: no, description: toPlainText(t('props.items.indeterminate')) },
+                { name: 'items',         type: 'ContextMenuItemDef[]',         defaultValue: '—',         required: no, description: toPlainText(t('props.items.subItems')) },
+                { name: 'onClick',       type: '() => void',                   defaultValue: '—',         required: no, description: toPlainText(t('props.items.onSelect')) },
+                { name: 'onCheckedChange', type: '(checked: boolean) => void', defaultValue: '—',         required: no, description: toPlainText(t('props.items.onCheckedChange')) },
+                { name: 'onIndeterminateChange', type: '(indeterminate: boolean) => void', defaultValue: '—', required: no, description: toPlainText(t('props.items.onIndeterminateChange')) },
               ],
             },
           ],
@@ -811,22 +885,6 @@ export type ContextMenuOptions = {
 
       // ── 9. Tokens ────────────────────────────────────────────────────────
       case 'tokens': {
-        const customizationCode = `/* Em styles.css — sobrescrever tokens do popover */
-:root {
-  --popover:            0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --accent:             240 4.8% 95.9%;
-  --accent-foreground:  240 5.9% 10%;
-  --destructive:        0 84.2% 60.2%;
-}
-
-.dark {
-  --popover:            240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --accent:             240 3.7% 15.9%;
-  --accent-foreground:  0 0% 98%;
-}`;
-
         return createDocsTokens({
           title: t('tokens.title'),
           cols: {
@@ -858,7 +916,10 @@ export type ContextMenuOptions = {
             { token: '--z-popover',          value: '.nds-dropdown-menu-positioner', description: t('tokens.table.zIndex')           },
           ],
           customizationTitle: t('tokens.customizationTitle'),
-          customizationCode,
+          // Do conteúdo compartilhado, e não literal: o trecho que morava aqui
+          // sobrescrevia os tokens do documento inteiro com os valores de uma
+          // paleta que não é a do design system.
+          customizationCode: t('tokens.customizationCode'),
         });
       }
 
@@ -880,7 +941,9 @@ export type ContextMenuOptions = {
             t('accessibility.aria.ariaHaspopup'),
             t('accessibility.aria.ariaExpanded'),
           ],
-          keyboardTitle: tNav('common.keyboard'),
+          // Chave PLANA do conteúdo, a mesma nas cinco stacks — cada uma lia o
+          // título de um lugar diferente.
+          keyboardTitle: t('accessibility.keyboardTitle'),
           keyboardItems: [
             { key: 'Right-click / Menu / Shift+F10', description: t('accessibility.keyboard.rightClick') },
             { key: 'Arrow Down',  description: t('accessibility.keyboard.arrowDown')  },
@@ -934,6 +997,7 @@ export type ContextMenuOptions = {
           items: [
             { event: t('analytics.table.menuOpen'),      trigger: toPlainText(t('analytics.table.menuOpenTrigger')),      payload: t('analytics.table.menuOpenPayload')      },
             { event: t('analytics.table.itemClick'),     trigger: toPlainText(t('analytics.table.itemClickTrigger')),     payload: t('analytics.table.itemClickPayload')     },
+            { event: t('analytics.table.close'),         trigger: toPlainText(t('analytics.table.closeTrigger')),         payload: t('analytics.table.closePayload')         },
             { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload')      },
             { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
             { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload')    },
@@ -961,10 +1025,10 @@ export type ContextMenuOptions = {
               level:     'WCAG',
               how:       tNav('common.howToVerify'),
             },
-            items: stringsFromDict(t, 'testes.accessibility').map(criterion => ({
+            items: stringsFromDict(t, 'testes.accessibility').map((criterion, i) => ({
               criterion,
-              level:     'AA',
-              how:       'axe-core / manual',
+              level:     A11Y_TEST_LEVELS[i] ?? 'AA',
+              how:       A11Y_TEST_HOW[i] ?? 'axe-core',
             })),
           },
           visual: {

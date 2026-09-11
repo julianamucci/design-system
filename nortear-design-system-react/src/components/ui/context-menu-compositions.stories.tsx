@@ -6,7 +6,7 @@ import {
   FOCUS_RULE_GUARDA,
   waitForPortal,
 } from "@/lib/wait-for-portal";
-import { gestoOpen } from "@shared/testing/context-menu-area";
+import { gestoOpen, menuOpen } from "@shared/testing/context-menu-area";
 import { AreaTrigger } from "./context-menu.fixtures";
 import {
   ContextMenu,
@@ -181,46 +181,55 @@ export const WithCheckbox: Story = {
       ).not.toBeNull();
     });
 
-    await step("Marcar alterna o estado anunciado e o indicador", async () => {
+    await step("Marcar alterna o estado anunciado e o indicador, e o menu segue aberto", async () => {
       // Lê o estado ANTES de clicar: no replay a story parte do que a rodada
       // anterior deixou, e um valor esperado fixo inverteria o resultado.
       const antes = target("grade").getAttribute("aria-checked");
       const esperado = antes === "true" ? "false" : "true";
+      const panel = await waitForPortal("menu");
       await userEvent.click(target("grade"));
-      // Algumas libs fecham o menu ao escolher; reabrir é o que torna o passo
-      // igual nas cinco stacks.
-      await gestoOpen(area());
       await waitFor(() =>
         expect(target("grade").getAttribute("aria-checked")).toBe(esperado),
       );
       await expect(!!target("grade").querySelector("svg")).toBe(esperado === "true");
+      // Alternar NÃO fecha (C10): a pessoa marca várias opções numa abertura
+      // só. Reabrir o menu aqui, como o passo fazia, escondia justamente o
+      // defeito que ele deveria pegar. Um quadro depois da troca a decisão de
+      // fechar já teria sido tomada — e sem animação de saída (D5) o painel
+      // sairia do DOM na hora. UM menu aberto, e o MESMO nó: fechado e
+      // reaberto no meio passaria por "aberto".
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const menus = within(document.body).queryAllByRole("menu");
+      await expect(menus).toHaveLength(1);
+      await expect(menus[0]).toBe(panel);
     });
   },
 };
 
 // ─── Com escolha única ────────────────────────────────────────────────────────
 
+// O rótulo mora DENTRO do grupo de escolha única, que é quem ele nomeia. Com
+// um `ContextMenuGroup` em volta, eram dois `role="group"` aninhados — e o de
+// dentro, o que contém as opções, anônimo.
 function DemoRadio() {
-  const [zoom, setZoom] = useState("100");
+  const [layout, setLayout] = useState("grid");
 
   return (
     <ContextMenu>
       <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
-        <ContextMenuGroup>
-          <ContextMenuLabel>Zoom</ContextMenuLabel>
-          <ContextMenuRadioGroup value={zoom} onValueChange={(value) => setZoom(value)}>
-            <ContextMenuRadioItem value="75" data-testid="z75">
-              75%
-            </ContextMenuRadioItem>
-            <ContextMenuRadioItem value="100" data-testid="z100">
-              100%
-            </ContextMenuRadioItem>
-            <ContextMenuRadioItem value="150" data-testid="z150">
-              150%
-            </ContextMenuRadioItem>
-          </ContextMenuRadioGroup>
-        </ContextMenuGroup>
+        <ContextMenuRadioGroup value={layout} onValueChange={(value) => setLayout(value)}>
+          <ContextMenuLabel>Layout</ContextMenuLabel>
+          <ContextMenuRadioItem value="grid" data-testid="grid">
+            Grade
+          </ContextMenuRadioItem>
+          <ContextMenuRadioItem value="list" data-testid="list">
+            Lista
+          </ContextMenuRadioItem>
+          <ContextMenuRadioItem value="columns" data-testid="columns">
+            Colunas
+          </ContextMenuRadioItem>
+        </ContextMenuRadioGroup>
       </ContextMenuContent>
     </ContextMenu>
   );
@@ -239,15 +248,31 @@ export const WithRadioGroup: Story = {
 
     await step("O papel diz que a escolha é única", async () => {
       await gestoOpen(area());
-      await expect(target("z100").getAttribute("role")).toBe("menuitemradio");
-      await expect(target("z75").getAttribute("role")).toBe("menuitemradio");
+      await expect(target("grid").getAttribute("role")).toBe("menuitemradio");
+      await expect(target("list").getAttribute("role")).toBe("menuitemradio");
+    });
+
+    await step("As opções vivem em UM grupo, nomeado pelo rótulo", async () => {
+      // O grupo que o leitor de tela anuncia é o que CONTÉM as opções, e o nome
+      // dele é o rótulo. Dois grupos aninhados — um com nome, outro anônimo em
+      // volta das opções — reprovam aqui pela contagem, e o nome errado pelo
+      // `name`.
+      const menu = await waitForPortal("menu");
+      const groups = within(menu).getAllByRole("group");
+      await expect(groups).toHaveLength(1);
+      const [group] = groups;
+      await expect(within(menu).getByRole("group", { name: "Layout" })).toBe(group);
+      await expect(group.getAttribute("data-slot")).toBe("context-menu-radio-group");
+      for (const id of ["grid", "list", "columns"]) {
+        await expect(target(id).closest('[role="group"]')).toBe(group);
+      }
     });
 
     await step("O indicador publica o data-slot do seu tipo de item", async () => {
       // Endereço por TIPO de item: escolha única e marcação não compartilham
       // slot, como nas outras stacks.
       await gestoOpen(area());
-      const options = ["z75", "z100", "z150"].map(target);
+      const options = ["grid", "list", "columns"].map(target);
       for (const opcao of options) {
         await expect(
           opcao.querySelector('[data-slot="context-menu-radio-item-indicator"]'),
@@ -262,16 +287,22 @@ export const WithRadioGroup: Story = {
       ).not.toBeNull();
     });
 
-    await step("Escolher uma opção limpa a anterior", async () => {
+    await step("Escolher uma opção limpa a anterior, e o menu segue aberto", async () => {
       // Alterna entre dois valores conhecidos e afirma o PAR: assim o passo vale
       // igual em qualquer rodada, não importa de onde parta.
-      const partiuDe75 = target("z75").getAttribute("aria-checked") === "true";
-      const click = partiuDe75 ? "z150" : "z75";
-      const other = partiuDe75 ? "z75" : "z150";
+      const partiuDeGrid = target("grid").getAttribute("aria-checked") === "true";
+      const click = partiuDeGrid ? "columns" : "grid";
+      const other = partiuDeGrid ? "grid" : "columns";
+      const panel = await waitForPortal("menu");
       await userEvent.click(target(click));
-      await gestoOpen(area());
       await waitFor(() => expect(target(click).getAttribute("aria-checked")).toBe("true"));
       await expect(target(other).getAttribute("aria-checked")).toBe("false");
+      // Mesma medida do `WithCheckbox` (C10): um quadro depois da troca, UM
+      // menu aberto, e o MESMO nó de antes do clique.
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      const menus = within(document.body).queryAllByRole("menu");
+      await expect(menus).toHaveLength(1);
+      await expect(menus[0]).toBe(panel);
     });
   },
 };
@@ -321,6 +352,11 @@ export const WithSubmenu: Story = {
         submenu()!.querySelectorAll('[data-slot="context-menu-item"]').length,
       ).toBe(2);
 
+      // Abrir não basta: o FOCO entra no submenu, no primeiro item. Com o foco
+      // parado no sub-gatilho, a pessoa vê o painel filho e as setas continuam
+      // andando no pai — o submenu existiria só para quem usa ponteiro.
+      await waitFor(() => expect(document.activeElement).toBe(target("por-email")));
+
       // "À direita" é medida, não atributo: é o que o conteúdo promete e o que
       // um `side` errado quebraria sem nenhum aviso. O `waitFor` não é folga —
       // o popup entra no DOM ANTES de o posicionador medir, e até lá fica em
@@ -338,6 +374,26 @@ export const WithSubmenu: Story = {
       await expect(document.activeElement).toBe(target("sub"));
     });
 
+    await step("Escape no submenu fecha só o submenu e devolve o foco ao sub-gatilho", async () => {
+      // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
+      // aberto. Fechar a árvore inteira faria um nível de volta custar os dois,
+      // e a pessoa recomeçaria do clique direito.
+      const panel = menuOpen();
+      target("sub").focus();
+      await userEvent.keyboard("{ArrowRight}");
+      await waitFor(() => expect(document.activeElement).toBe(target("por-email")));
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() => expect(submenu()).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(target("sub")));
+      await expect(target("sub").getAttribute("aria-expanded")).toBe("false");
+      // O raiz é o MESMO nó, um quadro depois: a decisão de fechar já teria sido
+      // tomada, e um painel fechado e reaberto no meio passaria por "aberto".
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(menuOpen()).toBe(panel);
+      await expect(panel?.isConnected).toBe(true);
+      await expect(within(document.body).queryAllByRole("menu")).toHaveLength(1);
+    });
+
     await step("A story termina com o submenu ABERTO", async () => {
       // `visual.item3` descreve o submenu aberto — é o que o Chromatic precisa
       // fotografar.
@@ -351,7 +407,7 @@ export const WithSubmenu: Story = {
 
 function DemoCompleta() {
   const [grid, setGrade] = useState(true);
-  const [zoom, setZoom] = useState("100");
+  const [layout, setLayout] = useState("grid");
 
   return (
     <ContextMenu>
@@ -383,15 +439,14 @@ function DemoCompleta() {
           </ContextMenuCheckboxItem>
         </ContextMenuGroup>
         <ContextMenuSeparator />
-        <ContextMenuGroup>
-          <ContextMenuLabel>Zoom</ContextMenuLabel>
-          <ContextMenuRadioGroup value={zoom} onValueChange={(value) => setZoom(value)}>
-            <ContextMenuRadioItem value="100" data-testid="z100">
-              100%
-            </ContextMenuRadioItem>
-            <ContextMenuRadioItem value="150">150%</ContextMenuRadioItem>
-          </ContextMenuRadioGroup>
-        </ContextMenuGroup>
+        {/* Escolha única: o rótulo dentro do grupo que ele nomeia — UM grupo. */}
+        <ContextMenuRadioGroup value={layout} onValueChange={(value) => setLayout(value)}>
+          <ContextMenuLabel>Layout</ContextMenuLabel>
+          <ContextMenuRadioItem value="grid" data-testid="grid">
+            Grade
+          </ContextMenuRadioItem>
+          <ContextMenuRadioItem value="list">Lista</ContextMenuRadioItem>
+        </ContextMenuRadioGroup>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive">
           Excluir
@@ -418,7 +473,7 @@ export const CompleteComposition: Story = {
       // estar na tela quando o Chromatic fotografa.
       const menu = await gestoOpen(area());
       await expect(target("grade").getAttribute("role")).toBe("menuitemcheckbox");
-      await expect(target("z100").getAttribute("role")).toBe("menuitemradio");
+      await expect(target("grid").getAttribute("role")).toBe("menuitemradio");
       await expect(
         menu.querySelectorAll('[data-slot="context-menu-separator"]').length,
       ).toBe(3);
@@ -431,6 +486,16 @@ export const CompleteComposition: Story = {
       for (const label of rotulos) {
         await expect(label.getAttribute("role")).not.toBe("menuitem");
       }
+    });
+
+    await step("A escolha única é UM grupo, nomeado pelo rótulo", async () => {
+      // O grupo que contém as opções é o que se chama "Layout", e nenhum outro
+      // grupo o embrulha — dois aninhados anunciavam o de dentro sem nome.
+      const menu = await waitForPortal("menu");
+      const group = within(menu).getByRole("group", { name: "Layout" });
+      await expect(group.getAttribute("data-slot")).toBe("context-menu-radio-group");
+      await expect(target("grid").closest('[role="group"]')).toBe(group);
+      await expect(group.parentElement?.closest('[role="group"]') ?? null).toBeNull();
     });
   },
 };

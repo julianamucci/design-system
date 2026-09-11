@@ -7,13 +7,17 @@ import { contextMenuPlaygroundSource, type ContextMenuArgs } from './context-men
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { pressTab } from '@/lib/press-tab';
+import { NdsButton } from './button';
 import { AREA_CLICK_DIREITO, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<ContextMenuArgs> = {
   title: 'Components/Overlay/ContextMenu',
   tags: ['autodocs', 'overlay'],
-  decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU] })],
+  // `NdsButton` serve aos vizinhos da story de Tab — um ponto de tabulação antes
+  // e outro depois da área.
+  decorators: [moduleMetadata({ imports: [...NDS_CONTEXT_MENU, NdsButton] })],
   parameters: {
     design: figmaDesign('dropdownMenu'),
     layout: 'centered',
@@ -22,15 +26,23 @@ const meta: Meta<ContextMenuArgs> = {
   },
   argTypes: {
     triggerLabel: { control: 'text', description: 'Texto da área que responde ao gesto.' },
+    showDestructive: { control: 'boolean', description: 'Exibe o item destrutivo (Excluir).' },
+    showSeparator: { control: 'boolean', description: 'Exibe a divisória antes do item destrutivo.' },
+    showShortcuts: { control: 'boolean', description: 'Exibe os atalhos de teclado ao lado dos rótulos.' },
     // Sem entrada em argTypes o renderer Angular não repassa NADA ao template —
     // nem função, nem string. Ver armadilha 5 no CLAUDE.md deste stack.
     areaClasse: { control: false, table: { disable: true } },
     onSelect: { control: false, table: { disable: true } },
+    onOpenChange: { control: false, table: { disable: true } },
   },
   args: {
     triggerLabel: 'Clique com o botão direito aqui',
+    showDestructive: true,
+    showSeparator: true,
+    showShortcuts: true,
     areaClasse: AREA_CLICK_DIREITO,
     onSelect: fn(),
+    onOpenChange: fn(),
   },
 };
 
@@ -42,6 +54,7 @@ export const Playground: Story = {
     docs: { source: { transform: contextMenuPlaygroundSource } },
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
+      'functional.item12', 'functional.item13', 'functional.item14', 'functional.item15',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
       'accessibility.item7', 'accessibility.item8',
       'visual.item1',
@@ -50,7 +63,7 @@ export const Playground: Story = {
   render: (args) => ({
     props: { ...args },
     template: `
-      <div ndsContextMenu>
+      <div ndsContextMenu (openChange)="onOpenChange($event)">
         <div
           ndsContextMenuTrigger
           [class]="areaClasse"
@@ -62,16 +75,24 @@ export const Playground: Story = {
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem (onSelect)="onSelect('editar')">
             Editar
-            <span ndsContextMenuShortcut>Ctrl+E</span>
+            @if (showShortcuts) {
+              <span ndsContextMenuShortcut>Ctrl+E</span>
+            }
           </div>
           <div ndsContextMenuItem (onSelect)="onSelect('duplicar')">Duplicar</div>
 
-          <div ndsContextMenuSeparator></div>
+          @if (showSeparator) {
+            <div ndsContextMenuSeparator></div>
+          }
 
-          <div ndsContextMenuItem variant="destructive" (onSelect)="onSelect('excluir')">
-            Excluir
-            <span ndsContextMenuShortcut>Delete</span>
-          </div>
+          @if (showDestructive) {
+            <div ndsContextMenuItem variant="destructive" (onSelect)="onSelect('excluir')">
+              Excluir
+              @if (showShortcuts) {
+                <span ndsContextMenuShortcut>Delete</span>
+              }
+            </div>
+          }
         </ng-template>
       </div>
     `,
@@ -106,14 +127,21 @@ export const Playground: Story = {
       const center = { x: boxArea.left + boxArea.width / 2, y: boxArea.top + boxArea.height / 2 };
       await expect(Math.abs(boxMenu.left - center.x)).toBeLessThan(24);
       await expect(Math.abs(boxMenu.top - center.y)).toBeLessThan(24);
+      // Quem escuta a troca de estado fica sabendo da abertura.
+      await expect(args.onOpenChange).toHaveBeenCalledWith(true);
     });
 
     await step('Os itens são itens de menu de verdade', async () => {
       const menu = await waitForPortal('menu');
+      await expect(menu.getAttribute('role')).toBe('menu');
       const items = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
       await expect(items.length).toBe(3);
       for (const item of items) await expect(item.getAttribute('role')).toBe('menuitem');
-      await expect(menu.querySelector('[data-slot="context-menu-separator"]')).not.toBeNull();
+      // O PAPEL da divisória, e não só a presença dela: sem `role="separator"` a
+      // linha é desenho, e o leitor de tela não anuncia que o bloco mudou.
+      await expect(
+        menu.querySelector('[data-slot="context-menu-separator"]')?.getAttribute('role'),
+      ).toBe('separator');
     });
 
     await step('O atalho é lido junto do item, não escondido', async () => {
@@ -141,10 +169,77 @@ export const Playground: Story = {
       await waitFor(() => expect(document.activeElement).toBe(items[0]));
     });
 
+    await step('Home e End levam às pontas do menu', async () => {
+      // Parte do item do MEIO: assim cada tecla tem para onde ir, e uma
+      // implementação que ignorasse as duas deixaria o foco parado ali.
+      const menu = await waitForPortal('menu');
+      const items = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      items[1].focus();
+      await userEvent.keyboard('{End}');
+      await waitFor(() => expect(document.activeElement).toBe(items[items.length - 1]));
+      await userEvent.keyboard('{Home}');
+      await waitFor(() => expect(document.activeElement).toBe(items[0]));
+    });
+
+    await step('Digitar salta para o item, e as letras se acumulam por um segundo', async () => {
+      // Numa lista de ações longa, o typeahead é o que evita percorrer item por
+      // item. As asserções são degraus, e cada uma compara com OUTRO item —
+      // nunca com "mudou", que passaria com o foco indo para qualquer lugar.
+      const menu = await waitForPortal('menu');
+      const items = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      // Editar · Duplicar · Excluir — iniciais que se separam, e duas começando
+      // por "e", que é o que dá sentido ao acúmulo.
+      await expect(items.length).toBe(3);
+
+      // Relógio, e não `waitFor`: o que se espera é o acúmulo EXPIRAR (o segundo
+      // do padrão WAI-ARIA), não uma mutação que se possa observar. Sem a espera
+      // o "d" de um grupo fica no buffer e o "e" do seguinte vira "de".
+      const expireTypeahead = () => new Promise((resolve) => setTimeout(resolve, 1100));
+
+      // Uma letra: a busca recomeça DEPOIS do item em foco — "d" a partir de
+      // Editar acha Duplicar.
+      items[0].focus();
+      await userEvent.keyboard('d');
+      await waitFor(() => expect(document.activeElement).toBe(items[1]));
+
+      // Duas letras seguidas: "e" pousa em Excluir, e "ed" — o acúmulo — corrige
+      // para Editar. Sem acúmulo o segundo toque seria um "d" solto a partir de
+      // Excluir, que acharia Duplicar.
+      await expireTypeahead();
+      await userEvent.keyboard('e');
+      await waitFor(() => expect(document.activeElement).toBe(items[2]));
+      await userEvent.keyboard('d');
+      await waitFor(() => expect(document.activeElement).toBe(items[0]));
+
+      // E o acúmulo EXPIRA: passado o segundo, "d" volta a valer sozinho.
+      await expireTypeahead();
+      await userEvent.keyboard('d');
+      await waitFor(() => expect(document.activeElement).toBe(items[1]));
+    });
+
     await step('Escape fecha e devolve o foco à área', async () => {
       await userEvent.keyboard('{Escape}');
       await waitForPortalVanish('menu');
       await waitFor(() => expect(document.activeElement).toBe(area()));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
+    });
+
+    await step('Tab fecha o menu e, com a área como última parada, o foco volta a ela', async () => {
+      // Menu não é diálogo (C2): o Tab fecha e segue a página a partir da ÁREA.
+      // Aqui a área é a única parada do canvas — não há vizinho depois dela —,
+      // então o destino é ela mesma: nem o `<body>`, nem o fim do documento,
+      // onde o painel vive em portal. Os vizinhos estão na story TabLeavesMenu.
+      //
+      // Tab despachado à mão (`@/lib/press-tab`): sem ação padrão, o foco só
+      // chega à área se o MENU o levar. Com `userEvent.keyboard('{Tab}')` a
+      // biblioteca de teste movia o foco pela conta dela, e o passo reprovava
+      // ou passava conforme o relógio.
+      const menu = await gestoOpen(area());
+      menu.querySelector<HTMLElement>('[data-slot="context-menu-item"]')!.focus();
+      pressTab();
+      await waitForPortalVanish('menu');
+      await waitFor(() => expect(document.activeElement).toBe(area()));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
     });
 
     await step('Clique fora fecha', async () => {
@@ -165,6 +260,38 @@ export const Playground: Story = {
       );
       await waitForPortalVanish('menu');
       await expect(args.onSelect).toHaveBeenCalledWith('duplicar');
+      // E o foco volta à área, de onde o menu saiu.
+      await waitFor(() => expect(document.activeElement).toBe(area()));
+    });
+
+    await step('Shift+F10 na área focada abre o menu, e o foco entra nele', async () => {
+      // A tecla Menu e o Shift+F10 são o caminho de quem não usa mouse, e o
+      // navegador os entrega como `contextmenu` no elemento FOCADO. Tecla
+      // sintética não dispara a ação padrão do navegador, então o passo entrega o
+      // evento que ele entregaria — e o que se prova é o resto: a área RECEBE
+      // foco (sem a parada de tabulação não haveria a quem entregar), o mesmo
+      // evento abre o menu, e o foco pousa no primeiro item.
+      await closeMenu();
+      area().focus();
+      await expect(document.activeElement).toBe(area());
+      // O primitivo separa teclado de ponteiro pelo tempo desde o último
+      // `pointerdown` na área (300 ms): o passo anterior foi um gesto de
+      // ponteiro, e sem esta espera o evento seria lido como clique direito —
+      // que abre sem destacar item nenhum. Relógio, porque o que se espera é o
+      // tempo passar.
+      await new Promise((resolve) => setTimeout(resolve, 350));
+      const box = area().getBoundingClientRect();
+      area().dispatchEvent(
+        new MouseEvent('contextmenu', {
+          bubbles: true,
+          cancelable: true,
+          clientX: box.left + box.width / 2,
+          clientY: box.top + box.height / 2,
+        }),
+      );
+      const menu = await waitForPortal('menu');
+      const firstItem = menu.querySelector<HTMLElement>('[data-slot="context-menu-item"]')!;
+      await waitFor(() => expect(document.activeElement).toBe(firstItem));
     });
 
     await step('A story termina com o menu ABERTO', async () => {
@@ -174,6 +301,101 @@ export const Playground: Story = {
       // declaração de cobertura visual apontava para uma foto da área vazia.
       const menu = await gestoOpen(area());
       await expect(menu).toBeVisible();
+    });
+  },
+};
+
+// ─── Tab sai do menu ──────────────────────────────────────────────────────────
+
+/**
+ * Menu não prende o foco (C2 do PRD do DropdownMenu, que é também o deste): Tab
+ * fecha e o foco segue a página a partir da ÁREA — o próximo ponto de
+ * tabulação depois dela, ou o anterior no Shift+Tab. A área como última parada
+ * está no Playground.
+ *
+ * Antes da correção (medido com teclado real em 2026-09-10), a lib fechava o
+ * menu e o foco VOLTAVA à área: Tab e Shift+Tab davam no mesmo lugar, e no
+ * submenu só o submenu fechava. O Tab é despachado à mão (`@/lib/press-tab`),
+ * então o foco só chega ao vizinho se o menu o levar.
+ */
+export const TabLeavesMenu: Story = {
+  parameters: {
+    covers: ['functional.item12'],
+    controls: { disable: true },
+  },
+  render: () => ({
+    props: { areaClasse: AREA_CLICK_DIREITO },
+    template: `
+      <div class="nds-cluster" data-spacing="md">
+        <button ndsButton variant="ghost">Antes</button>
+        <div ndsContextMenu>
+          <div
+            ndsContextMenuTrigger
+            [class]="areaClasse"
+            data-align="center"
+            data-justify="center"
+            data-testid="area"
+          >Clique com o botão direito aqui</div>
+
+          <ng-template ndsContextMenuContent>
+            <div ndsContextMenuItem>Editar</div>
+            <div ndsContextMenuItem>Duplicar</div>
+
+            <div ndsContextMenuSub>
+              <div ndsContextMenuSubTrigger>Compartilhar</div>
+              <ng-template ndsContextMenuSubContent>
+                <div ndsContextMenuItem>Por e-mail</div>
+                <div ndsContextMenuItem>Por link</div>
+              </ng-template>
+            </div>
+          </ng-template>
+        </div>
+        <button ndsButton variant="ghost">Depois</button>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const area = () => canvas.getByTestId('area');
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+
+    const openWithItemFocused = async () => {
+      const menu = await gestoOpen(area());
+      menu.querySelector<HTMLElement>('[data-slot="context-menu-item"]')!.focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+      return menu;
+    };
+
+    await step('Tab fecha o menu e o foco vai ao ponto DEPOIS da área', async () => {
+      await openWithItemFocused();
+      pressTab();
+      await waitForPortalVanish('menu');
+      // Nem a área, que era onde a lib devolvia o foco, nem o fim do documento,
+      // onde o painel vive em portal.
+      await waitFor(() => expect(document.activeElement).toBe(after));
+    });
+
+    await step('Shift+Tab fecha o menu e o foco vai ao ponto ANTES da área', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalVanish('menu');
+      await waitFor(() => expect(document.activeElement).toBe(before));
+    });
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e segue da área', async () => {
+      const menu = await openWithItemFocused();
+      within(menu).getByRole('menuitem', { name: 'Compartilhar' }).focus();
+      await userEvent.keyboard('{ArrowRight}');
+      const submenu = () =>
+        document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
+      await waitFor(() => expect(submenu()?.contains(document.activeElement)).toBe(true));
+
+      pressTab();
+      // Os dois painéis: fechar só o filho deixaria o raiz aberto com o foco
+      // fora dele.
+      await waitForPortalVanish('menu');
+      await waitFor(() => expect(document.activeElement).toBe(after));
     });
   },
 };

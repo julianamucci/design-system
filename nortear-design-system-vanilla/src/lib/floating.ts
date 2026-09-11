@@ -370,8 +370,17 @@ export function positionFloating(
  * Sem `side`, sem `align` e sem `flip` — um ponto não tem bordas para sair, e o
  * porquê de não virar está em `computePointPosition`. Também não escreve
  * `data-side`, pelo mesmo motivo: não há lado a anunciar.
+ *
+ * @returns As coordenadas de DOCUMENTO que escreveu. Quem precisa saber onde o
+ *          ponto caiu DENTRO do painel depois do deslize — a origem do zoom de
+ *          entrada do menu de contexto — faz a conta com elas, sem reler o
+ *          `style` nem medir uma caixa que ainda está animando.
  */
-export function positionFloatingAtPoint(x: number, y: number, panel: HTMLElement): void {
+export function positionFloatingAtPoint(
+  x: number,
+  y: number,
+  panel: HTMLElement,
+): { top: number; left: number } {
   const { panelWidth, panelHeight } = measurePanel(panel);
 
   const { top, left } = computePointPosition({
@@ -384,4 +393,6 @@ export function positionFloatingAtPoint(x: number, y: number, panel: HTMLElement
 
   panel.style.top = `${top}px`;
   panel.style.left = `${left}px`;
+
+  return { top, left };
 }

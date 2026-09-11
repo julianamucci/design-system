@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { ref } from 'vue';
 import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
-import { AREA_CLICK_DIREITO, gestoOpen } from '@shared/testing/context-menu-area';
+import { AREA_CLICK_DIREITO, gestoOpen, menuOpen } from '@shared/testing/context-menu-area';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -74,6 +74,29 @@ const componentes = {
 };
 
 const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
+
+/**
+ * Os ids de `aria-labelledby` do menu que não apontam para elemento nenhum.
+ *
+ * A lib escreve `aria-labelledby` em TODO grupo, com o id do grupo; quem o
+ * realiza é o rótulo que mora dentro dele. Grupo sem rótulo, ou rótulo que pega
+ * o id de outro grupo, deixa a referência pendurada — e o leitor de tela resolve
+ * o nome em nada, sem erro nenhum na tela.
+ */
+function danglingLabelledby(menu: HTMLElement): string[] {
+  return [menu, ...menu.querySelectorAll<HTMLElement>('[aria-labelledby]')]
+    .flatMap((el) => (el.getAttribute('aria-labelledby') ?? '').split(/\s+/).filter(Boolean))
+    .filter((id) => !document.getElementById(id));
+}
+
+/** Os grupos entre o item e o painel, do mais próximo ao mais distante. */
+function groupsAround(item: HTMLElement, menu: HTMLElement): HTMLElement[] {
+  const groups: HTMLElement[] = [];
+  for (let node = item.parentElement; node && node !== menu; node = node.parentElement) {
+    if (node.getAttribute('role') === 'group') groups.push(node);
+  }
+  return groups;
+}
 
 // ── Com atalhos ───────────────────────────────────────────────────────────────
 
@@ -196,19 +219,35 @@ export const WithCheckbox: Story = {
       ).not.toBeNull();
     });
 
-    await step('Marcar alterna o estado anunciado e o indicador', async () => {
+    await step('O rótulo NOMEIA o grupo das marcações', async () => {
+      // O que prova a ligação é o grupo ter o nome do rótulo e conter os itens
+      // — não a presença do rótulo.
+      const menu = await gestoOpen(area());
+      const group = within(menu).getByRole('group', { name: 'Visualização' });
+      await expect(group.contains(target('grade'))).toBe(true);
+      await expect(group.contains(target('reguas'))).toBe(true);
+      await expect(danglingLabelledby(menu)).toEqual([]);
+    });
+
+    await step('Marcar alterna o estado anunciado e o indicador, e o menu segue aberto', async () => {
       // Lê o estado ANTES de clicar: no replay a story parte do que a rodada
       // anterior deixou, e um valor esperado fixo inverteria o resultado.
       const antes = target('grade').getAttribute('aria-checked');
       const esperado = antes === 'true' ? 'false' : 'true';
+      const panel = menuOpen();
       await userEvent.click(target('grade'));
-      // Algumas libs fecham o menu ao escolher; reabrir é o que torna o passo
-      // igual nas cinco stacks.
-      await gestoOpen(area());
       await waitFor(() =>
         expect(target('grade').getAttribute('aria-checked')).toBe(esperado),
       );
       await expect(!!target('grade').querySelector('svg')).toBe(esperado === 'true');
+      // Alternar NÃO fecha. A lib decide fechar numa microtarefa DEPOIS de
+      // entregar a escolha, e sem animação de saída (D5) o painel sai do DOM na
+      // hora — então um quadro inteiro depois da troca de estado não é janela
+      // de tempo: é o ponto em que a decisão já foi tomada. O MESMO nó: um
+      // painel fechado e reaberto no meio passaria por "aberto".
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(menuOpen()).toBe(panel);
+      await expect(panel?.isConnected).toBe(true);
     });
   },
 };
@@ -234,14 +273,12 @@ export const WithRadioGroup: Story = {
           Clique com o botão direito aqui
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuGroup>
+          <ContextMenuRadioGroup :model-value="layout" @update:model-value="layout = $event">
             <ContextMenuLabel>Layout</ContextMenuLabel>
-            <ContextMenuRadioGroup :model-value="layout" @update:model-value="layout = $event">
-              <ContextMenuRadioItem value="grid" data-testid="grid">Grade</ContextMenuRadioItem>
-              <ContextMenuRadioItem value="list" data-testid="list">Lista</ContextMenuRadioItem>
-              <ContextMenuRadioItem value="columns" data-testid="columns">Colunas</ContextMenuRadioItem>
-            </ContextMenuRadioGroup>
-          </ContextMenuGroup>
+            <ContextMenuRadioItem value="grid" data-testid="grid">Grade</ContextMenuRadioItem>
+            <ContextMenuRadioItem value="list" data-testid="list">Lista</ContextMenuRadioItem>
+            <ContextMenuRadioItem value="columns" data-testid="columns">Colunas</ContextMenuRadioItem>
+          </ContextMenuRadioGroup>
         </ContextMenuContent>
       </ContextMenu>
     `,
@@ -253,6 +290,23 @@ export const WithRadioGroup: Story = {
       await gestoOpen(area());
       await expect(target('grid').getAttribute('role')).toBe('menuitemradio');
       await expect(target('list').getAttribute('role')).toBe('menuitemradio');
+    });
+
+    await step('UM grupo em volta das opções: o de rádio, nomeado pelo rótulo', async () => {
+      // O grupo de rádio da lib já é um grupo por baixo. Com um grupo comum em
+      // volta, eram DOIS: o rótulo pegava o id do de fora, e o de dentro — o
+      // que contém as opções — ficava com `aria-labelledby` pendurado. O rótulo
+      // mora dentro do grupo de rádio, e é ele que o nomeia.
+      const menu = await gestoOpen(area());
+      const group = within(menu).getByRole('group', { name: 'Layout' });
+      await expect(group.getAttribute('data-slot')).toBe('context-menu-radio-group');
+      await expect(menu.querySelectorAll('[role="group"]').length).toBe(1);
+      for (const id of ['grid', 'list', 'columns']) {
+        const around = groupsAround(target(id), menu);
+        await expect(around.length).toBe(1);
+        await expect(around[0]).toBe(group);
+      }
+      await expect(danglingLabelledby(menu)).toEqual([]);
     });
 
     await step('O indicador publica o data-slot do seu tipo de item', async () => {
@@ -274,16 +328,21 @@ export const WithRadioGroup: Story = {
       ).not.toBeNull();
     });
 
-    await step('Escolher uma opção limpa a anterior', async () => {
+    await step('Escolher uma opção limpa a anterior, e o menu segue aberto', async () => {
       // Alterna entre dois valores conhecidos e afirma o PAR: assim o passo vale
       // igual em qualquer rodada, não importa de onde parta.
       const partiuDeGrid = target('grid').getAttribute('aria-checked') === 'true';
       const click = partiuDeGrid ? 'columns' : 'grid';
       const other = partiuDeGrid ? 'grid' : 'columns';
+      const panel = menuOpen();
       await userEvent.click(target(click));
-      await gestoOpen(area());
       await waitFor(() => expect(target(click).getAttribute('aria-checked')).toBe('true'));
       await expect(target(other).getAttribute('aria-checked')).toBe('false');
+      // Mesma medida do `WithCheckbox`: um quadro depois da troca, a decisão de
+      // fechar já foi tomada — e o painel tem de ser o MESMO nó.
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(menuOpen()).toBe(panel);
+      await expect(panel?.isConnected).toBe(true);
     });
   },
 };
@@ -337,6 +396,10 @@ export const WithSubmenu: Story = {
         submenu()!.querySelectorAll('[data-slot="context-menu-item"]').length,
       ).toBe(2);
 
+      // E o foco ENTRA: abrir sem levar o foco deixaria o submenu à vista e
+      // inalcançável — a seta seguinte andaria no menu de fora (WCAG 2.1.1).
+      await waitFor(() => expect(document.activeElement).toBe(target('por-email')));
+
       // "À direita" é medida, não atributo: é o que o conteúdo promete e o que
       // um `side` errado quebraria sem nenhum aviso. O `waitFor` não é folga —
       // o popup entra no DOM ANTES de o posicionador medir, e até lá fica em
@@ -352,6 +415,25 @@ export const WithSubmenu: Story = {
       await userEvent.keyboard('{ArrowLeft}');
       await waitFor(() => expect(target('sub').getAttribute('aria-expanded')).toBe('false'));
       await expect(document.activeElement).toBe(target('sub'));
+    });
+
+    await step('Escape no submenu fecha só o submenu e devolve o foco ao sub-gatilho', async () => {
+      // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
+      // aberto. A lib fechava a árvore inteira — um nível de volta custava os
+      // dois, e a pessoa recomeçava do clique direito.
+      const panel = menuOpen();
+      target('sub').focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(document.activeElement).toBe(target('por-email')));
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(submenu()).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(target('sub')));
+      await expect(target('sub').getAttribute('aria-expanded')).toBe('false');
+      // O raiz é o MESMO nó, um quadro depois: a decisão de fechar já teria sido
+      // tomada, e um painel fechado e reaberto no meio passaria por "aberto".
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(menuOpen()).toBe(panel);
+      await expect(panel?.isConnected).toBe(true);
     });
 
     await step('A story termina com o submenu ABERTO', async () => {
@@ -407,13 +489,11 @@ export const CompleteComposition: Story = {
             </ContextMenuCheckboxItem>
           </ContextMenuGroup>
           <ContextMenuSeparator />
-          <ContextMenuGroup>
+          <ContextMenuRadioGroup :model-value="layout" @update:model-value="layout = $event">
             <ContextMenuLabel>Layout</ContextMenuLabel>
-            <ContextMenuRadioGroup :model-value="layout" @update:model-value="layout = $event">
-              <ContextMenuRadioItem value="grid" data-testid="grid">Grade</ContextMenuRadioItem>
-              <ContextMenuRadioItem value="list">Lista</ContextMenuRadioItem>
-            </ContextMenuRadioGroup>
-          </ContextMenuGroup>
+            <ContextMenuRadioItem value="grid" data-testid="grid">Grade</ContextMenuRadioItem>
+            <ContextMenuRadioItem value="list">Lista</ContextMenuRadioItem>
+          </ContextMenuRadioGroup>
           <ContextMenuSeparator />
           <ContextMenuItem variant="destructive">
             Excluir
@@ -444,6 +524,23 @@ export const CompleteComposition: Story = {
       for (const label of rotulos) {
         await expect(label.getAttribute('role')).not.toBe('menuitem');
       }
+    });
+
+    await step('Cada rótulo nomeia o SEU grupo, e nenhuma referência fica pendurada', async () => {
+      // Três rótulos, três grupos — e o de escolha única é o próprio grupo de
+      // rádio, com uma camada só em volta das opções.
+      const menu = await waitForPortal('menu');
+      await expect(menu.querySelectorAll('[role="group"]').length).toBe(3);
+      for (const label of menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-label"]')) {
+        await expect(label.id).not.toBe('');
+        await expect(label.closest('[role="group"]')?.getAttribute('aria-labelledby')).toBe(label.id);
+      }
+      const layout = within(menu).getByRole('group', { name: 'Layout' });
+      await expect(layout.getAttribute('data-slot')).toBe('context-menu-radio-group');
+      const aroundGrid = groupsAround(target('grid'), menu);
+      await expect(aroundGrid.length).toBe(1);
+      await expect(aroundGrid[0]).toBe(layout);
+      await expect(danglingLabelledby(menu)).toEqual([]);
     });
   },
 };

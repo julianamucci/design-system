@@ -8,6 +8,7 @@ import {
   computed,
   contentChild,
   effect,
+  forwardRef,
   inject,
   input,
 } from '@angular/core';
@@ -32,10 +33,18 @@ import {
   RdxMenuRadioItem,
   RdxMenuRadioItemIndicator,
   injectRdxMenuGroupContext,
-  injectRdxMenuRootContext,
   isIndeterminate,
 } from '@radix-ng/primitives/menu';
 import { ChevronRight, Check, Minus } from 'lucide';
+import {
+  NDS_MENU_TAB_ANCHOR,
+  NDS_SUBMENU_PANEL,
+  NdsMenuPopupScope,
+  NdsSubmenuKeyboardEntry,
+  NdsSubmenuOwnsPanel,
+  type NdsMenuTabAnchor,
+  type NdsSubmenuPanel,
+} from './menu-popup-scope';
 
 // ─── ContextMenu ──────────────────────────────────────────────────────────────
 //
@@ -67,6 +76,11 @@ import { ChevronRight, Check, Minus } from 'lucide';
 // O miolo é `<ng-template>` pela mesma razão do DropdownMenu: nó projetado
 // pertence à view de quem consome, o portal removeria o DOM sem destruir as
 // diretivas, e o foco nunca voltaria.
+//
+// E é instanciado com o injetor do POPUP (`NdsMenuPopupScope`, em
+// `menu-popup-scope.ts`) — sem ele o miolo não enxergava as peças que o
+// primitivo pendura no popup, e o foco não entrava no submenu. O DropdownMenu e
+// o Menubar montam o miolo do mesmo jeito e usam a mesma peça.
 
 export type ContextMenuSide = 'top' | 'bottom' | 'left' | 'right';
 export type ContextMenuAlign = 'start' | 'center' | 'end';
@@ -91,13 +105,17 @@ export class NdsContextMenuContent {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [RdxMenuPortal, RdxMenuPositioner, RdxMenuPopup, NgTemplateOutlet],
+  imports: [RdxMenuPortal, RdxMenuPositioner, RdxMenuPopup, NdsMenuPopupScope, NgTemplateOutlet],
   // Sem lista de inputs: o `RdxContextMenuRoot` não declara nenhum de próprio —
   // `open`, `modal`, `loopFocus` e os outputs vêm do `RdxMenuRoot` que ELE traz
   // como host directive. Listá-los aqui quebra na hora (NG0311), e não é
   // preciso: input de host directive aninhada já é ligável no elemento
   // (armadilha 7 no CLAUDE.md deste stack).
   hostDirectives: [RdxContextMenuRoot],
+  // A âncora do Tab que sai do menu é a ÁREA: a lib não registra gatilho nenhum
+  // no menu de contexto, e é dela que a página segue — o próximo ponto depois
+  // dela (Shift+Tab: o anterior), ou ela mesma se for a última parada.
+  providers: [{ provide: NDS_MENU_TAB_ANCHOR, useExisting: forwardRef(() => NdsContextMenu) }],
   host: {
     '[attr.data-slot]': '"context-menu"',
   },
@@ -113,17 +131,44 @@ export class NdsContextMenuContent {
         [sideOffset]="deslocamentoDoLado()"
         [alignOffset]="deslocamentoDoAlinhamento()"
       >
-        <div rdxMenuPopup class="nds-dropdown-menu-content" [attr.data-slot]="slotDoPopup()">
-          <ng-container [ngTemplateOutlet]="templateDoConteudo()!" />
+        <div
+          rdxMenuPopup
+          ndsMenuPopupScope
+          #scope="ndsMenuPopupScope"
+          class="nds-dropdown-menu-content"
+          [attr.data-slot]="slotDoPopup()"
+        >
+          <ng-container
+            [ngTemplateOutlet]="templateDoConteudo()!"
+            [ngTemplateOutletInjector]="scope.injector"
+          />
         </div>
       </div>
     </ng-template>
   `,
 })
-export class NdsContextMenu {
+export class NdsContextMenu implements NdsMenuTabAnchor {
   private readonly root = inject(RdxMenuRoot, { self: true });
 
   private readonly content = contentChild(NdsContextMenuContent);
+
+  /**
+   * A área do gesto — a âncora do Tab que sai do menu.
+   *
+   * `forwardRef` porque a classe da área é declarada mais abaixo, e o
+   * predicado da consulta é lido na definição do componente: sem ele o módulo
+   * morre ao carregar (`Cannot access 'NdsContextMenuTrigger' before
+   * initialization`), e o `ngc` não vê — só o navegador.
+   */
+  private readonly area = contentChild(
+    forwardRef(() => NdsContextMenuTrigger),
+    { read: ElementRef },
+  );
+
+  tabAnchor(): HTMLElement | null {
+    const area: HTMLElement | undefined = this.area()?.nativeElement;
+    return area ?? null;
+  }
 
   protected readonly templateDoConteudo = computed<TemplateRef<unknown> | null>(
     () => this.content()?.tpl ?? null,
@@ -166,7 +211,7 @@ export class NdsContextMenu {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [RdxMenuPortal, RdxMenuPositioner, RdxMenuPopup, NgTemplateOutlet],
+  imports: [RdxMenuPortal, RdxMenuPositioner, RdxMenuPopup, NdsMenuPopupScope, NgTemplateOutlet],
   hostDirectives: [
     {
       directive: RdxMenuRoot,
@@ -174,6 +219,8 @@ export class NdsContextMenu {
       outputs: ['openChange', 'onOpenChange'],
     },
   ],
+  // O `id` do painel, para o sub-gatilho apontar (`NdsSubmenuOwnsPanel`).
+  providers: [{ provide: NDS_SUBMENU_PANEL, useExisting: forwardRef(() => NdsContextMenuSub) }],
   host: {
     '[attr.data-slot]': '"context-menu-sub"',
   },
@@ -191,17 +238,22 @@ export class NdsContextMenu {
       >
         <div
           rdxMenuPopup
+          ndsMenuPopupScope
+          #scope="ndsMenuPopupScope"
           class="nds-dropdown-menu-content"
           data-slot="context-menu-sub-content"
-          [attr.id]="subContentId"
+          [attr.id]="panelId"
         >
-          <ng-container [ngTemplateOutlet]="content()!.tpl" />
+          <!-- O injetor DESTE painel, para o miolo dele: os itens daqui se
+               registram na lista deste painel, e um submenu aninhado aqui dentro
+               acha este painel como pai na árvore flutuante. -->
+          <ng-container [ngTemplateOutlet]="content()!.tpl" [ngTemplateOutletInjector]="scope.injector" />
         </div>
       </div>
     </ng-template>
   `,
 })
-export class NdsContextMenuSub {
+export class NdsContextMenuSub implements NdsSubmenuPanel {
   protected readonly content = contentChild(NdsContextMenuContent);
 
   /**
@@ -210,12 +262,13 @@ export class NdsContextMenuSub {
    * O painel é PORTALADO: `rdxMenuPortal` é estrutural e move os nós raiz para
    * o container, que por padrão é o `<body>` (`RdxPortalPresence`). Ou seja, o
    * menu filho não é descendente do item que o abriu, e sem este `id` nada no
-   * documento liga um ao outro.
+   * documento liga um ao outro. Chega ao sub-gatilho pelo `NDS_SUBMENU_PANEL`
+   * (`menu-popup-scope.ts`).
    *
    * Único e gerado pelo `RdxIdGenerator` porque a mesma docs page monta vários
    * menus, e `id` repetido faria a ligação apontar para o painel errado.
    */
-  readonly subContentId = injectId('nds-context-menu-sub-content-');
+  readonly panelId = injectId('nds-context-menu-sub-content-');
 }
 
 /**
@@ -410,36 +463,22 @@ export class NdsContextMenuIcon {
 /**
  * O item que abre o painel filho.
  *
- * ─── A ligação com o painel, e por que ela é do design system ─────────────────
+ * ─── A ligação com o painel ───────────────────────────────────────────────────
  *
- * `RdxMenuSubTrigger` liga `aria-haspopup="menu"` e `aria-expanded`, e para por
- * aí: ele diz que HÁ um menu filho e que ele está aberto, mas não diz QUAL. Como
- * o painel é portalado para o `<body>`, não sobra nem a relação de ancestral
- * para o leitor de tela inferir — o menu filho fica solto no documento, longe do
- * item que o abriu. É a única das quatro libs de cabeçalho que não escreve essa
- * ligação, então quem a escreve é o wrapper.
+ * `RdxMenuSubTrigger` liga `aria-haspopup="menu"` e `aria-expanded`, mas não diz
+ * QUAL menu abre — e o painel é portalado para o `<body>`, longe do item. Quem
+ * escreve a ligação é `NdsSubmenuOwnsPanel` (`menu-popup-scope.ts`): `aria-owns`
+ * apontando para o `id` do painel (`NdsContextMenuSub.panelId`), só enquanto ele
+ * está aberto. O porquê de `aria-owns` e não `aria-controls` está lá, e é a
+ * mesma peça dos sub-gatilhos do DropdownMenu e do Menubar.
  *
- * `aria-owns`, e NÃO `aria-controls`. Não são alternativas de gosto:
+ * ─── A seta para a direita LEVA O FOCO ao submenu ─────────────────────────────
  *
- *   · `aria-controls` é a ligação de quem CONTROLA um painel que já está no seu
- *     lugar na árvore — vale para o submenu aninhado;
- *   · `aria-owns` REPARENTA na árvore de acessibilidade um nó que o DOM pôs em
- *     outro canto, que é exatamente o caso aqui.
- *
- * O painel do `@radix-ng/primitives` sai no `<body>` (o container padrão do
- * `RdxPortalPresence`), medido antes de escolher — mesma colocação, e por isso
- * mesma escolha, do `aria-owns` que o Vanilla escreve em `src/lib/submenu.ts`.
- *
- * A ligação só vale enquanto o painel EXISTE: fechado, o `id` aponta para um nó
- * que saiu do documento, e apontar para o nada é pior que não apontar. Por isso
- * o valor é `null` com o menu fechado, na mesma fonte (`isOpen()`) de que a lib
- * tira o `aria-expanded` — os dois nunca se contradizem.
- *
- * Escrito por HOST BINDING, e não por `[attr.aria-owns]` no template de quem
- * compõe: neste stack o host binding de diretiva vence o atributo do template, e
- * a ligação escrita lá fora não pintaria (a mesma raiz dos 19 `data-slot` que
- * renderizaram errado). Aqui não há disputa — nenhuma diretiva da lib escreve
- * `aria-owns` neste elemento —, mas o lugar continua sendo o host.
+ * Contrato das cinco stacks (C6, `testes.functional.item5`): abrir e pôr o foco
+ * no primeiro item do painel filho. Quem garante isso é `NdsSubmenuKeyboardEntry`
+ * (`menu-popup-scope.ts`), a mesma peça dos sub-gatilhos do DropdownMenu e do
+ * Menubar — inclusive com o painel já aberto pelo ponteiro, caso em que a lib
+ * não move o foco.
  */
 @Component({
   selector: 'div[ndsContextMenuSubTrigger]',
@@ -447,13 +486,16 @@ export class NdsContextMenuIcon {
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [NdsContextMenuIcon],
-  hostDirectives: [{ directive: RdxMenuSubTrigger, inputs: ['disabled', 'openOnHover', 'label'] }],
+  hostDirectives: [
+    { directive: RdxMenuSubTrigger, inputs: ['disabled', 'openOnHover', 'label'] },
+    NdsSubmenuKeyboardEntry,
+    NdsSubmenuOwnsPanel,
+  ],
   host: {
     rdxMenuSubTrigger: '',
     class: 'nds-dropdown-menu-sub-trigger',
     '[attr.data-slot]': '"context-menu-sub-trigger"',
     '[attr.data-inset]': 'inset() ? "" : null',
-    '[attr.aria-owns]': 'ownedPanelId()',
   },
   template: `
     <ng-content />
@@ -462,21 +504,6 @@ export class NdsContextMenuIcon {
 })
 export class NdsContextMenuSubTrigger {
   readonly inset = input(false);
-
-  /**
-   * A raiz do SUBMENU, dona do painel — o mesmo elemento de onde a lib tira o
-   * seu contexto (`div[ndsContextMenuSub]`, um degrau acima deste item).
-   * Opcional para que um gatilho montado fora da tríade não derrube a página:
-   * sem raiz não há painel, e sem painel não há ligação a escrever.
-   */
-  private readonly sub = inject(NdsContextMenuSub, { optional: true });
-
-  /** Mesma fonte de estado que alimenta o `aria-expanded` da lib. */
-  private readonly submenu = injectRdxMenuRootContext();
-
-  protected readonly ownedPanelId = computed<string | null>(() =>
-    this.submenu.isOpen() ? (this.sub?.subContentId ?? null) : null,
-  );
 }
 
 @Component({

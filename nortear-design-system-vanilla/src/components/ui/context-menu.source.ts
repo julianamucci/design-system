@@ -9,6 +9,7 @@ import {
   text,
   type SourceTransform,
 } from '@/lib/story-source';
+import type { ContextMenuItemDef } from './context-menu';
 
 /** Uma entrada do menu, na forma que a fábrica aceita. */
 export type ContextMenuEntrySnippet = {
@@ -62,6 +63,33 @@ function itemsDefault(o: ContextMenuSnippetOptions): ContextMenuEntrySnippet[] {
     });
   }
   return items;
+}
+
+/**
+ * As entradas do snippet a partir das MESMAS definições que montam o menu.
+ *
+ * É o que impede prévia e código de divergirem na docs page: o card de variante
+ * monta o componente com uma lista e imprime o código com a mesma lista, em vez
+ * de manter um literal ao lado que envelhece sozinho. Foi assim que o card de
+ * marcação publicava os estados trocados e o de escolha única mostrava "Zoom"
+ * na tela e "Layout" no código.
+ *
+ * Os callbacks ficam de fora (o snippet não imprime função), e a variante
+ * `default` também — é o padrão, e o snippet não ensina a repetir padrão.
+ */
+export function contextMenuEntriesFrom(defs: ContextMenuItemDef[]): ContextMenuEntrySnippet[] {
+  return defs.map((def) => ({
+    type: def.type,
+    value: def.value,
+    label: def.label,
+    shortcut: def.shortcut,
+    variant: def.variant === 'destructive' ? 'destructive' : undefined,
+    inset: def.inset,
+    disabled: def.disabled,
+    checked: def.checked,
+    indeterminate: def.indeterminate,
+    items: def.items ? contextMenuEntriesFrom(def.items) : undefined,
+  }));
 }
 
 /** Uma entrada por linha, com o submenu recuado dentro da entrada que o abre. */

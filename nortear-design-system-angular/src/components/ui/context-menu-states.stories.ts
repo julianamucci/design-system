@@ -30,7 +30,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Estados do Context Menu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
+          'Estados do Context Menu: item desabilitado, item recuado, item destrutivo, item de marcação no estado misto e a paleta escura.',
       },
     },
   },
@@ -71,10 +71,7 @@ export const ItemDisabled: Story = {
         >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
-          <div ndsContextMenuItem data-testid="primeiro">
-            Editar
-            <span ndsContextMenuShortcut>Ctrl+E</span>
-          </div>
+          <div ndsContextMenuItem data-testid="primeiro">Editar</div>
           <div ndsContextMenuItem [disabled]="true" data-testid="off">Duplicar</div>
           <div ndsContextMenuItem data-testid="ultimo">Renomear</div>
 
@@ -267,10 +264,13 @@ export const CheckboxIndeterminate: Story = {
         >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
-          <div ndsContextMenuLabel>Mostrar na tela</div>
-          <div ndsContextMenuCheckboxItem [checked]="'indeterminate'">Colunas</div>
-          <div ndsContextMenuCheckboxItem [checked]="true">Régua</div>
-          <div ndsContextMenuCheckboxItem [checked]="false">Grade</div>
+          <!-- O rótulo mora DENTRO do grupo, e é o nome dele. -->
+          <div ndsContextMenuGroup>
+            <div ndsContextMenuLabel>Mostrar na tela</div>
+            <div ndsContextMenuCheckboxItem [checked]="'indeterminate'">Colunas</div>
+            <div ndsContextMenuCheckboxItem [checked]="true">Régua</div>
+            <div ndsContextMenuCheckboxItem [checked]="false">Grade</div>
+          </div>
         </ng-template>
       </div>
     `,

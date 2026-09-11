@@ -2,12 +2,37 @@
 	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
 	import { cn } from "@/lib/utils.js";
 	import ContextMenuPortal from "./context-menu-portal.svelte";
+	import {
+		closeAfterTab,
+		keepRootOpenOnSubEscape,
+		useContextMenuRootContext,
+		useContextMenuSubContext,
+	} from "./context";
 
 	let {
 		ref = $bindable(null),
 		class: className,
+		onkeydown,
 		...restProps
 	}: ContextMenuPrimitive.SubContentProps = $props();
+
+	const root = useContextMenuRootContext();
+	const sub = useContextMenuSubContext();
+
+	// Escape aqui dentro fecha só este submenu e devolve o foco ao gatilho dele;
+	// o menu de cima segue aberto. Ouvinte de captura no nó que a lib entrega por
+	// `ref`, antes da camada de Escape do bits — ver `context.ts`.
+	$effect(() => {
+		if (!ref || !sub) return;
+		return keepRootOpenOnSubEscape(ref, sub);
+	});
+
+	// Tab dentro do submenu fecha a RAIZ, como no painel principal: o submenu é
+	// portalizado à parte, e a tecla não chega ao painel de cima — ver `context.ts`.
+	function handleKeydown(event: Parameters<NonNullable<typeof onkeydown>>[0]) {
+		onkeydown?.(event);
+		closeAfterTab(event, root);
+	}
 </script>
 
 <!--
@@ -27,6 +52,7 @@
 		bind:ref
 		data-slot="context-menu-sub-content"
 		class={cn("nds-dropdown-menu-content", className)}
+		onkeydown={handleKeydown}
 		{...restProps}
 	/>
 </ContextMenuPortal>

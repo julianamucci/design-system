@@ -313,16 +313,22 @@
           "extras": "<code>trigger_id</code>"
         },
         "menuOpen": {
-          "event": "menu_open",
-          "component": "ContextMenu, DropdownMenu, Menubar",
-          "when": "Menu é aberto.",
+          "event": "context_menu_open",
+          "component": "ContextMenu",
+          "when": "Menu de contexto é aberto (clique direito, tecla de menu ou Shift+F10).",
           "extras": "<code>menu</code>"
         },
         "menuItemClick": {
-          "event": "menu_item_click",
-          "component": "ContextMenu, DropdownMenu, Menubar",
-          "when": "Item do menu é escolhido.",
+          "event": "context_menu_item_select",
+          "component": "ContextMenu",
+          "when": "Item do menu de contexto é escolhido.",
           "extras": "<code>label</code>, <code>menu</code>"
+        },
+        "contextMenuClose": {
+          "event": "context_menu_close",
+          "component": "ContextMenu",
+          "when": "Menu de contexto fecha.",
+          "extras": "<code>menu</code>, <code>reason</code>"
         },
         "accordionExpand": {
           "event": "accordion_expand",
@@ -738,16 +744,22 @@
           "extras": "<code>trigger_id</code>"
         },
         "menuOpen": {
-          "event": "menu_open",
-          "component": "ContextMenu, DropdownMenu, Menubar",
-          "when": "Menu is opened.",
+          "event": "context_menu_open",
+          "component": "ContextMenu",
+          "when": "Context menu is opened (right-click, menu key or Shift+F10).",
           "extras": "<code>menu</code>"
         },
         "menuItemClick": {
-          "event": "menu_item_click",
-          "component": "ContextMenu, DropdownMenu, Menubar",
-          "when": "A menu item is picked.",
+          "event": "context_menu_item_select",
+          "component": "ContextMenu",
+          "when": "A context menu item is picked.",
           "extras": "<code>label</code>, <code>menu</code>"
+        },
+        "contextMenuClose": {
+          "event": "context_menu_close",
+          "component": "ContextMenu",
+          "when": "Context menu closes.",
+          "extras": "<code>menu</code>, <code>reason</code>"
         },
         "accordionExpand": {
           "event": "accordion_expand",
@@ -1163,16 +1175,22 @@
           "extras": "<code>trigger_id</code>"
         },
         "menuOpen": {
-          "event": "menu_open",
-          "component": "ContextMenu, DropdownMenu, Menubar",
-          "when": "Se abre el menú.",
+          "event": "context_menu_open",
+          "component": "ContextMenu",
+          "when": "Se abre el menú contextual (clic derecho, tecla de menú o Shift+F10).",
           "extras": "<code>menu</code>"
         },
         "menuItemClick": {
-          "event": "menu_item_click",
-          "component": "ContextMenu, DropdownMenu, Menubar",
-          "when": "Se elige un ítem del menú.",
+          "event": "context_menu_item_select",
+          "component": "ContextMenu",
+          "when": "Se elige un ítem del menú contextual.",
           "extras": "<code>label</code>, <code>menu</code>"
+        },
+        "contextMenuClose": {
+          "event": "context_menu_close",
+          "component": "ContextMenu",
+          "when": "Se cierra el menú contextual.",
+          "extras": "<code>menu</code>, <code>reason</code>"
         },
         "accordionExpand": {
           "event": "accordion_expand",

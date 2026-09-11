@@ -89,6 +89,30 @@ describe('contextMenuPlaygroundSource', () => {
     // e escrever um aqui ensinaria um menu que o preview não mostra.
     expect(code).not.toContain('ndsContextMenuGroup');
   });
+
+  it('segue os três controls show*, sem escrever condição no snippet', () => {
+    // O painel Code mostra o menu que o preview mostra. Com um control
+    // desligado, a peça some do snippet — e nenhum `@if` aparece no lugar dela,
+    // porque o `@if` é do andaime da story, não do menu de ninguém.
+    const noShortcuts = contextMenuPlaygroundSource('', { args: { showShortcuts: false } });
+    expect(noShortcuts).not.toContain('ndsContextMenuShortcut');
+    expect(noShortcuts).toContain('<div ndsContextMenuItem>Editar</div>');
+    expect(noShortcuts).toContain('<div ndsContextMenuItem variant="destructive">Excluir</div>');
+
+    const noSeparator = contextMenuPlaygroundSource('', { args: { showSeparator: false } });
+    expect(noSeparator).not.toContain('ndsContextMenuSeparator');
+    expect(noSeparator).toContain('variant="destructive"');
+
+    const noDestructive = contextMenuPlaygroundSource('', { args: { showDestructive: false } });
+    expect(noDestructive).not.toContain('variant="destructive"');
+    expect(noDestructive).not.toContain('Excluir');
+    expect(noDestructive.match(/<div ndsContextMenuItem[ >]/g)).toHaveLength(2);
+
+    for (const code of [noShortcuts, noSeparator, noDestructive]) {
+      expect(code).not.toContain('@if');
+      expect(code).not.toMatch(/show(?:Destructive|Separator|Shortcuts)/);
+    }
+  });
 });
 
 // ─── Cobertura das três stories ───────────────────────────────────────────────
@@ -262,6 +286,9 @@ describe('estados', () => {
     // O item indisponível continua no menu e é alcançável pela seta, para ser
     // anunciado; o que ele não pode é executar. As duas coisas vêm da prop.
     const code = contextMenuItemDisabledSource();
+    expect(code).toContain('<div ndsContextMenuItem>Editar</div>');
+    // Sem atalho, como o conteúdo do Vanilla: o assunto é o item indisponível.
+    expect(code).not.toContain('ndsContextMenuShortcut');
     expect(code).toContain('<div ndsContextMenuItem disabled>Duplicar</div>');
     expect(code).toContain('<div ndsContextMenuItem>Renomear</div>');
     expect(code).toContain('<div ndsContextMenuItem variant="destructive" disabled>Excluir</div>');
@@ -314,6 +341,11 @@ describe('estados', () => {
     expect(code).toContain('<div ndsContextMenuCheckboxItem [checked]="false">Grade</div>');
     expect(code.match(/ndsContextMenuCheckboxItem/g)).toHaveLength(3);
     expect(code).toContain('<div ndsContextMenuLabel>Mostrar na tela</div>');
+    // O rótulo DENTRO do grupo, que é o que o faz nomear os três itens.
+    expect(code.match(/<div ndsContextMenuGroup>/g)).toHaveLength(1);
+    expect(code.indexOf('<div ndsContextMenuLabel>')).toBeGreaterThan(
+      code.indexOf('<div ndsContextMenuGroup>'),
+    );
     // Valor FIXO, e não ligado: o primeiro clique num item misto o resolve para
     // marcado, e é por isso que a story ao lado não interage com eles.
     expect(code).not.toContain('(checkedChange)');
@@ -374,6 +406,11 @@ describe('composições', () => {
     // Sem valor comum: um grupo de escolha única aqui faria a marcação de um
     // item desmarcar a do outro.
     expect(code).not.toContain('ndsContextMenuRadioGroup');
+    // O grupo que o rótulo nomeia é o comum, e o rótulo mora dentro dele.
+    expect(code.match(/<div ndsContextMenuGroup>/g)).toHaveLength(1);
+    expect(code.indexOf('<div ndsContextMenuLabel>Visualização</div>')).toBeGreaterThan(
+      code.indexOf('<div ndsContextMenuGroup>'),
+    );
   });
 
   it('contextMenuWithRadioGroupSource põe o valor no GRUPO, e o value em cada opção', () => {
@@ -391,9 +428,13 @@ describe('composições', () => {
     expect(code).toContain('<div ndsContextMenuRadioItem value="list">Lista</div>');
     expect(code).toContain('<div ndsContextMenuRadioItem value="columns">Colunas</div>');
     expect(code).not.toContain('[checked]');
-    // O rótulo fica FORA do grupo, como a story o põe.
-    expect(code.indexOf('<div ndsContextMenuLabel>Layout</div>')).toBeLessThan(
+    // O rótulo fica DENTRO do grupo de escolha única, que já é `role="group"`:
+    // é o nome dele. Solto antes, não nomeava nada.
+    expect(code.indexOf('<div ndsContextMenuLabel>Layout</div>')).toBeGreaterThan(
       code.indexOf('<div ndsContextMenuRadioGroup'),
+    );
+    expect(code.indexOf('<div ndsContextMenuLabel>Layout</div>')).toBeLessThan(
+      code.indexOf('<div ndsContextMenuRadioItem'),
     );
   });
 
@@ -406,12 +447,13 @@ describe('composições', () => {
     expect(code).toContain('<div ndsContextMenuSubTrigger>Compartilhar</div>');
     expect(code).toContain('<ng-template ndsContextMenuSubContent>');
     expect(code).toContain('</ng-template>');
-    // DOIS itens no submenu, como a `play` da story afirma, mais o item do menu
-    // pai que fica de fora dele.
+    // DOIS itens no submenu, como a `play` da story afirma, mais os dois do
+    // menu pai que ficam de fora dele — Editar e Duplicar, o conteúdo do Vanilla.
     expect(code).toContain('<div ndsContextMenuItem>Editar</div>');
+    expect(code).toContain('<div ndsContextMenuItem>Duplicar</div>');
     expect(code).toContain('<div ndsContextMenuItem>Por e-mail</div>');
     expect(code).toContain('<div ndsContextMenuItem>Por link</div>');
-    expect(code.match(/<div ndsContextMenuItem[ >]/g)).toHaveLength(3);
+    expect(code.match(/<div ndsContextMenuItem[ >]/g)).toHaveLength(4);
     // Sem divisória: a story não tem nenhuma, e o submenu não é bloco à parte.
     expect(code).not.toContain('ndsContextMenuSeparator');
   });

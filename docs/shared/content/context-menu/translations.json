@@ -22,7 +22,16 @@
         "delete": "Excluir",
         "editShortcut": "Ctrl+E",
         "deleteShortcut": "Delete",
-        "areaNoHint": "(sem dica visual)"
+        "areaNoHint": "(sem dica visual)",
+        "groupView": "Visualização",
+        "showGrid": "Mostrar grade",
+        "showRulers": "Mostrar réguas",
+        "groupLayout": "Layout",
+        "layoutGrid": "Grade",
+        "layoutList": "Lista",
+        "layoutColumns": "Colunas",
+        "groupActions": "Ações",
+        "duplicateShortcut": "Ctrl+D"
       }
     },
     "anatomy": {
@@ -106,8 +115,8 @@
         "dont": "Usar o Context Menu como único acesso a funcionalidades críticas."
       },
       "pair2": {
-        "do": "Item destrutivo na variante destructive, separado dos demais por um Separator.",
-        "dont": "Aninhar múltiplos níveis de submenu — aumenta carga cognitiva."
+        "do": "Item destrutivo na variante destrutiva, separado dos demais por uma linha.",
+        "dont": "Item destrutivo com a mesma aparência dos outros, no meio da lista."
       },
       "pair3": {
         "do": "Dê uma dica visual de que a área tem menu de contexto — cursor, contorno tracejado ou uma linha de ajuda: clique direito não se anuncia sozinho.",
@@ -117,36 +126,35 @@
     "import": {
       "title": "Importação",
       "basic": "Import básico:",
-      "withSub": "Com submenu:",
       "withCheckbox": "Com checkbox e radio:"
     },
     "variants": {
       "title": "Variantes",
-      "note": "O <code>ContextMenuItem</code> tem 2 variantes via prop <code>variant</code>. Os demais subcomponentes não possuem variante de prop.",
+      "note": "O item de ação tem duas variantes: padrão e destrutiva. As demais peças não têm variante.",
       "items": {
-        "default": "Item de ação padrão. Em foco, recebe o fundo de destaque (<code>--accent</code>) e texto em <code>--accent-foreground</code>.",
+        "default": "Item de ação padrão. Em foco, recebe o fundo de destaque (<code>--accent</code> a 20%) e texto em <code>--accent-foreground</code>; pelo teclado, soma um anel interno na mesma cor.",
         "destructive": "Ação destrutiva irreversível (ex: excluir). Texto na cor de alerta (<code>--destructive</code>); em foco, um fundo com 10% dessa mesma cor.",
         "withCheckbox": {
           "name": "Menu com checkboxes",
-          "description": "Grupo de <code>CheckboxItem</code> sob um <code>Label</code> (ex.: \"Aparência\"). Cada item mantém estado booleano independente — múltiplas opções podem coexistir.",
-          "use": "Configurações de visualização múltiplas e não exclusivas (mostrar grade, mostrar régua, mostrar barra de status). Combine com <code>Label</code> para agrupar semanticamente."
+          "description": "Itens de marcação sob um rótulo de grupo (ex.: \"Visualização\"). Cada um guarda o próprio estado — várias opções podem estar marcadas ao mesmo tempo.",
+          "use": "Configurações de visualização múltiplas e não exclusivas (mostrar grade, mostrar réguas, mostrar barra de status). Um rótulo de grupo nomeia o conjunto."
         },
         "withRadio": {
           "name": "Menu com radio group",
-          "description": "<code>RadioGroup</code> contendo <code>RadioItem</code> de seleção exclusiva — um único valor ativo por vez. Geralmente acompanhado de um <code>Label</code> indicando a propriedade controlada.",
-          "use": "Modos mutuamente exclusivos (densidade compacta/confortável/espaçosa, tema claro/escuro/sistema, ordenação). Para múltipla escolha, prefira <code>CheckboxItem</code>."
+          "description": "Grupo de rádio: um único valor ativo por vez. Costuma vir sob um rótulo que nomeia a propriedade controlada.",
+          "use": "Modos mutuamente exclusivos (densidade compacta/confortável/espaçosa, tema claro/escuro/sistema, ordenação). Para múltipla escolha, prefira itens de marcação."
         },
         "withSubmenu": {
           "name": "Menu com submenu",
-          "description": "Item <code>SubTrigger</code> que abre um <code>SubContent</code> à direita ao receber foco ou hover. Mantenha apenas um nível de aninhamento — submenus profundos prejudicam a navegação por teclado.",
+          "description": "Item que abre um submenu à direita, pela seta para a direita, por Enter ou pelo ponteiro. Mantenha um nível só — submenus profundos prejudicam a navegação por teclado.",
           "use": "Agrupar variações de uma mesma ação (Compartilhar → por e-mail, por link). Evite quando a lista cabe diretamente no menu raiz — submenus aumentam carga cognitiva."
         },
         "withShortcuts": {
           "name": "Itens com atalhos",
-          "description": "Itens combinando rótulo + <code>Shortcut</code> alinhado à direita. O <code>Shortcut</code> é lido junto do item pelo leitor de tela; a tecla real precisa ser registrada por um listener global.",
+          "description": "Itens com o atalho alinhado à direita. O atalho é lido junto do item pelo leitor de tela; a tecla real precisa ser registrada por um ouvinte global.",
           "use": "Ações que já possuem atalho global na aplicação (Ctrl+E, Ctrl+D, Delete). Mantém paridade entre menu contextual e teclado e ensina o atalho ao usuário."
         },
-        "label": "Rótulo de grupo não interativo. Prop <code>inset</code> adiciona padding-left para alinhar com itens com ícone."
+        "label": "Rótulo de grupo, não interativo. Recuado, alinha com os itens que têm ícone."
       }
     },
     "states": {
@@ -159,38 +167,42 @@
       "closed": {
         "label": "Fechado",
         "trigger": "Estado padrão",
-        "behavior": "Menu invisível; trigger aguarda right-click"
+        "behavior": "Menu invisível; a área aguarda o clique direito"
       },
       "open": {
         "label": "Aberto",
-        "trigger": "Right-click na área do trigger",
-        "behavior": "Popup posicionado na coordenada do cursor; transição de entrada"
+        "trigger": "Clique direito na área, ou a tecla de menu / Shift+F10 com ela focada",
+        "behavior": "Painel posicionado no ponto do clique, com transição de entrada; o fechamento é instantâneo"
       },
       "focused": {
         "label": "Focado",
-        "trigger": "Arrow keys ou Tab após abertura",
-        "behavior": "Item com foco recebe o fundo de destaque (<code>--accent</code>) e texto em <code>--accent-foreground</code>"
+        "trigger": "Setas do teclado depois da abertura (Tab fecha o menu)",
+        "behavior": "O item com foco recebe o fundo de destaque (<code>--accent</code> a 20%) e texto em <code>--accent-foreground</code>; pelo teclado, soma um anel interno na mesma cor"
       },
       "disabled": {
         "label": "Desabilitado",
-        "trigger": "Prop <code>disabled</code> no item",
+        "trigger": "Item marcado como desabilitado",
         "behavior": "Atenuado e anunciado como indisponível; não ativa"
       },
       "checked": {
         "label": "Marcado",
-        "trigger": "Prop <code>checked</code> no CheckboxItem",
-        "behavior": "CheckIcon visível à direita do item"
+        "trigger": "Item de marcação ou de rádio no estado marcado",
+        "behavior": "O tique aparece à direita do item, na pista reservada — o mesmo desenho para marcação e rádio"
       },
       "subOpen": {
         "label": "Submenu aberto",
-        "trigger": "Foco ou hover no SubTrigger",
-        "behavior": "SubContent aparece à direita; o SubTrigger fica com o fundo de destaque (<code>--accent</code>)"
+        "trigger": "Seta para a direita, Enter ou Espaço no item que abre o submenu, ou o ponteiro sobre ele",
+        "behavior": "O submenu aparece à direita; o item que o abriu segue destacado (<code>--accent</code>)"
+      },
+      "mixed": {
+        "label": "Misto",
+        "trigger": "Item de marcação no estado misto",
+        "behavior": "Um traço no lugar do tique, anunciado como misto — nem marcado, nem desmarcado"
       }
     },
     "props": {
       "title": "Propriedades",
       "rootTitle": "ContextMenu",
-      "triggerTitle": "ContextMenuTrigger",
       "contentTitle": "ContextMenuContent",
       "itemTitle": "ContextMenuItem",
       "checkboxItemTitle": "ContextMenuCheckboxItem",
@@ -206,21 +218,28 @@
       },
       "items": {
         "onOpenChange": "Callback disparado ao abrir ou fechar o menu.",
-        "align": "Alinhamento do popup em relação ao ponto de clique. Padrão: <code>\"start\"</code>.",
-        "alignOffset": "Deslocamento em px no eixo de alinhamento. Padrão: <code>4</code>.",
-        "side": "Lado preferencial de abertura. Padrão: <code>\"right\"</code>.",
-        "sideOffset": "Distância em px entre cursor e popup. Padrão: <code>0</code>.",
+        "align": "Alinhamento do painel em relação ao ponto do clique.",
+        "alignOffset": "Deslocamento em px no eixo de alinhamento.",
+        "side": "Lado preferencial de abertura.",
+        "sideOffset": "Distância em px entre o ponto do clique e o painel.",
         "variant": "Variante visual do item: <code>\"default\"</code> ou <code>\"destructive\"</code>.",
-        "inset": "Adiciona <code>padding-left: 1.75rem</code> para alinhar com itens que têm ícone.",
-        "checked": "Estado controlado do CheckboxItem.",
-        "onCheckedChange": "Callback do CheckboxItem ao alternar o estado.",
-        "value": "Valor do RadioItem dentro do RadioGroup.",
-        "onValueChange": "Callback do RadioGroup ao mudar a seleção.",
-        "disabled": "Desabilita o item: opacidade 50%, sem interação.",
-        "onSelect": "Callback disparado ao selecionar o item."
+        "inset": "Recua o início do item em <code>--spacing-7</code> (28px na densidade padrão) para alinhar com itens que têm ícone.",
+        "checked": "Estado controlado do item de marcação.",
+        "onCheckedChange": "Callback do item de marcação ao alternar o estado.",
+        "value": "Valor do item de rádio dentro do grupo.",
+        "onValueChange": "Callback do grupo de rádio ao mudar a seleção.",
+        "disabled": "Desabilita o item: opacidade 50% e não ativa — as setas continuam pousando nele, e ele é anunciado como indisponível.",
+        "onSelect": "Callback disparado ao selecionar o item.",
+        "indeterminate": "Deixa o item de marcação no estado misto: um traço no lugar do tique, anunciado como misto.",
+        "onIndeterminateChange": "Callback do item de marcação quando ele sai do estado misto.",
+        "shortcut": "Atalho exibido à direita do item — só visual; registrar a tecla é da aplicação.",
+        "label": "Texto exibido do item.",
+        "class": "Classes adicionais, que se somam às do componente.",
+        "modal": "Com o menu aberto, bloqueia a interação e a rolagem fora dele; não prende o foco — Tab fecha o menu.",
+        "modelValue": "Valor da opção marcada no grupo de rádio."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "Todos os subcomponentes aceitam <code>className</code>. Use tokens semânticos do projeto — nunca cores hardcoded."
+      "extensibility": "Todos os subcomponentes aceitam classes adicionais. Use tokens semânticos do projeto — nunca cores escritas à mão."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -243,7 +262,10 @@
         "radiusItem": "Border radius dos itens do menu",
         "zIndex": "Camada de empilhamento do popup"
       },
-      "customizationTitle": "Como personalizar via tema:"
+      "customizationTitle": "Como personalizar via tema:",
+      "customizationCode": {
+        "web": "/* Override de tokens no escopo do menu */\n.nds-dropdown-menu-content {\n  --popover: 220 14% 98%;\n  --popover-foreground: 220 9% 10%;\n}"
+      }
     },
     "accessibility": {
       "title": "Acessibilidade",
@@ -253,24 +275,24 @@
         "rightClick": "Clique direito abre o menu na posição do ponteiro. Sem mouse, a tecla de menu ou Shift+F10 sobre a área focada dispara o mesmo evento.",
         "arrowDown": "Move o foco para o próximo item do menu.",
         "arrowUp": "Move o foco para o item anterior do menu.",
-        "arrowRight": "Abre o submenu do item focado (SubTrigger).",
+        "arrowRight": "Abre o submenu do item focado e leva o foco ao primeiro item dele.",
         "arrowLeft": "Fecha o submenu e retorna ao item pai.",
         "enter": "Ativa o item focado.",
-        "space": "Ativa o item focado (CheckboxItem alterna estado).",
-        "escape": "Fecha o menu e retorna o foco ao trigger.",
-        "tab": "Fecha o menu (o menu não aprisiona o foco como Dialog).",
+        "space": "Ativa o item focado; num item de marcação, alterna o estado.",
+        "escape": "Fecha o menu e devolve o foco à área. Dentro do submenu, fecha só o submenu e devolve o foco ao item que o abriu.",
+        "tab": "Fecha o menu e o foco segue para o próximo ponto de tabulação depois da área (Shift+Tab: o anterior); se a área for o último, volta a ela. Vale também dentro de um submenu. O menu não prende o foco, ao contrário do Dialog.",
         "homeEnd": "Leva o foco ao primeiro e ao último item do menu aberto.",
         "typeahead": "Digitar letras move o foco para o item que começa com elas; as letras se acumulam por um segundo."
       },
       "aria": {
-        "roleMenu": "<code>role=\"menu\"</code> — aplicado automaticamente no <code>ContextMenuContent</code>.",
-        "roleMenuItem": "<code>role=\"menuitem\"</code> — aplicado em <code>ContextMenuItem</code> e <code>ContextMenuSubTrigger</code>.",
-        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — aplicado em <code>ContextMenuCheckboxItem</code>.",
-        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — aplicado em <code>ContextMenuRadioItem</code>.",
-        "ariaChecked": "<code>aria-checked</code> — em CheckboxItem e RadioItem para comunicar estado ao leitor de tela.",
+        "roleMenu": "<code>role=\"menu\"</code> — no painel.",
+        "roleMenuItem": "<code>role=\"menuitem\"</code> — nos itens de ação e no item que abre submenu.",
+        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — nos itens de marcação.",
+        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — nos itens de rádio.",
+        "ariaChecked": "<code>aria-checked</code> — nos itens de marcação e de rádio, com o estado (inclusive <code>\"mixed\"</code>) para o leitor de tela.",
         "ariaDisabled": "<code>aria-disabled</code> — em itens desabilitados.",
-        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — no SubTrigger para indicar que abre submenu.",
-        "ariaExpanded": "<code>aria-expanded</code> — no SubTrigger, atualizado ao abrir/fechar submenu."
+        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — no item que abre submenu.",
+        "ariaExpanded": "<code>aria-expanded</code> — no item que abre submenu, atualizado ao abrir e fechar."
       },
       "screenReader": {
         "onOpen": "Ao abrir: leitor anuncia o menu e o primeiro item focado.",
@@ -278,15 +300,14 @@
         "onSelect": "Ao selecionar: leitor anuncia a ação realizada.",
         "shortcuts": "O atalho é lido junto do item — \"Editar, Ctrl+E\" é o nome útil. Escondê-lo deixaria a pessoa sem saber que o atalho existe.",
         "alternative": "Alternativa acessível obrigatória: o usuário de leitor de tela pode não descobrir o Context Menu."
-      }
+      },
+      "keyboardTitle": "Navegação por teclado"
     },
     "related": {
       "title": "Componentes Relacionados",
-      "alternatives": "Alternativas",
-      "usedWith": "Costuma ser usado com",
       "dropdownMenu": "Alternativa acessível com trigger explícito — preferida em contextos touch e para ações de linha em tabela.",
       "menubar": "Para menus de aplicação fixos no topo, sempre visíveis.",
-      "dialog": "Para ações destrutivas que exigem confirmação antes de executar.",
+      "dialog": "Para uma tarefa mais longa aberta pelo menu — um formulário, uma edição — que pede um painel próprio.",
       "alertDialog": "Para confirmação de ações irreversíveis disparadas por itens do menu.",
       "tooltip": "Para exibir o atalho de teclado em botões relacionados às ações do menu."
     },
@@ -295,7 +316,7 @@
       "tip1": "O atalho exibido no item é só o rótulo. Quem o faz funcionar é um ouvinte de <code>keydown</code> registrado no ciclo de vida de quem monta a tela — e removido quando ela sai, senão ele sobrevive à página.",
       "tip2": "Item destrutivo: use a variante <code>destructive</code> do item — ela pinta o texto com a cor de alerta (<code>--destructive</code>) e, no foco, um fundo com 10% dessa cor. Não escreva essas cores à mão.",
       "tip3": "Submenus aumentam a carga cognitiva: use apenas quando o agrupamento for essencial e nunca aninhe mais de um nível.",
-      "tip4": "O popup usa <code>--popover</code> e <code>--popover-foreground</code> — não troque por <code>--card</code>, que é reservado para painéis de conteúdo (Dialog, Sheet).",
+      "tip4": "O painel usa <code>--popover</code> e <code>--popover-foreground</code>, como toda superfície flutuante — não troque por <code>--card</code>, que é do cartão sobre a página.",
       "tip5": "Para indicar ao usuário que a área tem menu de contexto, exiba uma dica sutil na interface (ex: texto auxiliar ou tooltip no hover)."
     },
     "analytics": {
@@ -305,12 +326,12 @@
         "event": "Evento",
         "trigger": "Gatilho",
         "payload": "Payload Adicional",
-        "menuOpen": "menu_open",
-        "menuOpenTrigger": "Usuário abre o Context Menu via right-click",
-        "menuOpenPayload": "{ component: \"context-menu\", location, menu }",
-        "itemClick": "menu_item_click",
-        "itemClickTrigger": "Usuário seleciona um item do menu",
-        "itemClickPayload": "{ label: string, menu: string, location }",
+        "menuOpen": "context_menu_open",
+        "menuOpenTrigger": "A pessoa abre o menu: clique direito, tecla de menu ou Shift+F10",
+        "menuOpenPayload": "{ component: \"context-menu\", menu, location }",
+        "itemClick": "context_menu_item_select",
+        "itemClickTrigger": "A pessoa escolhe um item do menu",
+        "itemClickPayload": "{ component: \"context-menu\", label, menu, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -319,7 +340,10 @@
         "sectionViewedPayload": "{ section_id, component_name, locale }",
         "langSwitch": "language_switched",
         "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
-        "langSwitchPayload": "{ previous_language, new_language }"
+        "langSwitchPayload": "{ previous_language, new_language }",
+        "close": "context_menu_close",
+        "closeTrigger": "O menu fecha: Escape (escape), clique fora ou Tab (overlay) ou item escolhido (api)",
+        "closePayload": "{ component: \"context-menu\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }"
       }
     },
     "testes": {
@@ -328,43 +352,43 @@
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Context Menu.",
         "item1": {
-          "action": "Right-click na área do trigger",
+          "action": "Clique direito na área",
           "result": "Menu abre na coordenada onde o ponteiro estava, com transição de entrada",
           "priority": "high"
         },
         "item2": {
           "action": "Pressionar Escape com menu aberto",
-          "result": "Menu fecha e foco retorna ao trigger",
+          "result": "O menu fecha e o foco volta à área",
           "priority": "high"
         },
         "item3": {
           "action": "Clicar fora da área do menu",
-          "result": "Menu fecha ao perder foco (click outside)",
+          "result": "O menu fecha, sem executar nenhum item",
           "priority": "high"
         },
         "item4": {
-          "action": "Navegar com Arrow Down/Up",
+          "action": "Navegar com as setas para baixo e para cima",
           "result": "Foco percorre os itens do menu na ordem em que aparecem",
           "priority": "high"
         },
         "item5": {
-          "action": "Focar no SubTrigger e pressionar Arrow Right",
-          "result": "Submenu abre à direita; foco vai para o primeiro item do submenu",
+          "action": "Focar o item que abre o submenu e pressionar a seta para a direita",
+          "result": "O submenu abre à direita; o foco vai para o primeiro item dele",
           "priority": "high"
         },
         "item6": {
-          "action": "Pressionar Arrow Left dentro do submenu",
-          "result": "Submenu fecha; foco retorna ao SubTrigger",
+          "action": "Pressionar a seta para a esquerda (ou Escape) dentro do submenu",
+          "result": "Só o submenu fecha; o foco volta ao item que o abriu, e o menu segue aberto",
           "priority": "high"
         },
         "item7": {
-          "action": "Selecionar CheckboxItem",
-          "result": "Estado marcado alterna e é anunciado por aria-checked; o indicador de marcação aparece e some",
+          "action": "Escolher um item de marcação",
+          "result": "O estado marcado alterna e é anunciado por aria-checked; o indicador aparece e some, e o menu segue aberto",
           "priority": "medium"
         },
         "item8": {
-          "action": "Selecionar RadioItem dentro de RadioGroup",
-          "result": "A opção escolhida passa a marcada e a anterior é desmarcada — só uma fica ativa",
+          "action": "Escolher uma opção de um grupo de rádio",
+          "result": "A opção escolhida passa a marcada e a anterior é desmarcada — só uma fica ativa, e o menu segue aberto",
           "priority": "medium"
         },
         "item9": {
@@ -373,7 +397,7 @@
           "priority": "medium"
         },
         "item10": {
-          "action": "Renderizar item com variant destructive",
+          "action": "Exibir um item na variante destrutiva",
           "result": "Item marcado como destrutivo pelo atributo de variante; cor de alerta no texto e no realce de foco",
           "priority": "high"
         },
@@ -381,18 +405,38 @@
           "action": "Exibir um item de marcação no estado misto",
           "result": "Desenha um traço em vez do tique do estado marcado, e é anunciado como misto — nem marcado, nem desmarcado",
           "priority": "high"
+        },
+        "item12": {
+          "action": "Pressionar Tab com o menu aberto",
+          "result": "O menu fecha e o foco vai ao próximo ponto de tabulação depois da área (Shift+Tab: ao anterior); se a área for o último, volta a ela — o menu não prende o foco",
+          "priority": "high"
+        },
+        "item13": {
+          "action": "Pressionar Home ou End",
+          "result": "O foco vai ao primeiro ou ao último item do menu aberto",
+          "priority": "medium"
+        },
+        "item14": {
+          "action": "Digitar a letra inicial de um item",
+          "result": "O foco vai ao item que começa com ela",
+          "priority": "medium"
+        },
+        "item15": {
+          "action": "Pressionar a tecla de menu ou Shift+F10 com a área focada",
+          "result": "O menu abre como no clique direito",
+          "priority": "high"
         }
       },
       "accessibility": {
         "title": "Acessibilidade Verificável",
         "description": "Critérios verificáveis por axe-core e testes manuais.",
         "item1": "Sem violações reportadas pelo axe-core no estado padrão",
-        "item2": "role=\"menu\" presente no ContextMenuContent",
-        "item3": "role=\"menuitem\" presente em cada ContextMenuItem",
-        "item4": "role=\"menuitemcheckbox\" e aria-checked em CheckboxItem",
-        "item5": "role=\"menuitemradio\" e aria-checked em RadioItem",
+        "item2": "role=\"menu\" presente no painel",
+        "item3": "role=\"menuitem\" em cada item de ação",
+        "item4": "role=\"menuitemcheckbox\" e aria-checked nos itens de marcação",
+        "item5": "role=\"menuitemradio\" e aria-checked nos itens de rádio",
         "item6": "aria-disabled em itens desabilitados",
-        "item7": "Escape fecha o menu e retorna foco ao trigger",
+        "item7": "Escape fecha o menu e devolve o foco à área",
         "item8": "Contraste mínimo 4.5:1 em todos os estados de texto",
         "item9": "A seta pousa também no item desabilitado, que segue no percurso do teclado e é anunciado como indisponível em vez de sumir (WAI-ARIA APG)"
       },
@@ -471,7 +515,16 @@
         "delete": "Delete",
         "editShortcut": "Ctrl+E",
         "deleteShortcut": "Delete",
-        "areaNoHint": "(no visual hint)"
+        "areaNoHint": "(no visual hint)",
+        "groupView": "View",
+        "showGrid": "Show grid",
+        "showRulers": "Show rulers",
+        "groupLayout": "Layout",
+        "layoutGrid": "Grid",
+        "layoutList": "List",
+        "layoutColumns": "Columns",
+        "groupActions": "Actions",
+        "duplicateShortcut": "Ctrl+D"
       }
     },
     "anatomy": {
@@ -555,8 +608,8 @@
         "dont": "Use Context Menu as the only access point to critical features."
       },
       "pair2": {
-        "do": "Destructive item in the destructive variant, separated from the rest by a Separator.",
-        "dont": "Nesting multiple submenu levels — increases cognitive load."
+        "do": "Destructive item in the destructive variant, set apart from the others by a line.",
+        "dont": "Destructive item looking like the others, in the middle of the list."
       },
       "pair3": {
         "do": "Give a visual hint that the area has a context menu — a cursor, a dashed outline or a line of help text: right-click does not announce itself.",
@@ -566,36 +619,35 @@
     "import": {
       "title": "Import",
       "basic": "Basic import:",
-      "withSub": "With submenu:",
       "withCheckbox": "With checkbox and radio:"
     },
     "variants": {
       "title": "Variants",
-      "note": "<code>ContextMenuItem</code> has 2 variants via the <code>variant</code> prop. Other subcomponents have no variant prop.",
+      "note": "The action item has two variants: default and destructive. The other parts have no variant.",
       "items": {
-        "default": "Standard action item. On focus it takes the highlight background (<code>--accent</code>) and text in <code>--accent-foreground</code>.",
+        "default": "Standard action item. On focus it takes the highlight background (<code>--accent</code> at 20%) and text in <code>--accent-foreground</code>; from the keyboard it also gets an inner ring in the same colour.",
         "destructive": "Irreversible destructive action (e.g., delete). Text in the alert colour (<code>--destructive</code>); on focus, a background at 10% of that same colour.",
         "withCheckbox": {
           "name": "Menu with checkboxes",
-          "description": "Group of <code>CheckboxItem</code> under a <code>Label</code> (e.g., \"Appearance\"). Each item holds an independent boolean state — multiple options can coexist.",
-          "use": "Multiple non-exclusive view settings (show grid, show ruler, show status bar). Combine with <code>Label</code> to group items semantically."
+          "description": "Checkbox items under a group label (e.g., \"View\"). Each keeps its own state — several options can be checked at once.",
+          "use": "Multiple, non-exclusive view settings (show grid, show rulers, show status bar). A group label names the set."
         },
         "withRadio": {
           "name": "Menu with radio group",
-          "description": "<code>RadioGroup</code> containing <code>RadioItem</code> for exclusive selection — a single active value at a time. Usually paired with a <code>Label</code> describing the controlled property.",
-          "use": "Mutually exclusive modes (compact/comfortable/spacious density, light/dark/system theme, sorting). For multi-choice, prefer <code>CheckboxItem</code>."
+          "description": "Radio group: a single active value at a time. It usually sits under a label that names the property it controls.",
+          "use": "Mutually exclusive modes (compact/comfortable/spacious density, light/dark/system theme, sorting). For multiple choice, prefer checkbox items."
         },
         "withSubmenu": {
           "name": "Menu with submenu",
-          "description": "<code>SubTrigger</code> item opening a <code>SubContent</code> to the right on focus or hover. Keep only one level of nesting — deep submenus hurt keyboard navigation.",
+          "description": "Item that opens a submenu on the right, with the right arrow, Enter or the pointer. Keep it to one level — deep submenus hurt keyboard navigation.",
           "use": "Group variations of a single action (Share → by email, by link). Avoid when the list fits directly in the root menu — submenus increase cognitive load."
         },
         "withShortcuts": {
           "name": "Items with shortcuts",
-          "description": "Items combining label + <code>Shortcut</code> aligned to the right. <code>Shortcut</code> is read together with the item by the screen reader; the actual key must be wired via a global listener.",
+          "description": "Items with the shortcut aligned on the right. Screen readers read the shortcut with the item; the actual key must be registered by a global listener.",
           "use": "Actions that already have a global app shortcut (Ctrl+E, Ctrl+D, Delete). Keeps parity between context menu and keyboard and teaches the shortcut to the user."
         },
-        "label": "Non-interactive group label. The <code>inset</code> prop adds padding-left to align with icon items."
+        "label": "Group label, not interactive. When inset, it lines up with items that have an icon."
       }
     },
     "states": {
@@ -608,38 +660,42 @@
       "closed": {
         "label": "Closed",
         "trigger": "Default state",
-        "behavior": "Menu invisible; trigger awaits right-click"
+        "behavior": "Menu invisible; the area awaits a right-click"
       },
       "open": {
         "label": "Open",
-        "trigger": "Right-click on trigger area",
-        "behavior": "Popup positioned at cursor coordinates; entrance transition"
+        "trigger": "Right-click on the area, or the menu key / Shift+F10 with it focused",
+        "behavior": "Panel positioned at the click point, with an entry transition; closing is instant"
       },
       "focused": {
         "label": "Focused",
-        "trigger": "Arrow keys or Tab after opening",
-        "behavior": "The focused item receives the highlight background (<code>--accent</code>) and text in <code>--accent-foreground</code>"
+        "trigger": "Arrow keys after opening (Tab closes the menu)",
+        "behavior": "The focused item receives the highlight background (<code>--accent</code> at 20%) and text in <code>--accent-foreground</code>; from the keyboard it also gets an inner ring in the same colour"
       },
       "disabled": {
         "label": "Disabled",
-        "trigger": "<code>disabled</code> prop on item",
+        "trigger": "Item marked as disabled",
         "behavior": "Dimmed and announced as unavailable; does not activate"
       },
       "checked": {
         "label": "Checked",
-        "trigger": "<code>checked</code> prop on CheckboxItem",
-        "behavior": "CheckIcon visible on the right side of the item"
+        "trigger": "Checkbox or radio item in the checked state",
+        "behavior": "The check appears on the right of the item, in the reserved lane — the same drawing for checkbox and radio"
       },
       "subOpen": {
         "label": "Submenu open",
-        "trigger": "Focus or hover on SubTrigger",
-        "behavior": "SubContent appears to the right; the SubTrigger takes the highlight background (<code>--accent</code>)"
+        "trigger": "Right arrow, Enter or Space on the item that opens the submenu, or the pointer over it",
+        "behavior": "The submenu appears on the right; the item that opened it stays highlighted (<code>--accent</code>)"
+      },
+      "mixed": {
+        "label": "Mixed",
+        "trigger": "Checkbox item in the mixed state",
+        "behavior": "A dash instead of the check, announced as mixed — neither checked nor unchecked"
       }
     },
     "props": {
       "title": "Properties",
       "rootTitle": "ContextMenu",
-      "triggerTitle": "ContextMenuTrigger",
       "contentTitle": "ContextMenuContent",
       "itemTitle": "ContextMenuItem",
       "checkboxItemTitle": "ContextMenuCheckboxItem",
@@ -655,21 +711,28 @@
       },
       "items": {
         "onOpenChange": "Callback fired when the menu opens or closes.",
-        "align": "Popup alignment relative to the click point. Default: <code>\"start\"</code>.",
-        "alignOffset": "Offset in px along the alignment axis. Default: <code>4</code>.",
-        "side": "Preferred opening side. Default: <code>\"right\"</code>.",
-        "sideOffset": "Distance in px between cursor and popup. Default: <code>0</code>.",
+        "align": "Alignment of the panel relative to the click point.",
+        "alignOffset": "Offset in px along the alignment axis.",
+        "side": "Preferred side to open on.",
+        "sideOffset": "Distance in px between the click point and the panel.",
         "variant": "Visual variant of the item: <code>\"default\"</code> or <code>\"destructive\"</code>.",
-        "inset": "Adds <code>padding-left: 1.75rem</code> to align with icon items.",
-        "checked": "Controlled state of CheckboxItem.",
-        "onCheckedChange": "CheckboxItem callback when toggling state.",
-        "value": "RadioItem value within the RadioGroup.",
-        "onValueChange": "RadioGroup callback when selection changes.",
-        "disabled": "Disables the item: 50% opacity, no interaction.",
-        "onSelect": "Callback fired when the item is selected."
+        "inset": "Indents the start of the item by <code>--spacing-7</code> (28px at default density) to align with icon items.",
+        "checked": "Controlled state of the checkbox item.",
+        "onCheckedChange": "Callback of the checkbox item when its state toggles.",
+        "value": "Value of the radio item within the group.",
+        "onValueChange": "Callback of the radio group when the selection changes.",
+        "disabled": "Disables the item: 50% opacity and it does not activate — the arrow keys still land on it, and it is announced as unavailable.",
+        "onSelect": "Callback fired when the item is selected.",
+        "indeterminate": "Puts the checkbox item in the mixed state: a dash instead of the check, announced as mixed.",
+        "onIndeterminateChange": "Callback of the checkbox item when it leaves the mixed state.",
+        "shortcut": "Shortcut shown on the right of the item — visual only; registering the key is the application's job.",
+        "label": "Displayed text of the item.",
+        "class": "Additional classes, added to the component's own.",
+        "modal": "While the menu is open, blocks interaction and scrolling outside it; it does not trap focus — Tab closes the menu.",
+        "modelValue": "Value of the checked option in the radio group."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "All subcomponents accept <code>className</code>. Use project semantic tokens — never hardcoded colors."
+      "extensibility": "All subcomponents accept additional classes. Use the project's semantic tokens — never hard-coded colors."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -692,7 +755,10 @@
         "radiusItem": "Menu item border radius",
         "zIndex": "Popup stacking layer"
       },
-      "customizationTitle": "How to customize via theme:"
+      "customizationTitle": "How to customize via theme:",
+      "customizationCode": {
+        "web": "/* Token override scoped to the menu */\n.nds-dropdown-menu-content {\n  --popover: 220 14% 98%;\n  --popover-foreground: 220 9% 10%;\n}"
+      }
     },
     "accessibility": {
       "title": "Accessibility",
@@ -702,24 +768,24 @@
         "rightClick": "Right-click opens the menu at the pointer position. Without a mouse, the menu key or Shift+F10 over the focused area fires the same event.",
         "arrowDown": "Moves focus to the next menu item.",
         "arrowUp": "Moves focus to the previous menu item.",
-        "arrowRight": "Opens the submenu of the focused item (SubTrigger).",
+        "arrowRight": "Opens the focused item's submenu and moves focus to its first item.",
         "arrowLeft": "Closes the submenu and returns to the parent item.",
         "enter": "Activates the focused item.",
-        "space": "Activates the focused item (CheckboxItem toggles state).",
-        "escape": "Closes the menu and returns focus to the trigger.",
-        "tab": "Closes the menu (the menu does not trap focus like Dialog).",
+        "space": "Activates the focused item; on a checkbox item, toggles its state.",
+        "escape": "Closes the menu and returns focus to the area. Inside the submenu, it closes only the submenu and returns focus to the item that opened it.",
+        "tab": "Closes the menu and focus moves to the next tab stop after the area (Shift+Tab: the previous one); if the area is the last stop, focus returns to it. This also applies inside a submenu. The menu does not trap focus, unlike Dialog.",
         "homeEnd": "Moves focus to the first and to the last item of the open menu.",
         "typeahead": "Typing letters moves focus to the item that starts with them; the letters accumulate for one second."
       },
       "aria": {
-        "roleMenu": "<code>role=\"menu\"</code> — automatically applied to <code>ContextMenuContent</code>.",
-        "roleMenuItem": "<code>role=\"menuitem\"</code> — applied to <code>ContextMenuItem</code> and <code>ContextMenuSubTrigger</code>.",
-        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — applied to <code>ContextMenuCheckboxItem</code>.",
-        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — applied to <code>ContextMenuRadioItem</code>.",
-        "ariaChecked": "<code>aria-checked</code> — on CheckboxItem and RadioItem to communicate state to screen readers.",
+        "roleMenu": "<code>role=\"menu\"</code> — on the panel.",
+        "roleMenuItem": "<code>role=\"menuitem\"</code> — on action items and on the item that opens a submenu.",
+        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — on checkbox items.",
+        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — on radio items.",
+        "ariaChecked": "<code>aria-checked</code> — on checkbox and radio items, with the state (including <code>\"mixed\"</code>) for screen readers.",
         "ariaDisabled": "<code>aria-disabled</code> — on disabled items.",
-        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — on SubTrigger to indicate it opens a submenu.",
-        "ariaExpanded": "<code>aria-expanded</code> — on SubTrigger, updated when submenu opens/closes."
+        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — on the item that opens a submenu.",
+        "ariaExpanded": "<code>aria-expanded</code> — on the item that opens a submenu, updated as it opens and closes."
       },
       "screenReader": {
         "onOpen": "On open: reader announces the menu and the first focused item.",
@@ -727,15 +793,14 @@
         "onSelect": "On select: reader announces the action taken.",
         "shortcuts": "The shortcut is read together with the item — \"Edit, Ctrl+E\" is the useful name. Hiding it would leave the person unaware that the shortcut exists.",
         "alternative": "Accessible alternative required: screen reader users may not discover the Context Menu."
-      }
+      },
+      "keyboardTitle": "Keyboard navigation"
     },
     "related": {
       "title": "Related Components",
-      "alternatives": "Alternatives",
-      "usedWith": "Often used with",
       "dropdownMenu": "Accessible alternative with explicit trigger — preferred in touch contexts and for table row actions.",
       "menubar": "For fixed application menus at the top, always visible.",
-      "dialog": "For destructive actions requiring confirmation before execution.",
+      "dialog": "For a longer task opened from the menu — a form, an edit — that calls for a panel of its own.",
       "alertDialog": "For confirming irreversible actions triggered by menu items.",
       "tooltip": "For displaying keyboard shortcuts on buttons related to menu actions."
     },
@@ -744,7 +809,7 @@
       "tip1": "The shortcut shown in the item is only the label. What makes it work is a <code>keydown</code> listener registered in the lifecycle of whoever mounts the screen — and removed when it leaves, otherwise it outlives the page.",
       "tip2": "Destructive item: use the destructive variant of the item — it paints the text in the alert colour (<code>--destructive</code>) and, on focus, a background at 10% of that colour. Do not hand-write these colours.",
       "tip3": "Submenus increase cognitive load: use only when grouping is essential and never nest more than one level.",
-      "tip4": "The popup uses <code>--popover</code> and <code>--popover-foreground</code> — do not swap in <code>--card</code>, which is reserved for content panels (Dialog, Sheet).",
+      "tip4": "The panel uses <code>--popover</code> and <code>--popover-foreground</code>, like every floating surface — do not swap it for <code>--card</code>, which belongs to the card on the page.",
       "tip5": "To indicate to the user that an area has a context menu, display a subtle hint in the interface (e.g., helper text or hover tooltip)."
     },
     "analytics": {
@@ -754,12 +819,12 @@
         "event": "Event",
         "trigger": "Trigger",
         "payload": "Additional Payload",
-        "menuOpen": "menu_open",
-        "menuOpenTrigger": "User opens the Context Menu via right-click",
-        "menuOpenPayload": "{ component: \"context-menu\", location, menu }",
-        "itemClick": "menu_item_click",
-        "itemClickTrigger": "User selects a menu item",
-        "itemClickPayload": "{ label: string, menu: string, location }",
+        "menuOpen": "context_menu_open",
+        "menuOpenTrigger": "The person opens the menu: right-click, menu key or Shift+F10",
+        "menuOpenPayload": "{ component: \"context-menu\", menu, location }",
+        "itemClick": "context_menu_item_select",
+        "itemClickTrigger": "The person picks a menu item",
+        "itemClickPayload": "{ component: \"context-menu\", label, menu, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "On docs page open or language switch",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -768,7 +833,10 @@
         "sectionViewedPayload": "{ section_id, component_name, locale }",
         "langSwitch": "language_switched",
         "langSwitchTrigger": "On language switch in LanguageSwitcher",
-        "langSwitchPayload": "{ previous_language, new_language }"
+        "langSwitchPayload": "{ previous_language, new_language }",
+        "close": "context_menu_close",
+        "closeTrigger": "The menu closes: Escape (escape), click outside or Tab (overlay) or item picked (api)",
+        "closePayload": "{ component: \"context-menu\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }"
       }
     },
     "testes": {
@@ -777,43 +845,43 @@
         "title": "Functional Behavior",
         "description": "What should happen for each Context Menu interaction.",
         "item1": {
-          "action": "Right-click on trigger area",
+          "action": "Right-click on the area",
           "result": "Menu opens at the coordinate where the pointer was, with an entrance transition",
           "priority": "high"
         },
         "item2": {
           "action": "Press Escape with menu open",
-          "result": "Menu closes and focus returns to trigger",
+          "result": "The menu closes and focus returns to the area",
           "priority": "high"
         },
         "item3": {
           "action": "Click outside menu area",
-          "result": "Menu closes on click outside",
+          "result": "The menu closes without running any item",
           "priority": "high"
         },
         "item4": {
-          "action": "Navigate with Arrow Down/Up",
+          "action": "Navigate with the down and up arrows",
           "result": "Focus moves through the menu items in the order they appear",
           "priority": "high"
         },
         "item5": {
-          "action": "Focus SubTrigger and press Arrow Right",
-          "result": "Submenu opens to the right; focus moves to first submenu item",
+          "action": "Focus the item that opens the submenu and press the right arrow",
+          "result": "The submenu opens to the right; focus moves to its first item",
           "priority": "high"
         },
         "item6": {
-          "action": "Press Arrow Left inside submenu",
-          "result": "Submenu closes; focus returns to SubTrigger",
+          "action": "Press the left arrow (or Escape) inside the submenu",
+          "result": "Only the submenu closes; focus returns to the item that opened it, and the menu stays open",
           "priority": "high"
         },
         "item7": {
-          "action": "Select CheckboxItem",
-          "result": "Checked state toggles and is announced through aria-checked; the check indicator appears and disappears",
+          "action": "Pick a checkable item",
+          "result": "The checked state toggles and is announced through aria-checked; the indicator appears and disappears, and the menu stays open",
           "priority": "medium"
         },
         "item8": {
-          "action": "Select RadioItem inside RadioGroup",
-          "result": "The chosen option becomes checked and the previous one is cleared — only one stays active",
+          "action": "Pick an option in a radio group",
+          "result": "The chosen option becomes checked and the previous one is cleared — only one stays active, and the menu stays open",
           "priority": "medium"
         },
         "item9": {
@@ -822,7 +890,7 @@
           "priority": "medium"
         },
         "item10": {
-          "action": "Render item with destructive variant",
+          "action": "Render an item in the destructive variant",
           "result": "Item marked as destructive through the variant attribute; alert colour on the text and on the focus highlight",
           "priority": "high"
         },
@@ -830,18 +898,38 @@
           "action": "Render a checkable item in the mixed state",
           "result": "Draws a dash instead of the check mark of the checked state, and is announced as mixed — neither checked nor unchecked",
           "priority": "high"
+        },
+        "item12": {
+          "action": "Press Tab with the menu open",
+          "result": "The menu closes and focus moves to the next tab stop after the area (Shift+Tab: the previous one); if the area is the last stop, focus returns to it — the menu does not trap focus",
+          "priority": "high"
+        },
+        "item13": {
+          "action": "Press Home or End",
+          "result": "Focus moves to the first or last item of the open menu",
+          "priority": "medium"
+        },
+        "item14": {
+          "action": "Type the first letter of an item",
+          "result": "Focus moves to the item that starts with it",
+          "priority": "medium"
+        },
+        "item15": {
+          "action": "Press the menu key or Shift+F10 with the area focused",
+          "result": "The menu opens as it does on right-click",
+          "priority": "high"
         }
       },
       "accessibility": {
         "title": "Verifiable Accessibility",
         "description": "Criteria verifiable by axe-core and manual testing.",
         "item1": "No violations reported by axe-core in default state",
-        "item2": "role=\"menu\" present on ContextMenuContent",
-        "item3": "role=\"menuitem\" present on each ContextMenuItem",
-        "item4": "role=\"menuitemcheckbox\" and aria-checked on CheckboxItem",
-        "item5": "role=\"menuitemradio\" and aria-checked on RadioItem",
+        "item2": "role=\"menu\" present on the panel",
+        "item3": "role=\"menuitem\" on each action item",
+        "item4": "role=\"menuitemcheckbox\" and aria-checked on checkbox items",
+        "item5": "role=\"menuitemradio\" and aria-checked on radio items",
         "item6": "aria-disabled on disabled items",
-        "item7": "Escape closes the menu and returns focus to trigger",
+        "item7": "Escape closes the menu and returns focus to the area",
         "item8": "Minimum contrast 4.5:1 across all text states",
         "item9": "The arrow also lands on the disabled item, which stays in the keyboard sequence and is announced as unavailable instead of disappearing (WAI-ARIA APG)"
       },
@@ -920,7 +1008,16 @@
         "delete": "Eliminar",
         "editShortcut": "Ctrl+E",
         "deleteShortcut": "Delete",
-        "areaNoHint": "(sin pista visual)"
+        "areaNoHint": "(sin pista visual)",
+        "groupView": "Visualización",
+        "showGrid": "Mostrar cuadrícula",
+        "showRulers": "Mostrar reglas",
+        "groupLayout": "Diseño",
+        "layoutGrid": "Cuadrícula",
+        "layoutList": "Lista",
+        "layoutColumns": "Columnas",
+        "groupActions": "Acciones",
+        "duplicateShortcut": "Ctrl+D"
       }
     },
     "anatomy": {
@@ -1004,8 +1101,8 @@
         "dont": "Usar el Context Menu como único acceso a funcionalidades críticas."
       },
       "pair2": {
-        "do": "Ítem destructivo en la variante destructive, separado de los demás por un Separator.",
-        "dont": "Anidar múltiples niveles de submenú — aumenta la carga cognitiva."
+        "do": "Ítem destructivo en la variante destructiva, separado de los demás por una línea.",
+        "dont": "Ítem destructivo con la misma apariencia que los demás, en medio de la lista."
       },
       "pair3": {
         "do": "Da una pista visual de que el área tiene menú contextual — cursor, contorno punteado o una línea de ayuda: el clic derecho no se anuncia solo.",
@@ -1015,36 +1112,35 @@
     "import": {
       "title": "Importación",
       "basic": "Import básico:",
-      "withSub": "Con submenú:",
       "withCheckbox": "Con checkbox y radio:"
     },
     "variants": {
       "title": "Variantes",
-      "note": "<code>ContextMenuItem</code> tiene 2 variantes vía la prop <code>variant</code>. Los demás subcomponentes no tienen prop de variante.",
+      "note": "El ítem de acción tiene dos variantes: predeterminada y destructiva. Las demás piezas no tienen variante.",
       "items": {
-        "default": "Ítem de acción estándar. Al enfocarse toma el fondo de realce (<code>--accent</code>) y texto en <code>--accent-foreground</code>.",
+        "default": "Ítem de acción estándar. Al enfocarse toma el fondo de realce (<code>--accent</code> al 20%) y texto en <code>--accent-foreground</code>; con el teclado suma un anillo interno del mismo color.",
         "destructive": "Acción destructiva irreversible (ej: eliminar). Texto en el color de alerta (<code>--destructive</code>); al enfocarse, un fondo con el 10% de ese mismo color.",
         "withCheckbox": {
           "name": "Menú con checkboxes",
-          "description": "Grupo de <code>CheckboxItem</code> bajo un <code>Label</code> (ej.: \"Apariencia\"). Cada ítem mantiene un estado booleano independiente — múltiples opciones pueden coexistir.",
-          "use": "Configuraciones de visualización múltiples y no exclusivas (mostrar cuadrícula, mostrar regla, mostrar barra de estado). Combina con <code>Label</code> para agrupar semánticamente."
+          "description": "Ítems de marcación bajo un rótulo de grupo (ej.: \"Visualización\"). Cada uno guarda su propio estado — varias opciones pueden estar marcadas a la vez.",
+          "use": "Ajustes de visualización múltiples y no exclusivos (mostrar cuadrícula, mostrar reglas, mostrar barra de estado). Un rótulo de grupo nombra el conjunto."
         },
         "withRadio": {
           "name": "Menú con radio group",
-          "description": "<code>RadioGroup</code> que contiene <code>RadioItem</code> de selección exclusiva — un único valor activo a la vez. Habitualmente acompañado de un <code>Label</code> que describe la propiedad controlada.",
-          "use": "Modos mutuamente exclusivos (densidad compacta/cómoda/espaciosa, tema claro/oscuro/sistema, ordenación). Para múltiple opción, prefiere <code>CheckboxItem</code>."
+          "description": "Grupo de radio: un único valor activo a la vez. Suele ir bajo un rótulo que nombra la propiedad controlada.",
+          "use": "Modos mutuamente excluyentes (densidad compacta/cómoda/espaciosa, tema claro/oscuro/sistema, ordenación). Para elección múltiple, prefiere ítems de marcación."
         },
         "withSubmenu": {
           "name": "Menú con submenú",
-          "description": "Ítem <code>SubTrigger</code> que abre un <code>SubContent</code> a la derecha al recibir foco o hover. Mantén solo un nivel de anidamiento — submenús profundos perjudican la navegación por teclado.",
+          "description": "Ítem que abre un submenú a la derecha, con la flecha derecha, Enter o el puntero. Mantén un solo nivel — los submenús profundos perjudican la navegación por teclado.",
           "use": "Agrupar variantes de una misma acción (Compartir → por correo, por enlace). Evítalo cuando la lista cabe directamente en el menú raíz — los submenús aumentan la carga cognitiva."
         },
         "withShortcuts": {
           "name": "Ítems con atajos",
-          "description": "Ítems que combinan etiqueta + <code>Shortcut</code> alineado a la derecha. El <code>Shortcut</code> se lee junto con el ítem por el lector de pantalla; la tecla real debe registrarse mediante un listener global.",
+          "description": "Ítems con el atajo alineado a la derecha. El lector de pantalla lee el atajo junto al ítem; la tecla real debe registrarla un listener global.",
           "use": "Acciones que ya tienen atajo global en la aplicación (Ctrl+E, Ctrl+D, Delete). Mantiene paridad entre menú contextual y teclado y enseña el atajo al usuario."
         },
-        "label": "Etiqueta de grupo no interactiva. La prop <code>inset</code> agrega padding-left para alinear con ítems con ícono."
+        "label": "Rótulo de grupo, no interactivo. Con sangría, se alinea con los ítems que tienen icono."
       }
     },
     "states": {
@@ -1057,38 +1153,42 @@
       "closed": {
         "label": "Cerrado",
         "trigger": "Estado predeterminado",
-        "behavior": "Menú invisible; trigger espera el clic derecho"
+        "behavior": "Menú invisible; el área espera el clic derecho"
       },
       "open": {
         "label": "Abierto",
-        "trigger": "Clic derecho en el área del trigger",
-        "behavior": "Popup posicionado en las coordenadas del cursor; transición de entrada"
+        "trigger": "Clic derecho en el área, o la tecla de menú / Shift+F10 con ella enfocada",
+        "behavior": "Panel posicionado en el punto del clic, con transición de entrada; el cierre es instantáneo"
       },
       "focused": {
         "label": "Enfocado",
-        "trigger": "Arrow keys o Tab después de abrir",
-        "behavior": "El ítem enfocado recibe el fondo de realce (<code>--accent</code>) y texto en <code>--accent-foreground</code>"
+        "trigger": "Flechas del teclado tras la apertura (Tab cierra el menú)",
+        "behavior": "El ítem enfocado recibe el fondo de realce (<code>--accent</code> al 20%) y texto en <code>--accent-foreground</code>; con el teclado suma un anillo interno del mismo color"
       },
       "disabled": {
         "label": "Deshabilitado",
-        "trigger": "Prop <code>disabled</code> en el ítem",
+        "trigger": "Ítem marcado como deshabilitado",
         "behavior": "Atenuado y anunciado como no disponible; no se activa"
       },
       "checked": {
         "label": "Marcado",
-        "trigger": "Prop <code>checked</code> en el CheckboxItem",
-        "behavior": "CheckIcon visible a la derecha del ítem"
+        "trigger": "Ítem de marcación o de radio en estado marcado",
+        "behavior": "La marca aparece a la derecha del ítem, en el carril reservado — el mismo dibujo para marcación y radio"
       },
       "subOpen": {
         "label": "Submenú abierto",
-        "trigger": "Foco o hover en SubTrigger",
-        "behavior": "SubContent aparece a la derecha; el SubTrigger toma el fondo de realce (<code>--accent</code>)"
+        "trigger": "Flecha derecha, Enter o Espacio sobre el ítem que abre el submenú, o el puntero encima de él",
+        "behavior": "El submenú aparece a la derecha; el ítem que lo abrió sigue resaltado (<code>--accent</code>)"
+      },
+      "mixed": {
+        "label": "Mixto",
+        "trigger": "Ítem de marcación en estado mixto",
+        "behavior": "Un guion en lugar de la marca, anunciado como mixto — ni marcado ni desmarcado"
       }
     },
     "props": {
       "title": "Propiedades",
       "rootTitle": "ContextMenu",
-      "triggerTitle": "ContextMenuTrigger",
       "contentTitle": "ContextMenuContent",
       "itemTitle": "ContextMenuItem",
       "checkboxItemTitle": "ContextMenuCheckboxItem",
@@ -1104,21 +1204,28 @@
       },
       "items": {
         "onOpenChange": "Callback disparado al abrir o cerrar el menú.",
-        "align": "Alineación del popup respecto al punto de clic. Por defecto: <code>\"start\"</code>.",
-        "alignOffset": "Desplazamiento en px en el eje de alineación. Por defecto: <code>4</code>.",
-        "side": "Lado preferido de apertura. Por defecto: <code>\"right\"</code>.",
-        "sideOffset": "Distancia en px entre el cursor y el popup. Por defecto: <code>0</code>.",
+        "align": "Alineación del panel respecto al punto del clic.",
+        "alignOffset": "Desplazamiento en px en el eje de alineación.",
+        "side": "Lado preferido de apertura.",
+        "sideOffset": "Distancia en px entre el punto del clic y el panel.",
         "variant": "Variante visual del ítem: <code>\"default\"</code> o <code>\"destructive\"</code>.",
-        "inset": "Agrega <code>padding-left: 1.75rem</code> para alinear con ítems que tienen ícono.",
-        "checked": "Estado controlado del CheckboxItem.",
-        "onCheckedChange": "Callback del CheckboxItem al alternar el estado.",
-        "value": "Valor del RadioItem dentro del RadioGroup.",
-        "onValueChange": "Callback del RadioGroup al cambiar la selección.",
-        "disabled": "Deshabilita el ítem: opacidad 50%, sin interacción.",
-        "onSelect": "Callback disparado al seleccionar el ítem."
+        "inset": "Agrega una sangría inicial de <code>--spacing-7</code> (28px en la densidad estándar) para alinear con ítems que tienen ícono.",
+        "checked": "Estado controlado del ítem de marcación.",
+        "onCheckedChange": "Callback del ítem de marcación al alternar el estado.",
+        "value": "Valor del ítem de radio dentro del grupo.",
+        "onValueChange": "Callback del grupo de radio al cambiar la selección.",
+        "disabled": "Deshabilita el ítem: opacidad 50% y no se activa — las flechas siguen deteniéndose en él, y se anuncia como no disponible.",
+        "onSelect": "Callback disparado al seleccionar el ítem.",
+        "indeterminate": "Deja el ítem de marcación en estado mixto: un guion en lugar de la marca, anunciado como mixto.",
+        "onIndeterminateChange": "Callback del ítem de marcación cuando sale del estado mixto.",
+        "shortcut": "Atajo mostrado a la derecha del ítem — solo visual; registrar la tecla es tarea de la aplicación.",
+        "label": "Texto mostrado del ítem.",
+        "class": "Clases adicionales, que se suman a las del componente.",
+        "modal": "Con el menú abierto, bloquea la interacción y el desplazamiento fuera de él; no atrapa el foco: Tab cierra el menú.",
+        "modelValue": "Valor de la opción marcada en el grupo de radio."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "Todos los subcomponentes aceptan <code>className</code>. Usa tokens semánticos del proyecto — nunca colores hardcoded."
+      "extensibility": "Todos los subcomponentes aceptan clases adicionales. Usa los tokens semánticos del proyecto — nunca colores escritos a mano."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1141,7 +1248,10 @@
         "radiusItem": "Border radius de los ítems del menú",
         "zIndex": "Capa de apilamiento del popup"
       },
-      "customizationTitle": "Cómo personalizar vía tema:"
+      "customizationTitle": "Cómo personalizar vía tema:",
+      "customizationCode": {
+        "web": "/* Override de tokens en el ámbito del menú */\n.nds-dropdown-menu-content {\n  --popover: 220 14% 98%;\n  --popover-foreground: 220 9% 10%;\n}"
+      }
     },
     "accessibility": {
       "title": "Accesibilidad",
@@ -1151,24 +1261,24 @@
         "rightClick": "Clic derecho abre el menú en la posición del puntero. Sin ratón, la tecla de menú o Shift+F10 sobre el área enfocada dispara el mismo evento.",
         "arrowDown": "Mueve el foco al siguiente ítem del menú.",
         "arrowUp": "Mueve el foco al ítem anterior del menú.",
-        "arrowRight": "Abre el submenú del ítem enfocado (SubTrigger).",
+        "arrowRight": "Abre el submenú del ítem enfocado y lleva el foco a su primer ítem.",
         "arrowLeft": "Cierra el submenú y regresa al ítem padre.",
         "enter": "Activa el ítem enfocado.",
-        "space": "Activa el ítem enfocado (CheckboxItem alterna el estado).",
-        "escape": "Cierra el menú y devuelve el foco al trigger.",
-        "tab": "Cierra el menú (el menú no atrapa el foco como Dialog).",
+        "space": "Activa el ítem enfocado; en un ítem de marcación, alterna el estado.",
+        "escape": "Cierra el menú y devuelve el foco al área. Dentro del submenú, cierra solo el submenú y devuelve el foco al ítem que lo abrió.",
+        "tab": "Cierra el menú y el foco pasa a la siguiente parada de tabulación después del área (Shift+Tab: la anterior); si el área es la última, vuelve a ella. Vale también dentro de un submenú. El menú no atrapa el foco, a diferencia de Dialog.",
         "homeEnd": "Lleva el foco al primer y al último ítem del menú abierto.",
         "typeahead": "Escribir letras mueve el foco al ítem que empieza con ellas; las letras se acumulan por un segundo."
       },
       "aria": {
-        "roleMenu": "<code>role=\"menu\"</code> — aplicado automáticamente en <code>ContextMenuContent</code>.",
-        "roleMenuItem": "<code>role=\"menuitem\"</code> — aplicado en <code>ContextMenuItem</code> y <code>ContextMenuSubTrigger</code>.",
-        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — aplicado en <code>ContextMenuCheckboxItem</code>.",
-        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — aplicado en <code>ContextMenuRadioItem</code>.",
-        "ariaChecked": "<code>aria-checked</code> — en CheckboxItem y RadioItem para comunicar el estado al lector de pantalla.",
+        "roleMenu": "<code>role=\"menu\"</code> — en el panel.",
+        "roleMenuItem": "<code>role=\"menuitem\"</code> — en los ítems de acción y en el ítem que abre submenú.",
+        "roleMenuitemCheckbox": "<code>role=\"menuitemcheckbox\"</code> — en los ítems de marcación.",
+        "roleMenuitemRadio": "<code>role=\"menuitemradio\"</code> — en los ítems de radio.",
+        "ariaChecked": "<code>aria-checked</code> — en los ítems de marcación y de radio, con el estado (incluido <code>\"mixed\"</code>) para el lector de pantalla.",
         "ariaDisabled": "<code>aria-disabled</code> — en ítems deshabilitados.",
-        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — en SubTrigger para indicar que abre un submenú.",
-        "ariaExpanded": "<code>aria-expanded</code> — en SubTrigger, actualizado al abrir/cerrar el submenú."
+        "ariaHaspopup": "<code>aria-haspopup=\"menu\"</code> — en el ítem que abre submenú.",
+        "ariaExpanded": "<code>aria-expanded</code> — en el ítem que abre submenú, actualizado al abrir y cerrar."
       },
       "screenReader": {
         "onOpen": "Al abrir: el lector anuncia el menú y el primer ítem enfocado.",
@@ -1176,15 +1286,14 @@
         "onSelect": "Al seleccionar: el lector anuncia la acción realizada.",
         "shortcuts": "El atajo se lee junto al elemento — \"Editar, Ctrl+E\" es el nombre útil. Ocultarlo dejaría a la persona sin saber que el atajo existe.",
         "alternative": "Alternativa accesible obligatoria: el usuario de lector de pantalla puede no descubrir el Context Menu."
-      }
+      },
+      "keyboardTitle": "Navegación por teclado"
     },
     "related": {
       "title": "Componentes Relacionados",
-      "alternatives": "Alternativas",
-      "usedWith": "Se usa frecuentemente con",
       "dropdownMenu": "Alternativa accesible con trigger explícito — preferida en contextos touch y para acciones de fila en tablas.",
       "menubar": "Para menús de aplicación fijos en la parte superior, siempre visibles.",
-      "dialog": "Para acciones destructivas que requieren confirmación antes de ejecutarse.",
+      "dialog": "Para una tarea más larga abierta desde el menú — un formulario, una edición — que pide un panel propio.",
       "alertDialog": "Para confirmar acciones irreversibles disparadas por ítems del menú.",
       "tooltip": "Para mostrar atajos de teclado en botones relacionados con las acciones del menú."
     },
@@ -1193,7 +1302,7 @@
       "tip1": "El atajo mostrado en el ítem es solo la etiqueta. Quien lo hace funcionar es un escucha de <code>keydown</code> registrado en el ciclo de vida de quien monta la pantalla — y retirado cuando ella sale, si no sobrevive a la página.",
       "tip2": "Ítem destructivo: usa la variante <code>destructive</code> del ítem — pinta el texto con el color de alerta (<code>--destructive</code>) y, al enfocarse, un fondo con el 10% de ese color. No escribas esos colores a mano.",
       "tip3": "Los submenús aumentan la carga cognitiva: úsalos solo cuando el agrupamiento sea esencial y nunca anides más de un nivel.",
-      "tip4": "El popup usa <code>--popover</code> y <code>--popover-foreground</code> — no lo cambies por <code>--card</code>, que es para paneles de contenido (Dialog, Sheet).",
+      "tip4": "El panel usa <code>--popover</code> y <code>--popover-foreground</code>, como toda superficie flotante — no lo cambies por <code>--card</code>, que es de la tarjeta sobre la página.",
       "tip5": "Para indicar al usuario que el área tiene menú de contexto, muestra una pista sutil en la interfaz (ej: texto auxiliar o tooltip al pasar el cursor)."
     },
     "analytics": {
@@ -1203,12 +1312,12 @@
         "event": "Evento",
         "trigger": "Disparador",
         "payload": "Payload Adicional",
-        "menuOpen": "menu_open",
-        "menuOpenTrigger": "Usuario abre el Context Menu vía clic derecho",
-        "menuOpenPayload": "{ component: \"context-menu\", location, menu }",
-        "itemClick": "menu_item_click",
-        "itemClickTrigger": "Usuario selecciona un ítem del menú",
-        "itemClickPayload": "{ label: string, menu: string, location }",
+        "menuOpen": "context_menu_open",
+        "menuOpenTrigger": "La persona abre el menú: clic derecho, tecla de menú o Shift+F10",
+        "menuOpenPayload": "{ component: \"context-menu\", menu, location }",
+        "itemClick": "context_menu_item_select",
+        "itemClickTrigger": "La persona elige un ítem del menú",
+        "itemClickPayload": "{ component: \"context-menu\", label, menu, location }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -1217,7 +1326,10 @@
         "sectionViewedPayload": "{ section_id, component_name, locale }",
         "langSwitch": "language_switched",
         "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
-        "langSwitchPayload": "{ previous_language, new_language }"
+        "langSwitchPayload": "{ previous_language, new_language }",
+        "close": "context_menu_close",
+        "closeTrigger": "El menú se cierra: Escape (escape), clic fuera o Tab (overlay) o ítem elegido (api)",
+        "closePayload": "{ component: \"context-menu\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }"
       }
     },
     "testes": {
@@ -1226,43 +1338,43 @@
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Context Menu.",
         "item1": {
-          "action": "Clic derecho en el área del trigger",
+          "action": "Clic derecho en el área",
           "result": "El menú abre en la coordenada donde estaba el puntero, con transición de entrada",
           "priority": "high"
         },
         "item2": {
           "action": "Presionar Escape con el menú abierto",
-          "result": "Menú cierra y el foco regresa al trigger",
+          "result": "El menú se cierra y el foco vuelve al área",
           "priority": "high"
         },
         "item3": {
           "action": "Clic fuera del área del menú",
-          "result": "Menú cierra al perder foco (click outside)",
+          "result": "El menú se cierra sin ejecutar ningún ítem",
           "priority": "high"
         },
         "item4": {
-          "action": "Navegar con Arrow Down/Up",
+          "action": "Navegar con las flechas abajo y arriba",
           "result": "El foco recorre los ítems del menú en el orden en que aparecen",
           "priority": "high"
         },
         "item5": {
-          "action": "Enfocar SubTrigger y presionar Arrow Right",
-          "result": "Submenú abre a la derecha; foco va al primer ítem del submenú",
+          "action": "Enfocar el ítem que abre el submenú y pulsar la flecha derecha",
+          "result": "El submenú se abre a la derecha; el foco va a su primer ítem",
           "priority": "high"
         },
         "item6": {
-          "action": "Presionar Arrow Left dentro del submenú",
-          "result": "Submenú cierra; foco regresa al SubTrigger",
+          "action": "Pulsar la flecha izquierda (o Escape) dentro del submenú",
+          "result": "Solo el submenú se cierra; el foco vuelve al ítem que lo abrió, y el menú sigue abierto",
           "priority": "high"
         },
         "item7": {
-          "action": "Seleccionar CheckboxItem",
-          "result": "El estado marcado alterna y se anuncia con aria-checked; el indicador de marca aparece y desaparece",
+          "action": "Elegir un ítem de marcación",
+          "result": "El estado marcado alterna y se anuncia con aria-checked; el indicador aparece y desaparece, y el menú sigue abierto",
           "priority": "medium"
         },
         "item8": {
-          "action": "Seleccionar RadioItem dentro de RadioGroup",
-          "result": "La opción elegida pasa a marcada y la anterior se desmarca — solo una queda activa",
+          "action": "Elegir una opción de un grupo de radio",
+          "result": "La opción elegida pasa a marcada y la anterior se desmarca — solo una queda activa, y el menú sigue abierto",
           "priority": "medium"
         },
         "item9": {
@@ -1271,7 +1383,7 @@
           "priority": "medium"
         },
         "item10": {
-          "action": "Renderizar ítem con variante destructive",
+          "action": "Mostrar un ítem en la variante destructiva",
           "result": "Ítem marcado como destructivo por el atributo de variante; color de alerta en el texto y en el resalte de foco",
           "priority": "high"
         },
@@ -1279,18 +1391,38 @@
           "action": "Mostrar un elemento de marcación en estado mixto",
           "result": "Dibuja un guion en vez de la marca de verificación del estado marcado, y se anuncia como mixto — ni marcado ni desmarcado",
           "priority": "high"
+        },
+        "item12": {
+          "action": "Pulsar Tab con el menú abierto",
+          "result": "El menú se cierra y el foco pasa a la siguiente parada de tabulación después del área (Shift+Tab: la anterior); si el área es la última, vuelve a ella — el menú no atrapa el foco",
+          "priority": "high"
+        },
+        "item13": {
+          "action": "Pulsar Home o End",
+          "result": "El foco va al primer o al último ítem del menú abierto",
+          "priority": "medium"
+        },
+        "item14": {
+          "action": "Escribir la letra inicial de un ítem",
+          "result": "El foco va al ítem que empieza por ella",
+          "priority": "medium"
+        },
+        "item15": {
+          "action": "Pulsar la tecla de menú o Shift+F10 con el área enfocada",
+          "result": "El menú se abre como con el clic derecho",
+          "priority": "high"
         }
       },
       "accessibility": {
         "title": "Accesibilidad Verificable",
         "description": "Criterios verificables por axe-core y pruebas manuales.",
         "item1": "Sin violaciones reportadas por axe-core en el estado predeterminado",
-        "item2": "role=\"menu\" presente en ContextMenuContent",
-        "item3": "role=\"menuitem\" presente en cada ContextMenuItem",
-        "item4": "role=\"menuitemcheckbox\" y aria-checked en CheckboxItem",
-        "item5": "role=\"menuitemradio\" y aria-checked en RadioItem",
+        "item2": "role=\"menu\" presente en el panel",
+        "item3": "role=\"menuitem\" en cada ítem de acción",
+        "item4": "role=\"menuitemcheckbox\" y aria-checked en los ítems de marcación",
+        "item5": "role=\"menuitemradio\" y aria-checked en los ítems de radio",
         "item6": "aria-disabled en ítems deshabilitados",
-        "item7": "Escape cierra el menú y devuelve el foco al trigger",
+        "item7": "Escape cierra el menú y devuelve el foco al área",
         "item8": "Contraste mínimo 4.5:1 en todos los estados de texto",
         "item9": "La flecha también se posa en el ítem deshabilitado, que sigue en el recorrido del teclado y se anuncia como no disponible en vez de desaparecer (WAI-ARIA APG)"
       },

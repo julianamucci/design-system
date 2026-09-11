@@ -12,6 +12,7 @@ import {
 } from './context-menu.source';
 import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
+import { formaDoIndicador } from '@shared/testing/menu-checkbox-indicator';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Sem argTypes, então o painel Controls é desligado — do contrário abriria vazio.
@@ -121,12 +122,14 @@ export const WithCheckbox: Story = {
         >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
-          <div ndsContextMenuLabel>Visualização</div>
-          <div ndsContextMenuCheckboxItem [(checked)]="grade" data-testid="grade">
-            Mostrar grade
-          </div>
-          <div ndsContextMenuCheckboxItem [(checked)]="reguas" data-testid="reguas">
-            Mostrar réguas
+          <div ndsContextMenuGroup>
+            <div ndsContextMenuLabel>Visualização</div>
+            <div ndsContextMenuCheckboxItem [(checked)]="grade" data-testid="grade">
+              Mostrar grade
+            </div>
+            <div ndsContextMenuCheckboxItem [(checked)]="reguas" data-testid="reguas">
+              Mostrar réguas
+            </div>
           </div>
         </ng-template>
       </div>
@@ -151,13 +154,30 @@ export const WithCheckbox: Story = {
       }
     });
 
-    await step('Marcar alterna o estado anunciado', async () => {
+    await step('O rótulo NOMEIA o grupo dos itens que vêm depois dele', async () => {
+      // Rótulo solto entre os itens é texto que o leitor de tela anuncia sem
+      // dizer a que se aplica. O que prova a ligação é o grupo ter o nome do
+      // rótulo e conter os itens — não a presença do rótulo.
+      const menu = document.querySelector<HTMLElement>('[data-slot="context-menu-content"]')!;
+      const group = within(menu).getByRole('group', { name: 'Visualização' });
+      await expect(group.contains(target('grade'))).toBe(true);
+      await expect(group.contains(target('reguas'))).toBe(true);
+    });
+
+    await step('Marcar alterna o estado anunciado e o indicador', async () => {
       // Lê o estado ANTES de clicar: o painel Interactions reexecuta a play no
       // MESMO DOM, e um valor esperado fixo inverteria o resultado no replay.
       const antes = target('grade').getAttribute('aria-checked');
       const esperado = antes === 'true' ? 'false' : 'true';
       await userEvent.click(target('grade'));
       await waitFor(() => expect(target('grade').getAttribute('aria-checked')).toBe(esperado));
+      // O indicador aparece e some junto (`functional.item7`). Ele continua
+      // MONTADO desmarcado — a lib o esconde por `display: none` —, então a
+      // medida é o glifo desenhado, e não a presença do nó. Leitura pura dentro
+      // do `waitFor`: `getBBox` mede, não pendura nada no DOM.
+      await waitFor(() =>
+        expect(formaDoIndicador(target('grade')) !== null).toBe(esperado === 'true'),
+      );
       // O menu NÃO fecha: quem marca uma opção costuma querer marcar a próxima.
       await expect(document.querySelector('[data-slot="context-menu-content"]')).not.toBeNull();
     });
@@ -184,8 +204,8 @@ export const WithRadioGroup: Story = {
         >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
-          <div ndsContextMenuLabel>Layout</div>
           <div ndsContextMenuRadioGroup [(value)]="layout">
+            <div ndsContextMenuLabel>Layout</div>
             <div ndsContextMenuRadioItem value="grid" data-testid="grid">Grade</div>
             <div ndsContextMenuRadioItem value="list" data-testid="list">Lista</div>
             <div ndsContextMenuRadioItem value="columns" data-testid="columns">Colunas</div>
@@ -211,6 +231,16 @@ export const WithRadioGroup: Story = {
       }
     });
 
+    await step('O rótulo NOMEIA o grupo de escolha única', async () => {
+      // O grupo de escolha única já é `role="group"`; com o rótulo dentro dele,
+      // é o rótulo que lhe dá nome. Solto antes, não nomeava nada.
+      const menu = document.querySelector<HTMLElement>('[data-slot="context-menu-content"]')!;
+      const group = within(menu).getByRole('group', { name: 'Layout' });
+      for (const id of ['grid', 'list', 'columns']) {
+        await expect(group.contains(target(id))).toBe(true);
+      }
+    });
+
     await step('Escolher uma opção limpa a anterior', async () => {
       // Alterna entre dois valores conhecidos e afirma o PAR: assim o passo vale
       // igual em qualquer rodada, não importa de onde parta.
@@ -228,12 +258,12 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    covers: ['functional.item5', 'visual.item3'],
+    // `functional.item6` deixou de ser dispensa: o foco agora ENTRA no painel
+    // filho (injetor do popup no miolo + garantia no sub-gatilho, ver
+    // `context-menu.ts`), e é com ele lá dentro que a seta esquerda tem o que
+    // fechar.
+    covers: ['functional.item5', 'functional.item6', 'visual.item3'],
     docs: { source: { transform: contextMenuWithSubmenuSource } },
-    coversNotApplicable: {
-      'functional.item6':
-        'a seta esquerda só fecha o submenu com o foco dentro dele, e o foco não entra: a view do ng-template resolve DI pela arvore de declaracao e o item nao acha a lista composta do popup (mesma limitacao registrada no DropdownMenu). O Escape fecha, e esta afirmado.',
-    },
   },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },
@@ -249,6 +279,7 @@ export const WithSubmenu: Story = {
 
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>Editar</div>
+          <div ndsContextMenuItem>Duplicar</div>
 
           <div ndsContextMenuSub>
             <div ndsContextMenuSubTrigger data-testid="sub">Compartilhar</div>
@@ -264,6 +295,8 @@ export const WithSubmenu: Story = {
   play: async ({ canvasElement, step }) => {
     const area = () => canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
     const subTrigger = () => document.querySelector<HTMLElement>('[data-testid="sub"]')!;
+    const submenu = () =>
+      document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
 
     await step('O sub-gatilho diz que abre um menu', async () => {
       await gestoOpen(area());
@@ -279,16 +312,16 @@ export const WithSubmenu: Story = {
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('true'));
 
-      const submenu = document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]')!;
-      const items = submenu.querySelectorAll('[data-slot="context-menu-item"]');
+      const panel = submenu()!;
+      const items = panel.querySelectorAll('[data-slot="context-menu-item"]');
       await expect(items.length).toBe(2);
 
       // O painel é portalado para fora da árvore do menu, então `aria-expanded`
       // sozinho diz que ABRIU sem dizer O QUÊ. Quem devolve a relação é
       // `aria-owns` — e ele tem de apontar para ESTE painel, não para um id
       // qualquer.
-      await expect(submenu.id).not.toBe('');
-      await expect(subTrigger().getAttribute('aria-owns')).toBe(submenu.id);
+      await expect(panel.id).not.toBe('');
+      await expect(subTrigger().getAttribute('aria-owns')).toBe(panel.id);
 
       // "À direita" é medida, não atributo: é o que o conteúdo promete e o que
       // um `side` errado quebraria sem nenhum aviso.
@@ -297,21 +330,60 @@ export const WithSubmenu: Story = {
       // medir, e até lá fica em (0,0). Ler o retângulo no primeiro quadro dá
       // zero e o teste reprova por corrida, não por defeito.
       await waitFor(() =>
-        expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+        expect(panel.getBoundingClientRect().left).toBeGreaterThanOrEqual(
           subTrigger().getBoundingClientRect().left,
         ),
       );
     });
 
-    await step('Escape fecha o submenu e o foco fica no gatilho dele', async () => {
-      // `functional.item6` promete SETA ESQUERDA fechando — mas ela só age com o
-      // foco DENTRO do submenu, e aqui o foco nunca entra (mesma limitação do
-      // ng-template registrada no DropdownMenu). Afirmar a seta seria afirmar o
-      // que a story não produz; o Escape fecha e é caminho de teclado real.
-      await userEvent.keyboard('{Escape}');
+    await step('E o foco ENTRA no submenu, no primeiro item dele', async () => {
+      // Abrir sem entrar deixaria a pessoa vendo um painel que a seta seguinte
+      // não percorre: o percurso do teclado é o do painel que tem o foco. Era o
+      // defeito deste stack (WCAG 2.1.1) — a seta abria e o foco ficava no
+      // sub-gatilho.
+      await waitFor(() =>
+        expect(document.activeElement).toBe(
+          submenu()?.querySelector('[data-slot="context-menu-item"]') ?? null,
+        ),
+      );
+      // Com o foco lá dentro, o sub-gatilho segue destacado: é ele que diz de
+      // onde o painel saiu.
+      await expect(subTrigger().hasAttribute('data-popup-open')).toBe(true);
+    });
+
+    await step('Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho', async () => {
+      await userEvent.keyboard('{ArrowLeft}');
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('false'));
       await expect(subTrigger().getAttribute('aria-owns')).toBeNull();
-      await expect(document.activeElement).toBe(subTrigger());
+      await waitFor(() => expect(document.activeElement).toBe(subTrigger()));
+      // Só o submenu fechou: o menu pai continua aberto em volta do foco.
+      await expect(document.querySelector('[data-slot="context-menu-content"]')).not.toBeNull();
+    });
+
+    await step('Escape no submenu fecha só o submenu e devolve o foco ao sub-gatilho', async () => {
+      // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
+      // aberto — um nível de volta não pode custar os dois, senão a pessoa
+      // recomeça do clique direito. Quem sabe que há um nível mais fundo é a
+      // árvore flutuante da lib, e ela só sabe porque o painel do submenu se
+      // registra como FILHO do pai (injetor do popup, `menu-popup-scope.ts`).
+      const root = document.querySelector<HTMLElement>('[data-slot="context-menu-content"]');
+      // O foco está no sub-gatilho (passo anterior): a seta reabre e entra.
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() =>
+        expect(document.activeElement).toBe(
+          submenu()?.querySelector('[data-slot="context-menu-item"]') ?? null,
+        ),
+      );
+
+      await userEvent.keyboard('{Escape}');
+      await waitFor(() => expect(submenu()).toBeNull());
+      await waitFor(() => expect(document.activeElement).toBe(subTrigger()));
+      await expect(subTrigger().getAttribute('aria-expanded')).toBe('false');
+      // O raiz é o MESMO nó, um quadro depois: um painel fechado e reaberto no
+      // meio passaria por "aberto".
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(document.querySelector('[data-slot="context-menu-content"]')).toBe(root);
+      await expect(root?.isConnected).toBe(true);
     });
 
     await step('A story termina com o submenu ABERTO', async () => {
@@ -319,9 +391,7 @@ export const WithSubmenu: Story = {
       // terminava no Escape, ou seja, com ele fechado: o Chromatic fotografava
       // exatamente o estado que o item do contrato não descreve.
       await userEvent.keyboard('{ArrowRight}');
-      await waitFor(() =>
-        expect(document.querySelector('[data-slot="context-menu-sub-content"]')).not.toBeNull(),
-      );
+      await waitFor(() => expect(submenu()).not.toBeNull());
     });
   },
 };

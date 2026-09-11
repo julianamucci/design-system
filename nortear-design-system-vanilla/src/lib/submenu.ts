@@ -282,7 +282,24 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     // quem montou: dois dos três chamadores nem o escreviam, e o terceiro
     // (menubar) cravava `right` na construção, antes de existir medida. Depois
     // da troca esse valor estaria mentindo.
-    positionFloating(trigger, panel, 'right', 'start', sideOffset, { flip: true });
+    const side = positionFloating(trigger, panel, 'right', 'start', sideOffset, { flip: true });
+
+    // A ORIGEM do zoom de entrada é a borda que encosta no item, na altura do
+    // item: à esquerda do painel quando ele sai pela direita, à direita quando o
+    // `flip` o virou. A folha compartilhada lê `--transform-origin` como
+    // primeiro degrau da cadeia (o nome que o base-ui publica), e sem ele caía
+    // em `center` — o submenu crescia do MEIO, em silêncio, porque `center` é
+    // fallback válido. É custom property: onde a folha do painel não a lê (ou o
+    // painel não anima a entrada), ela não muda nada.
+    //
+    // A altura sai do `top` que a conta acabou de escrever, e não de medir o
+    // painel: a caixa dele pode estar no primeiro quadro da animação, com o
+    // `scale` aplicado.
+    const originY = trigger.getBoundingClientRect().top + window.scrollY - parseFloat(panel.style.top);
+    panel.style.setProperty(
+      '--transform-origin',
+      `${side === 'left' ? '100%' : '0px'} ${Math.max(0, originY)}px`,
+    );
 
     if (closeDelay > 0) {
       panel.addEventListener('mouseenter', cancelClose);

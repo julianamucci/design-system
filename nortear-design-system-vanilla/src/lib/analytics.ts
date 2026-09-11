@@ -286,18 +286,39 @@ interface AnalyticsEvents {
     location?: string;
   };
 
-  /** Disparado ao abrir um ContextMenu via right-click. */
-  menu_open: {
+  /**
+   * Os três eventos do ContextMenu. Até 2026-09-10 eram `menu_open` e
+   * `menu_item_click` — outro vocabulário que o do irmão DropdownMenu
+   * (`dropdown_menu_*`), com o `component` dizendo `context-menu` e o evento de
+   * item sem `component` nenhum; e o fechamento não era medido. Decisão da dona:
+   * a família fala uma língua só no GA4 (a série `menu_*` para de crescer aí).
+   *
+   * `menu` é o id ESTÁVEL do menu (`demo`, `pair1-do`…), `label` o valor do
+   * item — nunca texto traduzido. `location` é a seção da docs page (guideline 07).
+   */
+  context_menu_open: {
     component: 'context-menu';
-    location?: string;
-    menu?: string;
+    menu: string;
+    location: string;
   };
 
-  /** Disparado ao selecionar um item de um ContextMenu. */
-  menu_item_click: {
+  context_menu_item_select: {
+    component: 'context-menu';
     label: string;
     menu: string;
-    location?: string;
+    location: string;
+  };
+
+  /**
+   * `reason` no vocabulário da família (portão `reason_vocabulario_divergente`):
+   * o ContextMenu fecha por `escape`, por clique fora ou Tab (`overlay`) ou pela escolha
+   * de um item (`api`) — não tem botão de fechar, mas o tipo carrega as quatro.
+   */
+  context_menu_close: {
+    component: 'context-menu';
+    menu: string;
+    reason: 'escape' | 'overlay' | 'close-button' | 'api';
+    location: string;
   };
 
   /**

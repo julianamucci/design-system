@@ -117,6 +117,26 @@ export const WithCheckbox: Story = {
       await expect(item('reguas').getAttribute('aria-checked')).toBe('true');
     });
 
+    await step('O indicador é a peça de marcação, nomeada pelo data-slot', async () => {
+      // O `data-slot` do indicador é por TIPO de item nas cinco stacks — é por
+      // ele que a auditoria compara o markup. Um indicador genérico passaria em
+      // todas as outras asserções desta story.
+      for (const value of ['grade', 'reguas']) {
+        await expect(
+          item(value).querySelector('[data-slot="context-menu-checkbox-item-indicator"]'),
+        ).not.toBeNull();
+      }
+    });
+
+    await step('O rótulo NOMEIA o grupo dos itens que vêm depois dele', async () => {
+      // Rótulo solto entre os itens é texto que o leitor de tela anuncia sem
+      // dizer a que se aplica. O que prova a ligação é o grupo ter o nome do
+      // rótulo e conter os itens — não a presença do rótulo.
+      const group = within(menuOpen()!).getByRole('group', { name: 'Visualização' });
+      await expect(group.contains(item('grade'))).toBe(true);
+      await expect(group.contains(item('reguas'))).toBe(true);
+    });
+
     await step('Marcar alterna o estado anunciado e o indicador', async () => {
       // Lê o estado ANTES de clicar: no replay a story parte do que a rodada
       // anterior deixou, e um valor esperado fixo inverteria o resultado.
@@ -168,6 +188,16 @@ export const WithRadioGroup: Story = {
       await gestoOpen(area());
       await expect(item('grid').getAttribute('role')).toBe('menuitemradio');
       await expect(item('list').getAttribute('role')).toBe('menuitemradio');
+    });
+
+    await step('O indicador é a peça de rádio, nomeada pelo data-slot', async () => {
+      // O mesmo desenho do item de marcação (D8), mas outra peça: o que separa
+      // os dois no markup é o `data-slot`, e é ele que se compara entre stacks.
+      for (const value of ['grid', 'list', 'columns']) {
+        await expect(
+          item(value).querySelector('[data-slot="context-menu-radio-item-indicator"]'),
+        ).not.toBeNull();
+      }
     });
 
     await step('Escolher uma opção limpa a anterior', async () => {
@@ -255,10 +285,59 @@ export const WithSubmenu: Story = {
       );
     });
 
+    await step('E o foco ENTRA no submenu, no primeiro item dele', async () => {
+      // Abrir sem entrar deixaria a pessoa vendo um painel que a seta seguinte
+      // não percorre: o percurso do teclado é o do painel que tem o foco.
+      await expect(document.activeElement).toBe(
+        submenu()!.querySelector('[data-slot="context-menu-item"]'),
+      );
+    });
+
+    await step('Com o foco lá dentro, o sub-gatilho continua destacado', async () => {
+      // O destaque do sub-gatilho vinha só do `:focus`, e sumia no passo em que
+      // o foco entra no painel filho — a pessoa perdia de vista de onde ele
+      // saiu. Quem o segura agora é o `data-state="open"`, que a folha lê. A
+      // medida é a cor pintada, comparada com a de um irmão sem destaque.
+      await expect(subTrigger().getAttribute('data-state')).toBe('open');
+      await expect(getComputedStyle(subTrigger()).backgroundColor).not.toBe(
+        getComputedStyle(item('duplicate')).backgroundColor,
+      );
+    });
+
+    await step('O submenu cresce a partir do item, não do meio', async () => {
+      // Mesma origem de zoom que o painel raiz: a borda encostada no item.
+      // Sem `--transform-origin` a cadeia da folha cai em `center`, e nada
+      // reprova — por isso a medida é a origem resolvida.
+      const panel = submenu()!;
+      const [ox] = getComputedStyle(panel).transformOrigin.split(' ').map(parseFloat);
+      await expect(ox).toBeLessThan(panel.offsetWidth / 4);
+    });
+
     await step('Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho', async () => {
       await userEvent.keyboard('{ArrowLeft}');
       await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('false'));
       await expect(document.activeElement).toBe(subTrigger());
+      await expect(subTrigger().getAttribute('data-state')).toBe('closed');
+    });
+
+    await step('Escape no submenu fecha SÓ o submenu e devolve o foco ao sub-gatilho', async () => {
+      // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
+      // aberto (C5 do PRD). Fechar a árvore inteira custaria os dois níveis por
+      // um, e a pessoa recomeçaria do clique direito.
+      const root = menuOpen();
+      subTrigger().focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(document.activeElement).toBe(item('por-email')));
+
+      await userEvent.keyboard('{Escape}');
+      await expect(submenu()).toBeNull();
+      await expect(document.activeElement).toBe(subTrigger());
+      await expect(subTrigger().getAttribute('aria-expanded')).toBe('false');
+      // O raiz é o MESMO nó, um quadro depois: um painel fechado e reaberto no
+      // meio passaria por "aberto" numa leitura que só procurasse um menu.
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(menuOpen()).toBe(root);
+      await expect(root?.isConnected).toBe(true);
     });
 
     await step('A story termina com o submenu ABERTO', async () => {
@@ -354,6 +433,24 @@ export const CompleteComposition: Story = {
       for (const label of rotulos) {
         await expect(label.getAttribute('role')).not.toBe('menuitem');
       }
+    });
+
+    await step('Cada rótulo nomeia o seu grupo, e o separador fecha o grupo', async () => {
+      // Três rótulos, três grupos — e cada item fica no grupo do rótulo que o
+      // antecede. "Excluir" vem depois do último separador: fica fora de todos.
+      const menu = menuOpen()!;
+      for (const label of menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-label"]')) {
+        const group = menu.querySelector(`[role="group"][aria-labelledby="${label.id}"]`);
+        await expect(group).not.toBeNull();
+        await expect(group!.contains(label)).toBe(true);
+      }
+      await expect(item('grade').closest('[role="group"]')?.getAttribute('aria-labelledby')).toBe(
+        within(menu).getByText('Visualização').id,
+      );
+      await expect(item('grid').closest('[role="group"]')?.getAttribute('aria-labelledby')).toBe(
+        within(menu).getByText('Layout').id,
+      );
+      await expect(item('delete').closest('[role="group"]')).toBeNull();
     });
   },
 };

@@ -1,6 +1,11 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import * as ContextMenu from '@/components/ui/context-menu';
+  import {
+    contextMenuEntriesSource,
+    contextMenuEntriesState,
+    type ContextMenuDocsEntry,
+  } from '@/components/ui/context-menu/context-menu.source';
   import { Button } from '@/components/ui/button';
   import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
   import { locale, useTranslation } from '@/lib/i18n';
@@ -26,7 +31,7 @@
 
   import uiTranslations from '@/i18n/ui.json';
   import componentTranslations from '@shared/content/context-menu/translations.json';
-  import { stripHtml, toPlainText } from '@/lib/strip-html';
+  import { toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
   const { tStore } = useTranslation(componentTranslations);
@@ -50,11 +55,16 @@
   $effect(() => {
     const t = $tStore;
     const l = $locale;
+    // `aiSummary` e `aiEntities` são o que a página oferece aos motores
+    // generativos (JSON-LD `abstract` e `about`). Estavam no conteúdo e não
+    // chegavam aqui — a página publicava o artigo sem resumo nem entidades.
     const cleanup = applySeo({
       title: t('seo.title'),
       description: t('seo.description'),
       locale: l,
       componentSlug: 'context-menu',
+      aiSummary: t('seo.aiSummary'),
+      aiEntities: t('seo.aiEntities'),
     });
     track('docs_page_view', {
       component_name: 'context-menu',
@@ -159,66 +169,263 @@
     return out;
   }
 
-  // Ferramenta de verificação fica aqui, e não no conteúdo compartilhado,
-  // porque é IDENTIFICADOR de ferramenta — e identificador não se traduz.
-  // Critério além desta lista cai no padrão.
-  const a11yTestHow = [
+  // Nível WCAG e forma de verificar cada critério de acessibilidade, por índice —
+  // a MESMA lista nas cinco stacks. São identificadores (número de critério,
+  // consulta da suíte, regra do axe), e identificador não se traduz: por isso
+  // ficam aqui e não no conteúdo compartilhado. Item além da lista cai no par
+  // padrão em vez de sumir.
+  const A11Y_TEST_LEVELS = [
+    'AA',
+    '4.1.2 · A',
+    '4.1.2 · A',
+    '4.1.2 · A',
+    '4.1.2 · A',
+    '4.1.2 · A',
+    '2.1.1 · A',
+    '1.4.3 · AA',
+    '2.1.1 · A',
+  ];
+  const A11Y_TEST_HOW = [
     'axe-core',
-    'DOM inspection',
-    'DOM inspection',
-    'DOM inspection',
-    'DOM inspection',
-    'DOM inspection',
-    'Keyboard test',
-    'Contrast analyzer',
-    'Keyboard test',
+    "getByRole('menu')",
+    "getAllByRole('menuitem')",
+    "getAllByRole('menuitemcheckbox') · aria-checked",
+    "getAllByRole('menuitemradio') · aria-checked",
+    'aria-disabled',
+    'Escape · document.activeElement',
+    'axe-core · color-contrast',
+    'ArrowDown · document.activeElement',
   ];
 
   /**
-   * `location` é a SEÇÃO onde o elemento está, e é por isso que ele chega por
-   * parâmetro em vez de sair de uma constante no topo do arquivo.
+   * Abertura, escolha e fechamento de UM menu vivo desta página.
    *
-   * A página inteira mandava `docs_demo`: um clique no preview de Variantes ou
-   * do Do & Don't é tão real quanto o da Demonstração, e chegava ao GA4 com o
-   * carimbo da seção errada. O `menu` nomeia o preview; o rótulo traduzido
-   * nunca entra, sob pena de partir o mesmo evento em um por idioma.
+   * `menu` é o id estável do menu e `location` a SEÇÃO onde ele está (guideline
+   * 07): um clique no preview de Variantes ou do Do & Don't é tão real quanto o
+   * da Demonstração. `label` é o valor estável do item. Nenhum dos três leva
+   * texto traduzido, sob pena de partir o mesmo evento em um por idioma.
+   *
+   * O MOTIVO do fechamento: o `onOpenChange` da lib diz só que fechou. O Escape
+   * e a escolha de item se anotam antes do aviso — o `onEscapeKeydown` do painel
+   * e o `onSelect` do item rodam antes de a lib fechar —, e o que sobra é
+   * `overlay`: clique fora ou o Tab que leva o foco embora, que é sair sem
+   * decidir. O Escape dentro de um submenu fecha só o submenu (o wrapper barra a
+   * tecla antes do painel de cima), e por isso não anota nada no menu de cima.
+   *
+   * Duas portas para o item, porque só uma decide: `select` é o item de AÇÃO,
+   * que fecha o menu e arma `api`; `toggle` é a marcação e a opção de rádio,
+   * que alternam e deixam o menu aberto. As duas avisam a escolha, mas `toggle`
+   * não arma motivo nenhum — armado ali, o clique fora ou o Tab seguinte sairia
+   * como `api`, uma decisão que ninguém tomou.
    */
-  function trackMenuOpen(menu: string, location: string, open: boolean): void {
-    if (!open) return;
-    track('menu_open', { component: 'context-menu', menu, location });
+  function contextMenuTracker(menu: string, location: string) {
+    let reason: 'escape' | 'overlay' | 'api' = 'overlay';
+    const announce = (label: string) =>
+      track('context_menu_item_select', { component: 'context-menu', label, menu, location });
+    return {
+      onOpenChange(open: boolean) {
+        if (open) {
+          reason = 'overlay';
+          track('context_menu_open', { component: 'context-menu', menu, location });
+          return;
+        }
+        track('context_menu_close', { component: 'context-menu', menu, reason, location });
+      },
+      onEscapeKeydown() {
+        reason = 'escape';
+      },
+      select(label: string) {
+        return () => {
+          reason = 'api';
+          announce(label);
+        };
+      },
+      toggle(label: string) {
+        return () => announce(label);
+      },
+    };
   }
 
-  // ─── State para demos interativos ────────────────────────────────────────────
+  type ContextMenuTracker = ReturnType<typeof contextMenuTracker>;
 
-  let checkboxShowBookmarks = $state(true);
-  let checkboxShowFullUrls = $state(false);
-  let radioValue = $state('pedro');
+  // Um rastreador por menu vivo: o motivo do fechamento é estado de CADA menu.
+  // Os ids de Variantes são a chave do card em kebab; os do Do & Don't, o par e
+  // o lado.
+  const menus = {
+    demo:          contextMenuTracker('demo',           'docs_demo'),
+    pair1Do:       contextMenuTracker('pair1-do',       'docs_do_dont'),
+    pair1Dont:     contextMenuTracker('pair1-dont',     'docs_do_dont'),
+    pair2Do:       contextMenuTracker('pair2-do',       'docs_do_dont'),
+    pair2Dont:     contextMenuTracker('pair2-dont',     'docs_do_dont'),
+    pair3Do:       contextMenuTracker('pair3-do',       'docs_do_dont'),
+    pair3Dont:     contextMenuTracker('pair3-dont',     'docs_do_dont'),
+    default:       contextMenuTracker('default',        'docs_variantes'),
+    destructive:   contextMenuTracker('destructive',    'docs_variantes'),
+    label:         contextMenuTracker('label',          'docs_variantes'),
+    withCheckbox:  contextMenuTracker('with-checkbox',  'docs_variantes'),
+    withRadio:     contextMenuTracker('with-radio',     'docs_variantes'),
+    withSubmenu:   contextMenuTracker('with-submenu',   'docs_variantes'),
+    withShortcuts: contextMenuTracker('with-shortcuts', 'docs_variantes'),
+  };
 
-  // Composições — estado
-  let compShowGrid = $state(true);
-  let compShowRulers = $state(false);
-  let compZoom = $state('100');
+  // ─── Cards de Variantes ──────────────────────────────────────────────────────
+  //
+  // Os sete cards, pela CHAVE do conteúdo compartilhado. A MESMA lista monta a
+  // prévia (o snippet `menuEntries`) e imprime o código
+  // (`contextMenuEntriesSource`), como a `variantMenu` do vanilla. Até
+  // 2026-09-10 cada card tinha um literal em português ao lado da prévia: em
+  // inglês ou espanhol a prévia dizia "Edit" e o código "Editar", o de marcação
+  // publicava os estados trocados e o destrutivo mostrava um atalho que as outras
+  // stacks não mostram. Rótulo sai de `demonstration.labels.*`; o `value` de
+  // cada item é o valor estável do evento.
+
+  const VARIANT_KEYS = [
+    'default',
+    'destructive',
+    'label',
+    'withCheckbox',
+    'withRadio',
+    'withSubmenu',
+    'withShortcuts',
+  ] as const;
+  type VariantKey = (typeof VARIANT_KEYS)[number];
+
+  function variantEntries(key: VariantKey, t: (key: string) => string): ContextMenuDocsEntry[] {
+    // A chave do rótulo vai inteira, e não montada por partes: é por ela que o
+    // `audit.mjs` confere que a página usa os mesmos rótulos das outras stacks.
+    const action = (
+      value: string,
+      labelKey: string,
+      extra: { shortcut?: string; variant?: 'destructive'; inset?: boolean } = {},
+    ): ContextMenuDocsEntry => ({ type: 'item', value, label: t(labelKey), ...extra });
+    const separator: ContextMenuDocsEntry = { type: 'separator' };
+
+    switch (key) {
+      case 'default':
+        return [
+          action('edit', 'demonstration.labels.edit'),
+          action('duplicate', 'demonstration.labels.duplicate'),
+        ];
+      case 'destructive':
+        // Sem atalho, como nas outras quatro: atalho é assunto de `withShortcuts`.
+        return [
+          action('edit', 'demonstration.labels.edit'),
+          separator,
+          action('delete', 'demonstration.labels.delete', { variant: 'destructive' }),
+        ];
+      case 'label':
+        // O rótulo mora DENTRO do grupo, e é por isso que ele nomeia o bloco.
+        return [
+          {
+            type: 'group',
+            label: t('demonstration.labels.groupActions'),
+            inset: true,
+            items: [
+              action('edit', 'demonstration.labels.edit', { inset: true }),
+              action('duplicate', 'demonstration.labels.duplicate', { inset: true }),
+            ],
+          },
+        ];
+      case 'withCheckbox':
+        // "Mostrar grade" desmarcada e "Mostrar réguas" marcada, como no vanilla
+        // e na story `WithCheckbox`.
+        return [
+          {
+            type: 'group',
+            label: t('demonstration.labels.groupView'),
+            items: [
+              {
+                type: 'checkbox',
+                value: 'show-grid',
+                label: t('demonstration.labels.showGrid'),
+                checked: false,
+              },
+              {
+                type: 'checkbox',
+                value: 'show-rulers',
+                label: t('demonstration.labels.showRulers'),
+                checked: true,
+              },
+            ],
+          },
+        ];
+      case 'withRadio':
+        // O grupo de rádio já é um grupo: o rótulo mora dentro dele e o nomeia.
+        return [
+          {
+            type: 'radio-group',
+            label: t('demonstration.labels.groupLayout'),
+            name: 'layout',
+            value: 'layout-grid',
+            items: [
+              { value: 'layout-grid', label: t('demonstration.labels.layoutGrid') },
+              { value: 'layout-list', label: t('demonstration.labels.layoutList') },
+              { value: 'layout-columns', label: t('demonstration.labels.layoutColumns') },
+            ],
+          },
+        ];
+      case 'withSubmenu':
+        return [
+          action('edit', 'demonstration.labels.edit'),
+          action('duplicate', 'demonstration.labels.duplicate'),
+          {
+            type: 'submenu',
+            label: t('demonstration.labels.share'),
+            items: [
+              action('share-email', 'demonstration.labels.shareEmail'),
+              action('share-link', 'demonstration.labels.shareLink'),
+            ],
+          },
+        ];
+      case 'withShortcuts':
+        return [
+          action('edit', 'demonstration.labels.edit', {
+            shortcut: t('demonstration.labels.editShortcut'),
+          }),
+          action('duplicate', 'demonstration.labels.duplicate', {
+            shortcut: t('demonstration.labels.duplicateShortcut'),
+          }),
+          separator,
+          action('delete', 'demonstration.labels.delete', {
+            shortcut: t('demonstration.labels.deleteShortcut'),
+            variant: 'destructive',
+          }),
+        ];
+    }
+  }
+
+  // As listas no idioma da página, lidas uma vez por troca de idioma: é delas
+  // que saem a prévia e o código de cada card.
+  const variantMenus = $derived.by(() => {
+    const t = $tStore;
+    return Object.fromEntries(VARIANT_KEYS.map((key) => [key, variantEntries(key, t)])) as Record<
+      VariantKey,
+      ContextMenuDocsEntry[]
+    >;
+  });
+
+  const variantCode = (key: VariantKey) =>
+    contextMenuEntriesSource({
+      triggerLabel: $tStore('demonstration.labels.triggerLabel'),
+      entries: variantMenus[key],
+    });
+
+  // As marcações e a escolha única dos cards abrem no estado que a lista
+  // declara — o mesmo que o código publica. O rótulo não importa aqui, e por
+  // isso a leitura dispensa o idioma.
+  const variantState = $state(
+    contextMenuEntriesState(VARIANT_KEYS.flatMap((key) => variantEntries(key, (name) => name))),
+  );
 
   // ─── Code strings ────────────────────────────────────────────────────────────
 
   const codeImportBasic = `import * as ContextMenu from "@/components/ui/context-menu";`;
 
-  const codeImportWithSub = `import {
-  ContextMenu,
-  ContextMenuTrigger,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuSeparator,
-  ContextMenuSub,
-  ContextMenuSubTrigger,
-  ContextMenuSubContent,
-  ContextMenuShortcut,
-} from "@/components/ui/context-menu";`;
-
   const codeImportWithCheckbox = `import {
   ContextMenu,
   ContextMenuTrigger,
   ContextMenuContent,
+  ContextMenuGroup,
   ContextMenuLabel,
   ContextMenuSeparator,
   ContextMenuCheckboxItem,
@@ -226,145 +433,43 @@
   ContextMenuRadioItem,
 } from "@/components/ui/context-menu";`;
 
-  const codeDefault = `<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">
-    Clique com o botão direito aqui
-  </ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Item>
-      Editar
-      <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
-    </ContextMenu.Item>
-    <ContextMenu.Item>Duplicar</ContextMenu.Item>
-    <ContextMenu.Separator />
-    <ContextMenu.Item variant="destructive">
-      Excluir
-      <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
-    </ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
-
-  const codeDestructive = `<ContextMenu.Item variant="destructive">
-  Excluir
-  <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
-</ContextMenu.Item>`;
-
-  const codeVariantLabel = `<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Group>
-      <ContextMenu.Label>Grupo de ações</ContextMenu.Label>
-      <ContextMenu.Item inset>Editar</ContextMenu.Item>
-      <ContextMenu.Item inset>Duplicar</ContextMenu.Item>
-    </ContextMenu.Group>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
-
-  const codeCustomizationTokens = `/* Customizar tokens do Context Menu via tema */
-:root {
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
-}`;
-
-  const codeCompCheckbox = `<script lang="ts">
-  import * as ContextMenu from "@/components/ui/context-menu";
-  let showGrid = $state(true);
-  let showRulers = $state(false);
-<\/script>
-<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Group>
-      <ContextMenu.Label inset>Visualização</ContextMenu.Label>
-      <ContextMenu.CheckboxItem bind:checked={showGrid}>Mostrar grade</ContextMenu.CheckboxItem>
-      <ContextMenu.CheckboxItem bind:checked={showRulers}>Mostrar réguas</ContextMenu.CheckboxItem>
-    </ContextMenu.Group>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
-
-  const codeCompRadio = `<script lang="ts">
-  import * as ContextMenu from "@/components/ui/context-menu";
-  let zoom = $state("100");
-<\/script>
-<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Group>
-      <ContextMenu.Label inset>Zoom</ContextMenu.Label>
-      <ContextMenu.RadioGroup bind:value={zoom}>
-        <ContextMenu.RadioItem value="75">75%</ContextMenu.RadioItem>
-        <ContextMenu.RadioItem value="100">100%</ContextMenu.RadioItem>
-        <ContextMenu.RadioItem value="150">150%</ContextMenu.RadioItem>
-      </ContextMenu.RadioGroup>
-    </ContextMenu.Group>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
-
-  const codeCompSubmenu = `<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Item>Editar</ContextMenu.Item>
-    <ContextMenu.Item>Duplicar</ContextMenu.Item>
-    <ContextMenu.Sub>
-      <ContextMenu.SubTrigger>Compartilhar</ContextMenu.SubTrigger>
-      <ContextMenu.SubContent>
-        <ContextMenu.Item>Por e-mail</ContextMenu.Item>
-        <ContextMenu.Item>Por link</ContextMenu.Item>
-      </ContextMenu.SubContent>
-    </ContextMenu.Sub>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
-
-  const codeCompShortcuts = `<ContextMenu.Root>
-  <ContextMenu.Trigger class="...">Right-click aqui</ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Item>
-      Editar
-      <ContextMenu.Shortcut>Ctrl+E</ContextMenu.Shortcut>
-    </ContextMenu.Item>
-    <ContextMenu.Item>
-      Duplicar
-      <ContextMenu.Shortcut>Ctrl+D</ContextMenu.Shortcut>
-    </ContextMenu.Item>
-    <ContextMenu.Separator />
-    <ContextMenu.Item variant="destructive">
-      Excluir
-      <ContextMenu.Shortcut>Delete</ContextMenu.Shortcut>
-    </ContextMenu.Item>
-  </ContextMenu.Content>
-</ContextMenu.Root>`;
-
+  // As peças que esta stack TEM, com os nomes dela. `inset` só onde a folha o
+  // lê — item, rótulo e sub-gatilho —, e os itens de marcação e de rádio não
+  // fecham o menu ao alternar (`closeOnSelect` nasce desligado neles).
   const interfaceCode = `// ContextMenuItem
 interface ContextMenuItemProps {
   variant?: 'default' | 'destructive';
   inset?: boolean;
   disabled?: boolean;
-  onSelect?: () => void;
+  onSelect?: (event: Event) => void;
   class?: string;
 }
 
 // ContextMenuCheckboxItem
 interface ContextMenuCheckboxItemProps {
-  checked?: boolean;
-  inset?: boolean;
+  checked?: boolean;          // bind:checked
+  indeterminate?: boolean;    // bind:indeterminate
   disabled?: boolean;
+  closeOnSelect?: boolean;    // false
   onCheckedChange?: (checked: boolean) => void;
+}
+
+// ContextMenuRadioGroup
+interface ContextMenuRadioGroupProps {
+  value?: string;             // bind:value
+  onValueChange?: (value: string) => void;
 }
 
 // ContextMenuRadioItem
 interface ContextMenuRadioItemProps {
   value: string;
-  inset?: boolean;
   disabled?: boolean;
+  closeOnSelect?: boolean;    // false
 }
 
-// ContextMenuRadioGroup
-interface ContextMenuRadioGroupProps {
-  value?: string;
-  onValueChange?: (value: string) => void;
+// ContextMenuLabel
+interface ContextMenuLabelProps {
+  inset?: boolean;
 }`;
 </script>
 
@@ -381,30 +486,31 @@ interface ContextMenuRadioGroupProps {
   <!-- ── Demonstração ──────────────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
-      <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('demo', 'docs_demo', o)}>
-        <ContextMenu.Trigger
-          class={areaClasse}
-          data-align="center"
-          data-justify="center"
-         
-        >
+      <ContextMenu.Root onOpenChange={menus.demo.onOpenChange}>
+        <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
           {$tStore('demonstration.labels.triggerLabel')}
         </ContextMenu.Trigger>
-        <ContextMenu.Content>
-          <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'edit', menu: 'demo', location: 'docs_demo' })}>
+        <ContextMenu.Content onEscapeKeydown={menus.demo.onEscapeKeydown}>
+          <ContextMenu.Item onSelect={menus.demo.select('edit')}>
             {$tStore('demonstration.labels.edit')}
             <ContextMenu.Shortcut>{$tStore('demonstration.labels.editShortcut')}</ContextMenu.Shortcut>
           </ContextMenu.Item>
-          <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'duplicate', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
+          <ContextMenu.Item onSelect={menus.demo.select('duplicate')}>
+            {$tStore('demonstration.labels.duplicate')}
+          </ContextMenu.Item>
           <ContextMenu.Sub>
             <ContextMenu.SubTrigger>{$tStore('demonstration.labels.share')}</ContextMenu.SubTrigger>
             <ContextMenu.SubContent>
-              <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'share-email', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.shareEmail')}</ContextMenu.Item>
-              <ContextMenu.Item onSelect={() => track('menu_item_click', { label: 'share-link', menu: 'demo', location: 'docs_demo' })}>{$tStore('demonstration.labels.shareLink')}</ContextMenu.Item>
+              <ContextMenu.Item onSelect={menus.demo.select('share-email')}>
+                {$tStore('demonstration.labels.shareEmail')}
+              </ContextMenu.Item>
+              <ContextMenu.Item onSelect={menus.demo.select('share-link')}>
+                {$tStore('demonstration.labels.shareLink')}
+              </ContextMenu.Item>
             </ContextMenu.SubContent>
           </ContextMenu.Sub>
           <ContextMenu.Separator />
-          <ContextMenu.Item variant="destructive" onSelect={() => track('menu_item_click', { label: 'delete', menu: 'demo', location: 'docs_demo' })}>
+          <ContextMenu.Item variant="destructive" onSelect={menus.demo.select('delete')}>
             {$tStore('demonstration.labels.delete')}
             <ContextMenu.Shortcut>{$tStore('demonstration.labels.deleteShortcut')}</ContextMenu.Shortcut>
           </ContextMenu.Item>
@@ -448,30 +554,34 @@ interface ContextMenuRadioGroupProps {
   />
 
   <!-- ── Do & Don't ───────────────────────────────────────────────────── -->
+  <!--
+    As legendas são TEXTO no container, e o conteúdo pode trazer marcação: sem
+    `toPlainText` a tag chegaria à tela como texto.
+  -->
   <DocsDoDont
     title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair1.do'),
-        dontCaption: $tStore('doDont.pair1.dont'),
+        doCaption: toPlainText($tStore('doDont.pair1.do')),
+        dontCaption: toPlainText($tStore('doDont.pair1.dont')),
         doPreview: doPair1,
         dontPreview: dontPair1,
       },
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair2.do'),
-        dontCaption: $tStore('doDont.pair2.dont'),
+        doCaption: toPlainText($tStore('doDont.pair2.do')),
+        dontCaption: toPlainText($tStore('doDont.pair2.dont')),
         doPreview: doPair2,
         dontPreview: dontPair2,
       },
       {
         doLabel: $tNavStore('common.do'),
         dontLabel: $tNavStore('common.dont'),
-        doCaption: $tStore('doDont.pair3.do'),
-        dontCaption: $tStore('doDont.pair3.dont'),
+        doCaption: toPlainText($tStore('doDont.pair3.do')),
+        dontCaption: toPlainText($tStore('doDont.pair3.dont')),
         doPreview: doPair3,
         dontPreview: dontPair3,
       },
@@ -484,22 +594,25 @@ interface ContextMenuRadioGroupProps {
     A legenda promete "as mesmas ações também via botão visível", então o lado do
     faça DESENHA o botão — anunciá-lo por escrito ("+ botão visível") era CONTAR
     o que o par existe para MOSTRAR, e um texto solto não prova que a ação é
-    alcançável sem o botão direito. Os dois menus levam as mesmas ações; o que
-    muda entre os lados é só o botão.
+    alcançável sem o botão direito. Os dois menus são o MESMO — Editar e Excluir,
+    sem divisória, como no vanilla —; o que muda entre os lados é só o botão.
+    A divisória é assunto do par 2, e aqui ela seria uma segunda diferença
+    competindo com a alternativa visível.
 
     Todo rótulo sai do conteúdo compartilhado: literal em português fica em
     português para quem lê a página em inglês ou espanhol, sem erro e sem aviso.
   -->
   {#snippet doPair1()}
     <div class="nds-stack" data-spacing="sm" data-align="center">
-      <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par1-do', 'docs_do_dont', o)}>
+      <ContextMenu.Root onOpenChange={menus.pair1Do.onOpenChange}>
         <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
           {$tStore('demonstration.labels.triggerLabel')}
         </ContextMenu.Trigger>
-        <ContextMenu.Content>
-          <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
-          <ContextMenu.Separator />
-          <ContextMenu.Item variant="destructive">
+        <ContextMenu.Content onEscapeKeydown={menus.pair1Do.onEscapeKeydown}>
+          <ContextMenu.Item onSelect={menus.pair1Do.select('edit')}>
+            {$tStore('demonstration.labels.edit')}
+          </ContextMenu.Item>
+          <ContextMenu.Item variant="destructive" onSelect={menus.pair1Do.select('delete')}>
             {$tStore('demonstration.labels.delete')}
           </ContextMenu.Item>
         </ContextMenu.Content>
@@ -509,56 +622,60 @@ interface ContextMenuRadioGroupProps {
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par1-dont', 'docs_do_dont', o)}>
+    <ContextMenu.Root onOpenChange={menus.pair1Dont.onOpenChange}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
-        <ContextMenu.Separator />
-        <ContextMenu.Item variant="destructive">
+      <ContextMenu.Content onEscapeKeydown={menus.pair1Dont.onEscapeKeydown}>
+        <ContextMenu.Item onSelect={menus.pair1Dont.select('edit')}>
+          {$tStore('demonstration.labels.edit')}
+        </ContextMenu.Item>
+        <ContextMenu.Item variant="destructive" onSelect={menus.pair1Dont.select('delete')}>
           {$tStore('demonstration.labels.delete')}
         </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
 
-  <!-- Par 2: item destrutivo separado, e o submenu que não se aninha. -->
+  <!--
+    Par 2: a ação destrutiva. No faça ela vem na variante destrutiva, separada
+    das outras por uma linha; no evite ela tem a mesma aparência das outras e
+    mora no MEIO da lista — é o que a legenda de cada lado descreve.
+  -->
   {#snippet doPair2()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par2-do', 'docs_do_dont', o)}>
+    <ContextMenu.Root onOpenChange={menus.pair2Do.onOpenChange}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
-        <ContextMenu.Item>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
+      <ContextMenu.Content onEscapeKeydown={menus.pair2Do.onEscapeKeydown}>
+        <ContextMenu.Item onSelect={menus.pair2Do.select('edit')}>
+          {$tStore('demonstration.labels.edit')}
+        </ContextMenu.Item>
+        <ContextMenu.Item onSelect={menus.pair2Do.select('duplicate')}>
+          {$tStore('demonstration.labels.duplicate')}
+        </ContextMenu.Item>
         <ContextMenu.Separator />
-        <ContextMenu.Item variant="destructive">
+        <ContextMenu.Item variant="destructive" onSelect={menus.pair2Do.select('delete')}>
           {$tStore('demonstration.labels.delete')}
         </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
-  <!-- Submenu dentro de submenu — o anti-padrão que `notes.tip3` nomeia. -->
   {#snippet dontPair2()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par2-dont', 'docs_do_dont', o)}>
+    <ContextMenu.Root onOpenChange={menus.pair2Dont.onOpenChange}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Sub>
-          <ContextMenu.SubTrigger>{$tStore('demonstration.labels.share')}</ContextMenu.SubTrigger>
-          <ContextMenu.SubContent>
-            <ContextMenu.Sub>
-              <ContextMenu.SubTrigger>
-                {$tStore('demonstration.labels.shareLink')}
-              </ContextMenu.SubTrigger>
-              <ContextMenu.SubContent>
-                <ContextMenu.Item>{$tStore('demonstration.labels.shareEmail')}</ContextMenu.Item>
-              </ContextMenu.SubContent>
-            </ContextMenu.Sub>
-          </ContextMenu.SubContent>
-        </ContextMenu.Sub>
+      <ContextMenu.Content onEscapeKeydown={menus.pair2Dont.onEscapeKeydown}>
+        <ContextMenu.Item onSelect={menus.pair2Dont.select('edit')}>
+          {$tStore('demonstration.labels.edit')}
+        </ContextMenu.Item>
+        <ContextMenu.Item onSelect={menus.pair2Dont.select('delete')}>
+          {$tStore('demonstration.labels.delete')}
+        </ContextMenu.Item>
+        <ContextMenu.Item onSelect={menus.pair2Dont.select('duplicate')}>
+          {$tStore('demonstration.labels.duplicate')}
+        </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
@@ -566,26 +683,30 @@ interface ContextMenuRadioGroupProps {
   <!--
     Os dois lados montam o MESMO menu; o que os separa é a DICA VISUAL, que é o
     assunto da legenda deste par. O "faça" traz a moldura tracejada da constante
-    compartilhada e uma linha que diz o gesto; o "evite" é a mesma área sem
-    contorno, sem cursor e sem aviso — o menu existe e ninguém tem como saber.
+    compartilhada; o "evite" é a mesma área sem contorno, sem cursor e sem aviso
+    — o menu existe e ninguém tem como saber.
 
     O lado direito era um `<div>` desenhado à mão, com `border-style` e
     `text-align` em `style` inline: ensinava markup que o design system não
     emite, e a guideline 08 §15 pede componente VIVO em toda seção com exemplo.
   -->
   {#snippet doPair3()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par3-do', 'docs_do_dont', o)}>
+    <ContextMenu.Root onOpenChange={menus.pair3Do.onOpenChange}>
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
-        <ContextMenu.Item>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
+      <ContextMenu.Content onEscapeKeydown={menus.pair3Do.onEscapeKeydown}>
+        <ContextMenu.Item onSelect={menus.pair3Do.select('edit')}>
+          {$tStore('demonstration.labels.edit')}
+        </ContextMenu.Item>
+        <ContextMenu.Item onSelect={menus.pair3Do.select('duplicate')}>
+          {$tStore('demonstration.labels.duplicate')}
+        </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
   {#snippet dontPair3()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('par3-dont', 'docs_do_dont', o)}>
+    <ContextMenu.Root onOpenChange={menus.pair3Dont.onOpenChange}>
       <ContextMenu.Trigger
         class="nds-cluster nds-w-xs nds-p-8 nds-rounded-md nds-text-body nds-text-muted-foreground"
         data-align="center"
@@ -593,9 +714,13 @@ interface ContextMenuRadioGroupProps {
       >
         {$tStore('demonstration.labels.areaNoHint')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
-        <ContextMenu.Item>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
+      <ContextMenu.Content onEscapeKeydown={menus.pair3Dont.onEscapeKeydown}>
+        <ContextMenu.Item onSelect={menus.pair3Dont.select('edit')}>
+          {$tStore('demonstration.labels.edit')}
+        </ContextMenu.Item>
+        <ContextMenu.Item onSelect={menus.pair3Dont.select('duplicate')}>
+          {$tStore('demonstration.labels.duplicate')}
+        </ContextMenu.Item>
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
@@ -605,26 +730,34 @@ interface ContextMenuRadioGroupProps {
     title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
-    secondaryDescription={$tStore('import.withSub')}
-    secondaryCode={codeImportWithSub}
+    secondaryDescription={$tStore('import.withCheckbox')}
+    secondaryCode={codeImportWithCheckbox}
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
+  <!--
+    O `name` dos três primeiros cards e o `trackId` dos outros quatro são a
+    CHAVE do conteúdo: é ela que vira o `snippet_id` da cópia de código, e uma
+    etiqueta com espaço ("Label + Inset") partia a série no GA4. Prévia e código
+    saem da mesma lista (`variantMenus`), e a nota da seção diz que só o item de
+    ação tem variante.
+  -->
   <DocsCompositions
     id="variantes"
     title={$tStore('variants.title')}
+    note={$tStore('variants.note')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="context-menu"
     items={[
-      { name: 'default',      description: stripHtml($tStore('variants.items.default')),      code: codeDefault,           preview: variantDefault      },
-      { name: 'destructive',  description: stripHtml($tStore('variants.items.destructive')),  code: codeDestructive,       preview: variantDestructive  },
-      { name: 'Label + Inset',description: stripHtml($tStore('variants.items.label')),        code: codeVariantLabel,      preview: variantLabel        },
+      { name: 'default',     description: $tStore('variants.items.default'),     code: variantCode('default'),     preview: variantDefault     },
+      { name: 'destructive', description: $tStore('variants.items.destructive'), code: variantCode('destructive'), preview: variantDestructive },
+      { name: 'label',       description: $tStore('variants.items.label'),       code: variantCode('label'),       preview: variantLabel       },
       {
         trackId: 'withCheckbox',
         name: $tStore('variants.items.withCheckbox.name'),
         description: $tStore('variants.items.withCheckbox.description'),
         useWhen: $tStore('variants.items.withCheckbox.use'),
-        code: codeCompCheckbox,
+        code: variantCode('withCheckbox'),
         preview: variantWithCheckbox,
       },
       {
@@ -632,7 +765,7 @@ interface ContextMenuRadioGroupProps {
         name: $tStore('variants.items.withRadio.name'),
         description: $tStore('variants.items.withRadio.description'),
         useWhen: $tStore('variants.items.withRadio.use'),
-        code: codeCompRadio,
+        code: variantCode('withRadio'),
         preview: variantWithRadio,
       },
       {
@@ -640,7 +773,7 @@ interface ContextMenuRadioGroupProps {
         name: $tStore('variants.items.withSubmenu.name'),
         description: $tStore('variants.items.withSubmenu.description'),
         useWhen: $tStore('variants.items.withSubmenu.use'),
-        code: codeCompSubmenu,
+        code: variantCode('withSubmenu'),
         preview: variantWithSubmenu,
       },
       {
@@ -648,143 +781,80 @@ interface ContextMenuRadioGroupProps {
         name: $tStore('variants.items.withShortcuts.name'),
         description: $tStore('variants.items.withShortcuts.description'),
         useWhen: $tStore('variants.items.withShortcuts.use'),
-        code: codeCompShortcuts,
+        code: variantCode('withShortcuts'),
         preview: variantWithShortcuts,
       },
     ]}
   />
 
-  {#snippet variantDefault()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('default', 'docs_variantes', o)}>
-      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item>
-          {$tStore('demonstration.labels.edit')}
-          <ContextMenu.Shortcut>{$tStore('demonstration.labels.editShortcut')}</ContextMenu.Shortcut>
+  <!--
+    As entradas de um menu, recursivas no submenu. Item de AÇÃO escolhe e fecha
+    (`select`, motivo `api`); marcação e opção de rádio alternam e deixam o menu
+    aberto (`toggle`, sem motivo) — ver `contextMenuTracker`.
+  -->
+  {#snippet menuEntries(entries: ContextMenuDocsEntry[], tracker: ContextMenuTracker)}
+    {#each entries as entry, index (index)}
+      {#if entry.type === 'item'}
+        <ContextMenu.Item variant={entry.variant} inset={entry.inset} onSelect={tracker.select(entry.value)}>
+          {entry.label}
+          {#if entry.shortcut}
+            <ContextMenu.Shortcut>{entry.shortcut}</ContextMenu.Shortcut>
+          {/if}
         </ContextMenu.Item>
-        <ContextMenu.Item>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
-        <ContextMenu.Item>{$tStore('demonstration.labels.share')}</ContextMenu.Item>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
-
-  {#snippet variantDestructive()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('destructive', 'docs_variantes', o)}>
-      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
+      {:else if entry.type === 'separator'}
         <ContextMenu.Separator />
-        <ContextMenu.Item variant="destructive">
-          {$tStore('demonstration.labels.delete')}
-          <ContextMenu.Shortcut>{$tStore('demonstration.labels.deleteShortcut')}</ContextMenu.Shortcut>
-        </ContextMenu.Item>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
-
-  {#snippet variantLabel()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('label-inset', 'docs_variantes', o)}>
-      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
+      {:else if entry.type === 'group'}
         <ContextMenu.Group>
-          <ContextMenu.Label>Grupo de ações</ContextMenu.Label>
-          <ContextMenu.Item inset>Editar</ContextMenu.Item>
-          <ContextMenu.Item inset>Duplicar</ContextMenu.Item>
+          <ContextMenu.Label inset={entry.inset}>{entry.label}</ContextMenu.Label>
+          {@render menuEntries(entry.items, tracker)}
         </ContextMenu.Group>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
-
-  {#snippet variantWithCheckbox()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('with-checkbox', 'docs_variantes', o)}>
-      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Group>
-          <ContextMenu.Label inset>Visualização</ContextMenu.Label>
-          <ContextMenu.CheckboxItem
-            checked={compShowGrid}
-            onCheckedChange={(v: boolean) => { compShowGrid = v; }}
-          >
-            Mostrar grade
-          </ContextMenu.CheckboxItem>
-          <ContextMenu.CheckboxItem
-            checked={compShowRulers}
-            onCheckedChange={(v: boolean) => { compShowRulers = v; }}
-          >
-            Mostrar réguas
-          </ContextMenu.CheckboxItem>
-        </ContextMenu.Group>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
-
-  {#snippet variantWithRadio()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('with-radio', 'docs_variantes', o)}>
-      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Group>
-          <ContextMenu.Label inset>Zoom</ContextMenu.Label>
-          <ContextMenu.RadioGroup value={compZoom} onValueChange={(v: string) => { compZoom = v; }}>
-            <ContextMenu.RadioItem value="75">75%</ContextMenu.RadioItem>
-            <ContextMenu.RadioItem value="100">100%</ContextMenu.RadioItem>
-            <ContextMenu.RadioItem value="150">150%</ContextMenu.RadioItem>
-          </ContextMenu.RadioGroup>
-        </ContextMenu.Group>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
-
-  {#snippet variantWithSubmenu()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('with-submenu', 'docs_variantes', o)}>
-      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item>{$tStore('demonstration.labels.edit')}</ContextMenu.Item>
-        <ContextMenu.Item>{$tStore('demonstration.labels.duplicate')}</ContextMenu.Item>
+      {:else if entry.type === 'checkbox'}
+        <ContextMenu.CheckboxItem
+          bind:checked={variantState.checked[entry.value]}
+          onSelect={tracker.toggle(entry.value)}
+        >
+          {entry.label}
+        </ContextMenu.CheckboxItem>
+      {:else if entry.type === 'radio-group'}
+        <ContextMenu.RadioGroup bind:value={variantState.radio[entry.name]}>
+          <ContextMenu.Label>{entry.label}</ContextMenu.Label>
+          {#each entry.items as option (option.value)}
+            <ContextMenu.RadioItem value={option.value} onSelect={tracker.toggle(option.value)}>
+              {option.label}
+            </ContextMenu.RadioItem>
+          {/each}
+        </ContextMenu.RadioGroup>
+      {:else if entry.type === 'submenu'}
         <ContextMenu.Sub>
-          <ContextMenu.SubTrigger>{$tStore('demonstration.labels.share')}</ContextMenu.SubTrigger>
+          <ContextMenu.SubTrigger>{entry.label}</ContextMenu.SubTrigger>
           <ContextMenu.SubContent>
-            <ContextMenu.Item>{$tStore('demonstration.labels.shareEmail')}</ContextMenu.Item>
-            <ContextMenu.Item>{$tStore('demonstration.labels.shareLink')}</ContextMenu.Item>
+            {@render menuEntries(entry.items, tracker)}
           </ContextMenu.SubContent>
         </ContextMenu.Sub>
+      {/if}
+    {/each}
+  {/snippet}
+
+  <!-- Um card: a área do gesto e o menu da lista, com o rastreador do card. -->
+  {#snippet variantCard(key: VariantKey)}
+    <ContextMenu.Root onOpenChange={menus[key].onOpenChange}>
+      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
+        {$tStore('demonstration.labels.triggerLabel')}
+      </ContextMenu.Trigger>
+      <ContextMenu.Content onEscapeKeydown={menus[key].onEscapeKeydown}>
+        {@render menuEntries(variantMenus[key], menus[key])}
       </ContextMenu.Content>
     </ContextMenu.Root>
   {/snippet}
 
-  {#snippet variantWithShortcuts()}
-    <ContextMenu.Root onOpenChange={(o: boolean) => trackMenuOpen('with-shortcuts', 'docs_variantes', o)}>
-      <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
-        {$tStore('demonstration.labels.triggerLabel')}
-      </ContextMenu.Trigger>
-      <ContextMenu.Content>
-        <ContextMenu.Item>
-          {$tStore('demonstration.labels.edit')}
-          <ContextMenu.Shortcut>{$tStore('demonstration.labels.editShortcut')}</ContextMenu.Shortcut>
-        </ContextMenu.Item>
-        <ContextMenu.Item>
-          {$tStore('demonstration.labels.duplicate')}
-          <ContextMenu.Shortcut>Ctrl+D</ContextMenu.Shortcut>
-        </ContextMenu.Item>
-        <ContextMenu.Separator />
-        <ContextMenu.Item variant="destructive">
-          {$tStore('demonstration.labels.delete')}
-          <ContextMenu.Shortcut>{$tStore('demonstration.labels.deleteShortcut')}</ContextMenu.Shortcut>
-        </ContextMenu.Item>
-      </ContextMenu.Content>
-    </ContextMenu.Root>
-  {/snippet}
+  <!-- O container pede uma prévia sem argumento por card. -->
+  {#snippet variantDefault()}{@render variantCard('default')}{/snippet}
+  {#snippet variantDestructive()}{@render variantCard('destructive')}{/snippet}
+  {#snippet variantLabel()}{@render variantCard('label')}{/snippet}
+  {#snippet variantWithCheckbox()}{@render variantCard('withCheckbox')}{/snippet}
+  {#snippet variantWithRadio()}{@render variantCard('withRadio')}{/snippet}
+  {#snippet variantWithSubmenu()}{@render variantCard('withSubmenu')}{/snippet}
+  {#snippet variantWithShortcuts()}{@render variantCard('withShortcuts')}{/snippet}
 
   <!-- ── Estados ───────────────────────────────────────────────────────── -->
   <DocsStates
@@ -796,15 +866,27 @@ interface ContextMenuRadioGroupProps {
     }}
     items={[
       { label: $tStore('states.closed.label'),   trigger: toPlainText($tStore('states.closed.trigger')),   behavior: toPlainText($tStore('states.closed.behavior'))},
-      { label: $tStore('states.open.label'),      trigger: toPlainText($tStore('states.open.trigger')),      behavior: toPlainText($tStore('states.open.behavior'))},
-      { label: $tStore('states.focused.label'),   trigger: toPlainText($tStore('states.focused.trigger')),   behavior: toPlainText($tStore('states.focused.behavior'))},
-      { label: $tStore('states.disabled.label'),  trigger: toPlainText($tStore('states.disabled.trigger')),  behavior: toPlainText($tStore('states.disabled.behavior'))},
-      { label: $tStore('states.checked.label'),   trigger: toPlainText($tStore('states.checked.trigger')),   behavior: toPlainText($tStore('states.checked.behavior'))},
-      { label: $tStore('states.subOpen.label'),   trigger: toPlainText($tStore('states.subOpen.trigger')),   behavior: toPlainText($tStore('states.subOpen.behavior'))},
+      { label: $tStore('states.open.label'),     trigger: toPlainText($tStore('states.open.trigger')),     behavior: toPlainText($tStore('states.open.behavior'))},
+      { label: $tStore('states.focused.label'),  trigger: toPlainText($tStore('states.focused.trigger')),  behavior: toPlainText($tStore('states.focused.behavior'))},
+      { label: $tStore('states.disabled.label'), trigger: toPlainText($tStore('states.disabled.trigger')), behavior: toPlainText($tStore('states.disabled.behavior'))},
+      { label: $tStore('states.checked.label'),  trigger: toPlainText($tStore('states.checked.trigger')),  behavior: toPlainText($tStore('states.checked.behavior'))},
+      { label: $tStore('states.mixed.label'),    trigger: toPlainText($tStore('states.mixed.trigger')),    behavior: toPlainText($tStore('states.mixed.behavior'))},
+      { label: $tStore('states.subOpen.label'),  trigger: toPlainText($tStore('states.subOpen.trigger')),  behavior: toPlainText($tStore('states.subOpen.behavior'))},
     ]}
   />
 
   <!-- ── Propriedades ──────────────────────────────────────────────────── -->
+  <!--
+    Só o que esta stack TEM, com os nomes dela, e os padrões da coluna Padrão são
+    os do conteúdo do bits (`context-menu-content.svelte`: `side = "right"`,
+    `sideOffset = 2`, `align = "start"`; `alignOffset` cai no 0 da camada
+    flutuante). `inset` fica fora dos itens de marcação e de rádio: a folha não
+    os recua, e a prop saiu dos dois. "Obrigatório" sai de `common.yes`/`no`.
+    O `value` do GRUPO de rádio é a opção marcada (`props.items.modelValue`); o
+    do ITEM é o valor dele no grupo (`props.items.value`) — o nome da prop é o
+    mesmo nas duas peças, a descrição não. O item de marcação lista o
+    `indeterminate`, que ele tem e que o bloco de interface já declarava.
+  -->
   <DocsProps
     title={$tStore('props.title')}
     tables={[
@@ -818,7 +900,7 @@ interface ContextMenuRadioGroupProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'onOpenChange', type: '(open: boolean) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.items.onOpenChange')) },
+          { name: 'onOpenChange', type: '(open: boolean) => void', defaultValue: '—', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.onOpenChange')) },
         ],
       },
       {
@@ -831,10 +913,10 @@ interface ContextMenuRadioGroupProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'align',       type: '"start" | "center" | "end"', defaultValue: '"start"', required: 'Não', description: stripHtml($tStore('props.items.align'))       },
-          { name: 'alignOffset', type: 'number',                      defaultValue: '4',       required: 'Não', description: stripHtml($tStore('props.items.alignOffset')) },
-          { name: 'side',        type: '"top" | "right" | "bottom" | "left"', defaultValue: '"right"', required: 'Não', description: stripHtml($tStore('props.items.side')) },
-          { name: 'sideOffset', type: 'number',                       defaultValue: '0',       required: 'Não', description: stripHtml($tStore('props.items.sideOffset'))  },
+          { name: 'align',       type: '"start" | "center" | "end"',          defaultValue: '"start"', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.align'))       },
+          { name: 'alignOffset', type: 'number',                               defaultValue: '0',       required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.alignOffset')) },
+          { name: 'side',        type: '"top" | "right" | "bottom" | "left"', defaultValue: '"right"', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.side'))        },
+          { name: 'sideOffset',  type: 'number',                               defaultValue: '2',       required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.sideOffset'))  },
         ],
       },
       {
@@ -847,10 +929,10 @@ interface ContextMenuRadioGroupProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'variant',  type: '"default" | "destructive"', defaultValue: '"default"', required: 'Não', description: stripHtml($tStore('props.items.variant'))  },
-          { name: 'inset',    type: 'boolean',                   defaultValue: 'false',     required: 'Não', description: stripHtml($tStore('props.items.inset'))    },
-          { name: 'disabled', type: 'boolean',                   defaultValue: 'false',     required: 'Não', description: stripHtml($tStore('props.items.disabled')) },
-          { name: 'onSelect', type: '() => void',                defaultValue: '—',         required: 'Não', description: stripHtml($tStore('props.items.onSelect')) },
+          { name: 'variant',  type: '"default" | "destructive"', defaultValue: '"default"', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.variant'))  },
+          { name: 'inset',    type: 'boolean',                   defaultValue: 'false',     required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.inset'))    },
+          { name: 'disabled', type: 'boolean',                   defaultValue: 'false',     required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.disabled')) },
+          { name: 'onSelect', type: '(event: Event) => void',    defaultValue: '—',         required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.onSelect')) },
         ],
       },
       {
@@ -863,9 +945,10 @@ interface ContextMenuRadioGroupProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'checked',         type: 'boolean',               defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.checked'))         },
-          { name: 'onCheckedChange', type: '(checked: boolean) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.items.onCheckedChange')) },
-          { name: 'disabled',        type: 'boolean',               defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.disabled'))        },
+          { name: 'checked',         type: 'boolean',                    defaultValue: 'false', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.checked'))         },
+          { name: 'indeterminate',   type: 'boolean',                    defaultValue: 'false', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.indeterminate'))   },
+          { name: 'onCheckedChange', type: '(checked: boolean) => void', defaultValue: '—',     required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.onCheckedChange')) },
+          { name: 'disabled',        type: 'boolean',                    defaultValue: 'false', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.disabled'))        },
         ],
       },
       {
@@ -878,8 +961,8 @@ interface ContextMenuRadioGroupProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'value',         type: 'string',                  defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.items.value'))         },
-          { name: 'onValueChange', type: '(value: string) => void', defaultValue: '—', required: 'Não', description: stripHtml($tStore('props.items.onValueChange')) },
+          { name: 'value',         type: 'string',                  defaultValue: '""', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.modelValue'))    },
+          { name: 'onValueChange', type: '(value: string) => void', defaultValue: '—',  required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.onValueChange')) },
         ],
       },
       {
@@ -892,8 +975,8 @@ interface ContextMenuRadioGroupProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'value',    type: 'string',  defaultValue: '—',     required: 'Sim', description: stripHtml($tStore('props.items.value'))    },
-          { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.disabled')) },
+          { name: 'value',    type: 'string',  defaultValue: '—',     required: $tNavStore('common.yes'), description: toPlainText($tStore('props.items.value'))    },
+          { name: 'disabled', type: 'boolean', defaultValue: 'false', required: $tNavStore('common.no'),  description: toPlainText($tStore('props.items.disabled')) },
         ],
       },
       {
@@ -906,7 +989,7 @@ interface ContextMenuRadioGroupProps {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'inset', type: 'boolean', defaultValue: 'false', required: 'Não', description: stripHtml($tStore('props.items.inset')) },
+          { name: 'inset', type: 'boolean', defaultValue: 'false', required: $tNavStore('common.no'), description: toPlainText($tStore('props.items.inset')) },
         ],
       },
     ]}
@@ -946,16 +1029,22 @@ interface ContextMenuRadioGroupProps {
       { token: '--z-popover',          value: '.nds-dropdown-menu-positioner', description: $tStore('tokens.table.zIndex')           },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
-    customizationCode={codeCustomizationTokens}
+    customizationCode={$tStore('tokens.customizationCode')}
   />
 
   <!-- ── Acessibilidade ───────────────────────────────────────────────── -->
+  <!--
+    O aviso vem PRIMEIRO: é a regra que decide se o componente pode ser usado
+    (clique direito não se anuncia), e as outras quatro stacks o põem no topo.
+    Depois, os oito atributos, na ordem do conteúdo.
+  -->
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
     title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
+      $tStore('accessibility.warning'),
       $tStore('accessibility.aria.roleMenu'),
       $tStore('accessibility.aria.roleMenuItem'),
       $tStore('accessibility.aria.roleMenuitemCheckbox'),
@@ -963,9 +1052,9 @@ interface ContextMenuRadioGroupProps {
       $tStore('accessibility.aria.ariaChecked'),
       $tStore('accessibility.aria.ariaDisabled'),
       $tStore('accessibility.aria.ariaHaspopup'),
-      $tStore('accessibility.warning'),
+      $tStore('accessibility.aria.ariaExpanded'),
     ]}
-    keyboardTitle={$tStore('accessibility.title')}
+    keyboardTitle={$tStore('accessibility.keyboardTitle')}
     keyboardItems={[
       { key: 'Right-click / Menu / Shift+F10', description: $tStore('accessibility.keyboard.rightClick') },
       { key: 'Arrow Down',  description: $tStore('accessibility.keyboard.arrowDown')  },
@@ -982,14 +1071,15 @@ interface ContextMenuRadioGroupProps {
   />
 
   <!-- ── Relacionados ─────────────────────────────────────────────────── -->
+  <!-- A descrição é TEXTO no container: sem `toPlainText`, tag vira texto. -->
   <DocsRelated
     title={$tStore('related.title')}
     items={[
-      { name: 'DropdownMenu', description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
-      { name: 'Menubar',      description: $tStore('related.menubar'),      path: '?path=/docs/components-navigation-menubar--docs'      },
-      { name: 'Dialog',       description: $tStore('related.dialog'),       path: '?path=/docs/components-overlay-dialog--docs'       },
-      { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/components-overlay-alertdialog--docs'  },
-      { name: 'Tooltip',      description: $tStore('related.tooltip'),      path: '?path=/docs/components-overlay-tooltip--docs'      },
+      { name: 'DropdownMenu', description: toPlainText($tStore('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
+      { name: 'Menubar',      description: toPlainText($tStore('related.menubar')),      path: '?path=/docs/components-navigation-menubar--docs'      },
+      { name: 'Dialog',       description: toPlainText($tStore('related.dialog')),       path: '?path=/docs/components-overlay-dialog--docs'       },
+      { name: 'AlertDialog',  description: toPlainText($tStore('related.alertDialog')),  path: '?path=/docs/components-overlay-alertdialog--docs'  },
+      { name: 'Tooltip',      description: toPlainText($tStore('related.tooltip')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
     ]}
   />
 
@@ -1010,6 +1100,7 @@ interface ContextMenuRadioGroupProps {
     items={[
       { event: $tStore('analytics.table.menuOpen'),      trigger: toPlainText($tStore('analytics.table.menuOpenTrigger')),      payload: $tStore('analytics.table.menuOpenPayload')      },
       { event: $tStore('analytics.table.itemClick'),     trigger: toPlainText($tStore('analytics.table.itemClickTrigger')),     payload: $tStore('analytics.table.itemClickPayload')     },
+      { event: $tStore('analytics.table.close'),         trigger: toPlainText($tStore('analytics.table.closeTrigger')),         payload: $tStore('analytics.table.closePayload')         },
       { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
       { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
       { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
@@ -1039,8 +1130,8 @@ interface ContextMenuRadioGroupProps {
       },
       items: stringsFromDict($tStore, 'testes.accessibility').map((criterion, i) => ({
         criterion,
-        level: 'AA',
-        how: a11yTestHow[i] ?? 'axe-core',
+        level: A11Y_TEST_LEVELS[i] ?? 'AA',
+        how: A11Y_TEST_HOW[i] ?? 'axe-core',
       })),
     }}
     visual={{

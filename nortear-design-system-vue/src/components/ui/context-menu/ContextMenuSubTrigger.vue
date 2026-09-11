@@ -12,7 +12,9 @@ import { cn } from '@/lib/utils'
 
 const props = defineProps<ContextMenuSubTriggerProps & { class?: HTMLAttributes['class'], inset?: boolean }>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+// `inset` sai como `data-inset`, que é o que a folha lê — repassado à lib, caía
+// no DOM como atributo cru (ver `ContextMenuItem.vue`).
+const delegatedProps = reactiveOmit(props, 'inset', 'class')
 
 const forwardedProps = useForwardProps(delegatedProps)
 </script>

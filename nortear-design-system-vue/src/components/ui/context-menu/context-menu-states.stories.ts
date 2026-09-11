@@ -43,7 +43,7 @@ const meta: Meta = {
       source: { transform: contextMenuSource },
       description: {
         component:
-          'Estados do Context Menu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
+          'Estados do Context Menu: item desabilitado, item recuado, item destrutivo, item de marcação em estado misto e a paleta escura.',
       },
     },
   },
@@ -84,14 +84,9 @@ export const ItemDisabled: Story = {
           Clique com o botão direito aqui
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuGroup>
-            <ContextMenuItem data-testid="primeiro">
-              Editar
-              <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-            </ContextMenuItem>
-            <ContextMenuItem disabled data-testid="off">Duplicar</ContextMenuItem>
-            <ContextMenuItem data-testid="ultimo">Renomear</ContextMenuItem>
-          </ContextMenuGroup>
+          <ContextMenuItem data-testid="primeiro">Editar</ContextMenuItem>
+          <ContextMenuItem disabled data-testid="off">Duplicar</ContextMenuItem>
+          <ContextMenuItem data-testid="ultimo">Renomear</ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem variant="destructive" disabled data-testid="perigo-off">
             Excluir
@@ -104,9 +99,12 @@ export const ItemDisabled: Story = {
     const area = () => within(canvasElement).getByTestId('area');
 
     await step('O item desabilitado é anunciado como tal', async () => {
-      await gestoOpen(area());
+      const menu = await gestoOpen(area());
       await expect(target('off').getAttribute('aria-disabled')).toBe('true');
       await expect(target('perigo-off').getAttribute('aria-disabled')).toBe('true');
+      // Sem grupo em volta: não há rótulo que o nomeie, e grupo sem nome leva
+      // da lib um `aria-labelledby` para um id que não existe.
+      await expect(menu.querySelector('[role="group"]')).toBeNull();
     });
 
     await step('Ele está atenuado, e não só marcado', async () => {
@@ -211,13 +209,11 @@ export const ItemDestructive: Story = {
           Clique com o botão direito aqui
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuGroup>
-            <ContextMenuItem data-testid="normal">
-              Editar
-              <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
-            </ContextMenuItem>
-            <ContextMenuItem>Duplicar</ContextMenuItem>
-          </ContextMenuGroup>
+          <ContextMenuItem data-testid="normal">
+            Editar
+            <ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>
+          </ContextMenuItem>
+          <ContextMenuItem>Duplicar</ContextMenuItem>
           <ContextMenuSeparator />
           <ContextMenuItem variant="destructive" data-testid="perigo">
             Excluir permanentemente
@@ -269,10 +265,12 @@ export const CheckboxIndeterminate: Story = {
           Clique com o botão direito aqui
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuLabel>Mostrar na tela</ContextMenuLabel>
-          <ContextMenuCheckboxItem checked="indeterminate">Colunas</ContextMenuCheckboxItem>
-          <ContextMenuCheckboxItem :checked="true">Régua</ContextMenuCheckboxItem>
-          <ContextMenuCheckboxItem :checked="false">Grade</ContextMenuCheckboxItem>
+          <ContextMenuGroup>
+            <ContextMenuLabel>Mostrar na tela</ContextMenuLabel>
+            <ContextMenuCheckboxItem checked="indeterminate">Colunas</ContextMenuCheckboxItem>
+            <ContextMenuCheckboxItem :checked="true">Régua</ContextMenuCheckboxItem>
+            <ContextMenuCheckboxItem :checked="false">Grade</ContextMenuCheckboxItem>
+          </ContextMenuGroup>
         </ContextMenuContent>
       </ContextMenu>
     `,
@@ -306,6 +304,16 @@ export const CheckboxIndeterminate: Story = {
 
     await step('O desmarcado continua sem glifo nenhum', async () => {
       await expect(formaDoIndicador(desmarcado)).toBeNull();
+    });
+
+    await step('O rótulo NOMEIA o grupo das três marcações', async () => {
+      // Como no Vanilla, onde todo rótulo abre um grupo. Solto entre os itens,
+      // ele era texto anunciado sem dizer a que se aplica. Leitura pura: a story
+      // não interage, e o que ela declara vale na montagem.
+      const group = canvas.getByRole('group', { name: 'Mostrar na tela' });
+      for (const option of [misto, checked, desmarcado]) {
+        await expect(group.contains(option)).toBe(true);
+      }
     });
   },
 };

@@ -280,4 +280,4 @@ nds-menubar
 - Item de marcação anuncia o estado; grupo de opção exclusiva anuncia qual está escolhida
 - Nome acessível de cada gatilho é o texto visível dele
 
-**Analytics**: `menu_item_click` com identificador estável do item — nunca o rótulo traduzido, que dividiria o evento por idioma.
+**Analytics**: o Menubar não dispara evento hoje — ausência declarada no PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9. Se passar a disparar, será `menubar_item_select`, com identificador estável do item — nunca o rótulo traduzido, que dividiria o evento por idioma.

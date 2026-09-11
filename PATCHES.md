@@ -593,6 +593,167 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 **Verificação após bump:** a story `Open` confere o foco no Cancelar, inclusive na abertura por toque.
 
+### react/context-menu — Tab fecha o menu e o foco segue a página (a base-ui prende o foco) {#react-context-menu-tab-exit}
+
+- **Arquivos:** `nortear-design-system-react/src/components/ui/context-menu.tsx` (+ `menu-tab-exit.ts`)
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `@base-ui/react` — `menu/popup/MenuPopup.js` passa `modal: isContextMenu` ao `FloatingFocusManager`
+
+**Antes:** Tab no painel do ContextMenu não saía: o item destacado era a única parada de tabulação, e as âncoras de foco do portal devolviam o foco a ele. Shift+Tab fechava só o painel em que estava.
+
+**Depois:** o `ContextMenuContent` ouve Tab e Shift+Tab, faz `preventDefault` e `event.preventBaseUIHandler()`; a raiz calcula o próximo (ou anterior) ponto de tabulação a partir da ÁREA (`tabbableBeside`), fecha pelo `actionsRef` e foca o destino. Sem destino, a lib devolve o foco à área, como no Escape. A raiz troca o motivo `imperative-action` por `focus-out`, e o Tab chega ao analytics como `overlay`. O `modal` da raiz (véu e trava de rolagem) fica intacto.
+
+**Motivo:** C2 e D1 do `prd/dropdown-menu.md` — menu não prende o foco, e Tab segue o percurso da página. O destino sai da área porque o painel vive em portal no fim do `<body>`: o próximo depois do item seria uma âncora de foco da lib.
+
+**Verificação após bump:** `grep -n "modal: isContextMenu" node_modules/@base-ui/react/menu/popup/MenuPopup.js` — se sumiu, ou se o Tab passou a fechar seguindo a página, saem o handler, o `TabExitContext`, `tabbableBeside`, `assignRef` e `withReason`. Portão: o passo "Tab fecha o menu e o foco segue o percurso da página" do Playground.
+
+### react/context-menu — estado misto no item de marcação (a base-ui é de dois estados) {#react-context-menu-mixed-checkbox}
+
+- **Arquivo:** `nortear-design-system-react/src/components/ui/context-menu.tsx`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `@base-ui/react` — `Menu.CheckboxItem` só tem `checked` booleano
+
+**Depois:** prop `indeterminate` (controlada) → `aria-checked="mixed"` só quando mista, `checked={false}` repassado à lib (o primeiro clique resolve para marcado) e o traço no lugar do indicador.
+
+**Motivo:** D8 do `prd/dropdown-menu.md`, e decisão da dona de 2026-09-10 — as outras quatro stacks já tinham o estado misto. `MenuCheckboxItem.js:94-98` aplica as props de fora depois do `aria-checked` interno.
+
+**Verificação após bump:** a story `CheckboxIndeterminate`, primeiro passo (`mixed`/`true`/`false`). Se a lib passar a sobrescrever `aria-checked`, ou ganhar `indeterminate` nativo, rever.
+
+### angular/dropdown-menu + menubar + context-menu — o foco entra no submenu pela seta direita {#angular-dropdown-menu-submenu-entry}
+
+- **Arquivos:** `nortear-design-system-angular/src/components/ui/menu-popup-scope.ts` (`NdsSubmenuKeyboardEntry`, `NdsMenuPopupScope`), `dropdown-menu.ts`, `menubar.ts`, `context-menu.ts`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `@radix-ng/primitives` 1.1.2 — `RdxMenuSubTrigger.onArrowRight` (`radix-ng-primitives-menu.mjs:2482-2497`) só foca o primeiro item com o submenu FECHADO; e o miolo em `ng-template` não alcança `RdxCompositeList`/`RDX_FLOATING_REGISTRATION` do popup
+
+**Antes:** a seta direita abria o submenu e o foco não entrava (Menubar e ContextMenu); a seta esquerda e o Escape não fechavam o submenu (DropdownMenu). O Angular resolve as dependências do `ng-template` de onde ele foi escrito, não do popup em que aterrissa, e o popup do submenu se registrava como raiz solta em vez de filho do menu pai.
+
+**Depois:** o popup entrega o próprio injetor ao miolo (`[ngTemplateOutletInjector]`, pela diretiva interna `NdsMenuPopupScope`), e o sub-gatilho leva o foco ao primeiro item por quadro de animação, com teto de 10 quadros — também quando o ponteiro já tinha aberto o submenu.
+
+**Motivo:** WCAG 2.1.1 e C6 do `prd/dropdown-menu.md`; o vanilla é a referência.
+
+**Verificação após bump:** as stories `WithSubmenu` das três composições. Se o `onArrowRight` passar a focar com o painel aberto, `NdsSubmenuKeyboardEntry` sai; o injetor do popup continua necessário enquanto o miolo for `ng-template`.
+
+### angular/dropdown-menu + menubar + context-menu — Tab fecha o menu inteiro e o foco segue a página {#angular-dropdown-menu-tab-exit}
+
+- **Arquivos:** `nortear-design-system-angular/src/components/ui/menu-popup-scope.ts` (`leaveOnTab`, `NDS_MENU_TAB_ANCHOR`), `src/lib/tabbable.ts`, `dropdown-menu.ts`, `menubar.ts`, `context-menu.ts`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `RdxMenuPopup.handleKeydown` — `case 'Tab': this.rootContext.close()` (`radix-ng-primitives-menu.mjs:1318-1321`) e o `returnFocus` ao gatilho (`:1423-1426`)
+
+**Antes:** Tab e Shift+Tab fechavam só o nível com foco e devolviam o foco ao gatilho (ou à área): os dois iam ao mesmo lugar, e o Tab no submenu deixava o menu pai aberto.
+
+**Depois:** um ouvinte de captura no popup consome a tecla, fecha a cadeia inteira (`closeEntireMenu('focus-out')`, que a docs page lê como `overlay`) e, com o painel desmontado, foca o vizinho do gatilho, da barra ou da área (`NDS_MENU_TAB_ANCHOR`), ou o próprio gatilho quando não há vizinho.
+
+**Motivo:** C2 e D1 do `prd/dropdown-menu.md`; destino idêntico ao do vanilla.
+
+**Verificação após bump:** `TabLeavesMenu`/`TabLeavesMenubar`/`TabAtPageEnd` e o passo de Tab do Playground do ContextMenu.
+
+### angular/dropdown-menu + menubar + context-menu — o sub-gatilho liga o painel portalado por aria-owns {#angular-menu-submenu-aria-owns}
+
+- **Arquivos:** `nortear-design-system-angular/src/components/ui/menu-popup-scope.ts` (`NdsSubmenuOwnsPanel`, `NDS_SUBMENU_PANEL`), `dropdown-menu.ts`, `menubar.ts`, `context-menu.ts`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `@radix-ng/primitives` 1.1.2 — `RdxMenuSubTrigger` (`radix-ng-primitives-menu.mjs:2310`, host em `:2625`/`:2637-2638`) liga só `aria-haspopup` e `aria-expanded`, sem `aria-owns`/`aria-controls`; o `RdxMenuPopup` não dá `id` ao painel (`registerPopup`, `:1135`), e o `RdxMenuPortal` o põe no `<body>`
+
+**Antes:** no DropdownMenu e no Menubar o sub-gatilho dizia que HAVIA um menu filho aberto, mas não QUAL: o painel, portalado para o `<body>`, ficava solto no documento, longe do item que o abriu. O ContextMenu já escrevia a ligação, numa cópia própria dentro do sub-gatilho.
+
+**Depois:** a raiz de cada submenu fornece o `id` do próprio painel (`NDS_SUBMENU_PANEL`) e o marca com ele; a diretiva interna `NdsSubmenuOwnsPanel`, host directive dos três sub-gatilhos, escreve `aria-owns` apontando para esse `id` só enquanto o submenu está aberto, na mesma fonte (`isOpen()`) do `aria-expanded` da lib — `null` fechado. `aria-owns`, e não `aria-controls`, porque o painel está em outro canto do DOM e precisa ser reparentado na árvore de acessibilidade — a mesma escolha do vanilla (`src/lib/submenu.ts`). A cópia do ContextMenu saiu; o comportamento dele é o mesmo.
+
+**Motivo:** o leitor de tela precisa saber a que item o menu filho pertence; o vanilla, que é a referência, escreve essa ligação no DropdownMenu e no Menubar.
+
+**Verificação após bump:** as stories `WithSubmenu` das três composições (`aria-owns` nulo fechado, igual ao `id` do painel aberto, nulo de novo depois de fechar) — reprovam sem o conserto, medido. Se a lib passar a escrever `aria-owns` (ou `aria-controls`) no sub-gatilho e um `id` no painel, `NdsSubmenuOwnsPanel`, o token e os `panelId` saem.
+
+### vue/context-menu — Tab fecha o menu no modo modal {#vue-context-menu-tab-closes}
+
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/context-menu/` (`context-menu.context.ts`, `ContextMenuContent.vue`, `ContextMenuSubContent.vue`, `ContextMenu.vue`)
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `reka-ui` — `Menu/MenuContentImpl.js:210` faz `preventDefault` no Tab quando o menu é modal, e o `ContextMenuRoot` liga `modal` por padrão
+
+**Antes:** Tab não fazia nada com o menu aberto — o foco ficava preso na lista.
+
+**Depois:** um ouvinte de captura no painel consome o Tab, fecha pela raiz da reka e manda o foco ao próximo ponto de tabulação depois da área (o anterior com Shift+Tab). `modal` continua ligado. O `update:open` passa a levar o motivo do fechamento (`escape` · `overlay` · `api`), lido dos eventos do painel, como o Popover e o Drawer desta stack já fazem.
+
+**Motivo:** C2 e D1 do `prd/dropdown-menu.md` — o menu não prende o foco; `modal` aqui significa véu de interação e trava de rolagem, não armadilha de foco.
+
+**Verificação após bump:** a play "Tab fecha o menu…" do Playground. Se a reka parar de prender o Tab, o ouvinte pode sair.
+
+### vue/context-menu — Escape no submenu fecha só o submenu {#vue-context-menu-submenu-escape}
+
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/context-menu/` (`context-menu.context.ts` — `useSubmenuEscape`, `ContextMenuSub.vue`, `ContextMenuSubContent.vue`)
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `reka-ui` — `Menu/MenuSubContent.js` (`onEscapeKeyDown` chama `rootContext.onClose()` sem olhar `defaultPrevented`) e `DismissableLayer.js:72` (`onKeyStroke("Escape")` na `window`)
+
+**Antes:** Escape dentro do submenu fechava o menu inteiro.
+
+**Depois:** um ouvinte de captura no painel do submenu consome a tecla e interrompe a propagação antes da `window`; fecha só o submenu, pelo estado que agora mora no nosso `ContextMenuSub`, e foca o sub-gatilho (achado pelo `aria-labelledby` do painel). O raiz segue aberto e não emite fechamento. Quem controla o submenu por `v-model:open` continua recebendo cada mudança.
+
+**Motivo:** padrão de menu da WAI-ARIA APG, e é o que o vanilla (referência) faz. O contexto de menu da reka não é exportado, então o fechamento passa por uma chave nossa.
+
+**Verificação após bump:** o passo "Escape no submenu…" da `WithSubmenu`. Se a reka passar a fechar só o submenu, o ouvinte e o estado no `ContextMenuSub` podem sair.
+
+### vue/context-menu — marcação e rádio não fecham ao escolher {#vue-context-menu-keep-open}
+
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/context-menu/ContextMenuCheckboxItem.vue`, `ContextMenuRadioItem.vue`
+- **Categoria:** bugfix
+- **Data:** 2026-09-10
+- **Upstream ref:** `reka-ui` — `MenuItem.js:44-47` fecha o menu a menos que o `select` venha com `preventDefault`
+
+**Depois:** os dois itens chamam `preventDefault` no `select`, depois do ouvinte de quem consome.
+
+**Motivo:** alternar uma opção não fecha o menu — vanilla e react fazem assim, e as stories afirmam. As plays que diziam isso passavam só porque a animação de SAÍDA mantinha o painel montado ~150 ms depois de fechar; ela saiu em 2026-09-10 (D5) e o defeito apareceu.
+
+**Verificação após bump:** `WithCheckbox` e `WithRadioGroup` conferem que o painel continua sendo o mesmo nó um quadro depois da troca de estado.
+
+### svelte/context-menu — Tab fecha o menu quando a área é a última parada {#svelte-context-menu-tab-last-stop}
+
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/context-menu/` (`context.ts` — `closeAfterTab`, `context-menu-content.svelte`, `context-menu-sub-content.svelte`)
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `bits-ui` 2.19.0 — `bits/menu/menu.svelte.js:826-848` (`handleTabKeyDown`)
+
+**Antes:** sem ponto de tabulação depois da área, o ramo `else` do bits só chamava `body.focus()`: o Tab era bloqueado e o menu ficava aberto, com o foco preso.
+
+**Depois:** os dois painéis encadeiam um ouvinte depois do do bits; num microtask, se a raiz continua aberta, fecham-na e avisam `onOpenChange(false)`. Mora nos nossos wrappers, sem patch. Os itens de marcação e de rádio não fecham ao escolher pela prop do próprio bits (`closeOnSelect = false`), que não é desvio.
+
+**Motivo:** C2 do `prd/dropdown-menu.md` — Tab fecha e segue a página. A área com `tabindex="0"` é o que nos põe nesse ramo.
+
+**Verificação após bump:** o passo "Tab fecha o menu também quando a área é a última parada" do Playground. Se o `else` do `handleTabKeyDown` passar a fechar, o `closeAfterTab` sai.
+
+### svelte/context-menu — Escape no submenu fecha só o submenu {#svelte-context-menu-submenu-escape}
+
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/context-menu/` (`context.ts` — `ContextMenuSubContext`, `keepRootOpenOnSubEscape`; `context-menu-sub.svelte`, `context-menu-sub-trigger.svelte`, `context-menu-sub-content.svelte`)
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `bits-ui` 2.19.0 — `bits/utilities/escape-layer/use-escape-layer.svelte.js` (`isResponsibleEscapeLayer`: a responsável é a última camada `close`; o painel raiz nasce `close`, o do submenu `defer-otherwise-close`) e `bits/menu/components/menu-sub-content.svelte` (`handleCloseAutoFocus` não devolve o foco)
+
+**Antes:** Escape dentro do submenu fechava o menu inteiro — quem respondia era a camada do painel raiz.
+
+**Depois:** o painel do submenu ouve `keydown` na CAPTURA e, no Escape, faz `preventDefault` + `stopPropagation` antes da camada do bits (que ouve no `document`, na borbulha); fecha só o submenu pelo estado do nosso `ContextMenuSub` (com `onOpenChange(false)`) e foca o sub-gatilho, que se registra no contexto. O raiz segue aberto e não emite fechamento. Com o foco no raiz (submenu aberto só pelo ponteiro), a tecla não passa pelo painel do submenu e o raiz fecha tudo, que é o certo.
+
+**Motivo:** padrão de menu da WAI-ARIA APG, C5 do `prd/dropdown-menu.md` e `testes.functional.item6`; é o que o vanilla (referência) e o vue fazem. O contexto de menu do bits não é exportado, então o fechamento passa por um contexto nosso.
+
+**Verificação após bump:** o passo "Escape no submenu…" da `WithSubmenu`. Se o submenu passar a ser a camada responsável pelo próprio Escape (ou o raiz passar a `defer-otherwise-close`), o ouvinte e o contexto de submenu saem.
+
+### svelte/context-menu — o painel não recebia `id`, e o typeahead não rodava {#svelte-context-menu-content-id}
+
+- **Arquivo:** `nortear-design-system-svelte/src/components/ui/context-menu/context-menu-content.svelte`
+- **Categoria:** a11y
+- **Data:** 2026-09-10
+- **Upstream ref:** `bits-ui` 2.19.0 — `popper-layer-inner.svelte` consome o `id` do conteúdo e não o põe no painel; `menu.svelte.js:861` (`isKeydownInside`) compara o id do `[data-context-menu-content]` mais próximo com o id guardado
+
+**Antes:** a comparação virava `undefined === contentId`, sempre falsa, e a letra digitada não movia o foco (C4). Setas e Home/End funcionavam, porque o foco itinerante não depende do id.
+
+**Depois:** o wrapper cria um id estável (`$props.id()`, sobrescrevível por `id`), entrega-o ao bits e um `$effect` o escreve no nó que o bits devolve pelo `ref` — o único caminho até esse elemento. Sem patch. O subpainel não precisa: ele mescla as próprias props, id incluído.
+
+**Motivo:** C4 do `prd/dropdown-menu.md` — typeahead, padrão de menu da WAI-ARIA APG.
+
+**Verificação após bump:** o passo "Digitar salta para o item…" do Playground. Se o painel passar a sair com o `id` que o bits guardou, o `$effect` sai.
+
 ---
 
 ## Patches `node_modules/` (gerenciados via `patch-package`)

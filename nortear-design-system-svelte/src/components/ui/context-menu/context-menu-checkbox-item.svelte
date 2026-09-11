@@ -9,22 +9,32 @@
 		ref = $bindable(null),
 		checked = $bindable(false),
 		indeterminate = $bindable(false),
+		closeOnSelect = false,
 		class: className,
-		inset,
 		children: childrenProp,
 		...restProps
 	}: WithoutChildrenOrChild<ContextMenuPrimitive.CheckboxItemProps> & {
-		inset?: boolean;
 		children?: Snippet;
 	} = $props();
 </script>
 
+<!--
+	Alternar NÃO fecha o menu — como no vanilla e no react. A lib nasce com
+	`closeOnSelect` ligado, e só a saída sem animação (D5) deixou isso visível: o
+	painel ficava montado durante a animação de saída, e a play lia o item como se
+	o menu seguisse aberto. Marcar é ajuste, não decisão: a pessoa costuma alternar
+	mais de uma opção de uma vez. Quem consome religa pela mesma prop, e o
+	`onSelect` dele continua chegando à lib por `restProps`.
+
+	Sem `inset`: a folha só recua item comum, rótulo e sub-gatilho — o item de
+	marcação reserva a pista do indicador à direita (D8), e a prop não fazia nada.
+-->
 <ContextMenuPrimitive.CheckboxItem
 	bind:ref
 	bind:checked
 	bind:indeterminate
+	{closeOnSelect}
 	data-slot="context-menu-checkbox-item"
-	data-inset={inset}
 	class={cn("nds-dropdown-menu-checkbox-item", className)}
 	{...restProps}
 >

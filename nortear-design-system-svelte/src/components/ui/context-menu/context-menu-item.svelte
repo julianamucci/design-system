@@ -17,7 +17,7 @@
 <ContextMenuPrimitive.Item
 	bind:ref
 	data-slot="context-menu-item"
-	data-inset={inset}
+	data-inset={inset || undefined}
 	data-variant={variant}
 	class={cn("nds-dropdown-menu-item", className)}
 	{...restProps}

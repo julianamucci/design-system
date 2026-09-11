@@ -5,19 +5,24 @@
 
 	let {
 		ref = $bindable(null),
+		closeOnSelect = false,
 		class: className,
-		inset,
 		children: childrenProp,
 		...restProps
-	}: WithoutChild<ContextMenuPrimitive.RadioItemProps> & {
-		inset?: boolean;
-	} = $props();
+	}: WithoutChild<ContextMenuPrimitive.RadioItemProps> = $props();
 </script>
 
+<!--
+	Escolher uma opção NÃO fecha o menu, pelo mesmo motivo do item de marcação
+	(ver `context-menu-checkbox-item.svelte`) e como no vanilla, em que marcar uma
+	opção deixa o painel aberto. Quem consome religa pela mesma prop.
+
+	Sem `inset`: a folha não recua o item de rádio, e a prop não fazia nada.
+-->
 <ContextMenuPrimitive.RadioItem
 	bind:ref
+	{closeOnSelect}
 	data-slot="context-menu-radio-item"
-	data-inset={inset}
 	class={cn("nds-dropdown-menu-radio-item", className)}
 	{...restProps}
 >

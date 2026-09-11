@@ -2,16 +2,16 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { Root as ContextMenu } from './index';
-import ContextMenuEstadoStory from './ContextMenuEstadoStory.svelte';
+import ContextMenuStateStory from './ContextMenuStateStory.svelte';
 import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
 import { gestoOpen, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
   contextMenuItemDisabledSource,
   contextMenuItemDestructiveSource,
-  contextMenuItemRecuadoSource,
-  contextMenuMarkupMistaSource,
-  contextMenuPaletteDarkSource,
+  contextMenuItemInsetSource,
+  contextMenuCheckboxIndeterminateSource,
+  contextMenuDarkPaletteSource,
   contextMenuSource,
 } from './context-menu.source';
 
@@ -32,7 +32,7 @@ const meta: Meta = {
       source: { transform: contextMenuSource },
       description: {
         component:
-          'Estados do Context Menu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
+          'Estados do Context Menu: item desabilitado, item recuado, item destrutivo, marcação em estado misto e a paleta escura.',
       },
     },
   },
@@ -50,14 +50,14 @@ export const ItemDisabled: Story = {
     covers: ['functional.item9', 'accessibility.item6', 'accessibility.item9', 'visual.item5'],
     docs: { source: { transform: contextMenuItemDisabledSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'disabled' } }),
+  render: () => ({ Component: ContextMenuStateStory, props: { state: 'disabled' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 
     await step('O item desabilitado é anunciado como tal', async () => {
       await gestoOpen(area());
       await expect(target('off').getAttribute('aria-disabled')).toBe('true');
-      await expect(target('perigo-off').getAttribute('aria-disabled')).toBe('true');
+      await expect(target('danger-off').getAttribute('aria-disabled')).toBe('true');
     });
 
     await step('Ele está atenuado, e não só marcado', async () => {
@@ -73,7 +73,7 @@ export const ItemDisabled: Story = {
       //
       // Quem alinha esta stack é o patch de `patches/`, e não código nosso: se
       // ele parar de aplicar, este passo é o primeiro a reprovar.
-      target('primeiro').focus();
+      target('edit').focus();
       await userEvent.keyboard('{ArrowDown}');
       await expect(document.activeElement).toBe(target('off'));
     });
@@ -99,9 +99,9 @@ export const ItemDisabled: Story = {
 
 export const ItemInset: Story = {
   parameters: {
-    docs: { source: { transform: contextMenuItemRecuadoSource } },
+    docs: { source: { transform: contextMenuItemInsetSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'inset' } }),
+  render: () => ({ Component: ContextMenuStateStory, props: { state: 'inset' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 
@@ -110,17 +110,17 @@ export const ItemInset: Story = {
       // esquerda. Afirmar o nome da classe não protegeria isso: a classe pode
       // continuar aplicada com a regra vazia.
       await gestoOpen(area());
-      const recuo = parseFloat(getComputedStyle(target('recuado')).paddingLeft);
-      const normal = parseFloat(getComputedStyle(target('normal')).paddingLeft);
-      await expect(recuo).toBeGreaterThan(normal);
+      const insetPadding = parseFloat(getComputedStyle(target('inset')).paddingLeft);
+      const plainPadding = parseFloat(getComputedStyle(target('plain')).paddingLeft);
+      await expect(insetPadding).toBeGreaterThan(plainPadding);
     });
 
     await step('Os dois itens continuam alinhados à direita', async () => {
       // O recuo empurra só a borda esquerda: se empurrasse a caixa inteira, o
       // menu ganharia um degrau à direita.
-      const recuo = target('recuado').getBoundingClientRect();
-      const normal = target('normal').getBoundingClientRect();
-      await expect(Math.abs(recuo.right - normal.right)).toBeLessThan(2);
+      const insetBox = target('inset').getBoundingClientRect();
+      const plainBox = target('plain').getBoundingClientRect();
+      await expect(Math.abs(insetBox.right - plainBox.right)).toBeLessThan(2);
     });
   },
 };
@@ -132,7 +132,7 @@ export const ItemDestructive: Story = {
     covers: ['functional.item10', 'visual.item2'],
     docs: { source: { transform: contextMenuItemDestructiveSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'destructive' } }),
+  render: () => ({ Component: ContextMenuStateStory, props: { state: 'destructive' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 
@@ -140,13 +140,13 @@ export const ItemDestructive: Story = {
       // `data-variant` é o que o CSS lê e o que a auditoria compara entre
       // stacks; a cor é consequência dele.
       await gestoOpen(area());
-      await expect(target('perigo').getAttribute('data-variant')).toBe('destructive');
-      await expect(target('normal').getAttribute('data-variant')).toBe('default');
+      await expect(target('danger').getAttribute('data-variant')).toBe('destructive');
+      await expect(target('plain').getAttribute('data-variant')).toBe('default');
     });
 
     await step('E a cor do texto realmente muda', async () => {
-      await expect(getComputedStyle(target('perigo')).color).not.toBe(
-        getComputedStyle(target('normal')).color,
+      await expect(getComputedStyle(target('danger')).color).not.toBe(
+        getComputedStyle(target('plain')).color,
       );
     });
   },
@@ -163,38 +163,38 @@ export const ItemDestructive: Story = {
 export const CheckboxIndeterminate: Story = {
   parameters: {
     covers: ['functional.item11'],
-    docs: { source: { transform: contextMenuMarkupMistaSource } },
+    docs: { source: { transform: contextMenuCheckboxIndeterminateSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'indeterminate' } }),
+  render: () => ({ Component: ContextMenuStateStory, props: { state: 'indeterminate' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
     const menu = await gestoOpen(area());
     const canvas = within(menu);
-    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
+    const mixed = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
     const checked = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
-    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
+    const unchecked = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
 
     await step('O estado misto é anunciado como misto, e não como marcado', async () => {
       // Uma comparação frouxa leria o misto como verdadeiro; o que a pessoa ouve
       // tem que separar os três estados.
-      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(mixed.getAttribute('aria-checked')).toBe('mixed');
       await expect(checked.getAttribute('aria-checked')).toBe('true');
-      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+      await expect(unchecked.getAttribute('aria-checked')).toBe('false');
     });
 
     await step('O misto desenha traço; o marcado, tique', async () => {
       // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
       // traço é largo e sem altura, tique tem a diagonal. O snippet descartava o
       // estado misto e desenhava tique nos dois — é isso que esta asserção pega.
-      const formaMista = formaDoIndicador(misto);
-      const formaMarcada = formaDoIndicador(checked);
-      await expect(ehTraco(formaMista)).toBe(true);
-      await expect(ehTique(formaMista)).toBe(false);
-      await expect(ehTique(formaMarcada)).toBe(true);
+      const mixedShape = formaDoIndicador(mixed);
+      const checkedShape = formaDoIndicador(checked);
+      await expect(ehTraco(mixedShape)).toBe(true);
+      await expect(ehTique(mixedShape)).toBe(false);
+      await expect(ehTique(checkedShape)).toBe(true);
     });
 
     await step('O desmarcado continua sem glifo nenhum', async () => {
-      await expect(formaDoIndicador(desmarcado)).toBeNull();
+      await expect(formaDoIndicador(unchecked)).toBeNull();
     });
   },
 };
@@ -207,9 +207,9 @@ export const DarkPalette: Story = {
     // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
     themes: { themeOverride: 'dark' },
-    docs: { source: { transform: contextMenuPaletteDarkSource } },
+    docs: { source: { transform: contextMenuDarkPaletteSource } },
   },
-  render: () => ({ Component: ContextMenuEstadoStory, props: { state: 'dark' } }),
+  render: () => ({ Component: ContextMenuStateStory, props: { state: 'dark' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 

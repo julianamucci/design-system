@@ -87,6 +87,7 @@ import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
 import { positionFloatingAtPoint } from '@/lib/floating';
+import { isPlainTab, tabExitTarget } from '@/lib/tabbable';
 
 export type ContextMenuItemDef = {
   /** `item` é o padrão. `submenu` exige `items`; `radio` exige `value`. */
@@ -118,10 +119,28 @@ export type ContextMenuItemDef = {
   onIndeterminateChange?: (indeterminate: boolean) => void;
 };
 
+/**
+ * Por onde o menu fechou — o vocabulário da família, o mesmo `reason` do
+ * `context_menu_close`. `escape` é a tecla; `overlay` é sair SEM decidir —
+ * clique fora, Tab levando o foco embora, ou um novo clique direito que
+ * reabre o menu noutro ponto; `api` é o fechamento pedido pelo produto — um
+ * item de ação escolhido, ou o componente saindo da página com o menu aberto.
+ *
+ * Não há `close-button`: este menu não tem botão de fechar.
+ */
+export type ContextMenuCloseReason = 'escape' | 'overlay' | 'api';
+
 export type ContextMenuOptions = {
   trigger: HTMLElement;
   items: ContextMenuItemDef[];
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Motivo do fechamento. Dispara uma vez por fechamento, ANTES do
+   * `onOpenChange(false)` — a mesma ordem do `createAlertDialog` e do
+   * `createSheet`. É o que alimenta o `reason` do `context_menu_close`: o
+   * `onOpenChange` diz QUE fechou, e só a fábrica sabe por qual caminho.
+   */
+  onClose?: (reason: ContextMenuCloseReason) => void;
   /** Grupo de escolha única: o valor corrente entre os itens `radio`. */
   radioValue?: string;
   onRadioChange?: (value: string) => void;
@@ -208,7 +227,7 @@ function fillItemContent(li: HTMLElement, item: ContextMenuItemDef): void {
 // ─── createContextMenu ────────────────────────────────────────────────────────
 
 export function createContextMenu(options: ContextMenuOptions): DestroyableElement {
-  const { trigger, items, onOpenChange } = options;
+  const { trigger, items, onOpenChange, onClose } = options;
 
   const id = ++_contextMenuCounter;
   const menuId = `context-menu-${id}`;
@@ -217,16 +236,26 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   let isOpen = false;
   let radioValue = options.radioValue;
   let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
+  // O `id` de cada rótulo, para o `aria-labelledby` do grupo que ele nomeia.
+  // Contador da fábrica, e não do painel: o painel é remontado a cada abertura
+  // e o do submenu convive com o do menu raiz no mesmo documento.
+  let labelCount = 0;
 
   // ── Submenu ─────────────────────────────────────────────────────────────────
   // Um controlador por menu, e um painel filho de cada vez: abrir outro fecha o
   // anterior. Gatilho, painel, posição, ARIA, teclado, ponteiro e limpeza são
   // dele; o que continua sendo desta fábrica é montar os ITENS, que é o que cada
   // menu tem de próprio.
+  //
+  // `writeStateAttr`: com o submenu aberto o sub-gatilho leva
+  // `data-state="open"`, que é o que a folha lê para mantê-lo destacado quando o
+  // foco ENTRA no painel filho. Sem ele o destaque vinha só do `:focus`, e sumia
+  // exatamente no passo em que a pessoa precisa saber de onde o submenu saiu.
   const submenu = createSubmenuController({
     triggerSlot: 'context-menu-sub-trigger',
     panelIdPrefix: `${menuId}-sub`,
     getItems: getMenuItems,
+    writeStateAttr: true,
   });
 
   const wrapper = document.createElement('div');
@@ -251,17 +280,6 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       sep.dataset.slot = 'context-menu-separator';
       sep.className = 'nds-dropdown-menu-separator';
       menu.appendChild(sep);
-      return;
-    }
-
-    if (type === 'label') {
-      const lbl = document.createElement('li');
-      lbl.setAttribute('role', 'presentation');
-      lbl.dataset.slot = 'context-menu-label';
-      if (item.inset) lbl.dataset.inset = 'true';
-      lbl.className = 'nds-dropdown-menu-label';
-      lbl.textContent = item.label ?? '';
-      menu.appendChild(lbl);
       return;
     }
 
@@ -322,7 +340,11 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
             item.onCheckedChange?.(checked);
           } else if (item.value) {
             radioValue = item.value;
-            sincronizarRadios(li.closest('[data-slot="context-menu-content"]') as HTMLElement);
+            // O painel é o `role="menu"` mais próximo, e não o do menu raiz: o
+            // rádio pode morar num SUBMENU, cujo painel tem outro `data-slot` e
+            // vive fora da árvore do raiz. Buscar pelo `data-slot` do raiz
+            // devolvia `null` ali, e a escolha não desmarcava os irmãos.
+            sincronizarRadios(li.closest<HTMLElement>('[role="menu"]'));
             options.onRadioChange?.(item.value);
           }
           item.onClick?.();
@@ -381,20 +403,66 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     fillItemContent(li, item);
 
     if (!item.disabled) {
+      // Escolher um item de AÇÃO decide e fecha: é o fechamento `api`, o único
+      // em que a pessoa terminou o que veio fazer.
       li.addEventListener('click', () => {
         item.onClick?.();
-        close();
+        close('api');
       });
       li.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           item.onClick?.();
-          close();
+          close('api');
         }
       });
     }
 
     menu.appendChild(li);
+  }
+
+  /**
+   * O rótulo NOMEIA um bloco — e nomear exige que exista um bloco.
+   *
+   * Ele era um `<li role="presentation">` solto entre os itens: o texto não
+   * chegava a nome acessível de coisa alguma, e o leitor de tela o anunciava sem
+   * dizer a que se aplicava. Agora ele abre um `role="group"` com
+   * `aria-labelledby` apontando para ele, e os itens seguintes entram no grupo
+   * até o próximo separador ou rótulo — a mesma forma da fábrica do
+   * `dropdown-menu`, que as duas folhas compartilham. O rótulo continua fora do
+   * percurso do teclado: não tem papel de item.
+   *
+   * `<ul>` não é filho válido de `<ul>`, então o grupo mora num `<li>` portador
+   * com `role="presentation"`, que o apaga da árvore de acessibilidade para o
+   * grupo continuar possuído pelo menu. Os dois níveis levam
+   * `.nds-dropdown-menu-group` (`display: contents` na folha): a semântica pede
+   * dois elementos onde o desenho não quer nenhum.
+   */
+  function buildGroup(item: ContextMenuItemDef, menu: HTMLElement): HTMLElement {
+    const labelId = `${menuId}-label-${++labelCount}`;
+
+    const carrier = document.createElement('li');
+    carrier.setAttribute('role', 'presentation');
+    carrier.className = 'nds-dropdown-menu-group';
+
+    const group = document.createElement('ul');
+    group.setAttribute('role', 'group');
+    group.setAttribute('aria-labelledby', labelId);
+    group.className = 'nds-dropdown-menu-group';
+    group.dataset.slot = 'context-menu-group';
+
+    const lbl = document.createElement('li');
+    lbl.id = labelId;
+    lbl.setAttribute('role', 'presentation');
+    lbl.dataset.slot = 'context-menu-label';
+    if (item.inset) lbl.dataset.inset = 'true';
+    lbl.className = 'nds-dropdown-menu-label';
+    lbl.textContent = item.label ?? '';
+
+    group.appendChild(lbl);
+    carrier.appendChild(group);
+    menu.appendChild(carrier);
+    return group;
   }
 
   /** Reflete a escolha única em todos os irmãos do grupo. */
@@ -416,7 +484,24 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     menu.className = cn('nds-dropdown-menu-content', slot === 'context-menu-content' ? options.class : undefined);
     menu.dataset.slot = slot;
     menu.dataset.state = 'open';
-    defs.forEach((def) => buildItem(def, menu));
+
+    // O grupo ABERTO. Um rótulo abre; o separador e o rótulo seguinte fecham.
+    // Item que aparece antes de qualquer rótulo continua pendurado no menu —
+    // grupo sem nome não agrupa nada para quem ouve.
+    let openGroup: HTMLElement | null = null;
+    defs.forEach((def) => {
+      const type = def.type ?? 'item';
+      if (type === 'label') {
+        openGroup = buildGroup(def, menu);
+        return;
+      }
+      if (type === 'separator') {
+        openGroup = null;
+        buildItem(def, menu);
+        return;
+      }
+      buildItem(def, openGroup ?? menu);
+    });
     return menu;
   }
 
@@ -480,7 +565,19 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     // `flip`: o ponto do clique é a referência que a pessoa tem na tela, e virar
     // o painel para cima do ponteiro o afastaria do gesto que o pediu. Também
     // não há `data-side` a escrever, porque não havia lado para começar.
-    positionFloatingAtPoint(x, y, panelEl);
+    const { top, left } = positionFloatingAtPoint(x, y, panelEl);
+    // A ORIGEM da entrada é o ponto do clique, medido dentro do painel. O painel
+    // entra com zoom (`nds-menu-in`, pelo `data-state="open"`), e a folha lê a
+    // origem de `--transform-origin` — o primeiro degrau da cadeia, o mesmo nome
+    // que o base-ui publica. Sem ele a cadeia caía em `center` e o menu crescia
+    // do MEIO, longe do ponteiro que o pediu; nada reprovava, porque `center` é
+    // fallback válido. Na maioria dos cliques a origem é `0 0`, o canto que
+    // encosta no ponteiro; quando a conta desliza o painel para caber, ela
+    // acompanha, e o zoom continua saindo de onde a pessoa clicou.
+    panelEl.style.setProperty(
+      '--transform-origin',
+      `${x + window.scrollX - left}px ${y + window.scrollY - top}px`,
+    );
     sincronizarRadios(panelEl);
 
     isOpen = true;
@@ -501,13 +598,21 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   }
 
   /**
-   * `devolverFocus` distingue quem fechou. Escape e escolha de item devolvem o
-   * foco à área — sem isso ele cai no `<body>` e quem navega por teclado perde o
-   * lugar (`testes.functional.item2`). Clique fora e Tab NÃO devolvem: ali a
-   * pessoa já está indo para outro lugar, e roubar o foco de volta desfaria o
-   * gesto.
+   * O `reason` diz por onde o menu fechou, e decide também o foco. Escape e
+   * escolha de item (`escape`, `api`) devolvem o foco à área — sem isso ele cai
+   * no `<body>` e quem navega por teclado perde o lugar
+   * (`testes.functional.item2`). `overlay` — clique fora, Tab — NÃO devolve: ali
+   * a pessoa já está indo para outro lugar, e roubar o foco de volta desfaria o
+   * gesto. (O Tab leva o foco ao destino dele ANTES de chamar este fechamento.)
    */
-  function close(devolverFocus = true): void {
+  function close(
+    reason: ContextMenuCloseReason,
+    devolverFocus = reason !== 'overlay',
+  ): void {
+    // Já fechado: nada a fazer, e isso inclui NÃO avisar ninguém — um segundo
+    // `onClose` seria um segundo `context_menu_close` no GA4.
+    if (!isOpen) return;
+
     // Primeiro o filho: o painel dele vive no `body` e não sai junto com o pai.
     submenu.close();
     panelEl?.remove();
@@ -528,6 +633,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
 
     if (devolverFocus && trigger.isConnected) trigger.focus();
 
+    onClose?.(reason);
     onOpenChange?.(false);
   }
 
@@ -545,7 +651,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
 
     if (e.key === 'Escape') {
       e.preventDefault();
-      close();
+      close('escape');
       return;
     }
 
@@ -570,8 +676,24 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     } else if (e.key === 'End') {
       e.preventDefault();
       menuItems[menuItems.length - 1]?.focus();
-    } else if (e.key === 'Tab') {
-      close(false);
+    } else if (isPlainTab(e)) {
+      // Menu não prende o foco (C2): Tab fecha e o foco segue a página a partir
+      // da ÁREA — o próximo ponto de tabulação depois dela, o anterior no
+      // Shift+Tab, e a própria área quando ela é a última parada. Vale também
+      // com o foco no submenu, que este ouvinte do `document` recebe igual, e aí
+      // fecha a árvore inteira.
+      //
+      // A tecla é CONSUMIDA. Ela era deixada ao navegador, "porque o Tab é da
+      // página" — e o navegador partia do fim do `body`, onde o painel vive em
+      // portal: Tab saía do documento e Shift+Tab caía na última parada da
+      // página (medido; ver `@/lib/tabbable`).
+      //
+      // O foco vai ANTES de o painel sair, para não passar pelo `<body>`; por
+      // isso o `close` não devolve foco nenhum. É `overlay` e não `escape`: a
+      // pessoa saiu sem decidir, como no clique fora.
+      e.preventDefault();
+      tabExitTarget(e, trigger).focus();
+      close('overlay');
     } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && /\S/.test(e.key)) {
       e.preventDefault();
       typeahead(e.key, menuItems);
@@ -585,13 +707,18 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       !submenu.contains(target) &&
       !trigger.contains(target)
     ) {
-      close(false);
+      close('overlay');
     }
   }
 
+  // Um evento só para os três caminhos de abertura: clique direito, tecla Menu
+  // e Shift+F10. Os dois últimos o navegador entrega como `contextmenu` no
+  // elemento FOCADO — é por isso que a área tem `tabindex`.
   trigger.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-    if (isOpen) close(false);
+    // Um novo clique direito com o menu aberto o fecha e reabre no ponto novo.
+    // O primeiro saiu sem decidir: `overlay`, como no clique fora.
+    if (isOpen) close('overlay');
     open(e.clientX, e.clientY);
   });
 
@@ -601,7 +728,10 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   // com dois. Nas outras stacks quem desmonta é o framework; aqui é a forma
   // compartilhada de limpeza, que antes era um observador montado por abertura.
   return tornarDestruivel(wrapper, wrapper, () => {
-    if (isOpen) close(false);
+    // Sair da página com o menu aberto é fechamento pedido pelo produto — `api`,
+    // a mesma leitura do `createAlertDialog` —, e sem devolver foco a uma área
+    // que está deixando o documento.
+    if (isOpen) close('api', false);
     // Cinto e suspensório: `close` já leva o painel do submenu, mas quem
     // desmonta com o menu FECHADO não passaria por ele, e o timer de carência
     // sobreviveria ao elemento que o registrou.

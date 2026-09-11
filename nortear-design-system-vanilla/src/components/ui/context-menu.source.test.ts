@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   contextMenuCleanupSnippet,
+  contextMenuEntriesFrom,
   contextMenuSnippet,
   contextMenuSource,
   contextMenuSourceCleanup,
@@ -165,6 +166,35 @@ describe('transforms por story', () => {
     const code = contextMenuCleanupSnippet({ triggerLabel: 'Área do documento' });
     expect(code).toContain("area.textContent = 'Área do documento';");
     expect(code).toContain('menu.destroy();');
+  });
+});
+
+describe('contextMenuEntriesFrom', () => {
+  it('imprime o código da MESMA lista que monta a prévia', () => {
+    const code = contextMenuSnippet({
+      items: contextMenuEntriesFrom([
+        { type: 'label', label: 'Visualização' },
+        { type: 'checkbox', label: 'Mostrar grade', value: 'show-grid', checked: false, onClick: () => undefined },
+        { type: 'item', label: 'Editar', value: 'edit', variant: 'default', onClick: () => undefined },
+        {
+          type: 'submenu',
+          label: 'Compartilhar',
+          value: 'share',
+          items: [{ type: 'item', label: 'Por link', value: 'share-link', onClick: () => undefined }],
+        },
+        { type: 'item', label: 'Excluir', value: 'delete', variant: 'destructive' },
+      ]),
+    });
+    expect(code).toContain("{ type: 'checkbox', label: 'Mostrar grade', value: 'show-grid', checked: false },");
+    expect(code).toContain("        { label: 'Por link', value: 'share-link' },");
+    expect(code).toContain("variant: 'destructive'");
+    // `default` é o padrão da variante e `item` o do tipo: nenhum dos dois
+    // entra no trecho copiável.
+    expect(code).not.toContain("variant: 'default'");
+    expect(code).not.toContain("type: 'item'");
+    // O snippet não imprime função: o callback de rastreamento da prévia é da
+    // docs page, não do exemplo.
+    expect(code).not.toContain('onClick');
   });
 });
 

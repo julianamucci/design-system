@@ -32,7 +32,7 @@ const meta: Meta = {
       source: { transform: contextMenuSource },
       description: {
         component:
-          'Estados do ContextMenu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
+          'Estados do ContextMenu: item desabilitado, item recuado, item destrutivo, item de marcação no estado misto, a paleta escura e a limpeza de ouvintes quando o menu sai da página.',
       },
     },
   },
@@ -219,47 +219,6 @@ export const ItemDestructive: Story = {
   },
 };
 
-// ─── Paleta escura ────────────────────────────────────────────────────────────
-
-export const DarkPalette: Story = {
-  parameters: {
-    covers: ['visual.item6'],
-    // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
-    // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
-    themes: { themeOverride: 'dark' },
-    // O preview traz um item desabilitado, que o menu canônico do `meta` não
-    // tem — e a paleta vem do tema, não da chamada.
-    docs: { source: { transform: contextMenuSourceDarkPalette } },
-  },
-  render: () =>
-    createContextMenu({
-      trigger: clickCreateArea('Clique com o botão direito aqui'),
-      items: [
-        { type: 'item', label: 'Editar', value: 'edit', onClick: fn() },
-        { type: 'item', label: 'Duplicar', value: 'off', disabled: true },
-        { type: 'separator' },
-        { type: 'item', label: 'Excluir', value: 'delete', variant: 'destructive' },
-      ],
-    }),
-  play: async ({ canvasElement, step }) => {
-    const area = () => within(canvasElement).getByTestId('area');
-
-    await step('A paleta escura está aplicada no documento', async () => {
-      await waitFor(() =>
-        expect(document.documentElement.classList.contains('dark')).toBe(true),
-      );
-    });
-
-    await step('O menu é mais escuro que o texto que ele recebe', async () => {
-      // Prova que a paleta trocou de verdade: com os tokens do claro esta
-      // relação se inverte, e a asserção acusa.
-      const menu = await gestoOpen(area());
-      const cs = getComputedStyle(menu);
-      await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
-    });
-  },
-};
-
 // ─── CheckboxIndeterminate ────────────────────────────────────────────────────
 //
 // Story SEM interação no item, de propósito. O que ela declara vale na abertura,
@@ -325,6 +284,47 @@ export const CheckboxIndeterminate: Story = {
 
     await step('O desmarcado continua sem glifo nenhum', async () => {
       await expect(formaDoIndicador(desmarcado)).toBeNull();
+    });
+  },
+};
+
+// ─── Paleta escura ────────────────────────────────────────────────────────────
+
+export const DarkPalette: Story = {
+  parameters: {
+    covers: ['visual.item6'],
+    // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
+    // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
+    themes: { themeOverride: 'dark' },
+    // O preview traz um item desabilitado, que o menu canônico do `meta` não
+    // tem — e a paleta vem do tema, não da chamada.
+    docs: { source: { transform: contextMenuSourceDarkPalette } },
+  },
+  render: () =>
+    createContextMenu({
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
+      items: [
+        { type: 'item', label: 'Editar', value: 'edit', onClick: fn() },
+        { type: 'item', label: 'Duplicar', value: 'off', disabled: true },
+        { type: 'separator' },
+        { type: 'item', label: 'Excluir', value: 'delete', variant: 'destructive' },
+      ],
+    }),
+  play: async ({ canvasElement, step }) => {
+    const area = () => within(canvasElement).getByTestId('area');
+
+    await step('A paleta escura está aplicada no documento', async () => {
+      await waitFor(() =>
+        expect(document.documentElement.classList.contains('dark')).toBe(true),
+      );
+    });
+
+    await step('O menu é mais escuro que o texto que ele recebe', async () => {
+      // Prova que a paleta trocou de verdade: com os tokens do claro esta
+      // relação se inverte, e a asserção acusa.
+      const menu = await gestoOpen(area());
+      const cs = getComputedStyle(menu);
+      await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
     });
   },
 };
