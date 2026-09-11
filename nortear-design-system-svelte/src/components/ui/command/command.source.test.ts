@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import * as sources from './command.source';
 import {
-  commandBlocks,
   commandInlineSource,
   commandItemCheckedSource,
   commandItemDisabledSource,
@@ -15,25 +14,29 @@ import {
   commandWithLinkItemSource,
   commandWithSeparatorSource,
   commandWithShortcutsSource,
+} from './command.source';
+import {
+  commandBlocks,
   EMPTY_STATE_ITEMS,
   LONG_LIST_NAMES,
   PALETTE_ITEMS,
+  PLAYGROUND_ITEMS,
   SEPARATOR_ITEMS,
-} from './command.source';
+} from './command.fixtures';
 
 /**
- * Todo construtor de snippet do módulo, sem filtro por nome.
+ * Todo construtor de snippet do módulo, sem filtro por nome e sem exceção.
  *
  * Um filtro por sufixo (`/Source$/`) já encolheu em silêncio uma varredura
  * irmã quando a tradução de identificadores moveu o sufixo. Aqui entra TODA
- * função exportada que não recebe dado obrigatório — as auxiliares com
- * parâmetro obrigatório (`commandBlocks`, `commandInlineSource`,
- * `commandSourceWith`) são declaradas pelo nome, e a contagem é conferida.
+ * função exportada. Até 2026-09-10 três auxiliares com parâmetro obrigatório
+ * eram declaradas fora da conta; agora a lista e `commandBlocks` moram em
+ * `command.fixtures.ts`, `commandSourceWith` não sai do módulo, e o motor
+ * `commandInlineSource` cai na lista do Playground sem argumento — então não
+ * sobra export que a varredura precise pular.
  */
-const HELPERS = new Set(['commandBlocks', 'commandInlineSource', 'commandSourceWith']);
 const builders = Object.entries(sources).filter(
-  (entry): entry is [string, () => string] =>
-    typeof entry[1] === 'function' && !HELPERS.has(entry[0]),
+  (entry): entry is [string, () => string] => typeof entry[1] === 'function',
 );
 
 describe('commandSource', () => {
@@ -101,6 +104,7 @@ describe('todo snippet do painel', () => {
     // decidir: ele entra na varredura (padrão) ou vira auxiliar declarada.
     expect(builders.map(([name]) => name).sort()).toEqual(
       [
+        'commandInlineSource',
         'commandItemCheckedSource',
         'commandItemDisabledSource',
         'commandLoadingSource',
@@ -273,5 +277,15 @@ describe('transforms das stories de composição', () => {
       <CommandItem value="v">L</CommandItem>
     </CommandGroup>`);
     expect(output).toContain('<CommandEmpty>E</CommandEmpty>');
+  });
+
+  it('sem argumento, o motor escreve a lista do Playground sem os extras dele', () => {
+    // É a forma que a varredura transversal chama. `loop` e `onSelect` são do
+    // Playground, e o motor não os inventa.
+    const output = commandInlineSource();
+    expect(output).toContain('<CommandInput placeholder="Buscar componente..." />');
+    expect(output.match(/<CommandItem /g)).toHaveLength(PLAYGROUND_ITEMS.length);
+    expect(output).toContain('<Command>');
+    expect(output).not.toContain('onSelect');
   });
 });

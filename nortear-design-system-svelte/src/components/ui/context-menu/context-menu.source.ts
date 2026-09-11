@@ -14,6 +14,7 @@
  * bloco. Grupo sem rótulo não entra: não agrupa nada para quem ouve.
  */
 import { svelteSnippet } from '@/lib/story-source';
+import { contextMenuEntriesState, type ContextMenuDocsEntry } from './context-menu.fixtures';
 
 export type ContextMenuArgs = {
   triggerLabel: string;
@@ -346,69 +347,58 @@ export function contextMenuWithSubmenuSource(): string {
 }
 
 // ─── Cards de Variantes da docs page ──────────────────────────────────────────
+//
+// A forma da lista (`ContextMenuDocsEntry`) e o leitor do estado inicial dela
+// (`contextMenuEntriesState`) moram em `context-menu.fixtures.ts`: a docs page
+// monta a prévia com eles, e este módulo só exporta construtor de snippet.
 
 /**
- * Uma entrada do menu de um card de Variantes, já com o rótulo no idioma da
- * página.
+ * A lista que `contextMenuEntriesSource` escreve quando ninguém passa outra:
+ * a composição completa, com o conteúdo de `contextMenuCompleteSource`.
  *
- * A MESMA lista monta a prévia (o snippet recursivo `menuEntries` da docs page)
- * e imprime o código (`contextMenuEntriesSource`), como a `variantMenu` do
- * vanilla: até 2026-09-10 cada card tinha um literal de código em português ao
- * lado, e em inglês a prévia dizia "Edit" e o código "Editar"; o de marcação
- * publicava os estados trocados e o destrutivo mostrava um atalho que a prévia
- * das outras stacks não tem.
- *
- * `value` é o valor ESTÁVEL do item — o `label` do `context_menu_item_select`,
- * o valor da opção no grupo de rádio e, na marcação, o nome da variável do
- * estado (`show-grid` → `showGrid`). Grupo e grupo de rádio são entradas com
- * filhos porque é assim que o rótulo nomeia o bloco nesta stack: só DENTRO do
- * grupo ele vira o `aria-labelledby` dele.
+ * Passa por todo tipo de entrada — item com atalho e destrutivo, divisória,
+ * grupo, marcação, grupo de rádio e submenu —, e é por isso que ela é o padrão:
+ * a varredura transversal chama o construtor sem argumento e confere que cada
+ * `bind:` que a marcação escreve tem a variável declarada no script. É ali que
+ * este construtor erraria — o nome da variável sai do `value` (`show-grid` →
+ * `showGrid`) nas duas pontas.
  */
-export type ContextMenuDocsEntry =
-  | {
-      type: 'item';
-      label: string;
-      value: string;
-      shortcut?: string;
-      variant?: 'destructive';
-      inset?: boolean;
-    }
-  | { type: 'separator' }
-  | { type: 'group'; label: string; inset?: boolean; items: ContextMenuDocsEntry[] }
-  | { type: 'checkbox'; label: string; value: string; checked: boolean }
-  | {
-      type: 'radio-group';
-      label: string;
-      /** Nome da variável que guarda a escolha — identificador, não se traduz. */
-      name: string;
-      /** Opção marcada ao abrir. */
-      value: string;
-      items: Array<{ label: string; value: string }>;
-    }
-  | { type: 'submenu'; label: string; items: ContextMenuDocsEntry[] };
-
-/** O estado inicial das marcações e dos grupos de rádio de uma lista. */
-export type ContextMenuDocsState = {
-  checked: Record<string, boolean>;
-  radio: Record<string, string>;
-};
-
-/**
- * Lê da lista o estado com que o menu abre — a prévia inicia o `$state` dela
- * por aqui, e o código declara as mesmas variáveis com os mesmos valores.
- */
-export function contextMenuEntriesState(entries: ContextMenuDocsEntry[]): ContextMenuDocsState {
-  const state: ContextMenuDocsState = { checked: {}, radio: {} };
-  const visit = (list: ContextMenuDocsEntry[]) => {
-    for (const entry of list) {
-      if (entry.type === 'checkbox') state.checked[entry.value] = entry.checked;
-      else if (entry.type === 'radio-group') state.radio[entry.name] = entry.value;
-      else if (entry.type === 'group' || entry.type === 'submenu') visit(entry.items);
-    }
-  };
-  visit(entries);
-  return state;
-}
+const COMPLETE_ENTRIES: ContextMenuDocsEntry[] = [
+  {
+    type: 'group',
+    label: 'Ações',
+    items: [
+      { type: 'item', label: 'Editar', value: 'edit', shortcut: 'Ctrl+E' },
+      {
+        type: 'submenu',
+        label: 'Compartilhar',
+        items: [
+          { type: 'item', label: 'Por e-mail', value: 'share-email' },
+          { type: 'item', label: 'Por link', value: 'share-link' },
+        ],
+      },
+    ],
+  },
+  { type: 'separator' },
+  {
+    type: 'group',
+    label: 'Visualização',
+    items: [{ type: 'checkbox', label: 'Mostrar grade', value: 'show-grid', checked: true }],
+  },
+  { type: 'separator' },
+  {
+    type: 'radio-group',
+    label: 'Layout',
+    name: 'layout',
+    value: 'grid',
+    items: [
+      { label: 'Grade', value: 'grid' },
+      { label: 'Lista', value: 'list' },
+    ],
+  },
+  { type: 'separator' },
+  { type: 'item', label: 'Excluir', value: 'delete', shortcut: 'Delete', variant: 'destructive' },
+];
 
 /** `show-grid` → `showGrid`: o nome da variável que guarda a marcação. */
 function stateName(value: string): string {
@@ -496,12 +486,15 @@ function entriesMarkup(entries: ContextMenuDocsEntry[], indent: string): string[
  * O código de um card de Variantes, a partir da MESMA lista que monta a prévia
  * — ver `ContextMenuDocsEntry`. O texto da área e os rótulos chegam traduzidos,
  * então o código fala o idioma da prévia nos três idiomas.
+ *
+ * Sem argumento, escreve `COMPLETE_ENTRIES` com o texto de área canônico: todo
+ * `*.source.ts` desta stack se chama sem argumento, e é assim que a varredura
+ * transversal alcança o construtor que a docs page usa.
  */
-export function contextMenuEntriesSource(options: {
-  triggerLabel: string;
-  entries: ContextMenuDocsEntry[];
-}): string {
-  const { triggerLabel, entries } = options;
+export function contextMenuEntriesSource(
+  options: { triggerLabel?: string; entries?: ContextMenuDocsEntry[] } = {},
+): string {
+  const { triggerLabel = 'Clique com o botão direito aqui', entries = COMPLETE_ENTRIES } = options;
   const parts = entriesParts(
     entries,
     new Set(['ContextMenu', 'ContextMenuTrigger', 'ContextMenuContent']),

@@ -19,7 +19,7 @@
     PALETTE_SHORTCUT,
     PALETTE_TITLE,
     PALETTE_TRIGGER,
-  } from './command.source';
+  } from './command.fixtures';
 
   let { onCommandRun }: { onCommandRun?: (value: string) => void } = $props();
 

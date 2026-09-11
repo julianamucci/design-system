@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, waitFor, expect } from 'storybook/test';
 import { Root as Command } from '@/components/ui/command';
 import CommandInlineStory from './CommandInlineStory.svelte';
-import { commandWithGroupsSource, GROUPED_ITEMS, NO_RESULT } from './command.source';
-import { separatorsOf } from './command.fixtures';
+import { commandWithGroupsSource } from './command.source';
+import { GROUPED_ITEMS, NO_RESULT, separatorsOf } from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 /*

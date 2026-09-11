@@ -5,8 +5,8 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import CommandDocs from '@/components/docs/CommandDocs.svelte';
 import { Root as Command } from '@/components/ui/command';
 import CommandInlineStory from './CommandInlineStory.svelte';
-import { commandSource, PLAYGROUND_ITEMS } from './command.source';
-import { highlightedOf, separatorsOf } from './command.fixtures';
+import { commandSource } from './command.source';
+import { highlightedOf, PLAYGROUND_ITEMS, separatorsOf } from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 

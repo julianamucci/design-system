@@ -1,11 +1,11 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import * as ContextMenu from '@/components/ui/context-menu';
+  import { contextMenuEntriesSource } from '@/components/ui/context-menu/context-menu.source';
   import {
-    contextMenuEntriesSource,
     contextMenuEntriesState,
     type ContextMenuDocsEntry,
-  } from '@/components/ui/context-menu/context-menu.source';
+  } from '@/components/ui/context-menu/context-menu.fixtures';
   import { Button } from '@/components/ui/button';
   import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
   import { locale, useTranslation } from '@/lib/i18n';

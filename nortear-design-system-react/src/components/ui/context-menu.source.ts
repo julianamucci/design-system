@@ -10,7 +10,7 @@
  * `ContextMenuTrigger` com o vocabulário de classe da área de clique direito, e
  * é isso que os snippets escrevem por extenso.
  */
-import { childText, jsxSnippet, type SourceTransform } from '@/lib/story-source';
+import { childText, indentar, jsxSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type ContextMenuArgs = {
   triggerLabel: string;
@@ -660,20 +660,88 @@ function stateLines(entries: readonly ContextMenuEntry[]): string[] {
   });
 }
 
+/** As peças que as entradas usam — é o bloco de import, e só ele. */
+function entryParts(entries: readonly ContextMenuEntry[], parts: Set<string>): Set<string> {
+  for (const entry of entries) {
+    switch (entry.kind) {
+      case 'item':
+        parts.add('ContextMenuItem');
+        if (entry.shortcut) parts.add('ContextMenuShortcut');
+        break;
+      case 'separator':
+        parts.add('ContextMenuSeparator');
+        break;
+      case 'checkbox':
+        parts.add('ContextMenuCheckboxItem');
+        break;
+      case 'submenu':
+        parts.add('ContextMenuSub').add('ContextMenuSubTrigger').add('ContextMenuSubContent');
+        entryParts(entry.items, parts);
+        break;
+      case 'group':
+        parts.add('ContextMenuGroup').add('ContextMenuLabel');
+        entryParts(entry.items, parts);
+        break;
+      case 'radio-group':
+        parts.add('ContextMenuRadioGroup').add('ContextMenuLabel').add('ContextMenuRadioItem');
+        break;
+    }
+  }
+  return parts;
+}
+
+/** O menu canônico, o mesmo do `meta`: as ações com atalho, o divisor e a destrutiva. */
+const ENTRIES_DEFAULT: readonly ContextMenuEntry[] = [
+  { kind: 'item', label: 'Editar', value: 'edit', shortcut: 'Ctrl+E' },
+  { kind: 'item', label: 'Duplicar', value: 'duplicate' },
+  { kind: 'separator' },
+  { kind: 'item', label: 'Excluir', value: 'delete', shortcut: 'Delete', destructive: true },
+];
+
+export type ContextMenuSnippetOptions = {
+  /** Texto da área que responde ao gesto. */
+  triggerLabel?: string;
+  /** O menu como lista de entradas; sem ela, o menu canônico. */
+  entries?: readonly ContextMenuEntry[];
+};
+
 /**
- * O trecho de JSX do menu descrito por `entries`, com os rótulos EXATAMENTE
- * como chegam — quem chama os lê do conteúdo compartilhado, no idioma da
- * página. Os estados de marcação e de escolha única entram antes do menu.
+ * O trecho do menu descrito por `entries`, com os rótulos EXATAMENTE como
+ * chegam — quem chama os lê do conteúdo compartilhado, no idioma da página.
+ *
+ * O trecho é o que se COLA: o import só das peças usadas e, havendo marcação ou
+ * escolha única, o `useState` de cada uma dentro de um componente. Até
+ * 2026-09-10 ele saía sem import nenhum, e com estado era um `const [x, setX] =
+ * useState(…)` solto seguido de JSX solto — nenhum dos dois compila colado, e o
+ * card de Variantes era o único das stacks com código incompleto ao lado da
+ * prévia (o vanilla e o vue imprimem o import). Sem `entries` o construtor cai
+ * no menu canônico, que é como a guarda transversal o chama.
  */
-export function contextMenuJsx(triggerLabel: string, entries: readonly ContextMenuEntry[]): string {
+export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
+  const entries = o.entries ?? ENTRIES_DEFAULT;
   const state = stateLines(entries);
+  const parts = entryParts(entries, new Set(['ContextMenu', 'ContextMenuContent', 'ContextMenuTrigger']));
+  const imports = importDe(...[...parts].sort((a, b) => a.localeCompare(b, 'en')));
   const menu = [
     '<ContextMenu>',
-    `  <ContextMenuTrigger>${jsxText(triggerLabel)}</ContextMenuTrigger>`,
+    `  <ContextMenuTrigger>${jsxText(o.triggerLabel ?? LABEL_DEFAULT)}</ContextMenuTrigger>`,
     '  <ContextMenuContent>',
     ...entries.flatMap((entry) => entryLines(entry, '    ')),
     '  </ContextMenuContent>',
     '</ContextMenu>',
   ].join('\n');
-  return state.length > 0 ? `${state.join('\n')}\n\n${menu}` : menu;
+
+  if (state.length === 0) return jsxSnippet(imports, menu);
+
+  return jsxSnippet(
+    `${imports}
+import { useState } from "react";`,
+    `function ContextMenuWithState() {
+${indentar(state.join('\n'), '  ')}
+
+  return (
+${indentar(menu, '    ')}
+  );
+}`,
+  );
 }

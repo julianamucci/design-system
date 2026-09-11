@@ -11,14 +11,18 @@ import {
   commandLongListSource,
   commandNoResultsSource,
   commandSource,
+} from './command.source';
+import {
   CHECKED_ITEM_ITEMS,
+  commandItem,
   DISABLED_ITEM_ITEMS,
   EMPTY_STATE_ITEMS,
   EMPTY_STATE_SEARCH,
+  emptyRegionOf,
+  highlightedOf,
   LONG_LIST_ITEMS,
   NO_RESULT,
-} from './command.source';
-import { commandItem, emptyRegionOf, highlightedOf } from './command.fixtures';
+} from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável

@@ -351,8 +351,17 @@ hospedeiro (Dialog) → stories → docs page.
 | texto, props, critérios de teste | `docs/shared/content/command/translations.json` |
 | desenho e anotações | Figma, página `Command` (componente `702:8`) |
 | portões determinísticos | `node scripts/audit.mjs command --json` |
+| código do painel Code | `ui/command/command.source.ts` (só construtores de snippet) e `command.fixtures.ts` (as listas que story e snippet dividem), por stack — a varredura `source-snippets.test.ts` de cada uma cobra a fronteira |
 
 ## 12. Histórico
+
+**2026-09-10 · a varredura do painel Code reprovava no svelte, e ninguém a rodava.** A
+rodada que fez as cinco cumprirem o mesmo contrato deixou o `command.source.ts` do
+svelte exportando 17 listas e duas funções que não eram construtores de snippet,
+e a `source-snippets.test.ts` fechou com 8 falhas. A suíte por slug
+(`npm test -- command`) não a alcança: o filtro não casa com o nome do arquivo
+da varredura. As listas foram para o `command.fixtures.ts`, o `commandInlineSource`
+ganhou padrão, e a saída de cada construtor ficou byte a byte igual.
 
 **2026-09-10 · o bloco `.nds-combobox-*` saiu do `command.css`** — fechava a
 pendência aberta no mesmo dia. Oito regras de uma arquitetura anterior do

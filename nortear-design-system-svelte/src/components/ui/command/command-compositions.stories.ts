@@ -13,14 +13,19 @@ import {
   commandWithLinkItemSource,
   commandPaletteSource,
   commandSource,
+} from './command.source';
+import {
+  commandItem,
   DISABLED_ITEMS,
+  highlightedOf,
   NO_RESULT,
   PALETTE_SHORTCUT,
   PALETTE_TITLE,
+  searchOf,
   SEPARATOR_ITEMS,
+  separatorsOf,
   SHORTCUT_ITEMS,
-} from './command.source';
-import { commandItem, highlightedOf, searchOf, separatorsOf } from './command.fixtures';
+} from './command.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Espiões de escopo de MÓDULO: dentro do `render` seriam inalcançáveis pela

@@ -230,19 +230,50 @@ function entryLines(
 }
 
 /**
+ * O menu canônico — as ações, o divisor e a ação destrutiva —, com os três
+ * `show*` do Playground tirando as peças que eles desligam. Control ausente
+ * vale o padrão do meta, que é ligado.
+ */
+function canonicalEntries(args?: Partial<ContextMenuArgs>): ContextMenuSnippetEntry[] {
+  const isOn = (value: unknown) => value !== false;
+  const withShortcuts = isOn(args?.showShortcuts);
+
+  const entries: ContextMenuSnippetEntry[] = [
+    { kind: 'item', label: 'Editar', shortcut: withShortcuts ? 'Ctrl+E' : undefined },
+    { kind: 'item', label: 'Duplicar' },
+  ];
+  if (isOn(args?.showSeparator)) entries.push({ kind: 'separator' });
+  if (isOn(args?.showDestructive)) {
+    entries.push({
+      kind: 'item',
+      label: 'Excluir',
+      shortcut: withShortcuts ? 'Delete' : undefined,
+      destructive: true,
+    });
+  }
+  return entries;
+}
+
+/**
  * O trecho de um menu a partir da lista de entradas.
  *
  * `triggerLabel` é o texto da área, e `root` os atributos da raiz que diferem
- * do padrão (já montados, como `attrBool` devolve).
+ * do padrão (já montados, como `attrBool` devolve). Sem `entries`, o menu
+ * canônico: é o que torna o construtor chamável sem argumento, que é a forma
+ * como a guarda transversal (`source-snippets.test.ts`) confere todo export —
+ * quem chama com a lista, a docs page e as stories, recebe o mesmo trecho de
+ * antes.
  */
-export function contextMenuSnippet(options: {
-  entries: ContextMenuSnippetEntry[];
-  triggerLabel?: string;
-  root?: string;
-}): string {
+export function contextMenuSnippet(
+  options: {
+    entries?: ContextMenuSnippetEntry[];
+    triggerLabel?: string;
+    root?: string;
+  } = {},
+): string {
   const parts = new Set(['ContextMenu', 'ContextMenuTrigger', 'ContextMenuContent']);
   const refs: string[] = [];
-  const content = options.entries
+  const content = (options.entries ?? canonicalEntries())
     .flatMap((entry) => entryLines(entry, 4, parts, refs))
     .join('\n');
   const imports = importing([...parts]);
@@ -269,26 +300,8 @@ ${refs.join('\n')}`
  */
 export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx) => {
   const args = ctx?.args;
-  // Control ausente vale o padrão do meta, que é ligado.
-  const isOn = (value: unknown) => value !== false;
-  const withShortcuts = isOn(args?.showShortcuts);
-
-  const entries: ContextMenuSnippetEntry[] = [
-    { kind: 'item', label: 'Editar', shortcut: withShortcuts ? 'Ctrl+E' : undefined },
-    { kind: 'item', label: 'Duplicar' },
-  ];
-  if (isOn(args?.showSeparator)) entries.push({ kind: 'separator' });
-  if (isOn(args?.showDestructive)) {
-    entries.push({
-      kind: 'item',
-      label: 'Excluir',
-      shortcut: withShortcuts ? 'Delete' : undefined,
-      destructive: true,
-    });
-  }
-
   return contextMenuSnippet({
-    entries,
+    entries: canonicalEntries(args),
     triggerLabel: text(args?.triggerLabel, LABEL_DEFAULT),
     root: attrBool('modal', args?.modal, true),
   });

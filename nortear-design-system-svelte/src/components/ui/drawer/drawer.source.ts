@@ -229,6 +229,10 @@ export function drawerHeadingH3Source(): string {
  * Quem confirma é o ENVIO do formulário, e o elo é o par id ↔ `form`: ver a
  * nota de `formId` em `Frame`. Sem ele o botão fica inerte e o Enter num campo
  * não dispara nada — com dois campos não há submissão implícita que salve.
+ *
+ * O parâmetro do `onsubmit` vai SEM anotação, como no snippet do `switch`: o
+ * atributo já tipa o evento como `SubmitEvent` do `<form>`, e a anotação só
+ * acrescentava à ligação um nome que o `<script>` do exemplo não declara.
  */
 export function drawerWithFormSource(): string {
   return panel({
@@ -243,7 +247,7 @@ export function drawerWithFormSource(): string {
         id="drawer-form"
         class="nds-grid"
         data-spacing="sm"
-        onsubmit={(event: SubmitEvent) => event.preventDefault()}
+        onsubmit={(event) => event.preventDefault()}
       >
         <div class="nds-grid" data-spacing="xs">
           <Label for="drawer-nome">Nome</Label>

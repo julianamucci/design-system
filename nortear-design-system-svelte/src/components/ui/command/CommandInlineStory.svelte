@@ -17,7 +17,7 @@
     NO_RESULT,
     type CommandEntry,
     type CommandEntryItem,
-  } from './command.source';
+  } from './command.fixtures';
 
   /**
    * A paleta inline de TODA story que não precisa de hospedeiro — Playground,

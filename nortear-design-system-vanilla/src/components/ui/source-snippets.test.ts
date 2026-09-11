@@ -159,6 +159,12 @@ const HELPERS = new Set<string>([
   // a fixture das stories o importa de lá para que o painel Code e o preview
   // não possam mostrar corpos diferentes.
   'SHEET_BODY_TEXT',
+  // Converte as definições da fábrica (`ContextMenuItemDef[]`) nas entradas do
+  // snippet: devolve DADO — um array —, não trecho copiável. Existe para que o
+  // card de Variantes da docs page monte a prévia e imprima o código com a
+  // MESMA lista. Quem imprime é `contextMenuSnippet`, que esta varredura chama;
+  // a composição dos dois é cobrada em `context-menu.source.test.ts`.
+  'contextMenuEntriesFrom',
 ]);
 
 /**

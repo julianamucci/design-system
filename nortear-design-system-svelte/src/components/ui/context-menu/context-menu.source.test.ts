@@ -12,9 +12,8 @@ import {
   contextMenuDarkPaletteSource,
   contextMenuSource,
   contextMenuEntriesSource,
-  contextMenuEntriesState,
-  type ContextMenuDocsEntry,
 } from './context-menu.source';
+import { contextMenuEntriesState, type ContextMenuDocsEntry } from './context-menu.fixtures';
 
 describe('contextMenuSource', () => {
   it('sem args, entrega a área do gesto e o menu do vanilla', () => {
@@ -317,5 +316,18 @@ describe('código dos cards de Variantes da docs page', () => {
     </ContextMenuSub>`);
     expect(output).toContain('    ContextMenuShortcut,');
     expect(output).toContain('<ContextMenuShortcut>Ctrl+E</ContextMenuShortcut>');
+  });
+
+  it('sem argumento, escreve a composição completa — o rótulo da escolha única pelo nome das outras stacks', () => {
+    // É a forma que a varredura transversal chama. A única diferença para
+    // `contextMenuCompleteSource` é o terceiro rótulo: a lista não tem como
+    // pedir o alias `ContextMenuGroupHeading`, e escreve `ContextMenuLabel`.
+    const expected = contextMenuCompleteSource()
+      .replace('    ContextMenuGroupHeading,\n', '')
+      .replace(
+        '<ContextMenuGroupHeading>Layout</ContextMenuGroupHeading>',
+        '<ContextMenuLabel>Layout</ContextMenuLabel>',
+      );
+    expect(contextMenuEntriesSource()).toBe(expected);
   });
 });

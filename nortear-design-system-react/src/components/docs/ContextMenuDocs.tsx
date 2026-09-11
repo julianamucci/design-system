@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/context-menu";
 import { contextMenuCloseReason } from "@/components/ui/context-menu-close-reason";
 import {
-  contextMenuJsx,
+  contextMenuSnippet,
   type ContextMenuActionEntry,
   type ContextMenuEntry,
 } from "@/components/ui/context-menu.source";
@@ -217,7 +217,7 @@ function TriggerArea({ children, plain = false }: { children: ReactNode; plain?:
 // ─── O menu como dado ─────────────────────────────────────────────────────────
 //
 // Toda prévia viva desta página é uma LISTA de entradas (`ContextMenuEntry`), e
-// é a mesma lista que imprime o código do card (`contextMenuJsx`) — o desenho do
+// é a mesma lista que imprime o código do card (`contextMenuSnippet`) — o desenho do
 // vanilla (`variantMenu` + `variantCode`). Até 2026-09-10 cada card tinha um
 // literal de código em português ao lado da prévia: quem lia em inglês via
 // "Edit" no menu e copiava "Editar".
@@ -525,7 +525,7 @@ function variantMenuId(key: VariantKey): string {
 
 // ─── Código de importação ─────────────────────────────────────────────────────
 //
-// O código de cada card de Variantes NÃO mora aqui: sai de `contextMenuJsx`
+// O código de cada card de Variantes NÃO mora aqui: sai de `contextMenuSnippet`
 // com a mesma lista que monta a prévia, no idioma da página.
 
 const codeImportBasic = `import {
@@ -658,7 +658,7 @@ export function ContextMenuDocs() {
   const variantCard = (key: VariantKey) => {
     const entries = variantMenu(key, tContent);
     return {
-      code: contextMenuJsx(trigger, entries),
+      code: contextMenuSnippet({ triggerLabel: trigger, entries }),
       preview: (
         <MenuPreview entries={entries} tracking={variantTracking(variantMenuId(key))} trigger={trigger} />
       ),
