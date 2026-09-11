@@ -3,7 +3,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
+  Directive,
   effect,
+  ElementRef,
+  inject,
   OnDestroy,
   viewChild,
   TemplateRef,
@@ -17,6 +21,7 @@ import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_COMBOBOX } from '@/components/ui/combobox';
+import { NdsButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import comboboxTranslations from '@shared/content/combobox/translations.json';
 
@@ -77,6 +82,39 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
 const IMPORT_CODE = `import { NDS_COMBOBOX } from '@/components/ui/combobox';`;
 
+/**
+ * Rótulo ESTÁVEL de cada valor escolhível desta página, para o payload do GA4.
+ *
+ * Não sai do `t()` de propósito: o texto traduzido faria a mesma escolha virar
+ * três eventos no relatório, um por idioma. O que a tela mostra vem do
+ * conteúdo; o que o evento carrega vem daqui — os mesmos rótulos que a página
+ * de referência manda.
+ */
+const TRACK_LABELS: Record<string, string> = {
+  brasil: 'Brazil',
+  argentina: 'Argentina',
+  chile: 'Chile',
+  colombia: 'Colombia',
+  mexico: 'Mexico',
+  peru: 'Peru',
+  portugal: 'Portugal',
+  espanha: 'Spain',
+  uruguai: 'Uruguay',
+  maca: 'Apple',
+  banana: 'Banana',
+  laranja: 'Orange',
+  cenoura: 'Carrot',
+  batata: 'Potato',
+  abobrinha: 'Zucchini',
+};
+
+/**
+ * As seções desta página que renderizam o combobox VIVO — o `location` do
+ * evento sai de ONDE O CAMPO ESTÁ (guideline 07). Estados não entra: a seção é
+ * só a tabela.
+ */
+type ComboboxLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_do_dont';
+
 // A raiz compõe `RdxComboboxRoot` por host directive, e cada peça compõe a sua.
 // `invalid` NÃO aparece na lista de inputs do `ɵdir` do primitivo: ele vem de
 // `RdxFormUiControlBase` e chega por `usesInheritance: true`.
@@ -100,13 +138,40 @@ export class NdsCombobox {
 // Uso com Reactive Forms:
 // <nds-combobox formControlName="pais"> … </nds-combobox>`;
 
+/**
+ * Engole o Backspace na CAPTURA da caixa, antes de ele chegar ao campo de texto.
+ *
+ * É o contraexemplo do par 2 do Do & Don't, o mesmo da página de referência: a
+ * caixa é ancestral do campo, então o ouvinte de captura roda antes do teclado
+ * do primitivo, que mora no `host` do campo, e a propagação morre ali. O texto
+ * digitado continua apagável — quem apaga é o navegador, que só pararia com
+ * `preventDefault` —, e sobra exatamente o defeito da legenda: desfazer uma
+ * escolha só com o ponteiro.
+ *
+ * Diretiva, e não `(keydown)` no template: o Angular não tem ligação de evento
+ * em captura, e um `(keydown)` na caixa correria na BOLHA, depois do campo.
+ */
+@Directive({ selector: 'div[ndsSwallowBackspace]', standalone: true })
+export class NdsSwallowBackspace {
+  constructor() {
+    const box = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
+    const onKeydown = (event: KeyboardEvent): void => {
+      if (event.key === 'Backspace') event.stopPropagation();
+    };
+    box.addEventListener('keydown', onKeydown, { capture: true });
+    inject(DestroyRef).onDestroy(() =>
+      box.removeEventListener('keydown', onKeydown, { capture: true }),
+    );
+  }
+}
+
 @Component({
   selector: 'nds-combobox-docs',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    ...NDS_COMBOBOX,
+    ...NDS_COMBOBOX, NdsButton, NdsSwallowBackspace,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsCompositions, NdsDocsStates, NdsDocsProps, NdsDocsTokens,
@@ -121,7 +186,7 @@ export class NdsCombobox {
     -->
 
     <ng-template #tplDoDont1Do>
-      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont1DoValue()" (valueChange)="setMultiple(doDont1DoValue, $event)" class="nds-w-full">
+      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont1DoValue()" (valueChange)="setMultiple(doDont1DoValue, 'dodont_named_remove', 'docs_do_dont', $event)" class="nds-w-full">
         <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
@@ -155,7 +220,7 @@ export class NdsCombobox {
     </ng-template>
 
     <ng-template #tplDoDont1Dont>
-      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont1DontValue()" (valueChange)="setMultiple(doDont1DontValue, $event)" class="nds-w-full">
+      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont1DontValue()" (valueChange)="setMultiple(doDont1DontValue, 'dodont_generic_remove', 'docs_do_dont', $event)" class="nds-w-full">
         <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
@@ -190,7 +255,7 @@ export class NdsCombobox {
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont2DoValue()" (valueChange)="setMultiple(doDont2DoValue, $event)" class="nds-w-full">
+      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont2DoValue()" (valueChange)="setMultiple(doDont2DoValue, 'dodont_backspace', 'docs_do_dont', $event)" class="nds-w-full">
         <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
@@ -224,13 +289,22 @@ export class NdsCombobox {
     </ng-template>
 
     <ng-template #tplDoDont2Dont>
-      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont2DontValue()" (valueChange)="setMultiple(doDont2DontValue, $event)" class="nds-w-full">
+      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="doDont2DontValue()" (valueChange)="setMultiple(doDont2DontValue, 'dodont_no_backspace', 'docs_do_dont', $event)" class="nds-w-full">
         <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
-        <div ndsComboboxInputWrapper>
+        <!-- O MESMO campo do lado "do", com uma diferença só: o Backspace é
+             engolido na caixa antes de chegar ao campo de texto. Os chips
+             mantêm o botão de remover — o defeito da legenda é o teclado
+             bloqueado, e tirar o botão mostrava outro defeito. -->
+        <div ndsComboboxInputWrapper ndsSwallowBackspace>
           <div ndsComboboxChips>
             @for (chosen of doDont2DontValue(); track chosen) {
-              <!-- Sem botão de remover: só o ponteiro desfaz, na lista. -->
-              <span ndsComboboxChip [value]="chosen">{{ countryLabel(chosen) }}</span>
+              <span ndsComboboxChip [value]="chosen">
+                {{ countryLabel(chosen) }}
+                <button
+                  ndsComboboxChipRemove
+                  [attr.aria-label]="removeLabel(countryLabel(chosen))"
+                ></button>
+              </span>
             }
             <input ndsComboboxInput [placeholder]="t('demonstration.labels.countriesPlaceholder')" />
           </div>
@@ -253,7 +327,7 @@ export class NdsCombobox {
     </ng-template>
 
     <ng-template #tplVarSingle>
-      <nds-combobox [value]="varSingleValue()" (valueChange)="setSingle(varSingleValue, $event)" class="nds-w-full">
+      <nds-combobox [value]="varSingleValue()" (valueChange)="setSingle(varSingleValue, 'variant_single', 'docs_variantes', $event)" class="nds-w-full">
         <label ndsComboboxLabel>{{ t('demonstration.labels.countryLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <input ndsComboboxInput [placeholder]="t('demonstration.labels.countryPlaceholder')" />
@@ -277,7 +351,7 @@ export class NdsCombobox {
     </ng-template>
 
     <ng-template #tplVarMultiple>
-      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="varMultipleValue()" (valueChange)="setMultiple(varMultipleValue, $event)" class="nds-w-full">
+      <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="varMultipleValue()" (valueChange)="setMultiple(varMultipleValue, 'variant_multiple', 'docs_variantes', $event)" class="nds-w-full">
         <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <div ndsComboboxChips>
@@ -311,7 +385,7 @@ export class NdsCombobox {
     </ng-template>
 
     <ng-template #tplVarGrouped>
-      <nds-combobox [value]="varGroupedValue()" (valueChange)="setSingle(varGroupedValue, $event)" class="nds-w-full">
+      <nds-combobox [value]="varGroupedValue()" (valueChange)="setSingle(varGroupedValue, 'variant_grouped', 'docs_variantes', $event)" class="nds-w-full">
         <label ndsComboboxLabel>{{ t('demonstration.labels.groupedLabel') }}</label>
         <div ndsComboboxInputWrapper>
           <input ndsComboboxInput [placeholder]="t('demonstration.labels.groupedPlaceholder')" />
@@ -344,7 +418,7 @@ export class NdsCombobox {
 
     <ng-template #tplCompInForm>
       <form class="nds-stack nds-w-full" data-spacing="md" (submit)="$event.preventDefault()">
-        <nds-combobox name="pais" [value]="compFormValue()" (valueChange)="setSingle(compFormValue, $event)" class="nds-w-full">
+        <nds-combobox name="country" [value]="compFormValue()" (valueChange)="setSingle(compFormValue, 'composition_form', 'docs_composicoes', $event)" class="nds-w-full">
           <label ndsComboboxLabel>{{ t('demonstration.labels.countryLabel') }}</label>
           <div ndsComboboxInputWrapper>
             <input ndsComboboxInput [placeholder]="t('demonstration.labels.countryPlaceholder')" />
@@ -365,6 +439,11 @@ export class NdsCombobox {
             <div ndsComboboxEmpty>{{ t('demonstration.labels.empty') }}</div>
           </ng-template>
         </nds-combobox>
+        <!-- O envio é o assunto da composição: sem ele, o campo com nome não
+             teria formulário nenhum para participar. -->
+        <div class="nds-cluster" data-justify="end">
+          <button ndsButton type="submit">{{ t('demonstration.labels.submit') }}</button>
+        </div>
       </form>
     </ng-template>
 
@@ -385,7 +464,7 @@ export class NdsCombobox {
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-stack nds-w-full" data-spacing="xl">
-            <nds-combobox [value]="demoSingleValue()" (valueChange)="setSingle(demoSingleValue, $event)" class="nds-w-full">
+            <nds-combobox name="country" [value]="demoSingleValue()" (valueChange)="setSingle(demoSingleValue, 'country', 'docs_demo', $event)" class="nds-w-full">
               <label ndsComboboxLabel>{{ t('demonstration.labels.countryLabel') }}</label>
               <div ndsComboboxInputWrapper>
                 <input
@@ -410,7 +489,7 @@ export class NdsCombobox {
               </ng-template>
             </nds-combobox>
 
-            <nds-combobox multiple [removedLabel]="t('demonstration.labels.removed')" [value]="demoMultipleValue()" (valueChange)="setMultiple(demoMultipleValue, $event)" class="nds-w-full">
+            <nds-combobox multiple name="countries" [removedLabel]="t('demonstration.labels.removed')" [value]="demoMultipleValue()" (valueChange)="setMultiple(demoMultipleValue, 'countries', 'docs_demo', $event)" class="nds-w-full">
               <label ndsComboboxLabel>{{ t('demonstration.labels.countriesLabel') }}</label>
               <div ndsComboboxInputWrapper>
                 <div ndsComboboxChips>
@@ -436,6 +515,39 @@ export class NdsCombobox {
                       {{ item.label }}
                       <span ndsComboboxItemIndicator></span>
                     </div>
+                  }
+                </div>
+                <div ndsComboboxEmpty>{{ t('demonstration.labels.empty') }}</div>
+              </ng-template>
+            </nds-combobox>
+
+            <!-- O terceiro modo do Playground: a lista com grupos. É o mesmo trio
+                 — única, múltipla e agrupada — que a Demonstração mostra nas
+                 outras stacks e que o conteúdo compartilhado define. -->
+            <nds-combobox name="ingredient" [value]="demoGroupedValue()" (valueChange)="setSingle(demoGroupedValue, 'ingredient', 'docs_demo', $event)" class="nds-w-full">
+              <label ndsComboboxLabel>{{ t('demonstration.labels.groupedLabel') }}</label>
+              <div ndsComboboxInputWrapper>
+                <input ndsComboboxInput [placeholder]="t('demonstration.labels.groupedPlaceholder')" />
+                <button ndsComboboxClear [attr.aria-label]="t('demonstration.labels.clear')"></button>
+                <button ndsComboboxTrigger [attr.aria-label]="t('demonstration.labels.openList')">
+                  <svg ndsComboboxIcon></svg>
+                </button>
+              </div>
+              <ng-template ndsComboboxPopup>
+                <div ndsComboboxList>
+                  @for (group of groceries(); track group.name; let last = $last) {
+                    <div ndsComboboxGroup>
+                      <div ndsComboboxGroupLabel>{{ group.name }}</div>
+                      @for (item of group.items; track item.value) {
+                        <div ndsComboboxItem [value]="item.value">
+                          {{ item.label }}
+                          <span ndsComboboxItemIndicator></span>
+                        </div>
+                      }
+                    </div>
+                    @if (!last) {
+                      <div ndsComboboxSeparator></div>
+                    }
                   }
                 </div>
                 <div ndsComboboxEmpty>{{ t('demonstration.labels.empty') }}</div>
@@ -553,6 +665,7 @@ export class NdsComboboxDocs implements AfterViewInit, OnDestroy {
 
   protected readonly demoSingleValue = signal<string | null>(null);
   protected readonly demoMultipleValue = signal<string[]>(['brasil', 'argentina']);
+  protected readonly demoGroupedValue = signal<string | null>(null);
   protected readonly doDont1DoValue = signal<string[]>(['brasil']);
   protected readonly doDont1DontValue = signal<string[]>(['brasil']);
   protected readonly doDont2DoValue = signal<string[]>(['brasil', 'argentina']);
@@ -613,13 +726,61 @@ export class NdsComboboxDocs implements AfterViewInit, OnDestroy {
    * reprovaria no verificador de templates, e alargar o tipo aqui obrigaria um
    * `Array.isArray` em cada `@for` da página. A via única mantém os exemplos
    * tipados como o leitor os escreveria.
+   *
+   * É também aqui que a escolha vai para o GA4, com `fieldName` estável e o
+   * `location` da seção. Na escolha única, valor vazio é o botão de limpar.
    */
-  protected setSingle(target: WritableSignal<string | null>, value: unknown): void {
-    target.set(typeof value === 'string' ? value : null);
+  protected setSingle(
+    target: WritableSignal<string | null>,
+    fieldName: string,
+    location: ComboboxLocation,
+    value: unknown,
+  ): void {
+    const chosen = typeof value === 'string' && value !== '' ? value : null;
+    target.set(chosen);
+    if (!chosen) {
+      track('field_change', { component: 'combobox', field_name: fieldName, value: '', location });
+      return;
+    }
+    track('option_select', {
+      component: 'combobox',
+      field_name: fieldName,
+      value: chosen,
+      label: TRACK_LABELS[chosen],
+      location,
+    });
   }
 
-  protected setMultiple(target: WritableSignal<string[]>, value: unknown): void {
-    target.set(Array.isArray(value) ? value.map((entry) => String(entry)) : []);
+  /**
+   * Na múltipla, quem separa "escolheu" de "removeu" é a comparação com a lista
+   * anterior: sem ela, remover um chip sairia no relatório como uma escolha.
+   */
+  protected setMultiple(
+    target: WritableSignal<string[]>,
+    fieldName: string,
+    location: ComboboxLocation,
+    value: unknown,
+  ): void {
+    const previous = target();
+    const next = Array.isArray(value) ? value.map((entry) => String(entry)) : [];
+    target.set(next);
+    const added = next.find((entry) => !previous.includes(entry));
+    if (added) {
+      track('option_select', {
+        component: 'combobox',
+        field_name: fieldName,
+        value: added,
+        label: TRACK_LABELS[added],
+        location,
+      });
+      return;
+    }
+    track('field_change', {
+      component: 'combobox',
+      field_name: fieldName,
+      value: next.join(','),
+      location,
+    });
   }
 
   protected countryLabel(value: string): string {

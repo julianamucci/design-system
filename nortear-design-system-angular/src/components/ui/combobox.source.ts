@@ -33,6 +33,28 @@ export type ComboboxSnippetOptions = {
   groups?: Record<string, string[]>;
 };
 
+/**
+ * Os nove países da spec — a mesma lista que as stories mostram.
+ *
+ * O snippet enumera o que está na tela: reduzir a três esconderia justamente os
+ * rótulos que a story de filtro usa para separar o predicado do consumidor do
+ * comportamento de fábrica.
+ */
+const COUNTRY_LABELS = [
+  'Brasil', 'Argentina', 'Chile', 'Colômbia', 'México',
+  'Peru', 'Portugal', 'Espanha', 'Uruguai',
+];
+
+/**
+ * A lista curta das stories de estado e da lista aberta — quatro países.
+ *
+ * É o padrão de `comboboxSnippet` porque é o que as três stories de estado
+ * renderizam e não repassam: o padrão anterior (Brasil, Portugal, Espanha) não
+ * batia com story nenhuma, e o painel Code ensinava uma lista que o preview ao
+ * lado não mostrava.
+ */
+const SHORT_COUNTRY_LABELS = ['Brasil', 'Argentina', 'Chile', 'Portugal'];
+
 /** O valor de uma opção, derivado do rótulo — sem acento e sem caixa alta. */
 function toValue(label: string): string {
   return label
@@ -66,8 +88,13 @@ function listBody(options: ComboboxSnippetOptions): string {
       .join('\n');
   }
 
-  const labels = options.items ?? ['Brasil', 'Portugal', 'Espanha'];
-  return labels.map((label) => itemLine(label, '          ')).join('\n');
+  return optionLabels(options).map((label) => itemLine(label, '          ')).join('\n');
+}
+
+/** Os rótulos de todas as opções, na ordem da lista — grupos achatados. */
+function optionLabels(options: ComboboxSnippetOptions): string[] {
+  if (options.groups) return Object.values(options.groups).flat();
+  return options.items ?? SHORT_COUNTRY_LABELS;
 }
 
 /** O uso real do campo, com só o que difere do padrão. */
@@ -116,8 +143,19 @@ export function comboboxSnippet(options: ComboboxSnippetOptions = {}): string {
       ].join('\n')
     : inputLine('        ');
 
+  // No modo múltiplo o chip mostra o RÓTULO de um valor, e quem o resolve é o
+  // `labelOf` — que lê `items`. A classe declara a lista, com as mesmas opções
+  // da lista abaixo: sem ela, `this.items` não resolve e o exemplo não compila.
+  const itemsField = optionLabels(options)
+    .map((option) => `    { value: '${toValue(option)}', label: '${option}' },`)
+    .join('\n');
+
   const body = multiple
     ? `  readonly value = signal<string[]>([]);
+
+  readonly items = [
+${itemsField}
+  ];
 
   labelOf(value: string): string {
     return this.items.find((item) => item.value === value)?.label ?? value;
@@ -167,22 +205,12 @@ export function comboboxSource(
     disabled: args['disabled'] as boolean | undefined,
     invalid: args['invalid'] as boolean | undefined,
     name: args['name'] as string | undefined,
-    items: ['Brasil', 'Argentina', 'Chile'],
+    // As duas stories que passam por aqui — Playground e a de múltipla escolha
+    // — renderizam os nove países. Três aqui publicavam uma lista menor que a
+    // do preview ao lado.
+    items: COUNTRY_LABELS,
   });
 }
-
-
-/**
- * Os nove países da spec — a mesma lista que as stories mostram.
- *
- * O snippet enumera o que está na tela: reduzir a três esconderia justamente os
- * rótulos que a story de filtro usa para separar o predicado do consumidor do
- * comportamento de fábrica.
- */
-const COUNTRY_LABELS = [
-  'Brasil', 'Argentina', 'Chile', 'Colômbia', 'México',
-  'Peru', 'Portugal', 'Espanha', 'Uruguai',
-];
 
 /**
  * O campo com um filtro do CONSUMIDOR.
@@ -217,7 +245,7 @@ const startsWithFilter: ComboboxFilter = (itemValue, query, itemToString) => {
 @Component({
   imports: [...NDS_COMBOBOX],
   template: \`
-    <nds-combobox [(value)]="value" [filter]="filter">
+    <nds-combobox name="pais" [(value)]="value" [filter]="filter">
       <label ndsComboboxLabel>País</label>
 
       <div ndsComboboxInputWrapper>

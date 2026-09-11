@@ -10,6 +10,7 @@
  * snippet. Quem consome escreve o campo, não a moldura.
  */
 import {
+  asCode,
   attr,
   attrBool,
   attrs,
@@ -32,9 +33,30 @@ ${names.map((name) => `  ${name},`).join('\n')}
 } from '@/components/ui/combobox'`;
 }
 
-const IMPORT_SINGLE = importing(
+/*
+ * Com e sem o botão de limpar, porque os snippets se dividem aí: bloqueado,
+ * reprovado e em formulário não desenham o limpar, e importá-lo ali ensinava
+ * uma peça que o exemplo não tem — a guarda de import só via o sentido
+ * contrário, o do nome usado e não importado.
+ */
+const IMPORT_SINGLE_CLEARABLE = importing(
   'Combobox',
   'ComboboxClear',
+  'ComboboxEmpty',
+  'ComboboxIcon',
+  'ComboboxInput',
+  'ComboboxInputWrapper',
+  'ComboboxItem',
+  'ComboboxItemIndicator',
+  'ComboboxLabel',
+  'ComboboxList',
+  'ComboboxPopup',
+  'ComboboxPositioner',
+  'ComboboxTrigger',
+);
+
+const IMPORT_SINGLE = importing(
+  'Combobox',
   'ComboboxEmpty',
   'ComboboxIcon',
   'ComboboxInput',
@@ -205,7 +227,7 @@ export const comboboxSource: SourceTransform<ComboboxArgs> = (_generated, ctx) =
   const args = ctx?.args ?? {};
   return vueSnippet(
     `import { ref } from 'vue'
-${IMPORT_SINGLE}
+${IMPORT_SINGLE_CLEARABLE}
 
 ${COUNTRIES}
 
@@ -218,7 +240,9 @@ const country = ref('')`,
         attr('name', args.name),
       ],
       label: 'País',
-      input: [attr('placeholder', args.placeholder ?? 'Buscar país')],
+      // `asCode` ANTES do `??`: um espião de evento não é nulo, passava pelo
+      // `??` e o `attr` o descartava — o snippet saía sem placeholder nenhum.
+      input: [attr('placeholder', asCode(args.placeholder) ?? 'Buscar país')],
       clear: true,
       items: LOOP_ITEMS,
     }),
@@ -339,8 +363,12 @@ ${indentar(
  * Dentro de um formulário: `name` na raiz é o que faz o valor viajar no envio —
  * o componente mantém um campo escondido com esse nome, e é ele que a
  * serialização nativa enxerga.
+ *
+ * O rótulo do envio entra por parâmetro: a docs page passa o de
+ * `demonstration.labels.submit`, e o código ao lado da prévia diz o que a
+ * prévia diz, em qualquer idioma — como no vanilla.
  */
-export function comboboxInFormSource(): string {
+export function comboboxInFormSource(submitLabel = 'Continuar'): string {
   return vueSnippet(
     `import { ref } from 'vue'
 import { Button } from '@/components/ui/button'
@@ -358,7 +386,7 @@ ${indentar(
     items: LOOP_ITEMS,
   }),
 )}
-  <Button type="submit">Enviar</Button>
+  <Button type="submit">${submitLabel}</Button>
 </form>`,
   );
 }
@@ -399,7 +427,7 @@ export function comboboxCustomFilterSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 import type { ComboboxFilter } from '@/components/ui/combobox'
-${IMPORT_SINGLE}
+${IMPORT_SINGLE_CLEARABLE}
 
 ${COUNTRIES}
 
@@ -427,7 +455,7 @@ export function comboboxControlledSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 import { Button } from '@/components/ui/button'
-${IMPORT_SINGLE}
+${IMPORT_SINGLE_CLEARABLE}
 
 ${COUNTRIES}
 

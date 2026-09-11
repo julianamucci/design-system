@@ -179,62 +179,140 @@ function sharedOptions(): {
   };
 }
 
+/*
+ * As chaves vão ESCRITAS POR INTEIRO nas duas tabelas abaixo, e não montadas
+ * por interpolação (`demonstration.labels.${key}`). Chave montada em tempo de
+ * execução não existe para quem a procura no editor, nem para o `audit.mjs`, que
+ * compara o conjunto de `demonstration.labels.*` que cada stack consome: com a
+ * interpolação, esta página aparecia sem os dezessete rótulos de país e de
+ * mercado que ela sempre mostrou.
+ *
+ * `trackLabel` é o rótulo ESTÁVEL do payload do GA4, e não sai do `t()` de
+ * propósito: o texto traduzido faria a mesma escolha virar três eventos no
+ * relatório, um por idioma. O que a tela mostra vem do conteúdo; o que o evento
+ * carrega vem daqui.
+ */
+
 /** Os nove países da spec de exemplos — os mesmos que as stories mostram. */
-const COUNTRY_KEYS: { value: string; key: string }[] = [
-  { value: 'brasil', key: 'brazil' },
-  { value: 'argentina', key: 'argentina' },
-  { value: 'chile', key: 'chile' },
-  { value: 'colombia', key: 'colombia' },
-  { value: 'mexico', key: 'mexico' },
-  { value: 'peru', key: 'peru' },
-  { value: 'portugal', key: 'portugal' },
-  { value: 'espanha', key: 'spain' },
-  { value: 'uruguai', key: 'uruguay' },
+const COUNTRIES: { value: string; key: string; trackLabel: string }[] = [
+  { value: 'brasil', key: 'demonstration.labels.brazil', trackLabel: 'Brazil' },
+  { value: 'argentina', key: 'demonstration.labels.argentina', trackLabel: 'Argentina' },
+  { value: 'chile', key: 'demonstration.labels.chile', trackLabel: 'Chile' },
+  { value: 'colombia', key: 'demonstration.labels.colombia', trackLabel: 'Colombia' },
+  { value: 'mexico', key: 'demonstration.labels.mexico', trackLabel: 'Mexico' },
+  { value: 'peru', key: 'demonstration.labels.peru', trackLabel: 'Peru' },
+  { value: 'portugal', key: 'demonstration.labels.portugal', trackLabel: 'Portugal' },
+  { value: 'espanha', key: 'demonstration.labels.spain', trackLabel: 'Spain' },
+  { value: 'uruguai', key: 'demonstration.labels.uruguay', trackLabel: 'Uruguay' },
 ];
 
 function countryItems(): ComboboxItem[] {
-  return COUNTRY_KEYS.map((entry) => ({
-    value: entry.value,
-    label: t(`demonstration.labels.${entry.key}`),
-  }));
+  return COUNTRIES.map((entry) => ({ value: entry.value, label: t(entry.key) }));
 }
 
 /** Frutas e Legumes — o exemplo agrupado da spec. */
-const GROCERY_KEYS: { value: string; key: string; groupKey: string }[] = [
-  { value: 'maca', key: 'apple', groupKey: 'groupFruits' },
-  { value: 'banana', key: 'banana', groupKey: 'groupFruits' },
-  { value: 'laranja', key: 'orange', groupKey: 'groupFruits' },
-  { value: 'cenoura', key: 'carrot', groupKey: 'groupVegetables' },
-  { value: 'batata', key: 'potato', groupKey: 'groupVegetables' },
-  { value: 'abobrinha', key: 'zucchini', groupKey: 'groupVegetables' },
+const GROCERIES: { value: string; key: string; groupKey: string; trackLabel: string }[] = [
+  { value: 'maca', key: 'demonstration.labels.apple', groupKey: 'demonstration.labels.groupFruits', trackLabel: 'Apple' },
+  { value: 'banana', key: 'demonstration.labels.banana', groupKey: 'demonstration.labels.groupFruits', trackLabel: 'Banana' },
+  { value: 'laranja', key: 'demonstration.labels.orange', groupKey: 'demonstration.labels.groupFruits', trackLabel: 'Orange' },
+  { value: 'cenoura', key: 'demonstration.labels.carrot', groupKey: 'demonstration.labels.groupVegetables', trackLabel: 'Carrot' },
+  { value: 'batata', key: 'demonstration.labels.potato', groupKey: 'demonstration.labels.groupVegetables', trackLabel: 'Potato' },
+  { value: 'abobrinha', key: 'demonstration.labels.zucchini', groupKey: 'demonstration.labels.groupVegetables', trackLabel: 'Zucchini' },
 ];
 
 function groceryItems(): ComboboxItem[] {
-  return GROCERY_KEYS.map((entry) => ({
+  return GROCERIES.map((entry) => ({
     value: entry.value,
-    label: t(`demonstration.labels.${entry.key}`),
-    group: t(`demonstration.labels.${entry.groupKey}`),
+    label: t(entry.key),
+    group: t(entry.groupKey),
   }));
 }
 
+/** Rótulo estável de cada valor escolhível desta página, para o payload do GA4. */
+const TRACK_LABELS: Record<string, string> = Object.fromEntries(
+  [...COUNTRIES, ...GROCERIES].map((entry) => [entry.value, entry.trackLabel]),
+);
+
 /**
- * Rótulo ESTÁVEL de cada valor, para o payload do GA4.
+ * As seções desta página que renderizam o combobox VIVO.
  *
- * Não sai do `t()` de propósito: o texto traduzido faria a mesma escolha virar
- * três eventos diferentes no relatório, um por idioma. O que a tela mostra vem
- * do conteúdo; o que o evento carrega vem daqui.
+ * É o `location` do evento, e ele sai de ONDE O CAMPO ESTÁ (guideline 07): uma
+ * escolha feita numa Variante é tão real quanto uma feita na Demonstração, e
+ * reportar as duas como `docs_demo` apagava a pergunta que o parâmetro existe
+ * para responder. Estados não entra porque a seção é só a tabela.
  */
-const TRACK_LABELS: Record<string, string> = {
-  brasil: 'Brazil',
-  argentina: 'Argentina',
-  chile: 'Chile',
-  colombia: 'Colombia',
-  mexico: 'Mexico',
-  peru: 'Peru',
-  portugal: 'Portugal',
-  espanha: 'Spain',
-  uruguai: 'Uruguay',
-};
+type ComboboxLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_do_dont';
+
+/**
+ * Ouvinte de valor que registra no GA4 a escolha e a remoção.
+ *
+ * Escolha única e múltipla chegam no mesmo formato — a lista inteira —, mas não
+ * se leem igual. Na única, lista vazia é o botão de limpar, e escolher de novo o
+ * mesmo item também é escolha. Na múltipla, quem separa "escolheu" de "removeu"
+ * é a comparação com a lista anterior: sem ela, remover um chip sairia no
+ * relatório como uma escolha.
+ */
+function trackValueChange(
+  fieldName: string,
+  location: ComboboxLocation,
+  multiple: boolean,
+  initial: string[],
+): (value: string[]) => void {
+  if (!multiple) {
+    return (value) => {
+      const chosen = value[0];
+      if (!chosen) {
+        track('field_change', { component: 'combobox', field_name: fieldName, value: '', location });
+        return;
+      }
+      track('option_select', {
+        component: 'combobox',
+        field_name: fieldName,
+        value: chosen,
+        label: TRACK_LABELS[chosen],
+        location,
+      });
+    };
+  }
+
+  let previous = [...initial];
+  return (value) => {
+    const added = value.find((entry) => !previous.includes(entry));
+    previous = [...value];
+    if (added) {
+      track('option_select', {
+        component: 'combobox',
+        field_name: fieldName,
+        value: added,
+        label: TRACK_LABELS[added],
+        location,
+      });
+      return;
+    }
+    track('field_change', {
+      component: 'combobox',
+      field_name: fieldName,
+      value: value.join(','),
+      location,
+    });
+  };
+}
+
+interface FieldOptions {
+  labelText: string;
+  placeholder: string;
+  items: ComboboxItem[];
+  /** Nome ESTÁVEL do campo no GA4 — o mesmo que as outras stacks mandam. */
+  fieldName: string;
+  /** A seção onde o campo é renderizado. */
+  location: ComboboxLocation;
+  id?: string;
+  name?: string;
+  multiple?: boolean;
+  defaultValue?: string[];
+  disabled?: boolean;
+  invalid?: boolean;
+}
 
 /**
  * Campo montado pela fábrica, dentro de um contêiner de coluna.
@@ -242,19 +320,11 @@ const TRACK_LABELS: Record<string, string> = {
  * A raiz da fábrica é `display: contents`, então quem organiza rótulo e caixa em
  * duas linhas é este contêiner — sem ele os dois herdariam o layout de quem
  * receber a demonstração, que muda de seção para seção.
+ *
+ * Todo campo da página dispara os eventos do produto: o rastreio vem junto, e
+ * não por opção, para nenhuma seção com componente vivo ficar muda no GA4.
  */
-function buildField(opts: {
-  labelText: string;
-  placeholder: string;
-  items: ComboboxItem[];
-  id?: string;
-  name?: string;
-  multiple?: boolean;
-  defaultValue?: string[];
-  disabled?: boolean;
-  invalid?: boolean;
-  onValueChange?: (value: string[]) => void;
-}): HTMLElement {
+function buildField(opts: FieldOptions): HTMLElement {
   const column = document.createElement('div');
   column.className = 'nds-stack nds-w-full';
   column.dataset.spacing = 'xs';
@@ -271,7 +341,12 @@ function buildField(opts: {
       defaultValue: opts.defaultValue,
       disabled: opts.disabled,
       invalid: opts.invalid,
-      onValueChange: opts.onValueChange,
+      onValueChange: trackValueChange(
+        opts.fieldName,
+        opts.location,
+        opts.multiple ?? false,
+        opts.defaultValue ?? [],
+      ),
     }),
   );
 
@@ -388,71 +463,46 @@ export function createComboboxDocs(): HTMLElement {
             wrap.className = 'nds-stack nds-w-sm';
             wrap.dataset.spacing = 'lg';
 
-            const countryField = buildField({
-              id: 'demo-country',
-              name: 'country',
-              labelText: t('demonstration.labels.countryLabel'),
-              placeholder: t('demonstration.labels.countryPlaceholder'),
-              items: countryItems(),
-              onValueChange: (value) => {
-                const chosen = value[0];
-                if (!chosen) {
-                  // Campo zerado pelo botão de limpar: não houve escolha a
-                  // registrar, e sim uma mudança de valor.
-                  track('field_change', {
-                    component: 'combobox',
-                    field_name: 'country',
-                    value: '',
-                    location: 'docs_demo',
-                  });
-                  return;
-                }
-                track('option_select', {
-                  component: 'combobox',
-                  field_name: 'country',
-                  value: chosen,
-                  label: TRACK_LABELS[chosen],
-                  location: 'docs_demo',
-                });
-              },
-            });
-            wrap.appendChild(countryField);
+            // Os três modos do Playground — única, múltipla e com grupos —, o
+            // mesmo exemplo que a Demonstração mostra nas outras stacks e que o
+            // conteúdo compartilhado define em `demonstration.labels`.
+            wrap.appendChild(
+              buildField({
+                id: 'demo-country',
+                name: 'country',
+                fieldName: 'country',
+                location: 'docs_demo',
+                labelText: t('demonstration.labels.countryLabel'),
+                placeholder: t('demonstration.labels.countryPlaceholder'),
+                items: countryItems(),
+              }),
+            );
 
-            // O modo múltiplo entrega a lista INTEIRA a cada mudança, então quem
-            // separa "escolheu" de "removeu" é a comparação com a lista anterior.
-            // Sem ela, remover um chip sairia no relatório como uma escolha.
-            let previousCountries: string[] = ['brasil', 'argentina'];
+            wrap.appendChild(
+              buildField({
+                id: 'demo-countries',
+                name: 'countries',
+                fieldName: 'countries',
+                location: 'docs_demo',
+                labelText: t('demonstration.labels.countriesLabel'),
+                placeholder: t('demonstration.labels.countriesPlaceholder'),
+                items: countryItems(),
+                multiple: true,
+                defaultValue: ['brasil', 'argentina'],
+              }),
+            );
 
-            const countriesField = buildField({
-              id: 'demo-countries',
-              name: 'countries',
-              labelText: t('demonstration.labels.countriesLabel'),
-              placeholder: t('demonstration.labels.countriesPlaceholder'),
-              items: countryItems(),
-              multiple: true,
-              defaultValue: [...previousCountries],
-              onValueChange: (value) => {
-                const added = value.find((entry) => !previousCountries.includes(entry));
-                previousCountries = [...value];
-                if (added) {
-                  track('option_select', {
-                    component: 'combobox',
-                    field_name: 'countries',
-                    value: added,
-                    label: TRACK_LABELS[added],
-                    location: 'docs_demo',
-                  });
-                  return;
-                }
-                track('field_change', {
-                  component: 'combobox',
-                  field_name: 'countries',
-                  value: value.join(','),
-                  location: 'docs_demo',
-                });
-              },
-            });
-            wrap.appendChild(countriesField);
+            wrap.appendChild(
+              buildField({
+                id: 'demo-ingredient',
+                name: 'ingredient',
+                fieldName: 'ingredient',
+                location: 'docs_demo',
+                labelText: t('demonstration.labels.groupedLabel'),
+                placeholder: t('demonstration.labels.groupedPlaceholder'),
+                items: groceryItems(),
+              }),
+            );
 
             return wrap;
           },
@@ -541,45 +591,60 @@ export function createComboboxDocs(): HTMLElement {
         });
 
       case 'do-dont': {
-        /** O lado certo: cada botão de remover já nasce com o nome do chip. */
-        const buildNamedRemove = () =>
-          buildField({
-            labelText: t('demonstration.labels.countryLabel'),
-            placeholder: t('demonstration.labels.countryPlaceholder'),
-            items: countryItems(),
-            multiple: true,
-            defaultValue: ['brasil', 'argentina', 'chile'],
-          });
+        // Os quatro previews são o campo VIVO da fábrica, instanciado na própria
+        // linha do preview. O lado errado de cada par é o mesmo campo do lado
+        // certo, com o defeito da legenda aplicado por cima — e não um desenho
+        // que imita o campo: imitação não tem teclado, lista nem leitor de tela,
+        // que são justamente onde os dois defeitos moram.
+
+        /** Par 1: três chips, para o nome repetido ter o que repetir. */
+        const removeNamesOptions = (fieldName: string): FieldOptions => ({
+          fieldName,
+          location: 'docs_do_dont',
+          labelText: t('demonstration.labels.countriesLabel'),
+          placeholder: t('demonstration.labels.countriesPlaceholder'),
+          items: countryItems(),
+          multiple: true,
+          defaultValue: ['brasil', 'argentina', 'chile'],
+        });
+
+        /** Par 2: dois chips, o bastante para o Backspace ter o que desfazer. */
+        const backspaceOptions = (fieldName: string): FieldOptions => ({
+          fieldName,
+          location: 'docs_do_dont',
+          labelText: t('demonstration.labels.countriesLabel'),
+          placeholder: t('demonstration.labels.countriesPlaceholder'),
+          items: countryItems(),
+          multiple: true,
+          defaultValue: ['brasil', 'argentina'],
+        });
 
         /**
-         * O contraexemplo, montado apagando o nome que a fábrica dá.
+         * O contraexemplo do par 1: apaga o nome que a fábrica dá a cada botão.
          *
          * A diferença é INVISÍVEL na tela — os dois lados desenham os mesmos
-         * três chips —, e é justamente esse o ponto: quem enxerga não percebe o
-         * defeito, e quem navega por lista de controles ouve três botões
-         * idênticos. Sem construir o lado errado, a legenda ficaria sozinha.
+         * chips —, e é justamente esse o ponto: quem enxerga não percebe o
+         * defeito, e quem navega por lista de controles ouve botões idênticos.
+         *
+         * A fábrica recria os chips a cada escolha, e cada chip novo nasce com o
+         * nome próprio de volta. Por isso o observador: sem ele, o contraexemplo
+         * se consertava sozinho no primeiro clique, e a legenda passava a
+         * descrever um defeito que a tela já não tinha. Ele só olha a lista de
+         * filhos, e trocar atributo não mexe nela — não há laço.
          */
-        const buildGenericRemove = () => {
-          const column = buildNamedRemove();
+        const withGenericRemoveNames = (column: HTMLElement): HTMLElement => {
           const generic = t('demonstration.labels.remove');
-          column
-            .querySelectorAll('[data-slot="combobox-chip-remove"]')
-            .forEach((button) => button.setAttribute('aria-label', generic));
+          const rename = () =>
+            column
+              .querySelectorAll('[data-slot="combobox-chip-remove"]')
+              .forEach((button) => button.setAttribute('aria-label', generic));
+          rename();
+          new MutationObserver(rename).observe(column, { childList: true, subtree: true });
           return column;
         };
 
-        /** O lado certo do gesto: o Backspace da fábrica remove o último chip. */
-        const buildBackspaceWorks = () =>
-          buildField({
-            labelText: t('demonstration.labels.countriesLabel'),
-            placeholder: t('demonstration.labels.countriesPlaceholder'),
-            items: countryItems(),
-            multiple: true,
-            defaultValue: ['brasil', 'argentina'],
-          });
-
         /**
-         * O contraexemplo: o Backspace é engolido antes de chegar ao campo.
+         * O contraexemplo do par 2: o Backspace é engolido antes de chegar ao campo.
          *
          * O ouvinte entra na CAPTURA da caixa, que é ancestral do campo de
          * texto — assim ele roda antes do ouvinte da fábrica e a propagação
@@ -587,8 +652,7 @@ export function createComboboxDocs(): HTMLElement {
          * navegador, e não este código: sobra exatamente o defeito da legenda,
          * desfazer uma escolha só com o ponteiro.
          */
-        const buildBackspaceBlocked = () => {
-          const column = buildBackspaceWorks();
+        const withBackspaceBlocked = (column: HTMLElement): HTMLElement => {
           const box = column.querySelector<HTMLElement>('[data-slot="combobox-input-wrapper"]');
           box?.addEventListener(
             'keydown',
@@ -608,16 +672,16 @@ export function createComboboxDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: buildNamedRemove,
-              dontPreviewFactory: buildGenericRemove,
+              doPreviewFactory: () => buildField(removeNamesOptions('dodont_named_remove')),
+              dontPreviewFactory: () => withGenericRemoveNames(buildField(removeNamesOptions('dodont_generic_remove'))),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: buildBackspaceWorks,
-              dontPreviewFactory: buildBackspaceBlocked,
+              doPreviewFactory: () => buildField(backspaceOptions('dodont_backspace')),
+              dontPreviewFactory: () => withBackspaceBlocked(buildField(backspaceOptions('dodont_no_backspace'))),
             },
           ],
         });
@@ -677,6 +741,8 @@ field.destroy();`,
 });`,
               previewFactory: () =>
                 buildField({
+                  fieldName: 'variant_single',
+                  location: 'docs_variantes',
                   labelText: t('demonstration.labels.countryLabel'),
                   placeholder: t('demonstration.labels.countryPlaceholder'),
                   items: countryItems(),
@@ -703,6 +769,8 @@ field.destroy();`,
 });`,
               previewFactory: () =>
                 buildField({
+                  fieldName: 'variant_multiple',
+                  location: 'docs_variantes',
                   labelText: t('demonstration.labels.countriesLabel'),
                   placeholder: t('demonstration.labels.countriesPlaceholder'),
                   items: countryItems(),
@@ -728,6 +796,8 @@ field.destroy();`,
 });`,
               previewFactory: () =>
                 buildField({
+                  fieldName: 'variant_grouped',
+                  location: 'docs_variantes',
                   labelText: t('demonstration.labels.groupedLabel'),
                   placeholder: t('demonstration.labels.groupedPlaceholder'),
                   items: groceryItems(),
@@ -770,7 +840,7 @@ form.appendChild(field);
 const actions = document.createElement('div');
 actions.className = 'nds-cluster';
 actions.dataset.justify = 'end';
-actions.appendChild(createButton({ type: 'submit', label: 'Continuar' }));
+actions.appendChild(createButton({ type: 'submit', label: '${t('demonstration.labels.submit')}' }));
 form.appendChild(actions);
 
 form.addEventListener('submit', (e) => {
@@ -790,6 +860,8 @@ form.addEventListener('submit', (e) => {
                   buildField({
                     id: 'composition-form-country',
                     name: 'country',
+                    fieldName: 'composition_form',
+                    location: 'docs_composicoes',
                     labelText: t('demonstration.labels.countryLabel'),
                     placeholder: t('demonstration.labels.countryPlaceholder'),
                     items: countryItems(),
@@ -799,7 +871,7 @@ form.addEventListener('submit', (e) => {
                 const actions = document.createElement('div');
                 actions.className = 'nds-cluster';
                 actions.dataset.justify = 'end';
-                actions.appendChild(createButton({ type: 'submit', label: 'Continuar' }));
+                actions.appendChild(createButton({ type: 'submit', label: t('demonstration.labels.submit') }));
                 form.appendChild(actions);
 
                 form.addEventListener('submit', (event) => {

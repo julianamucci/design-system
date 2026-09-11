@@ -19,6 +19,7 @@ import { Combobox } from "./combobox";
 import {
   comboboxGroupedSource,
   comboboxMultipleSource,
+  comboboxSingleLineChipsSource,
   comboboxSource,
 } from "./combobox.source";
 
@@ -271,6 +272,7 @@ export const MultipleWithChips: Story = {
 export const SingleLineChips: Story = {
   parameters: {
     docs: {
+      source: { transform: comboboxSingleLineChipsSource },
       description: {
         story:
           "Os chips ficam numa linha só que rola na horizontal, e o campo não cresce em altura. Limpar e abrir continuam na primeira linha, ao lado do texto.",

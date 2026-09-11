@@ -134,6 +134,9 @@
       removed: t('demonstration.labels.removed'),
       clear: t('demonstration.labels.clear'),
       openList: t('demonstration.labels.openList'),
+      // O envio da composição em formulário: o código ao lado lê a MESMA chave,
+      // e os dois mostram a mesma palavra nos três idiomas.
+      submit: t('demonstration.labels.submit'),
     };
   });
 
@@ -820,7 +823,7 @@ interface ComboboxChipProps {
       </ComboboxPopup>
     </ComboboxPositioner>
   </Combobox>
-  <Button type="submit">Continuar</Button>
+  <Button type="submit">${labels.submit}</Button>
 </form>`,
         preview: compFormSnippet,
       },
@@ -839,7 +842,7 @@ interface ComboboxChipProps {
         name: 'pais',
       })}
       <div style="align-self: flex-end;">
-        <Button type="submit">Continuar</Button>
+        <Button type="submit">{labels.submit}</Button>
       </div>
     </form>
   {/snippet}

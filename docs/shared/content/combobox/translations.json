@@ -40,7 +40,8 @@
         "openList": "Abrir lista",
         "removed": "removido",
         "countriesLabel": "Países",
-        "countriesPlaceholder": "Adicionar país"
+        "countriesPlaceholder": "Adicionar país",
+        "submit": "Continuar"
       }
     },
     "anatomy": {
@@ -654,7 +655,8 @@
         "openList": "Open list",
         "removed": "removed",
         "countriesLabel": "Countries",
-        "countriesPlaceholder": "Add country"
+        "countriesPlaceholder": "Add country",
+        "submit": "Continue"
       }
     },
     "anatomy": {
@@ -1268,7 +1270,8 @@
         "openList": "Abrir lista",
         "removed": "quitado",
         "countriesLabel": "Países",
-        "countriesPlaceholder": "Añadir país"
+        "countriesPlaceholder": "Añadir país",
+        "submit": "Continuar"
       }
     },
     "anatomy": {

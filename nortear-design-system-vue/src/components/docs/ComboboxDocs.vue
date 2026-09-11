@@ -219,43 +219,99 @@ function removedAnnouncementOf(label: string): string {
   return `${label} ${tContent('demonstration.labels.removed')}`;
 }
 
+// ─── Analytics — eventos dos campos vivos ─────────────────────────────────────
+
+/**
+ * A SEÇÃO onde o campo está, no vocabulário `docs_<section-id>` da guideline 07
+ * — nunca uma constante no topo do arquivo. A demonstração mandava
+ * `'demonstracao'`, fora do vocabulário, e por isso não cruzava com o
+ * `section_id` do `docs_section_viewed` no GA4.
+ */
+type DocsLocation = 'docs_demo' | 'docs_do_dont';
+
 // O payload carrega o VALOR, que é estável, e nunca o rótulo, que é traduzido:
-// o mesmo evento sairia como três no GA4, um por idioma.
+// o mesmo evento sairia como três no GA4, um por idioma. E o `field_name` é o do
+// vanilla (`country`, `countries`), para a série das cinco stacks juntar.
 //
 // A assinatura é a que a raiz emite — um valor que pode ser lista, número ou
 // nulo. Estreitar aqui, e não no `emit`, é o que deixa o binding compilar sem
 // mentir sobre o que chega.
-function onCountryChange(value: unknown): void {
-  track('option_select', {
-    component: 'combobox',
-    field_name: 'pais',
-    value: typeof value === 'string' ? value : '',
-    location: 'demonstracao',
-  });
-}
-
-let previousChosen = chosen.value.length;
-
-function onChosenChange(raw: unknown): void {
-  const values = Array.isArray(raw) ? raw.map(String) : [];
-  const added = values.length > previousChosen;
-  previousChosen = values.length;
-  if (added) {
-    track('option_select', {
-      component: 'combobox',
-      field_name: 'paises',
-      value: values[values.length - 1],
-      location: 'demonstracao',
-    });
+function trackSingleChange(fieldName: string, location: DocsLocation, value: unknown): void {
+  const chosenValue = typeof value === 'string' ? value : '';
+  if (!chosenValue) {
+    // Campo zerado pelo botão de limpar: não houve escolha a registrar, e sim
+    // uma mudança de valor.
+    track('field_change', { component: 'combobox', field_name: fieldName, value: '', location });
     return;
   }
-  // Sair de um chip ou limpar o campo é mudança do campo, não escolha.
-  track('field_change', {
-    component: 'combobox',
-    field_name: 'paises',
-    value: String(values.length),
-    location: 'demonstracao',
-  });
+  track('option_select', { component: 'combobox', field_name: fieldName, value: chosenValue, location });
+}
+
+/**
+ * O modo múltiplo entrega a lista INTEIRA a cada mudança, então quem separa
+ * "escolheu" de "removeu" é a comparação com a lista anterior — uma por campo,
+ * e por isso a fábrica: dois campos partilhando a lista anterior acusariam
+ * escolha onde houve remoção.
+ */
+function createMultipleTracker(
+  fieldName: string,
+  location: DocsLocation,
+  initial: readonly string[],
+): (raw: unknown) => void {
+  let previous = [...initial];
+  return (raw) => {
+    const values = Array.isArray(raw) ? raw.map(String) : [];
+    const added = values.find((entry) => !previous.includes(entry));
+    previous = values;
+    if (added) {
+      track('option_select', { component: 'combobox', field_name: fieldName, value: added, location });
+      return;
+    }
+    // Sair de um chip ou limpar o campo é mudança do campo, não escolha.
+    track('field_change', { component: 'combobox', field_name: fieldName, value: values.join(','), location });
+  };
+}
+
+const onChosenChange = createMultipleTracker('countries', 'docs_demo', chosen.value);
+
+// ─── Do & Don't ───────────────────────────────────────────────────────────────
+
+/*
+ * Os quatro lados são campos VIVOS, cada um com o próprio estado: um `ref`
+ * partilhado faria remover um chip de um lado sumir com ele do outro.
+ *
+ * O primeiro par começa com TRÊS chips e o segundo com dois, como no vanilla:
+ * três botões de remover chamados igual é o que a legenda descreve.
+ */
+const NAMED_REMOVE_INITIAL = ['brasil', 'argentina', 'chile'] as const;
+const BACKSPACE_INITIAL = ['brasil', 'argentina'] as const;
+
+const namedRemoveChosen = ref<string[]>([...NAMED_REMOVE_INITIAL]);
+const genericRemoveChosen = ref<string[]>([...NAMED_REMOVE_INITIAL]);
+const backspaceChosen = ref<string[]>([...BACKSPACE_INITIAL]);
+const noBackspaceChosen = ref<string[]>([...BACKSPACE_INITIAL]);
+
+const onNamedRemoveChange = createMultipleTracker('dodont_named_remove', 'docs_do_dont', NAMED_REMOVE_INITIAL);
+const onGenericRemoveChange = createMultipleTracker('dodont_generic_remove', 'docs_do_dont', NAMED_REMOVE_INITIAL);
+const onBackspaceChange = createMultipleTracker('dodont_backspace', 'docs_do_dont', BACKSPACE_INITIAL);
+const onNoBackspaceChange = createMultipleTracker('dodont_no_backspace', 'docs_do_dont', BACKSPACE_INITIAL);
+
+function chipsOf(values: string[]) {
+  return values.flatMap(value => countries.value.filter(item => item.value === value));
+}
+
+/**
+ * O contraexemplo do segundo par: o Backspace é engolido antes de chegar ao
+ * campo.
+ *
+ * O ouvinte entra na CAPTURA de um ancestral do campo — roda antes do ouvinte
+ * do próprio componente, e a propagação morre ali. O apagamento do texto
+ * continua, porque quem apaga é o navegador e não o componente: sobra
+ * exatamente o defeito da legenda, desfazer uma escolha só com o ponteiro. É a
+ * forma do vanilla, que é a referência.
+ */
+function swallowBackspace(event: KeyboardEvent): void {
+  if (event.key === 'Backspace') event.stopPropagation();
 }
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
@@ -326,7 +382,6 @@ interface ComboboxChipProps {
 const codeSingle = comboboxSource('', { args: {} });
 const codeMultiple = comboboxMultipleSource();
 const codeGrouped = comboboxGroupedSource();
-const codeInForm = comboboxInFormSource();
 
 const codeCustomization = tContent('tokens.customizationCode');
 
@@ -357,7 +412,9 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.inForm.name'),
     description: tContent('variants.compositions.inForm.description'),
     useWhen: tContent('variants.compositions.inForm.use'),
-    code: codeInForm,
+    // Dentro do `computed`, e não numa constante: o rótulo do envio é o da
+    // prévia ao lado, e acompanha a troca de idioma.
+    code: comboboxInFormSource(tContent('demonstration.labels.submit')),
   },
 ]);
 
@@ -531,8 +588,8 @@ const visualTestItems = computed(() => [
         <div class="nds-w-xs">
           <Combobox
             v-model="country"
-            name="pais"
-            @update:model-value="onCountryChange"
+            name="country"
+            @update:model-value="trackSingleChange('country', 'docs_demo', $event)"
           >
             <ComboboxLabel>{{ tContent('demonstration.labels.countryLabel') }}</ComboboxLabel>
             <ComboboxInputWrapper>
@@ -564,7 +621,7 @@ const visualTestItems = computed(() => [
           <Combobox
             v-model="chosen"
             multiple
-            name="paises"
+            name="countries"
             @update:model-value="onChosenChange"
           >
             <ComboboxLabel>{{ tContent('demonstration.labels.countriesLabel') }}</ComboboxLabel>
@@ -576,7 +633,10 @@ const visualTestItems = computed(() => [
                   :value="item.value"
                 >
                   {{ item.label }}
-                  <ComboboxChipRemove :aria-label="removeLabelOf(item.label)" :removed-announcement="removedAnnouncementOf(item.label)" />
+                  <ComboboxChipRemove
+                    :aria-label="removeLabelOf(item.label)"
+                    :removed-announcement="removedAnnouncementOf(item.label)"
+                  />
                 </ComboboxChip>
                 <!-- O texto mora DENTRO da caixa de chips: é ela que quebra ou
                      rola, e é o que faz o cursor continuar depois do último
@@ -728,43 +788,197 @@ const visualTestItems = computed(() => [
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!-- Os quatro lados são o campo de verdade. No primeiro par a diferença
+           é INVISÍVEL na tela — os dois desenham os mesmos chips —, e é esse o
+           ponto: quem enxerga não percebe o defeito, e quem navega por lista
+           de controles ouve três botões idênticos. -->
       <template #do-preview-0>
-        <span class="nds-combobox-chip">
-          <span>Brasil</span>
-          <button
-            type="button"
-            class="nds-combobox-chip-remove"
-            aria-label="Remover Brasil"
+        <div class="nds-w-full">
+          <Combobox
+            v-model="namedRemoveChosen"
+            multiple
+            @update:model-value="onNamedRemoveChange"
           >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </span>
+            <ComboboxLabel>{{ tContent('demonstration.labels.countriesLabel') }}</ComboboxLabel>
+            <ComboboxInputWrapper>
+              <ComboboxChips>
+                <ComboboxChip
+                  v-for="item in chipsOf(namedRemoveChosen)"
+                  :key="item.value"
+                  :value="item.value"
+                >
+                  {{ item.label }}
+                  <ComboboxChipRemove
+                    :aria-label="removeLabelOf(item.label)"
+                    :removed-announcement="removedAnnouncementOf(item.label)"
+                  />
+                </ComboboxChip>
+                <ComboboxInput :placeholder="tContent('demonstration.labels.countriesPlaceholder')" />
+              </ComboboxChips>
+              <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
+                <ComboboxIcon />
+              </ComboboxTrigger>
+            </ComboboxInputWrapper>
+            <ComboboxPositioner>
+              <ComboboxPopup>
+                <ComboboxList>
+                  <ComboboxItem
+                    v-for="item in countries"
+                    :key="item.value"
+                    :value="item.value"
+                  >
+                    {{ item.label }}
+                    <ComboboxItemIndicator />
+                  </ComboboxItem>
+                </ComboboxList>
+                <ComboboxEmpty>{{ tContent('demonstration.labels.empty') }}</ComboboxEmpty>
+              </ComboboxPopup>
+            </ComboboxPositioner>
+          </Combobox>
+        </div>
       </template>
       <template #dont-preview-0>
-        <span class="nds-combobox-chip">
-          <span>Brasil</span>
-          <button
-            type="button"
-            class="nds-combobox-chip-remove"
-            aria-label="Remover"
+        <div class="nds-w-full">
+          <Combobox
+            v-model="genericRemoveChosen"
+            multiple
+            @update:model-value="onGenericRemoveChange"
           >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </span>
+            <ComboboxLabel>{{ tContent('demonstration.labels.countriesLabel') }}</ComboboxLabel>
+            <ComboboxInputWrapper>
+              <ComboboxChips>
+                <ComboboxChip
+                  v-for="item in chipsOf(genericRemoveChosen)"
+                  :key="item.value"
+                  :value="item.value"
+                >
+                  {{ item.label }}
+                  <!-- O contraexemplo mora AQUI: todo botão de remover com o
+                       MESMO nome. A frase anunciada depois continua certa — o
+                       defeito é só o nome, que é o que a lista de controles lê. -->
+                  <ComboboxChipRemove
+                    :aria-label="tContent('demonstration.labels.remove')"
+                    :removed-announcement="removedAnnouncementOf(item.label)"
+                  />
+                </ComboboxChip>
+                <ComboboxInput :placeholder="tContent('demonstration.labels.countriesPlaceholder')" />
+              </ComboboxChips>
+              <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
+                <ComboboxIcon />
+              </ComboboxTrigger>
+            </ComboboxInputWrapper>
+            <ComboboxPositioner>
+              <ComboboxPopup>
+                <ComboboxList>
+                  <ComboboxItem
+                    v-for="item in countries"
+                    :key="item.value"
+                    :value="item.value"
+                  >
+                    {{ item.label }}
+                    <ComboboxItemIndicator />
+                  </ComboboxItem>
+                </ComboboxList>
+                <ComboboxEmpty>{{ tContent('demonstration.labels.empty') }}</ComboboxEmpty>
+              </ComboboxPopup>
+            </ComboboxPositioner>
+          </Combobox>
+        </div>
       </template>
 
       <template #do-preview-1>
-        <span
-          class="nds-cluster nds-text-body nds-text-muted-foreground"
-          data-spacing="xs"
-        >
-          <kbd class="nds-kbd">Backspace</kbd>
-        </span>
+        <div class="nds-w-full">
+          <Combobox
+            v-model="backspaceChosen"
+            multiple
+            @update:model-value="onBackspaceChange"
+          >
+            <ComboboxLabel>{{ tContent('demonstration.labels.countriesLabel') }}</ComboboxLabel>
+            <ComboboxInputWrapper>
+              <ComboboxChips>
+                <ComboboxChip
+                  v-for="item in chipsOf(backspaceChosen)"
+                  :key="item.value"
+                  :value="item.value"
+                >
+                  {{ item.label }}
+                  <ComboboxChipRemove
+                    :aria-label="removeLabelOf(item.label)"
+                    :removed-announcement="removedAnnouncementOf(item.label)"
+                  />
+                </ComboboxChip>
+                <ComboboxInput :placeholder="tContent('demonstration.labels.countriesPlaceholder')" />
+              </ComboboxChips>
+              <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
+                <ComboboxIcon />
+              </ComboboxTrigger>
+            </ComboboxInputWrapper>
+            <ComboboxPositioner>
+              <ComboboxPopup>
+                <ComboboxList>
+                  <ComboboxItem
+                    v-for="item in countries"
+                    :key="item.value"
+                    :value="item.value"
+                  >
+                    {{ item.label }}
+                    <ComboboxItemIndicator />
+                  </ComboboxItem>
+                </ComboboxList>
+                <ComboboxEmpty>{{ tContent('demonstration.labels.empty') }}</ComboboxEmpty>
+              </ComboboxPopup>
+            </ComboboxPositioner>
+          </Combobox>
+        </div>
       </template>
       <template #dont-preview-1>
-        <span class="nds-text-body nds-text-muted-foreground">
-          {{ toPlainText(tContent('doDont.pair2.dont')) }}
-        </span>
+        <!-- A captura no ANCESTRAL é o contraexemplo: ver `swallowBackspace`. -->
+        <div
+          class="nds-w-full"
+          @keydown.capture="swallowBackspace"
+        >
+          <Combobox
+            v-model="noBackspaceChosen"
+            multiple
+            @update:model-value="onNoBackspaceChange"
+          >
+            <ComboboxLabel>{{ tContent('demonstration.labels.countriesLabel') }}</ComboboxLabel>
+            <ComboboxInputWrapper>
+              <ComboboxChips>
+                <ComboboxChip
+                  v-for="item in chipsOf(noBackspaceChosen)"
+                  :key="item.value"
+                  :value="item.value"
+                >
+                  {{ item.label }}
+                  <ComboboxChipRemove
+                    :aria-label="removeLabelOf(item.label)"
+                    :removed-announcement="removedAnnouncementOf(item.label)"
+                  />
+                </ComboboxChip>
+                <ComboboxInput :placeholder="tContent('demonstration.labels.countriesPlaceholder')" />
+              </ComboboxChips>
+              <ComboboxTrigger :aria-label="tContent('demonstration.labels.openList')">
+                <ComboboxIcon />
+              </ComboboxTrigger>
+            </ComboboxInputWrapper>
+            <ComboboxPositioner>
+              <ComboboxPopup>
+                <ComboboxList>
+                  <ComboboxItem
+                    v-for="item in countries"
+                    :key="item.value"
+                    :value="item.value"
+                  >
+                    {{ item.label }}
+                    <ComboboxItemIndicator />
+                  </ComboboxItem>
+                </ComboboxList>
+                <ComboboxEmpty>{{ tContent('demonstration.labels.empty') }}</ComboboxEmpty>
+              </ComboboxPopup>
+            </ComboboxPositioner>
+          </Combobox>
+        </div>
       </template>
     </DocsDoDont>
 
@@ -832,7 +1046,10 @@ const visualTestItems = computed(() => [
                   :value="item.value"
                 >
                   {{ item.label }}
-                  <ComboboxChipRemove :aria-label="removeLabelOf(item.label)" :removed-announcement="removedAnnouncementOf(item.label)" />
+                  <ComboboxChipRemove
+                    :aria-label="removeLabelOf(item.label)"
+                    :removed-announcement="removedAnnouncementOf(item.label)"
+                  />
                 </ComboboxChip>
                 <ComboboxInput :placeholder="tContent('demonstration.labels.countriesPlaceholder')" />
               </ComboboxChips>
@@ -950,7 +1167,7 @@ const visualTestItems = computed(() => [
             </ComboboxPositioner>
           </Combobox>
           <Button type="submit">
-            Enviar
+            {{ tContent('demonstration.labels.submit') }}
           </Button>
         </form>
       </template>

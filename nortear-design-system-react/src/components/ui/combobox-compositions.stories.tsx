@@ -26,7 +26,12 @@ import {
   type ComboboxOption,
 } from "./combobox";
 import { Button } from "./button";
-import { comboboxInFormSource, comboboxSource } from "./combobox.source";
+import {
+  comboboxControlledSource,
+  comboboxCustomFilterSource,
+  comboboxInFormSource,
+  comboboxSource,
+} from "./combobox.source";
 
 const meta: Meta = {
   title: "Components/Form/Combobox/Compositions",
@@ -178,6 +183,7 @@ export const CustomFilter: Story = {
   parameters: {
     a11y: { config: { rules: axeRules(FOCUS_RULE_GUARDA) } },
     docs: {
+      source: { transform: comboboxCustomFilterSource },
       description: {
         story:
           "A busca é do consumidor: aqui o campo só aceita o que começa com o texto digitado, e o que casa no meio da palavra deixa de aparecer.",
@@ -311,6 +317,7 @@ function ControlledCountryCombobox() {
 export const Controlled: Story = {
   parameters: {
     docs: {
+      source: { transform: comboboxControlledSource },
       description: {
         story:
           "A escolha e o texto de busca vivem fora do campo. Escolher na lista atualiza o estado de fora, e escrever nesse estado muda o que o campo mostra.",

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from "react";
 import DOMPurify from "dompurify";
 
 import {
@@ -19,6 +19,7 @@ import {
   type ComboboxOption,
   type ComboboxOptionGroup,
 } from "@/components/ui/combobox";
+import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
@@ -122,6 +123,18 @@ const getNavGroups = (t: (key: string) => string) => [
 // moldura da prévia. `contain`, `min-height` sem unidade e `position` são
 // mecânicos — não há valor de design nenhum aqui.
 
+/**
+ * A SEÇÃO onde o campo está — prop, e nunca constante no topo do arquivo.
+ *
+ * As quatro chamadas desta página mandavam `docs_demo`, inclusive dos campos de
+ * Variantes, Composições e Do & Don't, que são componente VIVO tanto quanto o
+ * da Demonstração: a escolha feita ali é tão real quanto a outra. Respondendo
+ * sempre a mesma coisa, o parâmetro não cruzava com o `section_id` do
+ * `docs_section_viewed` nem com o meio do `data-track-id`. Vocabulário
+ * `docs_<section-id>`, guideline 07. Estados não entra: a seção é só tabela.
+ */
+type DocsLocation = "docs_demo" | "docs_variantes" | "docs_composicoes" | "docs_do_dont";
+
 interface DemoFieldProps {
   label: string;
   placeholder: string;
@@ -129,8 +142,22 @@ interface DemoFieldProps {
   clearLabel: string;
   openLabel: string;
   fieldName: string;
+  location: DocsLocation;
   disabled?: boolean;
   invalid?: boolean;
+}
+
+/**
+ * Engole o Backspace na CAPTURA da caixa, antes de ele chegar ao campo de texto.
+ *
+ * É o contraexemplo do par 2 do Do & Don't, o mesmo do vanilla: a caixa é
+ * ancestral do campo, então o ouvinte de captura roda antes do teclado da lib e
+ * a propagação morre ali. O texto digitado continua apagável — quem apaga é o
+ * navegador, que só pararia com `preventDefault` —, e sobra exatamente o defeito
+ * da legenda: desfazer uma escolha só com o ponteiro.
+ */
+function swallowBackspace(event: KeyboardEvent<HTMLDivElement>) {
+  if (event.key === "Backspace") event.stopPropagation();
 }
 
 function DemoSingleField({
@@ -141,6 +168,7 @@ function DemoSingleField({
   clearLabel,
   openLabel,
   fieldName,
+  location,
   disabled = false,
   invalid = false,
 }: DemoFieldProps & { items: ComboboxOption[] }) {
@@ -161,14 +189,14 @@ function DemoSingleField({
               component: "combobox",
               field_name: fieldName,
               value: option.value,
-              location: "docs_demo",
+              location,
             });
           } else {
             track("field_change", {
               component: "combobox",
               field_name: fieldName,
               value: "",
-              location: "docs_demo",
+              location,
             });
           }
         }}
@@ -204,19 +232,30 @@ function DemoMultipleField({
   removeLabel,
   removedLabel,
   fieldName,
+  location,
+  initialCount = 2,
   genericRemove = false,
-  withoutRemove = false,
+  blockBackspace = false,
 }: DemoFieldProps & {
   items: ComboboxOption[];
   removeLabel: string;
   /** Sufixo do que a região viva anuncia DEPOIS de remover: "Brasil removido". */
   removedLabel: string;
+  /**
+   * Quantos países já chegam escolhidos. O par 1 do Do & Don't parte de TRÊS,
+   * como no vanilla: é o que dá ao nome repetido o que repetir.
+   */
+  initialCount?: number;
   /** Contraexemplo: todo botão de remover com o MESMO nome. */
   genericRemove?: boolean;
-  /** Contraexemplo: chip sem botão de remover nenhum. */
-  withoutRemove?: boolean;
+  /**
+   * Contraexemplo: o Backspace não desfaz o último chip. Os chips, o botão de
+   * remover e o resto do campo ficam iguais — o defeito é só do teclado, e é
+   * ele que a legenda descreve.
+   */
+  blockBackspace?: boolean;
 }) {
-  const [chosen, setChosen] = useState<ComboboxOption[]>(() => items.slice(0, 2));
+  const [chosen, setChosen] = useState<ComboboxOption[]>(() => items.slice(0, initialCount));
 
   return (
     <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
@@ -234,27 +273,25 @@ function DemoMultipleField({
             component: "combobox",
             field_name: fieldName,
             value: next.map((option) => option.value).join(","),
-            location: "docs_demo",
+            location,
           });
         }}
       >
         <ComboboxLabel>{label}</ComboboxLabel>
-        <ComboboxInputWrapper>
+        <ComboboxInputWrapper onKeyDownCapture={blockBackspace ? swallowBackspace : undefined}>
           <ComboboxChips>
             {chosen.map((option) => (
               <ComboboxChip key={option.value}>
                 <ComboboxChipText>{option.label}</ComboboxChipText>
                 {/* Nome próprio por chip: "Remover" repetido é indistinguível
-                    para quem navega por lista de controles. As duas variações
-                    existem para a seção Do & Don't mostrar o defeito, e não
-                    apenas descrevê-lo. */}
-                {withoutRemove ? null : (
-                  <ComboboxChipRemove
-                    aria-label={
-                      genericRemove ? removeLabel : `${removeLabel} ${option.label}`
-                    }
-                  />
-                )}
+                    para quem navega por lista de controles. A variação existe
+                    para a seção Do & Don't mostrar o defeito, e não apenas
+                    descrevê-lo. */}
+                <ComboboxChipRemove
+                  aria-label={
+                    genericRemove ? removeLabel : `${removeLabel} ${option.label}`
+                  }
+                />
               </ComboboxChip>
             ))}
             <ComboboxInput placeholder={placeholder} />
@@ -282,6 +319,7 @@ function DemoGroupedField({
   clearLabel,
   openLabel,
   fieldName,
+  location,
 }: DemoFieldProps & { groups: ComboboxOptionGroup[] }) {
   return (
     <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
@@ -295,7 +333,7 @@ function DemoGroupedField({
             component: "combobox",
             field_name: fieldName,
             value: option.value,
-            location: "docs_demo",
+            location,
           });
         }}
       >
@@ -514,7 +552,13 @@ export function ComboboxDocs() {
   </ComboboxContent>
 </Combobox>`;
 
-  const codeInForm = `<form onSubmit={(evento) => evento.preventDefault()}>
+  // O botão é o `Button` do design system, como na prévia — um `<button>` cru
+  // sai sem estilo e com o contraste entregue ao acaso do tema.
+  const codeInForm = `<form
+  className="nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4"
+  data-spacing="md"
+  onSubmit={(evento) => evento.preventDefault()}
+>
   <Combobox items={paises} name="pais">
     <ComboboxLabel>País</ComboboxLabel>
     <ComboboxInputWrapper>
@@ -530,7 +574,9 @@ export function ComboboxDocs() {
       )}
     </ComboboxContent>
   </Combobox>
-  <button type="submit">Continuar</button>
+  <div className="nds-cluster" data-justify="end">
+    <Button type="submit">${tContent("demonstration.labels.submit")}</Button>
+  </div>
 </form>`;
 
   const interfaceCode = `interface ComboboxOption {
@@ -654,6 +700,7 @@ interface ComboboxContentProps {
             <DemoSingleField
               items={countries}
               fieldName="country"
+              location="docs_demo"
               label={tContent("demonstration.labels.countryLabel")}
               placeholder={tContent("demonstration.labels.countryPlaceholder")}
               {...shared}
@@ -667,6 +714,7 @@ interface ComboboxContentProps {
             <DemoMultipleField
               items={countries}
               fieldName="countries"
+              location="docs_demo"
               label={tContent("demonstration.labels.countriesLabel")}
               placeholder={tContent("demonstration.labels.countriesPlaceholder")}
               removeLabel={tContent("demonstration.labels.remove")}
@@ -682,6 +730,7 @@ interface ComboboxContentProps {
             <DemoGroupedField
               groups={ingredients}
               fieldName="ingredient"
+              location="docs_demo"
               label={tContent("demonstration.labels.groupedLabel")}
               placeholder={tContent("demonstration.labels.groupedPlaceholder")}
               {...shared}
@@ -788,6 +837,8 @@ interface ComboboxContentProps {
               <DemoMultipleField
                 items={countries}
                 fieldName="dodont_named_remove"
+                location="docs_do_dont"
+                initialCount={3}
                 label={tContent("demonstration.labels.countriesLabel")}
                 placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 removeLabel={tContent("demonstration.labels.remove")}
@@ -799,6 +850,8 @@ interface ComboboxContentProps {
               <DemoMultipleField
                 items={countries}
                 fieldName="dodont_generic_remove"
+                location="docs_do_dont"
+                initialCount={3}
                 label={tContent("demonstration.labels.countriesLabel")}
                 placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 // O contraexemplo mora AQUI: o mesmo campo, com todo botão de
@@ -820,6 +873,7 @@ interface ComboboxContentProps {
               <DemoMultipleField
                 items={countries}
                 fieldName="dodont_backspace"
+                location="docs_do_dont"
                 label={tContent("demonstration.labels.countriesLabel")}
                 placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 removeLabel={tContent("demonstration.labels.remove")}
@@ -831,13 +885,17 @@ interface ComboboxContentProps {
               <DemoMultipleField
                 items={countries}
                 fieldName="dodont_no_backspace"
+                location="docs_do_dont"
                 label={tContent("demonstration.labels.countriesLabel")}
                 placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 removeLabel={tContent("demonstration.labels.remove")}
                 removedLabel={tContent("demonstration.labels.removed")}
-                // Chip sem caminho de saída: quem escolheu por engano fica com
-                // o valor preso, e o campo passa a exigir recarregar a página.
-                withoutRemove
+                // O MESMO campo, com o Backspace engolido antes de chegar ao
+                // texto: o botão de remover continua ali, e desfazer a última
+                // escolha passa a exigir o ponteiro — que é o que a legenda
+                // diz. O contraexemplo anterior tirava o botão de remover, e a
+                // prévia mostrava outro defeito que não o da legenda.
+                blockBackspace
                 {...shared}
               />
             ),
@@ -864,6 +922,7 @@ interface ComboboxContentProps {
               <DemoSingleField
                 items={countries}
                 fieldName="variant_single"
+                location="docs_variantes"
                 label={tContent("demonstration.labels.countryLabel")}
                 placeholder={tContent("demonstration.labels.countryPlaceholder")}
                 {...shared}
@@ -879,6 +938,7 @@ interface ComboboxContentProps {
               <DemoMultipleField
                 items={countries}
                 fieldName="variant_multiple"
+                location="docs_variantes"
                 label={tContent("demonstration.labels.countriesLabel")}
                 placeholder={tContent("demonstration.labels.countriesPlaceholder")}
                 removeLabel={tContent("demonstration.labels.remove")}
@@ -896,6 +956,7 @@ interface ComboboxContentProps {
               <DemoGroupedField
                 groups={ingredients}
                 fieldName="variant_grouped"
+                location="docs_variantes"
                 label={tContent("demonstration.labels.groupedLabel")}
                 placeholder={tContent("demonstration.labels.groupedPlaceholder")}
                 {...shared}
@@ -917,19 +978,28 @@ interface ComboboxContentProps {
             description: tContent("variants.compositions.inForm.description"),
             useWhen: tContent("variants.compositions.inForm.use"),
             code: codeInForm,
+            // O botão de envio é o que faz desta prévia um FORMULÁRIO: sem ele o
+            // campo não tinha para onde mandar o valor, e o código ao lado já
+            // publicava um botão que a prévia não desenhava. O rótulo sai da
+            // mesma chave nos dois lugares, então código e prévia falam o
+            // idioma da página.
             preview: (
               <form
-                className="nds-stack nds-w-sm"
+                className="nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4"
                 data-spacing="md"
                 onSubmit={(event) => event.preventDefault()}
               >
                 <DemoSingleField
                   items={countries}
                   fieldName="composition_form"
+                  location="docs_composicoes"
                   label={tContent("demonstration.labels.countryLabel")}
                   placeholder={tContent("demonstration.labels.countryPlaceholder")}
                   {...shared}
                 />
+                <div className="nds-cluster" data-justify="end">
+                  <Button type="submit">{tContent("demonstration.labels.submit")}</Button>
+                </div>
               </form>
             ),
           },

@@ -12,6 +12,7 @@ export type ComboboxArgs = {
 	label: string;
 	placeholder: string;
 	multiple: boolean;
+	chipsLayout: 'wrap' | 'single-line';
 	disabled: boolean;
 	invalid: boolean;
 	name?: string;
@@ -20,11 +21,54 @@ export type ComboboxArgs = {
 type Option = { value: string; label: string };
 type Group = { label: string; options: Option[] };
 
+// ─── As listas das stories ────────────────────────────────────────────────────
+//
+// Cada snippet publica a MESMA lista que a story ao lado mostra: copiar o
+// código e ver outra coisa na tela é o que faz quem lê desconfiar dos dois.
+
+/** As quatro das formas de escolha única, dos estados e da lista aberta. */
 const COUNTRIES: Option[] = [
 	{ value: 'brasil', label: 'Brasil' },
 	{ value: 'argentina', label: 'Argentina' },
 	{ value: 'chile', label: 'Chile' },
 	{ value: 'portugal', label: 'Portugal' },
+];
+
+/** A lista inteira da spec de exemplos — Playground e múltipla com chips. */
+const ALL_COUNTRIES: Option[] = [
+	{ value: 'brasil', label: 'Brasil' },
+	{ value: 'argentina', label: 'Argentina' },
+	{ value: 'chile', label: 'Chile' },
+	{ value: 'colombia', label: 'Colômbia' },
+	{ value: 'mexico', label: 'México' },
+	{ value: 'peru', label: 'Peru' },
+	{ value: 'portugal', label: 'Portugal' },
+	{ value: 'espanha', label: 'Espanha' },
+	{ value: 'uruguai', label: 'Uruguai' },
+];
+
+/** Longa de propósito: seis escolhidos não cabem numa linha do campo. */
+const VISITED: Option[] = [
+	{ value: 'brasil', label: 'Brasil' },
+	{ value: 'argentina', label: 'Argentina' },
+	{ value: 'chile', label: 'Chile' },
+	{ value: 'colombia', label: 'Colômbia' },
+	{ value: 'mexico', label: 'México' },
+	{ value: 'portugal', label: 'Portugal' },
+	{ value: 'uruguai', label: 'Uruguai' },
+];
+
+/**
+ * A das composições. "Uruguai" é o motivo: o filtro padrão a acha por "guai",
+ * no MEIO da palavra, e a regra própria não — sem ela a diferença que a story
+ * demonstra não se reproduz no código copiado.
+ */
+const COMPOSITION_COUNTRIES: Option[] = [
+	{ value: 'brasil', label: 'Brasil' },
+	{ value: 'argentina', label: 'Argentina' },
+	{ value: 'chile', label: 'Chile' },
+	{ value: 'portugal', label: 'Portugal' },
+	{ value: 'uruguai', label: 'Uruguai' },
 ];
 
 const GROCERIES: Group[] = [
@@ -55,9 +99,12 @@ type Options = {
 	name?: string;
 	options?: Option[];
 	groups?: Group[];
+	/** Escolhidos iniciais do modo múltiplo — os chips que a story já mostra. */
+	initialValue?: string[];
 	/**
-	 * Como os chips ocupam o campo. Só `single-line` entra no snippet: repetir o
-	 * padrão ensina ruído a quem copia.
+	 * Como os chips ocupam o campo. Só `single-line` entra no snippet, e só no
+	 * modo múltiplo: repetir o padrão, ou escrever um modo de chips num campo que
+	 * não tem chip, ensina ruído a quem copia.
 	 */
 	chipsLayout?: 'wrap' | 'single-line';
 	/** Regra de correspondência própria, no lugar do filtro padrão. */
@@ -112,13 +159,42 @@ ${optionsLiteral(group.options, '      ')}
 	return `const items = [\n${optionsLiteral(o.options ?? COUNTRIES)}\n];`;
 }
 
+/**
+ * O texto da busca sai do campo quando alguém de fora precisa dele: no modo
+ * controlado, porque é do consumidor; na lista agrupada, porque é ele que
+ * decide qual grupo ainda tem opção para mostrar.
+ */
+function bindsInputValue(o: Options): boolean {
+	return Boolean(o.controlled || o.groups);
+}
+
 /** Estado da escolha: texto no modo simples, lista de textos no múltiplo. */
 function valueBlock(o: Options): string {
-	const value = o.multiple ? 'let value = $state<string[]>([]);' : 'let value = $state("");';
+	const initial = (o.initialValue ?? []).map((entry) => `"${entry}"`).join(', ');
+	const value = o.multiple
+		? `let value = $state<string[]>([${initial}]);`
+		: 'let value = $state("");';
 	// No modo controlado o TEXTO da busca também é do consumidor: as duas
 	// ligações saem juntas, porque controlar só a escolha deixa a busca sem dono
 	// declarado e o campo volta a administrar o próprio texto.
-	return o.controlled ? [value, 'let inputValue = $state("");'].join('\n') : value;
+	return bindsInputValue(o) ? [value, 'let inputValue = $state("");'].join('\n') : value;
+}
+
+/**
+ * Os grupos que ainda têm opção depois do texto digitado.
+ *
+ * Cada opção se esconde sozinha, mas o grupo não: sem esta conta, digitar
+ * "ban" deixava o cabeçalho "Legumes" na tela sem nenhuma opção embaixo — o
+ * defeito clássico de filtrar item a item, que a story ao lado evita e o
+ * snippet ensinava. A conta é a MESMA que a peça usa para se esconder.
+ */
+function visibleGroupsBlock(o: Options): string {
+	if (!o.groups) return '';
+	return [
+		'const visibleGroups = $derived(',
+		'  groups.filter((group) => filterItems(group.options, inputValue).length > 0),',
+		');',
+	].join('\n');
 }
 
 /**
@@ -126,13 +202,16 @@ function valueBlock(o: Options): string {
  *
  * O filtro recebe o ITEM inteiro, e não o rótulo: é o que deixa a regra olhar
  * qualquer campo da opção. Aqui ela casa só pelo INÍCIO do rótulo, no lugar do
- * trecho em qualquer posição que o padrão aceita.
+ * trecho em qualquer posição que o padrão aceita — e continua sem acento e sem
+ * caixa, como o padrão e como a regra da story, pela mesma `normalizeText` que
+ * os dois usam: com `toLowerCase` a cópia deixaria de achar "Mexico" em
+ * "México", e ninguém veria na story, que não tem essa diferença.
  */
 function filterBlock(o: Options): string {
 	if (!o.customFilter) return '';
 	return [
 		'const filter: ComboboxFilter = (item, query) =>',
-		'  item.label.toLowerCase().startsWith(query.trim().toLowerCase());',
+		'  normalizeText(item.label).startsWith(normalizeText(query.trim()));',
 	].join('\n');
 }
 
@@ -140,9 +219,9 @@ function filterBlock(o: Options): string {
 function rootProps(o: Options): string {
 	return attrs(
 		'{items}',
-		o.controlled ? 'bind:value bind:inputValue' : 'bind:value',
+		bindsInputValue(o) ? 'bind:value bind:inputValue' : 'bind:value',
 		o.multiple ? 'multiple' : '',
-		o.chipsLayout === 'single-line' ? 'chipsLayout="single-line"' : '',
+		o.multiple && o.chipsLayout === 'single-line' ? 'chipsLayout="single-line"' : '',
 		o.customFilter ? '{filter}' : '',
 		o.disabled ? 'disabled' : '',
 		o.invalid ? 'invalid' : '',
@@ -175,14 +254,14 @@ function fieldBlock(o: Options, placeholder: string): string {
 function listBlock(o: Options): string {
 	if (o.groups) {
 		return `      <ComboboxList>
-        {#each groups as group, index (group.label)}
+        {#each visibleGroups as group, index (group.label)}
           <ComboboxGroup>
             <ComboboxGroupLabel>{group.label}</ComboboxGroupLabel>
             {#each group.options as option (option.value)}
               <ComboboxItem value={option.value} label={option.label} />
             {/each}
           </ComboboxGroup>
-          {#if index < groups.length - 1}
+          {#if index < visibleGroups.length - 1}
             <ComboboxSeparator />
           {/if}
         {/each}
@@ -199,16 +278,16 @@ function listBlock(o: Options): string {
 export function comboboxSnippet(o: Options = {}): string {
 	const extra = [
 		...(o.multiple ? IMPORT_CHIPS : []),
-		...(o.groups ? IMPORT_GROUPS : []),
+		...(o.groups ? [...IMPORT_GROUPS, 'filterItems'] : []),
 		// O tipo entra na MESMA importação das peças: quem escreve o próprio
 		// filtro precisa da assinatura publicada, e não de uma anotação inventada.
-		...(o.customFilter ? ['type ComboboxFilter'] : []),
+		...(o.customFilter ? ['normalizeText', 'type ComboboxFilter'] : []),
 	];
 	const label = o.label ?? 'País';
 	const placeholder = o.placeholder ?? 'Buscar país';
 
 	return svelteSnippet(
-		[importBlock(extra), itemsBlock(o), filterBlock(o), valueBlock(o)]
+		[importBlock(extra), itemsBlock(o), filterBlock(o), valueBlock(o), visibleGroupsBlock(o)]
 			.filter(Boolean)
 			.join('\n\n'),
 		`<Combobox${rootProps(o)}>
@@ -233,8 +312,17 @@ export function comboboxSource(
 	_generated?: string,
 	ctx?: { args?: Partial<ComboboxArgs> },
 ): string {
-	const { label, placeholder, multiple, disabled, invalid, name } = ctx?.args ?? {};
-	return comboboxSnippet({ label, placeholder, multiple, disabled, invalid, name });
+	const { label, placeholder, multiple, chipsLayout, disabled, invalid, name } = ctx?.args ?? {};
+	return comboboxSnippet({
+		label,
+		placeholder,
+		multiple,
+		chipsLayout,
+		disabled,
+		invalid,
+		name,
+		options: ALL_COUNTRIES,
+	});
 }
 
 /** Múltipla escolha: cada escolhido vira um chip dentro do campo. */
@@ -244,6 +332,8 @@ export function comboboxMultipleSource(): string {
 		placeholder: 'Adicionar país',
 		multiple: true,
 		name: 'paises',
+		options: ALL_COUNTRIES,
+		initialValue: ['brasil', 'argentina'],
 	});
 }
 
@@ -277,17 +367,21 @@ export function comboboxSingleLineChipsSource(): string {
 		multiple: true,
 		chipsLayout: 'single-line',
 		name: 'visitados',
+		options: VISITED,
+		// Os seis que passam da largura do campo: sem eles o snippet monta um
+		// campo vazio, e a linha única não tem o que demonstrar.
+		initialValue: ['brasil', 'argentina', 'chile', 'colombia', 'mexico', 'portugal'],
 	});
 }
 
 /** Regra de correspondência própria: casa só pelo início do rótulo. */
 export function comboboxCustomFilterSource(): string {
-	return comboboxSnippet({ customFilter: true });
+	return comboboxSnippet({ customFilter: true, options: COMPOSITION_COUNTRIES });
 }
 
 /** Escolha e texto de busca controlados por fora, os dois por ligação. */
 export function comboboxControlledSource(): string {
-	return comboboxSnippet({ controlled: true });
+	return comboboxSnippet({ controlled: true, options: COMPOSITION_COUNTRIES });
 }
 
 /** Indisponível: nada recebe foco e a lista não abre. */
