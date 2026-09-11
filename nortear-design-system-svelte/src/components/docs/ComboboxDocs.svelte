@@ -200,6 +200,17 @@
     return Array.isArray(current) ? current : [];
   }
 
+  /**
+   * Engole o Backspace antes que ele chegue à busca — o "evite" do par 2.
+   *
+   * Ouvinte de CAPTURA na caixa: o `stopPropagation` ali impede a tecla de
+   * descer até o campo de texto, que é quem remove o último chip. Só a tecla
+   * sai; os botões de remover de cada chip seguem funcionando.
+   */
+  function swallowBackspace(event: KeyboardEvent): void {
+    if (event.key === 'Backspace') event.stopPropagation();
+  }
+
   function groupsOf(items: ComboboxOption[], query: string) {
     const out: { label: string; items: ComboboxOption[] }[] = [];
     for (const entry of items) {
@@ -211,50 +222,101 @@
     return out.filter((group) => filterItems(group.items, query).length > 0);
   }
 
-  function labelOf(items: ComboboxOption[], value: string): string {
-    return items.find((entry) => entry.value === value)?.label ?? value;
-  }
+  /**
+   * As seções desta página que renderizam o combobox VIVO.
+   *
+   * É o `location` do evento, e ele sai de ONDE O CAMPO ESTÁ (guideline 07): uma
+   * escolha feita numa Variante é tão real quanto uma feita na Demonstração.
+   * Até 2026-09-11 o `report` mandava `docs_demo` fixo, e as prévias de
+   * Variantes, Composições e Do & Don't reportavam "veio da demonstração" — as
+   * três do Do & Don't que não passavam pelo `comboboxField` nem rastreavam.
+   */
+  type ComboboxLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_do_dont';
 
   /**
-   * Quantos itens cada amostra tinha na chamada ANTERIOR.
+   * O `field_name` e a seção de cada amostra — os MESMOS nomes estáveis das
+   * outras quatro stacks. O `field_name` era a chave interna do registro
+   * (`demoSingle`, `dd1Do`), que só esta stack usava: a mesma escolha virava
+   * uma linha diferente no GA4 conforme a stack da página.
+   */
+  const SAMPLE_TRACKING: Record<string, { fieldName: string; location: ComboboxLocation }> = {
+    demoSingle:   { fieldName: 'country',               location: 'docs_demo' },
+    demoMultiple: { fieldName: 'countries',             location: 'docs_demo' },
+    demoGrouped:  { fieldName: 'ingredient',            location: 'docs_demo' },
+    varSingle:    { fieldName: 'variant_single',        location: 'docs_variantes' },
+    varMultiple:  { fieldName: 'variant_multiple',      location: 'docs_variantes' },
+    varGrouped:   { fieldName: 'variant_grouped',       location: 'docs_variantes' },
+    compForm:     { fieldName: 'composition_form',      location: 'docs_composicoes' },
+    dd1Do:        { fieldName: 'dodont_named_remove',   location: 'docs_do_dont' },
+    dd1Dont:      { fieldName: 'dodont_generic_remove', location: 'docs_do_dont' },
+    dd2Do:        { fieldName: 'dodont_backspace',      location: 'docs_do_dont' },
+    dd2Dont:      { fieldName: 'dodont_no_backspace',   location: 'docs_do_dont' },
+  };
+
+  /**
+   * O `label` do evento, em inglês e estável — o mesmo mapa do vanilla. O
+   * rótulo da tela ("Brasil", "Brazil") partiria a mesma escolha em uma linha
+   * por idioma; era o que esta página mandava.
+   */
+  const TRACK_LABELS: Record<string, string> = {
+    brasil: 'Brazil',
+    argentina: 'Argentina',
+    chile: 'Chile',
+    colombia: 'Colombia',
+    mexico: 'Mexico',
+    peru: 'Peru',
+    portugal: 'Portugal',
+    espanha: 'Spain',
+    uruguai: 'Uruguay',
+    maca: 'Apple',
+    banana: 'Banana',
+    laranja: 'Orange',
+    cenoura: 'Carrot',
+    batata: 'Potato',
+    abobrinha: 'Zucchini',
+  };
+
+  /**
+   * O valor que cada amostra tinha na chamada ANTERIOR.
    *
    * Guardar à parte é o que faz a conta valer: quando o retorno de mudança
    * chega, o valor ligado já foi atualizado, e comparar com ele daria sempre
    * empate — toda remoção contaria como escolha.
    */
-  const previousCount: Record<string, number> = Object.fromEntries(
+  const previousValues: Record<string, string[]> = Object.fromEntries(
     Object.entries(values).map(([key, entry]) => [
       key,
-      Array.isArray(entry) ? entry.length : entry ? 1 : 0,
+      Array.isArray(entry) ? [...entry] : entry ? [entry] : [],
     ]),
   );
 
   /**
-   * Escolher e desfazer são eventos DIFERENTES, e a diferença está no tamanho:
-   * a lista cresceu, alguém escolheu; encolheu, alguém removeu um chip ou limpou
-   * o campo. O payload carrega valor e nome do campo, nunca texto traduzido de
-   * interface — o mesmo evento em três idiomas tem de contar como um só.
+   * Escolher e desfazer são eventos DIFERENTES: apareceu um valor que não
+   * estava lá, alguém escolheu; senão, alguém removeu um chip ou limpou o
+   * campo. O payload carrega valor, nome do campo e a seção, nunca texto
+   * traduzido de interface — o mesmo evento em três idiomas conta como um só.
    */
-  function report(id: string, items: ComboboxOption[], next: string | string[]): void {
-    const before = previousCount[id] ?? 0;
-    const after = Array.isArray(next) ? next.length : next ? 1 : 0;
-    previousCount[id] = after;
-    const value = Array.isArray(next) ? next[next.length - 1] : next;
-    if (after < before || !value) {
+  function report(id: string, next: string | string[]): void {
+    const { fieldName, location } = SAMPLE_TRACKING[id];
+    const list = Array.isArray(next) ? next : next ? [next] : [];
+    const previous = previousValues[id] ?? [];
+    previousValues[id] = [...list];
+    const added = list.find((entry) => !previous.includes(entry));
+    if (!added) {
       track('field_change', {
         component: 'combobox',
-        field_name: id,
-        value: Array.isArray(next) ? next.join(',') : next,
-        location: 'docs_demo',
+        field_name: fieldName,
+        value: list.join(','),
+        location,
       });
       return;
     }
     track('option_select', {
       component: 'combobox',
-      field_name: id,
-      value,
-      label: labelOf(items, value),
-      location: 'docs_demo',
+      field_name: fieldName,
+      value: added,
+      label: TRACK_LABELS[added],
+      location,
     });
   }
 
@@ -390,7 +452,7 @@ interface ComboboxChipProps {
     invalid={config.invalid ?? false}
     name={config.name}
     removedMessage={(label) => `${label} ${labels.removed}`}
-    onValueChange={(next) => report(id, items, next)}
+    onValueChange={(next) => report(id, next)}
   >
     <ComboboxLabel>{config.label}</ComboboxLabel>
     <ComboboxInputWrapper>
@@ -615,6 +677,7 @@ interface ComboboxChipProps {
         bind:value={values.dd1Do}
         bind:inputValue={queries.dd1Do}
         multiple
+        onValueChange={(next) => report('dd1Do', next)}
       >
         <ComboboxLabel>{labels.country}</ComboboxLabel>
         <ComboboxInputWrapper>
@@ -649,6 +712,7 @@ interface ComboboxChipProps {
         bind:value={values.dd1Dont}
         bind:inputValue={queries.dd1Dont}
         multiple
+        onValueChange={(next) => report('dd1Dont', next)}
       >
         <ComboboxLabel>{labels.country}</ComboboxLabel>
         <ComboboxInputWrapper>
@@ -695,14 +759,23 @@ interface ComboboxChipProps {
         bind:value={values.dd2Dont}
         bind:inputValue={queries.dd2Dont}
         multiple
+        onValueChange={(next) => report('dd2Dont', next)}
       >
         <ComboboxLabel>{labels.countries}</ComboboxLabel>
-        <ComboboxInputWrapper>
+        <!--
+          O contraexemplo é o da legenda — o Backspace no campo vazio NÃO remove
+          o último chip —, e só ele: a caixa engole a tecla na CAPTURA, antes de
+          ela chegar à busca, como o `swallowBackspace` e o `withBackspaceBlocked`
+          das outras stacks. Os botões de remover ficam: até 2026-09-11 este lado
+          tirava os botões e deixava o Backspace funcionando, e mostrava um
+          defeito que a legenda não descreve.
+        -->
+        <ComboboxInputWrapper onkeydowncapture={swallowBackspace}>
           <ComboboxChips>
             {#each chipsOf('dd2Dont') as chip (chip)}
-              <!-- Chip sem botão de remover: desfazer passa a exigir o mouse na
-                   lista, e o teclado perde o caminho de volta. -->
-              <ComboboxChip value={chip} />
+              <ComboboxChip value={chip}>
+                <ComboboxChipRemove removeLabel={labels.remove} />
+              </ComboboxChip>
             {/each}
             <ComboboxInput placeholder={labels.countriesPlaceholder} />
           </ComboboxChips>
