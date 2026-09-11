@@ -376,7 +376,7 @@ ${actionButtonsSnippet(labels.actions)}
     <ng-template #tplDoDont1Do>
       <!-- O preview é componente VIVO, então o clique aqui é tão real quanto o
            da demonstração: dispara o evento do produto com o location DESTA
-           seção. O label leva o lado (valor estável), nunca o texto traduzido. -->
+           seção. O trigger_id leva o lado (valor estável), nunca o texto traduzido. -->
       <nds-sheet (onOpenChange)="aoMudarPainel('right', 'docs_do_dont', $event)">
         <button ndsSheetTrigger ndsButton variant="outline">{{ t('demonstration.labels.trigger') }}</button>
         <ng-template ndsSheetContent side="right">
@@ -896,8 +896,9 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
    * Abertura e fechamento de qualquer painel VIVO desta página.
    *
    * O evento nasce AQUI, na camada de produto — o primitivo de UI não importa
-   * `@/lib/analytics`. O payload leva valores estáveis (`qual`, `reason`), nunca
-   * o texto traduzido, que viraria três valores distintos no GA4.
+   * `@/lib/analytics`. O payload leva valores estáveis — o lado (`qual`) no
+   * `trigger_id`, e o `reason` —, nunca o texto traduzido, que viraria três
+   * valores distintos no GA4.
    *
    * `location` é `docs_<section-id>` da seção que RENDERIZA o painel (guideline
    * 07, "`location` nas docs pages") e vem do call site, sem default: constante
@@ -906,12 +907,12 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
    */
   protected aoMudarPainel(qual: string, location: string, evento: RdxDialogOpenChange): void {
     if (evento.open) {
-      track('dialog_open', { component: 'sheet', label: qual, location });
+      track('dialog_open', { component: 'sheet', trigger_id: qual, location });
       return;
     }
     track('dialog_close', {
       component: 'sheet',
-      label: qual,
+      trigger_id: qual,
       reason: sheetCloseReason(evento.reason),
       location,
     });
@@ -927,7 +928,7 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
     track('dialog_confirm', {
       component: 'sheet',
       action,
-      label: qual,
+      trigger_id: qual,
       location,
     });
   }

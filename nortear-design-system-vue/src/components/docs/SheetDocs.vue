@@ -153,8 +153,9 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 
 // ─── Analytics — demo events ──────────────────────────────────────────────────
 
-// label usa o SIDE (valor estável, não localizado) — texto traduzido
-// fragmentaria o mesmo evento em 3 valores no GA4.
+// `trigger_id` leva o SIDE (valor estável, não localizado) — texto traduzido
+// fragmentaria o mesmo evento em 3 valores no GA4. Até 2026-09-10 o campo era
+// `label`; a família Overlay passou a dizer quem abriu em `trigger_id`.
 //
 // `location` vem de QUEM CHAMA, nunca de constante no topo do arquivo: ele
 // existe para dizer de ONDE veio o clique, e cravá-lo em 'docs_demo' fazia a
@@ -184,12 +185,12 @@ const closeWatch = {
 function rastrearSheet(location: string, side: string, open: boolean) {
   if (open) {
     pendingCloseReason = null;
-    track('dialog_open', { component: 'sheet', label: side, location });
+    track('dialog_open', { component: 'sheet', trigger_id: side, location });
     return;
   }
   track('dialog_close', {
     component: 'sheet',
-    label: side,
+    trigger_id: side,
     reason: pendingCloseReason ?? 'close-button',
     location,
   });
@@ -200,7 +201,7 @@ function rastrearConfirmacao(location: string, side: string, action = 'apply') {
   track('dialog_confirm', {
     component: 'sheet',
     action,
-    label: side,
+    trigger_id: side,
     location,
   });
 }

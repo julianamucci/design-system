@@ -330,7 +330,7 @@ copiava a explicação do vizinho sem medir a folha daqui.
 
 | evento | quando | payload |
 |---|---|---|
-| `dialog_open` | o diálogo abre | `{ component: "alert-dialog", label, location }` |
+| `dialog_open` | o diálogo abre | `{ component: "alert-dialog", trigger_id, location }` |
 | `dialog_confirm` | a ação é executada | idem |
 | `dialog_close` | fecha, por qualquer caminho | idem, mais `reason` |
 
@@ -354,9 +354,12 @@ clique da ação, registrado antes do fechamento. **Até essa data o Escape do
 vanilla fechava sem `dialog_close` nenhum**: o fechamento era rastreado à mão
 nos cliques dos dois botões.
 
-**Rótulos estáveis nas cinco**: `destructive` e `neutral` na demonstração e em
-Variantes; `pair1-do`, `pair1-dont`, `pair2-do`, `pair2-dont` no Do & Don't —
-batendo com as chaves `doDont.pair1/pair2` do conteúdo.
+**Ids estáveis nas cinco, no `trigger_id`**: `destructive` e `neutral` na
+demonstração e em Variantes; `pair1-do`, `pair1-dont`, `pair2-do`, `pair2-dont`
+no Do & Don't — batendo com as chaves `doDont.pair1/pair2` do conteúdo. O campo
+era `label` até 2026-09-10, quando a dona unificou o campo de quem abriu em
+`trigger_id` na categoria inteira (`18-overlay.md` §Analytics); os valores não
+mudaram, e o tipo proíbe o campo antigo.
 
 **Até 2026-09-10 esta linha dizia "fecha sem executar"**, e o conteúdo
 compartilhado documentava um campo `trigger` com `"cancel_button"` que nenhuma

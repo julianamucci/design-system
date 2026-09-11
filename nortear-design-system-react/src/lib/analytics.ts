@@ -136,22 +136,39 @@ interface AnalyticsEvents {
 
   /**
    * Abertura de Dialog, AlertDialog e Sheet — a mesma pergunta de produto, e a
-   * peça vai no `component`. O campo que diz QUEM abriu depende da peça, e é o
-   * tipo que cobra (§9 de `prd/dialog.md`, `prd/alert-dialog.md` e
-   * `prd/sheet.md`): o Dialog manda `trigger_id`, o id estável da demo
-   * (`default`, `do-dont-pair1-do`…); o AlertDialog e o Sheet mandam `label` —
-   * no Sheet, o lado. Até 2026-09-10 os dois campos eram opcionais, e o Dialog
-   * de quatro stacks mandava `label` (no Angular, `par1_do`) contra o PRD:
-   * o tipo aceitava tudo, e nenhum portão via.
+   * peça vai no `component`. O campo que diz QUEM abriu é `trigger_id` nos três
+   * (e no Drawer, que tem evento próprio): o id ESTÁVEL do gatilho — `default`,
+   * `do-dont-pair1-do` no Dialog, `destructive` no AlertDialog, o lado no
+   * Sheet —, nunca o texto dele, que chega traduzido e partiria o evento em
+   * três valores no GA4.
+   *
+   * Até 2026-09-10 o campo dependia da peça: o Dialog mandava `trigger_id`, e o
+   * AlertDialog, o Sheet e o Drawer mandavam `label` com o mesmo id. A dona
+   * decidiu unificar em `trigger_id` (regra em
+   * `docs/shared/guidelines/18-overlay.md` §Analytics). `label?: never` existe
+   * para o call site que voltar ao campo antigo reprovar no build — antes da
+   * união, os dois campos eram opcionais, o tipo aceitava tudo, e nenhum
+   * portão via.
    */
-  dialog_open:
-    | { component: "dialog"; trigger_id: string; location: string; label?: never }
-    | { component: "alert-dialog" | "sheet"; label: string; location: string; trigger_id?: never };
+  dialog_open: {
+    component: "dialog" | "alert-dialog" | "sheet";
+    trigger_id: string;
+    location: string;
+    label?: never;
+  };
 
-  /** Fechamento, por qualquer caminho — mesmos campos da abertura, mais o `reason`. */
-  dialog_close:
-    | { component: "dialog"; trigger_id: string; reason: "escape" | "overlay" | "close-button" | "api"; location: string; label?: never }
-    | { component: "alert-dialog" | "sheet"; label: string; reason: "escape" | "overlay" | "close-button" | "api"; location: string; trigger_id?: never };
+  /**
+   * Fechamento, por qualquer caminho — mesmos campos da abertura, mais o
+   * `reason`, no vocabulário do design system (quatro palavras, iguais em toda
+   * a família de overlay).
+   */
+  dialog_close: {
+    component: "dialog" | "alert-dialog" | "sheet";
+    trigger_id: string;
+    reason: "escape" | "overlay" | "close-button" | "api";
+    location: string;
+    label?: never;
+  };
 
   /** Clique na ação primária do Footer de um Dialog. */
   dialog_action: {
@@ -356,11 +373,16 @@ interface AnalyticsEvents {
    * que o conteúdo compartilhado do componente documenta na seção Analytics —
    * separar o painel arrastável do diálogo centrado é o que permite medir o
    * fluxo mobile sem diluí-lo no total de diálogos.
+   *
+   * Quem abriu vai em `trigger_id`, como no `dialog_open`: o id estável do
+   * gatilho — a direção do painel —, nunca texto. Até 2026-09-10 era `label`;
+   * `label?: never` faz o call site antigo reprovar no build.
    */
   drawer_open: {
     component: 'drawer';
-    label?: string;
+    trigger_id: string;
     location?: string;
+    label?: never;
   };
 
   /**
@@ -373,18 +395,23 @@ interface AnalyticsEvents {
    */
   drawer_close: {
     component: 'drawer';
-    label?: string;
+    trigger_id: string;
     reason: 'escape' | 'overlay' | 'close-button' | 'api';
     location?: string;
+    label?: never;
   };
 
-  /** Disparado quando o usuário confirma a ação primária de um Dialog/Sheet/Drawer. */
+  /**
+   * Disparado quando o usuário confirma a ação primária de um Dialog/Sheet/Drawer.
+   * `trigger_id` é o mesmo id estável da abertura do painel — é ele que liga a
+   * confirmação ao `dialog_open` que a precedeu no GA4.
+   */
   dialog_confirm: {
     component: string;
-    trigger_id?: string;
+    trigger_id: string;
     action?: string;
-    label?: string;
     location?: string;
+    label?: never;
   };
 
   /** Disparado quando o usuário muda de página em Pagination. */

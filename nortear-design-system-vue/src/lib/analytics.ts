@@ -121,22 +121,25 @@ interface AnalyticsEvents {
 
   /**
    * Abertura de Dialog, AlertDialog e Sheet — a mesma pergunta de produto, e a
-   * peça vai no `component`. O campo que diz QUEM abriu depende da peça, e é o
-   * tipo que cobra (§9 de `prd/dialog.md`, `prd/alert-dialog.md` e
-   * `prd/sheet.md`): o Dialog manda `trigger_id`, o id estável da demo
-   * (`default`, `do-dont-pair1-do`…); o AlertDialog e o Sheet mandam `label` —
-   * no Sheet, o lado. Até 2026-09-10 os dois campos eram opcionais, e o Dialog
-   * de quatro stacks mandava `label` (no Angular, `par1_do`) contra o PRD:
-   * o tipo aceitava tudo, e nenhum portão via.
+   * peça vai no `component`. O campo que diz QUEM abriu é `trigger_id` nos três
+   * (e no Drawer): o id ESTÁVEL do gatilho (`default`, `destructive`,
+   * `pair1-do`, no Sheet o lado…), nunca o texto dele, que partiria o mesmo
+   * evento em um valor por idioma no GA4.
+   *
+   * Até 2026-09-10 o Dialog mandava `trigger_id` e AlertDialog, Sheet e Drawer
+   * mandavam `label` com o mesmo tipo de valor — dois nomes para uma dimensão
+   * só. A dona decidiu unificar em `trigger_id` (regra em
+   * `docs/shared/guidelines/18-overlay.md` §Analytics). Antes disso os dois
+   * campos já tinham sido opcionais, e o Dialog de quatro stacks mandava `label`
+   * contra o PRD: o tipo aceitava tudo, e nenhum portão via.
+   *
+   * `label?: never` existe para o call site que voltar ao campo antigo reprovar
+   * no build.
    */
-  dialog_open:
-    | { component: 'dialog'; trigger_id: string; location: string; label?: never }
-    | { component: 'alert-dialog' | 'sheet'; label: string; location: string; trigger_id?: never };
+  dialog_open: { component: 'dialog' | 'alert-dialog' | 'sheet'; trigger_id: string; location: string; label?: never };
 
   /** Fechamento, por qualquer caminho — mesmos campos da abertura, mais o `reason`. */
-  dialog_close:
-    | { component: 'dialog'; trigger_id: string; reason: 'escape' | 'overlay' | 'close-button' | 'api'; location: string; label?: never }
-    | { component: 'alert-dialog' | 'sheet'; label: string; reason: 'escape' | 'overlay' | 'close-button' | 'api'; location: string; trigger_id?: never };
+  dialog_close: { component: 'dialog' | 'alert-dialog' | 'sheet'; trigger_id: string; reason: 'escape' | 'overlay' | 'close-button' | 'api'; location: string; label?: never };
 
   dialog_action: {
     component: string;
@@ -305,12 +308,13 @@ interface AnalyticsEvents {
    * que o conteúdo compartilhado do componente documenta na seção Analytics —
    * separar o painel arrastável do diálogo centrado é o que permite medir o
    * fluxo mobile sem diluí-lo no total de diálogos.
+   *
+   * Quem abriu vai em `trigger_id` — o id estável do gatilho (na demo, a
+   * direção: `right`, `left`, `bottom`…), como na família `dialog_*`. Até
+   * 2026-09-10 o campo era `label`; `label?: never` faz o call site antigo
+   * reprovar no build.
    */
-  drawer_open: {
-    component: 'drawer';
-    label?: string;
-    location?: string;
-  };
+  drawer_open: { component: 'drawer'; trigger_id: string; location?: string; label?: never };
 
   /**
    * Disparado ao fechar o Drawer por qualquer caminho.
@@ -320,21 +324,14 @@ interface AnalyticsEvents {
    * decisão de "saí sem decidir nada" do clique no véu) e o fechamento por
    * código é `api`. Motivo novo aqui vira dimensão nova no GA4.
    */
-  drawer_close: {
-    component: 'drawer';
-    label?: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
-    location?: string;
-  };
+  drawer_close: { component: 'drawer'; trigger_id: string; reason: 'escape' | 'overlay' | 'close-button' | 'api'; location?: string; label?: never };
 
-  /** Disparado quando o usuário confirma a ação primária de um Dialog/Sheet/Drawer. */
-  dialog_confirm: {
-    component: string;
-    trigger_id?: string;
-    action?: string;
-    label?: string;
-    location?: string;
-  };
+  /**
+   * Disparado quando o usuário confirma a ação primária de um Dialog/Sheet/Drawer.
+   * `trigger_id` é o mesmo id estável da abertura — até 2026-09-10 era
+   * opcional e parte dos call sites mandava `label` no lugar.
+   */
+  dialog_confirm: { component: string; trigger_id: string; action?: string; location?: string; label?: never };
 
   /** Disparado quando o usuário muda de página em Pagination. */
   page_change: {

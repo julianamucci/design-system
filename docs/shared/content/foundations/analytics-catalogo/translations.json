@@ -272,21 +272,21 @@
         },
         "dialogOpen": {
           "event": "dialog_open",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "component": "Dialog, AlertDialog, Sheet",
           "when": "Overlay abre.",
-          "extras": "<code>label</code>, <code>trigger_id</code>"
+          "extras": "<code>trigger_id</code>, <code>location</code>"
         },
         "dialogClose": {
           "event": "dialog_close",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "component": "Dialog, AlertDialog, Sheet",
           "when": "Overlay fecha por qualquer caminho.",
-          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
+          "extras": "<code>trigger_id</code>, <code>reason</code> (escape · overlay · close-button · api)"
         },
         "dialogConfirm": {
           "event": "dialog_confirm",
           "component": "AlertDialog, Sheet",
           "when": "Ação primária é confirmada.",
-          "extras": "<code>action</code>, <code>trigger_id</code>"
+          "extras": "<code>trigger_id</code>, <code>action</code>"
         },
         "dialogAction": {
           "event": "dialog_action",
@@ -703,21 +703,21 @@
         },
         "dialogOpen": {
           "event": "dialog_open",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "component": "Dialog, AlertDialog, Sheet",
           "when": "Overlay opens.",
-          "extras": "<code>label</code>, <code>trigger_id</code>"
+          "extras": "<code>trigger_id</code>, <code>location</code>"
         },
         "dialogClose": {
           "event": "dialog_close",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "component": "Dialog, AlertDialog, Sheet",
           "when": "Overlay closes through any path.",
-          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
+          "extras": "<code>trigger_id</code>, <code>reason</code> (escape · overlay · close-button · api)"
         },
         "dialogConfirm": {
           "event": "dialog_confirm",
           "component": "AlertDialog, Sheet",
           "when": "Primary action is confirmed.",
-          "extras": "<code>action</code>, <code>trigger_id</code>"
+          "extras": "<code>trigger_id</code>, <code>action</code>"
         },
         "dialogAction": {
           "event": "dialog_action",
@@ -1134,21 +1134,21 @@
         },
         "dialogOpen": {
           "event": "dialog_open",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "component": "Dialog, AlertDialog, Sheet",
           "when": "El overlay se abre.",
-          "extras": "<code>label</code>, <code>trigger_id</code>"
+          "extras": "<code>trigger_id</code>, <code>location</code>"
         },
         "dialogClose": {
           "event": "dialog_close",
-          "component": "Dialog, AlertDialog, Sheet, Drawer",
+          "component": "Dialog, AlertDialog, Sheet",
           "when": "El overlay se cierra por cualquier camino.",
-          "extras": "<code>reason</code> (escape · overlay · close-button · action)"
+          "extras": "<code>trigger_id</code>, <code>reason</code> (escape · overlay · close-button · api)"
         },
         "dialogConfirm": {
           "event": "dialog_confirm",
           "component": "AlertDialog, Sheet",
           "when": "Se confirma la acción primaria.",
-          "extras": "<code>action</code>, <code>trigger_id</code>"
+          "extras": "<code>trigger_id</code>, <code>action</code>"
         },
         "dialogAction": {
           "event": "dialog_action",

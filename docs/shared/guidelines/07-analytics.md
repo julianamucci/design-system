@@ -82,7 +82,11 @@ interface AnalyticsBasePayload {
 
 ```typescript
 interface WithLabel {
-  label?: string         // Texto visível do elemento. Ex: "Salvar", "Cancelar"
+  label?: string         // Id ESTÁVEL do elemento, nunca o texto visível. Ex: "save", "pair1-do"
+}
+
+interface WithTrigger {
+  trigger_id?: string    // Id ESTÁVEL do gatilho que abriu um overlay, nunca o texto dele. Ex: "default", "right"
 }
 
 interface WithValue {
@@ -182,13 +186,23 @@ Esses elementos disparam o evento do produto (`button_click`, `tooltip_view`,
 
 ---
 
-#### Dialog / Sheet / Drawer
+#### Dialog / AlertDialog / Sheet / Drawer
 
 | Evento | Quando disparar | Payload adicional |
 |--------|----------------|-------------------|
-| `dialog_open` | Quando o overlay é exibido | `label` (título) |
-| `dialog_close` | Quando fechado, por qualquer caminho | `label`, `location`, `reason` (`"escape"` \| `"close-button"` \| `"api"`; o Dialog, que fecha pelo véu, soma `"overlay"`) |
-| `dialog_confirm` | Quando a ação principal é confirmada | `label` |
+| `dialog_open` | Quando o Dialog, o AlertDialog ou o Sheet é exibido | `trigger_id` |
+| `dialog_close` | Quando fechado, por qualquer caminho | `trigger_id`, `reason` (`"escape"` \| `"overlay"` \| `"close-button"` \| `"api"` — vocabulário em `18-overlay.md` §Analytics) |
+| `dialog_confirm` | Quando a ação principal é confirmada | `trigger_id` (e `action`, no Sheet) |
+| `drawer_open` / `drawer_close` | Quando o Drawer abre / fecha | `trigger_id`; `reason` no fechamento |
+
+**O campo de quem abriu é `trigger_id` em todo overlay** — Dialog, AlertDialog,
+Sheet, Drawer, Popover, HoverCard e Tooltip —, com o id estável do gatilho, nunca
+o texto dele. Até 2026-09-10 eram três nomes para o mesmo papel — um no Popover
+e no HoverCard, `trigger_id` no Tooltip e `label` nos modais (`hover-card.md`
+D7) —, e a dona unificou em `trigger_id`. Nos cinco
+`analytics.ts` os eventos da família modal carregam `label?: never`, para o call
+site que voltar ao campo antigo reprovar no build. Os menus não entram: lá o que
+identifica é o próprio menu, no campo `menu`.
 
 ---
 

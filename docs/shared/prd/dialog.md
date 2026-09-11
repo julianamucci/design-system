@@ -424,10 +424,14 @@ zera a escada inteira sob a preferência. O mecanismo está por extenso em
 | `dialog_open` | abre por gatilho ou estado controlado | `{ component: "dialog", trigger_id, location }` |
 | `dialog_close` | fecha | `{ component: "dialog", trigger_id, location, reason }` |
 
-O Sheet emite os MESMOS eventos, com `component: "sheet"` — as duas peças
-respondem à mesma pergunta de produto, e separar as séries esconderia isso. Lá o
-campo continua sendo `label`, e de propósito: no Sheet ele carrega o LADO
-(`right`, `left`, `bottom`), que não é identificador de gatilho.
+O Sheet e o AlertDialog emitem os MESMOS eventos, com `component: "sheet"` e
+`component: "alert-dialog"` — as peças respondem à mesma pergunta de produto, e
+separar as séries esconderia isso. **O campo de quem abriu é `trigger_id` nos
+três** (e no `drawer_*`), por decisão da dona em 2026-09-10: até ali o
+AlertDialog, o Sheet e o Drawer mandavam o mesmo id estável sob `label`, e esta
+linha defendia a divisão dizendo que o lado do Sheet "não é identificador de
+gatilho". É: nas demonstrações cada gatilho abre um lado, e o lado é o id dele.
+Regra da categoria em `18-overlay.md` §Analytics.
 
 **`reason` é obrigatório, com as quatro palavras da família** — `escape`,
 `overlay`, `close-button` e `api`, as mesmas do `drawer_close` e do
@@ -445,11 +449,13 @@ clique fora do conteúdo, e marca a confirmação ANTES de o painel fechar — a
 e o cancelar são partes de fechar da lib, e sem a marca "confirmou" chegaria ao
 relatório como "apertou o botão de fechar". Portão: `reason_vocabulario_divergente`.
 
-**Desde 2026-09-10 quem cobra o campo é o TIPO.** `dialog_open` e
-`dialog_close` são uma união discriminada pelo `component` nas cinco
-`analytics.ts`: `dialog` exige `trigger_id` e proíbe `label`; `alert-dialog` e
-`sheet` exigem `label` e proíbem `trigger_id`; `location` é obrigatório nas três.
-Até ali os dois campos eram opcionais, e um dia depois da decisão abaixo o
+**Desde 2026-09-10 quem cobra o campo é o TIPO.** Nas cinco `analytics.ts`,
+`dialog_open`, `dialog_close` e `dialog_confirm` exigem `trigger_id` e proíbem
+`label` (`label?: never`), e `location` é obrigatório no abrir e no fechar. O
+primeiro desenho foi uma união discriminada pelo `component` — `dialog` com
+`trigger_id`, `alert-dialog` e `sheet` com `label` —, e ela durou o mesmo dia:
+com a unificação não há mais o que discriminar. Até ali os dois campos eram
+opcionais, e um dia depois da decisão abaixo o
 Dialog de quatro stacks ainda mandava `label` — no Angular com os valores
 `par1_do`/`par2_dont`. Nenhum portão via: o tipo aceitava tudo. Plantada a
 união, o `npm run build` reprovou exatamente esses pontos, e mais um

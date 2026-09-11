@@ -816,17 +816,18 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
    * Abertura e fechamento dos painéis da demonstração.
    *
    * O evento nasce AQUI, na camada de produto — o primitivo de UI não importa
-   * `@/lib/analytics`. O payload leva valores estáveis (a direção, o motivo),
-   * nunca o texto traduzido, que viraria três valores distintos no GA4.
+   * `@/lib/analytics`. O payload leva valores estáveis — a direção no
+   * `trigger_id`, e o motivo —, nunca o texto traduzido, que viraria três
+   * valores distintos no GA4.
    */
   protected aoMudarPainel(direction: DrawerDirection, evento: RdxDialogOpenChange): void {
     if (evento.open) {
-      track('drawer_open', { component: 'drawer', label: direction, location: 'docs_demo' });
+      track('drawer_open', { component: 'drawer', trigger_id: direction, location: 'docs_demo' });
       return;
     }
     track('drawer_close', {
       component: 'drawer',
-      label: direction,
+      trigger_id: direction,
       reason: drawerCloseReason(evento.reason),
       location: 'docs_demo',
     });
@@ -845,7 +846,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
     track('dialog_confirm', {
       component: 'drawer',
       action: 'confirm',
-      label: qual,
+      trigger_id: qual,
       location: secao,
     });
   }
@@ -1198,12 +1199,12 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       {
         event: 'drawer_open',
         trigger: toPlainText(t('states.open.trigger')),
-        payload: 'component, label, location',
+        payload: 'component, trigger_id, location',
       },
       {
         event: 'drawer_close',
         trigger: toPlainText(t('accessibility.keyboard.escape')),
-        payload: 'component, label, reason, location',
+        payload: 'component, trigger_id, reason, location',
       },
       {
         event: 'docs_page_view',

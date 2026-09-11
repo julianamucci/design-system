@@ -155,19 +155,21 @@
   /**
    * Abertura e fechamento de qualquer painel VIVO desta página.
    *
-   * `label` carrega o SIDE (valor estável, não localizado) — texto traduzido
-   * partiria o mesmo evento em três valores no GA4. `location` vem de QUEM
-   * CHAMA, porque ele existe para dizer de ONDE veio o clique.
+   * `trigger_id` carrega o SIDE (valor estável, não localizado) — texto
+   * traduzido partiria o mesmo evento em três valores no GA4. É o mesmo valor
+   * que o `dialog_confirm` do painel manda, para a confirmação casar com a
+   * abertura. `location` vem de QUEM CHAMA, porque ele existe para dizer de
+   * ONDE veio o clique.
    */
-  function trackSheet(location: string, side: string, open: boolean): void {
+  function trackSheet(location: string, triggerId: string, open: boolean): void {
     if (open) {
       pendingCloseReason = null;
-      track('dialog_open', { component: 'sheet', label: side, location });
+      track('dialog_open', { component: 'sheet', trigger_id: triggerId, location });
       return;
     }
     track('dialog_close', {
       component: 'sheet',
-      label: side,
+      trigger_id: triggerId,
       reason: pendingCloseReason ?? 'close-button',
       location,
     });
@@ -474,7 +476,7 @@ interface TriggerProps {
                 <Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
               {/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_demo' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'right', location: 'docs_demo' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -605,7 +607,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_do_dont' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'right', location: 'docs_do_dont' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -630,7 +632,7 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('doDont.pair1.dontBody')}</p>
           </SheetBody>
           <SheetFooter>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_do_dont' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'right', location: 'docs_do_dont' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -656,7 +658,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_do_dont' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'right', location: 'docs_do_dont' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -679,7 +681,7 @@ interface TriggerProps {
             <p class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.body')}</p>
           </SheetBody>
           <SheetFooter>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', location: 'docs_do_dont' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'top', location: 'docs_do_dont' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -724,7 +726,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'right', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'right', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -750,7 +752,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'left', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'left', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -776,7 +778,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'top', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'top', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -802,7 +804,7 @@ interface TriggerProps {
             <SheetClose>
               {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.cancel')}</Button>{/snippet}
             </SheetClose>
-            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'bottom', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
+            <Button onclick={() => track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'bottom', location: 'docs_variantes' })}>{$tStore('demonstration.labels.apply')}</Button>
           </SheetFooter>
         </SheetContent>
       </Sheet>
@@ -876,7 +878,7 @@ interface TriggerProps {
             <form id="docs-sheet-filters" class="nds-stack" data-spacing="sm"
                   onsubmit={(e: SubmitEvent) => {
                     e.preventDefault();
-                    track('dialog_confirm', { component: 'sheet', action: 'apply', label: 'right', location: 'docs_composicoes' });
+                    track('dialog_confirm', { component: 'sheet', action: 'apply', trigger_id: 'right', location: 'docs_composicoes' });
                   }}>
               <div class="nds-stack" data-spacing="xs">
                 <Label for="docs-sheet-category">{$tStore('variants.compositions.advancedFilters.fieldCategory')}</Label>
@@ -948,7 +950,7 @@ interface TriggerProps {
             <form id="docs-sheet-profile" class="nds-stack" data-spacing="sm"
                   onsubmit={(e: SubmitEvent) => {
                     e.preventDefault();
-                    track('dialog_confirm', { component: 'sheet', action: 'save', label: 'right', location: 'docs_composicoes' });
+                    track('dialog_confirm', { component: 'sheet', action: 'save', trigger_id: 'right', location: 'docs_composicoes' });
                   }}>
               <div class="nds-stack" data-spacing="xs">
                 <Label for="docs-sheet-profile-name">{$tStore('variants.compositions.profileEdit.fieldName')}</Label>

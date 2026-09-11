@@ -850,7 +850,7 @@ Componentes como **AlertDialog** são overlays de decisão forçada.
 6. **`DocsAccessibility`** — `role="alertdialog"` anuncia imediatamente sem foco (diferente de `dialog`).
 7. **Stories** — omitir `alert-dialog-tamanhos`. Usar `defaultOpen={true}` nas stories de variantes/estados para que Chromatic capture o modal visível.
 8. **Play function** — 6 critérios: trigger abre modal com `role="alertdialog"`; Cancel fecha e retorna foco; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
-9. **Analytics de produto** — `dialog_open { component: "alert_dialog", location, label }` ao abrir; `dialog_confirm { component: "alert_dialog", location, label }` ao confirmar; `dialog_close { component: "alert_dialog", location, label, trigger: "cancel_button" | "escape" }` ao cancelar. Ver `docs/shared/guidelines/07-analytics.md`.
+9. **Analytics de produto** — `dialog_open { component: "alert-dialog", trigger_id, location }` ao abrir; `dialog_confirm { component: "alert-dialog", trigger_id, location }` ao confirmar; `dialog_close { component: "alert-dialog", trigger_id, reason, location }` ao fechar, com `reason` `escape`, `close-button` (o Cancelar) ou `api` (a ação que confirma). Ver `docs/shared/guidelines/07-analytics.md`.
 10. **`notes.tip${i}Title`** — título separado de `notes.tip${i}` (descrição). Não aninhar (`flattenDict` não indexa objetos intermediários).
 
 ### Containers Passivos Stateless (padrão AspectRatio)

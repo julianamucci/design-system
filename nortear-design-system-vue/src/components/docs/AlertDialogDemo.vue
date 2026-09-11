@@ -39,23 +39,24 @@ const props = withDefaults(defineProps<{
    */
   location: string;
   /**
-   * Rótulo estável do evento. Sem ele, sai do tom (`destructive` / `neutral`);
-   * o Do & Don't passa o do par (`pair1-do`, `pair2-dont`…, as chaves `doDont.pair*` do conteúdo), porque ali o tom não
+   * Id estável do gatilho, o `trigger_id` dos eventos. Sem ele, sai do tom
+   * (`destructive` / `neutral`); o Do & Don't passa o do par (`pair1-do`,
+   * `pair2-dont`…, as chaves `doDont.pair*` do conteúdo), porque ali o tom não
    * distingue o exemplo certo do errado.
    */
-  trackLabel?: string;
+  triggerId?: string;
 }>(), {
   triggerVariant: 'destructive',
   tone: 'default',
-  trackLabel: undefined,
+  triggerId: undefined,
 });
 
-const label = computed(
-  () => props.trackLabel ?? (props.tone === 'destructive' ? 'destructive' : 'neutral'),
+const resolvedTriggerId = computed(
+  () => props.triggerId ?? (props.tone === 'destructive' ? 'destructive' : 'neutral'),
 );
 
-// Rótulo estável: o título é texto traduzido e quebraria a agregação no GA4
-// (um rótulo por idioma para o mesmo demo).
+// `trigger_id` é id estável, nunca o título: o título é texto traduzido e
+// quebraria a agregação no GA4 (um valor por idioma para o mesmo demo).
 // O `update:open` da lib não diz por que o diálogo fechou, e o `dialog_close`
 // exige `reason` (`18-overlay.md` §Analytics). Três caminhos fecham este
 // componente, e nenhum deles é o clique fora: `Escape` (anunciado pela lib), o
@@ -79,14 +80,14 @@ function handleOpenChange(open: boolean) {
     pendingCloseReason = null;
     track('dialog_open', {
       component: 'alert-dialog',
-      label: label.value,
+      trigger_id: resolvedTriggerId.value,
       location: props.location,
     });
     return;
   }
   track('dialog_close', {
     component: 'alert-dialog',
-    label: label.value,
+    trigger_id: resolvedTriggerId.value,
     reason: pendingCloseReason ?? 'close-button',
     location: props.location,
   });
@@ -97,7 +98,7 @@ function handleConfirm() {
   pendingCloseReason = 'api';
   track('dialog_confirm', {
     component: 'alert-dialog',
-    label: label.value,
+    trigger_id: resolvedTriggerId.value,
     location: props.location,
   });
 }

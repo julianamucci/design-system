@@ -99,11 +99,12 @@ type DocsLocation = "docs_demo" | "docs_variantes" | "docs_do_dont" | "docs_comp
  * `DialogDocs.ts` de lá) — nunca o texto do gatilho, que chega traduzido e
  * partiria o evento em três valores no GA4.
  *
- * O campo é `trigger_id`, e o tipo do evento o EXIGE para `component: "dialog"`
- * e proíbe `label` (`prd/dialog.md` §9). Até 2026-09-10 esta página mandava o
- * id no campo `label` — o nome que o AlertDialog e o Sheet usam de propósito, e
- * que o Dialog abandonou em 2026-09-09 —, e só dos dois lados "do" do Do &
- * Don't, com ids de par (`do-dont-pair1`) que não diziam o lado. A lista é fechada
+ * O campo é `trigger_id`, e o tipo do evento o EXIGE e proíbe `label`
+ * (`prd/dialog.md` §9). Até 2026-09-10 esta página mandava o id no campo
+ * `label` — o nome que o AlertDialog e o Sheet também usavam até a dona
+ * unificar os três, e o Drawer, em `trigger_id` no mesmo dia (regra em
+ * `docs/shared/guidelines/18-overlay.md` §Analytics) —, e só dos dois lados
+ * "do" do Do & Don't, com ids de par (`do-dont-pair1`) que não diziam o lado. A lista é fechada
  * para que um id fora do vocabulário das outras stacks reprove no build, e não
  * no relatório.
  *

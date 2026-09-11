@@ -569,7 +569,7 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
   -->
   <!-- Par 1 — só a REDAÇÃO muda; a severidade é a mesma dos dois lados. -->
   {#snippet doPair1()}
-    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" trackLabel="pair1-do" triggerVariant="destructive" tone="destructive" />
+    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" triggerId="pair1-do" triggerVariant="destructive" tone="destructive" />
   {/snippet}
   {#snippet dontPair1()}
     <AlertDialogDemo
@@ -579,7 +579,7 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
       cancelLabel={$tStore('doDont.pair1.dontExample.cancel')}
       actionLabel={$tStore('doDont.pair1.dontExample.action')}
       location="docs_do_dont"
-      trackLabel="pair1-dont"
+      triggerId="pair1-dont"
       triggerVariant="destructive"
       tone="destructive"
     />
@@ -590,10 +590,10 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
     ensina.
   -->
   {#snippet doPair2()}
-    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" trackLabel="pair2-do" triggerVariant="destructive" tone="destructive" />
+    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" triggerId="pair2-do" triggerVariant="destructive" tone="destructive" />
   {/snippet}
   {#snippet dontPair2()}
-    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" trackLabel="pair2-dont" triggerVariant="destructive" tone="default" />
+    <AlertDialogDemo {...destructiveLabels} location="docs_do_dont" triggerId="pair2-dont" triggerVariant="destructive" tone="default" />
   {/snippet}
   {#snippet variantDestructive()}
     <AlertDialogDemo {...destructiveLabels} location="docs_variantes" triggerVariant="destructive" tone="destructive" />

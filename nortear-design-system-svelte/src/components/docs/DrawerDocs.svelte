@@ -249,8 +249,9 @@
   /**
    * Props da RAIZ de cada painel vivo desta página.
    *
-   * `label` carrega a DIREÇÃO — valor estável, não localizado. O título é texto
-   * traduzido e partiria o mesmo evento em três valores no GA4, um por idioma.
+   * `trigger_id` carrega a DIREÇÃO — valor estável, não localizado. O título é
+   * texto traduzido e partiria o mesmo evento em três valores no GA4, um por
+   * idioma.
    *
    * `location` vem de QUEM CHAMA, porque ele existe para dizer de ONDE veio o
    * clique: componente vivo em Variantes, Composições ou Do & Dont é clique tão
@@ -266,12 +267,12 @@
       onOpenChange: (open: boolean) => {
         if (open) {
           pendingCloseReason = null;
-          track('drawer_open', { component: 'drawer', label: direction, location });
+          track('drawer_open', { component: 'drawer', trigger_id: direction, location });
           return;
         }
         track('drawer_close', {
           component: 'drawer',
-          label: direction,
+          trigger_id: direction,
           reason: pendingCloseReason ?? 'close-button',
           location,
         });
@@ -1047,8 +1048,8 @@ interface TriggerProps {
       payload: 'Payload',
     }}
     items={[
-      { event: 'drawer_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'drawer', location, label }" },
-      { event: 'drawer_close', trigger: 'onOpenChange(false)', payload: "{ component: 'drawer', location, label, reason }" },
+      { event: 'drawer_open',  trigger: 'onOpenChange(true)',  payload: "{ component: 'drawer', location, trigger_id }" },
+      { event: 'drawer_close', trigger: 'onOpenChange(false)', payload: "{ component: 'drawer', location, trigger_id, reason }" },
       { event: '—',            trigger: stripHtml($tStore('analytics.description')), payload: '—' },
     ]}
   />

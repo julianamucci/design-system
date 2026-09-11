@@ -164,8 +164,9 @@ watch(locale, (newLocale) => {
 
 // ─── Analytics — painéis vivos ────────────────────────────────────────────────
 
-// `label` leva a DIREÇÃO (valor estável), nunca o título: título é texto
-// traduzido e partiria a mesma série em três valores no GA4.
+// `trigger_id` leva a DIREÇÃO (valor estável), nunca o título: título é texto
+// traduzido e partiria a mesma série em três valores no GA4. Até 2026-09-10 o
+// campo era `label`; a família Overlay passou a dizer quem abriu em `trigger_id`.
 //
 // `location` vem de QUEM CHAMA, nunca de constante no topo do arquivo: ele
 // responde de ONDE saiu a interação, e cravá-lo em 'docs_demo' faria a página
@@ -203,12 +204,12 @@ function onDragRelease(open: boolean) {
 function trackDrawer(location: string, direction: DrawerDirection, open: boolean) {
   if (open) {
     pendingCloseReason = null;
-    track('drawer_open', { component: 'drawer', label: direction, location });
+    track('drawer_open', { component: 'drawer', trigger_id: direction, location });
     return;
   }
   track('drawer_close', {
     component: 'drawer',
-    label: direction,
+    trigger_id: direction,
     reason: pendingCloseReason ?? 'close-button',
     location,
   });
@@ -543,8 +544,8 @@ const noteItems = computed(() => stringsFromDict('notes').map((content) => ({ ti
 // motivo — o que separa "saiu sem decidir" de "usou a saída do rodapé" — não
 // aparecia para quem lê.
 const analyticsItems = computed(() => [
-  { event: 'drawer_open',  trigger: toPlainText(tContent('states.open.trigger')),        payload: "{ component: 'drawer', location, label }" },
-  { event: 'drawer_close', trigger: toPlainText(tContent('accessibility.keyboard.escape')), payload: "{ component: 'drawer', location, label, reason }" },
+  { event: 'drawer_open',  trigger: toPlainText(tContent('states.open.trigger')),        payload: "{ component: 'drawer', location, trigger_id }" },
+  { event: 'drawer_close', trigger: toPlainText(tContent('accessibility.keyboard.escape')), payload: "{ component: 'drawer', location, trigger_id, reason }" },
 ]);
 
 const functionalTestItems = computed(() =>

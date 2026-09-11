@@ -3079,6 +3079,21 @@ function auditVocabularioPayload() {
             + 'o texto do gatilho, e texto traduzido parte o evento em um valor por idioma no GA4',
         });
       }
+
+      // Payload da família modal com `label`: até 2026-09-10 o AlertDialog, o
+      // Sheet e o Drawer mandavam quem abriu sob `label`, e a dona unificou em
+      // `trigger_id`. No código quem reprova é o tipo (`label?: never`); aqui a
+      // leitura é do payload DOCUMENTADO — conteúdo e PRD —, que o build não
+      // abre. `action_label` não casa: `_` é caractere de palavra, e o `\b` não
+      // separa.
+      if (/\{\s*component\s*:\s*\\?["']?(?:dialog|alert-dialog|sheet|drawer)\\?["']?\s*,[^}]*\blabel\b/.test(linha)) {
+        violations.push({
+          category: 'analytics', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: rel, line: i + 1, rule: 'campo_gatilho_divergente',
+          message: 'payload de Dialog/AlertDialog/Sheet/Drawer com `label` — quem abriu vai em `trigger_id` '
+            + 'em todo painel (18-overlay.md §Analytics); o tipo dos cinco analytics.ts proíbe o campo antigo',
+        });
+      }
     });
   }
 

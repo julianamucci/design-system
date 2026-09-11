@@ -478,7 +478,7 @@ Componentes como **AlertDialog** (implementado sobre bits-ui) são overlays de d
 7. **`DocsAccessibility`** — `role="alertdialog"` + `aria-modal="true"`. Foco inicial no Cancel, por escolha explícita do wrapper do Content (não pela ordem do DOM); `Escape` fecha.
 8. **Stories** — arquivos `.stories.ts`, `-states` e `-variants`, sobre os wrappers `AlertDialogStory.svelte`, `AlertDialogControlledStory.svelte` e `AlertDialogWithoutDescriptionStory.svelte`. As que precisam do modal visível para o Chromatic nascem com `open: true`, e nenhuma transform publica `$state(true)` no painel Code — só o Playground, quando quem lê liga o control `open`: é andaime da captura, não o que quem copia escreve.
 9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco ao trigger; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
-10. **Analytics de produto** — além dos eventos de docs: `dialog_open`, `dialog_confirm` e `dialog_close`, todos com `{ component, label, location }`; o `dialog_close` leva `reason` (`escape`, `close-button`, `api`). `location` é a SEÇÃO do preview e chega por prop ao `AlertDialogDemo.svelte`, o preview vivo de Demonstração, Variantes e Do & Don't.
+10. **Analytics de produto** — além dos eventos de docs: `dialog_open`, `dialog_confirm` e `dialog_close`, todos com `{ component, trigger_id, location }`; o `dialog_close` leva `reason` (`escape`, `close-button`, `api`). `location` é a SEÇÃO do preview e chega por prop ao `AlertDialogDemo.svelte`, o preview vivo de Demonstração, Variantes e Do & Don't.
 
 ### Containers Passivos Stateless (padrão AspectRatio)
 

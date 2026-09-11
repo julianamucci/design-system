@@ -123,10 +123,11 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
 
 type AlertDialogDemoOptions = {
   /**
-   * Id ESTÁVEL do preview para o payload — nunca o texto do botão, que é
-   * traduzido e partiria o mesmo preview em um rótulo por idioma no GA4.
+   * Id ESTÁVEL do preview, que vai no `trigger_id` do payload — nunca o texto
+   * do botão, que é traduzido e partiria o mesmo preview em um rótulo por
+   * idioma no GA4. Até 2026-09-10 o campo do payload era `label`.
    */
-  label: string;
+  triggerId: string;
   location: DocsLocation;
   triggerLabel: string;
   triggerVariant: 'default' | 'destructive' | 'outline';
@@ -149,7 +150,7 @@ type AlertDialogDemoOptions = {
  * fechamento que ela provoca.
  */
 function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
-  const payload = { component: 'alert-dialog' as const, label: opts.label, location: opts.location };
+  const payload = { component: 'alert-dialog' as const, trigger_id: opts.triggerId, location: opts.location };
   return createAlertDialog({
     trigger: createButton({ variant: opts.triggerVariant, label: opts.triggerLabel }),
     title: opts.title,
@@ -169,7 +170,7 @@ function buildAlertDialogDemo(opts: AlertDialogDemoOptions): HTMLElement {
   });
 }
 
-type DemoContent = Omit<AlertDialogDemoOptions, 'label' | 'location'>;
+type DemoContent = Omit<AlertDialogDemoOptions, 'triggerId' | 'location'>;
 
 /**
  * O exemplo destrutivo de `demonstration.labels`. Lido a cada chamada, e não
@@ -305,8 +306,8 @@ export function createAlertDialogDocs(): HTMLElement {
             wrap.dataset.spacing = 'md';
             wrap.dataset.justify = 'center';
             wrap.append(
-              buildAlertDialogDemo({ ...destructiveContent(), label: 'destructive', location: 'docs_demo' }),
-              buildAlertDialogDemo({ ...neutralContent(), label: 'neutral', location: 'docs_demo' }),
+              buildAlertDialogDemo({ ...destructiveContent(), triggerId: 'destructive', location: 'docs_demo' }),
+              buildAlertDialogDemo({ ...neutralContent(), triggerId: 'neutral', location: 'docs_demo' }),
             );
             return wrap;
           },
@@ -407,7 +408,7 @@ export function createAlertDialogDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildAlertDialogDemo({
                 ...destructiveContent(),
-                label: 'pair1-do',
+                triggerId: 'pair1-do',
                 location: 'docs_do_dont',
               }),
               dontPreviewFactory: () => buildAlertDialogDemo({
@@ -416,7 +417,7 @@ export function createAlertDialogDocs(): HTMLElement {
                 description: t('doDont.pair1.dontExample.description'),
                 cancelLabel: t('doDont.pair1.dontExample.cancel'),
                 actionLabel: t('doDont.pair1.dontExample.action'),
-                label: 'pair1-dont',
+                triggerId: 'pair1-dont',
                 location: 'docs_do_dont',
               }),
             },
@@ -427,13 +428,13 @@ export function createAlertDialogDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildAlertDialogDemo({
                 ...destructiveContent(),
-                label: 'pair2-do',
+                triggerId: 'pair2-do',
                 location: 'docs_do_dont',
               }),
               dontPreviewFactory: () => buildAlertDialogDemo({
                 ...destructiveContent(),
                 tone: 'default',
-                label: 'pair2-dont',
+                triggerId: 'pair2-dont',
                 location: 'docs_do_dont',
               }),
             },
@@ -487,7 +488,7 @@ const dialog = createAlertDialog({
               code: codeDestructive,
               previewFactory: () => buildAlertDialogDemo({
                 ...destructiveContent(),
-                label: 'destructive',
+                triggerId: 'destructive',
                 location: 'docs_variantes',
               }),
             },
@@ -497,7 +498,7 @@ const dialog = createAlertDialog({
               code: codeDefault,
               previewFactory: () => buildAlertDialogDemo({
                 ...neutralContent(),
-                label: 'neutral',
+                triggerId: 'neutral',
                 location: 'docs_variantes',
               }),
             },

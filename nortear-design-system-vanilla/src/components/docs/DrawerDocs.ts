@@ -104,8 +104,10 @@ function itemsFromDict<K extends string>(
  * O evento nasce AQUI, na camada de produto: a fábrica de UI não importa
  * `@/lib/analytics`, e há portão para isso (`analytics_in_ui_primitive`).
  *
- * `label` carrega a DIREÇÃO — valor estável, não localizado. O título é texto
- * traduzido e partiria o mesmo evento em três valores no GA4, um por idioma.
+ * `trigger_id` carrega a DIREÇÃO — valor estável, não localizado. O título é
+ * texto traduzido e partiria o mesmo evento em três valores no GA4, um por
+ * idioma. Até 2026-09-10 o campo era `label`; a dona unificou em `trigger_id`
+ * o campo de quem abriu, em toda a família de overlay.
  *
  * `location` vem de QUEM CHAMA, porque ele existe para dizer de ONDE veio o
  * clique: painel vivo em Variantes, Composições ou Do & Dont é clique tão real
@@ -124,17 +126,17 @@ function itemsFromDict<K extends string>(
  * decidir nada.
  *
  * A direção sai daqui JUNTO com o rastreio, e não de um campo à parte: com duas
- * fontes, o rótulo do evento pode divergir do painel que o disparou.
+ * fontes, o `trigger_id` do evento pode divergir do painel que o disparou.
  */
 function drawerTracking(direction: DrawerDirection, location: string) {
   return {
     direction,
     onOpenChange: (open: boolean) => {
       if (!open) return;
-      track('drawer_open', { component: 'drawer', label: direction, location });
+      track('drawer_open', { component: 'drawer', trigger_id: direction, location });
     },
     onClose: (reason: DrawerCloseReason) => {
-      track('drawer_close', { component: 'drawer', label: direction, reason, location });
+      track('drawer_close', { component: 'drawer', trigger_id: direction, reason, location });
     },
   };
 }
@@ -893,12 +895,12 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
             {
               event: 'drawer_open',
               trigger: 'onOpenChange(true)',
-              payload: "{ component: 'drawer', location, label }",
+              payload: "{ component: 'drawer', location, trigger_id }",
             },
             {
               event: 'drawer_close',
               trigger: 'onClose(reason)',
-              payload: "{ component: 'drawer', location, label, reason }",
+              payload: "{ component: 'drawer', location, trigger_id, reason }",
             },
             {
               event: '—',

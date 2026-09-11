@@ -309,11 +309,16 @@ segura, está por extenso em `hover-card.md` §8.
 
 | evento | quando | payload |
 |---|---|---|
-| `dialog_open` | o painel abre | `{ component: "sheet", label, location }` |
-| `dialog_close` | o painel fecha | `{ component: "sheet", label, location, reason }` |
+| `dialog_open` | o painel abre | `{ component: "sheet", trigger_id, location }` |
+| `dialog_close` | o painel fecha | `{ component: "sheet", trigger_id, location, reason }` |
+| `dialog_confirm` | a ação primária do rodapé é executada | `{ component: "sheet", trigger_id, action, location }` |
 
-**`label` carrega o `side`** — valor estável (`"right"`, `"left"`…), nunca texto
-traduzido. O evento é o do Dialog de propósito: as duas peças respondem à mesma
+**`trigger_id` carrega o `side`** — valor estável (`"right"`, `"left"`…), nunca
+texto traduzido: nas demonstrações cada gatilho abre um lado, e o lado é o id
+dele. Até 2026-09-10 o campo era `label`, e o Dialog, na mesma família, mandava
+`trigger_id`; a dona unificou em `trigger_id` (`18-overlay.md` §Analytics). Os
+valores não mudaram. O `dialog_confirm` já era disparado pelas cinco e faltava
+nesta tabela. O evento é o do Dialog de propósito: as duas peças respondem à mesma
 pergunta de produto, e separar as séries esconderia isso.
 
 **`reason` é obrigatório, no vocabulário da família** — `escape`, `overlay`,

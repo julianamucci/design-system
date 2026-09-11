@@ -139,6 +139,10 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   // factory). pendingReason sobrepõe o reason 'overlay' desse caminho sintético
   // para que cancel/apply reportem o motivo semântico correto.
   let pendingReason: 'close-button' | 'api' | null = null;
+  // Quem abriu é o LADO — valor estável, nunca o texto traduzido do gatilho.
+  // Vai no `trigger_id` dos três eventos; até 2026-09-10 era `label`, e o
+  // `dialog_confirm` não levava campo nenhum de gatilho.
+  const triggerId = opts.side ?? 'right';
   const closeFromAction = () => {
     const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
     overlay?.click();
@@ -150,6 +154,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   apply.addEventListener('click', () => {
     track('dialog_confirm', {
       component: 'sheet',
+      trigger_id: triggerId,
       action: 'apply',
       location: opts.location,
     });
@@ -169,7 +174,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
         if (opts.srOnlyHeader) hideHeaderVisually();
         track('dialog_open', {
           component: 'sheet',
-          label: opts.side ?? 'right',
+          trigger_id: triggerId,
           location: opts.location,
         });
       }
@@ -177,7 +182,7 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
     onClose: (reason) => {
       track('dialog_close', {
         component: 'sheet',
-        label: opts.side ?? 'right',
+        trigger_id: triggerId,
         reason: pendingReason ?? reason,
         location: opts.location,
       });
@@ -736,13 +741,13 @@ createSheet({
                   description: t('variants.compositions.secondaryNavigation.panelDescription'),
                   content: buildSecondaryNavBody(),
                   // Preview VIVO: clique aqui é tão real quanto na demonstração.
-                  // Mesmo padrão do `buildSheetDemo` — `label` carrega o side,
-                  // que é valor estável, nunca texto traduzido.
+                  // Mesmo padrão do `buildSheetDemo` — `trigger_id` carrega o
+                  // side, que é valor estável, nunca texto traduzido.
                   onOpenChange: (open) => {
                     if (open) {
                       track('dialog_open', {
                         component: 'sheet',
-                        label: 'left',
+                        trigger_id: 'left',
                         location: 'docs_composicoes',
                       });
                     }
@@ -750,7 +755,7 @@ createSheet({
                   onClose: (reason) => {
                     track('dialog_close', {
                       component: 'sheet',
-                      label: 'left',
+                      trigger_id: 'left',
                       reason,
                       location: 'docs_composicoes',
                     });
@@ -829,6 +834,7 @@ createSheet({
                 save.addEventListener('click', () => {
                   track('dialog_confirm', {
                     component: 'sheet',
+                    trigger_id: 'right',
                     action: 'save',
                     location: 'docs_composicoes',
                   });
@@ -844,7 +850,7 @@ createSheet({
                     if (open) {
                       track('dialog_open', {
                         component: 'sheet',
-                        label: 'right',
+                        trigger_id: 'right',
                         location: 'docs_composicoes',
                       });
                     }
@@ -852,7 +858,7 @@ createSheet({
                   onClose: (reason) => {
                     track('dialog_close', {
                       component: 'sheet',
-                      label: 'right',
+                      trigger_id: 'right',
                       reason,
                       location: 'docs_composicoes',
                     });
@@ -911,7 +917,7 @@ createSheet({
                     if (open) {
                       track('dialog_open', {
                         component: 'sheet',
-                        label: 'bottom',
+                        trigger_id: 'bottom',
                         location: 'docs_composicoes',
                       });
                     }
@@ -919,7 +925,7 @@ createSheet({
                   onClose: (reason) => {
                     track('dialog_close', {
                       component: 'sheet',
-                      label: 'bottom',
+                      trigger_id: 'bottom',
                       reason,
                       location: 'docs_composicoes',
                     });

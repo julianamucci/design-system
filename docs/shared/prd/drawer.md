@@ -381,11 +381,14 @@ zera a escada inteira sob a preferência. O mecanismo está por extenso em
 
 | evento | quando | payload |
 |---|---|---|
-| `drawer_open` | o painel abre | `{ component: "drawer", label, location }` |
+| `drawer_open` | o painel abre | `{ component: "drawer", trigger_id, location }` |
 | `drawer_close` | o painel fecha | idem, mais `reason` |
 
-**`label` carrega a DIREÇÃO** — `bottom`, `right`, `left` ou `top` —, nunca o
-título traduzido, que partiria a mesma série em um valor por idioma no GA4.
+**`trigger_id` carrega a DIREÇÃO** — `bottom`, `right`, `left` ou `top` —, nunca
+o título traduzido, que partiria a mesma série em um valor por idioma no GA4. O
+campo era `label` até 2026-09-10, quando a dona unificou o campo de quem abriu em
+`trigger_id` na categoria inteira (`18-overlay.md` §Analytics); os valores não
+mudaram, e o tipo proíbe o campo antigo (`label?: never`).
 
 **`reason` é obrigatório no fechamento**, e tem vocabulário fechado no tipo:
 `escape`, `overlay`, `close-button` ou `api`. É o vocabulário do design

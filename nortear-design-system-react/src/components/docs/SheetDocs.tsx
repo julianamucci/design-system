@@ -138,13 +138,13 @@ type FiltersFormDemoProps = DemoProps & {
 function SheetDemo({ trigger, title, description, cancel, apply, body, side = "right", location }: DemoProps) {
   return (
     <div style={{ contain: "layout" }}>
-      {/* label usa o SIDE (valor estável, não localizado) — texto traduzido
+      {/* trigger_id usa o SIDE (valor estável, não localizado) — texto traduzido
           fragmentaria o mesmo evento em 3 valores no GA4. */}
       <Sheet
         onOpenChange={(open, details) =>
           track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
-            label: side,
+            trigger_id: side,
             ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
             location,
           })
@@ -167,6 +167,7 @@ function SheetDemo({ trigger, title, description, cancel, apply, body, side = "r
               onClick={() =>
                 track("dialog_confirm", {
                   component: "sheet",
+                  trigger_id: side,
                   action: "apply",
                   location,
                 })
@@ -185,13 +186,13 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCate
   const side = "right";
   return (
     <div style={{ contain: "layout" }}>
-      {/* label usa o SIDE (valor estável, não localizado) — texto traduzido
+      {/* trigger_id usa o SIDE (valor estável, não localizado) — texto traduzido
           fragmentaria o mesmo evento em 3 valores no GA4. */}
       <Sheet
         onOpenChange={(open, details) =>
           track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
-            label: side,
+            trigger_id: side,
             ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
             location,
           })
@@ -214,6 +215,7 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCate
                 e.preventDefault();
                 track("dialog_confirm", {
                   component: "sheet",
+                  trigger_id: side,
                   action: "apply",
                   location,
                 });
@@ -481,7 +483,7 @@ export function SheetDocs() {
                   onOpenChange={(open, details) =>
                     track(open ? "dialog_open" : "dialog_close", {
                       component: "sheet",
-                      label: "right",
+                      trigger_id: "right",
                       ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
                       location: "docs_do_dont",
                     })
@@ -513,6 +515,7 @@ export function SheetDocs() {
                         onClick={() =>
                           track("dialog_confirm", {
                             component: "sheet",
+                            trigger_id: "right",
                             action: "apply",
                             location: "docs_do_dont",
                           })
@@ -716,7 +719,7 @@ export function SheetDocs() {
                   onOpenChange={(open, details) =>
                     track(open ? "dialog_open" : "dialog_close", {
                       component: "sheet",
-                      label: "left",
+                      trigger_id: "left",
                       ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
                       location: "docs_composicoes",
                     })
@@ -799,7 +802,7 @@ export function SheetDocs() {
                   onOpenChange={(open, details) =>
                     track(open ? "dialog_open" : "dialog_close", {
                       component: "sheet",
-                      label: "right",
+                      trigger_id: "right",
                       ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
                       location: "docs_composicoes",
                     })
@@ -826,6 +829,7 @@ export function SheetDocs() {
                           e.preventDefault();
                           track("dialog_confirm", {
                             component: "sheet",
+                            trigger_id: "right",
                             action: "save",
                             location: "docs_composicoes",
                           });
@@ -907,7 +911,7 @@ export function SheetDocs() {
                   onOpenChange={(open, details) =>
                     track(open ? "dialog_open" : "dialog_close", {
                       component: "sheet",
-                      label: "bottom",
+                      trigger_id: "bottom",
                       ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
                       location: "docs_composicoes",
                     })

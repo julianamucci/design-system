@@ -515,7 +515,7 @@ Componentes como **AlertDialog** (implementação vanilla-TS com foco-trap manua
 7. **`DocsAccessibility`** — `role="alertdialog"` + `aria-modal="true"` aplicados pela factory. Focus trap manual via listeners `keydown` em Tab/Shift+Tab. Foco inicial no Cancel; `Escape` fecha.
 8. **Stories** — arquivos `.stories.ts`, `-states` e `-variants`. As que precisam do modal visível para o Chromatic nascem abertas por `defaultOpen`, e nenhuma transform imprime a opção no painel Code: é andaime da captura, não o que quem copia escreve.
 9. **Play function** — 6 critérios: trigger abre com `role="alertdialog"`; Cancel fecha + retorna foco ao trigger; Escape fecha; Tab não escapa (focus trap); overlay **não** fecha; Action fecha + dispara callback.
-10. **Analytics de produto** — além dos eventos de docs: `dialog_open`, `dialog_confirm` e `dialog_close`, todos com `{ component, label, location }`; o `dialog_close` leva o `reason` que o `onClose` da fábrica entrega (`escape`, `close-button`, `api`). `location` é a SEÇÃO do preview, por parâmetro.
+10. **Analytics de produto** — além dos eventos de docs: `dialog_open`, `dialog_confirm` e `dialog_close`, todos com `{ component, trigger_id, location }`; o `dialog_close` leva o `reason` que o `onClose` da fábrica entrega (`escape`, `close-button`, `api`). `location` é a SEÇÃO do preview, por parâmetro.
 
 ### Containers Passivos Stateless (padrão AspectRatio)
 

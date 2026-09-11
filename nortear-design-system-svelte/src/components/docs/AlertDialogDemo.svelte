@@ -38,12 +38,13 @@
      */
     location: 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
     /**
-     * Rótulo estável do evento. Sem ele, sai do tom (`destructive` /
-     * `neutral`); o Do & Don't passa o do par (`pair1-do`, `pair2-dont`…),
-     * porque ali o tom não distingue o exemplo certo do errado. Nunca texto
-     * traduzido: partiria o mesmo evento em três valores no GA4.
+     * Id estável do gatilho, que vai no `trigger_id` dos eventos. Sem ele, sai
+     * do tom (`destructive` / `neutral`); o Do & Don't passa o do par
+     * (`pair1-do`, `pair2-dont`…), porque ali o tom não distingue o exemplo
+     * certo do errado. Nunca texto traduzido: partiria o mesmo evento em três
+     * valores no GA4.
      */
-    trackLabel?: string;
+    triggerId?: string;
   }
 
   const {
@@ -55,10 +56,10 @@
     triggerVariant = 'destructive',
     tone = 'default',
     location,
-    trackLabel,
+    triggerId: triggerIdOverride,
   }: Props = $props();
 
-  const label = $derived(trackLabel ?? (tone === 'destructive' ? 'destructive' : 'neutral'));
+  const triggerId = $derived(triggerIdOverride ?? (tone === 'destructive' ? 'destructive' : 'neutral'));
 
   // O `onOpenChange` da lib não diz por que o diálogo fechou, e o
   // `dialog_close` exige `reason` (`18-overlay.md` §Analytics). Três caminhos
@@ -73,12 +74,12 @@
   function handleOpenChange(open: boolean): void {
     if (open) {
       pendingCloseReason = null;
-      track('dialog_open', { component: 'alert-dialog', label, location });
+      track('dialog_open', { component: 'alert-dialog', trigger_id: triggerId, location });
       return;
     }
     track('dialog_close', {
       component: 'alert-dialog',
-      label,
+      trigger_id: triggerId,
       reason: pendingCloseReason ?? 'close-button',
       location,
     });
@@ -87,7 +88,7 @@
 
   function handleConfirm(): void {
     pendingCloseReason = 'api';
-    track('dialog_confirm', { component: 'alert-dialog', label, location });
+    track('dialog_confirm', { component: 'alert-dialog', trigger_id: triggerId, location });
   }
 </script>
 

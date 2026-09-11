@@ -93,10 +93,11 @@ type DocsLocation = "docs_demo" | "docs_variantes" | "docs_do_dont";
 // portal com overlay modal, e um preview aberto cobriria a página no load.
 type AlertDialogDemoProps = {
   /**
-   * Id ESTÁVEL do cenário no payload. O título chega traduzido, e texto
-   * traduzido parte um evento em três valores no GA4 (um por idioma).
+   * Id ESTÁVEL do cenário, que vai no `trigger_id` do payload. O título chega
+   * traduzido, e texto traduzido parte um evento em três valores no GA4 (um por
+   * idioma).
    */
-  label: string;
+  triggerId: string;
   location: DocsLocation;
   /** Variante do Button no gatilho. */
   triggerVariant: "destructive" | "outline";
@@ -113,7 +114,7 @@ type AlertDialogDemoProps = {
 // variantes do Button — o componente, a fiação de eventos e as duas saídas do
 // rodapé (C7) são sempre os mesmos.
 function AlertDialogDemo({
-  label,
+  triggerId,
   location,
   triggerVariant,
   actionVariant,
@@ -128,7 +129,7 @@ function AlertDialogDemo({
       onOpenChange={(open, details) =>
         track(open ? "dialog_open" : "dialog_close", {
           component: "alert-dialog",
-          label,
+          trigger_id: triggerId,
           // Escape chega aqui como `escape-key` e sai `escape`; o Cancelar,
           // como `close-button`; a ação, como `api` pela marca abaixo.
           ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
@@ -154,7 +155,7 @@ function AlertDialogDemo({
               markConfirmation()
               track("dialog_confirm", {
                 component: "alert-dialog",
-                label,
+                trigger_id: triggerId,
                 location,
               })
             }}
@@ -361,14 +362,14 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-cluster" data-spacing="md" data-justify="center">
           <AlertDialogDemo
-            label="destructive"
+            triggerId="destructive"
             location="docs_demo"
             triggerVariant="destructive"
             actionVariant="destructive"
             {...destructiveLabels}
           />
           <AlertDialogDemo
-            label="neutral"
+            triggerId="neutral"
             location="docs_demo"
             triggerVariant="outline"
             {...neutralLabels}
@@ -484,7 +485,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             dontLabel: tNav("common.dont"),
             doPreview: (
               <AlertDialogDemo
-                label="pair1-do"
+                triggerId="pair1-do"
                 location="docs_do_dont"
                 triggerVariant="destructive"
                 actionVariant="destructive"
@@ -496,7 +497,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             // variantes do "faça", para que a comparação ensine uma coisa só.
             dontPreview: (
               <AlertDialogDemo
-                label="pair1-dont"
+                triggerId="pair1-dont"
                 location="docs_do_dont"
                 triggerVariant="destructive"
                 actionVariant="destructive"
@@ -515,7 +516,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             dontLabel: tNav("common.dont"),
             doPreview: (
               <AlertDialogDemo
-                label="pair2-do"
+                triggerId="pair2-do"
                 location="docs_do_dont"
                 triggerVariant="destructive"
                 actionVariant="destructive"
@@ -526,7 +527,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             // ação na variante padrão sob um gatilho destrutivo.
             dontPreview: (
               <AlertDialogDemo
-                label="pair2-dont"
+                triggerId="pair2-dont"
                 location="docs_do_dont"
                 triggerVariant="destructive"
                 {...destructiveLabels}
@@ -556,7 +557,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             code: codeDestructive,
             preview: (
               <AlertDialogDemo
-                label="destructive"
+                triggerId="destructive"
                 location="docs_variantes"
                 triggerVariant="destructive"
                 actionVariant="destructive"
@@ -570,7 +571,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             code: codeDefault,
             preview: (
               <AlertDialogDemo
-                label="neutral"
+                triggerId="neutral"
                 location="docs_variantes"
                 triggerVariant="outline"
                 {...neutralLabels}

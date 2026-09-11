@@ -431,15 +431,15 @@
         "payload": "Payload",
         "dialog_open": {
           "trigger": "Sheet abre (trigger ou controle externo)",
-          "payload": "{ component: \"sheet\", label, location }"
+          "payload": "{ component: \"sheet\", trigger_id, location }"
         },
         "dialog_close": {
           "trigger": "Sheet fecha (Escape, overlay ou ação)",
-          "payload": "{ component: \"sheet\", reason, location }"
+          "payload": "{ component: \"sheet\", trigger_id, reason, location }"
         },
         "dialog_confirm": {
           "trigger": "Ação primária do footer é executada",
-          "payload": "{ component: \"sheet\", action, location }"
+          "payload": "{ component: \"sheet\", trigger_id, action, location }"
         }
       }
     },
@@ -955,15 +955,15 @@
         "payload": "Payload",
         "dialog_open": {
           "trigger": "Sheet opens (trigger or external control)",
-          "payload": "{ component: \"sheet\", label, location }"
+          "payload": "{ component: \"sheet\", trigger_id, location }"
         },
         "dialog_close": {
           "trigger": "Sheet closes (Escape, overlay or action)",
-          "payload": "{ component: \"sheet\", reason, location }"
+          "payload": "{ component: \"sheet\", trigger_id, reason, location }"
         },
         "dialog_confirm": {
           "trigger": "Footer primary action is executed",
-          "payload": "{ component: \"sheet\", action, location }"
+          "payload": "{ component: \"sheet\", trigger_id, action, location }"
         }
       }
     },
@@ -1479,15 +1479,15 @@
         "payload": "Payload",
         "dialog_open": {
           "trigger": "Sheet se abre (trigger o control externo)",
-          "payload": "{ component: \"sheet\", label, location }"
+          "payload": "{ component: \"sheet\", trigger_id, location }"
         },
         "dialog_close": {
           "trigger": "Sheet se cierra (Escape, overlay o acción)",
-          "payload": "{ component: \"sheet\", reason, location }"
+          "payload": "{ component: \"sheet\", trigger_id, reason, location }"
         },
         "dialog_confirm": {
           "trigger": "La acción primaria del pie se ejecuta",
-          "payload": "{ component: \"sheet\", action, location }"
+          "payload": "{ component: \"sheet\", trigger_id, action, location }"
         }
       }
     },

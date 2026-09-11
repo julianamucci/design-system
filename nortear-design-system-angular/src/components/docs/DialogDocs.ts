@@ -1059,7 +1059,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
    * `triggerId` é o id estável do exemplo, do vocabulário da página de
    * referência (`basic`, `with-form`, `do-dont-pair1-do`…) — nunca o texto
    * traduzido, que viraria três valores no GA4, um por idioma. O tipo de
-   * `dialog_open` exige o campo e proíbe `label` quando a peça é o Dialog.
+   * `dialog_open` exige o campo e proíbe `label`, em toda a família de diálogos.
    */
   protected onExampleOpenChange(
     triggerId: string,

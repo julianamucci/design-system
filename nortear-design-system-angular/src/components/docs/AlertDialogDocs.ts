@@ -858,24 +858,25 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
    * A confirmação de um diálogo VIVO da página — a docs page É o produto
    * consumidor deste design system.
    *
-   * `label` é a chave estável do exemplo, nunca o texto traduzido (o mesmo
-   * evento viraria três valores no GA4, um por idioma). `location` é a SEÇÃO
-   * onde o elemento está — `docs_demo`, `docs_variantes`, `docs_do_dont` — e vem
-   * do call site: com um valor cravado aqui, o funil somaria três seções numa.
+   * `triggerId` vai no `trigger_id`: é a chave estável do exemplo, nunca o
+   * texto traduzido (o mesmo evento viraria três valores no GA4, um por
+   * idioma). `location` é a SEÇÃO onde o elemento está — `docs_demo`,
+   * `docs_variantes`, `docs_do_dont` — e vem do call site: com um valor cravado
+   * aqui, o funil somaria três seções numa.
    */
-  protected trackConfirmation(label: string, location: string): void {
+  protected trackConfirmation(triggerId: string, location: string): void {
     // `dialog_confirm` e não um evento novo: é o que a tabela de analytics do
     // conteúdo compartilhado documenta, e ele já existe tipado em AnalyticsEvents.
     // Levanta a bandeira ANTES do fechamento: o `(click)` de quem consome roda
     // antes do listener de `host` da diretiva de fechar (armadilha 10 do
     // CLAUDE.md desta stack), igual ao Dialog.
     this.confirmed = true;
-    track('dialog_confirm', { component: 'alert-dialog', label, location });
+    track('dialog_confirm', { component: 'alert-dialog', trigger_id: triggerId, location });
   }
 
   /**
    * `dialog_open` e `dialog_close` de todo diálogo vivo da página, com o mesmo
-   * `label` e `location` da confirmação.
+   * `trigger_id` e `location` da confirmação.
    *
    * O motivo segue o vocabulário do design system (`18-overlay.md` §Analytics).
    * A ação que confirma e o Cancelar são as duas partes de fechar, e o radix-ng
@@ -884,15 +885,15 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
    * `escape-key` e sai como `escape`. Clique fora não fecha este componente,
    * então `overlay` não aparece.
    */
-  protected trackOpenChange(label: string, location: string, event: RdxDialogOpenChange): void {
+  protected trackOpenChange(triggerId: string, location: string, event: RdxDialogOpenChange): void {
     if (event.open) {
       this.confirmed = false;
-      track('dialog_open', { component: 'alert-dialog', label, location });
+      track('dialog_open', { component: 'alert-dialog', trigger_id: triggerId, location });
       return;
     }
     const reason = this.confirmed ? 'api' : (ALERT_CLOSE_REASON[event.reason] ?? 'api');
     this.confirmed = false;
-    track('dialog_close', { component: 'alert-dialog', label, reason, location });
+    track('dialog_close', { component: 'alert-dialog', trigger_id: triggerId, reason, location });
   }
 
   private confirmed = false;

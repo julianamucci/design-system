@@ -175,8 +175,8 @@ const dragWatch = {
 };
 
 /**
- * `label` leva a DIREÇÃO, valor estável — nunca o título, que é texto traduzido
- * e partiria a mesma série em três valores no GA4.
+ * `trigger_id` leva a DIREÇÃO, valor estável — nunca o título, que é texto
+ * traduzido e partiria a mesma série em três valores no GA4.
  *
  * `location` vem de QUEM CHAMA: ele responde de ONDE saiu a interação, e um
  * `docs_demo` cravado faria a página inteira responder a mesma coisa. Painel
@@ -186,12 +186,12 @@ const dragWatch = {
 function trackDrawer(location: string, direction: DrawerDirection, open: boolean) {
   if (open) {
     pendingCloseReason = null;
-    track("drawer_open", { component: "drawer", label: direction, location });
+    track("drawer_open", { component: "drawer", trigger_id: direction, location });
     return;
   }
   track("drawer_close", {
     component: "drawer",
-    label: direction,
+    trigger_id: direction,
     reason: pendingCloseReason ?? "close-button",
     location,
   });
@@ -1144,12 +1144,12 @@ interface DrawerProps {
           {
             event: "drawer_open",
             trigger: toPlainText(tContent("states.open.trigger")),
-            payload: "component, label, location",
+            payload: "component, trigger_id, location",
           },
           {
             event: "drawer_close",
             trigger: toPlainText(tContent("accessibility.keyboard.escape")),
-            payload: "component, label, reason, location",
+            payload: "component, trigger_id, reason, location",
           },
         ]}
       />

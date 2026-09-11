@@ -118,7 +118,9 @@ A medição que pesou: o campo tinha TRÊS nomes para o mesmo papel — um aqui 
 popover, `trigger_id` no tooltip (sozinho) e `label` nos quatro modais e no
 command. Os dois primeiros nasceram no MESMO commit (`fb2ba485d`, 2026-07-27), a
 fiação em massa de 125 arquivos: uma passagem só emitiu dois nomes para o mesmo
-campo, porque nada declarava um. Portão: `campo_gatilho_divergente`.
+campo, porque nada declarava um. Portão: `campo_gatilho_divergente`. Os modais
+chegaram ao mesmo nome em 2026-09-10 — o Dialog primeiro, e AlertDialog, Sheet e
+Drawer no mesmo dia, por decisão da dona (`18-overlay.md` §Analytics).
 
 ## 4. Anatomia
 

@@ -217,6 +217,14 @@ O vocabulário do payload — `component` em kebab-case, `trigger_id` para o
 gatilho, `label` estável e nunca texto — é regra de todos os eventos, e está em
 [`07-analytics.md`](07-analytics.md). O que é desta categoria:
 
+- **Quem abriu vai em `trigger_id`, em todo painel** — `dialog_*` (Dialog,
+  AlertDialog, Sheet), `drawer_*`, `popover_open`, `hover_card_open` e
+  `tooltip_view`. O valor é o id estável do gatilho; no Sheet e no Drawer das
+  demonstrações, o lado que ele abre. Até 2026-09-10 o mesmo papel tinha três
+  nomes, e o último a cair foi `label`, no AlertDialog, no Sheet e no Drawer —
+  a dona unificou em `trigger_id`. Os menus ficam de fora: lá quem identifica é o
+  menu, no campo `menu`.
+
 - **O fechamento diz por que fechou**, com `reason` **obrigatório** e de
   vocabulário do design system, nunca o da lib — quatro palavras, iguais em
   `dialog_close` (Dialog, Sheet, AlertDialog), `drawer_close`,
@@ -283,7 +291,7 @@ evitar.
 | O ponteiro pinta o destaque em toda peça | D4 do `dropdown-menu.md` | `destaque_sem_hover` (peça pintada por `[data-highlighted]` sem o `:hover` par na folha; select e combobox são exceções declaradas, porque o vanilla destaca por ponteiro ali — premissa conferida no arquivo) | a COR do hover — a regra lê a presença do par, não se ele pinta o mesmo que o destaque. Nasceu em 2026-09-10: no vanilla o mouse não pintava marcação, rádio nem sub-gatilho |
 | Modalidade | aqui, §Modalidade | `modalidade_sem_condicao` | só a família NÃO-modal; o inverso é da suíte, que assere `aria-modal="true"` |
 | O `<form>` e o rodapé | aqui, §Formulário | `submit_fora_do_form` no conteúdo compartilhado; play lendo `button.form`, nas cinco | a varredura do código das stacks foi retirada em 2026-09-08 (a maioria dos achados era falsa) |
-| Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` · `location_fora_do_vocabulario` · `campo_de_payload_morto` · `rotulo_de_rastreio_texto` | — |
+| Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `campo_gatilho_divergente` (o nome antigo do Popover em qualquer lugar, e `label` no payload documentado de `dialog_*`/`drawer_*`) · `location_fora_do_vocabulario` · `campo_de_payload_morto` · `rotulo_de_rastreio_texto` · o TIPO: `label?: never` em `dialog_*` e `drawer_*` nos cinco `analytics.ts` | o nome do campo nos eventos que não são de painel — o menu usa `menu`, e nada cobra que continue assim |
 | O véu não desfoca | aqui, §Véu | `veu_com_desfoque` | — |
 | Corpo é `flex: 1 1 auto` | aqui, §O corpo que rola | `corpo_com_atalho_flex` | — |
 | Ordem dos botões no rodapé | `02-alinhamento-botoes.md` | play, nas cinco, no Dialog e no AlertDialog (story `Responsive`: ordem no DOM e `column-reverse` no mobile) | no Drawer, o DOM renderizado não é asserido em stack nenhuma; o snippet é, no Vue (`drawer.source.test.ts`) |

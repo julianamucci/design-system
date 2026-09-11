@@ -560,7 +560,7 @@ const a11yCritCols = computed(() => ({
           :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
           location="docs_do_dont"
-          track-label="pair1-do"
+          trigger-id="pair1-do"
         />
       </template>
       <template #dont-preview-0>
@@ -573,7 +573,7 @@ const a11yCritCols = computed(() => ({
           :action-label="tContent('doDont.pair1.dontExample.action')"
           tone="destructive"
           location="docs_do_dont"
-          track-label="pair1-dont"
+          trigger-id="pair1-dont"
         />
       </template>
       <template #do-preview-1>
@@ -586,7 +586,7 @@ const a11yCritCols = computed(() => ({
           :action-label="tContent('demonstration.labels.action')"
           tone="destructive"
           location="docs_do_dont"
-          track-label="pair2-do"
+          trigger-id="pair2-do"
         />
       </template>
       <template #dont-preview-1>
@@ -599,7 +599,7 @@ const a11yCritCols = computed(() => ({
           :action-label="tContent('demonstration.labels.action')"
           tone="default"
           location="docs_do_dont"
-          track-label="pair2-dont"
+          trigger-id="pair2-dont"
         />
       </template>
     </DocsDoDont>
