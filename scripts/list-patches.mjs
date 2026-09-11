@@ -19,7 +19,9 @@ import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const STACKS = ['nortear-design-system-react', 'nortear-design-system-vue', 'nortear-design-system-svelte', 'nortear-design-system-vanilla'];
+// As cinco stacks — `STACKS` em `scripts/audit.mjs` é a lista autoritativa. O angular
+// ficava de fora, e os marcadores dele não apareciam no inventário padrão.
+const STACKS = ['nortear-design-system-react', 'nortear-design-system-vue', 'nortear-design-system-svelte', 'nortear-design-system-vanilla', 'nortear-design-system-angular'];
 const EXTS = new Set(['.ts', '.tsx', '.vue', '.svelte', '.js']);
 const SKIP = new Set(['node_modules', '.storybook-static', 'storybook-static', 'dist', '.turbo', '.next', '.svelte-kit']);
 
