@@ -1,24 +1,17 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
+import type { MenubarCloseReason } from '@/components/ui/menubar';
 import {
-  Menubar,
-  MenubarCheckboxItem,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarRadioGroup,
-  MenubarRadioItem,
-  MenubarSeparator,
-  MenubarShortcut,
-  MenubarSub,
-  MenubarSubContent,
-  MenubarSubTrigger,
-  MenubarTrigger,
-} from '@/components/ui/menubar';
+  menubarSnippet,
+  type MenubarSnippetAction,
+  type MenubarSnippetEntry,
+  type MenubarSnippetMenu,
+} from '@/components/ui/menubar/menubar.source';
+import MenubarPreview from '@/components/docs/MenubarPreview.vue';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/menubar/translations.json';
 import uiTranslations from '@/i18n/ui.json';
@@ -62,13 +55,405 @@ const { t: tNav } = useTranslation(uiTranslations);
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
-  high: 'Alta',
-  medium: 'Média',
-  low: 'Baixa',
+  high: 'common.high',
+  medium: 'common.medium',
+  low: 'common.low',
 };
 
 function localPriority(raw: string): string {
-  return priorityKeyMap[raw] ?? raw;
+  return tNav(priorityKeyMap[raw] ?? 'common.high');
+}
+
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * Citar índice por índice trava a lista no tamanho de hoje: o conteúdo
+ * compartilhado ganha um item e ele simplesmente não existe para quem lê — sem
+ * erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu aqui: a
+ * página parava no nono critério funcional e no sétimo de acessibilidade, com o
+ * conteúdo já em dezesseis e oito.
+ */
+function stringsFromDict(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = t(`${base}.item${i}`, '');
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A mesma varredura para a lista cujo item é um OBJETO — critério funcional,
+ * story de regressão visual. O primeiro campo é quem decide se o item existe, e
+ * os demais acompanham.
+ */
+function entriesFromDict<K extends string>(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!t(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map((field) => [field, t(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
+}
+
+// ─── Analytics — barras vivas ─────────────────────────────────────────────────
+
+// Demonstração, Variantes e Do & Don't renderizam a barra VIVA, e abrir,
+// escolher e fechar ali é tão real quanto num app — por isso as três seções
+// disparam os três eventos, cada uma com a SUA `location`, que vem do CHAMADOR.
+// Até 2026-09-11 esta página não rastreava nada, e a tabela de analytics
+// prometia dois eventos — abertura de menu e atalho invocado — que não
+// existiam.
+//
+// `menu` e `label` são IDENTIFICADORES em inglês, nunca o rótulo traduzido:
+// "Salvar", "Save" e "Guardar" chegariam ao GA4 como três ações. Numa barra de
+// um menu só, `menu` é o id da prévia; numa barra de vários, o id da prévia
+// seguido do `value` do menu — que aqui é a chave do gatilho em
+// `demonstration.labels` (`demo-file`, `pair1-do-edit`). `label` é a chave do
+// item, em kebab-case.
+type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
+
+/**
+ * Os dois ouvintes de UMA barra. A barra desta stack emite o NOVO valor — o
+ * menu aberto, ou `''` — e, quando um menu fecha, o motivo (`escape`, `overlay`
+ * ou `api`). Quem guarda qual menu estava aberto é o ouvinte: fechar é sair do
+ * valor anterior, e passar ao vizinho é fechar um e abrir o outro. O `?? 'api'`
+ * só cobre o tipo: a barra sempre manda o motivo ao fechar.
+ *
+ * A escolha chega com o `value` do menu em que o item mora e o `value` da
+ * entrada — o id estável, nunca o rótulo traduzido. Marcar e escolher rádio
+ * também chegam aqui, e não fecham (C10).
+ */
+function trackMenubar(preview: string, location: DocsLocation, multiple: boolean) {
+  let current = '';
+  const menuId = (value: string) => (multiple ? `${preview}-${value}` : preview);
+  return {
+    valueChange(value: string, reason?: MenubarCloseReason) {
+      if (value === current) return;
+      if (current) {
+        track('menubar_close', {
+          component: 'menubar',
+          menu: menuId(current),
+          reason: reason ?? 'api',
+          location,
+        });
+      }
+      current = value;
+      if (value) track('menubar_open', { component: 'menubar', menu: menuId(value), location });
+    },
+    select(menu: string, label: string) {
+      track('menubar_item_select', { component: 'menubar', menu: menuId(menu), label, location });
+    },
+  };
+}
+
+// Criados uma vez: o template recebe as FUNÇÕES, e cada par guarda o estado da
+// SUA barra.
+const tracked = {
+  demo:           trackMenubar('demo', 'docs_demo', true),
+  pair1Do:        trackMenubar('pair1-do', 'docs_do_dont', true),
+  pair1Dont:      trackMenubar('pair1-dont', 'docs_do_dont', false),
+  pair2Do:        trackMenubar('pair2-do', 'docs_do_dont', false),
+  pair2Dont:      trackMenubar('pair2-dont', 'docs_do_dont', false),
+  default:        trackMenubar('default', 'docs_variantes', false),
+  destructive:    trackMenubar('destructive', 'docs_variantes', false),
+  withShortcuts:  trackMenubar('with-shortcuts', 'docs_variantes', false),
+  withCheckbox:   trackMenubar('with-checkbox', 'docs_variantes', false),
+  withRadio:      trackMenubar('with-radio', 'docs_variantes', false),
+  editorComplete: trackMenubar('editor-complete', 'docs_variantes', true),
+};
+
+// ─── As barras como dado ──────────────────────────────────────────────────────
+//
+// Toda barra viva desta página é uma LISTA de menus, e é a mesma lista que
+// imprime o código do card de Variantes (`menubarSnippet`) — o código mostra o
+// que a prévia desenha, no idioma de quem lê e com o estado com que ela abre.
+// Até 2026-09-11 cada card levava um literal de código em português nos três
+// idiomas, sem os `ref` das marcações e da escolha única que ele ligava.
+//
+// O `value` de cada menu é a chave do gatilho (`file`, `edit`…), e é ele que
+// compõe o `menu` do evento numa barra de vários menus. O `value` de cada
+// entrada é o id ESTÁVEL: o `label` do evento de escolha e, nas marcações e na
+// escolha única, o nome do `ref` no código.
+
+const bars = computed(() => {
+  const action = (
+    label: string,
+    value: string,
+    extra: Pick<MenubarSnippetAction, 'shortcut' | 'destructive'> = {},
+  ): MenubarSnippetAction => ({ kind: 'item', label, value, ...extra });
+  const separator: MenubarSnippetEntry = { kind: 'separator' };
+
+  const file = tContent('demonstration.labels.file');
+  const edit = tContent('demonstration.labels.edit');
+  const view = tContent('demonstration.labels.view');
+  const appearance = tContent('demonstration.labels.appearance');
+
+  const newShortcut = { shortcut: tContent('demonstration.labels.newShortcut') };
+  const openShortcut = { shortcut: tContent('demonstration.labels.openShortcut') };
+  const saveShortcut = { shortcut: tContent('demonstration.labels.saveShortcut') };
+  const quitShortcut = { shortcut: tContent('demonstration.labels.quitShortcut') };
+  const undoShortcut = { shortcut: tContent('demonstration.labels.undoShortcut') };
+  const redoShortcut = { shortcut: tContent('demonstration.labels.redoShortcut') };
+  const copyShortcut = { shortcut: tContent('demonstration.labels.copyShortcut') };
+  const pasteShortcut = { shortcut: tContent('demonstration.labels.pasteShortcut') };
+  const fullScreenShortcut = { shortcut: tContent('demonstration.labels.fullScreenShortcut') };
+
+  const newLabel = tContent('demonstration.labels.new');
+  const openLabel = tContent('demonstration.labels.open');
+  const saveLabel = tContent('demonstration.labels.save');
+  const quitLabel = tContent('demonstration.labels.quit');
+  const undoLabel = tContent('demonstration.labels.undo');
+  const redoLabel = tContent('demonstration.labels.redo');
+  const copyLabel = tContent('demonstration.labels.copy');
+  const pasteLabel = tContent('demonstration.labels.paste');
+  const fullScreenLabel = tContent('demonstration.labels.fullScreen');
+  const darkModeLabel = tContent('demonstration.labels.darkMode');
+  const showRulerLabel = tContent('demonstration.labels.showRuler');
+  const pdf = action(tContent('demonstration.labels.pdf'), 'pdf');
+
+  return {
+    // UMA barra, quatro menus — a do vanilla, que é a referência.
+    demo: [
+      {
+        value: 'file',
+        trigger: file,
+        entries: [
+          action(newLabel, 'new', newShortcut),
+          action(openLabel, 'open', openShortcut),
+          action(saveLabel, 'save', saveShortcut),
+          separator,
+          {
+            kind: 'submenu',
+            label: tContent('demonstration.labels.export'),
+            items: [pdf, action(tContent('demonstration.labels.csv'), 'csv')],
+          },
+          separator,
+          action(quitLabel, 'quit', quitShortcut),
+        ],
+      },
+      {
+        value: 'edit',
+        trigger: edit,
+        entries: [
+          action(undoLabel, 'undo', undoShortcut),
+          action(redoLabel, 'redo', redoShortcut),
+          separator,
+          action(tContent('demonstration.labels.cut'), 'cut', { shortcut: tContent('demonstration.labels.cutShortcut') }),
+          action(copyLabel, 'copy', copyShortcut),
+          action(pasteLabel, 'paste', pasteShortcut),
+        ],
+      },
+      {
+        value: 'view',
+        trigger: view,
+        entries: [
+          // O rótulo mora DENTRO do grupo: é o que faz dele o nome do grupo.
+          {
+            kind: 'group',
+            label: appearance,
+            items: [
+              { kind: 'checkbox', label: darkModeLabel, value: 'dark-mode', checked: false },
+              { kind: 'checkbox', label: showRulerLabel, value: 'show-ruler', checked: true },
+            ],
+          },
+          separator,
+          action(fullScreenLabel, 'full-screen', fullScreenShortcut),
+        ],
+      },
+      {
+        value: 'tools',
+        trigger: tContent('demonstration.labels.tools'),
+        entries: [
+          action(tContent('demonstration.labels.find'), 'find', { shortcut: tContent('demonstration.labels.findShortcut') }),
+          action(tContent('demonstration.labels.replace'), 'replace', { shortcut: tContent('demonstration.labels.replaceShortcut') }),
+          separator,
+          {
+            kind: 'radio-group',
+            value: 'theme',
+            selected: 'system-theme',
+            options: [
+              { label: tContent('demonstration.labels.lightTheme'), value: 'light-theme' },
+              { label: tContent('demonstration.labels.darkTheme'), value: 'dark-theme' },
+              { label: tContent('demonstration.labels.systemTheme'), value: 'system-theme' },
+            ],
+          },
+        ],
+      },
+    ],
+    // Três menus de três itens: a regra de uso pede de três a dez por menu.
+    pair1Do: [
+      {
+        value: 'file',
+        trigger: file,
+        entries: [action(newLabel, 'new'), action(openLabel, 'open'), action(saveLabel, 'save')],
+      },
+      {
+        value: 'edit',
+        trigger: edit,
+        entries: [action(undoLabel, 'undo'), action(copyLabel, 'copy'), action(pasteLabel, 'paste')],
+      },
+      {
+        value: 'view',
+        trigger: view,
+        entries: [
+          action(tContent('demonstration.labels.zoom'), 'zoom'),
+          action(fullScreenLabel, 'full-screen'),
+          action(showRulerLabel, 'show-ruler'),
+        ],
+      },
+    ],
+    // Uma barra para uma ação só: o que a legenda condena.
+    pair1Dont: [
+      {
+        value: 'menu',
+        trigger: tContent('demonstration.labels.menu'),
+        entries: [action(tContent('demonstration.labels.singleAction'), 'single-action')],
+      },
+    ],
+    pair2Do: [
+      {
+        value: 'file',
+        trigger: file,
+        entries: [action(saveLabel, 'save', saveShortcut), action(openLabel, 'open', openShortcut)],
+      },
+    ],
+    // Submenu dentro de submenu, vivo: o nível a mais que a legenda condena.
+    pair2Dont: [
+      {
+        value: 'file',
+        trigger: file,
+        entries: [
+          {
+            kind: 'submenu',
+            label: tContent('demonstration.labels.export'),
+            items: [{ kind: 'submenu', label: tContent('demonstration.labels.format'), items: [pdf] }],
+          },
+        ],
+      },
+    ],
+    default: [
+      {
+        value: 'file',
+        trigger: file,
+        entries: [action(newLabel, 'new', newShortcut), action(saveLabel, 'save', saveShortcut)],
+      },
+    ],
+    destructive: [
+      {
+        value: 'file',
+        trigger: file,
+        entries: [
+          action(saveLabel, 'save'),
+          separator,
+          action(tContent('demonstration.labels.deleteFile'), 'delete-file', { destructive: true }),
+        ],
+      },
+    ],
+    withShortcuts: [
+      {
+        value: 'edit',
+        trigger: edit,
+        entries: [
+          action(undoLabel, 'undo', undoShortcut),
+          action(redoLabel, 'redo', redoShortcut),
+          separator,
+          action(copyLabel, 'copy', copyShortcut),
+          action(pasteLabel, 'paste', pasteShortcut),
+        ],
+      },
+    ],
+    // Itens de marcação de verdade, com o indicador do componente — nunca glifo
+    // no texto.
+    withCheckbox: [
+      {
+        value: 'view',
+        trigger: view,
+        entries: [
+          {
+            kind: 'group',
+            label: tContent('demonstration.labels.panels'),
+            items: [
+              { kind: 'checkbox', label: tContent('demonstration.labels.sidebar'), value: 'sidebar', checked: true },
+              { kind: 'checkbox', label: tContent('demonstration.labels.grid'), value: 'grid', checked: false },
+              { kind: 'checkbox', label: tContent('demonstration.labels.ruler'), value: 'ruler', checked: false },
+            ],
+          },
+        ],
+      },
+    ],
+    withRadio: [
+      {
+        value: 'theme',
+        trigger: tContent('demonstration.labels.theme'),
+        entries: [
+          {
+            kind: 'radio-group',
+            label: appearance,
+            value: 'theme',
+            selected: 'dark',
+            options: [
+              { label: tContent('demonstration.labels.light'), value: 'light' },
+              { label: tContent('demonstration.labels.dark'), value: 'dark' },
+              { label: tContent('demonstration.labels.system'), value: 'system' },
+            ],
+          },
+        ],
+      },
+    ],
+    editorComplete: [
+      {
+        value: 'file',
+        trigger: file,
+        entries: [
+          action(newLabel, 'new', newShortcut),
+          action(openLabel, 'open', openShortcut),
+          action(saveLabel, 'save', saveShortcut),
+          separator,
+          action(quitLabel, 'quit', quitShortcut),
+        ],
+      },
+      {
+        value: 'edit',
+        trigger: edit,
+        entries: [action(undoLabel, 'undo', undoShortcut), action(redoLabel, 'redo', redoShortcut)],
+      },
+      {
+        value: 'view',
+        trigger: view,
+        entries: [
+          { kind: 'group', label: appearance, items: [action(darkModeLabel, 'dark-mode')] },
+          separator,
+          action(fullScreenLabel, 'full-screen', fullScreenShortcut),
+        ],
+      },
+      {
+        value: 'help',
+        trigger: tContent('demonstration.labels.help'),
+        entries: [
+          action(tContent('demonstration.labels.documentation'), 'documentation'),
+          action(tContent('demonstration.labels.about'), 'about'),
+        ],
+      },
+    ],
+  } satisfies Record<string, MenubarSnippetMenu[]>;
+});
+
+/** O código de um card: o trecho que a MESMA lista da prévia imprime. */
+function barCode(menus: MenubarSnippetMenu[]): string {
+  return menubarSnippet({ menus });
 }
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
@@ -153,7 +538,9 @@ const codeImportBasic = `import {
   Menubar,
   MenubarCheckboxItem,
   MenubarContent,
+  MenubarGroup,
   MenubarItem,
+  MenubarLabel,
   MenubarMenu,
   MenubarRadioGroup,
   MenubarRadioItem,
@@ -165,38 +552,23 @@ const codeImportBasic = `import {
   MenubarTrigger,
 } from "@/components/ui/menubar";`;
 
-const codeDefault = `<Menubar default-value="file">
-  <MenubarMenu value="file">
-    <MenubarTrigger>Arquivo</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Novo</MenubarItem>
-      <MenubarItem>Abrir</MenubarItem>
-      <MenubarItem>Salvar</MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`;
+// O código de cada card de Variantes NÃO mora aqui: sai de `menubarSnippet` com
+// a mesma lista que monta a prévia (`barCode`), no idioma da página.
 
-const codeDestructive = `<Menubar default-value="file">
-  <MenubarMenu value="file">
-    <MenubarTrigger>Arquivo</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Salvar</MenubarItem>
-      <MenubarSeparator />
-      <MenubarItem variant="destructive">Excluir arquivo</MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`;
-
+// A API desta stack: o menu aberto liga por `v-model` na barra (`modelValue`),
+// e o `@update:modelValue` traz o motivo quando um menu fecha. `loop` nasce
+// ligado no wrapper, como o conteúdo promete.
 const interfaceCode = `// Menubar (root)
 interface MenubarRootProps {
-  value?: string;
+  modelValue?: string;   // v-model: the open menu, '' when closed
   defaultValue?: string;
-  loop?: boolean;        // default true
+  loop?: boolean;        // default: true
 }
+// @update:modelValue → (value: string, reason?: 'escape' | 'overlay' | 'api')
 
 // MenubarMenu
 interface MenubarMenuProps {
-  value: string;         // identificador único do menu
+  value: string;
 }
 
 // MenubarContent
@@ -211,6 +583,13 @@ interface MenubarContentProps {
 interface MenubarItemProps {
   variant?: 'default' | 'destructive';
   inset?: boolean;
+  disabled?: boolean;
+}
+// @select → (event: Event)
+
+// MenubarCheckboxItem
+interface MenubarCheckboxItemProps {
+  checked?: boolean | 'indeterminate'; // v-model:checked
   disabled?: boolean;
 }`;
 
@@ -230,107 +609,39 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item9'),
 ]);
 
+// A ordem é a dos slots `variant-preview-{i}` do template.
 const variantItems = computed(() => [
-  { trackId: 'default', name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault },
-  { trackId: 'destructive', name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: codeDestructive },
+  { trackId: 'default', name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: barCode(bars.value.default) },
+  { trackId: 'destructive', name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: barCode(bars.value.destructive) },
   {
     trackId: 'withShortcuts',
     name: tContent('variants.items.withShortcuts.name'),
     description: tContent('variants.items.withShortcuts.description'),
     useWhen: tContent('variants.items.withShortcuts.use'),
-    code: codeWithShortcuts,
+    code: barCode(bars.value.withShortcuts),
   },
   {
     trackId: 'withCheckbox',
     name: tContent('variants.items.withCheckbox.name'),
     description: tContent('variants.items.withCheckbox.description'),
     useWhen: tContent('variants.items.withCheckbox.use'),
-    code: codeWithCheckbox,
+    code: barCode(bars.value.withCheckbox),
   },
   {
     trackId: 'withRadio',
     name: tContent('variants.items.withRadio.name'),
     description: tContent('variants.items.withRadio.description'),
     useWhen: tContent('variants.items.withRadio.use'),
-    code: codeWithRadio,
+    code: barCode(bars.value.withRadio),
   },
   {
     trackId: 'editorComplete',
     name: tContent('variants.items.editorComplete.name'),
     description: tContent('variants.items.editorComplete.description'),
     useWhen: tContent('variants.items.editorComplete.use'),
-    code: codeEditorComplete,
+    code: barCode(bars.value.editorComplete),
   },
 ]);
-
-const codeWithShortcuts = `<Menubar default-value="edit">
-  <MenubarMenu value="edit">
-    <MenubarTrigger>Editar</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
-      <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
-      <MenubarSeparator />
-      <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
-      <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`;
-
-const codeWithCheckbox = `<Menubar default-value="view">
-  <MenubarMenu value="view">
-    <MenubarTrigger>Exibir</MenubarTrigger>
-    <MenubarContent>
-      <MenubarCheckboxItem :checked="showSidebar" @update:checked="showSidebar = $event">Sidebar</MenubarCheckboxItem>
-      <MenubarCheckboxItem :checked="showGrid" @update:checked="showGrid = $event">Grid</MenubarCheckboxItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`;
-
-const codeWithRadio = `<Menubar default-value="theme">
-  <MenubarMenu value="theme">
-    <MenubarTrigger>Tema</MenubarTrigger>
-    <MenubarContent>
-      <MenubarRadioGroup v-model="theme">
-        <MenubarRadioItem value="light">Claro</MenubarRadioItem>
-        <MenubarRadioItem value="dark">Escuro</MenubarRadioItem>
-        <MenubarRadioItem value="system">Sistema</MenubarRadioItem>
-      </MenubarRadioGroup>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`;
-
-const codeEditorComplete = `<Menubar>
-  <MenubarMenu value="file">
-    <MenubarTrigger>Arquivo</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
-      <MenubarItem>Abrir... <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
-      <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-  <MenubarMenu value="edit">
-    <MenubarTrigger>Editar</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-  <MenubarMenu value="view">
-    <MenubarTrigger>Exibir</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Tela cheia <MenubarShortcut>F11</MenubarShortcut></MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-  <MenubarMenu value="help">
-    <MenubarTrigger>Ajuda</MenubarTrigger>
-    <MenubarContent>
-      <MenubarItem>Sobre</MenubarItem>
-    </MenubarContent>
-  </MenubarMenu>
-</Menubar>`;
-
-const compShowSidebar = ref(true);
-const compShowGrid = ref(false);
-const compTheme = ref('system');
 
 const stateItems = computed(() => [
   { label: tContent('states.closed.label'),   trigger: toPlainText(tContent('states.closed.trigger')),   behavior: toPlainText(tContent('states.closed.behavior')) },
@@ -347,13 +658,17 @@ const propCols = computed(() => ({
   description: tContent('props.table.description'),
 }));
 
+// Os nomes que se escrevem nesta stack: a barra liga o menu aberto por
+// `v-model` (`modelValue`), e o evento traz o motivo do fechamento como segundo
+// argumento — o tipo do conteúdo compartilhado não o tem. A tabela dizia
+// `value` e `@update:value`, que a barra ignora em silêncio.
 const menubarPropItems = computed(() => [
-  { name: 'value',           type: tContent('props.table.value.type'),          defaultValue: tContent('props.table.value.default'),          required: tContent('props.table.value.required'),          description: toPlainText(tContent('props.table.value.description'))          },
-  { name: '@update:value',   type: tContent('props.table.onValueChange.type'),  defaultValue: tContent('props.table.onValueChange.default'),  required: tContent('props.table.onValueChange.required'),  description: toPlainText(tContent('props.table.onValueChange.description'))  },
-  { name: 'defaultValue',    type: tContent('props.table.defaultValue.type'),   defaultValue: tContent('props.table.defaultValue.default'),   required: tContent('props.table.defaultValue.required'),   description: toPlainText(tContent('props.table.defaultValue.description'))   },
-  { name: 'loop',            type: tContent('props.table.loop.type'),           defaultValue: tContent('props.table.loop.default'),           required: tContent('props.table.loop.required'),           description: toPlainText(tContent('props.table.loop.description'))           },
-  { name: 'side',            type: tContent('props.table.side.type'),           defaultValue: tContent('props.table.side.default'),           required: tContent('props.table.side.required'),           description: toPlainText(tContent('props.table.side.description'))           },
-  { name: 'align',           type: tContent('props.table.align.type'),          defaultValue: tContent('props.table.align.default'),          required: tContent('props.table.align.required'),          description: toPlainText(tContent('props.table.align.description'))          },
+  { name: 'modelValue',         type: tContent('props.table.value.type'),          defaultValue: tContent('props.table.value.default'),          required: tContent('props.table.value.required'),          description: toPlainText(tContent('props.table.value.description'))          },
+  { name: '@update:modelValue', type: "(value: string, reason?: 'escape' | 'overlay' | 'api') => void", defaultValue: tContent('props.table.onValueChange.default'),  required: tContent('props.table.onValueChange.required'),  description: toPlainText(tContent('props.table.onValueChange.description'))  },
+  { name: 'defaultValue',       type: tContent('props.table.defaultValue.type'),   defaultValue: tContent('props.table.defaultValue.default'),   required: tContent('props.table.defaultValue.required'),   description: toPlainText(tContent('props.table.defaultValue.description'))   },
+  { name: 'loop',               type: tContent('props.table.loop.type'),           defaultValue: tContent('props.table.loop.default'),           required: tContent('props.table.loop.required'),           description: toPlainText(tContent('props.table.loop.description'))           },
+  { name: 'side',               type: tContent('props.table.side.type'),           defaultValue: tContent('props.table.side.default'),           required: tContent('props.table.side.required'),           description: toPlainText(tContent('props.table.side.description'))           },
+  { name: 'align',              type: tContent('props.table.align.type'),          defaultValue: tContent('props.table.align.default'),          required: tContent('props.table.align.required'),          description: toPlainText(tContent('props.table.align.description'))          },
 ]);
 
 const tokenRows = computed(() => [
@@ -406,32 +721,58 @@ const noteItems = computed(() => [
   { title: '', content: tContent('notes.item6') },
 ]);
 
+// A tabela sai do conteúdo compartilhado, como a do ContextMenu. As linhas que
+// moravam aqui ensinavam dois eventos que nenhum código disparava e que o tipo
+// não tinha.
 const analyticsItems = computed(() => [
-  { event: 'menubar_menu_open',        trigger: '@update:value(menu)',     payload: "{ component: 'menubar', menu, label }" },
-  { event: 'menubar_item_select',      trigger: '@select em Item',         payload: "{ component: 'menubar', menu, label }" },
-  { event: 'menubar_shortcut_invoke',  trigger: 'atalho registrado',       payload: "{ component: 'menubar', shortcut, label }" },
+  { event: tContent('analytics.table.menuOpen'),      trigger: toPlainText(tContent('analytics.table.menuOpenTrigger')),      payload: tContent('analytics.table.menuOpenPayload')      },
+  { event: tContent('analytics.table.itemClick'),     trigger: toPlainText(tContent('analytics.table.itemClickTrigger')),     payload: tContent('analytics.table.itemClickPayload')     },
+  { event: tContent('analytics.table.close'),         trigger: toPlainText(tContent('analytics.table.closeTrigger')),         payload: tContent('analytics.table.closePayload')         },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
-const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
-  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
-  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
-  priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
-})));
+const functionalTestItems = computed(() =>
+  entriesFromDict(tContent, 'testes.functional', ['action', 'result', 'priority']).map((entry) => ({
+    action: toPlainText(entry.action),
+    result: toPlainText(entry.result),
+    priority: localPriority(entry.priority),
+  })),
+);
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1'), level: 'AA',     how: 'axe-core'           },
-  { criterion: tContent('testes.accessibility.item2'), level: '1.3.1',  how: 'DevTools attribute' },
-  { criterion: tContent('testes.accessibility.item3'), level: '4.1.2',  how: 'DevTools attribute' },
-  { criterion: tContent('testes.accessibility.item4'), level: '4.1.2',  how: 'DevTools a11y tree' },
-  { criterion: tContent('testes.accessibility.item5'), level: '4.1.2',  how: 'DevTools a11y tree' },
-  { criterion: tContent('testes.accessibility.item6'), level: '2.4.3',  how: 'Manual review'      },
-  { criterion: tContent('testes.accessibility.item7'), level: '1.4.3',  how: 'Contrast checker'   },
-]);
+// Nível WCAG e forma de verificar ficam aqui, e não no conteúdo compartilhado,
+// porque são IDENTIFICADORES (número de critério, consulta da suíte, regra do
+// axe) e identificador não se traduz. A coluna dizia "DevTools attribute" e
+// "Manual review" — frase em inglês, igual nos três idiomas; agora diz a
+// consulta ou a regra que mede o critério. Item novo além da lista cai no par
+// padrão em vez de sumir.
+const a11yTestLevels = ['AA', '1.3.1 · A', '4.1.2 · A', '4.1.2 · A', '4.1.2 · A', '2.4.3 · A', '1.4.3 · AA', '2.1.1 · A'];
+const a11yTestHow = [
+  'axe-core',
+  "getByRole('menubar')",
+  'aria-haspopup · aria-expanded',
+  "getByRole('menu')",
+  "getAllByRole('menuitem' | 'menuitemcheckbox' | 'menuitemradio')",
+  'Escape · document.activeElement',
+  'axe-core · color-contrast',
+  'ArrowDown · document.activeElement',
+];
 
-const visualTestItems = computed(() => [1, 2, 3, 4, 5].map((i) => ({
-  story: tContent(`testes.visual.item${i}.story`),
-  priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
-})));
+const a11yTestItems = computed(() =>
+  stringsFromDict(tContent, 'testes.accessibility').map((criterion, i) => ({
+    criterion: toPlainText(criterion),
+    level: a11yTestLevels[i] ?? 'AA',
+    how: a11yTestHow[i] ?? 'axe-core',
+  })),
+);
+
+const visualTestItems = computed(() =>
+  entriesFromDict(tContent, 'testes.visual', ['story', 'priority']).map((entry) => ({
+    story: entry.story,
+    priority: localPriority(entry.priority),
+  })),
+);
 
 const a11yCritCols = computed(() => ({
   criterion: tNav('common.criterion'),
@@ -456,66 +797,22 @@ const a11yCritCols = computed(() => ({
     </template>
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
+    <!--
+      Uma barra, quatro menus — a do vanilla, que é a referência. Os gatilhos são
+      as chaves `file` … `tools`; até 2026-09-11 eram as LEGENDAS antigas ("Menu
+      Arquivo (com submenu)"), e a barra anunciava como nome de menu uma frase
+      sobre a demonstração.
+    -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
         class="nds-w-full nds-min-h-80"
         style="contain: layout"
       >
-        <Menubar>
-          <MenubarMenu value="file">
-            <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.fileMenu')) }}</MenubarTrigger>
-            <MenubarContent>
-              <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
-              <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
-              <MenubarSeparator />
-              <MenubarSub>
-                <MenubarSubTrigger>Exportar</MenubarSubTrigger>
-                <MenubarSubContent>
-                  <MenubarItem>PDF</MenubarItem>
-                  <MenubarItem>CSV</MenubarItem>
-                  <MenubarItem>JSON</MenubarItem>
-                </MenubarSubContent>
-              </MenubarSub>
-            </MenubarContent>
-          </MenubarMenu>
-          <MenubarMenu value="edit">
-            <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.editMenu')) }}</MenubarTrigger>
-            <MenubarContent>
-              <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
-              <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
-              <MenubarSeparator />
-              <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
-              <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
-            </MenubarContent>
-          </MenubarMenu>
-          <MenubarMenu value="view">
-            <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.viewMenu')) }}</MenubarTrigger>
-            <MenubarContent>
-              <MenubarCheckboxItem :checked="true">
-                Barra de status
-              </MenubarCheckboxItem>
-              <MenubarCheckboxItem :checked="false">
-                Barra lateral
-              </MenubarCheckboxItem>
-            </MenubarContent>
-          </MenubarMenu>
-          <MenubarMenu value="tools">
-            <MenubarTrigger>{{ stripHtml(tContent('demonstration.labels.toolsMenu')) }}</MenubarTrigger>
-            <MenubarContent>
-              <MenubarRadioGroup model-value="grid">
-                <MenubarRadioItem value="list">
-                  Lista
-                </MenubarRadioItem>
-                <MenubarRadioItem value="grid">
-                  Grid
-                </MenubarRadioItem>
-                <MenubarRadioItem value="kanban">
-                  Kanban
-                </MenubarRadioItem>
-              </MenubarRadioGroup>
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
+        <MenubarPreview
+          :menus="bars.demo"
+          @update:model-value="tracked.demo.valueChange"
+          @select="tracked.demo.select"
+        />
       </div>
     </DocsDemonstration>
 
@@ -594,26 +891,21 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
         <div
           style="contain: layout"
-          class="nds-w-full nds-min-h-20"
+          class="nds-w-full nds-min-h-60"
         >
-          <Menubar>
-            <MenubarMenu value="file">
-              <MenubarTrigger>Arquivo</MenubarTrigger><MenubarContent><MenubarItem>Novo</MenubarItem></MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu value="edit">
-              <MenubarTrigger>Editar</MenubarTrigger><MenubarContent><MenubarItem>Copiar</MenubarItem></MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu value="view">
-              <MenubarTrigger>Exibir</MenubarTrigger><MenubarContent><MenubarItem>Zoom</MenubarItem></MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <!-- Três menus de três itens cada: a regra de uso pede de três a dez. -->
+          <MenubarPreview
+            :menus="bars.pair1Do"
+            @update:model-value="tracked.pair1Do.valueChange"
+            @select="tracked.pair1Do.select"
+          />
         </div>
       </template>
       <template #dont-preview-0>
@@ -621,11 +913,11 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-20"
         >
-          <Menubar>
-            <MenubarMenu value="single">
-              <MenubarTrigger>Menu</MenubarTrigger><MenubarContent><MenubarItem>Item</MenubarItem></MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <MenubarPreview
+            :menus="bars.pair1Dont"
+            @update:model-value="tracked.pair1Dont.valueChange"
+            @select="tracked.pair1Dont.select"
+          />
         </div>
       </template>
       <template #do-preview-1>
@@ -633,15 +925,11 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <Menubar default-value="edit">
-            <MenubarMenu value="edit">
-              <MenubarTrigger>Editar</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
-                <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <MenubarPreview
+            :menus="bars.pair2Do"
+            @update:model-value="tracked.pair2Do.valueChange"
+            @select="tracked.pair2Do.select"
+          />
         </div>
       </template>
       <template #dont-preview-1>
@@ -649,24 +937,12 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <Menubar default-value="file">
-            <MenubarMenu value="file">
-              <MenubarTrigger>Arquivo</MenubarTrigger>
-              <MenubarContent>
-                <MenubarSub>
-                  <MenubarSubTrigger>Exportar</MenubarSubTrigger>
-                  <MenubarSubContent>
-                    <MenubarSub>
-                      <MenubarSubTrigger>Tipo</MenubarSubTrigger>
-                      <MenubarSubContent>
-                        <MenubarItem>PDF</MenubarItem>
-                      </MenubarSubContent>
-                    </MenubarSub>
-                  </MenubarSubContent>
-                </MenubarSub>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <!-- Submenu dentro de submenu, vivo: o nível a mais que a legenda condena. -->
+          <MenubarPreview
+            :menus="bars.pair2Dont"
+            @update:model-value="tracked.pair2Dont.valueChange"
+            @select="tracked.pair2Dont.select"
+          />
         </div>
       </template>
     </DocsDoDont>
@@ -678,6 +954,12 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
+    <!--
+      As barras nascem FECHADAS, como no vanilla: com `default-value` cada prévia
+      abria o seu painel ao carregar a página, e seis menus abertos de uma vez
+      disputavam a tela sem ninguém ter pedido nenhum. Cada prévia recebe a MESMA
+      lista que imprime o código do card (`barCode` em `variantItems`).
+    -->
     <DocsCompositions
       id="variantes"
       :title="tContent('variants.title')"
@@ -690,16 +972,11 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <Menubar default-value="file">
-            <MenubarMenu value="file">
-              <MenubarTrigger>Arquivo</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>Novo</MenubarItem>
-                <MenubarItem>Abrir</MenubarItem>
-                <MenubarItem>Salvar</MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <MenubarPreview
+            :menus="bars.default"
+            @update:model-value="tracked.default.valueChange"
+            @select="tracked.default.select"
+          />
         </div>
       </template>
       <template #variant-preview-1>
@@ -707,18 +984,11 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <Menubar default-value="file">
-            <MenubarMenu value="file">
-              <MenubarTrigger>Arquivo</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>Salvar</MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem variant="destructive">
-                  Excluir arquivo
-                </MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <MenubarPreview
+            :menus="bars.destructive"
+            @update:model-value="tracked.destructive.valueChange"
+            @select="tracked.destructive.select"
+          />
         </div>
       </template>
       <template #variant-preview-2>
@@ -726,18 +996,11 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <Menubar default-value="edit">
-            <MenubarMenu value="edit">
-              <MenubarTrigger>Editar</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
-                <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>Copiar <MenubarShortcut>Ctrl+C</MenubarShortcut></MenubarItem>
-                <MenubarItem>Colar <MenubarShortcut>Ctrl+V</MenubarShortcut></MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <MenubarPreview
+            :menus="bars.withShortcuts"
+            @update:model-value="tracked.withShortcuts.valueChange"
+            @select="tracked.withShortcuts.select"
+          />
         </div>
       </template>
       <template #variant-preview-3>
@@ -745,25 +1008,11 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <Menubar default-value="view">
-            <MenubarMenu value="view">
-              <MenubarTrigger>Exibir</MenubarTrigger>
-              <MenubarContent>
-                <MenubarCheckboxItem
-                  :checked="compShowSidebar"
-                  @update:checked="compShowSidebar = $event"
-                >
-                  Sidebar
-                </MenubarCheckboxItem>
-                <MenubarCheckboxItem
-                  :checked="compShowGrid"
-                  @update:checked="compShowGrid = $event"
-                >
-                  Grid
-                </MenubarCheckboxItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <MenubarPreview
+            :menus="bars.withCheckbox"
+            @update:model-value="tracked.withCheckbox.valueChange"
+            @select="tracked.withCheckbox.select"
+          />
         </div>
       </template>
       <template #variant-preview-4>
@@ -771,24 +1020,11 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <Menubar default-value="theme">
-            <MenubarMenu value="theme">
-              <MenubarTrigger>Tema</MenubarTrigger>
-              <MenubarContent>
-                <MenubarRadioGroup v-model="compTheme">
-                  <MenubarRadioItem value="light">
-                    Claro
-                  </MenubarRadioItem>
-                  <MenubarRadioItem value="dark">
-                    Escuro
-                  </MenubarRadioItem>
-                  <MenubarRadioItem value="system">
-                    Sistema
-                  </MenubarRadioItem>
-                </MenubarRadioGroup>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <MenubarPreview
+            :menus="bars.withRadio"
+            @update:model-value="tracked.withRadio.valueChange"
+            @select="tracked.withRadio.select"
+          />
         </div>
       </template>
       <template #variant-preview-5>
@@ -796,39 +1032,11 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <Menubar>
-            <MenubarMenu value="file">
-              <MenubarTrigger>Arquivo</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>
-                <MenubarItem>Abrir... <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>
-                <MenubarItem>Salvar <MenubarShortcut>Ctrl+S</MenubarShortcut></MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>Sair <MenubarShortcut>Ctrl+Q</MenubarShortcut></MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu value="edit">
-              <MenubarTrigger>Editar</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>Desfazer <MenubarShortcut>Ctrl+Z</MenubarShortcut></MenubarItem>
-                <MenubarItem>Refazer <MenubarShortcut>Ctrl+Shift+Z</MenubarShortcut></MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu value="view">
-              <MenubarTrigger>Exibir</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>Modo escuro</MenubarItem>
-                <MenubarItem>Tela cheia <MenubarShortcut>F11</MenubarShortcut></MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-            <MenubarMenu value="help">
-              <MenubarTrigger>Ajuda</MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>Documentação</MenubarItem>
-                <MenubarItem>Sobre</MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          <MenubarPreview
+            :menus="bars.editorComplete"
+            @update:model-value="tracked.editorComplete.valueChange"
+            @select="tracked.editorComplete.select"
+          />
         </div>
       </template>
     </DocsCompositions>
@@ -895,9 +1103,9 @@ const a11yCritCols = computed(() => ({
     <DocsAnalytics
       :title="tContent('analytics.title')"
       :cols="{
-        event: 'Evento',
-        trigger: 'Quando dispara',
-        payload: 'Payload',
+        event: tContent('analytics.table.event'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
+        payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"
     />

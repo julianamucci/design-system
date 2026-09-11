@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
+import {
+  menubarCheckboxCheckedSource,
+  menubarCheckboxIndeterminateSource,
+  menubarClosedSource,
+  menubarControlledSource,
+  menubarItemDisabledSource,
+  menubarOpenSource,
+} from './menubar.source';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -41,7 +49,10 @@ type Story = StoryObj;
 // família precisa desligar. É aqui que "sem violações no estado padrão" vale.
 
 export const Closed: Story = {
-  parameters: { covers: ['accessibility.item1', 'accessibility.item2', 'visual.item1'] },
+  parameters: {
+    covers: ['accessibility.item1', 'accessibility.item2', 'visual.item1'],
+    docs: { source: { transform: menubarClosedSource } },
+  },
   render: () => ({
     props: { menus: MENUS_FECHADOS },
     template: `
@@ -90,6 +101,7 @@ export const Open: Story = {
     // teclado, e esta story nasce aberta por `defaultOpen`, sem interação
     // nenhuma. A declaração era honesta na intenção e vazia no efeito.
     covers: ['accessibility.item4'],
+    docs: { source: { transform: menubarOpenSource } },
   },
   render: () => ({
     props: { menus: MENUS_FECHADOS },
@@ -147,6 +159,7 @@ export const ItemDisabled: Story = {
   parameters: {
     covers: ['accessibility.item8'],
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
+    docs: { source: { transform: menubarItemDisabledSource } },
   },
   argTypes: {
     // Função em `args` sem entrada aqui NÃO chega ao template no renderer
@@ -218,6 +231,7 @@ export const CheckboxChecked: Story = {
   parameters: {
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item7'],
+    docs: { source: { transform: menubarCheckboxCheckedSource } },
   },
   render: () => ({
     props: { regua: true, grid: false },
@@ -272,6 +286,11 @@ export const CheckboxChecked: Story = {
         await expect(regua.getAttribute('aria-checked')).toBe('false');
       });
       await expect(document.body.contains(menu)).toBe(true);
+      // E o documento o confirma: UM menu, sem a marca de fechado. A referência
+      // capturada antes do clique sozinha passaria durante a animação de saída.
+      const menus = within(document.body).queryAllByRole('menu');
+      await expect(menus).toHaveLength(1);
+      await expect(menus[0].hasAttribute('data-closed')).toBe(false);
     });
   },
 };
@@ -287,6 +306,7 @@ export const CheckboxIndeterminate: Story = {
   parameters: {
     a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item9'],
+    docs: { source: { transform: menubarCheckboxIndeterminateSource } },
   },
   render: () => ({
     template: `
@@ -363,6 +383,10 @@ export const ControlledOpen: Story = {
     // Actions lista espião que esta story não usa.
     controls: { disable: true },
     actions: { disable: true },
+    // A story guarda a abertura num campo comum do objeto de props do
+    // renderer; o snippet guarda num sinal, que é o que agenda o redesenho num
+    // componente de verdade.
+    docs: { source: { transform: menubarControlledSource } },
   },
   render: () => ({
     // O estado vive AQUI, fora da barra — é esse o assunto da story.

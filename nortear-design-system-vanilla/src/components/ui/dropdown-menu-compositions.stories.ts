@@ -168,16 +168,31 @@ export const WithCheckboxItems: Story = {
       await expect(marca(email)).toBe(false);
     });
 
-    await step('Clicar alterna o item e mantém o menu aberto', async () => {
-      // Idempotente: leva o e-mail a marcado só se ainda não estiver, então o
-      // replay do painel Interactions termina no mesmo estado.
-      if (email.getAttribute('aria-checked') !== 'true') await userEvent.click(email);
+    await step('Clicar alterna nos DOIS sentidos, o indicador acompanha e o menu segue aberto', async () => {
+      // O indicador é conferido DEPOIS de cada clique — o passo anterior o lia
+      // só no estado de montagem, e um tique que não se redesenhasse ao marcar
+      // passaria. E os dois sentidos: falso → verdadeiro → falso. Um alternador
+      // que só marcasse passaria com um clique só.
+      //
+      // A precondição é a do primeiro passo (e-mail desmarcado), e o passo
+      // termina nela: o replay do painel Interactions parte do mesmo estado.
+      const marca = () => email.querySelector('.nds-dropdown-menu-item-indicator svg');
+      const menusAbertos = () => within(document.body).queryAllByRole('menu');
 
-      await waitFor(async () => {
-        await expect(email.getAttribute('aria-checked')).toBe('true');
-      });
+      await userEvent.click(email);
+      await expect(email.getAttribute('aria-checked')).toBe('true');
+      await expect(marca()).not.toBeNull();
       // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
-      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
+      // Consulta NOVA ao documento, e não a referência de antes do clique: um
+      // menu que fechasse levaria o painel embora, e `email` continuaria
+      // respondendo por atributo — nó solto não sabe que saiu do documento.
+      await expect(menusAbertos()).toHaveLength(1);
+
+      await userEvent.click(email);
+      await expect(email.getAttribute('aria-checked')).toBe('false');
+      await expect(marca()).toBeNull();
+      await expect(menusAbertos()).toHaveLength(1);
+
       // Independentes entre si — é o que separa checkbox de escolha única.
       await expect(name.getAttribute('aria-checked')).toBe('true');
     });
@@ -246,6 +261,18 @@ export const WithRadioGroup: Story = {
       await expect(light.querySelector('.nds-dropdown-menu-item-indicator svg')).toBeNull();
     });
 
+    await step('Escolher não fecha o menu', async () => {
+      // A consulta é NOVA, e não a referência guardada antes do clique: um menu
+      // que fechasse levaria o painel embora, mas `escuro` e `light` continuariam
+      // respondendo por atributo — nós soltos não sabem que saíram do documento.
+      // Contar os menus do documento é o que reprova esse fechamento.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
+      await expect(within(document.body).getByRole('menuitemradio', { name: 'Escuro' })).toHaveAttribute(
+        'aria-checked',
+        'true',
+      );
+    });
+
     await step('Limpa via ESC', async () => {
       await endClose();
     });
@@ -256,7 +283,7 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    covers: ['functional.item7', 'visual.item4'],
+    covers: ['functional.item7', 'functional.item12', 'visual.item4'],
     // Override de story: o item de submenu leva a própria lista aninhada, e o
     // snippet do meta mostraria uma lista plana.
     docs: {
@@ -357,6 +384,26 @@ export const WithSubmenu: Story = {
       await expect(document.activeElement).toBe(subTrigger);
     });
 
+    await step('Escape dentro do submenu fecha SÓ o submenu e o menu segue aberto', async () => {
+      // Reabre e entra: o passo anterior deixou o foco no sub-gatilho, com o
+      // submenu fechado.
+      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
+        subTrigger.focus();
+        await userEvent.keyboard('{ArrowRight}');
+      }
+      await expect(body.getAllByRole('menu')).toHaveLength(2);
+      await expect((document.activeElement as HTMLElement).textContent).toBe('PDF');
+
+      await userEvent.keyboard('{Escape}');
+      // Um nível por tecla: fechar o menu inteiro aqui tiraria a pessoa de dois
+      // níveis de uma vez. O menu pai continua na tela, e o foco volta ao item
+      // que abriu o submenu.
+      await expect(body.getAllByRole('menu')).toHaveLength(1);
+      await expect(menu.isConnected).toBe(true);
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(subTrigger);
+    });
+
     await step('Limpa via ESC', async () => {
       await endClose();
     });
@@ -367,6 +414,7 @@ export const WithSubmenu: Story = {
 
 export const WithShortcuts: Story = {
   parameters: {
+    covers: ['functional.item14'],
     // Override de story: o atalho é uma chave do item e integra o nome
     // acessível — o snippet do meta mostraria itens sem tecla nenhuma.
     docs: {

@@ -3,7 +3,7 @@ import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu
 
 import { cn } from "@/lib/utils"
 import { ChevronRightIcon, CheckIcon, MinusIcon } from "lucide-react"
-import { withReason } from "./context-menu-close-reason"
+import { withReason } from "./menu-close-reason"
 import { assignRef, tabbableBeside } from "./menu-tab-exit"
 
 /**

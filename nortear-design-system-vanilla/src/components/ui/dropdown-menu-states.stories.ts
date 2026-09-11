@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createDropdownMenu } from './dropdown-menu';
+import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { createButton } from './button';
-import { wrap } from './dropdown-menu.fixtures';
+import { montar, wrap } from './dropdown-menu.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -90,7 +90,13 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
-    covers: ['functional.item1', 'functional.item2', 'accessibility.item3'],
+    covers: [
+      'functional.item1',
+      'functional.item2',
+      'functional.item10',
+      'functional.item11',
+      'accessibility.item3',
+    ],
   },
   // O menu abre pelo CLIQUE da `play`, não por um `.click()` na montagem: é o
   // caminho de quem usa, e é o único em que dá para afirmar onde o foco pousa.
@@ -309,6 +315,59 @@ export const ItemDisabled: Story = {
   },
 };
 
+// ─── ItemInset ────────────────────────────────────────────────────────────────
+//
+// O recuo que a anatomia compartilhada promete (`anatomy.item4`) e que esta
+// fábrica não tinha — o ContextMenu e o Menubar desta stack já o expunham. Ele
+// alinha o texto de um item de ação com o dos itens de marcação, que desenham o
+// tique à esquerda do rótulo.
+
+const INSET_ITEMS: DropdownMenuItemDef[] = [
+  { type: 'label', label: 'Colunas', inset: true },
+  { type: 'checkbox', label: 'Nome', value: 'name', checked: true },
+  { type: 'item', label: 'Redefinir', value: 'reset', inset: true },
+  { type: 'submenu', label: 'Exportar', value: 'export', inset: true, items: [{ type: 'item', label: 'CSV', value: 'csv' }] },
+  { type: 'separator' },
+  { type: 'item', label: 'Fechar', value: 'close', inset: false },
+];
+
+export const ItemInset: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: dropdownMenuSourceWith({ triggerLabel: 'Tabela', items: INSET_ITEMS, defaultOpen: true }),
+      },
+    },
+  },
+  render: () => montar('Tabela', INSET_ITEMS),
+  play: async ({ step }) => {
+    const menu = await within(document.body).findByRole('menu');
+    const reset = within(menu).getByRole('menuitem', { name: 'Redefinir' });
+    const exportTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
+    const closeItem = within(menu).getByRole('menuitem', { name: 'Fechar' });
+    const label = menu.querySelector<HTMLElement>('.nds-dropdown-menu-label')!;
+
+    await step('O recuo chega ao item, ao rótulo e ao sub-gatilho — e só a quem o pediu', async () => {
+      for (const el of [reset, exportTrigger, label]) await expect(el).toHaveAttribute('data-inset');
+      // `inset: false` não escreve o atributo: a folha casa `[data-inset]` por
+      // PRESENÇA, e um `data-inset="false"` recuaria do mesmo jeito.
+      await expect(closeItem).not.toHaveAttribute('data-inset');
+    });
+
+    await step('O recuo é geometria, não atributo', async () => {
+      // O atributo pode continuar lá com a regra vazia: o que se mede é a
+      // margem interna que ele produz, contra a do item sem recuo.
+      const padding = (el: HTMLElement) => Number.parseFloat(getComputedStyle(el).paddingLeft);
+      await expect(padding(reset)).toBeGreaterThan(padding(closeItem));
+      await expect(padding(exportTrigger)).toBeGreaterThan(padding(closeItem));
+    });
+
+    await step('Limpa via ESC', async () => {
+      await closeAfter();
+    });
+  },
+};
+
 // ─── CheckboxIndeterminate ────────────────────────────────────────────────────
 //
 // Story SEM interação, de propósito. O que ela declara vale na montagem, e o
@@ -409,8 +468,11 @@ export const ListenerCleanup: Story = {
     await expect(host).not.toBeNull();
 
     let probe!: ProbeResult;
+    // Os avisos que a instância deu, em ordem — zerados a cada rodada.
+    const avisos: string[] = [];
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      avisos.length = 0;
       probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => createDropdownMenu({
@@ -419,6 +481,8 @@ export const ListenerCleanup: Story = {
             { type: 'item', label: 'Editar', value: 'edit' },
             { type: 'item', label: 'Excluir', value: 'delete' },
           ],
+          onOpenChange: (open) => avisos.push(open ? 'abriu' : 'fechou'),
+          onClose: (reason) => avisos.push(`motivo:${reason}`),
         }),
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
         seletorDePortal: '[data-slot="dropdown-menu-content"]',
@@ -427,6 +491,14 @@ export const ListenerCleanup: Story = {
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
       await checkLimpeza(probe);
+    });
+
+    await step('Sair da página com o menu aberto não é fechamento: ninguém é avisado', async () => {
+      // O `abriu` é a precondição que dá dentes ao resto: sem ele a lista vazia
+      // passaria com um menu que nunca abriu. Até 2026-09-11 a destruição saía
+      // como `close('api')`, e cada troca de idioma da docs page mandava um
+      // `dropdown_menu_close` de um menu que a pessoa não fechou.
+      await expect(avisos).toEqual(['abriu']);
     });
   },
 };

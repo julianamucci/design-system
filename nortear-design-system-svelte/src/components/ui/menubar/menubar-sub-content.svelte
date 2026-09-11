@@ -4,6 +4,7 @@
 	import MenubarPortal from "./menubar-portal.svelte";
 	import { closeAfterTab } from "@/components/ui/dropdown-menu/tab-leaves-menu";
 	import { useMenubarRoot } from "./tab-leaves-menu";
+	import { keepRootOpenOnSubEscape, useMenuSub } from "@/components/ui/dropdown-menu/sub-escape";
 
 	let {
 		ref = $bindable(null),
@@ -13,6 +14,15 @@
 	}: MenubarPrimitive.SubContentProps = $props();
 
 	const root = useMenubarRoot();
+	const sub = useMenuSub();
+
+	// Escape aqui dentro fecha só este submenu e devolve o foco ao gatilho dele;
+	// o menu da barra segue aberto. Ouvinte de captura no nó que a lib entrega por
+	// `ref`, antes da camada de Escape do bits — ver `dropdown-menu/sub-escape.ts`.
+	$effect(() => {
+		if (!ref || !sub) return;
+		return keepRootOpenOnSubEscape(ref, sub);
+	});
 
 	// O portal tira este painel da árvore DOM do raiz: o Tab apertado aqui não
 	// passa pelo ouvinte de lá. O mesmo fechamento — ver

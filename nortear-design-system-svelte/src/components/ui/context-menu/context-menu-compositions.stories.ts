@@ -58,6 +58,9 @@ const groupName = (group: HTMLElement) => {
 
 export const WithShortcut: Story = {
   parameters: {
+    // F17: o atalho dentro do item, lido junto dele, e encostado à direita do
+    // rótulo — os dois passos abaixo.
+    covers: ['functional.item17'],
     docs: { source: { transform: contextMenuWithShortcutsSource } },
   },
   render: () => ({ Component: ContextMenuCompositionStory, props: { composition: 'shortcut' } }),
@@ -72,6 +75,13 @@ export const WithShortcut: Story = {
         await expect(shortcut.hasAttribute('aria-hidden')).toBe(false);
         await expect(shortcut.closest('[data-slot="context-menu-item"]')).not.toBeNull();
       }
+      // F17 promete o atalho NO NOME ACESSÍVEL, e é o nome que se confere: estar
+      // dentro do item e sem `aria-hidden` é condição, não prova — um
+      // `aria-label` no item, por exemplo, tiraria o atalho do nome sem mexer em
+      // nenhuma das duas. "Editar Ctrl+E" é o que o leitor de tela anuncia.
+      await expect(within(menu).getByRole('menuitem', { name: 'Editar Ctrl+E' })).toBe(
+        target('edit'),
+      );
     });
 
     await step('O atalho fica encostado à direita do rótulo', async () => {
@@ -217,7 +227,9 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    covers: ['functional.item5', 'functional.item6', 'visual.item3'],
+    // A10 é o primeiro passo: o sub-gatilho declara `aria-haspopup="menu"`, e o
+    // `aria-expanded` acompanha o estado em cada passo seguinte.
+    covers: ['functional.item5', 'functional.item6', 'accessibility.item10', 'visual.item3'],
     docs: { source: { transform: contextMenuWithSubmenuSource } },
   },
   render: () => ({ Component: ContextMenuCompositionStory, props: { composition: 'submenu' } }),

@@ -6,6 +6,7 @@ import { menubarPlaygroundSource, type MenubarArgs } from './menubar.source';
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { pressTab } from '@/lib/press-tab';
+import { clickOutside } from '@shared/testing/context-menu-area';
 import { NdsMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -100,6 +101,12 @@ const meta: Meta<MenubarArgs> = {
 export default meta;
 type Story = StoryObj<MenubarArgs>;
 
+/**
+ * Spy de escopo de módulo — dentro do `render` a `play` não o alcançaria. É o
+ * que prova que o clique fora fecha SEM executar item nenhum.
+ */
+const itemChoice = fn();
+
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
@@ -115,6 +122,7 @@ export const Playground: Story = {
       'functional.item10',
       'functional.item11',
       'functional.item12',
+      'functional.item14',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
@@ -122,7 +130,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    props: { ...args, menus: MENUS },
+    props: { ...args, menus: MENUS, onSelect: itemChoice },
     template: `
       <nds-menubar [modal]="modal" [loopFocus]="loopFocus">
         @for (m of menus; track m.label) {
@@ -131,7 +139,11 @@ export const Playground: Story = {
 
             <ng-template ndsMenubarContent [side]="side" [align]="align">
               @for (i of m.items; track i.label) {
-                <div ndsMenubarItem [variant]="i.variant ?? 'default'">
+                <div
+                  ndsMenubarItem
+                  [variant]="i.variant ?? 'default'"
+                  (onSelect)="onSelect(i.label)"
+                >
                   {{ i.label }}
                   @if (i.atalho) {
                     <span ndsMenubarShortcut>{{ i.atalho }}</span>
@@ -300,6 +312,24 @@ export const Playground: Story = {
       await waitForPortalVanish('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
     });
+
+    await step('Clicar fora da barra fecha o menu sem executar nenhum item', async () => {
+      // `clickOutside` despacha `pointerdown`, `mousedown` e `click` no `<body>`
+      // em vez de `userEvent.click(document.body)`: com `modal` (o padrão) a lib
+      // põe `pointer-events: none` no resto da página, e o `userEvent` se RECUSA
+      // a clicar ali — a play morreria com erro em vez de falha.
+      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+      await waitForPortal('menu');
+      itemChoice.mockClear();
+
+      await clickOutside();
+      await waitForPortalVanish('menu');
+      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      // "Sem executar": o clique fora não é escolha — nenhum item ativou, e
+      // quem escuta a abertura ficou sabendo que o menu fechou.
+      await expect(itemChoice).not.toHaveBeenCalled();
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
+    });
   },
 };
 
@@ -317,7 +347,12 @@ export const Playground: Story = {
  * então o foco só chega ao vizinho se o menu o levar.
  */
 export const TabLeavesMenubar: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: {
+    // Tab e Shift+Tab a partir do menu aberto, e Tab de DENTRO do submenu
+    // fechando o menu inteiro; a barra como última parada está em `TabAtPageEnd`.
+    covers: ['functional.item13'],
+    controls: { disable: true },
+  },
   render: () => ({
     template: `
       <div class="nds-cluster" data-spacing="md">
@@ -405,7 +440,10 @@ export const TabLeavesMenubar: Story = {
  * estava aberto — nunca ao `<body>`, nem à barra, que não recebe foco.
  */
 export const TabAtPageEnd: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: {
+    covers: ['functional.item13'],
+    controls: { disable: true },
+  },
   render: () => ({
     template: `
       <div class="nds-cluster" data-spacing="md">

@@ -12,6 +12,7 @@ import {
   menubarItemBloqueadoSource,
   menubarItemDefaultSource,
   menubarItemDestructiveSource,
+  menubarSnippet,
   menubarSource,
 } from './menubar.source';
 
@@ -243,5 +244,130 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     for (const fn of all) {
       expect(fn()).toContain(`from '@/components/ui/menubar'`);
     }
+  });
+});
+
+describe('menubarSnippet — a barra descrita por dados', () => {
+  it('imprime os rótulos que recebe: o código diz o que a prévia diz, em qualquer idioma', () => {
+    const saida = menubarSnippet({
+      menus: [
+        {
+          value: 'file',
+          trigger: 'File',
+          entries: [
+            { kind: 'item', label: 'Save', value: 'save' },
+            { kind: 'separator' },
+            { kind: 'item', label: 'Delete file', value: 'delete-file', destructive: true },
+          ],
+        },
+      ],
+    });
+    expect(saida).toContain('<MenubarMenu value="file">');
+    expect(saida).toContain('<MenubarTrigger>File</MenubarTrigger>');
+    expect(saida).toContain('<MenubarItem variant="destructive">Delete file</MenubarItem>');
+    expect(saida).not.toContain('Arquivo');
+    // `loop` já nasce ligado no wrapper: o trecho não repete o padrão.
+    expect(saida).not.toContain('loop');
+    expect(saida).toContain('  <Menubar>\n');
+  });
+
+  it('declara o ESTADO INICIAL de cada marcação e da escolha única, com o nome do id estável', () => {
+    const saida = menubarSnippet({
+      menus: [
+        {
+          value: 'view',
+          trigger: 'View',
+          entries: [
+            {
+              kind: 'group',
+              label: 'Panels',
+              items: [
+                { kind: 'checkbox', label: 'Sidebar', value: 'sidebar', checked: true },
+                { kind: 'checkbox', label: 'Show ruler', value: 'show-ruler', checked: false },
+              ],
+            },
+          ],
+        },
+        {
+          value: 'theme',
+          trigger: 'Theme',
+          entries: [
+            {
+              kind: 'radio-group',
+              label: 'Appearance',
+              value: 'theme',
+              selected: 'dark',
+              options: [
+                { label: 'Light', value: 'light' },
+                { label: 'Dark', value: 'dark' },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    expect(saida).toContain(`import { ref } from 'vue'
+
+const sidebar = ref(true)
+const showRuler = ref(false)
+const theme = ref('dark')`);
+    // A API desta stack: `checked` com `v-model:checked`, não `modelValue`.
+    expect(saida).toContain('<MenubarCheckboxItem v-model:checked="showRuler">');
+    expect(saida).toContain(`        <MenubarRadioGroup v-model="theme">
+          <MenubarLabel>Appearance</MenubarLabel>`);
+  });
+
+  it('o grupo de escolha única sem rótulo não inventa um', () => {
+    const saida = menubarSnippet({
+      menus: [
+        {
+          value: 'tools',
+          trigger: 'Tools',
+          entries: [
+            {
+              kind: 'radio-group',
+              value: 'theme',
+              selected: 'system-theme',
+              options: [{ label: 'System', value: 'system-theme' }],
+            },
+          ],
+        },
+      ],
+    });
+    expect(saida).not.toContain('MenubarLabel');
+    expect(saida).toContain(`const theme = ref('system-theme')`);
+  });
+
+  it('submenu dentro de submenu sai aninhado, com a tríade em cada nível', () => {
+    const saida = menubarSnippet({
+      menus: [
+        {
+          value: 'file',
+          trigger: 'File',
+          entries: [
+            {
+              kind: 'submenu',
+              label: 'Export',
+              items: [{ kind: 'submenu', label: 'Format', items: [{ kind: 'item', label: 'PDF', value: 'pdf' }] }],
+            },
+          ],
+        },
+      ],
+    });
+    expect(saida.match(/<MenubarSub>/g)).toHaveLength(2);
+    expect(saida).toContain('<MenubarSubTrigger>Format</MenubarSubTrigger>');
+  });
+
+  it('sem args, a barra canônica, e o import só com as peças usadas', () => {
+    const saida = menubarSnippet();
+    expect(saida).toContain(`import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarShortcut,
+  MenubarTrigger,
+} from '@/components/ui/menubar'`);
+    expect(saida).not.toContain(`from 'vue'`);
   });
 });

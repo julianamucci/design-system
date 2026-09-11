@@ -17,7 +17,11 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
 } from '@/components/ui/context-menu';
+import { Button } from '@/components/ui/button';
 import { contextMenuSource } from './context-menu.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -85,11 +89,61 @@ const meta: Meta<ContextMenuArgs> = {
 export default meta;
 type Story = StoryObj<ContextMenuArgs>;
 
+/**
+ * Espião dos itens do Playground — prova que o clique fora fecha SEM executar
+ * item nenhum (F3). Fora dos `args` de propósito: é instrumento da play, não
+ * control, e um arg sem `argTypes` deixaria o painel com uma linha muda.
+ */
+const playgroundItemSelect = fn();
+
+/**
+ * O teclado REAL do navegador — o `userEvent` do vitest em modo browser, que
+ * passa pelo CDP —, quando existir.
+ *
+ * O `userEvent` do `storybook/test` monta eventos no DOM, e evento montado não
+ * executa a ação padrão do navegador. Para a tecla de menu a ação padrão É o
+ * que se quer medir: o navegador dispara `contextmenu` no elemento focado.
+ * Com o evento montado, a tecla chegaria à área e nada abriria.
+ *
+ * `vitest/browser` é módulo virtual do plugin do Vitest (ver
+ * `.storybook/main.ts`): fora do modo browser — o painel Interactions — o
+ * import falha, e quem chama faz a parte do navegador pelo DOM.
+ */
+async function realKeyboard(): Promise<((text: string) => Promise<void>) | null> {
+  try {
+    const mod = (await import('vitest/browser')) as {
+      userEvent?: { keyboard?: (text: string) => Promise<void> };
+    };
+    const keyboard = mod.userEvent?.keyboard;
+    if (keyboard) return (text) => keyboard.call(mod.userEvent, text);
+  } catch {
+    // Sem modo browser: o chamador faz a parte do navegador.
+  }
+  return null;
+}
+
+/**
+ * A parte do navegador, quando não há teclado real: `contextmenu` no centro do
+ * elemento, que é o que a tecla de menu e o Shift+F10 disparam no focado.
+ */
+function dispatchContextMenu(target: HTMLElement): void {
+  const box = target.getBoundingClientRect();
+  target.dispatchEvent(
+    new MouseEvent('contextmenu', {
+      bubbles: true,
+      cancelable: true,
+      clientX: box.left + box.width / 2,
+      clientY: box.top + box.height / 2,
+    }),
+  );
+}
+
 export const Playground: Story = {
   parameters: {
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'functional.item12', 'functional.item13', 'functional.item14', 'functional.item15',
+      'functional.item16',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
       'accessibility.item7', 'accessibility.item8',
       'visual.item1',
@@ -105,7 +159,7 @@ export const Playground: Story = {
       ContextMenuShortcut,
     },
     setup() {
-      return { args };
+      return { args, itemSelect: playgroundItemSelect };
     },
     template: `
       <ContextMenu :modal="args.modal" @update:open="args.onOpenChange">
@@ -113,13 +167,13 @@ export const Playground: Story = {
           {{ args.triggerLabel }}
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem>
+          <ContextMenuItem @select="itemSelect">
             Editar
             <ContextMenuShortcut v-if="args.showShortcuts">Ctrl+E</ContextMenuShortcut>
           </ContextMenuItem>
-          <ContextMenuItem>Duplicar</ContextMenuItem>
+          <ContextMenuItem @select="itemSelect">Duplicar</ContextMenuItem>
           <ContextMenuSeparator v-if="args.showSeparator" />
-          <ContextMenuItem v-if="args.showDestructive" variant="destructive">
+          <ContextMenuItem v-if="args.showDestructive" variant="destructive" @select="itemSelect">
             Excluir
             <ContextMenuShortcut v-if="args.showShortcuts">Delete</ContextMenuShortcut>
           </ContextMenuItem>
@@ -152,6 +206,10 @@ export const Playground: Story = {
         Math.abs(boxMenu.top - (boxArea.top + boxArea.height / 2)),
       ).toBeLessThan(24);
       await expect(args.onOpenChange).toHaveBeenCalled();
+      // F16, pelo ponteiro: o foco ENTRA no menu ao abrir — sem isso a seta
+      // seguinte andaria na página, e o menu à vista seria inalcançável pelo
+      // teclado de quem abriu com o mouse.
+      await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
     });
 
     await step('Os itens são itens de menu de verdade', async () => {
@@ -272,6 +330,33 @@ export const Playground: Story = {
       }
     });
 
+    await step('Com a área como ÚLTIMA parada da página, Tab fecha o menu e o foco volta a ela', async () => {
+      // A segunda metade do F12: sem próximo ponto de tabulação, o Tab fecha do
+      // mesmo jeito — preso, seria a armadilha que C2 proíbe — e o foco volta à
+      // área pelo caminho da lib, como no Escape. Nesta story a área é o ÚNICO
+      // ponto de tabulação (o vizinho do passo anterior já saiu no `finally`),
+      // então ela é também o último. A precondição é conferida, não suposta — e
+      // sem o `tabbableBeside` do wrapper, que seria medir a peça com ela mesma:
+      // "tabulável" aqui é `tabIndex >= 0` e visível.
+      const stopsAfterArea = [...canvasElement.ownerDocument.querySelectorAll<HTMLElement>('*')].filter(
+        (el) =>
+          el.tabIndex >= 0
+          && el.getClientRects().length > 0
+          && Boolean(area().compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING),
+      );
+      await expect(stopsAfterArea).toHaveLength(0);
+
+      const menu = await gestoOpen(area());
+      menu.querySelector<HTMLElement>('[data-slot="context-menu-item"]')!.focus();
+      // Despacho, e não `userEvent.tab()`: sem próximo ponto, o user-event
+      // calcularia por conta própria para onde ir, e o passo mediria a
+      // biblioteca de teste em vez do wrapper — ver `pressTab`.
+      pressTab();
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(area()));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
+    });
+
     await step('Escape fecha e devolve o foco à área', async () => {
       await gestoOpen(area());
       await userEvent.keyboard('{Escape}');
@@ -280,11 +365,16 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'escape');
     });
 
-    await step('Clique fora fecha', async () => {
+    await step('Clique fora fecha, sem executar nenhum item', async () => {
       await gestoOpen(area());
+      // Zerado DEPOIS de abrir e antes do clique: o que se mede é só este
+      // gesto. F3 promete as duas metades — fecha E não executa —, e sem o
+      // espião a segunda passava sem ninguém olhar.
+      playgroundItemSelect.mockClear();
       await clickOutside();
       await waitForPortalGone('menu');
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
+      await expect(playgroundItemSelect).not.toHaveBeenCalled();
     });
 
     await step('Escolher um item fecha, e o motivo é a escolha', async () => {
@@ -293,9 +383,41 @@ export const Playground: Story = {
       // vazando para cá sairia aqui como `overlay`.
       const menu = await gestoOpen(area());
       const duplicateItem = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')][1];
+      playgroundItemSelect.mockClear();
       await userEvent.click(duplicateItem);
       await waitForPortalGone('menu');
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'api');
+      // O contraponto do clique fora: aqui o espião DISPARA — é o que dá dentes
+      // ao "não executou" do passo anterior.
+      await expect(playgroundItemSelect).toHaveBeenCalledTimes(1);
+    });
+
+    await step('A TECLA DE MENU com a área focada abre o menu, e o foco entra nele', async () => {
+      // F15 e F16 pela tecla de menu de verdade. A área PRECISA estar na ordem
+      // de tabulação: a tecla dispara `contextmenu` no elemento focado, e sem
+      // parada de tabulação o menu não existe para quem não usa mouse.
+      await closeMenu();
+      area().focus();
+      await expect(document.activeElement).toBe(area());
+      const real = await realKeyboard();
+      if (real) {
+        // Teclado REAL: quem transforma a tecla em `contextmenu` é o próprio
+        // navegador, e nada é despachado à mão — é a tecla que se mede.
+        await real('{ContextMenu}');
+      } else {
+        // Painel Interactions, sem CDP: a play faz a parte do navegador.
+        await userEvent.keyboard('{ContextMenu}');
+        dispatchContextMenu(area());
+      }
+      const menu = await waitForPortal('menu');
+      // O foco ENTRA no menu, sem nenhum item focado à mão — e a seta prova que
+      // dali os itens são alcançáveis.
+      await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
+      await userEvent.keyboard('{ArrowDown}');
+      const items = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      await waitFor(() => expect(items).toContain(document.activeElement));
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('menu');
     });
 
     await step('Shift+F10 na área focada abre o menu, e o foco entra nele', async () => {
@@ -327,6 +449,119 @@ export const Playground: Story = {
       // descreve o menu aberto, não a área vazia.
       const menu = await gestoOpen(area());
       await expect(menu).toBeVisible();
+    });
+  },
+};
+
+/**
+ * Um `Tab` de teclado, DESPACHADO À MÃO no elemento em foco — a ordem do
+ * teclado real, `keydown` no item em foco primeiro. Quem decide o Tab é o
+ * ouvinte de CAPTURA do painel (`useTabCloses`); com o foco já movido, a tecla
+ * nunca chegaria a ele. A mesma forma das stories de Tab do DropdownMenu.
+ */
+function pressTab(shift = false): void {
+  document.activeElement?.dispatchEvent(
+    new KeyboardEvent('keydown', { key: 'Tab', shiftKey: shift, bubbles: true, cancelable: true }),
+  );
+}
+
+/**
+ * Menu não prende o foco (C2 do PRD do DropdownMenu, que é também o deste): Tab
+ * fecha e o foco segue a página a partir da ÁREA — o próximo ponto de
+ * tabulação depois dela, ou o anterior no Shift+Tab. A área como última parada
+ * está no Playground.
+ *
+ * O passo que só esta story mede é o do SUBMENU (F12, "também de dentro do
+ * submenu"): o painel dele vive em outro portal, e a tecla apertada ali nunca
+ * chega ao ouvinte do raiz. O Playground cobria só o painel raiz.
+ */
+export const TabLeavesMenu: Story = {
+  parameters: {
+    covers: ['functional.item12'],
+    controls: { disable: true },
+  },
+  render: (args) => ({
+    components: {
+      ContextMenu,
+      ContextMenuTrigger,
+      ContextMenuContent,
+      ContextMenuItem,
+      ContextMenuSub,
+      ContextMenuSubTrigger,
+      ContextMenuSubContent,
+      Button,
+    },
+    setup() {
+      return { args };
+    },
+    template: `
+      <div class="nds-cluster" data-spacing="md">
+        <Button variant="ghost">Antes</Button>
+        <ContextMenu @update:open="args.onOpenChange">
+          <ContextMenuTrigger class="${AREA_CLICK_DIREITO}" data-align="center" data-justify="center" data-testid="area">
+            {{ args.triggerLabel }}
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem>Editar</ContextMenuItem>
+            <ContextMenuItem>Duplicar</ContextMenuItem>
+            <ContextMenuSub>
+              <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
+              <ContextMenuSubContent>
+                <ContextMenuItem>Por e-mail</ContextMenuItem>
+                <ContextMenuItem>Por link</ContextMenuItem>
+              </ContextMenuSubContent>
+            </ContextMenuSub>
+          </ContextMenuContent>
+        </ContextMenu>
+        <Button variant="ghost">Depois</Button>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const area = () => canvas.getByTestId('area');
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+    const openMenus = () => within(document.body).queryAllByRole('menu');
+
+    const openWithItemFocused = async () => {
+      const menu = await gestoOpen(area());
+      menu.querySelector<HTMLElement>('[data-slot="context-menu-item"]')!.focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+      return menu;
+    };
+
+    await step('Tab fecha o menu e o foco vai ao ponto DEPOIS da área', async () => {
+      await openWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(after));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
+    });
+
+    await step('Shift+Tab fecha o menu e o foco vai ao ponto ANTES da área', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(before));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
+    });
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e segue da área', async () => {
+      const menu = await openWithItemFocused();
+      within(menu).getByRole('menuitem', { name: 'Compartilhar' }).focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(openMenus()).toHaveLength(2));
+      const sub = document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]')!;
+      within(sub).getAllByRole('menuitem')[0].focus();
+      await expect(sub.contains(document.activeElement)).toBe(true);
+
+      pressTab();
+      // Os dois painéis: fechar só o filho deixaria o raiz aberto com o foco
+      // fora dele.
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(after));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
     });
   },
 };

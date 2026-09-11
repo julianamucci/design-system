@@ -105,25 +105,41 @@ export type SubmenuController = {
    * Registra um gatilho já montado por quem chama e devolve o MESMO elemento,
    * para que um chamador que mantém a própria lista de focáveis o registre nela
    * em uma linha.
+   *
+   * Vale para gatilho de QUALQUER nível: um sub-gatilho montado dentro do
+   * painel de um submenu é registrado no mesmo controlador, e abre o nível de
+   * baixo — ver o bloco de `createSubmenuController`.
    */
   attach: (trigger: HTMLElement, options: SubmenuTriggerOptions) => HTMLElement;
-  /** Abre o painel do gatilho, fechando o que estiver aberto. */
+  /**
+   * Abre o painel do gatilho no nível dele, fechando o que estiver aberto
+   * naquele nível e abaixo.
+   */
   open: (trigger: HTMLElement, focusFirstItem?: boolean) => void;
-  /** Fecha o painel aberto, se houver. */
+  /**
+   * Fecha TODOS os painéis abertos, se houver. Com `focusTrigger`, o foco vai
+   * ao gatilho do primeiro nível — o item do menu do componente.
+   */
   close: (focusTrigger?: boolean) => void;
   /**
-   * Teclas que agem com o foco DENTRO do painel: `ArrowLeft` e `Escape`.
+   * Teclas que agem com o foco DENTRO de um painel: `ArrowLeft` e `Escape`.
    * Devolve `true` quando consumiu o evento — quem chama para de tratar.
    *
    * `Enter`, `Espaço` e `ArrowRight` não estão aqui: eles agem com o foco no
    * gatilho, e o próprio gatilho os escuta.
    */
   handleKeydown: (event: KeyboardEvent) => boolean;
-  /** O nó está dentro do painel aberto? */
+  /** O nó está dentro de algum painel aberto, de qualquer nível? */
   contains: (node: Node | null) => boolean;
-  /** Painel aberto, ou `null`. */
+  /**
+   * O painel aberto que contém o nó, ou `null`. É o que decide o percurso das
+   * setas: ele é do painel que tem o foco, e nenhum nível recolhe os itens de
+   * outro.
+   */
+  panelContaining: (node: Node | null) => HTMLElement | null;
+  /** Painel aberto mais fundo, ou `null`. */
   readonly panel: HTMLElement | null;
-  /** Gatilho do painel aberto, ou `null`. */
+  /** Gatilho do painel aberto mais fundo, ou `null`. */
   readonly trigger: HTMLElement | null;
   /** Fecha, solta os temporizadores e não abre mais. Idempotente. */
   destroy: () => void;
@@ -156,10 +172,32 @@ export function createSubmenuChevron(): SVGSVGElement {
 /**
  * Um controlador por MENU, não por gatilho.
  *
- * Um painel filho de cada vez: abrir outro fecha o anterior, que é o que evita
- * dois painéis vivos sobre o mesmo menu. O estado mora aqui porque é estado do
- * menu, não do item.
+ * Um painel por NÍVEL: abrir outro no mesmo nível fecha o anterior e tudo o que
+ * estava aberto abaixo dele, que é o que evita dois painéis vivos sobre o mesmo
+ * menu. O estado mora aqui porque é estado do menu, não do item.
+ *
+ * SUBMENU DENTRO DE SUBMENU, desde 2026-09-11. Os painéis abertos são uma PILHA,
+ * e o nível de um gatilho é o painel aberto que o contém — nenhum, para o item
+ * do menu do componente. Até então o controlador guardava um painel só: um
+ * sub-gatilho montado dentro do painel filho, ao abrir, fechava o próprio painel
+ * que o continha. O conteúdo compartilhado do Menubar mostra esse aninhamento
+ * VIVO no lado "evite" do Do & Don't (o assunto do par é justamente que ele
+ * confunde), e as quatro libs o permitem; o que faltava era esta pilha.
+ *
+ * O que muda por nível, e por quê:
+ *
+ *   • `Escape` fecha só o nível mais fundo, e `ArrowLeft` fecha o nível que tem
+ *     o foco — a WAI-ARIA APG pede um nível por tecla, e fechar a pilha inteira
+ *     tiraria a pessoa de três níveis com um toque.
+ *   • A carência do ponteiro sabe DE QUE NÍVEL veio: entrar num painel só a
+ *     cancela se ela fecharia aquele painel. Sair do filho de volta para o pai
+ *     agenda o fechamento do filho, e entrar no pai não o cancela — sem isto o
+ *     neto ficava aberto sob um ponteiro que já tinha voltado.
+ *   • `close()` fecha a pilha inteira: é o que os três menus chamam quando o
+ *     menu deles sai, e um neto que sobrevivesse ao avô seria um menu órfão no
+ *     `body`.
  */
+// PATCH: api — submenu dentro de submenu, por pilha de níveis (ver PATCHES.md#vanilla-submenu-nested-levels)
 export function createSubmenuController(options: SubmenuOptions): SubmenuController {
   const {
     triggerSlot,
@@ -181,28 +219,44 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
    */
   const registry = new WeakMap<HTMLElement, SubmenuTriggerOptions>();
 
-  let panelEl: HTMLElement | null = null;
-  let triggerEl: HTMLElement | null = null;
+  /** Os painéis abertos, do primeiro nível ao mais fundo. */
+  const levels: Array<{ trigger: HTMLElement; panel: HTMLElement }> = [];
   let panelCount = 0;
   let closeTimer: ReturnType<typeof setTimeout> | null = null;
+  /** Nível que o fechamento agendado vai fechar (ele e os de baixo). */
+  let closeTimerLevel = -1;
   let destroyed = false;
+
+  /**
+   * O nível em que o painel deste gatilho abre: um abaixo do painel aberto que
+   * contém o gatilho, ou o primeiro, para o item do menu do componente.
+   */
+  function levelOf(trigger: HTMLElement): number {
+    for (let i = levels.length - 1; i >= 0; i--) {
+      if (levels[i].panel.contains(trigger)) return i + 1;
+    }
+    return 0;
+  }
 
   function cancelClose(): void {
     if (closeTimer === null) return;
     clearTimeout(closeTimer);
     closeTimer = null;
+    closeTimerLevel = -1;
   }
 
-  function scheduleClose(): void {
+  function scheduleClose(level: number): void {
     if (closeDelay <= 0) return;
-    if (!panelEl) return;
+    if (levels.length <= level) return;
     cancelClose();
+    closeTimerLevel = level;
     closeTimer = setTimeout(() => {
       closeTimer = null;
+      closeTimerLevel = -1;
       // O foco manda sobre o ponteiro: quem entrou no painel pela seta não pode
       // perdê-lo porque o mouse estava parado noutro canto da tela.
-      if (panelEl?.contains(document.activeElement)) return;
-      close();
+      if (levels.slice(level).some((l) => l.panel.contains(document.activeElement))) return;
+      closeFrom(level);
     }, closeDelay);
   }
 
@@ -211,9 +265,8 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     if (writeStateAttr) trigger.dataset.state = open ? 'open' : 'closed';
   }
 
-  function focusFirstItem(): void {
-    if (!panelEl) return;
-    getItems(panelEl)[0]?.focus();
+  function focusFirstItem(panel: HTMLElement): void {
+    getItems(panel)[0]?.focus();
   }
 
   /**
@@ -253,14 +306,19 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     const config = registry.get(trigger);
     if (!config || config.disabled) return;
 
+    const level = levelOf(trigger);
+
     // Já aberto neste gatilho: não remonta o painel, mas ainda entra nele se foi
     // isso que pediram — a tecla que abre e a que entra são a mesma.
-    if (triggerEl === trigger && panelEl) {
-      if (focusFirst) focusFirstItem();
+    const current = levels[level];
+    if (current?.trigger === trigger) {
+      if (focusFirst) focusFirstItem(current.panel);
       return;
     }
 
-    close();
+    // O que estava aberto NESTE nível sai, com tudo abaixo dele; o nível de cima
+    // — o painel que contém este gatilho — continua.
+    closeFrom(level);
 
     const panel = config.buildPanel();
     // O `id` existe para o `aria-owns` ter para onde apontar: com o painel fora
@@ -302,33 +360,47 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     );
 
     if (closeDelay > 0) {
-      panel.addEventListener('mouseenter', cancelClose);
-      panel.addEventListener('mouseleave', scheduleClose);
+      // Entrar no painel só cancela o fechamento que o levaria junto: o que foi
+      // agendado para um nível ABAIXO dele (o ponteiro voltou do neto para o
+      // filho) segue valendo, senão o neto ficava aberto sem ninguém nele.
+      panel.addEventListener('mouseenter', () => {
+        if (closeTimerLevel <= level) cancelClose();
+      });
+      panel.addEventListener('mouseleave', () => scheduleClose(level));
     }
 
     markTrigger(trigger, true);
     trigger.setAttribute('aria-owns', panel.id);
 
-    panelEl = panel;
-    triggerEl = trigger;
+    levels.push({ trigger, panel });
 
-    if (focusFirst) focusFirstItem();
+    if (focusFirst) focusFirstItem(panel);
   }
 
-  /** Fecha o painel e desfaz a ligação que só vale enquanto ele existe. */
-  function close(focusTrigger = false): void {
-    cancelClose();
-    panelEl?.remove();
-    panelEl = null;
-    const previous = triggerEl;
-    if (previous) {
-      markTrigger(previous, false);
+  /**
+   * Fecha o painel do nível `level` e todos os de baixo, e desfaz a ligação que
+   * só vale enquanto cada um existe. Do mais fundo para cima: o neto não pode
+   * ficar no `body` depois de o filho sair.
+   */
+  function closeFrom(level: number, focusTrigger = false): void {
+    if (closeTimerLevel >= level) cancelClose();
+    let shallowest: HTMLElement | null = null;
+    while (levels.length > level) {
+      const { trigger, panel } = levels.pop()!;
+      panel.remove();
+      markTrigger(trigger, false);
       // `aria-owns` sai junto: apontar para um painel que já não está no
       // documento é pior que não apontar para nada.
-      previous.removeAttribute('aria-owns');
+      trigger.removeAttribute('aria-owns');
+      shallowest = trigger;
     }
-    triggerEl = null;
-    if (focusTrigger) previous?.focus();
+    if (focusTrigger) shallowest?.focus();
+  }
+
+  /** Fecha a pilha inteira — o que cada menu chama quando ele próprio sai. */
+  function close(focusTrigger = false): void {
+    cancelClose();
+    closeFrom(0, focusTrigger);
   }
 
   function attach(trigger: HTMLElement, config: SubmenuTriggerOptions): HTMLElement {
@@ -348,14 +420,15 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     markTrigger(trigger, false);
 
     if (openOnHover) trigger.addEventListener('mouseenter', () => open(trigger));
-    if (closeDelay > 0) trigger.addEventListener('mouseleave', scheduleClose);
+    if (closeDelay > 0) trigger.addEventListener('mouseleave', () => scheduleClose(levelOf(trigger)));
 
     trigger.addEventListener('click', (event) => {
       // Clique abre em vez de escolher: o gatilho não tem ação própria, e fechar
       // o menu aqui descartaria o que a pessoa veio buscar.
       event.stopPropagation();
-      if (toggleOnClick && triggerEl === trigger && panelEl) {
-        close(true);
+      const level = levelOf(trigger);
+      if (toggleOnClick && levels[level]?.trigger === trigger) {
+        closeFrom(level, true);
         return;
       }
       open(trigger, focusOnClickOpen);
@@ -378,26 +451,34 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
   function handleKeydown(event: KeyboardEvent): boolean {
     const active = document.activeElement;
 
-    // Com submenu aberto, `Escape` fecha SÓ o submenu e devolve o foco ao
-    // gatilho: fechar o menu inteiro aqui tiraria a pessoa de dois níveis com
-    // uma tecla, e o `Escape` seguinte é que fecha o menu.
-    if (event.key === 'Escape' && panelEl) {
+    // Com submenu aberto, `Escape` fecha SÓ o mais fundo e devolve o foco ao
+    // gatilho dele: fechar o menu inteiro aqui tiraria a pessoa de dois níveis
+    // com uma tecla, e o `Escape` seguinte é que fecha o nível de cima.
+    if (event.key === 'Escape' && levels.length > 0) {
       event.preventDefault();
-      close(true);
+      closeFrom(levels.length - 1, true);
       return true;
     }
 
-    if (event.key === 'ArrowLeft' && panelEl?.contains(active)) {
+    // `ArrowLeft` fecha o nível que TEM o foco — e, com ele, o que estiver
+    // aberto abaixo —, e devolve o foco ao item que o abriu.
+    const level = levels.findIndex((l) => l.panel.contains(active));
+    if (event.key === 'ArrowLeft' && level >= 0) {
       event.preventDefault();
-      close(true);
+      closeFrom(level, true);
       return true;
     }
 
     return false;
   }
 
+  function panelContaining(node: Node | null): HTMLElement | null {
+    if (node === null) return null;
+    return levels.find((l) => l.panel.contains(node))?.panel ?? null;
+  }
+
   function contains(node: Node | null): boolean {
-    return node !== null && panelEl !== null && panelEl.contains(node);
+    return panelContaining(node) !== null;
   }
 
   return {
@@ -406,11 +487,12 @@ export function createSubmenuController(options: SubmenuOptions): SubmenuControl
     close,
     handleKeydown,
     contains,
+    panelContaining,
     get panel() {
-      return panelEl;
+      return levels.at(-1)?.panel ?? null;
     },
     get trigger() {
-      return triggerEl;
+      return levels.at(-1)?.trigger ?? null;
     },
     // Nada pode sobrar no `body` depois disto: o painel é portalado, então quem
     // desmonta o menu sem fechá-lo antes deixaria um menu órfão na tela sem

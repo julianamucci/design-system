@@ -15,7 +15,7 @@
  * aberto. O painel aberto não muda a MARCAÇÃO que se copia — só a story que
  * trata do estado inicial ensina `defaultOpen`, e é a de estado aberto.
  */
-import { attrs, jsxSnippet, propBool, type SourceTransform } from '@/lib/story-source';
+import { attrs, indentar, jsxSnippet, propBool, type SourceTransform } from '@/lib/story-source';
 
 export type MenubarArgs = {
   modal: boolean;
@@ -421,5 +421,292 @@ export function menubarControlledSource(): string {
     </MenubarMenu>
   </Menubar>
 </>`,
+  );
+}
+
+/**
+ * Marcação mista: os três estados de um item de marcação lado a lado.
+ *
+ * Misto quer dizer "alguns dos filhos" e desenha traço; marcado desenha tique.
+ * Os três vão por extenso — o assunto é o CONTRASTE entre eles. `indeterminate`
+ * é prop do wrapper, e controlada: o primeiro clique chama
+ * `onCheckedChange(true)`, e é ali que quem guarda o estado tira o misto.
+ */
+export function menubarCheckboxIndeterminateSource(): string {
+  return jsxSnippet(
+    importingMenubar(
+      'Menubar',
+      'MenubarCheckboxItem',
+      'MenubarContent',
+      'MenubarGroup',
+      'MenubarLabel',
+      'MenubarMenu',
+      'MenubarTrigger',
+    ),
+    `<Menubar>
+${menu(
+  'Exibir',
+  `      <MenubarGroup>
+        <MenubarLabel>Mostrar na tela</MenubarLabel>
+        <MenubarCheckboxItem checked={false} indeterminate>
+          Colunas
+        </MenubarCheckboxItem>
+        <MenubarCheckboxItem checked>Régua</MenubarCheckboxItem>
+        <MenubarCheckboxItem checked={false}>Grade</MenubarCheckboxItem>
+      </MenubarGroup>`,
+)}
+</Menubar>`,
+  );
+}
+
+// ─── A barra como DADO: uma lista monta a prévia e imprime o código ───────────
+//
+// Os cards de Variantes da docs page tinham um literal de código em português
+// ao lado de cada prévia — e dois deles nem prévia tinham, só o texto
+// `variant="default"`. É o desenho do ContextMenu desta stack e do vanilla: a
+// MESMA lista vira a barra viva e o trecho que se copia, então os dois não têm
+// como divergir — nem de idioma, nem de estrutura.
+
+/**
+ * Item de ação. `value` é o id ESTÁVEL do item — é o que o evento de escolha
+ * manda ao GA4 —, e o snippet não o imprime: o item de ação não tem `value`.
+ */
+export type MenubarActionEntry = {
+  kind: 'item';
+  label: string;
+  value: string;
+  shortcut?: string;
+  destructive?: boolean;
+};
+
+/**
+ * Item de marcação. `value` é o id estável e também dá NOME ao estado no
+ * snippet: `show-ruler` vira `const [showRuler, setShowRuler]`.
+ */
+export type MenubarCheckboxEntry = {
+  kind: 'checkbox';
+  label: string;
+  value: string;
+  checked: boolean;
+};
+
+/**
+ * Submenu — que pode conter OUTRO submenu. A barra não o recomenda (é o "evite"
+ * do Do & Don't), mas precisa conseguir mostrá-lo vivo para que o defeito seja
+ * visto, e não descrito.
+ */
+export type MenubarSubmenuEntry = {
+  kind: 'submenu';
+  label: string;
+  items: Array<MenubarActionEntry | MenubarSubmenuEntry>;
+};
+
+/**
+ * Uma entrada de um menu da barra. O rótulo do grupo de escolha única é
+ * opcional: onde ele existe, mora DENTRO do `MenubarRadioGroup`, que é quem ele
+ * nomeia — um `MenubarGroup` em volta anunciaria dois grupos, um anônimo.
+ */
+export type MenubarEntry =
+  | MenubarActionEntry
+  | MenubarCheckboxEntry
+  | MenubarSubmenuEntry
+  | { kind: 'separator' }
+  | { kind: 'group'; label: string; items: Array<MenubarActionEntry | MenubarCheckboxEntry> }
+  | {
+      kind: 'radio-group';
+      label?: string;
+      /** Id estável do grupo e nome do estado no snippet. */
+      value: string;
+      /** A opção marcada ao montar. */
+      selected: string;
+      /** `value` de cada opção é o id estável dela — e o do evento de escolha. */
+      options: Array<{ label: string; value: string }>;
+    };
+
+/** Um menu da barra: o texto do gatilho e o que o painel lista. */
+export type MenubarMenuEntry = {
+  label: string;
+  entries: readonly MenubarEntry[];
+};
+
+/** `show-ruler` → `showRuler`: o nome do estado sai do id estável. */
+function stateName(value: string): string {
+  return value.replace(/-([a-z0-9])/g, (_, letter: string) => letter.toUpperCase());
+}
+
+function setterName(state: string): string {
+  return `set${state.charAt(0).toUpperCase()}${state.slice(1)}`;
+}
+
+/**
+ * Texto de JSX. O rótulo vem do conteúdo compartilhado, e um `{` ou um `<`
+ * nele quebraria o trecho copiado — nesse caso ele vai como string entre chaves.
+ */
+function jsxText(text: string): string {
+  return /[{}<>]/.test(text) ? `{${JSON.stringify(text)}}` : text;
+}
+
+function actionLines(entry: MenubarActionEntry, pad: string): string[] {
+  const open = `<MenubarItem${entry.destructive ? ' variant="destructive"' : ''}>`;
+  if (!entry.shortcut) return [`${pad}${open}${jsxText(entry.label)}</MenubarItem>`];
+  return [
+    `${pad}${open}`,
+    `${pad}  ${jsxText(entry.label)} <MenubarShortcut>${jsxText(entry.shortcut)}</MenubarShortcut>`,
+    `${pad}</MenubarItem>`,
+  ];
+}
+
+function submenuLines(entry: MenubarSubmenuEntry, pad: string): string[] {
+  return [
+    `${pad}<MenubarSub>`,
+    `${pad}  <MenubarSubTrigger>${jsxText(entry.label)}</MenubarSubTrigger>`,
+    `${pad}  <MenubarSubContent>`,
+    ...entry.items.flatMap((item) =>
+      item.kind === 'submenu' ? submenuLines(item, `${pad}    `) : actionLines(item, `${pad}    `),
+    ),
+    `${pad}  </MenubarSubContent>`,
+    `${pad}</MenubarSub>`,
+  ];
+}
+
+function entryLines(entry: MenubarEntry, pad: string): string[] {
+  switch (entry.kind) {
+    case 'item':
+      return actionLines(entry, pad);
+    case 'separator':
+      return [`${pad}<MenubarSeparator />`];
+    case 'checkbox': {
+      const state = stateName(entry.value);
+      return [
+        `${pad}<MenubarCheckboxItem checked={${state}} onCheckedChange={${setterName(state)}}>`,
+        `${pad}  ${jsxText(entry.label)}`,
+        `${pad}</MenubarCheckboxItem>`,
+      ];
+    }
+    case 'submenu':
+      return submenuLines(entry, pad);
+    case 'group':
+      return [
+        `${pad}<MenubarGroup>`,
+        `${pad}  <MenubarLabel>${jsxText(entry.label)}</MenubarLabel>`,
+        ...entry.items.flatMap((item) => entryLines(item, `${pad}  `)),
+        `${pad}</MenubarGroup>`,
+      ];
+    case 'radio-group': {
+      const state = stateName(entry.value);
+      return [
+        `${pad}<MenubarRadioGroup value={${state}} onValueChange={${setterName(state)}}>`,
+        ...(entry.label ? [`${pad}  <MenubarLabel>${jsxText(entry.label)}</MenubarLabel>`] : []),
+        ...entry.options.map(
+          (option) =>
+            `${pad}  <MenubarRadioItem value=${JSON.stringify(option.value)}>${jsxText(option.label)}</MenubarRadioItem>`,
+        ),
+        `${pad}</MenubarRadioGroup>`,
+      ];
+    }
+  }
+}
+
+/** O `useState` de cada marcação e de cada grupo de escolha única, na ordem da barra. */
+function stateLines(entries: readonly MenubarEntry[]): string[] {
+  return entries.flatMap((entry) => {
+    if (entry.kind === 'checkbox') {
+      const state = stateName(entry.value);
+      return [`const [${state}, ${setterName(state)}] = useState(${entry.checked});`];
+    }
+    if (entry.kind === 'radio-group') {
+      const state = stateName(entry.value);
+      return [`const [${state}, ${setterName(state)}] = useState(${JSON.stringify(entry.selected)});`];
+    }
+    if (entry.kind === 'group') return stateLines(entry.items);
+    return [];
+  });
+}
+
+/** As peças que as entradas usam — é o bloco de import, e só ele. */
+function entryParts(entries: readonly MenubarEntry[], parts: Set<string>): Set<string> {
+  for (const entry of entries) {
+    switch (entry.kind) {
+      case 'item':
+        parts.add('MenubarItem');
+        if (entry.shortcut) parts.add('MenubarShortcut');
+        break;
+      case 'separator':
+        parts.add('MenubarSeparator');
+        break;
+      case 'checkbox':
+        parts.add('MenubarCheckboxItem');
+        break;
+      case 'submenu':
+        parts.add('MenubarSub').add('MenubarSubTrigger').add('MenubarSubContent');
+        entryParts(entry.items, parts);
+        break;
+      case 'group':
+        parts.add('MenubarGroup').add('MenubarLabel');
+        entryParts(entry.items, parts);
+        break;
+      case 'radio-group':
+        parts.add('MenubarRadioGroup').add('MenubarRadioItem');
+        if (entry.label) parts.add('MenubarLabel');
+        break;
+    }
+  }
+  return parts;
+}
+
+/** A barra canônica, a mesma do `meta`: dois menus com atalho. */
+const MENUS_DEFAULT: readonly MenubarMenuEntry[] = [
+  {
+    label: 'Arquivo',
+    entries: [
+      { kind: 'item', label: 'Novo', value: 'new', shortcut: 'Ctrl+N' },
+      { kind: 'item', label: 'Abrir', value: 'open', shortcut: 'Ctrl+O' },
+    ],
+  },
+  {
+    label: 'Editar',
+    entries: [
+      { kind: 'item', label: 'Desfazer', value: 'undo', shortcut: 'Ctrl+Z' },
+      { kind: 'item', label: 'Refazer', value: 'redo', shortcut: 'Ctrl+Shift+Z' },
+    ],
+  },
+];
+
+export type MenubarSnippetOptions = {
+  /** Os menus da barra, na ordem; sem eles, a barra canônica. */
+  menus?: readonly MenubarMenuEntry[];
+};
+
+/**
+ * O trecho da barra descrita por `menus`, com os rótulos EXATAMENTE como
+ * chegam — quem chama os lê do conteúdo compartilhado, no idioma da página.
+ *
+ * O trecho é o que se COLA: o import só das peças usadas e, havendo marcação ou
+ * escolha única, o `useState` de cada uma dentro de um componente. Sem `menus`
+ * o construtor cai na barra canônica, que é como a guarda transversal o chama.
+ */
+export function menubarSnippet(o: MenubarSnippetOptions = {}): string {
+  const menus = o.menus ?? MENUS_DEFAULT;
+  const allEntries = menus.flatMap((m) => m.entries);
+  const state = stateLines(allEntries);
+  const parts = entryParts(allEntries, new Set(['Menubar', 'MenubarContent', 'MenubarMenu', 'MenubarTrigger']));
+  const bar = `<Menubar>
+${menus
+  .map((m) => menu(jsxText(m.label), m.entries.flatMap((entry) => entryLines(entry, '      ')).join('\n')))
+  .join('\n')}
+</Menubar>`;
+
+  if (state.length === 0) return jsxSnippet(importingMenubar(...parts), bar);
+
+  return jsxSnippet(
+    `import { useState } from "react";
+${importingMenubar(...parts)}`,
+    `function MenubarWithState() {
+${indentar(state.join('\n'), '  ')}
+
+  return (
+${indentar(bar, '    ')}
+  );
+}`,
   );
 }

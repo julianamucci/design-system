@@ -13,10 +13,59 @@
     "demonstration": {
       "title": "Demonstração",
       "labels": {
-        "fileMenu": "Menu Arquivo (com submenu)",
-        "editMenu": "Menu Editar (com shortcuts)",
-        "viewMenu": "Menu Exibir (com checkbox)",
-        "toolsMenu": "Menu Ferramentas (com radio)"
+        "file": "Arquivo",
+        "edit": "Editar",
+        "view": "Exibir",
+        "tools": "Ferramentas",
+        "help": "Ajuda",
+        "theme": "Tema",
+        "menu": "Menu",
+        "new": "Novo",
+        "open": "Abrir",
+        "save": "Salvar",
+        "export": "Exportar",
+        "format": "Formato",
+        "pdf": "PDF",
+        "csv": "CSV",
+        "quit": "Sair",
+        "undo": "Desfazer",
+        "redo": "Refazer",
+        "cut": "Recortar",
+        "copy": "Copiar",
+        "paste": "Colar",
+        "appearance": "Aparência",
+        "darkMode": "Modo escuro",
+        "showRuler": "Mostrar régua",
+        "fullScreen": "Tela cheia",
+        "find": "Buscar",
+        "replace": "Substituir",
+        "lightTheme": "Tema claro",
+        "darkTheme": "Tema escuro",
+        "systemTheme": "Tema do sistema",
+        "zoom": "Zoom",
+        "singleAction": "Ação única",
+        "deleteFile": "Excluir arquivo",
+        "panels": "Painéis",
+        "sidebar": "Barra lateral",
+        "grid": "Grade",
+        "ruler": "Régua",
+        "light": "Claro",
+        "dark": "Escuro",
+        "system": "Sistema",
+        "documentation": "Documentação",
+        "about": "Sobre",
+        "newShortcut": "Ctrl+N",
+        "openShortcut": "Ctrl+O",
+        "saveShortcut": "Ctrl+S",
+        "quitShortcut": "Ctrl+Q",
+        "undoShortcut": "Ctrl+Z",
+        "redoShortcut": "Ctrl+Shift+Z",
+        "cutShortcut": "Ctrl+X",
+        "copyShortcut": "Ctrl+C",
+        "pasteShortcut": "Ctrl+V",
+        "fullScreenShortcut": "F11",
+        "findShortcut": "Ctrl+F",
+        "replaceShortcut": "Ctrl+H"
       }
     },
     "anatomy": {
@@ -33,7 +82,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <div ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></div>\n      <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></div>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <div ndsMenubarSubTrigger>Exportar</div>\n        <ng-template ndsMenubarSubContent>\n          <div ndsMenubarItem>PDF</div>\n          <div ndsMenubarItem>CSV</div>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
         "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst bar = createMenubar([\n  {\n    label: 'Arquivo',\n    items: [\n      { label: 'Novo', shortcut: 'Ctrl+N' },\n      { label: 'Abrir', shortcut: 'Ctrl+O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Exportar',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Editar',\n    items: [{ label: 'Desfazer', shortcut: 'Ctrl+Z' }],\n  },\n]);\n\ndocument.body.appendChild(bar);",
         "vue": "<Menubar v-model=\"menuAtivo\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "svelte": "<Menubar bind:value={menuAtivo}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Arquivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Novo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
@@ -152,7 +201,7 @@
         "withShortcuts": {
           "name": "Menu com shortcuts",
           "description": "Menu com items que exibem atalhos de teclado à direita via <code>Shortcut</code>. O texto fica alinhado à esquerda e o atalho à direita, em cor secundária.",
-          "use": "Editores e ferramentas com ações frequentes (Salvar, Desfazer, Copiar). O atalho exibido é puramente visual — registre o handler real no consumidor (ex.: <code>useHotkeys</code>)."
+          "use": "Editores e ferramentas com ações frequentes (Salvar, Desfazer, Copiar). O atalho exibido é puramente visual — registre o handler real no consumidor (um atalho de teclado registrado pela aplicação)."
         },
         "withCheckbox": {
           "name": "Menu com checkbox",
@@ -324,9 +373,9 @@
         "title": "Navegação por Teclado",
         "tab": "Tab — entra no Menubar pelo gatilho que tem a vez (o primeiro, até outro ser usado) ou sai dele; com um menu aberto, sair também o fecha.",
         "arrowsHorizontal": "← / → — move entre Triggers; abre menu adjacente se um já estiver aberto.",
-        "arrowsVertical": "↑ / ↓ — abre menu (se Trigger focado) ou navega Items (se Content aberto).",
+        "arrowsVertical": "↓ — com o Trigger focado, abre o menu; ↑ / ↓ — com o menu aberto, navegam entre os Items.",
         "enter": "Enter / Space — ativa Trigger ou Item.",
-        "escape": "ESC — fecha menu (e submenu); retorna foco ao Trigger.",
+        "escape": "ESC — fecha o menu e devolve o foco ao Trigger. Dentro de um submenu, fecha só o submenu e devolve o foco ao item que o abriu.",
         "homeEnd": "Home / End — primeiro/último Item dentro de Content.",
         "typeahead": "Letras alfabéticas — typeahead em Items."
       },
@@ -371,14 +420,37 @@
       "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: a coordenação entre menus, o portal e o posicionamento vêm da lib de menu adotada nesta stack; o design system aplica as classes <code>.nds-*</code> e o teclado documentado aqui.",
       "item2": "<strong>Portal</strong>: o painel do menu pode ser renderizado em portal, fora da árvore do exemplo. Em previews, aplique <code>contain: layout</code> no wrapper.",
-      "item3": "<strong>Atalhos</strong>: <code>MenubarShortcut</code> é visual; o atalho real precisa ser registrado no consumidor (ex: <code>useHotkeys</code>).",
+      "item3": "<strong>Atalhos</strong>: <code>MenubarShortcut</code> é visual; o atalho real precisa ser registrado no consumidor (um atalho de teclado registrado pela aplicação).",
       "item4": "<strong>Mobile</strong>: Menubar em telas pequenas vira sub-ótimo — considere alternar para Sidebar ou DropdownMenu acima de breakpoint.",
       "item5": "<strong>Submenus</strong>: limite a 1 nível. Submenu aninhado em submenu confunde navegação por setas.",
       "item6": "<strong>Trigger via composição</strong>: delegar a renderização a um Button filho para herdar variantes; o Trigger já é <code>&lt;button&gt;</code>."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (label do Trigger), <code>label</code> (texto do Item). Disparar via callbacks de mudança de valor e de seleção."
+      "description": "O Menubar fala a mesma língua da família de menus (DropdownMenu e Context Menu): <code>menubar_open</code>, <code>menubar_close</code> e <code>menubar_item_select</code>, e todo payload leva <code>component</code>, <code>menu</code> e <code>location</code>. O de item soma <code>label</code>; o de fechamento soma <code>reason</code> — <code>escape</code>, <code>overlay</code> (clique fora, Tab, clique no gatilho aberto ou passagem para o menu vizinho: saiu sem decidir) ou <code>api</code> (item escolhido ou fechamento pelo código); o tipo carrega também <code>close-button</code>, que a barra não usa. <code>menu</code> e <code>label</code> são identificadores estáveis, em inglês e kebab-case — nesta página, <code>menu</code> é o id da prévia seguido do menu da barra (<code>demo-file</code>, <code>pair1-do-edit</code>, <code>with-shortcuts</code>) e <code>label</code> é o id do item (<code>save</code>, <code>show-ruler</code>). Nunca o texto traduzido: \"Salvar\", \"Save\" e \"Guardar\" virariam três linhas de uma ação só no GA4. O atalho exibido é só texto e não gera evento: quem registra a tecla é quem consome. <code>location</code> é a seção da página onde a barra está.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "menuOpen": "menubar_open",
+        "menuOpenTrigger": "A pessoa abre um menu da barra: clique no gatilho, Enter, Espaço ou seta para baixo com ele focado, ou seta lateral com outro menu já aberto",
+        "menuOpenPayload": "{ component: \"menubar\", menu, location }",
+        "itemClick": "menubar_item_select",
+        "itemClickTrigger": "A pessoa escolhe um item: ação, marcação ou opção de rádio",
+        "itemClickPayload": "{ component: \"menubar\", label, menu, location }",
+        "close": "menubar_close",
+        "closeTrigger": "Um menu da barra fecha: Escape (escape); clique fora, Tab, clique no gatilho aberto ou passagem ao menu vizinho (overlay); item escolhido (api)",
+        "closePayload": "{ component: \"menubar\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -417,7 +489,7 @@
         },
         "item7": {
           "action": "Click em CheckboxItem",
-          "result": "data-state alterna; aria-checked reflete",
+          "result": "aria-checked alterna e o indicador acompanha, e o menu segue aberto",
           "priority": "high"
         },
         "item8": {
@@ -444,6 +516,26 @@
           "action": "Space no Trigger",
           "result": "Abre o menu e leva o foco para dentro dele, como o Enter faz",
           "priority": "high"
+        },
+        "item13": {
+          "action": "Pressionar Tab com um menu aberto (também de dentro de um submenu)",
+          "result": "O menu fecha e o foco sai da barra para o próximo ponto de tabulação depois dela (Shift+Tab: o anterior); se a barra for o último, volta ao gatilho do menu que estava aberto",
+          "priority": "high"
+        },
+        "item14": {
+          "action": "Clicar fora da barra com um menu aberto",
+          "result": "O menu fecha sem executar nenhum item",
+          "priority": "high"
+        },
+        "item15": {
+          "action": "Escolher uma opção de um grupo de rádio",
+          "result": "A opção escolhida passa a marcada e a anterior é desmarcada — só uma fica ativa, e o menu segue aberto",
+          "priority": "medium"
+        },
+        "item16": {
+          "action": "Exibir um item com atalho",
+          "result": "O atalho aparece à direita do rótulo e integra o nome acessível do item; é só texto — a tecla precisa ser registrada por quem consome o menu",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -520,10 +612,59 @@
     "demonstration": {
       "title": "Demonstration",
       "labels": {
-        "fileMenu": "File menu (with submenu)",
-        "editMenu": "Edit menu (with shortcuts)",
-        "viewMenu": "View menu (with checkbox)",
-        "toolsMenu": "Tools menu (with radio)"
+        "file": "File",
+        "edit": "Edit",
+        "view": "View",
+        "tools": "Tools",
+        "help": "Help",
+        "theme": "Theme",
+        "menu": "Menu",
+        "new": "New",
+        "open": "Open",
+        "save": "Save",
+        "export": "Export",
+        "format": "Format",
+        "pdf": "PDF",
+        "csv": "CSV",
+        "quit": "Quit",
+        "undo": "Undo",
+        "redo": "Redo",
+        "cut": "Cut",
+        "copy": "Copy",
+        "paste": "Paste",
+        "appearance": "Appearance",
+        "darkMode": "Dark mode",
+        "showRuler": "Show ruler",
+        "fullScreen": "Full screen",
+        "find": "Find",
+        "replace": "Replace",
+        "lightTheme": "Light theme",
+        "darkTheme": "Dark theme",
+        "systemTheme": "System theme",
+        "zoom": "Zoom",
+        "singleAction": "Single action",
+        "deleteFile": "Delete file",
+        "panels": "Panels",
+        "sidebar": "Sidebar",
+        "grid": "Grid",
+        "ruler": "Ruler",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "documentation": "Documentation",
+        "about": "About",
+        "newShortcut": "Ctrl+N",
+        "openShortcut": "Ctrl+O",
+        "saveShortcut": "Ctrl+S",
+        "quitShortcut": "Ctrl+Q",
+        "undoShortcut": "Ctrl+Z",
+        "redoShortcut": "Ctrl+Shift+Z",
+        "cutShortcut": "Ctrl+X",
+        "copyShortcut": "Ctrl+C",
+        "pasteShortcut": "Ctrl+V",
+        "fullScreenShortcut": "F11",
+        "findShortcut": "Ctrl+F",
+        "replaceShortcut": "Ctrl+H"
       }
     },
     "anatomy": {
@@ -540,7 +681,7 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>File</button>\n    <ng-template ndsMenubarContent>\n      <div ndsMenubarItem>New <span ndsMenubarShortcut>Ctrl+N</span></div>\n      <div ndsMenubarItem>Open <span ndsMenubarShortcut>Ctrl+O</span></div>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <div ndsMenubarSubTrigger>Export</div>\n        <ng-template ndsMenubarSubContent>\n          <div ndsMenubarItem>PDF</div>\n          <div ndsMenubarItem>CSV</div>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Edit</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
         "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst bar = createMenubar([\n  {\n    label: 'File',\n    items: [\n      { label: 'New', shortcut: 'Ctrl+N' },\n      { label: 'Open', shortcut: 'Ctrl+O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Export',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Edit',\n    items: [{ label: 'Undo', shortcut: 'Ctrl+Z' }],\n  },\n]);\n\ndocument.body.appendChild(bar);",
         "vue": "<Menubar v-model=\"activeMenu\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "svelte": "<Menubar bind:value={activeMenu}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>File</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>New <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Open <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Export</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Edit</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
@@ -659,7 +800,7 @@
         "withShortcuts": {
           "name": "Menu with shortcuts",
           "description": "Menu with items that display keyboard shortcuts on the right via <code>Shortcut</code>. The label aligns left while the shortcut sits on the right in a secondary colour.",
-          "use": "Editors and tools with frequent actions (Save, Undo, Copy). The displayed shortcut is visual only — register the real handler in the consumer (e.g., <code>useHotkeys</code>)."
+          "use": "Editors and tools with frequent actions (Save, Undo, Copy). The displayed shortcut is visual only — register the real handler in the consumer (a keyboard shortcut registered by the application)."
         },
         "withCheckbox": {
           "name": "Menu with checkbox",
@@ -831,9 +972,9 @@
         "title": "Keyboard Navigation",
         "tab": "Tab — enters the Menubar at the trigger whose turn it is (the first, until another is used) or leaves it; with a menu open, leaving also closes it.",
         "arrowsHorizontal": "← / → — moves between Triggers; opens adjacent menu if one is already open.",
-        "arrowsVertical": "↑ / ↓ — opens menu (if Trigger focused) or navigates Items (if Content open).",
+        "arrowsVertical": "↓ — with the Trigger focused, opens the menu; ↑ / ↓ — with the menu open, move between Items.",
         "enter": "Enter / Space — activates Trigger or Item.",
-        "escape": "ESC — closes menu (and submenu); returns focus to Trigger.",
+        "escape": "ESC — closes the menu and returns focus to the Trigger. Inside a submenu, it closes only the submenu and returns focus to the item that opened it.",
         "homeEnd": "Home / End — first/last Item inside Content.",
         "typeahead": "Alphabetic letters — typeahead in Items."
       },
@@ -878,14 +1019,37 @@
       "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: menu coordination, the portal and positioning come from the menu library adopted in this stack; the design system applies the <code>.nds-*</code> classes and the keyboard behaviour documented here.",
       "item2": "<strong>Portal</strong>: the menu panel may render in a portal, outside the example tree. In previews, apply <code>contain: layout</code> on the wrapper.",
-      "item3": "<strong>Shortcuts</strong>: <code>MenubarShortcut</code> is visual; the actual shortcut needs to be registered by the consumer (e.g., <code>useHotkeys</code>).",
+      "item3": "<strong>Shortcuts</strong>: <code>MenubarShortcut</code> is visual; the actual shortcut needs to be registered by the consumer (a keyboard shortcut registered by the application).",
       "item4": "<strong>Mobile</strong>: Menubar on small screens becomes sub-optimal — consider switching to Sidebar or DropdownMenu above breakpoint.",
       "item5": "<strong>Submenus</strong>: limit to 1 level. Submenu nested in submenu confuses arrow-key navigation.",
       "item6": "<strong>Trigger via composition</strong>: delegate rendering to a Button child to inherit variants; the Trigger is already a <code>&lt;button&gt;</code>."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (Trigger label), <code>label</code> (Item text). Dispatch via the value-change and select callbacks."
+      "description": "Menubar speaks the menu family's language (DropdownMenu and Context Menu): <code>menubar_open</code>, <code>menubar_close</code> and <code>menubar_item_select</code>, and every payload carries <code>component</code>, <code>menu</code> and <code>location</code>. The item event adds <code>label</code>; the close event adds <code>reason</code> — <code>escape</code>, <code>overlay</code> (click outside, Tab, a click on the open trigger or moving to the next menu: left without deciding) or <code>api</code> (item picked, or closed from code); the type also carries <code>close-button</code>, which the bar never sends. <code>menu</code> and <code>label</code> are stable identifiers in English kebab-case — on this page <code>menu</code> is the preview id followed by the bar's menu (<code>demo-file</code>, <code>pair1-do-edit</code>, <code>with-shortcuts</code>) and <code>label</code> is the item id (<code>save</code>, <code>show-ruler</code>). Never the translated text: \"Salvar\", \"Save\" and \"Guardar\" would become three rows of a single action in GA4. The displayed shortcut is text only and fires no event: the key is registered by whoever consumes the bar. <code>location</code> is the page section the bar lives in.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "menuOpen": "menubar_open",
+        "menuOpenTrigger": "The person opens a menu of the bar: click on the trigger, Enter, Space or Arrow Down with it focused, or a side arrow while another menu is open",
+        "menuOpenPayload": "{ component: \"menubar\", menu, location }",
+        "itemClick": "menubar_item_select",
+        "itemClickTrigger": "The person picks an item: action, checkable item or radio option",
+        "itemClickPayload": "{ component: \"menubar\", label, menu, location }",
+        "close": "menubar_close",
+        "closeTrigger": "A menu of the bar closes: Escape (escape); click outside, Tab, a click on the open trigger or moving to the next menu (overlay); item picked (api)",
+        "closePayload": "{ component: \"menubar\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
     },
     "testes": {
       "title": "Test Criteria",
@@ -924,7 +1088,7 @@
         },
         "item7": {
           "action": "Click on CheckboxItem",
-          "result": "data-state toggles; aria-checked reflects",
+          "result": "aria-checked toggles and the indicator follows, and the menu stays open",
           "priority": "high"
         },
         "item8": {
@@ -951,6 +1115,26 @@
           "action": "Space on the Trigger",
           "result": "Opens the menu and moves focus into it, the same way Enter does",
           "priority": "high"
+        },
+        "item13": {
+          "action": "Press Tab with a menu open (also from inside a submenu)",
+          "result": "The menu closes and focus leaves the bar for the next tab stop after it (Shift+Tab: the previous one); if the bar is the last stop, focus returns to the trigger of the menu that was open",
+          "priority": "high"
+        },
+        "item14": {
+          "action": "Click outside the bar with a menu open",
+          "result": "The menu closes without running any item",
+          "priority": "high"
+        },
+        "item15": {
+          "action": "Pick an option in a radio group",
+          "result": "The chosen option becomes checked and the previous one is cleared — only one stays active, and the menu stays open",
+          "priority": "medium"
+        },
+        "item16": {
+          "action": "Render an item with a shortcut",
+          "result": "The shortcut appears to the right of the label and is part of the item accessible name; it is text only — the key has to be registered by whoever consumes the menu",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -1027,10 +1211,59 @@
     "demonstration": {
       "title": "Demostración",
       "labels": {
-        "fileMenu": "Menú Archivo (con submenú)",
-        "editMenu": "Menú Editar (con shortcuts)",
-        "viewMenu": "Menú Ver (con checkbox)",
-        "toolsMenu": "Menú Herramientas (con radio)"
+        "file": "Archivo",
+        "edit": "Editar",
+        "view": "Ver",
+        "tools": "Herramientas",
+        "help": "Ayuda",
+        "theme": "Tema",
+        "menu": "Menú",
+        "new": "Nuevo",
+        "open": "Abrir",
+        "save": "Guardar",
+        "export": "Exportar",
+        "format": "Formato",
+        "pdf": "PDF",
+        "csv": "CSV",
+        "quit": "Salir",
+        "undo": "Deshacer",
+        "redo": "Rehacer",
+        "cut": "Cortar",
+        "copy": "Copiar",
+        "paste": "Pegar",
+        "appearance": "Apariencia",
+        "darkMode": "Modo oscuro",
+        "showRuler": "Mostrar regla",
+        "fullScreen": "Pantalla completa",
+        "find": "Buscar",
+        "replace": "Reemplazar",
+        "lightTheme": "Tema claro",
+        "darkTheme": "Tema oscuro",
+        "systemTheme": "Tema del sistema",
+        "zoom": "Zoom",
+        "singleAction": "Acción única",
+        "deleteFile": "Eliminar archivo",
+        "panels": "Paneles",
+        "sidebar": "Barra lateral",
+        "grid": "Cuadrícula",
+        "ruler": "Regla",
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema",
+        "documentation": "Documentación",
+        "about": "Acerca de",
+        "newShortcut": "Ctrl+N",
+        "openShortcut": "Ctrl+O",
+        "saveShortcut": "Ctrl+S",
+        "quitShortcut": "Ctrl+Q",
+        "undoShortcut": "Ctrl+Z",
+        "redoShortcut": "Ctrl+Shift+Z",
+        "cutShortcut": "Ctrl+X",
+        "copyShortcut": "Ctrl+C",
+        "pasteShortcut": "Ctrl+V",
+        "fullScreenShortcut": "F11",
+        "findShortcut": "Ctrl+F",
+        "replaceShortcut": "Ctrl+H"
       }
     },
     "anatomy": {
@@ -1047,7 +1280,7 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Menubar>\n  <MenubarMenu>\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu>\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
-        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Arquivo</button>\n    <ng-template ndsMenubarContent>\n      <button ndsMenubarItem>Novo <span ndsMenubarShortcut>Ctrl+N</span></button>\n      <button ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></button>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <button ndsMenubarSubTrigger>Exportar</button>\n        <ng-template ndsMenubarSubContent>\n          <button ndsMenubarItem>PDF</button>\n          <button ndsMenubarItem>CSV</button>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
+        "angular": "<nds-menubar>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Archivo</button>\n    <ng-template ndsMenubarContent>\n      <div ndsMenubarItem>Nuevo <span ndsMenubarShortcut>Ctrl+N</span></div>\n      <div ndsMenubarItem>Abrir <span ndsMenubarShortcut>Ctrl+O</span></div>\n      <div ndsMenubarSeparator></div>\n      <nds-menubar-sub>\n        <div ndsMenubarSubTrigger>Exportar</div>\n        <ng-template ndsMenubarSubContent>\n          <div ndsMenubarItem>PDF</div>\n          <div ndsMenubarItem>CSV</div>\n        </ng-template>\n      </nds-menubar-sub>\n    </ng-template>\n  </nds-menubar-menu>\n  <nds-menubar-menu>\n    <button ndsMenubarTrigger>Editar</button>\n    <ng-template ndsMenubarContent>...</ng-template>\n  </nds-menubar-menu>\n</nds-menubar>",
         "vanilla": "import { createMenubar } from '@/components/ui/menubar';\n\nconst bar = createMenubar([\n  {\n    label: 'Archivo',\n    items: [\n      { label: 'Nuevo', shortcut: 'Ctrl+N' },\n      { label: 'Abrir', shortcut: 'Ctrl+O' },\n      { type: 'separator' },\n      {\n        type: 'submenu',\n        label: 'Exportar',\n        items: [{ label: 'PDF' }, { label: 'CSV' }],\n      },\n    ],\n  },\n  {\n    label: 'Editar',\n    items: [{ label: 'Deshacer', shortcut: 'Ctrl+Z' }],\n  },\n]);\n\ndocument.body.appendChild(bar);",
         "vue": "<Menubar v-model=\"menuActivo\">\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>",
         "svelte": "<Menubar bind:value={menuActivo}>\n  <MenubarMenu value=\"file\">\n    <MenubarTrigger>Archivo</MenubarTrigger>\n    <MenubarContent>\n      <MenubarItem>Nuevo <MenubarShortcut>Ctrl+N</MenubarShortcut></MenubarItem>\n      <MenubarItem>Abrir <MenubarShortcut>Ctrl+O</MenubarShortcut></MenubarItem>\n      <MenubarSeparator />\n      <MenubarSub>\n        <MenubarSubTrigger>Exportar</MenubarSubTrigger>\n        <MenubarSubContent>\n          <MenubarItem>PDF</MenubarItem>\n          <MenubarItem>CSV</MenubarItem>\n        </MenubarSubContent>\n      </MenubarSub>\n    </MenubarContent>\n  </MenubarMenu>\n  <MenubarMenu value=\"edit\">\n    <MenubarTrigger>Editar</MenubarTrigger>\n    <MenubarContent>...</MenubarContent>\n  </MenubarMenu>\n</Menubar>"
@@ -1166,7 +1399,7 @@
         "withShortcuts": {
           "name": "Menú con shortcuts",
           "description": "Menú con items que muestran atajos de teclado a la derecha vía <code>Shortcut</code>. El texto se alinea a la izquierda y el atajo a la derecha, en color secundario.",
-          "use": "Editores y herramientas con acciones frecuentes (Guardar, Deshacer, Copiar). El atajo mostrado es solo visual — registra el handler real en el consumidor (ej.: <code>useHotkeys</code>)."
+          "use": "Editores y herramientas con acciones frecuentes (Guardar, Deshacer, Copiar). El atajo mostrado es solo visual — registra el handler real en el consumidor (un atajo de teclado registrado por la aplicación)."
         },
         "withCheckbox": {
           "name": "Menú con checkbox",
@@ -1338,9 +1571,9 @@
         "title": "Navegación por Teclado",
         "tab": "Tab — entra al Menubar por el disparador que tiene el turno (el primero, hasta que se use otro) o sale de él; con un menú abierto, salir también lo cierra.",
         "arrowsHorizontal": "← / → — mueve entre Triggers; abre menú adyacente si uno ya está abierto.",
-        "arrowsVertical": "↑ / ↓ — abre menú (si Trigger enfocado) o navega Items (si Content abierto).",
+        "arrowsVertical": "↓ — con el Trigger enfocado, abre el menú; ↑ / ↓ — con el menú abierto, navegan entre los Items.",
         "enter": "Enter / Space — activa Trigger o Item.",
-        "escape": "ESC — cierra menú (y submenú); devuelve foco al Trigger.",
+        "escape": "ESC — cierra el menú y devuelve el foco al Trigger. Dentro de un submenú, cierra solo el submenú y devuelve el foco al item que lo abrió.",
         "homeEnd": "Home / End — primer/último Item dentro del Content.",
         "typeahead": "Letras alfabéticas — typeahead en Items."
       },
@@ -1385,14 +1618,37 @@
       "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: la coordinación entre menús, el portal y el posicionamiento vienen de la librería de menú adoptada en este stack; el design system aplica las clases <code>.nds-*</code> y el teclado documentado aquí.",
       "item2": "<strong>Portal</strong>: el panel del menú puede renderizarse en portal, fuera del árbol del ejemplo. En previews, aplica <code>contain: layout</code> en el wrapper.",
-      "item3": "<strong>Atajos</strong>: <code>MenubarShortcut</code> es visual; el atajo real debe registrarse en el consumidor (ej.: <code>useHotkeys</code>).",
+      "item3": "<strong>Atajos</strong>: <code>MenubarShortcut</code> es visual; el atajo real debe registrarse en el consumidor (un atajo de teclado registrado por la aplicación).",
       "item4": "<strong>Mobile</strong>: Menubar en pantallas pequeñas se vuelve subóptimo — considera cambiar a Sidebar o DropdownMenu por encima de un breakpoint.",
       "item5": "<strong>Submenús</strong>: limita a 1 nivel. Submenú anidado en submenú confunde navegación por flechas.",
       "item6": "<strong>Trigger vía composición</strong>: delegar la renderización a un Button hijo para heredar variantes; el Trigger ya es un <code>&lt;button&gt;</code>."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>menubar_menu_open</code>, <code>menubar_item_select</code>, <code>menubar_shortcut_invoke</code>. Payload: <code>component='menubar'</code>, <code>menu</code> (label del Trigger), <code>label</code> (texto del Item). Dispara vía los callbacks de cambio de valor y de selección."
+      "description": "El Menubar habla el mismo idioma que la familia de menús (DropdownMenu y Context Menu): <code>menubar_open</code>, <code>menubar_close</code> y <code>menubar_item_select</code>, y todo payload lleva <code>component</code>, <code>menu</code> y <code>location</code>. El de ítem suma <code>label</code>; el de cierre suma <code>reason</code> — <code>escape</code>, <code>overlay</code> (clic fuera, Tab, clic en el disparador abierto o paso al menú vecino: salió sin decidir) o <code>api</code> (ítem elegido o cierre por código); el tipo lleva también <code>close-button</code>, que la barra no usa. <code>menu</code> y <code>label</code> son identificadores estables, en inglés y kebab-case — en esta página, <code>menu</code> es el id de la vista previa seguido del menú de la barra (<code>demo-file</code>, <code>pair1-do-edit</code>, <code>with-shortcuts</code>) y <code>label</code> es el id del ítem (<code>save</code>, <code>show-ruler</code>). Nunca el texto traducido: \"Salvar\", \"Save\" y \"Guardar\" serían tres filas de una sola acción en GA4. El atajo mostrado es solo texto y no genera evento: la tecla la registra quien consume la barra. <code>location</code> es la sección de la página donde está la barra.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "menuOpen": "menubar_open",
+        "menuOpenTrigger": "La persona abre un menú de la barra: clic en el disparador, Enter, Espacio o flecha abajo con él enfocado, o flecha lateral con otro menú ya abierto",
+        "menuOpenPayload": "{ component: \"menubar\", menu, location }",
+        "itemClick": "menubar_item_select",
+        "itemClickTrigger": "La persona elige un ítem: acción, marcación u opción de radio",
+        "itemClickPayload": "{ component: \"menubar\", label, menu, location }",
+        "close": "menubar_close",
+        "closeTrigger": "Un menú de la barra se cierra: Escape (escape); clic fuera, Tab, clic en el disparador abierto o paso al menú vecino (overlay); ítem elegido (api)",
+        "closePayload": "{ component: \"menubar\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
     },
     "testes": {
       "title": "Criterios de Test",
@@ -1431,7 +1687,7 @@
         },
         "item7": {
           "action": "Click en CheckboxItem",
-          "result": "data-state alterna; aria-checked refleja",
+          "result": "aria-checked alterna y el indicador acompaña, y el menú sigue abierto",
           "priority": "high"
         },
         "item8": {
@@ -1458,6 +1714,26 @@
           "action": "Space en el Trigger",
           "result": "Abre el menú y lleva el foco dentro de él, como hace Enter",
           "priority": "high"
+        },
+        "item13": {
+          "action": "Pulsar Tab con un menú abierto (también desde dentro de un submenú)",
+          "result": "El menú se cierra y el foco sale de la barra hacia la siguiente parada de tabulación después de ella (Shift+Tab: la anterior); si la barra es la última, vuelve al disparador del menú que estaba abierto",
+          "priority": "high"
+        },
+        "item14": {
+          "action": "Hacer clic fuera de la barra con un menú abierto",
+          "result": "El menú se cierra sin ejecutar ningún ítem",
+          "priority": "high"
+        },
+        "item15": {
+          "action": "Elegir una opción de un grupo de radio",
+          "result": "La opción elegida pasa a marcada y la anterior se desmarca — solo una queda activa, y el menú sigue abierto",
+          "priority": "medium"
+        },
+        "item16": {
+          "action": "Mostrar un ítem con atajo",
+          "result": "El atajo aparece a la derecha de la etiqueta e integra el nombre accesible del ítem; es solo texto — la tecla debe registrarla quien consume el menú",
+          "priority": "medium"
         }
       },
       "accessibility": {

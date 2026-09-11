@@ -2,6 +2,7 @@
 	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
 	import { cn } from "@/lib/utils.js";
+	import { useMenuSub } from "./sub-escape";
 
 	let {
 		ref = $bindable(null),
@@ -12,6 +13,12 @@
 	}: DropdownMenuPrimitive.SubTriggerProps & {
 		inset?: boolean;
 	} = $props();
+
+	// O submenu devolve o foco a este nó quando o Escape o fecha — ver `sub-escape.ts`.
+	const sub = useMenuSub();
+	$effect(() => {
+		sub?.setTrigger(ref);
+	});
 </script>
 
 <DropdownMenuPrimitive.SubTrigger

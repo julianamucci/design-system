@@ -1,22 +1,30 @@
 import { describe, expect, it } from 'vitest';
-import { contextMenuCloseReason, withReason } from './context-menu-close-reason';
+import { menuCloseReason, withReason } from './menu-close-reason';
 
-describe('contextMenuCloseReason', () => {
+describe('menuCloseReason', () => {
   it.each([
     ['escape-key', 'escape'],
     ['outside-press', 'overlay'],
     ['focus-out', 'overlay'],
     ['cancel-open', 'overlay'],
+    // O gatilho: clique nele com o menu aberto, e a troca de menu na barra.
+    ['trigger-press', 'overlay'],
+    ['trigger-hover', 'overlay'],
+    ['sibling-open', 'overlay'],
+    ['list-navigation', 'overlay'],
     ['item-press', 'api'],
     ['imperative-action', 'api'],
+    // Caminho desconhecido ou fechado pelo código: decisão de dentro.
+    ['none', 'api'],
+    ['qualquer-coisa-nova-da-lib', 'api'],
     [undefined, 'api'],
   ])('%s vira %s', (motivo, esperado) => {
-    expect(contextMenuCloseReason(motivo)).toBe(esperado);
+    expect(menuCloseReason(motivo)).toBe(esperado);
   });
 
   it('nunca devolve close-button: o menu não tem botão de fechar', () => {
-    for (const motivo of ['close-press', 'trigger-press', 'none']) {
-      expect(contextMenuCloseReason(motivo)).not.toBe('close-button');
+    for (const motivo of ['close-press', 'none', 'trigger-press']) {
+      expect(menuCloseReason(motivo)).not.toBe('close-button');
     }
   });
 });

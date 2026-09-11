@@ -2,7 +2,9 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
+import { menubarDefaultSource, menubarDestructiveSource } from './menubar.source';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { backgroundEffective, byTheme, noTransicao, ratio } from '@shared/testing/cor';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
@@ -38,7 +40,13 @@ type Story = StoryObj;
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  parameters: { covers: ['accessibility.item7'] },
+  parameters: {
+    covers: ['accessibility.item7'],
+    // Sem transform o painel Code publicaria o `@for` sobre a lista da story,
+    // o `[defaultOpen]="true"` e o `[modal]="false"` que só existem para o
+    // painel caber no quadro.
+    docs: { source: { transform: menubarDefaultSource } },
+  },
   render: () => ({
     props: { items: ITEMS_NEUTROS },
     template: `
@@ -87,13 +95,43 @@ export const Default: Story = {
     });
 
     await step('O popup é opaco', async () => {
-      // O contraste de 4.5:1 que o axe mede entre o texto do item e o fundo do
-      // popup só significa alguma coisa se o fundo for opaco: sobre um painel
-      // translúcido a razão medida é a do que estiver por baixo.
+      // Pré-condição da medida de baixo: sobre um painel translúcido a razão
+      // medida seria a do que estiver por baixo dele.
       const background = getComputedStyle(menu).backgroundColor;
       await expect(background).not.toBe('rgba(0, 0, 0, 0)');
       await expect(background).not.toBe('transparent');
       await expect(background.startsWith('rgba(')).toBe(false);
+    });
+
+    await step('O texto do item em repouso passa de 4.5:1 sobre o painel, nos três temas e nos dois modos', async () => {
+      // `accessibility.item7` é CONTRASTE, e até 2026-09-11 a story afirmava só
+      // a opacidade do painel — que é pré-condição, não medida. Aqui a razão é
+      // medida pelo colhedor de cor computada (`@shared/testing/cor`): o texto
+      // do item contra o primeiro fundo opaco acima dele, com o tema e o modo
+      // estampados no PAINEL — ele é portalado para o `<body>`, fora da raiz da
+      // story, e é nele que os tokens precisam ser redeclarados. As transições
+      // morrem antes, para não ler o primeiro quadro da troca de tema.
+      const inRest = items.find((i) => !i.hasAttribute('data-highlighted'));
+      await expect(inRest).toBeDefined();
+      const item = inRest!;
+      const measurements = noTransicao(menu, () =>
+        noTransicao(item, () =>
+          byTheme(menu, (theme, mode) => {
+            const background = backgroundEffective(item);
+            const contrast = background ? ratio(getComputedStyle(item).color, background) : null;
+            return { theme, mode, contrast };
+          }),
+        ),
+      );
+      await expect(measurements).toHaveLength(6);
+      const below = measurements
+        .filter((m) => !m.contrast || m.contrast.ratio < 4.5)
+        .map((m) =>
+          m.contrast
+            ? `${m.theme}/${m.mode}: ${m.contrast.frente} sobre ${m.contrast.background} = ${m.contrast.ratio}:1`
+            : `${m.theme}/${m.mode}: sem fundo opaco para medir`,
+        );
+      await expect(below).toEqual([]);
     });
   },
 };
@@ -101,7 +139,10 @@ export const Default: Story = {
 // ─── Destructive ──────────────────────────────────────────────────────────────
 
 export const Destructive: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: { source: { transform: menubarDestructiveSource } },
+  },
   render: () => ({
     template: `
       <nds-menubar [modal]="false">

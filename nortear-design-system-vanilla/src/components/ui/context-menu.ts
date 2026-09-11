@@ -85,6 +85,7 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { createMenuTypeahead, isTypeaheadKey } from '@/lib/menu-typeahead';
 import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
 import { positionFloatingAtPoint } from '@/lib/floating';
 import { isPlainTab, tabExitTarget } from '@/lib/tabbable';
@@ -124,7 +125,12 @@ export type ContextMenuItemDef = {
  * `context_menu_close`. `escape` é a tecla; `overlay` é sair SEM decidir —
  * clique fora, Tab levando o foco embora, ou um novo clique direito que
  * reabre o menu noutro ponto; `api` é o fechamento pedido pelo produto — um
- * item de ação escolhido, ou o componente saindo da página com o menu aberto.
+ * item de ação escolhido.
+ *
+ * O componente saindo da página com o menu aberto NÃO é fechamento e não avisa
+ * nada — nem `onClose`, nem `onOpenChange(false)`: quem desmonta sabe que
+ * desmontou, e um `context_menu_close` ali seria um fechamento que a pessoa
+ * não fez.
  *
  * Não há `close-button`: este menu não tem botão de fechar.
  */
@@ -242,7 +248,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   let labelCount = 0;
 
   // ── Submenu ─────────────────────────────────────────────────────────────────
-  // Um controlador por menu, e um painel filho de cada vez: abrir outro fecha o
+  // Um controlador por menu, e um painel por nível: abrir outro no mesmo nível fecha o
   // anterior. Gatilho, painel, posição, ARIA, teclado, ponteiro e limpeza são
   // dele; o que continua sendo desta fábrica é montar os ITENS, que é o que cada
   // menu tem de próprio.
@@ -525,30 +531,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   // ── Typeahead ───────────────────────────────────────────────────────────────
   // Numa lista de ações longa é o que evita percorrer item por item. As letras
   // se acumulam por 1s, como no padrão WAI-ARIA de menu: digitar "co" rápido
-  // procura "co", e não "c" e depois "o". Mesma forma do `dropdown-menu` desta
-  // stack — as duas fábricas compartilham a folha e o contrato de teclado.
-  let searchTypeahead = '';
-  let timerTypeahead: ReturnType<typeof setTimeout> | null = null;
-
-  function typeahead(letra: string, menuItems: HTMLElement[]): void {
-    searchTypeahead += letra.toLowerCase();
-    if (timerTypeahead !== null) clearTimeout(timerTypeahead);
-    timerTypeahead = setTimeout(() => {
-      searchTypeahead = '';
-      timerTypeahead = null;
-    }, 1000);
-
-    const current = menuItems.indexOf(document.activeElement as HTMLElement);
-    // A busca recomeça DEPOIS do item atual para que repetir a mesma letra
-    // percorra os homônimos em vez de travar no primeiro.
-    const order = menuItems
-      .slice(current + 1)
-      .concat(menuItems.slice(0, Math.max(current + 1, 0)));
-    const target = order.find((el) =>
-      (el.textContent ?? '').trim().toLowerCase().startsWith(searchTypeahead),
-    );
-    target?.focus();
-  }
+  // procura "co", e não "c" e depois "o". A conta mora em `@/lib/menu-typeahead`,
+  // a mesma do `dropdown-menu` e do `menubar` desta stack.
+  const typeahead = createMenuTypeahead();
 
   function open(x: number, y: number): void {
     panelEl = buildMenu(items, 'context-menu-content');
@@ -611,7 +596,22 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   ): void {
     // Já fechado: nada a fazer, e isso inclui NÃO avisar ninguém — um segundo
     // `onClose` seria um segundo `context_menu_close` no GA4.
-    if (!isOpen) return;
+    if (!dismantle()) return;
+
+    if (devolverFocus && trigger.isConnected) trigger.focus();
+
+    onClose?.(reason);
+    onOpenChange?.(false);
+  }
+
+  /**
+   * A metade MECÂNICA do fechamento: tira o painel e solta ouvintes e
+   * temporizadores — sem mexer no foco e sem avisar ninguém. Devolve se havia
+   * menu aberto. É tudo o que a destruição faz: sair da página não é fechar o
+   * menu.
+   */
+  function dismantle(): boolean {
+    if (!isOpen) return false;
 
     // Primeiro o filho: o painel dele vive no `body` e não sai junto com o pai.
     submenu.close();
@@ -623,18 +623,10 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       clearTimeout(timerClickOutside);
       timerClickOutside = null;
     }
-    if (timerTypeahead !== null) {
-      clearTimeout(timerTypeahead);
-      timerTypeahead = null;
-    }
-    searchTypeahead = '';
+    typeahead.reset();
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
-
-    if (devolverFocus && trigger.isConnected) trigger.focus();
-
-    onClose?.(reason);
-    onOpenChange?.(false);
+    return true;
   }
 
   function handleKeydown(e: KeyboardEvent): void {
@@ -656,9 +648,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     }
 
     // O percurso é do painel que TEM o foco. O painel do submenu não é
-    // descendente do menu pai, então nenhum dos dois recolhe os itens do outro.
-    const subPanel = submenu.panel;
-    const escopo = subPanel?.contains(active) ? subPanel : panelEl;
+    // descendente do menu pai, então nenhum dos dois recolhe os itens do outro
+    // — e o de um submenu aninhado também não recolhe os do nível de cima.
+    const escopo = submenu.panelContaining(active) ?? panelEl;
     const menuItems = getMenuItems(escopo);
     const currentIdx = menuItems.indexOf(active as HTMLElement);
 
@@ -694,9 +686,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       e.preventDefault();
       tabExitTarget(e, trigger).focus();
       close('overlay');
-    } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && /\S/.test(e.key)) {
+    } else if (isTypeaheadKey(e)) {
       e.preventDefault();
-      typeahead(e.key, menuItems);
+      typeahead.type(e.key, menuItems);
     }
   }
 
@@ -728,10 +720,12 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
   // com dois. Nas outras stacks quem desmonta é o framework; aqui é a forma
   // compartilhada de limpeza, que antes era um observador montado por abertura.
   return tornarDestruivel(wrapper, wrapper, () => {
-    // Sair da página com o menu aberto é fechamento pedido pelo produto — `api`,
-    // a mesma leitura do `createAlertDialog` —, e sem devolver foco a uma área
-    // que está deixando o documento.
-    if (isOpen) close('api', false);
+    // Sair da página com o menu aberto NÃO é fechamento: o painel sai, sem
+    // devolver foco a uma área que está deixando o documento e sem avisar
+    // ninguém. Até 2026-09-11 isto era `close('api')`, e cada troca de idioma da
+    // docs page — que refaz as seções — mandava um `context_menu_close` de um
+    // menu que a pessoa não fechou.
+    dismantle();
     // Cinto e suspensório: `close` já leva o painel do submenu, mas quem
     // desmonta com o menu FECHADO não passaria por ele, e o timer de carência
     // sobreviveria ao elemento que o registrou.

@@ -64,6 +64,9 @@ const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid
 
 export const WithShortcut: Story = {
   parameters: {
+    // `functional.item17`: o atalho dentro do item, no nome acessível, sem
+    // `aria-hidden`, e encostado à direita do rótulo — medidos abaixo.
+    covers: ["functional.item17"],
     // Sem este override o painel cai no snippet do `meta`, que publica um item
     // "Duplicar" sem atalho dentro de um grupo — o preview mostra "Desfazer,
     // Ctrl+Z" e nenhum grupo.
@@ -100,6 +103,9 @@ export const WithShortcut: Story = {
         await expect(atalho.hasAttribute("aria-hidden")).toBe(false);
         await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
       }
+      // O resultado que as duas condições acima garantem: o atalho INTEGRA o
+      // nome do item — "Editar Ctrl+E", e não só "Editar".
+      await expect(target("editar")).toHaveAccessibleName("Editar Ctrl+E");
     });
 
     await step("O atalho fica encostado à direita do rótulo", async () => {
@@ -311,7 +317,10 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    covers: ["functional.item5", "functional.item6", "visual.item3"],
+    // `accessibility.item10`: o primeiro passo lê `aria-haspopup="menu"` e
+    // `aria-expanded="false"` no sub-gatilho, e o segundo, `aria-expanded`
+    // virando `true` quando o submenu abre.
+    covers: ["functional.item5", "functional.item6", "accessibility.item10", "visual.item3"],
     a11y: { config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] } },
     // As três peças do submenu andam juntas e nenhuma aparece no snippet do
     // `meta`.

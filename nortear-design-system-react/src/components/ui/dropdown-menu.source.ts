@@ -391,3 +391,266 @@ export function dropdownMenuWithShortcutsSource(): string {
     ),
   );
 }
+
+/**
+ * Marcação mista: os três estados de um item de marcação lado a lado.
+ *
+ * Misto quer dizer "alguns dos filhos" e desenha traço; marcado desenha tique.
+ * Os três vão por extenso de propósito — o assunto é o CONTRASTE entre eles, e
+ * omitir o desmarcado apagaria metade da lição.
+ *
+ * `indeterminate` é prop do wrapper, e controlada: o primeiro clique chama
+ * `onCheckedChange(true)`, e é ali que quem guarda o estado tira o misto.
+ */
+export function dropdownMenuCheckboxIndeterminateSource(): string {
+  return jsxSnippet(
+    importDe(
+      'DropdownMenuCheckboxItem',
+      'DropdownMenuContent',
+      'DropdownMenuGroup',
+      'DropdownMenuLabel',
+      'DropdownMenuTrigger',
+    ),
+    menu(
+      '',
+      'Exibir',
+      '',
+      `<DropdownMenuGroup>
+  <DropdownMenuLabel>Mostrar na tela</DropdownMenuLabel>
+  <DropdownMenuCheckboxItem checked={false} indeterminate>
+    Colunas
+  </DropdownMenuCheckboxItem>
+  <DropdownMenuCheckboxItem checked>Régua</DropdownMenuCheckboxItem>
+  <DropdownMenuCheckboxItem checked={false}>Grade</DropdownMenuCheckboxItem>
+</DropdownMenuGroup>`,
+    ),
+  );
+}
+
+// ─── O menu como DADO: uma lista monta a prévia e imprime o código ────────────
+//
+// Os cards de Variantes da docs page tinham um literal de código ao lado de
+// cada prévia, em português — e dois deles nem prévia tinham, só o texto
+// `variant="default"`. É o desenho do ContextMenu desta stack e do vanilla: a
+// MESMA lista de entradas vira o menu vivo e o trecho que se copia, então os
+// dois não têm como divergir — nem de idioma, nem de estrutura.
+
+/**
+ * Item de ação. `value` é o id ESTÁVEL do item — é o que o evento de escolha
+ * manda ao GA4 —, e o snippet não o imprime: o item de ação não tem `value`.
+ */
+export type DropdownMenuActionEntry = {
+  kind: 'item';
+  label: string;
+  value: string;
+  shortcut?: string;
+  destructive?: boolean;
+};
+
+/**
+ * Item de marcação. `value` é o id estável e também dá NOME ao estado no
+ * snippet: `column-email` vira `const [columnEmail, setColumnEmail]`.
+ */
+export type DropdownMenuCheckboxEntry = {
+  kind: 'checkbox';
+  label: string;
+  value: string;
+  checked: boolean;
+};
+
+/**
+ * Uma entrada do menu. O grupo de escolha única carrega o PRÓPRIO rótulo: é o
+ * `DropdownMenuRadioGroup` que o rótulo nomeia, sem `DropdownMenuGroup` em
+ * volta — dois grupos aninhados anunciavam um deles anônimo.
+ */
+export type DropdownMenuEntry =
+  | DropdownMenuActionEntry
+  | DropdownMenuCheckboxEntry
+  | { kind: 'separator' }
+  | { kind: 'submenu'; label: string; items: DropdownMenuActionEntry[] }
+  | {
+      kind: 'group';
+      label: string;
+      items: Array<DropdownMenuActionEntry | DropdownMenuCheckboxEntry>;
+    }
+  | {
+      kind: 'radio-group';
+      label: string;
+      /** Id estável do grupo e nome do estado no snippet. */
+      value: string;
+      /** A opção marcada ao montar. */
+      selected: string;
+      /** `value` de cada opção é o id estável dela — e o do evento de escolha. */
+      options: Array<{ label: string; value: string }>;
+    };
+
+/** `column-email` → `columnEmail`: o nome do estado sai do id estável. */
+function stateName(value: string): string {
+  return value.replace(/-([a-z0-9])/g, (_, letter: string) => letter.toUpperCase());
+}
+
+function setterName(state: string): string {
+  return `set${state.charAt(0).toUpperCase()}${state.slice(1)}`;
+}
+
+/**
+ * Texto de JSX. O rótulo vem do conteúdo compartilhado, e um `{` ou um `<`
+ * nele quebraria o trecho copiado — nesse caso ele vai como string entre chaves.
+ */
+function jsxText(text: string): string {
+  return /[{}<>]/.test(text) ? `{${JSON.stringify(text)}}` : text;
+}
+
+function actionLines(entry: DropdownMenuActionEntry, pad: string): string[] {
+  const open = `<DropdownMenuItem${entry.destructive ? ' variant="destructive"' : ''}>`;
+  if (!entry.shortcut) return [`${pad}${open}${jsxText(entry.label)}</DropdownMenuItem>`];
+  return [
+    `${pad}${open}`,
+    `${pad}  ${jsxText(entry.label)}`,
+    `${pad}  <DropdownMenuShortcut>${jsxText(entry.shortcut)}</DropdownMenuShortcut>`,
+    `${pad}</DropdownMenuItem>`,
+  ];
+}
+
+function entryLines(entry: DropdownMenuEntry, pad: string): string[] {
+  switch (entry.kind) {
+    case 'item':
+      return actionLines(entry, pad);
+    case 'separator':
+      return [`${pad}<DropdownMenuSeparator />`];
+    case 'checkbox': {
+      const state = stateName(entry.value);
+      return [
+        `${pad}<DropdownMenuCheckboxItem checked={${state}} onCheckedChange={${setterName(state)}}>`,
+        `${pad}  ${jsxText(entry.label)}`,
+        `${pad}</DropdownMenuCheckboxItem>`,
+      ];
+    }
+    case 'submenu':
+      return [
+        `${pad}<DropdownMenuSub>`,
+        `${pad}  <DropdownMenuSubTrigger>${jsxText(entry.label)}</DropdownMenuSubTrigger>`,
+        `${pad}  <DropdownMenuSubContent>`,
+        ...entry.items.flatMap((item) => actionLines(item, `${pad}    `)),
+        `${pad}  </DropdownMenuSubContent>`,
+        `${pad}</DropdownMenuSub>`,
+      ];
+    case 'group':
+      return [
+        `${pad}<DropdownMenuGroup>`,
+        `${pad}  <DropdownMenuLabel>${jsxText(entry.label)}</DropdownMenuLabel>`,
+        ...entry.items.flatMap((item) => entryLines(item, `${pad}  `)),
+        `${pad}</DropdownMenuGroup>`,
+      ];
+    case 'radio-group': {
+      const state = stateName(entry.value);
+      return [
+        `${pad}<DropdownMenuRadioGroup value={${state}} onValueChange={${setterName(state)}}>`,
+        `${pad}  <DropdownMenuLabel>${jsxText(entry.label)}</DropdownMenuLabel>`,
+        ...entry.options.map(
+          (option) =>
+            `${pad}  <DropdownMenuRadioItem value=${JSON.stringify(option.value)}>${jsxText(option.label)}</DropdownMenuRadioItem>`,
+        ),
+        `${pad}</DropdownMenuRadioGroup>`,
+      ];
+    }
+  }
+}
+
+/** O `useState` de cada marcação e de cada grupo de escolha única, na ordem do menu. */
+function stateLines(entries: readonly DropdownMenuEntry[]): string[] {
+  return entries.flatMap((entry) => {
+    if (entry.kind === 'checkbox') {
+      const state = stateName(entry.value);
+      return [`const [${state}, ${setterName(state)}] = useState(${entry.checked});`];
+    }
+    if (entry.kind === 'radio-group') {
+      const state = stateName(entry.value);
+      return [`const [${state}, ${setterName(state)}] = useState(${JSON.stringify(entry.selected)});`];
+    }
+    if (entry.kind === 'group') return stateLines(entry.items);
+    return [];
+  });
+}
+
+/** As peças que as entradas usam — é o bloco de import, e só ele. */
+function entryParts(entries: readonly DropdownMenuEntry[], parts: Set<string>): Set<string> {
+  for (const entry of entries) {
+    switch (entry.kind) {
+      case 'item':
+        parts.add('DropdownMenuItem');
+        if (entry.shortcut) parts.add('DropdownMenuShortcut');
+        break;
+      case 'separator':
+        parts.add('DropdownMenuSeparator');
+        break;
+      case 'checkbox':
+        parts.add('DropdownMenuCheckboxItem');
+        break;
+      case 'submenu':
+        parts.add('DropdownMenuSub').add('DropdownMenuSubTrigger').add('DropdownMenuSubContent');
+        entryParts(entry.items, parts);
+        break;
+      case 'group':
+        parts.add('DropdownMenuGroup').add('DropdownMenuLabel');
+        entryParts(entry.items, parts);
+        break;
+      case 'radio-group':
+        parts.add('DropdownMenuRadioGroup').add('DropdownMenuLabel').add('DropdownMenuRadioItem');
+        break;
+    }
+  }
+  return parts;
+}
+
+/** O menu canônico, o mesmo do `meta`: grupo rotulado, divisor e a ação destrutiva. */
+const ENTRIES_DEFAULT: readonly DropdownMenuEntry[] = [
+  {
+    kind: 'group',
+    label: 'Conta',
+    items: [
+      { kind: 'item', label: 'Perfil', value: 'profile' },
+      { kind: 'item', label: 'Configurações', value: 'settings' },
+    ],
+  },
+  { kind: 'separator' },
+  { kind: 'item', label: 'Sair', value: 'logout', destructive: true },
+];
+
+export type DropdownMenuSnippetOptions = {
+  /** Texto do botão que abre o menu. */
+  triggerLabel?: string;
+  /** O menu como lista de entradas; sem ela, o menu canônico. */
+  entries?: readonly DropdownMenuEntry[];
+};
+
+/**
+ * O trecho do menu descrito por `entries`, com os rótulos EXATAMENTE como
+ * chegam — quem chama os lê do conteúdo compartilhado, no idioma da página.
+ *
+ * O trecho é o que se COLA: o import só das peças usadas e, havendo marcação ou
+ * escolha única, o `useState` de cada uma dentro de um componente. Sem
+ * `entries` o construtor cai no menu canônico, que é como a guarda transversal
+ * o chama.
+ */
+export function dropdownMenuSnippet(o: DropdownMenuSnippetOptions = {}): string {
+  const entries = o.entries ?? ENTRIES_DEFAULT;
+  const state = stateLines(entries);
+  const parts = [...entryParts(entries, new Set(['DropdownMenuContent', 'DropdownMenuTrigger']))];
+  const items = entries.flatMap((entry) => entryLines(entry, '')).join('\n');
+  const markup = menu('', jsxText(o.triggerLabel ?? 'Conta'), '', items);
+
+  if (state.length === 0) return jsxSnippet(importDe(...parts), markup);
+
+  return jsxSnippet(
+    `import { useState } from "react";
+${importDe(...parts)}`,
+    `function DropdownMenuWithState() {
+${indentar(state.join('\n'), '  ')}
+
+  return (
+${indentar(markup, '    ')}
+  );
+}`,
+  );
+}

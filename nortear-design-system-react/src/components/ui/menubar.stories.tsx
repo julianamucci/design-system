@@ -61,6 +61,26 @@ type PlaygroundArgs = {
   onOpenChange: (isOpen: boolean) => void
 }
 
+// Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
+// pelo `play`. Recebe só o rótulo do item escolhido.
+const itemSelectSpy = fn()
+
+/**
+ * Clique fora da barra, por despacho direto no `<body>`.
+ *
+ * `userEvent.click(document.body)` não serve: com o menu modal a lib segura o
+ * resto da página, e o `userEvent` se recusa a clicar em elemento assim — a
+ * play morre com erro em vez de falha. Os três eventos são de propósito: a
+ * camada dispensável escuta um deles conforme a lib. É o mesmo gesto do
+ * `clickOutside` do ContextMenu (`@shared/testing/context-menu-area`), que
+ * espera pelo painel DAQUELE componente.
+ */
+function clickOutside(): void {
+  for (const type of ["pointerdown", "mousedown", "click"] as const) {
+    document.body.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }))
+  }
+}
+
 const meta = {
   title: "Components/Navigation/Menubar",
   component: Menubar as never,
@@ -120,6 +140,7 @@ export const Playground: Story = {
       "functional.item10",
       "functional.item11",
       "functional.item12",
+      "functional.item14",
       "accessibility.item2",
       "accessibility.item3",
       "accessibility.item4",
@@ -139,7 +160,7 @@ export const Playground: Story = {
             <MenubarTrigger>{menu.label}</MenubarTrigger>
             <MenubarContent side={side}>
               {menu.items.map((item) => (
-                <MenubarItem key={item.label}>
+                <MenubarItem key={item.label} onClick={() => itemSelectSpy(item.label)}>
                   {item.label}
                   {"atalho" in item ? (
                     <MenubarShortcut>{item.atalho}</MenubarShortcut>
@@ -319,6 +340,26 @@ export const Playground: Story = {
       await waitForPortalGone("menu")
       await expect(arquivo.getAttribute("aria-expanded")).toBe("false")
     })
+
+    await step("Clicar fora da barra fecha o menu sem executar nenhum item", async () => {
+      // Contrato C5: clique fora é "saí sem decidir". Fechar executando o item
+      // em foco — o primeiro, que a lib destaca ao abrir — seria a ação que a
+      // pessoa não pediu. A contagem parte do valor ATUAL do espião, que
+      // sobrevive ao replay do painel Interactions.
+      if (arquivo.getAttribute("aria-expanded") !== "true") {
+        await userEvent.click(arquivo)
+      }
+      await waitForPortal("menu")
+      const selectionsBefore = itemSelectSpy.mock.calls.length
+
+      clickOutside()
+      await waitForPortalGone("menu")
+      for (const trigger of triggers) {
+        await expect(trigger.getAttribute("aria-expanded")).toBe("false")
+      }
+      await expect(itemSelectSpy).toHaveBeenCalledTimes(selectionsBefore)
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
+    })
   },
 }
 
@@ -377,7 +418,9 @@ function TabBar({ withAfter }: { withAfter: boolean }) {
 }
 
 export const TabLeavesMenubar: Story = {
-  parameters: { controls: { disable: true } },
+  // Tab e Shift+Tab, do painel e de dentro do submenu, até o vizinho da BARRA.
+  // A barra como última parada fica em `TabAtPageEnd`.
+  parameters: { covers: ["functional.item13"], controls: { disable: true } },
   render: () => <TabBar withAfter />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -462,7 +505,7 @@ export const TabLeavesMenubar: Story = {
  * gatilho pelo caminho da lib.
  */
 export const TabAtPageEnd: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ["functional.item13"], controls: { disable: true } },
   render: () => <TabBar withAfter={false} />,
   play: async ({ canvasElement, step }) => {
     const bar = within(canvasElement).getByRole("menubar")

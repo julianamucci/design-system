@@ -6,6 +6,9 @@ import {
   MenubarItem,
   MenubarMenu,
   MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
   MenubarTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
@@ -56,7 +59,7 @@ type PlaygroundArgs = {
   loop: boolean;
   /** Lado em que o painel abre. Vive no conteúdo, e o Playground o encaminha. */
   side: 'top' | 'right' | 'bottom' | 'left';
-  'onUpdate:modelValue': (value: string) => void;
+  'onUpdate:modelValue': (value: string, reason?: 'escape' | 'overlay' | 'api') => void;
 };
 
 const meta = {
@@ -101,6 +104,24 @@ export default meta;
 // mesma forma que o Playground do React usa.
 type Story = StoryObj<PlaygroundArgs>;
 
+/**
+ * Espião dos itens do Playground: é ele que prova que o clique fora fecha SEM
+ * executar item nenhum (F14). Fica fora dos `args` porque não é controle — é
+ * instrumento da play.
+ */
+const itemSelected = fn();
+
+/**
+ * Um clique fora da barra e de qualquer painel: `pointerdown`, `mousedown` e
+ * `click` no `<body>` — é o `pointerdown` no documento que a camada dispensável
+ * da lib escuta. Não exportado: toda exportação de um `*.stories.ts` vira story.
+ */
+function clickOutside(): void {
+  for (const type of ['pointerdown', 'mousedown', 'click'] as const) {
+    document.body.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }));
+  }
+}
+
 export const Playground: Story = {
   parameters: {
     covers: [
@@ -113,6 +134,7 @@ export const Playground: Story = {
       'functional.item10',
       'functional.item11',
       'functional.item12',
+      'functional.item14',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
@@ -122,7 +144,7 @@ export const Playground: Story = {
   render: (args) => ({
     components: { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarShortcut, MenubarTrigger },
     setup() {
-      return { args, menus: MENUS };
+      return { args, menus: MENUS, itemSelected };
     },
     template: `
       <div class="nds-min-h-80" style="contain: layout">
@@ -135,7 +157,7 @@ export const Playground: Story = {
           <MenubarMenu v-for="m in menus" :key="m.value" :value="m.value">
             <MenubarTrigger>{{ m.label }}</MenubarTrigger>
             <MenubarContent :side="args.side">
-              <MenubarItem v-for="i in m.items" :key="i.label">
+              <MenubarItem v-for="i in m.items" :key="i.label" @select="itemSelected">
                 {{ i.label }}
                 <MenubarShortcut v-if="i.atalho">{{ i.atalho }}</MenubarShortcut>
               </MenubarItem>
@@ -299,6 +321,8 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(arquivo);
       });
+      // O motivo viaja com o valor novo: a barra fechou pelo Escape.
+      await expect(args['onUpdate:modelValue']).toHaveBeenLastCalledWith('', 'escape');
     });
 
     await step('Clicar no gatilho de um menu aberto fecha o menu', async () => {
@@ -310,6 +334,21 @@ export const Playground: Story = {
       await userEvent.click(arquivo);
       await waitForPortalGone('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+    });
+
+    await step('Clicar fora da barra fecha o menu sem executar item nenhum', async () => {
+      // F14: o clique fora é "saí sem decidir" — o menu some e nenhuma ação
+      // roda. O espião zera aqui para medir só este gesto.
+      itemSelected.mockClear();
+      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+      await waitForPortal('menu');
+
+      clickOutside();
+      await waitForPortalGone('menu');
+      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      await expect(itemSelected).not.toHaveBeenCalled();
+      // E o motivo diz que foi fora: `overlay`, a mesma palavra do Tab.
+      await expect(args['onUpdate:modelValue']).toHaveBeenLastCalledWith('', 'overlay');
     });
   },
 };
@@ -329,21 +368,43 @@ function pressTab(shift = false): void {
   );
 }
 
+/** Espião do `update:modelValue` da `TabLeavesMenubar` — prova o motivo do fechamento. */
+const tabValueChange = fn();
+
 export const TabLeavesMenubar: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ['functional.item13'], controls: { disable: true } },
   render: () => ({
-    components: { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger, Button },
-    setup() {
-      return { menus: MENUS.slice(0, 2) };
+    components: {
+      Menubar,
+      MenubarContent,
+      MenubarItem,
+      MenubarMenu,
+      MenubarSub,
+      MenubarSubContent,
+      MenubarSubTrigger,
+      MenubarTrigger,
+      Button,
     },
+    setup() {
+      return { menus: MENUS.slice(0, 2), tabValueChange };
+    },
+    // O primeiro menu ganha um submenu: é de dentro dele que partem os dois
+    // últimos passos.
     template: `
       <div class="nds-cluster nds-min-h-80" data-spacing="md" style="contain: layout">
         <Button variant="ghost">Antes</Button>
-        <Menubar>
+        <Menubar @update:model-value="tabValueChange">
           <MenubarMenu v-for="m in menus" :key="m.value" :value="m.value">
             <MenubarTrigger>{{ m.label }}</MenubarTrigger>
             <MenubarContent>
               <MenubarItem v-for="i in m.items" :key="i.label">{{ i.label }}</MenubarItem>
+              <MenubarSub v-if="m.value === 'file'">
+                <MenubarSubTrigger>Exportar</MenubarSubTrigger>
+                <MenubarSubContent>
+                  <MenubarItem>PDF</MenubarItem>
+                  <MenubarItem>CSV</MenubarItem>
+                </MenubarSubContent>
+              </MenubarSub>
             </MenubarContent>
           </MenubarMenu>
         </Menubar>
@@ -357,12 +418,27 @@ export const TabLeavesMenubar: Story = {
     const [fileTrigger] = within(bar).getAllByRole('menuitem');
     const before = canvas.getByRole('button', { name: 'Antes' });
     const after = canvas.getByRole('button', { name: 'Depois' });
+    const body = within(document.body);
 
     const openWithItemFocused = async () => {
       if (fileTrigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(fileTrigger);
       const menu = await waitForPortal('menu');
       within(menu).getAllByRole('menuitem')[0].focus();
       await expect(menu.contains(document.activeElement)).toBe(true);
+    };
+
+    // O submenu aberto pela seta, com o foco num item DELE.
+    const openSubmenuWithItemFocused = async () => {
+      await openWithItemFocused();
+      const subTrigger = within(await waitForPortal('menu')).getByRole('menuitem', { name: 'Exportar' });
+      subTrigger.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
+      });
+      const submenu = document.querySelector<HTMLElement>('[data-slot="menubar-sub-content"]')!;
+      within(submenu).getAllByRole('menuitem')[0].focus();
+      await expect(submenu.contains(document.activeElement)).toBe(true);
     };
 
     await step('Tab sai da barra inteira e fecha o menu aberto', async () => {
@@ -375,12 +451,37 @@ export const TabLeavesMenubar: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(after);
       });
+      // Saiu sem decidir nada: `overlay`, a mesma palavra do clique fora.
+      await expect(tabValueChange).toHaveBeenLastCalledWith('', 'overlay');
     });
 
     await step('Shift+Tab sai para o ponto ANTERIOR à barra', async () => {
       // Sem o ouvinte, Shift+Tab caía no botão DEPOIS da barra: a ordem de
       // tabulação partia do painel, que vive no fim do documento.
       await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before);
+      });
+    });
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e sai da barra', async () => {
+      // O painel do submenu vive em outro portal: a tecla apertada nele nunca
+      // chega ao ouvinte do raiz. Fechar só o submenu deixaria o menu aberto
+      // com o foco fora dele.
+      await openSubmenuWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after);
+      });
+      await expect(tabValueChange).toHaveBeenLastCalledWith('', 'overlay');
+    });
+
+    await step('Shift+Tab dentro do submenu também fecha tudo, e volta ao anterior', async () => {
+      await openSubmenuWithItemFocused();
       pressTab(true);
       await waitForPortalGone('menu');
       await waitFor(async () => {
@@ -396,7 +497,7 @@ export const TabLeavesMenubar: Story = {
  * gatilho pelo caminho da lib.
  */
 export const TabAtPageEnd: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ['functional.item13'], controls: { disable: true } },
   render: () => ({
     components: { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger, Button },
     setup() {

@@ -9,7 +9,10 @@ import {
   dropdownMenuItemDisabledSource,
   dropdownMenuItemDestructiveSource,
   dropdownMenuItemDefaultSource,
+  dropdownMenuCheckboxIndeterminateSource,
+  dropdownMenuSnippet,
   dropdownMenuSource,
+  type DropdownMenuActionEntry,
 } from './dropdown-menu.source';
 
 const ALL = [
@@ -23,6 +26,8 @@ const ALL = [
   dropdownMenuWithRadioSource,
   dropdownMenuWithSubmenuSource,
   dropdownMenuWithShortcutsSource,
+  dropdownMenuCheckboxIndeterminateSource,
+  () => dropdownMenuSnippet(),
 ];
 
 /** Todo rótulo tem que estar dentro de um grupo — ver a regra do primitivo. */
@@ -169,6 +174,116 @@ describe('composições', () => {
       item.indexOf('</DropdownMenuItem>'),
     );
     expect(saida).not.toContain('aria-hidden');
+  });
+});
+
+describe('estado misto', () => {
+  it('os três estados lado a lado, e o misto pela prop do wrapper', () => {
+    const output = dropdownMenuCheckboxIndeterminateSource();
+    expect(output).toContain('<DropdownMenuCheckboxItem checked={false} indeterminate>');
+    expect(output).toContain('<DropdownMenuCheckboxItem checked>Régua</DropdownMenuCheckboxItem>');
+    expect(output).toContain('<DropdownMenuCheckboxItem checked={false}>Grade</DropdownMenuCheckboxItem>');
+    // O `mixed` é o wrapper que escreve: ensinar o atributo à mão contornaria a prop.
+    expect(output).not.toContain('aria-checked');
+  });
+});
+
+describe('dropdownMenuSnippet — o menu como dado', () => {
+  const rename: DropdownMenuActionEntry = { kind: 'item', label: 'Rename', value: 'rename' };
+
+  it('imprime os rótulos exatamente como chegam, no idioma de quem lê', () => {
+    // O defeito era o código em português ao lado da prévia em inglês.
+    const output = dropdownMenuSnippet({
+      triggerLabel: 'Edit',
+      entries: [
+        { kind: 'item', label: 'Undo', value: 'undo', shortcut: 'Ctrl+Z' },
+        { kind: 'separator' },
+        { kind: 'item', label: 'Delete account', value: 'delete-account', destructive: true },
+      ],
+    });
+    expect(output).toContain('<Button variant="outline">Edit</Button>');
+    expect(output).toContain('    <DropdownMenuItem>\n      Undo\n      <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>');
+    expect(output).toContain('<DropdownMenuItem variant="destructive">Delete account</DropdownMenuItem>');
+    expect(output).not.toMatch(/Editar|Desfazer|Excluir/);
+    // Item de ação não tem `value`: o id estável é do evento, não do snippet.
+    expect(output).not.toContain('value=');
+  });
+
+  it('a escolha única sai como UM grupo nomeado pelo rótulo, com o estado antes', () => {
+    const output = dropdownMenuSnippet({
+      triggerLabel: 'Theme',
+      entries: [
+        {
+          kind: 'radio-group',
+          label: 'Appearance',
+          value: 'theme',
+          selected: 'light',
+          options: [
+            { label: 'Light', value: 'light' },
+            { label: 'Dark', value: 'dark' },
+          ],
+        },
+      ],
+    });
+    expect(output).toContain(
+      'function DropdownMenuWithState() {\n'
+        + '  const [theme, setTheme] = useState("light");\n\n'
+        + '  return (\n'
+        + '    <DropdownMenu>',
+    );
+    expect(output).toContain(
+      '<DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>\n'
+        + '          <DropdownMenuLabel>Appearance</DropdownMenuLabel>\n'
+        + '          <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>',
+    );
+    expect(output).not.toContain('DropdownMenuGroup');
+  });
+
+  it('a marcação nomeia o estado pelo id estável, e o rótulo mora no grupo', () => {
+    const output = dropdownMenuSnippet({
+      entries: [
+        {
+          kind: 'group',
+          label: 'Visible columns',
+          items: [{ kind: 'checkbox', label: 'Email', value: 'column-email', checked: false }],
+        },
+      ],
+    });
+    expect(output).toContain('const [columnEmail, setColumnEmail] = useState(false);');
+    expect(output).toContain('<DropdownMenuCheckboxItem checked={columnEmail} onCheckedChange={setColumnEmail}>');
+    expect(groupLabelInside(output)).toBe(true);
+  });
+
+  it('o trecho se cola: importa as peças que usa, e o useState só quando há estado', () => {
+    const withoutState = dropdownMenuSnippet({
+      entries: [rename, { kind: 'submenu', label: 'Export', items: [{ kind: 'item', label: 'PDF', value: 'pdf' }] }],
+    });
+    expect(withoutState.startsWith(
+      'import {\n'
+        + '  DropdownMenu,\n'
+        + '  DropdownMenuContent,\n'
+        + '  DropdownMenuItem,\n'
+        + '  DropdownMenuSub,\n'
+        + '  DropdownMenuSubContent,\n'
+        + '  DropdownMenuSubTrigger,\n'
+        + '  DropdownMenuTrigger,\n'
+        + '} from "@/components/ui/dropdown-menu";\n'
+        + 'import { Button } from "@/components/ui/button";\n\n'
+        + '<DropdownMenu>',
+    )).toBe(true);
+    expect(withoutState).not.toContain('useState');
+    expect(withoutState).not.toContain('DropdownMenuShortcut');
+  });
+
+  it('sem entradas, publica o menu canônico do meta', () => {
+    const output = dropdownMenuSnippet();
+    expect(output).toContain('<DropdownMenuLabel>Conta</DropdownMenuLabel>');
+    expect(output).toContain('<DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>');
+  });
+
+  it('rótulo com chave ou sinal de tag vira string, e o trecho continua compilando', () => {
+    const output = dropdownMenuSnippet({ entries: [{ kind: 'item', label: 'A <b> {x}', value: 'a' }] });
+    expect(output).toContain('<DropdownMenuItem>{"A <b> {x}"}</DropdownMenuItem>');
   });
 });
 

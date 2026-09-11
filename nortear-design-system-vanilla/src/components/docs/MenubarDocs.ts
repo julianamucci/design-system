@@ -3,7 +3,13 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createMenubar } from '@/components/ui/menubar';
+import {
+  createMenubar,
+  type MenubarCloseReason,
+  type MenubarItem,
+  type MenubarMenu,
+} from '@/components/ui/menubar';
+import { menubarSnippet, type MenubarItemSnippet } from '@/components/ui/menubar.source';
 import uiTranslations from '@/i18n/ui.json';
 import menubarTranslations from '@shared/content/menubar/translations.json';
 
@@ -43,7 +49,40 @@ function screenReaderItems(): string[] {
     .filter(([k]) => k !== 'title')
     .map(([, v]) => v);
 }
-const { t, subscribe } = createTranslation(menubarTranslations as Record<string, unknown>);
+// Opções que só esta stack tem.
+//
+// A lista de menus, os avisos POR MENU (`onOpenChange`/`onClose` em cada
+// `MenubarMenu`), o `onClick` da opção de escolha única e o `defaultOpen` por
+// índice são a API da FÁBRICA — as outras stacks compõem peças e não têm linha
+// para elas no conteúdo compartilhado. Ficam no override, nos três idiomas, como
+// no ContextMenu desta stack: presas em pt-BR na tabela, apareciam em português
+// nas versões en e es da página.
+const { t, subscribe } = createTranslation(menubarTranslations as Record<string, unknown>, {
+  'pt-BR': {
+    'props.factory.menus': 'Lista de menus: o rótulo do gatilho, os itens e os avisos de abrir e fechar de cada um.',
+    'props.factory.class': 'Classes adicionais na raiz da barra.',
+    'props.factory.defaultOpenIndex': 'Aqui é o índice do menu na lista.',
+    'props.factory.menuOnOpenChange': 'Avisado quando este menu abre ou fecha. É por menu: trocar de menu com a barra aberta avisa o que fecha antes do que abre.',
+    'props.factory.menuOnClose': 'Motivo do fechamento do menu, uma vez por fechamento e antes do callback de mudança: escape, overlay (clique fora, Tab, clique no gatilho aberto ou passagem ao menu vizinho) ou api (item escolhido). Sair da página não é fechamento e não dispara.',
+    'props.factory.radioOptionOnClick': 'Avisado a cada escolha da opção, pelo ponteiro ou por Enter/Espaço — também quando ela já era a escolhida. A mudança de valor é o callback de mudança do grupo.',
+  },
+  en: {
+    'props.factory.menus': 'List of menus: the trigger label, the items and the open and close callbacks of each one.',
+    'props.factory.class': 'Additional classes on the bar root.',
+    'props.factory.defaultOpenIndex': 'Here it is the index of the menu in the list.',
+    'props.factory.menuOnOpenChange': 'Called when this menu opens or closes. It is per menu: switching menus with the bar open notifies the one closing before the one opening.',
+    'props.factory.menuOnClose': 'Close reason of the menu, once per close and before the change callback: escape, overlay (click outside, Tab, click on the open trigger or moving to the next menu) or api (item chosen). Leaving the page is not a close and does not fire it.',
+    'props.factory.radioOptionOnClick': 'Called on every choice of the option, by pointer or by Enter/Space — also when it was already the chosen one. The value change is the group change callback.',
+  },
+  es: {
+    'props.factory.menus': 'Lista de menús: el rótulo del disparador, los ítems y los avisos de apertura y cierre de cada uno.',
+    'props.factory.class': 'Clases adicionales en la raíz de la barra.',
+    'props.factory.defaultOpenIndex': 'Aquí es el índice del menú en la lista.',
+    'props.factory.menuOnOpenChange': 'Se avisa cuando este menú se abre o se cierra. Es por menú: cambiar de menú con la barra abierta avisa al que se cierra antes que al que se abre.',
+    'props.factory.menuOnClose': 'Motivo del cierre del menú, una vez por cierre y antes del callback de cambio: escape, overlay (clic fuera, Tab, clic en el disparador abierto o paso al menú vecino) o api (ítem elegido). Salir de la página no es un cierre y no lo dispara.',
+    'props.factory.radioOptionOnClick': 'Se avisa en cada elección de la opción, con el puntero o con Enter/Espacio — también cuando ya era la elegida. El cambio de valor es el callback de cambio del grupo.',
+  },
+});
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -56,68 +95,427 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-function buildDemoMenubar(): HTMLElement {
-  const bar = createMenubar([
-    {
-      label: 'Arquivo',
-      items: [
-        { type: 'item', label: 'Novo',     shortcut: 'Ctrl+N' },
-        { type: 'item', label: 'Abrir',    shortcut: 'Ctrl+O' },
-        { type: 'item', label: 'Salvar',   shortcut: 'Ctrl+S' },
-        { type: 'separator' },
-        {
-          type: 'submenu',
-          label: 'Exportar',
-          items: [
-            { type: 'item', label: 'PDF' },
-            { type: 'item', label: 'CSV' },
-          ],
-        },
-        { type: 'separator' },
-        { type: 'item', label: 'Sair',     shortcut: 'Ctrl+Q' },
-      ],
-    },
-    {
-      label: 'Editar',
-      items: [
-        { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
-        { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
-        { type: 'separator' },
-        { type: 'item', label: 'Recortar', shortcut: 'Ctrl+X' },
-        { type: 'item', label: 'Copiar',   shortcut: 'Ctrl+C' },
-        { type: 'item', label: 'Colar',    shortcut: 'Ctrl+V' },
-      ],
-    },
-    {
-      label: 'Exibir',
-      items: [
-        { type: 'label',    label: 'Aparência' },
-        { type: 'checkbox', label: 'Modo escuro' },
-        { type: 'checkbox', label: 'Mostrar régua', checked: true },
-        { type: 'separator' },
-        { type: 'item',     label: 'Tela cheia', shortcut: 'F11' },
-      ],
-    },
-    {
-      label: 'Ferramentas',
-      items: [
-        { type: 'item', label: 'Buscar',     shortcut: 'Ctrl+F' },
-        { type: 'item', label: 'Substituir', shortcut: 'Ctrl+H' },
-        { type: 'separator' },
-        {
+/**
+ * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
+ *
+ * As listas de `testes.*` estavam cravadas em nove critérios funcionais e sete
+ * de acessibilidade, com dezesseis e oito no conteúdo: sete critérios — o Tab
+ * que sai da barra, o clique fora, o rádio que não fecha, o atalho — não
+ * existiam para quem lia esta página, e nada avisava.
+ */
+function stringsFromDict(
+  translate: (key: string, defaultValue?: string) => string,
+  base: string,
+): string[] {
+  const out: string[] = [];
+  for (let i = 1; ; i++) {
+    const value = translate(`${base}.item${i}`, '');
+    if (!value) break;
+    out.push(value);
+  }
+  return out;
+}
+
+/**
+ * A mesma varredura para a lista cujo item é um OBJETO — critério funcional,
+ * story de regressão visual. O primeiro campo é quem decide se o item existe, e
+ * os demais acompanham.
+ */
+function entriesFromDict<K extends string>(
+  translate: (key: string, defaultValue?: string) => string,
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!translate(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map(field => [field, translate(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
+}
+
+// ─── Rótulos das prévias ──────────────────────────────────────────────────────
+//
+// Cada rótulo pela CHAVE LITERAL do conteúdo compartilhado — é ela que faz as
+// cinco stacks mostrarem o mesmo menu nos três idiomas, e é pela chave escrita
+// por inteiro que o `demonstration_labels_divergent` enxerga o conjunto. Até
+// 2026-09-11 esta página não usava chave nenhuma: tudo era literal em português,
+// e em inglês a barra continuava dizendo "Arquivo".
+//
+// Função, e não valor: o rótulo é lido no idioma do MOMENTO em que a prévia é
+// montada. E a CHAVE é também o id estável dos eventos, em kebab: `showRuler`
+// vira `show-ruler` no `label` do `menubar_item_select`, `file` vira o sufixo
+// do `menu` numa barra de vários menus.
+
+const LABELS = {
+  file: () => t('demonstration.labels.file'),
+  edit: () => t('demonstration.labels.edit'),
+  view: () => t('demonstration.labels.view'),
+  tools: () => t('demonstration.labels.tools'),
+  help: () => t('demonstration.labels.help'),
+  theme: () => t('demonstration.labels.theme'),
+  menu: () => t('demonstration.labels.menu'),
+  new: () => t('demonstration.labels.new'),
+  open: () => t('demonstration.labels.open'),
+  save: () => t('demonstration.labels.save'),
+  export: () => t('demonstration.labels.export'),
+  format: () => t('demonstration.labels.format'),
+  pdf: () => t('demonstration.labels.pdf'),
+  csv: () => t('demonstration.labels.csv'),
+  quit: () => t('demonstration.labels.quit'),
+  undo: () => t('demonstration.labels.undo'),
+  redo: () => t('demonstration.labels.redo'),
+  cut: () => t('demonstration.labels.cut'),
+  copy: () => t('demonstration.labels.copy'),
+  paste: () => t('demonstration.labels.paste'),
+  appearance: () => t('demonstration.labels.appearance'),
+  darkMode: () => t('demonstration.labels.darkMode'),
+  showRuler: () => t('demonstration.labels.showRuler'),
+  fullScreen: () => t('demonstration.labels.fullScreen'),
+  find: () => t('demonstration.labels.find'),
+  replace: () => t('demonstration.labels.replace'),
+  lightTheme: () => t('demonstration.labels.lightTheme'),
+  darkTheme: () => t('demonstration.labels.darkTheme'),
+  systemTheme: () => t('demonstration.labels.systemTheme'),
+  zoom: () => t('demonstration.labels.zoom'),
+  singleAction: () => t('demonstration.labels.singleAction'),
+  deleteFile: () => t('demonstration.labels.deleteFile'),
+  panels: () => t('demonstration.labels.panels'),
+  sidebar: () => t('demonstration.labels.sidebar'),
+  grid: () => t('demonstration.labels.grid'),
+  ruler: () => t('demonstration.labels.ruler'),
+  light: () => t('demonstration.labels.light'),
+  dark: () => t('demonstration.labels.dark'),
+  system: () => t('demonstration.labels.system'),
+  documentation: () => t('demonstration.labels.documentation'),
+  about: () => t('demonstration.labels.about'),
+  newShortcut: () => t('demonstration.labels.newShortcut'),
+  openShortcut: () => t('demonstration.labels.openShortcut'),
+  saveShortcut: () => t('demonstration.labels.saveShortcut'),
+  quitShortcut: () => t('demonstration.labels.quitShortcut'),
+  undoShortcut: () => t('demonstration.labels.undoShortcut'),
+  redoShortcut: () => t('demonstration.labels.redoShortcut'),
+  cutShortcut: () => t('demonstration.labels.cutShortcut'),
+  copyShortcut: () => t('demonstration.labels.copyShortcut'),
+  pasteShortcut: () => t('demonstration.labels.pasteShortcut'),
+  fullScreenShortcut: () => t('demonstration.labels.fullScreenShortcut'),
+  findShortcut: () => t('demonstration.labels.findShortcut'),
+  replaceShortcut: () => t('demonstration.labels.replaceShortcut'),
+} as const;
+
+type LabelKey = keyof typeof LABELS;
+
+/** A chave em kebab — o id estável dos eventos (`showRuler` → `show-ruler`). */
+function kebab(key: string): string {
+  return key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+}
+
+// ─── Descrição das barras ─────────────────────────────────────────────────────
+//
+// Cada prévia é descrita UMA vez, por chave, e a mesma descrição monta a barra
+// viva e imprime o código do cartão (`menubarSnippet`). Até 2026-09-11 o código
+// de três cartões ensinava a montar item à mão sobre o painel ("o factory Nortear
+// não tem CheckboxItem"), quando a fábrica já tinha os seis tipos de item — e a
+// prévia do lado mostrava `✓` e `●` em texto, sem papel nem estado.
+
+type ItemSpec =
+  | { type: 'item'; key: LabelKey; shortcut?: LabelKey; variant?: 'destructive' }
+  | { type: 'separator' }
+  | { type: 'label'; key: LabelKey }
+  | { type: 'checkbox'; key: LabelKey; checked?: boolean }
+  | { type: 'radio-group'; options: LabelKey[]; value: LabelKey }
+  | { type: 'submenu'; key: LabelKey; items: ItemSpec[] };
+
+/** Um menu da barra: a chave do gatilho e os itens. */
+type MenuSpec = { trigger: LabelKey; items: ItemSpec[] };
+
+const item = (key: LabelKey, shortcut?: LabelKey, variant?: 'destructive'): ItemSpec =>
+  ({ type: 'item', key, shortcut, variant });
+const SEPARATOR: ItemSpec = { type: 'separator' };
+const groupLabel = (key: LabelKey): ItemSpec => ({ type: 'label', key });
+const checkbox = (key: LabelKey, checked = false): ItemSpec => ({ type: 'checkbox', key, checked });
+const radioGroup = (options: LabelKey[], value: LabelKey): ItemSpec =>
+  ({ type: 'radio-group', options, value });
+const submenu = (key: LabelKey, items: ItemSpec[]): ItemSpec => ({ type: 'submenu', key, items });
+
+/**
+ * Os itens da fábrica, com a escolha rastreada. `select` recebe o id do item —
+ * a chave em kebab —, e o rádio manda o valor da opção, que é a mesma chave.
+ * Marcar e escolher rádio também escolhem, mas não fecham o menu: o fechamento
+ * seguinte leva o motivo de quem de fato fechou.
+ *
+ * O rádio rastreia pelo `onClick` da OPÇÃO, e não pelo `onValueChange` do
+ * grupo: este não dispara quando a opção escolhida já era a marcada, e o
+ * `menubar_item_select` sumia justo no gesto de confirmar — o dropdown e o menu
+ * de contexto mandam o evento a cada escolha.
+ */
+function toMenubarItems(specs: ItemSpec[], select: (label: string) => void): MenubarItem[] {
+  return specs.map((spec): MenubarItem => {
+    switch (spec.type) {
+      case 'separator':
+        return { type: 'separator' };
+      case 'label':
+        return { type: 'label', label: LABELS[spec.key]() };
+      case 'checkbox':
+        return {
+          type: 'checkbox',
+          label: LABELS[spec.key](),
+          checked: spec.checked,
+          onCheckedChange: () => select(kebab(spec.key)),
+        };
+      case 'radio-group':
+        return {
           type: 'radio-group',
-          value: 'system',
-          options: [
-            { value: 'light',  label: 'Tema claro' },
-            { value: 'dark',   label: 'Tema escuro' },
-            { value: 'system', label: 'Tema do sistema' },
-          ],
+          value: kebab(spec.value),
+          options: spec.options.map((key) => ({
+            value: kebab(key),
+            label: LABELS[key](),
+            onClick: () => select(kebab(key)),
+          })),
+        };
+      case 'submenu':
+        return { type: 'submenu', label: LABELS[spec.key](), items: toMenubarItems(spec.items, select) };
+      case 'item':
+        return {
+          label: LABELS[spec.key](),
+          shortcut: spec.shortcut ? LABELS[spec.shortcut]() : undefined,
+          variant: spec.variant,
+          onClick: () => select(kebab(spec.key)),
+        };
+    }
+  });
+}
+
+/** A mesma descrição no formato do snippet — sem os callbacks de rastreio. */
+function toSnippetItems(specs: ItemSpec[]): MenubarItemSnippet[] {
+  return specs.map((spec): MenubarItemSnippet => {
+    switch (spec.type) {
+      case 'separator':
+        return { type: 'separator' };
+      case 'label':
+        return { type: 'label', label: LABELS[spec.key]() };
+      case 'checkbox':
+        return { type: 'checkbox', label: LABELS[spec.key](), checked: spec.checked };
+      case 'radio-group':
+        return {
+          type: 'radio-group',
+          value: kebab(spec.value),
+          options: spec.options.map((key) => ({ value: kebab(key), label: LABELS[key]() })),
+        };
+      case 'submenu':
+        return { type: 'submenu', label: LABELS[spec.key](), items: toSnippetItems(spec.items) };
+      case 'item':
+        return {
+          label: LABELS[spec.key](),
+          shortcut: spec.shortcut ? LABELS[spec.shortcut]() : undefined,
+          variant: spec.variant,
+        };
+    }
+  });
+}
+
+// ─── Rastreamento das barras vivas ────────────────────────────────────────────
+
+/**
+ * Onde cada prévia viva mora — o `location` dos três eventos é a SEÇÃO da
+ * página onde a barra está (guideline 07). Vem sempre de quem CHAMA.
+ */
+type PreviewLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
+
+/**
+ * Uma barra VIVA, com os três eventos da família em cada menu.
+ *
+ * Até 2026-09-11 esta página não rastreava nada: a fábrica não avisava abrir
+ * nem fechar, e o conteúdo documentava `menubar_open`, `menubar_close` e
+ * `menubar_item_select` que nenhuma prévia disparava. O `menu` de cada evento é
+ * o id da prévia; numa barra de VÁRIOS menus, o id da prévia mais a chave do
+ * gatilho em kebab (`demo-file`, `pair1-do-edit`) — sem o sufixo, os quatro
+ * menus da demonstração seriam o mesmo menu no GA4.
+ */
+function buildBar(preview: string, menus: MenuSpec[], location: PreviewLocation): HTMLElement {
+  return createMenubar(
+    menus.map((spec): MenubarMenu => {
+      const menu = menus.length > 1 ? `${preview}-${kebab(spec.trigger)}` : preview;
+      return {
+        label: LABELS[spec.trigger](),
+        items: toMenubarItems(spec.items, (label) => {
+          track('menubar_item_select', { component: 'menubar', menu, label, location });
+        }),
+        onOpenChange: (open) => {
+          if (open) track('menubar_open', { component: 'menubar', menu, location });
         },
+        onClose: (reason: MenubarCloseReason) => {
+          track('menubar_close', { component: 'menubar', menu, reason, location });
+        },
+      };
+    }),
+  );
+}
+
+/** O código do cartão, da mesma descrição que montou a prévia. */
+function barCode(menus: MenuSpec[]): string {
+  return menubarSnippet({
+    menus: menus.map((spec) => ({ label: LABELS[spec.trigger](), items: toSnippetItems(spec.items) })),
+  });
+}
+
+/**
+ * Moldura de prévia: a barra no alto e o espaço do painel aberto reservado
+ * embaixo. O painel de topo é ancorado por CSS dentro da barra, e `contain`
+ * segura o reflow; o recheio vem de classe (`nds-p-2`), não de `style`.
+ */
+function frame(child: HTMLElement, minHeightClass?: string): HTMLElement {
+  const wrap = document.createElement('div');
+  // Mecânica de layout, não valor de design.
+  wrap.style.contain = 'layout';
+  wrap.className = ['nds-cluster nds-w-full nds-p-2', minHeightClass].filter(Boolean).join(' ');
+  wrap.dataset.align = 'start';
+  wrap.dataset.justify = 'center';
+  wrap.appendChild(child);
+  return wrap;
+}
+
+// ─── As barras de cada seção ──────────────────────────────────────────────────
+
+/** A demonstração: UMA barra, quatro menus, com os seis tipos de item. */
+function demoMenus(): MenuSpec[] {
+  return [
+    {
+      trigger: 'file',
+      items: [
+        item('new', 'newShortcut'),
+        item('open', 'openShortcut'),
+        item('save', 'saveShortcut'),
+        SEPARATOR,
+        submenu('export', [item('pdf'), item('csv')]),
+        SEPARATOR,
+        item('quit', 'quitShortcut'),
       ],
     },
-  ]);
-  bar.dataset.slot = 'menubar';
-  return bar;
+    {
+      trigger: 'edit',
+      items: [
+        item('undo', 'undoShortcut'),
+        item('redo', 'redoShortcut'),
+        SEPARATOR,
+        item('cut', 'cutShortcut'),
+        item('copy', 'copyShortcut'),
+        item('paste', 'pasteShortcut'),
+      ],
+    },
+    {
+      trigger: 'view',
+      items: [
+        groupLabel('appearance'),
+        checkbox('darkMode'),
+        checkbox('showRuler', true),
+        SEPARATOR,
+        item('fullScreen', 'fullScreenShortcut'),
+      ],
+    },
+    {
+      trigger: 'tools',
+      items: [
+        item('find', 'findShortcut'),
+        item('replace', 'replaceShortcut'),
+        SEPARATOR,
+        radioGroup(['lightTheme', 'darkTheme', 'systemTheme'], 'systemTheme'),
+      ],
+    },
+  ];
+}
+
+/**
+ * Os seis cartões de Variantes, pela CHAVE do conteúdo. A chave em kebab é o
+ * `menu` dos eventos; no `editorComplete`, que tem quatro menus, soma-se a
+ * chave de cada gatilho.
+ */
+type VariantKey =
+  | 'default'
+  | 'destructive'
+  | 'withShortcuts'
+  | 'withCheckbox'
+  | 'withRadio'
+  | 'editorComplete';
+
+function variantMenus(key: VariantKey): MenuSpec[] {
+  switch (key) {
+    case 'default':
+      return [{ trigger: 'file', items: [item('new', 'newShortcut'), item('save', 'saveShortcut')] }];
+    case 'destructive':
+      // A variante destrutiva é TIPO de item da fábrica (`variant`). O cartão
+      // mostrava um `<div role="menu">` solto com um item estático, e o código
+      // ao lado ensinava a montá-lo à mão "porque o factory não tem variant".
+      return [{ trigger: 'file', items: [item('save'), SEPARATOR, item('deleteFile', undefined, 'destructive')] }];
+    case 'withShortcuts':
+      return [
+        {
+          trigger: 'edit',
+          items: [
+            item('undo', 'undoShortcut'),
+            item('redo', 'redoShortcut'),
+            SEPARATOR,
+            item('copy', 'copyShortcut'),
+            item('paste', 'pasteShortcut'),
+          ],
+        },
+      ];
+    case 'withCheckbox':
+      return [
+        {
+          trigger: 'view',
+          items: [groupLabel('panels'), checkbox('sidebar', true), checkbox('grid'), checkbox('ruler')],
+        },
+      ];
+    case 'withRadio':
+      return [
+        {
+          trigger: 'theme',
+          items: [groupLabel('appearance'), radioGroup(['light', 'dark', 'system'], 'dark')],
+        },
+      ];
+    case 'editorComplete':
+      return [
+        {
+          trigger: 'file',
+          items: [
+            item('new', 'newShortcut'),
+            item('open', 'openShortcut'),
+            item('save', 'saveShortcut'),
+            SEPARATOR,
+            item('quit', 'quitShortcut'),
+          ],
+        },
+        { trigger: 'edit', items: [item('undo', 'undoShortcut'), item('redo', 'redoShortcut')] },
+        {
+          trigger: 'view',
+          items: [
+            groupLabel('appearance'),
+            item('darkMode'),
+            SEPARATOR,
+            item('fullScreen', 'fullScreenShortcut'),
+          ],
+        },
+        { trigger: 'help', items: [item('documentation'), item('about')] },
+      ];
+  }
+}
+
+/**
+ * A prévia de um cartão. A seção vem de quem CHAMA, mesmo que hoje só
+ * Variantes chame: o valor cravado aqui dentro era a forma exata que o portão
+ * `location_so_da_demo` condena — o helper decidindo de onde o clique veio.
+ */
+function variantPreview(
+  key: VariantKey,
+  location: PreviewLocation,
+  minHeightClass = 'nds-min-h-60',
+): HTMLElement {
+  return frame(buildBar(kebab(key), variantMenus(key), location), minHeightClass);
 }
 
 // ─── createMenubarDocs ────────────────────────────────────────────────────────
@@ -217,17 +615,7 @@ export function createMenubarDocs(): HTMLElement {
       case 'demonstracao':
         return createDocsDemonstration({
           title: t('demonstration.title'),
-          demoFactory: () => {
-            const wrap = document.createElement('div');
-            wrap.style.contain = 'layout';
-            wrap.className = 'nds-cluster nds-w-full';
-            wrap.dataset.align = 'start';
-            wrap.dataset.justify = 'center';
-            wrap.classList.add('nds-min-h-50');
-            wrap.style.padding = 'var(--spacing-2)';
-            wrap.appendChild(buildDemoMenubar());
-            return wrap;
-          },
+          demoFactory: () => frame(buildBar('demo', demoMenus(), 'docs_demo'), 'nds-min-h-50'),
         });
 
       case 'anatomia':
@@ -283,6 +671,11 @@ export function createMenubarDocs(): HTMLElement {
           },
         });
 
+      // Os quatro lados são barras VIVAS. O "evite" do par 2 era um parágrafo
+      // em português cravado — "não-suportado pelo factory Nortear" —, porque a
+      // fábrica não aninhava submenu em submenu. Aninha desde 2026-09-11 (a pilha
+      // de níveis de `@/lib/submenu`), e o exemplo passa a mostrar o que a
+      // legenda condena: dois níveis de submenu até chegar ao PDF.
       case 'do-dont':
         return createDocsDoDont({
           title: t('doDont.title'),
@@ -292,70 +685,51 @@ export function createMenubarDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
-                wrap.dataset.align = 'start';
-                wrap.dataset.justify = 'center';
-                wrap.appendChild(
-                  createMenubar([
-                    { label: 'Arquivo', items: [{ type: 'item', label: 'Novo' }] },
-                    { label: 'Editar',  items: [{ type: 'item', label: 'Copiar' }] },
-                    { label: 'Exibir',  items: [{ type: 'item', label: 'Zoom' }] },
-                  ]),
-                );
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
-                wrap.dataset.align = 'start';
-                wrap.dataset.justify = 'center';
-                wrap.appendChild(
-                  createMenubar([
-                    { label: 'Menu', items: [{ type: 'item', label: 'Ação única' }] },
-                  ]),
-                );
-                return wrap;
-              },
+              // TRÊS itens por menu: o lado "faça" não pode contrariar a regra
+              // da própria página (`usage.guidelines.item3` pede de 3 a 10), e
+              // com um item só cada menu era o mesmo defeito do lado "evite".
+              // "Mostrar régua" entra como item de AÇÃO, não de marcação — o
+              // assunto do par é a organização em categorias, e o texto do
+              // conteúdo é o que decide.
+              doPreviewFactory: () =>
+                frame(
+                  buildBar(
+                    'pair1-do',
+                    [
+                      { trigger: 'file', items: [item('new'), item('open'), item('save')] },
+                      { trigger: 'edit', items: [item('undo'), item('copy'), item('paste')] },
+                      { trigger: 'view', items: [item('zoom'), item('fullScreen'), item('showRuler')] },
+                    ],
+                    'docs_do_dont',
+                  ),
+                  'nds-min-h-40',
+                ),
+              dontPreviewFactory: () =>
+                frame(
+                  buildBar('pair1-dont', [{ trigger: 'menu', items: [item('singleAction')] }], 'docs_do_dont'),
+                ),
             },
             {
               doLabel: tNav('common.do'),
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster';
-                wrap.dataset.align = 'start';
-                wrap.dataset.justify = 'center';
-                wrap.appendChild(
-                  createMenubar([
-                    {
-                      label: 'Arquivo',
-                      items: [
-                        { type: 'item', label: 'Salvar', shortcut: 'Ctrl+S' },
-                        { type: 'item', label: 'Abrir',  shortcut: 'Ctrl+O' },
-                      ],
-                    },
-                  ]),
-                );
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-stack nds-text-caption nds-text-muted-foreground nds-italic';
-                wrap.dataset.spacing = 'xs';
-                wrap.style.alignItems = 'center';
-                const note = document.createElement('p');
-                note.textContent = 'Submenu aninhado em submenu (não-suportado pelo factory Nortear).';
-                wrap.appendChild(note);
-                return wrap;
-              },
+              doPreviewFactory: () =>
+                frame(
+                  buildBar(
+                    'pair2-do',
+                    [{ trigger: 'file', items: [item('save', 'saveShortcut'), item('open', 'openShortcut')] }],
+                    'docs_do_dont',
+                  ),
+                ),
+              dontPreviewFactory: () =>
+                frame(
+                  buildBar(
+                    'pair2-dont',
+                    [{ trigger: 'file', items: [submenu('export', [submenu('format', [item('pdf')])])] }],
+                    'docs_do_dont',
+                  ),
+                ),
             },
           ],
         });
@@ -366,150 +740,10 @@ export function createMenubarDocs(): HTMLElement {
           code: `import { createMenubar } from '@/components/ui/menubar';`,
         });
 
-      case 'variantes': {
-        const codeDefault = `const bar = createMenubar([
-  {
-    label: 'Arquivo',
-    items: [
-      { type: 'item', label: 'Novo',    shortcut: 'Ctrl+N' },
-      { type: 'item', label: 'Abrir',   shortcut: 'Ctrl+O' },
-      { type: 'item', label: 'Salvar',  shortcut: 'Ctrl+S' },
-    ],
-  },
-]);`;
-
-        const codeDestructive = `// DIVERGÊNCIA IDIOMÁTICA:
-// O factory Nortear não tem prop \`variant\` — o item destructive
-// é montado manualmente via classes .nds-* no <div role="menuitem">.
-const bar = createMenubar([{ label: 'Arquivo', items: [{ type: 'item', label: 'Novo' }] }]);
-const panel = bar.querySelector('[role="menu"]');
-const li = document.createElement('div');
-li.setAttribute('role', 'menuitem');
-li.setAttribute('tabindex', '0');
-li.className = 'nds-dropdown-menu-item nds-text-destructive';
-li.textContent = 'Excluir arquivo';
-panel.appendChild(li);`;
-
-        function injectCheckbox(panel: HTMLElement, label: string, checked: boolean): void {
-          const item = document.createElement('div');
-          item.setAttribute('role', 'menuitemcheckbox');
-          item.setAttribute('aria-checked', String(checked));
-          item.setAttribute('tabindex', '0');
-          if (checked) item.dataset.state = 'checked';
-          item.className = 'nds-dropdown-menu-item nds-hover-bg-accent';
-          const indicator = document.createElement('span');
-          indicator.className = 'nds-icon-sm nds-rounded';
-          indicator.style.display = 'inline-flex';
-          indicator.style.alignItems = 'center';
-          indicator.style.justifyContent = 'center';
-          indicator.setAttribute('aria-hidden', 'true');
-          if (checked) indicator.textContent = '✓';
-          const text = document.createElement('span');
-          text.textContent = label;
-          item.append(indicator, text);
-          item.addEventListener('click', () => {
-            const next = item.getAttribute('aria-checked') !== 'true';
-            item.setAttribute('aria-checked', String(next));
-            item.dataset.state = next ? 'checked' : 'unchecked';
-            indicator.textContent = next ? '✓' : '';
-          });
-          panel.appendChild(item);
-        }
-
-        function injectRadio(panel: HTMLElement, label: string, checked: boolean): void {
-          const item = document.createElement('div');
-          item.setAttribute('role', 'menuitemradio');
-          item.setAttribute('aria-checked', String(checked));
-          item.setAttribute('tabindex', '0');
-          if (checked) item.dataset.state = 'checked';
-          item.className = 'nds-dropdown-menu-item nds-hover-bg-accent';
-          const indicator = document.createElement('span');
-          indicator.className = 'nds-icon-sm nds-rounded';
-          indicator.style.display = 'inline-flex';
-          indicator.style.alignItems = 'center';
-          indicator.style.justifyContent = 'center';
-          indicator.setAttribute('aria-hidden', 'true');
-          if (checked) indicator.textContent = '●';
-          const text = document.createElement('span');
-          text.textContent = label;
-          item.append(indicator, text);
-          item.addEventListener('click', () => {
-            panel.querySelectorAll<HTMLElement>('[role="menuitemradio"]').forEach((el) => {
-              el.setAttribute('aria-checked', 'false');
-              el.dataset.state = 'unchecked';
-              const ind = el.querySelector<HTMLElement>('span[aria-hidden="true"]');
-              if (ind) ind.textContent = '';
-            });
-            item.setAttribute('aria-checked', 'true');
-            item.dataset.state = 'checked';
-            indicator.textContent = '●';
-          });
-          panel.appendChild(item);
-        }
-
-        function wrapPreview(child: HTMLElement): HTMLElement {
-          const wrap = document.createElement('div');
-          wrap.style.contain = 'layout';
-          wrap.className = 'nds-cluster nds-w-full nds-min-h-60';
-          wrap.dataset.align = 'start';
-          wrap.dataset.justify = 'center';
-
-          wrap.style.padding = 'var(--spacing-2)';
-          wrap.appendChild(child);
-          return wrap;
-        }
-
-        const codeWithShortcuts = `const bar = createMenubar([
-  {
-    label: 'Editar',
-    items: [
-      { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
-      { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
-      { type: 'separator' },
-      { type: 'item', label: 'Copiar',   shortcut: 'Ctrl+C' },
-      { type: 'item', label: 'Colar',    shortcut: 'Ctrl+V' },
-    ],
-  },
-]);`;
-
-        const codeWithCheckbox = `// O factory Nortear não tem CheckboxItem nativo.
-// Compor manualmente com role="menuitemcheckbox" sobre o panel:
-const bar = createMenubar([{ label: 'Exibir', items: [{ type: 'label', label: 'Painéis' }] }]);
-const panel = bar.querySelector('[role="menu"]');
-// injectCheckbox(panel, 'Sidebar', true);
-// injectCheckbox(panel, 'Grid', false);`;
-
-        const codeWithRadio = `// Idem para radio — composição manual com role="menuitemradio":
-const bar = createMenubar([{ label: 'Tema', items: [{ type: 'label', label: 'Aparência' }] }]);
-const panel = bar.querySelector('[role="menu"]');
-// injectRadio(panel, 'Claro',   false);
-// injectRadio(panel, 'Escuro',  true);
-// injectRadio(panel, 'Sistema', false);`;
-
-        const codeEditorComplete = `const bar = createMenubar([
-  { label: 'Arquivo', items: [
-    { type: 'item', label: 'Novo',    shortcut: 'Ctrl+N' },
-    { type: 'item', label: 'Abrir...', shortcut: 'Ctrl+O' },
-    { type: 'item', label: 'Salvar',  shortcut: 'Ctrl+S' },
-    { type: 'separator' },
-    { type: 'item', label: 'Sair',    shortcut: 'Ctrl+Q' },
-  ]},
-  { label: 'Editar', items: [
-    { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
-    { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
-  ]},
-  { label: 'Exibir', items: [
-    { type: 'label', label: 'Aparência' },
-    { type: 'item',  label: 'Modo escuro' },
-    { type: 'separator' },
-    { type: 'item',  label: 'Tela cheia', shortcut: 'F11' },
-  ]},
-  { label: 'Ajuda', items: [
-    { type: 'item', label: 'Documentação' },
-    { type: 'item', label: 'Sobre' },
-  ]},
-]);`;
-
+      // Seis cartões, e cada um é a barra VIVA: prévia e código saem da mesma
+      // descrição (`variantMenus`). O `trackId` é a CHAVE do conteúdo — o
+      // `snippet_id` do toggle de código e, em kebab, o `menu` dos eventos.
+      case 'variantes':
         return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
@@ -520,152 +754,50 @@ const panel = bar.querySelector('[role="menu"]');
               trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
-              code: codeDefault,
-              previewFactory: () => {
-                const wrap = document.createElement('div');
-                wrap.style.contain = 'layout';
-                wrap.className = 'nds-cluster nds-min-h-40';
-                wrap.dataset.align = 'start';
-                wrap.dataset.justify = 'center';
-
-                wrap.appendChild(
-                  createMenubar([
-                    {
-                      label: 'Arquivo',
-                      items: [
-                        { type: 'item', label: 'Novo',    shortcut: 'Ctrl+N' },
-                        { type: 'item', label: 'Salvar',  shortcut: 'Ctrl+S' },
-                      ],
-                    },
-                  ]),
-                );
-                return wrap;
-              },
+              code: barCode(variantMenus('default')),
+              previewFactory: () => variantPreview('default', 'docs_variantes', 'nds-min-h-40'),
             },
             {
               trackId: 'destructive',
               name: t('variants.items.destructive'),
-              description:
-                stripHtml(t('variants.styles.destructive')) +
-                ' (Não suportado nativamente pelo factory Nortear — composição manual.)',
-              code: codeDestructive,
-              previewFactory: () => {
-                const li = document.createElement('div');
-                li.setAttribute('role', 'menuitem');
-                li.className =
-                  'nds-dropdown-menu-item nds-text-destructive nds-border-destructive-soft nds-rounded-md nds-min-w-48';
-                li.textContent = 'Excluir arquivo';
-
-                // `role="menuitem"` SOLTO é violação de `aria-required-parent`, e
-                // era real: a varredura do axe reprovou este preview por ele. O
-                // papel só existe dentro de `menu`, `menubar` ou `group` — item
-                // de menu sem menu não é anunciado como item de coisa nenhuma.
-                //
-                // O invólucro é um `div` nu com o papel, e não
-                // `.nds-dropdown-menu-content`: aquela classe é `position:
-                // absolute`, e tiraria o preview do fluxo do quadro que o
-                // enquadra. O que falta aqui é semântica, não desenho.
-                const menu = document.createElement('div');
-                menu.setAttribute('role', 'menu');
-                menu.setAttribute('aria-label', 'Exemplo de item destrutivo');
-                menu.appendChild(li);
-                return menu;
-              },
+              description: stripHtml(t('variants.styles.destructive')),
+              code: barCode(variantMenus('destructive')),
+              previewFactory: () => variantPreview('destructive', 'docs_variantes', 'nds-min-h-40'),
             },
             {
               name: stripHtml(t('variants.items.withShortcuts.name')),
               trackId: 'withShortcuts',
               description: stripHtml(t('variants.items.withShortcuts.description')),
               useWhen: stripHtml(t('variants.items.withShortcuts.use')),
-              code: codeWithShortcuts,
-              previewFactory: () => wrapPreview(
-                createMenubar([
-                  {
-                    label: 'Editar',
-                    items: [
-                      { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
-                      { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
-                      { type: 'separator' },
-                      { type: 'item', label: 'Copiar',   shortcut: 'Ctrl+C' },
-                      { type: 'item', label: 'Colar',    shortcut: 'Ctrl+V' },
-                    ],
-                  },
-                ]),
-              ),
+              code: barCode(variantMenus('withShortcuts')),
+              previewFactory: () => variantPreview('withShortcuts', 'docs_variantes'),
             },
             {
               name: stripHtml(t('variants.items.withCheckbox.name')),
               trackId: 'withCheckbox',
               description: stripHtml(t('variants.items.withCheckbox.description')),
               useWhen: stripHtml(t('variants.items.withCheckbox.use')),
-              code: codeWithCheckbox,
-              previewFactory: () => {
-                const bar = createMenubar([
-                  { label: 'Exibir', items: [{ type: 'label', label: 'Painéis' }] },
-                ]);
-                const panel = bar.querySelector<HTMLElement>('[role="menu"]');
-                if (panel) {
-                  injectCheckbox(panel, 'Sidebar', true);
-                  injectCheckbox(panel, 'Grid', false);
-                  injectCheckbox(panel, 'Régua', false);
-                }
-                return wrapPreview(bar);
-              },
+              code: barCode(variantMenus('withCheckbox')),
+              previewFactory: () => variantPreview('withCheckbox', 'docs_variantes'),
             },
             {
               name: stripHtml(t('variants.items.withRadio.name')),
               trackId: 'withRadio',
               description: stripHtml(t('variants.items.withRadio.description')),
               useWhen: stripHtml(t('variants.items.withRadio.use')),
-              code: codeWithRadio,
-              previewFactory: () => {
-                const bar = createMenubar([
-                  { label: 'Tema', items: [{ type: 'label', label: 'Aparência' }] },
-                ]);
-                const panel = bar.querySelector<HTMLElement>('[role="menu"]');
-                if (panel) {
-                  injectRadio(panel, 'Claro',   false);
-                  injectRadio(panel, 'Escuro',  true);
-                  injectRadio(panel, 'Sistema', false);
-                }
-                return wrapPreview(bar);
-              },
+              code: barCode(variantMenus('withRadio')),
+              previewFactory: () => variantPreview('withRadio', 'docs_variantes'),
             },
             {
               name: stripHtml(t('variants.items.editorComplete.name')),
               trackId: 'editorComplete',
               description: stripHtml(t('variants.items.editorComplete.description')),
               useWhen: stripHtml(t('variants.items.editorComplete.use')),
-              code: codeEditorComplete,
-              previewFactory: () => wrapPreview(
-                createMenubar([
-                  { label: 'Arquivo', items: [
-                    { type: 'item', label: 'Novo',     shortcut: 'Ctrl+N' },
-                    { type: 'item', label: 'Abrir...', shortcut: 'Ctrl+O' },
-                    { type: 'item', label: 'Salvar',   shortcut: 'Ctrl+S' },
-                    { type: 'separator' },
-                    { type: 'item', label: 'Sair',     shortcut: 'Ctrl+Q' },
-                  ]},
-                  { label: 'Editar', items: [
-                    { type: 'item', label: 'Desfazer', shortcut: 'Ctrl+Z' },
-                    { type: 'item', label: 'Refazer',  shortcut: 'Ctrl+Shift+Z' },
-                  ]},
-                  { label: 'Exibir', items: [
-                    { type: 'label', label: 'Aparência' },
-                    { type: 'item',  label: 'Modo escuro' },
-                    { type: 'separator' },
-                    { type: 'item',  label: 'Tela cheia', shortcut: 'F11' },
-                  ]},
-                  { label: 'Ajuda', items: [
-                    { type: 'item', label: 'Documentação' },
-                    { type: 'item', label: 'Sobre' },
-                  ]},
-                ]),
-              ),
+              code: barCode(variantMenus('editorComplete')),
+              previewFactory: () => variantPreview('editorComplete', 'docs_variantes'),
             },
           ],
         });
-      }
 
       case 'estados':
         return createDocsStates({
@@ -683,9 +815,13 @@ const panel = bar.querySelector('[role="menu"]');
           ],
         });
 
+      // A interface e a tabela descrevem a fábrica COMO ELA É. As duas diziam
+      // que ela não tinha `variant`, marcação, submenu, `loop` nem `side` — ela
+      // tinha os cinco, e a tabela ensinava a contornar o que não faltava.
       case 'propriedades': {
         const interfaceCode = `// createMenubar(menus, options?)
-export type MenubarItemType = 'item' | 'separator' | 'label';
+export type MenubarItemType =
+  | 'item' | 'separator' | 'label' | 'checkbox' | 'radio-group' | 'submenu';
 
 export type MenubarItem = {
   type?: MenubarItemType;
@@ -693,18 +829,43 @@ export type MenubarItem = {
   shortcut?: string;
   onClick?: () => void;
   disabled?: boolean;
-  checked?: boolean;
+  variant?: 'default' | 'destructive';
+  inset?: boolean;
+  checked?: boolean;                        // checkbox
+  indeterminate?: boolean;                  // checkbox
+  onCheckedChange?: (checked: boolean) => void;
+  options?: MenubarRadioOption[];           // radio-group
+  value?: string;                           // radio-group
+  onValueChange?: (value: string) => void;  // radio-group
+  items?: MenubarItem[];                    // submenu
 };
+
+export type MenubarRadioOption = {
+  value: string;
+  label: string;
+  disabled?: boolean;
+  onClick?: () => void;
+};
+
+export type MenubarCloseReason = 'escape' | 'overlay' | 'api';
 
 export type MenubarMenu = {
   label: string;
   items: MenubarItem[];
+  onOpenChange?: (open: boolean) => void;
+  onClose?: (reason: MenubarCloseReason) => void;
 };
 
 export function createMenubar(
   menus: MenubarMenu[],
-  options?: { class?: string },
-): HTMLElement;`;
+  options?: {
+    class?: string;
+    loop?: boolean;                               // true
+    defaultOpen?: number;
+    side?: 'top' | 'bottom' | 'left' | 'right';   // 'bottom'
+    align?: 'start' | 'center' | 'end';           // 'start'
+  },
+): DestroyableElement;`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -714,6 +875,13 @@ export function createMenubar(
           description: t('props.table.description'),
         };
 
+        // "Sim"/"Não" do vocabulário comum da página, e toda descrição de
+        // `t()`: as genéricas do conteúdo compartilhado, e as que só esta
+        // fábrica tem do override no topo do arquivo. A tabela saía em
+        // português nos três idiomas.
+        const yes = tNav('common.yes');
+        const no = tNav('common.no');
+
         return createDocsProps({
           title: t('props.title'),
           tables: [
@@ -721,22 +889,21 @@ export function createMenubar(
               title: 'createMenubar(menus, options?)',
               cols: propsCols,
               items: [
-                { name: 'menus',         type: 'MenubarMenu[]',                       defaultValue: '—',    required: 'Sim', description: 'Lista de menus (label + items) renderizados na barra.' },
-                { name: 'options.class', type: 'string',                              defaultValue: '—',    required: 'Não', description: 'Classes adicionais no Root.' },
-                { name: 'value',         type: 'string',                              defaultValue: '—',    required: 'Não', description: toPlainText(t('props.table.value.description'))         + ' NOTA: factory Nortear não tem controle externo nativo.' },
-                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',    required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) + ' NOTA: factory Nortear não emite (use item.onClick).' },
-                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',    required: 'Não', description: toPlainText(t('props.table.defaultValue.description'))  + ' NOTA: factory Nortear sempre inicia fechado.' },
-                { name: 'loop',          type: 'boolean',                             defaultValue: 'true', required: 'Não', description: toPlainText(t('props.table.loop.description'))          + ' NOTA: factory Nortear não implementa loop (setas Esquerda/Direita não navegam).' },
-                { name: 'side',          type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' NOTA: factory Nortear fixa bottom-start.' },
-                { name: 'align',         type: "'start' | 'center' | 'end'",          defaultValue: "'start'",  required: 'Não', description: toPlainText(t('props.table.align.description')) + ' NOTA: factory Nortear fixa start.' },
+                { name: 'menus',                type: 'MenubarMenu[]',                       defaultValue: '—',        required: yes, description: toPlainText(t('props.factory.menus')) },
+                { name: 'options.class',        type: 'string',                              defaultValue: '—',        required: no,  description: toPlainText(t('props.factory.class')) },
+                { name: 'options.loop',         type: 'boolean',                             defaultValue: 'true',     required: no,  description: toPlainText(t('props.table.loop.description')) },
+                { name: 'options.defaultOpen',  type: 'number',                              defaultValue: '—',        required: no,  description: `${toPlainText(t('props.table.defaultValue.description'))} ${toPlainText(t('props.factory.defaultOpenIndex'))}` },
+                { name: 'options.side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: no,  description: toPlainText(t('props.table.side.description')) },
+                { name: 'options.align',        type: "'start' | 'center' | 'end'",          defaultValue: "'start'",  required: no,  description: toPlainText(t('props.table.align.description')) },
+                { name: 'MenubarMenu.onOpenChange', type: '(open: boolean) => void',         defaultValue: '—',        required: no,  description: toPlainText(t('props.factory.menuOnOpenChange')) },
+                { name: 'MenubarMenu.onClose',  type: "(reason: 'escape' | 'overlay' | 'api') => void", defaultValue: '—', required: no, description: toPlainText(t('props.factory.menuOnClose')) },
+                { name: 'MenubarRadioOption.onClick', type: '() => void',                    defaultValue: '—',        required: no,  description: toPlainText(t('props.factory.radioOptionOnClick')) },
               ],
             },
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityCode:
-            t('props.extensibilityCode') +
-            '\n\n// NOTA Nortear: o factory custom não possui MenubarSub/SubTrigger/SubContent.\n// Para hierarquia, prefira reorganizar os menus em estrutura plana, ou utilize\n// as stacks React/Vue/Svelte que possuem submenu via base-ui/reka-ui/bits-ui.',
+          extensibilityCode: t('props.extensibilityCode'),
         });
       }
 
@@ -800,35 +967,24 @@ export function createMenubar(
           items: [1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
+      // A tabela sai do CONTEÚDO, como a do Context Menu. A cravada aqui ensinava
+      // `menubar_menu_open` e `menubar_shortcut_invoke`, dois eventos que o tipo
+      // nunca teve e que nenhuma prévia disparava.
       case 'analytics':
         return createDocsAnalytics({
           title: t('analytics.title'),
           cols: {
-            event: tNav('common.event'),
-            trigger: tNav('common.eventTrigger'),
-            payload: tNav('common.payload'),
+            event:   t('analytics.table.event'),
+            trigger: toPlainText(t('analytics.table.trigger')),
+            payload: t('analytics.table.payload'),
           },
           items: [
-            {
-              event: 'menubar_menu_open',
-              trigger: 'click no Trigger / onValueChange',
-              payload: "{ component: 'menubar', menu, location }",
-            },
-            {
-              event: 'menubar_item_select',
-              trigger: 'click no Item / item.onClick',
-              payload: "{ component: 'menubar', menu, label, value }",
-            },
-            {
-              event: 'menubar_shortcut_invoke',
-              trigger: 'atalho de teclado registrado externo',
-              payload: "{ component: 'menubar', menu, label, shortcut }",
-            },
-            {
-              event: '—',
-              trigger: stripHtml(t('analytics.description')),
-              payload: '—',
-            },
+            { event: t('analytics.table.menuOpen'),      trigger: toPlainText(t('analytics.table.menuOpenTrigger')),      payload: t('analytics.table.menuOpenPayload')      },
+            { event: t('analytics.table.itemClick'),     trigger: toPlainText(t('analytics.table.itemClickTrigger')),     payload: t('analytics.table.itemClickPayload')     },
+            { event: t('analytics.table.close'),         trigger: toPlainText(t('analytics.table.closeTrigger')),         payload: t('analytics.table.closePayload')         },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload')      },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload')    },
           ],
         });
 
@@ -842,11 +998,8 @@ export function createMenubar(
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => ({
-              action: t(`testes.functional.item${i}.action`),
-              result: t(`testes.functional.item${i}.result`),
-              priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
-            })),
+            items: entriesFromDict(t, 'testes.functional', ['action', 'result', 'priority'])
+              .map(entry => ({ ...entry, priority: priorityLabel(entry.priority) })),
           },
           accessibility: {
             title: t('testes.accessibility.title'),
@@ -855,8 +1008,8 @@ export function createMenubar(
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
-              criterion: t(`testes.accessibility.item${i}`),
+            items: stringsFromDict(t, 'testes.accessibility').map(criterion => ({
+              criterion,
               level: 'AA',
               how: 'axe-core / manual',
             })),
@@ -867,10 +1020,8 @@ export function createMenubar(
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
-              story: t(`testes.visual.item${i}.story`),
-              priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
-            })),
+            items: entriesFromDict(t, 'testes.visual', ['story', 'priority'])
+              .map(entry => ({ ...entry, priority: priorityLabel(entry.priority) })),
           },
         });
     }

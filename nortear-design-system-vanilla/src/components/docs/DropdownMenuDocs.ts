@@ -3,7 +3,16 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createDropdownMenu } from '@/components/ui/dropdown-menu';
+import {
+  createDropdownMenu,
+  type DropdownMenuCloseReason,
+  type DropdownMenuItemDef,
+  type DropdownMenuOptions,
+} from '@/components/ui/dropdown-menu';
+import {
+  dropdownMenuSnippet,
+  type DropdownMenuSnippetItem,
+} from '@/components/ui/dropdown-menu.source';
 import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import dropdownMenuTranslations from '@shared/content/dropdown-menu/translations.json';
@@ -27,6 +36,7 @@ import {
   createDocsPageLayout,
 } from '@/components/docs/shared/sections';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
+import { text } from '@/lib/story-source';
 
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -44,7 +54,52 @@ function screenReaderItems(): string[] {
     .filter(([k]) => k !== 'title')
     .map(([, v]) => v);
 }
-const { t, subscribe } = createTranslation(dropdownMenuTranslations as Record<string, unknown>);
+// Opções que só esta stack tem.
+//
+// `trigger`, `items`, `onClose`, `class` e `sideOffset` são a API da FÁBRICA —
+// as outras stacks compõem peças e não têm linha para elas no conteúdo
+// compartilhado —, e o mesmo vale para o que só a fábrica faz com `open`,
+// `modal`, `side` e `align`. Ficam no override, nos três idiomas, como no
+// ContextMenu desta stack: presas em pt-BR na tabela, apareciam em português
+// nas versões en e es da página.
+const { t, subscribe } = createTranslation(dropdownMenuTranslations as Record<string, unknown>, {
+  'pt-BR': {
+    'props.factory.trigger': 'Elemento que abre o menu ao receber clique.',
+    'props.factory.items': 'Lista de itens, separadores, rótulos, alternadores, escolha única e submenus.',
+    'props.factory.onClose': 'Motivo do fechamento, uma vez por fechamento e antes do callback de mudança: escape, overlay (clique fora, Tab ou clique no gatilho) ou api (item escolhido ou fechamento por código). Sair da página não é fechamento e não dispara.',
+    'props.factory.class': 'Classes adicionais aplicadas ao painel.',
+    'props.factory.sideOffset': 'Vão entre gatilho e menu, em px.',
+    'props.factory.openControlled': 'Definida, o menu passa ao modo controlado: clique, Escape, Tab e clique fora só anunciam a intenção pelo callback de mudança, e quem move o menu é setOpen().',
+    'props.factory.modalDetail': 'Com true, o clique de fora dispensa o menu sem chegar ao que está embaixo e a página não rola; com false, o clique também acerta o alvo.',
+    'props.factory.sideMarkup': 'Sai no markup como data-side.',
+    'props.factory.alignMarkup': 'Sai no markup como data-align.',
+    'import.factoryOptions': 'Posição, modalidade e abertura por código:',
+  },
+  en: {
+    'props.factory.trigger': 'Element that opens the menu when clicked.',
+    'props.factory.items': 'List of items, separators, labels, toggles, single-choice items and submenus.',
+    'props.factory.onClose': 'Close reason, once per close and before the change callback: escape, overlay (click outside, Tab or click on the trigger) or api (item chosen or close from code). Leaving the page is not a close and does not fire it.',
+    'props.factory.class': 'Additional classes applied to the panel.',
+    'props.factory.sideOffset': 'Gap between trigger and menu, in px.',
+    'props.factory.openControlled': 'When set, the menu becomes controlled: click, Escape, Tab and click outside only announce the intent through the change callback, and setOpen() is what moves the menu.',
+    'props.factory.modalDetail': 'With true, a click outside dismisses the menu without reaching what is underneath and the page does not scroll; with false, the click also hits its target.',
+    'props.factory.sideMarkup': 'Shown in the markup as data-side.',
+    'props.factory.alignMarkup': 'Shown in the markup as data-align.',
+    'import.factoryOptions': 'Position, modality and opening from code:',
+  },
+  es: {
+    'props.factory.trigger': 'Elemento que abre el menú al recibir un clic.',
+    'props.factory.items': 'Lista de ítems, separadores, rótulos, alternadores, selección única y submenús.',
+    'props.factory.onClose': 'Motivo del cierre, una vez por cierre y antes del callback de cambio: escape, overlay (clic fuera, Tab o clic en el disparador) o api (ítem elegido o cierre por código). Salir de la página no es un cierre y no lo dispara.',
+    'props.factory.class': 'Clases adicionales aplicadas al panel.',
+    'props.factory.sideOffset': 'Espacio entre el disparador y el menú, en px.',
+    'props.factory.openControlled': 'Definida, el menú pasa al modo controlado: clic, Escape, Tab y clic fuera solo anuncian la intención por el callback de cambio, y quien mueve el menú es setOpen().',
+    'props.factory.modalDetail': 'Con true, el clic fuera descarta el menú sin llegar a lo que está debajo y la página no se desplaza; con false, el clic también alcanza su destino.',
+    'props.factory.sideMarkup': 'Aparece en el markup como data-side.',
+    'props.factory.alignMarkup': 'Aparece en el markup como data-align.',
+    'import.factoryOptions': 'Posición, modalidad y apertura por código:',
+  },
+});
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -58,72 +113,14 @@ function priorityLabel(raw: string): string {
 }
 
 /**
- * Painel de menu ESTÁTICO para prévia — o `<ul role="menu">` que a folha
- * compartilhada desenha, sem gatilho e sem posicionamento.
- *
- * Serve às PRÉVIAS DE VARIANTE, que precisam do painel já aberto e sem gatilho
- * para caber no cartão. O Do & Don't deixou de usá-lo: lá o componente é
- * instanciado de verdade, porque a legenda fala do mecanismo e não do desenho.
- *
- * `role="menuitem"` solto, sem um `menu` que o possua, é órfão para o leitor de
- * tela (e para o `aria-required-parent` do axe) — é por isso que a imitação
- * ainda começa por aqui. O painel também é quem dá largura ao item:
- * `.nds-dropdown-menu-content` declara `min-width: 8rem` na folha, no lugar do
- * valor cravado que estava aqui.
- */
-function makeStaticMenuPanel(build: (ul: HTMLUListElement) => void): HTMLElement {
-  const ul = document.createElement('ul');
-  ul.setAttribute('role', 'menu');
-  ul.className = 'nds-dropdown-menu-content';
-  // A prévia não é posicionada por gatilho nenhum: o `position` da classe é o
-  // que a tiraria do fluxo do cartão.
-  ul.style.position = 'static';
-  build(ul);
-  return ul;
-}
-
-/**
- * Item de menu para prévia. `data-variant` é o mecanismo REAL da variante — a
- * folha pinta `--destructive` a partir dele —, e não um par de classes de cor
- * escolhidas à mão.
- *
- * Usado pelas prévias de variante, que mostram o painel aberto dentro do cartão.
- */
-/**
- * Contador dos ids de rótulo das PRÉVIAS.
- *
- * De escopo de módulo, e não da seção: a docs page pode ser remontada (troca de
- * idioma), e um contador que reinicia devolveria o mesmo id a dois grupos vivos
- * ao mesmo tempo — `aria-labelledby` passaria a apontar para o rótulo errado.
- */
-let previewLabelCounter = 0;
-
-function makeItem(label: string, shortcut?: string, variant?: 'destructive'): HTMLLIElement {
-  const li = document.createElement('li');
-  li.setAttribute('role', 'menuitem');
-  li.setAttribute('tabindex', '-1');
-  li.className = 'nds-dropdown-menu-item';
-  li.dataset.variant = variant ?? 'default';
-  const text = document.createElement('span');
-  text.textContent = label;
-  li.appendChild(text);
-  if (shortcut) {
-    const sc = document.createElement('span');
-    sc.className = 'nds-dropdown-menu-shortcut';
-    // Sem `aria-hidden`: o atalho é informação, não decoração.
-    sc.textContent = shortcut;
-    li.appendChild(sc);
-  }
-  return li;
-}
-
-/**
  * Varre `base.item1`, `base.item2`, … enquanto existirem no conteúdo.
  *
  * Contar à mão (`[1, 2, 3].map(...)`) trava a lista no tamanho de hoje: o
  * conteúdo compartilhado ganha um item e ele simplesmente não existe para quem
  * lê — sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu com
- * o sétimo critério de acessibilidade deste componente.
+ * o sétimo critério de acessibilidade deste componente, e de novo com os seis
+ * critérios funcionais da família de menus (F9–F14), que a lista cravada em
+ * oito escondia.
  */
 function stringsFromDict(
   translate: (key: string, defaultValue?: string) => string,
@@ -139,50 +136,259 @@ function stringsFromDict(
 }
 
 /**
- * A demonstração é produto: quem abre o menu aqui dispara o mesmo evento que o
- * componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
- * item, nunca o rótulo traduzido — texto localizado partiria o mesmo evento em
- * um por idioma no GA4.
- *
- * `location` é a SEÇÃO onde o elemento está. Estes dois handlers atendem apenas
- * a demonstração, e é por isso que o valor é fixo dentro deles; preview vivo de
- * outra seção pede o `docs_<section-id>` daquela seção.
+ * A mesma varredura para a lista cujo item é um OBJETO — critério funcional,
+ * story de regressão visual. O primeiro campo é quem decide se o item existe, e
+ * os demais acompanham.
  */
-function trackMenuOpenChange(menu: string, isOpen: boolean): void {
-  track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
-    component: 'dropdown-menu',
-    label: menu,
-    location: 'docs_demo',
+function entriesFromDict<K extends string>(
+  translate: (key: string, defaultValue?: string) => string,
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!translate(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map(field => [field, translate(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
+}
+
+// ─── Rastreamento das prévias vivas ───────────────────────────────────────────
+
+/**
+ * Onde cada prévia viva mora — o `location` dos três eventos é a SEÇÃO da
+ * página onde o menu está (guideline 07), nunca o texto dela. Vem sempre de
+ * quem CHAMA: um valor fixo dentro do helper era o que fazia as prévias de
+ * Variantes dizerem que vinham da demonstração.
+ */
+type PreviewLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
+
+/**
+ * Pendura o `dropdown_menu_item_select` em cada item escolhível — ação,
+ * marcação e rádio, dentro de submenu também. O `label` do evento é o `value`
+ * do item, que é a chave de `demonstration.labels.*` em kebab (`column-email`,
+ * `delete-account`): ESTÁVEL, enquanto o rótulo traduzido partiria o mesmo
+ * evento em um valor por idioma no GA4.
+ *
+ * Marcar e escolher rádio também escolhem — o evento sai —, mas não fecham o
+ * menu: o fechamento seguinte leva o motivo de quem de fato fechou.
+ */
+function withItemTracking(
+  defs: DropdownMenuItemDef[],
+  menu: string,
+  location: PreviewLocation,
+): DropdownMenuItemDef[] {
+  return defs.map((def) => {
+    const type = def.type ?? 'item';
+    if (type === 'submenu') {
+      return { ...def, items: withItemTracking(def.items ?? [], menu, location) };
+    }
+    if (type === 'separator' || type === 'label' || !def.value) return def;
+    const label = def.value;
+    return {
+      ...def,
+      onClick: () => {
+        def.onClick?.();
+        track('dropdown_menu_item_select', { component: 'dropdown-menu', menu, label, location });
+      },
+    };
   });
 }
 
-function trackMenuItemSelect(menu: string, item: string): () => void {
-  return () => {
-    track('dropdown_menu_item_select', {
-      component: 'dropdown-menu',
-      label: item,
-      menu,
-      location: 'docs_demo',
-    });
+/**
+ * A abertura e o fechamento de uma prévia VIVA, para espalhar nas opções da
+ * fábrica.
+ *
+ * Toda prévia desta página rastreia — demonstração, Do & Don't e Variantes. Até
+ * 2026-09-11 só a demonstração o fazia, com o `location` cravado nela, e o
+ * cartão `default` de Variantes dizia que vinha da demonstração. `menu` é o id
+ * estável da prévia (`demo-account`, `pair1-do`, `with-checkbox-items`), e o
+ * fechamento leva o motivo que só a fábrica conhece: `escape`, `overlay`
+ * (clique fora, Tab ou clique no gatilho) ou `api` (item escolhido).
+ */
+function menuTracking(
+  menu: string,
+  location: PreviewLocation,
+): Pick<DropdownMenuOptions, 'onOpenChange' | 'onClose'> {
+  return {
+    onOpenChange: (open) => {
+      if (open) track('dropdown_menu_open', { component: 'dropdown-menu', menu, location });
+    },
+    onClose: (reason: DropdownMenuCloseReason) => {
+      track('dropdown_menu_close', { component: 'dropdown-menu', menu, reason, location });
+    },
   };
 }
 
-function buildDemoMenu(triggerLabel: string): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: triggerLabel });
+// ─── Itens das prévias ────────────────────────────────────────────────────────
+//
+// Rótulo do conteúdo compartilhado, nunca literal — é ele que faz as cinco
+// stacks mostrarem o mesmo menu nos três idiomas —, e `value` estável, que é o
+// que o evento de escolha manda. Uma função por lista, e não uma constante,
+// porque o rótulo é lido no idioma do MOMENTO em que a prévia é montada.
+
+const SEPARATOR: DropdownMenuItemDef = { type: 'separator' };
+
+/**
+ * O menu de conta — a célula `basic` da demonstração e o cartão `default`.
+ *
+ * "Sair" é DESTRUTIVO: a anatomia compartilhada e as outras quatro stacks já o
+ * marcavam, e esta, que é a referência, era a única que não.
+ */
+function accountItems(): DropdownMenuItemDef[] {
+  return [
+    // O rótulo nomeia o grupo que ele encabeça — e por isso diz de que bloco se
+    // trata, não o que a seção da página está demonstrando. A legenda da célula
+    // é quem diz o que se demonstra.
+    { type: 'label', label: t('demonstration.labels.account') },
+    { type: 'item', label: t('demonstration.labels.profile'), value: 'profile' },
+    { type: 'item', label: t('demonstration.labels.settings'), value: 'settings' },
+    SEPARATOR,
+    { type: 'item', label: t('demonstration.labels.logout'), value: 'logout', variant: 'destructive' },
+  ];
+}
+
+/** Dois grupos rotulados — o cartão `withLabel` e o lado "faça" do par 1. */
+function groupedAccountItems(): DropdownMenuItemDef[] {
+  return [
+    { type: 'label', label: t('demonstration.labels.account') },
+    { type: 'item', label: t('demonstration.labels.profile'), value: 'profile' },
+    { type: 'item', label: t('demonstration.labels.settings'), value: 'settings' },
+    SEPARATOR,
+    { type: 'label', label: t('demonstration.labels.support') },
+    { type: 'item', label: t('demonstration.labels.documentation'), value: 'documentation' },
+    { type: 'item', label: t('demonstration.labels.logout'), value: 'logout' },
+  ];
+}
+
+/** Alternadores independentes — `withCheckbox` e o cartão `withCheckboxItems`. */
+function columnsItems(): DropdownMenuItemDef[] {
+  return [
+    { type: 'label', label: t('demonstration.labels.visibleColumns') },
+    { type: 'checkbox', label: t('demonstration.labels.columnName'), value: 'column-name', checked: true },
+    { type: 'checkbox', label: t('demonstration.labels.columnEmail'), value: 'column-email', checked: false },
+    { type: 'checkbox', label: t('demonstration.labels.columnRole'), value: 'column-role', checked: false },
+  ];
+}
+
+/** Escolha única — `withRadio` e o cartão `withRadioGroup`. */
+function themeItems(): DropdownMenuItemDef[] {
+  return [
+    { type: 'label', label: t('demonstration.labels.appearance') },
+    { type: 'radio', label: t('demonstration.labels.light'), value: 'light', group: 'theme', checked: true },
+    { type: 'radio', label: t('demonstration.labels.dark'), value: 'dark', group: 'theme' },
+    { type: 'radio', label: t('demonstration.labels.system'), value: 'system', group: 'theme' },
+  ];
+}
+
+/** Hierarquia em dois níveis — o exemplo de `withSubmenu`. */
+function fileItems(): DropdownMenuItemDef[] {
+  return [
+    { type: 'item', label: t('demonstration.labels.rename'), value: 'rename' },
+    {
+      // O sub-gatilho não tem ação própria: ele abre o painel filho, e é lá
+      // que estão os itens que a pessoa veio escolher.
+      type: 'submenu',
+      label: t('demonstration.labels.export'),
+      value: 'export',
+      items: [
+        { type: 'item', label: t('demonstration.labels.pdf'), value: 'pdf' },
+        { type: 'item', label: t('demonstration.labels.csv'), value: 'csv' },
+      ],
+    },
+  ];
+}
+
+/**
+ * Renomear, separador e a ação irreversível. O par 2 do Do & Don't muda UMA
+ * coisa entre os dois lados — a variante destrutiva —, e é disso que a legenda
+ * fala.
+ */
+function renameDeleteItems(destructive: boolean): DropdownMenuItemDef[] {
+  return [
+    { type: 'item', label: t('demonstration.labels.rename'), value: 'rename' },
+    SEPARATOR,
+    {
+      type: 'item',
+      label: t('demonstration.labels.deleteAccount'),
+      value: 'delete-account',
+      variant: destructive ? 'destructive' : 'default',
+    },
+  ];
+}
+
+/**
+ * Dez ações sem grupo — o lado "evite" do par 1. O número entra no código
+ * porque o i18n não interpola; o id do item leva o mesmo número.
+ */
+function actionItems(): DropdownMenuItemDef[] {
+  return Array.from({ length: 10 }, (_, i) => ({
+    type: 'item' as const,
+    label: `${t('demonstration.labels.action')} ${i + 1}`,
+    value: `action-${i + 1}`,
+  }));
+}
+
+/** Itens com atalho — o cartão `withShortcuts`. */
+function shortcutItems(): DropdownMenuItemDef[] {
+  return [
+    { type: 'item', label: t('demonstration.labels.undo'), value: 'undo', shortcut: t('demonstration.labels.undoShortcut') },
+    { type: 'item', label: t('demonstration.labels.copy'), value: 'copy', shortcut: t('demonstration.labels.copyShortcut') },
+    SEPARATOR,
+    { type: 'item', label: t('demonstration.labels.paste'), value: 'paste', shortcut: t('demonstration.labels.pasteShortcut') },
+  ];
+}
+
+/**
+ * Uma prévia VIVA: o componente de verdade, com gatilho, portal e teclado.
+ *
+ * Até 2026-09-11 cinco dos seis cartões de Variantes eram painéis ESTÁTICOS —
+ * um `<ul role="menu">` desenhado à mão, sem gatilho, sem teclado e sem
+ * evento —, que é imitação (guideline 08 §15): o cartão mostrava uma aparência
+ * sem o mecanismo que a produz. A prévia agora abre como o componente abre.
+ */
+function buildMenuPreview(options: {
+  trigger: string;
+  items: DropdownMenuItemDef[];
+  menu: string;
+  location: PreviewLocation;
+}): HTMLElement {
   return createDropdownMenu({
-    trigger,
-    onOpenChange: (open) => trackMenuOpenChange('acoes', open),
-    items: [
-      // O rótulo nomeia o grupo que ele encabeça — e por isso diz de que bloco
-      // se trata, não o que a seção da página está demonstrando. A legenda da
-      // célula é quem carrega o texto do conteúdo compartilhado.
-      { type: 'label', label: 'Conta' },
-      { type: 'item', label: 'Perfil', value: 'profile', onClick: trackMenuItemSelect('acoes', 'perfil') },
-      { type: 'item', label: 'Configurações', value: 'settings', onClick: trackMenuItemSelect('acoes', 'configuracoes') },
-      { type: 'separator' },
-      { type: 'item', label: 'Sair', value: 'logout', onClick: trackMenuItemSelect('acoes', 'sair') },
-    ],
+    trigger: createButton({ variant: 'outline', label: options.trigger }),
+    items: withItemTracking(options.items, options.menu, options.location),
+    ...menuTracking(options.menu, options.location),
   });
+}
+
+/** A prévia centrada no cartão — o painel abre em portal, o cartão guarda o gatilho. */
+function centered(child: HTMLElement): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-cluster nds-w-full';
+  wrap.dataset.align = 'center';
+  wrap.dataset.justify = 'center';
+  wrap.appendChild(child);
+  return wrap;
+}
+
+/** A lista da prévia no formato do snippet — sem os callbacks de rastreio. */
+function snippetItems(defs: DropdownMenuItemDef[]): DropdownMenuSnippetItem[] {
+  return defs.map((def) => ({
+    type: def.type,
+    label: def.label,
+    value: def.value,
+    variant: def.variant,
+    shortcut: def.shortcut,
+    inset: def.inset,
+    checked: def.checked,
+    indeterminate: def.indeterminate,
+    group: def.group,
+    disabled: def.disabled,
+    items: def.items ? snippetItems(def.items) : undefined,
+  }));
 }
 
 /**
@@ -191,9 +397,10 @@ function buildDemoMenu(triggerLabel: string): HTMLElement {
  *
  * A legenda é o que amarra a célula ao `demonstration.labels.*` — é por ela que
  * o portão `demonstration_labels_divergent` enxerga que as cinco stacks mostram
- * o mesmo exemplo.
+ * o mesmo exemplo. Ela é LEGENDA, não texto do gatilho: o gatilho diz o nome do
+ * menu (`account`, `columns`, `theme`, `file`).
  */
-function buildDemoCell(labelKey: string, menu: HTMLElement): HTMLElement {
+function buildDemoCell(caption: string, menu: HTMLElement): HTMLElement {
   const cell = document.createElement('div');
   cell.className = 'nds-stack nds-min-h-20';
   cell.dataset.spacing = 'sm';
@@ -201,65 +408,65 @@ function buildDemoCell(labelKey: string, menu: HTMLElement): HTMLElement {
   // da célula quando ele abre.
   cell.style.contain = 'layout';
 
-  const caption = document.createElement('p');
-  caption.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
-  caption.textContent = t(labelKey);
+  const text = document.createElement('p');
+  text.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
+  text.textContent = caption;
 
-  cell.append(caption, menu);
+  cell.append(text, menu);
   return cell;
 }
 
-/** Alternadores independentes — o exemplo de `demonstration.labels.withCheckbox`. */
-function buildDemoCheckboxMenu(): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: 'Colunas' });
-  return createDropdownMenu({
-    trigger,
-    onOpenChange: (open) => trackMenuOpenChange('colunas', open),
-    items: [
-      { type: 'label', label: 'Colunas visíveis' },
-      { type: 'checkbox', label: 'Nome', value: 'nome', checked: true, onClick: trackMenuItemSelect('colunas', 'nome') },
-      { type: 'checkbox', label: 'E-mail', value: 'email', checked: false, onClick: trackMenuItemSelect('colunas', 'email') },
-      { type: 'checkbox', label: 'Função', value: 'funcao', checked: false, onClick: trackMenuItemSelect('colunas', 'funcao') },
-    ],
-  });
+/**
+ * Os seis cartões de Variantes, pela CHAVE do conteúdo compartilhado. A mesma
+ * lista monta a prévia e imprime o código (`dropdownMenuSnippet`), e é isso que
+ * impede os dois de divergirem: até 2026-09-11 cada cartão tinha um literal de
+ * código ao lado de uma prévia estática, e o `destructive` mostrava "Excluir" na
+ * tela e "Excluir conta" no código.
+ */
+type VariantKey =
+  | 'default'
+  | 'destructive'
+  | 'withLabel'
+  | 'withCheckboxItems'
+  | 'withRadioGroup'
+  | 'withShortcuts';
+
+function variantMenu(key: VariantKey): { trigger: string; items: DropdownMenuItemDef[] } {
+  switch (key) {
+    case 'default':
+      return { trigger: t('demonstration.labels.account'), items: accountItems() };
+    case 'destructive':
+      return { trigger: t('demonstration.labels.account'), items: renameDeleteItems(true) };
+    case 'withLabel':
+      return { trigger: t('demonstration.labels.account'), items: groupedAccountItems() };
+    case 'withCheckboxItems':
+      return { trigger: t('demonstration.labels.columns'), items: columnsItems() };
+    case 'withRadioGroup':
+      return { trigger: t('demonstration.labels.theme'), items: themeItems() };
+    case 'withShortcuts':
+      return { trigger: t('demonstration.labels.edit'), items: shortcutItems() };
+  }
 }
 
-/** Escolha única — o exemplo de `demonstration.labels.withRadio`. */
-function buildDemoRadioMenu(): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: 'Tema' });
-  return createDropdownMenu({
-    trigger,
-    onOpenChange: (open) => trackMenuOpenChange('tema', open),
-    items: [
-      { type: 'label', label: 'Aparência' },
-      { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true, onClick: trackMenuItemSelect('tema', 'light') },
-      { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema', onClick: trackMenuItemSelect('tema', 'dark') },
-      { type: 'radio', label: 'Sistema', value: 'system', group: 'tema', onClick: trackMenuItemSelect('tema', 'system') },
-    ],
-  });
+/** A chave do cartão em kebab — é o `menu` dos eventos (`with-checkbox-items`…). */
+function variantMenuId(key: VariantKey): string {
+  return key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
 
-/** Hierarquia em dois níveis — o exemplo de `demonstration.labels.withSubmenu`. */
-function buildDemoSubmenuMenu(): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: 'Arquivo' });
-  return createDropdownMenu({
-    trigger,
-    onOpenChange: (open) => trackMenuOpenChange('submenu', open),
-    items: [
-      { type: 'item', label: 'Renomear', value: 'rename', onClick: trackMenuItemSelect('submenu', 'renomear') },
-      {
-        // O sub-gatilho não tem ação própria: ele abre o painel filho, e é lá
-        // que estão os itens que a pessoa veio escolher.
-        type: 'submenu',
-        label: 'Exportar',
-        value: 'export',
-        items: [
-          { type: 'item', label: 'PDF', value: 'pdf', onClick: trackMenuItemSelect('submenu', 'pdf') },
-          { type: 'item', label: 'CSV', value: 'csv', onClick: trackMenuItemSelect('submenu', 'csv') },
-        ],
-      },
-    ],
-  });
+/**
+ * A prévia de um cartão. A seção vem de quem CHAMA, mesmo que hoje só
+ * Variantes chame: o valor cravado aqui dentro era a forma exata que o portão
+ * `location_so_da_demo` condena — o helper decidindo de onde o clique veio.
+ */
+function variantPreview(key: VariantKey, location: PreviewLocation): HTMLElement {
+  return centered(
+    buildMenuPreview({ ...variantMenu(key), menu: variantMenuId(key), location }),
+  );
+}
+
+function variantCode(key: VariantKey): string {
+  const { trigger, items } = variantMenu(key);
+  return dropdownMenuSnippet({ triggerLabel: trigger, items: snippetItems(items) });
 }
 
 // ─── createDropdownMenuDocs ───────────────────────────────────────────────────
@@ -369,11 +576,46 @@ export function createDropdownMenuDocs(): HTMLElement {
             // Custom property, e não medida cravada: a grade decide quantas
             // colunas cabem a partir dela.
             wrap.style.setProperty('--grid-min', '9rem');
+            // Quatro menus numa prévia só: o `menu` de cada um é o id da prévia
+            // mais a chave do rótulo do GATILHO — `demo` sozinho daria o mesmo
+            // nome aos quatro, e abrir e fechar deixariam de se distinguir.
             wrap.append(
-              buildDemoCell('demonstration.labels.basic', buildDemoMenu('Conta')),
-              buildDemoCell('demonstration.labels.withCheckbox', buildDemoCheckboxMenu()),
-              buildDemoCell('demonstration.labels.withRadio', buildDemoRadioMenu()),
-              buildDemoCell('demonstration.labels.withSubmenu', buildDemoSubmenuMenu()),
+              buildDemoCell(
+                t('demonstration.labels.basic'),
+                buildMenuPreview({
+                  trigger: t('demonstration.labels.account'),
+                  items: accountItems(),
+                  menu: 'demo-account',
+                  location: 'docs_demo',
+                }),
+              ),
+              buildDemoCell(
+                t('demonstration.labels.withCheckbox'),
+                buildMenuPreview({
+                  trigger: t('demonstration.labels.columns'),
+                  items: columnsItems(),
+                  menu: 'demo-columns',
+                  location: 'docs_demo',
+                }),
+              ),
+              buildDemoCell(
+                t('demonstration.labels.withRadio'),
+                buildMenuPreview({
+                  trigger: t('demonstration.labels.theme'),
+                  items: themeItems(),
+                  menu: 'demo-theme',
+                  location: 'docs_demo',
+                }),
+              ),
+              buildDemoCell(
+                t('demonstration.labels.withSubmenu'),
+                buildMenuPreview({
+                  trigger: t('demonstration.labels.file'),
+                  items: fileItems(),
+                  menu: 'demo-file',
+                  location: 'docs_demo',
+                }),
+              ),
             );
             return wrap;
           },
@@ -441,29 +683,23 @@ export function createDropdownMenuDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Conta' });
-                return createDropdownMenu({
-                  trigger,
-                  items: [
-                    { type: 'label', label: 'Conta' },
-                    { type: 'item', label: 'Perfil' },
-                    { type: 'item', label: 'Configurações' },
-                    { type: 'separator' },
-                    { type: 'item', label: 'Sair' },
-                  ],
-                });
-              },
-              dontPreviewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Menu' });
-                return createDropdownMenu({
-                  trigger,
-                  items: Array.from({ length: 10 }, (_, i) => ({
-                    type: 'item' as const,
-                    label: `Ação ${i + 1}`,
-                  })),
-                });
-              },
+              // DOIS grupos rotulados, como diz a legenda ("Items agrupados e
+              // Separator entre grupos"). O lado "faça" tinha um grupo só, e o
+              // separador não separava grupo nenhum.
+              doPreviewFactory: () =>
+                buildMenuPreview({
+                  trigger: t('demonstration.labels.account'),
+                  items: groupedAccountItems(),
+                  menu: 'pair1-do',
+                  location: 'docs_do_dont',
+                }),
+              dontPreviewFactory: () =>
+                buildMenuPreview({
+                  trigger: t('demonstration.labels.menu'),
+                  items: actionItems(),
+                  menu: 'pair1-dont',
+                  location: 'docs_do_dont',
+                }),
             },
             {
               doLabel: tNav('common.do'),
@@ -475,162 +711,55 @@ export function createDropdownMenuDocs(): HTMLElement {
               // pinta o texto de perigo é o `data-variant` que a FÁBRICA põe no
               // item, e um `<li>` montado à mão poderia acertar a cor por outro
               // caminho sem que o mecanismo real estivesse de pé.
-              doPreviewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Conta' });
-                return createDropdownMenu({
-                  trigger,
-                  items: [
-                    { type: 'item', label: 'Renomear' },
-                    { type: 'separator' },
-                    { type: 'item', label: 'Excluir conta', variant: 'destructive' },
-                  ],
-                });
-              },
-              dontPreviewFactory: () => {
-                const trigger = createButton({ variant: 'outline', label: 'Conta' });
-                return createDropdownMenu({
-                  trigger,
-                  items: [
-                    { type: 'item', label: 'Renomear' },
-                    { type: 'separator' },
-                    { type: 'item', label: 'Excluir conta' },
-                  ],
-                });
-              },
+              doPreviewFactory: () =>
+                buildMenuPreview({
+                  trigger: t('demonstration.labels.account'),
+                  items: renameDeleteItems(true),
+                  menu: 'pair2-do',
+                  location: 'docs_do_dont',
+                }),
+              dontPreviewFactory: () =>
+                buildMenuPreview({
+                  trigger: t('demonstration.labels.account'),
+                  items: renameDeleteItems(false),
+                  menu: 'pair2-dont',
+                  location: 'docs_do_dont',
+                }),
             },
           ],
         });
 
+      // O código exibido está na língua de quem lê: os rótulos saem do conteúdo,
+      // e os comentários em português que explicavam cada opção saíram — quem
+      // explica é a tabela de Propriedades, nos três idiomas.
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
           code: `import { createDropdownMenu } from '@/components/ui/dropdown-menu';
 import { createButton } from '@/components/ui/button';`,
-          secondaryDescription: 'Posição, modalidade e abertura por código:',
+          secondaryDescription: t('import.factoryOptions'),
           secondaryCode: `const menu = createDropdownMenu({
-  trigger: createButton({ variant: 'outline', label: 'Abrir menu' }),
-  items: [{ type: 'item', label: 'Editar', value: 'edit' }],
-  side: 'right',        // borda do gatilho por onde o menu sai
-  align: 'end',         // encosto no eixo perpendicular
-  sideOffset: 4,        // vão em px
-  modal: true,          // false deixa o resto da página utilizável
+  trigger: createButton({ variant: 'outline', label: ${text(t('demonstration.labels.file'))} }),
+  items: [{ type: 'item', label: ${text(t('demonstration.labels.rename'))}, value: 'rename' }],
+  side: 'right',
+  align: 'end',
+  sideOffset: 4,
+  modal: true,
   defaultOpen: false,
-  onOpenChange: (aberto) => console.log(aberto),
+  onOpenChange: (open) => console.log(open),
+  onClose: (reason) => console.log(reason),
 });
 
-// O elemento devolvido abre e fecha por código.
 menu.open();
 menu.toggle();
 menu.setOpen(false);`,
         });
 
-      case 'variantes': {
-        const codeDefault = `const trigger = createButton({ variant: 'outline', label: 'Abrir menu' });
-createDropdownMenu({
-  trigger,
-  items: [
-    { type: 'item', label: 'Editar',     value: 'edit'      },
-    { type: 'item', label: 'Duplicar',   value: 'duplicate' },
-  ],
-});`;
-
-        const codeDestructive = `createDropdownMenu({
-  trigger,
-  items: [
-    { type: 'item', label: 'Editar', value: 'edit' },
-    { type: 'separator' },
-    { type: 'item', label: 'Excluir conta', value: 'delete', variant: 'destructive' },
-  ],
-});`;
-
-        // As peças abaixo montam a PRÉVIA estática de cada variante — o menu de
-        // verdade abre em portal, e uma prévia que abre não caberia no cartão.
-        // Elas usam as mesmas classes `.nds-dropdown-menu-*` da fábrica: sem
-        // isso a prévia mostraria uma aparência que o componente não tem.
-        function makeLabelItem(text: string): HTMLLIElement {
-          const li = document.createElement('li');
-          li.setAttribute('role', 'presentation');
-          li.className = 'nds-dropdown-menu-label';
-          li.textContent = text;
-          return li;
-        }
-        /**
-         * O bloco rotulado, como a fábrica o monta: o rótulo dá o nome acessível
-         * ao `role="group"` que envolve os itens seguintes.
-         *
-         * A prévia precisa disto porque a descrição da variante afirma que o
-         * grupo recebe o texto do rótulo — uma imitação sem grupo mostraria ao
-         * leitor exatamente o que o texto diz não acontecer.
-         */
-        function makeGroup(labelText: string, children: HTMLElement[]): HTMLLIElement {
-          const labelId = `dropdown-menu-preview-label-${++previewLabelCounter}`;
-          // `<ul>` não é filho válido de `<ul>`: o portador existe pelo HTML, e
-          // `.nds-dropdown-menu-group` tira a caixa dos dois do caminho — é o
-          // que a fábrica faz, com a mesma classe.
-          const carrier = document.createElement('li');
-          carrier.setAttribute('role', 'presentation');
-          carrier.className = 'nds-dropdown-menu-group';
-
-          const group = document.createElement('ul');
-          group.setAttribute('role', 'group');
-          group.setAttribute('aria-labelledby', labelId);
-          group.className = 'nds-dropdown-menu-group';
-          group.dataset.slot = 'dropdown-menu-group';
-
-          const lbl = makeLabelItem(labelText);
-          lbl.id = labelId;
-          group.append(lbl, ...children);
-          carrier.appendChild(group);
-          return carrier;
-        }
-        function makeSeparator(): HTMLLIElement {
-          const li = document.createElement('li');
-          li.setAttribute('role', 'separator');
-          li.className = 'nds-dropdown-menu-separator';
-          return li;
-        }
-        function makeIndicator(checked: boolean): HTMLSpanElement {
-          const span = document.createElement('span');
-          span.className = 'nds-dropdown-menu-item-indicator';
-          span.setAttribute('aria-hidden', 'true');
-          if (checked) {
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('viewBox', '0 0 24 24');
-            svg.setAttribute('fill', 'none');
-            svg.setAttribute('stroke', 'currentColor');
-            svg.setAttribute('stroke-width', '2');
-            svg.setAttribute('stroke-linecap', 'round');
-            svg.setAttribute('stroke-linejoin', 'round');
-            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-            path.setAttribute('d', 'M20 6 9 17l-5-5');
-            svg.appendChild(path);
-            span.appendChild(svg);
-          }
-          return span;
-        }
-        function makeCheckboxItem(label: string, checked: boolean): HTMLLIElement {
-          const li = document.createElement('li');
-          li.setAttribute('role', 'menuitemcheckbox');
-          li.setAttribute('aria-checked', String(checked));
-          li.setAttribute('tabindex', '-1');
-          li.className = 'nds-dropdown-menu-checkbox-item';
-          const text = document.createElement('span');
-          text.textContent = label;
-          li.append(makeIndicator(checked), text);
-          return li;
-        }
-        function makeRadioItem(label: string, checked: boolean): HTMLLIElement {
-          const li = document.createElement('li');
-          li.setAttribute('role', 'menuitemradio');
-          li.setAttribute('aria-checked', String(checked));
-          li.setAttribute('tabindex', '-1');
-          li.className = 'nds-dropdown-menu-radio-item';
-          const text = document.createElement('span');
-          text.textContent = label;
-          li.append(makeIndicator(checked), text);
-          return li;
-        }
-
+      // Seis cartões, e cada um é o componente VIVO — gatilho, portal, teclado e
+      // evento. O `trackId` é a CHAVE do conteúdo: é ela que vira o
+      // `snippet_id` do toggle de código, e em kebab o `menu` dos eventos da
+      // prévia. Prévia e código saem da mesma lista (`variantMenu`).
+      case 'variantes':
         return createDocsCompositions({
           id: 'variantes',
           title: t('variants.title'),
@@ -641,138 +770,50 @@ createDropdownMenu({
               trackId: 'default',
               name: t('variants.items.default'),
               description: stripHtml(t('variants.styles.default')),
-              code: codeDefault,
-              previewFactory: () => buildDemoMenu(t('variants.items.default')),
+              code: variantCode('default'),
+              previewFactory: () => variantPreview('default', 'docs_variantes'),
             },
             {
               trackId: 'destructive',
               name: t('variants.items.destructive'),
               description: stripHtml(t('variants.styles.destructive')),
-              code: codeDestructive,
-              previewFactory: () =>
-                makeStaticMenuPanel((ul) => {
-                  ul.appendChild(makeItem('Excluir', undefined, 'destructive'));
-                }),
+              code: variantCode('destructive'),
+              previewFactory: () => variantPreview('destructive', 'docs_variantes'),
             },
             {
               name: t('variants.items.withLabel.name'),
               trackId: 'withLabel',
               description: stripHtml(t('variants.items.withLabel.description')),
               useWhen: stripHtml(t('variants.items.withLabel.use')),
-              code: `const trigger = createButton({ variant: 'outline', label: 'Conta' });
-const menu = createDropdownMenu({
-  trigger,
-  items: [
-    { type: 'label',     label: 'Conta'          },
-    { type: 'item',      label: 'Perfil'         },
-    { type: 'item',      label: 'Configurações'  },
-    { type: 'separator' },
-    { type: 'label',     label: 'Suporte'        },
-    { type: 'item',      label: 'Documentação'   },
-    { type: 'item',      label: 'Sair'           },
-  ],
-});`,
-              previewFactory: () => makeStaticMenuPanel((ul) => {
-                ul.append(
-                  makeGroup('Conta', [makeItem('Perfil'), makeItem('Configurações')]),
-                  makeSeparator(),
-                  makeGroup('Suporte', [makeItem('Documentação'), makeItem('Sair')]),
-                );
-              }),
+              code: variantCode('withLabel'),
+              previewFactory: () => variantPreview('withLabel', 'docs_variantes'),
             },
             {
               name: t('variants.items.withCheckboxItems.name'),
               trackId: 'withCheckboxItems',
               description: stripHtml(t('variants.items.withCheckboxItems.description')),
               useWhen: stripHtml(t('variants.items.withCheckboxItems.use')),
-              code: `createDropdownMenu({
-  trigger,
-  items: [
-    { type: 'label',    label: 'Colunas visíveis' },
-    { type: 'checkbox', label: 'Nome',   value: 'nome',  checked: true  },
-    { type: 'checkbox', label: 'E-mail', value: 'email', checked: false,
-      onCheckedChange: (checked) => console.log('e-mail', checked) },
-    { type: 'checkbox', label: 'Função', value: 'funcao', checked: false },
-  ],
-});
-// Alternar não fecha o menu: quem marca uma coluna costuma marcar a próxima.`,
-              // A prévia mostra exatamente a lista do snippet, e a mesma da
-              // story `WithCheckboxItems`. Divergia nos dois primeiros rótulos
-              // ("Status" e "Email"), e nenhum portão liga prévia a snippet.
-              previewFactory: () => makeStaticMenuPanel((ul) => {
-                ul.append(
-                  makeGroup('Colunas visíveis', [
-                    makeCheckboxItem('Nome', true),
-                    makeCheckboxItem('E-mail', false),
-                    makeCheckboxItem('Função', false),
-                  ]),
-                );
-              }),
+              code: variantCode('withCheckboxItems'),
+              previewFactory: () => variantPreview('withCheckboxItems', 'docs_variantes'),
             },
             {
               name: t('variants.items.withRadioGroup.name'),
               trackId: 'withRadioGroup',
               description: stripHtml(t('variants.items.withRadioGroup.description')),
               useWhen: stripHtml(t('variants.items.withRadioGroup.use')),
-              code: `createDropdownMenu({
-  trigger,
-  items: [
-    { type: 'label', label: 'Aparência' },
-    { type: 'radio', label: 'Claro',   value: 'light',  group: 'tema', checked: true },
-    { type: 'radio', label: 'Escuro',  value: 'dark',   group: 'tema' },
-    { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
-  ],
-});
-// O 'group' é o que torna a escolha única: marcar um desmarca os irmãos.`,
-              // Marcado é o "Claro", como no snippet acima e na story
-              // `WithRadioGroup`: a prévia marcava o "Escuro" e contradizia os
-              // dois na mesma tela.
-              previewFactory: () => makeStaticMenuPanel((ul) => {
-                ul.append(
-                  makeGroup('Aparência', [
-                    makeRadioItem('Claro', true),
-                    makeRadioItem('Escuro', false),
-                    makeRadioItem('Sistema', false),
-                  ]),
-                );
-              }),
+              code: variantCode('withRadioGroup'),
+              previewFactory: () => variantPreview('withRadioGroup', 'docs_variantes'),
             },
             {
               name: t('variants.items.withShortcuts.name'),
               trackId: 'withShortcuts',
               description: stripHtml(t('variants.items.withShortcuts.description')),
               useWhen: stripHtml(t('variants.items.withShortcuts.use')),
-              code: `createDropdownMenu({
-  trigger,
-  items: [
-    { type: 'item', label: 'Desfazer', value: 'undo',  shortcut: 'Ctrl+Z'  },
-    { type: 'item', label: 'Copiar',   value: 'copy',  shortcut: 'Ctrl+C'  },
-    { type: 'separator' },
-    { type: 'item', label: 'Colar',    value: 'paste', shortcut: 'Ctrl+V'  },
-  ],
-});
-// O atalho integra o nome acessível do item, para que quem usa leitor de tela
-// também saiba que a tecla existe. Registrar a tecla real é do consumidor.`,
-              // A prévia mostra exatamente o que o snippet acima ensina, e os
-              // dois mostram o que a story `WithShortcuts` monta: três itens e
-              // um separador antes de "Colar". Antes divergia nos dois eixos —
-              // o snippet trazia três itens com `Ctrl`, a prévia trazia cinco
-              // com o glifo de macOS — e depois os dois passaram a trazer
-              // quatro, contra os três da story. Nenhum portão liga as
-              // superfícies: a guarda de snippet do auditor isenta de propósito
-              // o que está dentro de template literal.
-              previewFactory: () => makeStaticMenuPanel((ul) => {
-                ul.append(
-                  makeItem('Desfazer', 'Ctrl+Z'),
-                  makeItem('Copiar', 'Ctrl+C'),
-                  makeSeparator(),
-                  makeItem('Colar', 'Ctrl+V'),
-                );
-              }),
+              code: variantCode('withShortcuts'),
+              previewFactory: () => variantPreview('withShortcuts', 'docs_variantes'),
             },
           ],
         });
-      }
 
       case 'estados':
         return createDocsStates({
@@ -793,34 +834,38 @@ const menu = createDropdownMenu({
       case 'propriedades': {
         const interfaceCode = `// createDropdownMenu(options)
 export type DropdownMenuItemDef = {
-  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio';
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
   value?: string;
   label?: string;
   disabled?: boolean;
   variant?: 'default' | 'destructive';
   shortcut?: string;
-  checked?: boolean;          // só em checkbox e radio
-  indeterminate?: boolean;    // só em checkbox
-  group?: string;             // só em radio
+  inset?: boolean;            // item | label | submenu
+  checked?: boolean;          // checkbox | radio
+  indeterminate?: boolean;    // checkbox
+  group?: string;             // radio
+  items?: DropdownMenuItemDef[]; // submenu
   onClick?: () => void;
   onCheckedChange?: (checked: boolean) => void;
   onIndeterminateChange?: (indeterminate: boolean) => void;
 };
 
+export type DropdownMenuCloseReason = 'escape' | 'overlay' | 'api';
+
 export type DropdownMenuOptions = {
   trigger: HTMLElement;
   items: DropdownMenuItemDef[];
-  side?: 'top' | 'bottom' | 'left' | 'right';   // default 'bottom'
-  align?: 'start' | 'center' | 'end';           // default 'start'
-  sideOffset?: number;                          // default 4
-  modal?: boolean;                              // default true
-  open?: boolean;                               // presente = modo controlado
+  side?: 'top' | 'bottom' | 'left' | 'right';   // 'bottom'
+  align?: 'start' | 'center' | 'end';           // 'start'
+  sideOffset?: number;                          // 4
+  modal?: boolean;                              // true
+  open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  onClose?: (reason: DropdownMenuCloseReason) => void;
   class?: string;
 };
 
-// O elemento devolvido abre e fecha por código.
 export type DropdownMenuElement = DestroyableElement & {
   open: () => void;
   close: () => void;
@@ -838,6 +883,15 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
           description: t('props.table.description'),
         };
 
+        // "Sim"/"Não" do vocabulário comum da página, e toda descrição de
+        // `t()`: as genéricas do conteúdo compartilhado, e as que só esta
+        // fábrica tem do override no topo do arquivo. A tabela saía em
+        // português nos três idiomas.
+        const yes = tNav('common.yes');
+        const no = tNav('common.no');
+        const both = (shared: string, factory: string) =>
+          `${toPlainText(t(shared))} ${toPlainText(t(factory))}`;
+
         return createDocsProps({
           title: t('props.title'),
           tables: [
@@ -845,16 +899,17 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
               title: 'createDropdownMenu(options)',
               cols: propsCols,
               items: [
-                { name: 'trigger',      type: 'HTMLElement',                 defaultValue: '—',     required: 'Sim', description: 'Elemento que abre o menu ao receber click.' },
-                { name: 'items',        type: 'DropdownMenuItemDef[]',       defaultValue: '—',     required: 'Sim', description: 'Lista de itens, separadores, rótulos, alternadores e escolha única.' },
-                { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
-                { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' Definida, o menu passa ao modo controlado: clique, Escape, Tab e clique fora só anunciam a intenção por onOpenChange, e quem move o menu é setOpen().' },
-                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) },
-                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.modal.description')) + ' Com true, o clique de fora dispensa o menu sem chegar ao que está embaixo e a página não rola; com false, o clique também acerta o alvo.' },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' Sai no markup como data-side.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",  defaultValue: "'start'", required: 'Não', description: toPlainText(t('props.table.align.description')) + ' Sai no markup como data-align.' },
-                { name: 'sideOffset',   type: 'number',                      defaultValue: '4',     required: 'Não', description: 'Vão entre gatilho e menu, em px.' },
+                { name: 'trigger',      type: 'HTMLElement',                 defaultValue: '—',     required: yes, description: toPlainText(t('props.factory.trigger')) },
+                { name: 'items',        type: 'DropdownMenuItemDef[]',       defaultValue: '—',     required: yes, description: toPlainText(t('props.factory.items')) },
+                { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: no,  description: toPlainText(t('props.table.onOpenChange.description')) },
+                { name: 'onClose',      type: "(reason: 'escape' | 'overlay' | 'api') => void", defaultValue: '—', required: no, description: toPlainText(t('props.factory.onClose')) },
+                { name: 'class',        type: 'string',                      defaultValue: '—',     required: no,  description: toPlainText(t('props.factory.class')) },
+                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: no,  description: both('props.table.open.description', 'props.factory.openControlled') },
+                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: no,  description: toPlainText(t('props.table.defaultOpen.description')) },
+                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: no,  description: both('props.table.modal.description', 'props.factory.modalDetail') },
+                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: no, description: both('props.table.side.description', 'props.factory.sideMarkup') },
+                { name: 'align',        type: "'start' | 'center' | 'end'",  defaultValue: "'start'", required: no, description: both('props.table.align.description', 'props.factory.alignMarkup') },
+                { name: 'sideOffset',   type: 'number',                      defaultValue: '4',     required: no,  description: toPlainText(t('props.factory.sideOffset')) },
               ],
             },
           ],
@@ -921,38 +976,30 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
+      // A tabela sai do CONTEÚDO, como a do Context Menu — irmão da mesma
+      // folha e do mesmo PRD. As três linhas cravadas aqui ensinavam o payload
+      // antigo (`label` no lugar de `menu`, sem `reason`) depois que o tipo e o
+      // conteúdo já tinham mudado.
       case 'analytics':
         return createDocsAnalytics({
           title: t('analytics.title'),
           cols: {
-            event: tNav('common.event'),
-            trigger: tNav('common.eventTrigger'),
-            payload: tNav('common.payload'),
+            event:   t('analytics.table.event'),
+            trigger: toPlainText(t('analytics.table.trigger')),
+            payload: t('analytics.table.payload'),
           },
           items: [
-            {
-              event: 'dropdown_menu_open',
-              trigger: 'onOpenChange(true)',
-              payload: "{ component: 'dropdown-menu', location, label }",
-            },
-            {
-              event: 'dropdown_menu_close',
-              trigger: 'onOpenChange(false)',
-              payload: "{ component: 'dropdown-menu', location, label }",
-            },
-            {
-              event: 'dropdown_menu_item_select',
-              trigger: 'onSelect / item.onClick',
-              payload: "{ component: 'dropdown-menu', location, label, menu }",
-            },
-            {
-              event: '—',
-              trigger: stripHtml(t('analytics.description')),
-              payload: '—',
-            },
+            { event: t('analytics.table.menuOpen'),      trigger: toPlainText(t('analytics.table.menuOpenTrigger')),      payload: t('analytics.table.menuOpenPayload')      },
+            { event: t('analytics.table.itemClick'),     trigger: toPlainText(t('analytics.table.itemClickTrigger')),     payload: t('analytics.table.itemClickPayload')     },
+            { event: t('analytics.table.close'),         trigger: toPlainText(t('analytics.table.closeTrigger')),         payload: t('analytics.table.closePayload')         },
+            { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload')      },
+            { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
+            { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload')    },
           ],
         });
 
+      // As três listas saem do conteúdo por varredura: a funcional estava
+      // cravada em oito e escondia os seis critérios novos da família (F9–F14).
       case 'testes':
         return createDocsTestes({
           title: t('testes.title'),
@@ -963,11 +1010,8 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
-              action: t(`testes.functional.item${i}.action`),
-              result: t(`testes.functional.item${i}.result`),
-              priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
-            })),
+            items: entriesFromDict(t, 'testes.functional', ['action', 'result', 'priority'])
+              .map(entry => ({ ...entry, priority: priorityLabel(entry.priority) })),
           },
           accessibility: {
             title: t('testes.accessibility.title'),
@@ -988,10 +1032,8 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
               story: tNav('common.storyState'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
-              story: t(`testes.visual.item${i}.story`),
-              priority: priorityLabel(t(`testes.visual.item${i}.priority`)),
-            })),
+            items: entriesFromDict(t, 'testes.visual', ['story', 'priority'])
+              .map(entry => ({ ...entry, priority: priorityLabel(entry.priority) })),
           },
         });
     }

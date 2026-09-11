@@ -6,13 +6,18 @@ import {
   waitForPortalGone,
   FOCUS_RULE_GUARDA,
 } from "@/lib/wait-for-portal";
+import { formaDoIndicador, ehTraco, ehTique } from "@shared/testing/menu-checkbox-indicator";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import {
+  dropdownMenuCheckboxIndeterminateSource,
   dropdownMenuControlledSource,
   dropdownMenuItemDisabledSource,
   dropdownMenuSource,
@@ -36,7 +41,7 @@ const meta = {
       source: { transform: dropdownMenuSource },
       description: {
         component:
-          "Fechado, aberto, controlado por fora e item desabilitado. Teclado, foco e bloqueio " +
+          "Fechado, aberto, controlado por fora, item desabilitado e marcação mista. Teclado, foco e bloqueio " +
           "vêm do primitivo — o que estas stories provam é que a composição não desfaz nada disso.",
       },
     },
@@ -58,15 +63,6 @@ const wrapperStyle: React.CSSProperties = {
 export const Closed: Story = {
   parameters: {
     covers: ["accessibility.item2"],
-    // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
-    // estados. `checked` é booleano, o payload da mudança é booleano, o estado
-    // exposto ao indicador é booleano e os únicos atributos de dado são
-    // `data-checked` e `data-unchecked` — não existe terceiro valor. A caixa de
-    // seleção avulsa da MESMA lib tem `indeterminate`; o item de menu não.
-    coversNotApplicable: {
-      "functional.item8":
-        "o item de marcação do menu neste primitivo é de dois estados — prop, payload e estado do indicador são booleanos, sem terceiro valor para anunciar como misto",
-    },
   },
   render: () => (
     <div className={wrapperClass} style={wrapperStyle}>
@@ -99,7 +95,9 @@ export const Closed: Story = {
 };
 
 export const Open: Story = {
-  parameters: { covers: ["functional.item2", "accessibility.item3"] },
+  parameters: {
+    covers: ["functional.item2", "functional.item10", "functional.item11", "accessibility.item3"],
+  },
   render: () => (
     <div className={wrapperClass} style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
@@ -270,6 +268,77 @@ export const ItemDisabled: Story = {
       items[0].focus();
       await userEvent.keyboard("{ArrowDown}");
       await expect(document.activeElement).toBe(disabled);
+    });
+  },
+};
+
+// ─── Marcação mista ───────────────────────────────────────────────────────────
+//
+// Story SEM interação no item, de propósito. O que ela declara vale na abertura,
+// e o primeiro clique num item misto o resolve para marcado — uma play que
+// clicasse aqui mediria outro estado no REPLAY do painel Interactions, que
+// reexecuta no mesmo DOM. Os três itens são controlados e sem callback.
+
+export const CheckboxIndeterminate: Story = {
+  parameters: {
+    // O misto é do wrapper (D8): o item de marcação da base-ui é de dois
+    // estados, e esta é a story que prova que o terceiro chega ao DOM.
+    covers: ["functional.item8"],
+    docs: { source: { transform: dropdownMenuCheckboxIndeterminateSource } },
+  },
+  render: () => (
+    <div className={wrapperClass} style={wrapperStyle}>
+      <DropdownMenu defaultOpen modal={false}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">Exibir</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuLabel>Mostrar na tela</DropdownMenuLabel>
+            <DropdownMenuCheckboxItem checked={false} indeterminate>
+              Colunas
+            </DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked>Régua</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked={false}>Grade</DropdownMenuCheckboxItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  ),
+  play: async ({ step }) => {
+    const menu = await waitForPortal("menu");
+    const canvas = within(menu);
+    const mixed = canvas.getByRole("menuitemcheckbox", { name: "Colunas" });
+    const checked = canvas.getByRole("menuitemcheckbox", { name: "Régua" });
+    const unchecked = canvas.getByRole("menuitemcheckbox", { name: "Grade" });
+
+    await step("O estado misto é anunciado como misto, e não como marcado", async () => {
+      // O item da lib escreve `aria-checked` sozinho; o `"mixed"` vem do
+      // wrapper. Se a lib passar a sobrescrevê-lo, é aqui que fica vermelho — e
+      // os dois outros estados provam que o atributo não sumiu de quem não é
+      // misto.
+      await expect(mixed.getAttribute("aria-checked")).toBe("mixed");
+      await expect(checked.getAttribute("aria-checked")).toBe("true");
+      await expect(unchecked.getAttribute("aria-checked")).toBe("false");
+    });
+
+    await step("O misto desenha traço; o marcado, tique", async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal.
+      const mixedShape = formaDoIndicador(mixed);
+      await expect(ehTraco(mixedShape)).toBe(true);
+      await expect(ehTique(mixedShape)).toBe(false);
+      await expect(ehTique(formaDoIndicador(checked))).toBe(true);
+    });
+
+    await step("O traço mora no indicador do item, como o tique", async () => {
+      await expect(
+        mixed.querySelector('[data-slot="dropdown-menu-checkbox-item-indicator"] svg'),
+      ).not.toBeNull();
+    });
+
+    await step("O desmarcado continua sem glifo nenhum", async () => {
+      await expect(formaDoIndicador(unchecked)).toBeNull();
     });
   },
 };

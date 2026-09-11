@@ -3,6 +3,7 @@
 	import { cn } from "@/lib/utils.js";
 	import DropdownMenuPortal from "./dropdown-menu-portal.svelte";
 	import { closeAfterTab, useDropdownMenuRoot } from "./tab-leaves-menu";
+	import { keepRootOpenOnSubEscape, useMenuSub } from "./sub-escape";
 
 	let {
 		ref = $bindable(null),
@@ -12,6 +13,15 @@
 	}: DropdownMenuPrimitive.SubContentProps = $props();
 
 	const root = useDropdownMenuRoot();
+	const sub = useMenuSub();
+
+	// Escape aqui dentro fecha só este submenu e devolve o foco ao gatilho dele;
+	// o menu de cima segue aberto. Ouvinte de captura no nó que a lib entrega por
+	// `ref`, antes da camada de Escape do bits — ver `sub-escape.ts`.
+	$effect(() => {
+		if (!ref || !sub) return;
+		return keepRootOpenOnSubEscape(ref, sub);
+	});
 
 	// O portal tira este painel da árvore DOM do raiz: o Tab apertado aqui não
 	// passa pelo ouvinte de lá. O mesmo fechamento — ver `tab-leaves-menu.ts`.

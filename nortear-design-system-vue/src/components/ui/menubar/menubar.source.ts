@@ -556,3 +556,197 @@ const openMenu = ref('')`,
 </Menubar>`,
   );
 }
+
+// ─── A barra como DADO: uma lista monta a prévia e imprime o código ───────────
+//
+// Os cards de Variantes da docs page tinham um literal de código ao lado de
+// cada prévia, em português nos três idiomas e sem o estado inicial das
+// marcações e da escolha única: em inglês a prévia dizia "View" e o código
+// "Exibir", e o trecho ligava `:checked` a nomes que não declarava. É o desenho
+// do ContextMenu desta stack: a MESMA lista de menus vira a barra viva
+// (`MenubarPreview.vue`) e o trecho que se copia, então os dois não têm como
+// divergir.
+
+/**
+ * Item de ação. `value` é o id ESTÁVEL do item — é o que o evento de escolha
+ * manda ao GA4 —, e o snippet não o imprime: o item de ação não tem valor.
+ */
+export type MenubarSnippetAction = {
+  kind: 'item';
+  label: string;
+  value: string;
+  shortcut?: string;
+  destructive?: boolean;
+};
+
+/**
+ * Item de marcação, ligado por `v-model:checked` — a API do
+ * `MenubarCheckboxItem` desta stack. `value` é o id estável e dá NOME ao `ref`:
+ * `show-ruler` vira `const showRuler = ref(true)`.
+ */
+export type MenubarSnippetCheckbox = {
+  kind: 'checkbox';
+  label: string;
+  value: string;
+  checked: boolean;
+};
+
+/**
+ * Uma entrada de um menu da barra. O submenu aceita qualquer entrada, inclusive
+ * outro submenu: é assim que o "evite" do par 2 desenha o nível a mais que a
+ * legenda condena, vivo. O grupo de escolha única carrega o próprio rótulo
+ * quando tem um — é ele que o rótulo nomeia.
+ */
+export type MenubarSnippetEntry =
+  | MenubarSnippetAction
+  | MenubarSnippetCheckbox
+  | { kind: 'separator' }
+  | { kind: 'submenu'; label: string; items: MenubarSnippetEntry[] }
+  | { kind: 'group'; label: string; items: Array<MenubarSnippetAction | MenubarSnippetCheckbox> }
+  | {
+      kind: 'radio-group';
+      label?: string;
+      /** Id estável do grupo e nome do `ref` no snippet. */
+      value: string;
+      /** A opção marcada ao montar — o valor inicial do `ref`. */
+      selected: string;
+      /** `value` de cada opção é o id estável dela — e o do evento de escolha. */
+      options: Array<{ label: string; value: string }>;
+    };
+
+/** Um menu da barra: o `value` do `MenubarMenu`, o texto do gatilho e as entradas. */
+export type MenubarSnippetMenu = {
+  value: string;
+  trigger: string;
+  entries: MenubarSnippetEntry[];
+};
+
+/** `show-ruler` → `showRuler`: o nome do `ref` sai do id estável. */
+function refName(value: string): string {
+  return value.replace(/-([a-z0-9])/g, (_, letter: string) => letter.toUpperCase());
+}
+
+/**
+ * Texto de template. O rótulo vem do conteúdo compartilhado, e um `<` ou um
+ * `{{` nele quebraria o trecho copiado — nesse caso ele vai como expressão.
+ */
+function templateText(text: string): string {
+  if (!/[<>{}]/.test(text)) return text;
+  return `{{ '${text.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}' }}`;
+}
+
+/** Uma entrada em linhas, no recuo `pad`; registra as peças e os `ref` usados. */
+function entryLines(
+  entry: MenubarSnippetEntry,
+  pad: string,
+  parts: Set<string>,
+  refs: string[],
+): string[] {
+  switch (entry.kind) {
+    case 'item': {
+      parts.add('MenubarItem');
+      const open = `<MenubarItem${attrs(entry.destructive && 'variant="destructive"')}>`;
+      if (!entry.shortcut) return [`${pad}${open}${templateText(entry.label)}</MenubarItem>`];
+      parts.add('MenubarShortcut');
+      return [
+        `${pad}${open}`,
+        `${pad}  ${templateText(entry.label)}`,
+        `${pad}  <MenubarShortcut>${templateText(entry.shortcut)}</MenubarShortcut>`,
+        `${pad}</MenubarItem>`,
+      ];
+    }
+    case 'separator':
+      parts.add('MenubarSeparator');
+      return [`${pad}<MenubarSeparator />`];
+    case 'checkbox': {
+      parts.add('MenubarCheckboxItem');
+      const name = refName(entry.value);
+      refs.push(`const ${name} = ref(${entry.checked})`);
+      return [
+        `${pad}<MenubarCheckboxItem v-model:checked="${name}">`,
+        `${pad}  ${templateText(entry.label)}`,
+        `${pad}</MenubarCheckboxItem>`,
+      ];
+    }
+    case 'submenu':
+      parts.add('MenubarSub').add('MenubarSubTrigger').add('MenubarSubContent');
+      return [
+        `${pad}<MenubarSub>`,
+        `${pad}  <MenubarSubTrigger>${templateText(entry.label)}</MenubarSubTrigger>`,
+        `${pad}  <MenubarSubContent>`,
+        ...entry.items.flatMap((item) => entryLines(item, `${pad}    `, parts, refs)),
+        `${pad}  </MenubarSubContent>`,
+        `${pad}</MenubarSub>`,
+      ];
+    case 'group':
+      parts.add('MenubarGroup').add('MenubarLabel');
+      return [
+        `${pad}<MenubarGroup>`,
+        `${pad}  <MenubarLabel>${templateText(entry.label)}</MenubarLabel>`,
+        ...entry.items.flatMap((item) => entryLines(item, `${pad}  `, parts, refs)),
+        `${pad}</MenubarGroup>`,
+      ];
+    case 'radio-group': {
+      parts.add('MenubarRadioGroup').add('MenubarRadioItem');
+      if (entry.label) parts.add('MenubarLabel');
+      const name = refName(entry.value);
+      refs.push(`const ${name} = ref('${entry.selected}')`);
+      return [
+        `${pad}<MenubarRadioGroup v-model="${name}">`,
+        ...(entry.label ? [`${pad}  <MenubarLabel>${templateText(entry.label)}</MenubarLabel>`] : []),
+        ...entry.options.map(
+          (option) =>
+            `${pad}  <MenubarRadioItem value="${option.value}">${templateText(option.label)}</MenubarRadioItem>`,
+        ),
+        `${pad}</MenubarRadioGroup>`,
+      ];
+    }
+  }
+}
+
+/** A barra canônica: um menu de arquivo, com o atalho de cada item. */
+const MENUS_DEFAULT: readonly MenubarSnippetMenu[] = [
+  {
+    value: 'file',
+    trigger: 'Arquivo',
+    entries: [
+      { kind: 'item', label: 'Novo', value: 'new', shortcut: 'Ctrl+N' },
+      { kind: 'item', label: 'Salvar', value: 'save', shortcut: 'Ctrl+S' },
+    ],
+  },
+];
+
+/**
+ * O trecho da barra descrita por `menus`, com os rótulos EXATAMENTE como chegam
+ * — quem chama os lê do conteúdo compartilhado, no idioma da página.
+ *
+ * O trecho é o que se COLA: o import só das peças usadas e, havendo marcação ou
+ * escolha única, o `ref` de cada uma com o valor que a prévia tem ao montar.
+ * `loop` não aparece: a barra desta stack já nasce dando a volta. Sem `menus` o
+ * construtor cai na barra canônica, que é como a guarda transversal
+ * (`source-snippets.test.ts`) o chama.
+ */
+export function menubarSnippet(options: { menus?: readonly MenubarSnippetMenu[] } = {}): string {
+  const parts = new Set(['Menubar', 'MenubarContent', 'MenubarMenu', 'MenubarTrigger']);
+  const refs: string[] = [];
+  const markup = (options.menus ?? MENUS_DEFAULT)
+    .map((menu) =>
+      [
+        `  <MenubarMenu value="${menu.value}">`,
+        `    <MenubarTrigger>${templateText(menu.trigger)}</MenubarTrigger>`,
+        `    <MenubarContent>`,
+        ...menu.entries.flatMap((entry) => entryLines(entry, '      ', parts, refs)),
+        `    </MenubarContent>`,
+        `  </MenubarMenu>`,
+      ].join('\n'),
+    )
+    .join('\n');
+  const imports = importa(...parts);
+  const script = refs.length
+    ? `${imports}
+import { ref } from 'vue'
+
+${refs.join('\n')}`
+    : imports;
+  return vueSnippet(script, `<Menubar>\n${markup}\n</Menubar>`);
+}

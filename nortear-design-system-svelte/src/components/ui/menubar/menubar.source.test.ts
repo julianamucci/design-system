@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { menubarSource } from './menubar.source';
+import { menubarEntriesSource, menubarSource } from './menubar.source';
 
 describe('menubarSource', () => {
   it('sem args, entrega a barra canônica com as quatro categorias clássicas', () => {
@@ -124,5 +124,78 @@ describe('menubarSource', () => {
     const saida = menubarSource('', { args: { demonstration: 'itemDisabled' } });
     expect(saida).not.toContain('MenubarShortcut');
     expect(saida).not.toContain('MenubarSeparator');
+  });
+});
+
+describe('menubarEntriesSource — o código dos cards de Variantes', () => {
+  it('um MenubarMenu por gatilho, com os rótulos que recebeu', () => {
+    const saida = menubarEntriesSource({
+      menus: [
+        {
+          value: 'file',
+          triggerLabel: 'File',
+          entries: [
+            { type: 'item', label: 'New', value: 'new', shortcut: 'Ctrl+N' },
+            { type: 'item', label: 'Save', value: 'save', shortcut: 'Ctrl+S' },
+          ],
+        },
+        {
+          value: 'help',
+          triggerLabel: 'Help',
+          entries: [{ type: 'item', label: 'About', value: 'about' }],
+        },
+      ],
+    });
+    expect(saida.match(/<MenubarMenu value="/g)).toHaveLength(2);
+    expect(saida).toContain('<MenubarTrigger>File</MenubarTrigger>');
+    expect(saida).toContain('<MenubarShortcut>Ctrl+S</MenubarShortcut>');
+    expect(saida).toContain('<MenubarItem>About</MenubarItem>');
+    expect(saida).not.toMatch(/Arquivo|Novo|Salvar/);
+    // Nada liga estado: nem declaração, nem peça de marcação no import.
+    expect(saida).not.toContain('$state');
+    expect(saida).not.toContain('MenubarCheckboxItem');
+  });
+
+  it('a variante destrutiva e a divisória saem da lista, não de um literal ao lado', () => {
+    const saida = menubarEntriesSource({
+      menus: [
+        {
+          value: 'file',
+          triggerLabel: 'File',
+          entries: [
+            { type: 'item', label: 'Save', value: 'save' },
+            { type: 'separator' },
+            { type: 'item', label: 'Delete file', value: 'delete-file', variant: 'destructive' },
+          ],
+        },
+      ],
+    });
+    expect(saida).toContain('<MenubarSeparator />');
+    expect(saida).toContain('<MenubarItem variant="destructive">Delete file</MenubarItem>');
+  });
+
+  it('a marcação declara a variável que liga, com o estado da lista', () => {
+    const saida = menubarEntriesSource({
+      menus: [
+        {
+          value: 'view',
+          triggerLabel: 'View',
+          entries: [
+            {
+              type: 'group',
+              label: 'Panels',
+              items: [
+                { type: 'checkbox', label: 'Sidebar', value: 'sidebar', checked: true },
+                { type: 'checkbox', label: 'Grid', value: 'grid', checked: false },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    expect(saida).toContain('let sidebar = $state(true);');
+    expect(saida).toContain('let grid = $state(false);');
+    expect(saida).toContain('<MenubarGroupHeading>Panels</MenubarGroupHeading>');
+    expect(saida).toContain('<MenubarCheckboxItem bind:checked={grid}>');
   });
 });

@@ -89,7 +89,7 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
-    covers: ['functional.item2', 'accessibility.item3', 'accessibility.item4'],
+    covers: ['functional.item2', 'functional.item10', 'functional.item11', 'accessibility.item3', 'accessibility.item4'],
     // Aqui a montagem já aberta É o assunto — nas outras stories a prop é só
     // andaime da foto do Chromatic.
     docs: { source: { transform: dropdownMenuOpenSource } },

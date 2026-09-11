@@ -155,6 +155,11 @@
           "use": "Ações que já possuem atalho global na aplicação (Ctrl+E, Ctrl+D, Delete). Mantém paridade entre menu contextual e teclado e ensina o atalho ao usuário."
         },
         "label": "Rótulo de grupo, não interativo. Recuado, alinha com os itens que têm ícone."
+      },
+      "names": {
+        "default": "Padrão",
+        "destructive": "Destrutivo",
+        "label": "Rótulo"
       }
     },
     "states": {
@@ -297,7 +302,7 @@
       "screenReader": {
         "onOpen": "Ao abrir: leitor anuncia o menu e o primeiro item focado.",
         "onNavigate": "Ao navegar: leitor anuncia o label do item e seu estado (checked, disabled).",
-        "onSelect": "Ao selecionar: leitor anuncia a ação realizada.",
+        "onSelect": "Ao selecionar: o menu fecha e o foco volta à área; o resultado da ação é anunciado pela própria aplicação, não pelo menu.",
         "shortcuts": "O atalho é lido junto do item — \"Editar, Ctrl+E\" é o nome útil. Escondê-lo deixaria a pessoa sem saber que o atalho existe.",
         "alternative": "Alternativa acessível obrigatória: o usuário de leitor de tela pode não descobrir o Context Menu."
       },
@@ -407,7 +412,7 @@
           "priority": "high"
         },
         "item12": {
-          "action": "Pressionar Tab com o menu aberto",
+          "action": "Pressionar Tab com o menu aberto (também de dentro do submenu)",
           "result": "O menu fecha e o foco vai ao próximo ponto de tabulação depois da área (Shift+Tab: ao anterior); se a área for o último, volta a ela — o menu não prende o foco",
           "priority": "high"
         },
@@ -425,6 +430,16 @@
           "action": "Pressionar a tecla de menu ou Shift+F10 com a área focada",
           "result": "O menu abre como no clique direito",
           "priority": "high"
+        },
+        "item16": {
+          "action": "Abrir o menu por clique direito, tecla de menu ou Shift+F10",
+          "result": "O foco entra no menu, e as setas alcançam os itens a partir dali",
+          "priority": "high"
+        },
+        "item17": {
+          "action": "Exibir um item com atalho",
+          "result": "O atalho aparece à direita do rótulo e integra o nome acessível do item; é só texto — a tecla precisa ser registrada por quem consome o menu",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -438,7 +453,8 @@
         "item6": "aria-disabled em itens desabilitados",
         "item7": "Escape fecha o menu e devolve o foco à área",
         "item8": "Contraste mínimo 4.5:1 em todos os estados de texto",
-        "item9": "A seta pousa também no item desabilitado, que segue no percurso do teclado e é anunciado como indisponível em vez de sumir (WAI-ARIA APG)"
+        "item9": "A seta pousa também no item desabilitado, que segue no percurso do teclado e é anunciado como indisponível em vez de sumir (WAI-ARIA APG)",
+        "item10": "O item que abre submenu tem aria-haspopup=menu e aria-expanded reflete o estado"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -648,6 +664,11 @@
           "use": "Actions that already have a global app shortcut (Ctrl+E, Ctrl+D, Delete). Keeps parity between context menu and keyboard and teaches the shortcut to the user."
         },
         "label": "Group label, not interactive. When inset, it lines up with items that have an icon."
+      },
+      "names": {
+        "default": "Default",
+        "destructive": "Destructive",
+        "label": "Label"
       }
     },
     "states": {
@@ -790,7 +811,7 @@
       "screenReader": {
         "onOpen": "On open: reader announces the menu and the first focused item.",
         "onNavigate": "On navigation: reader announces the item label and its state (checked, disabled).",
-        "onSelect": "On select: reader announces the action taken.",
+        "onSelect": "On select: the menu closes and focus returns to the area; the outcome of the action is announced by the application, not by the menu.",
         "shortcuts": "The shortcut is read together with the item — \"Edit, Ctrl+E\" is the useful name. Hiding it would leave the person unaware that the shortcut exists.",
         "alternative": "Accessible alternative required: screen reader users may not discover the Context Menu."
       },
@@ -900,7 +921,7 @@
           "priority": "high"
         },
         "item12": {
-          "action": "Press Tab with the menu open",
+          "action": "Press Tab with the menu open (also from inside the submenu)",
           "result": "The menu closes and focus moves to the next tab stop after the area (Shift+Tab: the previous one); if the area is the last stop, focus returns to it — the menu does not trap focus",
           "priority": "high"
         },
@@ -918,6 +939,16 @@
           "action": "Press the menu key or Shift+F10 with the area focused",
           "result": "The menu opens as it does on right-click",
           "priority": "high"
+        },
+        "item16": {
+          "action": "Open the menu by right-click, menu key or Shift+F10",
+          "result": "Focus moves into the menu, and the arrows reach the items from there",
+          "priority": "high"
+        },
+        "item17": {
+          "action": "Render an item with a shortcut",
+          "result": "The shortcut appears to the right of the label and is part of the item accessible name; it is text only — the key has to be registered by whoever consumes the menu",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -931,7 +962,8 @@
         "item6": "aria-disabled on disabled items",
         "item7": "Escape closes the menu and returns focus to the area",
         "item8": "Minimum contrast 4.5:1 across all text states",
-        "item9": "The arrow also lands on the disabled item, which stays in the keyboard sequence and is announced as unavailable instead of disappearing (WAI-ARIA APG)"
+        "item9": "The arrow also lands on the disabled item, which stays in the keyboard sequence and is announced as unavailable instead of disappearing (WAI-ARIA APG)",
+        "item10": "The item that opens a submenu has aria-haspopup=menu and aria-expanded reflects the state"
       },
       "visual": {
         "title": "Visual Regression",
@@ -1141,6 +1173,11 @@
           "use": "Acciones que ya tienen atajo global en la aplicación (Ctrl+E, Ctrl+D, Delete). Mantiene paridad entre menú contextual y teclado y enseña el atajo al usuario."
         },
         "label": "Rótulo de grupo, no interactivo. Con sangría, se alinea con los ítems que tienen icono."
+      },
+      "names": {
+        "default": "Predeterminado",
+        "destructive": "Destructivo",
+        "label": "Etiqueta"
       }
     },
     "states": {
@@ -1283,7 +1320,7 @@
       "screenReader": {
         "onOpen": "Al abrir: el lector anuncia el menú y el primer ítem enfocado.",
         "onNavigate": "Al navegar: el lector anuncia la etiqueta del ítem y su estado (checked, disabled).",
-        "onSelect": "Al seleccionar: el lector anuncia la acción realizada.",
+        "onSelect": "Al seleccionar: el menú se cierra y el foco vuelve al área; el resultado de la acción lo anuncia la propia aplicación, no el menú.",
         "shortcuts": "El atajo se lee junto al elemento — \"Editar, Ctrl+E\" es el nombre útil. Ocultarlo dejaría a la persona sin saber que el atajo existe.",
         "alternative": "Alternativa accesible obligatoria: el usuario de lector de pantalla puede no descubrir el Context Menu."
       },
@@ -1393,7 +1430,7 @@
           "priority": "high"
         },
         "item12": {
-          "action": "Pulsar Tab con el menú abierto",
+          "action": "Pulsar Tab con el menú abierto (también desde dentro del submenú)",
           "result": "El menú se cierra y el foco pasa a la siguiente parada de tabulación después del área (Shift+Tab: la anterior); si el área es la última, vuelve a ella — el menú no atrapa el foco",
           "priority": "high"
         },
@@ -1411,6 +1448,16 @@
           "action": "Pulsar la tecla de menú o Shift+F10 con el área enfocada",
           "result": "El menú se abre como con el clic derecho",
           "priority": "high"
+        },
+        "item16": {
+          "action": "Abrir el menú con clic derecho, tecla de menú o Shift+F10",
+          "result": "El foco entra en el menú, y las flechas alcanzan los ítems desde ahí",
+          "priority": "high"
+        },
+        "item17": {
+          "action": "Mostrar un ítem con atajo",
+          "result": "El atajo aparece a la derecha de la etiqueta e integra el nombre accesible del ítem; es solo texto — la tecla debe registrarla quien consume el menú",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -1424,7 +1471,8 @@
         "item6": "aria-disabled en ítems deshabilitados",
         "item7": "Escape cierra el menú y devuelve el foco al área",
         "item8": "Contraste mínimo 4.5:1 en todos los estados de texto",
-        "item9": "La flecha también se posa en el ítem deshabilitado, que sigue en el recorrido del teclado y se anuncia como no disponible en vez de desaparecer (WAI-ARIA APG)"
+        "item9": "La flecha también se posa en el ítem deshabilitado, que sigue en el recorrido del teclado y se anuncia como no disponible en vez de desaparecer (WAI-ARIA APG)",
+        "item10": "El ítem que abre un submenú tiene aria-haspopup=menu y aria-expanded refleja el estado"
       },
       "visual": {
         "title": "Regresión Visual",

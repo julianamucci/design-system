@@ -94,6 +94,22 @@ describe('dropdownMenuSnippet', () => {
     expect(code).not.toContain("type: 'item'");
   });
 
+  it('o recuo entra só quando pedido, no item, no rótulo e no sub-gatilho', () => {
+    const code = dropdownMenuSnippet({
+      items: [
+        { type: 'label', label: 'Ações', inset: true },
+        { label: 'Editar', value: 'edit', inset: true },
+        { type: 'submenu', label: 'Exportar', value: 'export', inset: true, items: [{ label: 'PDF', value: 'pdf' }] },
+        { label: 'Copiar', value: 'copy', inset: false },
+      ],
+    });
+    expect(code).toContain("{ type: 'label', label: 'Ações', inset: true }");
+    expect(code).toContain("{ label: 'Editar', value: 'edit', inset: true }");
+    expect(code).toContain("{ type: 'submenu', label: 'Exportar', value: 'export', inset: true, ");
+    // `false` é o padrão da fábrica: escrito, ensinaria a repeti-lo.
+    expect(code).toContain("{ label: 'Copiar', value: 'copy' }");
+  });
+
   it('o item de ação simples não repete o tipo padrão', () => {
     expect(dropdownMenuSnippet({ items: [{ label: 'Perfil', value: 'profile' }] })).toContain(
       "{ label: 'Perfil', value: 'profile' }",

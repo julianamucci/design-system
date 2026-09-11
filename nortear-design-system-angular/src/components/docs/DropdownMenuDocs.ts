@@ -4,19 +4,21 @@ import {
   Component,
   computed,
   effect,
+  input,
   OnDestroy,
   viewChild,
   TemplateRef,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
+import type { CheckedState, RdxMenuOpenChange } from '@radix-ng/primitives/menu';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
-import { NDS_DROPDOWN_MENU } from '@/components/ui/dropdown-menu';
-import { NdsButton } from '@/components/ui/button';
+import { NDS_DROPDOWN_MENU, menuCloseReason } from '@/components/ui/dropdown-menu';
+import { NdsButton, type ButtonSize } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import dropdownMenuTranslations from '@shared/content/dropdown-menu/translations.json';
 
@@ -51,8 +53,22 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 // `notes.item2` / `notes.item5` — o comportamento descrito é o desta stack.
 // `props.*` — as props que o conteúdo compartilhado não descreve (as quatro
 // peças deste stack têm mais superfície do que as seis linhas da tabela dele).
+// `snippet.*` — os COMENTÁRIOS do código de extensibilidade desta stack, que é
+// montado por `extensibilitySnippet()` na língua de quem lê. É prosa, não
+// snippet: o código em si vive no arquivo, os rótulos vêm de
+// `demonstration.labels.*`.
 const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, unknown>, {
   'pt-BR': {
+    'snippet.controlled': 'Menu controlado, com posicionamento e analytics',
+    'snippet.inComponent': 'no componente',
+    'snippet.stableIds':
+      'O payload leva IDENTIFICADORES estáveis, em inglês e kebab-case — o do menu e o do item —,',
+    'snippet.stableIdsWhy':
+      'nunca o rótulo traduzido: o rótulo partiria um evento em três no GA4, um por idioma.',
+    'snippet.location':
+      'location é a SEÇÃO da tela onde o menu mora: nestas docs, docs_<seção>; no produto, a seção dele.',
+    'snippet.reasons':
+      'escape: Escape · overlay: clique fora, Tab ou gatilho aberto · api: item escolhido ou código',
     'props.class.description':
       'Classes extras escritas no elemento são mescladas com as do componente; não há prop de classe.',
     'props.disabled.description':
@@ -82,6 +98,8 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
     'props.groupValueChange.description': 'Emite o valor recém-escolhido.',
     'props.itemValue.description':
       'Valor desta opção. É o que o grupo compara para decidir quem está marcado.',
+    'props.openChangeDetail.description':
+      'Emite a mudança de abertura junto do motivo ({ open, reason }): diz se o menu fechou por Escape, por clique fora ou por item escolhido.',
     'notes.item1':
       '<strong>Primitivo</strong>: <code>@radix-ng/primitives/menu</code> — entrega os papéis ARIA, o foco no primeiro item ao abrir, roving tabindex, setas, Home/End, typeahead, Escape com devolução do foco, posicionamento com fuga de colisão e submenu com abertura em diagonal.',
     'notes.item2':
@@ -94,6 +112,16 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
       '<strong>Pendência da lib</strong>: as âncoras de foco que cercam o conteúdo portalizado combinam <code>aria-hidden</code> com <code>tabindex="0"</code>, e o axe lê isso como armadilha de foco. Elas existem justamente para o Tab não ficar preso; a regra está desligada nas stories que terminam com o menu aberto, com o achado registrado.',
   },
   en: {
+    'snippet.controlled': 'Controlled menu, with positioning and analytics',
+    'snippet.inComponent': 'in the component',
+    'snippet.stableIds':
+      'The payload carries STABLE identifiers, in English and kebab-case — the menu one and the item one —,',
+    'snippet.stableIdsWhy':
+      'never the translated label: the label would split one event into three in GA4, one per language.',
+    'snippet.location':
+      'location is the SECTION of the screen where the menu lives: in these docs, docs_<section>; in the product, its own.',
+    'snippet.reasons':
+      'escape: Escape · overlay: click outside, Tab or open trigger · api: item chosen or code',
     'props.class.description':
       'Extra classes written on the element are merged with the component ones; there is no class prop.',
     'props.disabled.description':
@@ -118,6 +146,8 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
     'props.groupValueChange.description': 'Emits the newly selected value.',
     'props.itemValue.description':
       'This option value. It is what the group compares to decide which one is checked.',
+    'props.openChangeDetail.description':
+      'Emits the open change together with its reason ({ open, reason }): tells whether the menu closed by Escape, by a click outside or by a chosen item.',
     'notes.item1':
       '<strong>Primitive</strong>: <code>@radix-ng/primitives/menu</code> — provides the ARIA roles, focus on the first item when opening, roving tabindex, arrows, Home/End, typeahead, Escape with focus return, collision-aware positioning and diagonal submenu opening.',
     'notes.item2':
@@ -130,6 +160,16 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
       '<strong>Upstream pending item</strong>: the focus guards around the portaled content combine <code>aria-hidden</code> with <code>tabindex="0"</code>, and axe reads that as a focus trap. They exist precisely so Tab does not get trapped; the rule is off in the stories that end with the menu open, and the finding is on record.',
   },
   es: {
+    'snippet.controlled': 'Menú controlado, con posicionamiento y analytics',
+    'snippet.inComponent': 'en el componente',
+    'snippet.stableIds':
+      'El payload lleva IDENTIFICADORES estables, en inglés y kebab-case — el del menú y el del ítem —,',
+    'snippet.stableIdsWhy':
+      'nunca la etiqueta traducida: la etiqueta partiría un evento en tres en GA4, uno por idioma.',
+    'snippet.location':
+      'location es la SECCIÓN de la pantalla donde vive el menú: en estas docs, docs_<sección>; en el producto, la suya.',
+    'snippet.reasons':
+      'escape: Escape · overlay: clic fuera, Tab o disparador abierto · api: ítem elegido o código',
     'props.class.description':
       'Las clases extra escritas en el elemento se combinan con las del componente; no hay prop de clase.',
     'props.disabled.description':
@@ -155,6 +195,8 @@ const { t, dict } = useTranslation(dropdownMenuTranslations as Record<string, un
     'props.groupValueChange.description': 'Emite el valor recién elegido.',
     'props.itemValue.description':
       'Valor de esta opción. Es lo que el grupo compara para decidir cuál está marcada.',
+    'props.openChangeDetail.description':
+      'Emite el cambio de apertura junto con el motivo ({ open, reason }): dice si el menú se cerró por Escape, por clic fuera o por ítem elegido.',
     'notes.item1':
       '<strong>Primitivo</strong>: <code>@radix-ng/primitives/menu</code> — aporta los roles ARIA, el foco en el primer item al abrir, roving tabindex, flechas, Home/End, typeahead, Escape con devolución del foco, posicionamiento con evasión de colisión y submenú con apertura en diagonal.',
     'notes.item2':
@@ -204,36 +246,24 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// Hardcoded, e não `t('anatomy.structureCode')`: a variante `angular` do
-// conteúdo compartilhado põe os itens dentro de um `<ng-template>` e os desenha
-// como `<button>`. Aqui o popup é um elemento escrito por quem consome (é o que
-// mantém a árvore de injeção dos itens correta) e o item é um `<div>` com papel
-// de menu (a folha não zera a aparência nativa de botão). Mesmo caminho do
-// TabsDocs e do SwitchDocs; a correção do conteúdo está reportada.
-const ANATOMY_CODE = `<nds-dropdown-menu>
-  <button ndsDropdownMenuTrigger ndsButton variant="outline">Abrir menu</button>
+// A anatomia vem do conteúdo (`t('anatomy.structureCode')`): a variante
+// `angular` passou a compilar contra os seletores desta stack (itens e
+// sub-gatilho em `<div>`), com en/es traduzidos. O bloco local que a contornava
+// até 2026-09-11 saiu — contorno local é o que mantém defeito de conteúdo vivo.
 
-  <ng-template ndsDropdownMenuContent side="bottom" align="start">
-    <div ndsDropdownMenuLabel>Conta</div>
-    <div ndsDropdownMenuItem>Perfil</div>
-    <div ndsDropdownMenuItem>Configurações</div>
-    <div ndsDropdownMenuSeparator></div>
-    <div ndsDropdownMenuItem variant="destructive">Sair</div>
-  </ng-template>
-</nds-dropdown-menu>`;
-
-const INTERFACE_CODE = `// A raiz é componente: é ela que declara o portal, o positioner e o popup.
-@Component({
+// A interface é só CÓDIGO, sem prosa: comentário cravado aqui sairia em
+// português nos três idiomas. O que cada entrada faz está nas tabelas de props,
+// que são traduzidas.
+const INTERFACE_CODE = `@Component({
   selector: 'nds-dropdown-menu, nds-dropdown-menu-sub',
   hostDirectives: [
     { directive: RdxMenuRoot,
       inputs: ['open', 'defaultOpen', 'disabled', 'modal', 'loopFocus'],
-      outputs: ['openChange'] },
+      outputs: ['openChange', 'onOpenChange'] },
   ],
 })
 export class NdsDropdownMenu {}
 
-// O miolo do menu é um <ng-template>: quem monta e desmonta é o portal.
 @Directive({ selector: 'ng-template[ndsDropdownMenuContent]' })
 export class NdsDropdownMenuContent {
   readonly side = input<'top' | 'bottom' | 'left' | 'right' | undefined>(undefined);
@@ -254,98 +284,469 @@ export class NdsDropdownMenuItem {
   readonly inset = input(false);
 }`;
 
-// Também hardcoded: a variante `angular` de `props.extensibilityCode` descreve
-// o popup dentro de um `<ng-template>`. Aqui o exemplo é o que compila.
-const EXTENSIBILITY_CODE = `<!-- Menu controlado, com posicionamento e analytics -->
-<nds-dropdown-menu [open]="aberto()" (openChange)="onOpenChange($event)">
-  <button ndsDropdownMenuTrigger ndsButton variant="outline">Ações</button>
+/**
+ * O código de extensibilidade, na língua de quem lê.
+ *
+ * Local, e não `t('props.extensibilityCode')`: a variante `angular` do conteúdo
+ * mostra um menu controlado sem rastreio e com o item em `<button>`, seletor que
+ * esta stack não tem. O exemplo daqui compila, e o rastreio que ele ensina é o
+ * da família (PRD dropdown-menu §9): três eventos, `menu` e `label` como
+ * identificadores estáveis, `location` como a seção da tela e o motivo pelo
+ * `menuCloseReason` — a mesma tradução que as prévias desta página usam. Até
+ * 2026-09-11 ele ensinava uma região inventada da tela como `location` e vinha
+ * em português cravado.
+ */
+function extensibilitySnippet(): string {
+  const label = (key: string) => t(`demonstration.labels.${key}`);
+  return `<!-- ${t('snippet.controlled')} -->
+<nds-dropdown-menu
+  [open]="isOpen()"
+  (openChange)="isOpen.set($event)"
+  (onOpenChange)="onOpenChange($event)"
+>
+  <button ndsDropdownMenuTrigger ndsButton variant="outline">${label('account')}</button>
 
   <ng-template ndsDropdownMenuContent side="right" align="end" [sideOffset]="8">
-    @for (acao of acoes; track acao.value) {
-      <div ndsDropdownMenuItem (onSelect)="onSelect(acao.value)">{{ acao.label }}</div>
-    }
+    <div ndsDropdownMenuItem (onSelect)="onSelect('profile')">${label('profile')}</div>
+    <div ndsDropdownMenuItem (onSelect)="onSelect('settings')">${label('settings')}</div>
+    <div ndsDropdownMenuSeparator></div>
+    <div ndsDropdownMenuItem variant="destructive" (onSelect)="onSelect('logout')">${label('logout')}</div>
   </ng-template>
 </nds-dropdown-menu>
 
-// no componente
-readonly aberto = signal(false);
+// ${t('snippet.inComponent')}
+readonly isOpen = signal(false);
 
-onOpenChange(proximo: boolean) {
-  this.aberto.set(proximo);
-  // O payload leva o identificador do menu, nunca o rótulo traduzido: o rótulo
-  // partiria um evento em três no GA4, um por idioma.
-  track(proximo ? 'dropdown_menu_open' : 'dropdown_menu_close', {
-    component: 'dropdown-menu',
-    label: 'acoes',
-    location: 'toolbar',
-  });
+// ${t('snippet.stableIds')}
+// ${t('snippet.stableIdsWhy')}
+// ${t('snippet.location')}
+private readonly payload = { component: 'dropdown-menu', menu: 'demo-account', location: 'docs_demo' } as const;
+
+onOpenChange({ open, reason }: { open: boolean; reason: string }) {
+  if (open) {
+    track('dropdown_menu_open', this.payload);
+    return;
+  }
+  // ${t('snippet.reasons')}
+  track('dropdown_menu_close', { ...this.payload, reason: menuCloseReason(reason) });
+}
+
+onSelect(item: string) {
+  track('dropdown_menu_item_select', { ...this.payload, label: item });
 }`;
+}
 
 const IMPORT_CODE = `import { NDS_DROPDOWN_MENU } from '@/components/ui/dropdown-menu';
 import { NdsButton } from '@/components/ui/button';`;
 
-// Snippets das seis fichas da seção Variantes. Ficam aqui, e não no conteúdo
-// compartilhado, porque descrevem a composição DESTE stack.
-const CODE_DEFAULT = `<div ndsDropdownMenuItem>Perfil</div>`;
+// ─── As prévias vivas ─────────────────────────────────────────────────────────
+//
+// A docs page É o produto consumidor: toda prévia desta página — as quatro
+// células da demonstração, as seis fichas de Variantes e os quatro lados do Do &
+// Don't — abre, escolhe e fecha com evento de verdade. Até 2026-09-11 só a
+// demonstração rastreava, com ids em português (`acoes`, `configuracoes`), o
+// menu no campo `label` e `location` cravado em `docs_demo` dentro do helper; as
+// dez prévias das outras duas seções abriam e fechavam sem deixar rastro.
+//
+// Uma prévia é DADO: a lista abaixo monta o menu vivo e imprime o código da
+// ficha ao lado, e é isso que impede os dois de divergirem. O texto vem sempre
+// de `demonstration.labels.*` — nada de literal —, e o mesmo conjunto de chaves
+// nas cinco stacks é o que o portão `demonstration_labels_divergent` compara.
 
-const CODE_DESTRUCTIVE = `<div ndsDropdownMenuItem variant="destructive">Excluir conta</div>`;
+/** A seção da página em que a prévia está (guideline 07). */
+type PreviewLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
 
-const CODE_WITH_LABEL = `<ng-template ndsDropdownMenuContent>
-  <div ndsDropdownMenuGroup>
-    <div ndsDropdownMenuLabel>Conta</div>
-    <div ndsDropdownMenuItem>Perfil</div>
-    <div ndsDropdownMenuItem>Configurações</div>
-  </div>
-  <div ndsDropdownMenuSeparator></div>
-  <div ndsDropdownMenuGroup>
-    <div ndsDropdownMenuLabel>Suporte</div>
-    <div ndsDropdownMenuItem>Documentação</div>
-    <div ndsDropdownMenuItem>Sair</div>
-  </div>
-</ng-template>`;
+/** Rótulo de exemplo: sempre uma chave de `demonstration.labels`, nunca literal. */
+type LabelKey = `demonstration.labels.${string}`;
 
-const CODE_WITH_CHECKBOX = `<ng-template ndsDropdownMenuContent>
-  <div ndsDropdownMenuGroup>
-    <div ndsDropdownMenuLabel>Colunas visíveis</div>
-    <div ndsDropdownMenuCheckboxItem [(checked)]="showName">Nome</div>
-    <div ndsDropdownMenuCheckboxItem [(checked)]="showEmail">E-mail</div>
-    <div ndsDropdownMenuCheckboxItem [(checked)]="showRole">Função</div>
-  </div>
-</ng-template>`;
+type ItemEntry = {
+  kind: 'item';
+  label: LabelKey;
+  /** O valor ESTÁVEL do item — é o `label` do evento, nunca o texto traduzido. */
+  value: string;
+  /** Texto que segue o rótulo sem tradução: o número de "Ação 1" … "Ação 10". */
+  suffix?: string;
+  shortcut?: LabelKey;
+  destructive?: boolean;
+};
 
-const CODE_WITH_RADIO = `<ng-template ndsDropdownMenuContent>
-  <div ndsDropdownMenuRadioGroup [(value)]="theme">
-    <div ndsDropdownMenuLabel>Aparência</div>
-    <div ndsDropdownMenuRadioItem value="light">Claro</div>
-    <div ndsDropdownMenuRadioItem value="dark">Escuro</div>
-    <div ndsDropdownMenuRadioItem value="system">Sistema</div>
-  </div>
-</ng-template>`;
+/** `checked` é o estado INICIAL; o atual mora na prévia (`checkedState`). */
+type CheckboxEntry = { kind: 'checkbox'; label: LabelKey; value: string; checked: boolean };
 
-const CODE_WITH_SHORTCUTS = `<ng-template ndsDropdownMenuContent>
-  <div ndsDropdownMenuItem>
-    Desfazer <span ndsDropdownMenuShortcut>Ctrl+Z</span>
-  </div>
-  <div ndsDropdownMenuItem>
-    Copiar <span ndsDropdownMenuShortcut>Ctrl+C</span>
-  </div>
-  <div ndsDropdownMenuSeparator></div>
-  <div ndsDropdownMenuItem>
-    Colar <span ndsDropdownMenuShortcut>Ctrl+V</span>
-  </div>
-</ng-template>`;
+/** `value` é a escolha INICIAL; a atual mora na prévia (`radioState`). */
+type RadioGroupEntry = {
+  kind: 'radio-group';
+  label: LabelKey;
+  value: string;
+  options: readonly { label: LabelKey; value: string }[];
+};
+
+type PreviewEntry =
+  | ItemEntry
+  | CheckboxEntry
+  | { kind: 'separator' }
+  /** Rótulo DENTRO do grupo, que é o nome dele — rótulo solto não nomeia nada. */
+  | { kind: 'group'; label: LabelKey; entries: readonly (ItemEntry | CheckboxEntry)[] }
+  | RadioGroupEntry
+  | { kind: 'sub'; label: LabelKey; entries: readonly ItemEntry[] };
 
 /**
- * Itens do menu de ações da demonstração.
- *
- * O `value` é o identificador estável que vai no payload de analytics; o
- * `label` é o que a pessoa lê. Os dois vivem separados de propósito: mandar o
- * rótulo traduzido partiria o mesmo evento em três no GA4, um por idioma.
+ * O id estável de um rótulo: a chave em kebab-case (`columnEmail` →
+ * `column-email`). É o `label` dos eventos — a mesma forma nas cinco stacks.
  */
-const ITEMS_DEMO = [
-  { value: 'perfil', label: 'Perfil' },
-  { value: 'configuracoes', label: 'Configurações' },
-] as const;
+function idOf(label: LabelKey): string {
+  return label
+    .slice('demonstration.labels.'.length)
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .toLowerCase();
+}
+
+function item(label: LabelKey, extra: Partial<Omit<ItemEntry, 'kind' | 'label'>> = {}): ItemEntry {
+  return { kind: 'item', label, value: idOf(label), ...extra };
+}
+
+function checkbox(label: LabelKey, checked: boolean): CheckboxEntry {
+  return { kind: 'checkbox', label, value: idOf(label), checked };
+}
+
+function option(label: LabelKey): { label: LabelKey; value: string } {
+  return { label, value: idOf(label) };
+}
+
+const SEPARATOR: PreviewEntry = { kind: 'separator' };
+
+const ACCOUNT_GROUP: PreviewEntry = {
+  kind: 'group',
+  label: 'demonstration.labels.account',
+  entries: [item('demonstration.labels.profile'), item('demonstration.labels.settings')],
+};
+
+const SUPPORT_GROUP: PreviewEntry = {
+  kind: 'group',
+  label: 'demonstration.labels.support',
+  entries: [item('demonstration.labels.documentation'), item('demonstration.labels.logout')],
+};
+
+/** Conta — grupo nomeado, e a saída DESTRUTIVA por último, depois do traço. */
+const ACCOUNT_ENTRIES: readonly PreviewEntry[] = [
+  ACCOUNT_GROUP,
+  SEPARATOR,
+  item('demonstration.labels.logout', { destructive: true }),
+];
+
+/** Dois grupos nomeados e o traço entre eles — o "faça" do par 1 e a ficha withLabel. */
+const GROUPED_ENTRIES: readonly PreviewEntry[] = [ACCOUNT_GROUP, SEPARATOR, SUPPORT_GROUP];
+
+/** Alternadores independentes, com o primeiro marcado. */
+const COLUMNS_ENTRIES: readonly PreviewEntry[] = [
+  {
+    kind: 'group',
+    label: 'demonstration.labels.visibleColumns',
+    entries: [
+      checkbox('demonstration.labels.columnName', true),
+      checkbox('demonstration.labels.columnEmail', false),
+      checkbox('demonstration.labels.columnRole', false),
+    ],
+  },
+];
+
+/** Escolha única, com o claro marcado. */
+const THEME_ENTRIES: readonly PreviewEntry[] = [
+  {
+    kind: 'radio-group',
+    label: 'demonstration.labels.appearance',
+    value: 'light',
+    options: [
+      option('demonstration.labels.light'),
+      option('demonstration.labels.dark'),
+      option('demonstration.labels.system'),
+    ],
+  },
+];
+
+/** Hierarquia em dois níveis: o sub-gatilho não tem ação própria, ele abre o painel filho. */
+const FILE_ENTRIES: readonly PreviewEntry[] = [
+  item('demonstration.labels.rename'),
+  {
+    kind: 'sub',
+    label: 'demonstration.labels.export',
+    entries: [item('demonstration.labels.pdf'), item('demonstration.labels.csv')],
+  },
+];
+
+/** O "evite" do par 1: dez ações soltas, sem grupo nem traço. */
+const ACTIONS_ENTRIES: readonly PreviewEntry[] = Array.from({ length: 10 }, (_, i) =>
+  item('demonstration.labels.action', { value: `action-${i + 1}`, suffix: ` ${i + 1}` }),
+);
+
+/** A mesma ação irreversível: separada e destrutiva ("faça") contra neutra ("evite"). */
+const DELETE_DO_ENTRIES: readonly PreviewEntry[] = [
+  item('demonstration.labels.rename'),
+  SEPARATOR,
+  item('demonstration.labels.deleteAccount', { destructive: true }),
+];
+
+const DELETE_DONT_ENTRIES: readonly PreviewEntry[] = [
+  item('demonstration.labels.rename'),
+  SEPARATOR,
+  item('demonstration.labels.deleteAccount'),
+];
+
+const SHORTCUT_ENTRIES: readonly PreviewEntry[] = [
+  item('demonstration.labels.undo', { shortcut: 'demonstration.labels.undoShortcut' }),
+  item('demonstration.labels.copy', { shortcut: 'demonstration.labels.copyShortcut' }),
+  SEPARATOR,
+  item('demonstration.labels.paste', { shortcut: 'demonstration.labels.pasteShortcut' }),
+];
+
+/**
+ * As seis fichas de Variantes, pela CHAVE do conteúdo compartilhado. A chave é
+ * o `trackId` da ficha (o `snippet_id` do toggle de código) e, em kebab, o
+ * `menu` dos eventos da prévia — `withCheckboxItems` → `with-checkbox-items`.
+ */
+const VARIANTS = [
+  { key: 'default', trigger: 'demonstration.labels.account', entries: ACCOUNT_ENTRIES },
+  { key: 'destructive', trigger: 'demonstration.labels.account', entries: DELETE_DO_ENTRIES },
+  { key: 'withLabel', trigger: 'demonstration.labels.account', entries: GROUPED_ENTRIES },
+  { key: 'withCheckboxItems', trigger: 'demonstration.labels.columns', entries: COLUMNS_ENTRIES },
+  { key: 'withRadioGroup', trigger: 'demonstration.labels.theme', entries: THEME_ENTRIES },
+  { key: 'withShortcuts', trigger: 'demonstration.labels.edit', entries: SHORTCUT_ENTRIES },
+] as const satisfies readonly { key: string; trigger: LabelKey; entries: readonly PreviewEntry[] }[];
+
+type VariantKey = (typeof VARIANTS)[number]['key'];
+
+/**
+ * O código da ficha, a partir da MESMA lista que monta a prévia — com os
+ * rótulos no idioma da página, para que código e prévia digam o mesmo nos três.
+ *
+ * O que é instrumentação da página (`(onOpenChange)`, `(onSelect)` ligados ao
+ * rastreio) não entra: é andaime desta docs page, não lição do menu.
+ */
+function menuSnippet(trigger: LabelKey, entries: readonly PreviewEntry[]): string {
+  const pad = (n: number) => ' '.repeat(n);
+  const itemLines = (e: ItemEntry, n: number): string[] => {
+    const attrs = e.destructive ? ' variant="destructive"' : '';
+    const text = `${t(e.label)}${e.suffix ?? ''}`;
+    if (!e.shortcut) return [`${pad(n)}<div ndsDropdownMenuItem${attrs}>${text}</div>`];
+    return [
+      `${pad(n)}<div ndsDropdownMenuItem${attrs}>`,
+      `${pad(n + 2)}${text} <span ndsDropdownMenuShortcut>${t(e.shortcut)}</span>`,
+      `${pad(n)}</div>`,
+    ];
+  };
+  const leaf = (e: ItemEntry | CheckboxEntry, n: number): string[] =>
+    e.kind === 'item'
+      ? itemLines(e, n)
+      : [`${pad(n)}<div ndsDropdownMenuCheckboxItem [checked]="${e.checked}">${t(e.label)}</div>`];
+
+  const lines: string[] = [];
+  for (const entry of entries) {
+    if (entry.kind === 'separator') {
+      lines.push(`${pad(4)}<div ndsDropdownMenuSeparator></div>`);
+    } else if (entry.kind === 'item' || entry.kind === 'checkbox') {
+      lines.push(...leaf(entry, 4));
+    } else if (entry.kind === 'group') {
+      lines.push(`${pad(4)}<div ndsDropdownMenuGroup>`);
+      lines.push(`${pad(6)}<div ndsDropdownMenuLabel>${t(entry.label)}</div>`);
+      for (const child of entry.entries) lines.push(...leaf(child, 6));
+      lines.push(`${pad(4)}</div>`);
+    } else if (entry.kind === 'radio-group') {
+      lines.push(`${pad(4)}<div ndsDropdownMenuRadioGroup value="${entry.value}">`);
+      lines.push(`${pad(6)}<div ndsDropdownMenuLabel>${t(entry.label)}</div>`);
+      for (const opt of entry.options) {
+        lines.push(`${pad(6)}<div ndsDropdownMenuRadioItem value="${opt.value}">${t(opt.label)}</div>`);
+      }
+      lines.push(`${pad(4)}</div>`);
+    } else {
+      lines.push(`${pad(4)}<nds-dropdown-menu-sub>`);
+      lines.push(`${pad(6)}<div ndsDropdownMenuSubTrigger>${t(entry.label)}</div>`);
+      lines.push(`${pad(6)}<ng-template ndsDropdownMenuSubContent>`);
+      for (const child of entry.entries) lines.push(...itemLines(child, 8));
+      lines.push(`${pad(6)}</ng-template>`);
+      lines.push(`${pad(4)}</nds-dropdown-menu-sub>`);
+    }
+  }
+
+  return `<nds-dropdown-menu>
+  <button ndsDropdownMenuTrigger ndsButton variant="outline">${t(trigger)}</button>
+
+  <ng-template ndsDropdownMenuContent>
+${lines.join('\n')}
+  </ng-template>
+</nds-dropdown-menu>`;
+}
+
+/**
+ * Uma prévia VIVA do menu — o componente de verdade, com os três eventos.
+ *
+ * `menu` é o id estável da prévia (`demo-account`, `with-label`, `pair1-do`…)
+ * e `location` a seção em que ela está. Os dois chegam por input, e não de uma
+ * constante no topo do arquivo, porque a mesma peça mora em três seções — era
+ * a constante dentro do helper que fazia Variantes e Do & Don't dizerem que
+ * vieram da demonstração.
+ *
+ * Exportada por exigência do verificador de templates (NG3004): a docs page a
+ * usa no próprio template. Não é API do design system — nada fora deste arquivo
+ * a importa.
+ */
+@Component({
+  selector: 'div[ndsDropdownMenuPreview]',
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+  imports: [...NDS_DROPDOWN_MENU, NdsButton],
+  template: `
+    <nds-dropdown-menu (onOpenChange)="onOpenChange($event)">
+      <button ndsDropdownMenuTrigger ndsButton variant="outline" [size]="size()">
+        {{ t(trigger()) }}
+      </button>
+
+      <ng-template ndsDropdownMenuContent>
+        @for (entry of entries(); track $index) {
+          @if (entry.kind === 'separator') {
+            <div ndsDropdownMenuSeparator></div>
+          } @else if (entry.kind === 'item') {
+            <div
+              ndsDropdownMenuItem
+              [variant]="entry.destructive ? 'destructive' : 'default'"
+              (onSelect)="onSelect(entry.value)"
+            >
+              {{ t(entry.label) }}{{ entry.suffix ?? '' }}
+              @if (entry.shortcut) {
+                <span ndsDropdownMenuShortcut>{{ t(entry.shortcut) }}</span>
+              }
+            </div>
+          } @else if (entry.kind === 'checkbox') {
+            <div
+              ndsDropdownMenuCheckboxItem
+              [checked]="isChecked(entry)"
+              (checkedChange)="onCheckedChange(entry, $event)"
+            >{{ t(entry.label) }}</div>
+          } @else if (entry.kind === 'group') {
+            <div ndsDropdownMenuGroup>
+              <div ndsDropdownMenuLabel>{{ t(entry.label) }}</div>
+              @for (child of entry.entries; track child.value) {
+                @if (child.kind === 'item') {
+                  <div
+                    ndsDropdownMenuItem
+                    [variant]="child.destructive ? 'destructive' : 'default'"
+                    (onSelect)="onSelect(child.value)"
+                  >{{ t(child.label) }}</div>
+                } @else {
+                  <div
+                    ndsDropdownMenuCheckboxItem
+                    [checked]="isChecked(child)"
+                    (checkedChange)="onCheckedChange(child, $event)"
+                  >{{ t(child.label) }}</div>
+                }
+              }
+            </div>
+          } @else if (entry.kind === 'radio-group') {
+            <div
+              ndsDropdownMenuRadioGroup
+              [value]="radioValue(entry)"
+              (valueChange)="onRadioChange(entry, $event)"
+            >
+              <div ndsDropdownMenuLabel>{{ t(entry.label) }}</div>
+              @for (opt of entry.options; track opt.value) {
+                <!-- A escolha é o CLIQUE no item, não a mudança de valor: escolher a
+                     opção já marcada também é uma escolha, e o evento sai igual
+                     nas cinco. O teclado chega aqui pelo click() da lib. -->
+                <div ndsDropdownMenuRadioItem [value]="opt.value" (click)="onToggle(opt.value)">{{ t(opt.label) }}</div>
+              }
+            </div>
+          } @else {
+            <nds-dropdown-menu-sub>
+              <div ndsDropdownMenuSubTrigger>{{ t(entry.label) }}</div>
+              <ng-template ndsDropdownMenuSubContent>
+                @for (child of entry.entries; track child.value) {
+                  <div ndsDropdownMenuItem (onSelect)="onSelect(child.value)">{{ t(child.label) }}</div>
+                }
+              </ng-template>
+            </nds-dropdown-menu-sub>
+          }
+        }
+      </ng-template>
+    </nds-dropdown-menu>
+  `,
+})
+export class NdsDropdownMenuPreview {
+  readonly menu = input.required<string>();
+  readonly location = input.required<PreviewLocation>();
+  readonly trigger = input.required<LabelKey>();
+  readonly entries = input.required<readonly PreviewEntry[]>();
+  /** As fichas e o Do & Don't usam o botão pequeno; a demonstração, o padrão. */
+  readonly size = input<ButtonSize>('default');
+
+  protected readonly t = t;
+
+  /**
+   * O estado ATUAL dos alternadores e das escolhas únicas desta prévia, pela
+   * entrada da lista. O miolo do menu é desmontado ao fechar e remontado ao
+   * abrir: ligado à constante da lista, ele voltava ao estado inicial a cada
+   * abertura — marcar "E-mail", fechar e abrir de novo mostrava "E-mail"
+   * desmarcado. As outras quatro stacks guardam o estado; esta passou a guardar
+   * em 2026-09-11.
+   */
+  private readonly checkedState = signal(new Map<CheckboxEntry, CheckedState>());
+  private readonly radioState = signal(new Map<RadioGroupEntry, string>());
+
+  protected isChecked(entry: CheckboxEntry): CheckedState {
+    return this.checkedState().get(entry) ?? entry.checked;
+  }
+
+  protected radioValue(group: RadioGroupEntry): string {
+    return this.radioState().get(group) ?? group.value;
+  }
+
+  protected onCheckedChange(entry: CheckboxEntry, checked: CheckedState): void {
+    this.checkedState.update((state) => new Map(state).set(entry, checked));
+    this.onToggle(entry.value);
+  }
+
+  protected onRadioChange(group: RadioGroupEntry, value: unknown): void {
+    if (typeof value !== 'string') return;
+    this.radioState.update((state) => new Map(state).set(group, value));
+  }
+
+  /**
+   * O motivo sai do `menuCloseReason`, a tradução única da família: Escape,
+   * clique fora, Tab e clique no gatilho aberto têm motivo próprio na lib; o que
+   * chega sem motivo é o item escolhido ou o código — `api` nos dois casos.
+   */
+  protected onOpenChange(change: RdxMenuOpenChange): void {
+    const payload = { component: 'dropdown-menu' as const, menu: this.menu(), location: this.location() };
+    if (change.open) {
+      track('dropdown_menu_open', payload);
+      return;
+    }
+    track('dropdown_menu_close', { ...payload, reason: menuCloseReason(change.reason) });
+  }
+
+  /** Item de ação: a escolha FECHA o menu, e o fechamento que vem é `api`. */
+  protected onSelect(label: string): void {
+    track('dropdown_menu_item_select', {
+      component: 'dropdown-menu',
+      menu: this.menu(),
+      label,
+      location: this.location(),
+    });
+  }
+
+  /**
+   * Marcação e escolha única também são escolha, mas NÃO fecham o menu (C10): o
+   * evento sai, e o fechamento seguinte leva o motivo de quem de fato fechou.
+   */
+  protected onToggle(label: unknown): void {
+    if (typeof label !== 'string') return;
+    track('dropdown_menu_item_select', {
+      component: 'dropdown-menu',
+      menu: this.menu(),
+      label,
+      location: this.location(),
+    });
+  }
+}
 
 @Component({
   selector: 'nds-dropdown-menu-docs',
@@ -353,7 +754,7 @@ const ITEMS_DEMO = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    ...NDS_DROPDOWN_MENU, NdsButton,
+    NdsDropdownMenuPreview,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsCompositions,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
@@ -366,135 +767,112 @@ const ITEMS_DEMO = [
       cobririam a própria documentação. Quem lê abre a que quiser — e o estado
       aberto é o que as stories capturam para a regressão visual.
     -->
+
+    <!-- Par 1 — agrupar: dois grupos nomeados e o traço entre eles, contra dez
+         ações soltas numa lista só. -->
     <ng-template #tplDoDont1Do>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>Conta</div>
-            <div ndsDropdownMenuItem>Perfil</div>
-            <div ndsDropdownMenuItem>Configurações</div>
-          </div>
-          <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>Suporte</div>
-            <div ndsDropdownMenuItem>Documentação</div>
-            <div ndsDropdownMenuItem>Sair</div>
-          </div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="pair1-do"
+        location="docs_do_dont"
+        trigger="demonstration.labels.account"
+        size="sm"
+        [entries]="groupedEntries"
+      ></div>
     </ng-template>
     <ng-template #tplDoDont1Dont>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Menu</button>
-        <ng-template ndsDropdownMenuContent>
-          @for (n of dezItens; track n) {
-            <div ndsDropdownMenuItem>Ação {{ n }}</div>
-          }
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="pair1-dont"
+        location="docs_do_dont"
+        trigger="demonstration.labels.menu"
+        size="sm"
+        [entries]="actionsEntries"
+      ></div>
     </ng-template>
+
+    <!-- Par 2 — a mesma ação irreversível: separada e na variante destrutiva,
+         contra a variante padrão. Só isso muda entre os dois lados. -->
     <ng-template #tplDoDont2Do>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>Renomear</div>
-          <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuItem variant="destructive">Excluir conta</div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="pair2-do"
+        location="docs_do_dont"
+        trigger="demonstration.labels.account"
+        size="sm"
+        [entries]="deleteDoEntries"
+      ></div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>Renomear</div>
-          <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuItem>Excluir conta</div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="pair2-dont"
+        location="docs_do_dont"
+        trigger="demonstration.labels.account"
+        size="sm"
+        [entries]="deleteDontEntries"
+      ></div>
     </ng-template>
 
     <ng-template #tplVarDefault>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>Perfil</div>
-          <div ndsDropdownMenuItem>Configurações</div>
-          <div ndsDropdownMenuItem>Equipe</div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="default"
+        location="docs_variantes"
+        trigger="demonstration.labels.account"
+        size="sm"
+        [entries]="variants[0].entries"
+      ></div>
     </ng-template>
     <ng-template #tplVarDestructive>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>Perfil</div>
-          <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuItem variant="destructive">Excluir conta</div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="destructive"
+        location="docs_variantes"
+        trigger="demonstration.labels.account"
+        size="sm"
+        [entries]="variants[1].entries"
+      ></div>
     </ng-template>
     <ng-template #tplVarLabel>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Conta</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>Conta</div>
-            <div ndsDropdownMenuItem>Perfil</div>
-            <div ndsDropdownMenuItem>Configurações</div>
-          </div>
-          <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>Suporte</div>
-            <div ndsDropdownMenuItem>Documentação</div>
-            <div ndsDropdownMenuItem>Sair</div>
-          </div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="with-label"
+        location="docs_variantes"
+        trigger="demonstration.labels.account"
+        size="sm"
+        [entries]="variants[2].entries"
+      ></div>
     </ng-template>
     <ng-template #tplVarCheckbox>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Colunas</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuGroup>
-            <div ndsDropdownMenuLabel>Colunas visíveis</div>
-            <div ndsDropdownMenuCheckboxItem [(checked)]="showName">Nome</div>
-            <div ndsDropdownMenuCheckboxItem [(checked)]="showEmail">E-mail</div>
-            <div ndsDropdownMenuCheckboxItem [(checked)]="showRole">Função</div>
-          </div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="with-checkbox-items"
+        location="docs_variantes"
+        trigger="demonstration.labels.columns"
+        size="sm"
+        [entries]="variants[3].entries"
+      ></div>
     </ng-template>
     <ng-template #tplVarRadio>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Tema</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuRadioGroup [(value)]="theme">
-            <div ndsDropdownMenuLabel>Aparência</div>
-            <div ndsDropdownMenuRadioItem value="light">Claro</div>
-            <div ndsDropdownMenuRadioItem value="dark">Escuro</div>
-            <div ndsDropdownMenuRadioItem value="system">Sistema</div>
-          </div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="with-radio-group"
+        location="docs_variantes"
+        trigger="demonstration.labels.theme"
+        size="sm"
+        [entries]="variants[4].entries"
+      ></div>
     </ng-template>
     <ng-template #tplVarShortcuts>
-      <nds-dropdown-menu>
-        <button ndsDropdownMenuTrigger ndsButton variant="outline" size="sm">Editar</button>
-        <ng-template ndsDropdownMenuContent>
-          <div ndsDropdownMenuItem>
-            Desfazer <span ndsDropdownMenuShortcut>Ctrl+Z</span>
-          </div>
-          <div ndsDropdownMenuItem>
-            Copiar <span ndsDropdownMenuShortcut>Ctrl+C</span>
-          </div>
-          <div ndsDropdownMenuSeparator></div>
-          <div ndsDropdownMenuItem>
-            Colar <span ndsDropdownMenuShortcut>Ctrl+V</span>
-          </div>
-        </ng-template>
-      </nds-dropdown-menu>
+      <div
+        ndsDropdownMenuPreview
+        menu="with-shortcuts"
+        location="docs_variantes"
+        trigger="demonstration.labels.edit"
+        size="sm"
+        [entries]="variants[5].entries"
+      ></div>
     </ng-template>
 
     <nds-docs-page-layout
@@ -512,119 +890,60 @@ const ITEMS_DEMO = [
       </div>
 
       <ng-container docsMain>
+        <!-- Quatro células, cada uma com a LEGENDA do conteúdo compartilhado em
+             cima e o menu embaixo — a legenda diz o que a célula demonstra, e o
+             gatilho diz o que o menu é (Conta, Colunas, Tema, Arquivo), como no
+             Vanilla. Até 2026-09-11 a legenda ia DENTRO do botão. -->
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-cluster" data-spacing="md">
-            <nds-dropdown-menu (openChange)="onOpenChange('acoes', $event)">
-              <button ndsDropdownMenuTrigger ndsButton variant="outline">
+            <div class="nds-stack" data-spacing="sm">
+              <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {{ t('demonstration.labels.basic') }}
-              </button>
-              <ng-template ndsDropdownMenuContent>
-                <div ndsDropdownMenuGroup>
-                  <div ndsDropdownMenuLabel>Conta</div>
-                  @for (item of itensDemo; track item.value) {
-                    <div ndsDropdownMenuItem (onSelect)="onSelect('acoes', item.value)">
-                      {{ item.label }}
-                    </div>
-                  }
-                </div>
-                <div ndsDropdownMenuSeparator></div>
-                <div
-                  ndsDropdownMenuItem
-                  variant="destructive"
-                  (onSelect)="onSelect('acoes', 'sair')"
-                >
-                  Sair
-                </div>
-              </ng-template>
-            </nds-dropdown-menu>
-
-            <nds-dropdown-menu (openChange)="onOpenChange('colunas', $event)">
-              <button ndsDropdownMenuTrigger ndsButton variant="outline">
+              </p>
+              <div
+                ndsDropdownMenuPreview
+                menu="demo-account"
+                location="docs_demo"
+                trigger="demonstration.labels.account"
+                [entries]="accountEntries"
+              ></div>
+            </div>
+            <div class="nds-stack" data-spacing="sm">
+              <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {{ t('demonstration.labels.withCheckbox') }}
-              </button>
-              <ng-template ndsDropdownMenuContent>
-                <div ndsDropdownMenuGroup>
-                  <div ndsDropdownMenuLabel>Colunas visíveis</div>
-                  <!--
-                    A ligação de mão dupla vem ABERTA aqui de propósito: a
-                    forma com banana-em-caixa já consome o evento de mudança, e
-                    a marcação também precisa avisar o analytics. Quem guarda o
-                    estado é o handler, que faz as duas coisas.
-                  -->
-                  <div
-                    ndsDropdownMenuCheckboxItem
-                    [checked]="showName()"
-                    (checkedChange)="onColumnToggle('nome', $event)"
-                  >
-                    Nome
-                  </div>
-                  <div
-                    ndsDropdownMenuCheckboxItem
-                    [checked]="showEmail()"
-                    (checkedChange)="onColumnToggle('email', $event)"
-                  >
-                    E-mail
-                  </div>
-                  <div
-                    ndsDropdownMenuCheckboxItem
-                    [checked]="showRole()"
-                    (checkedChange)="onColumnToggle('funcao', $event)"
-                  >
-                    Função
-                  </div>
-                </div>
-              </ng-template>
-            </nds-dropdown-menu>
-
-            <nds-dropdown-menu (openChange)="onOpenChange('tema', $event)">
-              <button ndsDropdownMenuTrigger ndsButton variant="outline">
+              </p>
+              <div
+                ndsDropdownMenuPreview
+                menu="demo-columns"
+                location="docs_demo"
+                trigger="demonstration.labels.columns"
+                [entries]="columnsEntries"
+              ></div>
+            </div>
+            <div class="nds-stack" data-spacing="sm">
+              <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {{ t('demonstration.labels.withRadio') }}
-              </button>
-              <ng-template ndsDropdownMenuContent>
-                <div ndsDropdownMenuRadioGroup [(value)]="theme">
-                  <div ndsDropdownMenuLabel>Aparência</div>
-                  <div
-                    ndsDropdownMenuRadioItem
-                    value="light"
-                    (onSelect)="onSelect('tema', 'light')"
-                  >
-                    Claro
-                  </div>
-                  <div
-                    ndsDropdownMenuRadioItem
-                    value="dark"
-                    (onSelect)="onSelect('tema', 'dark')"
-                  >
-                    Escuro
-                  </div>
-                  <div
-                    ndsDropdownMenuRadioItem
-                    value="system"
-                    (onSelect)="onSelect('tema', 'system')"
-                  >
-                    Sistema
-                  </div>
-                </div>
-              </ng-template>
-            </nds-dropdown-menu>
-
-            <nds-dropdown-menu (openChange)="onOpenChange('submenu', $event)">
-              <button ndsDropdownMenuTrigger ndsButton variant="outline">
+              </p>
+              <div
+                ndsDropdownMenuPreview
+                menu="demo-theme"
+                location="docs_demo"
+                trigger="demonstration.labels.theme"
+                [entries]="themeEntries"
+              ></div>
+            </div>
+            <div class="nds-stack" data-spacing="sm">
+              <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
                 {{ t('demonstration.labels.withSubmenu') }}
-              </button>
-              <ng-template ndsDropdownMenuContent>
-                <div ndsDropdownMenuItem (onSelect)="onSelect('submenu', 'renomear')">
-                  Renomear
-                </div>
-                <nds-dropdown-menu-sub>
-                  <div ndsDropdownMenuSubTrigger>Exportar</div>
-                  <ng-template ndsDropdownMenuSubContent>
-                    <div ndsDropdownMenuItem (onSelect)="onSelect('submenu', 'pdf')">PDF</div>
-                    <div ndsDropdownMenuItem (onSelect)="onSelect('submenu', 'csv')">CSV</div>
-                  </ng-template>
-                </nds-dropdown-menu-sub>
-              </ng-template>
-            </nds-dropdown-menu>
+              </p>
+              <div
+                ndsDropdownMenuPreview
+                menu="demo-file"
+                location="docs_demo"
+                trigger="demonstration.labels.file"
+                [entries]="fileEntries"
+              ></div>
+            </div>
           </div>
         </nds-docs-demonstration>
 
@@ -632,7 +951,7 @@ const ITEMS_DEMO = [
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -673,7 +992,7 @@ const ITEMS_DEMO = [
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
-          [extensibilityCode]="extensibilityCode"
+          [extensibilityCode]="extensibilityCode()"
         />
 
         <nds-docs-tokens
@@ -725,18 +1044,25 @@ const ITEMS_DEMO = [
 export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly extensibilityCode = EXTENSIBILITY_CODE;
+  /** Recalculado na troca de idioma: os comentários e rótulos vêm de `t()`. */
+  protected readonly extensibilityCode = computed(() => {
+    dict();
+    return extensibilitySnippet();
+  });
   protected readonly importCode = IMPORT_CODE;
-  protected readonly itensDemo = ITEMS_DEMO;
-  protected readonly dezItens = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-  /** Estado dos exemplos vivos — alternadores e escolha única. */
-  protected readonly showName = signal(true);
-  protected readonly showEmail = signal(false);
-  protected readonly showRole = signal(false);
-  protected readonly theme = signal<unknown>('light');
+  // Expostos ao template porque expressão de template Angular não enxerga o
+  // escopo do módulo.
+  protected readonly accountEntries = ACCOUNT_ENTRIES;
+  protected readonly columnsEntries = COLUMNS_ENTRIES;
+  protected readonly themeEntries = THEME_ENTRIES;
+  protected readonly fileEntries = FILE_ENTRIES;
+  protected readonly groupedEntries = GROUPED_ENTRIES;
+  protected readonly actionsEntries = ACTIONS_ENTRIES;
+  protected readonly deleteDoEntries = DELETE_DO_ENTRIES;
+  protected readonly deleteDontEntries = DELETE_DONT_ENTRIES;
+  protected readonly variants = VARIANTS;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -750,54 +1076,6 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   private readonly tplVarCheckbox = viewChild.required<TemplateRef<unknown>>('tplVarCheckbox');
   private readonly tplVarRadio = viewChild.required<TemplateRef<unknown>>('tplVarRadio');
   private readonly tplVarShortcuts = viewChild.required<TemplateRef<unknown>>('tplVarShortcuts');
-
-  /**
-   * A demonstração é produto: quem abre um menu aqui dispara o mesmo evento que
-   * o componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
-   * item, nunca o rótulo traduzido — o rótulo partiria um evento em três no GA4.
-   *
-   * `location` é a SEÇÃO onde o elemento está, no vocabulário `docs_<section-id>`
-   * — o mesmo id que o `docs_section_viewed` manda em `section_id`. O valor
-   * anterior, `docs-demonstration`, ficava fora dele por dois motivos e não
-   * cruzava com nada no GA4; o hífen logo depois de `docs` ainda o escondia do
-   * portão `location_fora_do_vocabulario`, que varre `docs[_:]`.
-   *
-   * Os dois handlers atendem apenas a demonstração, e é por isso que o valor é
-   * fixo dentro deles; preview vivo de outra seção pede o id daquela seção.
-   */
-  protected onOpenChange(menu: string, isOpen: boolean): void {
-    track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
-      component: 'dropdown-menu',
-      label: menu,
-      location: 'docs_demo',
-    });
-  }
-
-  protected onSelect(menu: string, item: string): void {
-    track('dropdown_menu_item_select', {
-      component: 'dropdown-menu',
-      label: item,
-      menu,
-      location: 'docs_demo',
-    });
-  }
-
-  /**
-   * Marcar uma coluna é escolher um item, e por isso dispara o mesmo
-   * `dropdown_menu_item_select` que o item simples — era o único tipo de item
-   * da demonstração que não avisava nada. O identificador é o do item, não o
-   * rótulo traduzido, e não muda quando a marcação vai de ligada a desligada:
-   * o evento diz que a pessoa escolheu, e o estado resultante é outra pergunta.
-   *
-   * O estado misto não chega por aqui (nenhum destes itens é tri-valorado); a
-   * comparação com `true` é o que estreita o tipo do primitivo para o boolean
-   * que estes três sinais guardam.
-   */
-  protected onColumnToggle(coluna: 'nome' | 'email' | 'funcao', checked: boolean | 'indeterminate'): void {
-    const sinais = { nome: this.showName, email: this.showEmail, funcao: this.showRole };
-    sinais[coluna].set(checked === true);
-    this.onSelect('colunas', coluna);
-  }
 
   protected readonly navGroups = computed(() => {
     dict();
@@ -882,38 +1160,42 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
    * As duas ênfases de item e as quatro composições canônicas saem na MESMA
    * seção: o conteúdo compartilhado guarda as seis em `variants.items`, e as
    * duas primeiras descrevem-se por `variants.styles`, sem "quando usar".
+   *
+   * `trackId` é a CHAVE do conteúdo (`withCheckboxItems`), como nas outras
+   * quatro stacks — o `snippet_id` do toggle de código não pode mudar de nome
+   * de uma stack para outra. O código de cada ficha sai da MESMA lista que monta
+   * a prévia (`menuSnippet`), então os dois não divergem.
    */
   protected readonly variantItems = computed(() => {
     dict();
-    return [
-      {
-        name: t('variants.items.default'),
-        description: stripHtml(t('variants.styles.default')),
-        trackId: 'default',
-        code: CODE_DEFAULT,
-        preview: this.tplVarDefault(),
-      },
-      {
-        name: t('variants.items.destructive'),
-        description: stripHtml(t('variants.styles.destructive')),
-        trackId: 'destructive',
-        code: CODE_DESTRUCTIVE,
-        preview: this.tplVarDestructive(),
-      },
-      ...[
-        { key: 'withLabel',         trackId: 'with-label',         code: CODE_WITH_LABEL,     tpl: this.tplVarLabel()     },
-        { key: 'withCheckboxItems', trackId: 'with-checkbox',      code: CODE_WITH_CHECKBOX,  tpl: this.tplVarCheckbox()  },
-        { key: 'withRadioGroup',    trackId: 'with-radio',         code: CODE_WITH_RADIO,     tpl: this.tplVarRadio()     },
-        { key: 'withShortcuts',     trackId: 'with-shortcuts',     code: CODE_WITH_SHORTCUTS, tpl: this.tplVarShortcuts() },
-      ].map(({ key, trackId, code, tpl }) => ({
+    const templates: Record<VariantKey, TemplateRef<unknown>> = {
+      default: this.tplVarDefault(),
+      destructive: this.tplVarDestructive(),
+      withLabel: this.tplVarLabel(),
+      withCheckboxItems: this.tplVarCheckbox(),
+      withRadioGroup: this.tplVarRadio(),
+      withShortcuts: this.tplVarShortcuts(),
+    };
+    return VARIANTS.map(({ key, trigger, entries }) => {
+      const code = menuSnippet(trigger, entries);
+      if (key === 'default' || key === 'destructive') {
+        return {
+          name: t(`variants.items.${key}`),
+          description: stripHtml(t(`variants.styles.${key}`)),
+          trackId: key,
+          code,
+          preview: templates[key],
+        };
+      }
+      return {
         name: t(`variants.items.${key}.name`),
         description: t(`variants.items.${key}.description`),
         useWhen: t(`variants.items.${key}.use`),
-        trackId,
+        trackId: key,
         code,
-        preview: tpl,
-      })),
-    ];
+        preview: templates[key],
+      };
+    });
   });
 
   protected readonly statesCols = computed(() => {
@@ -973,6 +1255,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
         items: [
           ofContent('open', 'open', 'model<boolean>'),
           ofContent('openChange', 'onOpenChange', 'output<boolean>'),
+          local('onOpenChange', 'output<{ open: boolean; reason: string }>', '—', 'openChangeDetail'),
           ofContent('defaultOpen', 'defaultOpen'),
           ofContent('modal', 'modal'),
           local('disabled', 'boolean', 'false', 'disabled'),
@@ -1110,27 +1393,31 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsCols = computed(() => {
     dict();
     return {
-      event: tNav('common.event'),
-      trigger: tNav('common.eventTrigger'),
-      payload: tNav('common.payload'),
+      event: t('analytics.table.event'),
+      trigger: t('analytics.table.trigger'),
+      payload: t('analytics.table.payload'),
     };
   });
 
+  /**
+   * A tabela vem do CONTEÚDO (`analytics.table.*`), como a do ContextMenu. Até
+   * 2026-09-11 as linhas eram cravadas aqui, com a descrição inteira repetida
+   * como gatilho de cada evento e o payload antigo (`label` na abertura).
+   */
   protected readonly analyticsItems = computed(() => {
     dict();
-    // Sem tabela no conteúdo compartilhado: os eventos vêm da descrição, e são
-    // os mesmos que a demonstração acima dispara de verdade.
-    const trigger = toPlainText(t('analytics.description'));
     return [
-      { event: 'dropdown_menu_open',        trigger: trigger, payload: 'component, label, location' },
-      { event: 'dropdown_menu_close',       trigger: trigger, payload: 'component, label, location' },
-      { event: 'dropdown_menu_item_select', trigger: trigger, payload: 'component, label, menu, location' },
-      {
-        event: 'docs_page_view',
-        trigger: trigger,
-        payload: 'component_name, locale, page_title',
-      },
-    ];
+      { e: 'menuOpen',      trigger: 'menuOpenTrigger',      carga: 'menuOpenPayload'      },
+      { e: 'itemClick',     trigger: 'itemClickTrigger',     carga: 'itemClickPayload'     },
+      { e: 'close',         trigger: 'closeTrigger',         carga: 'closePayload'         },
+      { e: 'pageView',      trigger: 'pageViewTrigger',      carga: 'pageViewPayload'      },
+      { e: 'sectionViewed', trigger: 'sectionViewedTrigger', carga: 'sectionViewedPayload' },
+      { e: 'langSwitch',    trigger: 'langSwitchTrigger',    carga: 'langSwitchPayload'    },
+    ].map(({ e, trigger, carga }) => ({
+      event: t(`analytics.table.${e}`),
+      trigger: toPlainText(t(`analytics.table.${trigger}`)),
+      payload: toPlainText(t(`analytics.table.${carga}`)),
+    }));
   });
 
   protected readonly testesFunctional = computed(() => {

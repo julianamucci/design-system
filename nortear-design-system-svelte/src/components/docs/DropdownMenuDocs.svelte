@@ -7,7 +7,6 @@
     DropdownMenuGroup,
     DropdownMenuGroupHeading,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuShortcut,
     DropdownMenuCheckboxItem,
@@ -17,6 +16,11 @@
     DropdownMenuSubTrigger,
     DropdownMenuSubContent,
   } from '@/components/ui/dropdown-menu';
+  import { dropdownMenuEntriesSource } from '@/components/ui/dropdown-menu/dropdown-menu.source';
+  import {
+    menuEntriesState,
+    type MenuDocsEntry,
+  } from '@/components/ui/dropdown-menu/dropdown-menu.fixtures';
   import { Button } from '@/components/ui/button';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -57,6 +61,29 @@
     return out;
   }
 
+  /**
+   * A mesma varredura para a lista cujo item é um OBJETO — critério funcional,
+   * story de regressão visual. O primeiro campo é quem decide se o item existe,
+   * e os demais acompanham. Contagem fixa aqui escondia os critérios novos: a
+   * página renderizava 8 dos 14 funcionais.
+   */
+  function entriesFromDict<K extends string>(
+    t: (key: string, defaultValue?: string) => string,
+    base: string,
+    fields: readonly K[],
+  ): Array<Record<K, string>> {
+    const out: Array<Record<K, string>> = [];
+    for (let i = 1; ; i++) {
+      if (!t(`${base}.item${i}.${fields[0]}`, '')) break;
+      out.push(
+        Object.fromEntries(
+          fields.map((field) => [field, t(`${base}.item${i}.${field}`, '')]),
+        ) as Record<K, string>,
+      );
+    }
+    return out;
+  }
+
   // Nível WCAG e ferramenta ficam aqui, e não no conteúdo compartilhado, porque
   // são IDENTIFICADORES (número de critério, nome do verificador) e
   // identificador não se traduz. Item além da lista cai no par padrão.
@@ -71,32 +98,264 @@
     'Keyboard test',
   ];
 
+  // ─── Rastreio ────────────────────────────────────────────────────────────────
+
+  /** As seções desta página que renderizam o menu VIVO. */
+  type MenuLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
+
+  /** O vocabulário do fechamento na família — o menu não tem botão de fechar. */
+  type MenuCloseReason = 'escape' | 'overlay' | 'api';
+
+  /** O painel de submenu, pelo `data-slot` que o wrapper escreve nele. */
+  const SUB_CONTENT_SELECTOR = '[data-slot="dropdown-menu-sub-content"]';
+
   /**
-   * A demonstração é produto: quem abre um menu aqui dispara o mesmo evento que
-   * o componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
-   * item, nunca o rótulo traduzido — texto localizado partiria o mesmo evento em
-   * um por idioma no GA4.
+   * Abertura, escolha e fechamento de UM menu vivo desta página, no formato da
+   * família (ContextMenu e Menubar): todo payload leva `component`, `menu` e
+   * `location`; o de item soma `label`, o de fechamento soma `reason`.
    *
-   * `location` é a SEÇÃO onde o elemento está. Estes dois handlers atendem
-   * apenas a demonstração, e é por isso que o valor é fixo dentro deles;
-   * preview vivo de outra seção pede o `docs_<section-id>` daquela seção.
+   * `menu` é o id estável da prévia — `demo-account`, `pair1-do`,
+   * `with-checkbox-items` — e `label` o do item, a chave do rótulo em kebab.
+   * `location` é a SEÇÃO onde o menu está (guideline 07), e vem de quem chama:
+   * um clique no preview de Variantes ou do Do & Don't é tão real quanto o da
+   * Demonstração. Nenhum dos três leva texto traduzido, sob pena de partir o
+   * mesmo evento em um por idioma.
+   *
+   * O MOTIVO do fechamento: o `onOpenChange` da lib diz só que fechou, e cada
+   * caminho se anota ANTES do aviso. `escape` pelo `onEscapeKeydown` do painel;
+   * `overlay` — sair sem decidir — pelo clique fora (`onInteractOutside`), pelo
+   * Tab (o `onkeydown` do painel e o do submenu, que vive num portal à parte) e
+   * pelo clique no gatilho do menu aberto; `api` pela escolha do item de ação.
+   * O que não se anotou fecha como `api`: é o fechamento pelo código ou por um
+   * caminho que a página não conhece — "decisão de dentro" (18-overlay
+   * §Analytics). Até 2026-09-11 o padrão era `overlay`, e todo fechamento de
+   * origem desconhecida contava como clique fora.
+   *
+   * O Escape dentro de um submenu fecha só o submenu (o wrapper barra a tecla
+   * antes do painel de cima), e por isso não anota nada no menu de cima.
+   *
+   * Duas portas para o item, porque só uma decide: `select` é o item de AÇÃO,
+   * que fecha o menu e arma `api`; `toggle` é a marcação e a opção de rádio,
+   * que alternam e deixam o menu aberto sem armar motivo.
    */
-  function trackMenuOpenChange(menu: string, isOpen: boolean): void {
-    track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
-      component: 'dropdown-menu',
-      label: menu,
-      location: 'docs_demo',
-    });
+  function dropdownMenuTracker(menu: string, location: MenuLocation) {
+    let open = false;
+    let reason: MenuCloseReason = 'api';
+    const leave = () => {
+      reason = 'overlay';
+    };
+    const leaveOnTab = (event: KeyboardEvent) => {
+      if (event.key === 'Tab') leave();
+    };
+    const announce = (label: string) =>
+      track('dropdown_menu_item_select', { component: 'dropdown-menu', menu, label, location });
+    return {
+      onOpenChange(next: boolean) {
+        open = next;
+        if (next) {
+          reason = 'api';
+          track('dropdown_menu_open', { component: 'dropdown-menu', menu, location });
+          return;
+        }
+        track('dropdown_menu_close', { component: 'dropdown-menu', menu, reason, location });
+        reason = 'api';
+      },
+      /** O que o PAINEL anota — espalhado no `Content`: Escape, clique fora e Tab. */
+      content: {
+        onEscapeKeydown: () => {
+          reason = 'escape';
+        },
+        onInteractOutside: (event: PointerEvent) => {
+          // O clique num painel de submenu também chega aqui, e a lib não fecha
+          // por ele: é interação DENTRO do menu, não fora.
+          if (event.target instanceof Element && event.target.closest(SUB_CONTENT_SELECTOR)) return;
+          leave();
+        },
+        onkeydown: leaveOnTab,
+      },
+      /** O painel do submenu vive num portal à parte: o Tab dado nele não passa pelo de cima. */
+      subContent: { onkeydown: leaveOnTab },
+      /** O clique no gatilho do menu ABERTO o fecha sem decidir nada. */
+      trigger: {
+        onpointerdown: () => {
+          if (open) leave();
+        },
+      },
+      select(label: string) {
+        return () => {
+          reason = 'api';
+          announce(label);
+        };
+      },
+      toggle(label: string) {
+        return () => announce(label);
+      },
+    };
   }
 
-  function trackMenuItemSelect(menu: string, item: string): void {
-    track('dropdown_menu_item_select', {
-      component: 'dropdown-menu',
-      label: item,
-      menu,
-      location: 'docs_demo',
-    });
+  type DropdownMenuTracker = ReturnType<typeof dropdownMenuTracker>;
+
+  // Um rastreador por menu vivo: o motivo do fechamento é estado de CADA menu.
+  // A demonstração tem quatro menus, então o id é o da prévia seguido do gatilho;
+  // Variantes usa a chave do card em kebab; o Do & Don't, o par e o lado.
+  const menus = {
+    demoAccount:       dropdownMenuTracker('demo-account',        'docs_demo'),
+    demoColumns:       dropdownMenuTracker('demo-columns',        'docs_demo'),
+    demoTheme:         dropdownMenuTracker('demo-theme',          'docs_demo'),
+    demoFile:          dropdownMenuTracker('demo-file',           'docs_demo'),
+    pair1Do:           dropdownMenuTracker('pair1-do',            'docs_do_dont'),
+    pair1Dont:         dropdownMenuTracker('pair1-dont',          'docs_do_dont'),
+    pair2Do:           dropdownMenuTracker('pair2-do',            'docs_do_dont'),
+    pair2Dont:         dropdownMenuTracker('pair2-dont',          'docs_do_dont'),
+    default:           dropdownMenuTracker('default',             'docs_variantes'),
+    destructive:       dropdownMenuTracker('destructive',         'docs_variantes'),
+    withLabel:         dropdownMenuTracker('with-label',          'docs_variantes'),
+    withCheckboxItems: dropdownMenuTracker('with-checkbox-items', 'docs_variantes'),
+    withRadioGroup:    dropdownMenuTracker('with-radio-group',    'docs_variantes'),
+    withShortcuts:     dropdownMenuTracker('with-shortcuts',      'docs_variantes'),
+  };
+
+  // Os dez itens do contraexemplo "menu longo demais": o rótulo é o de
+  // `action` seguido do número, e o id do item, `action-1` … `action-10`.
+  const ACTION_NUMBERS = Array.from({ length: 10 }, (_, index) => index + 1);
+
+  // ─── Cards de Variantes ──────────────────────────────────────────────────────
+  //
+  // Os seis cards, pela CHAVE do conteúdo compartilhado. A MESMA lista monta a
+  // prévia (o snippet `menuEntries`) e imprime o código
+  // (`dropdownMenuEntriesSource`), como no ContextMenu desta stack e na
+  // `variantMenu` do vanilla. Até 2026-09-11 cada card tinha um literal em
+  // português ao lado da prévia: em inglês a prévia dizia "Account" e o código
+  // "Conta", e os cards `default` e `destructive` mostravam um item solto que a
+  // prévia nem tinha. Rótulo sai de `demonstration.labels.*`; o `value` de cada
+  // item é o valor estável do evento.
+
+  const VARIANT_KEYS = [
+    'default',
+    'destructive',
+    'withLabel',
+    'withCheckboxItems',
+    'withRadioGroup',
+    'withShortcuts',
+  ] as const;
+  type VariantKey = (typeof VARIANT_KEYS)[number];
+
+  /** O gatilho de cada card, pela chave inteira do conteúdo: ele diz o que o menu é. */
+  const VARIANT_TRIGGER: Record<VariantKey, string> = {
+    default: 'demonstration.labels.account',
+    destructive: 'demonstration.labels.account',
+    withLabel: 'demonstration.labels.account',
+    withCheckboxItems: 'demonstration.labels.columns',
+    withRadioGroup: 'demonstration.labels.theme',
+    withShortcuts: 'demonstration.labels.edit',
+  };
+
+  function variantEntries(key: VariantKey, t: (key: string) => string): MenuDocsEntry[] {
+    // A chave do rótulo vai inteira, e não montada por partes: é por ela que o
+    // `audit.mjs` confere que a página usa os mesmos rótulos das outras stacks.
+    const action = (
+      value: string,
+      labelKey: string,
+      extra: { shortcut?: string; variant?: 'destructive' } = {},
+    ): MenuDocsEntry => ({ type: 'item', value, label: t(labelKey), ...extra });
+    const separator: MenuDocsEntry = { type: 'separator' };
+    // Conta: o grupo nomeado de `demo-account`, que três cards repetem.
+    const accountGroup: MenuDocsEntry = {
+      type: 'group',
+      label: t('demonstration.labels.account'),
+      items: [
+        action('profile', 'demonstration.labels.profile'),
+        action('settings', 'demonstration.labels.settings'),
+      ],
+    };
+
+    switch (key) {
+      case 'default':
+        // Os itens de `demo-account`, com a saída destrutiva.
+        return [
+          accountGroup,
+          separator,
+          action('logout', 'demonstration.labels.logout', { variant: 'destructive' }),
+        ];
+      case 'destructive':
+        return [
+          action('rename', 'demonstration.labels.rename'),
+          separator,
+          action('delete-account', 'demonstration.labels.deleteAccount', { variant: 'destructive' }),
+        ];
+      case 'withLabel':
+        return [
+          accountGroup,
+          separator,
+          {
+            type: 'group',
+            label: t('demonstration.labels.support'),
+            items: [
+              action('documentation', 'demonstration.labels.documentation'),
+              action('logout', 'demonstration.labels.logout'),
+            ],
+          },
+        ];
+      case 'withCheckboxItems':
+        // Como `demo-columns`: Nome marcado, E-mail e Função não.
+        return [
+          {
+            type: 'group',
+            label: t('demonstration.labels.visibleColumns'),
+            items: [
+              { type: 'checkbox', value: 'column-name', label: t('demonstration.labels.columnName'), checked: true },
+              { type: 'checkbox', value: 'column-email', label: t('demonstration.labels.columnEmail'), checked: false },
+              { type: 'checkbox', value: 'column-role', label: t('demonstration.labels.columnRole'), checked: false },
+            ],
+          },
+        ];
+      case 'withRadioGroup':
+        // Como `demo-theme`: a aparência nasce em "Claro".
+        return [
+          {
+            type: 'radio-group',
+            label: t('demonstration.labels.appearance'),
+            name: 'theme',
+            value: 'light',
+            items: [
+              { value: 'light', label: t('demonstration.labels.light') },
+              { value: 'dark', label: t('demonstration.labels.dark') },
+              { value: 'system', label: t('demonstration.labels.system') },
+            ],
+          },
+        ];
+      case 'withShortcuts':
+        return [
+          action('undo', 'demonstration.labels.undo', { shortcut: t('demonstration.labels.undoShortcut') }),
+          action('copy', 'demonstration.labels.copy', { shortcut: t('demonstration.labels.copyShortcut') }),
+          separator,
+          action('paste', 'demonstration.labels.paste', { shortcut: t('demonstration.labels.pasteShortcut') }),
+        ];
+    }
   }
+
+  // As listas no idioma da página, lidas uma vez por troca de idioma: é delas
+  // que saem a prévia e o código de cada card.
+  const variantMenus = $derived.by(() => {
+    const t = $tStore;
+    return Object.fromEntries(VARIANT_KEYS.map((key) => [key, variantEntries(key, t)])) as Record<
+      VariantKey,
+      MenuDocsEntry[]
+    >;
+  });
+
+  const variantCode = (key: VariantKey) =>
+    dropdownMenuEntriesSource({
+      triggerLabel: $tStore(VARIANT_TRIGGER[key]),
+      entries: variantMenus[key],
+    });
+
+  // As marcações e a escolha única dos cards abrem no estado que a lista
+  // declara — o mesmo que o código publica. O rótulo não importa aqui, e por
+  // isso a leitura dispensa o idioma.
+  const variantState = $state(
+    menuEntriesState(VARIANT_KEYS.flatMap((key) => variantEntries(key, (name) => name))),
+  );
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os
   // valores chegam ao container — o `t()` exige nome de chave e não serviria. O
@@ -130,10 +389,12 @@
         { name: 'DropdownMenu' },
       ],
     });
+    // O título da ABA, com o sufixo que `applySeo` escreve — o mesmo valor das
+    // outras páginas desta stack. Sem ele o GA4 abria duas linhas por página.
     track('docs_page_view', {
       component_name: 'dropdown-menu',
       locale: l,
-      page_title: t('title'),
+      page_title: `${t('title')} · Design System`,
     });
     return cleanup;
   });
@@ -188,25 +449,25 @@
 
   // ─── State para demos interativos ────────────────────────────────────────────
 
-  // Os valores iniciais são os da story e os do snippet do painel Code: Nome
-  // marcado, E-mail e Função não, e a aparência em "Claro". Nascia com o e-mail
-  // marcado e o tema em "Sistema" — a prévia dizia uma coisa e o código logo
-  // abaixo dela dizia outra, que é a deriva medida no vanilla.
-  //
-  // `variantCheckbox` e `variantRadio` viviam aqui sem uso: estado morto que
-  // nenhum dos cinco portões abre, porque `$state` sem leitor não é erro.
-  let demoShowName = $state(true);
-  let demoShowEmail = $state(false);
-  let demoShowRole = $state(false);
-  let demoTheme = $state('light');
-
-  // Compositions interactive state
-  let compShowName = $state(true);
-  let compShowEmail = $state(false);
-  let compShowRole = $state(false);
-  let compTheme = $state('light');
+  // Os valores iniciais da demonstração são os dos cards de Variantes e os do
+  // snippet do painel Code: Nome marcado, E-mail e Função não, e a aparência em
+  // "Claro". Nascia com o e-mail marcado e o tema em "Sistema" — a prévia dizia
+  // uma coisa e o código logo abaixo dela dizia outra, que é a deriva medida no
+  // vanilla. O id estável do item é a chave: é o mesmo valor que vai no evento.
+  const columns = $state({ 'column-name': true, 'column-email': false, 'column-role': false });
+  let theme = $state('light');
 
   // ─── Code strings ────────────────────────────────────────────────────────────
+
+  // O exemplo de uso da seção Importação: o menu de `demo-account`, pela mesma
+  // lista do card `default` — no idioma de quem lê. Era um literal em português
+  // nos três idiomas.
+  const codeImportUsage = $derived(
+    dropdownMenuEntriesSource({
+      triggerLabel: $tStore('demonstration.labels.account'),
+      entries: variantMenus.default,
+    }),
+  );
 
   const codeImportBasic = `import {
   DropdownMenu,
@@ -219,26 +480,6 @@
   DropdownMenuSeparator,
   DropdownMenuShortcut,
 } from "@/components/ui/dropdown-menu";`;
-
-  const codeImportUsage = `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Abrir menu</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent side="bottom" align="start">
-    <DropdownMenuLabel>Conta</DropdownMenuLabel>
-    <DropdownMenuItem>Perfil</DropdownMenuItem>
-    <DropdownMenuItem>Configurações</DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>`;
-
-  const codeDefault = `<DropdownMenuItem>Perfil</DropdownMenuItem>`;
-  const codeDestructive = `<DropdownMenuItem variant="destructive">
-  Excluir conta
-</DropdownMenuItem>`;
 
   const interfaceCode = `// DropdownMenu (Root)
 interface DropdownMenuProps {
@@ -297,118 +538,243 @@ interface DropdownMenuRadioGroupProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap; contain: layout">
-      <DropdownMenu onOpenChange={(o: boolean) => trackMenuOpenChange('acoes', o)}>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" {...props}>{$tStore('demonstration.labels.basic')}</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <!--
-            `Group` + `GroupHeading` é a dupla que dá NOME ao agrupamento: o
-            heading vira o `aria-labelledby` do grupo, que é o que a ficha de
-            `Com Label` promete a quem lê. Um `Label` solto rotula visualmente e
-            não nomeia nada.
-          -->
-          <DropdownMenuGroup>
-            <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
-            <DropdownMenuItem onSelect={() => trackMenuItemSelect('acoes', 'perfil')}>Perfil</DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => trackMenuItemSelect('acoes', 'configuracoes')}>Configurações</DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive" onSelect={() => trackMenuItemSelect('acoes', 'sair')}>Sair</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+    <!--
+      Quatro células, cada uma com a LEGENDA do conteúdo em cima e o menu
+      embaixo, como no vanilla. A legenda descreve a célula; o gatilho diz o que
+      o menu é. Até 2026-09-11 o texto da legenda ia no gatilho — o botão dizia
+      "Com checkbox-items (toggles)" —, e os rótulos do menu eram literais em
+      português nos três idiomas. `--grid-min` é custom property: a grade decide
+      quantas colunas cabem a partir dela.
+    -->
+    <div class="nds-grid nds-w-full nds-min-h-40" data-spacing="md" style="--grid-min: 9rem; contain: layout">
+      <div class="nds-stack nds-min-h-20" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.basic')}</p>
+        <DropdownMenu onOpenChange={menus.demoAccount.onOpenChange}>
+          <DropdownMenuTrigger {...menus.demoAccount.trigger}>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>{$tStore('demonstration.labels.account')}</Button>
+            {/snippet}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="start" {...menus.demoAccount.content}>
+            {@render accountItems(menus.demoAccount)}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-      <DropdownMenu onOpenChange={(o: boolean) => trackMenuOpenChange('colunas', o)}>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" {...props}>{$tStore('demonstration.labels.withCheckbox')}</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <!--
-            O identificador do item é o da COLUNA, não o rótulo traduzido:
-            "Função"/"Role"/"Rol" partiriam o mesmo evento em três no GA4.
-          -->
-          <DropdownMenuCheckboxItem
-            checked={demoShowName}
-            onCheckedChange={(v) => (demoShowName = v)}
-            onSelect={() => trackMenuItemSelect('colunas', 'nome')}
-          >
-            Nome
-          </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem
-            checked={demoShowEmail}
-            onCheckedChange={(v) => (demoShowEmail = v)}
-            onSelect={() => trackMenuItemSelect('colunas', 'email')}
-          >
-            E-mail
-          </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem
-            checked={demoShowRole}
-            onCheckedChange={(v) => (demoShowRole = v)}
-            onSelect={() => trackMenuItemSelect('colunas', 'funcao')}
-          >
-            Função
-          </DropdownMenuCheckboxItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div class="nds-stack nds-min-h-20" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.withCheckbox')}</p>
+        <DropdownMenu onOpenChange={menus.demoColumns.onOpenChange}>
+          <DropdownMenuTrigger {...menus.demoColumns.trigger}>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>{$tStore('demonstration.labels.columns')}</Button>
+            {/snippet}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="start" {...menus.demoColumns.content}>
+            {@render columnsItems(menus.demoColumns)}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-      <DropdownMenu onOpenChange={(o: boolean) => trackMenuOpenChange('tema', o)}>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" {...props}>{$tStore('demonstration.labels.withRadio')}</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuLabel>Aparência</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup bind:value={demoTheme}>
-            <DropdownMenuRadioItem
-              value="light"
-              onSelect={() => trackMenuItemSelect('tema', 'light')}
-            >
-              Claro
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem
-              value="dark"
-              onSelect={() => trackMenuItemSelect('tema', 'dark')}
-            >
-              Escuro
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem
-              value="system"
-              onSelect={() => trackMenuItemSelect('tema', 'system')}
-            >
-              Sistema
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div class="nds-stack nds-min-h-20" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.withRadio')}</p>
+        <DropdownMenu onOpenChange={menus.demoTheme.onOpenChange}>
+          <DropdownMenuTrigger {...menus.demoTheme.trigger}>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>{$tStore('demonstration.labels.theme')}</Button>
+            {/snippet}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="start" {...menus.demoTheme.content}>
+            {@render themeItems(menus.demoTheme)}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
 
-      <DropdownMenu onOpenChange={(o: boolean) => trackMenuOpenChange('submenu', o)}>
-        <DropdownMenuTrigger>
+      <div class="nds-stack nds-min-h-20" data-spacing="sm" style="contain: layout">
+        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.withSubmenu')}</p>
+        <DropdownMenu onOpenChange={menus.demoFile.onOpenChange}>
+          <DropdownMenuTrigger {...menus.demoFile.trigger}>
+            {#snippet child({ props })}
+              <Button variant="outline" {...props}>{$tStore('demonstration.labels.file')}</Button>
+            {/snippet}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="start" {...menus.demoFile.content}>
+            <DropdownMenuItem onSelect={menus.demoFile.select('rename')}>{$tStore('demonstration.labels.rename')}</DropdownMenuItem>
+            <!-- O sub-gatilho não tem ação própria: ele abre o painel filho, e é lá que estão os itens. -->
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>{$tStore('demonstration.labels.export')}</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent {...menus.demoFile.subContent}>
+                <DropdownMenuItem onSelect={menus.demoFile.select('pdf')}>{$tStore('demonstration.labels.pdf')}</DropdownMenuItem>
+                <DropdownMenuItem onSelect={menus.demoFile.select('csv')}>{$tStore('demonstration.labels.csv')}</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </div>
+  </DocsDemonstration>
+
+  <!--
+    Os miolos que se repetem entre seções, pela CHAVE do conteúdo — um literal
+    em português ficava em português para quem lê a página em inglês ou
+    espanhol. A chave vai inteira, e não montada por partes: é por ela que o
+    `audit.mjs` confere que a página usa os mesmos rótulos das outras stacks.
+    O `label` de cada item é o id estável do evento, a chave em kebab.
+  -->
+
+  <!-- Conta: o grupo nomeado e a saída destrutiva — `demo-account`. -->
+  {#snippet accountItems(tracker: DropdownMenuTracker)}
+    <!--
+      `Group` + `GroupHeading` é a dupla que dá NOME ao agrupamento: o heading
+      vira o `aria-labelledby` do grupo. Um `Label` solto rotula visualmente e
+      não nomeia nada.
+    -->
+    <DropdownMenuGroup>
+      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.account')}</DropdownMenuGroupHeading>
+      <DropdownMenuItem onSelect={tracker.select('profile')}>{$tStore('demonstration.labels.profile')}</DropdownMenuItem>
+      <DropdownMenuItem onSelect={tracker.select('settings')}>{$tStore('demonstration.labels.settings')}</DropdownMenuItem>
+    </DropdownMenuGroup>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem variant="destructive" onSelect={tracker.select('logout')}>{$tStore('demonstration.labels.logout')}</DropdownMenuItem>
+  {/snippet}
+
+  <!-- Dois grupos nomeados, Conta e Suporte — o faça do par 1. -->
+  {#snippet accountSupportItems(tracker: DropdownMenuTracker)}
+    <DropdownMenuGroup>
+      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.account')}</DropdownMenuGroupHeading>
+      <DropdownMenuItem onSelect={tracker.select('profile')}>{$tStore('demonstration.labels.profile')}</DropdownMenuItem>
+      <DropdownMenuItem onSelect={tracker.select('settings')}>{$tStore('demonstration.labels.settings')}</DropdownMenuItem>
+    </DropdownMenuGroup>
+    <DropdownMenuSeparator />
+    <DropdownMenuGroup>
+      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.support')}</DropdownMenuGroupHeading>
+      <DropdownMenuItem onSelect={tracker.select('documentation')}>{$tStore('demonstration.labels.documentation')}</DropdownMenuItem>
+      <DropdownMenuItem onSelect={tracker.select('logout')}>{$tStore('demonstration.labels.logout')}</DropdownMenuItem>
+    </DropdownMenuGroup>
+  {/snippet}
+
+  <!--
+    Colunas visíveis: alternadores independentes, no grupo que o rótulo nomeia.
+    Marcar não fecha o menu — `toggle`, sem motivo de fechamento.
+  -->
+  {#snippet columnsItems(tracker: DropdownMenuTracker)}
+    <DropdownMenuGroup>
+      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.visibleColumns')}</DropdownMenuGroupHeading>
+      <DropdownMenuCheckboxItem
+        bind:checked={columns['column-name']}
+        onSelect={tracker.toggle('column-name')}
+      >
+        {$tStore('demonstration.labels.columnName')}
+      </DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem
+        bind:checked={columns['column-email']}
+        onSelect={tracker.toggle('column-email')}
+      >
+        {$tStore('demonstration.labels.columnEmail')}
+      </DropdownMenuCheckboxItem>
+      <DropdownMenuCheckboxItem
+        bind:checked={columns['column-role']}
+        onSelect={tracker.toggle('column-role')}
+      >
+        {$tStore('demonstration.labels.columnRole')}
+      </DropdownMenuCheckboxItem>
+    </DropdownMenuGroup>
+  {/snippet}
+
+  <!-- Aparência: escolha única; o grupo de rádio já é um grupo, e o rótulo o nomeia. -->
+  {#snippet themeItems(tracker: DropdownMenuTracker)}
+    <DropdownMenuRadioGroup bind:value={theme}>
+      <DropdownMenuGroupHeading>{$tStore('demonstration.labels.appearance')}</DropdownMenuGroupHeading>
+      <DropdownMenuRadioItem value="light" onSelect={tracker.toggle('light')}>{$tStore('demonstration.labels.light')}</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="dark" onSelect={tracker.toggle('dark')}>{$tStore('demonstration.labels.dark')}</DropdownMenuRadioItem>
+      <DropdownMenuRadioItem value="system" onSelect={tracker.toggle('system')}>{$tStore('demonstration.labels.system')}</DropdownMenuRadioItem>
+    </DropdownMenuRadioGroup>
+  {/snippet}
+
+  <!--
+    Renomear e excluir. `destructive` separa a ação irreversível e a pinta de
+    perigo; sem ele, é o contraexemplo do par 2.
+  -->
+  {#snippet renameDeleteItems(tracker: DropdownMenuTracker, destructive: boolean)}
+    <DropdownMenuItem onSelect={tracker.select('rename')}>{$tStore('demonstration.labels.rename')}</DropdownMenuItem>
+    <DropdownMenuSeparator />
+    <DropdownMenuItem
+      variant={destructive ? 'destructive' : 'default'}
+      onSelect={tracker.select('delete-account')}
+    >
+      {$tStore('demonstration.labels.deleteAccount')}
+    </DropdownMenuItem>
+  {/snippet}
+
+  <!--
+    As entradas de um card de Variantes, recursivas no submenu — a MESMA lista
+    que `dropdownMenuEntriesSource` imprime no painel Code do card. Item de AÇÃO
+    escolhe e fecha (`select`, motivo `api`); marcação e opção de rádio alternam
+    e deixam o menu aberto (`toggle`, sem motivo). O atalho mora dentro do item,
+    à direita do rótulo, e é lido junto dele.
+  -->
+  {#snippet menuEntries(entries: MenuDocsEntry[], tracker: DropdownMenuTracker)}
+    {#each entries as entry, index (index)}
+      {#if entry.type === 'item'}
+        <DropdownMenuItem variant={entry.variant} onSelect={tracker.select(entry.value)}>
+          {entry.label}
+          {#if entry.shortcut}
+            <DropdownMenuShortcut>{entry.shortcut}</DropdownMenuShortcut>
+          {/if}
+        </DropdownMenuItem>
+      {:else if entry.type === 'separator'}
+        <DropdownMenuSeparator />
+      {:else if entry.type === 'group'}
+        <DropdownMenuGroup>
+          <DropdownMenuGroupHeading>{entry.label}</DropdownMenuGroupHeading>
+          {@render menuEntries(entry.items, tracker)}
+        </DropdownMenuGroup>
+      {:else if entry.type === 'checkbox'}
+        <DropdownMenuCheckboxItem
+          bind:checked={variantState.checked[entry.value]}
+          onSelect={tracker.toggle(entry.value)}
+        >
+          {entry.label}
+        </DropdownMenuCheckboxItem>
+      {:else if entry.type === 'radio-group'}
+        <DropdownMenuRadioGroup bind:value={variantState.radio[entry.name]}>
+          <DropdownMenuGroupHeading>{entry.label}</DropdownMenuGroupHeading>
+          {#each entry.items as option (option.value)}
+            <DropdownMenuRadioItem value={option.value} onSelect={tracker.toggle(option.value)}>
+              {option.label}
+            </DropdownMenuRadioItem>
+          {/each}
+        </DropdownMenuRadioGroup>
+      {:else if entry.type === 'submenu'}
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>{entry.label}</DropdownMenuSubTrigger>
+          <DropdownMenuSubContent {...tracker.subContent}>
+            {@render menuEntries(entry.items, tracker)}
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+      {/if}
+    {/each}
+  {/snippet}
+
+  <!--
+    Um card: o gatilho, que diz o que o menu é, e o menu da lista, com o
+    rastreador do card. (As prévias do Do & Don't escrevem o menu por extenso: o
+    `dodont_preview_sem_componente` procura o componente na própria prévia, e
+    não atravessa um snippet.)
+  -->
+  {#snippet variantCard(key: VariantKey)}
+    <div style="contain: layout">
+      <DropdownMenu onOpenChange={menus[key].onOpenChange}>
+        <DropdownMenuTrigger {...menus[key].trigger}>
           {#snippet child({ props })}
-            <Button variant="outline" {...props}>{$tStore('demonstration.labels.withSubmenu')}</Button>
+            <Button variant="outline" size="sm" {...props}>{$tStore(VARIANT_TRIGGER[key])}</Button>
           {/snippet}
         </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'renomear')}>Renomear</DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
-              <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'pdf')}>PDF</DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => trackMenuItemSelect('submenu', 'csv')}>CSV</DropdownMenuItem>
-            </DropdownMenuSubContent>
-          </DropdownMenuSub>
+        <DropdownMenuContent side="bottom" align="start" {...menus[key].content}>
+          {@render menuEntries(variantMenus[key], menus[key])}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  </DocsDemonstration>
+  {/snippet}
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
@@ -514,84 +880,72 @@ interface DropdownMenuRadioGroupProps {
     ]}
   />
 
+  <!--
+    Par 1: agrupar. O faça traz os dois grupos nomeados, Conta e Suporte, com a
+    divisória entre eles — é o que a legenda descreve; o evite, dez itens soltos.
+    Par 2: a ação destrutiva. Os dois lados têm os mesmos itens e a mesma
+    divisória; o que muda é a variante de perigo, o assunto da legenda.
+  -->
   {#snippet doPair1()}
     <div style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
+      <DropdownMenu onOpenChange={menus.pair1Do.onOpenChange}>
+        <DropdownMenuTrigger {...menus.pair1Do.trigger}>
           {#snippet child({ props })}
-            <Button variant="outline" {...props}>Conta</Button>
+            <Button variant="outline" size="sm" {...props}>{$tStore('demonstration.labels.account')}</Button>
           {/snippet}
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuGroup>
-            <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
-            <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuGroupHeading>Equipe</DropdownMenuGroupHeading>
-            <DropdownMenuItem>Convidar</DropdownMenuItem>
-            <DropdownMenuItem>Membros</DropdownMenuItem>
-          </DropdownMenuGroup>
+        <DropdownMenuContent side="bottom" align="start" {...menus.pair1Do.content}>
+          {@render accountSupportItems(menus.pair1Do)}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
+      <DropdownMenu onOpenChange={menus.pair1Dont.onOpenChange}>
+        <DropdownMenuTrigger {...menus.pair1Dont.trigger}>
           {#snippet child({ props })}
-            <Button variant="outline" {...props}>Tudo</Button>
+            <Button variant="outline" size="sm" {...props}>{$tStore('demonstration.labels.menu')}</Button>
           {/snippet}
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent side="bottom" align="start" {...menus.pair1Dont.content}>
           <!--
             Dez itens planos, que é o número da legenda: com seis a lista ainda
             parece curta, e o "vira lista de scroll" não aparece.
           -->
-          <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configurações</DropdownMenuItem>
-          <DropdownMenuItem>Convidar</DropdownMenuItem>
-          <DropdownMenuItem>Membros</DropdownMenuItem>
-          <DropdownMenuItem>Faturas</DropdownMenuItem>
-          <DropdownMenuItem>Assinatura</DropdownMenuItem>
-          <DropdownMenuItem>Notificações</DropdownMenuItem>
-          <DropdownMenuItem>Integrações</DropdownMenuItem>
-          <DropdownMenuItem>Suporte</DropdownMenuItem>
-          <DropdownMenuItem>Sair</DropdownMenuItem>
+          {#each ACTION_NUMBERS as number (number)}
+            <DropdownMenuItem onSelect={menus.pair1Dont.select(`action-${number}`)}>
+              {$tStore('demonstration.labels.action')} {number}
+            </DropdownMenuItem>
+          {/each}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
+      <DropdownMenu onOpenChange={menus.pair2Do.onOpenChange}>
+        <DropdownMenuTrigger {...menus.pair2Do.trigger}>
           {#snippet child({ props })}
-            <Button variant="outline" {...props}>Ações</Button>
+            <Button variant="outline" size="sm" {...props}>{$tStore('demonstration.labels.account')}</Button>
           {/snippet}
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem>Editar</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
+        <DropdownMenuContent side="bottom" align="start" {...menus.pair2Do.content}>
+          {@render renameDeleteItems(menus.pair2Do, true)}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
+      <DropdownMenu onOpenChange={menus.pair2Dont.onOpenChange}>
+        <DropdownMenuTrigger {...menus.pair2Dont.trigger}>
           {#snippet child({ props })}
-            <Button variant="outline" {...props}>Ações</Button>
+            <Button variant="outline" size="sm" {...props}>{$tStore('demonstration.labels.account')}</Button>
           {/snippet}
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem>Editar</DropdownMenuItem>
-          <DropdownMenuItem>Excluir conta</DropdownMenuItem>
+        <DropdownMenuContent side="bottom" align="start" {...menus.pair2Dont.content}>
+          {@render renameDeleteItems(menus.pair2Dont, false)}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
@@ -611,33 +965,14 @@ interface DropdownMenuRadioGroupProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="dropdown-menu"
     items={[
-      { trackId: 'default', name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: codeDefault,     preview: variantDefault     },
-      { trackId: 'destructive', name: $tStore('variants.items.destructive'), description: stripHtml($tStore('variants.styles.destructive')), code: codeDestructive, preview: variantDestructive },
+      { trackId: 'default',     name: $tStore('variants.items.default'),     description: stripHtml($tStore('variants.styles.default')),     code: variantCode('default'),     preview: variantDefault     },
+      { trackId: 'destructive', name: $tStore('variants.items.destructive'), description: stripHtml($tStore('variants.styles.destructive')), code: variantCode('destructive'), preview: variantDestructive },
       {
         trackId: 'withLabel',
         name: $tStore('variants.items.withLabel.name'),
         description: $tStore('variants.items.withLabel.description'),
         useWhen: $tStore('variants.items.withLabel.use'),
-        code: `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Conta</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuGroup>
-      <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
-      <DropdownMenuItem>Perfil</DropdownMenuItem>
-      <DropdownMenuItem>Configurações</DropdownMenuItem>
-    </DropdownMenuGroup>
-    <DropdownMenuSeparator />
-    <DropdownMenuGroup>
-      <DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>
-      <DropdownMenuItem>Documentação</DropdownMenuItem>
-      <DropdownMenuItem>Sair</DropdownMenuItem>
-    </DropdownMenuGroup>
-  </DropdownMenuContent>
-</DropdownMenu>`,
+        code: variantCode('withLabel'),
         preview: variantWithLabel,
       },
       {
@@ -645,20 +980,7 @@ interface DropdownMenuRadioGroupProps {
         name: $tStore('variants.items.withCheckboxItems.name'),
         description: $tStore('variants.items.withCheckboxItems.description'),
         useWhen: $tStore('variants.items.withCheckboxItems.use'),
-        code: `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Colunas</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuCheckboxItem bind:checked={showName}>Nome</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem bind:checked={showEmail}>E-mail</DropdownMenuCheckboxItem>
-    <DropdownMenuCheckboxItem bind:checked={showRole}>Função</DropdownMenuCheckboxItem>
-  </DropdownMenuContent>
-</DropdownMenu>`,
+        code: variantCode('withCheckboxItems'),
         preview: variantWithCheckboxItems,
       },
       {
@@ -666,22 +988,7 @@ interface DropdownMenuRadioGroupProps {
         name: $tStore('variants.items.withRadioGroup.name'),
         description: $tStore('variants.items.withRadioGroup.description'),
         useWhen: $tStore('variants.items.withRadioGroup.use'),
-        code: `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Tema</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuLabel>Aparência</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuRadioGroup bind:value={theme}>
-      <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
-      <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
-      <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
-    </DropdownMenuRadioGroup>
-  </DropdownMenuContent>
-</DropdownMenu>`,
+        code: variantCode('withRadioGroup'),
         preview: variantWithRadioGroup,
       },
       {
@@ -689,172 +996,24 @@ interface DropdownMenuRadioGroupProps {
         name: $tStore('variants.items.withShortcuts.name'),
         description: $tStore('variants.items.withShortcuts.description'),
         useWhen: $tStore('variants.items.withShortcuts.use'),
-        code: `<DropdownMenu>
-  <DropdownMenuTrigger>
-    {#snippet child({ props })}
-      <Button variant="outline" {...props}>Editar</Button>
-    {/snippet}
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuItem>
-      Desfazer
-      <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuItem>
-      Copiar
-      <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>
-      Colar
-      <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
-    </DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>`,
+        code: variantCode('withShortcuts'),
         preview: variantWithShortcuts,
       },
     ]}
   />
 
-  {#snippet variantDefault()}
-    <div style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" {...props}>Default</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem>Perfil</DropdownMenuItem>
-          <DropdownMenuItem>Configurações</DropdownMenuItem>
-          <DropdownMenuItem>Equipe</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  {/snippet}
-  {#snippet variantDestructive()}
-    <div style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" {...props}>Destructive</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem>Editar</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  {/snippet}
-
-  {#snippet variantWithLabel()}
-    <div class="nds-min-h-60" style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" size="sm" {...props}>Conta</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuGroup>
-            <DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>
-            <DropdownMenuItem>Perfil</DropdownMenuItem>
-            <DropdownMenuItem>Configurações</DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>
-            <DropdownMenuItem>Documentação</DropdownMenuItem>
-            <DropdownMenuItem>Sair</DropdownMenuItem>
-          </DropdownMenuGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  {/snippet}
-
-  {#snippet variantWithCheckboxItems()}
-    <div class="nds-min-h-50" style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" size="sm" {...props}>Colunas</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuCheckboxItem
-            checked={compShowName}
-            onCheckedChange={(v) => (compShowName = v)}
-          >
-            Nome
-          </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem
-            checked={compShowEmail}
-            onCheckedChange={(v) => (compShowEmail = v)}
-          >
-            E-mail
-          </DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem
-            checked={compShowRole}
-            onCheckedChange={(v) => (compShowRole = v)}
-          >
-            Função
-          </DropdownMenuCheckboxItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  {/snippet}
-
-  {#snippet variantWithRadioGroup()}
-    <div class="nds-min-h-50" style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" size="sm" {...props}>Tema</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuLabel>Aparência</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup bind:value={compTheme}>
-            <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  {/snippet}
-
-  {#snippet variantWithShortcuts()}
-    <div class="nds-min-h-60" style="contain: layout">
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          {#snippet child({ props })}
-            <Button variant="outline" size="sm" {...props}>Editar</Button>
-          {/snippet}
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="bottom" align="start">
-          <DropdownMenuItem>
-            Desfazer
-            <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Copiar
-            <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            Colar
-            <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  {/snippet}
+  <!--
+    Os seis cards de Variantes, cada um com o rastreador dele e `location`
+    `docs_variantes`. Até 2026-09-11 nenhum rastreava, e os gatilhos diziam o
+    NOME do card ("Default", "Destructive") em vez do que o menu é. O container
+    pede uma prévia sem argumento por card.
+  -->
+  {#snippet variantDefault()}{@render variantCard('default')}{/snippet}
+  {#snippet variantDestructive()}{@render variantCard('destructive')}{/snippet}
+  {#snippet variantWithLabel()}{@render variantCard('withLabel')}{/snippet}
+  {#snippet variantWithCheckboxItems()}{@render variantCard('withCheckboxItems')}{/snippet}
+  {#snippet variantWithRadioGroup()}{@render variantCard('withRadioGroup')}{/snippet}
+  {#snippet variantWithShortcuts()}{@render variantCard('withShortcuts')}{/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
@@ -967,18 +1126,25 @@ interface DropdownMenuRadioGroupProps {
   />
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
+  <!--
+    Cabeçalho e linhas saem do conteúdo compartilhado, como no ContextMenu: a
+    tabela escrita aqui ensinava `label` onde o evento leva `menu`, não tinha o
+    `reason` e ficava em português nos três idiomas.
+  -->
   <DocsAnalytics
     title={$tStore('analytics.title')}
     cols={{
-      event: 'Evento',
-      trigger: 'Trigger',
-      payload: 'Payload',
+      event:   $tStore('analytics.table.event'),
+      trigger: toPlainText($tStore('analytics.table.trigger')),
+      payload: $tStore('analytics.table.payload'),
     }}
     items={[
-      { event: 'dropdown_menu_open',        trigger: 'onOpenChange(true)',  payload: "{ component: 'dropdown-menu', location, label }" },
-      { event: 'dropdown_menu_close',       trigger: 'onOpenChange(false)', payload: "{ component: 'dropdown-menu', location, label }" },
-      { event: 'dropdown_menu_item_select', trigger: 'onSelect',            payload: "{ component: 'dropdown-menu', location, label, menu }" },
-      { event: '—',                         trigger: stripHtml($tStore('analytics.description')), payload: '—' },
+      { event: $tStore('analytics.table.menuOpen'),      trigger: toPlainText($tStore('analytics.table.menuOpenTrigger')),      payload: $tStore('analytics.table.menuOpenPayload')      },
+      { event: $tStore('analytics.table.itemClick'),     trigger: toPlainText($tStore('analytics.table.itemClickTrigger')),     payload: $tStore('analytics.table.itemClickPayload')     },
+      { event: $tStore('analytics.table.close'),         trigger: toPlainText($tStore('analytics.table.closeTrigger')),         payload: $tStore('analytics.table.closePayload')         },
+      { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
+      { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
+      { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
     ]}
   />
 
@@ -992,11 +1158,13 @@ interface DropdownMenuRadioGroupProps {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
-        action: toPlainText($tStore(`testes.functional.item${i}.action`)),
-        result: toPlainText($tStore(`testes.functional.item${i}.result`)),
-        priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
-      })),
+      items: entriesFromDict($tStore, 'testes.functional', ['action', 'result', 'priority']).map(
+        (entry) => ({
+          action: toPlainText(entry.action),
+          result: toPlainText(entry.result),
+          priority: localPriority(entry.priority, $tNavStore),
+        }),
+      ),
     }}
     accessibility={{
       title: $tStore('testes.accessibility.title'),
@@ -1017,9 +1185,9 @@ interface DropdownMenuRadioGroupProps {
         story: $tNavStore('common.storyState'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5].map((i) => ({
-        story: $tStore(`testes.visual.item${i}.story`),
-        priority: localPriority($tStore(`testes.visual.item${i}.priority`), $tNavStore),
+      items: entriesFromDict($tStore, 'testes.visual', ['story', 'priority']).map((entry) => ({
+        story: entry.story,
+        priority: localPriority(entry.priority, $tNavStore),
       })),
     }}
   />

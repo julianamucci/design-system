@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
-import { gestoOpen } from './context-menu.fixtures';
+import { dispatchContextMenu, gestoOpen, realKeyboard } from './context-menu.fixtures';
 import { contextMenuPlaygroundSource, type ContextMenuArgs } from './context-menu.source';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -55,6 +55,10 @@ export const Playground: Story = {
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'functional.item12', 'functional.item13', 'functional.item14', 'functional.item15',
+      // F16 nos três caminhos: o clique direito (foco no painel, e a seta chega
+      // ao primeiro item), a TECLA DE MENU de verdade (teclado real do
+      // navegador) e o Shift+F10 (foco direto no primeiro item).
+      'functional.item16',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
       'accessibility.item7', 'accessibility.item8',
       'visual.item1',
@@ -129,6 +133,18 @@ export const Playground: Story = {
       await expect(Math.abs(boxMenu.top - center.y)).toBeLessThan(24);
       // Quem escuta a troca de estado fica sabendo da abertura.
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
+    });
+
+    await step('Pelo clique direito o foco ENTRA no menu, e a seta alcança os itens dali', async () => {
+      // O ponteiro abre com o foco no PAINEL, sem destacar item nenhum (é o
+      // `'popup'` do primitivo). O que o F16 cobra é o foco não ficar para trás
+      // na área: sem isto a primeira seta rolaria a página em vez de andar no
+      // menu. Leitura pura dentro do `waitFor`.
+      const menu = await waitForPortal('menu');
+      await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
+      await userEvent.keyboard('{ArrowDown}');
+      const items = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      await waitFor(() => expect(items).toContain(document.activeElement));
     });
 
     await step('Os itens são itens de menu de verdade', async () => {
@@ -242,15 +258,21 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
     });
 
-    await step('Clique fora fecha', async () => {
+    await step('Clique fora fecha sem executar nenhum item', async () => {
       // `clickOutside` despacha `pointerdown`, `mousedown` e `click` no `<body>`
       // em vez de `userEvent.click(document.body)`: a camada dispensável escuta
       // um evento diferente em cada lib, e o `userEvent` se RECUSA a clicar num
       // elemento com `pointer-events: none` — a play morreria com erro em vez de
       // falha. É o helper que as outras quatro stacks já usam aqui.
       await gestoOpen(area());
+      const itemSpy = args.onSelect as ReturnType<typeof fn>;
+      itemSpy.mockClear();
       await clickOutside();
       await waitForPortalVanish('menu');
+      // F3 inteiro: "sem executar nenhum item". Os três itens do Playground
+      // estão ligados ao espião — fechar não prova que nada rodou, o espião sim.
+      await expect(itemSpy).not.toHaveBeenCalled();
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
     });
 
     await step('Escolher um item avisa quem escuta', async () => {
@@ -262,6 +284,35 @@ export const Playground: Story = {
       await expect(args.onSelect).toHaveBeenCalledWith('duplicar');
       // E o foco volta à área, de onde o menu saiu.
       await waitFor(() => expect(document.activeElement).toBe(area()));
+    });
+
+    await step('A TECLA DE MENU na área focada abre o menu, e o foco entra nele', async () => {
+      // F16 pela tecla de verdade. A tecla de menu dispara `contextmenu` no
+      // elemento FOCADO — é a ação padrão do navegador, e é ela que se mede:
+      // com o teclado real (CDP), nada é despachado à mão. Sem modo browser (o
+      // painel Interactions), a play faz a parte do navegador.
+      await closeMenu();
+      area().focus();
+      await expect(document.activeElement).toBe(area());
+      // O primitivo separa teclado de ponteiro pelo tempo desde o último
+      // `pointerdown` na área (300 ms) — ver o passo do Shift+F10.
+      await new Promise((resolve) => setTimeout(resolve, 350));
+      const real = await realKeyboard();
+      if (real) {
+        await real('{ContextMenu}');
+      } else {
+        await userEvent.keyboard('{ContextMenu}');
+        dispatchContextMenu(area());
+      }
+      const menu = await waitForPortal('menu');
+      // O foco ENTRA no menu, sem nenhum item focado à mão — e a seta prova que
+      // dali os itens são alcançáveis. Leitura pura dentro do `waitFor`.
+      await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
+      await userEvent.keyboard('{ArrowDown}');
+      const items = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      await waitFor(() => expect(items).toContain(document.activeElement));
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalVanish('menu');
     });
 
     await step('Shift+F10 na área focada abre o menu, e o foco entra nele', async () => {
@@ -280,15 +331,7 @@ export const Playground: Story = {
       // que abre sem destacar item nenhum. Relógio, porque o que se espera é o
       // tempo passar.
       await new Promise((resolve) => setTimeout(resolve, 350));
-      const box = area().getBoundingClientRect();
-      area().dispatchEvent(
-        new MouseEvent('contextmenu', {
-          bubbles: true,
-          cancelable: true,
-          clientX: box.left + box.width / 2,
-          clientY: box.top + box.height / 2,
-        }),
-      );
+      dispatchContextMenu(area());
       const menu = await waitForPortal('menu');
       const firstItem = menu.querySelector<HTMLElement>('[data-slot="context-menu-item"]')!;
       await waitFor(() => expect(document.activeElement).toBe(firstItem));

@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
+import {
+  menubarEditorSource,
+  menubarWithCheckboxSource,
+  menubarWithRadioSource,
+  menubarWithShortcutsSource,
+  menubarWithSubmenuSource,
+} from './menubar.source';
 import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
@@ -52,7 +59,11 @@ type Story = StoryObj;
 // ─── WithShortcuts ────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    // F16: o atalho à direita do rótulo e dentro do nome acessível do item.
+    covers: ['functional.item16', 'visual.item2'],
+    docs: { source: { transform: menubarWithShortcutsSource } },
+  },
   render: () => ({
     props: { shortcuts: SHORTCUTS },
     template: `
@@ -95,13 +106,28 @@ export const WithShortcuts: Story = {
       await expect(atalho.classList.contains('nds-dropdown-menu-shortcut')).toBe(true);
       await expect(getComputedStyle(atalho).color).not.toBe(getComputedStyle(items[0]).color);
     });
+
+    await step('O atalho fica encostado na borda direita do item', async () => {
+      // O título do passo acima dizia "à direita" e só a cor era medida.
+      // `margin-left: auto` é o mecanismo, mas num item flex o valor computado já
+      // vem resolvido em pixels — o que dá para afirmar é o resultado: o atalho
+      // encosta na direita e o rótulo fica na esquerda.
+      const item = items[items.length - 1];
+      const atalho = item.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!;
+      const itemBox = item.getBoundingClientRect();
+      const shortcutBox = atalho.getBoundingClientRect();
+      await expect(itemBox.right - shortcutBox.right).toBeLessThan(shortcutBox.left - itemBox.left);
+    });
   },
 };
 
 // ─── WithSubmenu ──────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: { source: { transform: menubarWithSubmenuSource } },
+  },
   render: () => ({
     props: { exportacoes: EXPORTACOES },
     template: `
@@ -240,7 +266,10 @@ export const WithSubmenu: Story = {
 // ─── WithCheckboxItems ────────────────────────────────────────────────────────
 
 export const WithCheckboxItems: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item3'],
+    docs: { source: { transform: menubarWithCheckboxSource } },
+  },
   render: () => ({
     props: { exibicoes: EXIBICOES, marcados: { 'Régua': true, 'Barra lateral': false, 'Grade': false } },
     template: `
@@ -290,6 +319,11 @@ export const WithCheckboxItems: Story = {
 
     await step('Marcar não fecha o menu — quem marca uma quer marcar a próxima', async () => {
       await expect(document.body.contains(menu)).toBe(true);
+      // E o documento o confirma: UM menu, sem a marca de fechado. A referência
+      // capturada antes do clique sozinha passaria durante a animação de saída.
+      const menus = within(document.body).queryAllByRole('menu');
+      await expect(menus).toHaveLength(1);
+      await expect(menus[0].hasAttribute('data-closed')).toBe(false);
       const other = boxes[EXIBICOES.indexOf('Grade')];
       await expect(other.getAttribute('aria-checked')).toBe('false');
     });
@@ -299,7 +333,12 @@ export const WithCheckboxItems: Story = {
 // ─── WithRadioGroup ───────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['accessibility.item5'] },
+  parameters: {
+    // F15: a opção escolhida passa a marcada, a anterior é desmarcada, e o menu
+    // SEGUE aberto — o último passo conta os menus no documento.
+    covers: ['functional.item15', 'accessibility.item5'],
+    docs: { source: { transform: menubarWithRadioSource } },
+  },
   render: () => ({
     props: { temas: THEMES, theme: 'light' },
     template: `
@@ -339,12 +378,27 @@ export const WithRadioGroup: Story = {
       });
       await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
     });
+
+    await step('Escolher uma opção NÃO fecha o menu', async () => {
+      // As opções de cima foram capturadas antes do clique: com o menu fechado
+      // elas continuariam respondendo `aria-checked` de um nó que saiu do
+      // documento. A prova é o documento — um menu, montado e sem a marca de
+      // fechado — e a opção lida de novo DESSE menu.
+      const menus = within(document.body).queryAllByRole('menu');
+      await expect(menus).toHaveLength(1);
+      await expect(menus[0].hasAttribute('data-closed')).toBe(false);
+      const escuro = THEMES.find((t) => t.value === 'dark')!.label;
+      await expect(
+        within(menus[0]).getByRole('menuitemradio', { name: escuro }).getAttribute('aria-checked'),
+      ).toBe('true');
+    });
   },
 };
 
 // ─── EditorCompleto ───────────────────────────────────────────────────────────
 
 export const EditorCompleto: Story = {
+  parameters: { docs: { source: { transform: menubarEditorSource } } },
   render: () => ({
     props: { menus: MENUS_EDITOR },
     template: `

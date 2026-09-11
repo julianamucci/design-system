@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createDropdownMenu } from './dropdown-menu';
+import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
+import { createDropdownMenu, type DropdownMenuCloseReason } from './dropdown-menu';
 import { dropdownMenuSource } from './dropdown-menu.source';
 import { createButton } from './button';
 import { createDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
@@ -17,6 +17,8 @@ type DropdownArgs = {
   align: 'start' | 'center' | 'end';
   modal: boolean;
   defaultOpen: boolean;
+  onSelect: (value: string) => void;
+  onClose: (reason: DropdownMenuCloseReason) => void;
 };
 
 const meta: Meta<DropdownArgs> = {
@@ -48,6 +50,14 @@ const meta: Meta<DropdownArgs> = {
         'Bloqueia a interação com o resto da página: o clique de fora dispensa o menu sem chegar ao que está embaixo, e a página não rola.',
     },
     defaultOpen: { control: 'boolean', description: 'Abre o menu ao montar.' },
+    // Espiões da play, não controles: o assunto deles é o que o menu EXECUTA e
+    // por onde ele FECHA, e nenhum dos dois se ajusta num painel.
+    onSelect: { control: false, table: { disable: true } },
+    onClose: {
+      control: false,
+      description: 'Callback do fechamento, com o motivo: escape, overlay (clique fora, Tab ou clique no gatilho) ou api (item escolhido).',
+      table: { type: { summary: "(reason: 'escape' | 'overlay' | 'api') => void" } },
+    },
   },
   args: {
     triggerLabel: 'Abrir menu',
@@ -55,6 +65,8 @@ const meta: Meta<DropdownArgs> = {
     align: 'start',
     modal: true,
     defaultOpen: false,
+    onSelect: fn(),
+    onClose: fn(),
   },
 };
 
@@ -65,18 +77,22 @@ type Story = StoryObj<DropdownArgs>;
 
 function buildMenuEl(args: DropdownArgs): { el: HTMLElement; trigger: HTMLButtonElement } {
   const trigger = createButton({ variant: 'outline', label: args.triggerLabel });
+  // Cada item avisa o espião com o próprio `value`: é por ele que a play prova
+  // que o clique fora fecha SEM executar item nenhum.
+  const select = (value: string) => () => args.onSelect?.(value);
   const el = createDropdownMenu({
     trigger,
     items: [
       { type: 'label', label: 'Conta' },
-      { type: 'item', label: 'Perfil', value: 'profile' },
-      { type: 'item', label: 'Configurações', value: 'settings' },
+      { type: 'item', label: 'Perfil', value: 'profile', onClick: select('profile') },
+      { type: 'item', label: 'Configurações', value: 'settings', onClick: select('settings') },
       { type: 'separator' },
-      { type: 'item', label: 'Sair', value: 'logout' },
+      { type: 'item', label: 'Sair', value: 'logout', onClick: select('logout') },
     ],
     side: args.side,
     align: args.align,
     modal: args.modal,
+    onClose: args.onClose,
   });
   el.dataset.slot = 'dropdown-menu';
   return { el, trigger };
@@ -89,6 +105,7 @@ export const Playground: Story = {
     covers: [
       'functional.item3',
       'functional.item4',
+      'functional.item13',
       'accessibility.item1',
       'accessibility.item2',
       'accessibility.item5',
@@ -157,6 +174,13 @@ export const Playground: Story = {
       await userEvent.keyboard('{Enter}');
       await waitForClose();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(args.onSelect).toHaveBeenLastCalledWith('profile');
+      // O foco VOLTA ao gatilho — a metade do item que só se afirmava no Escape.
+      // O painel sai com o item focado dentro, e sem a devolução o foco caía no
+      // `<body>`: quem navega por teclado perdia o lugar a cada escolha.
+      await expect(document.activeElement).toBe(trigger);
+      // Escolher é o fechamento em que a pessoa DECIDIU.
+      await expect(args.onClose).toHaveBeenLastCalledWith('api');
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
@@ -171,6 +195,32 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
+      await expect(args.onClose).toHaveBeenLastCalledWith('escape');
+    });
+
+    await step('Clicar fora fecha o menu sem executar item nenhum', async () => {
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      await body.findByRole('menu');
+      const selectsBefore = (args.onSelect as unknown as ReturnType<typeof fn>).mock.calls.length;
+
+      // Uma volta do laço antes do gesto: com `modal` desligado no painel, o
+      // ouvinte de clique fora é registrado DEPOIS do clique que abriu — para ele
+      // não fechar o menu no mesmo gesto —, e sem esta espera a play podia
+      // chegar antes dele. Relógio, e não `waitFor`: não há mutação a observar.
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      // Despacho direto no `<body>`, com os três eventos do gesto: no modo modal
+      // o bloqueador consome o clique de fora na captura, e é no `click`, o
+      // último, que ele dispensa o menu.
+      for (const type of ['pointerdown', 'mousedown', 'click'] as const) {
+        document.body.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }));
+      }
+      await waitForClose();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // Nenhum item rodou: o clique fora é sair sem decidir.
+      await expect(args.onSelect).toHaveBeenCalledTimes(selectsBefore);
+      await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
+      // A trava de rolagem do modo modal sai junto com o menu.
+      await expect(document.body.style.overflow).not.toBe('hidden');
     });
   },
 };
@@ -234,7 +284,7 @@ async function openWithItemFocused(trigger: HTMLElement): Promise<HTMLElement> {
  * era o navegador, a partir do fim do `body`.
  */
 export const TabLeavesMenu: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ['functional.item9'], controls: { disable: true } },
   render: () => buildTabScene(true),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -286,7 +336,7 @@ export const TabLeavesMenu: Story = {
  * volta ao gatilho em vez de sair do documento.
  */
 export const TabAtPageEnd: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ['functional.item9'], controls: { disable: true } },
   render: () => buildTabScene(false),
   play: async ({ canvasElement, step }) => {
     const trigger = within(canvasElement).getByRole('button', { name: 'Abrir menu' });

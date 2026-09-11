@@ -4,7 +4,8 @@
 	import ContextMenuPortal from "./context-menu-portal.svelte";
 	import type { ComponentProps } from "svelte";
 	import type { WithoutChildrenOrChild } from "@/lib/utils.js";
-	import { closeAfterTab, useContextMenuRootContext } from "./context";
+	import { closeAfterTab } from "@/components/ui/dropdown-menu/tab-leaves-menu";
+	import { useContextMenuRootContext } from "./context";
 
 	const uid = $props.id();
 
@@ -22,7 +23,8 @@
 	const root = useContextMenuRootContext();
 
 	// O `onkeydown` de quem consome segue primeiro; o Tab que a lib deixa aberto
-	// fecha depois dela — ver `context.ts`.
+	// fecha depois dela — ver `context.ts` e `dropdown-menu/tab-leaves-menu.ts`.
+	// PATCH: a11y — sem parada depois da área, o bits prende o Tab e deixa o menu aberto (ver PATCHES.md#svelte-context-menu-tab-last-stop)
 	function handleKeydown(event: Parameters<NonNullable<typeof onkeydown>>[0]) {
 		onkeydown?.(event);
 		closeAfterTab(event, root);

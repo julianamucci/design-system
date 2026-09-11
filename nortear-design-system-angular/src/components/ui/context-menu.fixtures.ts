@@ -38,3 +38,43 @@ export async function gestoOpen(area: HTMLElement): Promise<HTMLElement> {
   await userEvent.pointer({ keys: '[MouseRight]', target: area, coords });
   return await waitForPortal('menu');
 }
+
+/**
+ * O teclado REAL do navegador — o `userEvent` do vitest em modo browser, que
+ * passa pelo CDP —, quando existir.
+ *
+ * O `userEvent` do `storybook/test` monta eventos no DOM, e evento montado não
+ * executa a ação padrão do navegador. Para a tecla de menu a ação padrão É o
+ * que se quer medir: o navegador dispara `contextmenu` no elemento focado.
+ *
+ * `vitest/browser` é módulo virtual do plugin do Vitest (ver `.storybook/main.ts`):
+ * fora do modo browser — o painel Interactions — o import lança, e quem chama
+ * cai no caminho do DOM. Mesma forma do React.
+ */
+export async function realKeyboard(): Promise<((text: string) => Promise<void>) | null> {
+  try {
+    const { userEvent: browserUserEvent } = await import('vitest/browser');
+    if (typeof browserUserEvent?.keyboard === 'function') {
+      return (text) => browserUserEvent.keyboard(text);
+    }
+  } catch {
+    // Sem modo browser: o chamador faz a parte do navegador.
+  }
+  return null;
+}
+
+/**
+ * A parte do navegador, quando não há teclado real: `contextmenu` no centro do
+ * elemento, que é o que a tecla de menu e o Shift+F10 disparam no focado.
+ */
+export function dispatchContextMenu(target: HTMLElement): void {
+  const box = target.getBoundingClientRect();
+  target.dispatchEvent(
+    new MouseEvent('contextmenu', {
+      bubbles: true,
+      cancelable: true,
+      clientX: box.left + box.width / 2,
+      clientY: box.top + box.height / 2,
+    }),
+  );
+}

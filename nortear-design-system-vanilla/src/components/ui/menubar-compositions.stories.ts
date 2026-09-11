@@ -57,7 +57,7 @@ type Story = StoryObj;
 
 export const WithShortcuts: Story = {
   parameters: {
-    covers: ['visual.item2'],
+    covers: ['functional.item16', 'visual.item2'],
     docs: {
       source: {
         transform: menubarSourceWith({
@@ -102,6 +102,19 @@ export const WithShortcuts: Story = {
       const atalho = panel.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!;
       await expect(atalho.classList.contains('nds-dropdown-menu-shortcut')).toBe(true);
       await expect(getComputedStyle(atalho).color).not.toBe(getComputedStyle(items[0]).color);
+    });
+
+    await step('O atalho fica encostado na borda direita do item', async () => {
+      // "À direita" era só o nome do passo acima, que media a COR. A posição se
+      // afirma pela caixa: `margin-left: auto` já chega resolvido em pixels num
+      // item flex, e o que dá para cobrar é o resultado — o vão entre o atalho e
+      // a borda direita é menor que o vão entre ele e a borda esquerda.
+      for (const item of items) {
+        const atalho = item.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!;
+        const itemBox = item.getBoundingClientRect();
+        const shortcutBox = atalho.getBoundingClientRect();
+        await expect(itemBox.right - shortcutBox.right).toBeLessThan(shortcutBox.left - itemBox.left);
+      }
     });
   },
 };
@@ -163,17 +176,24 @@ export const WithSubmenu: Story = {
       await expect(subTrigger.getAttribute('data-slot')).toBe('menubar-sub-trigger');
     });
 
-    await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu', async () => {
-      // Idempotente: só navega e abre quando ainda está fechado.
-      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
-        const first = within(panel).getAllByRole('menuitem')[0];
-        first.focus();
-        await userEvent.keyboard('{ArrowDown}');
-        await waitFor(async () => {
-          await expect(document.activeElement).toBe(subTrigger);
-        });
-        await userEvent.keyboard('{ArrowRight}');
-      }
+    const visibleMenus = () => within(document.body).queryAllByRole('menu');
+
+    await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu e o foco ENTRA nele', async () => {
+      // Precondição própria: o replay do painel Interactions reexecuta a play no
+      // mesmo DOM, e a rodada anterior termina com o submenu aberto. O clique no
+      // sub-gatilho aberto o fecha — e devolve o foco a ele.
+      if (subTrigger.getAttribute('aria-expanded') === 'true') await userEvent.click(subTrigger);
+      await waitFor(async () => {
+        await expect(visibleMenus()).toHaveLength(1);
+      });
+
+      // O foco parte do primeiro item do menu PAI — é de lá que a seta sai.
+      within(panel).getAllByRole('menuitem')[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(subTrigger);
+      });
+      await userEvent.keyboard('{ArrowRight}');
 
       await waitFor(async () => {
         await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
@@ -182,8 +202,13 @@ export const WithSubmenu: Story = {
         // canvas, porque o painel do submenu é anexado ao `body` — fora da
         // árvore do menu pai, que é o que o tira do alcance do `overflow` do pai
         // e permite posicioná-lo por medida.
-        await expect(within(document.body).getAllByRole('menu')).toHaveLength(2);
+        await expect(visibleMenus()).toHaveLength(2);
       });
+      // Onde a SETA deixou o foco — nenhuma linha desta play o põe lá. Era aqui
+      // que a play focava o item do submenu à mão antes de apertar a seta
+      // esquerda, e o `functional.item5` ("foco no primeiro item do submenu")
+      // passava sem que a abertura pelo teclado entrasse no painel.
+      await expect(document.activeElement).toBe(within(visibleMenus()[1]).getAllByRole('menuitem')[0]);
     });
 
     await step('O submenu traz os próprios itens e abre AO LADO do pai', async () => {
@@ -205,6 +230,204 @@ export const WithSubmenu: Story = {
       await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
         panel.getBoundingClientRect().left,
       );
+    });
+
+    // As duas saídas do submenu, que o `covers` de `functional.item5` prometia e
+    // a play não apertava: ela só abria. Cada uma fecha UM nível — o submenu —,
+    // devolve o foco ao item que o abriu, e o menu da barra segue aberto.
+
+    await step('A seta para a esquerda fecha SÓ o submenu e devolve o foco', async () => {
+      // O foco está dentro do submenu porque a seta direita o levou até lá, no
+      // passo de abertura — e não por um `focus()` desta play.
+      await expect(visibleMenus()[1].contains(document.activeElement)).toBe(true);
+      await userEvent.keyboard('{ArrowLeft}');
+      await expect(visibleMenus()).toHaveLength(1);
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(subTrigger);
+      // O menu da barra continua na tela: um nível por tecla.
+      await expect(panel.hidden).toBe(false);
+    });
+
+    await step('Escape dentro do submenu fecha SÓ o submenu e devolve o foco', async () => {
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(visibleMenus()).toHaveLength(2);
+      });
+      await expect(visibleMenus()[1].contains(document.activeElement)).toBe(true);
+
+      await userEvent.keyboard('{Escape}');
+      await expect(visibleMenus()).toHaveLength(1);
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(subTrigger);
+      await expect(panel.hidden).toBe(false);
+    });
+
+    await step('Submenu aberto pelo PONTEIRO, foco no menu pai: Escape fecha só o submenu', async () => {
+      // O caso que os dois passos acima não alcançam: o ponteiro abre o submenu
+      // e o foco fica no painel pai. A tecla sobe do painel pai até a barra, e
+      // a barra fechava TUDO — dois níveis com uma tecla, contra a WAI-ARIA APG.
+      const [first] = within(panel).getAllByRole('menuitem');
+      first.focus();
+      // O ponteiro passa por um irmão ANTES: no replay ele já pode estar sobre o
+      // sub-gatilho, e aí não haveria entrada nova para abrir o submenu.
+      await userEvent.hover(first);
+      await userEvent.hover(subTrigger);
+      await waitFor(async () => {
+        await expect(visibleMenus()).toHaveLength(2);
+      });
+      // Precondição medida: o foco NÃO entrou no submenu — o ponteiro não o leva.
+      await expect(panel.contains(document.activeElement)).toBe(true);
+
+      await userEvent.keyboard('{Escape}');
+      await expect(visibleMenus()).toHaveLength(1);
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      // O menu da barra segue aberto, e o foco segue nele.
+      await expect(panel.hidden).toBe(false);
+      await expect(
+        canvasElement.querySelector('[data-slot="menubar-trigger"]')?.getAttribute('aria-expanded'),
+      ).toBe('true');
+      await expect(panel.contains(document.activeElement)).toBe(true);
+    });
+
+    await step('A story termina com o submenu ABERTO', async () => {
+      // É o estado que `visual.item4` descreve e o Chromatic fotografa.
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
+        await expect(visibleMenus()).toHaveLength(2);
+      });
+    });
+  },
+};
+
+// ─── NestedSubmenu ────────────────────────────────────────────────────────────
+//
+// Submenu DENTRO de submenu. O conteúdo compartilhado o mostra vivo no lado
+// "evite" do Do & Don't — o assunto do par é justamente que ele confunde —, e a
+// fábrica não o aninhava: o sub-gatilho do segundo nível, ao abrir, fechava o
+// próprio painel que o continha. A pilha de níveis de `@/lib/submenu` é o que
+// esta story prova, uma tecla por nível.
+
+const FORMATOS = ['PDF', 'PNG'] as const;
+
+const NESTED_MENUS = [
+  {
+    label: 'Arquivo',
+    items: [
+      { label: 'Novo' },
+      {
+        type: 'submenu' as const,
+        label: 'Exportar',
+        items: [{ type: 'submenu' as const, label: 'Formato', items: FORMATOS.map((f) => ({ label: f })) }],
+      },
+    ],
+  },
+];
+
+export const NestedSubmenu: Story = {
+  parameters: {
+    docs: { source: { transform: menubarSourceWith({ menus: NESTED_MENUS, defaultOpen: 0 }) } },
+  },
+  render: () => embrulhar(createMenubar(NESTED_MENUS, { defaultOpen: 0 }), '340px'),
+  play: async ({ canvasElement, step }) => {
+    const panel = await waitForPanel(canvasElement);
+    const [fileTrigger] = triggersOf(canvasElement.querySelector<HTMLElement>('[data-slot="menubar"]')!);
+    const exportTrigger = within(panel).getByRole('menuitem', { name: 'Exportar' });
+    const visibleMenus = () => within(document.body).queryAllByRole('menu');
+    const formatTrigger = () => within(document.body).getByRole('menuitem', { name: 'Formato' });
+
+    /**
+     * Precondição própria: só o menu da barra aberto, com o foco no sub-gatilho
+     * do primeiro nível. O replay do painel Interactions reexecuta a play no
+     * mesmo DOM, com a pilha no estado em que a rodada anterior a deixou — o
+     * clique no gatilho aberto fecha tudo, e o seguinte reabre limpo.
+     */
+    const resetToFirstLevel = async () => {
+      if (fileTrigger.getAttribute('aria-expanded') === 'true') await userEvent.click(fileTrigger);
+      await userEvent.click(fileTrigger);
+      await waitFor(async () => {
+        await expect(visibleMenus()).toHaveLength(1);
+      });
+      exportTrigger.focus();
+    };
+
+    await step('Duas setas para a direita descem dois níveis, e o foco entra em cada um', async () => {
+      await resetToFirstLevel();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(formatTrigger());
+      });
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect((document.activeElement as HTMLElement).textContent).toBe(FORMATOS[0]);
+      });
+      // O menu da barra e os DOIS submenus ao mesmo tempo: abrir o segundo nível
+      // não fecha o primeiro, que é o painel que o contém.
+      await expect(visibleMenus()).toHaveLength(3);
+      await expect(exportTrigger.getAttribute('aria-expanded')).toBe('true');
+      await expect(formatTrigger().getAttribute('aria-expanded')).toBe('true');
+    });
+
+    await step('Cada nível vive fora da árvore do anterior, ligado pelo aria-owns', async () => {
+      const [, middle, inner] = visibleMenus();
+      await expect(middle.contains(inner)).toBe(false);
+      await expect(exportTrigger.getAttribute('aria-owns')).toBe(middle.id);
+      await expect(formatTrigger().getAttribute('aria-owns')).toBe(inner.id);
+      await expect(middle.id).not.toBe(inner.id);
+    });
+
+    await step('Escape fecha SÓ o nível mais fundo e devolve o foco a quem o abriu', async () => {
+      await userEvent.keyboard('{Escape}');
+      await expect(visibleMenus()).toHaveLength(2);
+      await expect(document.activeElement).toBe(formatTrigger());
+      await expect(formatTrigger().getAttribute('aria-expanded')).toBe('false');
+      await expect(exportTrigger.getAttribute('aria-expanded')).toBe('true');
+    });
+
+    await step('A seta para a esquerda sobe um nível por vez', async () => {
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(visibleMenus()).toHaveLength(3);
+      });
+      await userEvent.keyboard('{ArrowLeft}');
+      await expect(visibleMenus()).toHaveLength(2);
+      await expect(document.activeElement).toBe(formatTrigger());
+
+      await userEvent.keyboard('{ArrowLeft}');
+      await expect(visibleMenus()).toHaveLength(1);
+      await expect(document.activeElement).toBe(exportTrigger);
+      await expect(exportTrigger.getAttribute('aria-owns')).toBe(null);
+    });
+
+    await step('Escolher no nível mais fundo fecha a barra INTEIRA e volta ao gatilho', async () => {
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(formatTrigger());
+      });
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(visibleMenus()).toHaveLength(3);
+      });
+      await userEvent.keyboard('{Enter}');
+      // Nenhum painel sobra no `body`: um neto que sobrevivesse ao avô seria um
+      // menu órfão na tela, sem ninguém com referência para removê-lo.
+      await expect(visibleMenus()).toHaveLength(0);
+      await expect(document.querySelectorAll('[data-slot="menubar-sub-content"]')).toHaveLength(0);
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await expect(document.activeElement).toBe(fileTrigger);
+    });
+
+    await step('A story termina com os dois níveis ABERTOS', async () => {
+      // É o estado que o Chromatic fotografa: a pilha inteira na tela.
+      await resetToFirstLevel();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(formatTrigger());
+      });
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(visibleMenus()).toHaveLength(3);
+      });
     });
   },
 };
@@ -285,14 +508,31 @@ export const WithCheckboxItems: Story = {
       const other = boxes[EXIBICOES.findIndex((e) => e.label === 'Grade')];
       await expect(other.getAttribute('aria-checked')).toBe('false');
     });
+
+    await step('O rótulo dá nome ao grupo dos alternadores', async () => {
+      // O rótulo era um `<div>` solto no painel: o texto não chegava a nome
+      // acessível de coisa alguma. Agora ele nomeia o `role="group"` que
+      // envolve os itens seguintes — e continua fora da roda do teclado.
+      const group = within(panel).getByRole('group', { name: 'Mostrar na tela' });
+      await expect(within(group).getAllByRole('menuitemcheckbox')).toHaveLength(EXIBICOES.length);
+      await expect(group.getAttribute('tabindex')).toBeNull();
+    });
   },
 };
 
 // ─── WithRadioGroup ───────────────────────────────────────────────────────────
 
+/**
+ * Cada escolha de opção, na ordem — o `onClick` da opção, que sai a cada gesto
+ * de escolher, e é de onde a docs page tira o `menubar_item_select`. Lista do
+ * módulo porque a play precisa lê-la; as asserções medem o que ENTROU durante o
+ * passo, então o replay do painel Interactions não as engana.
+ */
+const themeChoices: string[] = [];
+
 export const WithRadioGroup: Story = {
   parameters: {
-    covers: ['accessibility.item5'],
+    covers: ['functional.item15', 'accessibility.item5'],
     docs: {
       source: {
         transform: menubarSourceWith({
@@ -326,7 +566,11 @@ export const WithRadioGroup: Story = {
               {
                 type: 'radio-group',
                 value: 'light',
-                options: THEMES.map((t) => ({ value: t.value, label: t.label })),
+                options: THEMES.map((t) => ({
+                  value: t.value,
+                  label: t.label,
+                  onClick: () => themeChoices.push(t.value),
+                })),
               },
             ],
           },
@@ -338,10 +582,22 @@ export const WithRadioGroup: Story = {
   play: async ({ canvasElement, step }) => {
     const panel = await waitForPanel(canvasElement);
     const options = within(panel).getAllByRole('menuitemradio');
+    const optionOf = (value: string) => options[THEMES.findIndex((t) => t.value === value)];
+    const checkedCount = () => options.filter((o) => o.getAttribute('aria-checked') === 'true').length;
 
     await step('O grupo publica escolha única, e só uma opção está marcada', async () => {
       await expect(options).toHaveLength(THEMES.length);
-      await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+      await expect(checkedCount()).toBe(1);
+    });
+
+    await step('O rótulo dá nome ao grupo de escolha única — um grupo só', async () => {
+      // O grupo de escolha única era um `role="group"` SEM nome, e o rótulo um
+      // `<div>` solto ao lado dele: o leitor anunciava "grupo" sem dizer de quê.
+      // O rótulo agora nomeia o próprio grupo das opções, sem um segundo grupo
+      // aninhado — dois grupos para um bloco seriam anunciados duas vezes.
+      const group = within(panel).getByRole('group', { name: 'Tema' });
+      await expect(within(group).getAllByRole('menuitemradio')).toHaveLength(THEMES.length);
+      await expect(within(panel).getAllByRole('group')).toHaveLength(1);
     });
 
     await step('Escolher outra opção transfere a marcação', async () => {
@@ -354,6 +610,56 @@ export const WithRadioGroup: Story = {
         await expect(escuro.getAttribute('aria-checked')).toBe('true');
       });
       await expect(options.filter((o) => o.getAttribute('aria-checked') === 'true')).toHaveLength(1);
+    });
+
+    await step('Enter e Espaço escolhem pelo teclado, e o menu segue aberto', async () => {
+      // A opção só ouvia `click`: quem navega por teclado pousava nela e não
+      // tinha como escolher (WCAG 2.1.1). A seta leva o foco — a play não o põe
+      // em opção nenhuma além da de partida —, e a TECLA escolhe.
+      optionOf('dark').focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(optionOf('system'));
+      await userEvent.keyboard('{Enter}');
+      await expect(optionOf('system')).toHaveAttribute('aria-checked', 'true');
+      await expect(checkedCount()).toBe(1);
+
+      await userEvent.keyboard('{ArrowUp}');
+      await expect(document.activeElement).toBe(optionOf('dark'));
+      await userEvent.keyboard(' ');
+      await expect(optionOf('dark')).toHaveAttribute('aria-checked', 'true');
+      await expect(checkedCount()).toBe(1);
+      // Escolher pelo teclado também não fecha.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
+    });
+
+    await step('Escolher de novo a opção já escolhida ainda é uma escolha', async () => {
+      // O ouvinte voltava ANTES de avisar qualquer coisa quando a opção já era
+      // a escolhida, e o `menubar_item_select` sumia justo no gesto de
+      // confirmar. O dropdown e o menu de contexto avisam a cada ativação.
+      //
+      // Precondição medida ANTES do clique — o passo do teclado deixou "Escuro"
+      // escolhido, e é a opção já escolhida que este passo clica. Escolha única
+      // não alterna: o clique repetido, no replay ou não, deixa o mesmo estado.
+      const dark = optionOf('dark');
+      await expect(dark.getAttribute('aria-checked')).toBe('true');
+      const before = themeChoices.length;
+      await userEvent.click(dark);
+      await expect(themeChoices.slice(before)).toEqual(['dark']);
+      // A marcação não mudou: continua uma, e na mesma opção.
+      await expect(checkedCount()).toBe(1);
+      await expect(options.find((o) => o.getAttribute('aria-checked') === 'true')).toBe(dark);
+    });
+
+    await step('Escolher não fecha o menu', async () => {
+      // Consulta NOVA, e não as referências de antes do clique: um menu que
+      // fechasse esconderia o painel, mas as opções guardadas continuariam
+      // respondendo por atributo. Contar os menus VISÍVEIS do documento — o
+      // painel fechado leva `hidden` e sai da contagem — é o que reprova esse
+      // fechamento.
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
+      await expect(
+        within(document.body).getByRole('menuitemradio', { name: THEMES.find((t) => t.value === 'dark')!.label }),
+      ).toHaveAttribute('aria-checked', 'true');
     });
   },
 };

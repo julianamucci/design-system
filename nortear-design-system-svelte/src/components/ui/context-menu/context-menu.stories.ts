@@ -78,6 +78,34 @@ function pressTab(shift = false): void {
 }
 
 /**
+ * A tecla de MENU, apertada de verdade sobre a área focada.
+ *
+ * Quem transforma a tecla num `contextmenu` é o NAVEGADOR, e ele só faz isso
+ * com entrada trusted: o `userEvent` do `storybook/test` monta o `keydown` no
+ * DOM e nada acontece depois dele. O `userEvent` do vitest em modo browser
+ * passa pelo driver e é tecla de verdade — é por ele que a suíte mede. O
+ * especificador é LITERAL de propósito: `vitest/browser` é módulo virtual, e só
+ * o plugin do Vitest o resolve (mesmo desenho de `apertarTecla`, em
+ * `@shared/testing/slider-probe`).
+ *
+ * Fora do modo browser — o painel Interactions, onde não há driver — o import
+ * falha ou o módulo lança, e o passo despacha o `contextmenu` que o navegador
+ * despacharia, para que a story siga navegável ali. A medição é a da suíte.
+ */
+async function pressMenuKey(target: HTMLElement): Promise<void> {
+  target.focus();
+  await expect(document.activeElement).toBe(target);
+  try {
+    const { userEvent: browserEvent } = await import('vitest/browser');
+    await browserEvent.keyboard('{ContextMenu}');
+    return;
+  } catch {
+    // Sem driver: o caminho do DOM, logo abaixo.
+  }
+  target.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+}
+
+/**
  * Espera o acúmulo do typeahead expirar. Relógio e não `waitFor`: o que se
  * espera é o tempo passar, e não uma mutação que se possa observar. A lib zera
  * a busca 1000 ms depois da última letra.
@@ -89,6 +117,7 @@ export const Playground: Story = {
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'functional.item12', 'functional.item13', 'functional.item14', 'functional.item15',
+      'functional.item16',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
       'accessibility.item7', 'accessibility.item8',
       'visual.item1',
@@ -135,6 +164,22 @@ export const Playground: Story = {
       ).toBeLessThan(24);
       // A abertura chega a quem consome: é o aviso que a docs page mede.
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(true);
+    });
+
+    await step('O foco entra no menu ao abrir, e a seta alcança os itens a partir dali', async () => {
+      // Aberto pelo gesto, o foco tem de estar DENTRO do painel — no próprio
+      // painel ou num item. Se ficasse na área, a seta seguinte rolaria a
+      // página em vez de andar no menu, e ele seria inoperável por teclado.
+      const menu = await waitForPortal('menu');
+      await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
+      // De onde quer que a abertura tenha deixado o foco, a seta para baixo
+      // pousa num ITEM do menu — é a outra metade do critério.
+      await userEvent.keyboard('{ArrowDown}');
+      await waitFor(() => {
+        const active = document.activeElement as HTMLElement | null;
+        expect(active?.getAttribute('role')).toBe('menuitem');
+        expect(menu.contains(active)).toBe(true);
+      });
     });
 
     await step('Os itens são itens de menu de verdade', async () => {
@@ -259,32 +304,35 @@ export const Playground: Story = {
       }
     });
 
-    await step('Tab fecha o menu também quando a área é a última parada', async () => {
+    await step('Tab fecha o menu também quando a área é a última parada, e o foco volta a ela', async () => {
       // A borda que a lib deixava aberta: sem próxima parada, ela barrava a
       // tecla e só chamava `body.focus()` — o menu ficava aberto e o foco preso
-      // nele. O wrapper do painel fecha nesse caso (ver `context.ts`).
+      // nele. O wrapper do painel fecha nesse caso (ver `context.ts`). F12 diz
+      // para ONDE o foco vai: sem outra parada, de volta à área — o fechamento
+      // sozinho passaria com o foco perdido no `<body>`.
       await gestoOpen(area());
       (await menuItems())[0].focus();
       pressTab();
       await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(area()));
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
     });
 
-    await step('Shift+F10 na área focada abre o menu, como o clique direito', async () => {
-      // A tecla de menu e o Shift+F10 são traduzidos pelo NAVEGADOR num
-      // `contextmenu` no elemento focado; o `userEvent` não reproduz essa
-      // tradução, que é do sistema. Por isso o passo prova as duas metades que
-      // são do componente: a área entra na ordem de tabulação e recebe o foco,
-      // e o `contextmenu` que o navegador dispara nela abre o menu.
+    await step('A tecla de menu na área focada abre o menu, e o foco entra nele', async () => {
+      // A tecla é APERTADA de verdade: o `contextmenu` que ela produz é o
+      // navegador quem dispara, e só entrada trusted chega lá (ver
+      // `pressMenuKey`). Até 2026-09-11 o passo despachava o `contextmenu` à mão
+      // e declarava cobrir a tecla — media o próprio despacho. A área entra na
+      // ordem de tabulação, recebe o foco, a tecla abre o menu e o foco sai da
+      // área para DENTRO dele (F16) — senão quem abriu pelo teclado ficaria com
+      // o menu na tela e o foco atrás dele.
       await closeMenu();
       await expect(area().tabIndex).toBe(0);
-      area().focus();
-      await expect(document.activeElement).toBe(area());
-      document.activeElement!.dispatchEvent(
-        new MouseEvent('contextmenu', { bubbles: true, cancelable: true }),
-      );
-      await expect(await waitForPortal('menu')).toBeVisible();
+      await pressMenuKey(area());
+      const menu = await waitForPortal('menu');
+      await expect(menu).toBeVisible();
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(true);
+      await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
     });
 
     await step('A story termina com o menu ABERTO', async () => {
@@ -292,6 +340,85 @@ export const Playground: Story = {
       // descreve o menu aberto, não a área vazia.
       const menu = await gestoOpen(area());
       await expect(menu).toBeVisible();
+    });
+  },
+};
+
+// ─── Tab sai do menu ──────────────────────────────────────────────────────────
+
+/**
+ * Menu não prende o foco (C2 do PRD do DropdownMenu, que é também o deste): Tab
+ * fecha e o foco segue a página a partir da ÁREA — o próximo ponto de
+ * tabulação depois dela, ou o anterior no Shift+Tab. A área como última parada
+ * está no Playground.
+ *
+ * O que só esta story mede é o Tab dado DE DENTRO DO SUBMENU (F12, ação
+ * emendada): o painel filho vive num portal à parte, e a tecla dada nele não
+ * passa pelo painel de cima — é o `closeAfterTab` do painel do submenu, e o
+ * `handleTabKeyDown` da lib subindo até a raiz, que fecham o menu INTEIRO.
+ */
+export const TabLeavesMenu: Story = {
+  args: { neighbors: true, withSubmenu: true },
+  parameters: { covers: ['functional.item12'], controls: { disable: true } },
+  play: async ({ canvasElement, step, args }) => {
+    const canvas = within(canvasElement);
+    const area = () => canvas.getByTestId('area');
+    const before = canvas.getByRole('button', { name: 'Antes' });
+    const after = canvas.getByRole('button', { name: 'Depois' });
+    const openMenus = () => within(document.body).queryAllByRole('menu');
+
+    const openWithItemFocused = async () => {
+      const menu = await gestoOpen(area());
+      menu.querySelector<HTMLElement>('[data-slot="context-menu-item"]')!.focus();
+      await expect(menu.contains(document.activeElement)).toBe(true);
+      return menu;
+    };
+
+    const openSubmenuWithItemFocused = async () => {
+      const menu = await openWithItemFocused();
+      const subTrigger = menu.querySelector<HTMLElement>('[data-slot="context-menu-sub-trigger"]')!;
+      subTrigger.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(openMenus()).toHaveLength(2));
+      const submenu = document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]')!;
+      submenu.querySelector<HTMLElement>('[data-slot="context-menu-item"]')!.focus();
+      await expect(submenu.contains(document.activeElement)).toBe(true);
+    };
+
+    await step('Tab fecha o menu e o foco vai ao ponto DEPOIS da área', async () => {
+      await openWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(after));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
+    });
+
+    await step('Shift+Tab fecha o menu e o foco vai ao ponto ANTES da área', async () => {
+      await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(before));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
+    });
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO e segue a página', async () => {
+      // Nenhum painel sobra aberto — nem o do submenu, nem o raiz —, e o foco
+      // segue da ÁREA, não do sub-gatilho.
+      await openSubmenuWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(openMenus()).toHaveLength(0);
+      await waitFor(() => expect(document.activeElement).toBe(after));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
+    });
+
+    await step('Shift+Tab dentro do submenu também fecha tudo', async () => {
+      await openSubmenuWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await expect(openMenus()).toHaveLength(0);
+      await waitFor(() => expect(document.activeElement).toBe(before));
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
     });
   },
 };

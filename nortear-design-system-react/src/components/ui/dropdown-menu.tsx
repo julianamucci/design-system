@@ -24,8 +24,8 @@ import * as React from "react"
 import { Menu as MenuPrimitive } from "@base-ui/react/menu"
 
 import { cn } from "@/lib/utils"
-import { ChevronRightIcon, CheckIcon } from "lucide-react"
-import { withReason } from "./context-menu-close-reason"
+import { ChevronRightIcon, CheckIcon, MinusIcon } from "lucide-react"
+import { withReason } from "./menu-close-reason"
 import { assignRef, tabbableBeside } from "./menu-tab-exit"
 
 /**
@@ -238,7 +238,10 @@ function DropdownMenuLabel({
   return (
     <MenuPrimitive.GroupLabel
       data-slot="dropdown-menu-label"
-      data-inset={inset}
+      // `|| undefined` em todo `data-inset` deste arquivo: com `inset={false}` o
+      // React escreveria `data-inset="false"`, e a folha seleciona por PRESENÇA
+      // (`[data-inset]`) — a peça sairia recuada justamente quando pediram que não.
+      data-inset={inset || undefined}
       className={cn(
         "nds-dropdown-menu-label",
         className
@@ -260,7 +263,7 @@ function DropdownMenuItem({
   return (
     <MenuPrimitive.Item
       data-slot="dropdown-menu-item"
-      data-inset={inset}
+      data-inset={inset || undefined}
       data-variant={variant}
       className={cn(
         "nds-dropdown-menu-item",
@@ -287,7 +290,7 @@ function DropdownMenuSubTrigger({
   return (
     <MenuPrimitive.SubmenuTrigger
       data-slot="dropdown-menu-sub-trigger"
-      data-inset={inset}
+      data-inset={inset || undefined}
       className={cn(
         "nds-dropdown-menu-sub-trigger",
         className
@@ -321,34 +324,69 @@ function DropdownMenuSubContent({
   )
 }
 
+/**
+ * Item de marcação, com o estado MISTO que a lib não tem.
+ *
+ * O `Menu.CheckboxItem` da base-ui é de dois estados: `checked` é booleano e o
+ * `aria-checked` que ele escreve também. O misto ("alguns dos filhos marcados",
+ * D8 do `prd/dropdown-menu.md`) mora aqui, no wrapper, com a MESMA forma do
+ * `ContextMenuCheckboxItem` — mesma folha, mesmo contrato, e a mesma leitura da
+ * fonte (`menu/checkbox-item/MenuCheckboxItem.js`, 1.7.0): as props de FORA
+ * entram depois do `aria-checked` interno, então o `"mixed"` passado aqui é o
+ * que chega ao DOM.
+ *
+ * Três decisões, na ordem em que valem:
+ *
+ *   1. O `aria-checked="mixed"` só entra no objeto de props QUANDO é misto. Uma
+ *      chave com `undefined` sobrescreveria o valor da lib e apagaria o atributo
+ *      dos dois outros estados.
+ *   2. Enquanto misto, a lib recebe `checked={false}`: o primeiro clique chama
+ *      `onCheckedChange(true)` e resolve o misto para MARCADO, como a
+ *      propriedade `indeterminate` do input nativo. Quem guarda o estado tira o
+ *      `indeterminate` nesse callback — a prop é controlada.
+ *   3. O traço é desenhado aqui, e não dentro do indicador da lib, que só monta
+ *      com o item marcado. Tique quer dizer "marcado", e misto não é isso.
+ *
+ * O `MenubarCheckboxItem` repete a forma: o item da barra é a mesma peça da lib,
+ * com o endereço de markup (`data-slot`) da barra.
+ */
 function DropdownMenuCheckboxItem({
   className,
   children,
   checked,
+  indeterminate = false,
   inset,
   ...props
 }: MenuPrimitive.CheckboxItem.Props & {
   inset?: boolean
+  /** Estado misto: anunciado como `mixed` e desenhado com traço. Controlado. */
+  indeterminate?: boolean
 }) {
   return (
     <MenuPrimitive.CheckboxItem
       data-slot="dropdown-menu-checkbox-item"
-      data-inset={inset}
+      data-inset={inset || undefined}
       className={cn(
         "nds-dropdown-menu-checkbox-item",
         className
       )}
-      checked={checked}
       {...props}
+      checked={indeterminate ? false : checked}
+      // PATCH: a11y — o item de marcação da base-ui é de dois estados (ver PATCHES.md#react-dropdown-menu-mixed-checkbox)
+      // O misto (D8) entra pelo wrapper.
+      {...(indeterminate ? { "aria-checked": "mixed" as const } : {})}
     >
       <span
         className="nds-dropdown-menu-item-indicator"
         data-slot="dropdown-menu-checkbox-item-indicator"
       >
-        <MenuPrimitive.CheckboxItemIndicator>
-          <CheckIcon
-          />
-        </MenuPrimitive.CheckboxItemIndicator>
+        {indeterminate ? (
+          <MinusIcon aria-hidden="true" />
+        ) : (
+          <MenuPrimitive.CheckboxItemIndicator>
+            <CheckIcon />
+          </MenuPrimitive.CheckboxItemIndicator>
+        )}
       </span>
       {children}
     </MenuPrimitive.CheckboxItem>
@@ -375,7 +413,7 @@ function DropdownMenuRadioItem({
   return (
     <MenuPrimitive.RadioItem
       data-slot="dropdown-menu-radio-item"
-      data-inset={inset}
+      data-inset={inset || undefined}
       className={cn("nds-dropdown-menu-radio-item", className)}
       {...props}
     >

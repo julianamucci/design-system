@@ -94,13 +94,14 @@ export const Playground: Story = {
       'functional.item10',
       'functional.item11',
       'functional.item12',
+      'functional.item14',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
       'accessibility.item6',
     ],
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
     const triggers = within(barra).getAllByRole('menuitem');
@@ -258,8 +259,57 @@ export const Playground: Story = {
       await waitForPortalGone('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
     });
+
+    // A camada dispensável prende `pointer-events: none` no gatilho enquanto o
+    // menu desmonta; clicar antes da limpeza estoura (ver `TabLeavesMenubar`).
+    const reopenFile = async () => {
+      await waitFor(async () => {
+        await expect(getComputedStyle(arquivo).pointerEvents).not.toBe('none');
+      });
+      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+      return waitForPortal('menu');
+    };
+
+    await step('Clicar fora da barra fecha o menu sem executar nenhum item', async () => {
+      // Sair sem decidir: o menu some e nenhuma ação roda. A contagem do espião
+      // é lida ANTES do clique, e não zerada: no replay do painel Interactions
+      // ele já traz as escolhas da rodada anterior.
+      await reopenFile();
+      const selectedBefore = (args.onSelect as ReturnType<typeof fn>).mock.calls.length;
+      clickOutside();
+      await waitForPortalGone('menu');
+      await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      await expect(args.onSelect).toHaveBeenCalledTimes(selectedBefore);
+    });
+
+    await step('Escolher um item executa — é o que dá dentes ao passo anterior', async () => {
+      // O espião que o clique fora não pode chamar tem de responder quando a
+      // escolha acontece; sem esta prova, "não foi chamado" passaria com um
+      // espião desligado.
+      const menu = await reopenFile();
+      await userEvent.click(within(menu).getAllByRole('menuitem')[0]);
+      await waitForPortalGone('menu');
+      await expect(args.onSelect).toHaveBeenLastCalledWith(MENUS[0].items[0]);
+    });
   },
 };
+
+/**
+ * Clique fora da barra, por despacho direto no `<body>`.
+ *
+ * Os três eventos são de propósito, como no `clickOutside` do menu de contexto
+ * (`@shared/testing/context-menu-area`): a camada dispensável do bits ouve
+ * `pointerdown` no documento, e o `userEvent` se recusa a clicar num elemento
+ * com `pointer-events: none`. O ponto (0, 0) fica fora do painel, que é o que
+ * a lib confere (`isClickTrulyOutside`).
+ */
+function clickOutside(): void {
+  for (const type of ['pointerdown', 'mousedown', 'click'] as const) {
+    document.body.dispatchEvent(
+      new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }),
+    );
+  }
+}
 
 /**
  * Um `Tab` de teclado, DESPACHADO À MÃO no elemento em foco.
@@ -276,11 +326,17 @@ function pressTab(shift = false): void {
   );
 }
 
+/**
+ * Tab e Shift+Tab fecham o menu aberto e saem da BARRA — também de dentro do
+ * submenu (F13). A barra é a da composição com submenu: o painel filho vive num
+ * portal à parte, e a tecla dada nele não passa pelo painel de cima.
+ */
 export const TabLeavesMenubar: Story = {
-  args: { neighbors: 'both', defaultValue: undefined, demonstration: 'default' },
-  parameters: { controls: { disable: true } },
+  args: { neighbors: 'both', defaultValue: undefined, demonstration: 'submenu' },
+  parameters: { covers: ['functional.item13'], controls: { disable: true } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const body = within(document.body);
     const bar = canvas.getByRole('menubar');
     const [fileTrigger] = within(bar).getAllByRole('menuitem');
     const before = canvas.getByRole('button', { name: 'Antes' });
@@ -294,6 +350,21 @@ export const TabLeavesMenubar: Story = {
       const menu = await waitForPortal('menu');
       within(menu).getAllByRole('menuitem')[0].focus();
       await expect(menu.contains(document.activeElement)).toBe(true);
+    };
+
+    const openSubmenuWithItemFocused = async () => {
+      await openWithItemFocused();
+      const subTrigger = within(await waitForPortal('menu')).getByRole('menuitem', {
+        name: 'Exportar',
+      });
+      subTrigger.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
+      });
+      const submenu = body.getAllByRole('menu')[1];
+      within(submenu).getAllByRole('menuitem')[0].focus();
+      await expect(submenu.contains(document.activeElement)).toBe(true);
     };
 
     await step('Tab sai da barra inteira e fecha o menu aberto', async () => {
@@ -316,6 +387,28 @@ export const TabLeavesMenubar: Story = {
         await expect(document.activeElement).toBe(before);
       });
     });
+
+    await step('Tab dentro do submenu fecha o menu e sai da barra', async () => {
+      // Nenhum painel sobra aberto — nem o do submenu, nem o do menu da barra —,
+      // e o foco segue da BARRA, não do sub-gatilho.
+      await openSubmenuWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after);
+      });
+    });
+
+    await step('Shift+Tab dentro do submenu também fecha tudo', async () => {
+      await openSubmenuWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await expect(fileTrigger.getAttribute('aria-expanded')).toBe('false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before);
+      });
+    });
   },
 };
 
@@ -326,7 +419,7 @@ export const TabLeavesMenubar: Story = {
  */
 export const TabAtPageEnd: Story = {
   args: { neighbors: 'before', defaultValue: undefined, demonstration: 'default' },
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ['functional.item13'], controls: { disable: true } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const bar = canvas.getByRole('menubar');

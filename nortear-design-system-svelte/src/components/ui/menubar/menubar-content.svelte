@@ -45,6 +45,7 @@
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof MenubarPortal>>;
 	} = $props();
 
+	// PATCH: a11y — typeahead morto: o painel da barra nascia sem o `id` que a lib compara (ver PATCHES.md#svelte-menu-content-id)
 	$effect(() => {
 		if (ref && !ref.id) ref.id = id;
 	});

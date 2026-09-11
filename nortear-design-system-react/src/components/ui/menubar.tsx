@@ -19,7 +19,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { CheckIcon } from "lucide-react"
+import { CheckIcon, MinusIcon } from "lucide-react"
 
 function Menubar({ className, ...props }: MenubarPrimitive.Props) {
   return (
@@ -108,7 +108,9 @@ function MenubarItem({
   return (
     <DropdownMenuItem
       data-slot="menubar-item"
-      data-inset={inset}
+      // `|| undefined` em todo `data-inset` deste arquivo: `data-inset="false"`
+      // conta como recuo para a folha, que seleciona por PRESENÇA (`[data-inset]`).
+      data-inset={inset || undefined}
       data-variant={variant}
       className={cn(
         className
@@ -118,34 +120,51 @@ function MenubarItem({
   )
 }
 
+/**
+ * Item de marcação da barra, com o estado MISTO que a lib não tem.
+ *
+ * A mesma forma do `DropdownMenuCheckboxItem` — o docblock de lá tem a leitura
+ * da fonte e as três decisões. `aria-checked="mixed"` só quando misto; a lib
+ * recebe `checked={false}`, e o primeiro clique resolve para marcado; o traço é
+ * desenhado aqui, porque o indicador da lib só monta com o item marcado.
+ */
 function MenubarCheckboxItem({
   className,
   children,
   checked,
+  indeterminate = false,
   inset,
   ...props
 }: MenuPrimitive.CheckboxItem.Props & {
   inset?: boolean
+  /** Estado misto: anunciado como `mixed` e desenhado com traço. Controlado. */
+  indeterminate?: boolean
 }) {
   return (
     <MenuPrimitive.CheckboxItem
       data-slot="menubar-checkbox-item"
-      data-inset={inset}
+      data-inset={inset || undefined}
       className={cn(
         "nds-dropdown-menu-checkbox-item",
         className
       )}
-      checked={checked}
       {...props}
+      checked={indeterminate ? false : checked}
+      // PATCH: a11y — o item de marcação da base-ui é de dois estados (ver PATCHES.md#react-dropdown-menu-mixed-checkbox)
+      // O misto (D8) entra pelo wrapper, igual ao do DropdownMenu.
+      {...(indeterminate ? { "aria-checked": "mixed" as const } : {})}
     >
       <span
         className="nds-dropdown-menu-item-indicator"
         data-slot="menubar-checkbox-item-indicator"
       >
-        <MenuPrimitive.CheckboxItemIndicator>
-          <CheckIcon
-          />
-        </MenuPrimitive.CheckboxItemIndicator>
+        {indeterminate ? (
+          <MinusIcon aria-hidden="true" />
+        ) : (
+          <MenuPrimitive.CheckboxItemIndicator>
+            <CheckIcon />
+          </MenuPrimitive.CheckboxItemIndicator>
+        )}
       </span>
       {children}
     </MenuPrimitive.CheckboxItem>
@@ -169,7 +188,7 @@ function MenubarRadioItem({
   return (
     <MenuPrimitive.RadioItem
       data-slot="menubar-radio-item"
-      data-inset={inset}
+      data-inset={inset || undefined}
       className={cn(
         "nds-dropdown-menu-radio-item",
         className
@@ -200,7 +219,7 @@ function MenubarLabel({
   return (
     <DropdownMenuLabel
       data-slot="menubar-label"
-      data-inset={inset}
+      data-inset={inset || undefined}
       className={cn(
         className
       )}
@@ -253,7 +272,7 @@ function MenubarSubTrigger({
   return (
     <DropdownMenuSubTrigger
       data-slot="menubar-sub-trigger"
-      data-inset={inset}
+      data-inset={inset || undefined}
       className={cn(
         className
       )}

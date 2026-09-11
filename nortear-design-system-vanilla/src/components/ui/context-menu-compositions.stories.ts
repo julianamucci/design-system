@@ -43,6 +43,7 @@ const item = (value: string) =>
 
 export const WithShortcut: Story = {
   parameters: {
+    covers: ['functional.item17'],
     // "Desfazer Ctrl+Z" é o segundo atalho do preview, e o menu canônico do
     // `meta` traz "Duplicar" sem atalho nenhum ali.
     docs: { source: { transform: contextMenuSourceWithShortcut } },
@@ -68,6 +69,10 @@ export const WithShortcut: Story = {
         await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
         await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
       }
+      // O nome acessível é o que o leitor de tela anuncia: "Editar Ctrl+E", e
+      // não só "Editar". Estar dentro do item e sem `aria-hidden` é a condição;
+      // o nome computado é o resultado.
+      await expect(item('editar')).toHaveAccessibleName('Editar Ctrl+E');
     });
 
     await step('O atalho fica encostado à direita do rótulo', async () => {
@@ -217,7 +222,7 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    covers: ['functional.item5', 'functional.item6', 'visual.item3'],
+    covers: ['functional.item5', 'functional.item6', 'accessibility.item10', 'visual.item3'],
     docs: {
       source: {
         transform: contextMenuSourceWith({

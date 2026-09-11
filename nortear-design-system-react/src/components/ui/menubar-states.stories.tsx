@@ -18,11 +18,13 @@ import {
 } from "./menubar"
 import {
   menubarOpenSource,
+  menubarCheckboxIndeterminateSource,
   menubarControlledSource,
   menubarItemBloqueadoSource,
   menubarItemCheckedSource,
   menubarSource,
 } from "./menubar.source"
+import { formaDoIndicador, ehTraco, ehTique } from "@shared/testing/menu-checkbox-indicator"
 
 // As stories que TERMINAM com um menu aberto desligam duas regras do axe, e as
 // duas descrevem defeitos da lib, não do design system — ver os comentários em
@@ -57,7 +59,7 @@ const meta = {
       source: { transform: menubarSource },
       description: {
         component:
-          "Os quatro estados que o conteúdo compartilhado descreve: barra fechada, menu aberto, item bloqueado e item marcado.",
+          "Os estados que o conteúdo compartilhado descreve: barra fechada, menu aberto, item bloqueado, item marcado e marcação mista.",
       },
     },
   },
@@ -66,9 +68,12 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+// Só MECÂNICA no inline. A altura mínima é valor de design e mora na escada,
+// em `.nds-min-h-70` (17,5rem = os mesmos 280px): inline ela vencia a folha e
+// saía do tema, da densidade e da escala — vinha de uma CONSTANTE, e por isso
+// o portão não a via.
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 280,
   position: "relative",
 }
 
@@ -83,7 +88,7 @@ export const Closed: Story = {
     covers: ["accessibility.item1", "accessibility.item2", "visual.item1"],
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-70" style={wrapperStyle}>
       <Menubar>
         {MENUS_FECHADOS.map((m) => (
           <MenubarMenu key={m}>
@@ -130,7 +135,7 @@ export const Open: Story = {
     docs: { source: { transform: menubarOpenSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-70" style={wrapperStyle}>
       <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -188,7 +193,7 @@ export const ItemDisabled: Story = {
     docs: { source: { transform: menubarItemBloqueadoSource } },
   },
   render: () => (
-      <div style={wrapperStyle}>
+      <div className="nds-min-h-70" style={wrapperStyle}>
         <Menubar modal={false}>
           <MenubarMenu defaultOpen>
             <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -259,20 +264,9 @@ export const CheckboxChecked: Story = {
     // Item de marcação dentro de grupo rotulado: três peças que o snippet do
     // meta não tem, e o par marcado/desmarcado é justamente o que se ensina.
     docs: { source: { transform: menubarItemCheckedSource } },
-    // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
-    // estados. `checked` é booleano, o payload da mudança é booleano, o estado
-    // exposto ao indicador é booleano e os únicos atributos de dado são
-    // `data-checked` e `data-unchecked` — não existe terceiro valor. A caixa de
-    // seleção avulsa da MESMA lib tem `indeterminate`; o item de menu não.
-    // Sem terceiro estado não há o que anunciar como misto nem o que desenhar
-    // como traço, e declarar cobertura aqui faria o auditor mentir.
-    coversNotApplicable: {
-      "functional.item9":
-        "o item de marcação do menu neste primitivo é de dois estados — prop, payload e estado do indicador são booleanos, sem terceiro valor para anunciar como misto",
-    },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-70" style={wrapperStyle}>
       <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Exibir</MenubarTrigger>
@@ -315,7 +309,83 @@ export const CheckboxChecked: Story = {
       await waitFor(async () => {
         await expect(regua.getAttribute("aria-checked")).toBe("false")
       })
-      await expect(document.body.contains(menu)).toBe(true)
+      // C10: um quadro depois da troca, UM menu aberto e o MESMO nó — um
+      // painel no meio do fechamento ainda estaria no documento, e só
+      // `document.body.contains` não distinguiria.
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+      const menus = within(document.body).queryAllByRole("menu")
+      await expect(menus).toHaveLength(1)
+      await expect(menus[0]).toBe(menu)
+    })
+  },
+}
+
+// ─── CheckboxIndeterminate ────────────────────────────────────────────────────
+//
+// Story SEM interação no item, de propósito. O que ela declara vale na abertura,
+// e o primeiro clique num item misto o resolve para marcado — uma play que
+// clicasse aqui mediria outro estado no REPLAY do painel Interactions. Os três
+// itens são controlados e sem callback.
+
+export const CheckboxIndeterminate: Story = {
+  parameters: {
+    a11y: AXE_WITH_MENU_OPEN,
+    // O misto é do wrapper (D8): o item de marcação da base-ui é de dois
+    // estados, e esta é a story que prova que o terceiro chega ao DOM.
+    covers: ["functional.item9"],
+    docs: { source: { transform: menubarCheckboxIndeterminateSource } },
+  },
+  render: () => (
+    <div className="nds-min-h-70" style={wrapperStyle}>
+      <Menubar modal={false}>
+        <MenubarMenu defaultOpen>
+          <MenubarTrigger>Exibir</MenubarTrigger>
+          <MenubarContent>
+            <MenubarGroup>
+              <MenubarLabel>Mostrar na tela</MenubarLabel>
+              <MenubarCheckboxItem checked={false} indeterminate>
+                Colunas
+              </MenubarCheckboxItem>
+              <MenubarCheckboxItem checked>Régua</MenubarCheckboxItem>
+              <MenubarCheckboxItem checked={false}>Grade</MenubarCheckboxItem>
+            </MenubarGroup>
+          </MenubarContent>
+        </MenubarMenu>
+      </Menubar>
+    </div>
+  ),
+  play: async ({ step }) => {
+    const menu = await waitForPortal("menu")
+    const canvas = within(menu)
+    const mixed = canvas.getByRole("menuitemcheckbox", { name: "Colunas" })
+    const checked = canvas.getByRole("menuitemcheckbox", { name: "Régua" })
+    const unchecked = canvas.getByRole("menuitemcheckbox", { name: "Grade" })
+
+    await step("O estado misto é anunciado como misto, e não como marcado", async () => {
+      // O item da lib escreve `aria-checked` sozinho; o `"mixed"` vem do
+      // wrapper. Os dois outros estados provam que o atributo não sumiu de quem
+      // não é misto.
+      await expect(mixed.getAttribute("aria-checked")).toBe("mixed")
+      await expect(checked.getAttribute("aria-checked")).toBe("true")
+      await expect(unchecked.getAttribute("aria-checked")).toBe("false")
+    })
+
+    await step("O misto desenha traço; o marcado, tique", async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone.
+      const mixedShape = formaDoIndicador(mixed)
+      await expect(ehTraco(mixedShape)).toBe(true)
+      await expect(ehTique(mixedShape)).toBe(false)
+      await expect(ehTique(formaDoIndicador(checked))).toBe(true)
+    })
+
+    await step("O traço mora no indicador do item, como o tique", async () => {
+      await expect(
+        mixed.querySelector('[data-slot="menubar-checkbox-item-indicator"] svg')
+      ).not.toBeNull()
+    })
+
+    await step("O desmarcado continua sem glifo nenhum", async () => {
+      await expect(formaDoIndicador(unchecked)).toBeNull()
     })
   },
 }
@@ -343,7 +413,7 @@ function MenubarWithExternalState() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-70" style={wrapperStyle}>
       <div className="nds-stack" data-spacing="sm">
         <div className="nds-cluster" data-align="center">
           <button

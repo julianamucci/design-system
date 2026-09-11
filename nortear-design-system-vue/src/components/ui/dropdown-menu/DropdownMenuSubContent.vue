@@ -8,6 +8,7 @@ import {
   useForwardPropsEmits,
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
+import { injectDropdownMenuCloseChannel, useSubmenuEscape } from './dropdown-menu.context'
 import { useDropdownMenuTabLeaves } from './tab-leaves-menu'
 
 /**
@@ -40,7 +41,22 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 // apertada aqui nunca chega ao ouvinte de lá — e a lib também a prende aqui. O
 // mesmo ouvinte, com o mesmo destino; quem aplica o foco é o painel raiz.
 // PATCH: a11y — a reka prende o Tab no menu modal (ver PATCHES.md#vue-menu-tab-leaves)
-const { onKeydownCapture } = useDropdownMenuTabLeaves()
+const { onKeydownCapture: onTabCapture } = useDropdownMenuTabLeaves()
+
+// E o Escape, no sentido oposto: aqui ele fecha SÓ o submenu e devolve o foco
+// ao sub-gatilho (`useSubmenuEscape`, WAI-ARIA APG, F12), onde a lib fecharia
+// tudo. O `escape-key-down` abaixo só chega quando o foco está no painel RAIZ
+// com este aberto pelo ponteiro — aí a lib fecha tudo, e o motivo é `escape`.
+// O clique fora quem anota é o painel raiz: para o submenu, um clique no painel
+// raiz também é "fora", e anotá-lo daqui deixaria o motivo errado pendurado.
+const { onKeydownCapture: onEscapeCapture } = useSubmenuEscape()
+const channel = injectDropdownMenuCloseChannel()
+
+// Um ouvinte de captura só por painel: o template não aceita dois.
+function onKeydownCapture(event: KeyboardEvent) {
+  onTabCapture(event)
+  onEscapeCapture(event)
+}
 </script>
 
 <template>
@@ -50,6 +66,7 @@ const { onKeydownCapture } = useDropdownMenuTabLeaves()
       v-bind="{ ...$attrs, ...forwarded }"
       :class="cn('nds-dropdown-menu-content', props.class)"
       @keydown.capture="onKeydownCapture"
+      @escape-key-down="channel.note('escape')"
     >
       <slot />
     </DropdownMenuSubContent>

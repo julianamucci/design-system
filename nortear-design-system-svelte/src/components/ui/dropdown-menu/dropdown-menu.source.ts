@@ -11,6 +11,12 @@
  * cascata entrega o snippet certo sem adivinhar nada por nome de story.
  */
 import { attrs, svelteSnippet } from '@/lib/story-source';
+import {
+  menuEntriesDeclarations,
+  menuEntriesMarkup,
+  menuEntriesParts,
+  type MenuDocsEntry,
+} from './dropdown-menu.fixtures';
 
 export type DropdownMenuVariant =
   | 'default'
@@ -316,4 +322,89 @@ export function dropdownMenuWithSubmenuSource(): string {
 /** Compositions/WithShortcuts — o atalho encostado na borda direita do item. */
 export function dropdownMenuWithShortcutsSource(): string {
   return dropdownMenuSource('', { args: { variant: 'withShortcuts', triggerLabel: 'Editar' } });
+}
+
+// ─── Cards de Variantes da docs page ──────────────────────────────────────────
+//
+// A forma da lista (`MenuDocsEntry`), o leitor do estado e o escritor das
+// linhas moram em `dropdown-menu.fixtures.ts`: a docs page monta a prévia com a
+// lista, e este módulo só exporta construtor de snippet.
+
+/**
+ * A lista que `dropdownMenuEntriesSource` escreve quando ninguém passa outra.
+ *
+ * Passa por todo tipo de entrada — grupo nomeado, item com atalho e
+ * destrutivo, divisória, marcação, grupo de rádio e submenu —, e é por isso que
+ * ela é o padrão: a varredura transversal chama o construtor sem argumento e
+ * confere que cada `bind:` que a marcação escreve tem a variável declarada no
+ * script. É ali que este construtor erraria — o nome da variável sai do `value`
+ * (`column-name` → `columnName`) nas duas pontas.
+ */
+const COMPLETE_ENTRIES: MenuDocsEntry[] = [
+  {
+    type: 'group',
+    label: 'Conta',
+    items: [
+      { type: 'item', label: 'Perfil', value: 'profile' },
+      { type: 'item', label: 'Desfazer', value: 'undo', shortcut: 'Ctrl+Z' },
+    ],
+  },
+  { type: 'separator' },
+  {
+    type: 'group',
+    label: 'Colunas visíveis',
+    items: [{ type: 'checkbox', label: 'Nome', value: 'column-name', checked: true }],
+  },
+  {
+    type: 'radio-group',
+    label: 'Aparência',
+    name: 'theme',
+    value: 'light',
+    items: [
+      { label: 'Claro', value: 'light' },
+      { label: 'Escuro', value: 'dark' },
+    ],
+  },
+  {
+    type: 'submenu',
+    label: 'Exportar',
+    items: [
+      { type: 'item', label: 'PDF', value: 'pdf' },
+      { type: 'item', label: 'CSV', value: 'csv' },
+    ],
+  },
+  { type: 'separator' },
+  { type: 'item', label: 'Excluir conta', value: 'delete-account', variant: 'destructive' },
+];
+
+/**
+ * O código de um card de Variantes, a partir da MESMA lista que monta a prévia
+ * — ver `MenuDocsEntry`. O gatilho e os rótulos chegam traduzidos, então o
+ * código fala o idioma da prévia nos três idiomas. Serve também ao exemplo de
+ * uso da seção Importação, que até 2026-09-11 era um literal em português.
+ *
+ * Sem argumento, escreve `COMPLETE_ENTRIES`: todo `*.source.ts` desta stack se
+ * chama sem argumento, e é assim que a varredura transversal alcança o
+ * construtor que a docs page usa.
+ */
+export function dropdownMenuEntriesSource(
+  options: { triggerLabel?: string; entries?: MenuDocsEntry[] } = {},
+): string {
+  const { triggerLabel = 'Conta', entries = COMPLETE_ENTRIES } = options;
+  const names = [...menuEntriesParts('DropdownMenu', entries)];
+  const declarations = menuEntriesDeclarations(entries);
+
+  return svelteSnippet(
+    [importing(names), declarations.join('\n')].filter(Boolean).join('\n\n'),
+    `<DropdownMenu>
+  <DropdownMenuTrigger>
+    {#snippet child({ props })}
+      <Button variant="outline" {...props}>${triggerLabel}</Button>
+    {/snippet}
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+${menuEntriesMarkup('DropdownMenu', entries, '    ').join('\n')}
+  </DropdownMenuContent>
+</DropdownMenu>`,
+  );
 }

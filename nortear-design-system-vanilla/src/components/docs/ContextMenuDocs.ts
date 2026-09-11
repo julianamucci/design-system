@@ -13,6 +13,7 @@ import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
 import { toPlainText } from '@/lib/strip-html';
+import { text } from '@/lib/story-source';
 import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
 
 import {
@@ -60,7 +61,7 @@ const { t, subscribe } = createTranslation(contextMenuTranslations as Record<str
   'pt-BR': {
     'props.items.trigger': 'Elemento que captura o gesto — clique direito, tecla de menu ou Shift+F10 sobre ele. A fábrica lhe dá parada de tabulação se ele não tiver.',
     'props.items.items': 'Lista de itens, separadores, rótulos e submenus do menu.',
-    'props.items.onClose': 'Disparado a cada fechamento, antes do callback de mudança, com o motivo: escape, overlay (clique fora ou Tab) ou api (item escolhido).',
+    'props.items.onClose': 'Disparado a cada fechamento, antes do callback de mudança, com o motivo: escape, overlay (clique fora ou Tab) ou api (item escolhido). Sair da página não é fechamento e não dispara.',
     'props.items.radioValue': 'Valor corrente do grupo de escolha única — ele vive no menu, não em cada item.',
     'props.items.type': 'Tipo do item. "submenu" exige a lista de itens; "radio" exige o valor.',
     'props.items.subItems': 'Itens do submenu, quando o tipo é "submenu".',
@@ -68,7 +69,7 @@ const { t, subscribe } = createTranslation(contextMenuTranslations as Record<str
   en: {
     'props.items.trigger': 'Element that captures the gesture — right-click, the menu key or Shift+F10 on it. The factory gives it a tab stop if it has none.',
     'props.items.items': 'List of items, separators, labels and submenus in the menu.',
-    'props.items.onClose': 'Fired on every close, before the change callback, with the reason: escape, overlay (click outside or Tab) or api (item chosen).',
+    'props.items.onClose': 'Fired on every close, before the change callback, with the reason: escape, overlay (click outside or Tab) or api (item chosen). Leaving the page is not a close and does not fire it.',
     'props.items.radioValue': 'Current value of the single-choice group — it lives in the menu, not in each item.',
     'props.items.type': 'Item type. "submenu" requires the item list; "radio" requires the value.',
     'props.items.subItems': 'Submenu items, when the type is "submenu".',
@@ -76,7 +77,7 @@ const { t, subscribe } = createTranslation(contextMenuTranslations as Record<str
   es: {
     'props.items.trigger': 'Elemento que captura el gesto — clic derecho, tecla de menú o Shift+F10 sobre él. La fábrica le da una parada de tabulación si no la tiene.',
     'props.items.items': 'Lista de ítems, separadores, rótulos y submenús del menú.',
-    'props.items.onClose': 'Se dispara en cada cierre, antes del callback de cambio, con el motivo: escape, overlay (clic fuera o Tab) o api (ítem elegido).',
+    'props.items.onClose': 'Se dispara en cada cierre, antes del callback de cambio, con el motivo: escape, overlay (clic fuera o Tab) o api (ítem elegido). Salir de la página no es un cierre y no lo dispara.',
     'props.items.radioValue': 'Valor actual del grupo de selección única — vive en el menú, no en cada ítem.',
     'props.items.type': 'Tipo del ítem. "submenu" exige la lista de ítems; "radio" exige el valor.',
     'props.items.subItems': 'Ítems del submenú, cuando el tipo es "submenu".',
@@ -110,6 +111,7 @@ const A11Y_TEST_LEVELS = [
   '2.1.1 · A',
   '1.4.3 · AA',
   '2.1.1 · A',
+  '4.1.2 · A',
 ];
 const A11Y_TEST_HOW = [
   'axe-core',
@@ -121,6 +123,7 @@ const A11Y_TEST_HOW = [
   'Escape · document.activeElement',
   'axe-core · color-contrast',
   'ArrowDown · document.activeElement',
+  'aria-haspopup · aria-expanded',
 ];
 
 /**
@@ -282,7 +285,13 @@ function itemShare(): ContextMenuItemDef {
 
 const SEPARATOR: ContextMenuItemDef = { type: 'separator' };
 
-function buildDemoMenu(): HTMLElement {
+/**
+ * O menu da demonstração. A seção vem de quem CHAMA, mesmo que hoje só a
+ * Demonstração chame: o valor cravado aqui dentro era a forma exata que o
+ * portão `location_so_da_demo` condena — o helper decidindo de onde o clique
+ * veio.
+ */
+function buildDemoMenu(location: PreviewLocation): HTMLElement {
   // Os ATALHOS entram porque a demonstração é o mesmo exemplo nas cinco: sem
   // eles esta era a única que não mostrava a coluna de atalho, e o
   // `demonstration_labels_divergent` mediu a diferença pelo rótulo que faltava
@@ -298,9 +307,9 @@ function buildDemoMenu(): HTMLElement {
         itemDelete({ shortcut: t('demonstration.labels.deleteShortcut'), variant: 'destructive' }),
       ],
       'demo',
-      'docs_demo',
+      location,
     ),
-    ...menuTracking('demo', 'docs_demo'),
+    ...menuTracking('demo', location),
   });
 }
 
@@ -424,11 +433,12 @@ function variantMenuId(key: VariantKey): string {
   return key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
 }
 
-function variantPreview(key: VariantKey): HTMLElement {
+/** A prévia de um card — a seção vem de quem CHAMA, nunca daqui de dentro. */
+function variantPreview(key: VariantKey, location: PreviewLocation): HTMLElement {
   return buildMenuPreview({
     ...variantMenu(key),
     menu: variantMenuId(key),
-    location: 'docs_variantes',
+    location,
   });
 }
 
@@ -552,7 +562,7 @@ export function createContextMenuDocs(): HTMLElement {
             wrap.dataset.align = 'center';
             wrap.dataset.justify = 'center';
             wrap.classList.add('nds-min-h-50');
-            wrap.appendChild(buildDemoMenu());
+            wrap.appendChild(buildDemoMenu('docs_demo'));
             return wrap;
           },
         });
@@ -680,32 +690,34 @@ export function createContextMenuDocs(): HTMLElement {
         });
 
       // ── 5. Importação ────────────────────────────────────────────────────
+      // O código exibido está na língua de quem lê: os rótulos saem do mesmo
+      // `demonstration.labels.*` das prévias, e o comentário em português que
+      // explicava os tipos de item saiu — quem explica é o texto da seção.
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
           description: t('import.basic'),
           code: `import { createContextMenu } from '@/components/ui/context-menu';`,
           secondaryDescription: t('import.withCheckbox'),
-          secondaryCode: `// Marcação e escolha única são TIPOS de item — a fábrica emite os papéis,
-// o aria-checked e o indicador. Não há markup a montar à mão.
-createContextMenu({
+          secondaryCode: `createContextMenu({
   trigger,
-  radioValue: 'grid',
+  radioValue: 'layout-grid',
   items: [
-    { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: true },
+    { type: 'checkbox', label: ${text(t('demonstration.labels.showGrid'))}, value: 'show-grid', checked: true },
     { type: 'separator' },
-    { type: 'radio', label: 'Grade', value: 'grid' },
-    { type: 'radio', label: 'Lista', value: 'list' },
+    { type: 'radio', label: ${text(t('demonstration.labels.layoutGrid'))}, value: 'layout-grid' },
+    { type: 'radio', label: ${text(t('demonstration.labels.layoutList'))}, value: 'layout-list' },
   ],
 });`,
         });
 
       // ── 6. Variantes ─────────────────────────────────────────────────────
       //
-      // Sete cards, e o `name`/`trackId` de cada um é a CHAVE do conteúdo — é
-      // ela que vira o `snippet_id` do toggle de código e o `menu` dos eventos
-      // da prévia. Nome traduzido ali partiria o mesmo card em três valores no
-      // GA4. Prévia e código saem da mesma lista (`variantMenu`).
+      // Sete cards, e o `trackId` de cada um é a CHAVE do conteúdo — é ela que
+      // vira o `snippet_id` do toggle de código e o `menu` dos eventos da
+      // prévia. O `name` é o título traduzido; usado como id, partiria o mesmo
+      // card em três valores no GA4. Prévia e código saem da mesma lista
+      // (`variantMenu`).
       case 'variantes':
         return createDocsCompositions({
           id: 'variantes',
@@ -713,24 +725,31 @@ createContextMenu({
           note: t('variants.note'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'context-menu',
+          // Os três primeiros cards leem o título de `variants.names.*`: o
+          // `name` deles era a chave crua ("default", "destructive", "label"),
+          // e o card mostrava o identificador como título nos três idiomas. A
+          // chave continua sendo o `trackId`, que é o que tem de ser estável.
           items: [
             {
-              name: 'default',
+              name: t('variants.names.default'),
+              trackId: 'default',
               description: t('variants.items.default'),
               code: variantCode('default'),
-              previewFactory: () => variantPreview('default'),
+              previewFactory: () => variantPreview('default', 'docs_variantes'),
             },
             {
-              name: 'destructive',
+              name: t('variants.names.destructive'),
+              trackId: 'destructive',
               description: t('variants.items.destructive'),
               code: variantCode('destructive'),
-              previewFactory: () => variantPreview('destructive'),
+              previewFactory: () => variantPreview('destructive', 'docs_variantes'),
             },
             {
-              name: 'label',
+              name: t('variants.names.label'),
+              trackId: 'label',
               description: t('variants.items.label'),
               code: variantCode('label'),
-              previewFactory: () => variantPreview('label'),
+              previewFactory: () => variantPreview('label', 'docs_variantes'),
             },
             {
               name: t('variants.items.withCheckbox.name'),
@@ -738,7 +757,7 @@ createContextMenu({
               description: t('variants.items.withCheckbox.description'),
               useWhen: t('variants.items.withCheckbox.use'),
               code: variantCode('withCheckbox'),
-              previewFactory: () => variantPreview('withCheckbox'),
+              previewFactory: () => variantPreview('withCheckbox', 'docs_variantes'),
             },
             {
               name: t('variants.items.withRadio.name'),
@@ -746,7 +765,7 @@ createContextMenu({
               description: t('variants.items.withRadio.description'),
               useWhen: t('variants.items.withRadio.use'),
               code: variantCode('withRadio'),
-              previewFactory: () => variantPreview('withRadio'),
+              previewFactory: () => variantPreview('withRadio', 'docs_variantes'),
             },
             {
               name: t('variants.items.withSubmenu.name'),
@@ -754,7 +773,7 @@ createContextMenu({
               description: t('variants.items.withSubmenu.description'),
               useWhen: t('variants.items.withSubmenu.use'),
               code: variantCode('withSubmenu'),
-              previewFactory: () => variantPreview('withSubmenu'),
+              previewFactory: () => variantPreview('withSubmenu', 'docs_variantes'),
             },
             {
               name: t('variants.items.withShortcuts.name'),
@@ -762,7 +781,7 @@ createContextMenu({
               description: t('variants.items.withShortcuts.description'),
               useWhen: t('variants.items.withShortcuts.use'),
               code: variantCode('withShortcuts'),
-              previewFactory: () => variantPreview('withShortcuts'),
+              previewFactory: () => variantPreview('withShortcuts', 'docs_variantes'),
             },
           ],
         });

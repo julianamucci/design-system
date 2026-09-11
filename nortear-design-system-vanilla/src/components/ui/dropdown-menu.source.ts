@@ -26,6 +26,8 @@ export type DropdownMenuSnippetItem = {
   /** Ênfase. `default` é o padrão e não entra no snippet. */
   variant?: 'default' | 'destructive';
   shortcut?: string;
+  /** Recuo. `false` é o padrão e não entra no snippet. */
+  inset?: boolean;
   checked?: boolean;
   indeterminate?: boolean;
   group?: string;
@@ -69,6 +71,7 @@ function item(i: DropdownMenuSnippetItem): string {
     ['group', i.group !== undefined ? text(i.group) : undefined],
     ['variant', i.variant && i.variant !== 'default' ? text(i.variant) : undefined],
     ['shortcut', i.shortcut !== undefined ? text(i.shortcut) : undefined],
+    ['inset', i.inset ? 'true' : undefined],
     ['checked', i.checked !== undefined ? String(i.checked) : undefined],
     ['indeterminate', i.indeterminate ? 'true' : undefined],
     ['disabled', i.disabled ? 'true' : undefined],

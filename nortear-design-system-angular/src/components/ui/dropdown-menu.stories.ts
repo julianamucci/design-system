@@ -6,6 +6,7 @@ import { dropdownMenuPlaygroundSource, type DropdownMenuArgs } from './dropdown-
 import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { pressTab } from '@/lib/press-tab';
+import { clickOutside } from '@shared/testing/context-menu-area';
 import { NdsDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -69,6 +70,7 @@ export const Playground: Story = {
       'functional.item1',
       'functional.item3',
       'functional.item4',
+      'functional.item13',
       'accessibility.item1',
       'accessibility.item2',
       'accessibility.item3',
@@ -90,10 +92,14 @@ export const Playground: Story = {
         <ng-template ndsDropdownMenuContent [side]="side" [align]="align">
           <div ndsDropdownMenuGroup>
             <div ndsDropdownMenuLabel>Conta</div>
+            <!-- Os TRÊS itens ligados ao espião, como no ContextMenu e no
+                 Menubar: "clicar fora não executa item nenhum" (F13) só se
+                 prova com todos escutados — um item sem espião poderia
+                 disparar e a asserção não veria. -->
             <div ndsDropdownMenuItem (onSelect)="onSelect('perfil')">Perfil</div>
-            <div ndsDropdownMenuItem>Configurações</div>
+            <div ndsDropdownMenuItem (onSelect)="onSelect('configuracoes')">Configurações</div>
             <div ndsDropdownMenuSeparator></div>
-            <div ndsDropdownMenuItem variant="destructive">Sair</div>
+            <div ndsDropdownMenuItem variant="destructive" (onSelect)="onSelect('sair')">Sair</div>
           </div>
         </ng-template>
       </nds-dropdown-menu>
@@ -130,6 +136,7 @@ export const Playground: Story = {
       itemChoice.mockClear();
       await userEvent.keyboard('{Enter}');
       await expect(itemChoice).toHaveBeenCalledTimes(1);
+      await expect(itemChoice).toHaveBeenCalledWith('perfil');
       await waitForPortalVanish('menu');
       await expect(trigger.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado
@@ -150,6 +157,25 @@ export const Playground: Story = {
         await expect(document.activeElement).toBe(trigger);
       });
     });
+
+    await step('Clicar fora fecha o menu sem executar nenhum item', async () => {
+      // `clickOutside` despacha `pointerdown`, `mousedown` e `click` no `<body>`
+      // em vez de `userEvent.click(document.body)`: com `modal` (o padrão) a lib
+      // põe `pointer-events: none` no resto da página, e o `userEvent` se RECUSA
+      // a clicar ali — a play morreria com erro em vez de falha. É o mesmo
+      // despacho que o ContextMenu desta stack já usa para o mesmo item.
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      await waitForPortal('menu');
+      itemChoice.mockClear();
+
+      await clickOutside();
+      await waitForPortalVanish('menu');
+      await expect(trigger.getAttribute('aria-expanded')).toBe('false');
+      // "Sem executar": o clique fora não é escolha — nenhum item ativou, e quem
+      // escuta a abertura ficou sabendo que o menu fechou.
+      await expect(itemChoice).not.toHaveBeenCalled();
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false);
+    });
   },
 };
 
@@ -169,7 +195,12 @@ export const Playground: Story = {
  * trava de rolagem ligados — `modal` não quer dizer armadilha de foco (D1).
  */
 export const TabLeavesMenu: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: {
+    // Tab e Shift+Tab a partir do menu, e Tab de DENTRO do submenu fechando o
+    // menu inteiro; a última parada da página está em `TabAtPageEnd`.
+    covers: ['functional.item9'],
+    controls: { disable: true },
+  },
   render: () => ({
     template: `
       <div class="nds-cluster" data-spacing="md">
@@ -251,7 +282,10 @@ export const TabLeavesMenu: Story = {
  * proíbe —, e o foco volta ao gatilho, nunca ao `<body>`.
  */
 export const TabAtPageEnd: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: {
+    covers: ['functional.item9'],
+    controls: { disable: true },
+  },
   render: () => ({
     template: `
       <div class="nds-cluster" data-spacing="md">

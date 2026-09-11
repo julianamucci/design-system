@@ -64,6 +64,28 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
+// pelo `play`. Recebe só o rótulo — o evento nativo não serve de prova e pesa
+// na aba Actions.
+const itemSelectSpy = fn();
+
+/**
+ * Clique fora do menu, por despacho direto no `<body>`.
+ *
+ * `userEvent.click(document.body)` não serve: com o menu modal a lib segura o
+ * resto da página, e o `userEvent` se recusa a clicar em elemento assim — a
+ * play morre com erro em vez de falha. Os três eventos são de propósito: a
+ * camada dispensável escuta um deles conforme a lib, e despachar só o `click`
+ * foi a causa da falha antiga do Sheet. É o mesmo gesto do `clickOutside` do
+ * ContextMenu (`@shared/testing/context-menu-area`), que espera pelo painel
+ * DAQUELE componente.
+ */
+function clickOutside(): void {
+  for (const type of ["pointerdown", "mousedown", "click"] as const) {
+    document.body.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }));
+  }
+}
+
 export const Playground: Story = {
   args: {
     onOpenChange: fn(),
@@ -73,6 +95,7 @@ export const Playground: Story = {
       "functional.item1",
       "functional.item3",
       "functional.item4",
+      "functional.item13",
       "accessibility.item1",
       "accessibility.item2",
       "accessibility.item3",
@@ -99,10 +122,14 @@ export const Playground: Story = {
             */}
             <DropdownMenuGroup>
               <DropdownMenuLabel>Conta</DropdownMenuLabel>
-              <DropdownMenuItem>Perfil</DropdownMenuItem>
-              <DropdownMenuItem>Configurações</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => itemSelectSpy("Perfil")}>Perfil</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => itemSelectSpy("Configurações")}>
+                Configurações
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+              <DropdownMenuItem variant="destructive" onClick={() => itemSelectSpy("Sair")}>
+                Sair
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -159,6 +186,27 @@ export const Playground: Story = {
         await expect(document.activeElement).toBe(trigger);
       });
     });
+
+    await step("Clicar fora fecha o menu sem executar nenhum item", async () => {
+      // Contrato C5: clique fora é "saí sem decidir". Fechar executando o item
+      // em foco — o primeiro, que a lib destaca ao abrir — seria a ação que a
+      // pessoa não pediu. A contagem parte do valor ATUAL do espião: o passo do
+      // Enter, acima, já escolheu um item nesta rodada.
+      if (trigger.getAttribute("aria-expanded") !== "true") await userEvent.click(trigger);
+      await waitForPortal("menu");
+      const selectionsBefore = itemSelectSpy.mock.calls.length;
+
+      clickOutside();
+      await waitForPortalGone("menu");
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+      await expect(itemSelectSpy).toHaveBeenCalledTimes(selectionsBefore);
+      // O motivo que a lib entrega é o do clique fora — é dele que sai o
+      // `overlay` do `dropdown_menu_close`.
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(
+        false,
+        expect.objectContaining({ reason: "outside-press" }),
+      );
+    });
   },
 };
 
@@ -187,6 +235,9 @@ function pressTab(shift = false): void {
 
 export const TabLeavesMenu: Story = {
   parameters: {
+    // Tab e Shift+Tab, do painel raiz e de dentro do submenu, até o vizinho do
+    // gatilho. O gatilho como última parada fica em `TabAtPageEnd`.
+    covers: ["functional.item9"],
     // O menu é MODAL aqui, que é o padrão: o conserto do Tab não pode custar
     // o véu de interação (D1).
     controls: { disable: true },
@@ -301,7 +352,7 @@ export const TabLeavesMenu: Story = {
  * —, e o foco volta ao gatilho pelo caminho da lib.
  */
 export const TabAtPageEnd: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ["functional.item9"], controls: { disable: true } },
   render: () => (
     <div className="nds-cluster nds-min-h-80" data-spacing="md" style={{ contain: "layout" }}>
       <Button variant="ghost">Antes</Button>

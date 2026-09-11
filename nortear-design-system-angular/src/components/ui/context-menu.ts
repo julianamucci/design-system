@@ -86,6 +86,14 @@ export type ContextMenuSide = 'top' | 'bottom' | 'left' | 'right';
 export type ContextMenuAlign = 'start' | 'center' | 'end';
 export type ContextMenuItemVariant = 'default' | 'destructive';
 
+// O motivo do fechamento no vocabulário da família — a MESMA tradução nos três
+// membros, e por isso num arquivo só. O evento nasce na camada de produto.
+export {
+  menuCloseReason,
+  MenuCloseTracker,
+  type MenuCloseReason,
+} from './menu-close-reason';
+
 /** Guarda o miolo do menu até a abertura. */
 @Directive({
   selector: 'ng-template[ndsContextMenuContent], ng-template[ndsContextMenuSubContent]',
@@ -569,8 +577,14 @@ export class NdsContextMenuRadioGroup {}
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [RdxMenuRadioItemIndicator, NdsContextMenuIcon],
+  // `onSelect` exposto como no DropdownMenu e no Menubar: a mesma peça, o mesmo
+  // contrato nos três membros da família.
   hostDirectives: [
-    { directive: RdxMenuRadioItem, inputs: ['value', 'disabled', 'closeOnClick', 'label'] },
+    {
+      directive: RdxMenuRadioItem,
+      inputs: ['value', 'disabled', 'closeOnClick', 'label'],
+      outputs: ['onSelect'],
+    },
   ],
   host: {
     rdxMenuRadioItem: '',

@@ -323,7 +323,7 @@ Tabs
 | Componente | Evento | Payload obrigatório |
 |------------|--------|---------------------|
 | Breadcrumb | `navigation_click` | `label`, `destination` |
-| Menubar | — (não rastreado; ver PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9) | — |
+| Menubar | `menubar_open` · `menubar_close` · `menubar_item_select` | `{ component: 'menubar', menu, location }`, mais `reason` no fechamento e `label` na escolha — PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9 |
 | Navigation Menu | `navigation_click` | `label`, `destination` |
 | Pagination | `page_change` | `page`, `total_pages` |
 | Stepper | `step_change` | `step`, `total_steps`, `direction` |

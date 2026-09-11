@@ -162,6 +162,7 @@ const a11yTestLevels = [
   '2.1.1 · A',
   '1.4.3 · AA',
   '2.1.1 · A',
+  '4.1.2 · A',
 ];
 const a11yTestHow = [
   'axe-core',
@@ -173,6 +174,7 @@ const a11yTestHow = [
   'Escape · document.activeElement',
   'axe-core · color-contrast',
   'ArrowDown · document.activeElement',
+  'aria-haspopup · aria-expanded',
 ];
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
@@ -424,17 +426,20 @@ const variantCode = computed(() => {
 // vier de fora — num ponto de ancoragem, o painel nasce no ponteiro. `inset`
 // está onde a folha tem regra para ele (item, rótulo, sub-gatilho); nos itens
 // de marcação e de rádio a pista do indicador já faz o alinhamento.
-const interfaceCode = `// ContextMenu — raiz
+//
+// Os comentários do bloco são CÓDIGO que se copia, e código se escreve em
+// inglês: até 2026-09-11 eles diziam "raiz" e "padrão" nos três idiomas.
+const interfaceCode = `// ContextMenu (root)
 interface ContextMenuProps {
-  modal?: boolean;          // padrão: true
+  modal?: boolean;          // default: true
   dir?: 'ltr' | 'rtl';
-  pressOpenDelay?: number;  // padrão: 700
+  pressOpenDelay?: number;  // default: 700
 }
 // @update:open → (open: boolean, reason?: 'escape' | 'overlay' | 'api')
 
 // ContextMenuContent
 interface ContextMenuContentProps {
-  alignOffset?: number;     // padrão: 0
+  alignOffset?: number;     // default: 0
   loop?: boolean;
   class?: string;
 }
@@ -470,7 +475,7 @@ interface ContextMenuRadioItemProps {
   class?: string;
 }
 
-// ContextMenuLabel e ContextMenuSubTrigger
+// ContextMenuLabel and ContextMenuSubTrigger
 interface ContextMenuLabelProps {
   inset?: boolean;
   class?: string;
@@ -505,14 +510,18 @@ const usageDont = computed(() => ({
   items: stringsFromDict(tContent, 'usage.dont'),
 }));
 
-// `name` e `trackId` são a CHAVE do card no conteúdo compartilhado — é deles
-// que sai o `snippet_id` do botão de copiar. O nome traduzido partiria o mesmo
-// botão em três valores no GA4, e "Label" com maiúscula não casava com a chave
-// `label` que as outras stacks mandam.
+// `trackId` é a CHAVE do card no conteúdo compartilhado — é dele que sai o
+// `snippet_id` do botão de copiar. O nome traduzido partiria o mesmo botão em
+// três valores no GA4, e "Label" com maiúscula não casava com a chave `label`
+// que as outras stacks mandam.
+//
+// O TÍTULO dos três primeiros cards vem de `variants.names.*`: até 2026-09-11 o
+// card mostrava a chave crua ("default", "destructive", "label") como título,
+// nos três idiomas. Os outros quatro têm o nome em `variants.items.<card>.name`.
 const variantItems = computed(() => [
-  { name: 'default',      description: stripHtml(tContent('variants.items.default')),      code: variantCode.value.default     },
-  { name: 'destructive',  description: stripHtml(tContent('variants.items.destructive')),  code: variantCode.value.destructive },
-  { name: 'label',        description: stripHtml(tContent('variants.items.label')),        code: variantCode.value.label       },
+  { trackId: 'default',     name: tContent('variants.names.default'),     description: stripHtml(tContent('variants.items.default')),     code: variantCode.value.default     },
+  { trackId: 'destructive', name: tContent('variants.names.destructive'), description: stripHtml(tContent('variants.items.destructive')), code: variantCode.value.destructive },
+  { trackId: 'label',       name: tContent('variants.names.label'),       description: stripHtml(tContent('variants.items.label')),       code: variantCode.value.label       },
   {
     trackId: 'withCheckbox',
     name: tContent('variants.items.withCheckbox.name'),

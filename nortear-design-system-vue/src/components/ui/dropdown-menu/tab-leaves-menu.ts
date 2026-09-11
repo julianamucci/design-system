@@ -1,8 +1,9 @@
 import { injectDropdownMenuRootContext } from 'reka-ui'
+import { injectDropdownMenuCloseChannel } from './dropdown-menu.context'
 
 /**
- * Tab SAI do menu e o fecha — C2 do PRD do DropdownMenu, e o que o vanilla, o
- * react e o bits-ui fazem.
+ * Tab SAI do menu e o fecha — C2 do PRD do DropdownMenu (e do ContextMenu, que
+ * o herda), e o que as outras stacks fazem.
  *
  * Medido em 2026-09-10 com teclado real (Playwright), foco num item e o menu
  * aberto, com um botão antes e outro depois do gatilho:
@@ -75,6 +76,22 @@ export function tabbableBeside(anchor: HTMLElement, direction: 'next' | 'prev'):
 }
 
 /**
+ * O que o mecanismo precisa da raiz de um menu MODAL da reka — o
+ * `DropdownMenuRoot` e o `ContextMenuRoot` entregam os dois campos com o mesmo
+ * nome, e é por isso que um só mecanismo serve aos dois membros da família.
+ * No ContextMenu o "gatilho" é a ÁREA do gesto.
+ */
+export interface TabLeavesRoot {
+  triggerElement: { readonly value: HTMLElement | null | undefined }
+  onOpenChange: (value: boolean) => void
+}
+
+/** Quem recebe a anotação do motivo — o canal de fechamento de cada membro. */
+export interface TabLeavesChannel {
+  note: (reason: 'overlay') => void
+}
+
+/**
  * O destino guardado entre a tecla e o fechamento, por menu. A chave é o
  * contexto da raiz, que o painel raiz e o do submenu recebem IGUAL — o portal
  * separa o DOM, não a árvore de componentes.
@@ -88,16 +105,25 @@ const pendingTarget = new WeakMap<object, HTMLElement>()
  * devolveria ao gatilho — `onCloseAutoFocus`, só no painel raiz. Sem destino (o
  * gatilho é o último ponto da página), a lib segue o caminho de sempre e o foco
  * volta ao gatilho.
+ *
+ * UM mecanismo para o DropdownMenu e o ContextMenu desta stack. Até 2026-09-11
+ * o ContextMenu tinha a própria cópia (`useTabCloses`, com o destino viajando
+ * pelo canal de fechamento e um `tabbableBeside` duplicado), com o mesmo
+ * comportamento e outro código — a correção de um não chegava ao outro. O
+ * Menubar NÃO entra: a lib o monta não modal, não barra o Tab e fecha sozinha
+ * pelo `focusOutside`, então lá basta mover o foco (`menubar/tab-leaves-menu.ts`).
  */
-export function useDropdownMenuTabLeaves() {
-  const root = injectDropdownMenuRootContext(null)
-
+export function useTabLeavesMenu(root: TabLeavesRoot | null, channel: TabLeavesChannel) {
   function onKeydownCapture(event: KeyboardEvent) {
     if (!root || !isPlainTab(event)) return
     event.preventDefault()
     const trigger = root.triggerElement.value
     const target = trigger ? tabbableBeside(trigger, event.shiftKey ? 'prev' : 'next') : null
     if (target) pendingTarget.set(root, target)
+    else pendingTarget.delete(root)
+    // Saiu sem decidir nada: é `overlay`, a mesma palavra do clique fora — e
+    // vale igual do painel do submenu, que fecha o menu INTEIRO.
+    channel.note('overlay')
     root.onOpenChange(false)
   }
 
@@ -111,4 +137,9 @@ export function useDropdownMenuTabLeaves() {
   }
 
   return { onKeydownCapture, onCloseAutoFocus }
+}
+
+/** O mecanismo ligado à raiz e ao canal do DropdownMenu. */
+export function useDropdownMenuTabLeaves() {
+  return useTabLeavesMenu(injectDropdownMenuRootContext(null), injectDropdownMenuCloseChannel())
 }

@@ -4,6 +4,7 @@ import type { HTMLAttributes } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import { MenubarTrigger, useForwardProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
+import { injectMenubarCloseChannel } from './menubar.context'
 
 /**
  * REABRIR pelo teclado precisa levar o foco para dentro do painel.
@@ -59,6 +60,21 @@ function focusPanelOnKeyboardOpen(event: KeyboardEvent) {
   }
   requestAnimationFrame(attempt)
 }
+
+/**
+ * Enter e Espaço no gatilho de um menu ABERTO o fecham (a lib alterna) — e isso
+ * é sair sem decidir, `overlay`, o mesmo motivo do clique no gatilho aberto.
+ * O clique a barra já recebe anotado pelo painel (`pointer-down-outside`); a
+ * tecla não passa por ele, então quem anota é o gatilho. De CAPTURA: roda antes
+ * do ouvinte da lib, que é quem alterna.
+ */
+const channel = injectMenubarCloseChannel()
+
+function noteToggleClose(event: KeyboardEvent) {
+  if (event.key !== 'Enter' && event.key !== ' ') return
+  const trigger = event.currentTarget as HTMLElement | null
+  if (trigger?.getAttribute('aria-expanded') === 'true') channel.note('overlay')
+}
 </script>
 
 <template>
@@ -67,6 +83,7 @@ function focusPanelOnKeyboardOpen(event: KeyboardEvent) {
     v-bind="forwardedProps"
     :class="cn('nds-menubar-trigger', props.class)"
     @keydown="focusPanelOnKeyboardOpen"
+    @keydown.capture="noteToggleClose"
   >
     <slot />
   </MenubarTrigger>

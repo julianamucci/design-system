@@ -11,13 +11,13 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
-import type { RdxMenuOpenChange } from '@radix-ng/primitives/menu';
+import type { CheckedState, RdxMenuOpenChange } from '@radix-ng/primitives/menu';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
-import { NDS_CONTEXT_MENU } from '@/components/ui/context-menu';
+import { NDS_CONTEXT_MENU, menuCloseReason } from '@/components/ui/context-menu';
 import { NdsButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
@@ -76,18 +76,15 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const INTERFACE_CODE = `// O primitivo do Radix NG dá só raiz e gatilho; do popup para dentro
-// as peças de @radix-ng/primitives/menu valem sem alteração.
-@Component({
+// A interface é só CÓDIGO, sem prosa: comentário cravado aqui sairia em
+// português nos três idiomas. O que cada peça faz está nas tabelas de props e
+// nas notas, que são traduzidas — o submenu com raiz própria inclusive.
+const INTERFACE_CODE = `@Component({
   selector: 'div[ndsContextMenu]',
-  // open, modal, loopFocus e as saídas (openChange, onOpenChange) vêm do
-  // RdxMenuRoot que o RdxContextMenuRoot já compõe — ligáveis no elemento.
   hostDirectives: [RdxContextMenuRoot],
 })
 export class NdsContextMenu {}
 
-// O submenu tem raiz PRÓPRIA: o menu de topo nasce no ponto do ponteiro,
-// o submenu nasce colado ao item que o abre.
 @Component({ selector: 'div[ndsContextMenuSub]', hostDirectives: [RdxMenuRoot] })
 export class NdsContextMenuSub {}`;
 
@@ -148,7 +145,16 @@ type ItemEntry = {
   inset?: boolean;
 };
 
+/** `checked` é o estado INICIAL; o atual mora na prévia (`checkedState`). */
 type CheckboxEntry = { kind: 'checkbox'; label: LabelKey; value: string; checked: boolean };
+
+/** `value` é a escolha INICIAL; a atual mora na prévia (`radioState`). */
+type RadioGroupEntry = {
+  kind: 'radio-group';
+  label: LabelKey;
+  value: string;
+  options: readonly { label: LabelKey; value: string }[];
+};
 
 type PreviewEntry =
   | ItemEntry
@@ -156,7 +162,7 @@ type PreviewEntry =
   | { kind: 'separator' }
   /** Rótulo DENTRO do grupo, que é o nome dele — rótulo solto não nomeia nada. */
   | { kind: 'group'; label: LabelKey; inset?: boolean; entries: readonly (ItemEntry | CheckboxEntry)[] }
-  | { kind: 'radio-group'; label: LabelKey; value: string; options: readonly { label: LabelKey; value: string }[] }
+  | RadioGroupEntry
   | { kind: 'sub'; label: LabelKey; entries: readonly { label: LabelKey; value: string }[] };
 
 const EDIT: ItemEntry = { kind: 'item', label: 'demonstration.labels.edit', value: 'edit' };
@@ -252,22 +258,6 @@ const PAIR2_DONT_ENTRIES: readonly PreviewEntry[] = [EDIT, DELETE, DUPLICATE];
 const PAIR3_ENTRIES: readonly PreviewEntry[] = [EDIT, DUPLICATE];
 
 /**
- * O motivo do fechamento, no vocabulário da família (PRD dropdown-menu §9).
- *
- * O primitivo diz `escape-key`, `outside-press` e `focus-out`; item escolhido e
- * Tab chegam os dois como `none`. O que os separa é a prévia saber que um item
- * foi escolhido — `api`, a única saída em que a pessoa DECIDIU. Tab e clique
- * fora são `overlay`: saiu sem decidir.
- */
-function closeReason(
-  reason: RdxMenuOpenChange['reason'],
-  itemChosen: boolean,
-): 'escape' | 'overlay' | 'api' {
-  if (reason === 'escape-key') return 'escape';
-  return itemChosen ? 'api' : 'overlay';
-}
-
-/**
  * O código do card, a partir da MESMA lista que monta a prévia — com os rótulos
  * no idioma da página, para que código e prévia digam o mesmo nos três.
  *
@@ -353,6 +343,7 @@ const A11Y_CRITERIA: readonly { level: string; how: string }[] = [
   { level: '2.1.1 · A',   how: 'Escape · document.activeElement' },
   { level: '1.4.3 · AA',  how: 'axe-core · color-contrast' },
   { level: '2.1.1 · A',   how: 'ArrowDown · document.activeElement' },
+  { level: '4.1.2 · A',   how: 'aria-haspopup · aria-expanded' },
 ];
 
 /**
@@ -400,8 +391,8 @@ const A11Y_CRITERIA: readonly { level: string; how: string }[] = [
           } @else if (entry.kind === 'checkbox') {
             <div
               ndsContextMenuCheckboxItem
-              [checked]="entry.checked"
-              (checkedChange)="onToggle(entry.value)"
+              [checked]="isChecked(entry)"
+              (checkedChange)="onCheckedChange(entry, $event)"
             >{{ t(entry.label) }}</div>
           } @else if (entry.kind === 'group') {
             <div ndsContextMenuGroup>
@@ -417,14 +408,18 @@ const A11Y_CRITERIA: readonly { level: string; how: string }[] = [
                 } @else {
                   <div
                     ndsContextMenuCheckboxItem
-                    [checked]="child.checked"
-                    (checkedChange)="onToggle(child.value)"
+                    [checked]="isChecked(child)"
+                    (checkedChange)="onCheckedChange(child, $event)"
                   >{{ t(child.label) }}</div>
                 }
               }
             </div>
           } @else if (entry.kind === 'radio-group') {
-            <div ndsContextMenuRadioGroup [value]="entry.value">
+            <div
+              ndsContextMenuRadioGroup
+              [value]="radioValue(entry)"
+              (valueChange)="onRadioChange(entry, $event)"
+            >
               <div ndsContextMenuLabel>{{ t(entry.label) }}</div>
               @for (option of entry.options; track option.value) {
                 <!-- A escolha é o CLIQUE no item, não a mudança de valor: escolher a
@@ -460,23 +455,50 @@ export class NdsContextMenuPreview {
   protected readonly areaWithHint = AREA_CLICK_DIREITO;
   protected readonly areaWithoutHint = AREA_SEM_DICA;
 
-  /** Um item escolhido nesta abertura — é o que faz o fechamento ser `api`. */
-  private itemChosen = false;
+  /**
+   * O estado ATUAL dos alternadores e das escolhas únicas desta prévia, pela
+   * entrada da lista. O miolo do menu é desmontado ao fechar e remontado ao
+   * abrir: ligado à constante da lista, ele voltava ao estado inicial a cada
+   * abertura. As outras quatro stacks guardam o estado; esta passou a guardar
+   * em 2026-09-11.
+   */
+  private readonly checkedState = signal(new Map<CheckboxEntry, CheckedState>());
+  private readonly radioState = signal(new Map<RadioGroupEntry, string>());
 
+  protected isChecked(entry: CheckboxEntry): CheckedState {
+    return this.checkedState().get(entry) ?? entry.checked;
+  }
+
+  protected radioValue(group: RadioGroupEntry): string {
+    return this.radioState().get(group) ?? group.value;
+  }
+
+  protected onCheckedChange(entry: CheckboxEntry, checked: CheckedState): void {
+    this.checkedState.update((state) => new Map(state).set(entry, checked));
+    this.onToggle(entry.value);
+  }
+
+  protected onRadioChange(group: RadioGroupEntry, value: unknown): void {
+    if (typeof value !== 'string') return;
+    this.radioState.update((state) => new Map(state).set(group, value));
+  }
+
+  /**
+   * O motivo sai do `menuCloseReason`, a tradução única da família: Escape,
+   * clique fora, Tab e o botão solto fora do painel têm motivo próprio na lib; o
+   * que chega sem motivo é o item escolhido ou o código — `api` nos dois casos.
+   */
   protected onOpenChange(change: RdxMenuOpenChange): void {
     const payload = { component: 'context-menu' as const, menu: this.menu(), location: this.location() };
     if (change.open) {
-      this.itemChosen = false;
       track('context_menu_open', payload);
       return;
     }
-    track('context_menu_close', { ...payload, reason: closeReason(change.reason, this.itemChosen) });
-    this.itemChosen = false;
+    track('context_menu_close', { ...payload, reason: menuCloseReason(change.reason) });
   }
 
   /** Item de ação: a escolha FECHA o menu, e o fechamento que vem é `api`. */
   protected onSelect(label: string): void {
-    this.itemChosen = true;
     track('context_menu_item_select', {
       component: 'context-menu',
       label,
@@ -799,10 +821,12 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
   });
 
   /**
-   * Os sete cards. `name`/`trackId` é a CHAVE (`default`, `withCheckbox`…) — o
+   * Os sete cards. `trackId` é a CHAVE (`default`, `withCheckbox`…) — o
    * `snippet_id` do toggle de código não pode mudar com o idioma. Os três cards
-   * de string solta não têm nome no conteúdo, e o nome deles é a própria chave,
-   * como no Vanilla; os quatro de objeto trazem nome, descrição e "quando usar".
+   * de string solta (`default`, `destructive`, `label`) leem o nome de
+   * `variants.names.*`; os quatro de objeto trazem nome, descrição e "quando
+   * usar" em `variants.items.<card>`. Até 2026-09-11 os três primeiros
+   * mostravam a chave crua como título, nas cinco stacks.
    */
   protected readonly variantItems = computed(() => {
     dict();
@@ -821,7 +845,7 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
         ? `${t(`variants.items.${key}.description`)}<br><br><strong>${tNav('common.useWhen')}</strong> ${t(`variants.items.${key}.use`)}`
         : t(`variants.items.${key}`);
       return {
-        name: hasName ? t(`variants.items.${key}.name`) : key,
+        name: hasName ? t(`variants.items.${key}.name`) : t(`variants.names.${key}`),
         description,
         trackId: key,
         code: menuSnippet(VARIANT_ENTRIES[key]),

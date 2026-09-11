@@ -9,6 +9,7 @@
 		ref = $bindable(null),
 		checked = $bindable(false),
 		indeterminate = $bindable(false),
+		// PATCH: bugfix — marcar não fecha o menu, como no vanilla (ver PATCHES.md#svelte-menu-select-keeps-open)
 		closeOnSelect = false,
 		class: className,
 		children: childrenProp,

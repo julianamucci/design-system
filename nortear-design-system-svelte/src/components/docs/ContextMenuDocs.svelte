@@ -184,6 +184,7 @@
     '2.1.1 · A',
     '1.4.3 · AA',
     '2.1.1 · A',
+    '4.1.2 · A',
   ];
   const A11Y_TEST_HOW = [
     'axe-core',
@@ -195,6 +196,7 @@
     'Escape · document.activeElement',
     'axe-core · color-contrast',
     'ArrowDown · document.activeElement',
+    'aria-haspopup · aria-expanded',
   ];
 
   /**
@@ -205,35 +207,62 @@
    * da Demonstração. `label` é o valor estável do item. Nenhum dos três leva
    * texto traduzido, sob pena de partir o mesmo evento em um por idioma.
    *
-   * O MOTIVO do fechamento: o `onOpenChange` da lib diz só que fechou. O Escape
-   * e a escolha de item se anotam antes do aviso — o `onEscapeKeydown` do painel
-   * e o `onSelect` do item rodam antes de a lib fechar —, e o que sobra é
-   * `overlay`: clique fora ou o Tab que leva o foco embora, que é sair sem
-   * decidir. O Escape dentro de um submenu fecha só o submenu (o wrapper barra a
-   * tecla antes do painel de cima), e por isso não anota nada no menu de cima.
+   * O MOTIVO do fechamento: o `onOpenChange` da lib diz só que fechou, e cada
+   * caminho se anota ANTES do aviso. `escape` pelo `onEscapeKeydown` do painel;
+   * `overlay` — sair sem decidir — pelo clique fora (`onInteractOutside`) e pelo
+   * Tab que leva o foco embora (o `onkeydown` do painel e o do submenu, que vive
+   * num portal à parte); `api` pela escolha do item de ação. O que não se anotou
+   * fecha como `api`: fechamento pelo código ou por caminho que a página não
+   * conhece — "decisão de dentro" (18-overlay §Analytics). Até 2026-09-11 o
+   * padrão era `overlay`, e todo fechamento de origem desconhecida contava como
+   * clique fora. O Escape dentro de um submenu fecha só o submenu (o wrapper
+   * barra a tecla antes do painel de cima), e por isso não anota nada no menu
+   * de cima.
    *
    * Duas portas para o item, porque só uma decide: `select` é o item de AÇÃO,
    * que fecha o menu e arma `api`; `toggle` é a marcação e a opção de rádio,
-   * que alternam e deixam o menu aberto. As duas avisam a escolha, mas `toggle`
-   * não arma motivo nenhum — armado ali, o clique fora ou o Tab seguinte sairia
-   * como `api`, uma decisão que ninguém tomou.
+   * que alternam e deixam o menu aberto sem armar motivo.
    */
   function contextMenuTracker(menu: string, location: string) {
-    let reason: 'escape' | 'overlay' | 'api' = 'overlay';
+    let reason: 'escape' | 'overlay' | 'api' = 'api';
+    const leave = () => {
+      reason = 'overlay';
+    };
+    const leaveOnTab = (event: KeyboardEvent) => {
+      if (event.key === 'Tab') leave();
+    };
     const announce = (label: string) =>
       track('context_menu_item_select', { component: 'context-menu', label, menu, location });
     return {
       onOpenChange(open: boolean) {
         if (open) {
-          reason = 'overlay';
+          reason = 'api';
           track('context_menu_open', { component: 'context-menu', menu, location });
           return;
         }
         track('context_menu_close', { component: 'context-menu', menu, reason, location });
+        reason = 'api';
       },
-      onEscapeKeydown() {
-        reason = 'escape';
+      /** O que o PAINEL anota — espalhado no `Content`: Escape, clique fora e Tab. */
+      content: {
+        onEscapeKeydown: () => {
+          reason = 'escape';
+        },
+        onInteractOutside: (event: PointerEvent) => {
+          // O clique num painel de submenu também chega aqui, e a lib não fecha
+          // por ele: é interação DENTRO do menu, não fora.
+          if (
+            event.target instanceof Element &&
+            event.target.closest('[data-slot="context-menu-sub-content"]')
+          ) {
+            return;
+          }
+          leave();
+        },
+        onkeydown: leaveOnTab,
       },
+      /** O painel do submenu vive num portal à parte: o Tab dado nele não passa pelo de cima. */
+      subContent: { onkeydown: leaveOnTab },
       select(label: string) {
         return () => {
           reason = 'api';
@@ -490,7 +519,7 @@ interface ContextMenuLabelProps {
         <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
           {$tStore('demonstration.labels.triggerLabel')}
         </ContextMenu.Trigger>
-        <ContextMenu.Content onEscapeKeydown={menus.demo.onEscapeKeydown}>
+        <ContextMenu.Content {...menus.demo.content}>
           <ContextMenu.Item onSelect={menus.demo.select('edit')}>
             {$tStore('demonstration.labels.edit')}
             <ContextMenu.Shortcut>{$tStore('demonstration.labels.editShortcut')}</ContextMenu.Shortcut>
@@ -500,7 +529,7 @@ interface ContextMenuLabelProps {
           </ContextMenu.Item>
           <ContextMenu.Sub>
             <ContextMenu.SubTrigger>{$tStore('demonstration.labels.share')}</ContextMenu.SubTrigger>
-            <ContextMenu.SubContent>
+            <ContextMenu.SubContent {...menus.demo.subContent}>
               <ContextMenu.Item onSelect={menus.demo.select('share-email')}>
                 {$tStore('demonstration.labels.shareEmail')}
               </ContextMenu.Item>
@@ -608,7 +637,7 @@ interface ContextMenuLabelProps {
         <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
           {$tStore('demonstration.labels.triggerLabel')}
         </ContextMenu.Trigger>
-        <ContextMenu.Content onEscapeKeydown={menus.pair1Do.onEscapeKeydown}>
+        <ContextMenu.Content {...menus.pair1Do.content}>
           <ContextMenu.Item onSelect={menus.pair1Do.select('edit')}>
             {$tStore('demonstration.labels.edit')}
           </ContextMenu.Item>
@@ -626,7 +655,7 @@ interface ContextMenuLabelProps {
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content onEscapeKeydown={menus.pair1Dont.onEscapeKeydown}>
+      <ContextMenu.Content {...menus.pair1Dont.content}>
         <ContextMenu.Item onSelect={menus.pair1Dont.select('edit')}>
           {$tStore('demonstration.labels.edit')}
         </ContextMenu.Item>
@@ -647,7 +676,7 @@ interface ContextMenuLabelProps {
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content onEscapeKeydown={menus.pair2Do.onEscapeKeydown}>
+      <ContextMenu.Content {...menus.pair2Do.content}>
         <ContextMenu.Item onSelect={menus.pair2Do.select('edit')}>
           {$tStore('demonstration.labels.edit')}
         </ContextMenu.Item>
@@ -666,7 +695,7 @@ interface ContextMenuLabelProps {
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content onEscapeKeydown={menus.pair2Dont.onEscapeKeydown}>
+      <ContextMenu.Content {...menus.pair2Dont.content}>
         <ContextMenu.Item onSelect={menus.pair2Dont.select('edit')}>
           {$tStore('demonstration.labels.edit')}
         </ContextMenu.Item>
@@ -695,7 +724,7 @@ interface ContextMenuLabelProps {
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content onEscapeKeydown={menus.pair3Do.onEscapeKeydown}>
+      <ContextMenu.Content {...menus.pair3Do.content}>
         <ContextMenu.Item onSelect={menus.pair3Do.select('edit')}>
           {$tStore('demonstration.labels.edit')}
         </ContextMenu.Item>
@@ -714,7 +743,7 @@ interface ContextMenuLabelProps {
       >
         {$tStore('demonstration.labels.areaNoHint')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content onEscapeKeydown={menus.pair3Dont.onEscapeKeydown}>
+      <ContextMenu.Content {...menus.pair3Dont.content}>
         <ContextMenu.Item onSelect={menus.pair3Dont.select('edit')}>
           {$tStore('demonstration.labels.edit')}
         </ContextMenu.Item>
@@ -736,11 +765,13 @@ interface ContextMenuLabelProps {
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
   <!--
-    O `name` dos três primeiros cards e o `trackId` dos outros quatro são a
-    CHAVE do conteúdo: é ela que vira o `snippet_id` da cópia de código, e uma
-    etiqueta com espaço ("Label + Inset") partia a série no GA4. Prévia e código
-    saem da mesma lista (`variantMenus`), e a nota da seção diz que só o item de
-    ação tem variante.
+    O `trackId` de todo card é a CHAVE do conteúdo: é ela que vira o
+    `snippet_id` da cópia de código, e uma etiqueta com espaço ("Label + Inset")
+    partia a série no GA4. O TÍTULO dos três primeiros sai de
+    `variants.names.*` (Padrão, Destrutivo, Rótulo) — até 2026-09-11 o card
+    mostrava a chave crua, "default", como título; os outros quatro seguem em
+    `variants.items.<card>.name`. Prévia e código saem da mesma lista
+    (`variantMenus`), e a nota da seção diz que só o item de ação tem variante.
   -->
   <DocsCompositions
     id="variantes"
@@ -749,9 +780,9 @@ interface ContextMenuLabelProps {
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="context-menu"
     items={[
-      { name: 'default',     description: $tStore('variants.items.default'),     code: variantCode('default'),     preview: variantDefault     },
-      { name: 'destructive', description: $tStore('variants.items.destructive'), code: variantCode('destructive'), preview: variantDestructive },
-      { name: 'label',       description: $tStore('variants.items.label'),       code: variantCode('label'),       preview: variantLabel       },
+      { trackId: 'default',     name: $tStore('variants.names.default'),     description: $tStore('variants.items.default'),     code: variantCode('default'),     preview: variantDefault     },
+      { trackId: 'destructive', name: $tStore('variants.names.destructive'), description: $tStore('variants.items.destructive'), code: variantCode('destructive'), preview: variantDestructive },
+      { trackId: 'label',       name: $tStore('variants.names.label'),       description: $tStore('variants.items.label'),       code: variantCode('label'),       preview: variantLabel       },
       {
         trackId: 'withCheckbox',
         name: $tStore('variants.items.withCheckbox.name'),
@@ -827,7 +858,7 @@ interface ContextMenuLabelProps {
       {:else if entry.type === 'submenu'}
         <ContextMenu.Sub>
           <ContextMenu.SubTrigger>{entry.label}</ContextMenu.SubTrigger>
-          <ContextMenu.SubContent>
+          <ContextMenu.SubContent {...tracker.subContent}>
             {@render menuEntries(entry.items, tracker)}
           </ContextMenu.SubContent>
         </ContextMenu.Sub>
@@ -841,7 +872,7 @@ interface ContextMenuLabelProps {
       <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
-      <ContextMenu.Content onEscapeKeydown={menus[key].onEscapeKeydown}>
+      <ContextMenu.Content {...menus[key].content}>
         {@render menuEntries(variantMenus[key], menus[key])}
       </ContextMenu.Content>
     </ContextMenu.Root>

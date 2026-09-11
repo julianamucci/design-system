@@ -156,17 +156,41 @@ export const WithCheckboxItems: Story = {
       await expect(marca(email)).toBe('none');
     });
 
-    await step('Clicar alterna o item e mantém o menu aberto', async () => {
-      // Idempotente: leva o e-mail a marcado só se ainda não estiver, então o
-      // replay do painel Interactions termina no mesmo estado.
-      if (email.getAttribute('aria-checked') !== 'true') await userEvent.click(email);
+    await step('Clicar alterna nos DOIS sentidos, o indicador acompanha e o menu segue aberto', async () => {
+      // F5 inteiro: `aria-checked` vai de falso a verdadeiro e volta, o
+      // indicador é conferido DEPOIS de cada clique (e não só no estado
+      // inicial), e o menu continua aberto depois dos dois. Sem guarda de
+      // idempotência: dois cliques devolvem o item ao estado de partida, então o
+      // replay do painel Interactions começa e termina igual.
+      //
+      // O menu e o item são relidos do DOCUMENTO a cada volta: uma referência
+      // capturada antes do clique continuaria respondendo de um nó que saiu do
+      // documento, e o "segue aberto" passaria com o menu fechado.
+      const liveEmail = () => {
+        const menus = within(document.body).queryAllByRole('menu');
+        return menus.length === 1
+          ? within(menus[0]).queryByRole('menuitemcheckbox', { name: 'E-mail' })
+          : null;
+      };
+      // Leitura pura do estilo em linha que a lib escreve (`display: none`
+      // quando desmarcado) — nada que mexa no DOM dentro do `waitFor`.
+      const indicatorShown = (item: HTMLElement) =>
+        item.querySelector<HTMLElement>('[rdxmenucheckboxitemindicator]')!.style.display !== 'none';
 
-      await waitFor(async () => {
-        await expect(email.getAttribute('aria-checked')).toBe('true');
-        await expect(email.hasAttribute('data-checked')).toBe(true);
-      });
-      // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
-      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
+      const before = email.getAttribute('aria-checked') === 'true';
+      for (const expected of [!before, before]) {
+        await userEvent.click(liveEmail()!);
+        await waitFor(async () => {
+          const item = liveEmail();
+          await expect(item).not.toBeNull();
+          await expect(item!.getAttribute('aria-checked')).toBe(String(expected));
+          await expect(indicatorShown(item!)).toBe(expected);
+        });
+        // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
+        const menus = within(document.body).queryAllByRole('menu');
+        await expect(menus).toHaveLength(1);
+        await expect(menus[0].hasAttribute('data-closed')).toBe(false);
+      }
       // Independentes entre si — é o que separa checkbox de escolha única.
       await expect(name.getAttribute('aria-checked')).toBe('true');
     });
@@ -177,6 +201,9 @@ export const WithCheckboxItems: Story = {
 
 export const WithRadioGroup: Story = {
   parameters: {
+    // `functional.item6` diz também "e o menu segue aberto" (C10): o último passo
+    // CONTA os menus no documento em vez de consultar a referência capturada
+    // antes do clique, que continuaria respondendo com o menu fechado.
     covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
     docs: { source: { transform: dropdownMenuWithRadioSource } },
   },
@@ -218,6 +245,19 @@ export const WithRadioGroup: Story = {
         await expect(light.getAttribute('aria-checked')).toBe('false');
       });
     });
+
+    await step('Escolher uma opção NÃO fecha o menu', async () => {
+      // As referências de cima foram capturadas antes do clique: com o menu
+      // fechado elas continuariam respondendo `aria-checked` de um nó que saiu
+      // do documento. A prova é o documento — um menu, montado e sem a marca de
+      // fechado — e a opção lida de novo DESSE menu.
+      const menus = within(document.body).queryAllByRole('menu');
+      await expect(menus).toHaveLength(1);
+      await expect(menus[0].hasAttribute('data-closed')).toBe(false);
+      await expect(
+        within(menus[0]).getByRole('menuitemradio', { name: 'Escuro' }).getAttribute('aria-checked'),
+      ).toBe('true');
+    });
   },
 };
 
@@ -225,7 +265,9 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    covers: ['functional.item7', 'visual.item4'],
+    // F12: seta direita entra no submenu; seta esquerda e Escape fecham SÓ o
+    // submenu, com o foco de volta no sub-gatilho e o menu pai aberto.
+    covers: ['functional.item7', 'functional.item12', 'visual.item4'],
     docs: { source: { transform: dropdownMenuWithSubmenuSource } },
   },
   render: () => ({
@@ -354,6 +396,8 @@ export const WithSubmenu: Story = {
 
 export const WithShortcuts: Story = {
   parameters: {
+    // F14: o atalho à direita do rótulo e dentro do nome acessível.
+    covers: ['functional.item14'],
     docs: { source: { transform: dropdownMenuWithShortcutsSource } },
   },
   render: () => ({

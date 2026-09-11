@@ -9,6 +9,12 @@
  * Actions, e o que o componente ensina é a composição.
  */
 import { attrs, svelteSnippet } from '@/lib/story-source';
+import {
+  menuEntriesDeclarations,
+  menuEntriesMarkup,
+  menuEntriesParts,
+  type MenuDocsEntry,
+} from '@/components/ui/dropdown-menu/dropdown-menu.fixtures';
 
 export type MenubarArgs = {
   /** Menu aberto ao montar. Nesta stack ele é o `value` da raiz, vinculável. */
@@ -347,6 +353,93 @@ let menuAberto = $state("");`,
       <MenubarItem>Desfazer</MenubarItem>
     </MenubarContent>
   </MenubarMenu>
+</Menubar>`,
+  );
+}
+
+// ─── Cards de Variantes da docs page ──────────────────────────────────────────
+//
+// A lista é a do DropdownMenu (`dropdown-menu/dropdown-menu.fixtures.ts`): um
+// menu da barra É um DropdownMenu, com as mesmas entradas. O que este módulo
+// acrescenta é a barra em volta — um `MenubarMenu` por gatilho, e o prefixo
+// `Menubar` nas peças.
+
+/** Um menu da barra de um card: o `value` dele, o texto do gatilho e as entradas. */
+export type MenubarDocsMenu = { value: string; triggerLabel: string; entries: MenuDocsEntry[] };
+
+/**
+ * A barra que `menubarEntriesSource` escreve quando ninguém passa outra.
+ *
+ * Passa por todo tipo de entrada — item com atalho e destrutivo, divisória,
+ * submenu, grupo nomeado com marcação e grupo de rádio —, e por mais de um menu
+ * na mesma barra: a varredura transversal chama o construtor sem argumento e
+ * confere que cada `bind:` tem a variável declarada no script do exemplo.
+ */
+const COMPLETE_MENUS: MenubarDocsMenu[] = [
+  {
+    value: 'file',
+    triggerLabel: 'Arquivo',
+    entries: [
+      { type: 'item', label: 'Novo', value: 'new', shortcut: 'Ctrl+N' },
+      {
+        type: 'submenu',
+        label: 'Exportar',
+        items: [
+          { type: 'item', label: 'PDF', value: 'pdf' },
+          { type: 'item', label: 'CSV', value: 'csv' },
+        ],
+      },
+      { type: 'separator' },
+      { type: 'item', label: 'Excluir arquivo', value: 'delete-file', variant: 'destructive' },
+    ],
+  },
+  {
+    value: 'view',
+    triggerLabel: 'Exibir',
+    entries: [
+      {
+        type: 'group',
+        label: 'Painéis',
+        items: [{ type: 'checkbox', label: 'Barra lateral', value: 'sidebar', checked: true }],
+      },
+      {
+        type: 'radio-group',
+        label: 'Aparência',
+        name: 'theme',
+        value: 'dark',
+        items: [
+          { label: 'Claro', value: 'light' },
+          { label: 'Escuro', value: 'dark' },
+        ],
+      },
+    ],
+  },
+];
+
+/**
+ * O código de um card de Variantes, a partir da MESMA lista de menus que monta
+ * a prévia. Os gatilhos e os rótulos chegam traduzidos, então o código fala o
+ * idioma da prévia nos três idiomas — até 2026-09-11 cada card tinha um literal
+ * em português, e os de `default` e `destructive` mostravam um item solto que a
+ * prévia não tinha. Serve também ao exemplo de uso da seção Importação.
+ *
+ * Sem argumento, escreve `COMPLETE_MENUS`: é assim que a varredura transversal
+ * alcança o construtor que a docs page usa.
+ */
+export function menubarEntriesSource(options: { menus?: MenubarDocsMenu[] } = {}): string {
+  const { menus = COMPLETE_MENUS } = options;
+  const everything = menus.flatMap((entry) => entry.entries);
+  const parts = [...menuEntriesParts('Menubar', everything, new Set(BASE))];
+  const declarations = menuEntriesDeclarations(everything);
+
+  return svelteSnippet(
+    declarations.length ? `${importing(parts)}\n\n${declarations.join('\n')}` : importing(parts),
+    `<Menubar>
+${menus
+  .map(({ value, triggerLabel, entries }) =>
+    menu(value, triggerLabel, menuEntriesMarkup('Menubar', entries, '      ').join('\n')),
+  )
+  .join('\n')}
 </Menubar>`,
   );
 }

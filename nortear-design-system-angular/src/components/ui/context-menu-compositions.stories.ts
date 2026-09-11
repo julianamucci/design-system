@@ -44,7 +44,11 @@ const target = (id: string) => document.querySelector<HTMLElement>(`[data-testid
 // ── Com atalhos ───────────────────────────────────────────────────────────────
 
 export const WithShortcut: Story = {
-  parameters: { docs: { source: { transform: contextMenuWithShortcutSource } } },
+  parameters: {
+    // F17: o atalho à direita do rótulo e dentro do nome acessível do item.
+    covers: ['functional.item17'],
+    docs: { source: { transform: contextMenuWithShortcutSource } },
+  },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
@@ -88,6 +92,9 @@ export const WithShortcut: Story = {
         await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
         await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
       }
+      // E o resultado disso, que é o que o leitor de tela anuncia: o atalho
+      // DENTRO do nome do item, e não um irmão solto.
+      await expect(target('editar')).toHaveAccessibleName('Editar Ctrl+E');
     });
 
     await step('O atalho fica encostado à direita do rótulo', async () => {
@@ -251,6 +258,16 @@ export const WithRadioGroup: Story = {
       await waitFor(() => expect(target(click).getAttribute('aria-checked')).toBe('true'));
       await expect(target(other).getAttribute('aria-checked')).toBe('false');
     });
+
+    await step('Escolher uma opção NÃO fecha o menu', async () => {
+      // `functional.item8` termina em "e o menu segue aberto" (C10), e nada aqui
+      // o afirmava. A prova é o documento: UM menu, montado e sem a marca de
+      // fechado — e não uma referência capturada antes do clique.
+      const menus = within(document.body).queryAllByRole('menu');
+      await expect(menus).toHaveLength(1);
+      await expect(menus[0].hasAttribute('data-closed')).toBe(false);
+      await expect(menus[0].getAttribute('data-slot')).toBe('context-menu-content');
+    });
   },
 };
 
@@ -262,7 +279,9 @@ export const WithSubmenu: Story = {
     // filho (injetor do popup no miolo + garantia no sub-gatilho, ver
     // `context-menu.ts`), e é com ele lá dentro que a seta esquerda tem o que
     // fechar.
-    covers: ['functional.item5', 'functional.item6', 'visual.item3'],
+    // `accessibility.item10`: o passo "O sub-gatilho diz que abre um menu" lê
+    // `aria-haspopup` e `aria-expanded` fechado, e o de abertura lê o `true`.
+    covers: ['functional.item5', 'functional.item6', 'accessibility.item10', 'visual.item3'],
     docs: { source: { transform: contextMenuWithSubmenuSource } },
   },
   render: () => ({

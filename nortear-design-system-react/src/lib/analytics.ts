@@ -296,16 +296,19 @@ interface AnalyticsEvents {
 
   /** Disparado quando um DropdownMenu abre. */
   dropdown_menu_open: {
-    component: 'dropdown-menu';
-    label: string;
-    location?: string;
+    component: "dropdown-menu";
+    menu: string;
+    location: string;
+    label?: never;
   };
 
   /** Disparado quando um DropdownMenu fecha, por qualquer caminho. */
   dropdown_menu_close: {
-    component: 'dropdown-menu';
-    label: string;
-    location?: string;
+    component: "dropdown-menu";
+    menu: string;
+    reason: "escape" | "overlay" | "close-button" | "api";
+    location: string;
+    label?: never;
   };
 
   /**
@@ -314,10 +317,10 @@ interface AnalyticsEvents {
    * mesmo evento em três no GA4, um por idioma.
    */
   dropdown_menu_item_select: {
-    component: 'dropdown-menu';
-    label: string;
+    component: "dropdown-menu";
     menu: string;
-    location?: string;
+    label: string;
+    location: string;
   };
 
   /** Disparado quando o usuário dispara um toast na demonstração do Sonner. */
@@ -344,15 +347,16 @@ interface AnalyticsEvents {
    * item — nunca texto traduzido. `location` é a seção da docs page (guideline 07).
    */
   context_menu_open: {
-    component: 'context-menu';
+    component: "context-menu";
     menu: string;
     location: string;
+    label?: never;
   };
 
   context_menu_item_select: {
-    component: 'context-menu';
-    label: string;
+    component: "context-menu";
     menu: string;
+    label: string;
     location: string;
   };
 
@@ -362,9 +366,40 @@ interface AnalyticsEvents {
    * de um item (`api`) — não tem botão de fechar, mas o tipo carrega as quatro.
    */
   context_menu_close: {
-    component: 'context-menu';
+    component: "context-menu";
     menu: string;
-    reason: 'escape' | 'overlay' | 'close-button' | 'api';
+    reason: "escape" | "overlay" | "close-button" | "api";
+    location: string;
+    label?: never;
+  };
+
+  /**
+   * Os três eventos do Menubar, no formato da família (DropdownMenu e
+   * ContextMenu): `menu` é o id estável do menu — o da prévia, mais a chave do
+   * gatilho quando a barra tem vários menus (`demo-file`, `pair1-do-edit`) —,
+   * `label` o do item, e o fechamento diz o motivo. Até 2026-09-11 o Menubar
+   * não disparava nada, e o conteúdo prometia três eventos que o tipo não tinha
+   * — decisão da dona: rastrear, no formato da família.
+   */
+  menubar_open: {
+    component: "menubar";
+    menu: string;
+    location: string;
+    label?: never;
+  };
+
+  menubar_close: {
+    component: "menubar";
+    menu: string;
+    reason: "escape" | "overlay" | "close-button" | "api";
+    location: string;
+    label?: never;
+  };
+
+  menubar_item_select: {
+    component: "menubar";
+    menu: string;
+    label: string;
     location: string;
   };
 

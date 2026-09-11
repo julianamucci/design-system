@@ -86,11 +86,11 @@ Menubar[aria-label]
 
 | Tecla | Ação |
 |-------|------|
-| `Tab` / `Shift+Tab` | Move entre os menus da barra |
+| `Tab` / `Shift+Tab` | Entra na barra (uma parada só); com um menu aberto, fecha-o — também de dentro de um submenu — e sai para o ponto seguinte (ou anterior) da página |
 | `Arrow Right` / `Arrow Left` | Move entre menus na barra (quando aberto) |
 | `Arrow Down` / `Enter` / `Space` | Abre o menu e foca no primeiro item |
 | `Arrow Up` / `Arrow Down` | Navega entre itens do menu aberto |
-| `Escape` | Fecha o menu, retorna foco ao trigger |
+| `Escape` | Fecha o menu, retorna foco ao trigger; dentro de um submenu, fecha só o submenu e devolve o foco ao item que o abriu |
 | `Home` / `End` | Vai para o primeiro/último item do menu |
 
 - Atalhos no `MenubarShortcut` são apenas visuais — a lógica deve ser implementada separadamente via listener global de teclado
@@ -101,7 +101,8 @@ Menubar[aria-label]
 - Atalhos: teclas escritas por extenso (`Ctrl`, `Shift`, `Alt`), compostas com `+` e sem espaço — `Ctrl+S`, `Ctrl+Shift+Z`. Nada de glifo de macOS: ele não se digita em Windows nem em Linux
 
 **Analytics** (ver `../../docs/shared/guidelines/07-analytics.md`):
-- Não dispara evento hoje — ausência declarada no PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9. Se passar a disparar, será `menubar_item_select` (padrão da família: `dropdown_menu_*`, `context_menu_*`), com `label` = valor ESTÁVEL do item, nunca o texto traduzido
+- Fala a língua da família de menus (PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9): `menubar_open`, `menubar_close` e `menubar_item_select`, com `component`, `menu` e `location` em todo payload, `label` na escolha de item e `reason` no fechamento. `menu` e `label` são identificadores ESTÁVEIS, nunca o texto traduzido
+- A `Menubar` desta stack entrega o motivo como segundo argumento de `update:modelValue` quando um menu fecha (`escape`, `overlay` ou `api`); qual menu fechou é o valor anterior, que quem consome guarda
 
 ---
 
@@ -340,7 +341,7 @@ Tabs (defaultValue, onValueChange)
 | Componente | Evento | Payload obrigatório |
 |------------|--------|---------------------|
 | Breadcrumb | `navigation_click` | `label`, `destination` |
-| Menubar | — (não rastreado; ver PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9) | — |
+| Menubar | `menubar_open` · `menubar_close` · `menubar_item_select` | `{ component: 'menubar', menu, location }`, mais `reason` no fechamento e `label` na escolha — PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9 |
 | Navigation Menu | `navigation_click` | `label`, `destination` |
 | Pagination | `page_change` | `page`, `total_pages` |
 | Stepper | `step_change` | `step`, `total_steps`, `direction` |

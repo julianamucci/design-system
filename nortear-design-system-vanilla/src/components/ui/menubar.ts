@@ -36,9 +36,34 @@
 // O que continua sendo desta fábrica é montar os ITENS: marcação, escolha
 // única, recuo e atalho são o formato de item do menubar, e nenhum dos outros
 // dois menus o compartilha.
+//
+// SUBMENU DENTRO DE SUBMENU funciona desde 2026-09-11: o item `submenu` de um
+// painel filho registra o sub-gatilho no MESMO controlador, e o auxiliar abre o
+// nível de baixo — a pilha de níveis é dele. Até ali o segundo nível fechava o
+// próprio painel que o continha, e a docs page mostrava um parágrafo no lugar do
+// exemplo vivo.
+//
+// ABRIR E FECHAR SÃO AVISADOS POR MENU (`onOpenChange` e `onClose` em cada
+// `MenubarMenu`), com o motivo do fechamento no vocabulário da família. Até
+// 2026-09-11 a barra não avisava nada, e a docs page não tinha como rastrear o
+// `menubar_open`/`menubar_close` que o conteúdo compartilhado documenta. A
+// DESTRUIÇÃO não avisa: sair da página com um menu aberto não é a pessoa
+// fechando o menu, e avisar ali punha um `menubar_close` no GA4 a cada troca de
+// idioma da docs page — que refaz as seções com a barra aberta.
+//
+// O RÓTULO NOMEIA UM GRUPO, como no `dropdown-menu` e no `context-menu`. Ele
+// era um `<div>` solto no painel, e o grupo de escolha única um `role="group"`
+// sem nome: o leitor anunciava "grupo" sem dizer de quê. Agora o rótulo abre um
+// `role="group"` com `aria-labelledby` apontando para ele, e os itens seguintes
+// entram no grupo até o próximo separador ou rótulo; a escolha única que vem
+// logo depois de um rótulo É esse grupo.
+//
+// O TYPEAHEAD MORA EM `@/lib/menu-typeahead`, o mesmo dos outros dois menus.
+// Esta fábrica casava UMA letra, sem acúmulo — a única das três.
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { createMenuTypeahead, isTypeaheadKey } from '@/lib/menu-typeahead';
 import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
 import { isPlainTab, tabExitTarget } from '@/lib/tabbable';
 import { Check, Minus } from 'lucide';
@@ -57,6 +82,16 @@ export type MenubarRadioOption = {
   value: string;
   label: string;
   disabled?: boolean;
+  /**
+   * Disparado a cada ESCOLHA desta opção, pelo ponteiro ou por Enter/Espaço —
+   * inclusive quando ela já era a escolhida. É o gesto de escolher, e não a
+   * mudança de valor: essa é o `onValueChange` do grupo, que não dispara quando
+   * nada mudou. O mesmo `onClick` que o item de escolha única do
+   * `createDropdownMenu` e do `createContextMenu` dispara a cada ativação — e é
+   * dele que sai o `menubar_item_select`.
+   */
+  // PATCH: api — escolha da opção avisada mesmo sem mudança de valor (ver PATCHES.md#vanilla-menubar-radio-keyboard-onclick)
+  onClick?: () => void;
 };
 
 export type MenubarItem = {
@@ -89,9 +124,41 @@ export type MenubarItem = {
   items?: MenubarItem[];
 };
 
+/**
+ * Por onde um menu da barra fechou — o vocabulário da família, o mesmo
+ * `reason` do `menubar_close`, do `dropdown_menu_close` e do
+ * `context_menu_close`. `escape` é a tecla; `overlay` é sair SEM decidir —
+ * clique fora, Tab levando o foco embora, clique no gatilho aberto ou passagem
+ * ao menu vizinho (seta lateral ou clique noutro gatilho); `api` é o fechamento
+ * pedido pelo produto — um item de ação escolhido.
+ *
+ * A barra saindo da página com o menu aberto NÃO é fechamento e não avisa
+ * nada: quem desmonta sabe que desmontou, e um `menubar_close` ali seria um
+ * fechamento que a pessoa não fez.
+ *
+ * Não há `close-button`: o menu da barra não tem botão de fechar.
+ */
+// PATCH: api — abrir e fechar avisados por menu, com o motivo, para analytics (ver PATCHES.md#vanilla-menubar-open-close)
+export type MenubarCloseReason = 'escape' | 'overlay' | 'api';
+
 export type MenubarMenu = {
   label: string;
   items: MenubarItem[];
+  /**
+   * Avisado quando ESTE menu abre ou fecha. Por menu, e não na barra: é o par
+   * `open`/`onOpenChange` que as outras quatro stacks põem no `MenubarMenu`, e o
+   * menu é quem sabe o próprio nome — quem consome não precisa traduzir índice
+   * em menu. Trocar de menu com a barra aberta avisa os dois: o que sai fecha
+   * antes de o vizinho abrir.
+   */
+  onOpenChange?: (open: boolean) => void;
+  /**
+   * Motivo do fechamento deste menu. Dispara uma vez por fechamento, ANTES do
+   * `onOpenChange(false)` — a mesma ordem do `createDropdownMenu` e do
+   * `createContextMenu`. É o que alimenta o `reason` do `menubar_close`: o
+   * `onOpenChange` diz QUE fechou, e só a fábrica sabe por qual caminho.
+   */
+  onClose?: (reason: MenubarCloseReason) => void;
 };
 
 export type MenubarSide = 'top' | 'bottom' | 'left' | 'right';
@@ -107,6 +174,15 @@ export type MenubarOptions = {
   side?: MenubarSide;
   /** Alinhamento do painel no eixo perpendicular ao lado. */
   align?: MenubarAlign;
+};
+
+/** Um menu de topo já montado: o gatilho, o painel, a roda das setas e a definição. */
+type MountedMenu = {
+  panel: HTMLElement;
+  trigger: HTMLButtonElement;
+  items: HTMLElement[];
+  /** A definição de quem consome — é dela que saem os avisos de abrir e fechar. */
+  menu: MenubarMenu;
 };
 
 let _menubarCounter = 0;
@@ -197,7 +273,13 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   root.className = cn('nds-menubar', options?.class);
 
   const triggers: HTMLButtonElement[] = [];
-  let isOpen: { panel: HTMLElement; trigger: HTMLButtonElement; items: HTMLElement[] } | null = null;
+  let isOpen: MountedMenu | null = null;
+  // O `id` de cada rótulo, para o `aria-labelledby` do grupo que ele nomeia.
+  // Contador da BARRA, e não do painel: o painel do submenu é remontado a cada
+  // abertura e convive com os de topo no mesmo documento.
+  let labelCount = 0;
+  /** A busca por digitação — uma por barra, zerada a cada fechamento. */
+  const typeahead = createMenuTypeahead();
 
   /**
    * Focáveis de cada painel, pelo próprio painel.
@@ -211,7 +293,8 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   const focaveisPorPainel = new WeakMap<HTMLElement, HTMLElement[]>();
 
   /**
-   * Um controlador por BARRA, e um painel filho de cada vez.
+   * Um controlador por BARRA, e um painel por nível — o submenu de um submenu
+   * abre no nível de baixo sem fechar o que o contém.
    *
    * `toggleOnClick`: a barra vive aberta enquanto se navega por ela, então o
    * segundo clique no sub-gatilho é o gesto de quem quer fechá-lo.
@@ -239,14 +322,34 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     for (const g of triggers) g.tabIndex = g === target ? 0 : -1;
   }
 
-  function closeAll(): void {
-    if (!isOpen) return;
+  /**
+   * Esconde o menu aberto e devolve qual era, SEM avisar ninguém. É a metade
+   * mecânica do fechamento, e é tudo o que a destruição faz: sair da página não
+   * é fechar o menu.
+   */
+  function hideOpenMenu(): MountedMenu | null {
+    if (!isOpen) return null;
+    const closing = isOpen;
     // Primeiro o filho: o painel dele vive no `body` e não sai junto com o pai.
     submenu.close();
-    isOpen.panel.hidden = true;
-    isOpen.trigger.dataset.state = 'closed';
-    isOpen.trigger.setAttribute('aria-expanded', 'false');
+    // A próxima abertura não herda letras desta.
+    typeahead.reset();
+    closing.panel.hidden = true;
+    closing.trigger.dataset.state = 'closed';
+    closing.trigger.setAttribute('aria-expanded', 'false');
     isOpen = null;
+    return closing;
+  }
+
+  /**
+   * Fecha o menu aberto, com o motivo. Já fechada, a barra não avisa ninguém —
+   * um segundo `onClose` seria um segundo `menubar_close` no GA4.
+   */
+  function closeAll(reason: MenubarCloseReason): void {
+    const closing = hideOpenMenu();
+    if (!closing) return;
+    closing.menu.onClose?.(reason);
+    closing.menu.onOpenChange?.(false);
   }
 
   /**
@@ -270,7 +373,8 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     e.preventDefault();
     const openTrigger = isOpen.trigger;
     tabExitTarget(e, root, openTrigger).focus();
-    closeAll();
+    // `overlay`: a pessoa saiu sem decidir, como no clique fora.
+    closeAll('overlay');
     moverTabulacao(openTrigger);
   }
 
@@ -278,7 +382,8 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     const target = menusMontados[index];
     if (!target) return;
     if (isOpen?.trigger === target.trigger) return;
-    closeAll();
+    // Passar ao vizinho com a barra aberta é sair deste menu sem decidir.
+    closeAll('overlay');
     target.panel.hidden = false;
     target.trigger.dataset.state = 'open';
     target.trigger.setAttribute('aria-expanded', 'true');
@@ -286,6 +391,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     moverTabulacao(target.trigger);
     if (focus === 'item') target.items[0]?.focus();
     else if (focus === 'gatilho') target.trigger.focus();
+    target.menu.onOpenChange?.(true);
   }
 
   // ── Construção de um painel (menu de topo ou submenu) ──────────────────────
@@ -330,6 +436,12 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
 
     const focaveis: HTMLElement[] = [];
 
+    // O grupo ABERTO. Um rótulo abre; o separador e o rótulo seguinte fecham.
+    // Item que aparece antes de qualquer rótulo continua pendurado no painel —
+    // grupo sem nome não agrupa nada para quem ouve. A roda do teclado não sente
+    // o grupo: ela é a lista `focaveis`, montada na ordem da declaração.
+    let openGroup: HTMLElement | null = null;
+
     items.forEach((item) => {
       const type = item.type ?? 'item';
 
@@ -338,17 +450,35 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         sep.className = 'nds-dropdown-menu-separator';
         sep.dataset.slot = 'menubar-separator';
         sep.setAttribute('role', 'separator');
+        openGroup = null;
         panel.appendChild(sep);
         return;
       }
 
       if (type === 'label') {
+        // O rótulo NOMEIA um bloco — e nomear exige que exista um bloco. O que
+        // ganha o nome é o `role="group"` que passa a envolver os itens
+        // seguintes; o rótulo continua fora da roda, porque não tem papel de
+        // item. `.nds-dropdown-menu-group` (`display: contents` na folha):
+        // a semântica pede o embrulho, o desenho não quer caixa nenhuma.
+        const labelId = `menubar-${id}-label-${++labelCount}`;
+
+        const group = document.createElement('div');
+        group.className = 'nds-dropdown-menu-group';
+        group.dataset.slot = 'menubar-group';
+        group.setAttribute('role', 'group');
+        group.setAttribute('aria-labelledby', labelId);
+
         const label = document.createElement('div');
+        label.id = labelId;
         label.className = 'nds-dropdown-menu-label';
         label.dataset.slot = 'menubar-label';
         if (item.inset) label.setAttribute('data-inset', '');
         label.textContent = item.label ?? '';
-        panel.appendChild(label);
+
+        group.appendChild(label);
+        panel.appendChild(group);
+        openGroup = group;
         return;
       }
 
@@ -411,14 +541,24 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         });
 
         focaveis.push(box);
-        panel.appendChild(box);
+        (openGroup ?? panel).appendChild(box);
         return;
       }
 
       if (type === 'radio-group') {
-        const group = document.createElement('div');
-          group.dataset.slot = 'menubar-radio-group';
-        group.setAttribute('role', 'group');
+        // Logo depois de um rótulo, o grupo que ele acabou de abrir — ainda só
+        // com o rótulo dentro — É o grupo de escolha única, e já tem nome. Um
+        // segundo `role="group"` aninhado nele faria o leitor anunciar dois
+        // grupos para um bloco só. Sem rótulo antes, o grupo nasce aqui, sem
+        // nome: não há texto que o nomeie.
+        const reuse = openGroup !== null && openGroup.childElementCount === 1;
+        const group = reuse ? openGroup! : document.createElement('div');
+        if (!reuse) {
+          group.className = 'nds-dropdown-menu-group';
+          group.setAttribute('role', 'group');
+          (openGroup ?? panel).appendChild(group);
+        }
+        group.dataset.slot = 'menubar-radio-group';
 
         let escolhido = item.value;
         const options = item.options ?? [];
@@ -443,18 +583,41 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           );
           choice.appendChild(indicador);
 
-          choice.addEventListener('click', () => {
-            if (opcao.disabled || escolhido === opcao.value) return;
-            escolhido = opcao.value;
-            for (const other of elementos) {
-              const active = other.value === escolhido;
-              other.el.setAttribute('aria-checked', String(active));
-              if (active) other.el.dataset.checked = '';
-              else delete other.el.dataset.checked;
-              other.indicador.replaceChildren();
-              if (active) other.indicador.appendChild(ICON_MARCA());
+          /**
+           * Escolher: pelo ponteiro E pelo teclado. A opção só ouvia `click`, e
+           * quem navega por teclado pousava nela sem conseguir escolhê-la —
+           * Enter e Espaço não faziam nada (WCAG 2.1.1). A marcação ao lado já
+           * tinha o par de ouvintes; esta não.
+           *
+           * Escolher a opção JÁ escolhida continua sendo uma escolha: o
+           * `onClick` da opção sai sempre, como no item de escolha única dos
+           * outros dois menus. Ela voltava antes de avisar qualquer coisa, e o
+           * `menubar_item_select` sumia justo no gesto de confirmar. O que só
+           * sai com mudança de fato é o `onValueChange`. Não fecha, em nenhum
+           * dos casos: quem escolhe o tema quer ver o resultado com o menu ali.
+           */
+          const choose = (): void => {
+            if (opcao.disabled) return;
+            if (escolhido !== opcao.value) {
+              escolhido = opcao.value;
+              for (const other of elementos) {
+                const active = other.value === escolhido;
+                other.el.setAttribute('aria-checked', String(active));
+                if (active) other.el.dataset.checked = '';
+                else delete other.el.dataset.checked;
+                other.indicador.replaceChildren();
+                if (active) other.indicador.appendChild(ICON_MARCA());
+              }
+              item.onValueChange?.(escolhido);
             }
-            item.onValueChange?.(escolhido);
+            opcao.onClick?.();
+          };
+          choice.addEventListener('click', choose);
+          choice.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              choose();
+            }
           });
 
           elementos.push({ el: choice, indicador, value: opcao.value });
@@ -462,7 +625,6 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           group.appendChild(choice);
         }
 
-        panel.appendChild(group);
         return;
       }
 
@@ -506,7 +668,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') e.stopPropagation();
         });
 
-        panel.appendChild(subTrigger);
+        (openGroup ?? panel).appendChild(subTrigger);
         return;
       }
 
@@ -523,7 +685,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         if (item.disabled) return;
         const menuTrigger = isOpen?.trigger ?? null;
         item.onClick?.();
-        closeAll();
+        closeAll('api');
         menuTrigger?.focus();
       };
       el.addEventListener('click', acionar);
@@ -535,7 +697,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
       });
 
       focaveis.push(el);
-      panel.appendChild(el);
+      (openGroup ?? panel).appendChild(el);
     });
 
     // ── Teclado DENTRO do painel ────────────────────────────────────────────
@@ -565,19 +727,15 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         e.preventDefault();
         e.stopPropagation();
         roda[roda.length - 1]?.focus();
-      } else if (/^[a-zA-Z0-9]$/.test(e.key)) {
-        // Typeahead: o conteúdo compartilhado promete que digitar uma letra
-        // move o foco para o item que começa com ela.
-        const letra = e.key.toLowerCase();
-        const ordenados = [...roda.slice(current + 1), ...roda.slice(0, current + 1)];
-        const finding = ordenados.find((el) =>
-          (el.textContent ?? '').trim().toLowerCase().startsWith(letra),
-        );
-        if (finding) {
-          e.preventDefault();
-          e.stopPropagation();
-          finding.focus();
-        }
+      } else if (isTypeaheadKey(e)) {
+        // Typeahead: digitar leva o foco ao item que começa com o que foi
+        // digitado, e as letras se acumulam por 1s — a busca dos outros dois
+        // menus, de `@/lib/menu-typeahead`. Aqui era uma letra só, sem acúmulo:
+        // "rec" rápido ia a "Refazer", depois ao primeiro "e", depois ao
+        // primeiro "c".
+        e.preventDefault();
+        e.stopPropagation();
+        typeahead.type(e.key, roda);
       }
     });
 
@@ -604,11 +762,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
 
   // ── Montagem dos menus de topo ────────────────────────────────────────────
 
-  const menusMontados: Array<{
-    panel: HTMLElement;
-    trigger: HTMLButtonElement;
-    items: HTMLElement[];
-  }> = [];
+  const menusMontados: MountedMenu[] = [];
 
   menus.forEach((menu, index) => {
     const panelId = `menubar-panel-${id}-${index}`;
@@ -634,7 +788,9 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
 
     trigger.addEventListener('click', () => {
       const estavaOpen = trigger.dataset.state === 'open';
-      closeAll();
+      // Clicar no gatilho aberto, ou noutro gatilho com um menu aberto, é sair
+      // do menu que estava na tela sem decidir.
+      closeAll('overlay');
       if (!estavaOpen) openMenu(index, 'item');
       else moverTabulacao(trigger);
     });
@@ -644,7 +800,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         e.preventDefault();
         openMenu(index, 'item');
       } else if (e.key === 'Escape') {
-        closeAll();
+        closeAll('escape');
         moverTabulacao(trigger);
       }
     });
@@ -652,7 +808,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     wrapper.append(trigger, panel);
     root.appendChild(wrapper);
     triggers.push(trigger);
-    menusMontados.push({ panel, trigger, items: focaveis });
+    menusMontados.push({ panel, trigger, items: focaveis, menu });
   });
 
   // ── Teclado da BARRA ──────────────────────────────────────────────────────
@@ -671,8 +827,17 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'Escape') return;
 
     if (e.key === 'Escape') {
+      // Com um submenu aberto, o Escape é DELE: fecha só o nível mais fundo e
+      // devolve o foco ao item que o abriu. O painel do submenu cuida disso
+      // quando o foco está lá dentro; o que faltava era o submenu aberto pelo
+      // PONTEIRO, com o foco ainda no painel pai — aí a tecla subia até aqui e
+      // fechava a barra inteira, dois níveis de uma vez (WAI-ARIA APG).
+      if (submenu.panel) {
+        submenu.handleKeydown(e);
+        return;
+      }
       const openTrigger = isOpen?.trigger ?? null;
-      closeAll();
+      closeAll('escape');
       if (openTrigger) {
         moverTabulacao(openTrigger);
         openTrigger.focus();
@@ -711,7 +876,7 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
     // O painel do submenu também é "dentro": ele vive no `body`, fora de `root`,
     // e sem esta linha um clique num rótulo ou separador do submenu dispensaria
     // a barra inteira.
-    if (isOpen && !root.contains(target) && !submenu.contains(target)) closeAll();
+    if (isOpen && !root.contains(target) && !submenu.contains(target)) closeAll('overlay');
   }
 
   document.addEventListener('click', onClickOutside);
@@ -722,7 +887,12 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
   }
 
   return tornarDestruivel(root, root, () => {
-    closeAll();
+    // Sair da página com um menu aberto NÃO é fechamento: o painel sai, e
+    // ninguém é avisado. Até 2026-09-11 isto era `closeAll('api')`, e cada troca
+    // de idioma da docs page — que refaz as seções — mandava um `menubar_close`
+    // de um menu que a pessoa não fechou.
+    hideOpenMenu();
+    typeahead.reset();
     // Cinto e suspensório: `closeAll` já leva o painel do filho, mas quem
     // desmonta a barra FECHADA não passa por ele, e o painel é portalado — sem
     // isto sobraria um menu órfão no `body` sem ninguém com referência para

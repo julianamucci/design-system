@@ -436,12 +436,20 @@ export const ListenerCleanup: Story = {
     await expect(host).not.toBeNull();
 
     let probe!: ProbeResult;
+    // Os avisos que a barra deu, em ordem — zerados a cada rodada.
+    const avisos: string[] = [];
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      avisos.length = 0;
       probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => createMenubar([
-          { label: 'Arquivo', items: [{ label: 'Novo' }, { label: 'Salvar' }] },
+          {
+            label: 'Arquivo',
+            items: [{ label: 'Novo' }, { label: 'Salvar' }],
+            onOpenChange: (open) => avisos.push(open ? 'abriu' : 'fechou'),
+            onClose: (reason) => avisos.push(`motivo:${reason}`),
+          },
           { label: 'Editar', items: [{ label: 'Desfazer' }] },
         ]),
         exercitar: (no) => no.querySelector<HTMLElement>('[data-slot="menubar-trigger"]')?.click(),
@@ -451,6 +459,14 @@ export const ListenerCleanup: Story = {
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
       await checkLimpeza(probe);
     });
+
+    await step('Sair da página com o menu aberto não é fechamento: ninguém é avisado', async () => {
+      // O `abriu` é a precondição que dá dentes ao resto: sem ele a lista vazia
+      // passaria com uma barra que nunca abriu. Até 2026-09-11 a destruição
+      // saía como `closeAll('api')`, e cada troca de idioma da docs page mandava
+      // um `menubar_close` de um menu que a pessoa não fechou.
+      await expect(avisos).toEqual(['abriu']);
+    });
   },
 };
 
@@ -459,18 +475,22 @@ export const ListenerCleanup: Story = {
 // A barra CONTROLADA — no equivalente honesto desta stack.
 //
 // As outras quatro expõem uma ligação reativa: uma prop de abertura mais o
-// retorno da mudança. `createMenubar` não tem o par. Ela recebe `defaultOpen` na
-// CONSTRUÇÃO e não devolve nada que abra ou feche o menu depois — a API
-// devolvida é o elemento e o `destroy()`. Inventar a prop aqui seria ensinar o
-// que o design system não tem, então a story demonstra o que EXISTE: quem
-// consome guarda o estado e COMANDA a fábrica, refazendo a barra com o
-// `defaultOpen` que o estado pede.
+// retorno da mudança. `createMenubar` tem só a METADE de volta: o
+// `onOpenChange` de cada menu, desde 2026-09-11. A ida continua sem prop — a
+// fábrica recebe `defaultOpen` na CONSTRUÇÃO e não devolve nada que abra ou
+// feche o menu depois; a API devolvida é o elemento e o `destroy()`. Inventar a
+// prop aqui seria ensinar o que o design system não tem, então a story
+// demonstra o que EXISTE: quem consome guarda o estado e COMANDA a fábrica,
+// refazendo a barra com o `defaultOpen` que o estado pede.
 //
-// O caminho de volta é o DOM, e é ele que dá dentes à story: o `aria-expanded`
-// do gatilho conta quando o menu fechou sozinho, e o estado externo acompanha.
-// Sem esse segundo lado o estado passaria a mentir sobre a barra na primeira vez
-// que alguém apertasse Escape — que é a mesma armadilha de teclado (WCAG 2.1.2)
-// que um `onOpenChange` desligado cria nas stacks com ligação reativa.
+// O caminho de volta é o `onOpenChange` de cada menu, e é ele que dá dentes à
+// story: o menu avisa quando fechou sozinho, e o estado externo acompanha. Até
+// a fábrica ter o aviso, esta story lia o `aria-expanded` dos gatilhos por um
+// `MutationObserver` — funcionava, e ensinava a espiar o DOM onde agora há
+// callback. Sem esse segundo lado o estado passaria a mentir sobre a barra na
+// primeira vez que alguém apertasse Escape — que é a mesma armadilha de teclado
+// (WCAG 2.1.2) que um `onOpenChange` desligado cria nas stacks com ligação
+// reativa.
 
 const CONTROLLED_ITEMS = ['Novo', 'Abrir'] as const;
 
@@ -519,14 +539,32 @@ export const ControlledOpen: Story = {
       readout.textContent = openMenu === null ? 'fechado' : 'aberto';
     };
 
+    /**
+     * E a barra responde: cada menu avisa quando abre e quando fecha — por
+     * Escape, clique fora ou Tab —, e o estado acompanha. Trocar de menu avisa
+     * o que fecha antes do que abre, então o estado termina no vizinho.
+     */
+    const menus = CONTROLLED_MENUS.map((menu, index) => ({
+      ...menu,
+      onOpenChange: (open: boolean) => {
+        if (open) openMenu = index;
+        else if (openMenu === index) openMenu = null;
+        paint();
+      },
+    }));
+
     /** O estado manda: a barra é refeita com o menu que ele pede. */
     const apply = () => {
+      // O pedido é lido ANTES de a barra velha sair. Destruí-la com um menu
+      // aberto não avisa mais nada — sair da página não é fechamento —, mas a
+      // leitura antecipada é o que mantém esta fiação correta com qualquer
+      // fábrica que avise: o aviso de fechar apagaria do estado justamente o
+      // que se está pedindo.
+      const wanted = openMenu;
       bar?.destroy();
       host.replaceChildren();
-      bar =
-        openMenu === null
-          ? createMenubar(CONTROLLED_MENUS)
-          : createMenubar(CONTROLLED_MENUS, { defaultOpen: openMenu });
+      bar = wanted === null ? createMenubar(menus) : createMenubar(menus, { defaultOpen: wanted });
+      openMenu = wanted;
       host.appendChild(bar);
       paint();
     };
@@ -536,33 +574,11 @@ export const ControlledOpen: Story = {
       apply();
     });
 
-    // E a barra responde: fechar por Escape ou clique fora atualiza o estado.
-    const observer = new MutationObserver(() => {
-      const triggers = triggersOf(host);
-      const opened = triggers.findIndex((t) => t.getAttribute('aria-expanded') === 'true');
-      const next = opened === -1 ? null : opened;
-      if (next === openMenu) return;
-      openMenu = next;
-      paint();
-    });
-    observer.observe(host, {
-      subtree: true,
-      attributes: true,
-      attributeFilter: ['aria-expanded'],
-    });
-
     apply();
-    // O observador é de VIDA LONGA — ele acompanha a story inteira, ao contrário
-    // dos de um disparo só desta stack, que se desconectam no próprio retorno.
-    // Sem `disconnect`, ele sobrevive à saída do nó segurando o 'host' e o
-    // callback, e a story passaria a ensinar um vazamento: é justamente o que a
-    // `ListenerCleanup` deste arquivo existe para provar que não acontece.
-    //
-    // A última barra também precisa morrer aqui: `apply` destrói a ANTERIOR a
-    // cada troca, e a que fica de pé no fim não tem quem a chame.
+    // A última barra precisa morrer aqui: `apply` destrói a ANTERIOR a cada
+    // troca, e a que fica de pé no fim não tem quem a chame.
     const wrapper = embrulhar(area);
     return tornarDestruivel(wrapper, wrapper, () => {
-      observer.disconnect();
       bar?.destroy();
     });
   },

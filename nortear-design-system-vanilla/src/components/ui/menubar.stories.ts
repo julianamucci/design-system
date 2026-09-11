@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
-import { createMenubar, type MenubarAlign, type MenubarSide } from './menubar';
+import {
+  createMenubar,
+  type MenubarAlign,
+  type MenubarCloseReason,
+  type MenubarSide,
+} from './menubar';
 import { embrulhar, triggersOf, panelOpen, waitForPanel } from './menubar.fixtures';
 import { menubarSource } from './menubar.source';
 import { createMenubarDocs } from '@/components/docs/MenubarDocs';
@@ -49,6 +54,8 @@ type MenubarArgs = {
   side: MenubarSide;
   align: MenubarAlign;
   onSelect: (label: string) => void;
+  onOpenChange: (open: boolean) => void;
+  onClose: (reason: MenubarCloseReason) => void;
 };
 
 const meta: Meta<MenubarArgs> = {
@@ -88,6 +95,20 @@ const meta: Meta<MenubarArgs> = {
       },
     },
     onSelect: { control: false, table: { disable: true } },
+    // Por menu na fábrica (`MenubarMenu.onOpenChange`/`onClose`); aqui o mesmo
+    // espião vai nos quatro menus, porque o que a play mede é o MOTIVO, e ele
+    // é o mesmo vocabulário em qualquer menu da barra.
+    onOpenChange: {
+      control: false,
+      description: 'Callback de cada menu ao abrir e ao fechar.',
+      table: { type: { summary: '(open: boolean) => void' } },
+    },
+    onClose: {
+      control: false,
+      description:
+        'Callback do fechamento de cada menu, com o motivo: escape, overlay (clique fora, Tab, gatilho aberto ou menu vizinho) ou api (item escolhido).',
+      table: { type: { summary: "(reason: 'escape' | 'overlay' | 'api') => void" } },
+    },
   },
   args: {
     loop: true,
@@ -95,6 +116,8 @@ const meta: Meta<MenubarArgs> = {
     side: 'bottom',
     align: 'start',
     onSelect: fn(),
+    onOpenChange: fn(),
+    onClose: fn(),
   },
 };
 
@@ -115,6 +138,7 @@ export const Playground: Story = {
       'functional.item10',
       'functional.item11',
       'functional.item12',
+      'functional.item14',
       'accessibility.item2',
       'accessibility.item3',
       'accessibility.item4',
@@ -130,6 +154,8 @@ export const Playground: Story = {
           shortcut: 'shortcut' in i ? i.shortcut : undefined,
           onClick: () => args.onSelect(i.label),
         })),
+        onOpenChange: args.onOpenChange,
+        onClose: args.onClose,
       })),
       {
         loop: args.loop,
@@ -140,7 +166,7 @@ export const Playground: Story = {
     );
     return embrulhar(barra, '320px');
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
     const triggers = triggersOf(barra);
@@ -183,6 +209,8 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(items[0]);
       });
+      // O menu avisa que abriu — é o que alimenta o `menubar_open`.
+      await expect(args.onOpenChange).toHaveBeenCalledWith(true);
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
@@ -256,6 +284,8 @@ export const Playground: Story = {
         await expect(document.activeElement).toBe(editar);
       });
       await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+      // Passar ao vizinho é sair do menu anterior sem decidir.
+      await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
 
       await userEvent.keyboard('{ArrowLeft}');
       await waitFor(async () => {
@@ -281,6 +311,7 @@ export const Playground: Story = {
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
       await expect(document.activeElement).toBe(arquivo);
+      await expect(args.onClose).toHaveBeenLastCalledWith('escape');
     });
 
     await step('Clicar no gatilho de um menu aberto fecha o menu', async () => {
@@ -294,6 +325,26 @@ export const Playground: Story = {
         await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
         await expect(panelOpen(canvasElement)).toBeNull();
       });
+      await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
+    });
+
+    await step('Clicar fora da barra fecha o menu sem executar item nenhum', async () => {
+      if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
+      await waitFor(async () => {
+        await expect(panelOpen(canvasElement)).not.toBeNull();
+      });
+      const selectsBefore = (args.onSelect as unknown as ReturnType<typeof fn>).mock.calls.length;
+
+      // Despacho direto no `<body>`, fora da barra: é o ouvinte de clique fora
+      // do documento que fecha, e ele não depende de onde o ponteiro está.
+      document.body.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 }));
+      await waitFor(async () => {
+        await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
+        await expect(panelOpen(canvasElement)).toBeNull();
+      });
+      // Nenhum item rodou: o clique fora é sair sem decidir.
+      await expect(args.onSelect).toHaveBeenCalledTimes(selectsBefore);
+      await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
     });
   },
 };
@@ -336,7 +387,7 @@ function buildTabScene(withAfter: boolean): HTMLElement {
  * correção nada escutava o Tab aqui: o menu ficava aberto com o foco fora dele.
  */
 export const TabLeavesMenubar: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ['functional.item13'], controls: { disable: true } },
   render: () => buildTabScene(true),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -416,7 +467,7 @@ export const TabLeavesMenubar: Story = {
  * ao gatilho do menu que estava aberto, em vez de sair do documento.
  */
 export const TabAtPageEnd: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ['functional.item13'], controls: { disable: true } },
   render: () => buildTabScene(false),
   play: async ({ canvasElement, step }) => {
     const bar = within(canvasElement).getByRole('menubar');

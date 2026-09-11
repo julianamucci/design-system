@@ -7,6 +7,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
@@ -58,12 +61,33 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Espião dos itens do Playground: é ele que prova que o clique fora fecha SEM
+ * executar item nenhum (F13). Fica fora dos `args` porque não é controle — é
+ * instrumento da play.
+ */
+const itemSelected = fn();
+
+/**
+ * Um clique fora de qualquer painel: `pointerdown`, `mousedown` e `click` no
+ * `<body>`. No modo modal o `<body>` tem `pointer-events: none`, então o clique
+ * do `userEvent` seria recusado antes de sair — e é o `pointerdown` no documento
+ * que a camada dispensável da lib escuta. Não exportado: toda exportação de um
+ * `*.stories.ts` vira story.
+ */
+function clickOutside(): void {
+  for (const type of ['pointerdown', 'mousedown', 'click'] as const) {
+    document.body.dispatchEvent(new MouseEvent(type, { bubbles: true, cancelable: true, button: 0 }));
+  }
+}
+
 export const Playground: Story = {
   parameters: {
     covers: [
       'functional.item1',
       'functional.item3',
       'functional.item4',
+      'functional.item13',
       'accessibility.item1',
       'accessibility.item2',
       'accessibility.item3',
@@ -82,7 +106,7 @@ export const Playground: Story = {
       Button,
     },
     setup() {
-      return { args };
+      return { args, itemSelected };
     },
     template: `
       <div class="nds-min-h-80" style="contain: layout">
@@ -93,17 +117,17 @@ export const Playground: Story = {
           <DropdownMenuContent side="bottom" align="start">
             <DropdownMenuGroup>
               <DropdownMenuLabel>Conta</DropdownMenuLabel>
-              <DropdownMenuItem>Perfil</DropdownMenuItem>
-              <DropdownMenuItem>Configurações</DropdownMenuItem>
+              <DropdownMenuItem @select="itemSelected">Perfil</DropdownMenuItem>
+              <DropdownMenuItem @select="itemSelected">Configurações</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>
+              <DropdownMenuItem variant="destructive" @select="itemSelected">Sair</DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /Abrir menu/i });
 
@@ -140,6 +164,8 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
+      // Nenhum gesto de saída: quem fechou foi a escolha — `api`.
+      await expect(args['onUpdate:open']).toHaveBeenLastCalledWith(false, 'api');
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
@@ -152,6 +178,23 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
+      await expect(args['onUpdate:open']).toHaveBeenLastCalledWith(false, 'escape');
+    });
+
+    await step('Clicar fora fecha o menu sem executar item nenhum', async () => {
+      // F13: o clique fora é "saí sem decidir" — o menu some e nenhuma ação
+      // roda. O espião zera aqui, e não no começo da play, porque o passo do
+      // Enter executa um item de propósito.
+      itemSelected.mockClear();
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
+      await waitForPortal('menu');
+
+      clickOutside();
+      await waitForPortalGone('menu');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(itemSelected).not.toHaveBeenCalled();
+      // E o motivo diz que foi fora: `overlay`, a mesma palavra do Tab.
+      await expect(args['onUpdate:open']).toHaveBeenLastCalledWith(false, 'overlay');
     });
   },
 };
@@ -171,23 +214,46 @@ function pressTab(shift = false): void {
   );
 }
 
+/** Espião do `update:open` da `TabLeavesMenu` — prova o motivo do fechamento. */
+const tabOpenChange = fn();
+
 export const TabLeavesMenu: Story = {
   parameters: {
+    covers: ['functional.item9'],
     // O menu é MODAL aqui, que é o padrão: é no modal que a lib prende o Tab.
     controls: { disable: true },
   },
   render: () => ({
-    components: { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Button },
+    components: {
+      DropdownMenu,
+      DropdownMenuContent,
+      DropdownMenuItem,
+      DropdownMenuSub,
+      DropdownMenuSubContent,
+      DropdownMenuSubTrigger,
+      DropdownMenuTrigger,
+      Button,
+    },
+    setup() {
+      return { tabOpenChange };
+    },
     template: `
       <div class="nds-cluster nds-min-h-80" data-spacing="md" style="contain: layout">
         <Button variant="ghost">Antes</Button>
-        <DropdownMenu>
+        <DropdownMenu @update:open="tabOpenChange">
           <DropdownMenuTrigger as-child>
             <Button variant="outline">Abrir menu</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="bottom" align="start">
             <DropdownMenuItem>Perfil</DropdownMenuItem>
             <DropdownMenuItem>Configurações</DropdownMenuItem>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem>PDF</DropdownMenuItem>
+                <DropdownMenuItem>CSV</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
           </DropdownMenuContent>
         </DropdownMenu>
         <Button variant="ghost">Depois</Button>
@@ -199,12 +265,28 @@ export const TabLeavesMenu: Story = {
     const trigger = canvas.getByRole('button', { name: 'Abrir menu' });
     const before = canvas.getByRole('button', { name: 'Antes' });
     const after = canvas.getByRole('button', { name: 'Depois' });
+    const body = within(document.body);
 
     const openWithItemFocused = async () => {
       if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(trigger);
       const menu = await waitForPortal('menu');
       within(menu).getAllByRole('menuitem')[0].focus();
       await expect(menu.contains(document.activeElement)).toBe(true);
+    };
+
+    // O submenu aberto pela seta, com o foco num item DELE: é de lá que o Tab
+    // parte nos dois últimos passos.
+    const openSubmenuWithItemFocused = async () => {
+      await openWithItemFocused();
+      const subTrigger = within(await waitForPortal('menu')).getByRole('menuitem', { name: 'Exportar' });
+      subTrigger.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
+      });
+      const submenu = document.querySelector<HTMLElement>('[data-slot="dropdown-menu-sub-content"]')!;
+      within(submenu).getAllByRole('menuitem')[0].focus();
+      await expect(submenu.contains(document.activeElement)).toBe(true);
     };
 
     await step('Aberto, o menu segue modal: véu de interação e trava de rolagem (D1)', async () => {
@@ -225,10 +307,35 @@ export const TabLeavesMenu: Story = {
         await expect(document.activeElement).toBe(after);
       });
       await expect(getComputedStyle(document.body).overflow).not.toBe('hidden');
+      // Saiu sem decidir nada: `overlay`, a mesma palavra do clique fora.
+      await expect(tabOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
     });
 
     await step('Shift+Tab sai para o ponto ANTERIOR ao gatilho', async () => {
       await openWithItemFocused();
+      pressTab(true);
+      await waitForPortalGone('menu');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(before);
+      });
+    });
+
+    await step('Tab dentro do submenu fecha o menu INTEIRO', async () => {
+      // O painel do submenu vive em outro portal: a tecla apertada nele nunca
+      // chega ao ouvinte do raiz, e a lib também a prende ali. Fechar só o
+      // submenu deixaria o raiz aberto com o foco fora dele.
+      await openSubmenuWithItemFocused();
+      pressTab();
+      await waitForPortalGone('menu');
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(after);
+      });
+      await expect(tabOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
+    });
+
+    await step('Shift+Tab dentro do submenu também fecha tudo, e volta ao anterior', async () => {
+      await openSubmenuWithItemFocused();
       pressTab(true);
       await waitForPortalGone('menu');
       await waitFor(async () => {
@@ -244,7 +351,7 @@ export const TabLeavesMenu: Story = {
  * —, e o foco volta ao gatilho pelo caminho da lib.
  */
 export const TabAtPageEnd: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: { covers: ['functional.item9'], controls: { disable: true } },
   render: () => ({
     components: { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, Button },
     template: `

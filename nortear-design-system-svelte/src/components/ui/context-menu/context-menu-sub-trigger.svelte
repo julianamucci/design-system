@@ -2,7 +2,7 @@
 	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
 	import { cn, type WithoutChild } from "@/lib/utils.js";
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right';
-	import { useContextMenuSubContext } from "./context";
+	import { useMenuSub } from "@/components/ui/dropdown-menu/sub-escape";
 
 	let {
 		ref = $bindable(null),
@@ -14,8 +14,9 @@
 		inset?: boolean;
 	} = $props();
 
-	// O submenu devolve o foco a este nó quando o Escape o fecha — ver `context.ts`.
-	const sub = useContextMenuSubContext();
+	// O submenu devolve o foco a este nó quando o Escape o fecha — ver
+	// `dropdown-menu/sub-escape.ts`.
+	const sub = useMenuSub();
 	$effect(() => {
 		sub?.setTrigger(ref);
 	});

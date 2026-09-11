@@ -155,6 +155,14 @@ export type DropdownMenuAlign = 'start' | 'center' | 'end';
 /** Ênfase visual do item. `destructive` é para ação irreversível. */
 export type DropdownMenuItemVariant = 'default' | 'destructive';
 
+// O motivo do fechamento no vocabulário da família — a MESMA tradução nos três
+// membros, e por isso num arquivo só. O evento nasce na camada de produto.
+export {
+  menuCloseReason,
+  MenuCloseTracker,
+  type MenuCloseReason,
+} from './menu-close-reason';
+
 // ─── Content ──────────────────────────────────────────────────────────────────
 
 /**
@@ -203,7 +211,11 @@ export class NdsDropdownMenuContent {
     {
       directive: RdxMenuRoot,
       inputs: ['open', 'defaultOpen', 'disabled', 'modal', 'loopFocus'],
-      outputs: ['openChange'],
+      // `onOpenChange` traz o MOTIVO junto do estado (`{ open, reason }`) — é
+      // dele que sai o `reason` do `dropdown_menu_close` (escape · overlay ·
+      // api). `openChange` sozinho diz que fechou, não por quê. Mesmo par que o
+      // ContextMenu já expõe.
+      outputs: ['openChange', 'onOpenChange'],
     },
   ],
   // O `id` do painel do submenu, para o sub-gatilho apontar

@@ -280,4 +280,4 @@ nds-menubar
 - Item de marcação anuncia o estado; grupo de opção exclusiva anuncia qual está escolhida
 - Nome acessível de cada gatilho é o texto visível dele
 
-**Analytics**: o Menubar não dispara evento hoje — ausência declarada no PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9. Se passar a disparar, será `menubar_item_select`, com identificador estável do item — nunca o rótulo traduzido, que dividiria o evento por idioma.
+**Analytics**: `menubar_open`, `menubar_close` (com `reason`) e `menubar_item_select`, no formato da família de menus — `menu` e `label` são ids estáveis em inglês, nunca o rótulo traduzido, que dividiria o evento por idioma. O contrato está no PRD [`docs/shared/prd/dropdown-menu.md`](../../docs/shared/prd/dropdown-menu.md) §9.

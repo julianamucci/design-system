@@ -21,30 +21,24 @@ const emits = defineEmits<{
 const forwarded = useForwardProps(props)
 
 let pendingReason: ContextMenuCloseReason | null = null
-let tabTarget: HTMLElement | null = null
 
 function handleOpenChange(open: boolean) {
-  // `api` é o padrão: é o que sobra quando nenhum gesto de saída foi visto, e o
-  // único caminho que fecha sem gesto de saída é a escolha de um item.
+  // `api` é o padrão: é o que sobra quando nenhum gesto de saída foi visto — a
+  // escolha de um item, ou o fechamento pelo código.
   const reason = open ? undefined : (pendingReason ?? 'api')
   // Limpa nos dois sentidos: uma anotação que não resultou em fechamento não
   // pode vazar para o próximo.
   pendingReason = null
-  if (open) tabTarget = null
   emits('update:open', open, reason)
 }
 
 // O painel vive em portal e não é descendente de template desta raiz, mas o
 // `provide` alcança porque a árvore de COMPONENTES continua a mesma — é o mesmo
-// caminho que a própria reka-ui usa para levar estado ao conteúdo.
+// caminho que a própria reka-ui usa para levar estado ao conteúdo. O destino do
+// Tab não passa por aqui: ele mora no mecanismo compartilhado com o
+// DropdownMenu (`useTabLeavesMenu`).
 provide(CONTEXT_MENU_CLOSE, {
   note: (reason) => { pendingReason = reason },
-  setTabTarget: (target) => { tabTarget = target },
-  takeTabTarget: () => {
-    const target = tabTarget
-    tabTarget = null
-    return target
-  },
 })
 </script>
 

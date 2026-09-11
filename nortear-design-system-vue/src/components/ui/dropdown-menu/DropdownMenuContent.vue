@@ -8,6 +8,7 @@ import {
   useForwardPropsEmits,
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
+import { injectDropdownMenuCloseChannel } from './dropdown-menu.context'
 import { useDropdownMenuTabLeaves } from './tab-leaves-menu'
 
 defineOptions({
@@ -35,6 +36,15 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
  */
 // PATCH: a11y — a reka prende o Tab no menu modal (ver PATCHES.md#vue-menu-tab-leaves)
 const { onKeydownCapture, onCloseAutoFocus } = useDropdownMenuTabLeaves()
+
+/**
+ * O motivo do fechamento, anotado para a raiz (`dropdown-menu.context.ts`):
+ * Escape no painel raiz é `escape`; o ponteiro fora dele — inclusive no gatilho
+ * aberto — é `overlay`. O foco que sai não entra: no modo modal a lib o devolve
+ * ao painel sempre, e anotá-lo deixaria uma anotação pendurada até o próximo
+ * fechamento, que sairia com o motivo errado.
+ */
+const channel = injectDropdownMenuCloseChannel()
 </script>
 
 <template>
@@ -45,6 +55,8 @@ const { onKeydownCapture, onCloseAutoFocus } = useDropdownMenuTabLeaves()
       :class="cn('nds-dropdown-menu-content', props.class)"
       @keydown.capture="onKeydownCapture"
       @close-auto-focus="onCloseAutoFocus"
+      @escape-key-down="channel.note('escape')"
+      @pointer-down-outside="channel.note('overlay')"
     >
       <slot />
     </DropdownMenuContent>

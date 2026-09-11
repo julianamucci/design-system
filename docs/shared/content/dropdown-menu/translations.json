@@ -16,7 +16,38 @@
         "basic": "Menu de ações",
         "withCheckbox": "Com checkbox-items (toggles)",
         "withRadio": "Com radio-group (seleção única)",
-        "withSubmenu": "Com submenu aninhado"
+        "withSubmenu": "Com submenu aninhado",
+        "account": "Conta",
+        "profile": "Perfil",
+        "settings": "Configurações",
+        "logout": "Sair",
+        "columns": "Colunas",
+        "visibleColumns": "Colunas visíveis",
+        "columnName": "Nome",
+        "columnEmail": "E-mail",
+        "columnRole": "Função",
+        "theme": "Tema",
+        "appearance": "Aparência",
+        "light": "Claro",
+        "dark": "Escuro",
+        "system": "Sistema",
+        "file": "Arquivo",
+        "rename": "Renomear",
+        "export": "Exportar",
+        "pdf": "PDF",
+        "csv": "CSV",
+        "menu": "Menu",
+        "action": "Ação",
+        "deleteAccount": "Excluir conta",
+        "support": "Suporte",
+        "documentation": "Documentação",
+        "edit": "Editar",
+        "undo": "Desfazer",
+        "copy": "Copiar",
+        "paste": "Colar",
+        "undoShortcut": "Ctrl+Z",
+        "copyShortcut": "Ctrl+C",
+        "pasteShortcut": "Ctrl+V"
       }
     },
     "anatomy": {
@@ -33,7 +64,7 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Conta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configurações</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sair</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir menu</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Conta</div>\n    <button ndsDropdownMenuItem>Perfil</button>\n    <button ndsDropdownMenuItem>Configurações</button>\n    <div ndsDropdownMenuSeparator></div>\n    <button ndsDropdownMenuItem variant=\"destructive\">Sair</button>\n  </ng-template>\n</nds-dropdown-menu>",
+        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir menu</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Conta</div>\n    <div ndsDropdownMenuItem>Perfil</div>\n    <div ndsDropdownMenuItem>Configurações</div>\n    <div ndsDropdownMenuSeparator></div>\n    <div ndsDropdownMenuItem variant=\"destructive\">Sair</div>\n  </ng-template>\n</nds-dropdown-menu>",
         "vue": "<DropdownMenu>\n  <DropdownMenuTrigger as-child>\n    <Button variant=\"outline\">Abrir menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Conta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configurações</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sair</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
         "svelte": "<DropdownMenu>\n  <DropdownMenuTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Abrir menu</Button>\n    {/snippet}\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Conta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configurações</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sair</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
         "vanilla": "import { createDropdownMenu } from '@/components/ui/dropdown-menu';\nimport { createButton } from '@/components/ui/button';\n\n// Os itens são dados, não markup: a fábrica monta o painel e o teclado\nconst menu = createDropdownMenu({\n  trigger: createButton({ variant: 'outline', label: 'Abrir menu' }),\n  items: [\n    { type: 'label', label: 'Conta' },\n    { label: 'Perfil', onClick: () => {} },\n    { label: 'Configurações', onClick: () => {} },\n    { type: 'separator' },\n    { label: 'Sair', variant: 'destructive', onClick: () => {} },\n  ],\n});\n\ndocument.body.appendChild(menu);"
@@ -161,7 +192,7 @@
         },
         "withRadioGroup": {
           "name": "Com Radio Group",
-          "description": "Grupo de <code>menuitemradio</code> compartilhando estado: apenas um item por vez fica <code>aria-checked=\"true\"</code>. Indicador circular no item selecionado.",
+          "description": "Grupo de <code>menuitemradio</code> compartilhando estado: apenas um item por vez fica <code>aria-checked=\"true\"</code>. O escolhido mostra o mesmo tique à direita do item de marcação — o que separa os dois é o papel e o comportamento, não o desenho.",
           "use": "Seleção exclusiva de tema (claro/escuro/sistema), ordenação (asc/desc), idioma ou outra escolha 1-de-N dentro de um menu."
         },
         "withShortcuts": {
@@ -251,7 +282,7 @@
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
         "react": "// Menu controlado com posicionamento custom\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "angular": "<!-- Menu controlado com posicionamento custom -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <button ndsDropdownMenuItem>Item</button>\n  </ng-template>\n</nds-dropdown-menu>",
+        "angular": "<!-- Menu controlado com posicionamento custom -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <div ndsDropdownMenuItem>Item</div>\n  </ng-template>\n</nds-dropdown-menu>",
         "vue": "<!-- Menu controlado com posicionamento custom -->\n<DropdownMenu v-model:open=\"aberto\">\n  <DropdownMenuTrigger as-child>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" :side-offset=\"8\">\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
         "svelte": "<!-- Menu controlado com posicionamento custom -->\n<DropdownMenu bind:open={aberto}>\n  <DropdownMenuTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Abrir</Button>\n    {/snippet}\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
         "vanilla": "// Menu controlado, com lado e afastamento próprios\nlet isOpen = false;\n\nconst menu = createDropdownMenu({\n  trigger: createButton({ variant: 'outline', label: 'Abrir' }),\n  items: [{ label: 'Item', onClick: () => {} }],\n  side: 'right',     // borda do gatilho por onde o painel sai\n  align: 'end',      // encosto no eixo perpendicular ao lado\n  sideOffset: 8,     // vão entre gatilho e painel, em px\n  modal: false,      // o resto da página segue utilizável\n  open: isOpen,      // com `open`, quem manda no estado é quem chama\n  onOpenChange: (proximo) => {\n    isOpen = proximo;\n    menu.setOpen(proximo);\n  },\n});\n\n// Mover o menu por código: open(), close(), toggle(), setOpen(bool)\nmenu.toggle();"
@@ -306,14 +337,14 @@
         "item3": "<code>DropdownMenuItem</code> tem <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> tem <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> tem <code>role=\"menuitemradio\"</code>.",
         "item4": "Setas (cima/baixo) navegam entre itens; Home/End vão ao primeiro/último; letras digitadas movem o foco para item correspondente (typeahead).",
         "item5": "ESC fecha o menu e retorna foco ao trigger; clique fora também fecha.",
-        "item6": "<code>DropdownMenuShortcut</code> apenas exibe o atalho — a tecla real precisa ser registrada no consumidor (ex: useHotkeys)."
+        "item6": "<code>DropdownMenuShortcut</code> apenas exibe o atalho — a tecla real precisa ser registrada no consumidor (um atalho de teclado registrado pela aplicação)."
       },
       "keyboard": {
         "title": "Navegação por Teclado",
         "tab": "Tab — com o menu fechado, o gatilho é uma parada comum da página; com o menu aberto, fecha o menu e o foco segue para o próximo ponto de tabulação depois do gatilho (Shift+Tab: o anterior). Se o gatilho for o último, o foco volta a ele. Vale também dentro de um submenu, e fecha o menu inteiro.",
         "arrows": "Setas Cima/Baixo — navega entre itens; Setas Direita/Esquerda — abre/fecha submenu.",
         "enter": "Enter/Space — ativa Item (executa ação ou alterna checkbox/radio).",
-        "escape": "ESC — fecha menu (e submenu se aplicável); retorna foco ao trigger.",
+        "escape": "ESC — fecha o menu e devolve o foco ao trigger. Dentro de um submenu, fecha só o submenu e devolve o foco ao item que o abriu.",
         "homeEnd": "Home/End — vai ao primeiro/último item.",
         "typeahead": "Letras alfabéticas — typeahead move foco para item começando com a letra."
       },
@@ -360,15 +391,38 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: o menu é construído sobre a lib headless desta stack, que fornece portal, foco e teclado. Onde não há lib, a fábrica própria entrega o mesmo contrato de papéis ARIA, sem submenu aninhado.",
+      "item1": "<strong>Lib upstream</strong>: o menu é construído sobre a lib headless desta stack, que fornece portal, foco e teclado. Onde não há lib, a fábrica própria entrega o mesmo contrato de papéis ARIA, submenu incluído.",
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews de Storybook, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Submenus</strong>: limite a 1 nível de aninhamento. Submenu aninhado em submenu confunde e quebra navegação por teclado em mobile.",
-      "item4": "<strong>Atalhos</strong>: <code>DropdownMenuShortcut</code> é apenas visual; o atalho real precisa ser registrado no consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
+      "item4": "<strong>Atalhos</strong>: <code>DropdownMenuShortcut</code> é apenas visual; o atalho real precisa ser registrado no consumidor (uma biblioteca de atalhos de teclado, ou um ouvinte de teclado da própria aplicação).",
       "item5": "<strong>Trigger via composição</strong>: delegar a renderização ao <code>Button</code> filho evita <code>&lt;button&gt;&lt;button&gt;</code> aninhado (NestedInteractive ARIA violation)."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obrigatório: <code>component='dropdown-menu'</code>, <code>location</code> (contexto da página), <code>label</code> (identificador estável do item, nunca o texto traduzido — texto localizado divide o mesmo evento em um valor por idioma). Disparar via callbacks de mudança de abertura e de seleção no consumidor."
+      "description": "O DropdownMenu fala a mesma língua da família de menus (Context Menu e Menubar): três eventos, e todo payload leva <code>component</code>, <code>menu</code> e <code>location</code>. O de item soma <code>label</code>; o de fechamento soma <code>reason</code> — <code>escape</code>, <code>overlay</code> (clique fora, Tab ou clique no gatilho: saiu sem decidir) ou <code>api</code> (item escolhido ou fechamento pelo código); o tipo carrega também <code>close-button</code>, a quarta palavra da família, que o menu não usa por não ter botão de fechar. <code>menu</code> e <code>label</code> são identificadores estáveis, em inglês e kebab-case — nesta página, <code>menu</code> é o id da prévia (<code>demo-account</code>, <code>pair1-do</code>, <code>with-checkbox-items</code>) e <code>label</code> é o id do item (<code>profile</code>, <code>column-email</code>). Nunca o texto traduzido: \"Configurações\", \"Settings\" e \"Configuración\" virariam três linhas de uma ação só no GA4. <code>location</code> é a seção da página onde o menu está.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Gatilho",
+        "payload": "Payload Adicional",
+        "menuOpen": "dropdown_menu_open",
+        "menuOpenTrigger": "A pessoa abre o menu pelo gatilho: clique, Enter ou Espaço",
+        "menuOpenPayload": "{ component: \"dropdown-menu\", menu, location }",
+        "itemClick": "dropdown_menu_item_select",
+        "itemClickTrigger": "A pessoa escolhe um item: ação, marcação ou opção de rádio",
+        "itemClickPayload": "{ component: \"dropdown-menu\", label, menu, location }",
+        "close": "dropdown_menu_close",
+        "closeTrigger": "O menu fecha: Escape (escape), clique fora, Tab ou clique no gatilho (overlay) ou item escolhido (api)",
+        "closePayload": "{ component: \"dropdown-menu\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Ao rolar até uma seção (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Ao trocar idioma no LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
     },
     "testes": {
       "title": "Critérios de Teste",
@@ -397,12 +451,12 @@
         },
         "item5": {
           "action": "Clicar em CheckboxItem",
-          "result": "aria-checked alterna entre true e false e o indicador acompanha",
+          "result": "aria-checked alterna entre true e false e o indicador acompanha, e o menu segue aberto",
           "priority": "high"
         },
         "item6": {
           "action": "Clicar em RadioItem dentro de RadioGroup",
-          "result": "Apenas o item clicado fica checked; outros desmarcam",
+          "result": "Apenas o item clicado fica checked; outros desmarcam, e o menu segue aberto",
           "priority": "high"
         },
         "item7": {
@@ -414,6 +468,36 @@
           "action": "Exibir um item de marcação no estado misto",
           "result": "Desenha um traço em vez do tique do estado marcado, e é anunciado como misto — nem marcado, nem desmarcado",
           "priority": "high"
+        },
+        "item9": {
+          "action": "Pressionar Tab com o menu aberto (também de dentro do submenu)",
+          "result": "O menu inteiro fecha e o foco vai ao próximo ponto de tabulação depois do gatilho (Shift+Tab: ao anterior); se o gatilho for o último, volta a ele — o menu não prende o foco",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pressionar Home ou End com o menu aberto",
+          "result": "O foco vai ao primeiro ou ao último item do menu",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Digitar a letra inicial de um item com o menu aberto",
+          "result": "O foco vai ao item que começa com ela",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Seta para a direita no item que abre o submenu; depois seta para a esquerda ou Escape dentro dele",
+          "result": "O submenu abre e o foco vai ao primeiro item dele; a seta para a esquerda ou o Escape fecham só o submenu e devolvem o foco ao item que o abriu, e o menu segue aberto",
+          "priority": "high"
+        },
+        "item13": {
+          "action": "Clicar fora do menu aberto",
+          "result": "O menu fecha sem executar nenhum item",
+          "priority": "high"
+        },
+        "item14": {
+          "action": "Exibir um item com atalho",
+          "result": "O atalho aparece à direita do rótulo e integra o nome acessível do item; é só texto — a tecla precisa ser registrada por quem consome o menu",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -492,7 +576,38 @@
         "basic": "Action menu",
         "withCheckbox": "With checkbox-items (toggles)",
         "withRadio": "With radio-group (single selection)",
-        "withSubmenu": "With nested submenu"
+        "withSubmenu": "With nested submenu",
+        "account": "Account",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Log out",
+        "columns": "Columns",
+        "visibleColumns": "Visible columns",
+        "columnName": "Name",
+        "columnEmail": "Email",
+        "columnRole": "Role",
+        "theme": "Theme",
+        "appearance": "Appearance",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "file": "File",
+        "rename": "Rename",
+        "export": "Export",
+        "pdf": "PDF",
+        "csv": "CSV",
+        "menu": "Menu",
+        "action": "Action",
+        "deleteAccount": "Delete account",
+        "support": "Support",
+        "documentation": "Documentation",
+        "edit": "Edit",
+        "undo": "Undo",
+        "copy": "Copy",
+        "paste": "Paste",
+        "undoShortcut": "Ctrl+Z",
+        "copyShortcut": "Ctrl+C",
+        "pasteShortcut": "Ctrl+V"
       }
     },
     "anatomy": {
@@ -508,11 +623,11 @@
       "item9": "<strong>DropdownMenuShortcut</strong> — displays keyboard shortcut (e.g., \"Ctrl+K\") aligned to the right of the item.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sign out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir menu</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Conta</div>\n    <button ndsDropdownMenuItem>Perfil</button>\n    <button ndsDropdownMenuItem>Configurações</button>\n    <div ndsDropdownMenuSeparator></div>\n    <button ndsDropdownMenuItem variant=\"destructive\">Sair</button>\n  </ng-template>\n</nds-dropdown-menu>",
-        "vue": "<DropdownMenu>\n  <DropdownMenuTrigger as-child>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sign out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "svelte": "<DropdownMenu>\n  <DropdownMenuTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Open menu</Button>\n    {/snippet}\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Sign out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "vanilla": "import { createDropdownMenu } from '@/components/ui/dropdown-menu';\nimport { createButton } from '@/components/ui/button';\n\n// Items are data, not markup: the factory builds the panel and the keyboard handling\nconst menu = createDropdownMenu({\n  trigger: createButton({ variant: 'outline', label: 'Open menu' }),\n  items: [\n    { type: 'label', label: 'Account' },\n    { label: 'Profile', onClick: () => {} },\n    { label: 'Settings', onClick: () => {} },\n    { type: 'separator' },\n    { label: 'Sign out', variant: 'destructive', onClick: () => {} },\n  ],\n});\n\ndocument.body.appendChild(menu);"
+        "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Log out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Open menu</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Account</div>\n    <div ndsDropdownMenuItem>Profile</div>\n    <div ndsDropdownMenuItem>Settings</div>\n    <div ndsDropdownMenuSeparator></div>\n    <div ndsDropdownMenuItem variant=\"destructive\">Log out</div>\n  </ng-template>\n</nds-dropdown-menu>",
+        "vue": "<DropdownMenu>\n  <DropdownMenuTrigger as-child>\n    <Button variant=\"outline\">Open menu</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Log out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "svelte": "<DropdownMenu>\n  <DropdownMenuTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Open menu</Button>\n    {/snippet}\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Account</DropdownMenuLabel>\n    <DropdownMenuItem>Profile</DropdownMenuItem>\n    <DropdownMenuItem>Settings</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Log out</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "vanilla": "import { createDropdownMenu } from '@/components/ui/dropdown-menu';\nimport { createButton } from '@/components/ui/button';\n\n// Items are data, not markup: the factory builds the panel and the keyboard handling\nconst menu = createDropdownMenu({\n  trigger: createButton({ variant: 'outline', label: 'Open menu' }),\n  items: [\n    { type: 'label', label: 'Account' },\n    { label: 'Profile', onClick: () => {} },\n    { label: 'Settings', onClick: () => {} },\n    { type: 'separator' },\n    { label: 'Log out', variant: 'destructive', onClick: () => {} },\n  ],\n});\n\ndocument.body.appendChild(menu);"
       }
     },
     "usage": {
@@ -637,7 +752,7 @@
         },
         "withRadioGroup": {
           "name": "With Radio Group",
-          "description": "Group of <code>menuitemradio</code> sharing state: only one item at a time is <code>aria-checked=\"true\"</code>. Circular indicator on the selected item.",
+          "description": "Group of <code>menuitemradio</code> sharing state: only one item at a time is <code>aria-checked=\"true\"</code>. The selected one shows the same check on the right as the checkbox item — role and behaviour tell them apart, not the drawing.",
           "use": "Exclusive theme selection (light/dark/system), sort order (asc/desc), language or other 1-of-N choice within a menu."
         },
         "withShortcuts": {
@@ -727,7 +842,7 @@
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
         "react": "// Controlled menu with custom positioning\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Open</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "angular": "<!-- Controlled menu with custom positioning -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <button ndsDropdownMenuItem>Item</button>\n  </ng-template>\n</nds-dropdown-menu>",
+        "angular": "<!-- Controlled menu with custom positioning -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Open</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <div ndsDropdownMenuItem>Item</div>\n  </ng-template>\n</nds-dropdown-menu>",
         "vue": "<!-- Controlled menu with custom positioning -->\n<DropdownMenu v-model:open=\"open\">\n  <DropdownMenuTrigger as-child>\n    <Button variant=\"outline\">Open</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" :side-offset=\"8\">\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
         "svelte": "<!-- Controlled menu with custom positioning -->\n<DropdownMenu bind:open={open}>\n  <DropdownMenuTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Open</Button>\n    {/snippet}\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
         "vanilla": "// Controlled menu, with its own side and offset\nlet isOpen = false;\n\nconst menu = createDropdownMenu({\n  trigger: createButton({ variant: 'outline', label: 'Open' }),\n  items: [{ label: 'Item', onClick: () => {} }],\n  side: 'right',     // trigger edge the panel comes out of\n  align: 'end',      // anchoring on the axis perpendicular to the side\n  sideOffset: 8,     // gap between trigger and panel, in px\n  modal: false,      // the rest of the page stays usable\n  open: isOpen,      // with `open`, the caller owns the state\n  onOpenChange: (next) => {\n    isOpen = next;\n    menu.setOpen(next);\n  },\n});\n\n// Moving the menu by code: open(), close(), toggle(), setOpen(bool)\nmenu.toggle();"
@@ -782,14 +897,14 @@
         "item3": "<code>DropdownMenuItem</code> has <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> has <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> has <code>role=\"menuitemradio\"</code>.",
         "item4": "Up/Down arrows navigate between items; Home/End go to first/last; typed letters move focus to matching item (typeahead).",
         "item5": "ESC closes the menu and returns focus to trigger; outside click also closes.",
-        "item6": "<code>DropdownMenuShortcut</code> only displays the shortcut — the real key must be registered by the consumer (e.g., useHotkeys)."
+        "item6": "<code>DropdownMenuShortcut</code> only displays the shortcut — the real key must be registered by the consumer (a keyboard shortcut registered by the application)."
       },
       "keyboard": {
         "title": "Keyboard Navigation",
         "tab": "Tab — with the menu closed, the trigger is an ordinary stop on the page; with the menu open, it closes the menu and focus moves to the next tab stop after the trigger (Shift+Tab: the previous one). If the trigger is the last stop, focus returns to it. This also applies inside a submenu, and closes the whole menu.",
         "arrows": "Up/Down arrows — navigate between items; Right/Left arrows — open/close submenu.",
         "enter": "Enter/Space — activates Item (executes action or toggles checkbox/radio).",
-        "escape": "ESC — closes menu (and submenu if applicable); returns focus to trigger.",
+        "escape": "ESC — closes the menu and returns focus to the trigger. Inside a submenu, it closes only the submenu and returns focus to the item that opened it.",
         "homeEnd": "Home/End — go to first/last item.",
         "typeahead": "Alphabetic letters — typeahead moves focus to item starting with the letter."
       },
@@ -836,15 +951,38 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: the menu is built on this stack's headless library, which provides the portal, focus and keyboard handling. Where there is no library, the in-house factory delivers the same ARIA role contract, without nested submenus.",
+      "item1": "<strong>Upstream lib</strong>: the menu is built on this stack's headless library, which provides the portal, focus and keyboard handling. Where there is no library, the in-house factory delivers the same ARIA role contract, submenus included.",
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In Storybook previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Submenus</strong>: limit to 1 nesting level. Submenu within submenu confuses and breaks keyboard navigation on mobile.",
-      "item4": "<strong>Shortcuts</strong>: <code>DropdownMenuShortcut</code> is visual only; the actual shortcut needs to be registered by the consumer (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
+      "item4": "<strong>Shortcuts</strong>: <code>DropdownMenuShortcut</code> is visual only; the actual shortcut needs to be registered by the consumer (a keyboard-shortcut library, or the application's own key listener).",
       "item5": "<strong>Trigger via composition</strong>: delegating rendering to a <code>Button</code> child avoids nested <code>&lt;button&gt;&lt;button&gt;</code> (NestedInteractive ARIA violation)."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Relevant events: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Required payload: <code>component='dropdown-menu'</code>, <code>location</code> (page context), <code>label</code> (the item stable identifier, never the translated text — localized text splits one event into a value per locale). Dispatch via the open-change and select callbacks in the consumer."
+      "description": "DropdownMenu speaks the menu family's language (Context Menu and Menubar): three events, and every payload carries <code>component</code>, <code>menu</code> and <code>location</code>. The item event adds <code>label</code>; the close event adds <code>reason</code> — <code>escape</code>, <code>overlay</code> (click outside, Tab or a click on the trigger: left without deciding) or <code>api</code> (item picked, or closed from code); the type also carries <code>close-button</code>, the family's fourth word, which the menu never sends because it has no close button. <code>menu</code> and <code>label</code> are stable identifiers in English kebab-case — on this page <code>menu</code> is the preview id (<code>demo-account</code>, <code>pair1-do</code>, <code>with-checkbox-items</code>) and <code>label</code> is the item id (<code>profile</code>, <code>column-email</code>). Never the translated text: \"Configurações\", \"Settings\" and \"Configuración\" would become three rows of a single action in GA4. <code>location</code> is the page section the menu lives in.",
+      "table": {
+        "event": "Event",
+        "trigger": "Trigger",
+        "payload": "Additional Payload",
+        "menuOpen": "dropdown_menu_open",
+        "menuOpenTrigger": "The person opens the menu from the trigger: click, Enter or Space",
+        "menuOpenPayload": "{ component: \"dropdown-menu\", menu, location }",
+        "itemClick": "dropdown_menu_item_select",
+        "itemClickTrigger": "The person picks an item: action, checkable item or radio option",
+        "itemClickPayload": "{ component: \"dropdown-menu\", label, menu, location }",
+        "close": "dropdown_menu_close",
+        "closeTrigger": "The menu closes: Escape (escape), click outside, Tab or a click on the trigger (overlay) or item picked (api)",
+        "closePayload": "{ component: \"dropdown-menu\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "On docs page open or language switch",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "On scroll to a section (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "On language switch in LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
     },
     "testes": {
       "title": "Test Criteria",
@@ -873,12 +1011,12 @@
         },
         "item5": {
           "action": "Click CheckboxItem",
-          "result": "aria-checked toggles between true and false and the indicator follows",
+          "result": "aria-checked toggles between true and false and the indicator follows, and the menu stays open",
           "priority": "high"
         },
         "item6": {
           "action": "Click RadioItem within RadioGroup",
-          "result": "Only the clicked item is checked; others uncheck",
+          "result": "Only the clicked item is checked; others uncheck, and the menu stays open",
           "priority": "high"
         },
         "item7": {
@@ -890,6 +1028,36 @@
           "action": "Render a checkable item in the mixed state",
           "result": "Draws a dash instead of the check mark of the checked state, and is announced as mixed — neither checked nor unchecked",
           "priority": "high"
+        },
+        "item9": {
+          "action": "Press Tab with the menu open (also from inside the submenu)",
+          "result": "The whole menu closes and focus moves to the next tab stop after the trigger (Shift+Tab: the previous one); if the trigger is the last stop, focus returns to it — the menu does not trap focus",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Press Home or End with the menu open",
+          "result": "Focus moves to the first or last item of the menu",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Type the first letter of an item with the menu open",
+          "result": "Focus moves to the item that starts with it",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Right arrow on the item that opens the submenu; then left arrow or Escape inside it",
+          "result": "The submenu opens and focus moves to its first item; the left arrow or Escape close only the submenu and return focus to the item that opened it, and the menu stays open",
+          "priority": "high"
+        },
+        "item13": {
+          "action": "Click outside the open menu",
+          "result": "The menu closes without running any item",
+          "priority": "high"
+        },
+        "item14": {
+          "action": "Render an item with a shortcut",
+          "result": "The shortcut appears to the right of the label and is part of the item accessible name; it is text only — the key has to be registered by whoever consumes the menu",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -968,7 +1136,38 @@
         "basic": "Menú de acciones",
         "withCheckbox": "Con checkbox-items (toggles)",
         "withRadio": "Con radio-group (selección única)",
-        "withSubmenu": "Con submenú anidado"
+        "withSubmenu": "Con submenú anidado",
+        "account": "Cuenta",
+        "profile": "Perfil",
+        "settings": "Configuración",
+        "logout": "Cerrar sesión",
+        "columns": "Columnas",
+        "visibleColumns": "Columnas visibles",
+        "columnName": "Nombre",
+        "columnEmail": "Correo",
+        "columnRole": "Rol",
+        "theme": "Tema",
+        "appearance": "Apariencia",
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema",
+        "file": "Archivo",
+        "rename": "Renombrar",
+        "export": "Exportar",
+        "pdf": "PDF",
+        "csv": "CSV",
+        "menu": "Menú",
+        "action": "Acción",
+        "deleteAccount": "Eliminar cuenta",
+        "support": "Soporte",
+        "documentation": "Documentación",
+        "edit": "Editar",
+        "undo": "Deshacer",
+        "copy": "Copiar",
+        "paste": "Pegar",
+        "undoShortcut": "Ctrl+Z",
+        "copyShortcut": "Ctrl+C",
+        "pasteShortcut": "Ctrl+V"
       }
     },
     "anatomy": {
@@ -985,10 +1184,10 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<DropdownMenu>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir menú</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Cerrar sesión</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir menu</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Conta</div>\n    <button ndsDropdownMenuItem>Perfil</button>\n    <button ndsDropdownMenuItem>Configurações</button>\n    <div ndsDropdownMenuSeparator></div>\n    <button ndsDropdownMenuItem variant=\"destructive\">Sair</button>\n  </ng-template>\n</nds-dropdown-menu>",
-        "vue": "<DropdownMenu>\n  <DropdownMenuTrigger as-child>\n    <Button variant=\"outline\">Abrir menú</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Salir</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "svelte": "<DropdownMenu>\n  <DropdownMenuTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Abrir menú</Button>\n    {/snippet}\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Salir</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "vanilla": "import { createDropdownMenu } from '@/components/ui/dropdown-menu';\nimport { createButton } from '@/components/ui/button';\n\n// Los ítems son datos, no markup: la fábrica arma el panel y el teclado\nconst menu = createDropdownMenu({\n  trigger: createButton({ variant: 'outline', label: 'Abrir menú' }),\n  items: [\n    { type: 'label', label: 'Cuenta' },\n    { label: 'Perfil', onClick: () => {} },\n    { label: 'Configuración', onClick: () => {} },\n    { type: 'separator' },\n    { label: 'Salir', variant: 'destructive', onClick: () => {} },\n  ],\n});\n\ndocument.body.appendChild(menu);"
+        "angular": "<nds-dropdown-menu>\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir menú</button>\n  <ng-template ndsDropdownMenuContent side=\"bottom\" align=\"start\">\n    <div ndsDropdownMenuLabel>Cuenta</div>\n    <div ndsDropdownMenuItem>Perfil</div>\n    <div ndsDropdownMenuItem>Configuración</div>\n    <div ndsDropdownMenuSeparator></div>\n    <div ndsDropdownMenuItem variant=\"destructive\">Cerrar sesión</div>\n  </ng-template>\n</nds-dropdown-menu>",
+        "vue": "<DropdownMenu>\n  <DropdownMenuTrigger as-child>\n    <Button variant=\"outline\">Abrir menú</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Cerrar sesión</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "svelte": "<DropdownMenu>\n  <DropdownMenuTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Abrir menú</Button>\n    {/snippet}\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"bottom\" align=\"start\">\n    <DropdownMenuLabel>Cuenta</DropdownMenuLabel>\n    <DropdownMenuItem>Perfil</DropdownMenuItem>\n    <DropdownMenuItem>Configuración</DropdownMenuItem>\n    <DropdownMenuSeparator />\n    <DropdownMenuItem variant=\"destructive\">Cerrar sesión</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
+        "vanilla": "import { createDropdownMenu } from '@/components/ui/dropdown-menu';\nimport { createButton } from '@/components/ui/button';\n\n// Los ítems son datos, no markup: la fábrica arma el panel y el teclado\nconst menu = createDropdownMenu({\n  trigger: createButton({ variant: 'outline', label: 'Abrir menú' }),\n  items: [\n    { type: 'label', label: 'Cuenta' },\n    { label: 'Perfil', onClick: () => {} },\n    { label: 'Configuración', onClick: () => {} },\n    { type: 'separator' },\n    { label: 'Cerrar sesión', variant: 'destructive', onClick: () => {} },\n  ],\n});\n\ndocument.body.appendChild(menu);"
       }
     },
     "usage": {
@@ -1113,7 +1312,7 @@
         },
         "withRadioGroup": {
           "name": "Con Radio Group",
-          "description": "Grupo de <code>menuitemradio</code> compartiendo estado: solo un item a la vez queda <code>aria-checked=\"true\"</code>. Indicador circular en el item seleccionado.",
+          "description": "Grupo de <code>menuitemradio</code> compartiendo estado: solo un item a la vez queda <code>aria-checked=\"true\"</code>. El elegido muestra el mismo tilde a la derecha que el item de marcación — lo que los distingue es el rol y el comportamiento, no el dibujo.",
           "use": "Selección exclusiva de tema (claro/oscuro/sistema), orden (asc/desc), idioma u otra elección 1-de-N dentro de un menú."
         },
         "withShortcuts": {
@@ -1203,7 +1402,7 @@
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
         "react": "// Menú controlado con posicionamiento personalizado\n<DropdownMenu open={open} onOpenChange={setOpen}>\n  <DropdownMenuTrigger asChild>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Item</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
-        "angular": "<!-- Menú controlado con posicionamiento personalizado -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <button ndsDropdownMenuItem>Item</button>\n  </ng-template>\n</nds-dropdown-menu>",
+        "angular": "<!-- Menú controlado con posicionamiento personalizado -->\n<nds-dropdown-menu [(open)]=\"open\">\n  <button ndsDropdownMenuTrigger ndsButton variant=\"outline\">Abrir</button>\n  <ng-template ndsDropdownMenuContent side=\"right\" align=\"end\" [sideOffset]=\"8\">\n    <div ndsDropdownMenuItem>Item</div>\n  </ng-template>\n</nds-dropdown-menu>",
         "vue": "<!-- Menú controlado con posicionamiento personalizado -->\n<DropdownMenu v-model:open=\"abierto\">\n  <DropdownMenuTrigger as-child>\n    <Button variant=\"outline\">Abrir</Button>\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" :side-offset=\"8\">\n    <DropdownMenuItem>Elemento</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
         "svelte": "<!-- Menú controlado con posicionamiento personalizado -->\n<DropdownMenu bind:open={abierto}>\n  <DropdownMenuTrigger>\n    {#snippet child({ props })}\n      <Button variant=\"outline\" {...props}>Abrir</Button>\n    {/snippet}\n  </DropdownMenuTrigger>\n  <DropdownMenuContent side=\"right\" align=\"end\" sideOffset={8}>\n    <DropdownMenuItem>Elemento</DropdownMenuItem>\n  </DropdownMenuContent>\n</DropdownMenu>",
         "vanilla": "// Menú controlado, con lado y separación propios\nlet isOpen = false;\n\nconst menu = createDropdownMenu({\n  trigger: createButton({ variant: 'outline', label: 'Abrir' }),\n  items: [{ label: 'Elemento', onClick: () => {} }],\n  side: 'right',     // borde del disparador por donde sale el panel\n  align: 'end',      // apoyo en el eje perpendicular al lado\n  sideOffset: 8,     // espacio entre disparador y panel, en px\n  modal: false,      // el resto de la página sigue utilizable\n  open: isOpen,     // con `open`, quien manda en el estado es quien llama\n  onOpenChange: (siguiente) => {\n    isOpen = siguiente;\n    menu.setOpen(siguiente);\n  },\n});\n\n// Mover el menú por código: open(), close(), toggle(), setOpen(bool)\nmenu.toggle();"
@@ -1258,14 +1457,14 @@
         "item3": "<code>DropdownMenuItem</code> tiene <code>role=\"menuitem\"</code>; <code>CheckboxItem</code> tiene <code>role=\"menuitemcheckbox\"</code>; <code>RadioItem</code> tiene <code>role=\"menuitemradio\"</code>.",
         "item4": "Flechas Arriba/Abajo navegan entre items; Home/End van al primero/último; letras tipeadas mueven foco al item correspondiente (typeahead).",
         "item5": "ESC cierra el menú y devuelve foco al trigger; clic fuera también cierra.",
-        "item6": "<code>DropdownMenuShortcut</code> solo muestra el atajo — la tecla real debe registrarse en el consumidor (ej: useHotkeys)."
+        "item6": "<code>DropdownMenuShortcut</code> solo muestra el atajo — la tecla real debe registrarse en el consumidor (un atajo de teclado registrado por la aplicación)."
       },
       "keyboard": {
         "title": "Navegación por Teclado",
         "tab": "Tab — con el menú cerrado, el disparador es una parada común de la página; con el menú abierto, cierra el menú y el foco pasa a la siguiente parada de tabulación después del disparador (Shift+Tab: la anterior). Si el disparador es la última, el foco vuelve a él. Vale también dentro de un submenú, y cierra el menú entero.",
         "arrows": "Flechas Arriba/Abajo — navega entre items; Flechas Derecha/Izquierda — abre/cierra submenú.",
         "enter": "Enter/Space — activa Item (ejecuta acción o alterna checkbox/radio).",
-        "escape": "ESC — cierra menú (y submenú si aplica); devuelve foco al trigger.",
+        "escape": "ESC — cierra el menú y devuelve el foco al trigger. Dentro de un submenú, cierra solo el submenú y devuelve el foco al item que lo abrió.",
         "homeEnd": "Home/End — van al primer/último item.",
         "typeahead": "Letras alfabéticas — typeahead mueve foco al item que comienza con la letra."
       },
@@ -1312,15 +1511,38 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: el menú se construye sobre la librería headless de este stack, que aporta portal, foco y teclado. Donde no hay librería, la factory propia entrega el mismo contrato de roles ARIA, sin submenú anidado.",
+      "item1": "<strong>Lib upstream</strong>: el menú se construye sobre la librería headless de este stack, que aporta portal, foco y teclado. Donde no hay librería, la factory propia entrega el mismo contrato de roles ARIA, submenú incluido.",
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews de Storybook, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Submenús</strong>: limita a 1 nivel de anidamiento. Submenú dentro de submenú confunde y rompe la navegación por teclado en mobile.",
-      "item4": "<strong>Atajos</strong>: <code>DropdownMenuShortcut</code> es solo visual; el atajo real debe registrarse en el consumidor (<code>useHotkeys</code>, <code>tinykeys</code>, etc).",
+      "item4": "<strong>Atajos</strong>: <code>DropdownMenuShortcut</code> es solo visual; el atajo real debe registrarse en el consumidor (una biblioteca de atajos de teclado, o un oyente de teclado de la propia aplicación).",
       "item5": "<strong>Trigger vía composición</strong>: delegar la renderización a un <code>Button</code> hijo evita <code>&lt;button&gt;&lt;button&gt;</code> anidado (NestedInteractive ARIA violation)."
     },
     "analytics": {
       "title": "Analytics",
-      "description": "Eventos relevantes: <code>dropdown_menu_open</code>, <code>dropdown_menu_close</code>, <code>dropdown_menu_item_select</code>. Payload obligatorio: <code>component='dropdown-menu'</code>, <code>location</code> (contexto de página), <code>label</code> (identificador estable del elemento, nunca el texto traducido — el texto localizado divide el mismo evento en un valor por idioma). Dispara vía los callbacks de cambio de apertura y de selección en el consumidor."
+      "description": "El DropdownMenu habla el mismo idioma que la familia de menús (Context Menu y Menubar): tres eventos, y todo payload lleva <code>component</code>, <code>menu</code> y <code>location</code>. El de ítem suma <code>label</code>; el de cierre suma <code>reason</code> — <code>escape</code>, <code>overlay</code> (clic fuera, Tab o clic en el disparador: salió sin decidir) o <code>api</code> (ítem elegido o cierre por código); el tipo lleva también <code>close-button</code>, la cuarta palabra de la familia, que el menú no usa porque no tiene botón de cerrar. <code>menu</code> y <code>label</code> son identificadores estables, en inglés y kebab-case — en esta página, <code>menu</code> es el id de la vista previa (<code>demo-account</code>, <code>pair1-do</code>, <code>with-checkbox-items</code>) y <code>label</code> es el id del ítem (<code>profile</code>, <code>column-email</code>). Nunca el texto traducido: \"Configurações\", \"Settings\" y \"Configuración\" serían tres filas de una sola acción en GA4. <code>location</code> es la sección de la página donde está el menú.",
+      "table": {
+        "event": "Evento",
+        "trigger": "Disparador",
+        "payload": "Payload Adicional",
+        "menuOpen": "dropdown_menu_open",
+        "menuOpenTrigger": "La persona abre el menú desde el disparador: clic, Enter o Espacio",
+        "menuOpenPayload": "{ component: \"dropdown-menu\", menu, location }",
+        "itemClick": "dropdown_menu_item_select",
+        "itemClickTrigger": "La persona elige un ítem: acción, marcación u opción de radio",
+        "itemClickPayload": "{ component: \"dropdown-menu\", label, menu, location }",
+        "close": "dropdown_menu_close",
+        "closeTrigger": "El menú se cierra: Escape (escape), clic fuera, Tab o clic en el disparador (overlay) o ítem elegido (api)",
+        "closePayload": "{ component: \"dropdown-menu\", menu, reason: \"escape\" | \"overlay\" | \"api\", location }",
+        "pageView": "docs_page_view",
+        "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
+        "pageViewPayload": "{ component_name, locale, page_title }",
+        "sectionViewed": "docs_section_viewed",
+        "sectionViewedTrigger": "Al hacer scroll a una sección (IntersectionObserver)",
+        "sectionViewedPayload": "{ section_id, component_name, locale }",
+        "langSwitch": "language_switched",
+        "langSwitchTrigger": "Al cambiar idioma en LanguageSwitcher",
+        "langSwitchPayload": "{ previous_language, new_language }"
+      }
     },
     "testes": {
       "title": "Criterios de Test",
@@ -1349,12 +1571,12 @@
         },
         "item5": {
           "action": "Hacer clic en CheckboxItem",
-          "result": "aria-checked alterna entre true y false y el indicador acompaña",
+          "result": "aria-checked alterna entre true y false y el indicador acompaña, y el menú sigue abierto",
           "priority": "high"
         },
         "item6": {
           "action": "Hacer clic en RadioItem dentro de RadioGroup",
-          "result": "Solo el item clicado queda checked; otros desmarcan",
+          "result": "Solo el item clicado queda checked; otros desmarcan, y el menú sigue abierto",
           "priority": "high"
         },
         "item7": {
@@ -1366,6 +1588,36 @@
           "action": "Mostrar un elemento de marcación en estado mixto",
           "result": "Dibuja un guion en vez de la marca de verificación del estado marcado, y se anuncia como mixto — ni marcado ni desmarcado",
           "priority": "high"
+        },
+        "item9": {
+          "action": "Pulsar Tab con el menú abierto (también desde dentro del submenú)",
+          "result": "El menú entero se cierra y el foco pasa a la siguiente parada de tabulación después del disparador (Shift+Tab: la anterior); si el disparador es la última, vuelve a él — el menú no atrapa el foco",
+          "priority": "high"
+        },
+        "item10": {
+          "action": "Pulsar Home o End con el menú abierto",
+          "result": "El foco va al primer o al último ítem del menú",
+          "priority": "medium"
+        },
+        "item11": {
+          "action": "Escribir la letra inicial de un ítem con el menú abierto",
+          "result": "El foco va al ítem que empieza por ella",
+          "priority": "medium"
+        },
+        "item12": {
+          "action": "Flecha derecha en el ítem que abre el submenú; después flecha izquierda o Escape dentro de él",
+          "result": "El submenú se abre y el foco va a su primer ítem; la flecha izquierda o Escape cierran solo el submenú y devuelven el foco al ítem que lo abrió, y el menú sigue abierto",
+          "priority": "high"
+        },
+        "item13": {
+          "action": "Hacer clic fuera del menú abierto",
+          "result": "El menú se cierra sin ejecutar ningún ítem",
+          "priority": "high"
+        },
+        "item14": {
+          "action": "Mostrar un ítem con atajo",
+          "result": "El atajo aparece a la derecha de la etiqueta e integra el nombre accesible del ítem; es solo texto — la tecla debe registrarla quien consume el menú",
+          "priority": "medium"
         }
       },
       "accessibility": {

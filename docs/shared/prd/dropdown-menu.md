@@ -1,4 +1,5 @@
 # PRD — DropdownMenu
+<!-- prd-familia: context-menu menubar -->
 
 > **Estado descrito**: 2026-09-07. **Revisão serial fechada em** 2026-09-07.
 > **Revisado em 2026-09-10** pela pipeline `fix` do ContextMenu, que mora aqui
@@ -29,18 +30,18 @@ ao campo.
 
 ## 2. Contrato de comportamento
 
-| # | o contrato | portão |
+| # | o contrato | o item de `testes.*` que o verifica, em cada membro |
 |---|---|---|
-| C1 | O painel recebe o foco ao abrir, e as setas alcançam os itens | `accessibility.items.item2` |
-| C2 | **Não prende o foco**: Tab e Shift+Tab fecham o menu inteiro — também de dentro do submenu — e o foco vai ao próximo ponto de tabulação depois do GATILHO (Shift+Tab: ao anterior; no Menubar, da barra; no ContextMenu, da área); sem vizinho, volta ao gatilho | `accessibility.keyboard.tab` |
-| C3 | Setas cima/baixo andam; Home/End vão às pontas | `accessibility.items.item4` |
-| C4 | Letra digitada move o foco para o item que começa com ela (typeahead), com `preventDefault` | `accessibility.keyboard.typeahead` |
-| C5 | `Escape` fecha e devolve o foco ao gatilho; dentro do submenu fecha só o submenu e devolve o foco ao sub-gatilho. Clique fora também fecha | `accessibility.items.item5` |
-| C6 | Setas direita/esquerda abrem e fecham submenu | `accessibility.keyboard.arrows` |
-| C7 | O gatilho declara `aria-haspopup="menu"` e `aria-expanded` | `accessibility.items.item1` |
-| C8 | Papéis por tipo de item: `menuitem`, `menuitemcheckbox`, `menuitemradio` | `accessibility.items.item3` |
-| C9 | O atalho exibido é só texto — a tecla real é registrada por quem consome | `accessibility.items.item6` |
-| C10 | Marcar um item de marcação ou escolher uma opção de rádio NÃO fecha o menu | plays `WithCheckbox`/`WithRadioGroup` (menu de contexto) e `With Checkbox Items`/`With Radio Group` (compositions do dropdown e do menubar) |
+| C1 | O painel recebe o foco ao abrir, e as setas alcançam os itens | dropdown-menu: functional.item1, functional.item2 · context-menu: functional.item16, functional.item4 · menubar: functional.item3, functional.item4, functional.item12 |
+| C2 | **Não prende o foco**: Tab e Shift+Tab fecham o menu inteiro — também de dentro do submenu — e o foco vai ao próximo ponto de tabulação depois do GATILHO (Shift+Tab: ao anterior; no Menubar, da barra; no ContextMenu, da área); sem vizinho, volta ao gatilho | dropdown-menu: functional.item9 · context-menu: functional.item12 · menubar: functional.item13 |
+| C3 | Setas cima/baixo andam; Home/End vão às pontas | dropdown-menu: functional.item2, functional.item10 · context-menu: functional.item4, functional.item13 · menubar: functional.item4, functional.item10 |
+| C4 | Letra digitada move o foco para o item que começa com ela (typeahead), com `preventDefault` | dropdown-menu: functional.item11 · context-menu: functional.item14 · menubar: functional.item11 |
+| C5 | `Escape` fecha e devolve o foco ao gatilho; dentro do submenu fecha só o submenu e devolve o foco ao sub-gatilho. Clique fora também fecha | dropdown-menu: functional.item4, functional.item12, functional.item13 · context-menu: functional.item2, functional.item3, functional.item6 · menubar: functional.item6, functional.item5, functional.item14 |
+| C6 | Setas direita/esquerda abrem e fecham submenu | dropdown-menu: functional.item7, functional.item12 · context-menu: functional.item5, functional.item6 · menubar: functional.item5 |
+| C7 | O gatilho declara `aria-haspopup="menu"` e `aria-expanded` | dropdown-menu: accessibility.item2 · context-menu: n/a (a área não é botão que anuncia o menu — §8; o sub-gatilho é o que declara, em accessibility.item10) · menubar: accessibility.item3 |
+| C8 | Papéis por tipo de item: `menuitem`, `menuitemcheckbox`, `menuitemradio` | dropdown-menu: accessibility.item4 · context-menu: accessibility.item3, accessibility.item4, accessibility.item5 · menubar: accessibility.item5 |
+| C9 | O atalho exibido é só texto — a tecla real é registrada por quem consome | dropdown-menu: functional.item14 · context-menu: functional.item17 · menubar: functional.item16 |
+| C10 | Marcar um item de marcação ou escolher uma opção de rádio NÃO fecha o menu | dropdown-menu: functional.item5, functional.item6 · context-menu: functional.item7, functional.item8 · menubar: functional.item7, functional.item15 |
 
 **O destino do Tab sai do GATILHO, não do painel.** O painel vive num portal no
 fim do `<body>`: o Tab nativo a partir dele leva o foco para fora do documento,
@@ -262,11 +263,11 @@ tokens.
 
 | estado | quando ocorre | o que muda |
 |---|---|---|
-| Closed | inicial | painel desmontado |
+| Closed | inicial | painel fora da tela — desmontado na maioria das stacks; o bits mantém o nó (ver D5), e as plays contam menus abertos em vez de conferir o nó |
 | Open | gatilho | painel montado; foco no painel, setas ativas |
 | Item destacado | ponteiro ou setas | fundo accent a 20%, texto `--accent-foreground` |
 | Item com foco visível | navegação por teclado | soma o anel interno (D2) |
-| Item desabilitado | `data-disabled` | 50% de opacidade, sem eventos de ponteiro |
+| Item desabilitado | `data-disabled` nas libs, `aria-disabled="true"` no vanilla | 50% de opacidade, sem eventos de ponteiro; as setas continuam pousando nele |
 | Submenu aberto | seta direita, Enter ou Espaço no sub-gatilho, ou ponteiro | o sub-gatilho permanece destacado — a folha lê o nome de estado de cada lib (`data-popup-open` na base-ui e no radix-ng; `data-state="open"` na reka, no bits e no controlador de submenu do vanilla); sem o último, no Vue, no Svelte e no vanilla o destaque sumia quando o foco entrava no submenu (corrigido em 2026-09-10) |
 
 ## 7. API
@@ -313,6 +314,8 @@ para quem importa o namespace inteiro. As stories usam a forma longa.
 
 O índice do svelte também reexporta as formas curtas — `CheckboxItem`, `Content`, `Group`, `GroupHeading`, `Item`, `Label`, `RadioGroup`, `RadioItem`, `Root`, `Separator`, `Shortcut`, `Sub`, `SubContent`, `SubTrigger`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.
+
+No vue, o item de marcação não fala a mesma API nos três membros: o `DropdownMenuCheckboxItem` liga `v-model` (`modelValue`, o nome da reka 2), e o `ContextMenuCheckboxItem` e o `MenubarCheckboxItem` expõem `checked`/`update:checked`, que os wrappers declaram. É divergência de API de framework dentro de uma stack, registrada em 2026-09-11 e não alinhada: alinhar muda a API pública de dois componentes, e é decisão da dona.
 
 No svelte, `ContextMenuGroupHeading` é desde 2026-09-10 um apelido de
 `ContextMenuLabel`: mesmo markup, `data-slot="context-menu-label"`, e dentro de
@@ -363,52 +366,79 @@ segura, está por extenso em `hover-card.md` §8.
 
 ## 9. Analytics
 
-Seis eventos, disparados pelas cinco stacks. Os três primeiros são do menu; os
-três últimos são do ContextMenu, que mora aqui por D9.
+Nove eventos, três por membro da família, **no mesmo formato** — e é o tipo das
+cinco `analytics.ts` que o cobra: evento fora dele não compila.
 
 | evento | quando | payload |
 |---|---|---|
-| `dropdown_menu_open` | o menu abre | `{ component: "dropdown-menu", label, location }` |
-| `dropdown_menu_close` | o menu fecha | idem |
-| `dropdown_menu_item_select` | item escolhido | `{ component: "dropdown-menu", label, menu, location }` |
-| `context_menu_open` | o ContextMenu abre — clique direito, tecla de menu ou Shift+F10 | `{ component: "context-menu", menu, location }` |
-| `context_menu_item_select` | item do ContextMenu escolhido | `{ component: "context-menu", label, menu, location }` |
-| `context_menu_close` | o ContextMenu fecha | `{ component: "context-menu", menu, reason, location }` — `reason` é `escape`, `overlay` (clique fora ou Tab — saiu sem decidir) ou `api` (item escolhido; marcar e escolher rádio não fecham, C10); o tipo carrega as quatro palavras da família |
+| `dropdown_menu_open` · `context_menu_open` · `menubar_open` | o menu abre (no ContextMenu: clique direito, tecla de menu ou Shift+F10; no Menubar: um menu da barra) | `{ component, menu, location }` |
+| `dropdown_menu_close` · `context_menu_close` · `menubar_close` | o menu fecha | `{ component, menu, reason, location }` |
+| `dropdown_menu_item_select` · `context_menu_item_select` · `menubar_item_select` | item escolhido — marcar e escolher rádio também, sem fechar (C10) | `{ component, menu, label, location }` |
 
-**`label` é o VALOR, nunca o rótulo visível** (D10). Na demonstração o item que
-mostra "Configurações" emite `configuracoes`, e o menu inteiro se chama `acoes` —
-é `label` no evento de item e `menu` no de contexto, os dois estáveis. Traduzido,
-o mesmo item viraria três valores no GA4 e a série não juntaria.
+- **`component`** é o slug em kebab: `dropdown-menu`, `context-menu`, `menubar`.
+- **`menu`** é o id estável do menu, em inglês e kebab. Numa prévia de UM
+  menu, o id da prévia — `demo` (ContextMenu), `pair1-do`, `pair1-dont`…, ou o
+  nome do card em kebab (`with-checkbox-items`). Numa prévia de VÁRIOS menus, o
+  id da prévia + `-` + a chave do rótulo do gatilho em kebab — as quatro células
+  da demonstração do DropdownMenu (`demo-account` … `demo-file`) e toda barra
+  de mais de um menu (`demo-file`, `pair1-do-edit`, `editor-complete-help`);
+  barra de um menu só leva só o id da prévia (`with-shortcuts`). Nunca o texto
+  do gatilho.
+- **`label`** só existe na escolha de item: é a chave de
+  `demonstration.labels.*` que nomeia o item, em kebab (`showGrid` →
+  `show-grid`). A regra é mecânica de propósito — as cinco stacks chegam ao
+  mesmo valor sem combinar entre si.
+- **`reason`** é `escape`, `overlay` (clique fora, Tab, clique no gatilho
+  aberto e, no Menubar, a passagem ao menu vizinho — saiu sem decidir) ou `api`
+  (item escolhido que fecha, ou fechamento pelo código — "decisão de dentro",
+  como no resto da categoria). `close-button` não ocorre — menu não tem
+  controle de fechar —, mas o tipo carrega as quatro palavras da família.
+- **`location`** é a seção da página onde a prévia está (`docs_demo`,
+  `docs_variantes`, `docs_composicoes`, `docs_do_dont`) — toda prévia viva
+  rastreia, e a seção vem do chamador.
 
-**Os eventos do ContextMenu mudaram de nome em 2026-09-10, por decisão da dona.**
-Eram `menu_open` e `menu_item_click` — outro vocabulário que o do irmão, com o
-`component` dizendo `context-menu` e o evento de item sem `component` nenhum —, e
-o fechamento não era medido. As duas assimetrias estavam registradas aqui desde
-2026-09-09 como "observáveis e que ninguém decidiu"; agora a família fala uma
-língua só no GA4, e a série `menu_*` para de crescer nessa data.
+**Os ids são em inglês, e o texto nunca entra** (D10). Traduzido, o mesmo item
+viraria três valores no GA4, um por idioma, e a série não juntaria.
 
-> **PENDÊNCIA · 2026-09-10** — o `dropdown_menu_close` não tem `reason`, e o
-> `context_menu_close` tem. O portão `reason_vocabulario_divergente` aceita o
-> zero (evento sem `reason` é coerente), então nada reprova — mas os dois irmãos
-> passam a medir o fechamento de jeitos diferentes. É decisão da passagem do
-> DropdownMenu, não desta.
-> **Fecha quando**: o `dropdown_menu_close` tiver `reason` obrigatório no
-> vocabulário da família nas cinco stacks, ou o PRD registrar por que não.
+**Histórico — o que este formato substituiu, e por quê.**
 
-O **Menubar** não dispara nada. Ele veste esta folha por D9, e nenhum evento
-`menubar_*` existe no tipo — ausência declarada, não esquecimento a preencher.
+- **2026-09-10, eventos do ContextMenu**: eram `menu_open` e `menu_item_click`,
+  outro vocabulário que o do irmão, com o evento de item sem `component`, e o
+  fechamento não era medido. A dona decidiu renomear para `context_menu_*`, e a
+  série `menu_*` parou de crescer nessa data.
+- **2026-09-11, o resto da família**, por decisão da dona:
+  - o `dropdown_menu_open`/`_close` mandava o id do menu em `label`, e o
+    `dropdown_menu_item_select` o mandava em `menu` — a mesma dimensão do GA4
+    guardava o menu num evento e o item no outro. Passa a `menu`, e a série de
+    `label` desses dois eventos para de crescer em 2026-09-11;
+  - o `dropdown_menu_close` não tinha `reason`, e o portão aceitava a ausência
+    (`reason_vocabulario_divergente` pulava o evento sem o campo). Agora a
+    ausência reprova, salvo exceção declarada com premissa — hoje só o
+    `hover_card_close`;
+  - os ids eram em português no DropdownMenu (`acoes`, `configuracoes`) e em
+    inglês no ContextMenu — e o vanilla dava ao item `value: 'settings'` e
+    rastreava `configuracoes`. Passam a inglês, pela chave do rótulo;
+  - Variantes e Do & Don't do DropdownMenu não rastreavam: os dois helpers de
+    cada stack cravavam `docs_demo`, com um comentário dizendo que só a
+    demonstração era atendida. O `location_so_da_demo` exigia três literais e
+    a página tinha dois — a regra agora dispara com um, e a dívida do resto do
+    repositório está declarada em
+    `docs/shared/primitives/location-so-da-demo-divida.json`;
+  - **destruir não é fechar**: a fábrica do vanilla destruída com o menu aberto
+    mandava `*_close` com `api`, e toda troca de idioma de uma docs page com um
+    menu aberto virava um fechamento falso. Hoje a destruição não avisa nada,
+    nos três menus;
+  - o **Menubar** não disparava nada, e o conteúdo prometia
+    `menubar_menu_open`, `menubar_item_select` e `menubar_shortcut_invoke`, com
+    o texto do item no payload. Passa a rastrear, no formato da família; o
+    `menubar_shortcut_invoke` não existe — o atalho exibido é só texto (C9), e
+    nada o registra.
 
-> **PENDÊNCIA · 2026-09-10** — o conteúdo do Menubar contradiz a ausência acima:
-> `menubar/translations.json` → `analytics.description` promete
-> `menubar_menu_open`, `menubar_item_select` e `menubar_shortcut_invoke`, com
-> `label` = "texto do Item" (contra D10), a tabela de analytics das docs pages
-> lista os três, e o snippet do Angular (`MenubarDocs.ts`, exibido ao leitor)
-> ensina `track('menubar_menu_open', …)` — evento que não compila contra o tipo.
-> `node scripts/audit.mjs menubar` acusa 15 `event_not_typed`. Medido pela
-> pipeline do ContextMenu; é decisão da passagem do Menubar.
-> **Fecha quando**: ou os eventos existirem tipados nas cinco, com `label`
-> estável, e disparados pelas docs pages; ou o conteúdo, as tabelas e o snippet
-> deixarem de prometê-los.
+As duas pendências abertas aqui em 2026-09-10 — o `reason` do DropdownMenu e os
+eventos do Menubar — estavam endereçadas "à passagem do DropdownMenu" e "à
+passagem do Menubar". Este PRD descreve os dois, e nenhuma dessas passagens
+estava marcada: é o mecanismo que o `.claude/commands/pipeline.md` agora proíbe
+("A família é a unidade").
 
 ## 10. Reconstruir do zero
 

@@ -54,9 +54,12 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
+// Só MECÂNICA no inline. A altura mínima é valor de design e mora na escada,
+// em `.nds-min-h-70` (17,5rem = os mesmos 280px): inline ela vencia a folha e
+// saía do tema, da densidade e da escala — vinha de uma CONSTANTE, e por isso
+// o portão não a via.
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
-  minHeight: 280,
   position: "relative",
 }
 
@@ -71,7 +74,7 @@ export const Default: Story = {
     docs: { source: { transform: menubarItemNeutralSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-70" style={wrapperStyle}>
       <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Arquivo</MenubarTrigger>
@@ -135,7 +138,7 @@ export const Destructive: Story = {
     docs: { source: { transform: menubarItemDestructiveSource } },
   },
   render: () => (
-    <div style={wrapperStyle}>
+    <div className="nds-min-h-70" style={wrapperStyle}>
       <Menubar modal={false}>
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Arquivo</MenubarTrigger>

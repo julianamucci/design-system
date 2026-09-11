@@ -102,6 +102,7 @@ function groupsAround(item: HTMLElement, menu: HTMLElement): HTMLElement[] {
 
 export const WithShortcut: Story = {
   parameters: {
+    covers: ['functional.item17'],
     // A story mostra três atalhos e nenhum grupo; a forma canônica do `meta`
     // publica "Duplicar" sem atalho. Declarada aqui, e não herdada do `meta`,
     // para que a fiação viva ao lado do preview que ela publica.
@@ -143,6 +144,9 @@ export const WithShortcut: Story = {
         await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
         await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
       }
+      // E integra o NOME acessível (F17): "Editar Ctrl+E" é o que o leitor
+      // anuncia, e é o que ensina a tecla a quem não enxerga a coluna.
+      await expect(target('editar')).toHaveAccessibleName('Editar Ctrl+E');
     });
 
     await step('O atalho fica encostado à direita do rótulo', async () => {
@@ -351,7 +355,7 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    covers: ['functional.item5', 'functional.item6', 'visual.item3'],
+    covers: ['functional.item5', 'functional.item6', 'accessibility.item10', 'visual.item3'],
     // O segundo nível é a tríade Sub/SubTrigger/SubContent, que o snippet do
     // meta esconderia por inteiro.
     docs: { source: { transform: contextMenuWithSubmenuSource } },

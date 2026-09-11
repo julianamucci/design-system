@@ -12,6 +12,7 @@ import {
   dropdownMenuItemDisabledSource,
   dropdownMenuMarkupMistaSource,
   dropdownMenuDefaultSource,
+  dropdownMenuSnippet,
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
@@ -190,5 +191,99 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('Copiar<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
     // Escondido, a pessoa ouviria só "Copiar" e nunca saberia da tecla.
     expect(saida).not.toContain('aria-hidden');
+  });
+});
+
+describe('dropdownMenuSnippet — o menu descrito por dados', () => {
+  it('imprime os rótulos que recebe: o código diz o que a prévia diz, em qualquer idioma', () => {
+    const saida = dropdownMenuSnippet({
+      triggerLabel: 'Account',
+      entries: [
+        { kind: 'item', label: 'Rename', value: 'rename' },
+        { kind: 'separator' },
+        { kind: 'item', label: 'Delete account', value: 'delete-account', destructive: true },
+      ],
+    });
+    expect(saida).toContain('<Button variant="outline">Account</Button>');
+    expect(saida).toContain('<DropdownMenuItem>Rename</DropdownMenuItem>');
+    expect(saida).toContain('<DropdownMenuItem variant="destructive">Delete account</DropdownMenuItem>');
+    expect(saida).not.toContain('Conta');
+    // O id estável é do evento, não do código: o item de ação não tem valor.
+    expect(saida).not.toContain('delete-account');
+  });
+
+  it('declara o ESTADO INICIAL de cada marcação e da escolha única, com o nome do id estável', () => {
+    const saida = dropdownMenuSnippet({
+      triggerLabel: 'Columns',
+      entries: [
+        {
+          kind: 'group',
+          label: 'Visible columns',
+          items: [
+            { kind: 'checkbox', label: 'Name', value: 'column-name', checked: true },
+            { kind: 'checkbox', label: 'Email', value: 'column-email', checked: false },
+          ],
+        },
+        {
+          kind: 'radio-group',
+          label: 'Appearance',
+          value: 'theme',
+          selected: 'light',
+          options: [
+            { label: 'Light', value: 'light' },
+            { label: 'Dark', value: 'dark' },
+          ],
+        },
+      ],
+    });
+    // Sem os `ref` o trecho ligava `v-model` a nomes que não existiam — era o
+    // defeito do card de marcação.
+    expect(saida).toContain(`import { ref } from 'vue'
+
+const columnName = ref(true)
+const columnEmail = ref(false)
+const theme = ref('light')`);
+    expect(saida).toContain('<DropdownMenuCheckboxItem v-model="columnName">');
+    // O rótulo mora DENTRO do grupo que ele nomeia — nos dois tipos de grupo.
+    expect(saida).toContain(`      <DropdownMenuGroup>
+        <DropdownMenuLabel>Visible columns</DropdownMenuLabel>`);
+    expect(saida).toContain(`      <DropdownMenuRadioGroup v-model="theme">
+        <DropdownMenuLabel>Appearance</DropdownMenuLabel>
+        <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>`);
+  });
+
+  it('importa só as peças usadas, e só declara `ref` quando há estado', () => {
+    const saida = dropdownMenuSnippet({
+      entries: [
+        { kind: 'item', label: 'Undo', value: 'undo', shortcut: 'Ctrl+Z' },
+        { kind: 'submenu', label: 'Export', items: [{ kind: 'item', label: 'PDF', value: 'pdf' }] },
+      ],
+    });
+    expect(saida).toContain(`import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'`);
+    expect(saida).not.toContain(`from 'vue'`);
+    expect(saida).toContain(`      <DropdownMenuItem>
+        Undo
+        <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
+      </DropdownMenuItem>`);
+  });
+
+  it('um rótulo com sinal de menor vira expressão, e o trecho continua válido', () => {
+    const saida = dropdownMenuSnippet({ entries: [{ kind: 'item', label: 'a < b', value: 'a' }] });
+    expect(saida).toContain(`<DropdownMenuItem>{{ 'a < b' }}</DropdownMenuItem>`);
+  });
+
+  it('sem args, o menu canônico: grupo nomeado, divisor e a saída destrutiva', () => {
+    const saida = dropdownMenuSnippet();
+    expect(saida).toContain('<DropdownMenuLabel>Conta</DropdownMenuLabel>');
+    expect(saida).toContain('<DropdownMenuItem variant="destructive">Sair</DropdownMenuItem>');
   });
 });

@@ -98,6 +98,7 @@ export const Playground: Story = {
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'functional.item12', 'functional.item13', 'functional.item14', 'functional.item15',
+      'functional.item16',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
       'accessibility.item7', 'accessibility.item8',
       'visual.item1',
@@ -160,6 +161,18 @@ export const Playground: Story = {
         Math.abs(boxMenu.top - (boxArea.top + boxArea.height / 2)),
       ).toBeLessThan(24);
       await expect(args.onOpenChange).toHaveBeenCalled();
+    });
+
+    await step('O foco ENTRA no menu aberto, e as setas andam a partir dali', async () => {
+      // Sem foco nenhum empurrado pela play: o que se mede é onde a ABERTURA o
+      // deixou. Um menu que abrisse com o foco na área faria a seta seguinte
+      // rolar a página em vez de andar pelos itens.
+      const items = [
+        ...menuOpen()!.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]'),
+      ];
+      await expect(document.activeElement).toBe(items[0]);
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(items[1]);
     });
 
     await step('E CRESCE a partir do ponteiro, não do meio do painel', async () => {
@@ -308,18 +321,36 @@ export const Playground: Story = {
       await expect(args.onClose).toHaveBeenLastCalledWith('overlay');
     });
 
-    await step('Shift+F10 na área focada abre o menu, como o clique direito', async () => {
-      // A tecla Menu e o Shift+F10 são o caminho de quem não usa mouse, e o
-      // navegador os entrega como `contextmenu` no elemento FOCADO. Evento de
-      // teclado sintético não dispara a ação padrão do navegador, então o passo
-      // entrega o que ele entregaria — e o que se prova é o resto: a área
-      // RECEBE foco (sem a parada de tabulação não há elemento focado a quem
-      // entregar), o mesmo evento abre o menu, e o foco entra nele.
+    /**
+     * A tecla de menu e o Shift+F10 são o caminho de quem não usa mouse.
+     *
+     * A tecla é pressionada DE VERDADE, e o que ela produz se mede: o `keydown`
+     * chega à área focada — sem a parada de tabulação da área não haveria
+     * elemento focado a quem entregá-la. O que o user-event não faz é a AÇÃO
+     * PADRÃO do navegador para essas teclas, que é disparar `contextmenu` no
+     * elemento que recebeu a tecla; essa metade a play faz, e só ela, no alvo
+     * que o `keydown` de fato atingiu. O resto se prova: o menu abre e o foco
+     * ENTRA nele, pousando no primeiro item.
+     */
+    const openByKey = async (keys: string, key: string) => {
       await closeMenu();
       area().focus();
       await expect(document.activeElement).toBe(area());
+
+      let target: EventTarget | null = null;
+      const record = (e: KeyboardEvent) => {
+        if (e.key === key) target = e.target;
+      };
+      document.addEventListener('keydown', record, true);
+      try {
+        await userEvent.keyboard(keys);
+      } finally {
+        document.removeEventListener('keydown', record, true);
+      }
+      await expect(target).toBe(area());
+
       const box = area().getBoundingClientRect();
-      document.activeElement!.dispatchEvent(
+      (target as unknown as HTMLElement).dispatchEvent(
         new MouseEvent('contextmenu', {
           bubbles: true,
           cancelable: true,
@@ -328,9 +359,23 @@ export const Playground: Story = {
         }),
       );
       await waitFor(() => expect(menuOpen()).not.toBeNull());
-      await expect(document.activeElement).toBe(
-        menuOpen()!.querySelector('[data-slot="context-menu-item"]'),
-      );
+      return [...menuOpen()!.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+    };
+
+    await step('A tecla de menu na área focada abre o menu, e o foco entra nele', async () => {
+      const items = await openByKey('{ContextMenu}', 'ContextMenu');
+      await expect(document.activeElement).toBe(items[0]);
+      // E a seta alcança os itens a partir dali, sem o mouse: é o caminho
+      // inteiro de quem abriu pelo teclado.
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(items[1]);
+    });
+
+    await step('Shift+F10 na área focada abre o menu, e o foco entra nele', async () => {
+      const items = await openByKey('{Shift>}{F10}{/Shift}', 'F10');
+      await expect(document.activeElement).toBe(items[0]);
+      await userEvent.keyboard('{ArrowDown}');
+      await expect(document.activeElement).toBe(items[1]);
     });
 
     await step('A story termina com o menu ABERTO', async () => {

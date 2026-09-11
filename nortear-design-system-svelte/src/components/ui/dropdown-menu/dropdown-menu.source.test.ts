@@ -11,7 +11,9 @@ import {
   dropdownMenuItemDisabledSource,
   dropdownMenuDefaultSource,
   dropdownMenuSource,
+  dropdownMenuEntriesSource,
 } from './dropdown-menu.source';
+import type { MenuDocsEntry } from './dropdown-menu.fixtures';
 
 describe('dropdownMenuSource', () => {
   it('sem args, entrega o menu canônico fechado, importando só as peças usadas', () => {
@@ -226,5 +228,82 @@ describe('transforms das stories de variação, estado e composição', () => {
     const saida = dropdownMenuWithShortcutsSource();
     expect(saida).toContain('<DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>');
     expect(saida).toContain('>Editar</Button>');
+  });
+});
+
+describe('dropdownMenuEntriesSource — o código dos cards de Variantes', () => {
+  // A mesma lista monta a prévia e imprime o código: o que a lista diz é o que
+  // o painel mostra, no idioma em que os rótulos chegaram.
+  const entries: MenuDocsEntry[] = [
+    {
+      type: 'group',
+      label: 'Account',
+      items: [
+        { type: 'item', label: 'Profile', value: 'profile' },
+        { type: 'item', label: 'Settings', value: 'settings' },
+      ],
+    },
+    { type: 'separator' },
+    { type: 'item', label: 'Log out', value: 'logout', variant: 'destructive' },
+  ];
+
+  it('escreve o gatilho e os rótulos que recebeu, sem português cravado', () => {
+    const saida = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
+    expect(saida).toContain('<Button variant="outline" {...props}>Account</Button>');
+    expect(saida).toContain('<DropdownMenuGroupHeading>Account</DropdownMenuGroupHeading>');
+    expect(saida).toContain('<DropdownMenuItem>Profile</DropdownMenuItem>');
+    expect(saida).toContain('<DropdownMenuItem variant="destructive">Log out</DropdownMenuItem>');
+    expect(saida).not.toMatch(/Perfil|Conta|Sair/);
+  });
+
+  it('o rótulo do grupo mora DENTRO do grupo que ele nomeia', () => {
+    const saida = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
+    expect(saida).toContain(
+      '    <DropdownMenuGroup>\n      <DropdownMenuGroupHeading>Account</DropdownMenuGroupHeading>',
+    );
+  });
+
+  it('importa só as peças que a lista usa, e nenhum estado quando nada liga', () => {
+    const saida = dropdownMenuEntriesSource({ triggerLabel: 'Account', entries });
+    expect(saida).toContain('  DropdownMenuSeparator,');
+    expect(saida).not.toContain('DropdownMenuShortcut');
+    expect(saida).not.toContain('DropdownMenuCheckboxItem');
+    expect(saida).not.toContain('$state');
+  });
+
+  it('a marcação e a escolha única declaram as variáveis que ligam, com o estado da lista', () => {
+    const saida = dropdownMenuEntriesSource({
+      triggerLabel: 'Columns',
+      entries: [
+        { type: 'checkbox', label: 'Name', value: 'column-name', checked: true },
+        { type: 'checkbox', label: 'Email', value: 'column-email', checked: false },
+        {
+          type: 'radio-group',
+          label: 'Appearance',
+          name: 'theme',
+          value: 'light',
+          items: [
+            { label: 'Light', value: 'light' },
+            { label: 'Dark', value: 'dark' },
+          ],
+        },
+      ],
+    });
+    expect(saida).toContain('let columnName = $state(true);');
+    expect(saida).toContain('let columnEmail = $state(false);');
+    expect(saida).toContain("let theme = $state('light');");
+    expect(saida).toContain('<DropdownMenuCheckboxItem bind:checked={columnName}>');
+    expect(saida).toContain('<DropdownMenuRadioGroup bind:value={theme}>');
+    expect(saida).toContain('<DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>');
+  });
+
+  it('o atalho é filho do item, numa linha própria', () => {
+    const saida = dropdownMenuEntriesSource({
+      triggerLabel: 'Edit',
+      entries: [{ type: 'item', label: 'Undo', value: 'undo', shortcut: 'Ctrl+Z' }],
+    });
+    expect(saida).toContain(
+      '<DropdownMenuItem>\n      Undo\n      <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>\n    </DropdownMenuItem>',
+    );
   });
 });

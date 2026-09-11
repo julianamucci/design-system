@@ -166,6 +166,81 @@ onIndexChange?: (index: number, source: CarouselNavSource) => void;
 
 **Verificação após bump:** n/a (sem upstream). Ao evoluir a factory, manter `'init'` no mount e a origem correta em cada caminho de navegação.
 
+### vanilla/dropdown-menu — `onClose(reason)` com o motivo do fechamento {#vanilla-dropdown-menu-onclose-reason}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/dropdown-menu.ts`
+- **Categoria:** api
+- **Data:** 2026-09-11
+- **Upstream ref:** —
+
+**Antes:** só `onOpenChange(open)`.
+
+**Depois:** tipo `DropdownMenuCloseReason` (`escape | overlay | api`) e a opção `onClose(reason)`, disparada antes do `onOpenChange(false)`; no modo controlado ela carrega o motivo da interação que pediu o fechamento até o `setOpen(false)` rodar. `close()`/`setOpen()` públicos passaram a ser embrulhados, para que entregá-los direto a um ouvinte não passe o evento como motivo. Junto, um conserto: escolher item devolve o foco ao gatilho — antes ele caía no `<body>`, contra o que o `testes.functional.item3` e o `accessibility.item5` prometem.
+
+**Motivo:** o `dropdown_menu_close` passou a exigir `reason` (`prd/dropdown-menu.md` §9), e só a fábrica sabe por qual caminho o menu fechou. A mudança é aditiva.
+
+**Destruir não é fechar** (2026-09-11, vale para o DropdownMenu, o ContextMenu e o Menubar): a fábrica destruída com o menu aberto não avisa nada — nem `onClose` nem `onOpenChange(false)`. Antes ela mandava `api`, e toda troca de idioma de uma docs page com um menu aberto virava um fechamento falso no GA4. As três `ListenerCleanup` conferem que o único aviso foi a abertura.
+
+**Verificação após bump:** a play do `Playground` confere `api` (Enter), `escape` e `overlay` (clique fora).
+
+### vanilla/menubar — abrir e fechar avisados por menu, com o motivo {#vanilla-menubar-open-close}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/menubar.ts`
+- **Categoria:** api
+- **Data:** 2026-09-11
+- **Upstream ref:** —
+
+**Antes:** a barra não avisava nada.
+
+**Depois:** tipo `MenubarCloseReason` e, em cada `MenubarMenu`, `onOpenChange(open)` e `onClose(reason)`: `api` ao escolher item, `escape` no Escape, `overlay` no clique fora, no Tab, no clique no gatilho aberto e na passagem ao menu vizinho — o menu que fecha é avisado antes de o próximo abrir.
+
+**Motivo:** sem isto a página não rastreava `menubar_open`, `menubar_close` nem `menubar_item_select` (decisão da dona em 2026-09-11: o Menubar rastreia no formato da família). A mudança é aditiva.
+
+**Verificação após bump:** `Playground` do menubar confere `overlay` e `escape`; `ControlledOpen` passou a ler o fechamento do `onOpenChange`.
+
+### vanilla/submenu — submenu dentro de submenu, por pilha de níveis {#vanilla-submenu-nested-levels}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/lib/submenu.ts`
+- **Categoria:** api
+- **Data:** 2026-09-11
+- **Upstream ref:** —
+
+**Antes:** um painel só — o gatilho de segundo nível fechava o próprio pai.
+
+**Depois:** o controlador guarda uma pilha dos níveis abertos. Escape fecha só o mais fundo; a seta esquerda fecha o nível que tem o foco; cada um devolve o foco ao item que o abriu; `close()` fecha a pilha inteira. Novo `panelContaining(node)`, e `contains()` cobre todos os níveis. O atraso de fechamento por ponteiro só se cancela quando o ponteiro entra num painel que o fechamento pendente levaria.
+
+**Motivo:** o Do & Don't do Menubar mostra, VIVO, o submenu dentro de submenu que ele desaconselha — o vanilla exibia um `<p>` dizendo que a fábrica não suportava. O comportamento de um nível só não muda.
+
+**Verificação após bump:** a story `NestedSubmenu` do menubar (dois níveis; Escape e seta esquerda fecham um nível cada; escolher no mais fundo fecha tudo).
+
+### vanilla/menubar — o rádio escolhe pelo teclado, e escolher a opção marcada também avisa {#vanilla-menubar-radio-keyboard-onclick}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/menubar.ts`
+- **Categoria:** api
+- **Data:** 2026-09-11
+- **Upstream ref:** —
+
+**Antes:** a opção de rádio só ouvia `click` — Enter e Espaço não a escolhiam (WCAG 2.1.1, na stack de referência), enquanto a marcação tinha `keydown`. E escolher a opção já marcada não avisava nada.
+
+**Depois:** Enter e Espaço escolhem a opção, e `MenubarRadioOption.onClick` dispara em toda escolha, inclusive a da opção já marcada; o `onValueChange` continua só na mudança real. O rótulo abre um grupo nomeado por ele (`role="group"` + `aria-labelledby`), e o grupo de rádio que vem logo depois É esse grupo, sem um segundo aninhado.
+
+**Motivo:** padrão de menu da WAI-ARIA APG, e o evento `menubar_item_select` sai igual ao do DropdownMenu e do ContextMenu. A mudança é aditiva.
+
+**Verificação após bump:** `WithRadioGroup` das composições do menubar (passos de teclado e de reescolha, e o nome do grupo).
+
+### vanilla/dropdown-menu — `inset` no item, no rótulo e no sub-gatilho {#vanilla-dropdown-menu-inset}
+
+- **Arquivo:** `nortear-design-system-vanilla/src/components/ui/dropdown-menu.ts`
+- **Categoria:** api
+- **Data:** 2026-09-11
+- **Upstream ref:** —
+
+**Depois:** `inset?: boolean` no item, no rótulo e no submenu, escrevendo `data-inset` só quando verdadeiro — como o ContextMenu e o Menubar já faziam. O `anatomy.item4` do conteúdo prometia o recuo, e a fábrica do DropdownMenu era a única da família sem ele.
+
+**Motivo:** mesma folha, mesmo contrato (D9). A mudança é aditiva.
+
+**Verificação após bump:** a story `ItemInset` de dropdown-menu-states.
+
 ### vanilla/sheet — `onClose(reason)` espelhando o Dialog {#vanilla-sheet-onclose-reason}
 
 - **Arquivo:** `nortear-design-system-vanilla/src/components/ui/sheet.ts`
@@ -621,6 +696,19 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 **Verificação após bump:** a story `CheckboxIndeterminate`, primeiro passo (`mixed`/`true`/`false`). Se a lib passar a sobrescrever `aria-checked`, ou ganhar `indeterminate` nativo, rever.
 
+### react/dropdown-menu + menubar — estado misto no item de marcação (a base-ui é de dois estados) {#react-dropdown-menu-mixed-checkbox}
+
+- **Arquivos:** `nortear-design-system-react/src/components/ui/dropdown-menu.tsx` (`DropdownMenuCheckboxItem`) e `nortear-design-system-react/src/components/ui/menubar.tsx` (`MenubarCheckboxItem`)
+- **Categoria:** a11y
+- **Data:** 2026-09-11
+- **Upstream ref:** `@base-ui/react` 1.7.0 — `Menu.CheckboxItem` só tem `checked` booleano
+
+**Depois:** a mesma forma de `#react-context-menu-mixed-checkbox`: prop `indeterminate` (controlada) → `aria-checked="mixed"` só quando mista, `checked={false}` repassado à lib (o primeiro clique resolve para marcado) e o traço no lugar do indicador, dentro do invólucro `*-checkbox-item-indicator`.
+
+**Motivo:** D8 do `prd/dropdown-menu.md` — mesma folha, mesmo contrato do ContextMenu. O DropdownMenu e o Menubar desta stack declaravam `coversNotApplicable` para o estado misto alegando lib de dois estados, enquanto o ContextMenu da mesma stack já provava que o wrapper resolve. `MenuCheckboxItem.js:94-98` aplica as props de fora depois do `aria-checked` interno.
+
+**Verificação após bump:** stories `CheckboxIndeterminate` de `dropdown-menu-states` e de `menubar-states`, primeiro passo (`mixed`/`true`/`false`). Se a lib passar a sobrescrever `aria-checked` ou ganhar `indeterminate` nativo no item de menu, rever os três wrappers juntos.
+
 ### react/dropdown-menu + menubar — Tab sai do menu pelo vizinho do gatilho {#react-dropdown-menu-tab-exit}
 
 - **Arquivos:** `nortear-design-system-react/src/components/ui/dropdown-menu.tsx` (+ `menu-tab-exit.ts`); o `menubar.tsx` herda pelo `MenubarMenu`, que é um `DropdownMenu`
@@ -683,7 +771,7 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 ### vue/context-menu — Tab fecha o menu no modo modal {#vue-context-menu-tab-closes}
 
-- **Arquivos:** `nortear-design-system-vue/src/components/ui/context-menu/` (`context-menu.context.ts`, `ContextMenuContent.vue`, `ContextMenuSubContent.vue`, `ContextMenu.vue`)
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/context-menu/` (`context-menu.context.ts`, `ContextMenuContent.vue`, `ContextMenuSubContent.vue`), sobre o `useTabLeavesMenu` compartilhado de `dropdown-menu/tab-leaves-menu.ts` desde 2026-09-11 (ver `#vue-menu-tab-leaves`); o `ContextMenu.vue` não carrega mais o destino do Tab
 - **Categoria:** a11y
 - **Data:** 2026-09-10
 - **Upstream ref:** `reka-ui` — `Menu/MenuContentImpl.js:210` faz `preventDefault` no Tab quando o menu é modal, e o `ContextMenuRoot` liga `modal` por padrão
@@ -698,7 +786,7 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 ### vue/context-menu — Escape no submenu fecha só o submenu {#vue-context-menu-submenu-escape}
 
-- **Arquivos:** `nortear-design-system-vue/src/components/ui/context-menu/` (`context-menu.context.ts` — `useSubmenuEscape`, `ContextMenuSub.vue`, `ContextMenuSubContent.vue`)
+- **Arquivos:** desde 2026-09-11 o mecanismo é o compartilhado de `#vue-menu-submenu-escape` (`dropdown-menu/dropdown-menu.context.ts` — `useSubmenuEscape`, `MENU_SUB_CLOSE`), usado por `context-menu/ContextMenuSub.vue` e `ContextMenuSubContent.vue`. Esta entrada fica como histórico do ContextMenu; os marcadores no código apontam para a compartilhada
 - **Categoria:** a11y
 - **Data:** 2026-09-10
 - **Upstream ref:** `reka-ui` — `Menu/MenuSubContent.js` (`onEscapeKeyDown` chama `rootContext.onClose()` sem olhar `defaultPrevented`) e `DismissableLayer.js:72` (`onKeyStroke("Escape")` na `window`)
@@ -726,14 +814,14 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 ### svelte/context-menu — Tab fecha o menu quando a área é a última parada {#svelte-context-menu-tab-last-stop}
 
-- **Arquivos:** `nortear-design-system-svelte/src/components/ui/context-menu/` (`context.ts` — `closeAfterTab`, `context-menu-content.svelte`, `context-menu-sub-content.svelte`)
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/tab-leaves-menu.ts` (`closeAfterTab`, compartilhado com o DropdownMenu e o Menubar desde 2026-09-11 — ver `#svelte-menu-tab-edge`), chamado por `context-menu/context-menu-content.svelte` e `context-menu-sub-content.svelte`
 - **Categoria:** a11y
 - **Data:** 2026-09-10
 - **Upstream ref:** `bits-ui` 2.19.0 — `bits/menu/menu.svelte.js:826-848` (`handleTabKeyDown`)
 
 **Antes:** sem ponto de tabulação depois da área, o ramo `else` do bits só chamava `body.focus()`: o Tab era bloqueado e o menu ficava aberto, com o foco preso.
 
-**Depois:** os dois painéis encadeiam um ouvinte depois do do bits; num microtask, se a raiz continua aberta, fecham-na e avisam `onOpenChange(false)`. Mora nos nossos wrappers, sem patch. Os itens de marcação e de rádio não fecham ao escolher pela prop do próprio bits (`closeOnSelect = false`), que não é desvio.
+**Depois:** os dois painéis encadeiam um ouvinte depois do do bits; num microtask, se a raiz continua aberta, fecham-na e avisam `onOpenChange(false)`. Mora nos nossos wrappers, sem patch. (O manter-aberto dos itens de marcação e de rádio é outra entrada: `#svelte-menu-select-keeps-open`.)
 
 **Motivo:** C2 do `prd/dropdown-menu.md` — Tab fecha e segue a página. A área com `tabindex="0"` é o que nos põe nesse ramo.
 
@@ -741,7 +829,7 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 ### svelte/context-menu — Escape no submenu fecha só o submenu {#svelte-context-menu-submenu-escape}
 
-- **Arquivos:** `nortear-design-system-svelte/src/components/ui/context-menu/` (`context.ts` — `ContextMenuSubContext`, `keepRootOpenOnSubEscape`; `context-menu-sub.svelte`, `context-menu-sub-trigger.svelte`, `context-menu-sub-content.svelte`)
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/sub-escape.ts` (`keepRootOpenOnSubEscape`, compartilhado com o DropdownMenu e o Menubar desde 2026-09-11 — ver `#svelte-menu-submenu-escape`), chamado por `context-menu/context-menu-sub.svelte`, `context-menu-sub-trigger.svelte` e `context-menu-sub-content.svelte`
 - **Categoria:** a11y
 - **Data:** 2026-09-10
 - **Upstream ref:** `bits-ui` 2.19.0 — `bits/utilities/escape-layer/use-escape-layer.svelte.js` (`isResponsibleEscapeLayer`: a responsável é a última camada `close`; o painel raiz nasce `close`, o do submenu `defer-otherwise-close`) e `bits/menu/components/menu-sub-content.svelte` (`handleCloseAutoFocus` não devolve o foco)
@@ -771,7 +859,7 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 ### svelte/dropdown-menu — `id` no painel raiz (typeahead) {#svelte-menu-content-id}
 
-- **Arquivo:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/dropdown-menu-content.svelte`
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/dropdown-menu-content.svelte` e `menubar/menubar-content.svelte`
 - **Categoria:** a11y
 - **Data:** 2026-09-10
 - **Upstream ref:** `bits-ui` 2.19.0 — `popper-layer-inner.svelte` consome o `id`; `menu.svelte.js:861` compara com ele
@@ -784,9 +872,24 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 **Verificação após bump:** o passo "Digitar uma letra…" da story `Open` (dropdown-menu-states).
 
+### svelte/dropdown-menu + menubar — Escape no submenu fecha só o submenu {#svelte-menu-submenu-escape}
+
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/` (`sub-escape.ts` — `MenuSubAccess`, `keepRootOpenOnSubEscape`; `dropdown-menu-sub.svelte`, `dropdown-menu-sub-trigger.svelte`, `dropdown-menu-sub-content.svelte`) e `menubar/` (`menubar-sub.svelte`, `menubar-sub-trigger.svelte`, `menubar-sub-content.svelte`)
+- **Categoria:** a11y
+- **Data:** 2026-09-11
+- **Upstream ref:** `bits-ui` 2.19.0 — `bits/utilities/escape-layer/use-escape-layer.svelte.js` (`isResponsibleEscapeLayer`: a última camada `close` responde; o painel raiz nasce `close`, o do submenu `defer-otherwise-close`) e `bits/menu/components/menu-sub-content.svelte` (`handleCloseAutoFocus` não devolve o foco)
+
+**Antes:** Escape dentro do submenu fechava o menu inteiro (no Menubar, o menu da barra) — quem respondia era a camada do painel raiz.
+
+**Depois:** o painel do submenu ouve `keydown` na CAPTURA e, no Escape, faz `preventDefault` + `stopPropagation` antes da camada do bits (que ouve no `document`); fecha só o submenu pelo estado do nosso `Sub` (com `onOpenChange(false)`) e foca o sub-gatilho, registrado por contexto. O raiz segue aberto e não emite fechamento. Mesmo desenho do `#svelte-context-menu-submenu-escape`.
+
+**Motivo:** C5 do `prd/dropdown-menu.md`, `testes.functional.item12` (dropdown) e `item5` (menubar); padrão de menu da WAI-ARIA APG, e o que o vanilla faz.
+
+**Verificação após bump:** os passos "Escape no submenu fecha só o submenu…" de `WithSubmenu` (dropdown-menu-compositions e menubar-compositions). Se o submenu passar a responder pelo próprio Escape, o ouvinte e o contexto saem.
+
 ### svelte/dropdown-menu + menubar — `closeOnSelect = false` nos itens de marcação e rádio {#svelte-menu-select-keeps-open}
 
-- **Arquivos:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/dropdown-menu-checkbox-item.svelte`, `dropdown-menu-radio-item.svelte`, `menubar/menubar-checkbox-item.svelte`, `menubar/menubar-radio-item.svelte`
+- **Arquivos:** `nortear-design-system-svelte/src/components/ui/dropdown-menu/dropdown-menu-checkbox-item.svelte`, `dropdown-menu-radio-item.svelte`, `menubar/menubar-checkbox-item.svelte`, `menubar/menubar-radio-item.svelte`, `context-menu/context-menu-checkbox-item.svelte`, `context-menu/context-menu-radio-item.svelte`
 - **Categoria:** bugfix
 - **Data:** 2026-09-10
 - **Upstream ref:** padrão `closeOnSelect = true` do `bits-ui` (`menu-checkbox-item.svelte:20`, `menu-radio-item.svelte:18`; o fechamento sai de `menu.svelte.js:1064`)
@@ -825,9 +928,39 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 
 **Verificação após bump:** With Checkbox Items / With Radio Group (compositions) e Checkbox Checked (menubar-states) afirmam `queryAllByRole('menu')` com 1 menu depois do clique.
 
+### vue/menubar — a barra dá a volta por padrão {#vue-menubar-loop-default}
+
+- **Arquivo:** `nortear-design-system-vue/src/components/ui/menubar/Menubar.vue`
+- **Categoria:** a11y
+- **Data:** 2026-09-11
+- **Upstream ref:** `reka-ui/dist/Menubar/MenubarRoot.js:27-31` (`loop: false`)
+
+**Antes:** sem a prop, a seta lateral parava no último gatilho — e o conteúdo (`props.table.loop.default`) prometia `true`, como as outras quatro stacks fazem.
+
+**Depois:** `withDefaults({ loop: true })`; o `menubar.source.ts` só escreve `:loop="false"`.
+
+**Motivo:** a barra se comporta igual nas cinco, e a tabela de props diz a verdade.
+
+**Verificação após bump:** se a reka passar a nascer com `loop` ligado, o default sai.
+
+### vue/dropdown-menu + menubar — Escape no submenu fecha só o submenu {#vue-menu-submenu-escape}
+
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/dropdown-menu/` (`dropdown-menu.context.ts` — `useSubmenuEscape`, `MENU_SUB_CLOSE`; `DropdownMenuSub.vue`, `DropdownMenuSubContent.vue`), `menubar/` (`MenubarSub.vue`, `MenubarSubContent.vue`) e `context-menu/` (`ContextMenuSub.vue`, `ContextMenuSubContent.vue`)
+- **Categoria:** a11y
+- **Data:** 2026-09-11
+- **Upstream ref:** `reka-ui` — `Menu/MenuSubContent.js` (`onEscapeKeyDown` chama `rootContext.onClose()` sem olhar `defaultPrevented`) e `DismissableLayer.js:72` (`onKeyStroke("Escape")` na `window`)
+
+**Antes:** Escape dentro do submenu fechava o menu inteiro (DropdownMenu) ou o menu inteiro da barra (Menubar).
+
+**Depois:** ouvinte de captura no painel do submenu consome a tecla e interrompe a propagação antes da `window`; fecha só o submenu, pelo estado que agora mora no nosso `DropdownMenuSub`/`MenubarSub` (`useVModel`, passivo sem controle), e foca o sub-gatilho (achado pelo `aria-labelledby` do painel). O raiz segue aberto e não emite fechamento. Mesmo conserto do `#vue-context-menu-submenu-escape`.
+
+**Motivo:** F12 do DropdownMenu e F5 do Menubar (`prd/dropdown-menu.md` C5/C6), padrão WAI-ARIA APG, e o que o vanilla faz.
+
+**Verificação após bump:** os passos "Escape no submenu…" das `WithSubmenu` do dropdown-menu e do menubar (compositions). Se a reka passar a fechar só o submenu, o ouvinte e o estado nos `*Sub` saem.
+
 ### vue/dropdown-menu + menubar — Tab sai do menu pelo vizinho do gatilho {#vue-menu-tab-leaves}
 
-- **Arquivos:** `nortear-design-system-vue/src/components/ui/dropdown-menu/` (`tab-leaves-menu.ts`, `DropdownMenuContent.vue`, `DropdownMenuSubContent.vue`) e `menubar/` (`tab-leaves-menu.ts`, `MenubarContent.vue`, `MenubarSubContent.vue`)
+- **Arquivos:** `nortear-design-system-vue/src/components/ui/dropdown-menu/` (`tab-leaves-menu.ts` — `useTabLeavesMenu`, que desde 2026-09-11 serve também o ContextMenu; `DropdownMenuContent.vue`, `DropdownMenuSubContent.vue`) e `menubar/` (`tab-leaves-menu.ts`, `MenubarContent.vue`, `MenubarSubContent.vue` — o Menubar fica à parte: a reka o monta não modal e ele fecha sozinho no foco que sai, então mover o foco é o conserto inteiro)
 - **Categoria:** a11y
 - **Data:** 2026-09-10
 - **Upstream ref:** `reka-ui/dist/Menu/MenuContentImpl.js:210` (`preventDefault` no Tab com a raiz modal)

@@ -24,13 +24,47 @@
  * `src/lib/patches-aplicados.test.ts`. A story `ItemDisabled` aperta a seta e
  * verifica onde o foco pousa. Medido na fonte em 2026-09-02.
  */
-import type { DropdownMenuRootEmits, DropdownMenuRootProps } from 'reka-ui'
-import { DropdownMenuRoot, useForwardPropsEmits } from 'reka-ui'
+import type { DropdownMenuRootProps } from 'reka-ui'
+import { DropdownMenuRoot, useForwardProps } from 'reka-ui'
+import { provide } from 'vue'
+import { DROPDOWN_MENU_CLOSE, type DropdownMenuCloseReason } from './dropdown-menu.context'
 
 const props = defineProps<DropdownMenuRootProps>()
-const emits = defineEmits<DropdownMenuRootEmits>()
 
-const forwarded = useForwardPropsEmits(props, emits)
+/**
+ * `update:open` ganha o MOTIVO como segundo argumento no fechamento — a forma
+ * que o ContextMenu e o Popover desta stack já têm, e a que base-ui
+ * (`onOpenChange(open, detalhes)`) e radix-ng (`evento.reason`) entregam de
+ * fábrica. O motivo viaja junto com a mudança de estado DAQUELA instância, e é
+ * ele que o `dropdown_menu_close` precisa: sem ele a docs page mandaria o
+ * fechamento sem `reason` ou inventaria um.
+ */
+const emits = defineEmits<{
+  'update:open': [value: boolean, reason?: DropdownMenuCloseReason]
+}>()
+
+// Só as props: `update:open` quem emite é `handleOpenChange`, com o motivo.
+// Repassá-lo também faria o consumidor receber cada mudança duas vezes.
+const forwarded = useForwardProps(props)
+
+let pendingReason: DropdownMenuCloseReason | null = null
+
+function handleOpenChange(open: boolean) {
+  // `api` é o padrão: é o que sobra quando nenhum gesto de saída foi visto, e o
+  // caminho assim é a escolha de um item (ou o fechamento pelo código).
+  const reason = open ? undefined : (pendingReason ?? 'api')
+  // Limpa nos dois sentidos: uma anotação que não resultou em fechamento não
+  // pode vazar para o próximo.
+  pendingReason = null
+  emits('update:open', open, reason)
+}
+
+// O painel vive em portal e não é descendente de template desta raiz, mas o
+// `provide` alcança porque a árvore de COMPONENTES continua a mesma — é o mesmo
+// caminho que a própria reka-ui usa para levar estado ao conteúdo.
+provide(DROPDOWN_MENU_CLOSE, {
+  note: (reason) => { pendingReason = reason },
+})
 </script>
 
 <template>
@@ -38,6 +72,7 @@ const forwarded = useForwardPropsEmits(props, emits)
     v-slot="slotProps"
     data-slot="dropdown-menu"
     v-bind="forwarded"
+    @update:open="handleOpenChange"
   >
     <slot v-bind="slotProps" />
   </DropdownMenuRoot>

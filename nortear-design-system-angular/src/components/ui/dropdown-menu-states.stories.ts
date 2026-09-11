@@ -75,7 +75,9 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
-    covers: ['functional.item2'],
+    // F10: os passos "Home e End vão ao primeiro e ao último". F11: "Digitar uma
+    // letra salta para o item que começa com ela".
+    covers: ['functional.item2', 'functional.item10', 'functional.item11'],
     // A única story em que `[defaultOpen]="true"` chega ao snippet: aqui estar
     // aberto É o assunto. O `[modal]="false"` continua fora — ele destrava o
     // canvas, e não faz parte de lição nenhuma.

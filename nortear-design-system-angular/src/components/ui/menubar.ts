@@ -109,6 +109,15 @@ export type MenubarAlign = 'start' | 'center' | 'end';
 /** Ênfase visual do item. `destructive` é para ação irreversível. */
 export type MenubarItemVariant = 'default' | 'destructive';
 
+// O motivo do fechamento no vocabulário da família — a MESMA tradução nos três
+// membros, e por isso num arquivo só. Na barra ele precisa do `MenuCloseTracker`:
+// a passagem ao menu vizinho e o clique no gatilho aberto chegam sem motivo.
+export {
+  menuCloseReason,
+  MenuCloseTracker,
+  type MenuCloseReason,
+} from './menu-close-reason';
+
 // ─── Root da barra ────────────────────────────────────────────────────────────
 
 /**
@@ -199,7 +208,11 @@ export class NdsMenubarContent {
     {
       directive: RdxMenuRoot,
       inputs: ['open', 'defaultOpen', 'disabled', 'loopFocus'],
-      outputs: ['openChange'],
+      // `onOpenChange` traz o MOTIVO junto do estado (`{ open, reason }`) — é
+      // dele que sai o `reason` do `menubar_close`, inclusive a passagem ao menu
+      // vizinho. `openChange` sozinho diz que fechou, não por quê. Mesmo par que
+      // o DropdownMenu e o ContextMenu expõem.
+      outputs: ['openChange', 'onOpenChange'],
     },
   ],
   // O `id` do painel do submenu, para o sub-gatilho apontar

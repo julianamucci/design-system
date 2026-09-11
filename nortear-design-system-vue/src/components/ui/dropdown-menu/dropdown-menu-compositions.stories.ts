@@ -166,26 +166,52 @@ export const WithCheckboxItems: Story = {
       await expect(email).toHaveAttribute('aria-checked', 'false');
     });
 
+    // O estado não pode depender só do texto: o Check é o que a pessoa vê e o
+    // `aria-checked` é o que ela ouve. A leitura é pura — cabe dentro de
+    // `waitFor` sem provocar a próxima tentativa.
+    const marca = (item: HTMLElement) =>
+      item.querySelector('.nds-dropdown-menu-item-indicator svg') !== null;
+
+    // Alternar não fecha (C10): um quadro depois do clique o painel ainda é o
+    // MESMO nó, montado — a lib decide fechar no tique seguinte à escolha, e
+    // olhar antes disso passaria com o menu já de saída.
+    const staysOpen = async () => {
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
+      await expect(menu.isConnected).toBe(true);
+    };
+
     await step('O indicador só aparece no item marcado', async () => {
-      // O estado não pode depender só do texto: o Check é o que a pessoa vê e o
-      // `aria-checked` é o que ela ouve.
-      const marca = (item: HTMLElement) =>
-        item.querySelector('.nds-dropdown-menu-item-indicator svg') !== null;
       await expect(marca(name)).toBe(true);
       await expect(marca(email)).toBe(false);
     });
 
-    await step('Clicar alterna o item e mantém o menu aberto', async () => {
-      // Idempotente: leva o e-mail a marcado só se ainda não estiver, então o
-      // replay do painel Interactions termina no mesmo estado.
+    await step('Clicar marca o item: aria-checked e indicador vão juntos, e o menu segue aberto', async () => {
+      // Idempotente: leva o e-mail a marcado só se ainda não estiver.
       if (email.getAttribute('aria-checked') !== 'true') await userEvent.click(email);
 
       await waitFor(async () => {
         await expect(email).toHaveAttribute('aria-checked', 'true');
+        // O indicador conferido DEPOIS do clique: antes dele o passo anterior já
+        // mostrou que o item desmarcado não tem tique, e é a troca que se mede.
+        await expect(marca(email)).toBe(true);
       });
-      // Alternar não fecha: quem marca uma coluna costuma marcar a próxima.
-      await expect(within(document.body).queryAllByRole('menu')).toHaveLength(1);
+      await staysOpen();
       // Independentes entre si — é o que separa checkbox de escolha única.
+      await expect(name).toHaveAttribute('aria-checked', 'true');
+    });
+
+    await step('Clicar de novo desmarca: o indicador some, e o menu segue aberto', async () => {
+      // O outro sentido (F5: "alterna entre true e false"). Idempotente pelo
+      // mesmo par: só clica se o item ainda estiver marcado, e a story termina
+      // no estado inicial — o e-mail desmarcado.
+      if (email.getAttribute('aria-checked') !== 'false') await userEvent.click(email);
+
+      await waitFor(async () => {
+        await expect(email).toHaveAttribute('aria-checked', 'false');
+        await expect(marca(email)).toBe(false);
+      });
+      await staysOpen();
       await expect(name).toHaveAttribute('aria-checked', 'true');
     });
   },
@@ -252,7 +278,7 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    covers: ['functional.item7', 'visual.item4'],
+    covers: ['functional.item7', 'functional.item12', 'visual.item4'],
     // O segundo nível é a tríade Sub/SubTrigger/SubContent, que o snippet do
     // meta esconderia por inteiro.
     docs: { source: { transform: dropdownMenuWithSubmenuSource } },
@@ -287,20 +313,34 @@ export const WithSubmenu: Story = {
     const menu = await waitForPortal('menu');
     const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
+    // O painel do submenu, achado pelo endereço: o `menu` guardado acima é o
+    // RAIZ, e é ele que os passos de fechamento provam que segue aberto.
+    const submenu = () =>
+      document.querySelector<HTMLElement>('[data-slot="dropdown-menu-sub-content"]');
+    // O primeiro item do submenu, relido a cada chamada: o painel é outro nó a
+    // cada abertura.
+    const firstSubItem = () => within(submenu()!).getAllByRole('menuitem')[0];
+
     await step('O sub-gatilho anuncia que abre um menu', async () => {
       await expect(subTrigger).toHaveAttribute('aria-haspopup', 'menu');
-      await expect(subTrigger).toHaveAttribute('aria-expanded', 'false');
     });
 
-    await step('A seta para a direita abre o submenu', async () => {
-      // Idempotente: a seta só é enviada com o submenu fechado.
+    await step('A seta para a direita abre o submenu, e o foco vai ao primeiro item dele', async () => {
+      // Idempotente: a seta só é enviada com o submenu fechado. O sub-gatilho é
+      // focado à mão — é o ponto de partida do gesto —, mas o item do submenu
+      // NÃO: onde o foco cai depois da seta é justamente o que F12 afirma, e
+      // focá-lo à mão faria o passo passar com a lib deixando o foco no painel.
       if (subTrigger.getAttribute('aria-expanded') !== 'true') {
+        await expect(subTrigger).toHaveAttribute('aria-expanded', 'false');
         subTrigger.focus();
         await userEvent.keyboard('{ArrowRight}');
       }
       await waitFor(async () => {
         await expect(subTrigger).toHaveAttribute('aria-expanded', 'true');
         await expect(body.getAllByRole('menu')).toHaveLength(2);
+      });
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(firstSubItem());
       });
     });
 
@@ -328,11 +368,68 @@ export const WithSubmenu: Story = {
       await expect(submenu.classList.contains('nds-dropdown-menu-content')).toBe(true);
       await expect(menu.scrollHeight).toBeLessThanOrEqual(menu.clientHeight);
     });
+
+    await step('Seta esquerda fecha só o submenu e devolve o foco ao sub-gatilho', async () => {
+      // O foco já está no primeiro item do submenu, pela seta do passo de
+      // abertura — os passos de medida no meio não o movem.
+      await expect(submenu()!.contains(document.activeElement)).toBe(true);
+      await userEvent.keyboard('{ArrowLeft}');
+      await waitFor(async () => {
+        await expect(subTrigger).toHaveAttribute('aria-expanded', 'false');
+        await expect(submenu()).toBeNull();
+      });
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(subTrigger);
+      });
+      // O raiz é o MESMO nó: fechar e reabrir no meio passaria por "aberto".
+      await expect(body.getAllByRole('menu')).toHaveLength(1);
+      await expect(menu.isConnected).toBe(true);
+    });
+
+    await step('Escape no submenu fecha só o submenu, e o menu segue aberto', async () => {
+      // WAI-ARIA APG e F12: Escape fecha o menu em que o foco está. A lib
+      // fechava a árvore inteira — um nível de volta custava os dois, e a pessoa
+      // recomeçava do gatilho. Quem segura é o painel do submenu
+      // (`useSubmenuEscape`).
+      // O foco está no sub-gatilho (passo anterior): a seta reabre e LEVA o foco
+      // para dentro, sem mão da play.
+      await expect(document.activeElement).toBe(subTrigger);
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(submenu()).not.toBeNull();
+      });
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(firstSubItem());
+      });
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(submenu()).toBeNull();
+      });
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(subTrigger);
+      });
+      await expect(subTrigger).toHaveAttribute('aria-expanded', 'false');
+      // Um quadro depois, o raiz continua o MESMO nó, montado: a decisão de
+      // fechar já teria sido tomada.
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(body.getAllByRole('menu')).toHaveLength(1);
+      await expect(menu.isConnected).toBe(true);
+    });
+
+    await step('A story termina com o submenu ABERTO', async () => {
+      // `visual.item4` descreve o submenu aberto — é o que o Chromatic fotografa.
+      subTrigger.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
+      });
+    });
   },
 };
 
 export const WithShortcuts: Story = {
   parameters: {
+    covers: ['functional.item14'],
     // O atalho é uma peça a mais DENTRO do item, e é ela que completa o nome
     // acessível — o snippet do meta não a mostra.
     docs: { source: { transform: dropdownMenuWithShortcutsSource } },

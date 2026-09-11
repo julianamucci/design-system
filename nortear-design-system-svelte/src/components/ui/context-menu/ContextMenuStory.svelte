@@ -9,6 +9,7 @@
   // grupo — grupo sem rótulo não agrupa nada para quem ouve. A divisória tem
   // control próprio, e `onOpenChange` chega da story como espião.
   import * as ContextMenu from '@/components/ui/context-menu';
+  import { Button } from '@/components/ui/button';
   import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
   let {
@@ -21,6 +22,8 @@
     showDestructive = true,
     showSeparator = true,
     showShortcuts = true,
+    neighbors = false,
+    withSubmenu = false,
     onOpenChange,
   }: {
     triggerLabel?: string;
@@ -32,37 +35,60 @@
     showDestructive?: boolean;
     showSeparator?: boolean;
     showShortcuts?: boolean;
+    /**
+     * Botões antes e depois da área, que dão DESTINO ao Tab que sai do menu —
+     * a story `TabLeavesMenu` mede para onde o foco vai.
+     */
+    neighbors?: boolean;
+    /**
+     * O submenu "Compartilhar", o do vanilla na mesma story: é de dentro dele
+     * que o Tab também tem de fechar o menu inteiro (F12).
+     */
+    withSubmenu?: boolean;
     onOpenChange?: (open: boolean) => void;
   } = $props();
 </script>
 
-<ContextMenu.Root {onOpenChange}>
-  <ContextMenu.Trigger
-    class={AREA_CLICK_DIREITO}
-    data-align="center"
-    data-justify="center"
-    data-testid="area"
-  >
-    {triggerLabel}
-  </ContextMenu.Trigger>
-  <ContextMenu.Content>
-    <ContextMenu.Item>
-      {editLabel}
-      {#if showShortcuts}
-        <ContextMenu.Shortcut>{editShortcut}</ContextMenu.Shortcut>
-      {/if}
-    </ContextMenu.Item>
-    <ContextMenu.Item>{duplicateLabel}</ContextMenu.Item>
-    {#if showSeparator}
-      <ContextMenu.Separator />
-    {/if}
-    {#if showDestructive}
-      <ContextMenu.Item variant="destructive">
-        {deleteLabel}
+<div class={neighbors ? 'nds-cluster' : undefined} data-spacing={neighbors ? 'md' : undefined}>
+  {#if neighbors}<Button variant="ghost">Antes</Button>{/if}
+  <ContextMenu.Root {onOpenChange}>
+    <ContextMenu.Trigger
+      class={AREA_CLICK_DIREITO}
+      data-align="center"
+      data-justify="center"
+      data-testid="area"
+    >
+      {triggerLabel}
+    </ContextMenu.Trigger>
+    <ContextMenu.Content>
+      <ContextMenu.Item>
+        {editLabel}
         {#if showShortcuts}
-          <ContextMenu.Shortcut>{deleteShortcut}</ContextMenu.Shortcut>
+          <ContextMenu.Shortcut>{editShortcut}</ContextMenu.Shortcut>
         {/if}
       </ContextMenu.Item>
-    {/if}
-  </ContextMenu.Content>
-</ContextMenu.Root>
+      <ContextMenu.Item>{duplicateLabel}</ContextMenu.Item>
+      {#if withSubmenu}
+        <ContextMenu.Sub>
+          <ContextMenu.SubTrigger>Compartilhar</ContextMenu.SubTrigger>
+          <ContextMenu.SubContent>
+            <ContextMenu.Item>Por e-mail</ContextMenu.Item>
+            <ContextMenu.Item>Por link</ContextMenu.Item>
+          </ContextMenu.SubContent>
+        </ContextMenu.Sub>
+      {/if}
+      {#if showSeparator}
+        <ContextMenu.Separator />
+      {/if}
+      {#if showDestructive}
+        <ContextMenu.Item variant="destructive">
+          {deleteLabel}
+          {#if showShortcuts}
+            <ContextMenu.Shortcut>{deleteShortcut}</ContextMenu.Shortcut>
+          {/if}
+        </ContextMenu.Item>
+      {/if}
+    </ContextMenu.Content>
+  </ContextMenu.Root>
+  {#if neighbors}<Button variant="ghost">Depois</Button>{/if}
+</div>

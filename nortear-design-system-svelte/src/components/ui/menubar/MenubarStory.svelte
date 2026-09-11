@@ -230,7 +230,7 @@
             <MenubarTrigger>{m.label}</MenubarTrigger>
             <MenubarContent>
               {#each m.items as item (item)}
-                <MenubarItem {variant}>{item}</MenubarItem>
+                <MenubarItem {variant} onSelect={() => onSelect(item)}>{item}</MenubarItem>
               {/each}
             </MenubarContent>
           </MenubarMenu>

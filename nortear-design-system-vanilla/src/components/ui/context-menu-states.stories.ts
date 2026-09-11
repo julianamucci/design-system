@@ -357,8 +357,11 @@ export const ListenerCleanup: Story = {
     await expect(host).not.toBeNull();
 
     let probe!: ProbeResult;
+    // Os avisos que a instância deu, em ordem — zerados a cada rodada.
+    const avisos: string[] = [];
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
+      avisos.length = 0;
       probe = await sondarOuvintes({
         host: host as HTMLElement,
         montar: () => {
@@ -370,6 +373,8 @@ export const ListenerCleanup: Story = {
               { type: 'item', label: 'Copiar', value: 'copy' },
               { type: 'item', label: 'Colar', value: 'paste' },
             ],
+            onOpenChange: (open) => avisos.push(open ? 'abriu' : 'fechou'),
+            onClose: (reason) => avisos.push(`motivo:${reason}`),
           });
         },
         exercitar: (no) => {
@@ -382,6 +387,14 @@ export const ListenerCleanup: Story = {
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
       await checkLimpeza(probe);
+    });
+
+    await step('Sair da página com o menu aberto não é fechamento: ninguém é avisado', async () => {
+      // O `abriu` é a precondição que dá dentes ao resto: sem ele a lista vazia
+      // passaria com um menu que nunca abriu. Até 2026-09-11 a destruição saía
+      // como `close('api')`, e cada troca de idioma da docs page mandava um
+      // `context_menu_close` de um menu que a pessoa não fechou.
+      await expect(avisos).toEqual(['abriu']);
     });
   },
 };

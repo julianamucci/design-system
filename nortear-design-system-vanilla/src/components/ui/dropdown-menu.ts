@@ -116,6 +116,7 @@ import {
   type FloatingAlign,
   type FloatingSide,
 } from '@/lib/floating';
+import { createMenuTypeahead, isTypeaheadKey } from '@/lib/menu-typeahead';
 import { createSubmenuChevron, createSubmenuController } from '@/lib/submenu';
 import { isPlainTab, tabExitTarget } from '@/lib/tabbable';
 
@@ -132,6 +133,14 @@ export type DropdownMenuItemDef = {
   variant?: 'default' | 'destructive';
   /** Atalho exibido à direita. Integra o nome acessível do item de propósito. */
   shortcut?: string;
+  /**
+   * Recuo à esquerda, para alinhar o texto com o dos itens que têm indicador —
+   * marcação e escolha única desenham o tique à esquerda do rótulo, e um item
+   * de ação vizinho sem recuo fica com o texto desencontrado. Vale em `item`,
+   * `label` e `submenu`, os três que a folha recua (`[data-inset]`).
+   */
+  // PATCH: api — recuo de item, rótulo e sub-gatilho, como no context-menu e no menubar (ver PATCHES.md#vanilla-dropdown-menu-inset)
+  inset?: boolean;
   /** Só em `checkbox` e `radio`: estado inicial de marcação. */
   checked?: boolean;
   /**
@@ -151,6 +160,23 @@ export type DropdownMenuItemDef = {
   /** Só em `checkbox`: disparado quando o estado misto é resolvido por interação. */
   onIndeterminateChange?: (indeterminate: boolean) => void;
 };
+
+/**
+ * Por onde o menu fechou — o vocabulário da família, o mesmo `reason` do
+ * `dropdown_menu_close` e do `context_menu_close`. `escape` é a tecla;
+ * `overlay` é sair SEM decidir — clique fora, Tab levando o foco embora, ou um
+ * novo clique no gatilho aberto; `api` é o fechamento pedido pelo produto — um
+ * item de ação escolhido, ou `close()`/`setOpen(false)` por código.
+ *
+ * O componente saindo da página com o menu aberto NÃO é fechamento e não avisa
+ * nada — nem `onClose`, nem `onOpenChange(false)`: quem desmonta sabe que
+ * desmontou, e um `dropdown_menu_close` ali seria um fechamento que a pessoa
+ * não fez.
+ *
+ * Não há `close-button`: este menu não tem botão de fechar.
+ */
+// PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-dropdown-menu-onclose-reason)
+export type DropdownMenuCloseReason = 'escape' | 'overlay' | 'api';
 
 export type DropdownMenuOptions = {
   trigger: HTMLElement;
@@ -178,6 +204,17 @@ export type DropdownMenuOptions = {
   /** Estado inicial no modo não-controlado. */
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Motivo do fechamento. Dispara uma vez por fechamento, ANTES do
+   * `onOpenChange(false)` — a mesma ordem do `createContextMenu`, irmão da mesma
+   * folha. É o que alimenta o `reason` do `dropdown_menu_close`: o
+   * `onOpenChange` diz QUE fechou, e só a fábrica sabe por qual caminho.
+   *
+   * No modo controlado ele dispara quando o menu de fato sai — no `setOpen(false)`
+   * de quem manda — e leva o motivo da interação que PEDIU o fechamento; sem
+   * pedido pendente, é `api`.
+   */
+  onClose?: (reason: DropdownMenuCloseReason) => void;
   class?: string;
 };
 
@@ -289,6 +326,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     sideOffset = 4,
     modal = true,
     onOpenChange,
+    onClose,
   } = options;
 
   const controlled = options.open !== undefined;
@@ -300,9 +338,13 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   let isOpen = false;
   let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
   let overflowPrevious = '';
+  // O motivo que uma INTERAÇÃO pediu no modo controlado, guardado até quem manda
+  // aplicar o `setOpen(false)`. Sem ele o fechamento controlado saía sempre como
+  // `api`, e o Escape da pessoa virava "fechado pelo código" no GA4.
+  let pendingReason: DropdownMenuCloseReason | null = null;
 
   // ── Submenu ─────────────────────────────────────────────────────────────────
-  // Um controlador por menu, e um painel filho de cada vez: abrir outro fecha o
+  // Um controlador por menu, e um painel por nível: abrir outro no mesmo nível fecha o
   // anterior. Gatilho, painel, posição, ARIA, teclado, ponteiro e limpeza são
   // dele; o que continua sendo desta fábrica é montar os ITENS, que é o que cada
   // menu tem de próprio.
@@ -397,6 +439,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         lbl.id = labelId;
         lbl.setAttribute('role', 'presentation');
         lbl.className = 'nds-dropdown-menu-label';
+        // Presente só quando pedido: a folha casa `[data-inset]` por presença,
+        // e um `data-inset="false"` recuaria do mesmo jeito.
+        if (item.inset) lbl.setAttribute('data-inset', '');
         lbl.textContent = item.label ?? '';
 
         group.appendChild(lbl);
@@ -414,6 +459,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         const li = document.createElement('li');
         li.className = 'nds-dropdown-menu-sub-trigger';
         if (item.value) li.dataset.value = item.value;
+        if (item.inset) li.setAttribute('data-inset', '');
 
         const text = document.createElement('span');
         text.textContent = item.label ?? '';
@@ -439,6 +485,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       li.className = TYPE_CLASSNAME[kind];
       li.dataset.slot = `dropdown-menu-${kind === 'item' ? 'item' : `${kind}-item`}`;
       if (kind === 'item') li.dataset.variant = item.variant ?? 'default';
+      // Recuo só no item de ação: marcação e escolha única já têm o indicador
+      // ocupando a margem, e é com eles que o recuo alinha.
+      if (kind === 'item' && item.inset) li.setAttribute('data-inset', '');
       if (item.disabled) li.setAttribute('aria-disabled', 'true');
       // `tabindex` em TODO item, inclusive no desabilitado: sem ele o `focus()`
       // das setas é no-op, e o item ficaria na lista de candidatos sem nunca
@@ -529,7 +578,14 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
           item.onClick?.();
           // Escolher fecha — mas quem fecha é o mesmo caminho de qualquer outra
           // interação: controlado, isto só anuncia a intenção.
-          pedirChange(false);
+          pedirChange(false, 'api');
+          // E o foco VOLTA ao gatilho, como no Escape (`testes.functional.item3`,
+          // `accessibility.item5`). Sem esta linha o painel saía com o item
+          // focado dentro e o foco caía no `<body>`: quem navega por teclado
+          // perdia o lugar a cada escolha — e a play só conferia que o menu
+          // fechara. Só se o menu de fato saiu: controlado, quem fecha é quem
+          // chama.
+          if (!isOpen) trigger.focus();
         };
         li.addEventListener('click', ativar);
         li.addEventListener('keydown', (e) => {
@@ -573,32 +629,14 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   // ── Typeahead ───────────────────────────────────────────────────────────────
   // Numa lista de ações longa é o que evita percorrer item por item. As letras
   // se acumulam por 1s, como no padrão WAI-ARIA de menu: digitar "co" rápido
-  // procura "co", e não "c" e depois "o".
-  let searchTypeahead = '';
-  let timerTypeahead: ReturnType<typeof setTimeout> | null = null;
-
-  function typeahead(letra: string, menuItems: HTMLElement[]): void {
-    searchTypeahead += letra.toLowerCase();
-    if (timerTypeahead !== null) clearTimeout(timerTypeahead);
-    timerTypeahead = setTimeout(() => {
-      searchTypeahead = '';
-      timerTypeahead = null;
-    }, 1000);
-
-    const current = menuItems.indexOf(document.activeElement as HTMLElement);
-    // A busca recomeça DEPOIS do item atual para que repetir a mesma letra
-    // percorra os homônimos em vez de travar no primeiro.
-    const order = menuItems
-      .slice(current + 1)
-      .concat(menuItems.slice(0, Math.max(current + 1, 0)));
-    const target = order.find((el) =>
-      (el.textContent ?? '').trim().toLowerCase().startsWith(searchTypeahead),
-    );
-    target?.focus();
-  }
+  // procura "co", e não "c" e depois "o". A conta mora em `@/lib/menu-typeahead`,
+  // a mesma dos outros dois menus desta stack — eram três cópias, e uma delas
+  // (a do menubar) não acumulava.
+  const typeahead = createMenuTypeahead();
 
   function open(): void {
     if (isOpen) return;
+    pendingReason = null;
 
     panelEl = buildMenu(items, 'dropdown-menu-content');
     document.body.appendChild(panelEl);
@@ -639,8 +677,31 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     notificar(true);
   }
 
-  function close(): void {
-    if (!isOpen) return;
+  /**
+   * O `reason` diz por onde o menu fechou. Sem ele explícito vale o que uma
+   * interação pediu no modo controlado, e na falta disso `api` — o fechamento
+   * por código.
+   */
+  function close(reason: DropdownMenuCloseReason = pendingReason ?? 'api'): void {
+    // Já fechado: nada a fazer, e isso inclui NÃO avisar ninguém — um segundo
+    // `onClose` seria um segundo `dropdown_menu_close` no GA4.
+    if (!dismantle()) return;
+
+    // O motivo sai SEMPRE, controlado ou não: ele descreve o que aconteceu com
+    // o menu na tela, e só existe um fechamento de verdade — este.
+    onClose?.(reason);
+    notificar(false);
+  }
+
+  /**
+   * A metade MECÂNICA do fechamento: tira o painel, solta ouvintes e
+   * temporizadores, devolve a rolagem da página — e não avisa ninguém. Devolve
+   * se havia menu aberto. É tudo o que a destruição faz: sair da página não é
+   * fechar o menu.
+   */
+  function dismantle(): boolean {
+    if (!isOpen) return false;
+    pendingReason = null;
 
     // Primeiro o filho: o painel dele vive no `body` e não sai junto com o pai.
     submenu.close();
@@ -653,19 +714,14 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       clearTimeout(timerClickOutside);
       timerClickOutside = null;
     }
-    if (timerTypeahead !== null) {
-      clearTimeout(timerTypeahead);
-      timerTypeahead = null;
-    }
-    searchTypeahead = '';
+    typeahead.reset();
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
     document.removeEventListener('pointerdown', bloquearOutsideModal, true);
     document.removeEventListener('mousedown', bloquearOutsideModal, true);
     document.removeEventListener('click', bloquearOutsideModal, true);
     if (modal) document.body.style.overflow = overflowPrevious;
-
-    notificar(false);
+    return true;
   }
 
   function setOpen(next: boolean): void {
@@ -685,17 +741,21 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
   }
 
   /**
-   * Intenção vinda de uma INTERAÇÃO (clique, Escape, Tab, clique fora).
+   * Intenção vinda de uma INTERAÇÃO (clique, Escape, Tab, clique fora, item
+   * escolhido), com o motivo quando ela fecha.
    *
-   * Controlada, ela só é anunciada — quem manda no estado é quem chama. Fora do
-   * modo controlado, ela é executada, e `open`/`close` anunciam por conta.
+   * Controlada, ela só é anunciada — quem manda no estado é quem chama —, e o
+   * motivo fica guardado para o `setOpen(false)` que vier. Fora do modo
+   * controlado, ela é executada, e `open`/`close` anunciam por conta.
    */
-  function pedirChange(next: boolean): void {
+  function pedirChange(next: boolean, reason: DropdownMenuCloseReason = 'api'): void {
     if (controlled) {
+      pendingReason = next ? null : reason;
       onOpenChange?.(next);
       return;
     }
-    setOpen(next);
+    if (next) open();
+    else close(reason);
   }
 
   function bloquearOutsideModal(e: Event): void {
@@ -708,7 +768,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     e.stopPropagation();
     // A dispensa sai no `click`, o último do gesto: dispensar antes desmontaria
     // os bloqueadores no meio da sequência e soltaria o resto dela na página.
-    if (e.type === 'click') pedirChange(false);
+    if (e.type === 'click') pedirChange(false, 'overlay');
   }
 
   function handleKeydown(e: KeyboardEvent): void {
@@ -725,7 +785,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
     if (e.key === 'Escape') {
       e.preventDefault();
-      pedirChange(false);
+      pedirChange(false, 'escape');
       // O foco só volta se o menu de fato saiu: no modo controlado quem fecha é
       // quem chama, e devolver o foco antes disso o tiraria de dentro de um
       // menu que continua na tela.
@@ -734,9 +794,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     }
 
     // O percurso é do painel que TEM o foco. O painel do submenu não é
-    // descendente do menu pai, então nenhum dos dois recolhe os itens do outro.
-    const subPanel = submenu.panel;
-    const scope = subPanel?.contains(active) ? subPanel : panelEl;
+    // descendente do menu pai, então nenhum dos dois recolhe os itens do outro
+    // — e o de um submenu aninhado também não recolhe os do nível de cima.
+    const scope = submenu.panelContaining(active) ?? panelEl;
     const menuItems = getMenuItems(scope);
     const currentIdx = menuItems.indexOf(active as HTMLElement);
 
@@ -768,10 +828,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       // menu por isso — esperar seria a armadilha que C2 proíbe.
       e.preventDefault();
       tabExitTarget(e, trigger).focus();
-      pedirChange(false);
-    } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && /\S/.test(e.key)) {
+      // `overlay`, e não `escape`: a pessoa saiu sem decidir, como no clique fora.
+      pedirChange(false, 'overlay');
+    } else if (isTypeaheadKey(e)) {
       e.preventDefault();
-      typeahead(e.key, menuItems);
+      typeahead.type(e.key, menuItems);
     }
   }
 
@@ -782,13 +843,14 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       !submenu.contains(target) &&
       !trigger.contains(target)
     ) {
-      pedirChange(false);
+      pedirChange(false, 'overlay');
     }
   }
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    pedirChange(!isOpen);
+    // O segundo clique no gatilho aberto também é sair sem decidir.
+    pedirChange(!isOpen, 'overlay');
   });
 
   // O menu mora em portal no `body`, e os ouvintes de `keydown`/`click` vivem no
@@ -804,12 +866,18 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     wrapper,
     Object.assign(wrapper, {
       open,
-      close,
+      // Embrulhado: o `close` interno recebe o motivo, e passar o verbo público
+      // direto a um `addEventListener` entregaria o EVENTO como motivo.
+      close: () => close(),
       toggle: () => setOpen(!isOpen),
-      setOpen,
+      setOpen: (next: boolean) => setOpen(next),
     }),
     () => {
-      if (isOpen) close();
+      // Sair da página com o menu aberto NÃO é fechamento: o painel sai, e
+      // ninguém é avisado. Até 2026-09-11 isto era `close('api')`, e cada troca
+      // de idioma da docs page — que refaz as seções — mandava um
+      // `dropdown_menu_close` de um menu que a pessoa não fechou.
+      dismantle();
       // Cinto e suspensório: `close` já leva o painel do submenu, mas quem
       // desmonta com o menu FECHADO não passaria por ele, e o timer de carência
       // sobreviveria ao elemento que o registrou.

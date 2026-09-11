@@ -1,26 +1,16 @@
 <script setup lang="ts">
-import { computed, watch, ref } from 'vue';
+import { computed, watch } from 'vue';
 import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
+import type { DropdownMenuCloseReason } from '@/components/ui/dropdown-menu';
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+  dropdownMenuSnippet,
+  type DropdownMenuSnippetAction,
+  type DropdownMenuSnippetEntry,
+} from '@/components/ui/dropdown-menu/dropdown-menu.source';
+import DropdownMenuPreview from '@/components/docs/DropdownMenuPreview.vue';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import componentTranslations from '@shared/content/dropdown-menu/translations.json';
 import uiTranslations from '@/i18n/ui.json';
@@ -64,13 +54,13 @@ const { t: tNav } = useTranslation(uiTranslations);
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const priorityKeyMap: Record<string, string> = {
-  high: 'Alta',
-  medium: 'Média',
-  low: 'Baixa',
+  high: 'common.high',
+  medium: 'common.medium',
+  low: 'common.low',
 };
 
 function localPriority(raw: string): string {
-  return priorityKeyMap[raw] ?? raw;
+  return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
 /**
@@ -79,7 +69,8 @@ function localPriority(raw: string): string {
  * Contar à mão (`[1, 2, 3].map(...)`) trava a lista no tamanho de hoje: o
  * conteúdo compartilhado ganha um item e ele simplesmente não existe para quem
  * lê — sem erro, sem aviso, nos três idiomas de uma vez. Foi o que aconteceu
- * com o sétimo critério de acessibilidade deste componente.
+ * com o sétimo critério de acessibilidade deste componente, e de novo com os
+ * critérios funcionais: a página parava no oitavo e o conteúdo já tinha catorze.
  */
 function stringsFromDict(
   t: (key: string, defaultValue?: string) => string,
@@ -95,30 +86,223 @@ function stringsFromDict(
 }
 
 /**
- * A demonstração é produto: quem abre um menu aqui dispara o mesmo evento que o
- * componente dispararia num app. O payload leva o IDENTIFICADOR do menu e do
- * item, nunca o rótulo traduzido — texto localizado partiria o mesmo evento em
- * um por idioma no GA4.
- *
- * `location` é a SEÇÃO onde o elemento está. Estes dois handlers atendem apenas
- * a demonstração, e é por isso que o valor é fixo dentro deles; preview vivo de
- * outra seção pede o `docs_<section-id>` daquela seção.
+ * A mesma varredura para a lista cujo item é um OBJETO — critério funcional,
+ * story de regressão visual. O primeiro campo é quem decide se o item existe, e
+ * os demais acompanham.
  */
-function trackMenuOpenChange(menu: string, isOpen: boolean): void {
-  track(isOpen ? 'dropdown_menu_open' : 'dropdown_menu_close', {
-    component: 'dropdown-menu',
-    label: menu,
-    location: 'docs_demo',
-  });
+function entriesFromDict<K extends string>(
+  t: (key: string, defaultValue?: string) => string,
+  base: string,
+  fields: readonly K[],
+): Array<Record<K, string>> {
+  const out: Array<Record<K, string>> = [];
+  for (let i = 1; ; i++) {
+    if (!t(`${base}.item${i}.${fields[0]}`, '')) break;
+    out.push(
+      Object.fromEntries(
+        fields.map((field) => [field, t(`${base}.item${i}.${field}`, '')]),
+      ) as Record<K, string>,
+    );
+  }
+  return out;
 }
 
-function trackMenuItemSelect(menu: string, item: string): void {
-  track('dropdown_menu_item_select', {
-    component: 'dropdown-menu',
-    label: item,
-    menu,
-    location: 'docs_demo',
-  });
+// ─── Analytics — menus vivos ──────────────────────────────────────────────────
+
+// Demonstração, Variantes e Do & Don't renderizam o componente VIVO, e abrir,
+// escolher e fechar ali é tão real quanto num app — por isso as três seções
+// disparam os três eventos, cada uma com a SUA `location`, que vem do CHAMADOR.
+//
+// `menu` e `label` são IDENTIFICADORES em inglês, nunca o rótulo traduzido:
+// texto localizado partiria o mesmo evento em um valor por idioma no GA4 —
+// "Configurações", "Settings" e "Configuración" chegariam como três ações.
+// `menu` é o id da prévia; na Demonstração, que tem quatro menus, o id da
+// prévia seguido da chave do gatilho (`demo-account`, `demo-columns`…).
+// `label` é a chave do item em `demonstration.labels`, em kebab-case.
+type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
+
+/**
+ * Os dois ouvintes de UMA prévia: abrir e fechar, e escolher um item.
+ *
+ * O fechamento leva o motivo que a raiz desta stack entrega em `update:open`
+ * (`escape`, `overlay` ou `api`). O `?? 'api'` só cobre o tipo: a raiz sempre o
+ * manda ao fechar. A escolha leva o `value` da entrada — o id estável que a
+ * lista de entradas carrega, e não o rótulo traduzido. Marcar e escolher rádio
+ * também chegam aqui, e não fecham (C10).
+ */
+function trackMenu(menu: string, location: DocsLocation) {
+  return {
+    openChange(open: boolean, reason?: DropdownMenuCloseReason) {
+      if (open) {
+        track('dropdown_menu_open', { component: 'dropdown-menu', menu, location });
+        return;
+      }
+      track('dropdown_menu_close', {
+        component: 'dropdown-menu',
+        menu,
+        reason: reason ?? 'api',
+        location,
+      });
+    },
+    select(label: string) {
+      track('dropdown_menu_item_select', { component: 'dropdown-menu', menu, label, location });
+    },
+  };
+}
+
+// Um par de ouvintes por prévia, criado uma vez: o template recebe as FUNÇÕES,
+// e não uma chamada que as devolveria a cada evento sem nunca executá-las.
+const tracked = {
+  demoAccount:       trackMenu('demo-account', 'docs_demo'),
+  demoColumns:       trackMenu('demo-columns', 'docs_demo'),
+  demoTheme:         trackMenu('demo-theme', 'docs_demo'),
+  demoFile:          trackMenu('demo-file', 'docs_demo'),
+  pair1Do:           trackMenu('pair1-do', 'docs_do_dont'),
+  pair1Dont:         trackMenu('pair1-dont', 'docs_do_dont'),
+  pair2Do:           trackMenu('pair2-do', 'docs_do_dont'),
+  pair2Dont:         trackMenu('pair2-dont', 'docs_do_dont'),
+  default:           trackMenu('default', 'docs_variantes'),
+  destructive:       trackMenu('destructive', 'docs_variantes'),
+  withLabel:         trackMenu('with-label', 'docs_variantes'),
+  withCheckboxItems: trackMenu('with-checkbox-items', 'docs_variantes'),
+  withRadioGroup:    trackMenu('with-radio-group', 'docs_variantes'),
+  withShortcuts:     trackMenu('with-shortcuts', 'docs_variantes'),
+};
+
+/** Os dez itens planos do "evite" do par 1 — o número da legenda. */
+const PAIR1_DONT_ACTIONS = 10;
+
+// ─── Os menus como dado ───────────────────────────────────────────────────────
+//
+// Toda prévia viva desta página é uma LISTA de entradas, e é a mesma lista que
+// imprime o código do card de Variantes (`dropdownMenuSnippet`) — o código
+// mostra o que a prévia desenha, no idioma de quem lê e com o estado com que
+// ela abre. Até 2026-09-11 cada card levava um literal de código em português
+// nos três idiomas, sem os `ref` das marcações que ele ligava.
+//
+// O `value` de cada entrada é o id ESTÁVEL: o `label` do evento de escolha e,
+// nas marcações e na escolha única, o nome do `ref` no código.
+
+type MenuData = { trigger: string; entries: DropdownMenuSnippetEntry[] };
+
+const menus = computed(() => {
+  const action = (
+    label: string,
+    value: string,
+    extra: Pick<DropdownMenuSnippetAction, 'shortcut' | 'destructive'> = {},
+  ): DropdownMenuSnippetAction => ({ kind: 'item', label, value, ...extra });
+  const separator: DropdownMenuSnippetEntry = { kind: 'separator' };
+
+  const account = tContent('demonstration.labels.account');
+  const profile = action(tContent('demonstration.labels.profile'), 'profile');
+  const settings = action(tContent('demonstration.labels.settings'), 'settings');
+  const logout = action(tContent('demonstration.labels.logout'), 'logout');
+  const rename = action(tContent('demonstration.labels.rename'), 'rename');
+  const deleteAccount = action(tContent('demonstration.labels.deleteAccount'), 'delete-account');
+  // `Group` em volta do rótulo é o que faz o rótulo NOMEAR o bloco: o primitivo
+  // liga o `aria-labelledby` do grupo ao texto do `Label`. Um `Label` solto
+  // rotula visualmente e não nomeia nada.
+  const accountGroup: DropdownMenuSnippetEntry = { kind: 'group', label: account, items: [profile, settings] };
+  const supportGroup: DropdownMenuSnippetEntry = {
+    kind: 'group',
+    label: tContent('demonstration.labels.support'),
+    items: [action(tContent('demonstration.labels.documentation'), 'documentation'), logout],
+  };
+  const actionLabel = tContent('demonstration.labels.action');
+
+  return {
+    // Grupo nomeado, divisor e a saída destrutiva — a anatomia do componente.
+    account: {
+      trigger: account,
+      entries: [accountGroup, separator, { ...logout, destructive: true }],
+    },
+    columns: {
+      trigger: tContent('demonstration.labels.columns'),
+      entries: [
+        {
+          kind: 'group',
+          label: tContent('demonstration.labels.visibleColumns'),
+          items: [
+            { kind: 'checkbox', label: tContent('demonstration.labels.columnName'), value: 'column-name', checked: true },
+            { kind: 'checkbox', label: tContent('demonstration.labels.columnEmail'), value: 'column-email', checked: false },
+            { kind: 'checkbox', label: tContent('demonstration.labels.columnRole'), value: 'column-role', checked: false },
+          ],
+        },
+      ],
+    },
+    // UM grupo só, o de escolha única, com o rótulo DENTRO dele: fora, o grupo
+    // fica sem nome acessível e o rótulo vira texto solto no meio do menu.
+    theme: {
+      trigger: tContent('demonstration.labels.theme'),
+      entries: [
+        {
+          kind: 'radio-group',
+          label: tContent('demonstration.labels.appearance'),
+          value: 'theme',
+          selected: 'light',
+          options: [
+            { label: tContent('demonstration.labels.light'), value: 'light' },
+            { label: tContent('demonstration.labels.dark'), value: 'dark' },
+            { label: tContent('demonstration.labels.system'), value: 'system' },
+          ],
+        },
+      ],
+    },
+    // O sub-gatilho não tem ação própria: ele abre o painel filho, e é lá que
+    // estão os itens que a pessoa veio escolher.
+    file: {
+      trigger: tContent('demonstration.labels.file'),
+      entries: [
+        rename,
+        {
+          kind: 'submenu',
+          label: tContent('demonstration.labels.export'),
+          items: [
+            action(tContent('demonstration.labels.pdf'), 'pdf'),
+            action(tContent('demonstration.labels.csv'), 'csv'),
+          ],
+        },
+      ],
+    },
+    // Dois grupos rotulados e o separador entre eles.
+    accountSupport: {
+      trigger: account,
+      entries: [accountGroup, separator, supportGroup],
+    },
+    // Dez itens planos, que é o número da legenda: com sete a lista ainda
+    // parece curta, e o "vira lista de scroll" não aparece. O número vai no
+    // texto e no id (`action-1` … `action-10`): o conteúdo não interpola, e o
+    // rótulo é um só.
+    actions: {
+      trigger: tContent('demonstration.labels.menu'),
+      entries: Array.from({ length: PAIR1_DONT_ACTIONS }, (_, i) =>
+        action(`${actionLabel} ${i + 1}`, `action-${i + 1}`),
+      ),
+    },
+    destructive: {
+      trigger: account,
+      entries: [rename, separator, { ...deleteAccount, destructive: true }],
+    },
+    // Os mesmos itens do "faça" do par 2, sem a variante: é só ela que muda.
+    destructivePlain: {
+      trigger: account,
+      entries: [rename, separator, deleteAccount],
+    },
+    shortcuts: {
+      trigger: tContent('demonstration.labels.edit'),
+      entries: [
+        action(tContent('demonstration.labels.undo'), 'undo', { shortcut: tContent('demonstration.labels.undoShortcut') }),
+        action(tContent('demonstration.labels.copy'), 'copy', { shortcut: tContent('demonstration.labels.copyShortcut') }),
+        separator,
+        action(tContent('demonstration.labels.paste'), 'paste', { shortcut: tContent('demonstration.labels.pasteShortcut') }),
+      ],
+    },
+  } satisfies Record<string, MenuData>;
+});
+
+/** O código de um card: o trecho que a MESMA lista da prévia imprime. */
+function menuCode(menu: MenuData): string {
+  return dropdownMenuSnippet({ triggerLabel: menu.trigger, entries: menu.entries });
 }
 
 // ─── SEO & GEO ────────────────────────────────────────────────────────────────
@@ -216,33 +400,18 @@ const codeImportBasic = `import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";`;
 
-const codeDefault = `<DropdownMenu>
-  <DropdownMenuTrigger as-child>
-    <Button variant="outline">Abrir menu</Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuItem>Editar</DropdownMenuItem>
-    <DropdownMenuItem>Duplicar</DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>`;
+// O código de cada card de Variantes NÃO mora aqui: sai de `dropdownMenuSnippet`
+// com a mesma lista que monta a prévia (`menuCode`), no idioma da página.
 
-const codeDestructive = `<DropdownMenu>
-  <DropdownMenuTrigger as-child>
-    <Button variant="outline">Conta</Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuItem>Perfil</DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>`;
-
+// A API desta stack: `@update:open` traz o motivo do fechamento como segundo
+// argumento, e o item de marcação liga por `v-model` (o `modelValue` da peça).
 const interfaceCode = `// DropdownMenu (root)
 interface DropdownMenuRootProps {
   open?: boolean;
   defaultOpen?: boolean;
   modal?: boolean;
 }
+// @update:open → (open: boolean, reason?: 'escape' | 'overlay' | 'api')
 
 // DropdownMenuContent
 interface DropdownMenuContentProps {
@@ -256,6 +425,13 @@ interface DropdownMenuContentProps {
 interface DropdownMenuItemProps {
   variant?: 'default' | 'destructive';
   inset?: boolean;
+  disabled?: boolean;
+}
+// @select → (event: Event)
+
+// DropdownMenuCheckboxItem
+interface DropdownMenuCheckboxItemProps {
+  modelValue?: boolean | 'indeterminate'; // v-model
   disabled?: boolean;
 }`;
 
@@ -275,117 +451,39 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item9'),
 ]);
 
+// A ordem é a dos slots `variant-preview-{i}` do template.
 const variantItems = computed(() => [
-  { trackId: 'default', name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: codeDefault },
-  { trackId: 'destructive', name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: codeDestructive },
+  { trackId: 'default', name: tContent('variants.items.default'),     description: stripHtml(tContent('variants.styles.default')),     code: menuCode(menus.value.account) },
+  { trackId: 'destructive', name: tContent('variants.items.destructive'), description: stripHtml(tContent('variants.styles.destructive')), code: menuCode(menus.value.destructive) },
   {
     trackId: 'withLabel',
     name: tContent('variants.items.withLabel.name'),
     description: tContent('variants.items.withLabel.description'),
     useWhen: tContent('variants.items.withLabel.use'),
-    code: codeCompWithLabel,
+    code: menuCode(menus.value.accountSupport),
   },
   {
     trackId: 'withCheckboxItems',
     name: tContent('variants.items.withCheckboxItems.name'),
     description: tContent('variants.items.withCheckboxItems.description'),
     useWhen: tContent('variants.items.withCheckboxItems.use'),
-    code: codeCompCheckbox,
+    code: menuCode(menus.value.columns),
   },
   {
     trackId: 'withRadioGroup',
     name: tContent('variants.items.withRadioGroup.name'),
     description: tContent('variants.items.withRadioGroup.description'),
     useWhen: tContent('variants.items.withRadioGroup.use'),
-    code: codeCompRadio,
+    code: menuCode(menus.value.theme),
   },
   {
     trackId: 'withShortcuts',
     name: tContent('variants.items.withShortcuts.name'),
     description: tContent('variants.items.withShortcuts.description'),
     useWhen: tContent('variants.items.withShortcuts.use'),
-    code: codeCompShortcuts,
+    code: menuCode(menus.value.shortcuts),
   },
 ]);
-
-// ─── Compositions ─────────────────────────────────────────────────────────────
-
-const codeCompWithLabel = `<DropdownMenu>
-  <DropdownMenuTrigger as-child>
-    <Button variant="outline">Conta</Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuGroup>
-      <DropdownMenuLabel>Conta</DropdownMenuLabel>
-      <DropdownMenuItem>Perfil</DropdownMenuItem>
-      <DropdownMenuItem>Configurações</DropdownMenuItem>
-    </DropdownMenuGroup>
-    <DropdownMenuSeparator />
-    <DropdownMenuGroup>
-      <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-      <DropdownMenuItem>Documentação</DropdownMenuItem>
-      <DropdownMenuItem>Sair</DropdownMenuItem>
-    </DropdownMenuGroup>
-  </DropdownMenuContent>
-</DropdownMenu>`;
-
-const codeCompCheckbox = `<DropdownMenu>
-  <DropdownMenuTrigger as-child>
-    <Button variant="outline">Colunas</Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuGroup>
-      <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-      <DropdownMenuCheckboxItem v-model="showName">Nome</DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem v-model="showEmail">E-mail</DropdownMenuCheckboxItem>
-      <DropdownMenuCheckboxItem v-model="showRole">Função</DropdownMenuCheckboxItem>
-    </DropdownMenuGroup>
-  </DropdownMenuContent>
-</DropdownMenu>`;
-
-const codeCompRadio = `<DropdownMenu>
-  <DropdownMenuTrigger as-child>
-    <Button variant="outline">Tema</Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuRadioGroup v-model="theme">
-      <DropdownMenuLabel>Aparência</DropdownMenuLabel>
-      <DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>
-      <DropdownMenuRadioItem value="dark">Escuro</DropdownMenuRadioItem>
-      <DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>
-    </DropdownMenuRadioGroup>
-  </DropdownMenuContent>
-</DropdownMenu>`;
-
-const codeCompShortcuts = `<DropdownMenu>
-  <DropdownMenuTrigger as-child>
-    <Button variant="outline">Editar</Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuItem>
-      Desfazer <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuItem>
-      Copiar <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
-    </DropdownMenuItem>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>
-      Colar <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
-    </DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>`;
-
-// Estado dos menus vivos da demonstração — separado do estado das fichas de
-// composição, para que abrir um não mexa no outro.
-const demoShowName = ref(true);
-const demoShowEmail = ref(false);
-const demoShowRole = ref(false);
-const demoTheme = ref('light');
-
-const compShowName = ref(true);
-const compShowEmail = ref(false);
-const compShowRole = ref(false);
-const compTheme = ref('light');
 
 const stateItems = computed(() => [
   { label: tContent('states.closed.label'),   trigger: toPlainText(tContent('states.closed.trigger')),   behavior: toPlainText(tContent('states.closed.behavior')) },
@@ -404,7 +502,9 @@ const propCols = computed(() => ({
 
 const dropdownPropItems = computed(() => [
   { name: 'open',          type: tContent('props.table.open.type'),         defaultValue: tContent('props.table.open.default'),         required: tContent('props.table.open.required'),         description: toPlainText(tContent('props.table.open.description'))         },
-  { name: 'onUpdate:open', type: tContent('props.table.onOpenChange.type'), defaultValue: tContent('props.table.onOpenChange.default'), required: tContent('props.table.onOpenChange.required'), description: toPlainText(tContent('props.table.onOpenChange.description')) },
+  // O evento com o nome que se escreve nesta stack, e com o motivo que a raiz
+  // entrega no fechamento — o tipo do conteúdo compartilhado não o tem.
+  { name: '@update:open', type: "(open: boolean, reason?: 'escape' | 'overlay' | 'api') => void", defaultValue: tContent('props.table.onOpenChange.default'), required: tContent('props.table.onOpenChange.required'), description: toPlainText(tContent('props.table.onOpenChange.description')) },
   { name: 'defaultOpen',   type: tContent('props.table.defaultOpen.type'),  defaultValue: tContent('props.table.defaultOpen.default'),  required: tContent('props.table.defaultOpen.required'),  description: toPlainText(tContent('props.table.defaultOpen.description'))  },
   { name: 'modal',         type: tContent('props.table.modal.type'),        defaultValue: tContent('props.table.modal.default'),        required: tContent('props.table.modal.required'),        description: toPlainText(tContent('props.table.modal.description'))        },
   { name: 'side',          type: tContent('props.table.side.type'),         defaultValue: tContent('props.table.side.default'),         required: tContent('props.table.side.required'),         description: toPlainText(tContent('props.table.side.description'))         },
@@ -455,30 +555,40 @@ const noteItems = computed(() => [
   { title: '', content: tContent('notes.item5') },
 ]);
 
+// A tabela sai do conteúdo compartilhado, como a do ContextMenu: linha cravada
+// aqui ensinava um payload que o código já não mandava.
 const analyticsItems = computed(() => [
-  { event: 'dropdown_menu_open',        trigger: '@update:open(true)',  payload: "{ component: 'dropdown-menu', location, label }" },
-  { event: 'dropdown_menu_close',       trigger: '@update:open(false)', payload: "{ component: 'dropdown-menu', location, label }" },
-  { event: 'dropdown_menu_item_select', trigger: '@select em Item',     payload: "{ component: 'dropdown-menu', location, label, menu }" },
+  { event: tContent('analytics.table.menuOpen'),      trigger: toPlainText(tContent('analytics.table.menuOpenTrigger')),      payload: tContent('analytics.table.menuOpenPayload')      },
+  { event: tContent('analytics.table.itemClick'),     trigger: toPlainText(tContent('analytics.table.itemClickTrigger')),     payload: tContent('analytics.table.itemClickPayload')     },
+  { event: tContent('analytics.table.close'),         trigger: toPlainText(tContent('analytics.table.closeTrigger')),         payload: tContent('analytics.table.closePayload')         },
+  { event: tContent('analytics.table.pageView'),      trigger: toPlainText(tContent('analytics.table.pageViewTrigger')),      payload: tContent('analytics.table.pageViewPayload')      },
+  { event: tContent('analytics.table.sectionViewed'), trigger: toPlainText(tContent('analytics.table.sectionViewedTrigger')), payload: tContent('analytics.table.sectionViewedPayload') },
+  { event: tContent('analytics.table.langSwitch'),    trigger: toPlainText(tContent('analytics.table.langSwitchTrigger')),    payload: tContent('analytics.table.langSwitchPayload')    },
 ]);
 
-const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
-  action: toPlainText(tContent(`testes.functional.item${i}.action`)),
-  result: toPlainText(tContent(`testes.functional.item${i}.result`)),
-  priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
-})));
+const functionalTestItems = computed(() =>
+  entriesFromDict(tContent, 'testes.functional', ['action', 'result', 'priority']).map((entry) => ({
+    action: toPlainText(entry.action),
+    result: toPlainText(entry.result),
+    priority: localPriority(entry.priority),
+  })),
+);
 
-// Nível WCAG e ferramenta ficam aqui, e não no conteúdo compartilhado, porque
-// são IDENTIFICADORES (número de critério, nome do verificador) e identificador
-// não se traduz. Item novo além da lista cai no par padrão em vez de sumir.
-const a11yTestLevels = ['AA', '4.1.2', '4.1.2', '1.3.1', '2.4.3', '1.4.3', '4.1.2'];
+// Nível WCAG e forma de verificar ficam aqui, e não no conteúdo compartilhado,
+// porque são IDENTIFICADORES (número de critério, consulta da suíte, regra do
+// axe) e identificador não se traduz. A coluna "como verificar" dizia "DOM
+// inspection" e "Keyboard test" — frase em inglês, igual nos três idiomas; agora
+// diz a consulta ou a regra que de fato mede o critério, como no ContextMenu.
+// Item novo além da lista cai no par padrão em vez de sumir.
+const a11yTestLevels = ['AA', '4.1.2 · A', '4.1.2 · A', '4.1.2 · A', '2.4.3 · A', '1.4.3 · AA', '2.1.1 · A'];
 const a11yTestHow = [
   'axe-core',
-  'DOM inspection',
-  'DOM inspection',
-  'DOM inspection',
-  'Keyboard test',
-  'Contrast analyzer',
-  'Keyboard test',
+  'aria-haspopup · aria-expanded',
+  "getByRole('menu')",
+  "getAllByRole('menuitem' | 'menuitemcheckbox' | 'menuitemradio')",
+  'Escape · document.activeElement',
+  'axe-core · color-contrast',
+  'ArrowDown · document.activeElement',
 ];
 
 const a11yTestItems = computed(() =>
@@ -489,10 +599,12 @@ const a11yTestItems = computed(() =>
   })),
 );
 
-const visualTestItems = computed(() => [1, 2, 3, 4, 5].map((i) => ({
-  story: tContent(`testes.visual.item${i}.story`),
-  priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
-})));
+const visualTestItems = computed(() =>
+  entriesFromDict(tContent, 'testes.visual', ['story', 'priority']).map((entry) => ({
+    story: entry.story,
+    priority: localPriority(entry.priority),
+  })),
+);
 
 const a11yCritCols = computed(() => ({
   criterion: tNav('common.criterion'),
@@ -517,151 +629,82 @@ const a11yCritCols = computed(() => ({
     </template>
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
+    <!--
+      Quatro células, cada uma com a legenda do conteúdo compartilhado em cima e
+      o menu embaixo — a forma do vanilla, que é a referência. A legenda diz o
+      que a célula DEMONSTRA; o gatilho diz o que o menu É. Até 2026-09-11 esta
+      página usava a legenda como texto do gatilho ("Menu de ações"), e o gatilho
+      mentia sobre o que abria.
+    -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-cluster nds-w-full"
-        data-justify="center"
+        class="nds-grid nds-w-full nds-min-h-40"
         data-spacing="md"
-        style="contain: layout"
+        style="contain: layout; --grid-min: 9rem"
       >
-        <DropdownMenu @update:open="trackMenuOpenChange('acoes', $event)">
-          <DropdownMenuTrigger as-child>
-            <Button variant="outline">
-              {{ tContent('demonstration.labels.basic') }}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="bottom"
-            align="start"
-          >
-            <!--
-              `Group` em volta do rótulo é o que faz o rótulo NOMEAR o bloco: o
-              primitivo liga o `aria-labelledby` do grupo ao texto do `Label`, e
-              é isso que a ficha de `Com Label` promete a quem lê. Um `Label`
-              solto rotula visualmente e não nomeia nada.
-            -->
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>Conta</DropdownMenuLabel>
-              <DropdownMenuItem @select="trackMenuItemSelect('acoes', 'perfil')">
-                Perfil
-              </DropdownMenuItem>
-              <DropdownMenuItem @select="trackMenuItemSelect('acoes', 'configuracoes')">
-                Configurações
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              variant="destructive"
-              @select="trackMenuItemSelect('acoes', 'sair')"
-            >
-              Sair
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div
+          class="nds-stack nds-min-h-20"
+          data-spacing="sm"
+          style="contain: layout"
+        >
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.basic') }}
+          </p>
+          <DropdownMenuPreview
+            :trigger="menus.account.trigger"
+            :entries="menus.account.entries"
+            @update:open="tracked.demoAccount.openChange"
+            @select="tracked.demoAccount.select"
+          />
+        </div>
 
-        <DropdownMenu @update:open="trackMenuOpenChange('colunas', $event)">
-          <DropdownMenuTrigger as-child>
-            <Button variant="outline">
-              {{ tContent('demonstration.labels.withCheckbox') }}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="bottom"
-            align="start"
-          >
-            <!--
-              O identificador do item é o da COLUNA, não o rótulo traduzido:
-              "Função"/"Role"/"Rol" partiriam o mesmo evento em três no GA4.
-            -->
-            <DropdownMenuGroup>
-              <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-              <DropdownMenuCheckboxItem
-                v-model="demoShowName"
-                @select="trackMenuItemSelect('colunas', 'nome')"
-              >
-                Nome
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                v-model="demoShowEmail"
-                @select="trackMenuItemSelect('colunas', 'email')"
-              >
-                E-mail
-              </DropdownMenuCheckboxItem>
-              <DropdownMenuCheckboxItem
-                v-model="demoShowRole"
-                @select="trackMenuItemSelect('colunas', 'funcao')"
-              >
-                Função
-              </DropdownMenuCheckboxItem>
-            </DropdownMenuGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div
+          class="nds-stack nds-min-h-20"
+          data-spacing="sm"
+          style="contain: layout"
+        >
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.withCheckbox') }}
+          </p>
+          <DropdownMenuPreview
+            :trigger="menus.columns.trigger"
+            :entries="menus.columns.entries"
+            @update:open="tracked.demoColumns.openChange"
+            @select="tracked.demoColumns.select"
+          />
+        </div>
 
-        <DropdownMenu @update:open="trackMenuOpenChange('tema', $event)">
-          <DropdownMenuTrigger as-child>
-            <Button variant="outline">
-              {{ tContent('demonstration.labels.withRadio') }}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="bottom"
-            align="start"
-          >
-            <!--
-              O rótulo mora DENTRO do grupo de escolha única, que é onde a story
-              e o snippet do painel Code o colocam: fora dele o grupo fica sem
-              nome acessível e o rótulo vira texto solto no meio do menu.
-            -->
-            <DropdownMenuRadioGroup v-model="demoTheme">
-              <DropdownMenuLabel>Aparência</DropdownMenuLabel>
-              <DropdownMenuRadioItem
-                value="light"
-                @select="trackMenuItemSelect('tema', 'light')"
-              >
-                Claro
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem
-                value="dark"
-                @select="trackMenuItemSelect('tema', 'dark')"
-              >
-                Escuro
-              </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem
-                value="system"
-                @select="trackMenuItemSelect('tema', 'system')"
-              >
-                Sistema
-              </DropdownMenuRadioItem>
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div
+          class="nds-stack nds-min-h-20"
+          data-spacing="sm"
+          style="contain: layout"
+        >
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.withRadio') }}
+          </p>
+          <DropdownMenuPreview
+            :trigger="menus.theme.trigger"
+            :entries="menus.theme.entries"
+            @update:open="tracked.demoTheme.openChange"
+            @select="tracked.demoTheme.select"
+          />
+        </div>
 
-        <DropdownMenu @update:open="trackMenuOpenChange('submenu', $event)">
-          <DropdownMenuTrigger as-child>
-            <Button variant="outline">
-              {{ tContent('demonstration.labels.withSubmenu') }}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="bottom"
-            align="start"
-          >
-            <DropdownMenuItem @select="trackMenuItemSelect('submenu', 'renomear')">
-              Renomear
-            </DropdownMenuItem>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem @select="trackMenuItemSelect('submenu', 'pdf')">
-                  PDF
-                </DropdownMenuItem>
-                <DropdownMenuItem @select="trackMenuItemSelect('submenu', 'csv')">
-                  CSV
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div
+          class="nds-stack nds-min-h-20"
+          data-spacing="sm"
+          style="contain: layout"
+        >
+          <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
+            {{ tContent('demonstration.labels.withSubmenu') }}
+          </p>
+          <DropdownMenuPreview
+            :trigger="menus.file.trigger"
+            :entries="menus.file.entries"
+            @update:open="tracked.demoFile.openChange"
+            @select="tracked.demoFile.select"
+          />
+        </div>
       </div>
     </DocsDemonstration>
 
@@ -740,8 +783,8 @@ const a11yCritCols = computed(() => ({
     <DocsDoDont
       :title="tContent('doDont.title')"
       :pairs="[
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
-        { doLabel: 'Faça', dontLabel: 'Evite', doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
+        { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
       <template #do-preview-0>
@@ -749,31 +792,14 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                {{ tContent('usage.uxWriting.table.label.good') }}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Conta</DropdownMenuLabel>
-                <DropdownMenuItem>Perfil</DropdownMenuItem>
-                <DropdownMenuItem>Configurações</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Workspace</DropdownMenuLabel>
-                <DropdownMenuItem>Convidar</DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <!-- Dois grupos rotulados e o separador entre eles: o que a legenda diz. -->
+          <DropdownMenuPreview
+            :trigger="menus.accountSupport.trigger"
+            :entries="menus.accountSupport.entries"
+            size="sm"
+            @update:open="tracked.pair1Do.openChange"
+            @select="tracked.pair1Do.select"
+          />
         </div>
       </template>
       <template #dont-preview-0>
@@ -781,35 +807,14 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                {{ tContent('usage.uxWriting.table.trigger.bad') }}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <!--
-                Dez itens planos, que é o número da legenda: com sete a lista
-                ainda parece curta, e o "vira lista de scroll" não aparece.
-              -->
-              <DropdownMenuItem>Perfil</DropdownMenuItem>
-              <DropdownMenuItem>Configurações</DropdownMenuItem>
-              <DropdownMenuItem>Convidar</DropdownMenuItem>
-              <DropdownMenuItem>Membros</DropdownMenuItem>
-              <DropdownMenuItem>Faturas</DropdownMenuItem>
-              <DropdownMenuItem>Assinatura</DropdownMenuItem>
-              <DropdownMenuItem>Notificações</DropdownMenuItem>
-              <DropdownMenuItem>Integrações</DropdownMenuItem>
-              <DropdownMenuItem>Suporte</DropdownMenuItem>
-              <DropdownMenuItem>Sair</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <!-- Dez itens planos, sem grupo nem separador: a lista que vira rolagem. -->
+          <DropdownMenuPreview
+            :trigger="menus.actions.trigger"
+            :entries="menus.actions.entries"
+            size="sm"
+            @update:open="tracked.pair1Dont.openChange"
+            @select="tracked.pair1Dont.select"
+          />
         </div>
       </template>
       <template #do-preview-1>
@@ -817,26 +822,13 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                {{ tContent('usage.uxWriting.table.label.good') }}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuItem>Editar</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">
-                Excluir conta
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DropdownMenuPreview
+            :trigger="menus.destructive.trigger"
+            :entries="menus.destructive.entries"
+            size="sm"
+            @update:open="tracked.pair2Do.openChange"
+            @select="tracked.pair2Do.select"
+          />
         </div>
       </template>
       <template #dont-preview-1>
@@ -844,23 +836,14 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                {{ tContent('usage.uxWriting.table.label.good') }}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuItem>Editar</DropdownMenuItem>
-              <DropdownMenuItem>Excluir conta</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <!-- Os mesmos itens do "faça", sem a variante: é só ela que muda. -->
+          <DropdownMenuPreview
+            :trigger="menus.destructivePlain.trigger"
+            :entries="menus.destructivePlain.entries"
+            size="sm"
+            @update:open="tracked.pair2Dont.openChange"
+            @select="tracked.pair2Dont.select"
+          />
         </div>
       </template>
     </DocsDoDont>
@@ -872,36 +855,30 @@ const a11yCritCols = computed(() => ({
     />
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
+    <!--
+      Cada prévia recebe a MESMA lista que imprime o código do card (`menuCode`
+      em `variantItems`): o que se copia é o que se vê, no idioma da página.
+    -->
     <DocsCompositions
       id="variantes"
       :title="tContent('variants.title')"
       :items="variantItems"
-      use-when-label="Quando usar"
+      :use-when-label="tNav('common.useWhen')"
       component-slug="dropdown-menu"
     >
       <template #variant-preview-0>
         <div
           style="contain: layout"
-          class="nds-w-full nds-min-h-50"
+          class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                {{ tContent('demonstration.labels.basic') }}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuItem>Editar</DropdownMenuItem>
-              <DropdownMenuItem>Duplicar</DropdownMenuItem>
-              <DropdownMenuItem>Compartilhar</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <!-- Os itens da célula `demo-account`: o item neutro, com o destrutivo ao lado para contraste. -->
+          <DropdownMenuPreview
+            :trigger="menus.account.trigger"
+            :entries="menus.account.entries"
+            size="sm"
+            @update:open="tracked.default.openChange"
+            @select="tracked.default.select"
+          />
         </div>
       </template>
       <template #variant-preview-1>
@@ -909,26 +886,13 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                {{ tContent('usage.uxWriting.table.destructive.good') }}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuItem>Perfil</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">
-                Excluir conta
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DropdownMenuPreview
+            :trigger="menus.destructive.trigger"
+            :entries="menus.destructive.entries"
+            size="sm"
+            @update:open="tracked.destructive.openChange"
+            @select="tracked.destructive.select"
+          />
         </div>
       </template>
       <template #variant-preview-2>
@@ -936,32 +900,13 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                Conta
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Conta</DropdownMenuLabel>
-                <DropdownMenuItem>Perfil</DropdownMenuItem>
-                <DropdownMenuItem>Configurações</DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Suporte</DropdownMenuLabel>
-                <DropdownMenuItem>Documentação</DropdownMenuItem>
-                <DropdownMenuItem>Sair</DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DropdownMenuPreview
+            :trigger="menus.accountSupport.trigger"
+            :entries="menus.accountSupport.entries"
+            size="sm"
+            @update:open="tracked.withLabel.openChange"
+            @select="tracked.withLabel.select"
+          />
         </div>
       </template>
       <template #variant-preview-3>
@@ -969,33 +914,13 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                Colunas
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuGroup>
-                <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
-                <DropdownMenuCheckboxItem v-model="compShowName">
-                  Nome
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem v-model="compShowEmail">
-                  E-mail
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem v-model="compShowRole">
-                  Função
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DropdownMenuPreview
+            :trigger="menus.columns.trigger"
+            :entries="menus.columns.entries"
+            size="sm"
+            @update:open="tracked.withCheckboxItems.openChange"
+            @select="tracked.withCheckboxItems.select"
+          />
         </div>
       </template>
       <template #variant-preview-4>
@@ -1003,33 +928,13 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-50"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                Tema
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuRadioGroup v-model="compTheme">
-                <DropdownMenuLabel>Aparência</DropdownMenuLabel>
-                <DropdownMenuRadioItem value="light">
-                  Claro
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="dark">
-                  Escuro
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="system">
-                  Sistema
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DropdownMenuPreview
+            :trigger="menus.theme.trigger"
+            :entries="menus.theme.entries"
+            size="sm"
+            @update:open="tracked.withRadioGroup.openChange"
+            @select="tracked.withRadioGroup.select"
+          />
         </div>
       </template>
       <template #variant-preview-5>
@@ -1037,34 +942,13 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-60"
         >
-          <DropdownMenu>
-            <DropdownMenuTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-              >
-                Editar
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              side="bottom"
-              align="start"
-            >
-              <DropdownMenuItem>
-                Desfazer
-                <DropdownMenuShortcut>Ctrl+Z</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                Copiar
-                <DropdownMenuShortcut>Ctrl+C</DropdownMenuShortcut>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                Colar
-                <DropdownMenuShortcut>Ctrl+V</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DropdownMenuPreview
+            :trigger="menus.shortcuts.trigger"
+            :entries="menus.shortcuts.entries"
+            size="sm"
+            @update:open="tracked.withShortcuts.openChange"
+            @select="tracked.withShortcuts.select"
+          />
         </div>
       </template>
     </DocsCompositions>
@@ -1131,9 +1015,9 @@ const a11yCritCols = computed(() => ({
     <DocsAnalytics
       :title="tContent('analytics.title')"
       :cols="{
-        event: 'Evento',
-        trigger: 'Quando dispara',
-        payload: 'Payload',
+        event: tContent('analytics.table.event'),
+        trigger: toPlainText(tContent('analytics.table.trigger')),
+        payload: tContent('analytics.table.payload'),
       }"
       :items="analyticsItems"
     />

@@ -101,7 +101,9 @@ const wrapperStyle: React.CSSProperties = {
 // ─── WithShortcuts ────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
-  parameters: { a11y: AXE_WITH_MENU_OPEN, covers: ["visual.item2"] },
+  // `functional.item16`: o atalho no nome acessível, sem `aria-hidden`, e
+  // encostado à direita do rótulo — os três medidos abaixo.
+  parameters: { a11y: AXE_WITH_MENU_OPEN, covers: ["functional.item16", "visual.item2"] },
   render: () => (
     <div className="nds-min-h-90" style={wrapperStyle}>
       <Menubar modal={false}>
@@ -150,6 +152,20 @@ export const WithShortcuts: Story = {
         getComputedStyle(items[0]).color
       )
     })
+
+    await step("O atalho fica encostado na borda direita do item", async () => {
+      // `margin-left: auto` é o mecanismo, mas num item flex o valor computado
+      // já vem resolvido em pixels — o que dá para afirmar é o resultado: o vão
+      // entre o atalho e a borda direita é menor que o vão até a esquerda.
+      for (const item of items) {
+        const shortcut = item.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!
+        const itemBox = item.getBoundingClientRect()
+        const shortcutBox = shortcut.getBoundingClientRect()
+        await expect(itemBox.right - shortcutBox.right).toBeLessThan(
+          shortcutBox.left - itemBox.left
+        )
+      }
+    })
   },
 }
 
@@ -158,6 +174,8 @@ export const WithShortcuts: Story = {
 export const WithSubmenu: Story = {
   parameters: {
     a11y: AXE_WITH_MENU_OPEN,
+    // `functional.item5` inteiro: a seta direita abre e leva o foco ao primeiro
+    // item; a esquerda e o Escape fecham SÓ o submenu, e o menu segue aberto.
     covers: ["functional.item5", "visual.item4"],
     // O submenu é outro par de gatilho e painel DENTRO do painel: uma
     // sub-composição que o snippet do meta esconderia por inteiro.
@@ -183,10 +201,12 @@ export const WithSubmenu: Story = {
       </Menubar>
     </div>
   ),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const body = within(document.body)
     const menu = await waitForPortal("menu")
     const subTrigger = within(menu).getByRole("menuitem", { name: "Exportar" })
+    const [fileTrigger] = within(within(canvasElement).getByRole("menubar")).getAllByRole("menuitem")
+    const submenuPanel = () => body.queryAllByRole("menu").find((m) => m !== menu)
 
     await step("O sub-gatilho anuncia que abre outro menu", async () => {
       await expect(subTrigger.getAttribute("aria-haspopup")).toBe("menu")
@@ -217,10 +237,17 @@ export const WithSubmenu: Story = {
         // distingue submenu de troca de menu.
         await expect(body.getAllByRole("menu")).toHaveLength(2)
       })
+      // Abrir não basta: o FOCO entra no submenu, no primeiro item. Parado no
+      // sub-gatilho, as setas continuariam andando no pai.
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(
+          within(submenuPanel()!).getAllByRole("menuitem")[0]
+        )
+      })
     })
 
     await step("O submenu traz os próprios itens e abre AO LADO do pai", async () => {
-      const submenu = body.getAllByRole("menu").find((m) => m !== menu)!
+      const submenu = submenuPanel()!
       await expect(within(submenu).getAllByRole("menuitem")).toHaveLength(
         EXPORTACOES.length
       )
@@ -229,6 +256,55 @@ export const WithSubmenu: Story = {
       await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
         menu.getBoundingClientRect().left
       )
+    })
+
+    /** Só o submenu fechou: o foco no sub-gatilho, e o menu da barra é o MESMO nó, aberto. */
+    const onlySubmenuClosed = async () => {
+      await waitFor(async () => {
+        await expect(subTrigger.getAttribute("aria-expanded")).toBe("false")
+      })
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(subTrigger)
+      })
+      // Um quadro depois: a decisão de fechar o menu da barra junto já teria
+      // sido tomada. Na barra, a seta para a esquerda também é a tecla que
+      // passa ao menu VIZINHO — se ela vazasse do submenu, o gatilho de
+      // Arquivo apareceria fechado aqui.
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+      const menus = body.queryAllByRole("menu")
+      await expect(menus).toHaveLength(1)
+      await expect(menus[0]).toBe(menu)
+      await expect(fileTrigger.getAttribute("aria-expanded")).toBe("true")
+    }
+
+    await step("A seta para a esquerda fecha só o submenu e devolve o foco ao sub-gatilho", async () => {
+      await userEvent.keyboard("{ArrowLeft}")
+      await onlySubmenuClosed()
+    })
+
+    await step("Escape dentro do submenu também fecha só o submenu", async () => {
+      // WAI-ARIA APG: Escape fecha o menu em que o foco está, e o de fora segue
+      // aberto. Fechar a árvore inteira faria um nível de volta custar os dois.
+      subTrigger.focus()
+      await userEvent.keyboard("{ArrowRight}")
+      await waitFor(async () => {
+        await expect(body.getAllByRole("menu")).toHaveLength(2)
+      })
+      await waitFor(async () => {
+        await expect(submenuPanel()!.contains(document.activeElement)).toBe(true)
+      })
+      await userEvent.keyboard("{Escape}")
+      await onlySubmenuClosed()
+    })
+
+    await step("A story termina com o submenu ABERTO", async () => {
+      // `visual.item4` descreve o menu com o submenu aberto — é o que o
+      // Chromatic fotografa.
+      subTrigger.focus()
+      await userEvent.keyboard("{ArrowRight}")
+      await waitFor(async () => {
+        await expect(body.getAllByRole("menu")).toHaveLength(2)
+      })
     })
   },
 }
@@ -262,7 +338,7 @@ export const WithCheckboxItems: Story = {
       </Menubar>
     </div>
   ),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const menu = await waitForPortal("menu")
     const canvas = within(menu)
     const boxes = canvas.getAllByRole("menuitemcheckbox")
@@ -308,7 +384,17 @@ export const WithCheckboxItems: Story = {
     })
 
     await step("Marcar não fecha o menu — quem marca uma quer marcar a próxima", async () => {
-      await expect(document.body.contains(menu)).toBe(true)
+      // C10. `document.body.contains(menu)` sozinho não bastava: um painel no
+      // meio do fechamento ainda está no documento. Um quadro depois da troca
+      // a decisão de fechar já teria sido tomada — e sem animação de saída
+      // (D5) ele sairia na hora. UM menu aberto, o MESMO nó, e o gatilho
+      // ainda expandido.
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+      const menus = within(document.body).queryAllByRole("menu")
+      await expect(menus).toHaveLength(1)
+      await expect(menus[0]).toBe(menu)
+      const [trigger] = within(within(canvasElement).getByRole("menubar")).getAllByRole("menuitem")
+      await expect(trigger.getAttribute("aria-expanded")).toBe("true")
       const other = boxes[EXIBICOES.indexOf("Grade")]
       await expect(other.getAttribute("aria-checked")).toBe("false")
     })
@@ -320,7 +406,7 @@ export const WithCheckboxItems: Story = {
 export const WithRadioGroup: Story = {
   parameters: {
     a11y: AXE_WITH_MENU_OPEN,
-    covers: ["accessibility.item5"],
+    covers: ["functional.item15", "accessibility.item5"],
     // Escolha única: quem guarda o valor é o GRUPO, e é essa relação — não o
     // item isolado — que o snippet precisa mostrar.
     docs: { source: { transform: menubarChoiceUnicaSource } },
@@ -344,7 +430,7 @@ export const WithRadioGroup: Story = {
       </Menubar>
     </div>
   ),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     const menu = await waitForPortal("menu")
     const options = within(menu).getAllByRole("menuitemradio")
 
@@ -371,7 +457,7 @@ export const WithRadioGroup: Story = {
       ).not.toBeNull()
     })
 
-    await step("Escolher outra opção transfere a marcação", async () => {
+    await step("Escolher outra opção transfere a marcação, e o menu segue aberto", async () => {
       const escuro = options[THEMES.findIndex((t) => t.value === "dark")]
       // Idempotente: o clique só acontece com a opção desmarcada — e escolher a
       // MESMA opção duas vezes deixaria o mesmo estado de qualquer forma, que é
@@ -385,6 +471,17 @@ export const WithRadioGroup: Story = {
       await expect(
         options.filter((o) => o.getAttribute("aria-checked") === "true")
       ).toHaveLength(1)
+      // Escolher não fecha (C10). As opções de cima foram lidas ANTES do
+      // clique, e um nó desmontado continuaria respondendo ao que era — por
+      // isso a prova é o documento: um quadro depois, UM menu aberto, o MESMO
+      // nó, e o gatilho ainda expandido.
+      await new Promise((resolve) => requestAnimationFrame(resolve))
+      const menus = within(document.body).queryAllByRole("menu")
+      await expect(menus).toHaveLength(1)
+      await expect(menus[0]).toBe(menu)
+      await expect(menu.contains(escuro)).toBe(true)
+      const [trigger] = within(within(canvasElement).getByRole("menubar")).getAllByRole("menuitem")
+      await expect(trigger.getAttribute("aria-expanded")).toBe("true")
     })
   },
 }

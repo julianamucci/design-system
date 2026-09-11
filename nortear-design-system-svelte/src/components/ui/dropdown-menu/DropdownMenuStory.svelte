@@ -45,6 +45,11 @@
      * vira a ÚLTIMA parada da página, o caso em que a lib não fechava.
      */
     neighbors?: 'both' | 'before';
+    /**
+     * Espião da escolha de item, com o valor estável do item. É o que deixa a
+     * play afirmar que um fechamento NÃO executou nada — o clique fora (F13).
+     */
+    onSelect?: (value: string) => void;
   }
   // `defaultOpen` não existe no bits-ui nem no vaul-svelte: a prop era
   // passada, ignorada, e o overlay nunca abria. A API real é `open`
@@ -60,6 +65,7 @@
     triggerLabel = 'Mais ações',
     variant = 'default',
     neighbors = undefined,
+    onSelect = () => {},
   }: Props = $props();
 
   // states for interactive variants
@@ -199,9 +205,9 @@
             <DropdownMenuItem>Duplicar</DropdownMenuItem>
           {:else}
             <DropdownMenuGroup>
-              <DropdownMenuItem>Perfil</DropdownMenuItem>
-              <DropdownMenuItem>Configurações</DropdownMenuItem>
-              <DropdownMenuItem>Equipe</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => onSelect('profile')}>Perfil</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => onSelect('settings')}>Configurações</DropdownMenuItem>
+              <DropdownMenuItem onSelect={() => onSelect('team')}>Equipe</DropdownMenuItem>
             </DropdownMenuGroup>
           {/if}
         </DropdownMenuContent>

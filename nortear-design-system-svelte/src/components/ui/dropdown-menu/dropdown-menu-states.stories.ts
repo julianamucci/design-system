@@ -63,7 +63,15 @@ export const Open: Story = {
     // do primitivo não responde neste stack". Respondia: faltava ao painel o
     // `id` que a lib compara para decidir se a tecla é busca (ver
     // `dropdown-menu-content.svelte`). O passo da letra, abaixo, é o que cobra.
-    covers: ['functional.item2', 'accessibility.item3', 'accessibility.item4'],
+    // `functional.item10` (Home/End) e `item11` (letra inicial) são os dois
+    // passos de mesmo nome logo abaixo, que comparam o foco com um item CERTO.
+    covers: [
+      'functional.item2',
+      'functional.item10',
+      'functional.item11',
+      'accessibility.item3',
+      'accessibility.item4',
+    ],
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');

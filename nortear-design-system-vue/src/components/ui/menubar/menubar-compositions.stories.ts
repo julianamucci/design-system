@@ -91,7 +91,7 @@ const parts = {
 // ─── WithShortcuts ────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: { covers: ['functional.item16', 'visual.item2'] },
   render: () => ({
     components: parts,
     setup: () => ({ shortcuts: SHORTCUTS }),
@@ -133,6 +133,18 @@ export const WithShortcuts: Story = {
       const atalho = menu.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!;
       await expect(atalho.classList.contains('nds-dropdown-menu-shortcut')).toBe(true);
       await expect(getComputedStyle(atalho).color).not.toBe(getComputedStyle(items[0]).color);
+    });
+
+    await step('O atalho fica encostado na borda direita do item', async () => {
+      // "À direita do rótulo" (F16) é resultado de layout, e é ele que se mede:
+      // a folga até a borda direita do item é menor que a distância até a
+      // esquerda. Só a classe não provaria nada — ela pode estar lá e o item
+      // não ser flex.
+      const item = items[items.length - 1];
+      const atalho = item.querySelector<HTMLElement>('[data-slot="menubar-shortcut"]')!;
+      const itemBox = item.getBoundingClientRect();
+      const shortcutBox = atalho.getBoundingClientRect();
+      await expect(itemBox.right - shortcutBox.right).toBeLessThan(shortcutBox.left - itemBox.left);
     });
   },
 };
@@ -180,8 +192,14 @@ export const WithSubmenu: Story = {
       await expect(subTrigger.getAttribute('data-slot')).toBe('menubar-sub-trigger');
     });
 
-    await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu', async () => {
-      // Idempotente: só navega e abre quando ainda está fechado.
+    const submenu = () => document.querySelector<HTMLElement>('[data-slot="menubar-sub-content"]');
+    // O primeiro item do submenu, relido a cada chamada: o painel é outro nó a
+    // cada abertura.
+    const firstSubItem = () => within(submenu()!).getAllByRole('menuitem')[0];
+
+    await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu e leva o foco ao primeiro item', async () => {
+      // Idempotente: só navega e abre quando ainda está fechado. Nada é focado
+      // à mão aqui — onde o foco cai depois da seta é o que F5 afirma.
       if (subTrigger.getAttribute('aria-expanded') !== 'true') {
         // Quantas setas até o sub-gatilho depende de onde a lib deixou o realce
         // ao abrir — cravar o número é o que quebra quando um item muda de
@@ -203,6 +221,11 @@ export const WithSubmenu: Story = {
         // distingue submenu de troca de menu.
         await expect(body.getAllByRole('menu')).toHaveLength(2);
       });
+      // E o foco ENTRA: abrir sem levá-lo deixaria o submenu à vista e
+      // inalcançável — a seta seguinte andaria no menu de fora (WCAG 2.1.1).
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(firstSubItem());
+      });
     });
 
     await step('O submenu traz os próprios itens e abre AO LADO do pai', async () => {
@@ -213,6 +236,61 @@ export const WithSubmenu: Story = {
       await expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
         menu.getBoundingClientRect().left,
       );
+    });
+
+    await step('Seta esquerda fecha só o submenu e devolve o foco ao sub-gatilho', async () => {
+      // O foco já está no primeiro item do submenu, pela seta do passo de
+      // abertura — o passo de medida no meio não o move.
+      await expect(submenu()!.contains(document.activeElement)).toBe(true);
+      await userEvent.keyboard('{ArrowLeft}');
+      await waitFor(async () => {
+        await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+        await expect(submenu()).toBeNull();
+      });
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(subTrigger);
+      });
+      // A seta esquerda dentro do submenu não troca de menu da barra: o menu de
+      // Arquivo é o MESMO nó, ainda aberto.
+      await expect(body.getAllByRole('menu')).toHaveLength(1);
+      await expect(menu.isConnected).toBe(true);
+    });
+
+    await step('Escape no submenu fecha só o submenu, e o menu segue aberto', async () => {
+      // WAI-ARIA APG e F5: Escape fecha o menu em que o foco está. A lib fechava
+      // o menu inteiro da barra; quem segura é o painel do submenu
+      // (`useSubmenuEscape`).
+      // O foco está no sub-gatilho (passo anterior): a seta reabre e LEVA o foco
+      // para dentro, sem mão da play.
+      await expect(document.activeElement).toBe(subTrigger);
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(submenu()).not.toBeNull();
+      });
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(firstSubItem());
+      });
+      await userEvent.keyboard('{Escape}');
+      await waitFor(async () => {
+        await expect(submenu()).toBeNull();
+      });
+      await waitFor(async () => {
+        await expect(document.activeElement).toBe(subTrigger);
+      });
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
+      // Um quadro depois, o menu da barra continua o MESMO nó, montado.
+      await new Promise((resolve) => requestAnimationFrame(resolve));
+      await expect(body.getAllByRole('menu')).toHaveLength(1);
+      await expect(menu.isConnected).toBe(true);
+    });
+
+    await step('A story termina com o submenu ABERTO', async () => {
+      // `visual.item4` descreve o submenu aberto — é o que o Chromatic fotografa.
+      subTrigger.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(async () => {
+        await expect(body.getAllByRole('menu')).toHaveLength(2);
+      });
     });
   },
 };
@@ -313,7 +391,7 @@ export const WithCheckboxItems: Story = {
 
 export const WithRadioGroup: Story = {
   parameters: {
-    covers: ['accessibility.item5'],
+    covers: ['functional.item15', 'accessibility.item5'],
     docs: {
       // O valor mora no GRUPO, não no item: `v-model` no RadioGroup é a diferença
       // estrutural entre escolha única e alternador.

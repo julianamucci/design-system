@@ -15,7 +15,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuSubContent,
 } from "@/components/ui/context-menu";
-import { contextMenuCloseReason } from "@/components/ui/context-menu-close-reason";
+import { menuCloseReason } from "@/components/ui/menu-close-reason";
 import {
   contextMenuSnippet,
   type ContextMenuActionEntry,
@@ -122,6 +122,7 @@ const A11Y_TEST_LEVELS = [
   "2.1.1 · A",
   "1.4.3 · AA",
   "2.1.1 · A",
+  "4.1.2 · A",
 ];
 const A11Y_TEST_HOW = [
   "axe-core",
@@ -133,6 +134,7 @@ const A11Y_TEST_HOW = [
   "Escape · document.activeElement",
   "axe-core · color-contrast",
   "ArrowDown · document.activeElement",
+  "aria-haspopup · aria-expanded",
 ];
 
 // A moldura tracejada é o único sinal de "clique com o botão direito aqui", e a
@@ -163,12 +165,11 @@ const plainAreaClass =
  * `location` a SEÇÃO da página (guideline 07). Toda prévia viva abre, escolhe e
  * fecha — sem rastrear as de Variantes e de Do & Don't, só a demonstração
  * aparecia no relatório, e as treze prévias que a pessoa mais exercita sumiam.
+ *
+ * O par é montado no CHAMADOR, junto da seção onde a prévia está — nunca num
+ * helper por seção com a `location` cravada dentro (contrato da família, §6).
  */
 type MenuTracking = { menu: string; location: string };
-
-const DEMO: MenuTracking = { menu: "demo", location: "docs_demo" };
-const variantTracking = (menu: string): MenuTracking => ({ menu, location: "docs_variantes" });
-const doDontTracking = (menu: string): MenuTracking => ({ menu, location: "docs_do_dont" });
 
 /**
  * Abertura e fechamento num callback só, porque a lib entrega os dois pelo
@@ -185,7 +186,7 @@ function trackOpenChange({ menu, location }: MenuTracking) {
     track("context_menu_close", {
       component: "context-menu",
       menu,
-      reason: contextMenuCloseReason(eventDetails.reason),
+      reason: menuCloseReason(eventDetails.reason),
       location,
     });
   };
@@ -654,13 +655,14 @@ export function ContextMenuDocs() {
   const trigger = tContent("demonstration.labels.triggerLabel");
 
   // Prévia e código de um card de Variantes saem da MESMA lista de entradas —
-  // o código mostra o que a prévia desenha, no idioma de quem lê.
-  const variantCard = (key: VariantKey) => {
+  // o código mostra o que a prévia desenha, no idioma de quem lê. A seção
+  // (`location`) chega de quem chama, como em toda prévia desta página.
+  const variantCard = (key: VariantKey, location: string) => {
     const entries = variantMenu(key, tContent);
     return {
       code: contextMenuSnippet({ triggerLabel: trigger, entries }),
       preview: (
-        <MenuPreview entries={entries} tracking={variantTracking(variantMenuId(key))} trigger={trigger} />
+        <MenuPreview entries={entries} tracking={{ menu: variantMenuId(key), location }} trigger={trigger} />
       ),
     };
   };
@@ -685,7 +687,7 @@ export function ContextMenuDocs() {
       {/* ── Demonstração ───────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
         <div className="nds-cluster nds-p-8 nds-min-h-50" data-align="center" data-justify="center">
-          <MenuPreview entries={demoMenu(tContent)} tracking={DEMO} trigger={trigger} />
+          <MenuPreview entries={demoMenu(tContent)} tracking={{ menu: "demo", location: "docs_demo" }} trigger={trigger} />
         </div>
       </DocsDemonstration>
 
@@ -735,7 +737,7 @@ export function ContextMenuDocs() {
             // o do evite deixa o gesto como único caminho.
             doPreview: (
               <div className="nds-stack" data-spacing="sm" data-align="center">
-                <MenuPreview entries={pair1Menu} tracking={doDontTracking("pair1-do")} trigger={trigger} />
+                <MenuPreview entries={pair1Menu} tracking={{ menu: "pair1-do", location: "docs_do_dont" }} trigger={trigger} />
                 {/* A MESMA ação do menu, alcançável sem o botão direito. */}
                 <Button variant="outline" size="sm">
                   {tContent("demonstration.labels.edit")}
@@ -743,7 +745,7 @@ export function ContextMenuDocs() {
               </div>
             ),
             dontPreview: (
-              <MenuPreview entries={pair1Menu} tracking={doDontTracking("pair1-dont")} trigger={trigger} />
+              <MenuPreview entries={pair1Menu} tracking={{ menu: "pair1-dont", location: "docs_do_dont" }} trigger={trigger} />
             ),
             doCaption: toPlainText(tContent("doDont.pair1.do")),
             dontCaption: toPlainText(tContent("doDont.pair1.dont")),
@@ -763,14 +765,14 @@ export function ContextMenuDocs() {
                   SEPARATOR,
                   itemDelete(tContent, { destructive: true }),
                 ]}
-                tracking={doDontTracking("pair2-do")}
+                tracking={{ menu: "pair2-do", location: "docs_do_dont" }}
                 trigger={trigger}
               />
             ),
             dontPreview: (
               <MenuPreview
                 entries={[itemEdit(tContent), itemDelete(tContent), itemDuplicate(tContent)]}
-                tracking={doDontTracking("pair2-dont")}
+                tracking={{ menu: "pair2-dont", location: "docs_do_dont" }}
                 trigger={trigger}
               />
             ),
@@ -788,14 +790,14 @@ export function ContextMenuDocs() {
             doPreview: (
               <MenuPreview
                 entries={[itemEdit(tContent), itemDuplicate(tContent)]}
-                tracking={doDontTracking("pair3-do")}
+                tracking={{ menu: "pair3-do", location: "docs_do_dont" }}
                 trigger={trigger}
               />
             ),
             dontPreview: (
               <MenuPreview
                 entries={[itemEdit(tContent), itemDuplicate(tContent)]}
-                tracking={doDontTracking("pair3-dont")}
+                tracking={{ menu: "pair3-dont", location: "docs_do_dont" }}
                 trigger={tContent("demonstration.labels.areaNoHint")}
                 plain
               />
@@ -817,10 +819,12 @@ export function ContextMenuDocs() {
       />
 
       {/* ── Variantes ──────────────────────────────────────────────── */}
-      {/* O `name` dos três primeiros cards e o `trackId` dos quatro últimos são
-          a CHAVE do conteúdo: é ela que vira `snippet_id` no GA4, e um nome
-          com espaço ("Label + Inset") ou traduzido partia o mesmo card em
-          valores diferentes. */}
+      {/* O `trackId` de todo card é a CHAVE do conteúdo: é ela que vira
+          `snippet_id` no GA4, e um nome com espaço ("Label + Inset") ou
+          traduzido partia o mesmo card em valores diferentes. O `name` é o
+          título que se LÊ: os três primeiros cards o tiram de `variants.names`
+          (o `variants.items.<card>` deles é só a descrição); até 2026-09-11 o
+          título era a chave crua. */}
       <DocsCompositions
         id="variantes"
         title={tContent("variants.title")}
@@ -829,47 +833,50 @@ export function ContextMenuDocs() {
         componentSlug="context-menu"
         items={[
           {
-            name: "default",
+            trackId: "default",
+            name: tContent("variants.names.default"),
             description: stripHtml(tContent("variants.items.default")),
-            ...variantCard("default"),
+            ...variantCard("default", "docs_variantes"),
           },
           {
-            name: "destructive",
+            trackId: "destructive",
+            name: tContent("variants.names.destructive"),
             description: stripHtml(tContent("variants.items.destructive")),
-            ...variantCard("destructive"),
+            ...variantCard("destructive", "docs_variantes"),
           },
           {
-            name: "label",
+            trackId: "label",
+            name: tContent("variants.names.label"),
             description: stripHtml(tContent("variants.items.label")),
-            ...variantCard("label"),
+            ...variantCard("label", "docs_variantes"),
           },
           {
             trackId: "withCheckbox",
             name: tContent("variants.items.withCheckbox.name"),
             description: tContent("variants.items.withCheckbox.description"),
             useWhen: tContent("variants.items.withCheckbox.use"),
-            ...variantCard("withCheckbox"),
+            ...variantCard("withCheckbox", "docs_variantes"),
           },
           {
             trackId: "withRadio",
             name: tContent("variants.items.withRadio.name"),
             description: tContent("variants.items.withRadio.description"),
             useWhen: tContent("variants.items.withRadio.use"),
-            ...variantCard("withRadio"),
+            ...variantCard("withRadio", "docs_variantes"),
           },
           {
             trackId: "withSubmenu",
             name: tContent("variants.items.withSubmenu.name"),
             description: tContent("variants.items.withSubmenu.description"),
             useWhen: tContent("variants.items.withSubmenu.use"),
-            ...variantCard("withSubmenu"),
+            ...variantCard("withSubmenu", "docs_variantes"),
           },
           {
             trackId: "withShortcuts",
             name: tContent("variants.items.withShortcuts.name"),
             description: tContent("variants.items.withShortcuts.description"),
             useWhen: tContent("variants.items.withShortcuts.use"),
-            ...variantCard("withShortcuts"),
+            ...variantCard("withShortcuts", "docs_variantes"),
           },
         ]}
       />

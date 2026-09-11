@@ -407,3 +407,189 @@ export function dropdownMenuWithShortcutsSource(): string {
     }),
   );
 }
+
+// ─── O menu como DADO: uma lista monta a prévia e imprime o código ────────────
+//
+// Os cards de Variantes da docs page tinham um literal de código ao lado de
+// cada prévia, em português nos três idiomas e sem o estado inicial das
+// marcações: em inglês a prévia dizia "Columns" e o código "Colunas", e o
+// trecho ligava `v-model` a nomes que não declarava. É o desenho do ContextMenu
+// desta stack: a MESMA lista de entradas vira o menu vivo
+// (`DropdownMenuPreview.vue`) e o trecho que se copia, então os dois não têm
+// como divergir — nem de idioma, nem de estrutura, nem de estado inicial.
+
+/**
+ * Item de ação. `value` é o id ESTÁVEL do item — é o que o evento de escolha
+ * manda ao GA4 —, e o snippet não o imprime: o item de ação não tem valor.
+ */
+export type DropdownMenuSnippetAction = {
+  kind: 'item';
+  label: string;
+  value: string;
+  shortcut?: string;
+  destructive?: boolean;
+};
+
+/**
+ * Item de marcação. `value` é o id estável e também dá NOME ao `ref` no
+ * snippet: `column-email` vira `const columnEmail = ref(false)`.
+ */
+export type DropdownMenuSnippetCheckbox = {
+  kind: 'checkbox';
+  label: string;
+  value: string;
+  checked: boolean;
+};
+
+/**
+ * Uma entrada do menu. O grupo de escolha única carrega o PRÓPRIO rótulo: é o
+ * `DropdownMenuRadioGroup` que o rótulo nomeia, sem `DropdownMenuGroup` em
+ * volta — dois grupos aninhados anunciavam um deles anônimo.
+ */
+export type DropdownMenuSnippetEntry =
+  | DropdownMenuSnippetAction
+  | DropdownMenuSnippetCheckbox
+  | { kind: 'separator' }
+  | { kind: 'submenu'; label: string; items: DropdownMenuSnippetAction[] }
+  | {
+      kind: 'group';
+      label: string;
+      items: Array<DropdownMenuSnippetAction | DropdownMenuSnippetCheckbox>;
+    }
+  | {
+      kind: 'radio-group';
+      label: string;
+      /** Id estável do grupo e nome do `ref` no snippet. */
+      value: string;
+      /** A opção marcada ao montar — o valor inicial do `ref`. */
+      selected: string;
+      /** `value` de cada opção é o id estável dela — e o do evento de escolha. */
+      options: Array<{ label: string; value: string }>;
+    };
+
+/** `column-email` → `columnEmail`: o nome do `ref` sai do id estável. */
+function refName(value: string): string {
+  return value.replace(/-([a-z0-9])/g, (_, letter: string) => letter.toUpperCase());
+}
+
+/**
+ * Texto de template. O rótulo vem do conteúdo compartilhado, e um `<` ou um
+ * `{{` nele quebraria o trecho copiado — nesse caso ele vai como expressão.
+ */
+function templateText(text: string): string {
+  if (!/[<>{}]/.test(text)) return text;
+  return `{{ '${text.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}' }}`;
+}
+
+/** Um item de ação em linhas, no recuo `pad`. */
+function actionLines(entry: DropdownMenuSnippetAction, pad: string, parts: Set<string>): string[] {
+  parts.add('DropdownMenuItem');
+  const open = `<DropdownMenuItem${attrs(entry.destructive && 'variant="destructive"')}>`;
+  if (!entry.shortcut) return [`${pad}${open}${templateText(entry.label)}</DropdownMenuItem>`];
+  parts.add('DropdownMenuShortcut');
+  return [
+    `${pad}${open}`,
+    `${pad}  ${templateText(entry.label)}`,
+    `${pad}  <DropdownMenuShortcut>${templateText(entry.shortcut)}</DropdownMenuShortcut>`,
+    `${pad}</DropdownMenuItem>`,
+  ];
+}
+
+/** Uma entrada em linhas, no recuo `pad`; registra as peças e os `ref` usados. */
+function entryLines(
+  entry: DropdownMenuSnippetEntry,
+  pad: string,
+  parts: Set<string>,
+  refs: string[],
+): string[] {
+  switch (entry.kind) {
+    case 'item':
+      return actionLines(entry, pad, parts);
+    case 'separator':
+      parts.add('DropdownMenuSeparator');
+      return [`${pad}<DropdownMenuSeparator />`];
+    case 'checkbox': {
+      parts.add('DropdownMenuCheckboxItem');
+      const name = refName(entry.value);
+      refs.push(`const ${name} = ref(${entry.checked})`);
+      return [
+        `${pad}<DropdownMenuCheckboxItem v-model="${name}">`,
+        `${pad}  ${templateText(entry.label)}`,
+        `${pad}</DropdownMenuCheckboxItem>`,
+      ];
+    }
+    case 'submenu':
+      parts.add('DropdownMenuSub').add('DropdownMenuSubTrigger').add('DropdownMenuSubContent');
+      return [
+        `${pad}<DropdownMenuSub>`,
+        `${pad}  <DropdownMenuSubTrigger>${templateText(entry.label)}</DropdownMenuSubTrigger>`,
+        `${pad}  <DropdownMenuSubContent>`,
+        ...entry.items.flatMap((item) => actionLines(item, `${pad}    `, parts)),
+        `${pad}  </DropdownMenuSubContent>`,
+        `${pad}</DropdownMenuSub>`,
+      ];
+    case 'group':
+      parts.add('DropdownMenuGroup').add('DropdownMenuLabel');
+      return [
+        `${pad}<DropdownMenuGroup>`,
+        `${pad}  <DropdownMenuLabel>${templateText(entry.label)}</DropdownMenuLabel>`,
+        ...entry.items.flatMap((item) => entryLines(item, `${pad}  `, parts, refs)),
+        `${pad}</DropdownMenuGroup>`,
+      ];
+    case 'radio-group': {
+      parts.add('DropdownMenuRadioGroup').add('DropdownMenuLabel').add('DropdownMenuRadioItem');
+      const name = refName(entry.value);
+      refs.push(`const ${name} = ref('${entry.selected}')`);
+      return [
+        `${pad}<DropdownMenuRadioGroup v-model="${name}">`,
+        `${pad}  <DropdownMenuLabel>${templateText(entry.label)}</DropdownMenuLabel>`,
+        ...entry.options.map(
+          (option) =>
+            `${pad}  <DropdownMenuRadioItem value="${option.value}">${templateText(option.label)}</DropdownMenuRadioItem>`,
+        ),
+        `${pad}</DropdownMenuRadioGroup>`,
+      ];
+    }
+  }
+}
+
+/** O menu canônico, o mesmo do `meta`: grupo rotulado, divisor e a saída destrutiva. */
+const ENTRIES_DEFAULT: readonly DropdownMenuSnippetEntry[] = [
+  {
+    kind: 'group',
+    label: 'Conta',
+    items: [
+      { kind: 'item', label: 'Perfil', value: 'profile' },
+      { kind: 'item', label: 'Configurações', value: 'settings' },
+    ],
+  },
+  { kind: 'separator' },
+  { kind: 'item', label: 'Sair', value: 'logout', destructive: true },
+];
+
+/**
+ * O trecho do menu descrito por `entries`, com os rótulos EXATAMENTE como
+ * chegam — quem chama os lê do conteúdo compartilhado, no idioma da página.
+ *
+ * O trecho é o que se COLA: o import só das peças usadas e, havendo marcação ou
+ * escolha única, o `ref` de cada uma com o valor que a prévia tem ao montar.
+ * Sem `entries` o construtor cai no menu canônico, que é como a guarda
+ * transversal (`source-snippets.test.ts`) o chama.
+ */
+export function dropdownMenuSnippet(
+  options: { entries?: readonly DropdownMenuSnippetEntry[]; triggerLabel?: string } = {},
+): string {
+  const parts = new Set(BASE);
+  const refs: string[] = [];
+  const content = (options.entries ?? ENTRIES_DEFAULT)
+    .flatMap((entry) => entryLines(entry, '    ', parts, refs))
+    .join('\n');
+  const imports = importing([...parts]);
+  const script = refs.length
+    ? `${imports}
+import { ref } from 'vue'
+
+${refs.join('\n')}`
+    : imports;
+  return vueSnippet(script, menu({ trigger: templateText(options.triggerLabel ?? 'Conta'), content }));
+}

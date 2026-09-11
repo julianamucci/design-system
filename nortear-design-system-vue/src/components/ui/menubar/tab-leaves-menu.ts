@@ -1,5 +1,6 @@
 import { injectMenubarMenuContext, injectMenubarRootContext } from 'reka-ui'
 import { isPlainTab, tabbableBeside } from '@/components/ui/dropdown-menu/tab-leaves-menu'
+import { injectMenubarCloseChannel } from './menubar.context'
 
 /**
  * Tab SAI da barra inteira e fecha o menu aberto — `accessibility.items.item6`
@@ -28,12 +29,16 @@ import { isPlainTab, tabbableBeside } from '@/components/ui/dropdown-menu/tab-le
 export function useMenubarTabLeaves() {
   const root = injectMenubarRootContext(null)
   const menu = injectMenubarMenuContext(null)
+  const channel = injectMenubarCloseChannel()
 
   function onKeydownCapture(event: KeyboardEvent) {
     if (!root || !menu || !isPlainTab(event)) return
     event.preventDefault()
     const trigger = menu.triggerElement.value
     const target = trigger ? tabbableBeside(trigger, event.shiftKey ? 'prev' : 'next') : null
+    // Saiu sem decidir nada: é `overlay`, a mesma palavra do clique fora — e vale
+    // igual do painel do submenu, que fecha o menu inteiro.
+    channel.note('overlay')
     if (target) target.focus()
     else root.onMenuClose()
   }
