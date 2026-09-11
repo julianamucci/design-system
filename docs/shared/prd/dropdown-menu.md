@@ -113,6 +113,17 @@ variante destrutiva usa `--destructive / 0.1`.
 **Até 2026-09-10 esta linha não era a folha**: o par `:focus`/`:hover` do item
 comum pintava 10%, e o mesmo menu tinha dois pesos conforme o tipo do item e o
 caminho que o destacou. Decisão da dona: 20% para todos.
+**E o `:hover` só existia no item comum** até a mesma data — marcação, rádio,
+sub-gatilho e a variante destrutiva reagiam a `:focus` e `[data-highlighted]`. As
+quatro stacks de lib escrevem `[data-highlighted]` na passagem do ponteiro, e o
+defeito não aparecia nelas; as fábricas do vanilla não escutam ponteiro nos
+itens, e ali passar o mouse numa marcação não pintava nada, e no item destrutivo
+pintava o accent a 20%. A folha ganhou o `:hover` nas quatro peças (decisão da
+dona: mudar a folha, não esta linha), e a marcação desabilitada do vanilla, que
+só carrega `aria-disabled`, passou a esmaecer e a bloquear o ponteiro. Portão:
+`destaque_sem_hover` — peça pintada por `[data-highlighted]` sem `:hover` na
+mesma folha reprova, salvo folha cuja fábrica do vanilla destaca por ponteiro
+(select e combobox, exceções declaradas com a premissa conferida no arquivo).
 **Contraste registrado**: o `command` usa 10% para o item selecionado. Mesmo
 token, pesos diferentes, e as duas folhas dizem isso separadamente — não unifique
 sem medir os dois casos.

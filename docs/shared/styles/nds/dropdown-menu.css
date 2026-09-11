@@ -225,6 +225,7 @@
 }
 
 .nds-dropdown-menu-item[data-variant="destructive"]:focus,
+.nds-dropdown-menu-item[data-variant="destructive"]:hover,
 .nds-dropdown-menu-item[data-variant="destructive"][data-highlighted] {
   background-color: hsl(var(--destructive) / 0.1);
   color: hsl(var(--destructive));
@@ -257,6 +258,7 @@
  * Svelte e no vanilla o sub-gatilho perdia o destaque assim que o foco entrava
  * no submenu. Havia também um `[data-open]` que ninguém escrevia — saiu. */
 .nds-dropdown-menu-sub-trigger:focus,
+.nds-dropdown-menu-sub-trigger:hover,
 .nds-dropdown-menu-sub-trigger[data-highlighted],
 .nds-dropdown-menu-sub-trigger[data-popup-open],
 .nds-dropdown-menu-sub-trigger[data-state="open"] {
@@ -297,16 +299,32 @@
   outline: 0;
 }
 
+/* O `:hover` é o que pinta no vanilla: as fábricas dos três menus não escutam
+ * ponteiro nos itens, e quem escreve `[data-highlighted]` na passagem do mouse é
+ * a lib das outras quatro. Até 2026-09-10 só o item comum tinha o par — no
+ * vanilla, passar o mouse numa marcação, num rádio ou no sub-gatilho não pintava
+ * nada, e no item destrutivo pintava o accent a 20% em vez do destrutivo a 10%,
+ * contra a D4 do `dropdown-menu.md`. Nas quatro stacks de lib o defeito não
+ * aparecia. Portão: `destaque_sem_hover`. */
 .nds-dropdown-menu-checkbox-item:focus,
+.nds-dropdown-menu-checkbox-item:hover,
 .nds-dropdown-menu-checkbox-item[data-highlighted],
 .nds-dropdown-menu-radio-item:focus,
+.nds-dropdown-menu-radio-item:hover,
 .nds-dropdown-menu-radio-item[data-highlighted] {
   background-color: hsl(var(--accent) / 0.2);
   color: hsl(var(--accent-foreground));
 }
 
+/* `[aria-disabled="true"]` é como o vanilla marca o desabilitado — o
+ * `[data-disabled]` é das libs. Sem ele, a marcação desabilitada do vanilla não
+ * esmaecia nem bloqueava o ponteiro, e com o `:hover` acima passaria a pintar. */
 .nds-dropdown-menu-checkbox-item[data-disabled],
-.nds-dropdown-menu-radio-item[data-disabled] {
+.nds-dropdown-menu-checkbox-item[aria-disabled="true"],
+.nds-dropdown-menu-radio-item[data-disabled],
+.nds-dropdown-menu-radio-item[aria-disabled="true"],
+.nds-dropdown-menu-sub-trigger[data-disabled],
+.nds-dropdown-menu-sub-trigger[aria-disabled="true"] {
   pointer-events: none;
   opacity: 0.5;
 }
