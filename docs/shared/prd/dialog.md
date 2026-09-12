@@ -504,6 +504,11 @@ Ordem: folha → primitivo → cabeçalho, corpo e rodapé → botão de fechar 
 - **`translate`, nunca `transform`** para centralizar: as duas propriedades
   COMPÕEM em vez de uma vencer, e é isso que o `command` explora para reposicionar
   a paleta.
+- **No vanilla, o ícone de fechar é montado nó a nó** (`createElementNS`), e não
+  por `innerHTML` com a string do SVG: é a regra de XSS da casa
+  (`09-seguranca-xss.md`, portão que varre `.innerHTML =` no vanilla), e o que
+  a protege é o dia em que o ícone vier do conteúdo em vez de um literal. Nas
+  outras quatro o ícone vem do `lucide`, e a pergunta não se coloca.
 
 ## 11. Onde está a verdade
 

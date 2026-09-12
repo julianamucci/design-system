@@ -159,11 +159,12 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-// PATCH: bugfix — antes o close button era construído via assignment de string
-// SVG (atribuição direta a innerHTML), o que viola a regra de "nenhum innerHTML
-// com SVG hardcoded" do auditor de segurança. Construir nodes SVG via
-// createElementNS deixa o lint feliz e elimina qualquer rota futura de injeção
-// se o ícone passar a vir de translation.
+// O ícone de fechar é montado NÓ A NÓ, e não por `innerHTML` com a string do
+// SVG. Não é patch — não há lib por trás desta fábrica, e nada aqui muda a cada
+// bump: é a regra de XSS da casa, em `docs/shared/guidelines/09-seguranca-xss.md`
+// e no portão do `audit.mjs` que varre `.innerHTML =` no vanilla. O ganho é
+// ficar imune ao dia em que o ícone vier do conteúdo traduzido, e não de um
+// literal daqui.
 function createCloseIcon(): SVGSVGElement {
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('xmlns', SVG_NS);
