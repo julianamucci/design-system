@@ -781,6 +781,7 @@ export function createSlider(options: SliderRangeOptions): HTMLElement;`;
             { token: '--background',    value: toPlainText(t('tokens.table.thumbBackground.class')), description: toPlainText(t('tokens.table.thumbBackground.part')) },
             { token: '--ring',          value: toPlainText(t('tokens.table.focusRing.class')),       description: toPlainText(t('tokens.table.focusRing.part')) },
             { token: '--radius-full',   value: toPlainText(t('tokens.table.radius.class')),          description: toPlainText(t('tokens.table.radius.part')) },
+            { token: '--elevation-sm',  value: toPlainText(t('tokens.table.elevation.class')),       description: toPlainText(t('tokens.table.elevation.part')) },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

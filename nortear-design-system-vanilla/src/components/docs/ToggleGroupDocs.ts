@@ -920,6 +920,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
             { token: '--ring',          value: toPlainText(t('tokens.table.ring.class')),        description: toPlainText(t('tokens.table.ring.part'))        },
             { token: '--destructive',   value: toPlainText(t('tokens.table.destructive.class')), description: toPlainText(t('tokens.table.destructive.part')) },
             { token: '--radius-button', value: toPlainText(t('tokens.table.radius.class')),      description: toPlainText(t('tokens.table.radius.part'))      },
+            { token: '--elevation-xs', value: toPlainText(t('tokens.table.elevation.class')),   description: toPlainText(t('tokens.table.elevation.part'))   },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),

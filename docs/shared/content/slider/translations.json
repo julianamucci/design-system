@@ -298,8 +298,12 @@
           "part": "Anel de foco por teclado e cor da borda enquanto a alça está focada"
         },
         "radius": {
-          "class": ".nds-slider-track .nds-slider-range .nds-slider-thumb::before",
+          "class": ".nds-slider-track, .nds-slider-range, .nds-slider-thumb, .nds-slider-thumb::before",
           "part": "Arredondamento do trilho, do preenchimento e da alça"
+        },
+        "elevation": {
+          "class": ".nds-slider-thumb::before",
+          "part": "Relevo da alça, para ela se destacar do trilho"
         }
       },
       "customizationTitle": "Customização",
@@ -764,8 +768,12 @@
           "part": "Keyboard focus ring and border colour while the thumb is focused"
         },
         "radius": {
-          "class": ".nds-slider-track .nds-slider-range .nds-slider-thumb::before",
-          "part": "Rounding of track, fill and thumb"
+          "class": ".nds-slider-track, .nds-slider-range, .nds-slider-thumb, .nds-slider-thumb::before",
+          "part": "Rounding of the track, the range fill and the thumb"
+        },
+        "elevation": {
+          "class": ".nds-slider-thumb::before",
+          "part": "Thumb relief, so it stands out from the track"
         }
       },
       "customizationTitle": "Customization",
@@ -1230,8 +1238,12 @@
           "part": "Anillo de foco por teclado y color del borde mientras el thumb está enfocado"
         },
         "radius": {
-          "class": ".nds-slider-track .nds-slider-range .nds-slider-thumb::before",
-          "part": "Redondeo de la pista, del relleno y del thumb"
+          "class": ".nds-slider-track, .nds-slider-range, .nds-slider-thumb, .nds-slider-thumb::before",
+          "part": "Redondeo del riel, del relleno y del pulgar"
+        },
+        "elevation": {
+          "class": ".nds-slider-thumb::before",
+          "part": "Relieve del pulgar, para que destaque del riel"
         }
       },
       "customizationTitle": "Personalización",

@@ -327,6 +327,7 @@ const tokenRows = computed(() => [
   { token: '--size-lg',       value: tContent('tokens.table.slotSize.class'),  description: tContent('tokens.table.slotSize.part')  },
   { token: '--input',           value: tContent('tokens.table.border.class'),    description: tContent('tokens.table.border.part')    },
   { token: '--radius',          value: tContent('tokens.table.rounded.class'),   description: tContent('tokens.table.rounded.part')   },
+  { token: '--elevation-xs',    value: tContent('tokens.table.elevation.class'), description: tContent('tokens.table.elevation.part') },
   { token: '--ring',            value: tContent('tokens.table.hover.class'),     description: tContent('tokens.table.hover.part')     },
   { token: '--ring',            value: tContent('tokens.table.active.class'),    description: tContent('tokens.table.active.part')    },
   { token: '--destructive',     value: tContent('tokens.table.invalid.class'),   description: tContent('tokens.table.invalid.part')   },

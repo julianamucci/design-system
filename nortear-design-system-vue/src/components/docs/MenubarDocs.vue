@@ -677,6 +677,7 @@ const tokenRows = computed(() => [
   { token: '--accent',             value: tContent('tokens.table.triggerHover.class'),  description: tContent('tokens.table.triggerHover.part')  },
   { token: '--accent-foreground',  value: tContent('tokens.table.triggerText.class'),   description: tContent('tokens.table.triggerText.part')   },
   { token: '--radius-sm',          value: tContent('tokens.table.triggerRadius.class'), description: tContent('tokens.table.triggerRadius.part') },
+  { token: '--elevation-xs',       value: tContent('tokens.table.elevation.class'),     description: tContent('tokens.table.elevation.part')     },
   { token: '--popover',            value: tContent('tokens.table.contentBg.class'),     description: tContent('tokens.table.contentBg.part')     },
   { token: '--border',             value: tContent('tokens.table.contentBorder.class'), description: tContent('tokens.table.contentBorder.part') },
   // `--radius`, não `--radius-lg`: o painel lê o token base, e `--radius-lg`

@@ -202,7 +202,7 @@
         "primary": "Fundo marcado/indeterminado",
         "primaryForeground": "Cor do ícone (checked, indeterminate)",
         "input": "Borda no estado desmarcado",
-        "ring": "Ring de foco (<code>focus-visible</code>)",
+        "ring": "Ring de foco (focus-visible)",
         "destructive": "Borda e ring no estado de erro",
         "border": "Borda base do componente"
       },
@@ -598,7 +598,7 @@
         "primary": "Checked/indeterminate background",
         "primaryForeground": "Icon color (checked, indeterminate)",
         "input": "Border in unchecked state",
-        "ring": "Focus ring (<code>focus-visible</code>)",
+        "ring": "Focus ring (focus-visible)",
         "destructive": "Border and ring in error state",
         "border": "Base component border"
       },
@@ -994,7 +994,7 @@
         "primary": "Fondo marcado/indeterminado",
         "primaryForeground": "Color del ícono (checked, indeterminate)",
         "input": "Borde en estado desmarcado",
-        "ring": "Ring de foco (<code>focus-visible</code>)",
+        "ring": "Ring de foco (focus-visible)",
         "destructive": "Borde y ring en estado de error",
         "border": "Borde base del componente"
       },

@@ -677,6 +677,7 @@ export interface ButtonOptions {
             { token: '--accent',              value: '.nds-button-outline:hover, .nds-button-ghost:hover', description: t('tokens.table.accent') },
             { token: '--ring',                value: '.nds-button:focus-visible', description: t('tokens.table.ring') },
             { token: '--radius-button',       value: '.nds-button',             description: t('tokens.table.radius') },
+            { token: '--elevation-xs',        value: '.nds-button-default, .nds-button-secondary, .nds-button-outline', description: t('tokens.table.elevation') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

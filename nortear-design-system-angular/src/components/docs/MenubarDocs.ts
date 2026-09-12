@@ -1473,6 +1473,9 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
       { token: '--accent',       k: 'triggerHover',  className: '.nds-menubar-trigger[data-state="open"]' },
       { token: '--accent-foreground', k: 'triggerText',   className: '.nds-menubar-trigger:hover · .nds-menubar-trigger[data-state="open"]' },
       { token: '--radius-sm',    k: 'triggerRadius', className: '.nds-menubar-trigger'         },
+      // A barra fica no plano da página; o painel que ela abre é que flutua, e
+      // lê `--elevation-md` pela folha do dropdown.
+      { token: '--elevation-xs', k: 'elevation',     className: '.nds-menubar'                 },
       { token: '--popover',      k: 'contentBg',     className: '.nds-dropdown-menu-content'   },
       { token: '--border',       k: 'contentBorder', className: '.nds-dropdown-menu-content'   },
       { token: '--radius',       k: 'rounded',       className: '.nds-dropdown-menu-content'   },

@@ -271,14 +271,14 @@
         "description": "Descrição"
       },
       "items": {
-        "borderB": "<code>--border</code> — borda inferior nas linhas do <code>TableHeader</code> e do <code>TableBody</code>.",
-        "bgMuted": "<code>--muted</code> a 50% — fundo do <code>TableFooter</code> e hover das <code>TableRow</code>.",
-        "bgMutedSelected": "<code>--muted</code> — fundo da linha com <code>data-state=\"selected\"</code> no <code>TableRow</code>.",
-        "textMuted": "<code>--muted-foreground</code> — cor do <code>TableCaption</code> e do empty state.",
-        "fontMedium": "<code>--font-weight-medium</code> — peso dos cabeçalhos no <code>TableHead</code> e do <code>TableFooter</code>.",
-        "h10": "<code>--spacing-10</code> — altura MÍNIMA das células de cabeçalho no <code>TableHead</code>. É piso, não teto: o rótulo cresce junto quando a pessoa aumenta a fonte do navegador.",
-        "p2": "<code>--spacing-2</code> — padding padrão das células de dados no <code>TableCell</code>.",
-        "captionBottom": "<code>caption-side</code> — posiciona o <code>TableCaption</code> abaixo da tabela."
+        "borderB": "--border — borda inferior nas linhas do TableHeader e do TableBody.",
+        "bgMuted": "--muted a 50% — fundo do TableFooter e hover das TableRow.",
+        "bgMutedSelected": "--muted — fundo da linha com data-state=\"selected\" no TableRow.",
+        "textMuted": "--muted-foreground — cor do TableCaption e do empty state.",
+        "fontMedium": "--font-weight-medium — peso dos cabeçalhos no TableHead e do TableFooter.",
+        "h10": "--spacing-10 — altura MÍNIMA das células de cabeçalho no TableHead. É piso, não teto: o rótulo cresce junto quando a pessoa aumenta a fonte do navegador.",
+        "p2": "--spacing-2 — padding padrão das células de dados no TableCell.",
+        "captionBottom": "caption-side — posiciona o TableCaption abaixo da tabela."
       },
       "customizationTitle": "Como personalizar via tema:"
     },
@@ -730,14 +730,14 @@
         "description": "Description"
       },
       "items": {
-        "borderB": "<code>--border</code> — bottom border on <code>TableHeader</code> and <code>TableBody</code> rows.",
-        "bgMuted": "<code>--muted</code> at 50% — background for <code>TableFooter</code> and hover on <code>TableRow</code>.",
-        "bgMutedSelected": "<code>--muted</code> — background of the row with <code>data-state=\"selected\"</code> on <code>TableRow</code>.",
-        "textMuted": "<code>--muted-foreground</code> — color for <code>TableCaption</code> and empty state.",
-        "fontMedium": "<code>--font-weight-medium</code> — header weight in <code>TableHead</code> and <code>TableFooter</code>.",
-        "h10": "<code>--spacing-10</code> — MINIMUM height of the header cells in <code>TableHead</code>. It is a floor, not a ceiling: the label grows along when the reader increases the browser font size.",
-        "p2": "<code>--spacing-2</code> — default padding of the data cells in <code>TableCell</code>.",
-        "captionBottom": "<code>caption-side</code> — positions <code>TableCaption</code> below the table."
+        "borderB": "--border — bottom border on TableHeader and TableBody rows.",
+        "bgMuted": "--muted at 50% — background for TableFooter and hover on TableRow.",
+        "bgMutedSelected": "--muted — background of the row with data-state=\"selected\" on TableRow.",
+        "textMuted": "--muted-foreground — color for TableCaption and empty state.",
+        "fontMedium": "--font-weight-medium — header weight in TableHead and TableFooter.",
+        "h10": "--spacing-10 — MINIMUM height of the header cells in TableHead. It is a floor, not a ceiling: the label grows along when the reader increases the browser font size.",
+        "p2": "--spacing-2 — default padding of the data cells in TableCell.",
+        "captionBottom": "caption-side — positions TableCaption below the table."
       },
       "customizationTitle": "How to customize via theme:"
     },
@@ -1189,14 +1189,14 @@
         "description": "Descripción"
       },
       "items": {
-        "borderB": "<code>--border</code> — borde inferior en las filas de <code>TableHeader</code> y <code>TableBody</code>.",
-        "bgMuted": "<code>--muted</code> al 50% — fondo de <code>TableFooter</code> y hover de <code>TableRow</code>.",
-        "bgMutedSelected": "<code>--muted</code> — fondo de la fila con <code>data-state=\"selected\"</code> en <code>TableRow</code>.",
-        "textMuted": "<code>--muted-foreground</code> — color de <code>TableCaption</code> y del empty state.",
-        "fontMedium": "<code>--font-weight-medium</code> — peso de los encabezados en <code>TableHead</code> y <code>TableFooter</code>.",
-        "h10": "<code>--spacing-10</code> — altura MÍNIMA de las celdas de encabezado en <code>TableHead</code>. Es piso, no techo: la etiqueta crece cuando la persona aumenta la fuente del navegador.",
-        "p2": "<code>--spacing-2</code> — padding estándar de las celdas de datos en <code>TableCell</code>.",
-        "captionBottom": "<code>caption-side</code> — posiciona <code>TableCaption</code> debajo de la tabla."
+        "borderB": "--border — borde inferior en las filas de TableHeader y TableBody.",
+        "bgMuted": "--muted al 50% — fondo de TableFooter y hover de TableRow.",
+        "bgMutedSelected": "--muted — fondo de la fila con data-state=\"selected\" en TableRow.",
+        "textMuted": "--muted-foreground — color de TableCaption y del empty state.",
+        "fontMedium": "--font-weight-medium — peso de los encabezados en TableHead y TableFooter.",
+        "h10": "--spacing-10 — altura MÍNIMA de las celdas de encabezado en TableHead. Es piso, no techo: la etiqueta crece cuando la persona aumenta la fuente del navegador.",
+        "p2": "--spacing-2 — padding estándar de las celdas de datos en TableCell.",
+        "captionBottom": "caption-side — posiciona TableCaption debajo de la tabla."
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },

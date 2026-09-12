@@ -295,6 +295,10 @@
         "radius": {
           "class": ".nds-toggle",
           "part": "Raio do botão — respeita a forma do tema"
+        },
+        "elevation": {
+          "class": ".nds-toggle[data-variant=\"outline\"]",
+          "part": "Relevo do item na variante outline"
         }
       },
       "customizationTitle": "Customização",
@@ -748,6 +752,10 @@
         "radius": {
           "class": ".nds-toggle",
           "part": "Button radius — follows the theme shape"
+        },
+        "elevation": {
+          "class": ".nds-toggle[data-variant=\"outline\"]",
+          "part": "Item relief on the outline variant"
         }
       },
       "customizationTitle": "Customization",
@@ -1201,6 +1209,10 @@
         "radius": {
           "class": ".nds-toggle",
           "part": "Radio del botón — respeta la forma del tema"
+        },
+        "elevation": {
+          "class": ".nds-toggle[data-variant=\"outline\"]",
+          "part": "Relieve del ítem en la variante outline"
         }
       },
       "customizationTitle": "Personalización",

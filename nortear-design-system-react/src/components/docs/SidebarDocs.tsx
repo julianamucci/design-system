@@ -1253,6 +1253,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
           { token: "--sidebar-width", value: ".nds-sidebar-wrapper", description: tContent("tokens.sidebarWidth") },
           { token: "--sidebar-width-icon", value: ".nds-sidebar-wrapper", description: tContent("tokens.sidebarWidthIcon") },
           { token: "--sidebar-width-mobile", value: ".nds-sidebar-mobile", description: tContent("tokens.sidebarWidthMobile") },
+          { token: "--elevation-xs", value: ".nds-sidebar-root[data-variant=\"floating\"] .nds-sidebar-inner, .nds-sidebar-root[data-variant=\"inset\"] ~ .nds-sidebar-inset", description: tContent("tokens.table.elevation") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}

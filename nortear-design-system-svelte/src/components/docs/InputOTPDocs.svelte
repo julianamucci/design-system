@@ -660,6 +660,7 @@ interface InputOTPProps {
       { token: '--size-lg',        value: $tStore('tokens.table.slotSize.class'),  description: $tStore('tokens.table.slotSize.part')  },
       { token: '--input',            value: $tStore('tokens.table.border.class'),    description: $tStore('tokens.table.border.part')    },
       { token: '--radius',           value: $tStore('tokens.table.rounded.class'),   description: $tStore('tokens.table.rounded.part')   },
+      { token: '--elevation-xs',     value: $tStore('tokens.table.elevation.class'), description: $tStore('tokens.table.elevation.part') },
       { token: '--ring',             value: $tStore('tokens.table.hover.class'),     description: $tStore('tokens.table.hover.part')     },
       { token: '--ring',             value: $tStore('tokens.table.active.class'),    description: $tStore('tokens.table.active.part')    },
       { token: '--destructive',      value: $tStore('tokens.table.invalid.class'),   description: $tStore('tokens.table.invalid.part')   },

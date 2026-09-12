@@ -214,8 +214,8 @@
         "description": "Descrição",
         "spacing2": {
           "token": "--spacing-2",
-          "value": ".nds-thinking",
-          "description": "Espaço entre os pontos e o que vier ao lado deles."
+          "value": ".nds-thinking-dots > span",
+          "description": "Diâmetro de cada ponto. A folha NÃO tem espaço entre os pontos e o que vier ao lado: a frase do indicador sai do fluxo, e o espaçamento ali não separava nada."
         },
         "spacing1": {
           "token": "--spacing-1",
@@ -605,8 +605,8 @@
         "description": "Description",
         "spacing2": {
           "token": "--spacing-2",
-          "value": ".nds-thinking",
-          "description": "Space between the dots and whatever sits beside them."
+          "value": ".nds-thinking-dots > span",
+          "description": "Diameter of each dot. The sheet has NO gap between the dots and whatever sits beside them: the indicator sentence is out of flow, so spacing there separated nothing."
         },
         "spacing1": {
           "token": "--spacing-1",
@@ -996,8 +996,8 @@
         "description": "Descripción",
         "spacing2": {
           "token": "--spacing-2",
-          "value": ".nds-thinking",
-          "description": "Espacio entre los puntos y lo que venga a su lado."
+          "value": ".nds-thinking-dots > span",
+          "description": "Diámetro de cada punto. La hoja NO tiene espacio entre los puntos y lo que esté al lado: la frase del indicador sale del flujo, y el espaciado allí no separaba nada."
         },
         "spacing1": {
           "token": "--spacing-1",

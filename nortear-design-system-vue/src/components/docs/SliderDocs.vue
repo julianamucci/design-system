@@ -365,6 +365,8 @@ const tokenRows = computed(() => [
   { token: '--background',    value: tContent('tokens.table.thumbBackground.class'), description: tContent('tokens.table.thumbBackground.part') },
   { token: '--ring',          value: tContent('tokens.table.focusRing.class'),       description: tContent('tokens.table.focusRing.part')       },
   { token: '--radius-full',   value: tContent('tokens.table.radius.class'),          description: tContent('tokens.table.radius.part')          },
+  // `--elevation-sm`, não `-xs`: a alça lê o degrau de card, não o de controle.
+  { token: '--elevation-sm',  value: tContent('tokens.table.elevation.class'),       description: tContent('tokens.table.elevation.part')       },
 ]);
 
 const accessibilityItems = computed(() => [

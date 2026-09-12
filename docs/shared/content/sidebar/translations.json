@@ -253,7 +253,8 @@
       "table": {
         "token": "Token CSS",
         "class": "Classe .nds-*",
-        "part": "Parte do componente"
+        "part": "Parte do componente",
+        "elevation": "Relevo da barra nas variantes floating e inset, que se descolam da borda da tela"
       },
       "sidebarBg": "Fundo da sidebar",
       "sidebarFg": "Texto e ícones da sidebar",
@@ -734,7 +735,8 @@
       "table": {
         "token": "CSS Token",
         "class": ".nds-* Class",
-        "part": "Component Part"
+        "part": "Component Part",
+        "elevation": "Bar relief on the floating and inset variants, which detach from the screen edge"
       },
       "sidebarBg": "Sidebar background",
       "sidebarFg": "Sidebar text and icons",
@@ -1215,7 +1217,8 @@
       "table": {
         "token": "Token CSS",
         "class": "Clase .nds-*",
-        "part": "Parte del componente"
+        "part": "Parte del componente",
+        "elevation": "Relieve de la barra en las variantes floating e inset, que se separan del borde de la pantalla"
       },
       "sidebarBg": "Fondo del sidebar",
       "sidebarFg": "Texto e íconos del sidebar",

@@ -207,7 +207,15 @@ const LINHA_I18N_RX = new RegExp(
   String.raw`\{[^{}]*?\btoken:\s*(['"\`])(--[A-Za-z0-9-]+)\1` +
     // `[\w$.]+` e não `\w+`: o Svelte chama `$tStore(...)`, e `$` não é `\w`.
     // Era o que deixava aquela stack em zero linha depois de o resto já ler.
-    String.raw`[^{}]*?\b(?:value|target|parte|className):\s*[\w$.]+\(\s*(['"\`])([^'"\`]+)\3\s*\)`,
+    // A chamada pode vir ANINHADA — `toPlainText(t('tokens.table.X.class'))` —, e
+    // a versão anterior parava na primeira abertura: `[\w$.]+\(` consumia
+    // `toPlainText(` e exigia quote logo depois, achando o `t` de `t(`. Sem
+    // match, ZERO linha, e a tabela inteira do vanilla desaparecia em
+    // `toggle-group` e `slider`. Mesma família do bug de caixa em
+    // `InputOTPDocs`: "não sei ler" saindo como "não tem". Um nível de
+    // aninhamento basta para a árvore de hoje, e mais que isso viraria
+    // adivinhação.
+    String.raw`[^{}]*?\b(?:value|target|parte|className):\s*[\w$.]+\(\s*(?:[\w$.]+\(\s*)?(['"\`])([^'"\`]+)\3\s*\)`,
   'g',
 );
 
@@ -305,14 +313,29 @@ const pascal = slug.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
 const linhasPorStack = {};
 const chavesMortas = [];   // tContent que não resolve no conteúdo compartilhado
 const naoLidos = {};   // stack -> quantos tokens ficaram fora do alcance do regex
+// Stack sem docs page do slug. Antes isso era um `continue` calado, e o efeito
+// era o pior possível: a stack saía da comparação e o relatório ficava com cara
+// de completo. Ausência se DECLARA.
+const faltamDocsPage = [];
 
 for (const stack of STACKS) {
   const dir = join(ROOT, `nortear-design-system-${stack}`, 'src', 'components', 'docs');
   if (!existsSync(dir)) continue;
+  // Case-INSENSITIVE, e o motivo é o mesmo que o `filesForSlug` do `audit.mjs`
+  // já carrega escrito: o slug `input-otp` deriva `InputOtpDocs`, e o arquivo
+  // real é `InputOTPDocs` — sigla em caixa alta. Com match sensível a caixa, o
+  // slug caía neste `continue` nas CINCO stacks e o relatório saía
+  // `linhas comparadas: 0`, com todo token do componente listado como "a folha
+  // lê e nenhuma tabela lista". Ou seja, "não sei ler" chegando como "não tem",
+  // que é exatamente o que este script declara evitar — e acontecia um degrau
+  // antes, na descoberta do arquivo.
   const arq = readdirSync(dir).find(
-    (f) => statSync(join(dir, f)).isFile() && new RegExp(`^${pascal}Docs\\.`).test(f),
+    (f) => statSync(join(dir, f)).isFile() && new RegExp(`^${pascal}Docs\\.`, 'i').test(f),
   );
-  if (!arq) continue;
+  if (!arq) {
+    faltamDocsPage.push(stack);
+    continue;
+  }
   const src = readFileSync(join(dir, arq), 'utf8');
   const linhas = [];
   LINHA_RX.lastIndex = 0;
@@ -528,6 +551,10 @@ if (!totalLinhas) {
 }
 if (chavesMortas.length) {
   console.log(`   ⚠ ${chavesMortas.length} chave(s) de conteúdo que não resolvem: ${chavesMortas.slice(0, 5).join(' · ')}`);
+}
+if (faltamDocsPage.length) {
+  console.log(`   ⚠ sem docs page deste slug em: ${faltamDocsPage.join(', ')} — essas stacks não entraram`);
+  console.log('     na comparação. Se o arquivo existe com outro nome, é o NOME que está fora do padrão.');
 }
 
 console.log(`\n## 1. linhas que NÃO fecham com a folha (${problemas.length})`);

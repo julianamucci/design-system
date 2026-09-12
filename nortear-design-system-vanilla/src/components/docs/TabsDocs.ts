@@ -717,6 +717,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
             { token: '--foreground',       value: t('tokens.table.foreground.class'),       description: t('tokens.table.foreground.part') },
             { token: '--ring',             value: t('tokens.table.ring.class'),             description: t('tokens.table.ring.part') },
             { token: '--radius',           value: t('tokens.table.radius.class'),           description: t('tokens.table.radius.part') },
+            { token: '--elevation-xs',     value: t('tokens.table.elevation.class'),        description: t('tokens.table.elevation.part') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

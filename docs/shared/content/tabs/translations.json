@@ -288,6 +288,10 @@
         "radius": {
           "class": ".nds-tabs-list",
           "part": "Raio das bordas da lista de abas"
+        },
+        "elevation": {
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
+          "part": "Relevo da aba selecionada — é o que a separa das inativas junto com o fundo"
         }
       },
       "customizationTitle": "Customização",
@@ -747,6 +751,10 @@
         "radius": {
           "class": ".nds-tabs-list",
           "part": "Corner radius of the tab list"
+        },
+        "elevation": {
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
+          "part": "Relief of the selected tab — what separates it from the inactive ones, together with the fill"
         }
       },
       "customizationTitle": "Customization",
@@ -1206,6 +1214,10 @@
         "radius": {
           "class": ".nds-tabs-list",
           "part": "Radio de las esquinas de la lista de tabs"
+        },
+        "elevation": {
+          "class": ".nds-tabs-trigger[data-state=\"active\"]",
+          "part": "Relieve de la pestaña seleccionada — lo que la separa de las inactivas, junto con el fondo"
         }
       },
       "customizationTitle": "Personalización",

@@ -240,7 +240,7 @@
           "part": "Fundo da trilha — o primário a 20% de opacidade"
         },
         "indicator": {
-          "class": ".nds-progress-indicator .nds-progress-bar",
+          "class": ".nds-progress-indicator, .nds-progress-bar",
           "part": "Cor padrão da barra preenchida"
         },
         "success": {
@@ -671,7 +671,7 @@
           "part": "Track background — the primary colour at 20% opacity"
         },
         "indicator": {
-          "class": ".nds-progress-indicator .nds-progress-bar",
+          "class": ".nds-progress-indicator, .nds-progress-bar",
           "part": "Default colour of the filled bar"
         },
         "success": {
@@ -1102,7 +1102,7 @@
           "part": "Fondo de la pista — el primario al 20% de opacidad"
         },
         "indicator": {
-          "class": ".nds-progress-indicator .nds-progress-bar",
+          "class": ".nds-progress-indicator, .nds-progress-bar",
           "part": "Color predeterminado de la barra llena"
         },
         "success": {

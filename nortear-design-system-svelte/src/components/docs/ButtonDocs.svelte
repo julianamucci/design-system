@@ -563,6 +563,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
           { token: '--accent',             value: '.nds-button-outline:hover, .nds-button-ghost:hover', description: $tStore('tokens.table.accent') },
           { token: '--ring',               value: '.nds-button:focus-visible', description: $tStore('tokens.table.ring') },
           { token: '--radius-button',      value: '.nds-button',             description: $tStore('tokens.table.radius') },
+          { token: '--elevation-xs',       value: '.nds-button-default, .nds-button-secondary, .nds-button-outline', description: $tStore('tokens.table.elevation') },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={codeCustomizationTokens}

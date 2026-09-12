@@ -249,6 +249,7 @@ interface TabsContentProps {
     { key: "foreground", token: "--foreground" },
     { key: "ring", token: "--ring" },
     { key: "radius", token: "--radius" },
+    { key: "elevation", token: "--elevation-xs" },
   ];
 
   return (

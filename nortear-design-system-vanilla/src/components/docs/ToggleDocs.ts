@@ -757,6 +757,7 @@ export type ToggleOptions = {
               { token: '--ring',              k: 'ring'             },
               { token: '--destructive',       k: 'destructive'      },
               { token: '--radius-button',     k: 'radius'           },
+              { token: '--elevation-xs',      k: 'elevation'        },
             ].map(({ token, k }) => ({
               token,
               value: toPlainText(t(`tokens.table.${k}.class`)),

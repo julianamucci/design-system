@@ -301,8 +301,12 @@
           "part": "Anel do item em validação falha"
         },
         "radius": {
-          "class": ".nds-toggle-group > .nds-toggle:first-child",
-          "part": "Raio dos cantos extremos no visual segmentado"
+          "class": ".nds-toggle-group:not([data-orientation=\"vertical\"]) > .nds-toggle:first-child, .nds-toggle-group:not([data-orientation=\"vertical\"]) > .nds-toggle:last-child, .nds-toggle-group[data-orientation=\"vertical\"] > .nds-toggle:first-child, .nds-toggle-group[data-orientation=\"vertical\"] > .nds-toggle:last-child",
+          "part": "Raio dos cantos EXTREMOS no visual segmentado — os toggles do meio ficam retos, e a orientação decide quais cantos arredondam"
+        },
+        "elevation": {
+          "class": ".nds-toggle-group[data-variant=\"outline\"]",
+          "part": "Relevo do grupo na variante outline"
         }
       },
       "customizationTitle": "Customização",
@@ -772,8 +776,12 @@
           "part": "Ring on the item in failed validation"
         },
         "radius": {
-          "class": ".nds-toggle-group > .nds-toggle:first-child",
-          "part": "Radius of the outermost corners in the segmented look"
+          "class": ".nds-toggle-group:not([data-orientation=\"vertical\"]) > .nds-toggle:first-child, .nds-toggle-group:not([data-orientation=\"vertical\"]) > .nds-toggle:last-child, .nds-toggle-group[data-orientation=\"vertical\"] > .nds-toggle:first-child, .nds-toggle-group[data-orientation=\"vertical\"] > .nds-toggle:last-child",
+          "part": "Radius of the OUTER corners in the segmented look — the middle toggles stay square, and the orientation decides which corners round"
+        },
+        "elevation": {
+          "class": ".nds-toggle-group[data-variant=\"outline\"]",
+          "part": "Group relief on the outline variant"
         }
       },
       "customizationTitle": "Customization",
@@ -1243,8 +1251,12 @@
           "part": "Anillo del ítem en validación fallida"
         },
         "radius": {
-          "class": ".nds-toggle-group > .nds-toggle:first-child",
-          "part": "Radio de las esquinas extremas en el visual segmentado"
+          "class": ".nds-toggle-group:not([data-orientation=\"vertical\"]) > .nds-toggle:first-child, .nds-toggle-group:not([data-orientation=\"vertical\"]) > .nds-toggle:last-child, .nds-toggle-group[data-orientation=\"vertical\"] > .nds-toggle:first-child, .nds-toggle-group[data-orientation=\"vertical\"] > .nds-toggle:last-child",
+          "part": "Radio de las esquinas EXTREMAS en el aspecto segmentado — los toggles del medio quedan rectos, y la orientación decide qué esquinas se redondean"
+        },
+        "elevation": {
+          "class": ".nds-toggle-group[data-variant=\"outline\"]",
+          "part": "Relieve del grupo en la variante outline"
         }
       },
       "customizationTitle": "Personalización",

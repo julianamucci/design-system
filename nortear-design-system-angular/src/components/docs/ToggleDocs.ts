@@ -597,6 +597,7 @@ export class NdsToggleDocs implements AfterViewInit, OnDestroy {
       { token: '--ring',              k: 'ring'             },
       { token: '--destructive',       k: 'destructive'      },
       { token: '--radius-button',     k: 'radius'           },
+      { token: '--elevation-xs',      k: 'elevation'        },
     ].map(({ token, k }) => ({
       token,
       // O seletor vem do conteúdo compartilhado, como nas outras stacks: fixar

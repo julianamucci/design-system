@@ -270,6 +270,14 @@ Era uma de dezoito declarações assim nas folhas compartilhadas. Portão:
 `sombra_cravada`, que reprova valor literal, e `elevacao_fora_do_mapa`, que
 agora conhece o degrau de controle.
 
+**A linha entrou na tabela de tokens das cinco docs pages do Menubar em
+2026-09-12**, apontando `.nds-menubar` — e vale registrar por que ela faltava:
+enquanto a sombra era valor cravado não havia token para listar, então a ausência
+na tabela era coerente com a folha. Tokenizar criou a linha. O que cobra isso
+agora é o `token_table_row_incoerente` pelo lado do CONTEÚDO compartilhado: a
+metade das tabelas que guarda o seletor no `translations.json` era invisível ao
+portão, que só lia o par token↔seletor quando os dois eram literais na página.
+
 ## 6. Estados
 
 | estado | quando ocorre | o que muda |

@@ -763,6 +763,7 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
           { token: "--ring",          value: tContent("tokens.table.ring.class"),        description: tContent("tokens.table.ring.part") },
           { token: "--destructive",   value: tContent("tokens.table.destructive.class"), description: tContent("tokens.table.destructive.part") },
           { token: "--radius-button", value: tContent("tokens.table.radius.class"),      description: tContent("tokens.table.radius.part") },
+          { token: "--elevation-xs",  value: tContent("tokens.table.elevation.class"),   description: tContent("tokens.table.elevation.part") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

@@ -268,7 +268,8 @@
         "border": "Borda (variante outline)",
         "accent": "Fundo hover (outline, ghost)",
         "ring": "Ring de foco (focus-visible)",
-        "radius": "Border radius do botão"
+        "radius": "Border radius do botão",
+        "elevation": "Relevo do botão nas variantes com fundo e com borda (default, secondary, outline). Acompanha o modo: no escuro a sombra ganha alfa, senão ela desaparece sobre o fundo"
       },
       "customizationTitle": "Como personalizar via tema:"
     },
@@ -718,7 +719,8 @@
         "border": "Border (outline variant)",
         "accent": "Hover background (outline, ghost)",
         "ring": "Focus ring (focus-visible)",
-        "radius": "Button border radius"
+        "radius": "Button border radius",
+        "elevation": "Button relief on the variants with a fill or a border (default, secondary, outline). It follows the mode: in dark the shadow gains alpha, otherwise it vanishes against the background"
       },
       "customizationTitle": "How to customize via theme:"
     },
@@ -1168,7 +1170,8 @@
         "border": "Borde (variante outline)",
         "accent": "Fondo hover (outline, ghost)",
         "ring": "Ring de foco (focus-visible)",
-        "radius": "Border radius del botón"
+        "radius": "Border radius del botón",
+        "elevation": "Relieve del botón en las variantes con fondo y con borde (default, secondary, outline). Acompaña el modo: en oscuro la sombra gana alfa, si no desaparece sobre el fondo"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },

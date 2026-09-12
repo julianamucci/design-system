@@ -591,6 +591,7 @@ interface TabsContentProps {
       { token: '--foreground',       value: $tStore('tokens.table.foreground.class'),       description: $tStore('tokens.table.foreground.part')       },
       { token: '--ring',             value: $tStore('tokens.table.ring.class'),             description: $tStore('tokens.table.ring.part')             },
       { token: '--radius',           value: $tStore('tokens.table.radius.class'),           description: $tStore('tokens.table.radius.part')           },
+      { token: '--elevation-xs',     value: $tStore('tokens.table.elevation.class'),        description: $tStore('tokens.table.elevation.part')        },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

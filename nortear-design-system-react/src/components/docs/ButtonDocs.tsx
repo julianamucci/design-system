@@ -683,6 +683,7 @@ import { Plus } from "lucide-react";`;
               { token: "--accent", value: ".nds-button-outline:hover, .nds-button-ghost:hover", description: tContent("tokens.table.accent") },
               { token: "--ring", value: ".nds-button:focus-visible", description: tContent("tokens.table.ring") },
               { token: "--radius-button", value: ".nds-button", description: tContent("tokens.table.radius") },
+              { token: "--elevation-xs", value: ".nds-button-default, .nds-button-secondary, .nds-button-outline", description: tContent("tokens.table.elevation") },
             ]}
             customizationTitle={tContent("tokens.customizationTitle")}
             customizationCode={codeCustomizationTokens}

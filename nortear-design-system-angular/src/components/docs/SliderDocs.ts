@@ -644,6 +644,8 @@ export class NdsSliderDocs implements AfterViewInit, OnDestroy {
       { key: 'thumbBackground', token: '--background' },
       { key: 'focusRing', token: '--ring' },
       { key: 'radius', token: '--radius-full' },
+      // `--elevation-sm`, não `-xs`: a alça lê o degrau de card, não o de controle.
+      { key: 'elevation', token: '--elevation-sm' },
     ].map(({ key, token }) => ({
       token,
       value: toPlainText(t(`tokens.table.${key}.class`)),

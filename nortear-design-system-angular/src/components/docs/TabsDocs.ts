@@ -800,6 +800,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
       { token: '--foreground',       k: 'foreground',       className: '.nds-tabs-trigger' },
       { token: '--ring',             k: 'ring',             className: '.nds-tabs-trigger' },
       { token: '--radius',           k: 'radius',           className: '.nds-tabs-list'    },
+      { token: '--elevation-xs',     k: 'elevation',        className: '.nds-tabs-trigger[data-state="active"]' },
     ].map(({ token, k, className }) => ({
       token,
       value: className,

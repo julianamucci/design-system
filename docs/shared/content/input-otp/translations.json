@@ -311,6 +311,10 @@
         "separator": {
           "class": ".nds-input-otp-separator",
           "part": "Divisor entre blocos: 8 px de margem de cada lado — é ele que dá o respiro do formato 3+3"
+        },
+        "elevation": {
+          "class": ".nds-input-otp-slot",
+          "part": "Relevo de cada caixa de dígito"
         }
       },
       "customizationTitle": "Customização",
@@ -795,6 +799,10 @@
         "separator": {
           "class": ".nds-input-otp-separator",
           "part": "Divider between blocks: 8 px margin on each side — it is what gives the 3+3 format its breathing room"
+        },
+        "elevation": {
+          "class": ".nds-input-otp-slot",
+          "part": "Relief of each digit box"
         }
       },
       "customizationTitle": "Customization",
@@ -1279,6 +1287,10 @@
         "separator": {
           "class": ".nds-input-otp-separator",
           "part": "Divisor entre bloques: 8 px de margen a cada lado — es lo que da el respiro del formato 3+3"
+        },
+        "elevation": {
+          "class": ".nds-input-otp-slot",
+          "part": "Relieve de cada casilla de dígito"
         }
       },
       "customizationTitle": "Personalización",

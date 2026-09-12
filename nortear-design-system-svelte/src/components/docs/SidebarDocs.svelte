@@ -1225,6 +1225,7 @@ interface SidebarMenuButtonProps {
       { token: '--sidebar-width',         value: '.nds-sidebar-panel',       description: $tStore('tokens.sidebarWidth')      },
       { token: '--sidebar-width-icon',    value: '.nds-sidebar-root[data-state="collapsed"] .nds-sidebar-panel', description: $tStore('tokens.sidebarWidthIcon') },
       { token: '--sidebar-width-mobile',  value: '.nds-sidebar-mobile',      description: $tStore('tokens.sidebarWidthMobile') },
+      { token: '--elevation-xs',          value: '.nds-sidebar-root[data-variant="floating"] .nds-sidebar-inner, .nds-sidebar-root[data-variant="inset"] ~ .nds-sidebar-inset', description: $tStore('tokens.table.elevation') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

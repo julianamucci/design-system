@@ -293,6 +293,7 @@ const tokenRows = computed(() =>
     { token: '--ring',              k: 'ring'             },
     { token: '--destructive',       k: 'destructive'      },
     { token: '--radius-button',     k: 'radius'           },
+    { token: '--elevation-xs',      k: 'elevation'        },
   ].map(({ token, k }) => ({
     token,
     value: tContent(`tokens.table.${k}.class`),

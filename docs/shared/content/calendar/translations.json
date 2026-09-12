@@ -247,9 +247,9 @@
         "mutedForeground": "Texto dos dias fora do mês e dos dias da semana",
         "foreground": "Texto das datas padrão",
         "ring": "Focus ring no DayButton",
-        "cellRadius": "Raio dos cantos das células (<code>--radius-md</code>)",
-        "cellSize": "Tamanho da célula (variável local <code>--nds-cell-size</code>)",
-        "pickerItem": "Altura de um item na lista de meses e anos (variável local <code>--nds-picker-item</code>); onze cabem no painel, o resto rola"
+        "cellRadius": "Raio dos cantos das células (--radius-md)",
+        "cellSize": "Tamanho da célula (variável local --nds-cell-size)",
+        "pickerItem": "Altura de um item na lista de meses e anos (variável local --nds-picker-item); onze cabem no painel, o resto rola"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": {
@@ -694,9 +694,9 @@
         "mutedForeground": "Text of outside days and weekday headers",
         "foreground": "Text of default dates",
         "ring": "Focus ring on DayButton",
-        "cellRadius": "Cell corner radius (<code>--radius-md</code>)",
-        "cellSize": "Cell size (local <code>--nds-cell-size</code> variable)",
-        "pickerItem": "Height of one item in the month and year list (local variable <code>--nds-picker-item</code>); eleven fit in the panel, the rest scrolls"
+        "cellRadius": "Cell corner radius (--radius-md)",
+        "cellSize": "Cell size (local --nds-cell-size variable)",
+        "pickerItem": "Height of one item in the month and year list (local variable --nds-picker-item); eleven fit in the panel, the rest scrolls"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": {
@@ -1141,9 +1141,9 @@
         "mutedForeground": "Texto de los días fuera del mes y de los días de la semana",
         "foreground": "Texto de las fechas predeterminadas",
         "ring": "Focus ring en DayButton",
-        "cellRadius": "Radio de los cantos de las celdas (<code>--radius-md</code>)",
-        "cellSize": "Tamaño de celda (variable local <code>--nds-cell-size</code>)",
-        "pickerItem": "Altura de un elemento en la lista de meses y años (variable local <code>--nds-picker-item</code>); once caben en el panel, el resto se desplaza"
+        "cellRadius": "Radio de los cantos de las celdas (--radius-md)",
+        "cellSize": "Tamaño de celda (variable local --nds-cell-size)",
+        "pickerItem": "Altura de un elemento en la lista de meses y años (variable local --nds-picker-item); once caben en el panel, el resto se desplaza"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": {

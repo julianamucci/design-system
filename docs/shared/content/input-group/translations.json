@@ -312,7 +312,7 @@
           "part": "Arredondamento zerado do campo, que perde a moldura própria"
         },
         "textareaPadding": {
-          "class": ".nds-input-group-control",
+          "class": "textarea.nds-input-group-control",
           "part": "Espaço interno vertical, quando o campo é uma área de texto"
         },
         "addonPadding": {
@@ -846,7 +846,7 @@
           "part": "Zeroed radius of the field, which loses its own frame"
         },
         "textareaPadding": {
-          "class": ".nds-input-group-control",
+          "class": "textarea.nds-input-group-control",
           "part": "Vertical inner spacing, when the field is a text area"
         },
         "addonPadding": {
@@ -1380,7 +1380,7 @@
           "part": "Redondeo a cero del campo, que pierde su propio marco"
         },
         "textareaPadding": {
-          "class": ".nds-input-group-control",
+          "class": "textarea.nds-input-group-control",
           "part": "Espacio interno vertical, cuando el campo es un área de texto"
         },
         "addonPadding": {

@@ -380,6 +380,9 @@ const tokenRows = computed(() => [
   { token: '--sidebar-width',           value: '.nds-sidebar-wrapper',              description: tContent('tokens.sidebarWidth')      },
   { token: '--sidebar-width-icon',      value: '.nds-sidebar-wrapper',              description: tContent('tokens.sidebarWidthIcon')  },
   { token: '--sidebar-width-mobile',    value: '.nds-sidebar-mobile',               description: tContent('tokens.sidebarWidthMobile')},
+  // A descrição desta linha mora em `tokens.table.elevation`, e não ao lado das
+  // irmãs em `tokens.*`: é onde o conteúdo compartilhado a declarou.
+  { token: '--elevation-xs',            value: '.nds-sidebar-root[data-variant="floating"] .nds-sidebar-inner, .nds-sidebar-root[data-variant="inset"] ~ .nds-sidebar-inset', description: tContent('tokens.table.elevation') },
 ]);
 
 const accessibilityItems = computed(() => [

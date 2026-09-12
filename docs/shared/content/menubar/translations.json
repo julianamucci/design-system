@@ -351,6 +351,10 @@
         "destructive": {
           "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
           "part": "Item de ação irreversível"
+        },
+        "elevation": {
+          "class": ".nds-menubar",
+          "part": "Relevo da barra horizontal — a barra fica no plano da página, e o painel que ela abre é que flutua (`--elevation-md`)"
         }
       },
       "customizationTitle": "Customização",
@@ -950,6 +954,10 @@
         "destructive": {
           "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
           "part": "Irreversible action item"
+        },
+        "elevation": {
+          "class": ".nds-menubar",
+          "part": "Relief of the horizontal bar — the bar stays on the page plane, and it is the panel it opens that floats (`--elevation-md`)"
         }
       },
       "customizationTitle": "Customization",
@@ -1549,6 +1557,10 @@
         "destructive": {
           "class": ".nds-dropdown-menu-item[data-variant=\"destructive\"]",
           "part": "Item de acción irreversible"
+        },
+        "elevation": {
+          "class": ".nds-menubar",
+          "part": "Relieve de la barra horizontal — la barra permanece en el plano de la página, y el panel que abre es el que flota (`--elevation-md`)"
         }
       },
       "customizationTitle": "Personalización",

@@ -1919,6 +1919,7 @@ function auditStoryQuality(slug) {
   violations.push(...auditExportSemStory(slug));
   violations.push(...auditTailwindUtility(slug));
   violations.push(...auditTokenTableRow(slug));
+  violations.push(...auditTokenTableConteudo(slug));
 
   // Contrato resolvido = todo item de testes.* está coberto ou dispensado com
   // motivo, nas 4 stacks. É o que autoriza aposentar a comparação por contagem.
@@ -5495,6 +5496,7 @@ function indiceFolhas() {
   const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
   const porSeletor = new Map();
   const derivaDe = new Map();
+  const todosSeletores = new Set();
 
   const regrasDe = (css) => {
     const limpo = css.replace(/\/\*[\s\S]*?\*\//g, '');
@@ -5515,6 +5517,16 @@ function indiceFolhas() {
       const tokens = new Set();
       for (const m of body.matchAll(/var\(\s*(--[A-Za-z0-9-]+)/g)) tokens.add(m[1]);
       for (const m of body.matchAll(/(?:^|[;{\s])(--[A-Za-z0-9-]+)\s*:/g)) tokens.add(m[1]);
+      // Antes do descarte: `todosSeletores` guarda a regra EXISTA ELA LENDO TOKEN
+      // OU NÃO. Sem isso, "não lê token nenhum" é indistinguível de "não
+      // existe", e quem perguntar a segunda coisa recebe a primeira — foi o
+      // falso positivo da estreia de `auditTokenTableConteudo`, que acusou
+      // quatro seletores que estão na folha, byte a byte, só declarando
+      // `opacity` e `margin`.
+      for (const peca of sel.split(',')) {
+        const p = peca.trim();
+        if (p) todosSeletores.add(p);
+      }
       if (!tokens.size) continue;
       for (const peca of sel.split(',')) {
         const p = peca.trim();
@@ -5536,7 +5548,7 @@ function indiceFolhas() {
     }
   }
 
-  _indiceFolhas = { porSeletor, derivaDe };
+  _indiceFolhas = { porSeletor, derivaDe, todosSeletores };
   return _indiceFolhas;
 }
 
@@ -5612,6 +5624,109 @@ function auditTokenTableRow(slug) {
             ' nomeie o seletor que de fato lê, ou `—` se nada ler',
         });
       }
+    }
+  }
+  return violations;
+}
+
+/**
+ * O mesmo cruzamento da regra acima, mas pelo lado do CONTEÚDO compartilhado.
+ *
+ * A irmã lê o par token↔seletor quando os dois são literais na PÁGINA. Só que
+ * metade das tabelas guarda o seletor em `tokens.table.<k>.class` no
+ * `translations.json`, e a página só faz `t()` — nesse formato a irmã não vê
+ * nada, e o defeito ainda é pior, porque um valor errado ali sai errado nas
+ * CINCO stacks de uma vez.
+ *
+ * Medido em 2026-09-12, com o `tabela-tokens.mjs` consertado: eram seis defeitos
+ * vivos, todos invisíveis para o portão. O `slider` unia três seletores por
+ * ESPAÇO em vez de vírgula (em CSS isso é descendência, e não casava com nada), o
+ * `progress` fazia o mesmo com dois, o `toggle-group` nomeava um seletor sem a
+ * guarda de orientação que a folha tem, o `input-group` nomeava o campo genérico
+ * onde quem lê é o `textarea`, o `thinking-indicator` documentava um espaço que a
+ * folha removeu de propósito, e o `flow-graph` listava um token que nada lê,
+ * porque a linha existia para o exemplo de customização.
+ *
+ * Duas formas de cobrança, conforme o que o conteúdo declara:
+ * - linha com `token` E seletor → a regra daquele seletor tem de declarar aquele
+ *   token, que é o cruzamento inteiro;
+ * - linha só com seletor (o token mora na página) → o seletor tem de EXISTIR em
+ *   alguma folha. É menos, e é o que dá para afirmar sem adivinhar o par.
+ */
+function auditTokenTableConteudo(slug) {
+  const violations = [];
+  const arq = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  const bruto = readFile(arq);
+  if (!bruto) return violations;
+  let doc;
+  try { doc = JSON.parse(bruto); } catch { return violations; }
+
+  const { porSeletor, derivaDe, todosSeletores } = indiceFolhas();
+  const comAncestrais = (tokens) => {
+    const saida = new Set(tokens);
+    const fila = [...tokens];
+    while (fila.length) {
+      const t = fila.pop();
+      for (const pai of derivaDe.get(t) || []) {
+        if (saida.has(pai)) continue;
+        saida.add(pai);
+        fila.push(pai);
+      }
+    }
+    return saida;
+  };
+  const tokensDe = (nomeado) => {
+    const achados = new Set();
+    for (const [peca, tokens] of porSeletor) {
+      if (!seletorCasa(peca, nomeado)) continue;
+      for (const t of tokens) achados.add(t);
+    }
+    return achados;
+  };
+  // EXISTIR é outra pergunta que LER TOKEN, e confundir as duas foi o falso
+  // positivo da estreia desta regra: quatro seletores que estão na folha, só
+  // declarando `opacity` e `margin`, saíram como "não existe em folha nenhuma".
+  const existe = (nomeado) => {
+    for (const peca of todosSeletores) if (seletorCasa(peca, nomeado)) return true;
+    return false;
+  };
+
+  // um idioma basta: o seletor não se traduz, e a chave é a mesma nos três
+  const raiz = doc['pt-BR']?.tokens;
+  for (const ramo of ['table', 'items']) {
+    const tabela = raiz?.[ramo];
+    if (!tabela || typeof tabela !== 'object') continue;
+    for (const [chave, linha] of Object.entries(tabela)) {
+      if (!linha || typeof linha !== 'object') continue;
+      const valor = String(linha.class ?? linha.value ?? '').trim();
+      if (!valor || valor === '—' || valor === '-' || !valor.includes('.nds-')) continue;
+      const nomeados = valor.split(/·|,/).map((s) => s.trim()).filter((s) => s.includes('.nds-'));
+      if (!nomeados.length) continue;
+
+      const token = typeof linha.token === 'string' && linha.token.startsWith('--') ? linha.token : null;
+      const orfaos = nomeados.filter((n) => !existe(n));
+      if (token) {
+        const lidos = new Set();
+        for (const n of nomeados) for (const t of comAncestrais(tokensDe(n))) lidos.add(t);
+        if (lidos.has(token)) continue;
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack: 'shared',
+          file: relative(ROOT, arq), rule: 'token_table_row_incoerente',
+          message: `\`tokens.${ramo}.${chave}\` diz que \`${valor}\` lê \`${token}\`, e a regra desse seletor não o declara`
+            + (orfaos.length === nomeados.length ? ' — e esse seletor não existe em folha nenhuma' : '')
+            + '. Está no conteúdo COMPARTILHADO, então a linha sai errada nas cinco stacks: nomeie o seletor que de '
+            + 'fato lê, ou `—` se nada ler. Vírgula separa seletores; espaço é descendência',
+        });
+        continue;
+      }
+      if (!orfaos.length) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack: 'shared',
+        file: relative(ROOT, arq), rule: 'token_table_row_incoerente',
+        message: `\`tokens.${ramo}.${chave}.class\` nomeia \`${orfaos.join(', ')}\`, que não existe em folha nenhuma`
+          + '. Está no conteúdo COMPARTILHADO, então a coluna sai errada nas cinco stacks. Vírgula separa seletores; '
+          + 'espaço é descendência, e foi assim que três linhas viraram seletor inexistente',
+      });
     }
   }
   return violations;
@@ -8647,6 +8762,13 @@ function auditDeadClassInTokenTable(slug) {
         // honesta da tabela do scroll-area.
         const cls = bruto
           .trim()
+          // O qualificador de ELEMENTO é do seletor, não do nome da classe:
+          // `textarea.nds-input-group-control` é a regra que a folha de fato
+          // declara — quem lê `--spacing-2` ali é a área de texto, não o campo
+          // genérico. Sem cortar isto, a regra lia `textarea…` como classe sem
+          // prefixo e acusava vocabulário morto do framework que saiu, num
+          // seletor CSS perfeitamente válido.
+          .replace(/^[a-z][a-z0-9-]*(?=\.)/i, '')
           .replace(/^\./, '')
           // Atributo e pseudo-classe/pseudo-elemento são do SELETOR, não do nome
           // da classe. `nds-tabs-trigger[data-state="active"]` e

@@ -692,6 +692,10 @@ export class NdsButtonDocs implements AfterViewInit, OnDestroy {
       // pseudo solto — que sozinho não é seletor do design system.
       { token: '--ring',               value: '.nds-button:focus-visible', description: t('tokens.table.ring')            },
       { token: '--radius-button',      value: '.nds-button',             description: t('tokens.table.radius')            },
+      // Relevo fica ao lado do raio — as duas são geometria, não cor. O seletor
+      // é a lista das três variantes que têm superfície para sombrear; ghost e
+      // link não entram, porque não têm fundo do qual se descolar.
+      { token: '--elevation-xs',       value: '.nds-button-default, .nds-button-secondary, .nds-button-outline', description: t('tokens.table.elevation') },
     ];
   });
 

@@ -825,6 +825,11 @@ interface SliderProps {
             value: tContent("tokens.table.radius.class"),
             description: tContent("tokens.table.radius.part"),
           },
+          {
+            token: "--elevation-sm",
+            value: tContent("tokens.table.elevation.class"),
+            description: tContent("tokens.table.elevation.part"),
+          },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}

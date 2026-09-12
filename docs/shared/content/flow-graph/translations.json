@@ -397,9 +397,9 @@
           "description": "Forma redonda da marca."
         },
         "spacing16": {
-          "token": "--spacing-16",
-          "value": ".nds-flow-graph",
-          "description": "Largura mínima de coluna mais apertada, no exemplo de customização."
+          "token": "--flow-graph-column-min",
+          "value": ".nds-flow-graph-nodes",
+          "description": "Largura mínima de coluna, declarada na raiz e lida pela grade. É o ponto de extensão: redefina-a num invólucro para apertar ou alargar as colunas."
         }
       },
       "customizationTitle": "Customização",
@@ -992,9 +992,9 @@
           "description": "Round shape of the marker."
         },
         "spacing16": {
-          "token": "--spacing-16",
-          "value": ".nds-flow-graph",
-          "description": "A tighter minimum column width, in the customisation example."
+          "token": "--flow-graph-column-min",
+          "value": ".nds-flow-graph-nodes",
+          "description": "Minimum column width, declared on the root and read by the grid. This is the extension point: redefine it on a wrapper to tighten or widen the columns."
         }
       },
       "customizationTitle": "Customisation",
@@ -1587,9 +1587,9 @@
           "description": "Forma redonda de la marca."
         },
         "spacing16": {
-          "token": "--spacing-16",
-          "value": ".nds-flow-graph",
-          "description": "Ancho mínimo de columna más ajustado, en el ejemplo de personalización."
+          "token": "--flow-graph-column-min",
+          "value": ".nds-flow-graph-nodes",
+          "description": "Ancho mínimo de columna, declarado en la raíz y leído por la cuadrícula. Es el punto de extensión: redefínelo en un envoltorio para apretar o ensanchar las columnas."
         }
       },
       "customizationTitle": "Personalización",

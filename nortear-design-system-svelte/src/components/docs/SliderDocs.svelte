@@ -585,6 +585,7 @@ interface SliderProps {
       { token: '--background',    value: $tStore('tokens.table.thumbBackground.class'), description: $tStore('tokens.table.thumbBackground.part') },
       { token: '--ring',          value: $tStore('tokens.table.focusRing.class'),       description: $tStore('tokens.table.focusRing.part')       },
       { token: '--radius-full',   value: $tStore('tokens.table.radius.class'),          description: $tStore('tokens.table.radius.part')          },
+      { token: '--elevation-sm',  value: $tStore('tokens.table.elevation.class'),       description: $tStore('tokens.table.elevation.part')       },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}

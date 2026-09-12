@@ -757,6 +757,11 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
       { token: '--sidebar-width',             k: 'sidebarWidth',       target: '.nds-sidebar-panel' },
       { token: '--sidebar-width-icon',        k: 'sidebarWidthIcon',   target: '.nds-sidebar-root[data-collapsible="icon"] .nds-sidebar-panel' },
       { token: '--sidebar-width-mobile',      k: 'sidebarWidthMobile', target: '.nds-sidebar-mobile' },
+      // Aqui não há linha de raio: a ordem da tabela é cor → geometria
+      // (larguras) → camada, e o relevo fecha a sequência. A descrição desta
+      // linha mora em `tokens.table.elevation`, e não ao lado das irmãs em
+      // `tokens.*` — é onde o conteúdo compartilhado a declarou.
+      { token: '--elevation-xs',               k: 'table.elevation',    target: '.nds-sidebar-root[data-variant="floating"] .nds-sidebar-inner, .nds-sidebar-root[data-variant="inset"] ~ .nds-sidebar-inset' },
     ].map(({ token, k, target }) => ({
       token,
       value: target,

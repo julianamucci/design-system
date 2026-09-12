@@ -835,6 +835,11 @@ interface InputOTPProps {
             description: tContent("tokens.table.rounded.part"),
           },
           {
+            token: "--elevation-xs",
+            value: tContent("tokens.table.elevation.class"),
+            description: tContent("tokens.table.elevation.part"),
+          },
+          {
             token: "--ring",
             value: tContent("tokens.table.hover.class"),
             description: tContent("tokens.table.hover.part"),

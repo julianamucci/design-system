@@ -645,6 +645,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
             { token: '--size-lg',        value: t('tokens.table.slotSize.class'),  description: t('tokens.table.slotSize.part')  },
             { token: '--input',            value: t('tokens.table.border.class'),    description: t('tokens.table.border.part')    },
             { token: '--radius',           value: t('tokens.table.rounded.class'),   description: t('tokens.table.rounded.part')   },
+            { token: '--elevation-xs',     value: t('tokens.table.elevation.class'), description: t('tokens.table.elevation.part') },
             { token: '--ring',             value: t('tokens.table.hover.class'),     description: t('tokens.table.hover.part')     },
             { token: '--ring',             value: t('tokens.table.active.class'),    description: t('tokens.table.active.part')    },
             { token: '--destructive',      value: t('tokens.table.invalid.class'),   description: t('tokens.table.invalid.part')   },

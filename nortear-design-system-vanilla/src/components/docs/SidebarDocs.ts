@@ -1117,6 +1117,7 @@ export function createSidebarDocs(): HTMLElement {
             { token: '--sidebar-width',             value: '.nds-sidebar-wrapper',                  description: t('tokens.sidebarWidth') },
             { token: '--sidebar-width-icon',        value: '.nds-sidebar-wrapper',                  description: t('tokens.sidebarWidthIcon') },
             { token: '--sidebar-width-mobile',      value: '.nds-sidebar-mobile',                   description: t('tokens.sidebarWidthMobile') },
+            { token: '--elevation-xs',              value: '.nds-sidebar-root[data-variant="floating"] .nds-sidebar-inner, .nds-sidebar-root[data-variant="inset"] ~ .nds-sidebar-inset', description: t('tokens.table.elevation') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,

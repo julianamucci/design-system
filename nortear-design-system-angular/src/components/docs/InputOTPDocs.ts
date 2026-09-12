@@ -150,6 +150,7 @@ const TOKENS_MAP: { key: string; token: string }[] = [
   { key: 'slotSize',  token: '--size-lg' },
   { key: 'border',    token: '--input' },
   { key: 'rounded',   token: '--radius' },
+  { key: 'elevation', token: '--elevation-xs' },
   { key: 'hover',     token: '--ring' },
   { key: 'active',    token: '--ring' },
   { key: 'invalid',   token: '--destructive' },

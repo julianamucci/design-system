@@ -921,6 +921,7 @@ export function createMenubar(
             { token: '--accent',             value: t('tokens.table.triggerHover.class'),  description: t('tokens.table.triggerHover.part')  },
             { token: '--accent-foreground',  value: t('tokens.table.triggerText.class'),   description: t('tokens.table.triggerText.part')   },
             { token: '--radius-sm',          value: t('tokens.table.triggerRadius.class'), description: t('tokens.table.triggerRadius.part') },
+            { token: '--elevation-xs',       value: t('tokens.table.elevation.class'),     description: t('tokens.table.elevation.part')     },
             { token: '--popover',            value: t('tokens.table.contentBg.class'),     description: t('tokens.table.contentBg.part')     },
             { token: '--border',             value: t('tokens.table.contentBorder.class'), description: t('tokens.table.contentBorder.part') },
             { token: '--radius',             value: t('tokens.table.rounded.class'),       description: t('tokens.table.rounded.part')       },

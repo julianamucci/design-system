@@ -1092,6 +1092,11 @@ export function MenubarDocs() {
             description: tContent("tokens.table.triggerRadius.part"),
           },
           {
+            token: "--elevation-xs",
+            value: tContent("tokens.table.elevation.class"),
+            description: tContent("tokens.table.elevation.part"),
+          },
+          {
             token: "--popover",
             value: tContent("tokens.table.contentBg.class"),
             description: tContent("tokens.table.contentBg.part"),
