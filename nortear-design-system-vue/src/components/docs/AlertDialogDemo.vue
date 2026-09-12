@@ -19,6 +19,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  alertDialogCloseReason,
+  createAlertDialogCloseWatch,
+  type AlertDialogCloseGesture,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 
@@ -60,24 +63,28 @@ const resolvedTriggerId = computed(
 // O `update:open` da lib não diz por que o diálogo fechou, e o `dialog_close`
 // exige `reason` (`18-overlay.md` §Analytics). Três caminhos fecham este
 // componente, e nenhum deles é o clique fora: `Escape` (anunciado pela lib), o
-// Cancelar (`close-button`, que é o que sobra) e a ação que CONFIRMA — `api`,
-// "fechou por decisão de dentro". A ação e o Cancelar são partes de fechar da
-// lib; sem marcar a confirmação antes, "confirmou" chegaria ao relatório como
-// "apertou o botão de fechar". A marca chega ANTES do fechamento porque o
-// wrapper da ação entrega o `@click` na captura (`AlertDialogAction.vue`) — e
-// não por esta demo ser não controlada, que era o que a sustentava até
-// 2026-09-10: no modo controlado a lib emite a mudança síncrona, dentro do
-// próprio fechamento.
-type AlertDialogCloseReason = 'escape' | 'close-button' | 'api';
-let pendingCloseReason: AlertDialogCloseReason | null = null;
+// Cancelar (`close-button`) e a ação que CONFIRMA — `api`, "fechou por decisão
+// de dentro". A ação e o Cancelar são partes de fechar da lib; sem marcar a
+// confirmação antes, "confirmou" chegaria ao relatório como "apertou o botão de
+// fechar". A marca chega ANTES do fechamento porque o wrapper da ação entrega o
+// `@click` na captura (`AlertDialogAction.vue`) — e não por esta demo ser não
+// controlada, que era o que a sustentava até 2026-09-10: no modo controlado a
+// lib emite a mudança síncrona, dentro do próprio fechamento.
+//
+// Quem traduz gesto em motivo é o PRIMITIVO
+// (`ui/alert-dialog/alert-dialog.close-reason.ts`), que reaproveita o mapeador
+// do Dialog e estreita o vocabulário para as três palavras desta categoria. Até
+// 2026-09-12 o tipo morava aqui, e o Cancelar era "o que sobrava" em vez de um
+// gesto observado — a página remendando o que o componente não sabia dizer.
+let pendingGesture: AlertDialogCloseGesture | null = null;
 
-const closeWatch = {
-  onEscapeKeyDown: () => { pendingCloseReason = 'escape'; },
-};
+// O Escape é emit do primitivo; o Cancelar é delegação na captura do painel, que
+// corre antes do fechamento da lib.
+const closeWatch = createAlertDialogCloseWatch((gesture) => { pendingGesture = gesture; });
 
 function handleOpenChange(open: boolean) {
   if (open) {
-    pendingCloseReason = null;
+    pendingGesture = null;
     track('dialog_open', {
       component: 'alert-dialog',
       trigger_id: resolvedTriggerId.value,
@@ -88,14 +95,14 @@ function handleOpenChange(open: boolean) {
   track('dialog_close', {
     component: 'alert-dialog',
     trigger_id: resolvedTriggerId.value,
-    reason: pendingCloseReason ?? 'close-button',
+    reason: alertDialogCloseReason(pendingGesture),
     location: props.location,
   });
-  pendingCloseReason = null;
+  pendingGesture = null;
 }
 
 function handleConfirm() {
-  pendingCloseReason = 'api';
+  pendingGesture = 'confirm';
   track('dialog_confirm', {
     component: 'alert-dialog',
     trigger_id: resolvedTriggerId.value,

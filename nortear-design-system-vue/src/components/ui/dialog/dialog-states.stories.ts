@@ -10,6 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  createDialogCloseWatch,
+  dialogCloseReason,
+  type DialogCloseGesture,
+  type DialogCloseReason,
 } from './index';
 import { Button } from '@/components/ui/button';
 import {
@@ -241,6 +245,15 @@ export const WithCloseButtonHidden: Story = {
 // vazia. `mockClear()` no início da play zera o que a execução anterior deixou.
 const spyControlled = fn();
 
+/**
+ * O motivo que cada fechamento do painel controlado relatou, na ordem.
+ *
+ * A `play` roda no mesmo módulo que a story e lê daqui. Um `fn()` de args não
+ * serviria: o motivo não é prop do Dialog, e entraria na tabela de propriedades
+ * da docs page como se fosse.
+ */
+const controlledCloseReasons: DialogCloseReason[] = [];
+
 export const Controlled: Story = {
   parameters: {
     covers: ['functional.item7'],
@@ -257,17 +270,44 @@ export const Controlled: Story = {
     components: sharedComponents,
     setup() {
       const open = ref(false);
+      // O caminho de saída que o painel viu por último. Anotar é do primitivo;
+      // traduzir o gesto em motivo é de quem consome — aqui, do dono do estado.
+      let gesture: DialogCloseGesture | null = null;
+      const closeWatch = createDialogCloseWatch((seen) => { gesture = seen; });
+
+      function recordClose() {
+        controlledCloseReasons.push(dialogCloseReason(gesture));
+        gesture = null;
+      }
+
       const onChange = (v: boolean) => {
         open.value = v;
         spyControlled(v);
+        if (v) {
+          gesture = null;
+          return;
+        }
+        recordClose();
       };
-      return { open, onChange };
+
+      /**
+       * A ação primária confirma e ela mesma fecha, mexendo no estado externo.
+       * Fechar assim NÃO passa pelo `update:open` da lib — ela só avisa o que
+       * decide —, então é o dono do estado quem relata. É o caminho `api`:
+       * fechou por decisão de dentro.
+       */
+      function confirmAndClose() {
+        gesture = 'confirm';
+        onChange(false);
+      }
+
+      return { open, onChange, closeWatch, confirmAndClose };
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <Button @click="onChange(true)">Abrir via estado externo</Button>
         <Dialog :open="open" @update:open="onChange">
-          <DialogContent>
+          <DialogContent v-bind="closeWatch">
             <DialogHeader>
               <DialogTitle>Controlado pelo pai</DialogTitle>
               <DialogDescription>
@@ -278,7 +318,7 @@ export const Controlled: Story = {
               <DialogClose as-child>
                 <Button variant="outline">${L.cancel}</Button>
               </DialogClose>
-              <Button @click="onChange(false)">Confirmar</Button>
+              <Button @click="confirmAndClose">Confirmar</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -287,26 +327,61 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const externo = canvas.getByRole('button', { name: /Abrir via estado externo/i });
     spyControlled.mockClear();
 
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
+      // A play REEXECUTA no mesmo DOM: o painel pode ter ficado aberto da
+      // rodada anterior, e cada passo estabelece a própria precondição.
+      if (panel()) {
+        await userEvent.keyboard('{Escape}');
+        await waitForClosed();
+      }
       await expect(panel()).toBeNull();
     });
 
+    // Só depois do fechamento de partida, que também empilharia um motivo.
+    controlledCloseReasons.length = 0;
+
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
-      const externo = canvas.getByRole('button', { name: /Abrir via estado externo/i });
       await userEvent.click(externo);
       await expect(await waitForOpen()).toBeVisible();
       await expect(spyControlled).toHaveBeenLastCalledWith(true);
     });
 
-    await step('Escape também passa pelo dono do estado', async () => {
+    await step('Escape também passa pelo dono do estado, e se chama escape', async () => {
       await userEvent.keyboard('{Escape}');
       await waitForClosed();
       // O valor externo é quem fecha: se o callback não disparasse, o painel
       // teria sumido por conta própria e o estado do pai ficaria mentindo.
       await expect(spyControlled).toHaveBeenLastCalledWith(false);
       await expect(panel()).toBeNull();
+      await expect(controlledCloseReasons.at(-1)).toBe('escape');
+    });
+
+    await step('O Cancelar do rodapé se chama close-button', async () => {
+      await userEvent.click(externo);
+      const p = await waitForOpen();
+      // O gesto do Cancelar é DELEGADO na captura do painel — não há ouvinte no
+      // botão. É o único passo que mede essa fiação: o teste de unidade prova a
+      // tabela, e só o navegador prova que o clique chega a ela.
+      await userEvent.click(within(p).getByRole('button', { name: L.cancel }));
+      await waitForClosed();
+      await expect(controlledCloseReasons.at(-1)).toBe('close-button');
+    });
+
+    await step('A ação primária confirma e fecha, e isso se chama api', async () => {
+      await userEvent.click(externo);
+      const p = await waitForOpen();
+      await userEvent.click(within(p).getByRole('button', { name: /^Confirmar$/ }));
+      await waitForClosed();
+      // O defeito que este passo guarda: até 2026-09-12 o motivo que sobrava
+      // era `close-button`, e confirmar chegava ao relatório como "apertou o X".
+      await expect(controlledCloseReasons.at(-1)).toBe('api');
+    });
+
+    await step('Os três caminhos relataram motivos DIFERENTES', async () => {
+      await expect(controlledCloseReasons).toEqual(['escape', 'close-button', 'api']);
     });
   },
 };

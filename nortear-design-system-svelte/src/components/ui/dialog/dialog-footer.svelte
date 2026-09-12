@@ -10,9 +10,22 @@
 		children,
 		showCloseButton = false,
 		closeLabel = "Fechar",
+		onClosePress,
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & {
 		showCloseButton?: boolean;
+		/**
+		 * Avisa que o fechar DO RODAPÉ foi acionado — o `close-press` que o
+		 * bits-ui não publica. Este botão é o único da família sem elemento na
+		 * mão de quem chama: quando `showCloseButton` está ligado, quem consome
+		 * não tem onde pendurar o ouvinte, e sem esta prop o fechamento por ele
+		 * cairia no padrão `api` — "decisão de dentro" para um clique que a
+		 * pessoa deu.
+		 *
+		 * Fora do `restProps` de propósito: espalhado na `<div>` viraria atributo
+		 * inválido no rodapé.
+		 */
+		onClosePress?: () => void;
 		/**
 		 * Rótulo VISÍVEL do botão de fechar do rodapé — aqui ele fica lado a lado
 		 * com as ações e é texto normal, não `nds-sr-only`. Mesma razão da prop
@@ -46,7 +59,7 @@
 		escala de ênfase desaparecia.
 	-->
 	{#if showCloseButton}
-		<DialogPrimitive.Close>
+		<DialogPrimitive.Close onclick={onClosePress}>
 			{#snippet child({ props })}
 				<Button variant="ghost" {...props}>{closeLabel}</Button>
 			{/snippet}

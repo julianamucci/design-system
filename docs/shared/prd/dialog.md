@@ -341,6 +341,24 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.
 
+**A peça que diz por que o painel fechou também é do componente**, e desde
+2026-09-12 as cinco a têm ao lado do primitivo, exportada pelo mesmo índice das
+peças. Antes disso, três stacks deduziam o motivo DENTRO da docs page, onde a
+dedução não tinha teste e cada página fazia à sua maneira:
+
+| stack | peça | forma |
+|---|---|---|
+| react | `ui/dialog-close-reason.ts` | traduz — a base-ui publica o motivo em `eventDetails.reason` |
+| angular | `ui/dialog-close-reason.ts` | traduz — o radix-ng publica `RdxDialogOpenChangeReason`, que tem oito palavras contra as nossas quatro |
+| vanilla | a própria fábrica, em `onClose(reason)` | sabe de primeira mão: é ela que fecha |
+| vue | `ui/dialog/dialog.close-reason.ts` | OBSERVA o gesto: a reka-ui não publica motivo |
+| svelte | `ui/dialog/close-reason.ts` | observa o gesto: a bits-ui também não publica |
+
+Quem marca a CONFIRMAÇÃO continua sendo a página — é ela que sabe que a pessoa
+decidiu —, e a marca vence o motivo da lib, porque a ação e o cancelar são as
+duas partes de fechar e a lib entrega a mesma palavra para as duas. O que saiu da
+página foi a tradução. Portão: `motivo_sintetizado_na_docs_page`.
+
 No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
 semântica, não só o estilo.
 

@@ -461,6 +461,11 @@ export class NdsDialogFooter {
 })
 export class NdsDialogClose {}
 
+// O motivo do fechamento no vocabulário do design system — a MESMA tradução
+// para o Dialog e o AlertDialog, que alimentam o mesmo `dialog_close`, e por
+// isso num arquivo só. O evento nasce na camada de produto.
+export { dialogCloseReason, type DialogCloseHints, type DialogCloseReason } from './dialog-close-reason';
+
 /** A família inteira — conveniência para o `imports` de quem compõe. */
 export const NDS_DIALOG = [
   NdsDialog,

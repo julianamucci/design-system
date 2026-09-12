@@ -65,6 +65,12 @@ const meta: Meta = {
       description: 'Chamado ao cancelar pelo rodapé.',
       table: { type: { summary: '() => void' } },
     },
+    onClose: {
+      control: false,
+      description:
+        'Chamado no fechamento com o caminho que fechou o diálogo, no vocabulário do design system.',
+      table: { type: { summary: "(reason: 'escape' | 'overlay' | 'close-button' | 'api') => void" } },
+    },
   },
   args: {
     open: false,
@@ -72,11 +78,27 @@ const meta: Meta = {
     triggerLabel: t('demonstration.labels.triggerLabel'),
     onAction: fn(),
     onCancel: fn(),
+    onClose: fn(),
   },
 };
 
 export default meta;
 type Story = StoryObj;
+
+/**
+ * O motivo do ÚLTIMO fechamento reportado.
+ *
+ * Lido do espião, e não de estado da story: o `onClose` é o contrato que um
+ * produto consumiria para preencher o `reason` do `dialog_close`, e é ele que
+ * precisa estar certo. A palavra sai do `close-reason.ts` do primitivo — a docs
+ * page declarava um vocabulário próprio de TRÊS palavras, com `close-button`
+ * como padrão, e o fechamento por código chegava ao relatório como "apertou o
+ * botão de fechar".
+ */
+function lastCloseReason(onClose: ReturnType<typeof fn>): unknown {
+  const calls = onClose.mock.calls;
+  return calls.length ? calls[calls.length - 1][0] : undefined;
+}
 
 export const Playground: Story = {
   parameters: {
@@ -98,6 +120,7 @@ export const Playground: Story = {
     // biblioteca de teste trata `inert`.
     const triggerEl = trigger(canvasElement)!;
     const spyCancelar = args.onCancel as unknown as ReturnType<typeof fn>;
+    const onCloseSpy = args.onClose as unknown as ReturnType<typeof fn>;
 
     await step('O markup é o mesmo das outras stacks', async () => {
       // O Vanilla é a referência: o gatilho é um `<button>` de verdade, e
@@ -144,15 +167,18 @@ export const Playground: Story = {
       await checkFocusTrap(panel()!);
     });
 
-    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+    await step('Escape fecha, devolve o foco ao gatilho e reporta escape', async () => {
+      const closeCallsBefore = onCloseSpy.mock.calls.length;
       await userEvent.keyboard('{Escape}');
       await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(triggerEl);
       });
+      await expect(onCloseSpy.mock.calls.length).toBe(closeCallsBefore + 1);
+      await expect(lastCloseReason(onCloseSpy)).toBe('escape');
     });
 
-    await step('Clique no overlay fecha e devolve o foco', async () => {
+    await step('Clique no overlay fecha, devolve o foco e reporta overlay', async () => {
       await open(canvasElement);
       // `userEvent.click` e não `.click()` cru: o primitivo desta stack dispensa
       // no `pointerdown` de fora, e o `.click()` programático dispara só o
@@ -162,9 +188,10 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(triggerEl);
       });
+      await expect(lastCloseReason(onCloseSpy)).toBe('overlay');
     });
 
-    await step('O botão X fecha, tem nome acessível e devolve o foco', async () => {
+    await step('O botão X fecha, tem nome acessível, devolve o foco e reporta close-button', async () => {
       const p = await open(canvasElement);
       const x = cantoButtonClose(p)!;
       await expect(x).toHaveAccessibleName();
@@ -173,9 +200,10 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(triggerEl);
       });
+      await expect(lastCloseReason(onCloseSpy)).toBe('close-button');
     });
 
-    await step('O Cancelar do rodapé fecha e avisa o callback', async () => {
+    await step('O Cancelar do rodapé fecha, avisa o callback e reporta close-button', async () => {
       const p = await open(canvasElement);
       const callsBefore = spyCancelar.mock.calls.length;
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
@@ -187,6 +215,7 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(triggerEl);
       });
+      await expect(lastCloseReason(onCloseSpy)).toBe('close-button');
     });
 
     await step('A story termina aberta', async () => {

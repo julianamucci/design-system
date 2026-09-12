@@ -8,3 +8,11 @@ export { default as AlertDialogHeader } from './AlertDialogHeader.vue'
 export { default as AlertDialogMedia } from './AlertDialogMedia.vue'
 export { default as AlertDialogTitle } from './AlertDialogTitle.vue'
 export { default as AlertDialogTrigger } from './AlertDialogTrigger.vue'
+export {
+  alertDialogCloseReason,
+  ALERT_DIALOG_CANCEL_SLOT,
+  createAlertDialogCloseWatch,
+  type AlertDialogCloseGesture,
+  type AlertDialogCloseReason,
+  type AlertDialogCloseWatch,
+} from './alert-dialog.close-reason'

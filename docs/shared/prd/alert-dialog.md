@@ -241,6 +241,16 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | vanilla | `createAlertDialog`, `createAlertDialogMedia` |
 | angular | `button[ndsAlertDialogAction]`, `button[ndsAlertDialogCancel]`, `button[ndsAlertDialogTrigger]`, `div[ndsAlertDialogFooter]`, `div[ndsAlertDialogHeader]`, `div[ndsAlertDialogMedia]`, `h1[ndsAlertDialogTitle]` … `h6[ndsAlertDialogTitle]` (os seis), `nds-alert-dialog`, `ng-template[ndsAlertDialogContent]`, `p[ndsAlertDialogDescription]` |
 
+**Cada stack também exporta a peça que diz por que o diálogo fechou**, desde
+2026-09-12, ao lado do primitivo e pelo mesmo índice das peças — `react` e
+`angular` em `ui/dialog-close-reason.ts` (a família inteira num arquivo só),
+`vue` em `ui/alert-dialog/alert-dialog.close-reason.ts`, `svelte` em
+`ui/alert-dialog/close-reason.ts`, e o `vanilla` na própria fábrica, pelo
+`onClose(reason)`. As três palavras daqui são um SUBCONJUNTO declarado das
+quatro da família, e o Vue guarda isso com uma prova de tipo, além da declaração
+no portão. Ver `dialog.md` §Peças para a tabela completa e o motivo de cada
+forma.
+
 O índice do svelte também reexporta as formas curtas — `Action`, `Cancel`, `Content`, `Description`, `Footer`, `Header`, `Media`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.
 

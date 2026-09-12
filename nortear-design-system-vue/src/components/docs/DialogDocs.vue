@@ -13,6 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  createDialogCloseWatch,
+  dialogCloseReason,
+  type DialogCloseGesture,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -181,18 +184,23 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont' | 'docs_comp
 
 // O `update:open` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o
 // `dialog_close` exige `reason`, no vocabulário do design system
-// (`18-overlay.md` §Analytics). Mesma forma do SheetDocs: os dois caminhos que a
-// lib anuncia por evento próprio ficam anotados aqui; o que sobra é o botão de
-// fechar, o X ou o Cancelar. Nenhuma ação primária desta página fecha o painel,
-// então aqui não há caminho para `api`. Uma variável serve a todos os diálogos:
-// o painel é modal, e só um fica aberto por vez.
-type DialogCloseReason = 'escape' | 'overlay' | 'close-button';
-let pendingCloseReason: DialogCloseReason | null = null;
+// (`18-overlay.md` §Analytics). Quem vê o gesto ANOTA, e o mapeamento gesto →
+// motivo mora no PRIMITIVO (`ui/dialog/dialog.close-reason.ts`): é o tipo
+// exportado de lá que os portões comparam com as outras stacks, e a página não
+// inventa palavra nenhuma — ela só repassa a que o componente devolve.
+//
+// Até 2026-09-12 o tipo era declarado AQUI, com três palavras, e o que sobrava
+// caía em `close-button`: quem confirmasse chegaria ao relatório como quem
+// apertou o X. Mesma forma do SheetDocs desde então.
+//
+// Uma variável serve a todos os diálogos: o painel é modal, e só um fica aberto
+// por vez.
+let pendingGesture: DialogCloseGesture | null = null;
 
-const closeWatch = {
-  onEscapeKeyDown: () => { pendingCloseReason = 'escape'; },
-  onPointerDownOutside: () => { pendingCloseReason = 'overlay'; },
-};
+// Escape, clique no véu e foco que escapa são emits do primitivo; o clique num
+// controle de fechar (o X do canto, o fechar do rodapé ou qualquer DialogClose
+// da composição) é pego por delegação, na captura do painel.
+const closeWatch = createDialogCloseWatch((gesture) => { pendingGesture = gesture; });
 
 /**
  * `triggerId` é o id ESTÁVEL da prévia, no vocabulário que o vanilla fixou
@@ -203,21 +211,30 @@ const closeWatch = {
  */
 function trackOpenChange(triggerId: string, location: DocsLocation, open: boolean) {
   if (open) {
-    pendingCloseReason = null;
+    pendingGesture = null;
     track('dialog_open', { component: 'dialog', trigger_id: triggerId, location });
     return;
   }
   track('dialog_close', {
     component: 'dialog',
     trigger_id: triggerId,
-    reason: pendingCloseReason ?? 'close-button',
+    reason: dialogCloseReason(pendingGesture),
     location,
   });
-  pendingCloseReason = null;
+  pendingGesture = null;
 }
 
-/** `actionId` é o id estável da ação primária (`save`, `remove`, `ok`), nunca o rótulo. */
+/**
+ * `actionId` é o id estável da ação primária (`save`, `remove`, `ok`), nunca o rótulo.
+ *
+ * A ação primária é decisão de DENTRO, e se anota antes: nenhuma prévia desta
+ * página fecha o painel pela ação hoje (o botão não é um `DialogClose`), mas a
+ * marca é o que garante que, quando uma fechar, o motivo saia `api` e não o que
+ * sobrou. Marcar não atropela nada: todo caminho de saída real anota o próprio
+ * gesto por cima, e a anotação se zera a cada abertura.
+ */
 function trackAction(actionId: string, location: DocsLocation) {
+  pendingGesture = 'confirm';
   track('dialog_action', {
     component: 'dialog',
     action_label: actionId,

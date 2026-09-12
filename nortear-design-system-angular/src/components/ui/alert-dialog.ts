@@ -324,6 +324,15 @@ export class NdsAlertDialogCancel {
 })
 export class NdsAlertDialogAction {}
 
+// O motivo do fechamento no vocabulário do design system, com as TRÊS palavras
+// deste componente — a tradução mora no mesmo arquivo que a do Dialog, porque os
+// dois alimentam o mesmo `dialog_close`. O evento nasce na camada de produto.
+export {
+  alertDialogCloseReason,
+  type AlertDialogCloseReason,
+  type DialogCloseHints,
+} from './dialog-close-reason';
+
 /** A família inteira — conveniência para o `imports` de quem compõe. */
 export const NDS_ALERT_DIALOG = [
   NdsAlertDialog, NdsAlertDialogContent, NdsAlertDialogTrigger, NdsAlertDialogHeader,

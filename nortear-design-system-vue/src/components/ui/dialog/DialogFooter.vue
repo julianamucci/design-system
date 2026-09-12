@@ -48,8 +48,18 @@ const props = withDefaults(defineProps<{
       rodapé, então é `ghost` — com `outline` ele saía com o mesmo peso do
       secundário ao lado e a escala de ênfase desaparecia.
     -->
+    <!--
+      `data-slot="dialog-close"` marca TODO controle de fechar, e este é o
+      contrato do `dialog.ts` do Vanilla, que é a referência: lá a fábrica fecha
+      delegando o clique em `[data-slot="dialog-close"]` DENTRO do painel. Aqui
+      o atributo faltava, e o buraco tinha nome — a derivação do motivo
+      (`dialog.close-reason.ts`) usa o mesmo seletor, então o fechar do rodapé
+      fechava sem gesto observado e sairia relatado como `api`, "decisão de
+      dentro", em vez de `close-button`.
+    -->
     <DialogClose
       v-if="showCloseButton"
+      data-slot="dialog-close"
       as-child
     >
       <Button variant="ghost">

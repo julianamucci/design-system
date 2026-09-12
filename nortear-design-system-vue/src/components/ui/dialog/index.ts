@@ -7,3 +7,11 @@ export { default as DialogHeader } from './DialogHeader.vue'
 export { default as DialogOverlay } from './DialogOverlay.vue'
 export { default as DialogTitle } from './DialogTitle.vue'
 export { default as DialogTrigger } from './DialogTrigger.vue'
+export {
+  createDialogCloseWatch,
+  dialogCloseReason,
+  DIALOG_CLOSE_SLOT,
+  type DialogCloseGesture,
+  type DialogCloseReason,
+  type DialogCloseWatch,
+} from './dialog.close-reason'

@@ -18,11 +18,23 @@
 		children,
 		showCloseButton = true,
 		closeLabel = "Fechar",
+		onClosePress,
 		...restProps
 	}: WithoutChildrenOrChild<DialogPrimitive.ContentProps> & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof DialogPortal>>;
 		children: Snippet;
 		showCloseButton?: boolean;
+		/**
+		 * Avisa que o X do canto foi acionado — é o `close-press` que o bits-ui
+		 * NÃO publica. O `onOpenChange` diz que o diálogo fechou, nunca por onde;
+		 * das quatro saídas, esta é a única que mora dentro deste wrapper, então
+		 * é daqui que ela tem de sair. Quem escuta traduz em `DialogCloseReason`
+		 * pelo `close-reason.ts` ao lado; o primitivo não conhece analytics.
+		 *
+		 * Fica FORA do `restProps` de propósito: espalhado no `Content` viraria
+		 * atributo inválido no elemento do painel.
+		 */
+		onClosePress?: () => void;
 		/**
 		 * Nome acessível do X do canto. Vai num `<span class="nds-sr-only">` e não
 		 * num `aria-label`: é o mecanismo que o conteúdo compartilhado documenta, e
@@ -51,7 +63,14 @@
 	>
 		{@render children?.()}
 		{#if showCloseButton}
-			<DialogPrimitive.Close data-slot="dialog-close">
+			<!--
+				O `onclick` vai no `DialogPrimitive.Close`, e não no `Button`: a lib
+				faz `mergeProps(restProps, closeState.props)`, que ENCADEIA os dois
+				manipuladores. Escrito depois do `{...props}` no botão, ele venceria
+				o handler que fecha o diálogo — é o mesmo padrão que o Cancelar do
+				rodapé desta família já encadeia à mão.
+			-->
+			<DialogPrimitive.Close data-slot="dialog-close" onclick={onClosePress}>
 				{#snippet child({ props })}
 					<Button variant="ghost" class="nds-dialog-close-position" size="icon-sm" {...props}>
 						<XIcon  />

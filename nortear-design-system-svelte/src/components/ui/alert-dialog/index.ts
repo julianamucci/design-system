@@ -11,6 +11,17 @@ import Content from "./alert-dialog-content.svelte";
 import Description from "./alert-dialog-description.svelte";
 import Media from "./alert-dialog-media.svelte";
 
+// O motivo do fechamento é contrato do componente, não da página que o usa: sai
+// pelo mesmo barril das peças, como o `AlertDialogCloseReason` do Vanilla sai do
+// próprio `alert-dialog.ts`.
+export {
+	alertDialogCloseReason,
+	createAlertDialogCloseWatch,
+	type AlertDialogCloseReason,
+	type AlertDialogCloseSignal,
+	type AlertDialogCloseWatch,
+} from "./close-reason";
+
 export {
 	Root,
 	Title,

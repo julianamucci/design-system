@@ -12,6 +12,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  alertDialogCloseReason,
+  createAlertDialogCloseWatch,
+  type AlertDialogCloseGesture,
+  type AlertDialogCloseReason,
 } from './index';
 import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
@@ -99,6 +103,15 @@ const onCancelSpy = fn();
 const onCancelActionSpy = fn();
 const onOpenChangeSpy = fn();
 const onControlledActionSpy = fn();
+
+/**
+ * O motivo que cada fechamento do painel controlado relatou, na ordem.
+ *
+ * A `play` roda no mesmo módulo que a story e lê daqui. Um `fn()` de args não
+ * serviria: o motivo não é prop do AlertDialog, e entraria na tabela de
+ * propriedades da docs page como se fosse.
+ */
+const controlledCloseReasons: AlertDialogCloseReason[] = [];
 
 export const Closed: Story = {
   parameters: {
@@ -371,11 +384,32 @@ export const Controlled: Story = {
       const open = ref(false);
       onOpenChangeSpy.mockClear();
       onControlledActionSpy.mockClear();
+
+      // O caminho de saída que o painel viu por último. Anotar é do primitivo;
+      // traduzir o gesto em motivo é de quem consome — aqui, do dono do estado.
+      let gesture: AlertDialogCloseGesture | null = null;
+      const closeWatch = createAlertDialogCloseWatch((seen) => { gesture = seen; });
+
       const onOpenChange = (value: boolean) => {
         onOpenChangeSpy(value);
         open.value = value;
+        if (value) {
+          gesture = null;
+          return;
+        }
+        controlledCloseReasons.push(alertDialogCloseReason(gesture));
+        gesture = null;
       };
-      return { open, onOpenChange, onAction: onControlledActionSpy };
+
+      // Confirmar é decisão de DENTRO, e se marca antes: o pedido de fechamento
+      // sai síncrono de dentro do clique, e sem a marca chegaria ao relatório
+      // como se alguém tivesse apertado o Cancelar.
+      const onAction = (event: MouseEvent) => {
+        gesture = 'confirm';
+        onControlledActionSpy(event);
+      };
+
+      return { open, onOpenChange, onAction, closeWatch };
     },
     // A ação não fecha por conta própria: ela pede o fechamento pelo mesmo
     // evento de mudança que o Cancelar e o Escape, e o pai o aplica. O handler
@@ -384,7 +418,7 @@ export const Controlled: Story = {
       <div class="nds-stack" data-spacing="sm">
         <Button variant="destructive" @click="open = true">${L.triggerLabel}</Button>
         <AlertDialog :open="open" @update:open="onOpenChange">
-          <AlertDialogContent>
+          <AlertDialogContent v-bind="closeWatch">
             <AlertDialogHeader>
               <AlertDialogTitle>${L.title}</AlertDialogTitle>
               <AlertDialogDescription>${L.description}</AlertDialogDescription>
@@ -404,6 +438,9 @@ export const Controlled: Story = {
     // Guardado como nó: com o diálogo aberto o botão de fora recebe
     // aria-hidden, e uma nova query por role não o encontraria.
     const trigger = canvas.getByRole('button', { name: TRIGGER_NAME });
+    // A play REEXECUTA no mesmo DOM, e o que a rodada anterior empilhou não é
+    // desta medição.
+    controlledCloseReasons.length = 0;
 
     await step('O botão de fora abre o diálogo pelo estado', async () => {
       await userEvent.click(trigger);
@@ -418,6 +455,20 @@ export const Controlled: Story = {
         expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
       );
       await waitFor(() => expect(trigger).toHaveFocus());
+      await expect(controlledCloseReasons.at(-1)).toBe('escape');
+    });
+
+    await step('O Cancelar se chama close-button, e não "o que sobrou"', async () => {
+      await userEvent.click(trigger);
+      const dialog = await waitForPortal('alertdialog');
+      // O gesto do Cancelar é DELEGADO na captura do painel — não há ouvinte no
+      // botão. É o único passo que mede essa fiação: o teste de unidade prova a
+      // tabela, e só o navegador prova que o clique chega a ela.
+      await userEvent.click(within(dialog).getByRole('button', { name: CANCEL_NAME }));
+      await waitFor(() =>
+        expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
+      );
+      await expect(controlledCloseReasons.at(-1)).toBe('close-button');
     });
 
     // Neste modo o pedido de mudança sai SÍNCRONO de dentro do fechamento da
@@ -439,6 +490,14 @@ export const Controlled: Story = {
       await waitFor(() =>
         expect(body.queryByRole('alertdialog')).not.toBeInTheDocument(),
       );
+      // E é por isso que a ordem importa: a marca chega antes do fechamento, e o
+      // motivo sai `api`. Até 2026-09-12 o que sobrava era `close-button`, e
+      // confirmar chegava ao relatório como "apertou o cancelar".
+      await expect(controlledCloseReasons.at(-1)).toBe('api');
+    });
+
+    await step('Os três caminhos relataram motivos DIFERENTES', async () => {
+      await expect(controlledCloseReasons).toEqual(['escape', 'close-button', 'api']);
     });
   },
 };

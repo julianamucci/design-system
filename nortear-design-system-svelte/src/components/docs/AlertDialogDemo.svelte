@@ -16,6 +16,7 @@
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
+    createAlertDialogCloseWatch,
   } from '@/components/ui/alert-dialog';
   import { Button } from '@/components/ui/button';
   import { track } from '@/lib/analytics';
@@ -62,32 +63,42 @@
   const triggerId = $derived(triggerIdOverride ?? (tone === 'destructive' ? 'destructive' : 'neutral'));
 
   // O `onOpenChange` da lib não diz por que o diálogo fechou, e o
-  // `dialog_close` exige `reason` (`18-overlay.md` §Analytics). Três caminhos
-  // fecham este componente, e nenhum é o clique fora: `Escape` (anunciado pela
-  // lib), o Cancelar (`close-button`, que é o que sobra) e a ação que CONFIRMA
-  // — `api`, "fechou por decisão de dentro". A ação e o Cancelar são partes de
-  // fechar da lib; sem marcar a confirmação antes, "confirmou" chegaria ao
-  // relatório como "apertou o botão de fechar".
-  type CloseReason = 'escape' | 'close-button' | 'api';
-  let pendingCloseReason: CloseReason | null = null;
+  // `dialog_close` exige `reason` (`18-overlay.md` §Analytics). Quem traduz
+  // gesto em palavra é o `close-reason.ts` do primitivo, ao lado das peças:
+  // este preview é só mais um consumidor dele, como qualquer app seria.
+  //
+  // Até 2026-09-12 a tradução morava AQUI, num tipo local chamado
+  // `CloseReason` — o nome genérico o deixava fora até dos portões que
+  // comparam o vocabulário entre stacks.
+  //
+  // Uma instância por preview: a docs page monta este componente uma vez por
+  // exemplo, e um gesto pendente compartilhado misturaria os previews.
+  const closeWatch = createAlertDialogCloseWatch();
 
   function handleOpenChange(open: boolean): void {
     if (open) {
-      pendingCloseReason = null;
+      closeWatch.reset();
       track('dialog_open', { component: 'alert-dialog', trigger_id: triggerId, location });
       return;
     }
     track('dialog_close', {
       component: 'alert-dialog',
       trigger_id: triggerId,
-      reason: pendingCloseReason ?? 'close-button',
+      reason: closeWatch.takeReason(),
       location,
     });
-    pendingCloseReason = null;
   }
 
+  /**
+   * A confirmação e o evento de confirmação, numa chamada só.
+   *
+   * A marca vai ANTES do `dialog_confirm` de propósito: o painel fecha na
+   * sequência, e o `dialog_close` precisa encontrar a decisão anotada. Sem ela
+   * "confirmou a exclusão" chegaria ao relatório como "apertou o Cancelar" — a
+   * ação e o Cancelar são partes de fechar da lib, indistinguíveis de fora.
+   */
   function handleConfirm(): void {
-    pendingCloseReason = 'api';
+    closeWatch.markConfirmation();
     track('dialog_confirm', { component: 'alert-dialog', trigger_id: triggerId, location });
   }
 </script>
@@ -98,13 +109,19 @@
       <Button {...props} variant={triggerVariant}>{triggerLabel}</Button>
     {/snippet}
   </AlertDialogTrigger>
-  <AlertDialogContent onEscapeKeydown={() => { pendingCloseReason = 'escape'; }}>
+  <AlertDialogContent {...closeWatch.listeners}>
     <AlertDialogHeader>
       <AlertDialogTitle>{title}</AlertDialogTitle>
       <AlertDialogDescription>{description}</AlertDialogDescription>
     </AlertDialogHeader>
     <AlertDialogFooter>
-      <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
+      <!--
+        O clique no Cancelar é o `close-press` que a lib não publica: ela avisa
+        que o diálogo fechou, e o Cancelar e a ação saem pelo mesmo caminho.
+        Sem esta marca o fechamento cairia no padrão `api` — "decisão de
+        dentro" para quem só desistiu.
+      -->
+      <AlertDialogCancel {...closeWatch.cancelTrigger}>{cancelLabel}</AlertDialogCancel>
       <AlertDialogAction variant={tone === 'destructive' ? 'destructive' : 'default'} onclick={handleConfirm}>
         {actionLabel}
       </AlertDialogAction>

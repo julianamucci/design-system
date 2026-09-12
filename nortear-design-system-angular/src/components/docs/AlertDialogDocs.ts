@@ -16,7 +16,7 @@ import type { RdxDialogOpenChange } from '@radix-ng/primitives/dialog';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
-import { NDS_ALERT_DIALOG } from '@/components/ui/alert-dialog';
+import { NDS_ALERT_DIALOG, alertDialogCloseReason } from '@/components/ui/alert-dialog';
 import {
   alertDialogDestructiveSource,
   alertDialogNeutralSource,
@@ -152,11 +152,6 @@ import { NdsButton } from '@/components/ui/button';
   imports: [NDS_ALERT_DIALOG, NdsButton],
 })`;
 
-/** Razões do primitivo mapeadas para o vocabulário estável do GA4 — igual ao Dialog. */
-const ALERT_CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
-  'escape-key': 'escape',
-  'close-press': 'close-button',
-};
 @Component({
   selector: 'nds-alert-dialog-docs',
   standalone: true,
@@ -878,12 +873,14 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
    * `dialog_open` e `dialog_close` de todo diálogo vivo da página, com o mesmo
    * `trigger_id` e `location` da confirmação.
    *
-   * O motivo segue o vocabulário do design system (`18-overlay.md` §Analytics).
-   * A ação que confirma e o Cancelar são as duas partes de fechar, e o radix-ng
-   * entrega `close-press` para as duas; sem a bandeira, "confirmou" chegaria
-   * ao relatório como "apertou o botão de fechar". O Escape chega como
+   * O motivo segue o vocabulário do design system (`18-overlay.md` §Analytics),
+   * e quem o traduz é `alertDialogCloseReason`, ao lado do primitivo: a página
+   * só sabe que a pessoa confirmou — a palavra é do componente. A ação que
+   * confirma e o Cancelar são as duas partes de fechar, e o radix-ng entrega
+   * `close-press` para as duas; sem a bandeira, "confirmou" chegaria ao
+   * relatório como "apertou o botão de fechar". O Escape chega como
    * `escape-key` e sai como `escape`. Clique fora não fecha este componente,
-   * então `overlay` não aparece.
+   * então `overlay` não existe no vocabulário dele.
    */
   protected trackOpenChange(triggerId: string, location: string, event: RdxDialogOpenChange): void {
     if (event.open) {
@@ -891,7 +888,7 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
       track('dialog_open', { component: 'alert-dialog', trigger_id: triggerId, location });
       return;
     }
-    const reason = this.confirmed ? 'api' : (ALERT_CLOSE_REASON[event.reason] ?? 'api');
+    const reason = alertDialogCloseReason(event.reason, { confirmed: this.confirmed });
     this.confirmed = false;
     track('dialog_close', { component: 'alert-dialog', trigger_id: triggerId, reason, location });
   }

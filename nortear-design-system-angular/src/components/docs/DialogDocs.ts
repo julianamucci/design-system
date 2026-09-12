@@ -16,7 +16,7 @@ import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
-import { NDS_DIALOG } from '@/components/ui/dialog';
+import { NDS_DIALOG, dialogCloseReason } from '@/components/ui/dialog';
 import { NdsButton } from '@/components/ui/button';
 import { NdsInput } from '@/components/ui/input';
 import { NdsLabel } from '@/components/ui/label';
@@ -416,14 +416,6 @@ const IMG_CAPA =
 
 /** A seção onde o exemplo vivo mora — vira o `location` do evento. */
 type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_do_dont';
-
-/** Razões do primitivo mapeadas para o vocabulário estável do GA4. */
-const CLOSE_REASON: Record<string, 'escape' | 'overlay' | 'close-button' | 'api'> = {
-  'escape-key': 'escape',
-  'outside-press': 'overlay',
-  'focus-out': 'overlay',
-  'close-press': 'close-button',
-};
 
 @Component({
   selector: 'nds-dialog-docs',
@@ -1040,8 +1032,9 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       // A ação primária fecha pelo mesmo caminho do botão X (é um
       // `ndsDialogClose`), então o motivo do primitivo diria "close-button".
       // A bandeira preserva a diferença que interessa ao funil: fechou porque
-      // desistiu, ou porque concluiu.
-      reason: this.confirmed ? 'api' : (CLOSE_REASON[event.reason] ?? 'api'),
+      // desistiu, ou porque concluiu — quem SABE que a pessoa confirmou é esta
+      // página; quem traduz a palavra é o helper, ao lado do primitivo.
+      reason: dialogCloseReason(event.reason, { confirmed: this.confirmed }),
       location: 'docs_demo',
     });
     this.confirmed = false;
@@ -1075,7 +1068,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
       trigger_id: triggerId,
       // A primária dos exemplos NÃO fecha o painel (não é `ndsDialogClose`),
       // então o motivo do primitivo é o que houve de fato.
-      reason: CLOSE_REASON[event.reason] ?? 'api',
+      reason: dialogCloseReason(event.reason),
       location,
     });
   }

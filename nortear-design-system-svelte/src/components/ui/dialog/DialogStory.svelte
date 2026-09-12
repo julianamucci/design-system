@@ -8,6 +8,8 @@
     DialogHeader,
     DialogTitle,
     DialogTrigger,
+    createDialogCloseWatch,
+    type DialogCloseReason,
   } from './index';
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
@@ -52,6 +54,13 @@
     variant?: Variant;
     onAction?: () => void;
     onCancel?: () => void;
+    /**
+     * Recebe POR ONDE o diálogo fechou, no vocabulário do design system. É o
+     * mesmo contrato do `onClose(reason)` do Vanilla, que é a referência: o
+     * primitivo entrega a palavra e quem consome decide o que fazer com ela —
+     * aqui, uma asserção; num produto, o `dialog_close`.
+     */
+    onClose?: (reason: DialogCloseReason) => void;
   }
 
   let {
@@ -68,17 +77,35 @@
     variant = 'default',
     onAction,
     onCancel,
+    onClose,
   }: Props = $props();
+
+  /**
+   * O tradutor de gesto em motivo, do `close-reason.ts` ao lado.
+   *
+   * O bits-ui não publica motivo nenhum: `onOpenChange` avisa QUE fechou, nunca
+   * POR QUÊ. Os ouvintes espalhados no conteúdo anotam o gesto, e o motivo sai
+   * no fechamento.
+   */
+  const closeWatch = createDialogCloseWatch();
+
+  function handleOpenChange(next: boolean): void {
+    if (next) {
+      closeWatch.reset();
+      return;
+    }
+    onClose?.(closeWatch.takeReason());
+  }
 </script>
 
 {#key `${variant}-${showCloseButton}`}
-  <Dialog bind:open>
+  <Dialog bind:open onOpenChange={handleOpenChange}>
     <DialogTrigger>
       {#snippet child({ props })}
         <Button variant="outline" {...props}>{triggerLabel}</Button>
       {/snippet}
     </DialogTrigger>
-    <DialogContent {showCloseButton}>
+    <DialogContent {showCloseButton} {...closeWatch.listeners}>
       <DialogHeader>
         <!--
           O nível do cabeçalho vai pelo snippet `child`, e não pelo `level`
@@ -134,7 +161,7 @@
             <Input id="dialog-email" type="email" value="maria@exemplo.com" />
           </div>
           <DialogFooter>
-            <DialogClose>
+            <DialogClose {...closeWatch.closeTrigger}>
               {#snippet child({ props })}
                 <!--
                   `type="button"` explícito: dentro de um `<form>` o padrão do
@@ -199,13 +226,19 @@
           tabela da guideline 06. "Voltar" e "Continuar" seguiriam para outra
           etapa do fluxo, e fechar não é o que elas fazem.
         -->
-        <DialogFooter showCloseButton closeLabel={footerCloseLabel}>
+        <!--
+          O `onClosePress` é a única forma de saber deste clique: o botão nasce
+          DENTRO do rodapé, e quem consome não tem elemento onde pendurar o
+          ouvinte. Sem ele o fechamento cairia no padrão `api` — "decisão de
+          dentro" para um clique que a pessoa deu.
+        -->
+        <DialogFooter showCloseButton onClosePress={closeWatch.markClosePress} closeLabel={footerCloseLabel}>
           <Button variant="outline" onclick={onCancel}>{cancelLabel}</Button>
           <Button onclick={onAction}>{actionLabel}</Button>
         </DialogFooter>
       {:else if variant !== 'noFooter' && variant !== 'withForm'}
         <DialogFooter>
-          <DialogClose>
+          <DialogClose {...closeWatch.closeTrigger}>
             {#snippet child({ props })}
               <!--
                 `onclick` DEPOIS do spread sobrescrevia o handler que o
