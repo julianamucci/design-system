@@ -3134,6 +3134,71 @@ function auditReasonDaMesmaFamilia() {
 }
 
 /**
+ * Gatilho ESCONDIDO existindo só para ser clicado por código.
+ *
+ * A assinatura é reconhecível: um `<button>` que junta `.nds-sr-only`,
+ * `tabindex="-1"` e `aria-hidden="true"` — ou seja, invisível, fora da ordem de
+ * tabulação e apagado para o leitor de tela — e que alguém clica de dentro do
+ * próprio arquivo. Ele nasceu por falta de API: a fábrica exigia `trigger` e não
+ * sabia abrir sozinha, então inventava-se um alvo para o clique.
+ *
+ * Nada reprova isso por conta própria — o botão é HTML válido, compila, passa no
+ * axe (está escondido de todo mundo, inclusive do leitor) e a story fica verde.
+ * E ele ensina o padrão errado duas vezes: na story e no snippet que a docs page
+ * publica, que é código que alguém copia.
+ *
+ * Medido em 2026-09-12, depois de o Sheet e o Dialog ganharem `open()`: sobravam
+ * três pontos em componentes cuja fábrica JÁ tinha `open()`/`isOpen()` — drawer,
+ * dropdown-menu e popover. Não era falta de API; era código que nunca migrou.
+ */
+function auditGatilhoEscondido() {
+  const violations = [];
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components');
+    if (!existsSync(dir)) continue;
+    for (const file of walkDir(dir, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const src = stripComments(bruto);
+      // as três marcas juntas, em qualquer ordem, dentro de um mesmo trecho de
+      // 400 caracteres — é assim que o botão é montado nas cinco stacks, seja
+      // por `className`, por atributo de template ou por `dataset`
+      let cursor = 0;
+      for (const m of src.matchAll(/nds-sr-only/g)) {
+        const janela = src.slice(Math.max(0, m.index - 400), m.index + 400);
+        // a vírgula entra porque a forma mais comum é `setAttribute('tabindex',
+        // '-1')`, e a primeira versão só aceitava `=` e `:` — achava zero com
+        // três pontos vivos na árvore
+        if (!/tabindex['"]?\s*[=:,]\s*['"]?-1/.test(janela)) continue;
+        if (!/aria-hidden['"]?\s*[=:,]\s*['"]?true/.test(janela)) continue;
+        // O clique quase nunca está perto das três marcas — no caso medido ele
+        // vinha 25 linhas depois, dentro do ouvinte do botão externo. Quem amarra
+        // os dois é o IDENTIFICADOR, e é por ele que a busca vai; só quando não há
+        // identificador (marcação de template) a regra cai para "o arquivo clica
+        // em alguma coisa", que junto das três marcas já é assinatura rara.
+        const nome = (/(\w+)\.classList\.add\(['"]nds-sr-only/.exec(janela)
+          ?? /(?:const|let)\s+(\w+)[^;]{0,200}nds-sr-only/.exec(janela))?.[1];
+        const clica = nome
+          ? new RegExp(`\\b${nome}\\.click\\(\\)`).test(src)
+          : /\.click\(\)/.test(janela);
+        if (!clica) continue;
+        const pos = bruto.indexOf('nds-sr-only', cursor);
+        if (pos !== -1) cursor = pos + 1;
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack,
+          file: relative(ROOT, file), line: pos === -1 ? 1 : bruto.slice(0, pos).split('\n').length,
+          rule: 'gatilho_escondido_clicado',
+          message: 'gatilho escondido (`nds-sr-only` + `tabindex="-1"` + `aria-hidden="true"`) clicado por código — '
+            + 'ele existe por falta de API, e a API existe: chame `open()` no que a fábrica devolve. '
+            + 'Nada reprova este botão sozinho, e o snippet publicado ensina o padrão a quem copia',
+        });
+      }
+    }
+  }
+  return violations;
+}
+
+/**
  * Clique enfileirado em gatilho que pode nunca ter sido montado.
  *
  * O runner avalia o `render()` de uma story MAIS DE UMA VEZ e descarta as
@@ -10322,7 +10387,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
