@@ -219,6 +219,33 @@ Process rules, each learned from a concrete failure. They bind the orchestrator 
 
   Suíte inteira é para mudança que atravessa o grafo. Para mudança local, suíte inteira não é rigor — é ruído caro, e some no meio dele o sinal que importava.
 
+  **VARREDURA COMPLETA SÓ COM AUTORIZAÇÃO DA DONA.** Vale para `audit.mjs --all`,
+  para `docs-smoke` inteiro e para a suíte de uma stack inteira: não é decisão de
+  quem está corrigindo. Medido em 2026-09-12, na padronização do atraso do
+  tooltip — uma mudança de cinco linhas cujo relógio foi quase todo de medição:
+
+  | o quê | custo medido |
+  |---|---|
+  | a edição em si | segundos a poucos minutos |
+  | `docs-smoke` por stack | 116 s a **490 s** — 98 docs pages para validar uma linha |
+  | `audit.mjs --all` | ~350 s, e a comparação contra o HEAD são DUAS |
+  | agente de ponta a ponta | 250 s a 1200 s, quase tudo suíte |
+
+  As três formas de gastar isso à toa, cada uma cometida naquela noite:
+
+  1. **Comparação regra a regra contra o HEAD só quando o commit toca
+     `scripts/audit.mjs`.** Ela existe para provar que uma regra nova não mudou a
+     contagem de outra; num commit que não altera regra, não há o que provar.
+     Foram quatro delas em sequência, ~700 s cada, para nada.
+  2. **`docs-smoke` filtrado pela página que mudou** (`-t <Componente>`). A
+     varredura das 98 é para mudança que atravessa o grafo, não para um atributo
+     numa docs page.
+  3. **Antes de despachar agentes, diga em UMA linha onde a rodada para** — e
+     espere o corte. O escopo daquela noite foi alargando conforme a medição
+     revelava vizinhos (o trilho do sidebar, as docs pages, os snippets
+     canônicos), e cada alargamento custou uma onda de cinco agentes. Alargar
+     pode ser certo; alargar sem perguntar é que não.
+
   **Quem resolve CSS agora é o `build-storybook`, e ele é caro.** Até 2026-09-02
   o `npm run build` das quatro stacks de navegador terminava em `vite build`, e
   era ELE que empacotava o `globals.css` — plantando `@import
