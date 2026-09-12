@@ -107,8 +107,15 @@ function buildContent(args: PopoverArgs): HTMLElement {
   actions.className = 'nds-cluster';
   actions.dataset.spacing = 'sm';
   actions.dataset.justify = 'end';
+  // O Cancelar FECHA: a fábrica delega o clique em `[data-slot="popover-close"]`
+  // dentro do painel e informa `close-button`. Sem a marca ele era um
+  // `createButton` sem ouvinte nenhum — um Cancelar inerte publicado como
+  // exemplo canônico do componente.
+  const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+  cancelar.dataset.slot = 'popover-close';
+
   actions.append(
-    createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' }),
+    cancelar,
     createButton({ variant: 'default', size: 'sm', label: 'Salvar' }),
   );
 
@@ -251,6 +258,25 @@ export const Playground: Story = {
       });
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'overlay');
+    });
+
+    await step('O Cancelar do painel fecha e informa close-button', async () => {
+      const p = await open(trigger);
+      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
+      // A marca é o contrato: é ela que a delegação do painel procura, e sem
+      // ela o botão volta a ser inerte sem nada ficar vermelho.
+      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(cancelar);
+      await waitFor(() => {
+        if (panel()) throw new Error('popover ainda aberto');
+      });
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // O motivo separa no GA4 quem desistiu de quem dispensou o painel sem
+      // decidir: `close-button`, e não o `overlay` do clique fora nem o `api`
+      // de quem fecha por código.
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'close-button');
+      // O foco estava dentro do painel, então volta ao gatilho (WCAG 2.4.3).
+      await expect(trigger).toHaveFocus();
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

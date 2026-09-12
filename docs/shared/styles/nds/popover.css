@@ -70,14 +70,24 @@
   transform-origin: var(--transform-origin, var(--reka-popover-content-transform-origin, var(--bits-popover-content-transform-origin, center)));
 }
 
-/* Animação de saída apenas (data-ending-style): a entrada aparece direto,
- * evitando corrida com toBeVisible (opacity:0 no data-starting-style seria
- * lido como "não visível" por checagens síncronas). */
-.nds-popover-content[data-ending-style] {
-  opacity: 0;
-  transform: scale(0.95);
-  transition: opacity var(--duration-fast) ease-in, transform var(--duration-fast) ease-in;
-}
+/* O POPOVER NÃO ANIMA, nem para entrar nem para sair — decisão da dona em
+ * 2026-09-12, e vale para as cinco stacks porque esta folha é uma só.
+ *
+ * A regra que estava aqui animava só a SAÍDA (`[data-ending-style]`: opacidade a
+ * zero e `scale(0.95)` em `--duration-fast`), e a entrada aparecia direto. Isso
+ * não era assimetria por descuido: a entrada animada foi removida antes porque
+ * `opacity: 0` no `data-starting-style` era lido como "não visível" por checagem
+ * síncrona, e derrubava `toBeVisible` nas plays.
+ *
+ * O que a decisão pesou: a saída animada obriga o painel a SOBREVIVER ao
+ * fechamento até a transição terminar — no Angular é o portal do radix-ng que o
+ * segura, e o docblock de `ui/popover.ts` de lá registra isso como a razão de o
+ * portal existir. Um painel que continua na tela depois de a pessoa fechar é
+ * lentidão percebida num componente que a família inteira trata como leve e
+ * não-modal. Sem regra de animação, abre e fecha na hora.
+ *
+ * Quem for reintroduzir movimento aqui: a entrada é o lado que já custou caro
+ * uma vez, e reintroduzi-la exige espera de relógio nas plays das cinco. */
 
 /* O tamanho do texto vive no CONTEÚDO, não no header.
  *
@@ -115,8 +125,8 @@
   color: hsl(var(--muted-foreground));
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .nds-popover-content {
-    transition: none;
-  }
-}
+/* A guarda de `prefers-reduced-motion` saiu junto com a animação, em 2026-09-12.
+ * Ela desligava a transição de saída; sem transição nenhuma, `transition: none`
+ * não tem o que desligar — e guarda inerte é pior que guarda ausente, porque
+ * anuncia proteção sobre movimento que não existe e sobrevive a leituras de
+ * quem procura por ela. Se o movimento voltar, a guarda volta com ele. */

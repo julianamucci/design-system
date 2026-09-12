@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor, screen, within, userEvent } from "storybook/test";
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -117,11 +118,17 @@ export const WithTitle: Story = {
               Ajuste a aparência do conteúdo da página.
             </PopoverDescription>
           </PopoverHeader>
+          {/* Fora de um `<form>`, o único efeito visível das duas ações é
+              fechar: as duas são `PopoverClose`. */}
           <div className="nds-cluster nds-pt-1" data-justify="end" data-spacing="sm">
-            <Button variant="ghost" size="sm">
-              Cancelar
-            </Button>
-            <Button size="sm">Salvar</Button>
+            <PopoverClose asChild>
+              <Button variant="ghost" size="sm">
+                Cancelar
+              </Button>
+            </PopoverClose>
+            <PopoverClose asChild>
+              <Button size="sm">Salvar</Button>
+            </PopoverClose>
           </div>
         </PopoverContent>
       </Popover>

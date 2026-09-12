@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor, screen, fn } from "storybook/test";
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -131,9 +132,16 @@ export const Playground: Story = {
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>
+            {/* As duas ações FECHAM o painel, e por isso as duas são
+                `PopoverClose`. Um "Cancelar" que não fecha é a promessa de saída
+                que não se cumpre — o defeito visto na tela em 2026-09-12. */}
             <div className="nds-cluster" data-justify="end" data-spacing="sm">
-              <Button variant="ghost" size="sm">Cancelar</Button>
-              <Button size="sm">Salvar</Button>
+              <PopoverClose asChild>
+                <Button variant="ghost" size="sm">Cancelar</Button>
+              </PopoverClose>
+              <PopoverClose asChild>
+                <Button size="sm">Salvar</Button>
+              </PopoverClose>
             </div>
           </PopoverContent>
         </Popover>
@@ -203,6 +211,16 @@ export const Playground: Story = {
     await step("Clicar fora fecha o painel", async () => {
       await open(trigger);
       await userEvent.click(canvas.getByTestId("area-externa"));
+      await waitFor(() => expect(panel()).toBeNull());
+      await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    });
+
+    await step("O controle de fechar do rodapé fecha o painel", async () => {
+      // O motivo que chega ao `onOpenChange` é o assunto da story CloseButton,
+      // em States: aqui o espião recebe só o estado, porque serializar o
+      // `eventDetails` na aba Actions estoura SecurityError.
+      const p = await open(trigger);
+      await userEvent.click(within(p).getByRole("button", { name: /Cancelar/i }));
       await waitFor(() => expect(panel()).toBeNull());
       await expect(trigger).toHaveAttribute("aria-expanded", "false");
     });

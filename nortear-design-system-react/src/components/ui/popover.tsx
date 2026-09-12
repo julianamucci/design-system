@@ -26,8 +26,13 @@ import { cn } from "@/lib/utils"
  *
  * Por isso o modo modal aqui é metade lib e metade nosso: `modal` segue para a
  * raiz (trava de rolagem) e o laço de tabulação está escrito no `PopoverContent`
- * abaixo, na mesma forma do `popover.ts` do Vanilla. A alternativa seria injetar
- * um botão de fechar que o desenho não pede só para satisfazer `hasClosePart`.
+ * abaixo, na mesma forma do `popover.ts` do Vanilla.
+ *
+ * O laço CONTINUA depois de o `PopoverClose` existir (2026-09-12), e não é
+ * redundância: o painel modal só herda o trap da lib se QUEM MONTA a composição
+ * puser um controle de fechar dentro dele, e o contrato de `modal` não pode
+ * depender do conteúdo. Sem o laço, um painel modal sem botão de fechar
+ * anunciaria `aria-modal` e deixaria o Tab sair — o defeito de D1 do PRD.
  */
 
 /**
@@ -72,6 +77,51 @@ function PopoverTrigger({ asChild, children, ...props }: PopoverTriggerProps) {
     >
       {children}
     </PopoverPrimitive.Trigger>
+  )
+}
+
+/**
+ * Controle de fechar DENTRO do painel.
+ *
+ * Existe desde 2026-09-12, por decisão da dona, e nas cinco stacks: um
+ * "Cancelar" que não fecha é o defeito que a dona viu na tela — o rodapé promete
+ * uma saída e entrega um botão inerte.
+ *
+ * É ele que faz o ramo `close-press` do `popoverCloseReason` ter caminho:
+ * `PopoverClose` chama `store.setOpen(false, …REASONS.closePress)`
+ * (`popover/close/PopoverClose.mjs`), o motivo cru `"close-press"` chega ao
+ * `onOpenChange` e a função o traduz para `close-button`. Escrever um
+ * `onClick={() => setOpen(false)}` no lugar produziria `imperative-action`, que
+ * cai em `api` — o relatório leria "fechou por código" onde alguém apertou um
+ * botão.
+ *
+ * `asChild` pela mesma razão do gatilho: o controle é o `<Button>` que a
+ * composição já tem, recebendo as props de fechamento. Envolver o botão num
+ * segundo elemento daria dois nós para um só controle.
+ */
+type PopoverCloseProps = PopoverPrimitive.Close.Props & {
+  asChild?: boolean
+  children?: React.ReactNode
+}
+function PopoverClose({ asChild, children, ...props }: PopoverCloseProps) {
+  // Sem `nativeButton={false}` — mesma leitura do gatilho: todo call site passa
+  // um <Button>, que é um <button> nativo.
+  if (asChild && React.isValidElement(children)) {
+    return (
+      <PopoverPrimitive.Close
+        data-slot="popover-close"
+        render={children as React.ReactElement}
+        {...(props as PopoverPrimitive.Close.Props)}
+      />
+    )
+  }
+  return (
+    <PopoverPrimitive.Close
+      data-slot="popover-close"
+      {...(props as PopoverPrimitive.Close.Props)}
+    >
+      {children}
+    </PopoverPrimitive.Close>
   )
 }
 
@@ -244,6 +294,7 @@ function PopoverDescription({
 
 export {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   popoverAboveSource,
+  popoverCloseSource,
   popoverContentLivreSource,
   popoverControlledSource,
   popoverEditarPerfilSource,
@@ -37,6 +38,7 @@ const ALL = [
   popoverPaletteSource,
   popoverPreferenciasSource,
   popoverAboveSource,
+  popoverCloseSource,
 ];
 
 /**
@@ -138,6 +140,7 @@ describe('a lição do painel sem título', () => {
   it('com PopoverTitle o painel NÃO carrega aria-label — seriam dois contratos de nome', () => {
     for (const fn of [
       popoverSource,
+      popoverCloseSource,
       popoverFormSource,
       popoverOpenSource,
       popoverModalSource,
@@ -180,6 +183,62 @@ describe('a lição do rodapé', () => {
       expect(actions).toContain('variant="ghost"');
       expect(actions).toContain(primary);
       expect(actions.match(/variant=/g)).toHaveLength(1);
+    }
+  });
+});
+
+describe('a lição do controle de fechar', () => {
+  /**
+   * O mapa é declarado, e não inferido: construtor que ganha rodapé sem entrar
+   * aqui reprova no caso de cobertura abaixo. É a forma que a lista de exclusão
+   * do `source-snippets.test.ts` não tinha quando encolheu em silêncio.
+   */
+  const COM_FECHAR: Array<[() => string, string[], string[]]> = [
+    // construtor, o que FECHA, o que não fecha
+    [popoverSource, ['Cancelar', 'Salvar'], []],
+    [popoverCloseSource, ['Cancelar', 'Salvar'], []],
+    // Submit do form: fora do `<form>` ficaria inerte e o Enter num campo não
+    // dispararia nada.
+    [popoverEditarPerfilSource, ['Cancelar'], ['Atualizar']],
+    // "Limpar" devolve a escolha a quem ainda está decidindo.
+    [popoverFilterSource, ['Aplicar'], ['Limpar']],
+    // A ausência é o assunto da story modal: sem controle de fechar registrado,
+    // quem prende o foco é o laço do PopoverContent, e não a lib.
+    [popoverModalSource, [], ['Cancelar', 'OK']],
+  ];
+
+  /** O bloco `<PopoverClose …>…</PopoverClose>` que envolve um rótulo, se houver. */
+  function envolvido(output: string, label: string): boolean {
+    const i = output.indexOf(`>${label}<`);
+    if (i === -1) return false;
+    const abertura = output.lastIndexOf('<PopoverClose asChild>', i);
+    if (abertura === -1) return false;
+    const fechamento = output.indexOf('</PopoverClose>', abertura);
+    return fechamento > i;
+  }
+
+  it.each(COM_FECHAR)('%# ensina quem fecha e quem não fecha', (fn, fecham, naoFecham) => {
+    const output = fn();
+    for (const label of fecham) {
+      expect(envolvido(output, label), `"${label}" devia fechar`).toBe(true);
+    }
+    for (const label of naoFecham) {
+      expect(envolvido(output, label), `"${label}" não devia fechar`).toBe(false);
+    }
+    // Quem usa a peça importa a peça. O `source-snippets.test.ts` cobra que o
+    // nome EXISTA no componente; aqui se cobra que ele seja importado quando o
+    // snippet o escreve — e que não sobre import de peça que o snippet não usa.
+    const importa = output.includes('  PopoverClose,');
+    expect(importa).toBe(output.includes('<PopoverClose'));
+  });
+
+  it('todo construtor com rodapé de ações está declarado no mapa acima', () => {
+    // Cobertura, e não filtro: construtor novo com rodapé que ninguém declarar
+    // reprova aqui, em vez de sair da varredura em silêncio.
+    const declarados = new Set(COM_FECHAR.map(([fn]) => fn));
+    for (const fn of ALL) {
+      if (!fn().includes('data-justify="end"')) continue;
+      expect(declarados.has(fn), `${fn.name} tem rodapé e não está no mapa`).toBe(true);
     }
   });
 });

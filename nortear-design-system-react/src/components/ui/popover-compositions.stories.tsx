@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor, screen, within, userEvent } from "storybook/test";
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -103,8 +104,14 @@ export const EditProfile: Story = {
             <Input id="comp-name" defaultValue="Ana Ribeiro" />
             <Label htmlFor="comp-email" className="nds-text-caption">Email</Label>
             <Input id="comp-email" type="email" defaultValue="ana@nortear.com.br" />
+            {/* "Atualizar" é o submit DO formulário, e não um controle de
+                fechar: fora do `<form>` ele ficaria inerte e o Enter num campo
+                não dispararia nada — que é o gesto de quem acabou de digitar.
+                Sair sem salvar é papel do "Cancelar", e esse fecha. */}
             <div className="nds-cluster" data-justify="end" data-spacing="sm">
-              <Button variant="ghost" size="sm">Cancelar</Button>
+              <PopoverClose asChild>
+                <Button variant="ghost" size="sm">Cancelar</Button>
+              </PopoverClose>
               <Button type="submit" size="sm">Atualizar</Button>
             </div>
           </form>
@@ -160,9 +167,14 @@ export const TableFilter: Story = {
               <span>Arquivado</span>
             </label>
           </div>
+          {/* Só "Aplicar" fecha: aplicar É a decisão, e depois dela o painel não
+              tem mais o que oferecer. "Limpar" desmarca e devolve a escolha a
+              quem ainda está decidindo. */}
           <div className="nds-cluster" data-justify="end" data-spacing="sm">
             <Button variant="ghost" size="sm">Limpar</Button>
-            <Button size="sm">Aplicar</Button>
+            <PopoverClose asChild>
+              <Button size="sm">Aplicar</Button>
+            </PopoverClose>
           </div>
         </PopoverContent>
       </Popover>

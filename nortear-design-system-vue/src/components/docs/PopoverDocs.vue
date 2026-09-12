@@ -6,6 +6,7 @@ import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -582,12 +583,17 @@ const a11yCritCols = computed(() => ({
               data-spacing="sm"
               data-justify="end"
             >
-              <Button
-                variant="ghost"
-                size="sm"
-              >
-                {{ tContent('demonstration.labels.cancel') }}
-              </Button>
+              <!-- O Cancelar FECHA, e é a peça que o faz fechar. Até
+                   2026-09-12 ele era um botão decorativo aqui, e o evento de
+                   fechamento nunca chegava ao GA4 com `close-button`. -->
+              <PopoverClose as-child>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                >
+                  {{ tContent('demonstration.labels.cancel') }}
+                </Button>
+              </PopoverClose>
               <Button size="sm">
                 {{ tContent('demonstration.labels.save') }}
               </Button>
@@ -869,12 +875,14 @@ const a11yCritCols = computed(() => ({
                 data-spacing="sm"
                 data-justify="end"
               >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                >
-                  {{ tContent('demonstration.labels.cancel') }}
-                </Button>
+                <PopoverClose as-child>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                  >
+                    {{ tContent('demonstration.labels.cancel') }}
+                  </Button>
+                </PopoverClose>
                 <Button
                   type="submit"
                   size="sm"

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -44,6 +45,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -133,7 +135,9 @@ export const WithTitle: Story = {
               </PopoverDescription>
             </PopoverHeader>
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
-              <Button variant="ghost" size="sm">Cancelar</Button>
+              <PopoverClose as-child>
+                <Button variant="ghost" size="sm">Cancelar</Button>
+              </PopoverClose>
               <Button size="sm">Salvar</Button>
             </div>
           </PopoverContent>

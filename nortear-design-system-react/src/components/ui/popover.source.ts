@@ -80,10 +80,21 @@ ${content}
 </Popover>`;
 }
 
-/** Par de ações do rodapé do painel, encostado à direita. */
+/**
+ * Par de ações do rodapé do painel, encostado à direita.
+ *
+ * As duas FECHAM, e por isso as duas são `PopoverClose`: um "Cancelar" que não
+ * fecha é botão que promete saída e não entrega — foi o defeito que a dona viu
+ * na tela. Fora de um `<form>`, "Salvar" também só tem o fechamento como
+ * efeito visível, então ensinar um botão inerte ali seria ensinar o defeito.
+ */
 const ACTIONS_DEFAULT = `    <div className="nds-cluster" data-justify="end" data-spacing="sm">
-      <Button variant="ghost" size="sm">Cancelar</Button>
-      <Button size="sm">Salvar</Button>
+      <PopoverClose asChild>
+        <Button variant="ghost" size="sm">Cancelar</Button>
+      </PopoverClose>
+      <PopoverClose asChild>
+        <Button size="sm">Salvar</Button>
+      </PopoverClose>
     </div>`;
 
 /**
@@ -108,6 +119,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   return jsxSnippet(
     `${importingPopover(
       'Popover',
+      'PopoverClose',
       'PopoverContent',
       'PopoverDescription',
       'PopoverHeader',
@@ -124,6 +136,40 @@ ${ACTIONS_DEFAULT}`,
     ),
   );
 };
+
+/**
+ * O controle de fechar por dentro do painel.
+ *
+ * `PopoverClose` e não `onClick={() => setAberto(false)}`: o que separa os dois
+ * é o MOTIVO que chega ao `onOpenChange` — a peça fecha com `close-press`, que o
+ * design system lê como `close-button`, e o estado escrito à mão fecha por
+ * código, que é `api`. Trocar um pelo outro apaga do relatório a diferença
+ * entre desistiu e concluiu.
+ *
+ * O painel da story mostra o motivo num parágrafo ao lado; aquilo é andaime de
+ * demonstração e não entra aqui, pela mesma razão do resto do quadro.
+ */
+export function popoverCloseSource(): string {
+  return jsxSnippet(
+    `${importingPopover(
+      'Popover',
+      'PopoverClose',
+      'PopoverContent',
+      'PopoverDescription',
+      'PopoverHeader',
+      'PopoverTitle',
+      'PopoverTrigger',
+    )}
+${IMPORT_BUTTON}`,
+    popover(
+      ' defaultOpen',
+      'Abrir popover',
+      '',
+      `${header('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.')}
+${ACTIONS_DEFAULT}`,
+    ),
+  );
+}
 
 /**
  * Conteúdo livre — a ausência de título é o assunto, e o `aria-label` é a
@@ -258,6 +304,11 @@ const [aberto, setAberto] = useState(false);`,
  * registrados dentro do painel; da lib vem a trava de rolagem, que cai de
  * `modal === true` sozinho. O laço de tabulação está no `PopoverContent` de
  * `popover.tsx`, na mesma forma do Vanilla, que é a referência.
+ *
+ * Por isso este é o ÚNICO rodapé sem `PopoverClose` — e a ausência é o assunto:
+ * é ela que deixa o painel modal depender do nosso laço, que é o caso que o
+ * contrato precisa cobrir. Com um controle de fechar aqui, quem trapearia seria
+ * a lib, e a story mediria a lib.
  */
 export function popoverModalSource(): string {
   return jsxSnippet(
@@ -287,11 +338,17 @@ ${IMPORT_BUTTON}`,
  * Edição rápida sem trocar de tela. O gatilho nomeia a ação E o objeto —
  * "Editar perfil", nunca "Mais" ou "Clique aqui" —, porque é o nome do gatilho
  * que a pessoa ouve antes de decidir abrir.
+ *
+ * Só "Cancelar" é `PopoverClose`. "Atualizar" é o submit DO formulário: fora do
+ * `<form>` ele ficaria inerte e o Enter num campo não dispararia nada — que é o
+ * gesto de quem acabou de digitar. Fechar por dentro sem salvar é papel do
+ * descarte.
  */
 export function popoverEditarPerfilSource(): string {
   return jsxSnippet(
     `${importingPopover(
       'Popover',
+      'PopoverClose',
       'PopoverContent',
       'PopoverDescription',
       'PopoverHeader',
@@ -312,7 +369,9 @@ import { Label } from "@/components/ui/label";`,
       <Label htmlFor="conta-email" className="nds-text-caption">Email</Label>
       <Input id="conta-email" type="email" defaultValue="ana@nortear.com.br" />
       <div className="nds-cluster" data-justify="end" data-spacing="sm">
-        <Button variant="ghost" size="sm">Cancelar</Button>
+        <PopoverClose asChild>
+          <Button variant="ghost" size="sm">Cancelar</Button>
+        </PopoverClose>
         <Button type="submit" size="sm">Atualizar</Button>
       </div>
     </form>`,
@@ -324,6 +383,11 @@ import { Label } from "@/components/ui/label";`,
  * Filtros combináveis. Escolha múltipla não fecha no primeiro clique — fechar
  * obrigaria a reabrir o painel para cada critério —, e o par Limpar / Aplicar
  * fica no fim, na ordem em que a decisão acontece.
+ *
+ * Só "Aplicar" é `PopoverClose`: aplicar É a decisão, e depois dela o painel não
+ * tem mais o que oferecer. "Limpar" desmarca e devolve a escolha a quem está
+ * decidindo — fechar ali seria tirar o painel de quem acabou de pedir para
+ * recomeçar.
  */
 export function popoverFilterSource(): string {
   const opcao = (label: string, marcada = false) => `      <label className="nds-cluster" data-spacing="sm">
@@ -334,6 +398,7 @@ export function popoverFilterSource(): string {
   return jsxSnippet(
     `${importingPopover(
       'Popover',
+      'PopoverClose',
       'PopoverContent',
       'PopoverDescription',
       'PopoverHeader',
@@ -353,7 +418,9 @@ ${opcao('Arquivado')}
     </div>
     <div className="nds-cluster" data-justify="end" data-spacing="sm">
       <Button variant="ghost" size="sm">Limpar</Button>
-      <Button size="sm">Aplicar</Button>
+      <PopoverClose asChild>
+        <Button size="sm">Aplicar</Button>
+      </PopoverClose>
     </div>`,
     ),
   );

@@ -7,9 +7,19 @@ import { NdsButton } from './button';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os quatro estados que o conteúdo compartilhado descreve: fechado (painel fora
-// do DOM), aberto, controlado por fora e foco dentro do painel. O estado
-// "transitioning" não vira story própria — ele é o intervalo entre dois destes,
-// e o que o prova é o `data-ending-style` que a folha compartilhada anima.
+// do DOM), aberto, controlado por fora e foco dentro do painel.
+//
+// O estado "Fechando" da tabela não vira story própria porque não há mais
+// intervalo para fotografar: desde 2026-09-12 o Popover não anima nem para
+// entrar nem para sair, a folha compartilhada perdeu a regra de
+// `[data-ending-style]`, e o painel desmonta no render seguinte ao fechamento.
+// A afirmação anterior — de que o estado se provava pelo `data-ending-style`
+// que a folha animava — caiu junto com a regra.
+//
+// Quem o observa hoje são os passos de FECHAMENTO das outras stories: Escape e
+// botão de fechar no `popover.stories.ts`, clique fora em `Controlled` logo
+// abaixo. Os três terminam em `panel()` nulo, que é exatamente o que a tabela
+// de estados promete — "nada fica na tela depois de quem usa fechar".
 
 const meta: Meta = {
   title: 'Components/Overlay/Popover/States',

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect, fn, waitFor } from 'storybook/test';
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -45,8 +46,12 @@ const meta = {
     // Vue não tem argTypesRegex — declarar handlers manualmente
     onOpenChange: {
       control: false,
-      description: 'Callback disparado a cada abertura e fechamento, com o novo estado.',
-      table: { category: 'events', type: { summary: '(open: boolean) => void' } },
+      description:
+        'Callback disparado a cada abertura e fechamento, com o novo estado — e, no fechamento, o motivo.',
+      table: {
+        category: 'events',
+        type: { summary: '(open: boolean, reason?: PopoverCloseReason) => void' },
+      },
     },
   },
   args: {
@@ -89,6 +94,7 @@ export const Playground: Story = {
   render: (args) => ({
     components: {
       Popover,
+      PopoverClose,
       PopoverContent,
       PopoverDescription,
       PopoverHeader,
@@ -118,7 +124,9 @@ export const Playground: Story = {
               </PopoverDescription>
             </PopoverHeader>
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
-              <Button variant="ghost" size="sm">Cancelar</Button>
+              <PopoverClose as-child>
+                <Button variant="ghost" size="sm">Cancelar</Button>
+              </PopoverClose>
               <Button size="sm">Salvar</Button>
             </div>
           </PopoverContent>
@@ -211,6 +219,28 @@ export const Playground: Story = {
       await closed();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await expect(spy).toHaveBeenLastCalledWith(false, 'overlay');
+    });
+
+    await step('O Cancelar do rodapé fecha o painel e se chama close-button', async () => {
+      // O defeito que a dona viu no vanilla, e que esta stack tinha igual: um
+      // Cancelar que não cancela. A peça de fechar não existia aqui até
+      // 2026-09-12, e o botão do rodapé era decoração.
+      await open();
+      const cancelar = within(panel()!).getByRole('button', { name: /Cancelar/i });
+      // O `data-slot` prova que quem fecha é a PEÇA, e não um clique que por
+      // acaso caiu fora: o atributo do botão do design system é sobrescrito
+      // pela peça, como nas outras stacks que já tinham o controle.
+      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
+
+      await userEvent.click(cancelar);
+      await closed();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      // A reka-ui não publica motivo nenhum, e o handler que FECHA é dela — o
+      // nosso chega por fallthrough e o Vue o concatena DEPOIS. Esta asserção é
+      // quem mede a ordem: sem a anotação em fase de captura, o motivo que
+      // chega aqui é `api`, e "apertou cancelar" viraria "fechou por código"
+      // no relatório.
+      await expect(spy).toHaveBeenLastCalledWith(false, 'close-button');
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

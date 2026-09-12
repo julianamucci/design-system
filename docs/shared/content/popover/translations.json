@@ -36,11 +36,11 @@
       "item6": "<strong>PopoverDescription</strong> — descrição opcional, vinculada via <code>aria-describedby</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* conteúdo interativo */}\n  </PopoverContent>\n</Popover>",
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* conteúdo interativo */}\n    <PopoverClose asChild>\n      <Button variant=\"ghost\" size=\"sm\">Fechar</Button>\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
         "angular": "<div ndsPopover>\n  <button ndsPopoverTrigger ndsButton variant=\"outline\">Abrir</button>\n\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descrição opcional.</p>\n    </div>\n\n    <!-- conteúdo interativo -->\n    <button ndsPopoverClose ndsButton size=\"sm\">Fechar</button>\n  </ng-template>\n</div>",
-        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- conteúdo interativo -->\n  </PopoverContent>\n</Popover>",
-        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Abrir</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- conteúdo interativo -->\n  </PopoverContent>\n</Popover>",
-        "vanilla": "import {\n  createPopover,\n  createPopoverHeader,\n  createPopoverTitle,\n  createPopoverDescription,\n} from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// Cabeçalho, título e descrição são fábricas: a classe e o data-slot já saem prontos\nconst header = createPopoverHeader();\nheader.append(\n  createPopoverTitle({ text: 'Dimensões', level: 4 }),\n  createPopoverDescription({ text: 'Ajuste a largura e a altura.' }),\n);\n\nconst panel = document.createElement('div');\npanel.className = 'nds-stack';\npanel.dataset.spacing = 'sm';\npanel.append(header, formulario);   // conteúdo interativo\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Abrir' }),\n  content: panel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
+        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- conteúdo interativo -->\n    <PopoverClose as-child>\n      <Button variant=\"ghost\" size=\"sm\">Fechar</Button>\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
+        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Abrir</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- conteúdo interativo -->\n    <PopoverClose>\n      {#snippet child({ props })}\n        <Button {...props} variant=\"ghost\" size=\"sm\">Fechar</Button>\n      {/snippet}\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
+        "vanilla": "import {\n  createPopover,\n  createPopoverHeader,\n  createPopoverTitle,\n  createPopoverDescription,\n} from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// Cabeçalho, título e descrição são fábricas: a classe e o data-slot já saem prontos\nconst header = createPopoverHeader();\nheader.append(\n  createPopoverTitle({ text: 'Dimensões', level: 4 }),\n  createPopoverDescription({ text: 'Ajuste a largura e a altura.' }),\n);\n\n// Fechar é MARCA, não fábrica: a delegação na raiz escuta o slot\nconst fechar = createButton({ variant: 'ghost', size: 'sm', label: 'Fechar' });\nfechar.dataset.slot = 'popover-close';\n\nconst panel = document.createElement('div');\npanel.className = 'nds-stack';\npanel.dataset.spacing = 'sm';\npanel.append(header, formulario, fechar);   // conteúdo interativo\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Abrir' }),\n  content: panel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
       }
     },
     "usage": {
@@ -229,11 +229,6 @@
         "trigger": "modal ativo",
         "behavior": "Foco preso no painel, rolagem da página travada e <code>aria-modal=\"true\"</code>, as três juntas. O padrão é não-modal."
       },
-      "transitioning": {
-        "label": "Transitioning",
-        "trigger": "animação de entrada/saída",
-        "behavior": "Animação de saída — o painel continua montado até a transição de opacidade e escala terminar. A entrada aparece direto, sem animação."
-      },
       "focused": {
         "label": "Focused",
         "trigger": "tab em elemento interno",
@@ -243,6 +238,11 @@
         "state": "Estado",
         "trigger": "Quando ocorre",
         "behavior": "Comportamento"
+      },
+      "transitioning": {
+        "label": "Fechando",
+        "trigger": "fechamento",
+        "behavior": "O painel desmonta na hora. Não há animação de entrada nem de saída, então nada fica na tela depois de quem usa fechar."
       }
     },
     "props": {
@@ -537,11 +537,11 @@
       "item6": "<strong>PopoverDescription</strong> — optional description, linked via <code>aria-describedby</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    {/* interactive content */}\n  </PopoverContent>\n</Popover>",
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    {/* interactive content */}\n    <PopoverClose asChild>\n      <Button variant=\"ghost\" size=\"sm\">Close</Button>\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
         "angular": "<div ndsPopover>\n  <button ndsPopoverTrigger ndsButton variant=\"outline\">Abrir</button>\n\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descrição opcional.</p>\n    </div>\n\n    <!-- conteúdo interativo -->\n    <button ndsPopoverClose ndsButton size=\"sm\">Fechar</button>\n  </ng-template>\n</div>",
-        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    <!-- interactive content -->\n  </PopoverContent>\n</Popover>",
-        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Open</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    <!-- interactive content -->\n  </PopoverContent>\n</Popover>",
-        "vanilla": "import {\n  createPopover,\n  createPopoverHeader,\n  createPopoverTitle,\n  createPopoverDescription,\n} from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// Header, title and description are factories: class and data-slot come ready\nconst header = createPopoverHeader();\nheader.append(\n  createPopoverTitle({ text: 'Dimensions', level: 4 }),\n  createPopoverDescription({ text: 'Adjust the width and the height.' }),\n);\n\nconst panel = document.createElement('div');\npanel.className = 'nds-stack';\npanel.dataset.spacing = 'sm';\npanel.append(header, form);   // interactive content\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Open' }),\n  content: panel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
+        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    <!-- interactive content -->\n    <PopoverClose as-child>\n      <Button variant=\"ghost\" size=\"sm\">Close</Button>\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
+        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Open</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    <!-- interactive content -->\n    <PopoverClose>\n      {#snippet child({ props })}\n        <Button {...props} variant=\"ghost\" size=\"sm\">Close</Button>\n      {/snippet}\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
+        "vanilla": "import {\n  createPopover,\n  createPopoverHeader,\n  createPopoverTitle,\n  createPopoverDescription,\n} from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// Header, title and description are factories: class and data-slot come ready\nconst header = createPopoverHeader();\nheader.append(\n  createPopoverTitle({ text: 'Dimensions', level: 4 }),\n  createPopoverDescription({ text: 'Adjust the width and the height.' }),\n);\n\n// Closing is a MARK, not a factory: the root delegates on the slot\nconst fechar = createButton({ variant: 'ghost', size: 'sm', label: 'Close' });\nfechar.dataset.slot = 'popover-close';\n\nconst panel = document.createElement('div');\npanel.className = 'nds-stack';\npanel.dataset.spacing = 'sm';\npanel.append(header, form, fechar);   // interactive content\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Open' }),\n  content: panel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
       }
     },
     "usage": {
@@ -730,11 +730,6 @@
         "trigger": "modal enabled",
         "behavior": "Focus trapped in the panel, page scroll locked and <code>aria-modal=\"true\"</code>, the three together. The default is non-modal."
       },
-      "transitioning": {
-        "label": "Transitioning",
-        "trigger": "enter/exit animation",
-        "behavior": "Exit animation — the panel stays mounted until the opacity and scale transition ends. The entrance appears at once, with no animation."
-      },
       "focused": {
         "label": "Focused",
         "trigger": "tab on inner element",
@@ -744,6 +739,11 @@
         "state": "State",
         "trigger": "When it happens",
         "behavior": "Behavior"
+      },
+      "transitioning": {
+        "label": "Closing",
+        "trigger": "close",
+        "behavior": "The panel unmounts at once. There is no enter or exit animation, so nothing lingers on screen after the person closes it."
       }
     },
     "props": {
@@ -1038,11 +1038,11 @@
       "item6": "<strong>PopoverDescription</strong> — descripción opcional, vinculada vía <code>aria-describedby</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* contenido interactivo */}\n  </PopoverContent>\n</Popover>",
+        "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* contenido interactivo */}\n    <PopoverClose asChild>\n      <Button variant=\"ghost\" size=\"sm\">Cerrar</Button>\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
         "angular": "<div ndsPopover>\n  <button ndsPopoverTrigger ndsButton variant=\"outline\">Abrir</button>\n\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descrição opcional.</p>\n    </div>\n\n    <!-- conteúdo interativo -->\n    <button ndsPopoverClose ndsButton size=\"sm\">Fechar</button>\n  </ng-template>\n</div>",
-        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- contenido interactivo -->\n  </PopoverContent>\n</Popover>",
-        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Abrir</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- contenido interactivo -->\n  </PopoverContent>\n</Popover>",
-        "vanilla": "import {\n  createPopover,\n  createPopoverHeader,\n  createPopoverTitle,\n  createPopoverDescription,\n} from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// Encabezado, título y descripción son fábricas: la clase y el data-slot ya vienen\nconst header = createPopoverHeader();\nheader.append(\n  createPopoverTitle({ text: 'Dimensiones', level: 4 }),\n  createPopoverDescription({ text: 'Ajusta el ancho y el alto.' }),\n);\n\nconst panel = document.createElement('div');\npanel.className = 'nds-stack';\npanel.dataset.spacing = 'sm';\npanel.append(header, formulario);   // contenido interactivo\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Abrir' }),\n  content: panel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
+        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- contenido interactivo -->\n    <PopoverClose as-child>\n      <Button variant=\"ghost\" size=\"sm\">Cerrar</Button>\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
+        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Abrir</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- contenido interactivo -->\n    <PopoverClose>\n      {#snippet child({ props })}\n        <Button {...props} variant=\"ghost\" size=\"sm\">Cerrar</Button>\n      {/snippet}\n    </PopoverClose>\n  </PopoverContent>\n</Popover>",
+        "vanilla": "import {\n  createPopover,\n  createPopoverHeader,\n  createPopoverTitle,\n  createPopoverDescription,\n} from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// Encabezado, título y descripción son fábricas: la clase y el data-slot ya vienen\nconst header = createPopoverHeader();\nheader.append(\n  createPopoverTitle({ text: 'Dimensiones', level: 4 }),\n  createPopoverDescription({ text: 'Ajusta el ancho y el alto.' }),\n);\n\n// Cerrar es una MARCA, no una fábrica: la raíz delega por el slot\nconst fechar = createButton({ variant: 'ghost', size: 'sm', label: 'Cerrar' });\nfechar.dataset.slot = 'popover-close';\n\nconst panel = document.createElement('div');\npanel.className = 'nds-stack';\npanel.dataset.spacing = 'sm';\npanel.append(header, formulario, fechar);   // contenido interactivo\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Abrir' }),\n  content: panel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
       }
     },
     "usage": {
@@ -1231,11 +1231,6 @@
         "trigger": "modal activo",
         "behavior": "Foco atrapado en el panel, scroll de la página bloqueado y <code>aria-modal=\"true\"</code>, las tres juntas. Por defecto es no modal."
       },
-      "transitioning": {
-        "label": "Transitioning",
-        "trigger": "animación de entrada/salida",
-        "behavior": "Animación de salida — el panel sigue montado hasta que termina la transición de opacidad y escala. La entrada aparece de una vez, sin animación."
-      },
       "focused": {
         "label": "Focused",
         "trigger": "tab en elemento interno",
@@ -1245,6 +1240,11 @@
         "state": "Estado",
         "trigger": "Cuándo ocurre",
         "behavior": "Comportamiento"
+      },
+      "transitioning": {
+        "label": "Cerrando",
+        "trigger": "cierre",
+        "behavior": "El panel se desmonta de inmediato. No hay animación de entrada ni de salida, así que nada permanece en pantalla tras cerrarlo."
       }
     },
     "props": {

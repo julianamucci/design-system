@@ -68,9 +68,20 @@ página exige inércia do resto. Hoje esse caso é o Dialog.
 **Medição**: a prop estava na tabela de props desde sempre e existia em três das
 cinco, com semântica diferente em duas. No `base-ui` (react) `modal` sozinho
 **não prende foco** — `focusManagerModal = modal !== false && hasClosePart`, e
-esta família não expõe um `Popover.Close`; o que ele entrega é trava de rolagem e
-backdrop interno. A referência da implementação é a `reka-ui`, que entrega
-inteiro sozinha.
+até 2026-09-12 esta família não expunha um `Popover.Close`; o que ele entregava
+era trava de rolagem e backdrop interno. A referência da implementação é a
+`reka-ui`, que entrega inteiro sozinha.
+
+**Com a peça de fechar, medido em 2026-09-12** — e o resultado não é o que a
+frase acima faria esperar: o comportamento de TECLADO não muda, porque o laço de
+tabulação escrito à mão no `PopoverContent` já fazia o que a lib faria. O que
+passa a acontecer é a lib esconder de fato o resto da página (`markOthers`: 11
+subárvores `aria-hidden` contra 7), que é a metade que o `aria-modal` sempre
+prometeu e não cumpria. Nenhuma violação de axe nos dois estados.
+
+O laço à mão FICA, e não é redundância esquecida: ele é o único trap quando o
+painel modal não tem controle de fechar, e o contrato de `modal` não pode
+depender do conteúdo que alguém pôs dentro.
 **Para revisitar**: separar os três em props independentes reabre o defeito de D1.
 
 ### D3 · O painel se nomeia por título OU por `aria-label`
@@ -228,9 +239,36 @@ que os dois desceram para `lg` (2026-09-10): descrevia os vizinhos, então nada
 que tocasse aquelas folhas passava por aqui. Agora ela cita a regra, que é o que
 de fato decide o degrau.
 
-**Animação**: só a SAÍDA anima (`data-ending-style`: opacidade e `scale(0.95)`,
-`--duration-fast`). A entrada aparece direto, para evitar corrida entre
-`opacity: 0` do estado inicial e checagens síncronas de visibilidade.
+**Animação: nenhuma**, nem para entrar nem para sair — decisão da dona em
+2026-09-12.
+
+**Histórico, porque as duas metades caíram por motivos diferentes.** A ENTRADA
+saiu primeiro, por corrida de teste: `opacity: 0` no `data-starting-style` era
+lido como "não visível" por checagem síncrona e derrubava `toBeVisible` nas
+plays. Ficou a SAÍDA (`data-ending-style`: opacidade e `scale(0.95)` em
+`--duration-fast`), e ela caiu agora por comportamento: animar a saída obriga o
+painel a SOBREVIVER ao fechamento até a transição terminar — no Angular é o
+portal do radix-ng que o segura, e o docblock de `ui/popover.ts` de lá registra
+isso como a razão de o portal existir. Painel que continua na tela depois de a
+pessoa fechar é lentidão percebida, num componente que a família trata como leve
+e não-modal.
+
+**E a saída não animava nas cinco — animava em TRÊS.** Medido em 2026-09-12
+dentro de cada lib: `data-ending-style` é convenção da base-ui, e aparece em 108
+arquivos do `@base-ui/react`, 33 do `@radix-ng/primitives` e 10 do `bits-ui`. Na
+`reka-ui` do Vue são **zero**, e o vanilla não tem lib. A regra da folha
+compartilhada declarava um movimento que dois dos cinco painéis nunca
+executaram — e ninguém percebia, porque o seletor simplesmente não casava.
+
+É a mesma espécie do `close-button` inalcançável descrito na §9: uma declaração
+COMPARTILHADA que só parte das stacks consegue honrar. Nos dois casos o
+documento e a folha diziam "o componente faz X", e o que decidia era o que cada
+lib publicava. Tirar a animação fecha esse eixo pelo lado consistente: agora as
+cinco não animam, em vez de três animarem e duas não.
+
+Quem for reintroduzir movimento: a entrada é o lado que já custou caro, e
+reintroduzi-la exige espera de relógio nas plays das cinco — e o atributo que a
+dispara precisa existir nas cinco libs, ou volta a divergência de agora.
 
 ## 6. Estados
 
@@ -240,7 +278,7 @@ de fato decide o degrau.
 | Open | clique no gatilho | montado; foco no primeiro focável |
 | Controlled | `open` vem de fora | o painel não guarda estado próprio; abrir e fechar passam pelo consumidor, avisado a cada mudança |
 | Modal | `modal` ativo | foco preso, rolagem travada, `aria-modal="true"` — ver D2 |
-| Transitioning | saída | o painel fica montado até a transição terminar |
+| Transitioning | — | **não existe mais**: sem animação, o painel desmonta no fechamento (2026-09-12) |
 | Focused | Tab em elemento interno | anel de foco do próprio elemento, via `--ring` |
 
 ## 7. API
@@ -275,10 +313,10 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 
 | stack | peças |
 |---|---|
-| react | `Popover`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverTitle`, `PopoverTrigger` |
-| vue | `Popover`, `PopoverAnchor`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverTitle`, `PopoverTrigger` |
+| react | `Popover`, `PopoverClose`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverTitle`, `PopoverTrigger` |
+| vue | `Popover`, `PopoverAnchor`, `PopoverClose`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverTitle`, `PopoverTrigger` |
 | svelte | `Popover`, `PopoverClose`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverPortal`, `PopoverTitle`, `PopoverTrigger` |
-| vanilla | `createPopover`, `createPopoverDescription`, `createPopoverHeader`, `createPopoverTitle` |
+| vanilla | `createPopover`, `createPopoverDescription`, `createPopoverHeader`, `createPopoverTitle` — e o controle de fechar, que aqui é uma MARCA e não uma fábrica: `data-slot="popover-close"` em qualquer elemento do painel, com delegação na raiz |
 | angular | `[ndsPopoverDescription]`, `[ndsPopoverTitle]`, `button[ndsPopoverClose]`, `button[ndsPopoverTrigger]`, `div[ndsPopoverHeader]`, `div[ndsPopover]`, `ng-template[ndsPopoverContent]` |
 
 O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `Description`, `Header`, `Portal`, `Root`, `Title`, `Trigger` —,
@@ -339,7 +377,24 @@ palavras do `drawer_close`, para a família ser uma dimensão só no GA4.
 |---|---|
 | `escape` | tecla Escape |
 | `overlay` | saiu do painel sem decidir nada — clique fora, foco que saiu, ou clique no gatilho de novo |
-| `close-button` | controle de fechar explícito (existe no react, no svelte e no angular) |
+| `close-button` | controle de fechar explícito DENTRO do painel — existe nas cinco desde 2026-09-12 |
+
+**A peça de fechar tem duas formas, e a diferença é de framework, não de
+contrato**: no svelte e no angular ela é componente/diretiva que MARCA um botão
+de quem compõe (`PopoverClose`, `button[ndsPopoverClose]`); no vanilla é a marca
+direta, `data-slot="popover-close"`, com delegação na raiz — e não uma
+sub-fábrica, porque o conteúdo do painel é montado ANTES de `createPopover()`
+existir, então uma `createPopoverClose()` não teria em que popover chamar
+`close()`. É a mesma escolha que o Dialog e o Sheet desta stack fizeram em
+2026-09-11 (`PATCHES.md#vanilla-overlay-close-api`).
+
+**Até 2026-09-12 o `close-button` era inalcançável em três das cinco.** react,
+vue e vanilla declaravam a palavra no tipo e não tinham como produzi-la; o
+sintoma que a dona viu foi concreto — na story do vanilla com botões no painel, o
+"Cancelar" não fechava nada, enquanto o mesmo botão no Angular fechava. E este
+PRD afirmava, na mesma página, que a família "não expõe um `Popover.Close`" (§3) e
+que o controle "existe no react, no svelte e no angular" (§9): duas linhas
+erradas em sentidos opostos, e nenhuma delas sobre o vanilla, que é a referência.
 | `api` | fechado por código — é aqui que cai "salvou e fechou" |
 
 **Duas diferenças deliberadas em relação ao drawer**, e as duas vêm de o popover
@@ -380,7 +435,10 @@ Ordem: folha → primitivo da stack → sub-partes → stories → docs page.
 
 - **react (`base-ui`)** — `modal` sozinho não prende foco: `focusManagerModal =
   modal !== false && hasClosePart`, e `hasClosePart` conta os `Popover.Close`
-  renderizados dentro do painel. Esta família não expõe um.
+  renderizados dentro do painel. A família passou a expor um em 2026-09-12, então
+  o painel modal COM controle de fechar ganha o `aria-hidden` da lib sobre o
+  resto da página; sem ele, quem prende é o laço de tabulação da própria stack.
+  Ver D2 para a medição das duas combinações.
 - **vue (`reka-ui`)** — o `PopoverContentModal` é outro componente, não uma prop;
   e há dois atributos a desfazer: o `aria-labelledby` cravado apontando para o
   gatilho, e o `aria-controls=""` no gatilho.

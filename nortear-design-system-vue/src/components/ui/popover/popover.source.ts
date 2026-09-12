@@ -57,6 +57,36 @@ const IMPORT_BASE = `${importa(
 import { Button } from '@/components/ui/button'`;
 
 /**
+ * As mesmas peças, mais o controle de fechar — só onde o painel TEM rodapé de
+ * ações. O snippet que ensina um Cancelar sem `PopoverClose` ensina um botão
+ * que não cancela, que é exatamente o defeito corrigido em 2026-09-12.
+ */
+const IMPORT_ACOES = `${importa(
+  'Popover',
+  'PopoverClose',
+  'PopoverContent',
+  'PopoverDescription',
+  'PopoverHeader',
+  'PopoverTitle',
+  'PopoverTrigger',
+)}
+import { Button } from '@/components/ui/button'`;
+
+/**
+ * Botão que fecha o painel por dentro — o único papel do `PopoverClose`.
+ *
+ * `as-child` porque a peça da lib já renderiza um `<button>`: sem ele o botão
+ * do design system ficaria aninhado dentro de outro botão, que é markup
+ * inválido e faz o de fora roubar o clique. Sempre `ghost`, para a ação
+ * secundária não disputar peso com a primária do rodapé.
+ */
+function close(label: string, recuo: string): string {
+  return `${recuo}<PopoverClose as-child>
+${recuo}  <Button variant="ghost" size="sm">${label}</Button>
+${recuo}</PopoverClose>`;
+}
+
+/**
  * Painel de exemplo: cabeçalho com título e descrição, e o par de ações no pé.
  *
  * O título não é enfeite — é ele que REIVINDICA o nome acessível do painel.
@@ -71,7 +101,7 @@ ${p}    <PopoverTitle>Configurações de exibição</PopoverTitle>
 ${p}    <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
 ${p}  </PopoverHeader>
 ${p}  <div class="nds-cluster" data-justify="end" data-spacing="sm">
-${p}    <Button variant="ghost" size="sm">Cancelar</Button>
+${close('Cancelar', `${p}    `)}
 ${p}    <Button size="sm">Salvar</Button>
 ${p}  </div>
 ${p}</PopoverContent>`;
@@ -111,7 +141,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   );
 
   return vueSnippet(
-    IMPORT_BASE,
+    IMPORT_ACOES,
     `<Popover${root}>
   <PopoverTrigger as-child>
     <Button variant="outline">Abrir popover</Button>
@@ -124,7 +154,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
       </PopoverDescription>
     </PopoverHeader>
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
-      <Button variant="ghost" size="sm">Cancelar</Button>
+${close('Cancelar', '      ')}
       <Button size="sm">Salvar</Button>
     </div>
   </PopoverContent>
@@ -158,7 +188,7 @@ import { Button } from '@/components/ui/button'`,
  */
 export function popoverWithTitleSource(): string {
   return vueSnippet(
-    IMPORT_BASE,
+    IMPORT_ACOES,
     popover({
       root: ':default-open="true"',
       label: 'Configurações',
@@ -209,13 +239,13 @@ const email = ref('ana@nortear.com.br')`,
  * que não está lá.
  */
 export function popoverClosedSource(): string {
-  return vueSnippet(IMPORT_BASE, popover({ label: 'Abrir popover', panel: configPanel() }));
+  return vueSnippet(IMPORT_ACOES, popover({ label: 'Abrir popover', panel: configPanel() }));
 }
 
 /** Estado aberto na montagem: `default-open` é a forma não-controlada de abrir. */
 export function popoverOpenSource(): string {
   return vueSnippet(
-    IMPORT_BASE,
+    IMPORT_ACOES,
     popover({
       root: ':default-open="true"',
       label: 'Abrir popover',
@@ -255,7 +285,7 @@ export function popoverAboveSource(): string {
  */
 export function popoverControlledSource(): string {
   return vueSnippet(
-    `${IMPORT_BASE}
+    `${IMPORT_ACOES}
 import { ref } from 'vue'
 
 const aberto = ref(false)`,
@@ -282,7 +312,7 @@ ${configPanel(4)}
  */
 export function popoverModalSource(): string {
   return vueSnippet(
-    IMPORT_BASE,
+    IMPORT_ACOES,
     popover({
       root: ':default-open="true" :modal="true"',
       label: 'Abrir modal',
@@ -299,6 +329,7 @@ export function popoverEditarPerfilSource(): string {
   return vueSnippet(
     `${importa(
       'Popover',
+      'PopoverClose',
       'PopoverContent',
       'PopoverDescription',
       'PopoverHeader',
@@ -326,7 +357,7 @@ const email = ref('ana@nortear.com.br')`,
       <Label for="conta-email" class="nds-text-caption">Email</Label>
       <Input id="conta-email" v-model="email" type="email" />
       <div class="nds-cluster" data-justify="end" data-spacing="sm">
-        <Button variant="ghost" size="sm">Cancelar</Button>
+${close('Cancelar', '        ')}
         <Button type="submit" size="sm">Atualizar</Button>
       </div>
     </form>

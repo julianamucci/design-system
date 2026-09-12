@@ -21,8 +21,10 @@ export const POPOVER_MODAL: InjectionKey<ComputedRef<boolean>> =
  *   escape        tecla Escape
  *   overlay       saiu do painel sem decidir nada: clique fora, foco que saiu,
  *                 ou clique no gatilho de novo
- *   close-button  controle de fechar explícito (esta stack não tem a peça, então
- *                 o valor não ocorre aqui — e não é divergência)
+ *   close-button  o `PopoverClose` desta stack — controle de fechar explícito
+ *                 DENTRO do painel, entregue em 2026-09-12. Até então a stack
+ *                 não tinha a peça e o valor nunca ocorria aqui; o rodapé de
+ *                 Cancelar + Salvar era um cancelar que não cancelava
  *   api           fechado por código — é aqui que cai "salvou e fechou"
  */
 export type PopoverCloseReason = 'escape' | 'overlay' | 'close-button' | 'api'
@@ -33,9 +35,14 @@ export type PopoverCloseReason = 'escape' | 'overlay' | 'close-button' | 'api'
  * A reka-ui não publica o motivo em `update:open` — o docs page desta stack
  * mandava o fechamento SEM `reason` por isso, e dizia com razão que cravar um
  * valor seria inventar dado. Mas o gesto é OBSERVÁVEL: o painel emite
- * `escape-key-down` e `pointer-down-outside`, o gatilho vê o próprio clique. É o
- * mesmo caminho que o drawer desta stack já usa. Quem vê o gesto ANOTA; quem
- * emite a mudança de estado lê a anotação.
+ * `escape-key-down` e `pointer-down-outside`, o gatilho vê o próprio clique, e o
+ * `PopoverClose` vê o dele. É o mesmo caminho que o drawer desta stack já usa.
+ * Quem vê o gesto ANOTA; quem emite a mudança de estado lê a anotação.
+ *
+ * A ordem importa, e cada peça resolve a sua: o painel e o gatilho anotam antes
+ * de a lib reagir, e o `PopoverClose` precisa da fase de CAPTURA para chegar na
+ * frente do handler que a própria lib pendura no botão — o porquê está no
+ * template de `PopoverClose.vue`.
  *
  * O `inject` cai para uma anotação inerte quando a peça é usada sem a raiz.
  */

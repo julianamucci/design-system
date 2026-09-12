@@ -227,8 +227,15 @@ export function createPopoverHeader(options: PopoverPartOptions = {}): HTMLEleme
  *   escape        tecla Escape
  *   overlay       saiu do painel sem decidir nada: clique fora, foco que saiu,
  *                 ou clique no gatilho de novo
- *   close-button  controle de fechar explícito dentro do painel
+ *   close-button  controle de fechar explícito dentro do painel — todo
+ *                 `[data-slot="popover-close"]` do painel, por delegação
  *   api           fechado por código — é aqui que cai "salvou e fechou"
+ *
+ * `close-button` esteve NESTA lista sem nenhum caminho que o produzisse até
+ * 2026-09-12: a palavra existia no tipo, a docs page a publicava na tabela de
+ * analytics, e o "Cancelar" de três stories era um `createButton` sem ouvinte —
+ * o painel não fechava. Vocabulário declarado não é comportamento entregue, e
+ * aqui a diferença passou despercebida porque o tipo compilava.
  *
  * `api` é o padrão, e não `close-button` como no drawer: os formulários do
  * popover fecham POR CÓDIGO ao salvar, e com o padrão do drawer "concluiu"
@@ -247,6 +254,38 @@ export function createPopoverTitle(options: PopoverTitleOptions = {}): HTMLEleme
 export function createPopoverDescription(options: PopoverPartOptions = {}): HTMLElement {
   return createParte('p', 'popover-description', 'nds-popover-description', options);
 }
+
+/*
+ * ─── E por que NÃO existe um `createPopoverClose` ───────────────────────────
+ *
+ * O controle de fechar do painel é uma MARCA no botão de quem compõe —
+ * `data-slot="popover-close"` —, e não uma quarta sub-fábrica ao lado das três
+ * acima. A decisão é de 2026-09-12, e as duas saídas foram medidas:
+ *
+ *  - **Sub-fábrica.** As três irmãs são construtoras PURAS: `createParte` cria
+ *    um elemento, escreve classe e `data-slot`, e devolve. Nenhuma delas sabe de
+ *    instância nenhuma — e não teria como saber, porque o conteúdo do painel é
+ *    montado ANTES de `createPopover()` existir, em toda story, todo snippet e
+ *    toda seção da docs page. Uma `createPopoverClose()` nascida no mesmo lugar
+ *    não tem em que popover chamar `close()`; para ter, precisaria de um segundo
+ *    passo (`painel.ligarFechamento(botao)`) — um verbo que a família não tem —
+ *    ou de um visual próprio, duplicando o `createButton` que o desenho pede.
+ *  - **Delegação por `data-slot`.** É o que `dialog.ts` e `sheet.ts` desta stack
+ *    adotaram em 2026-09-11 (`PATCHES.md#vanilla-overlay-close-api`), pelo mesmo
+ *    motivo: o rodapé é de quem compõe, e um ouvinte por elemento só alcançaria
+ *    o que a própria fábrica cria. É também a forma das outras stacks lida do
+ *    lado certo — `button[ndsPopoverClose]` no angular é DIRETIVA sobre o botão
+ *    de quem compõe, e o `PopoverClose` do svelte renderiza o filho; nas duas, a
+ *    peça marca um botão que já existe, e aqui marcar é escrever o `data-slot`.
+ *
+ * Quem compõe:
+ *
+ *   const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+ *   cancelar.dataset.slot = 'popover-close';
+ *
+ * A marca vale para QUALQUER elemento dentro do painel, em qualquer profundidade
+ * — quem fecha é a delegação no painel, em `open()`.
+ */
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -337,6 +376,26 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     // leitor de tela anunciar o diálogo mesmo num painel só de texto.
     panelEl.tabIndex = -1;
     panelEl.style.position = 'absolute';
+
+    /*
+     * Todo `[data-slot="popover-close"]` DENTRO do painel fecha, informando
+     * `close-button`.
+     *
+     * Delegação, e não um ouvinte por botão: o conteúdo do painel é de quem
+     * compõe e chega pronto pela opção `content` — um ouvinte por elemento só
+     * alcançaria peça que esta fábrica criasse, e ela não cria nenhuma.
+     *
+     * `closest` e não `target`: o clique cai no ícone ou no `.nds-sr-only` de
+     * dentro do botão, e a comparação direta erraria os dois.
+     *
+     * `pedirChange` e não `close`: no modo controlado o gesto só ANUNCIA a
+     * intenção, como o Escape e o clique fora — quem move o painel é quem
+     * chama `setOpen()`.
+     */
+    panelEl.addEventListener('click', (event) => {
+      const alvo = event.target as Element | null;
+      if (alvo?.closest('[data-slot="popover-close"]')) pedirChange(false, 'close-button');
+    });
 
     if (typeof content === 'string') {
       panelEl.textContent = content;

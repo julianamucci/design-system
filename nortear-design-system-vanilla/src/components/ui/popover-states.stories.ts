@@ -220,8 +220,12 @@ export const Focused: Story = {
     actions.className = 'nds-cluster';
     actions.dataset.spacing = 'sm';
     actions.dataset.justify = 'end';
+    // O Cancelar fecha o painel: a fábrica delega o clique em
+    // `[data-slot="popover-close"]` e informa `close-button`.
+    const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+    cancelar.dataset.slot = 'popover-close';
     actions.append(
-      createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' }),
+      cancelar,
       createButton({ variant: 'default', size: 'sm', label: 'Confirmar' }),
     );
     content.appendChild(actions);
@@ -291,6 +295,24 @@ export const Focused: Story = {
       // errada daria verde em qualquer elemento.
       await expect(getComputedStyle(confirmar).boxShadow).not.toBe('none');
     });
+
+    await step('E o Cancelar do painel FECHA — ele não é decoração', async () => {
+      const p = panel()!;
+      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
+      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(cancelar);
+      await waitFor(() => {
+        if (panel()) throw new Error('popover ainda aberto');
+      });
+      // O foco estava no painel que saiu: ele volta ao gatilho, e não ao topo
+      // da página.
+      await expect(trigger).toHaveFocus();
+    });
+
+    // Termina ABERTA: é este estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await expect(await open(trigger)).toBeVisible();
+    });
   },
 };
 
@@ -323,8 +345,13 @@ export const Modal: Story = {
     actions.className = 'nds-cluster';
     actions.dataset.spacing = 'sm';
     actions.dataset.justify = 'end';
+    // No modo modal o controle de fechar dentro do painel pesa mais: o foco
+    // está preso e a rolagem travada, então o caminho de saída que não é o
+    // Escape tem de existir DENTRO do painel.
+    const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+    cancelar.dataset.slot = 'popover-close';
     actions.append(
-      createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' }),
+      cancelar,
       createButton({ variant: 'default', size: 'sm', label: 'Confirmar' }),
     );
     content.appendChild(actions);
@@ -378,6 +405,22 @@ export const Modal: Story = {
 
       await expect(p.contains(document.activeElement)).toBe(true);
       await expect(confirmar).toHaveFocus();
+    });
+
+    await step('O Cancelar fecha o painel — a saída que não é o Escape', async () => {
+      const p = panel()!;
+      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
+      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(cancelar);
+      await waitFor(() => {
+        if (panel()) throw new Error('popover ainda aberto');
+      });
+      await expect(trigger).toHaveFocus();
+    });
+
+    // Termina ABERTA: é este estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await expect(await open(trigger)).toBeVisible();
     });
   },
 };

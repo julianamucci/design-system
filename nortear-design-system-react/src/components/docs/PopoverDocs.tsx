@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ComponentProps } from "react";
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -240,6 +241,7 @@ export function PopoverDocs() {
   PopoverHeader,
   PopoverTitle,
   PopoverDescription,
+  PopoverClose,
 } from "@/components/ui/popover";`;
 
   const structureCode = tContent("anatomy.structureCode");
@@ -345,13 +347,22 @@ interface PopoverContentProps {
                   {tContent("demonstration.labels.description")}
                 </PopoverDescription>
               </PopoverHeader>
+              {/* As duas ações FECHAM, e é por isso que as duas são
+                  `PopoverClose`: um "Cancelar" inerte promete uma saída que não
+                  existe. E fechar por aqui chega ao `popover_close` com
+                  `close-button`, que é o motivo que distingue desistiu de
+                  concluiu — o `api` fica para o fechamento por código. */}
               <div className="nds-cluster" data-spacing="sm" data-justify="end">
-                <Button variant="ghost" size="sm">
-                  {tContent("demonstration.labels.cancel")}
-                </Button>
-                <Button size="sm">
-                  {tContent("demonstration.labels.save")}
-                </Button>
+                <PopoverClose asChild>
+                  <Button variant="ghost" size="sm">
+                    {tContent("demonstration.labels.cancel")}
+                  </Button>
+                </PopoverClose>
+                <PopoverClose asChild>
+                  <Button size="sm">
+                    {tContent("demonstration.labels.save")}
+                  </Button>
+                </PopoverClose>
               </div>
             </PopoverContent>
           </Popover>

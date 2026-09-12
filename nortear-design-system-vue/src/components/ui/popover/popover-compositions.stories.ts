@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -51,6 +52,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -88,7 +90,9 @@ export const EditProfile: Story = {
               <Label for="popover-comp-email" class="nds-text-caption">Email</Label>
               <Input id="popover-comp-email" type="email" model-value="ana@nortear.com.br" />
               <div class="nds-cluster" data-justify="end" data-spacing="sm">
-                <Button variant="ghost" size="sm">Cancelar</Button>
+                <PopoverClose as-child>
+                  <Button variant="ghost" size="sm">Cancelar</Button>
+                </PopoverClose>
                 <Button type="submit" size="sm">Atualizar</Button>
               </div>
             </form>

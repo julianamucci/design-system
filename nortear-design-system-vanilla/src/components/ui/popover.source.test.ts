@@ -120,6 +120,14 @@ describe('popoverComAcoesSnippet', () => {
     expect(code).toContain("label: 'Confirmar'");
     expect(code).toContain("createPopoverTitle({ text: 'Confirmar alteração' })");
   });
+
+  it('e ensina o Cancelar que FECHA, não um botão inerte', () => {
+    // O snippet é o que o leitor copia: até 2026-09-12 ele publicava um
+    // `createButton` sem ouvinte nenhum, e o painel não fechava por ele.
+    const code = popoverWithActionsSnippet();
+    expect(code).toContain("cancelar.dataset.slot = 'popover-close'");
+    expect(code).toContain('acoes.append(cancelar,');
+  });
 });
 
 describe('popoverSource', () => {

@@ -21,6 +21,7 @@ describe('popoverSource', () => {
       `<script setup lang="ts">
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -43,7 +44,9 @@ import { Button } from '@/components/ui/button'
         </PopoverDescription>
       </PopoverHeader>
       <div class="nds-cluster" data-justify="end" data-spacing="sm">
-        <Button variant="ghost" size="sm">Cancelar</Button>
+        <PopoverClose as-child>
+          <Button variant="ghost" size="sm">Cancelar</Button>
+        </PopoverClose>
         <Button size="sm">Salvar</Button>
       </div>
     </PopoverContent>
@@ -174,6 +177,27 @@ describe('transforms das stories de composição', () => {
     expect(saida).toContain('<Button variant="ghost" size="sm">Cancelar</Button>');
     expect(saida).toContain('<Button type="submit" size="sm">Atualizar</Button>');
     expect(saida).toContain('v-model="nome"');
+  });
+
+  it('o Cancelar do rodapé é o PopoverClose, e não um botão decorativo', () => {
+    // O defeito de 2026-09-12: o rodapé ensinava um Cancelar que não fechava
+    // nada. Quem copia o snippet copia o defeito, então a guarda é aqui.
+    for (const fn of [popoverSource, popoverWithTitleSource, popoverEditarPerfilSource]) {
+      const saida = fn();
+      expect(saida).toContain('<PopoverClose as-child>');
+      // `as-child` não é detalhe: sem ele o botão do design system fica dentro
+      // de outro botão, e o de fora rouba o clique.
+      expect(saida).not.toMatch(/<PopoverClose>/);
+      // E a peça tem de estar no import, senão o snippet não compila.
+      expect(saida).toContain('  PopoverClose,\n');
+    }
+  });
+
+  it('quem não tem rodapé de ações não importa a peça de fechar', () => {
+    // O import que não se usa é ruído que o leitor copia junto.
+    for (const fn of [popoverAboveSource, popoverFormSource, popoverContentLivreSource]) {
+      expect(fn()).not.toContain('PopoverClose');
+    }
   });
 
   it('o filtro é escolha múltipla, com o campo dentro do próprio rótulo', () => {

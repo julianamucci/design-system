@@ -294,8 +294,18 @@ alcança.
 > `movimento_sem_guarda_eficaz`, que reprova exatamente a guarda que perde. O que
 > sobra é enfeite: três blocos que anunciam proteção sobre movimento que o token
 > já para, e que o portão não acusa porque ali não há duração literal.
-> **Fecha quando**: as três guardas forem removidas com o motivo escrito na
-> folha, ou passarem a mirar seletor que vença a declaração.
+> **Estreitada de novo em 2026-09-12: são DUAS.** A do `popover.css` saiu — não
+> por ter sido consertada, mas porque o Popover deixou de animar por decisão da
+> dona, e sem `[data-ending-style]` não há declaração para a guarda perder. As
+> duas coisas saíram juntas da folha, com o motivo escrito lá.
+> **E uma referência apodreceu junto**: o comentário desta mesma família no
+> `hover-card.css` usava a guarda do popover como exemplo VIVO da perda na
+> cascata. Os dois lados do exemplo deixaram de existir, e ele passou a descrever
+> a FORMA do defeito em vez do caso — citar vizinho pelo nome envelhece sozinho,
+> que é exatamente o que esta pendência vem medindo desde 2026-09-09.
+> **Fecha quando**: as duas guardas restantes (`dialog.css` e
+> `dropdown-menu.css`) forem removidas com o motivo escrito na folha, ou
+> passarem a mirar seletor que vença a declaração.
 
 ## 9. Analytics
 

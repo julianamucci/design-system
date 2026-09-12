@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -44,6 +45,7 @@ type Story = StoryObj<typeof meta>;
 
 const sharedComponents = {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
@@ -59,7 +61,9 @@ const SIMPLE_PANEL = `
               <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
             </PopoverHeader>
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
-              <Button variant="ghost" size="sm">Cancelar</Button>
+              <PopoverClose as-child>
+                <Button variant="ghost" size="sm">Cancelar</Button>
+              </PopoverClose>
               <Button size="sm">Salvar</Button>
             </div>
           </PopoverContent>`;

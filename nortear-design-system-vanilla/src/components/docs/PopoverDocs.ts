@@ -195,6 +195,12 @@ function buildWithTitlePopover(
     actions.dataset.spacing = 'sm';
     actions.dataset.justify = 'end';
     const cancel = createButton({ variant: 'ghost', size: 'sm', label: t('demonstration.labels.cancel') });
+    // O Cancelar FECHA: a fábrica delega o clique em `[data-slot="popover-close"]`
+    // dentro do painel e relata `close-button` ao `onOpenChange` — que é o que o
+    // rastreio logo acima manda ao GA4. Sem a marca, a demonstração da página
+    // ensinava um Cancelar inerte e o motivo `close-button` da tabela de
+    // analytics não tinha caminho nenhum que o produzisse.
+    cancel.dataset.slot = 'popover-close';
     const save = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.save') });
     actions.append(cancel, save);
     content.appendChild(actions);
@@ -269,6 +275,9 @@ function buildFormPopover(location: string, triggerId = 'form'): HTMLElement {
   actions.dataset.spacing = 'sm';
   actions.dataset.justify = 'end';
   const cancel = createButton({ variant: 'ghost', size: 'sm', label: t('demonstration.labels.cancel'), type: 'button' });
+  // Sair sem confirmar é FECHAR o painel — a marca é o que liga o botão à
+  // delegação da fábrica.
+  cancel.dataset.slot = 'popover-close';
   const submit = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.form.submit'), type: 'submit' });
   actions.append(cancel, submit);
 
@@ -550,7 +559,16 @@ createPopover({ trigger, content });`;
         const codeForm = `const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 
 const form = document.createElement('form');
-// ... Inputs + botões (Cancelar + Atualizar)
+// ... Inputs
+
+// Sair sem confirmar FECHA o painel: a fábrica delega o clique em
+// [data-slot="popover-close"] dentro do painel e relata 'close-button'.
+// Sem a marca não há ouvinte a escrever — o botão fica inerte.
+const cancel = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar', type: 'button' });
+cancel.dataset.slot = 'popover-close';
+
+form.append(cancel, createButton({ variant: 'default', size: 'sm', label: 'Atualizar', type: 'submit' }));
+
 createPopover({ trigger, content: form });`;
 
         return createDocsVariants({
@@ -1013,6 +1031,9 @@ createPopover({ trigger, content });`;
 export type PopoverSide = 'top' | 'bottom' | 'left' | 'right';
 export type PopoverAlign = 'start' | 'center' | 'end';
 
+// Por qual caminho o painel fechou. Chega no segundo argumento do callback.
+export type PopoverCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+
 export type PopoverOptions = {
   trigger: HTMLElement;
   content: HTMLElement | string;
@@ -1021,7 +1042,9 @@ export type PopoverOptions = {
   sideOffset?: number;         // default 8
   open?: boolean;              // presente = modo controlado
   defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
+  modal?: boolean;             // default false — foco preso + rolagem travada
+  ariaLabel?: string;          // só age no painel SEM título
+  onOpenChange?: (open: boolean, reason?: PopoverCloseReason) => void;
   class?: string;
 };
 
@@ -1040,9 +1063,16 @@ export type PopoverPartOptions = { text?: string; class?: string };
 
 export function createPopoverHeader(options?: PopoverPartOptions): HTMLElement;
 export function createPopoverTitle(
-  options?: PopoverPartOptions & { level?: 1 | 2 | 3 | 4 | 5 | 6 },  // default 4
+  options?: PopoverPartOptions & { level?: 1 | 2 | 3 | 4 | 5 | 6 },  // default 2
 ): HTMLElement;
-export function createPopoverDescription(options?: PopoverPartOptions): HTMLElement;`;
+export function createPopoverDescription(options?: PopoverPartOptions): HTMLElement;
+
+// ─── Fechar de DENTRO do painel ─────────────────────────────────────────────
+// Não há uma quarta fábrica: o controle de fechar é uma MARCA no botão de quem
+// compõe. A fábrica delega o clique em [data-slot="popover-close"] dentro do
+// painel, em qualquer profundidade, e relata 'close-button'.
+const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+cancelar.dataset.slot = 'popover-close';`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -1066,7 +1096,9 @@ export function createPopoverDescription(options?: PopoverPartOptions): HTMLElem
                 { name: 'sideOffset',   type: 'number',                              defaultValue: '8',         required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) },
                 { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.open.description')) + ' Definida, o painel passa ao modo controlado: clique, Escape e clique fora só anunciam a intenção por onOpenChange, e quem move o painel é setOpen().' },
                 { name: 'defaultOpen',  type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: 'Estado inicial no modo não-controlado.' },
-                { name: 'onOpenChange', type: '(open: boolean) => void',             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
+                { name: 'modal',        type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: toPlainText(t('props.table.modal.description')) },
+                { name: 'ariaLabel',    type: 'string',                              defaultValue: '—',         required: 'Não', description: 'Nome acessível declarado do painel. Só age quando o conteúdo não traz título: com título quem nomeia é o aria-labelledby, e os dois juntos seriam ambiguidade.' },
+                { name: 'onOpenChange', type: "(open: boolean, reason?: 'escape' | 'overlay' | 'close-button' | 'api') => void", defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) + ' No fechamento chega também o caminho que o causou: escape, overlay (clique fora, ou clique no gatilho de novo), close-button (qualquer elemento marcado com data-slot="popover-close" dentro do painel) e api (a chamada de close() no que a fábrica devolve).' },
                 { name: 'class',        type: 'string',                              defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
               ],
             },
@@ -1075,7 +1107,7 @@ export function createPopoverDescription(options?: PopoverPartOptions): HTMLElem
               cols: propsCols,
               items: [
                 { name: 'text',  type: 'string',                    defaultValue: '—', required: 'Não', description: 'Texto da parte, escrito por textContent.' },
-                { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6',     defaultValue: '4', required: 'Não', description: 'Só no título: profundidade do cabeçalho. O painel é um diálogo e usa este elemento como nome acessível; trocar o nível encaixa o título na hierarquia da página.' },
+                { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6',     defaultValue: '2', required: 'Não', description: 'Só no título: profundidade do cabeçalho. O painel é um diálogo e usa este elemento como nome acessível; trocar o nível encaixa o título na hierarquia da página.' },
                 { name: 'class', type: 'string',                    defaultValue: '—', required: 'Não', description: 'Classes .nds-* adicionais na parte.' },
               ],
             },

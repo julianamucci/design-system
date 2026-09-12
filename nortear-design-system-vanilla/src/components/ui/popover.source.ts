@@ -301,10 +301,14 @@ const acoes = document.createElement('div');
 acoes.className = 'nds-cluster';
 acoes.dataset.spacing = 'sm';
 acoes.dataset.justify = 'end';
-acoes.append(
-  createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' }),
-  createButton({ size: 'sm', label: 'Confirmar' }),
-);
+
+// O Cancelar FECHA o painel: a fábrica delega o clique em
+// \`[data-slot="popover-close"]\` dentro do painel e relata \`close-button\`.
+// Sem a marca o botão não faz nada — não há ouvinte próprio a escrever.
+const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
+cancelar.dataset.slot = 'popover-close';
+
+acoes.append(cancelar, createButton({ size: 'sm', label: 'Confirmar' }));
 
 conteudo.append(${recuar(
       callLine('createPopoverTitle', options([['text', text(o.title ?? 'Confirmar alteração')]])),

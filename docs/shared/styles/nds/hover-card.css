@@ -132,11 +132,16 @@
  * junto com os outros 21 alvos de overlay sondados.
  *
  * Os blocos por folha das vizinhas são cinto e suspensório — e vários deles não
- * seguram nada: a guarda do popover (`popover.css`) mira
- * `.nds-popover-content`, (0,1,0), contra uma declaração em
- * `.nds-popover-content[data-ending-style]`, (0,2,0), e perde no cascata.
- * `@media` não acrescenta especificidade. Ninguém tinha notado porque a camada
- * de token já fazia o trabalho.
+ * seguram nada, por especificidade: a guarda mira a classe nua (0,1,0) contra
+ * uma declaração em `[data-ending-style]` (0,2,0), e perde na cascata; `@media`
+ * não acrescenta especificidade. Ninguém tinha notado porque a camada de token
+ * já fazia o trabalho.
+ *
+ * O exemplo que estava escrito aqui era o popover, e ele saiu em 2026-09-12: o
+ * Popover deixou de animar (decisão da dona), então nem a declaração nem a
+ * guarda existem mais naquela folha. Citar vizinho pelo nome envelhece sozinho —
+ * o que fica é a FORMA do defeito, que continua valendo para quem escrever a
+ * próxima guarda.
  *
  * O caso que a guarda de token NÃO cobre é duração LITERAL, fora de
  * `var(--duration-*)` — ver o bloco no fim de `utilities.css`. Aqui não é o

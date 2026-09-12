@@ -66,7 +66,6 @@ function pressTab(shift = false): void {
 }
 
 export const Closed: Story = {
-  name: 'Closed',
   parameters: {
     docs: { description: { story: 'Estado inicial — apenas o trigger é visível, Content não renderizado.' } },
   },

@@ -3,14 +3,17 @@ import { useState } from "react";
 import { userEvent, within, expect, waitFor, screen } from "storybook/test";
 import {
   Popover,
+  PopoverClose,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
 } from "./popover";
+import { popoverCloseReason } from "./popover-close-reason";
 import { Button } from "./button";
 import {
+  popoverCloseSource,
   popoverOpenSource,
   popoverControlledSource,
   popoverModalSource,
@@ -216,6 +219,100 @@ export const Controlled: Story = {
   },
 };
 
+export const CloseButton: Story = {
+  parameters: {
+    docs: {
+      source: { transform: popoverCloseSource },
+      description: {
+        story:
+          "Controle de fechar dentro do painel. Ele fecha por um caminho PRÓPRIO: o motivo que chega ao callback de mudança é o do botão de fechar, e não o de fechamento por código — é essa diferença que separa, no relatório, quem desistiu de quem concluiu.",
+      },
+    },
+  },
+  render: () => {
+    const CloseDemo = () => {
+      // O motivo TRADUZIDO, escrito na tela: é o que deixa a asserção medir o
+      // que o produto consumiria, e não o jargão cru da lib. Sem o parágrafo, o
+      // ramo `close-press` só existiria na tabela do teste de unidade — nenhuma
+      // story desta stack conseguia produzi-lo antes de 2026-09-12.
+      const [reason, setReason] = useState("—");
+      return (
+        <div className={`nds-stack ${wrapperClass}`} data-spacing="sm" style={wrapperStyle}>
+          <Popover
+            defaultOpen
+            onOpenChange={(open, evento) => {
+              if (!open) setReason(popoverCloseReason(evento?.reason));
+            }}
+          >
+            <PopoverTrigger asChild>
+              <Button variant="outline">Abrir popover</Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <PopoverHeader>
+                <PopoverTitle>Configurações de exibição</PopoverTitle>
+                <PopoverDescription>
+                  Ajuste a aparência do conteúdo da página.
+                </PopoverDescription>
+              </PopoverHeader>
+              <div className="nds-cluster" data-justify="end" data-spacing="sm">
+                <PopoverClose asChild>
+                  <Button variant="ghost" size="sm">Cancelar</Button>
+                </PopoverClose>
+                <PopoverClose asChild>
+                  <Button size="sm">Salvar</Button>
+                </PopoverClose>
+              </div>
+            </PopoverContent>
+          </Popover>
+          <p className="nds-text-caption nds-text-muted-foreground" data-testid="motivo">
+            {reason}
+          </p>
+        </div>
+      );
+    };
+    return <CloseDemo />;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = () => canvas.getByRole("button", { name: /Abrir popover/i });
+    const reasonText = () => canvas.getByTestId("motivo").textContent;
+
+    const openPanel = async () => {
+      if (trigger().getAttribute("aria-expanded") !== "true") {
+        await userEvent.click(trigger());
+      }
+      return waitFor(() => screen.getByRole("dialog"));
+    };
+
+    await step("Clicar no controle de fechar fecha o painel", async () => {
+      const dialog = await openPanel();
+      await userEvent.click(within(dialog).getByRole("button", { name: /Cancelar/i }));
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      await expect(trigger()).toHaveAttribute("aria-expanded", "false");
+    });
+
+    await step("E o motivo que chega ao callback é o do botão de fechar", async () => {
+      // A asserção que não existia. Antes de a peça existir, o ramo `close-press`
+      // do `popoverCloseReason` era inalcançável desta stack: nenhuma story tinha
+      // como produzi-lo, e o teste de unidade só provava a TABELA, nunca a fiação.
+      await expect(reasonText()).toBe("close-button");
+    });
+
+    await step("Controle negativo: Escape fecha pelo outro caminho", async () => {
+      // Sem este passo, um `close-button` cravado no lugar da tradução passaria.
+      await openPanel();
+      await userEvent.keyboard("{Escape}");
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      await expect(reasonText()).toBe("escape");
+    });
+
+    // Termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step("Estado final: painel aberto", async () => {
+      await expect(await openPanel()).toBeVisible();
+    });
+  },
+};
+
 export const Modal: Story = {
   parameters: {
     docs: {
@@ -241,7 +338,15 @@ export const Modal: Story = {
               O foco fica preso no painel enquanto ele está aberto.
             </PopoverDescription>
           </PopoverHeader>
-          {/* DOIS focáveis de propósito: com um só, "o Tab do último volta ao
+          {/* O rodapé NÃO usa `PopoverClose`, e a ausência é o assunto: o
+              gerenciador de foco do Base UI só trapeia com `modal !== false &&
+              hasClosePart`, e `hasClosePart` conta os controles de fechar
+              registrados dentro do painel. Com um deles aqui, quem prenderia o
+              foco seria a lib, e esta story mediria a lib — não o laço de
+              tabulação do `PopoverContent`, que é o que sustenta o contrato de
+              `modal` quando a composição não tem botão de fechar.
+
+              DOIS focáveis de propósito: com um só, "o Tab do último volta ao
               primeiro" seria verdade sem laço nenhum, porque primeiro e último
               seriam o mesmo elemento. */}
           <div className="nds-cluster nds-pt-1" data-justify="end">

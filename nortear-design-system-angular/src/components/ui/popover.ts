@@ -39,9 +39,10 @@ import {
 //   · posicionamento por floating-ui no `RdxPopoverPositioner`, com auto-flip
 //     por colisão e as variáveis `--transform-origin` / `data-side` /
 //     `data-align` que o CSS compartilhado já lê;
-//   · portal para o `document.body` que só monta enquanto o popover está aberto
-//     e segura o elemento até a animação de saída terminar — sem isso o
-//     `[data-ending-style]` da folha não teria o que animar;
+//   · portal para o `document.body`, que tira o painel de todo `overflow:
+//     hidden` e de todo contexto de empilhamento dos ancestrais — e só monta
+//     enquanto o popover está aberto, que é o que faz o painel fechado NÃO
+//     existir no DOM em vez de existir escondido;
 //   · `role="dialog"` no painel e o par `aria-labelledby`/`aria-describedby`
 //     ligado ao título e à descrição REAIS, por id gerado;
 //   · `aria-expanded`, `aria-controls` e `aria-haspopup="dialog"` no gatilho,
@@ -49,6 +50,24 @@ import {
 //     é o detalhe que evita `aria-valid-attr-value` no axe;
 //   · Escape e clique fora fecham, e o foco volta ao gatilho pelo gerenciador de
 //     foco do próprio primitivo.
+//
+// O PAINEL NÃO ESPERA ANIMAÇÃO NENHUMA PARA SAIR, desde 2026-09-12. Até essa
+// data este bloco citava uma terceira razão para o portal: ele SEGURAVA o
+// elemento até a transição de saída terminar, e era isso que dava tempo ao
+// `[data-ending-style]` da folha compartilhada. A dona tirou o movimento do
+// Popover — entrada e saída —, e a regra que animava saiu de
+// `docs/shared/styles/nds/popover.css`; a razão morreu com ela.
+//
+// O mecanismo do lado da lib continua de pé e é o que explica a mudança: a
+// `PresenceMachine` do `@radix-ng/primitives` adia o desmonte um render (o
+// `afterNextRender` que deixa os estilos de fechado chegarem ao DOM) e só o
+// SUSPENDE se achar animação ou transição de saída recém-iniciada na subárvore.
+// Sem nenhuma regra de movimento, ela não acha nada e desmonta ali mesmo.
+// Consequência medida: `onOpenChangeComplete` passa a emitir junto com o
+// fechamento, e não ~`--duration-fast` depois. Nenhuma play desta stack
+// dependia daquele intervalo — todas esperam o painel sumir por `waitFor`, que
+// só ficou mais rápido. Quem reintroduzir movimento aqui devolve as duas
+// coisas de uma vez: a espera e a razão.
 //
 // O que os primitivos NÃO entregam é `data-state="open|closed"`: o Radix NG usa
 // `data-open` / `data-closed` (convenção do Base UI). As outras stacks e a
