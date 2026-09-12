@@ -468,8 +468,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Composer context",
@@ -940,8 +939,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Contexto del composer",
@@ -1412,7 +1410,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

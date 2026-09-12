@@ -524,8 +524,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Context usage",
@@ -1052,8 +1051,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Uso del contexto",
@@ -1580,7 +1578,6 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

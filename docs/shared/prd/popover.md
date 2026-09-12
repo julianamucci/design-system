@@ -473,3 +473,17 @@ Ordem: folha → primitivo da stack → sub-partes → stories → docs page.
 | desenho, anotações de Dev Mode | Figma, página `Popover` (componente `677:3`) |
 | divergências intencionais sobre libs | `PATCHES.md` |
 | portões determinísticos | `node scripts/audit.mjs popover --json` |
+| rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
+
+**As 54 chaves `nav` saíram do conteúdo em 2026-09-12.** As páginas do vue e do
+svelte liam o conteúdo, e por isso "When to Use" e "Cuándo Usar" apareciam aqui
+onde as outras três diziam "Usage" e "Cuándo usar".
+
+O menu da docs page é cromo: as mesmas quinze seções, na mesma ordem, em toda
+página das cinco stacks, lidas de relance e comparando páginas. A palavra própria
+do componente vive no TÍTULO da seção. Portões: `rotulo_de_nav_no_conteudo`,
+`rotulo_de_nav_do_conteudo` e `vocabulario_de_nav_divergente`, este último
+porque `en.nav.anatomy` do vue dizia "Anatomity" — palavra inexistente, no menu
+das 82 docs pages daquela stack, e indistinguível de decisão enquanto ninguém
+comparava as cinco cópias.
+

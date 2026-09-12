@@ -387,8 +387,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Thinking indicator",
@@ -778,8 +777,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Indicador de generación",
@@ -1169,7 +1167,6 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

@@ -465,8 +465,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Response timing",
@@ -934,8 +933,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Tiempo de la respuesta",
@@ -1403,7 +1401,6 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

@@ -432,3 +432,22 @@ Ordem: folha → primitivo → cabeçalho e rodapé → mídia → stories → d
 | texto, props, critérios de teste | `docs/shared/content/alert-dialog/translations.json` |
 | desenho e anotações | Figma, página `AlertDialog` (componente `212:3`) |
 | portões determinísticos | `node scripts/audit.mjs alert-dialog --json` |
+| rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
+
+**As 54 chaves `nav` saíram do conteúdo em 2026-09-12.** Este slug foi o
+sintoma que abriu a investigação: o menu dizia "Estados" no react e no vanilla,
+que leem o `ui.json`, e "Configurações" no vue, no svelte e no angular, que
+liam o conteúdo — o angular por uma ponte `navLabel()` que tentava o conteúdo
+primeiro. Somando `nav.usage` em inglês e espanhol, eram cinco rótulos
+divergentes só aqui, de 173 medidos em 82 slugs. O título da seção continua
+vindo do conteúdo, e continua sendo "Configurações": é ali que a palavra do
+componente vale.
+
+O menu da docs page é cromo: as mesmas quinze seções, na mesma ordem, em toda
+página das cinco stacks, lidas de relance e comparando páginas. A palavra própria
+do componente vive no TÍTULO da seção. Portões: `rotulo_de_nav_no_conteudo`,
+`rotulo_de_nav_do_conteudo` e `vocabulario_de_nav_divergente`, este último
+porque `en.nav.anatomy` do vue dizia "Anatomity" — palavra inexistente, no menu
+das 82 docs pages daquela stack, e indistinguível de decisão enquanto ninguém
+comparava as cinco cópias.
+

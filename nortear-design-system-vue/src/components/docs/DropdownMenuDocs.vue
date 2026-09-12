@@ -337,37 +337,37 @@ watch(locale, (newLocale) => {
 
 const navGroups = computed(() => [
   {
-    label: tContent('nav.overview'),
+    label: tNav('nav.overview'),
     sections: [
-      { id: 'demonstracao', label: tContent('nav.demonstration') },
-      { id: 'anatomia',     label: tContent('nav.anatomy')       },
-      { id: 'quando-usar',  label: tContent('nav.usage')         },
-      { id: 'do-dont',      label: tContent('nav.doDont')        },
+      { id: 'demonstracao', label: tNav('nav.demonstration') },
+      { id: 'anatomia',     label: tNav('nav.anatomy')       },
+      { id: 'quando-usar',  label: tNav('nav.usage')         },
+      { id: 'do-dont',      label: tNav('nav.doDont')        },
     ],
   },
   {
-    label: tContent('nav.techRef'),
+    label: tNav('nav.techRef'),
     sections: [
-      { id: 'importacao',   label: tContent('nav.import')   },
-      { id: 'variantes',    label: tContent('nav.variants') },
-      { id: 'estados',      label: tContent('nav.states')   },
-      { id: 'propriedades', label: tContent('nav.props')    },
-      { id: 'tokens',       label: tContent('nav.tokens')   },
+      { id: 'importacao',   label: tNav('nav.import')   },
+      { id: 'variantes',    label: tNav('nav.variants') },
+      { id: 'estados',      label: tNav('nav.states')   },
+      { id: 'propriedades', label: tNav('nav.props')    },
+      { id: 'tokens',       label: tNav('nav.tokens')   },
     ],
   },
   {
-    label: tContent('nav.context'),
+    label: tNav('nav.context'),
     sections: [
-      { id: 'acessibilidade', label: tContent('nav.accessibility') },
-      { id: 'relacionados',   label: tContent('nav.related')       },
-      { id: 'notas',          label: tContent('nav.notes')         },
+      { id: 'acessibilidade', label: tNav('nav.accessibility') },
+      { id: 'relacionados',   label: tNav('nav.related')       },
+      { id: 'notas',          label: tNav('nav.notes')         },
     ],
   },
   {
-    label: tContent('nav.quality'),
+    label: tNav('nav.quality'),
     sections: [
-      { id: 'analytics', label: tContent('nav.analytics') },
-      { id: 'testes',    label: tContent('nav.testes')    },
+      { id: 'analytics', label: tNav('nav.analytics') },
+      { id: 'testes',    label: tNav('nav.testes')    },
     ],
   },
 ]);

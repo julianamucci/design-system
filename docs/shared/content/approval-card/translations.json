@@ -480,8 +480,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Approval card",
@@ -964,8 +963,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Tarjeta de autorización",
@@ -1448,7 +1446,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

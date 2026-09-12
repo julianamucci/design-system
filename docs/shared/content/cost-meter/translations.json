@@ -488,8 +488,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Cost meter",
@@ -980,8 +979,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Medidor de coste",
@@ -1472,7 +1470,6 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

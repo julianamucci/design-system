@@ -501,8 +501,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Composer model picker",
@@ -1006,8 +1005,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Selector de modelo del composer",
@@ -1511,7 +1509,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

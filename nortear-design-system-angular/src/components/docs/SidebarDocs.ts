@@ -56,17 +56,6 @@ const { t, dict } = useTranslation(sidebarTranslations as Record<string, unknown
   },
 });
 
-/**
- * Rótulo de navegação, com queda para o ui.json.
- *
- * Nem todo componente declara a lista de nav inteira no próprio JSON: o
- * slider não tem nav.compositions. Sem a queda, o que aparece na barra
- * lateral é a chave crua.
- */
-function navLabel(key: string): string {
-  const doComponente = t(key);
-  return doComponente === key ? tNav(key) : doComponente;
-}
 
 const SECTION_IDS = [
   'demonstracao', 'anatomia', 'quando-usar', 'do-dont',
@@ -536,8 +525,8 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: navLabel(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
+      label: tNav(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: tNav(s.labelKey) })),
     }));
   });
 

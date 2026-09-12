@@ -489,8 +489,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Trigger picker",
@@ -982,8 +981,7 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Selector del disparador",
@@ -1475,7 +1473,6 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

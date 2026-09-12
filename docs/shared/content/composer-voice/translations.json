@@ -473,8 +473,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Voice dictation",
@@ -950,8 +949,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Dictado por voz",
@@ -1427,7 +1425,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

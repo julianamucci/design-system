@@ -479,8 +479,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Tool group",
@@ -962,8 +961,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Grupo de herramientas",
@@ -1445,7 +1443,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

@@ -4647,6 +4647,115 @@ const SOMBRA_CRAVADA_DECLARADA = {
  * AlertDialog diz `xl`, e é o certo), então não entra.
  */
 /**
+ * O rótulo do menu lateral da docs page tem UMA casa, e ela é o `ui.json`.
+ *
+ * O menu é cromo: as mesmas quinze seções, na mesma ordem, em toda docs page
+ * das cinco stacks. Quem nomeia o que o componente TEM de próprio é o título da
+ * seção, que sai do conteúdo compartilhado — a separação vale porque a barra
+ * lateral se lê de relance, comparando páginas, e o título se lê dentro de uma.
+ *
+ * Medido em 2026-09-12, e o custo estava distribuído em 82 slugs: 79 dos 85
+ * conteúdos declaravam um bloco `nav` com **2949 chaves** nos três idiomas, e
+ * **93,5% delas eram cópia literal do `ui.json`**. As páginas discordavam sobre
+ * qual dicionário vence — react e vanilla liam o `ui.json`, catorze páginas do
+ * vue e dezessete do svelte liam o conteúdo, e onze do angular tinham uma ponte
+ * `navLabel()` que tentava o conteúdo primeiro. Resultado: **173 rótulos
+ * renderizados divergentes** entre as cinco, sem um portão, um teste ou um
+ * compilador que visse — JSON não compila, e o menu não tem asserção.
+ *
+ * O sintoma que chegou como relato era o menor deles: o AlertDialog dizia
+ * "Estados" em duas stacks e "Configurações" em três. Na mesma varredura
+ * apareceu `en.nav.anatomy: "Anatomity"` no `ui.json` do vue — palavra que não
+ * existe em inglês, no menu das 82 docs pages daquela stack.
+ *
+ * A regra cobre as três formas de a segunda casa voltar:
+ *
+ *  1. conteúdo compartilhado declarando `nav.*`;
+ *  2. docs page resolvendo `nav.*` pelo tradutor do CONTEÚDO;
+ *  3. os cinco `ui.json` discordando entre si sobre o mesmo rótulo.
+ *
+ * A terceira é a que pegaria o "Anatomity", e é por isso que ela existe: sem
+ * comparar as cinco cópias, um erro de digitação numa delas é indistinguível de
+ * uma decisão.
+ */
+function auditRotuloDeNav() {
+  const violations = [];
+
+  // 1 · o conteúdo compartilhado não tem bloco `nav`
+  const raizConteudo = join(ROOT, 'docs', 'shared', 'content');
+  if (existsSync(raizConteudo)) {
+    for (const slug of readdirSync(raizConteudo)) {
+      const arq = join(raizConteudo, slug, 'translations.json');
+      if (!existsSync(arq)) continue;
+      let json;
+      try { json = JSON.parse(readFile(arq) || '{}'); } catch { continue; }
+      const idiomas = Object.keys(json).filter((l) => json[l] && typeof json[l] === 'object' && json[l].nav);
+      if (idiomas.length === 0) continue;
+      const chaves = new Set(idiomas.flatMap((l) => Object.keys(json[l].nav)));
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, arq), rule: 'rotulo_de_nav_no_conteudo',
+        message: `\`${slug}\` declara bloco \`nav\` (${[...chaves].sort().map((c) => `nav.${c}`).join(', ')}) em ${idiomas.join('/')} — o rótulo do menu mora no \`src/i18n/ui.json\` de cada stack, e conteúdo que também o declara é a segunda casa que fez 173 rótulos divergirem entre as cinco; a palavra própria do componente vai no TÍTULO da seção`,
+      });
+    }
+  }
+
+  // 2 · docs page não resolve rótulo de menu pelo tradutor do conteúdo
+  const PELO_CONTEUDO = /(?:\btContent|\$?\btStore|\$tStore|\bnavLabel)\s*\(\s*['"`]nav\./;
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    if (!existsSync(dir)) continue;
+    for (const nome of readdirSync(dir)) {
+      if (!/Docs\.(tsx|vue|svelte|ts)$/.test(nome)) continue;
+      const src = readFile(join(dir, nome));
+      if (!src) continue;
+      const linhas = stripComments(src).split('\n');
+      const achados = [];
+      linhas.forEach((l, i) => { if (PELO_CONTEUDO.test(l)) achados.push(i + 1); });
+      // a ponte conteúdo-primeiro: `t(key)` devolvendo a própria chave e caindo no ui.json
+      const ponte = /function\s+navLabel\s*\(|const\s+navLabel\s*=/.test(stripComments(src));
+      if (achados.length === 0 && !ponte) continue;
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, join(dir, nome)), rule: 'rotulo_de_nav_do_conteudo',
+        message: ponte && achados.length === 0
+          ? 'declara uma ponte `navLabel` que tenta o conteúdo do componente antes do `ui.json` — era ela que fazia esta stack mostrar um rótulo de menu que as outras quatro não mostravam; o menu lê só o `ui.json`'
+          : `resolve rótulo de menu pelo tradutor do CONTEÚDO na(s) linha(s) ${achados.join(', ')} — o menu é cromo e lê o \`src/i18n/ui.json\`; conteúdo que nomeia seção o faz no título dela`,
+      });
+    }
+  }
+
+  // 3 · os cinco `ui.json` contam a mesma história sobre `nav`
+  const dicionarios = {};
+  for (const stack of STACKS) {
+    const arq = join(ROOT, stackDir(stack), 'src', 'i18n', 'ui.json');
+    if (!existsSync(arq)) continue;
+    try { dicionarios[stack] = JSON.parse(readFile(arq) || '{}'); } catch { /* JSON quebrado é assunto de outro portão */ }
+  }
+  const presentes = Object.keys(dicionarios);
+  if (presentes.length > 1) {
+    const idiomas = new Set(presentes.flatMap((s) => Object.keys(dicionarios[s])));
+    for (const loc of [...idiomas].sort()) {
+      const chaves = new Set(presentes.flatMap((s) => Object.keys(dicionarios[s][loc]?.nav ?? {})));
+      for (const chave of [...chaves].sort()) {
+        const valores = {};
+        for (const s of presentes) valores[s] = dicionarios[s][loc]?.nav?.[chave];
+        if (new Set(Object.values(valores).map((v) => JSON.stringify(v))).size === 1) continue;
+        const detalhe = presentes.map((s) => `${s}=${JSON.stringify(valores[s] ?? null)}`).join(' · ');
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+          file: relative(ROOT, join(ROOT, stackDir(presentes[0]), 'src', 'i18n', 'ui.json')),
+          rule: 'vocabulario_de_nav_divergente',
+          message: `\`${loc}.nav.${chave}\` não é o mesmo nas cinco stacks: ${detalhe} — o menu é a mesma barra em toda docs page, e divergência aqui é erro de digitação ou tradução perdida, nunca decisão`,
+        });
+      }
+    }
+  }
+
+  return violations;
+}
+
+/**
  * A pasta `tokens/figma/<Coleção>/<modo>.json` defasada do `figma-variables.json`.
  *
  * Os dois saem do MESMO gerador, mas de invocações diferentes: o arquivo único
@@ -11116,7 +11225,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

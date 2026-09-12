@@ -460,3 +460,18 @@ Ordem: folha → primitivo → alça → cabeçalho, corpo e rodapé → motor d
 | texto, props, critérios de teste | `docs/shared/content/drawer/translations.json` |
 | desenho e anotações | Figma, página `Drawer` (conjunto `698:116`) |
 | portões determinísticos | `node scripts/audit.mjs drawer --json` |
+| rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
+
+**As 54 chaves `nav` saíram do conteúdo em 2026-09-12.** As páginas do vue e
+do svelte liam o conteúdo, então este slug mostrava "When to Use" onde as outras
+três mostravam "Usage", e "Tests" onde as outras mostravam "Pruebas" — deriva de
+escrita, invisível para quem lê uma stack só.
+
+O menu da docs page é cromo: as mesmas quinze seções, na mesma ordem, em toda
+página das cinco stacks, lidas de relance e comparando páginas. A palavra própria
+do componente vive no TÍTULO da seção. Portões: `rotulo_de_nav_no_conteudo`,
+`rotulo_de_nav_do_conteudo` e `vocabulario_de_nav_divergente`, este último
+porque `en.nav.anatomy` do vue dizia "Anatomity" — palavra inexistente, no menu
+das 82 docs pages daquela stack, e indistinguível de decisão enquanto ninguém
+comparava as cinco cópias.
+

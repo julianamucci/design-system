@@ -492,8 +492,8 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: navLabel(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
+      label: tNav(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: tNav(s.labelKey) })),
     }));
   });
 
@@ -848,18 +848,6 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   }
 }
 
-/**
- * Rótulo do menu lateral.
- *
- * Tenta primeiro o conteúdo do componente e só então o ui.json. Alguns slugs
- * trazem o próprio bloco `nav`, outros não — e `t()` devolve a PRÓPRIA CHAVE
- * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
- * mostrava "nav.overview" escrito na tela, sem erro nenhum.
- */
-function navLabel(key: string): string {
-  const doComponente = t(key);
-  return doComponente === key ? tNav(key) : doComponente;
-}
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
 function numberedItems(d: Record<string, string>, base: string): string[] {

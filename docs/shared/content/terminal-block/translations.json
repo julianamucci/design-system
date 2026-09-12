@@ -543,8 +543,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Terminal block",
@@ -1090,8 +1089,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Bloque de terminal",
@@ -1637,7 +1635,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

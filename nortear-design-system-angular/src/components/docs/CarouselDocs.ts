@@ -914,8 +914,8 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: navLabel(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
+      label: tNav(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: tNav(s.labelKey) })),
     }));
   });
 
@@ -1299,11 +1299,6 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
 
 // ─── Helpers de cauda ─────────────────────────────────────────────────────────
 
-/** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function navLabel(key: string): string {
-  const doComponente = t(key);
-  return doComponente === key ? tNav(key) : doComponente;
-}
 
 /**
  * Lê uma chave que pode ser string solta OU objeto com campos.

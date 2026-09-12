@@ -466,8 +466,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Composer attachments",
@@ -936,8 +935,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Adjuntos del composer",
@@ -1406,7 +1404,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

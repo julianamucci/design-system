@@ -488,26 +488,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {
-      "overview": "Visão Geral",
-      "demonstration": "Demonstração",
-      "anatomy": "Anatomia",
-      "usage": "Quando Usar",
-      "doDont": "Boas práticas",
-      "techRef": "Referência Técnica",
-      "import": "Importação",
-      "variants": "Recursos",
-      "states": "Estados",
-      "props": "Propriedades",
-      "tokens": "Tokens",
-      "context": "Contexto",
-      "accessibility": "Acessibilidade",
-      "related": "Relacionados",
-      "notes": "Notas",
-      "quality": "Qualidade",
-      "analytics": "Analytics",
-      "testes": "Testes"
     }
   },
   "en": {
@@ -999,26 +979,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {
-      "overview": "Overview",
-      "demonstration": "Demonstration",
-      "anatomy": "Anatomy",
-      "usage": "When to Use",
-      "doDont": "Best practices",
-      "techRef": "Technical Reference",
-      "import": "Import",
-      "variants": "Features",
-      "states": "States",
-      "props": "Properties",
-      "tokens": "Tokens",
-      "context": "Context",
-      "accessibility": "Accessibility",
-      "related": "Related",
-      "notes": "Notes",
-      "quality": "Quality",
-      "analytics": "Analytics",
-      "testes": "Tests"
     }
   },
   "es": {
@@ -1510,26 +1470,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {
-      "overview": "Visión General",
-      "demonstration": "Demostración",
-      "anatomy": "Anatomía",
-      "usage": "Cuándo Usar",
-      "doDont": "Buenas prácticas",
-      "techRef": "Referencia Técnica",
-      "import": "Importación",
-      "variants": "Recursos",
-      "states": "Estados",
-      "props": "Propiedades",
-      "tokens": "Tokens",
-      "context": "Contexto",
-      "accessibility": "Accesibilidad",
-      "related": "Relacionados",
-      "notes": "Notas",
-      "quality": "Calidad",
-      "analytics": "Analytics",
-      "testes": "Pruebas"
     }
   }
 }

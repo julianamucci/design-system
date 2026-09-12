@@ -420,8 +420,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "en": {
     "title": "Composer quote",
@@ -844,8 +843,7 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   },
   "es": {
     "title": "Cita del composer",
@@ -1268,7 +1266,6 @@
           "priority": "high"
         }
       }
-    },
-    "nav": {}
+    }
   }
 }

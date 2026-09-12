@@ -42,6 +42,40 @@ O texto de todas as docs pages deve residir em `docs/shared/content/{slug}/trans
 
 Partes específicas de framework (package name, sintaxe de import, exemplos de código) ficam hardcoded no componente — não entram nas translations.
 
+### O rótulo do menu lateral NÃO é conteúdo do componente
+
+O menu da docs page é **cromo**: as mesmas quinze seções, na mesma ordem, em
+toda página das cinco stacks. Ele lê `src/i18n/ui.json` da própria stack, e nada
+mais. Quem nomeia o que o componente tem de próprio é o **título da seção**, que
+sai do `translations.json` compartilhado.
+
+O corte é o do modo de leitura: a barra lateral se lê de relance e **comparando
+páginas** — "onde ficam os tokens neste componente?" —, então vocabulário
+diferente por página é ruído. O título se lê dentro de uma página, e ali a
+palavra do componente informa. Chart pode intitular a seção "Tipos de gráfico"
+com o menu dizendo "Variantes"; o inverso obriga o leitor a reaprender a barra a
+cada página.
+
+**Medido em 2026-09-12**, e o custo estava distribuído em 82 slugs: 79 dos 85
+conteúdos declaravam um bloco `nav` com **2949 chaves** nos três idiomas, das
+quais **93,5% eram cópia literal do `ui.json`**. As páginas discordavam sobre
+qual dicionário vence — react e vanilla liam o `ui.json`, catorze do vue e
+dezessete do svelte liam o conteúdo, e onze do angular tinham uma ponte
+`navLabel()` que tentava o conteúdo primeiro. Saldo: **173 rótulos renderizados
+diferentes entre as cinco**, e nada os via, porque JSON não compila e menu não
+tem asserção.
+
+O relato que abriu a investigação era o menor dos 173 — o AlertDialog dizia
+"Estados" em duas stacks e "Configurações" em três. Na mesma varredura apareceu
+`en.nav.anatomy: "Anatomity"` no `ui.json` do vue: palavra que não existe em
+inglês, no menu das 82 docs pages daquela stack, desde sempre.
+
+Portão: `rotulo_de_nav_no_conteudo` (conteúdo declarando `nav`),
+`rotulo_de_nav_do_conteudo` (docs page resolvendo o rótulo pelo tradutor do
+conteúdo, ou reintroduzindo a ponte) e `vocabulario_de_nav_divergente` (os cinco
+`ui.json` discordando entre si). O terceiro é o que pegaria o "Anatomity": sem
+comparar as cinco cópias, erro de digitação é indistinguível de decisão.
+
 ---
 
 ---

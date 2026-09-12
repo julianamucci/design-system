@@ -485,24 +485,6 @@
         }
       }
     },
-    "nav": {
-      "overview": "Visão geral",
-      "demonstration": "Demonstração",
-      "anatomy": "Anatomia",
-      "usage": "Quando usar",
-      "doDont": "Boas práticas",
-      "techRef": "Referência técnica",
-      "import": "Importação",
-      "variants": "Conjuntos",
-      "states": "Estados",
-      "props": "Propriedades",
-      "tokens": "Tokens",
-      "accessibility": "Acessibilidade",
-      "related": "Relacionados",
-      "notes": "Notas",
-      "analytics": "Analytics",
-      "testes": "Testes"
-    },
     "labels": {
       "toolbar": "Formatação",
       "editorField": "Corpo do texto",
@@ -1054,24 +1036,6 @@
         }
       }
     },
-    "nav": {
-      "overview": "Overview",
-      "demonstration": "Demonstration",
-      "anatomy": "Anatomy",
-      "usage": "When to use",
-      "doDont": "Best practices",
-      "techRef": "Technical reference",
-      "import": "Import",
-      "variants": "Sets",
-      "states": "States",
-      "props": "Props",
-      "tokens": "Tokens",
-      "accessibility": "Accessibility",
-      "related": "Related",
-      "notes": "Notes",
-      "analytics": "Analytics",
-      "testes": "Tests"
-    },
     "labels": {
       "toolbar": "Formatting",
       "editorField": "Body text",
@@ -1622,24 +1586,6 @@
           "priority": "medium"
         }
       }
-    },
-    "nav": {
-      "overview": "Visión general",
-      "demonstration": "Demostración",
-      "anatomy": "Anatomía",
-      "usage": "Cuándo usar",
-      "doDont": "Buenas prácticas",
-      "techRef": "Referencia técnica",
-      "import": "Importación",
-      "variants": "Conjuntos",
-      "states": "Estados",
-      "props": "Propiedades",
-      "tokens": "Tokens",
-      "accessibility": "Accesibilidad",
-      "related": "Relacionados",
-      "notes": "Notas",
-      "analytics": "Analytics",
-      "testes": "Pruebas"
     },
     "labels": {
       "toolbar": "Formato",

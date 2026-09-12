@@ -517,24 +517,6 @@
       "exitFullscreen": "Sair da tela cheia",
       "enterPip": "Janela flutuante",
       "exitPip": "Sair da janela flutuante"
-    },
-    "nav": {
-      "overview": "Visão geral",
-      "demonstration": "Demonstração",
-      "anatomy": "Anatomia",
-      "usage": "Quando usar",
-      "doDont": "Boas práticas",
-      "techRef": "Referência técnica",
-      "import": "Importação",
-      "variants": "Fontes",
-      "states": "Estados",
-      "props": "Propriedades",
-      "tokens": "Tokens",
-      "accessibility": "Acessibilidade",
-      "related": "Relacionados",
-      "notes": "Notas",
-      "analytics": "Analytics",
-      "testes": "Testes"
     }
   },
   "en": {
@@ -1055,24 +1037,6 @@
       "exitFullscreen": "Exit fullscreen",
       "enterPip": "Picture-in-picture",
       "exitPip": "Exit picture-in-picture"
-    },
-    "nav": {
-      "overview": "Overview",
-      "demonstration": "Demonstration",
-      "anatomy": "Anatomy",
-      "usage": "When to use",
-      "doDont": "Best practices",
-      "techRef": "Technical reference",
-      "import": "Import",
-      "variants": "Sources",
-      "states": "States",
-      "props": "Props",
-      "tokens": "Tokens",
-      "accessibility": "Accessibility",
-      "related": "Related",
-      "notes": "Notes",
-      "analytics": "Analytics",
-      "testes": "Tests"
     }
   },
   "es": {
@@ -1593,24 +1557,6 @@
       "exitFullscreen": "Salir de pantalla completa",
       "enterPip": "Ventana flotante",
       "exitPip": "Salir de la ventana flotante"
-    },
-    "nav": {
-      "overview": "Visión general",
-      "demonstration": "Demostración",
-      "anatomy": "Anatomía",
-      "usage": "Cuándo usar",
-      "doDont": "Buenas prácticas",
-      "techRef": "Referencia técnica",
-      "import": "Importación",
-      "variants": "Fuentes",
-      "states": "Estados",
-      "props": "Propiedades",
-      "tokens": "Tokens",
-      "accessibility": "Accesibilidad",
-      "related": "Relacionados",
-      "notes": "Notas",
-      "analytics": "Analytics",
-      "testes": "Pruebas"
     }
   }
 }

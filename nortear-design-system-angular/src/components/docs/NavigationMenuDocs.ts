@@ -414,7 +414,7 @@ const TARGETS_DEMO = [
       aberto é o que as stories capturam para a regressão visual.
     -->
     <ng-template #tplDoDont1Do>
-      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.doDont'), tNav('common.do') + ' 1')">
+      <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.doDont'), tNav('common.do') + ' 1')">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem>
             <a ndsNavigationMenuLink href="#inicio" active>
@@ -448,7 +448,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.doDont'), tNav('common.do') + ' 2')">
+      <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.doDont'), tNav('common.do') + ' 2')">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="solucoes">
             <button ndsNavigationMenuTrigger>{{ t('usage.uxWriting.table.trigger.good') }}</button>
@@ -476,7 +476,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.doDont'), tNav('common.dont') + ' 2')">
+      <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.doDont'), tNav('common.dont') + ' 2')">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="tudo">
             <button ndsNavigationMenuTrigger>{{ t('usage.uxWriting.table.trigger.good') }}</button>
@@ -499,7 +499,7 @@ const TARGETS_DEMO = [
     </ng-template>
 
     <ng-template #tplVarHorizontal>
-      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.horizontal'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.variants'), t('variants.items.horizontal'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem>
             <a ndsNavigationMenuLink href="#inicio" active>
@@ -529,7 +529,7 @@ const TARGETS_DEMO = [
       <nav
         ndsNavigationMenu
         orientation="vertical"
-        [attr.aria-label]="label(t('nav.variants'), t('variants.items.vertical'))"
+        [attr.aria-label]="label(tNav('nav.variants'), t('variants.items.vertical'))"
       >
         <ul ndsNavigationMenuList class="nds-w-sm">
           <li ndsNavigationMenuItem>
@@ -546,7 +546,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplVarSimple>
-      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.linkSimples.name'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.variants'), t('variants.items.linkSimples.name'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem>
             <a ndsNavigationMenuLink href="#inicio" active>
@@ -562,7 +562,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplVarDropdown>
-      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.comDropdown.name'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.variants'), t('variants.items.comDropdown.name'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="planos">
             <button ndsNavigationMenuTrigger>{{ t('usage.uxWriting.table.trigger.good') }}</button>
@@ -584,7 +584,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplVarGrid>
-      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.megaMenuGrid.name'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.variants'), t('variants.items.megaMenuGrid.name'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="solucoes">
             <button ndsNavigationMenuTrigger>{{ t('demonstration.labels.withGrid') }}</button>
@@ -615,7 +615,7 @@ const TARGETS_DEMO = [
       </nav>
     </ng-template>
     <ng-template #tplVarFeatured>
-      <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.variants'), t('variants.items.comCardDestacado.name'))">
+      <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.variants'), t('variants.items.comCardDestacado.name'))">
         <ul ndsNavigationMenuList>
           <li ndsNavigationMenuItem value="recursos">
             <button ndsNavigationMenuTrigger>{{ t('demonstration.labels.withFeatured') }}</button>
@@ -668,7 +668,7 @@ const TARGETS_DEMO = [
       <ng-container docsMain>
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-stack" data-spacing="lg">
-            <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.demonstration'), t('demonstration.labels.simpleLink'))">
+            <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.demonstration'), t('demonstration.labels.simpleLink'))">
               <ul ndsNavigationMenuList>
                 <li ndsNavigationMenuItem>
                   <a
@@ -688,7 +688,7 @@ const TARGETS_DEMO = [
               </ul>
             </nav>
 
-            <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.demonstration'), t('demonstration.labels.withDropdown'))">
+            <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.demonstration'), t('demonstration.labels.withDropdown'))">
               <ul ndsNavigationMenuList>
                 <li ndsNavigationMenuItem value="planos">
                   <button ndsNavigationMenuTrigger>
@@ -719,7 +719,7 @@ const TARGETS_DEMO = [
               </ul>
             </nav>
 
-            <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.demonstration'), t('demonstration.labels.withGrid'))">
+            <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.demonstration'), t('demonstration.labels.withGrid'))">
               <ul ndsNavigationMenuList>
                 <li ndsNavigationMenuItem value="solucoes">
                   <button ndsNavigationMenuTrigger>
@@ -755,7 +755,7 @@ const TARGETS_DEMO = [
               </ul>
             </nav>
 
-            <nav ndsNavigationMenu [attr.aria-label]="label(t('nav.demonstration'), t('demonstration.labels.withFeatured'))">
+            <nav ndsNavigationMenu [attr.aria-label]="label(tNav('nav.demonstration'), t('demonstration.labels.withFeatured'))">
               <ul ndsNavigationMenuList>
                 <li ndsNavigationMenuItem value="recursos">
                   <button ndsNavigationMenuTrigger>

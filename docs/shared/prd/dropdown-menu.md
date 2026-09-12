@@ -500,3 +500,17 @@ rótulo → stories → docs page.
 | texto, props, critérios de teste | `docs/shared/content/dropdown-menu/translations.json` |
 | desenho e anotações | Figma, página `DropdownMenu` (componente `684:377`) |
 | portões determinísticos | `node scripts/audit.mjs dropdown-menu --json` |
+| rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
+
+**As 57 chaves `nav` saíram do conteúdo em 2026-09-12.** Mesma forma do drawer
+e da mesma família: vue e svelte liam o conteúdo e mostravam "When to Use" e
+"Tests" onde as outras três mostravam "Usage" e "Pruebas".
+
+O menu da docs page é cromo: as mesmas quinze seções, na mesma ordem, em toda
+página das cinco stacks, lidas de relance e comparando páginas. A palavra própria
+do componente vive no TÍTULO da seção. Portões: `rotulo_de_nav_no_conteudo`,
+`rotulo_de_nav_do_conteudo` e `vocabulario_de_nav_divergente`, este último
+porque `en.nav.anatomy` do vue dizia "Anatomity" — palavra inexistente, no menu
+das 82 docs pages daquela stack, e indistinguível de decisão enquanto ninguém
+comparava as cinco cópias.
+

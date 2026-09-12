@@ -522,8 +522,8 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: navLabel(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
+      label: tNav(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: tNav(s.labelKey) })),
     }));
   });
 
@@ -935,11 +935,6 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   }
 }
 
-/** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function navLabel(key: string): string {
-  const doComponente = t(key);
-  return doComponente === key ? tNav(key) : doComponente;
-}
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
 function numberedItems(d: Record<string, string>, base: string): string[] {
