@@ -206,8 +206,9 @@ export const WithMedia: Story = {
     const media = dialog.querySelector('[data-slot="alert-dialog-media"]');
     await expect(media).toHaveClass("nds-alert-dialog-media");
 
-    // a mídia precisa ser o PRIMEIRO filho do header: o leitor de tela chega ao
-    // título logo em seguida, e é dessa ordem que o :has() do CSS depende
+    // a mídia precisa ser o PRIMEIRO filho do header: é dessa ordem que sai a
+    // leitura ícone → título → descrição. O :has() da folha não depende dela —
+    // só centraliza a caixa do ícone no mobile.
     const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
     await expect(header?.firstElementChild).toBe(media);
     await expect(media?.querySelector("svg")).toHaveAttribute("aria-hidden", "true");

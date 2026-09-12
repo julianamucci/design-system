@@ -212,8 +212,8 @@ export const WithMedia: Story = {
   }),
   play: async ({ step }) => {
     await step('A caixa de mídia é o primeiro filho do cabeçalho, acima do título', async () => {
-      // É dessa ordem que dependem o `:has()` da folha e a leitura ícone →
-      // título → descrição.
+      // É dessa ordem que sai a leitura ícone → título → descrição. O `:has()`
+      // da folha não depende dela — é a PRESENÇA da mídia que ele lê.
       const panel = await waitForPortal('alertdialog');
       const media = panel.querySelector<HTMLElement>('.nds-alert-dialog-media');
       const header = panel.querySelector<HTMLElement>('.nds-alert-dialog-header');

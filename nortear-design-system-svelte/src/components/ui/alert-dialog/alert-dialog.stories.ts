@@ -201,8 +201,9 @@ export const Playground: Story = {
         await expect(media).toBeNull();
         return;
       }
-      // A mídia é o PRIMEIRO filho do header: é dessa ordem que dependem o
-      // :has() do CSS e a ordem de leitura ícone → título → descrição.
+      // A mídia é o PRIMEIRO filho do header: é dessa ordem que sai a leitura
+      // ícone → título → descrição. O :has() da folha não depende dela — é a
+      // PRESENÇA da mídia que ele lê, em qualquer posição.
       const header = dialog.querySelector('[data-slot="alert-dialog-header"]');
       await expect(header!.firstElementChild).toBe(media);
       await expect(media!.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');

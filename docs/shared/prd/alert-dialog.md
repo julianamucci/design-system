@@ -133,6 +133,20 @@ frase se espalhou para quatro stories e para `testes.visual.item6`. A regra
 repetia `text-align` à toa; saiu, com o estilo computado medido idêntico antes e
 depois, nas duas larguras, com e sem mídia.
 
+**E a segunda versão da mesma frase sobreviveu até 2026-09-12**: onze comentários
+nas cinco stacks diziam que a mídia tem de ser o primeiro filho do cabeçalho, e
+**sete** davam o `:has()` como a razão. O seletor casa em qualquer posição — lê
+PRESENÇA, não ordem —, e o motivo verdadeiro é só a leitura ícone → título →
+descrição. O Vue e o vanilla foram corrigidos numa rodada; os outros cinco
+ficaram, mais dois que a busca por frase não achou porque a redação era outra.
+
+O que torna esta família caro de pegar: a asserção ao lado (`firstElementChild`)
+está CERTA e continua verde, então nada denuncia a explicação errada. Quem lesse
+o comentário aprenderia que mover a mídia quebra o layout, e mexeria no CSS para
+consertar o que já funciona. Portão: `afirmacao_de_has_sobre_ordem`, que confere
+a premissa na folha do próprio slug — se `<slug>.css` tiver um `:has()` que de
+fato leia posição, como o `.nds-card:has(> img:first-child)`, a afirmação passa.
+
 ### D7 · A superfície é `--background`, e a família não concorda
 
 **Estado**: `--background` / `--foreground` — igual ao Sheet e ao Drawer,

@@ -209,8 +209,9 @@ export const Playground: Story = {
         await expect(media).toBeNull();
         return;
       }
-      // PRIMEIRO filho do cabeçalho: é dessa ordem que dependem o `:has()` da
-      // folha e a leitura ícone → título → descrição.
+      // PRIMEIRO filho do cabeçalho: é dessa ordem que sai a leitura ícone →
+      // título → descrição. O `:has()` da folha não depende dela — é a PRESENÇA
+      // da mídia que ele lê.
       const header = panel.querySelector('.nds-alert-dialog-header');
       await expect(header!.firstElementChild).toBe(media);
       // Quem sai da árvore de acessibilidade é o ícone, não a caixa.

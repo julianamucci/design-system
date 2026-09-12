@@ -271,9 +271,10 @@ const [open, setOpen] = useState(false);`,
 }
 
 /**
- * Bloco de mídia: precisa ser o PRIMEIRO filho do header — é dessa ordem que
- * dependem o `:has()` que centraliza a CAIXA do ícone no mobile e a leitura
- * ícone → título → descrição. O ícone sai da árvore de acessibilidade; quem
+ * Bloco de mídia: precisa ser o PRIMEIRO filho do header — é dessa ordem que sai
+ * a leitura ícone → título → descrição. O `:has()` que centraliza a CAIXA do
+ * ícone no mobile não depende dela: lê a PRESENÇA da mídia, em qualquer
+ * posição. O ícone sai da árvore de acessibilidade; quem
  * nomeia é o título.
  */
 export function alertDialogWithIconSource(): string {

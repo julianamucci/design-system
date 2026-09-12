@@ -105,8 +105,9 @@ import { NdsButton } from '@/components/ui/button';`;
 /**
  * O miolo: cabeçalho e rodapé dentro do `ng-template` do painel.
  *
- * A caixa de mídia é o PRIMEIRO filho do cabeçalho — é dessa ordem que depende
- * o `:has()` da folha e a leitura ícone → título → descrição. O ícone é o
+ * A caixa de mídia é o PRIMEIRO filho do cabeçalho — é dessa ordem que sai a
+ * leitura ícone → título → descrição. O `:has()` da folha não depende dela: é a
+ * PRESENÇA da mídia que ele lê, em qualquer posição. O ícone é o
  * `svg[ndsAlertIcon]`, que já sai da árvore de acessibilidade sozinho.
  */
 function panelContent(o: Composition, indent: string): string {
