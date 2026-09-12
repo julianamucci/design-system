@@ -3151,6 +3151,108 @@ function auditReasonDaMesmaFamilia() {
  * três pontos em componentes cuja fábrica JÁ tinha `open()`/`isOpen()` — drawer,
  * dropdown-menu e popover. Não era falta de API; era código que nunca migrou.
  */
+/**
+ * Comentário afirmando que um `:has()` da folha DEPENDE da ordem dos filhos.
+ *
+ * Medido em 2026-09-12, no AlertDialog: onze comentários nas cinco stacks
+ * repetiam que a caixa de mídia tinha de ser o primeiro filho do cabeçalho, e
+ * cinco deles davam o `:has()` da folha como a razão. A folha casa em qualquer
+ * posição — `:has(.nds-alert-dialog-media)`, sem `:first-child` e sem
+ * combinador —, então o motivo verdadeiro é só a ordem de leitura (ícone →
+ * título → descrição), que é o que os outros seis diziam.
+ *
+ * O que torna isto caro é a forma: a asserção `firstElementChild` está CERTA e
+ * continua verde, então nada denuncia a explicação errada ao lado dela. Quem
+ * lesse o comentário aprenderia que mover a mídia quebra o layout — e mexeria no
+ * CSS para "consertar" o que já funciona. Vue e vanilla foram corrigidos numa
+ * rodada anterior; as outras três ficaram, porque a mesma frase vive em cinco
+ * árvores e quem corrige uma não vê as outras.
+ *
+ * A premissa se confere na folha do SLUG, não numa lista: se `<slug>.css` tiver
+ * um `:has()` que de fato leia posição (`:first-child`, `:last-child`,
+ * `first-of-type`), a afirmação passa — é o caso real do `.nds-card:has(> img:first-child)`.
+ */
+/**
+ * Os blocos de comentário de um arquivo, com a linha em que cada um começa.
+ *
+ * Linha a linha de propósito: `//` consecutivos formam UM bloco, e o regex
+ * equivalente com quantificador aninhado retrocede catastroficamente.
+ */
+function blocosDeComentario(src) {
+  const blocos = [];
+  const linhas = src.split('\n');
+  let atual = null;
+  let dentroDeBloco = false;
+  for (let i = 0; i < linhas.length; i++) {
+    const linha = linhas[i];
+    const cortada = linha.trim();
+    if (dentroDeBloco) {
+      atual.texto += '\n' + linha;
+      if (linha.includes('*/')) { blocos.push(atual); atual = null; dentroDeBloco = false; }
+      continue;
+    }
+    if (cortada.startsWith('/*')) {
+      atual = { texto: linha, linha: i + 1 };
+      if (linha.includes('*/')) { blocos.push(atual); atual = null; } else dentroDeBloco = true;
+      continue;
+    }
+    if (cortada.startsWith('//')) {
+      if (atual) atual.texto += '\n' + linha;
+      else atual = { texto: linha, linha: i + 1 };
+      continue;
+    }
+    if (atual) { blocos.push(atual); atual = null; }
+  }
+  if (atual) blocos.push(atual);
+  return blocos;
+}
+
+function auditHasSobreOrdem() {
+  const violations = [];
+  const AFIRMA = /:has\(/;
+  const ORDEM = /(?:depende[mn]?\s|dessa ordem|primeiro filho|first child|first-child)/i;
+  const POSICAO_NA_FOLHA = /:has\([^)]*(?::first-child|:last-child|:first-of-type|:last-of-type)/;
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components');
+    if (!existsSync(dir)) continue;
+    for (const file of walkDir(dir, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const src = readFile(file);
+      if (!src) continue;
+      // saída antecipada, e ela é o que torna a regra barata: sem isto a
+      // varredura de comentários roda nos ~3.000 arquivos das cinco stacks, e a
+      // auditoria de um slug saiu de segundos para mais de um minuto. Só quem
+      // menciona `:has(` pode afirmar algo sobre ele.
+      if (!src.includes(':has(')) continue;
+      const slug = basename(file).replace(/\.(stories|source|fixtures|test|spec)?\.?(ts|tsx|vue|svelte)$/, '')
+        .replace(/-(variants|states|compositions|modes|layouts)$/, '');
+      const folha = readFile(join(ROOT, 'docs', 'shared', 'styles', 'nds', `${slug}.css`));
+      if (!folha || POSICAO_NA_FOLHA.test(folha)) continue;
+      // comentário por comentário: a afirmação e a dependência têm de estar no
+      // MESMO bloco, senão qualquer arquivo que mencione `:has()` numa linha e
+      // "primeiro filho" trinta linhas abaixo viraria achado.
+      //
+      // Os blocos saem de uma varredura POR LINHA, e não de um regex com
+      // quantificador aninhado (`\/\/[^\n]*(?:\n\s*\/\/[^\n]*)*`): aquela forma
+      // retrocedia catastroficamente nos arquivos grandes e levou a auditoria de
+      // um slug de segundos para 59s. Portão caro é portão que se deixa de rodar.
+      for (const bloco of blocosDeComentario(src)) {
+        if (!AFIRMA.test(bloco.texto) || !ORDEM.test(bloco.texto)) continue;
+        // a negação explícita é o conserto, não o defeito
+        if (/não depende|nao depende|qualquer posição|qualquer posicao|e não a posição|PRESENÇA/i.test(bloco.texto)) continue;
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: relative(ROOT, file), line: bloco.linha,
+          rule: 'afirmacao_de_has_sobre_ordem',
+          message: `o comentário dá o \`:has()\` de ${slug}.css como dependente da ordem dos filhos, e a folha casa em `
+            + 'qualquer posição — sem `:first-child` e sem combinador. A asserção ao lado continua certa e verde, '
+            + 'então nada denuncia a explicação errada: quem a lê aprende que mover o elemento quebra o layout',
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 function auditGatilhoEscondido() {
   const violations = [];
   for (const stack of STACKS) {
@@ -10387,7 +10489,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
