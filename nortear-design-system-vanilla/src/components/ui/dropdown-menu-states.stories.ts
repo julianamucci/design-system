@@ -3,7 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { createButton } from './button';
-import { montar, wrap } from './dropdown-menu.fixtures';
+import { clicarQuandoMontado, montar, wrap } from './dropdown-menu.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -54,7 +54,7 @@ function buildBase(opts: {
   const menu = createDropdownMenu({ trigger, items, onOpenChange: opts.onOpenChange });
   menu.dataset.slot = 'dropdown-menu';
 
-  if (opts.openInitially) queueMicrotask(() => trigger.click());
+  if (opts.openInitially) clicarQuandoMontado(trigger);
   return { wrapper: wrap(menu), trigger };
 }
 
@@ -409,7 +409,7 @@ export const CheckboxIndeterminate: Story = {
     });
     // A abertura é da MONTAGEM, e o painel fica aberto até o fim: é o estado que
     // a story existe para mostrar, e é o que o Chromatic fotografa.
-    queueMicrotask(() => trigger.click());
+    clicarQuandoMontado(trigger);
     return wrap(menu);
   },
   play: async ({ step }) => {

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createDropdownMenu, type DropdownMenuCloseReason } from './dropdown-menu';
 import { dropdownMenuSource } from './dropdown-menu.source';
+import { clicarQuandoMontado } from './dropdown-menu.fixtures';
 import { createButton } from './button';
 import { createDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -121,7 +122,7 @@ export const Playground: Story = {
     container.appendChild(el);
 
     if (args.defaultOpen) {
-      queueMicrotask(() => trigger.click());
+      clicarQuandoMontado(trigger);
     }
     return container;
   },

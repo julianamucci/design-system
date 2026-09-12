@@ -14,6 +14,37 @@ import { createButton } from './button';
 import { SHEET_BODY_TEXT } from './sheet.source';
 
 /**
+ * Clica o gatilho na próxima microtarefa — mas SÓ se ele estiver no documento.
+ *
+ * O runner avalia o `render()` de uma story MAIS DE UMA VEZ e descarta as
+ * árvores que não chegam ao canvas. Um `queueMicrotask(() => trigger.click())`
+ * cru abre o painel da árvore DESCARTADA também: ela portala um painel no
+ * `body` e rouba o foco do painel vivo; quando a varredura de graça do
+ * `tornarDestruivel` recolhe a instância órfã, o painel sai levando o foco
+ * junto, e a asserção "aberto, o foco está no painel" reprova com
+ * `activeElement === BODY`.
+ *
+ * Medido em 2026-09-12 no `dialog-states`, onde o defeito apareceu: passava
+ * antes por acidente, porque o desmonte antigo devolvia o foco ao
+ * `previousFocus` — que na instância órfã era justamente o botão do painel
+ * vivo. Consertar o desmonte tirou a restituição acidental, e os sete pontos
+ * iguais do Sheet eram a mesma forma esperando a ordem de avaliação mudar.
+ *
+ * `isConnected` é decisivo: a árvore descartada nunca entra no documento, e a
+ * viva já está nele quando a microtarefa roda — o renderer anexa o que o
+ * `render()` devolve na MESMA tarefa. A árvore viva, portanto, abre como antes.
+ *
+ * Gêmea da de `dialog.fixtures.ts` e da de `dropdown-menu.fixtures.ts` de
+ * propósito: fixture de um componente não é importada por outro.
+ */
+export function clicarQuandoMontado(trigger: HTMLElement | null | undefined): void {
+  if (!trigger) return;
+  queueMicrotask(() => {
+    if (trigger.isConnected) trigger.click();
+  });
+}
+
+/**
  * Corpo de uma linha — o parágrafo canônico do painel.
  *
  * O texto vem de `sheet.source.ts` porque é ele que o painel Code publica: com

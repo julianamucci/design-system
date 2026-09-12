@@ -3,7 +3,7 @@ import { expect } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import { createSheet, type SheetSide } from './sheet';
-import { makeBody, makeFooter } from './sheet.fixtures';
+import { clicarQuandoMontado, makeBody, makeFooter } from './sheet.fixtures';
 import { sheetHeadingH3Source, sheetSource, sheetSourceWith } from './sheet.source';
 import { createButton } from './button';
 
@@ -57,7 +57,7 @@ function buildSheetSide(opts: {
     content: makeBody(),
     footer: makeFooter('Cancelar', 'Aplicar filtros'),
   });
-  queueMicrotask(() => trigger.click());
+  clicarQuandoMontado(trigger);
   return sheet;
 }
 

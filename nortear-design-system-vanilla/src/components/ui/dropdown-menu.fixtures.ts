@@ -37,8 +37,38 @@ export function wrap(child: HTMLElement, alturaMinima = '180px'): HTMLElement {
 }
 
 /**
- * Monta o menu e o abre pelo gatilho. A abertura fica no `queueMicrotask` para
- * a foto do Chromatic sair com o painel na tela; as `play` que dependem de foco
+ * Clica o gatilho na próxima microtarefa — mas SÓ se ele estiver no documento.
+ *
+ * O runner avalia o `render()` de uma story MAIS DE UMA VEZ e descarta as
+ * árvores que não chegam ao canvas. Um `queueMicrotask(() => trigger.click())`
+ * cru abre o painel da árvore DESCARTADA também: ela portala um painel no
+ * `body` e rouba o foco do painel vivo; quando a varredura de graça do
+ * `tornarDestruivel` recolhe a instância órfã, o painel sai levando o foco
+ * junto, e a asserção "aberto, o foco está no painel" reprova com
+ * `activeElement === BODY`.
+ *
+ * Medido em 2026-09-12 no `dialog-states`, onde o defeito apareceu: passava
+ * antes por acidente, porque o desmonte antigo devolvia o foco ao
+ * `previousFocus` — que na instância órfã era justamente o botão do painel
+ * vivo. Consertar o desmonte tirou a restituição acidental.
+ *
+ * `isConnected` é decisivo: a árvore descartada nunca entra no documento, e a
+ * viva já está nele quando a microtarefa roda — o renderer anexa o que o
+ * `render()` devolve na MESMA tarefa. A árvore viva, portanto, abre como antes.
+ *
+ * Gêmea da de `dialog.fixtures.ts` e da de `sheet.fixtures.ts` de propósito:
+ * fixture de um componente não é importada por outro.
+ */
+export function clicarQuandoMontado(trigger: HTMLElement | null | undefined): void {
+  if (!trigger) return;
+  queueMicrotask(() => {
+    if (trigger.isConnected) trigger.click();
+  });
+}
+
+/**
+ * Monta o menu e o abre pelo gatilho. A abertura fica numa microtarefa para a
+ * foto do Chromatic sair com o painel na tela; as `play` que dependem de foco
  * abrem de novo pelo clique real, que é o caminho de quem usa.
  *
  * `alturaMinima` só vai adiante para a moldura: as composições montam listas
@@ -52,7 +82,7 @@ export function montar(
 ): HTMLElement {
   const trigger = createButton({ variant: 'outline', label: label });
   const menu = createDropdownMenu({ trigger, items });
-  queueMicrotask(() => trigger.click());
+  clicarQuandoMontado(trigger);
   return wrap(menu, alturaMinima);
 }
 

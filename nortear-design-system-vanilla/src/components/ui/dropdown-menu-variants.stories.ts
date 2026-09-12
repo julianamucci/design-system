@@ -3,7 +3,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { createButton } from './button';
-import { endClose, montar } from './dropdown-menu.fixtures';
+import { clicarQuandoMontado, endClose, montar } from './dropdown-menu.fixtures';
 import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -195,7 +195,7 @@ export const Placement: Story = {
     wrapper.className = 'nds-cluster nds-w-full nds-min-h-100';
     wrapper.dataset.justify = 'center';
     wrapper.appendChild(menu);
-    queueMicrotask(() => trigger.click());
+    clicarQuandoMontado(trigger);
     return wrapper;
   },
   play: async ({ canvasElement, step }) => {

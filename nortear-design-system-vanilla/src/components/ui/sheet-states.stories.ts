@@ -4,7 +4,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
 import { sheetSource, sheetSourceWith, sheetSourceControlled } from './sheet.source';
 import { createButton } from './button';
-import { makeBody, makeFooter } from './sheet.fixtures';
+import { clicarQuandoMontado, makeBody, makeFooter } from './sheet.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -63,7 +63,7 @@ function buildSheet(opts: {
     content: body,
     footer,
   });
-  if (opts.openInitially) queueMicrotask(() => trigger.click());
+  if (opts.openInitially) clicarQuandoMontado(trigger);
   return sheet;
 }
 
@@ -189,7 +189,7 @@ export const LongScrollBody: Story = {
       content: long,
       footer: makeFooter('Cancelar', 'Aceitar termos', true),
     });
-    queueMicrotask(() => trigger.click());
+    clicarQuandoMontado(trigger);
     return sheet;
   },
   play: async ({ step }) => {
@@ -253,7 +253,7 @@ export const WithCloseButtonHidden: Story = {
       footer: makeFooter('Cancelar', 'Aplicar filtros', true),
       showCloseButton: false,
     });
-    queueMicrotask(() => trigger.click());
+    clicarQuandoMontado(trigger);
     return sheet;
   },
   play: async ({ step }) => {

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
-import { makeExitFooter, makeFooter } from './sheet.fixtures';
+import { clicarQuandoMontado, makeExitFooter, makeFooter } from './sheet.fixtures';
 import { sheetSource, sheetSourceWith } from './sheet.source';
 import { createButton } from './button';
 import { createInput } from './input';
@@ -106,7 +106,7 @@ export const AdvancedFilters: Story = {
       // `true`: nesta composição os dois botões do rodapé fecham o painel.
       footer: makeFooter(LABELS.cancel, LABELS.apply, true, form.id),
     });
-    queueMicrotask(() => trigger.click());
+    clicarQuandoMontado(trigger);
     return sheet;
   },
   play: async () => {
@@ -251,7 +251,7 @@ export const ProfileEdit: Story = {
       // `true`: nesta composição os dois botões do rodapé fecham o painel.
       footer: makeFooter(LABELS.cancel, PROFILE.submit, true, form.id),
     });
-    queueMicrotask(() => trigger.click());
+    clicarQuandoMontado(trigger);
     return sheet;
   },
   play: async () => {
@@ -331,7 +331,7 @@ export const BottomPanel: Story = {
       // aparecia em lugar nenhum.
       footer: makeExitFooter(BOTTOM.close),
     });
-    queueMicrotask(() => trigger.click());
+    clicarQuandoMontado(trigger);
     return sheet;
   },
   play: async () => {
