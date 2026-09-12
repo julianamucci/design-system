@@ -260,7 +260,16 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     onOpenChange?.(true);
   }
 
-  function close(reason: AlertDialogCloseReason): void {
+  /**
+   * Tira véu e painel da tela, e devolve se havia algo aberto.
+   *
+   * Desmontar não é fechar: daqui não sai `onClose`, nem devolução de foco, nem
+   * `onOpenChange` — quem quer avisar é o `close(reason)`, logo abaixo. O
+   * `animar` separa os dois usos: fechar espera a animação de saída; desmontar
+   * (troca de story, desmonte de página) remove na hora, porque esperar deixaria
+   * o painel de um exemplo sobrando por cima do seguinte.
+   */
+  function desmontarPanel(animar: boolean): boolean {
     const saindo = [overlayEl, panelEl].filter((el): el is HTMLElement => el !== null);
 
     // Já fechado: nada a fazer, e isso inclui NÃO avisar ninguém. Durante a
@@ -273,7 +282,7 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     // a contagem é do documento e não sabe de quem é cada solta.
     /* v8 ignore next -- sem story: exercitar exige clicar num botão que está
        saindo, dentro dos 200ms da animação. */
-    if (saindo.length === 0) return;
+    if (saindo.length === 0) return false;
 
     // Solta as referências já: é o que faz um segundo close() cair na guarda
     // acima em vez de reagendar a remoção.
@@ -283,9 +292,11 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     unlockBodyScroll();
     trigger.setAttribute('aria-expanded', 'false');
     document.removeEventListener('keydown', handleKeydown);
-    previousFocus?.focus();
-    onClose?.(reason);
-    onOpenChange?.(false);
+
+    if (!animar) {
+      saindo.forEach((el) => el.remove());
+      return true;
+    }
 
     saindo.forEach((el) => { el.dataset.state = 'closed'; });
 
@@ -299,7 +310,7 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
        decisão do projeto, então este ramo é inalcançável na suíte. */
     if (saindo.every((el) => el.getAnimations().length === 0)) {
       saindo.forEach((el) => el.remove());
-      return;
+      return true;
     }
 
     // Remove só depois da animação de saída. NUNCA depender só do
@@ -324,6 +335,14 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     };
     saindo.forEach((el) => el.addEventListener('animationend', remover));
     const timer = window.setTimeout(remover, EXIT_FALLBACK_MS);
+    return true;
+  }
+
+  function close(reason: AlertDialogCloseReason): void {
+    if (!desmontarPanel(true)) return;
+    previousFocus?.focus();
+    onClose?.(reason);
+    onOpenChange?.(false);
   }
 
   function handleKeydown(e: KeyboardEvent): void {
@@ -369,7 +388,13 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
   // deixar de existir, e aí o painel portalado sobrevivia com o `keydown`
   // preso. A forma compartilhada só conta a saída depois de ter visto a entrada.
   const destruivel = tornarDestruivel(wrapper, wrapper, () => {
-    if (panelEl) close('api');
+    // Sair da página com a pergunta na tela NÃO é resposta: o painel sai sem
+    // devolver foco a um gatilho que está deixando o documento e sem `onClose`.
+    // Até 2026-09-12 isto era `close('api')`, e cada troca de idioma da docs
+    // page virava um `dialog_close` com a mesma palavra de quem confirmou —
+    // indistinguíveis no GA4. O estado continua sendo avisado.
+    const wasOpen = desmontarPanel(false);
+    if (wasOpen) onOpenChange?.(false);
   });
 
   // O wrapper só entra na página depois que a factory retorna: o microtask

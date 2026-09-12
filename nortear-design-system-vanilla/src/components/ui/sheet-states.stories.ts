@@ -67,6 +67,15 @@ function buildSheet(opts: {
   return sheet;
 }
 
+/**
+ * Motivos que o PRIMEIRO painel relatou, gravados no render e lidos pela play.
+ *
+ * Fora do render porque o `onClose` é passado na MONTAGEM e a play só recebe o
+ * `canvasElement`: sem um ponto combinado entre os dois, não há como observar um
+ * callback de fábrica daqui.
+ */
+const firstPanelReasons: unknown[] = [];
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Closed: Story = {
@@ -378,6 +387,105 @@ export const Controlled: Story = {
 // zero, confirmada por uma bateria de eventos disparada no documento depois da
 // saída. Ver `leak-probe.ts` para o que cada prova cobre e como pode falhar.
 
+// ─── Dois painéis, e o mais novo manda ────────────────────────────────────────
+//
+// O Sheet é MODAL: um de cada vez. Abrir o segundo tira o primeiro da tela, e
+// essa saída é um fechamento como qualquer outro — precisa dizer por quê. Até
+// 2026-09-11 ela era muda: o painel que sumia da tela sumia também do analytics,
+// e a série de abre/fecha da docs page não fechava a conta.
+
+export const SecondPanelClosesFirst: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: sheetSourceWith({
+          triggerLabel: 'Abrir o primeiro',
+          title: 'Primeiro painel',
+          description: 'Este sai de cena quando o outro entra.',
+          cancelLabel: false,
+          applyLabel: false,
+          onClose: true,
+        }),
+      },
+      description: {
+        story:
+          'Dois painéis na mesma página. Abrir o segundo fecha o primeiro, que relata o motivo api — ninguém o dispensou, foi a modalidade do componente que o recolheu.',
+      },
+    },
+  },
+  render: () => {
+    firstPanelReasons.length = 0;
+
+    const first = createSheet({
+      trigger: createButton({ variant: 'outline', label: 'Abrir o primeiro' }),
+      side: 'left',
+      title: 'Primeiro painel',
+      description: 'Este sai de cena quando o outro entra.',
+      content: makeBody('Abra o segundo painel e este aqui se recolhe.'),
+      onClose: (reason) => {
+        firstPanelReasons.push(reason);
+      },
+    });
+
+    const second = createSheet({
+      trigger: createButton({ variant: 'outline', label: 'Abrir o segundo' }),
+      side: 'right',
+      title: 'Segundo painel',
+      description: 'O mais novo manda: dois painéis modais ao mesmo tempo deixariam um deles inalcançável.',
+      content: makeBody('Este entrou por último, então é este que está na tela.'),
+    });
+
+    const wrap = document.createElement('div');
+    wrap.className = 'nds-cluster';
+    wrap.dataset.spacing = 'md';
+    wrap.append(first, second);
+    return wrap;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const firstTrigger = canvas.getByRole('button', { name: 'Abrir o primeiro' });
+    const secondTrigger = canvas.getByRole('button', { name: 'Abrir o segundo' });
+
+    await step('O primeiro painel abre sozinho na tela', async () => {
+      await userEvent.click(firstTrigger);
+      const panel = await waitForPortal('dialog');
+      await expect(panel).toHaveAccessibleName('Primeiro painel');
+      await expect(firstPanelReasons).toEqual([]);
+    });
+
+    await step('Abrir o segundo recolhe o primeiro, e ele diz por quê', async () => {
+      await userEvent.click(secondTrigger);
+      await waitFor(() => {
+        const abertos = document.querySelectorAll('[data-slot="sheet-content"]');
+        if (abertos.length !== 1) {
+          throw new Error(`esperava um painel na tela, achei ${abertos.length}`);
+        }
+      });
+      const panel = document.querySelector<HTMLElement>('[data-slot="sheet-content"]')!;
+      await expect(panel).toHaveAccessibleName('Segundo painel');
+      // O painel que sai da TELA tem de sair também do analytics. `api` e não
+      // `overlay`/`escape`/`close-button`: nenhum gesto da pessoa fechou este
+      // painel — foi uma decisão de dentro do componente.
+      await expect(firstPanelReasons).toEqual(['api']);
+    });
+
+    await step('O foco de retorno do segundo é o gatilho DELE', async () => {
+      // A leitura do foco anterior passou a acontecer ANTES de recolher o
+      // primeiro: o recolhimento devolve o foco ao gatilho do primeiro, e se
+      // este painel lesse depois, adotaria aquele gatilho como alvo de retorno.
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('dialog');
+      await waitFor(() => {
+        if (document.activeElement !== secondTrigger) {
+          throw new Error('o foco não voltou ao gatilho do segundo painel');
+        }
+      });
+      // E o primeiro não relatou um segundo fechamento: ele já tinha saído.
+      await expect(firstPanelReasons).toEqual(['api']);
+    });
+  },
+};
+
 export const ListenerCleanup: Story = {
   parameters: {
     controls: { disable: true },
@@ -407,6 +515,7 @@ export const ListenerCleanup: Story = {
     await expect(host).not.toBeNull();
 
     let probe!: ProbeResult;
+    const teardownReasons: unknown[] = [];
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       probe = await sondarOuvintes({
@@ -419,6 +528,9 @@ export const ListenerCleanup: Story = {
             title: 'Título',
             description: 'Descrição do painel.',
             content: content,
+            onClose: (reason) => {
+              teardownReasons.push(reason);
+            },
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
@@ -428,6 +540,14 @@ export const ListenerCleanup: Story = {
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
       await checkLimpeza(probe);
+    });
+
+    await step('Desmontar NÃO é fechar: nenhum motivo foi relatado', async () => {
+      // A sonda monta o painel, ABRE e tira o nó da página — o estado exato em
+      // que um desmonte silencioso é a diferença entre um relatório correto e um
+      // `dialog_close` que ninguém provocou. Uma troca de idioma numa docs page
+      // com o painel aberto é esse desmonte.
+      await expect(teardownReasons).toEqual([]);
     });
   },
 };

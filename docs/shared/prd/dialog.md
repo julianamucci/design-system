@@ -449,6 +449,18 @@ clique fora do conteúdo, e marca a confirmação ANTES de o painel fechar — a
 e o cancelar são partes de fechar da lib, e sem a marca "confirmou" chegaria ao
 relatório como "apertou o botão de fechar". Portão: `reason_vocabulario_divergente`.
 
+**Desmontar não é fechar** (2026-09-12). Sair da página com o painel aberto —
+troca de story, desmonte de docs page, troca de idioma, que refaz as seções —
+tirava o painel chamando o mesmo caminho de fechamento, e o relatório recebia um
+`dialog_close` com `api`: a MESMA palavra de quem confirmou a ação, portanto
+indistinguível dela no GA4. Valia para o Dialog e para o AlertDialog do vanilla;
+o Sheet e o Drawer já desmontavam calados. Hoje o desmonte remove o painel e
+avisa só `onOpenChange(false)`, que descreve estado e não gesto. Portão:
+`desmonte_emite_fechamento`, que resolve um salto de chamada — nenhum desses
+callbacks de limpeza contém a palavra `onClose`, todos chamam uma função local,
+e por isso a primeira versão do portão, que procurava a palavra, achava zero com
+três fábricas defeituosas.
+
 **Desde 2026-09-10 quem cobra o campo é o TIPO.** Nas cinco `analytics.ts`,
 `dialog_open`, `dialog_close` e `dialog_confirm` exigem `trigger_id` e proíbem
 `label` (`label?: never`), e `location` é obrigatório no abrir e no fechar. O

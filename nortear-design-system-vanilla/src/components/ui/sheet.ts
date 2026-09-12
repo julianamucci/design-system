@@ -67,7 +67,34 @@ import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 export type SheetSide = 'top' | 'bottom' | 'left' | 'right';
 
 // PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-sheet-onclose-reason)
-export type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
+//
+// `api` é o quarto motivo, e ele entrou em 2026-09-11. O vocabulário da família
+// é `escape | overlay | close-button | api` (18-overlay.md §Analytics), o
+// `DialogCloseReason` e o `DrawerCloseReason` desta stack já tinham os quatro, o
+// Sheet do Angular também — e o PRD (§9) e este patch pedem por escrito paridade
+// de assinatura com o Dialog. Faltando o motivo, a docs page o SINTETIZAVA por
+// fora: o rodapé fingia um clique no véu e a página trocava o motivo relatado
+// depois. Na stack que é a referência de contrato, o motivo tem de nascer na
+// fábrica.
+export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+
+/**
+ * O que a fábrica devolve.
+ *
+ * `close()` é o caminho público para fechar por decisão de dentro — a ação
+ * primária do rodapé que aplica e sai, um fluxo que terminou, uma rota que
+ * mudou. Ele informa `'api'`, que é o que separa, no analytics, o painel que a
+ * pessoa dispensou do que o programa recolheu. Mesma forma de `DrawerElement`.
+ *
+ * Só `close()`: `open()` e `toggle()` do Drawer não entram aqui porque a
+ * abertura comandada desta fábrica ainda passa pelo gatilho interno (é o que a
+ * story `Controlled` e o snippet dela documentam), e API nova sem consumidor é
+ * superfície para manter de graça.
+ */
+export type SheetElement = DestroyableElement & {
+  /** Fecha o painel informando `'api'`. Sem efeito se já estiver fechado. */
+  close: () => void;
+};
 
 export type SheetOptions = {
   trigger: HTMLElement;
@@ -190,7 +217,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 
 // ─── createSheet ──────────────────────────────────────────────────────────────
 
-export function createSheet(options: SheetOptions): DestroyableElement {
+export function createSheet(options: SheetOptions): SheetElement {
   const {
     trigger,
     side = 'right',
@@ -234,19 +261,36 @@ export function createSheet(options: SheetOptions): DestroyableElement {
 
   wrapper.appendChild(trigger);
 
+  /*
+   * O que a PILHA de painéis chama para tirar este daqui da tela.
+   *
+   * `closeWithReason('api')`, e não um desmonte silencioso: até 2026-09-11 este
+   * caminho só desmontava e avisava `onOpenChange(false)`, então abrir o painel
+   * B fechava o A sem NENHUM `dialog_close` — a série de abre/fecha da docs page
+   * do Sheet não fechava a conta, e o painel que sumia da tela sumia também do
+   * analytics.
+   *
+   * `api` é a palavra certa entre as quatro do vocabulário da família: ninguém
+   * dispensou o painel A — Escape, véu e botão são os três gestos da pessoa, e
+   * nenhum deles aconteceu. Foi uma decisão tomada DENTRO do sistema (a
+   * modalidade do Sheet: um de cada vez, o mais novo manda), que é exatamente o
+   * que `api` nomeia. Não há palavra para "substituído" e o portão
+   * `reason_entre_stacks_divergente` cobra as quatro; inventar uma quinta aqui
+   * dividiria a série em todas as stacks.
+   */
   const registro = {
-    close: () => {
-      const estavaOpen = panelEl !== null;
-      desmontarPanel();
-      if (estavaOpen) onOpenChange?.(false);
-    },
+    close: () => closeWithReason('api'),
   };
 
   function open(): void {
+    // O foco anterior é lido ANTES de fechar os outros, e a ordem passou a
+    // importar: fechar o painel A devolve o foco ao gatilho DELE, e lendo
+    // depois este painel adotaria aquele gatilho como alvo de retorno — B
+    // fecharia devolvendo o foco para o gatilho de A.
+    previousFocus = document.activeElement as HTMLElement;
+
     // Antes de pôr mais um painel na tela, tire da tela o que já estava lá.
     closeOutrosPanels(registro);
-
-    previousFocus = document.activeElement as HTMLElement;
 
     overlayEl = document.createElement('div');
     overlayEl.className = 'nds-sheet-overlay';
@@ -262,15 +306,38 @@ export function createSheet(options: SheetOptions): DestroyableElement {
     if (description) panelEl.setAttribute('aria-describedby', descId);
     panelEl.dataset.slot = 'sheet-content';
 
+    /*
+     * Todo `[data-slot="sheet-close"]` DENTRO do painel fecha, e fecha com
+     * `close-button`.
+     *
+     * Delegação, e não um ouvinte por botão: o rodapé é de quem compõe, chega
+     * pela opção `footer` e a fábrica não o monta — um ouvinte por elemento só
+     * alcançaria o X que ela mesma cria. Era essa a lacuna que fazia toda
+     * demonstração de "Cancelar" desta família ter de fingir um clique no véu,
+     * relatando `overlay` para um caminho que é de botão.
+     *
+     * `closest` e não `target`: o clique costuma cair no ícone ou no
+     * `.nds-sr-only` dentro do botão, e a comparação direta erraria os dois.
+     */
+    panelEl.addEventListener('click', (event) => {
+      const target = event.target as Element | null;
+      if (target?.closest('[data-slot="sheet-close"]')) closeWithReason('close-button');
+    });
+
     // Close button
     let closeBtn: HTMLButtonElement | null = null;
     if (showCloseButton) {
       closeBtn = document.createElement('button');
       closeBtn.type = 'button';
       closeBtn.className = 'nds-sheet-close';
+      // O X é UM controle de fechamento entre os possíveis, e passa a se nomear
+      // como tal: `data-slot="sheet-close"` é o contrato que React e Angular já
+      // escreviam e que esta stack — a referência — não tinha. Quem fecha é a
+      // delegação do painel, logo abaixo; um ouvinte próprio aqui disparava o
+      // fechamento duas vezes.
+      closeBtn.dataset.slot = 'sheet-close';
       closeBtn.setAttribute('aria-label', closeLabel);
       closeBtn.appendChild(createCloseIcon());
-      closeBtn.addEventListener('click', () => closeWithReason('close-button'));
     }
 
     // Header
@@ -359,6 +426,11 @@ export function createSheet(options: SheetOptions): DestroyableElement {
 
   // PATCH: api — motivo do fechamento exposto para analytics (ver PATCHES.md#vanilla-sheet-onclose-reason)
   function closeWithReason(reason: SheetCloseReason): void {
+    // Já fechado: não se fecha duas vezes. Sem a guarda, um `close()` público
+    // sobre painel desmontado devolveria o foco a um elemento que já não é o
+    // alvo e mandaria um `dialog_close` que ninguém provocou — fechamento falso
+    // no GA4. O Dialog desta stack já tinha a guarda; o Sheet não.
+    if (!panelEl && !overlayEl) return;
     desmontarPanel();
     previousFocus?.focus();
     onClose?.(reason);
@@ -400,7 +472,24 @@ export function createSheet(options: SheetOptions): DestroyableElement {
   // devolve o wrapper e quem chama o insere DEPOIS, e quem abre o painel no
   // mesmo tique da criação (as stories que nascem abertas fazem isso) dispara a
   // primeira mutação com o wrapper ainda solto.
-  return tornarDestruivel(wrapper, wrapper, () => {
-    registro.close();
-  });
+  // `Object.assign` e não um `as`: o verbo entra no tipo do próprio alvo, e
+  // `tornarDestruivel` devolve exatamente `SheetElement` sem conversão. Mesma
+  // forma do `drawer.ts`.
+  return tornarDestruivel(
+    wrapper,
+    Object.assign(wrapper, {
+      // Fechar por código informa `'api'`: quem escuta `onClose` separa o
+      // painel que a pessoa dispensou do que o programa recolheu.
+      close: () => closeWithReason('api'),
+    }),
+    () => {
+      // DESMONTE NÃO É FECHAMENTO: sai o painel e sai o estado, não sai motivo.
+      // Era `registro.close()`, que fazia as duas coisas de uma vez — e agora
+      // que aquele registro informa `api` (a pilha de painéis o usa), reusá-lo
+      // aqui transformaria toda troca de story num `dialog_close` falso.
+      const estavaOpen = panelEl !== null;
+      desmontarPanel();
+      if (estavaOpen) onOpenChange?.(false);
+    },
+  );
 }

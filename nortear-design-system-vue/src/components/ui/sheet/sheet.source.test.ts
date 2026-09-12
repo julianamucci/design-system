@@ -180,6 +180,10 @@ describe('transforms das stories de estado', () => {
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain('<Sheet :open="aberto" @update:open="(valor) => (aberto = valor)">');
+    // A saída pelo rodapé e a ação primária são caminhos DIFERENTES: uma delega
+    // o fechamento ao SheetClose, a outra é o dono do estado fechando por
+    // decisão própria — é a distinção que o `reason` do dialog_close carrega.
+    expect(saida).toContain('<Button @click="aberto = false">Aplicar</Button>');
     // Controlado e não-controlado não convivem: `default-open` seria ignorado.
     expect(saida).not.toContain('default-open');
   });

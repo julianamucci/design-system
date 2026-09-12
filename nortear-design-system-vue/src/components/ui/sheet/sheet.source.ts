@@ -318,6 +318,7 @@ ${header(
         <SheetClose as-child>
           <Button variant="outline">Cancelar</Button>
         </SheetClose>
+        <Button @click="aberto = false">Aplicar</Button>
       </SheetFooter>
     </SheetContent>
   </Sheet>

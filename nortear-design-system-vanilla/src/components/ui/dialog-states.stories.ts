@@ -7,6 +7,7 @@ import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './lea
 import {
   t,
   open,
+  clicarQuandoMontado,
   cantoButtonClose,
   checkNameAndDescription,
   waitForOpen,
@@ -67,7 +68,7 @@ function buildDialog(opts: {
     ],
     showCloseButton: opts.showCloseButton,
   });
-  if (opts.openInitially) queueMicrotask(() => trigger.click());
+  if (opts.openInitially) clicarQuandoMontado(trigger);
   return dialog;
 }
 
@@ -323,6 +324,8 @@ export const ListenerCleanup: Story = {
     await expect(host).not.toBeNull();
 
     let probe!: ProbeResult;
+    const teardownReasons: unknown[] = [];
+    const openStates: unknown[] = [];
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       probe = await sondarOuvintes({
@@ -335,6 +338,12 @@ export const ListenerCleanup: Story = {
             title: 'Título',
             description: 'Descrição do diálogo.',
             content: content,
+            onOpenChange: (isOpen) => {
+              openStates.push(isOpen);
+            },
+            onClose: (reason) => {
+              teardownReasons.push(reason);
+            },
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
@@ -344,6 +353,18 @@ export const ListenerCleanup: Story = {
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
       await checkLimpeza(probe);
+    });
+
+    await step('Desmontar NÃO é fechar: o estado muda, o motivo não é relatado', async () => {
+      // A sonda monta o diálogo, ABRE e tira o nó da página. Até 2026-09-11 esse
+      // caminho chamava `closeWithReason('api')` — o MESMO motivo do `close()`
+      // público —, então uma troca de idioma numa docs page com o painel aberto
+      // virava um `dialog_close` que ninguém provocou, indistinguível de uma
+      // decisão real do programa.
+      await expect(teardownReasons).toEqual([]);
+      // `onOpenChange` FICA: quem espelha o estado do painel precisa saber que
+      // ele saiu da tela. O que some é só o motivo, que é o que vira analytics.
+      await expect(openStates).toEqual([true, false]);
     });
   },
 };

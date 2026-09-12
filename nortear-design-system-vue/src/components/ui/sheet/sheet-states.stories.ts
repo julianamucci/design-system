@@ -11,6 +11,10 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  createSheetCloseWatch,
+  sheetCloseReason,
+  type SheetCloseGesture,
+  type SheetCloseReason,
 } from './index';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,6 +27,7 @@ import {
   sheetFormLongSource,
   sheetNoButtonCloseSource,
 } from './sheet.source';
+import { waitForPointerRelease } from './sheet.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
@@ -58,6 +63,15 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+/**
+ * O motivo que cada fechamento do painel controlado relatou, na ordem.
+ *
+ * A `play` roda no mesmo módulo que a story e lê daqui. Um `fn()` de args não
+ * serviria: o motivo não é prop do Sheet, e entraria na tabela de propriedades
+ * da docs page como se fosse.
+ */
+const controlledCloseReasons: SheetCloseReason[] = [];
 
 const sharedComponents = {
   Sheet,
@@ -307,13 +321,44 @@ export const Controlled: Story = {
     components: sharedComponents,
     setup() {
       const open = ref(false);
-      return { open };
+      // O caminho de saída que o painel viu por último. Anotar é do primitivo;
+      // traduzir o gesto em motivo é de quem consome — aqui, do dono do estado.
+      let gesture: SheetCloseGesture | null = null;
+      const closeWatch = createSheetCloseWatch((seen) => { gesture = seen; });
+
+      function recordClose() {
+        controlledCloseReasons.push(sheetCloseReason(gesture));
+        gesture = null;
+      }
+
+      function handleOpenChange(value: boolean) {
+        open.value = value;
+        if (value) {
+          gesture = null;
+          return;
+        }
+        recordClose();
+      }
+
+      /**
+       * A ação primária confirma e ela mesma fecha, mexendo no estado externo.
+       * Fechar assim NÃO passa por `update:open` — a lib só avisa o que ela
+       * própria decide —, então é o dono do estado quem relata. É o caminho
+       * `api`: fechou por decisão de dentro.
+       */
+      function confirmAndClose() {
+        gesture = 'confirm';
+        open.value = false;
+        recordClose();
+      }
+
+      return { open, closeWatch, handleOpenChange, confirmAndClose };
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <Button variant="outline" @click="open = true">Abrir pelo estado externo</Button>
-        <Sheet :open="open" @update:open="(v) => open = v">
-          <SheetContent side="right">
+        <Sheet :open="open" @update:open="handleOpenChange">
+          <SheetContent v-bind="closeWatch" side="right">
             <SheetHeader>
               <SheetTitle>Controlado pelo pai</SheetTitle>
               <SheetDescription>
@@ -324,6 +369,7 @@ export const Controlled: Story = {
               <SheetClose as-child>
                 <Button variant="outline">Cancelar</Button>
               </SheetClose>
+              <Button @click="confirmAndClose">Aplicar</Button>
             </SheetFooter>
           </SheetContent>
         </Sheet>
@@ -342,7 +388,12 @@ export const Controlled: Story = {
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
 
+    // Depois do fechamento de partida: a play REEXECUTA no mesmo DOM, e o passo
+    // acima pode ter fechado o que a rodada anterior deixou aberto.
+    controlledCloseReasons.length = 0;
+
     await step('O estado externo abre o painel', async () => {
+      await waitForPointerRelease();
       await userEvent.click(externo);
       const panel = await waitForPortal('dialog');
       await expect(panel).toBeVisible();
@@ -356,6 +407,22 @@ export const Controlled: Story = {
       // Se o evento não tivesse chegado, `open` continuaria true e o painel
       // reabriria no próximo ciclo de render.
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+      await expect(controlledCloseReasons.at(-1)).toBe('close-button');
+    });
+
+    await step('A ação primária confirma e fecha, e isso se chama api', async () => {
+      await waitForPointerRelease();
+      await userEvent.click(externo);
+      const panel = await waitForPortal('dialog');
+      await userEvent.click(within(panel).getByRole('button', { name: /^Aplicar$/i }));
+      await waitForPortalGone('dialog');
+      // O defeito que este passo guarda: até 2026-09-11 o motivo que sobrava era
+      // `close-button`, e confirmar chegava ao relatório como "apertou o X".
+      await expect(controlledCloseReasons.at(-1)).toBe('api');
+    });
+
+    await step('Os dois caminhos relataram motivos DIFERENTES', async () => {
+      await expect(controlledCloseReasons).toEqual(['close-button', 'api']);
     });
   },
 };

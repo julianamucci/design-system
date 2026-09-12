@@ -118,6 +118,11 @@ function buildDialogDemo(opts: DialogDemoOptions): HTMLElement {
     label: opts.triggerLabel,
   });
   const cancel = createButton({ variant: 'outline', label: opts.cancelLabel });
+  // O Cancelar fecha — a fábrica delega o clique em `[data-slot="dialog-close"]`
+  // dentro do painel e relata `close-button`. A marca é a mesma que o snippet
+  // desta página ensina desde sempre; até 2026-09-11 nada a escutava, e todas
+  // estas prévias vivas renderizavam um Cancelar inerte.
+  cancel.dataset.slot = 'dialog-close';
   const action = createButton({
     variant: opts.destructive ? 'destructive' : 'default',
     label: opts.actionLabel,
@@ -210,8 +215,14 @@ function buildDialogFormDemo(location: DocsLocation): HTMLElement {
   const footerEl = document.createElement('div');
   footerEl.className = 'nds-dialog-footer';
   footerEl.dataset.slot = 'dialog-footer';
+  // O Cancelar de um rodapé DENTRO do formulário fecha pelo mesmo contrato: a
+  // delegação da fábrica vale para o painel inteiro, e não só para a opção
+  // `footer`. O `type` já nasce `button` da fábrica — dentro de um `<form>`, um
+  // botão de sair que submetesse seria o oposto do que ele diz fazer.
+  const cancel = createButton({ variant: 'outline', label: t('demonstration.labels.cancel') });
+  cancel.dataset.slot = 'dialog-close';
   footerEl.append(
-    createButton({ variant: 'outline', label: t('demonstration.labels.cancel') }),
+    cancel,
     createButton({
       label: actionLabel,
       type: 'submit',
@@ -821,6 +832,8 @@ form.appendChild(field);
 const footerEl = document.createElement('div');
 footerEl.className = 'nds-dialog-footer';
 footerEl.dataset.slot = 'dialog-footer';
+// É o data-slot que fecha: a factory delega o clique em [data-slot="dialog-close"]
+// dentro do painel e relata o motivo 'close-button' no onClose.
 const cancel = createButton({ variant: 'outline', label: 'Cancelar' });
 cancel.type = 'button';
 cancel.dataset.slot = 'dialog-close';
@@ -956,7 +969,13 @@ export interface DialogOptions {
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: 'escape' | 'overlay' | 'close-button' | 'api') => void;
   class?: string;
-}`;
+}
+
+// O que a factory devolve fecha por código, informando 'api'.
+declare function createDialog(options: DialogOptions): HTMLElement & {
+  close: () => void;
+  destroy: () => void;
+};`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -980,7 +999,7 @@ export interface DialogOptions {
                 { name: 'footer',          type: 'HTMLElement',                                                          defaultValue: '—',     required: 'Não', description: 'Container das ações (cancel, action).' },
                 { name: 'showCloseButton', type: 'boolean',                                                              defaultValue: 'true',  required: 'Não', description: t('props.table.showCloseButtonContent') },
                 { name: 'onOpenChange',    type: '(open: boolean) => void',                                              defaultValue: '—',     required: 'Não', description: t('props.table.onOpenChange') },
-                { name: 'onClose',         type: "(reason: 'escape' | 'overlay' | 'close-button' | 'api') => void",  defaultValue: '—',     required: 'Não', description: 'Callback com a razão do fechamento — útil para analytics.' },
+                { name: 'onClose',         type: "(reason: 'escape' | 'overlay' | 'close-button' | 'api') => void",  defaultValue: '—',     required: 'Não', description: 'Callback com a razão do fechamento — útil para analytics. escape, overlay (clique no véu), close-button (o X do canto ou qualquer elemento marcado com data-slot="dialog-close" dentro do painel) e api (a chamada de close() no que a factory devolve).' },
                 { name: 'class',           type: 'string',                                                               defaultValue: '—',     required: 'Não', description: t('props.table.className') },
               ],
             },

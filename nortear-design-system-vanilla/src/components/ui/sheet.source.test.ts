@@ -39,10 +39,16 @@ describe('sheetSnippet', () => {
     expect(code).not.toContain('buildSheetSide');
   });
 
-  it('mostra que quem fecha pelo rodapé é o overlay — não existe botão componível', () => {
+  it('ensina que quem fecha pelo rodapé é o data-slot, não um clique fingido no véu', () => {
     const code = sheetSnippet();
     expect(code).toContain('footer: rodape');
-    expect(code).toContain("[data-slot=\"sheet-overlay\"]");
+    expect(code).toContain("sair.dataset.slot = 'sheet-close';");
+    // O contrário do que ele ensinava até 2026-09-11: fingir um clique no véu
+    // fecha, mas relata `overlay` para um caminho que é de BOTÃO — e era isso
+    // que fazia a docs page corrigir o motivo por fora, depois da fábrica.
+    expect(code).not.toContain('[data-slot="sheet-overlay"]');
+    // E continua sem prometer um componente que esta fábrica não tem: o que
+    // existe é a marca de markup, não um `SheetClose`.
     expect(code).not.toContain('SheetClose');
   });
 

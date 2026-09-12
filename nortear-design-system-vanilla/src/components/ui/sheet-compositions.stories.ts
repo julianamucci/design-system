@@ -324,10 +324,11 @@ export const BottomPanel: Story = {
       title: BOTTOM.panelTitle,
       description: BOTTOM.panelDescription,
       content: list,
-      // Rodapé só com a saída: a fábrica não expõe um botão de fechar
-      // componível, então quem fecha por fora é o overlay — e é ele que
-      // `makeExitFooter` aciona. Antes esta composição não tinha rodapé
-      // nenhum, e a chave `close` do conteúdo não aparecia em lugar nenhum.
+      // Rodapé só com a saída: o botão de fechar É componível, e o que o nomeia
+      // é o markup — `makeExitFooter` o marca com `data-slot="sheet-close"`, que
+      // a fábrica delega no painel e relata como `close-button`. Antes esta
+      // composição não tinha rodapé nenhum, e a chave `close` do conteúdo não
+      // aparecia em lugar nenhum.
       footer: makeExitFooter(BOTTOM.close),
     });
     queueMicrotask(() => trigger.click());

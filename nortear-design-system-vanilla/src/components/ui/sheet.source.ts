@@ -206,9 +206,11 @@ function bodyOf(o: SheetSnippetOptions): Body {
 /**
  * O rodapé.
  *
- * A fábrica não expõe um botão de fechar componível: o X do canto vem pronto, e
- * quem fecha pelos botões do rodapé é o overlay. É o que a linha do clique
- * mostra — sem ela, o snippet prometeria um `SheetClose` que não existe.
+ * O botão de fechar É componível, e o que o nomeia é o markup: a fábrica delega
+ * o clique em `[data-slot="sheet-close"]` dentro do painel e relata
+ * `close-button` no `onClose`. É o que as linhas da marca mostram — antes de
+ * 2026-09-11 nada escutava o slot, e o snippet ensinava a fingir um clique no
+ * véu, que relata `overlay` para um caminho que é de botão.
  *
  * Quando o corpo é um `<form>`, a primária é `type: 'submit'` RELIGADA pelo
  * atributo `form` (PRD D10). O rodapé é irmão do corpo por construção da
@@ -225,8 +227,18 @@ function footer(o: SheetSnippetOptions): { block?: string; referencia?: string }
   // não há formulário, e um `type: 'submit'` ali seria promessa vazia.
   const formId = o.body === 'form' ? 'filters' : o.body === 'profile' ? 'profile' : undefined;
 
+  // A saída sai da lista e vira variável: ela é o botão que se MARCA, e a marca
+  // é uma linha própria — dentro do `append` não caberia.
+  const exitBlock = cancelar
+    ? `const sair = createButton({ variant: 'outline', label: ${text(cancelar)} });
+// É o data-slot que fecha: a fábrica delega o clique em [data-slot="sheet-close"]
+// dentro do painel e relata 'close-button' no onClose.
+sair.dataset.slot = 'sheet-close';
+`
+    : '';
+
   const buttons = [
-    cancelar ? `createButton({ variant: 'outline', label: ${text(cancelar)} })` : undefined,
+    cancelar ? 'sair' : undefined,
     aplicar && !formId ? `createButton({ label: ${text(aplicar)} })` : undefined,
   ].filter((b): b is string => Boolean(b));
 
@@ -243,19 +255,12 @@ enviar.setAttribute('form', ${text(formId)});
 
   return {
     referencia: 'rodape',
-    block: `${primaria}const rodape = document.createElement('div');
+    block: `${exitBlock}${primaria}const rodape = document.createElement('div');
 rodape.className = 'nds-cluster';
 rodape.dataset.spacing = 'md';
 rodape.append(
 ${[...buttons, ...(primaria ? ['enviar'] : [])].map((b) => `  ${b},`).join('\n')}
-);
-// A fábrica não expõe um botão de fechar componível: quem fecha por fora é o
-// overlay, e é ele que os botões do rodapé acionam.
-for (const botao of Array.from(rodape.children)) {
-  botao.addEventListener('click', () => {
-    document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')?.click();
-  });
-}`,
+);`,
   };
 }
 

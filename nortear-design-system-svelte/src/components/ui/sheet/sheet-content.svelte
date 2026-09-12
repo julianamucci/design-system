@@ -32,6 +32,7 @@
 		side = "right",
 		showCloseButton = true,
 		closeLabel = "Fechar",
+		onClosePress,
 		portalProps,
 		children,
 		...restProps
@@ -39,6 +40,17 @@
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof SheetPortal>>;
 		side?: Side;
 		showCloseButton?: boolean;
+		/**
+		 * Avisa que o X do canto foi acionado — é o `close-press` que o bits-ui
+		 * NÃO publica. O `onOpenChange` diz que o painel fechou, nunca por onde;
+		 * das quatro saídas, esta é a única que mora dentro deste wrapper, então
+		 * é daqui que ela tem de sair. Quem escuta traduz em `SheetCloseReason`
+		 * pelo `close-reason.ts` ao lado; o primitivo não conhece analytics.
+		 *
+		 * Fica FORA do `restProps` de propósito: espalhado no `Content` viraria
+		 * atributo inválido no elemento do painel.
+		 */
+		onClosePress?: () => void;
 		/**
 		 * Nome acessível do botão X. Era a palavra "Fechar" escrita direto no
 		 * markup, e essa era a única string de interface do Sheet presa a um
@@ -64,7 +76,14 @@
 	>
 		{@render children?.()}
 		{#if showCloseButton}
-			<SheetPrimitive.Close data-slot="sheet-close">
+			<!--
+				O `onclick` vai no `SheetPrimitive.Close`, e não no `Button`: a lib
+				faz `mergeProps(restProps, closeState.props)`, que ENCADEIA os dois
+				manipuladores. Escrito depois do `{...props}` no botão, ele venceria
+				o handler que fecha o painel — é a quarta ocorrência do mesmo padrão
+				nesta família.
+			-->
+			<SheetPrimitive.Close data-slot="sheet-close" onclick={onClosePress}>
 				{#snippet child({ props })}
 					<Button variant="ghost" class="nds-sheet-close-position" size="icon-sm" {...props}>
 						<XIcon  />

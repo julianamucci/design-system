@@ -9,6 +9,8 @@
     SheetHeader,
     SheetTitle,
     SheetTrigger,
+    createSheetCloseWatch,
+    type SheetCloseReason,
   } from './index';
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
@@ -45,8 +47,21 @@
     actionLabel?: string;
     cancelLabel?: string;
     variant?: Variant;
+    /**
+     * Fecha o painel ao confirmar. Fora por padrão: as stories que já existiam
+     * clicam na primária sem esperar fechamento, e o ramo novo é o que prova o
+     * motivo `api` — decisão de dentro, fechamento por código.
+     */
+    closeOnAction?: boolean;
     onAction?: () => void;
     onCancel?: () => void;
+    /**
+     * Recebe POR ONDE o painel fechou, no vocabulário do design system. É o
+     * mesmo contrato do `onClose(reason)` do Vanilla, que é a referência: o
+     * primitivo entrega a palavra e quem consome decide o que fazer com ela —
+     * aqui, uma asserção; num produto, o `dialog_close`.
+     */
+    onClose?: (reason: SheetCloseReason) => void;
   }
   // Este wrapper nunca teve `defaultOpen` — as stories já passam `open`. O que
   // existia era um `{#if open !== undefined}` com os dois ramos idênticos fora
@@ -62,9 +77,49 @@
     actionLabel = 'Aplicar filtros',
     cancelLabel = 'Cancelar',
     variant = 'default',
+    closeOnAction = false,
     onAction,
     onCancel,
+    onClose,
   }: Props = $props();
+
+  /**
+   * O tradutor de gesto em motivo, do `close-reason.ts` ao lado.
+   *
+   * O bits-ui não publica motivo nenhum: `onOpenChange` avisa QUE fechou, nunca
+   * POR QUÊ. Os ouvintes espalhados no conteúdo anotam o gesto, e o motivo sai
+   * no fechamento.
+   */
+  const closeWatch = createSheetCloseWatch();
+
+  function handleOpenChange(next: boolean): void {
+    if (next) {
+      closeWatch.reset();
+      return;
+    }
+    onClose?.(closeWatch.takeReason());
+  }
+
+  /**
+   * Fechamento por CÓDIGO — e ele avisa sozinho.
+   *
+   * O `onOpenChange` do bits-ui sai do setter interno da lib (medido em
+   * `components/dialog.svelte`): mudar o valor ligado por fora fecha o painel e
+   * não dispara evento nenhum. Sem esta chamada o caminho programático seria o
+   * único sem motivo — justamente o que a palavra `api` existe para nomear.
+   */
+  function closeProgrammatically(): void {
+    if (!open) return;
+    open = false;
+    handleOpenChange(false);
+  }
+
+  /** A ação primária: marca a decisão, avisa quem escuta e, se pedido, fecha. */
+  function runAction(): void {
+    closeWatch.markConfirmation();
+    onAction?.();
+    if (closeOnAction) closeProgrammatically();
+  }
 
   /**
    * As CINCO seções do menu: o conteúdo compartilhado descreve a lista, e uma
@@ -93,7 +148,7 @@
   /** Sem a guarda, o Enter num campo tentaria NAVEGAR a página da story. */
   function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
-    onAction?.();
+    runAction();
   }
 
   /** A fileira do painel inferior, com a ação destrutiva por último. */
@@ -106,13 +161,13 @@
 
 <div style="contain: layout">
   {#key `${side}-${showCloseButton}-${variant}`}
-      <Sheet bind:open>
+      <Sheet bind:open onOpenChange={handleOpenChange}>
         <SheetTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{triggerLabel}</Button>
           {/snippet}
         </SheetTrigger>
-        <SheetContent {side} {showCloseButton}>
+        <SheetContent {side} {showCloseButton} {...closeWatch.listeners}>
           <SheetHeader>
             <!--
               Nível do cabeçalho pelo snippet `child`, e não pelo `level` sozinho:
@@ -229,7 +284,7 @@
               passo que não existe.
             -->
             <SheetFooter>
-              <SheetClose>
+              <SheetClose {...closeWatch.closeTrigger}>
                 {#snippet child({ props })}
                   <!--
                     O `onclick` ENCADEIA o do primitivo em vez de substituí-lo.
@@ -259,7 +314,7 @@
                 <Button
                   type={formId ? 'submit' : 'button'}
                   form={formId}
-                  onclick={formId ? undefined : onAction}
+                  onclick={formId ? undefined : runAction}
                 >
                   {actionLabel}
                 </Button>

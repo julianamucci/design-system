@@ -240,15 +240,42 @@ gatilho, `label` estável e nunca texto — é regra de todos os eventos, e est�
 
   O HoverCard não leva `reason`: é passivo, fechar é quase sempre "o ponteiro
   saiu", e o campo ia preenchido por uma stack só (ver o `hover-card.md` §9).
-- **Onde a lib não publica motivo, a docs page o deduz**: anota os eventos de
-  `Escape` e de clique fora do conteúdo, e marca a confirmação ANTES de o painel
-  fechar. A ação que confirma e o cancelar costumam ser partes de fechar da lib,
-  que entrega o mesmo motivo para as duas — sem a marca, "confirmou" chega ao
+- **Onde a lib não publica motivo, quem deduz fica AO LADO DO PRIMITIVO** — um
+  helper exportado do mesmo índice das peças, que anota os eventos de `Escape` e
+  de clique fora do conteúdo e marca a confirmação ANTES de o painel fechar. A
+  ação que confirma e o cancelar costumam ser partes de fechar da lib, que
+  entrega o mesmo motivo para as duas — sem a marca, "confirmou" chega ao
   relatório como "apertou o botão de fechar".
+
+  Esta linha dizia "a docs page o deduz" até 2026-09-11, e era o contrato ao
+  contrário: quem consome remendando o que o componente não sabe dizer. O
+  sintoma, medido no Sheet do vanilla — a stack de REFERÊNCIA de contrato —, era
+  a página fingir um clique no véu para fechar pelo rodapé e sobrescrever o
+  motivo relatado com uma variável dela. A página repassa a palavra; inventar a
+  palavra é do componente.
+
+- **Desmontar não é fechar.** O painel que sai da página junto com quem o montou
+  — troca de story, desmonte de docs page, troca de idioma, que refaz as seções —
+  não emite evento de fechamento. Se emitir, o relatório recebe um fechamento que
+  ninguém fez, e com `api` ele fica indistinguível de quem confirmou a ação. O
+  desmonte remove o painel e, no máximo, avisa o estado (`onOpenChange(false)`),
+  que descreve situação e não gesto — e não devolve foco, porque quem desmonta
+  pode ter tirado o próprio gatilho do documento. Medido em 2026-09-11 e
+  2026-09-12 em cinco fábricas do vanilla. Portão: `desmonte_emite_fechamento`.
 - **Até 2026-09-10 a quarta palavra não era a mesma**: `api` no drawer e no
   popover, `action` no `dialog_close` — que ainda aceitava `user` e `unknown` no
   React, era opcional em três stacks e ia vazio no Dialog e no AlertDialog do Vue
   e do Svelte. A dona decidiu por `api`. Portão: `reason_vocabulario_divergente`.
+- **Vocabulário mais curto se DECLARA.** Componente que legitimamente não tem um
+  dos motivos — o AlertDialog não fecha por clique no véu — entra em
+  `FAMILIA_DE_MOTIVO`, em `scripts/audit.mjs`, com a premissa conferida contra o
+  PRD dele: se o comportamento mudar, a exceção cai sozinha. Sem essa declaração,
+  "menos palavras" é a porta por onde uma peça fica para trás sem nada reprovar,
+  e foi por ela que o `SheetCloseReason` do vanilla passou seis semanas com três
+  palavras contra as quatro do Dialog da mesma stack. Dois portões guardam os
+  dois eixos: `reason_da_familia_divergente` entre os componentes que dividem um
+  evento, `reason_entre_stacks_divergente` entre as stacks que declaram o mesmo
+  tipo.
 
 ## Posicionamento dos flutuantes
 

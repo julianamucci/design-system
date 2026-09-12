@@ -354,6 +354,21 @@ clique da ação, registrado antes do fechamento. **Até essa data o Escape do
 vanilla fechava sem `dialog_close` nenhum**: o fechamento era rastreado à mão
 nos cliques dos dois botões.
 
+**E o desmonte não responde à pergunta** (2026-09-12): o callback de limpeza da
+fábrica chamava `close('api')`, então toda troca de idioma da docs page com a
+pergunta na tela mandava um `dialog_close` com a palavra de quem confirmou a
+exclusão. Hoje o painel sai sem `onClose` e sem devolver foco a um gatilho que
+está deixando o documento; `onOpenChange(false)` continua. A ausência de motivo é
+asserção da `ListenerCleanup` — lista vazia, não "algum motivo" —, e o portão é o
+`desmonte_emite_fechamento` (`dialog.md` §9).
+
+**As três palavras são exceção DECLARADA, não uma lista mais curta por acaso.**
+`FAMILIA_DE_MOTIVO`, em `scripts/audit.mjs`, registra que o `AlertDialogCloseReason`
+não tem `overlay` e confere a premissa contra a linha C5 deste arquivo: se o
+componente passar a fechar por clique no véu, a exceção cai e o portão volta a
+cobrar a palavra. Sem isso, "menos palavras" é exatamente a porta por onde o
+Sheet ficou seis semanas atrás do Dialog sem nada reprovar.
+
 **Ids estáveis nas cinco, no `trigger_id`**: `destructive` e `neutral` na
 demonstração e em Variantes; `pair1-do`, `pair1-dont`, `pair2-do`, `pair2-dont`
 no Do & Don't — batendo com as chaves `doDont.pair1/pair2` do conteúdo. O campo

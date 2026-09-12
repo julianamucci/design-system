@@ -10,6 +10,17 @@ import Footer from "./sheet-footer.svelte";
 import Title from "./sheet-title.svelte";
 import Description from "./sheet-description.svelte";
 
+// O motivo do fechamento é contrato do componente, não da página que o usa: sai
+// pelo mesmo barril das peças, como o `sheetCloseReason()` do Angular sai do
+// próprio `sheet.ts`.
+export {
+	createSheetCloseWatch,
+	sheetCloseReason,
+	type SheetCloseReason,
+	type SheetCloseSignal,
+	type SheetCloseWatch,
+} from "./close-reason";
+
 export {
 	Root,
 	Close,

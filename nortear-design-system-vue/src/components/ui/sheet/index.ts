@@ -7,3 +7,11 @@ export { default as SheetFooter } from './SheetFooter.vue'
 export { default as SheetHeader } from './SheetHeader.vue'
 export { default as SheetTitle } from './SheetTitle.vue'
 export { default as SheetTrigger } from './SheetTrigger.vue'
+export {
+  createSheetCloseWatch,
+  sheetCloseReason,
+  SHEET_CLOSE_SLOT,
+  type SheetCloseGesture,
+  type SheetCloseReason,
+  type SheetCloseWatch,
+} from './sheet.close-reason'

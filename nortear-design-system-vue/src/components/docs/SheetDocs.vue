@@ -14,6 +14,9 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  createSheetCloseWatch,
+  sheetCloseReason,
+  type SheetCloseGesture,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -165,39 +168,39 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 // E o alcance não é só a demonstração: Do & Dont, Variantes e Composições
 // renderizam Sheets VIVOS — abrir um painel ali é tão real quanto na demo.
 // O `update:open` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o payload
-// de `dialog_close` promete `reason`. Os dois caminhos que a lib anuncia por
-// evento próprio ficam anotados aqui; o que sobra é o botão, tanto o X do canto
-// quanto a saída do rodapé, que fecham pelo mesmo `SheetClose`.
+// de `dialog_close` promete `reason`. Quem vê o gesto ANOTA, e o mapeamento
+// gesto → motivo mora no PRIMITIVO (`ui/sheet/sheet.close-reason.ts`): é o tipo
+// exportado de lá que o portão `reason_entre_stacks_divergente` compara com as
+// outras stacks, e a página não inventa palavra nenhuma.
 //
 // Uma variável para a página inteira basta: o painel é modal, e nunca há dois
 // abertos ao mesmo tempo.
-type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
-let pendingCloseReason: SheetCloseReason | null = null;
+let pendingGesture: SheetCloseGesture | null = null;
 
-// Ouvintes prontos para `v-bind` no conteúdo: `escapeKeyDown` e
-// `pointerDownOutside` são emits do primitivo, e chegam lá pelo repasse do
-// SheetContent.
-const closeWatch = {
-  onEscapeKeyDown: () => { pendingCloseReason = 'escape'; },
-  onPointerDownOutside: () => { pendingCloseReason = 'overlay'; },
-};
+// Escape, clique no véu e foco que escapa são emits do primitivo, e chegam lá
+// pelo repasse do SheetContent; o clique num controle de fechar (o X do canto ou
+// qualquer SheetClose do rodapé) é pego por delegação, na captura do painel.
+const closeWatch = createSheetCloseWatch((gesture) => { pendingGesture = gesture; });
 
 function rastrearSheet(location: string, side: string, open: boolean) {
   if (open) {
-    pendingCloseReason = null;
+    pendingGesture = null;
     track('dialog_open', { component: 'sheet', trigger_id: side, location });
     return;
   }
   track('dialog_close', {
     component: 'sheet',
     trigger_id: side,
-    reason: pendingCloseReason ?? 'close-button',
+    reason: sheetCloseReason(pendingGesture),
     location,
   });
-  pendingCloseReason = null;
+  pendingGesture = null;
 }
 
 function rastrearConfirmacao(location: string, side: string, action = 'apply') {
+  // A ação primária é decisão de DENTRO: anotada antes, o fechamento que vier
+  // dela sai como `api`. Sem a marca, confirmar seria indistinguível de desistir.
+  pendingGesture = 'confirm';
   track('dialog_confirm', {
     component: 'sheet',
     action,

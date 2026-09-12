@@ -256,14 +256,73 @@ onOpenChange?: (open: boolean) => void;
 
 **Depois:**
 ```ts
-export type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
+export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
 onClose?: (reason: SheetCloseReason) => void;
 // closeWithReason(reason) interno; cada caminho de fechamento passa seu motivo
 ```
 
+**Paridade cumprida em 2026-09-11**, e ela tinha uma palavra de atraso: o tipo
+nasceu com TRÊS motivos e o `DialogCloseReason` da mesma stack já tinha quatro,
+então o fechamento por decisão de dentro — confirmar, ou o programa recolher o
+painel — não tinha palavra no Sheet. A docs page tapava o buraco sintetizando o
+`api` por fora, que é o inverso da regra da casa: o vanilla é a referência de
+contrato, e contrato remendado no consumidor não é contrato. Junto veio o
+`close()` público (ver `#vanilla-overlay-close-api`).
+
 **Motivo:** o evento `dialog_close` do catálogo tipado tem campo `reason`, e o Dialog factory já expõe `onClose(reason)` — o Sheet era o único overlay sem isso, deixando o analytics das docs pages sem distinguir escape/overlay/botão. Mudança aditiva; `onOpenChange(false)` continua disparando após `onClose`.
 
 **Verificação após bump:** n/a (sem upstream). Manter paridade de assinatura com `DialogCloseReason` se o Dialog ganhar novos motivos. Obs.: o AlertDialog **não** recebe este patch — ele não fecha por clique no véu (D1 do `prd/alert-dialog.md`), e os três caminhos que fecham são Cancelar (`close-button`), a ação (`api`) e Escape (`escape`, que equivale a cancelar). Esta linha dizia que ele não fechava por Escape, o que nunca foi o comportamento documentado.
+
+### vanilla/sheet+dialog — `close()` público, motivo `api` e fechamento por `data-slot` {#vanilla-overlay-close-api}
+
+- **Arquivos:** `nortear-design-system-vanilla/src/components/ui/sheet.ts`, `nortear-design-system-vanilla/src/components/ui/dialog.ts`
+- **Categoria:** api
+- **Data:** 2026-09-11
+- **Upstream ref:** — (fábricas standalone)
+
+**Antes:**
+```ts
+export type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
+// createSheet/createDialog devolvem só DestroyableElement: fechar por código
+// exige destroy(), que encerra a INSTÂNCIA
+// o X liga o próprio ouvinte; botão de fechar do consumidor não existe
+```
+
+**Depois:**
+```ts
+export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+export type SheetElement = DestroyableElement & { close: () => void };
+export type DialogElement = DestroyableElement & { close: () => void };
+// delegação no painel: [data-slot="sheet-close"] / [data-slot="dialog-close"]
+// fecham com 'close-button'; o X carrega o slot e perdeu o ouvinte próprio
+```
+
+**Motivo:** o vocabulário de fechamento da família é `escape | overlay | close-button | api` (`18-overlay.md` §Analytics), e o `SheetCloseReason` do vanilla — a stack de referência de contrato — tinha três palavras contra as quatro do Dialog, do Drawer e do Sheet do Angular. Sem `api`, a docs page SINTETIZAVA o motivo por fora: fingia um clique no véu para fechar pelo rodapé e sobrescrevia o motivo relatado com uma variável de página. O Dialog tinha o buraco do outro lado: a docs page ensinava marcar o Cancelar do rodapé com `data-slot="dialog-close"` e nada escutava o slot, então o padrão documentado renderizava um Cancelar inerte. Mudança aditiva; `onOpenChange(false)` continua disparando depois de `onClose`. Junto entrou a guarda de fechamento repetido no `sheet.ts` (o `dialog.ts` já a tinha).
+
+**Verificação após bump:** n/a (sem upstream). Manter os quatro motivos iguais nas cinco stacks — o portão `reason_entre_stacks_divergente` reprova a divergência, e o `reason_da_familia_divergente` reprova o Sheet ficar atrás do Dialog dentro da MESMA stack, que é por onde esta diferença passou seis semanas. `open()`/`toggle()`/`isOpen()` do `DrawerElement` seguem FORA destas duas por decisão: a abertura comandada delas ainda passa pelo gatilho interno.
+
+### vanilla/overlay — desmontar não é fechar {#vanilla-desmonte-nao-fecha}
+
+- **Arquivos:** `nortear-design-system-vanilla/src/components/ui/dialog.ts`, `alert-dialog.ts`, `sheet.ts`
+- **Categoria:** api
+- **Data:** 2026-09-12
+- **Upstream ref:** — (fábricas standalone)
+
+**Antes:**
+```ts
+// callback de limpeza do tornarDestruivel
+if (panelEl) close('api');   // = onClose('api') + onOpenChange(false)
+```
+
+**Depois:**
+```ts
+const wasOpen = desmontarPanel(/* animar */ false);
+if (wasOpen) onOpenChange?.(false);   // estado sim, motivo não
+```
+
+**Motivo:** o callback de limpeza roda quando o wrapper sai do DOM — troca de story, desmonte de docs page, troca de idioma. Cada uma dessas com o painel aberto virava um `dialog_close` que ninguém fez, e com a MESMA palavra de quem confirmou a ação: no GA4 os dois eram indistinguíveis. O Sheet e o Drawer já desmontavam em silêncio; o Dialog e o AlertDialog não. Junto, o `closeOutrosPanels` do Sheet — que recolhe o painel irmão ao abrir um novo — passou a relatar `api` em vez de sumir calado, e a leitura de `previousFocus` subiu para antes dele, senão o painel novo herdava o gatilho do antigo como alvo de retorno.
+
+**Verificação após bump:** n/a (sem upstream). O portão `desmonte_emite_fechamento` lê o callback de limpeza de cada `tornarDestruivel` das fábricas e resolve **um salto** de chamada: nenhum desses callbacks contém a palavra `onClose` — todos chamam uma função local —, então a versão que procurava a palavra achava zero na árvore inteira, com três fábricas defeituosas.
 
 ### vanilla/tooltip — `onShow` na exibição real {#vanilla-tooltip-onshow}
 

@@ -135,34 +135,20 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
   footer.dataset.spacing = 'md';
   footer.append(cancel, apply);
 
-  // Fechar ao clicar nas ações: dispara click no overlay (close interno da
-  // factory). pendingReason sobrepõe o reason 'overlay' desse caminho sintético
-  // para que cancel/apply reportem o motivo semântico correto.
-  let pendingReason: 'close-button' | 'api' | null = null;
+  // O Cancelar fecha pelo CONTRATO DE MARKUP: a fábrica delega o clique em
+  // `[data-slot="sheet-close"]` dentro do painel e relata `close-button`. Até
+  // 2026-09-11 não havia nada a marcar — a página fingia um clique no véu e
+  // depois SOBRESCREVIA o motivo que a fábrica tinha relatado, com um
+  // `pendingReason` de nível de página. Numa stack que é a referência de
+  // contrato, o motivo nasce na fábrica.
+  cancel.dataset.slot = 'sheet-close';
+
   // Quem abriu é o LADO — valor estável, nunca o texto traduzido do gatilho.
   // Vai no `trigger_id` dos três eventos; até 2026-09-10 era `label`, e o
   // `dialog_confirm` não levava campo nenhum de gatilho.
   const triggerId = opts.side ?? 'right';
-  const closeFromAction = () => {
-    const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
-    overlay?.click();
-  };
-  cancel.addEventListener('click', () => {
-    pendingReason = 'close-button';
-    closeFromAction();
-  });
-  apply.addEventListener('click', () => {
-    track('dialog_confirm', {
-      component: 'sheet',
-      trigger_id: triggerId,
-      action: 'apply',
-      location: opts.location,
-    });
-    pendingReason = 'api';
-    closeFromAction();
-  });
 
-  return createSheet({
+  const sheet = createSheet({
     trigger,
     side: opts.side ?? 'right',
     title: opts.title,
@@ -179,16 +165,32 @@ function buildSheetDemo(opts: SheetDemoOptions): HTMLElement {
         });
       }
     },
+    // O motivo chega INTACTO do `onClose` da fábrica: é ela que sabe por onde o
+    // painel saiu, e a página não tem o que corrigir.
     onClose: (reason) => {
       track('dialog_close', {
         component: 'sheet',
         trigger_id: triggerId,
-        reason: pendingReason ?? reason,
+        reason,
         location: opts.location,
       });
-      pendingReason = null;
     },
   });
+
+  // A ação primária confirma e sai por DECISÃO DE DENTRO: `close()` público, que
+  // a fábrica relata como `api`. É o quarto motivo do vocabulário da família, e
+  // o que separa no GA4 o painel aplicado do dispensado.
+  apply.addEventListener('click', () => {
+    track('dialog_confirm', {
+      component: 'sheet',
+      trigger_id: triggerId,
+      action: 'apply',
+      location: opts.location,
+    });
+    sheet.close();
+  });
+
+  return sheet;
 }
 
 // ─── createSheetDocs ──────────────────────────────────────────────────────────
@@ -793,13 +795,14 @@ form.addEventListener('submit', (e) => e.preventDefault());
 });
 const save = createButton({ variant: 'default', label: '${t('variants.compositions.profileEdit.submit')}', type: 'submit' });
 save.setAttribute('form', 'profile');
+// A fábrica delega o clique em [data-slot="sheet-close"] e fecha relatando
+// 'close-button'. É como se compõe uma saída no rodapé.
+const cancel = createButton({ variant: 'outline', label: '${t('demonstration.labels.cancel')}' });
+cancel.dataset.slot = 'sheet-close';
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
-footer.append(
-  createButton({ variant: 'outline', label: '${t('demonstration.labels.cancel')}' }),
-  save,
-);
+footer.append(cancel, save);
 createSheet({
   trigger,
   side: 'right',
@@ -822,13 +825,18 @@ createSheet({
                   type: 'submit',
                 });
                 save.setAttribute('form', 'docs-sheet-profile');
+                // O Cancelar fecha: a fábrica delega o clique em
+                // `[data-slot="sheet-close"]` dentro do painel. Sem a marca ele
+                // era um botão inerte na prévia viva.
+                const cancel = createButton({
+                  variant: 'outline',
+                  label: t('demonstration.labels.cancel'),
+                });
+                cancel.dataset.slot = 'sheet-close';
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
                 footer.dataset.spacing = 'md';
-                footer.append(
-                  createButton({ variant: 'outline', label: t('demonstration.labels.cancel') }),
-                  save,
-                );
+                footer.append(cancel, save);
                 // `action` nomeia a ação que o BOTÃO faz: aqui ele salva, então
                 // 'save'. 'apply' segue certo nos previews de filtros.
                 save.addEventListener('click', () => {
@@ -880,10 +888,14 @@ list.append(
   createButton({ variant: 'outline', label: '${t('variants.compositions.bottomPanel.actions.1')}' }),
   createButton({ variant: 'destructive', label: '${t('variants.compositions.bottomPanel.actions.2')}' }),
 );
+// A saída do rodapé fecha pelo contrato de markup: a fábrica delega o clique em
+// [data-slot="sheet-close"] e relata 'close-button'.
+const sair = createButton({ variant: 'outline', label: '${t('variants.compositions.bottomPanel.close')}' });
+sair.dataset.slot = 'sheet-close';
 const footer = document.createElement('div');
 footer.className = 'nds-cluster';
 footer.dataset.spacing = 'md';
-footer.append(createButton({ variant: 'outline', label: '${t('variants.compositions.bottomPanel.close')}' }));
+footer.append(sair);
 createSheet({
   trigger,
   side: 'bottom',
@@ -897,15 +909,18 @@ createSheet({
                   variant: 'outline',
                   label: t('variants.compositions.bottomPanel.trigger'),
                 });
+                const exit = createButton({
+                  variant: 'outline',
+                  label: t('variants.compositions.bottomPanel.close'),
+                });
+                // Sem a marca, a única saída desenhada deste painel não fazia
+                // nada: a prévia é viva, e um "Fechar" inerte ensina o contrário
+                // do que a composição promete.
+                exit.dataset.slot = 'sheet-close';
                 const footer = document.createElement('div');
                 footer.className = 'nds-cluster';
                 footer.dataset.spacing = 'md';
-                footer.append(
-                  createButton({
-                    variant: 'outline',
-                    label: t('variants.compositions.bottomPanel.close'),
-                  }),
-                );
+                footer.append(exit);
                 return createSheet({
                   trigger,
                   side: 'bottom',
@@ -966,10 +981,17 @@ export type SheetOptions = {
   content: HTMLElement;
   footer?: HTMLElement;
   onOpenChange?: (open: boolean) => void;
+  onClose?: (reason: SheetCloseReason) => void;
   class?: string;
 };
 
-export function createSheet(options: SheetOptions): HTMLElement;`;
+export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+
+// O que a fábrica devolve fecha por código, informando 'api'.
+export function createSheet(options: SheetOptions): HTMLElement & {
+  close: () => void;
+  destroy: () => void;
+};`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -993,6 +1015,7 @@ export function createSheet(options: SheetOptions): HTMLElement;`;
                 { name: 'content',         type: 'HTMLElement',                                       defaultValue: '—',       required: 'Sim', description: 'Body do painel (formulário, lista, mensagem).' },
                 { name: 'footer',          type: 'HTMLElement',                                       defaultValue: '—',       required: 'Não', description: 'Container das ações (Cancelar + ação primária).' },
                 { name: 'onOpenChange',    type: '(open: boolean) => void',                           defaultValue: '—',       required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
+                { name: 'onClose',         type: "(reason: 'escape' | 'overlay' | 'close-button' | 'api') => void", defaultValue: '—', required: 'Não', description: 'Chamado no fechamento com o caminho que o causou: escape, overlay (clique no véu), close-button (o X do canto ou qualquer elemento marcado com data-slot="sheet-close" dentro do painel) e api (a chamada de close() no que a fábrica devolve). Dispara antes do callback de mudança.' },
                 { name: 'class',           type: 'string',                                            defaultValue: '—',       required: 'Não', description: toPlainText(t('props.table.className.description')) },
                 { name: 'open',            type: 'boolean',                                           defaultValue: '—',       required: 'Não', description: 'NÃO SUPORTADO pela factory Nortear — estado é interno (uncontrolled). Use onOpenChange para observar mudanças.' },
                 { name: 'defaultOpen',     type: 'boolean',                                           defaultValue: 'false',   required: 'Não', description: 'NÃO SUPORTADO pela factory Nortear — para abrir programaticamente, chame `trigger.click()`.' },

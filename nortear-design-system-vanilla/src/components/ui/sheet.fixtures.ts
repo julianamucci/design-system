@@ -37,23 +37,26 @@ export function makeBody(text: string = SHEET_BODY_TEXT): HTMLElement {
  */
 export function makeExitFooter(exitLabel: string): HTMLElement {
   const exit = createButton({ variant: 'outline', label: exitLabel });
+  // O botão de fechar É componível: a fábrica delega o clique em
+  // `[data-slot="sheet-close"]` dentro do painel e relata `close-button`. Antes
+  // de 2026-09-11 não havia nada a marcar, e a fixture fingia um clique no véu —
+  // que relatava `overlay` para um caminho que é de botão.
+  exit.dataset.slot = 'sheet-close';
   const footer = document.createElement('div');
   footer.className = 'nds-cluster';
   footer.dataset.spacing = 'md';
   footer.appendChild(exit);
-  // A factory não expõe um botão de fechar componível: quem fecha por fora é o
-  // overlay, e é ele que o botão do rodapé aciona.
-  exit.addEventListener('click', () => {
-    document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')?.click();
-  });
   return footer;
 }
 
 /**
  * Rodapé de duas ações — cancelar à esquerda, ação principal à direita.
  *
- * Com `fecharAoClicar`, os dois botões passam a fechar o painel. A factory não
- * expõe SheetClose: quem fecha por fora é o overlay.
+ * Com `fecharAoClicar`, os dois botões passam a fechar o painel — pelo contrato
+ * de markup, marcados com `data-slot="sheet-close"`, que a fábrica delega no
+ * painel e relata como `close-button`. Antes de 2026-09-11 não havia o que
+ * marcar, e a fixture fingia um clique no véu: o motivo relatado era `overlay`
+ * para dois caminhos que são de botão.
  *
  * `formId` religa a ação principal ao `<form>` do corpo. O rodapé do Sheet é
  * IRMÃO do corpo rolável por construção da fábrica — é o que o mantém visível
@@ -81,11 +84,8 @@ export function makeFooter(
   footer.append(cancel, action);
 
   if (fecharAoClicar) {
-    const actionClose = () => {
-      document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')?.click();
-    };
-    cancel.addEventListener('click', actionClose);
-    action.addEventListener('click', actionClose);
+    cancel.dataset.slot = 'sheet-close';
+    action.dataset.slot = 'sheet-close';
   }
 
   return footer;

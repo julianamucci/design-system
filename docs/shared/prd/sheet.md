@@ -210,8 +210,21 @@ Fonte: `docs/shared/styles/nds/sheet.css`.
 
 | stack | como difere |
 |---|---|
-| vanilla | fábrica com `onClose(reason)` espelhando o Dialog — registrado em `PATCHES.md#vanilla-sheet-onclose-reason` |
+| vanilla | fábrica com `onClose(reason)` espelhando o Dialog, mais `close()` público e fechamento por `data-slot="sheet-close"` — `PATCHES.md#vanilla-sheet-onclose-reason` e `#vanilla-overlay-close-api` |
+| angular | `sheetCloseReason(RdxDialogOpenChangeReason)` exportado de `ui/sheet.ts` |
+| vue | `sheetCloseReason(gesture)` + `createSheetCloseWatch()` de `ui/sheet/sheet.close-reason.ts` — a reka-ui não publica motivo, então o gesto é OBSERVADO |
+| svelte | `sheetCloseReason(signal)` + `createSheetCloseWatch()` de `ui/sheet/close-reason.ts`, e `SheetContent` ganhou `onClosePress` — a bits-ui também não publica motivo |
+| react | não declara tipo próprio: o Sheet é o mesmo `dialog_close` do Dialog e usa o `dialogCloseReason` de `ui/dialog-close-reason.ts`, ao lado dos irmãos `ui/menu-close-reason.ts` e `ui/popover-close-reason.ts` |
 | todas | **onde a opção de lado mora varia por stack**; a tabela de props de cada página mostra a forma dela. O lado em si é sempre do painel (C8) |
+
+**Por que cada stack tem uma peça diferente aqui, e isso não é divergência para
+alinhar:** o motivo do fechamento é conhecimento da LIB, e três das cinco não o
+publicam. Onde ele chega pronto (base-ui, radix-ng) basta traduzir; onde não
+chega (reka-ui, bits-ui) é preciso observar o gesto antes de o painel fechar. O
+que o contrato exige é o resultado — as mesmas quatro palavras, derivadas ao lado
+do primitivo e nunca inventadas na página que consome. Até 2026-09-11 o vanilla,
+que é a referência, tinha três palavras e a docs page dele fabricava a quarta por
+fora, fingindo um clique no véu: o contrato remendado no consumidor.
 
 ### Peças, por stack
 
@@ -222,8 +235,8 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 |---|---|
 | react | `Sheet`, `SheetBody`, `SheetClose`, `SheetContent`, `SheetDescription`, `SheetFooter`, `SheetHeader`, `SheetTitle`, `SheetTrigger` |
 | vue | `Sheet`, `SheetBody`, `SheetClose`, `SheetContent`, `SheetDescription`, `SheetFooter`, `SheetHeader`, `SheetTitle`, `SheetTrigger` |
-| svelte | `Sheet`, `SheetBody`, `SheetClose`, `SheetContent`, `SheetDescription`, `SheetFooter`, `SheetHeader`, `SheetOverlay`, `SheetPortal`, `SheetTitle`, `SheetTrigger` |
-| vanilla | `createSheet` |
+| svelte | `Sheet`, `SheetBody`, `SheetClose`, `SheetContent`, `SheetDescription`, `SheetFooter`, `SheetHeader`, `SheetOverlay`, `SheetPortal`, `SheetTitle`, `SheetTrigger`, e do mesmo índice `createSheetCloseWatch`, `sheetCloseReason` e os tipos `SheetCloseReason`/`SheetCloseSignal`/`SheetCloseWatch` |
+| vanilla | `createSheet` (devolve `SheetElement = DestroyableElement & { close() }`) |
 | angular | `button[ndsSheetClose]`, `button[ndsSheetTrigger]`, `div[ndsSheetBody]`, `div[ndsSheetFooter]`, `div[ndsSheetHeader]`, `h1[ndsSheetTitle]` … `h6[ndsSheetTitle]` (os seis), `nds-sheet`, `ng-template[ndsSheetContent]`, `p[ndsSheetDescription]` |
 
 O índice do svelte também reexporta as formas curtas — `Body`, `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
@@ -325,6 +338,20 @@ pergunta de produto, e separar as séries esconderia isso.
 `close-button`, `api` —, com o registro da decisão de 2026-09-10 na §9 do
 [`dialog.md`](dialog.md), que é o dono deste evento. O vanilla chamava a
 confirmação que fecha o painel de `action` até essa data; hoje é `api`.
+
+**E o motivo sai de ONDE o painel fecha, nunca da página que o consome.** Cada
+stack o deriva ao lado do primitivo — tradução onde a lib publica o motivo,
+observação do gesto onde ela não publica —, e a docs page só repassa a palavra.
+Corrigido em 2026-09-11 nas três stacks que faltavam; a tabela de divergências
+da §7 diz qual é a peça de cada uma.
+
+**Histórico, porque este é o eixo por onde a inconsistência entrou duas vezes:**
+
+| data | o que era | o que segura hoje |
+|---|---|---|
+| 2026-07-27 | `SheetCloseReason` nasce com TRÊS palavras, e o PATCHES pede "manter paridade com `DialogCloseReason`" numa linha de texto | `reason_da_familia_divergente` — Dialog, Sheet e AlertDialog alimentam o mesmo `dialog_close` e têm de dizer as mesmas palavras, com exceção declarada e premissa conferida contra o PRD |
+| 2026-09-11 | o Dialog ganhou `api`, o Sheet não, e a docs page do vanilla fabricava a palavra fingindo um clique no véu | `reason_entre_stacks_divergente` — o mesmo tipo, nas stacks que o declaram, com o mesmo vocabulário |
+| 2026-09-12 | desmontar o painel emitia `dialog_close` com `api`: troca de idioma da docs page virava fechamento que ninguém fez, indistinguível de quem confirmou | `desmonte_emite_fechamento` — o callback de limpeza não pode alcançar `onClose`, e o portão resolve um salto de chamada porque nenhum desses callbacks contém a palavra |
 
 ## 10. Reconstruir do zero
 

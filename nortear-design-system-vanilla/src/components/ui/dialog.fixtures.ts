@@ -190,14 +190,46 @@ export function makeFooter(
   actionLabel: string,
   destructive = false,
 ): HTMLElement[] {
+  const cancel = createButton({ variant: 'outline', label: cancelLabel });
+  // O Cancelar FECHA: a fábrica delega o clique em `[data-slot="dialog-close"]`
+  // dentro do painel e relata `close-button`. Era o slot que o `cantoButtonClose`
+  // logo acima já descrevia como "todo controle de fechamento, inclusive o
+  // Cancelar do rodapé" — e que, até 2026-09-11, nada escutava.
+  cancel.dataset.slot = 'dialog-close';
   return [
-    createButton({ variant: 'outline', label: cancelLabel }),
+    cancel,
     createButton({ variant: destructive ? 'destructive' : 'default', label: actionLabel }),
   ];
 }
 
+/**
+ * Clica o gatilho na próxima microtarefa — mas SÓ se ele estiver no documento.
+ *
+ * O runner de testes avalia o `render()` de cada story mais de uma vez e
+ * descarta as árvores que não chegam ao canvas. Um `queueMicrotask(() =>
+ * trigger.click())` cru abre o diálogo dessas árvores também: a instância
+ * descartada portala um painel no `body`, e o painel rouba o foco do painel
+ * vivo. Quando a varredura de `tornarDestruivel` recolhe a instância órfã pelo
+ * prazo de graça, ela leva o painel junto — e o foco, que estava lá dentro,
+ * cai no `<body>` com o painel vivo ainda na tela.
+ *
+ * Medido em 2026-09-12 na story `States/Open`: dois `createDialog`, o segundo
+ * com o wrapper nunca conectado, e o foco em `BODY` ao fim. Passava antes por
+ * acidente — o desmonte chamava `previousFocus.focus()`, e `previousFocus` da
+ * instância órfã era justamente o botão do painel vivo. Tirar `onClose` do
+ * desmonte tirou junto essa devolução de foco, e o defeito apareceu.
+ *
+ * `isConnected` é decisivo aqui: a árvore descartada nunca entra no documento.
+ */
+export function clicarQuandoMontado(trigger: HTMLElement | null | undefined): void {
+  if (!trigger) return;
+  queueMicrotask(() => {
+    if (trigger.isConnected) trigger.click();
+  });
+}
+
 /** Abre pelo gatilho depois da montagem — a factory não tem `defaultOpen`. */
 export function mountOpen(dialog: HTMLElement): HTMLElement {
-  queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
+  clicarQuandoMontado(dialog.querySelector<HTMLElement>('button'));
   return dialog;
 }

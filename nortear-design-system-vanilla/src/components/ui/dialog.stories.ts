@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
-import { createDialog } from './dialog';
+import { createDialog, type DialogCloseReason } from './dialog';
 import { dialogSource } from './dialog.source';
 import { createButton } from './button';
 import { createDialogDocs } from '@/components/docs/DialogDocs';
@@ -29,6 +29,7 @@ type DialogArgs = {
   actionLabel: string;
   showCloseButton: boolean;
   onOpenChange: (open: boolean) => void;
+  onClose: (reason: DialogCloseReason) => void;
 };
 
 const meta: Meta<DialogArgs> = {
@@ -53,6 +54,14 @@ const meta: Meta<DialogArgs> = {
       description: 'Chamado a cada abertura e fechamento, com o novo estado.',
       table: { type: { summary: '(open: boolean) => void' } },
     },
+    onClose: {
+      control: false,
+      description:
+        "Chamado no fechamento com o caminho que o causou: 'escape', 'overlay' (clique no véu), 'close-button' (o X do canto ou qualquer data-slot=\"dialog-close\" dentro do painel) e 'api' (a chamada de close()). Dispara antes do callback de mudança.",
+      table: {
+        type: { summary: "(reason: 'escape' | 'overlay' | 'close-button' | 'api') => void" },
+      },
+    },
   },
   // Os rótulos saem do conteúdo compartilhado: cravados aqui, o Playground
   // abria em português para quem lê a página em inglês ou espanhol. Continuam
@@ -65,6 +74,7 @@ const meta: Meta<DialogArgs> = {
     actionLabel: t('demonstration.labels.action'),
     showCloseButton: true,
     onOpenChange: fn(),
+    onClose: fn(),
   },
 };
 
@@ -82,6 +92,17 @@ function buildPlayground(args: DialogArgs): HTMLElement {
   content.className = 'nds-text-body nds-text-muted-foreground';
   content.textContent = 'Conteúdo do corpo do diálogo (formulário, mensagem, mídia).';
 
+  // Os DOIS caminhos de saída do rodapé, e eles são motivos diferentes.
+  //
+  // O Cancelar se MARCA: a fábrica delega o clique em `[data-slot="dialog-close"]`
+  // dentro do painel e relata `close-button`. A ação primária fecha por DECISÃO
+  // DE DENTRO — `close()` no que a fábrica devolve, relatado como `api`.
+  //
+  // Até 2026-09-11 a fábrica não expunha nem um nem outro (só `destroy()`, que
+  // encerra a instância), e os dois botões fingiam um clique no véu: dois
+  // caminhos distintos chegavam ao analytics como `overlay`.
+  cancel.dataset.slot = 'dialog-close';
+
   const dialog = createDialog({
     trigger,
     title: args.title,
@@ -92,22 +113,10 @@ function buildPlayground(args: DialogArgs): HTMLElement {
     footer: [cancel, action],
     showCloseButton: args.showCloseButton,
     onOpenChange: args.onOpenChange,
+    onClose: args.onClose,
   });
 
-  // Mesma lacuna da `CustomCloseInFooter`: a fábrica não expõe fechamento
-  // programático — só `destroy()`, que encerra a instância —, então o clique no
-  // véu é o caminho público. A consulta parte do BOTÃO clicado, e não do
-  // documento: com dois diálogos montados, `document.querySelector` devolve o
-  // primeiro da ordem do DOM, que pode ser o do outro. Na rota A a fábrica anexa
-  // véu e painel ao `body` nessa ordem, então o véu é o irmão anterior do painel.
-  const closePeloOverlay = (event: Event) => {
-    const clicked = event.currentTarget as HTMLElement;
-    const panelEl = clicked.closest<HTMLElement>('[data-slot="dialog-content"]');
-    const overlayEl = panelEl?.previousElementSibling;
-    if (overlayEl instanceof HTMLElement && overlayEl.dataset.slot === 'dialog-overlay') overlayEl.click();
-  };
-  cancel.addEventListener('click', closePeloOverlay);
-  action.addEventListener('click', closePeloOverlay);
+  action.addEventListener('click', () => dialog.close());
 
   return dialog;
 }
@@ -128,6 +137,14 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const triggerEl = trigger(canvasElement)!;
     const spy = args.onOpenChange as unknown as ReturnType<typeof fn>;
+
+    // O MOTIVO que chegou ao `onClose` na última vez.
+    //
+    // Cada caminho de saída tem o seu, e é esse valor que vira o `reason` do
+    // `dialog_close` no GA4: sem uma asserção por caminho, uma troca de fiação
+    // faz quatro séries virarem uma sem nada ficar vermelho.
+    const onClose = args.onClose as unknown as ReturnType<typeof fn>;
+    const lastReason = (): unknown => onClose.mock.calls.at(-1)?.[0];
 
     await step('O markup é o contrato que as outras stacks copiam', async () => {
       const root = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
@@ -203,6 +220,7 @@ export const Playground: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForClosed();
       await expect(spy.mock.calls.length).toBe(callsBefore + 1);
+      await expect(lastReason()).toBe('escape');
       // Sem `waitFor`: a factory devolve o foco de forma síncrona, e envolver a
       // asserção mascararia um bug de foco real.
       await expect(document.activeElement).toBe(triggerEl);
@@ -214,33 +232,63 @@ export const Playground: Story = {
       await expect(document.body.style.overflow).toBe(overflowWhenClosed);
     });
 
-    await step('Clique no overlay fecha e devolve o foco', async () => {
+    await step('Clique no overlay fecha, devolve o foco e relata overlay', async () => {
       await open(canvasElement);
       overlay()!.click();
       await waitForClosed();
       await expect(document.activeElement).toBe(triggerEl);
+      await expect(lastReason()).toBe('overlay');
     });
 
     if (args.showCloseButton) {
-      await step('O botão X fecha, tem nome acessível e devolve o foco', async () => {
+      await step('O botão X fecha, tem nome acessível e relata close-button', async () => {
         const p = await open(canvasElement);
         const x = cantoButtonClose(p)!;
         await expect(x).toHaveAccessibleName();
+        const chamadasAntes = onClose.mock.calls.length;
         await userEvent.click(x);
         await waitForClosed();
         await expect(document.activeElement).toBe(triggerEl);
+        await expect(lastReason()).toBe('close-button');
+        // UMA vez: o X carrega o slot e a fábrica delega no painel — somar um
+        // ouvinte próprio à delegação fecharia duas vezes, e o GA4 contaria dois.
+        await expect(onClose.mock.calls.length).toBe(chamadasAntes + 1);
       });
     }
 
-    await step('O Cancelar do rodapé fecha sem tocar na ação primária', async () => {
+    await step('O Cancelar do rodapé fecha pelo slot e relata close-button', async () => {
       const p = await open(canvasElement);
       const footer = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const buttons = footer.querySelectorAll<HTMLElement>('button');
       // As ações são filhas DIRETAS do rodapé: é o que o CSS do sistema espera.
       await expect(buttons.length).toBe(2);
       await expect(buttons[0].parentElement).toBe(footer);
+      // Um botão do CONSUMIDOR, montado fora da fábrica: quem o faz fechar é a
+      // delegação do painel. A docs page ENSINAVA esta marca desde sempre, e
+      // até 2026-09-11 nada a escutava — o Cancelar documentado era inerte.
+      await expect(buttons[0]).toHaveAttribute('data-slot', 'dialog-close');
       await userEvent.click(buttons[0]);
       await waitForClosed();
+      await expect(lastReason()).toBe('close-button');
+    });
+
+    await step('A ação primária fecha por close() e relata api', async () => {
+      const p = await open(canvasElement);
+      const buttons = p.querySelectorAll<HTMLElement>('[data-slot="dialog-footer"] button');
+      await userEvent.click(buttons[1]);
+      await waitForClosed();
+      // `api` é o quarto motivo do vocabulário da família, e o que separa no
+      // analytics o painel que a pessoa dispensou do que o programa recolheu.
+      await expect(lastReason()).toBe('api');
+    });
+
+    await step('close() sobre painel já fechado não inventa fechamento', async () => {
+      // A guarda do lado de fora: sem ela, `close()` com o painel desmontado
+      // devolveria o foco a um alvo velho e mandaria um `dialog_close` que
+      // ninguém provocou — fechamento falso no GA4.
+      const chamadasAntes = onClose.mock.calls.length;
+      (canvasElement.querySelector('[data-slot="dialog"]') as { close?: () => void } | null)?.close?.();
+      await expect(onClose.mock.calls.length).toBe(chamadasAntes);
     });
 
     await step('A story termina aberta', async () => {

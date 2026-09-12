@@ -194,8 +194,12 @@ export const WithForm: Story = {
     const footerEl = document.createElement('div');
     footerEl.className = 'nds-dialog-footer';
     footerEl.dataset.slot = 'dialog-footer';
+    // A delegação da fábrica vale para o painel inteiro, e não só para a opção
+    // `footer`: um rodapé montado dentro do `content` fecha pelo mesmo slot.
+    const cancelar = createButton({ variant: 'outline', label: t('demonstration.labels.cancel') });
+    cancelar.dataset.slot = 'dialog-close';
     footerEl.append(
-      createButton({ variant: 'outline', label: t('demonstration.labels.cancel') }),
+      cancelar,
       createButton({ label: t('demonstration.labels.action'), type: 'submit' }),
     );
     form.appendChild(footerEl);
@@ -478,22 +482,12 @@ export const CustomCloseInFooter: Story = {
       variant: 'ghost',
       label: t('demonstration.labels.close'),
     });
-    // O botão precisa FECHAR de verdade: a factory não liga um `DialogClose`
-    // sozinha e não expõe fechamento programático — só `destroy()`, que encerra
-    // a instância inteira. Um "Fechar" que não fecha seria a story documentando
-    // o contrário do que promete, então o clique no véu é o caminho público que
-    // sobra.
-    //
-    // A consulta parte do PRÓPRIO botão, e não do documento: com dois diálogos
-    // montados, `document.querySelector('[data-slot="dialog-overlay"]')` devolve
-    // o primeiro da ordem do DOM — que pode ser o do outro. Na rota A a fábrica
-    // anexa véu e painel ao `body` nessa ordem, então o véu desta instância é o
-    // irmão anterior do painel que contém este botão.
-    footerClose.addEventListener('click', () => {
-      const panelEl = footerClose.closest<HTMLElement>('[data-slot="dialog-content"]');
-      const overlayEl = panelEl?.previousElementSibling;
-      if (overlayEl instanceof HTMLElement && overlayEl.dataset.slot === 'dialog-overlay') overlayEl.click();
-    });
+    // O botão fecha de verdade, e pelo contrato: a fábrica delega o clique em
+    // `[data-slot="dialog-close"]` dentro do painel e relata `close-button` —
+    // que é o motivo certo para um botão de fechar. Até 2026-09-11 nada escutava
+    // o slot, e esta story fingia um clique no véu, partindo do próprio botão
+    // para achar o véu daquela instância; o motivo relatado saía `overlay`.
+    footerClose.dataset.slot = 'dialog-close';
 
     return mountOpen(
       createDialog({

@@ -74,6 +74,17 @@ const meta: Meta = {
       description: 'Chamado ao acionar a saída do rodapé.',
       table: { type: { summary: '() => void' } },
     },
+    closeOnAction: {
+      control: 'boolean',
+      description: 'Fecha o painel ao confirmar — o fechamento por código.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
+    },
+    onClose: {
+      control: false,
+      description:
+        'Chamado no fechamento com o caminho que fechou o painel, no vocabulário do design system.',
+      table: { type: { summary: "(reason: 'escape' | 'overlay' | 'close-button' | 'api') => void" } },
+    },
   },
   args: {
     side: 'right',
@@ -83,8 +94,10 @@ const meta: Meta = {
     description: 'Configure os filtros para refinar os resultados.',
     actionLabel: 'Aplicar filtros',
     cancelLabel: 'Cancelar',
+    closeOnAction: true,
     onAction: fn(),
     onCancel: fn(),
+    onClose: fn(),
   },
 };
 
@@ -132,6 +145,21 @@ async function close(): Promise<void> {
   await waitForPointerLiberado();
 }
 
+/**
+ * O motivo do ÚLTIMO fechamento reportado.
+ *
+ * Lido do espião, e não de estado da story: o `onClose` é o contrato que um
+ * produto consumiria para preencher o `reason` do `dialog_close`, e é ele que
+ * precisa estar certo. A palavra sai do `close-reason.ts` do primitivo — a docs
+ * page declarava um vocabulário próprio de TRÊS palavras, com `close-button`
+ * como padrão, e "confirmou e fechou" chegava ao relatório como "apertou o botão
+ * de fechar".
+ */
+function lastCloseReason(onClose: ReturnType<typeof fn>): unknown {
+  const calls = onClose.mock.calls;
+  return calls.length ? calls[calls.length - 1][0] : undefined;
+}
+
 export const Playground: Story = {
   parameters: {
     covers: [
@@ -142,6 +170,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: args.triggerLabel as string });
+    const onClose = args.onClose as ReturnType<typeof fn>;
 
     await close();
 
@@ -208,40 +237,71 @@ export const Playground: Story = {
       await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
-    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+    await step('Escape fecha, devolve o foco ao gatilho e reporta escape', async () => {
+      const antes = onClose.mock.calls.length;
       await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');
         }
       });
+      await expect(onClose.mock.calls.length).toBe(antes + 1);
+      await expect(lastCloseReason(onClose)).toBe('escape');
     });
 
-    await step('Clique no overlay fecha o painel', async () => {
+    await step('Clique no overlay fecha o painel e reporta overlay', async () => {
       await open(trigger);
+      const antes = onClose.mock.calls.length;
       const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
       await expect(overlay).not.toBeNull();
       // `overlay.click()` NÃO serve: a lib dispensa a camada no `pointerdown`,
       // que o `click()` sintético não emite.
       await userEvent.click(overlay!);
       await waitForPortalGone('dialog');
+      await expect(onClose.mock.calls.length).toBe(antes + 1);
+      await expect(lastCloseReason(onClose)).toBe('overlay');
     });
 
-    await step('O botão do canto fecha o painel', async () => {
+    await step('O botão do canto fecha o painel e reporta close-button', async () => {
       const panel = await open(trigger);
+      const antes = onClose.mock.calls.length;
       const closeBtn = within(panel).getByRole('button', { name: /fechar/i });
       await userEvent.click(closeBtn);
       await waitForPortalGone('dialog');
+      await expect(onClose.mock.calls.length).toBe(antes + 1);
+      await expect(lastCloseReason(onClose)).toBe('close-button');
     });
 
-    await step('Cancelar no rodapé fecha e avisa quem escuta', async () => {
+    await step('Cancelar no rodapé fecha, avisa quem escuta e reporta close-button', async () => {
       const panel = await open(trigger);
-      const antes = (args.onCancel as ReturnType<typeof fn>).mock.calls.length;
+      const antesCancel = (args.onCancel as ReturnType<typeof fn>).mock.calls.length;
+      const antes = onClose.mock.calls.length;
       await userEvent.click(
         within(panel).getByRole('button', { name: args.cancelLabel as string }),
       );
       await waitForPortalGone('dialog');
-      await expect((args.onCancel as ReturnType<typeof fn>).mock.calls.length).toBe(antes + 1);
+      await expect((args.onCancel as ReturnType<typeof fn>).mock.calls.length).toBe(antesCancel + 1);
+      await expect(onClose.mock.calls.length).toBe(antes + 1);
+      // A saída do rodapé é um `SheetClose`, o mesmo caminho do X do canto: as
+      // duas são "apertei a saída", e é isso que separa esta palavra de `api`.
+      await expect(lastCloseReason(onClose)).toBe('close-button');
+    });
+
+    await step('Confirmar fecha por decisão de dentro e reporta api', async () => {
+      const panel = await open(trigger);
+      const antesAction = (args.onAction as ReturnType<typeof fn>).mock.calls.length;
+      const antes = onClose.mock.calls.length;
+      await userEvent.click(
+        within(panel).getByRole('button', { name: args.actionLabel as string }),
+      );
+      await waitForPortalGone('dialog');
+      await expect((args.onAction as ReturnType<typeof fn>).mock.calls.length).toBe(antesAction + 1);
+      await expect(onClose.mock.calls.length).toBe(antes + 1);
+      // O defeito que este passo guarda: com `close-button` de padrão, a ação
+      // que CONFIRMA — e o fechamento por código que ela dispara, que a lib nem
+      // anuncia — chegava ao relatório como "apertou o botão de fechar".
+      await expect(lastCloseReason(onClose)).toBe('api');
+      await waitForPointerLiberado();
     });
 
     // Termina fechado: a próxima rodada da play (painel Interactions) precisa do

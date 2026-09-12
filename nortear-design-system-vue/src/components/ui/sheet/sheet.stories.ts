@@ -10,12 +10,17 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  createSheetCloseWatch,
+  sheetCloseReason,
+  type SheetCloseGesture,
+  type SheetCloseReason,
 } from './index';
 import { Button } from '@/components/ui/button';
 import SheetDocs from '@/components/docs/SheetDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { sheetPlaygroundSource } from './sheet.source';
+import { waitForPointerRelease } from './sheet.fixtures';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const LABELS = {
@@ -94,14 +99,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<SheetArgs>;
 
-/** Espera o `body` voltar a aceitar ponteiro depois de um fechamento. */
-async function waitForPointerLiberado(): Promise<void> {
-  await waitFor(() => {
-    if (getComputedStyle(document.body).pointerEvents === 'none') {
-      throw new Error('o overlay ainda bloqueia o ponteiro');
-    }
-  });
-}
+/**
+ * O motivo que cada fechamento relatou, na ordem em que aconteceram.
+ *
+ * Mora no módulo, e não num `fn()` de args, porque o motivo NÃO é prop do Sheet:
+ * pendurá-lo em `argTypes` o faria aparecer na tabela de propriedades da docs
+ * page como se fosse parte da API. A `play` roda no mesmo módulo e lê daqui.
+ */
+const closeReasons: SheetCloseReason[] = [];
 
 /**
  * Abre só se estiver fechado.
@@ -113,7 +118,7 @@ async function open(trigger: HTMLElement): Promise<HTMLElement> {
   // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal a lib deixa
   // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
   // Sem esta espera o clique de reabertura falha no intervalo — medido.
-  await waitForPointerLiberado();
+  await waitForPointerRelease();
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
@@ -132,7 +137,7 @@ async function close(): Promise<void> {
     await userEvent.keyboard('{Escape}');
   }
   await waitForPortalGone('dialog');
-  await waitForPointerLiberado();
+  await waitForPointerRelease();
 }
 
 export const Playground: Story = {
@@ -156,19 +161,34 @@ export const Playground: Story = {
       Button,
     },
     setup() {
-      return { args, rotulos: LABELS };
+      // O caminho de saída que o painel viu por último. A anotação é do
+      // primitivo; traduzi-la é do consumidor — aqui, da story.
+      let gesture: SheetCloseGesture | null = null;
+      const closeWatch = createSheetCloseWatch((seen) => { gesture = seen; });
+
+      function handleOpenChange(open: boolean) {
+        args.onOpenChange(open);
+        if (open) {
+          gesture = null;
+          return;
+        }
+        closeReasons.push(sheetCloseReason(gesture));
+        gesture = null;
+      }
+
+      return { args, rotulos: LABELS, closeWatch, handleOpenChange };
     },
     template: `
       <Sheet
         :key="String(args.defaultOpen) + String(args.modal)"
         :default-open="args.defaultOpen"
         :modal="args.modal"
-        @update:open="args.onOpenChange"
+        @update:open="handleOpenChange"
       >
         <SheetTrigger as-child>
           <Button variant="outline">{{ args.triggerLabel }}</Button>
         </SheetTrigger>
-        <SheetContent :side="args.side" :show-close-button="args.showCloseButton">
+        <SheetContent v-bind="closeWatch" :side="args.side" :show-close-button="args.showCloseButton">
           <SheetHeader>
             <SheetTitle>{{ rotulos.title }}</SheetTitle>
             <SheetDescription>{{ rotulos.description }}</SheetDescription>
@@ -191,6 +211,11 @@ export const Playground: Story = {
     const trigger = canvas.getByRole('button', { name: args.triggerLabel });
 
     await close();
+
+    // Depois do fechamento de partida: a play REEXECUTA no mesmo DOM, e o
+    // `close()` acima pode ter fechado o que a rodada anterior deixou aberto.
+    closeReasons.length = 0;
+    const lastCloseReason = () => closeReasons.at(-1);
 
     await step('Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
       const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
@@ -259,16 +284,17 @@ export const Playground: Story = {
       await expect(panel.contains(document.activeElement)).toBe(true);
     });
 
-    await step('Escape fecha e devolve o foco ao gatilho', async () => {
+    await step('Escape fecha, devolve o foco ao gatilho e relata escape', async () => {
       await close();
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');
         }
       });
+      await expect(lastCloseReason()).toBe('escape');
     });
 
-    await step('Clique no overlay fecha o painel', async () => {
+    await step('Clique no overlay fecha o painel e relata overlay', async () => {
       await open(trigger);
       const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
       await expect(overlay).not.toBeNull();
@@ -277,20 +303,40 @@ export const Playground: Story = {
       // — o painel ficava aberto e a espera de fechamento estourava.
       await userEvent.click(overlay!);
       await waitForPortalGone('dialog');
+      await expect(lastCloseReason()).toBe('overlay');
     });
 
-    await step('O botão do canto fecha o painel', async () => {
+    await step('O botão do canto fecha o painel e relata close-button', async () => {
       const panel = await open(trigger);
       const closeBtn = within(panel).getByRole('button', { name: /fechar/i });
+      // O X é UM controle de fechar entre os possíveis, e se nomeia como tal —
+      // é por este atributo que a delegação do painel o reconhece.
+      await expect(closeBtn.closest('[data-slot="sheet-close"]')).not.toBeNull();
       await userEvent.click(closeBtn);
       await waitForPortalGone('dialog');
+      await expect(lastCloseReason()).toBe('close-button');
     });
 
-    await step('Cancelar no rodapé também fecha', async () => {
+    await step('Cancelar no rodapé também fecha, e pelo mesmo motivo', async () => {
       const panel = await open(trigger);
       const cancelar = within(panel).getByRole('button', { name: LABELS.cancel });
+      // O rodapé é de quem compõe: sem a delegação do painel, este caminho seria
+      // invisível e o relatório diria "api" para um clique que é de botão.
+      await expect(cancelar.closest('[data-slot="sheet-close"]')).not.toBeNull();
       await userEvent.click(cancelar);
       await waitForPortalGone('dialog');
+      await expect(lastCloseReason()).toBe('close-button');
+    });
+
+    await step('Nenhum caminho de saída foi relatado como close-button por omissão', async () => {
+      // O defeito que este passo guarda: até 2026-09-11 o motivo que sobrava era
+      // `close-button`, então Escape e véu chegariam ao GA4 como "apertou o X".
+      await expect(closeReasons).toEqual([
+        'escape',
+        'overlay',
+        'close-button',
+        'close-button',
+      ]);
     });
 
     // Termina fechado: a próxima rodada da play (painel Interactions) precisa do

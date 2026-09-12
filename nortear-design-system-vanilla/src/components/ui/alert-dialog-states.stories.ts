@@ -344,6 +344,10 @@ export const ListenerCleanup: Story = {
     await expect(host).not.toBeNull();
 
     let probe!: ProbeResult;
+    // Desmontar não é fechar: o que sai da página com a pergunta aberta não
+    // pode virar um `dialog_close`. O estado, sim, continua sendo avisado.
+    const motivosNoDesmonte: string[] = [];
+    const estados: boolean[] = [];
 
     await step('Monta, leva ao estado que vaza e tira da página', async () => {
       probe = await sondarOuvintes({
@@ -356,6 +360,8 @@ export const ListenerCleanup: Story = {
             description: 'A ação não pode ser desfeita.',
             cancelButton: createButton({ variant: 'outline', label: 'Cancelar' }),
             actionButton: createButton({ variant: 'destructive', label: 'Excluir' }),
+            onClose: (reason) => motivosNoDesmonte.push(reason),
+            onOpenChange: (open) => estados.push(open),
           });
         },
         exercitar: (no) => no.querySelector<HTMLElement>('button')?.click(),
@@ -365,6 +371,15 @@ export const ListenerCleanup: Story = {
 
     await step('Nada sobrou preso ao documento, e destroy() repete sem explodir', async () => {
       await checkLimpeza(probe);
+    });
+
+    await step('O desmonte não reportou motivo — mas reportou o estado', async () => {
+      // A lista VAZIA é a asserção: qualquer palavra aqui seria um fechamento
+      // que ninguém fez, e `api` o tornaria idêntico a confirmar a ação.
+      await expect(motivosNoDesmonte).toEqual([]);
+      // A outra metade importa tanto quanto: uma "simplificação" que apagasse o
+      // aviso de estado junto com o motivo passaria despercebida sem isto.
+      await expect(estados).toEqual([true, false]);
     });
   },
 };

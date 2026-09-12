@@ -63,7 +63,7 @@
 //
 // ─── O que esta stack NÃO faz, e é decisão de família ───────────────────────
 //
-// Não anima a SAÍDA: closeWithReason marca data-state="closed" e remove no
+// Não anima a SAÍDA: desmontarPanel marca data-state="closed" e remove no
 // mesmo quadro, então as keyframes de saída de dialog.css não chegam a rodar.
 // É como Sheet e Drawer se comportam nesta stack; o único que espera a
 // animação é o AlertDialog, que tem o par animationend + timeout escrito.
@@ -75,6 +75,21 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { lockBodyScroll, unlockBodyScroll } from '@/lib/scroll-lock';
 
 export type DialogCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+
+/**
+ * O que a fábrica devolve.
+ *
+ * `close()` é o caminho público para fechar por decisão de dentro — a ação que
+ * concluiu, o fluxo que terminou. Informa `'api'`, o motivo que separa no
+ * analytics o painel dispensado pela pessoa do recolhido pelo programa. Até
+ * 2026-09-11 só havia `destroy()`, que encerra a INSTÂNCIA: quem só queria
+ * fechar tinha de fingir um clique no véu, e as stories diziam isso por
+ * extenso. Mesma forma de `DrawerElement` e de `SheetElement`.
+ */
+export type DialogElement = DestroyableElement & {
+  /** Fecha o painel informando `'api'`. Sem efeito se já estiver fechado. */
+  close: () => void;
+};
 
 export type DialogOptions = {
   trigger: HTMLElement;
@@ -189,7 +204,7 @@ function createCloseIcon(): SVGSVGElement {
 
 // ─── createDialog ─────────────────────────────────────────────────────────────
 
-export function createDialog(options: DialogOptions): DestroyableElement {
+export function createDialog(options: DialogOptions): DialogElement {
   const { trigger, title, titleLevel = 2, description, content, footer, onOpenChange, onClose } = options;
   const showCloseButton = options.showCloseButton !== false;
   const closeLabel = options.closeLabel ?? 'Fechar';
@@ -243,6 +258,25 @@ export function createDialog(options: DialogOptions): DestroyableElement {
     if (description) panelEl.setAttribute('aria-describedby', descId);
     panelEl.dataset.slot = 'dialog-content';
     panelEl.dataset.state = 'open';
+
+    /*
+     * Todo `[data-slot="dialog-close"]` DENTRO do painel fecha, com
+     * `close-button`.
+     *
+     * Delegação, e não um ouvinte por botão: o rodapé é de quem compõe e chega
+     * pela opção `footer` (ou dentro do `content`, quando é um formulário) — um
+     * ouvinte por elemento só alcançaria o X que a própria fábrica cria. A docs
+     * page ENSINAVA marcar o Cancelar do rodapé com este slot desde sempre, e
+     * nada escutava: o painel renderizava um Cancelar inerte, e cada story
+     * contornava fingindo um clique no véu.
+     *
+     * `closest` e não `target`: o clique cai no ícone ou no `.nds-sr-only` de
+     * dentro do botão, e a comparação direta erraria os dois.
+     */
+    panelEl.addEventListener('click', (event) => {
+      const target = event.target as Element | null;
+      if (target?.closest('[data-slot="dialog-close"]')) closeWithReason('close-button');
+    });
 
     // Header
     const headerEl = document.createElement('div');
@@ -300,7 +334,8 @@ export function createDialog(options: DialogOptions): DestroyableElement {
       srOnly.className = 'nds-sr-only';
       srOnly.textContent = closeLabel;
       closeBtn.appendChild(srOnly);
-      closeBtn.addEventListener('click', () => closeWithReason('close-button'));
+      // Sem ouvinte próprio: quem fecha é a delegação do painel, que já alcança
+      // este botão pelo `data-slot`. Os dois juntos disparavam duas vezes.
       panelEl.appendChild(closeBtn);
     }
 
@@ -325,11 +360,20 @@ export function createDialog(options: DialogOptions): DestroyableElement {
     onOpenChange?.(true);
   }
 
-  function closeWithReason(reason: DialogCloseReason): void {
-    // Já fechado: um segundo close (Escape depois do clique no véu, ou o
-    // destruir chegando em cima do fechamento) não pode destravar a rolagem
-    // duas vezes — a contagem ficaria negativa e a página seguinte abriria
-    // travada.
+  /**
+   * Tira o painel do documento e solta o que ele prendeu.
+   *
+   * Separado do fechamento por vontade de quem usa, e é a mesma separação que
+   * `sheet.ts` e `drawer.ts` já tinham: aqui NÃO se devolve foco (o elemento
+   * anterior pode ter saído do DOM junto, que é exatamente o caso do desmonte)
+   * nem se anuncia motivo.
+   *
+   * A guarda de "já fechado" mora aqui: um segundo fechamento — Escape depois
+   * do clique no véu, ou o desmonte chegando em cima do fechamento — não pode
+   * destravar a rolagem duas vezes, porque a contagem ficaria negativa e a
+   * página seguinte abriria travada.
+   */
+  function desmontarPanel(): void {
     if (!panelEl && !overlayEl) return;
     unlockBodyScroll();
     trigger.setAttribute('aria-expanded', 'false');
@@ -340,6 +384,11 @@ export function createDialog(options: DialogOptions): DestroyableElement {
     overlayEl = null;
     panelEl = null;
     document.removeEventListener('keydown', handleKeydown);
+  }
+
+  function closeWithReason(reason: DialogCloseReason): void {
+    if (!panelEl && !overlayEl) return;
+    desmontarPanel();
     previousFocus?.focus();
     onClose?.(reason);
     onOpenChange?.(false);
@@ -370,7 +419,32 @@ export function createDialog(options: DialogOptions): DestroyableElement {
   // Forma compartilhada: `destroy()` público, idempotente e disparado sozinho.
   // O observador anterior se desligava na primeira mutação vista com o wrapper
   // ainda solto, e a guarda deixava de existir antes de servir para algo.
-  return tornarDestruivel(wrapper, wrapper, () => {
-    if (panelEl) closeWithReason('api');
-  });
+  // `Object.assign` e não um `as`: o verbo entra no tipo do próprio alvo, e
+  // `tornarDestruivel` devolve exatamente `DialogElement` sem conversão.
+  return tornarDestruivel(
+    wrapper,
+    Object.assign(wrapper, {
+      close: () => closeWithReason('api'),
+    }),
+    () => {
+      /*
+       * DESMONTE NÃO É FECHAMENTO, e por isso não chama `onClose`.
+       *
+       * Até 2026-09-11 esta saída chamava `closeWithReason('api')` — o MESMO
+       * motivo do `close()` público logo acima —, então a série do GA4 não
+       * separava "o programa fechou o painel" de "a página foi embora com ele
+       * aberto": uma troca de idioma numa docs page com o painel aberto
+       * produzia um `dialog_close` que ninguém provocou. Os três menus
+       * perderam o mesmo disparo na mesma data, e `sheet.ts` e `drawer.ts` já
+       * tinham esta forma.
+       *
+       * `onOpenChange(false)` FICA: quem espelha o estado do painel precisa
+       * saber que ele não está mais na tela. O que sai é só o motivo, que é o
+       * que alimenta o analytics.
+       */
+      const wasOpen = panelEl !== null || overlayEl !== null;
+      desmontarPanel();
+      if (wasOpen) onOpenChange?.(false);
+    },
+  );
 }
