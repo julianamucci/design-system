@@ -132,18 +132,13 @@ export class NdsProgress {}
 //   host: { '[style.--value]': 'valueCss()' }   // 0–100, do primitivo
 // Sem largura nem transform inline — o desenho continua sendo do design system.`;
 
-// Mesma estrutura que a variante `angular` de `anatomy.structureCode` no
-// conteúdo compartilhado — que escrevia a raiz como elemento (`<nds-progress>`)
-// e foi corrigida na fonte. A raiz é diretiva de atributo num `<div>`, como no
-// Card e no Slider: markup é o que a auditoria cross-stack compara, e as outras
-// quatro stacks renderizam `<div>`.
-const ANATOMY_CODE = `<div ndsProgress [value]="42">
-  <span ndsProgressLabel>Enviando arquivo</span>
-  <span ndsProgressValue></span>
-  <div ndsProgressTrack>
-    <div ndsProgressIndicator></div>
-  </div>
-</div>`;
+// A anatomia vem do conteúdo compartilhado (`anatomy.structureCode`), como nas
+// outras quatro stacks. Existiu aqui como constante local enquanto a variante
+// `angular` de lá escrevia a raiz como ELEMENTO; corrigida na fonte, a cópia
+// perdeu a razão de ser — e cobrava os outros dois idiomas, porque o rótulo
+// dentro do snippet ficava em português para quem lesse em inglês ou espanhol.
+// A raiz é diretiva de atributo num `<div>`, como no Card e no Slider: markup é
+// o que a auditoria cross-stack compara, e as outras quatro renderizam `<div>`.
 
 const CODE_DETERMINATE = `<div ndsProgress [value]="42" aria-label="Progresso do upload">
   <div ndsProgressTrack>
@@ -326,7 +321,7 @@ const CODE_WITH_LABEL = `<div ndsProgress [value]="42">
           [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
-          [structureCode]="anatomyCode"
+          [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
@@ -414,7 +409,6 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly importCode = `import { NDS_PROGRESS } from '@/components/ui/progress';`;
 
   protected readonly activeSection = signal<string | undefined>(undefined);

@@ -112,10 +112,10 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
 const IMPORT_CODE = `import { NdsToaster, toast } from '@/components/ui/sonner';`;
 
-// Escrito à mão, e não vindo de `anatomy.structureCode`: a variante `angular`
-// do conteúdo compartilhado descreve um elemento `<nds-toaster>` de uma lib
-// externa, e o componente desta stack é um seletor de ATRIBUTO no elemento
-// nativo — o snippet compartilhado não compila aqui. Divergência reportada.
+// Escrito à mão, e não vindo de `anatomy.structureCode`: o snippet local traz os
+// quatro disparos com mensagens reais, e não com rótulo genérico. A FORMA é a
+// mesma da variante compartilhada — `div[ndsToaster]` é seletor de ATRIBUTO no
+// elemento nativo, que é o que faz o markup sair igual ao das outras stacks.
 const ANATOMY_CODE = `<!-- Uma vez, no root da aplicação -->
 <div ndsToaster position="top-right" [richColors]="true" [closeButton]="true"></div>
 

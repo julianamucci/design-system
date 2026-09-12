@@ -116,10 +116,11 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-// A anatomia do conteúdo compartilhado descreve `<nds-accordion>` e
-// `<nds-accordion-item>`, elementos que não existem: aqui os seletores são de
-// atributo, para o markup ficar idêntico ao das outras stacks (`div` + `h3` +
-// `button`). Mesmo precedente do Card, do Checkbox e do Slider.
+// Anatomia local porque acrescenta o modo múltiplo, que a variante compartilhada
+// não mostra. A FORMA é a mesma de lá: os seletores desta stack são de atributo
+// (`div[ndsAccordion]`, `div[ndsAccordionItem]`), e é isso que mantém o markup
+// idêntico ao das outras stacks (`div` + `h3` + `button`). Mesmo precedente do
+// Card, do Checkbox e do Slider.
 const ANATOMY_CODE = `<div ndsAccordion defaultValue="item-1">
   <div ndsAccordionItem value="item-1">
     <button ndsAccordionTrigger>Título</button>

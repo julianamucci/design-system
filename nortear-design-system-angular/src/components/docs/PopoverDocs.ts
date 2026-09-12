@@ -158,9 +158,11 @@ export class NdsPopoverContent {
 @Directive({ selector: '[ndsPopoverDescription]', hostDirectives: [RdxPopoverDescription] })
 @Directive({ selector: 'button[ndsPopoverClose]', hostDirectives: [RdxPopoverClose] })`;
 
-// `props.extensibilityCode` do conteúdo compartilhado mostra `<nds-popover>` e
-// um `<nds-form />` — nenhum dos dois existe aqui. O que este stack tem de
-// extensível é o par `[open]` / `(openChange)`, que também habilita `[(open)]`.
+// Exemplo local porque o `props.extensibilityCode` compartilhado abre um
+// `form[ndsForm]` vazio, e aqui o assunto é outro: o que este stack tem de
+// extensível é o par `[open]` / `(openChange)`, que também habilita `[(open)]`,
+// com o fechamento por `button[ndsPopoverClose]` por fora do estado externo.
+// A raiz é `div[ndsPopover]` — seletor de atributo, como no snippet da Anatomia.
 const EXTENSIBILITY_CODE = `<!-- Controle externo do estado aberto/fechado -->
 <div ndsPopover [(open)]="aberto">
   <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>

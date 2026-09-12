@@ -264,6 +264,17 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | vanilla | `createSheet` (devolve `SheetElement = DestroyableElement & { open(), close(), isOpen() }`) |
 | angular | `button[ndsSheetClose]`, `button[ndsSheetTrigger]`, `div[ndsSheetBody]`, `div[ndsSheetFooter]`, `div[ndsSheetHeader]`, `h1[ndsSheetTitle]` … `h6[ndsSheetTitle]` (os seis), `nds-sheet`, `ng-template[ndsSheetContent]`, `p[ndsSheetDescription]` |
 
+**O snippet de extensibilidade publicava `<nds-filters-form>` até 2026-09-12**, e
+esse caso é diferente dos outros da campanha: a tag não era peça nossa escrita
+errado — era **placeholder do componente de QUEM CONSOME**, vestindo o prefixo da
+casa. Quem lesse contaria com um formulário de filtros que o design system nunca
+entregou, e a lista acima é a prova de que ele não existe. Virou
+`app-filters-form`, que é a convenção que a própria stack já usa em `<app-root />`.
+Portão: `tag_angular_inexistente`, que tira a régua dos `selector:` declarados
+pela própria stack — o prefixo `nds-` é o que torna o placeholder indistinguível
+de peça, e por isso é o prefixo que o portão vigia.
+
+
 O índice do svelte também reexporta as formas curtas — `Body`, `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.
 

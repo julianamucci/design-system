@@ -224,6 +224,15 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | vanilla | `createHoverCard` |
 | angular | `a[ndsHoverCardTrigger], button[ndsHoverCardTrigger]`, `ng-template[ndsHoverCardContent]`, `span[ndsHoverCard]` |
 
+**O snippet de extensibilidade publicava `<nds-hover-card>` até 2026-09-12**, e no Angular o
+SELETOR carrega o elemento: a peça é `span[ndsHoverCard]`, como a linha acima já dizia e
+como o `anatomy.structureCode` do conteúdo compartilhado já escrevia. A mesma
+página ensinava as duas formas, e a errada era a da seção que ninguém relê — quem
+copiasse receberia erro de template, porque snippet é string em JSON e nada nesta
+casa o compila. Portão: `tag_angular_inexistente`, que tira a régua dos
+`selector:` declarados pela própria stack.
+
+
 O índice do svelte também reexporta as formas curtas — `Content`, `Portal`, `Root`, `Trigger` —,
 para quem importa o namespace inteiro. As stories usam a forma longa.
 

@@ -219,7 +219,7 @@
         "vue": "<!-- Rolagem horizontal — barra horizontal explícita -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    <Card v-for=\"item in items\" :key=\"item.id\" v-bind=\"item\" />\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
         "svelte": "<!-- Rolagem horizontal — barra horizontal explícita -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    {#each items as item (item.id)}\n      <Card {...item} />\n    {/each}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
         "vanilla": "// Rolagem horizontal — barra horizontal explícita\nconst area = createScrollArea({ size: 'md', orientation: 'horizontal', children: trilha });",
-        "angular": "<!-- Rolagem horizontal — barra horizontal explícita -->\n<nds-scroll-area size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <nds-card [item]=\"item\" />\n    }\n  </div>\n  <nds-scroll-bar orientation=\"horizontal\" />\n</nds-scroll-area>"
+        "angular": "<!-- Rolagem horizontal. Nesta stack a barra é a do sistema: o componente\n     renderiza o viewport com overflow, sem peça de barra própria. -->\n<div ndsScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <app-item-card [item]=\"item\" />\n    }\n  </div>\n</div>"
       }
     },
     "tokens": {
@@ -624,7 +624,7 @@
         "vue": "<!-- Horizontal scroll — explicit horizontal bar -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    <Card v-for=\"item in items\" :key=\"item.id\" v-bind=\"item\" />\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
         "svelte": "<!-- Horizontal scroll — explicit horizontal bar -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    {#each items as item (item.id)}\n      <Card {...item} />\n    {/each}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
         "vanilla": "// Horizontal scroll — explicit horizontal bar\nconst area = createScrollArea({ size: 'md', orientation: 'horizontal', children: trilha });",
-        "angular": "<!-- Horizontal scroll — explicit horizontal bar -->\n<nds-scroll-area size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <nds-card [item]=\"item\" />\n    }\n  </div>\n  <nds-scroll-bar orientation=\"horizontal\" />\n</nds-scroll-area>"
+        "angular": "<!-- Horizontal scrolling. In this stack the bar is the native one: the component\n     renders the viewport with overflow, with no scrollbar piece of its own. -->\n<div ndsScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <app-item-card [item]=\"item\" />\n    }\n  </div>\n</div>"
       }
     },
     "tokens": {
@@ -1029,7 +1029,7 @@
         "vue": "<!-- Desplazamiento horizontal — barra horizontal explícita -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    <Card v-for=\"item in items\" :key=\"item.id\" v-bind=\"item\" />\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
         "svelte": "<!-- Desplazamiento horizontal — barra horizontal explícita -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    {#each items as item (item.id)}\n      <Card {...item} />\n    {/each}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
         "vanilla": "// Desplazamiento horizontal — barra horizontal explícita\nconst area = createScrollArea({ size: 'md', orientation: 'horizontal', children: trilha });",
-        "angular": "<!-- Desplazamiento horizontal — barra horizontal explícita -->\n<nds-scroll-area size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <nds-card [item]=\"item\" />\n    }\n  </div>\n  <nds-scroll-bar orientation=\"horizontal\" />\n</nds-scroll-area>"
+        "angular": "<!-- Desplazamiento horizontal. En esta stack la barra es la del sistema: el\n     componente renderiza el viewport con overflow, sin pieza de barra propia. -->\n<div ndsScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <app-item-card [item]=\"item\" />\n    }\n  </div>\n</div>"
       }
     },
     "tokens": {

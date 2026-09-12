@@ -16,8 +16,8 @@ import {
  *
  * Seletor de ATRIBUTO nos dois: o CSS compartilhado (`docs-swatches.css`)
  * estiliza `.nds-swatch` como se ele FOSSE o `<button>` — flex, borda, foco. Um
- * seletor de elemento (`<nds-swatch>`) inseriria um nó extra entre a grade e o
- * botão, e a regra passaria a pintar o invólucro.
+ * seletor de elemento (`nds-swatch`, tag própria) inseriria um nó extra entre a
+ * grade e o botão, e a regra passaria a pintar o invólucro.
  *
  * A cor entra por `--swatch-color`, nunca por style inline de cor: é o mesmo
  * mecanismo do `--ratio` no AspectRatio — custom property carregando um VALOR

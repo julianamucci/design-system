@@ -3279,6 +3279,108 @@ const ATRASO_EM_DOCS_PAGE = {
   },
 };
 
+/**
+ * Tag de ELEMENTO publicada para peça cujo seletor é ATRIBUTO, no Angular.
+ *
+ * Lá o seletor carrega o elemento, e isso é contrato: `div[ndsPopover]` não é
+ * `<nds-popover>`. Quem copiar o segundo recebe elemento desconhecido — no
+ * Angular, erro de template, não degradação silenciosa.
+ *
+ * Medido em 2026-09-12: **18 tags em 13 slugs**, todas em
+ * `props.extensibilityCode`, enquanto o `anatomy.structureCode` do MESMO arquivo
+ * já escrevia a forma certa. A página ensinava as duas, e a errada era a da
+ * seção que ninguém relê. Nada via: snippet é string em JSON, o `ngc` não o
+ * compila e nenhuma play o monta.
+ *
+ * A régua sai da própria stack — os `selector:` que declaram elemento — e não de
+ * uma lista escrita à mão, que envelheceria junto. Componente que virar elemento
+ * de verdade passa a ser aceito sozinho; peça que trocar de forma passa a
+ * reprovar sozinha.
+ *
+ * Varre o conteúdo compartilhado E as docs pages do Angular, porque snippet
+ * local de página é o outro lugar onde essa forma mora — e foi por ele que a
+ * mudança de política do Tooltip precisou ser refeita cinco vezes à mão.
+ */
+function auditTagAngularInexistente() {
+  const violations = [];
+  // A régua sai de `src` INTEIRO, não só de `components/ui`: as docs pages
+  // declaram as próprias peças (`nds-docs-page-layout`, `nds-foundation-page`) em
+  // `components/docs`. Lendo só `ui`, a primeira medição acusou 1459 tags —
+  // quase todas legítimas. Régua estreita demais acusa o inocente, e portão que
+  // acusa em massa é portão que ninguém lê.
+  const srcDir = join(ROOT, stackDir('angular'), 'src');
+  if (!existsSync(srcDir)) return violations;
+
+  const elementos = new Set();
+  for (const file of walkDir(srcDir, ['.ts'])) {
+    const src = readFile(file);
+    if (!src) continue;
+    for (const m of src.matchAll(/selector:\s*'([^']+)'/g)) {
+      for (const parte of m[1].split(',')) {
+        const p = parte.trim();
+        if (/^[a-z][a-z0-9-]*$/.test(p)) elementos.add(p);
+      }
+    }
+  }
+  // sem seletor de elemento nenhum a régua não existe, e acusar tudo seria ruído
+  if (!elementos.size) return violations;
+
+  const acusar = (tags, file, slug, stack) => {
+    for (const tag of new Set(tags)) {
+      if (elementos.has(tag)) continue;
+      violations.push({
+        category: 'quality', severity: 'high', slug, stack,
+        file, line: 1, rule: 'tag_angular_inexistente',
+        message: `o snippet publica \`<${tag}>\`, e o Angular não declara esse elemento — lá o SELETOR carrega o `
+          + 'elemento, então peça de atributo se escreve `<div ndsAlgo>`, como o `anatomy.structureCode` do mesmo '
+          + 'arquivo já faz. Quem copiar recebe erro de template; nada nesta casa compila snippet',
+      });
+    }
+  };
+
+  const base = join(ROOT, 'docs', 'shared', 'content');
+  if (existsSync(base)) {
+    for (const slug of readdirSync(base)) {
+      const arq = join(base, slug, 'translations.json');
+      const bruto = readFile(arq);
+      if (!bruto) continue;
+      let doc;
+      try { doc = JSON.parse(bruto); } catch { continue; }
+      const tags = [];
+      const varre = (o) => {
+        for (const v of Object.values(o || {})) {
+          if (v && typeof v === 'object') {
+            if (typeof v.angular === 'string') for (const m of v.angular.matchAll(/<(nds-[a-z0-9-]+)/g)) tags.push(m[1]);
+            varre(v);
+          }
+        }
+      };
+      varre(doc);
+      acusar(tags, relative(ROOT, arq), slug, 'shared');
+    }
+  }
+
+  const docsDir = join(ROOT, stackDir('angular'), 'src', 'components', 'docs');
+  if (existsSync(docsDir)) {
+    for (const file of walkDir(docsDir, ['.ts'])) {
+      const src = readFile(file);
+      if (!src) continue;
+      // `stripComments` ANTES de varrer, e o motivo é o defeito da estreia desta
+      // regra: os nove achados da primeira rodada eram todos COMENTÁRIO — a prosa
+      // que explica por que aquela tag não existe. Documentar a forma errada é
+      // justamente como a decisão fica registrada, e o portão reprovava quem a
+      // registrava. É a armadilha do "portão que casa palavra solta mede PROSA",
+      // já paga uma vez pela guarda de nome acessível.
+      //
+      // O conteúdo compartilhado NÃO passa por aqui de propósito: lá o `<!-- -->`
+      // e o `//` fazem parte do snippet publicado — comentário que o leitor copia
+      // junto, e portanto texto, não prosa do arquivo.
+      acusar([...stripComments(src).matchAll(/<(nds-[a-z0-9-]+)/g)].map((m) => m[1]), relative(ROOT, file), '_infra', 'angular');
+    }
+  }
+  return violations;
+}
+
 function auditAtrasoEmDocsPage() {
   const violations = [];
   for (const [stack, d] of Object.entries(ATRASO_EM_DOCS_PAGE)) {
@@ -11014,7 +11116,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

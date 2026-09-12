@@ -178,8 +178,9 @@ export class NdsTabsTrigger {}
 })
 export class NdsTabsContent {}`;
 
-// Também hardcoded: a variante `angular` de `props.extensibilityCode` descreve
-// `<nds-tabs>`. Aqui o exemplo é o que compila neste stack.
+// Exemplo local: a variante `angular` de `props.extensibilityCode` mostra o par
+// controlado, e aqui ele vem com a fiação de analytics junto. A raiz é
+// `div[ndsTabs]` — seletor de atributo, como no snippet da Anatomia.
 const EXTENSIBILITY_CODE = `<!-- Tabs controladas com analytics -->
 <div ndsTabs [value]="ativa()" (valueChange)="onTabChange($event)">
   <div ndsTabsList aria-label="Seções do componente">

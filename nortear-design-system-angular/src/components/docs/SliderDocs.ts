@@ -146,7 +146,7 @@ export class NdsSlider {
 // diferentes:
 //
 //  - a anatomia local existia porque a variante `angular` do conteúdo
-//    compartilhado ensinava `<nds-slider />`, um elemento que não existe (o
+//    compartilhado ensinava a raiz como ELEMENTO, forma que não existe aqui (o
 //    seletor é `div[ndsSlider]`). Contornar localmente deixou o erro de pé no
 //    conteúdo, que é o que o pacote `@nortear/ds-core` publica. A variante foi
 //    corrigida na fonte, e a cópia local perdeu a razão de ser;
