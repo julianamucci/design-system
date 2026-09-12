@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { HTMLAttributes, Ref } from 'vue'
 import { defaultDocument, useEventListener, useVModel } from '@vueuse/core'
-import { TooltipProvider } from 'reka-ui'
 import { computed, ref } from 'vue'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/composables/use-mobile'
 import { provideSidebarContext, SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_COOKIE_NAME, SIDEBAR_KEYBOARD_SHORTCUT, SIDEBAR_MOBILE_QUERY, SIDEBAR_WIDTH, SIDEBAR_WIDTH_ICON } from './utils'
@@ -78,7 +78,23 @@ provideSidebarContext({
 </script>
 
 <template>
-  <TooltipProvider :delay-duration="0">
+  <!--
+    O provedor é o da CASA, e vem SEM `delay-duration` de propósito.
+
+    O trilho recolhido troca o rótulo de cada item por um balão, e esse balão
+    tem de esperar o mesmo que todo balão do design system — 300ms, fixados
+    pela dona em 2026-09-12 (PRD do tooltip, D5). O jeito de esperar o mesmo é
+    não declarar valor nenhum aqui: quem guarda o número é
+    `ui/tooltip/TooltipProvider.vue`, e um segundo número neste arquivo seria a
+    divergência de volta, só que escrita de novo.
+
+    As duas formas erradas, que já estiveram aqui ou perto:
+      - `:delay-duration="0"` (resíduo do shadcn): balão a cada passada do
+        ponteiro pela coluna de ícones;
+      - o `TooltipProvider` da `reka-ui` sem prop nenhuma: cairia nos 700ms
+        padrão da lib, que ninguém escolheu.
+  -->
+  <TooltipProvider>
     <div
       data-slot="sidebar-wrapper"
       :style="{

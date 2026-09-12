@@ -48,8 +48,9 @@ const meta: Meta = {
     },
     delayDuration: {
       control: { type: 'number', min: 0, step: 50 },
-      description: 'Espera em ms antes de abrir no hover (aplicada no Provider).',
-      table: { type: { summary: 'number' }, defaultValue: { summary: '0' } },
+      description:
+        'Espera em ms antes de abrir no hover (aplicada no Provider). O foco pelo teclado abre na hora, sem esperar.',
+      table: { type: { summary: 'number' }, defaultValue: { summary: '300' } },
     },
     defaultOpen: {
       control: 'boolean',
@@ -82,7 +83,12 @@ const meta: Meta = {
     side: 'top',
     align: 'center',
     sideOffset: 4,
-    delayDuration: 0,
+    // 300 é o padrão do provedor (D5 do PRD, 2026-09-12). O `0` que estava aqui
+    // não era andaime de nada: a `play` do Playground abre por FOCO, que não
+    // espera, e nenhum passo dela mede tempo. Era a antiga afirmação de que o
+    // padrão era zero, escrita no lugar que o leitor mais lê — o control e o
+    // painel Code do Playground.
+    delayDuration: 300,
     defaultOpen: false,
     variant: 'default',
     triggerLabel: 'Salvar',

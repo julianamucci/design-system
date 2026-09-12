@@ -231,9 +231,9 @@
         "description": "Descrição",
         "delay": {
           "type": "number",
-          "default": "0",
+          "default": "300",
           "required": "Não",
-          "description": "Delay em ms antes do tooltip abrir no hover. Aplica-se no <code>TooltipProvider</code>."
+          "description": "Espera em ms antes de o balão abrir no hover, aplicada no provedor. O foco pelo teclado abre na hora, sem esperar — WCAG 1.4.13."
         },
         "open": {
           "type": "boolean",
@@ -699,9 +699,9 @@
         "description": "Description",
         "delay": {
           "type": "number",
-          "default": "0",
+          "default": "300",
           "required": "No",
-          "description": "Delay in ms before tooltip opens on hover. Applied at <code>TooltipProvider</code>."
+          "description": "Wait in ms before the bubble opens on hover, applied on the provider. Keyboard focus opens it immediately, with no wait — WCAG 1.4.13."
         },
         "open": {
           "type": "boolean",
@@ -1167,9 +1167,9 @@
         "description": "Descripción",
         "delay": {
           "type": "number",
-          "default": "0",
+          "default": "300",
           "required": "No",
-          "description": "Delay en ms antes de que el tooltip abra al hover. Se aplica en el <code>TooltipProvider</code>."
+          "description": "Espera en ms antes de que el globo abra en hover, aplicada en el proveedor. El foco por teclado lo abre de inmediato, sin esperar — WCAG 1.4.13."
         },
         "open": {
           "type": "boolean",

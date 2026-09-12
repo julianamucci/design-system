@@ -19,6 +19,7 @@ import {
   RdxTooltipPositioner,
   RdxTooltipProvider,
   RdxTooltipTrigger,
+  provideRdxTooltipConfig,
 } from '@radix-ng/primitives/tooltip';
 
 // ─── Tooltip ──────────────────────────────────────────────────────────────────
@@ -72,6 +73,40 @@ import {
 // de segurança do floating-ui.
 //
 
+/**
+ * A espera desta casa antes de o balão abrir no HOVER, em milissegundos.
+ *
+ * Fixada em 300 ms pela dona em 2026-09-12, igual nas cinco stacks (PRD D5). O
+ * atraso existe para separar o ponteiro que PASSA do ponteiro que PARA: com
+ * zero, todo movimento do mouse por uma barra de ferramentas acende balão.
+ *
+ * POR QUE ESTE NÚMERO ESTÁ ESCRITO AQUI, e não ausente como antes: até esta
+ * data a stack não passava atraso nenhum, e o primitivo caía na configuração
+ * global do Radix NG — 600 ms. Era a forma mais difícil de divergência: não
+ * havia valor em lugar nenhum do repositório para alguém comparar com as outras
+ * quatro stacks, e a docs page documentava o 600 da biblioteca como se fosse
+ * decisão de projeto. Deixar o default da lib decidir é o que criou o problema;
+ * declarar é o que o impede de voltar.
+ *
+ * O TECLADO NÃO ESPERA por isto. O `RdxTooltipTrigger` trata `(focus)` por
+ * `rootContext.open()`, que é abertura imediata — o atraso é só do hover, e
+ * prendê-lo ao foco quebraria a WCAG 1.4.13.
+ */
+export const NDS_TOOLTIP_DELAY = 300;
+
+/**
+ * Registra a espera da casa como PADRÃO do primitivo.
+ *
+ * É um default, não um valor fixo: a ordem de resolução do Radix NG é
+ * `[delay]` do gatilho → `[delay]` do balão → `[delay]` do grupo → esta
+ * configuração. Quem escrever `[delay]` continua vencendo; o que muda é que o
+ * último degrau passa a ser uma decisão desta casa em vez de um default de
+ * biblioteca.
+ */
+export function provideNdsTooltipConfig() {
+  return provideRdxTooltipConfig({ delay: NDS_TOOLTIP_DELAY });
+}
+
 /** Lado preferido de abertura. O auto-flip por colisão pode trocá-lo. */
 export type TooltipSide = 'top' | 'right' | 'bottom' | 'left';
 
@@ -88,6 +123,10 @@ export type TooltipAlign = 'start' | 'center' | 'end';
  * (`timeout`): depois que um tooltip do grupo abriu, os vizinhos abrem sem
  * esperar de novo, que é o que faz uma barra de ferramentas parecer uma coisa
  * só e não seis esperas independentes.
+ *
+ * É AQUI que a espera de 300 ms da casa entra, e não em cada balão: o grupo é o
+ * lugar em que um número vale para todos. Sem `[delay]` escrito, todo tooltip
+ * dentro do grupo abre em `NDS_TOOLTIP_DELAY`.
  */
 @Directive({
   selector: '[ndsTooltipProvider]',
@@ -98,6 +137,7 @@ export type TooltipAlign = 'start' | 'center' | 'end';
       inputs: ['delay', 'closeDelay', 'timeout'],
     },
   ],
+  providers: [provideNdsTooltipConfig()],
   host: {
     '[attr.data-slot]': '"tooltip-provider"',
   },
@@ -201,6 +241,13 @@ export class NdsTooltipTrigger {}
       outputs: ['openChange', 'onOpenChange'],
     },
   ],
+  // A MESMA declaração do grupo, repetida no balão de propósito: um
+  // `<span ndsTooltip>` escrito sem `ndsTooltipProvider` em volta não tem grupo
+  // de quem herdar, e sem isto voltaria a cair nos 600 ms da biblioteca — a
+  // divergência que este commit fecha, de volta pela porta de trás. Continua
+  // sendo PADRÃO, e o último degrau da resolução: um `[delay]` no grupo ou no
+  // gatilho vence, o que a story States/Hover prova com 600 explícito.
+  providers: [provideNdsTooltipConfig()],
   host: {
     '[attr.data-slot]': '"tooltip"',
   },

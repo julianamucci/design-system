@@ -13,9 +13,38 @@ import { figmaDesign } from '@shared/figma/design-links';
 /** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
 const LONG_DELAY = 600;
 
+/**
+ * A espera PADRÃO do provedor, em ms: 300, fixada pela dona em 2026-09-12 para
+ * as cinco stacks (D5 do PRD do tooltip).
+ *
+ * A story `Hover (provider default)` é o único ponto desta stack que a mede.
+ * Todas as outras passam um valor próprio, então um provedor que voltasse a
+ * abrir na hora — ou que herdasse 600 de alguma configuração de biblioteca,
+ * como aconteceu no Angular — passaria por todas elas sem uma falha.
+ */
+const DEFAULT_DELAY = 300;
+
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function wait(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms));
+}
+
+/**
+ * Espera o balão aparecer por RELÓGIO, com prazo, e diz se apareceu.
+ *
+ * Não é `waitFor` de propósito, e o motivo é de mecanismo: o `waitFor` reagenda
+ * por observador de mutação, então condição que toca o DOM provoca a própria
+ * retentativa, o prazo nunca chega e o arquivo morre sem resultado nem falha.
+ * Aqui a leitura é pura — `balaoDe` só consulta —, e o laço de relógio é o que
+ * deixa o TEMPO ser medido em vez de apenas tolerado.
+ */
+async function waitForBubble(trigger: HTMLElement, timeout: number): Promise<boolean> {
+  const deadline = performance.now() + timeout;
+  while (performance.now() < deadline) {
+    if (balaoDe(trigger) !== null) return true;
+    await wait(25);
+  }
+  return false;
 }
 
 const meta: Meta = {
@@ -121,6 +150,60 @@ export const Hover: Story = {
   },
 };
 
+/**
+ * O padrão do provedor, medido: o balão não aparece antes dos 300 ms de hover,
+ * e aparece depois.
+ *
+ * É a única story que NÃO passa `delayDuration`. O andaime repassa `undefined`,
+ * o padrão do `TooltipProvider` vale, e é ele que está sob asserção — passar
+ * `300` aqui mediria esta linha em vez do primitivo.
+ */
+export const HoverDefaultDelay: Story = {
+  name: 'Hover (provider default)',
+  args: { ...baseArgs, defaultOpen: false },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole('button', { name: /salvar/i });
+    let hoverStart = 0;
+
+    await step('O padrão de 300 ms é o que chega ao gatilho', async () => {
+      // `data-delay-duration` é escrito pela lib no gatilho com a espera que ela
+      // RESOLVEU — a do tooltip, e na falta dela a do provedor. O relógio abaixo
+      // prova que existe espera; este passo prova QUAL, e sem ele um 600 herdado
+      // de configuração de biblioteca passaria batido, que é exatamente a forma
+      // silenciosa de divergência que esta decisão foi consertar.
+      await expect(trigger).toHaveAttribute('data-delay-duration', String(DEFAULT_DELAY));
+    });
+
+    await step('O ponteiro que chega não abre nada — a contagem começa', async () => {
+      hoverStart = performance.now();
+      await userEvent.hover(trigger);
+      // Zero abriria AQUI. Era o valor antigo desta stack.
+      await expect(balaoDe(trigger)).toBeNull();
+
+      await wait(DEFAULT_DELAY / 2);
+      // A releitura no meio da contagem só vale enquanto a contagem corre: se a
+      // máquina engasgar e o relógio já tiver passado dos 300 ms, o balão pode
+      // ter aberto legitimamente. O defeito que este passo procura — abrir na
+      // hora — já foi pego pela leitura imediatamente após o hover.
+      if (performance.now() - hoverStart < DEFAULT_DELAY) {
+        await expect(balaoDe(trigger)).toBeNull();
+      }
+    });
+
+    await step('Parado sobre o gatilho, o balão abre depois dos 300 ms', async () => {
+      const opened = await waitForBubble(trigger, DEFAULT_DELAY * 8);
+      const elapsed = performance.now() - hoverStart;
+      await expect(opened).toBe(true);
+      // O piso é o que separa "esperou" de "abriu na hora": com o padrão em
+      // zero, o balão já estaria aberto na primeira leitura e o decorrido seria
+      // de alguns milissegundos. A folga de 20% absorve a granularidade do laço.
+      await expect(elapsed).toBeGreaterThanOrEqual(DEFAULT_DELAY * 0.8);
+      await expect(balaoDe(trigger)).toHaveAttribute('role', 'tooltip');
+    });
+  },
+};
+
 export const KeyboardFocus: Story = {
   name: 'Keyboard focus (no delay)',
   args: { ...baseArgs, defaultOpen: false, delayDuration: LONG_DELAY },
@@ -135,9 +218,17 @@ export const KeyboardFocus: Story = {
       trigger.blur();
       trigger.focus();
       await expect(trigger).toHaveFocus();
-      await waitFor(async () => {
-        await expect(balaoDe(trigger)).not.toBeNull();
-      });
+
+      // Medido por RELÓGIO, e com TETO. O `waitFor` que estava aqui tinha prazo
+      // default de 1000 ms contra um provedor pedindo 600: se o foco passasse a
+      // respeitar a espera do hover, o balão abriria aos 600 e a asserção
+      // continuaria verde — portão sem dentes justamente para a regra que esta
+      // story existe para provar.
+      const focusStart = performance.now();
+      const opened = await waitForBubble(trigger, LONG_DELAY * 3);
+      const elapsed = performance.now() - focusStart;
+      await expect(opened).toBe(true);
+      await expect(elapsed).toBeLessThan(LONG_DELAY / 2);
       await expect(balaoDe(trigger)).toHaveAttribute('role', 'tooltip');
     });
 

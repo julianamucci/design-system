@@ -204,7 +204,7 @@ export function TooltipDocs() {
 
   const interfaceCode = `// TooltipProvider (base-ui/tooltip)
 interface TooltipProviderProps {
-  delay?: number; // default 0 (ms)
+  delay?: number; // default 300 (ms)
 }
 
 // Tooltip
@@ -700,7 +700,7 @@ interface TooltipContentProps {
               name: tContent("variants.compositions.actionBar.name"),
               description: tContent("variants.compositions.actionBar.description"),
               useWhen: tContent("variants.compositions.actionBar.use"),
-              code: `<TooltipProvider delay={400} skipDelay={200}>
+              code: `<TooltipProvider delay={400} timeout={200}>
   <div className="nds-cluster" data-spacing="lg">
     <Tooltip>
       <TooltipTrigger

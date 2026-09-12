@@ -10,7 +10,18 @@
 	// registrada, não "alinhada".
 	//
 
-	let { delayDuration = 0, ...restProps }: TooltipPrimitive.ProviderProps = $props();
+	// A espera de abertura é 300 ms, fixada pela dona em 2026-09-12 para as cinco
+	// stacks — ver D5 no PRD do tooltip. Era `0` aqui, e zero não é atraso: é
+	// ausência de atraso, então todo ponteiro que PASSA pela barra de ferramentas
+	// acendia balão. O atraso existe para separar o ponteiro que passa do que para.
+	//
+	// O FOCO pelo teclado continua abrindo na hora, e isso não depende de valor
+	// nenhum: o `#onfocus` do gatilho do bits-ui chama `handleOpen()` direto, sem
+	// passar pelo `#handleDelayedOpen` que arma o temporizador. Prender o teclado
+	// à espera do hover esconderia a informação de quem não usa mouse (WCAG
+	// 1.4.13). As duas metades são medidas pelas stories `Hover (provider
+	// default)` e `Keyboard focus (no delay)`.
+	let { delayDuration = 300, ...restProps }: TooltipPrimitive.ProviderProps = $props();
 </script>
 
 <TooltipPrimitive.Provider {delayDuration} {...restProps} />

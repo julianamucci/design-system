@@ -89,6 +89,31 @@ compartilhada — enquanto o grupo está quente, o balão seguinte abre sem atra
 **Consequência**: o atraso NÃO é decisão de cada tooltip. Mudar num ponto muda o
 comportamento do grupo, que é o que se quer numa barra de ferramentas.
 
+**O valor é 300 ms nas cinco, fixado pela dona em 2026-09-12** — e antes disso
+era um valor por stack, com a documentação afirmando um sexto:
+
+| stack | antes | de onde vinha |
+|---|---|---|
+| react, vue, svelte | `0` | default escrito no wrapper |
+| vanilla | `300` | `SHOW_DELAY` na fábrica |
+| angular | `600` | NÃO era escolha: a stack não passava valor, e o primitivo caía na configuração global do radix-ng |
+| PRD e conteúdo compartilhado | `0` | afirmação que não valia para duas das cinco |
+
+Três leituras que essa tabela dá, e todas custam:
+
+1. **Zero não é atraso — é ausência de atraso**, e era o valor de três stacks. O
+   atraso existe para separar o ponteiro que PASSA do ponteiro que PARA; com
+   zero, todo movimento do mouse pela barra de ferramentas acende balão.
+2. **O 600 do Angular era default de biblioteca**, não decisão desta casa. É a
+   forma silenciosa de divergência mais difícil de achar: não há valor escrito em
+   lugar nenhum do repositório para alguém comparar.
+3. **A docs page do Angular documentava 600** e o conteúdo compartilhado dizia 0,
+   no mesmo componente e na mesma tabela de props — cada uma honesta sobre a
+   stack que enxergava.
+
+O foco pelo teclado continua abrindo na hora, sem esperar, nas cinco: o atraso é
+do hover, e prender o teclado a ele quebraria a WCAG 1.4.13.
+
 ### D6 · A cadeia de `transform-origin` cita as três libs
 
 **Fixada em** 2026-09-04 — o tooltip foi o primeiro da família a ser corrigido, e
@@ -152,7 +177,7 @@ Não há estado de foco DENTRO do balão: ele não recebe foco (C6).
 
 | prop | tipo | padrão |
 |---|---|---|
-| `delay` | number | `0` — no provedor |
+| `delay` | number | `300` — no provedor (ver D-espera) |
 | `open` | boolean | — |
 | `defaultOpen` | boolean | `false` |
 | `onOpenChange` | `(open: boolean) => void` | — |

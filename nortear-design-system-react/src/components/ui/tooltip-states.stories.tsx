@@ -6,6 +6,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  TOOLTIP_DEFAULT_DELAY,
 } from "./tooltip";
 import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
@@ -30,6 +31,32 @@ const LONG_DELAY = 600;
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function wait(ms: number): Promise<void> {
   return new Promise((resolver) => setTimeout(resolver, ms));
+}
+
+/**
+ * Instante em que o balão apareceu, por relógio.
+ *
+ * Laço de relógio, e não `waitFor`: o que se afirma aqui é TEMPO, e o `waitFor`
+ * reagenda por observador de mutação — um prazo dele diria "apareceu em algum
+ * momento", que é justamente o que não distingue 300 ms de 600. O laço só LÊ
+ * (`aria-describedby` + `getElementById`), sem tocar no DOM, então não há como
+ * a própria tentativa provocar a seguinte.
+ *
+ * Passo de 10 ms porque a medição é de borda: o limite superior da asserção é o
+ * default de 600 da biblioteca, e granularidade grossa comeria a margem.
+ */
+async function bubbleShownAt(
+  trigger: HTMLElement,
+  budget: number,
+): Promise<number> {
+  const deadline = performance.now() + budget;
+  while (performance.now() < deadline) {
+    if (balaoDe(trigger) !== null) {
+      return performance.now();
+    }
+    await wait(10);
+  }
+  return Number.POSITIVE_INFINITY;
 }
 
 const meta = {
@@ -208,6 +235,62 @@ export const Hover: Story = {
   },
 };
 
+export const HoverDefaultDelay: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "O atraso quando ninguém escolhe valor: um Provider sem espera declarada espera 300 ms antes de abrir. Passar o mouse por cima não acende balão; parar sobre o gatilho acende.",
+      },
+    },
+  },
+  render: () => (
+    // Provider SEM `delay`: é o PADRÃO que está sob medição, e o decorator do
+    // arquivo passa 0 — daí o provedor próprio. Aninhar governa de verdade: o
+    // provedor do base-ui monta o seu grupo de espera, e o gatilho lê o mais
+    // interno.
+    <TooltipProvider>
+      <div style={wrapperStyle}>
+        <Tooltip>
+          <TooltipTrigger
+            render={(props) => (
+              <Button {...props} variant="outline" size="icon" aria-label="Salvar">
+                <Save aria-hidden="true" />
+              </Button>
+            )}
+          />
+          <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = canvas.getByRole("button", { name: /Salvar/i });
+
+    const start = performance.now();
+    await userEvent.hover(trigger);
+
+    await step("Antes de cumprir o atraso padrão, o balão não existe", async () => {
+      await wait(TOOLTIP_DEFAULT_DELAY / 2);
+      // Se o padrão voltasse a ser zero, o balão já estaria aqui: com espera
+      // nenhuma a lib abre no primeiro movimento do ponteiro.
+      await expect(balaoDe(trigger)).toBeNull();
+    });
+
+    await step("Cumprido o atraso, o balão abre — e não no atraso da lib", async () => {
+      const openedAfter =
+        (await bubbleShownAt(trigger, TOOLTIP_DEFAULT_DELAY * 6)) - start;
+      await expect(openedAfter).toBeLessThan(Number.POSITIVE_INFINITY);
+      // O teto é o `OPEN_DELAY` do base-ui, que é 600: se o default do wrapper
+      // desaparecer, o valor que assume o lugar é esse, e a story reprova em
+      // vez de continuar verde medindo "abriu em algum momento".
+      await expect(openedAfter).toBeLessThan(TOOLTIP_DEFAULT_DELAY * 2);
+      await expect(balaoDe(trigger)).toHaveAttribute("role", "tooltip");
+    });
+  },
+};
+
 export const Focused: Story = {
   parameters: {
     covers: ["functional.item2"],
@@ -245,11 +328,15 @@ export const Focused: Story = {
 
     await step("O foco abre na hora, mesmo com o provider pedindo espera", async () => {
       trigger.blur();
+      const start = performance.now();
       trigger.focus();
       await expect(trigger).toHaveFocus();
-      await waitFor(async () => {
-        await expect(balaoDe(trigger)).not.toBeNull();
-      });
+      // Por relógio, e com teto: um `waitFor` de prazo padrão passaria mesmo se
+      // o foco tivesse sido preso à espera de 600 ms deste provider — diria
+      // "abriu", nunca "abriu na hora". O teto é o atraso PADRÃO do hover: se o
+      // foco esperar qualquer coisa parecida com um atraso de ponteiro, reprova.
+      const openedAfter = (await bubbleShownAt(trigger, LONG_DELAY * 2)) - start;
+      await expect(openedAfter).toBeLessThan(TOOLTIP_DEFAULT_DELAY);
       await expect(balaoDe(trigger)).toHaveAttribute("role", "tooltip");
     });
 

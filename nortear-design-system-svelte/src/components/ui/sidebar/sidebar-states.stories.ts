@@ -14,6 +14,59 @@ import {
   sidebarSource,
 } from './sidebar.source';
 
+/**
+ * O atraso que a casa fixou para TODO balão, em 2026-09-12 — D5 do PRD do
+ * tooltip. O trilho não declara valor próprio: herda este, do wrapper.
+ */
+const HOUSE_TOOLTIP_DELAY = 300;
+
+/**
+ * O padrão do `Tooltip.Provider` do bits-ui, que ninguém escolheu. É o número
+ * em que o trilho cairia se alguém trocasse o wrapper da casa pelo provedor da
+ * lib — e é o teto contra o qual a medição abaixo tem dentes.
+ */
+const LIB_TOOLTIP_DELAY = 700;
+
+/**
+ * Janela de cortesia do provedor da lib (`skipDelayDuration`): logo depois de
+ * um balão fechar, o próximo abre NA HORA, sem esperar o atraso. Medir dentro
+ * dela mediria a cortesia, não o atraso — por isso cada medição espera a janela
+ * vencer antes de começar.
+ */
+const LIB_SKIP_GRACE = 300;
+
+/** Espera de relógio. Fora de qualquer `waitFor`, e sem tocar no DOM. */
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Quantos ms depois de `mark` o balão passou a existir — ou `null` se o prazo
+ * venceu antes.
+ *
+ * É laço de RELÓGIO e não `waitFor` de propósito: o `waitFor` reagenda por
+ * observador de mutação, e uma condição que mexesse no DOM se realimentaria até
+ * o arquivo morrer sem resultado. Aqui dentro só há leitura pura —
+ * `querySelector` e o relógio.
+ */
+async function measureTooltipOpen(mark: number, deadline: number): Promise<number | null> {
+  while (performance.now() - mark < deadline) {
+    if (document.querySelector('[data-slot="tooltip-content"]')) return performance.now() - mark;
+    await sleep(10);
+  }
+  return null;
+}
+
+/** O simétrico: espera o balão sumir, também por relógio e leitura pura. */
+async function measureTooltipGone(deadline: number): Promise<boolean> {
+  const mark = performance.now();
+  while (performance.now() - mark < deadline) {
+    if (!document.querySelector('[data-slot="tooltip-content"]')) return true;
+    await sleep(10);
+  }
+  return false;
+}
+
 const meta: Meta = {
   title: 'Components/Layout/Sidebar/States',
   component: SidebarStory,
@@ -129,6 +182,101 @@ export const IconMode: StoryObj<Record<string, never>> = {
         { timeout: 3000 },
       );
     });
+  },
+};
+
+/**
+ * O balão do trilho recolhido espera, e a espera é a da casa.
+ *
+ * O trilho abria balão em zero — resíduo do shadcn, `delayDuration={0}` cravado
+ * no provedor do `sidebar-provider`. Zero não é atraso: é ausência de atraso, e
+ * o ponteiro que só ATRAVESSAVA a barra a caminho do conteúdo acendia um balão
+ * atrás do outro. A `Icon mode (collapsed)` provava que o balão abre; nenhuma
+ * story media QUANDO, e por isso o zero atravessou a migração inteira.
+ *
+ * Esta mede os dois lados da decisão:
+ *   - o ponteiro espera os 300 ms da casa (nem 0, nem os 700 da lib);
+ *   - o FOCO abre na hora, porque prender o teclado à espera do ponteiro
+ *     esconderia o nome da seção de quem não usa mouse (WCAG 1.4.13).
+ */
+export const TooltipDelay: StoryObj<Record<string, never>> = {
+  name: 'Tooltip delay (inherited)',
+  parameters: {
+    controls: { disable: true },
+    docs: { source: { transform: sidebarModeIconSource } },
+  },
+  render: () => ({
+    Component: SidebarIconStory,
+    props: {},
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const trigger = () => canvas.getByRole('button', { current: 'page' });
+    const tooltip = () => document.querySelector<HTMLElement>('[data-slot="tooltip-content"]');
+
+    await step('O trilho herda o atraso da casa, sem declarar valor próprio', async () => {
+      // O primitivo ecoa no gatilho o atraso que vai REALMENTE aplicar. É a
+      // leitura mais barata que separa as três leituras possíveis: `0` é o
+      // resíduo do shadcn, `700` é o padrão da lib, `300` é a decisão da casa.
+      await expect(trigger().getAttribute('data-delay-duration')).toBe(String(HOUSE_TOOLTIP_DELAY));
+    });
+
+    // Precondição própria: o replay parte do DOM que a rodada anterior deixou, e
+    // a janela de cortesia da lib abriria o próximo balão na hora — o que mediria
+    // a cortesia no lugar do atraso.
+    await userEvent.unhover(trigger());
+    trigger().blur();
+    await expect(await measureTooltipGone(2000)).toBe(true);
+    await sleep(LIB_SKIP_GRACE + 100);
+
+    await step('O ponteiro espera: nada no instante do hover, balão depois de 300 ms', async () => {
+      const mark = performance.now();
+      await userEvent.hover(trigger());
+      const atHover = tooltip();
+      const hoverCost = Math.round(performance.now() - mark);
+
+      await expect(
+        atHover,
+        `balão presente já no instante do ponteiro (${hoverCost} ms após a marca) — é atraso zero`,
+      ).toBeNull();
+
+      const elapsed = await measureTooltipOpen(mark, LIB_TOOLTIP_DELAY + 1500);
+      await expect(elapsed, 'o balão não abriu dentro do prazo').not.toBeNull();
+
+      // Piso: 250 e não 300 porque a marca é anterior ao `pointerenter`, e o
+      // laço amostra de 10 em 10 ms. Qualquer atraso zero mede abaixo de 100.
+      await expect(Math.round(elapsed!)).toBeGreaterThanOrEqual(250);
+      // Teto: abaixo do padrão da lib, com folga para carga de máquina. É este
+      // lado que reprova quem trocar o wrapper pelo `Provider` do bits-ui.
+      await expect(Math.round(elapsed!)).toBeLessThan(LIB_TOOLTIP_DELAY - 50);
+
+      // E o atraso foi cumprido pelo temporizador, não pulado: o primitivo
+      // distingue as duas aberturas no próprio atributo de estado.
+      await expect(trigger().getAttribute('data-state')).toBe('delayed-open');
+      await expect(tooltip()!.textContent?.trim()).toBe('Dashboard');
+    });
+
+    await userEvent.unhover(trigger());
+    await expect(await measureTooltipGone(2000)).toBe(true);
+    await sleep(LIB_SKIP_GRACE + 100);
+
+    await step('O foco abre na hora — a rota do teclado não paga a espera do ponteiro', async () => {
+      // A janela de cortesia já venceu acima, então "na hora" aqui só pode vir
+      // do caminho do foco: um atraso aplicado mediria 300 e reprovaria.
+      const mark = performance.now();
+      trigger().focus();
+
+      const elapsed = await measureTooltipOpen(mark, 2000);
+      await expect(elapsed, 'o foco não abriu o balão — teclado sem nome de seção').not.toBeNull();
+      await expect(Math.round(elapsed!)).toBeLessThan(150);
+      await expect(trigger().getAttribute('data-state')).toBe('instant-open');
+      await expect(tooltip()!.textContent?.trim()).toBe('Dashboard');
+    });
+
+    // Termina limpa: a foto do Chromatic é o trilho recolhido, e balão em
+    // animação de entrada é o que faz o axe medir contraste de elemento em fade.
+    trigger().blur();
+    await expect(await measureTooltipGone(2000)).toBe(true);
   },
 };
 

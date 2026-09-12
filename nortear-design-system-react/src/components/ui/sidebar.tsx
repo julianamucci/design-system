@@ -22,6 +22,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { PanelLeftIcon } from "lucide-react"
@@ -143,23 +144,51 @@ function SidebarProvider({
 
   return (
     <SidebarContext.Provider value={contextValue}>
-      <div
-        data-slot="sidebar-wrapper"
-        style={
-          {
-            "--sidebar-width": SIDEBAR_WIDTH,
-            "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
-            ...style,
-          } as React.CSSProperties
-        }
-        className={cn(
-          "nds-sidebar-wrapper",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </div>
+      {/*
+        O provedor do balão vive AQUI, e não em cada item do trilho.
+
+        O `SidebarMenuButton` recolhido monta `Tooltip` + `TooltipTrigger`, e o
+        gatilho do base-ui lê o atraso de abertura do provedor mais próximo. Sem
+        provedor nenhum ele cai no `OPEN_DELAY` da biblioteca, que é 600 —
+        número que ninguém desta casa escolheu, e que não está escrito em lugar
+        algum para alguém comparar. Era o que acontecia até 2026-09-12.
+
+        Este é o único ancestral comum de todo item de menu: o `useSidebar` de
+        cada peça já lança sem ele, então uma barra montada fora deste provedor
+        não existe. Envolver a `Sidebar` em vez disto deixaria de fora o item
+        que vive na gaveta móvel, e envolver item a item repetiria a decisão em
+        cada chamada.
+
+        Sem `delay`: o valor é o padrão do wrapper da casa
+        (`TOOLTIP_DEFAULT_DELAY`, 300 ms nas cinco stacks), e escrevê-lo aqui
+        recriaria a divergência que o padrão existe para fechar. O trilho
+        HERDA. Quem compõe pode declarar um provedor próprio por fora — o
+        base-ui lê o mais interno, e este continua sendo o mais interno para a
+        barra.
+
+        Não renderiza nó nenhum: o provedor do base-ui é só contexto mais o
+        grupo de espera do floating-ui, então a marcação do `wrapper` continua
+        exatamente a mesma.
+      */}
+      <TooltipProvider>
+        <div
+          data-slot="sidebar-wrapper"
+          style={
+            {
+              "--sidebar-width": SIDEBAR_WIDTH,
+              "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              ...style,
+            } as React.CSSProperties
+          }
+          className={cn(
+            "nds-sidebar-wrapper",
+            className
+          )}
+          {...props}
+        >
+          {children}
+        </div>
+      </TooltipProvider>
     </SidebarContext.Provider>
   )
 }

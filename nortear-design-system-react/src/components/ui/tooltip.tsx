@@ -45,8 +45,26 @@ const TooltipDescriptionContext = React.createContext<{
   open: boolean
 } | null>(null)
 
+/**
+ * Atraso de abertura padrão, em ms — fixado pela dona em 2026-09-12 para as
+ * cinco stacks (`docs/shared/prd/tooltip.md`, D5).
+ *
+ * O atraso é o que separa o ponteiro que PASSA do ponteiro que PARA: com zero,
+ * que era o valor daqui, todo movimento do mouse por uma barra de ícones acende
+ * balão. Ele NÃO se aplica ao teclado — o `useFocus` do base-ui abre na hora,
+ * sem passar pelo `restMs`, e prender o foco à espera quebraria a WCAG 1.4.13.
+ *
+ * Escrito aqui, e não deixado ao primitivo: o default do `@base-ui/react` é 600
+ * (`OPEN_DELAY`), e default de biblioteca é a forma silenciosa de divergência —
+ * não há valor escrito em lugar nenhum do repositório para alguém comparar.
+ *
+ * Exportado para a story que o MEDE não repetir o número: o valor e a asserção
+ * que o prova saem do mesmo lugar, e trocar um troca o outro.
+ */
+export const TOOLTIP_DEFAULT_DELAY = 300
+
 function TooltipProvider({
-  delay = 0,
+  delay = TOOLTIP_DEFAULT_DELAY,
   ...props
 }: TooltipPrimitive.Provider.Props) {
   return (

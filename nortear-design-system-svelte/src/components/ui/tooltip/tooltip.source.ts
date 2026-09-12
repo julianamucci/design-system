@@ -21,6 +21,18 @@ const ICONS = {
 
 type IconKey = keyof typeof ICONS;
 
+/**
+ * A espera padrão do `TooltipProvider`, em ms — 300, fixada pela dona em
+ * 2026-09-12 nas cinco stacks (D5 do PRD).
+ *
+ * Vive aqui porque o snippet só escreve `delayDuration` quando o valor DIFERE
+ * do padrão, como faz o do navigation-menu: escrever o padrão é ruído, e
+ * omitir o que difere é mentir sobre a cena que a story mostra. Enquanto o
+ * padrão era zero as duas regras coincidiam por acidente — `0` é falsy —, e
+ * foi essa coincidência que amarrou o painel Code ao valor antigo.
+ */
+const DEFAULT_DELAY = 300;
+
 export type TooltipArgs = {
   side: 'top' | 'right' | 'bottom' | 'left';
   align: 'start' | 'center' | 'end';
@@ -124,7 +136,7 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
     side = 'top',
     align = 'center',
     sideOffset = 4,
-    delayDuration = 0,
+    delayDuration = DEFAULT_DELAY,
     triggerLabel = 'Salvar',
     ariaLabel = 'Salvar',
     contentText = 'Salvar (Ctrl+S)',
@@ -135,8 +147,11 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
     icone: triggerIcon(variant, triggerLabel),
     ariaLabel,
     triggerLabel,
-    // A espera é decisão do Provider, que a compartilha entre os vizinhos.
-    provider: attrs(delayDuration ? `delayDuration={${delayDuration}}` : ''),
+    // A espera é decisão do Provider, que a compartilha entre os vizinhos, e o
+    // snippet a escreve só quando ela difere do padrão.
+    provider: attrs(
+      delayDuration === DEFAULT_DELAY ? '' : `delayDuration={${delayDuration}}`,
+    ),
     root: '',
     content: attrs(
       side === 'top' ? '' : `side="${side}"`,

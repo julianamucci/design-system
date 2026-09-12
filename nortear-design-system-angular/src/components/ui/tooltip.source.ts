@@ -301,6 +301,31 @@ ${iconTrigger('Salvar', SAVE_ICON, 'icon', '        ')}
 }
 
 /**
+ * A espera que vale sem ninguém pedir — o provider SEM `[delay]`.
+ *
+ * É o único snippet do componente em que o atributo está ausente de propósito,
+ * e a ausência é a lição: a espera de 300 ms é declarada pelo design system, em
+ * `provideNdsTooltipConfig()`, e não pela biblioteca headless. Antes de
+ * 2026-09-12 esta stack não declarava nada e herdava 600 ms — sem número
+ * escrito em lugar nenhum para alguém comparar.
+ */
+export function tooltipDefaultDelaySource(): string {
+  return example(
+    [TOOLTIP_IMPORT, BUTTON_IMPORT],
+    '...NDS_TOOLTIP, NdsButton',
+    `    <!-- Uma vez no root da app -->
+    <div ndsTooltipProvider>
+      <!-- Sem [delay]: vale a espera de 300 ms que o design system declara -->
+      <span ndsTooltip>
+${iconTrigger('Salvar', SAVE_ICON, 'icon', '        ')}
+
+        <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
+      </span>
+    </div>`,
+  );
+}
+
+/**
  * O balão que não some quando o mouse vai até ele.
  *
  * Persistência é requisito da WCAG 1.4.13, e aqui ela é do componente: não há

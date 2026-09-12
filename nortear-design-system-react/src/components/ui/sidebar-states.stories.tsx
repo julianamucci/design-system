@@ -25,6 +25,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "./sidebar";
+import { TOOLTIP_DEFAULT_DELAY } from "./tooltip";
+import { balaoDe } from "./tooltip.fixtures";
 import {
   sidebarLoadingSource,
   sidebarExpandidaSource,
@@ -36,6 +38,45 @@ import {
 } from "./sidebar.source";
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
+
+/**
+ * Atraso de abertura que o `@base-ui/react` aplica quando NINGUÉM declara um —
+ * o `OPEN_DELAY` de `tooltip/utils/constants.js`.
+ *
+ * Escrito aqui para ser o TETO da medição, e não para ser usado: é o valor que
+ * assumiria o lugar se o `TooltipProvider` da casa saísse do `SidebarProvider`,
+ * e foi o que o trilho desta stack fez até 2026-09-12 sem ninguém ter escolhido.
+ * Uma asserção que só perguntasse "abriu?" ficaria verde com ele de volta.
+ */
+const LIB_OPEN_DELAY = 600;
+
+/** Pausa explícita — só onde a asserção é "continua assim depois de X". */
+function wait(ms: number): Promise<void> {
+  return new Promise((resolver) => setTimeout(resolver, ms));
+}
+
+/**
+ * Instante em que o balão do item apareceu, por relógio.
+ *
+ * Laço de relógio, e não `waitFor`: o que se afirma é TEMPO, e um prazo de
+ * `waitFor` diria "apareceu em algum momento" — exatamente o que não distingue
+ * 300 ms de 600. E o laço só LÊ (`aria-describedby` + `getElementById`): um
+ * `waitFor` cuja condição TOCA o DOM reagenda a si mesmo por observador de
+ * mutação, o prazo nunca chega e o arquivo morre sem resultado nem falha.
+ *
+ * Passo de 10 ms porque a medição é de borda — granularidade grossa comeria a
+ * margem entre o padrão da casa e o da biblioteca.
+ */
+async function bubbleShownAt(trigger: HTMLElement, budget: number): Promise<number> {
+  const deadline = performance.now() + budget;
+  while (performance.now() < deadline) {
+    if (balaoDe(trigger) !== null) {
+      return performance.now();
+    }
+    await wait(10);
+  }
+  return Number.POSITIVE_INFINITY;
+}
 
 interface SidebarStatePreviewProps {
   defaultOpen?: boolean;
@@ -247,20 +288,61 @@ export const CollapsedIcon: Story = {
 
     await step("O ponteiro sobre o item abre o balão com o nome da seção", async () => {
       // Sem rótulo visível, o balão é o que resta para quem usa ponteiro — e
-      // ele só pode aparecer enquanto a barra está recolhida. O timeout maior é
-      // pelo atraso de abertura do tooltip, que é do componente e não do teste.
+      // ele só pode aparecer enquanto a barra está recolhida.
+      //
+      // A medição do atraso vem PRIMEIRO, antes de qualquer outro balão desta
+      // story: o provedor monta um grupo de espera, e dentro dele o segundo
+      // balão abre na hora. Medir depois de um vizinho mediria a cortesia do
+      // grupo, não o atraso.
       const item = canvas.getByRole("button", { current: "page" });
+      const start = performance.now();
       await userEvent.hover(item);
-      await waitFor(
-        async () => {
-          const balao = document.querySelector<HTMLElement>("[data-slot='tooltip-content']");
-          await expect(balao).not.toBeNull();
-          await expect(balao!.textContent?.trim()).toBe("Dashboard");
-        },
-        { timeout: 3000 },
-      );
+
+      // Passar o mouse não acende. Se o provedor da casa sumisse do
+      // `SidebarProvider` o atraso não cairia a zero — cairia para o da
+      // biblioteca —, mas se alguém declarasse `delay={0}` por atalho, o balão
+      // já estaria aqui.
+      await expect(balaoDe(item)).toBeNull();
+      await wait(TOOLTIP_DEFAULT_DELAY / 2);
+      await expect(balaoDe(item)).toBeNull();
+
+      const openedAfter = (await bubbleShownAt(item, LIB_OPEN_DELAY * 4)) - start;
+      // O teto é o atraso da BIBLIOTECA. Sem o `TooltipProvider` da casa dentro
+      // do `SidebarProvider`, o gatilho do base-ui cai no `OPEN_DELAY` de 600 e
+      // esta linha reprova — que é a diferença entre afirmar "abriu" e afirmar
+      // "abriu no atraso que esta casa escolheu".
+      await expect(openedAfter).toBeLessThan(LIB_OPEN_DELAY);
+      await expect(balaoDe(item)).toHaveAttribute("role", "tooltip");
+      await expect(balaoDe(item)!.textContent?.trim()).toBe("Dashboard");
+
       // Devolve o DOM ao estado de entrada para o replay.
       await userEvent.unhover(item);
+      await waitFor(
+        () => expect(document.querySelector("[data-slot='tooltip-content']")).toBeNull(),
+        { timeout: 3000 },
+      );
+    });
+
+    await step("Pelo teclado o balão abre na hora — a espera é só do ponteiro", async () => {
+      // WCAG 1.4.13: quem chega por teclado não tem como "parar em cima", então
+      // prender o foco ao atraso do ponteiro esconderia o nome do destino de
+      // quem mais precisa dele — no trilho recolhido não há rótulo visível.
+      //
+      // O Tab de verdade é o que põe o navegador em modalidade de teclado: o
+      // `useFocus` do base-ui só abre para foco que casa `:focus-visible`, e
+      // depois do hover acima um `focus()` cru não casaria.
+      const item = canvas.getByRole("button", { current: "page" });
+      await userEvent.tab();
+      const start = performance.now();
+      item.focus();
+      await expect(item).toHaveFocus();
+
+      const openedAfter = (await bubbleShownAt(item, LIB_OPEN_DELAY * 4)) - start;
+      // Teto é o atraso do PONTEIRO: se o foco passar a esperar qualquer coisa
+      // parecida com ele, reprova.
+      await expect(openedAfter).toBeLessThan(TOOLTIP_DEFAULT_DELAY);
+
+      item.blur();
       await waitFor(
         () => expect(document.querySelector("[data-slot='tooltip-content']")).toBeNull(),
         { timeout: 3000 },

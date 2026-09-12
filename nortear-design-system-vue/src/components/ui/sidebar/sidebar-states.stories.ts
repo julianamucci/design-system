@@ -27,6 +27,38 @@ import {
   sidebarRecolhidaIconSource,
 } from './sidebar.source';
 
+/**
+ * O atraso de abertura do balão no design system, em ms — fixado pela dona em
+ * 2026-09-12 (PRD do tooltip, D5) e guardado em `ui/tooltip/TooltipProvider.vue`.
+ * O trilho recolhido HERDA esse número: não declara valor próprio.
+ */
+const DS_TOOLTIP_DELAY = 300;
+
+/**
+ * O padrão da `reka-ui` para o mesmo atraso, em ms.
+ *
+ * É o valor que assumiria o lugar se o provedor da casa saísse do
+ * `SidebarProvider` — a forma errada que parece certa, porque não tem número
+ * escrito em lugar nenhum. Medir ABAIXO dele é o que separa "herdou os 300" de
+ * "caiu no padrão da biblioteca".
+ */
+const LIB_TOOLTIP_DELAY = 700;
+
+/**
+ * Janela em que a lib PULA o atraso depois de um balão fechar
+ * (`skip-delay-duration`, 300ms por padrão): dentro dela o próximo balão abre
+ * na hora, por decisão da biblioteca. Medir atraso — ou imediatismo — sem
+ * esperar essa janela passar mede a janela, não o componente.
+ */
+const LIB_SKIP_DELAY = 300;
+
+/** Espera de RELÓGIO. Só aqui, nunca dentro de `waitFor`. */
+function pause(ms: number): Promise<void> {
+  return new Promise<void>((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 const meta = {
   title: 'Components/Layout/Sidebar/States',
   component: Sidebar,
@@ -222,6 +254,91 @@ export const CollapsedIcon: Story = {
       await expect(getComputedStyle(label).display).toBe('none');
     });
 
+    // Leitura PURA do balão: é o que permite usá-la tanto no laço de relógio
+    // quanto dentro de `waitFor`. Sonda que MEXE no DOM dentro de `waitFor`
+    // reagenda a si mesma pelo observador de mutação e pendura o arquivo.
+    const balloon = () => document.querySelector<HTMLElement>('[data-slot="tooltip-content"]');
+
+    // Devolve o DOM ao estado de entrada. Sair do item não basta: entre gatilho
+    // e balão existe uma área de tolerância — é ela que deixa o ponteiro
+    // percorrer o caminho até o balão sem que ele feche — e, enquanto o
+    // ponteiro não reaparece fora dela, o balão continua de pé. O fechamento é
+    // provocado como no uso real: levando o ponteiro ao conteúdo.
+    const closeBalloon = async (item: HTMLElement) => {
+      item.blur();
+      await userEvent.unhover(item);
+      await userEvent.hover(canvasElement.querySelector<HTMLElement>('#main-content')!);
+      await waitFor(() => expect(balloon()).toBeNull(), { timeout: 3000 });
+    };
+
+    await step('O ponteiro espera o atraso do design system antes de abrir o balão', async () => {
+      // O trilho recolhido não declara atraso próprio: ele HERDA o do
+      // `TooltipProvider` da casa. A medição tem duas bordas, e as duas são o
+      // ponto — uma sozinha aprova metade dos defeitos possíveis.
+      const item = canvas.getByRole('button', { name: /componentes/i });
+
+      const startedAt = performance.now();
+      await userEvent.hover(item);
+
+      // Piso: no instante do hover ainda não há balão. Com `:delay-duration="0"`
+      // cravado — o resíduo do shadcn que este trilho carregava — o balão já
+      // está aqui, porque o `await` do userEvent drenou os microtasks do Vue.
+      await expect(balloon()).toBeNull();
+
+      // Laço de RELÓGIO, de leitura pura: o que se quer é o INSTANTE, e
+      // `waitFor` não o devolve.
+      let openedAt = -1;
+      while (performance.now() - startedAt < 2000) {
+        if (balloon()) {
+          openedAt = performance.now() - startedAt;
+          break;
+        }
+        await pause(16);
+      }
+
+      await expect(openedAt).toBeGreaterThanOrEqual(0);
+      await expect(openedAt).toBeGreaterThan(DS_TOOLTIP_DELAY - 100);
+      // Teto: ABAIXO do padrão da lib. É esta asserção que reprova o trilho que
+      // perdesse o provedor da casa e caísse nos 700ms que ninguém escolheu.
+      await expect(openedAt).toBeLessThan(LIB_TOOLTIP_DELAY - 100);
+      // Quem abriu foi o temporizador, e a lib assina isso no gatilho: abertura
+      // por foco marcaria `instant-open`.
+      await expect(item.getAttribute('data-state')).toBe('delayed-open');
+
+      await closeBalloon(item);
+    });
+
+    await step('O foco pelo teclado abre o balão na hora, sem esperar', async () => {
+      // WCAG 1.4.13: quem chega por Tab não tem como "parar em cima" para
+      // cumprir o atraso do ponteiro — se o foco esperasse, a rota do teclado
+      // ficaria sem o nome da seção enquanto a barra está recolhida.
+      //
+      // A espera antes de medir é pela janela de `skip-delay-duration` que o
+      // balão anterior abriu: dentro dela TODO balão abre na hora, por decisão
+      // da lib, e o passo estaria medindo a janela em vez do foco.
+      await pause(LIB_SKIP_DELAY + 200);
+
+      const item = canvas.getByRole('button', { name: /tokens/i });
+      const startedAt = performance.now();
+      item.focus();
+
+      let openedAt = -1;
+      while (performance.now() - startedAt < 1000) {
+        if (balloon()) {
+          openedAt = performance.now() - startedAt;
+          break;
+        }
+        await pause(8);
+      }
+
+      await expect(openedAt).toBeGreaterThanOrEqual(0);
+      await expect(openedAt).toBeLessThan(DS_TOOLTIP_DELAY - 100);
+      await expect(item.getAttribute('data-state')).toBe('instant-open');
+      await expect(document.activeElement).toBe(item);
+
+      await closeBalloon(item);
+    });
+
     await step('O ponteiro sobre o item abre o balão com o nome da seção', async () => {
       // Sem rótulo visível, o balão é o que resta para quem usa ponteiro — e
       // ele só pode aparecer enquanto a barra está recolhida. O timeout maior é
@@ -249,17 +366,8 @@ export const CollapsedIcon: Story = {
         },
         { timeout: 3000 },
       );
-      // Devolve o DOM ao estado de entrada para o replay. Sair do item não
-      // basta: entre gatilho e balão existe uma área de tolerância — é ela que
-      // deixa o ponteiro percorrer o caminho até o balão sem que ele feche — e,
-      // enquanto o ponteiro não reaparece fora dela, o balão continua de pé. O
-      // fechamento é provocado como no uso real: levando o ponteiro ao conteúdo.
-      await userEvent.unhover(item);
-      await userEvent.hover(canvasElement.querySelector<HTMLElement>('#main-content')!);
-      await waitFor(
-        () => expect(document.querySelector('[data-slot="tooltip-content"]')).toBeNull(),
-        { timeout: 3000 },
-      );
+      // Devolve o DOM ao estado de entrada para o replay.
+      await closeBalloon(item);
     });
   },
 };

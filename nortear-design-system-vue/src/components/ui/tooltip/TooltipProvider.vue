@@ -10,8 +10,14 @@ import { TooltipProvider } from 'reka-ui'
 // "alinhada".
 //
 
+// 300ms é a espera do design system nas cinco stacks, fixada pela dona em
+// 2026-09-12 (PRD do tooltip, D5). Zero não é atraso — é ausência de atraso, e
+// com ele todo movimento do ponteiro pela barra de ferramentas acende balão. O
+// atraso é do PONTEIRO: o foco pelo teclado abre na hora, porque quem chega por
+// Tab não tem como "parar em cima" (WCAG 1.4.13). Quem garante isso é a lib, que
+// só agenda o temporizador na entrada do ponteiro.
 const props = withDefaults(defineProps<TooltipProviderProps>(), {
-  delayDuration: 0,
+  delayDuration: 300,
 })
 </script>
 

@@ -54,7 +54,21 @@
 
 <svelte:window onkeydown={sidebar.handleShortcutKeydown} />
 
-<Tooltip.Provider delayDuration={0}>
+<!--
+	Provedor de balão SEM `delayDuration`: o trilho HERDA os 300 ms que o wrapper
+	da casa (`@/components/ui/tooltip`) fixa como padrão — D5 do PRD do tooltip,
+	2026-09-12, igual nas cinco stacks.
+
+	Havia `delayDuration={0}` cravado aqui, resíduo do shadcn: zero não é atraso,
+	é ausência de atraso, então todo ponteiro que ATRAVESSAVA o trilho recolhido
+	acendia balão. Declarar o número de novo — mesmo o número certo — recria a
+	divergência que a decisão fechou: o dia em que a casa mudar de 300, o trilho
+	fica para trás sozinho. O valor mora num lugar só, e é o wrapper.
+
+	Trocar por `TooltipPrimitive.Provider` da bits-ui seria o defeito ao
+	contrário: o padrão DELA é 700 ms, que ninguém escolheu.
+-->
+<Tooltip.Provider>
 	<div
 		data-slot="sidebar-wrapper"
 		style="--sidebar-width: {SIDEBAR_WIDTH}; --sidebar-width-icon: {SIDEBAR_WIDTH_ICON}; {style}"

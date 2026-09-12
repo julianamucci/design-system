@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import * as tooltipSource from './tooltip.source';
 import {
   tooltipClosedSource,
+  tooltipDefaultDelaySource,
   tooltipDefaultSource,
   tooltipDelaySource,
   tooltipFormFieldHelpSource,
@@ -101,7 +102,7 @@ describe('tooltipPlaygroundSource', () => {
 });
 
 /**
- * Os onze construtores das outras três stories, e a story que cada um serve.
+ * Os construtores das outras três stories, e a story que cada um serve.
  *
  * A lista existe para ser COBRADA: o caso logo abaixo compara com o que o
  * módulo exporta, e um construtor novo que não entre aqui reprova em vez de
@@ -118,7 +119,7 @@ const CONSTRUCTORS: Array<{
    *
    * Exceção única e declarada: chamado sem args, o Playground cai no padrão do
    * próprio control (`delay: 0`) e publica `[delay]="0"` — ali o zero não é
-   * andaime, é o que a pessoa acabou de escolher na barra. Nos outros onze
+   * andaime, é o que a pessoa acabou de escolher na barra. Nos outros
    * snippets o valor é FIXO no construtor, e um zero só poderia ter vindo da
    * story.
    */
@@ -143,6 +144,11 @@ const CONSTRUCTORS: Array<{
   // diferença entre elas é de interação, não de código. Um segundo construtor
   // idêntico seria a cópia que envelhece sozinha.
   { name: 'tooltipDelaySource', story: 'States/Hover + States/Focus', build: tooltipDelaySource },
+  {
+    name: 'tooltipDefaultDelaySource',
+    story: 'States/HoverDefaultDelay',
+    build: tooltipDefaultDelaySource,
+  },
   {
     name: 'tooltipPersistenceSource',
     story: 'States/PersistenceInBubble',
@@ -185,7 +191,9 @@ describe('cobertura das quatro stories', () => {
       // `nds-p-8` dá ao balão portalizado contra o que se posicionar dentro do
       // quadro do Storybook, e `[delay]="0"` faz o hover abrir na hora para a
       // `play`. Nenhum dos dois é do componente — o único snippet de valor fixo
-      // que fala de espera é o da própria story de espera, e ele diz 600.
+      // que fala de espera é o da própria story de espera, e ele diz 600. O da
+      // espera PADRÃO fala pela ausência do atributo, e por isso passa aqui sem
+      // exceção nenhuma.
       expect(code).not.toContain('nds-p-8');
       if (!argsDriven) expect(code).not.toContain('[delay]="0"');
       expect(code).not.toContain('args.');

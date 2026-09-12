@@ -34,7 +34,13 @@
     side = 'top',
     align = 'center',
     sideOffset = 4,
-    delayDuration = 0,
+    // Sem default: o andaime não OPINA sobre a espera, ele repassa. Story que
+    // omite o arg entrega `undefined` ao `TooltipProvider`, e aí vale o padrão
+    // do provedor (300 ms) — que é o que a story `Hover (provider default)`
+    // precisa exercitar para o portão ter dentes. Um `= 0` aqui fazia o andaime
+    // desligar a espera em silêncio, e um `= 300` mediria este arquivo em vez
+    // do primitivo.
+    delayDuration,
     defaultOpen = false,
     open = $bindable(defaultOpen),
     triggerLabel = 'Salvar',

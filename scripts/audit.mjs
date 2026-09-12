@@ -3208,6 +3208,80 @@ function blocosDeComentario(src) {
   return blocos;
 }
 
+/**
+ * O atraso de abertura do Tooltip, igual nas cinco e igual ao que a doc afirma.
+ *
+ * Medido em 2026-09-12, e é o caso mais instrutivo de divergência silenciosa que
+ * este repositório produziu: `0` no react, no vue e no svelte, `300` no vanilla,
+ * `600` no angular — e o PRD com o conteúdo compartilhado afirmando `0` para as
+ * cinco. Seis leituras do mesmo número.
+ *
+ * O `600` era o pior, porque **não era valor escrito em lugar nenhum**: a stack
+ * não declarava nada e o primitivo caía na configuração global do radix-ng. Não
+ * havia número para alguém comparar, e é por isso que a regra cobra DECLARAÇÃO,
+ * não só igualdade — stack que não declara volta a herdar o default da lib, que
+ * é 600 no base-ui, 700 na reka-ui e 700 na bits-ui, cada um diferente do nosso.
+ *
+ * E o eixo que faltava aos portões existentes é o segundo: o número do CÓDIGO
+ * contra o número que a documentação publica. As três stacks em zero estavam
+ * coerentes entre si, e o que as denunciava era a tabela de props.
+ */
+const ATRASO_DE_TOOLTIP = {
+  react: { arquivo: 'nortear-design-system-react/src/components/ui/tooltip.tsx', declaracao: /TOOLTIP_DEFAULT_DELAY\s*=\s*(\d+)/ },
+  vue: { arquivo: 'nortear-design-system-vue/src/components/ui/tooltip/TooltipProvider.vue', declaracao: /delayDuration:\s*(\d+)/ },
+  svelte: { arquivo: 'nortear-design-system-svelte/src/components/ui/tooltip/tooltip-provider.svelte', declaracao: /delayDuration\s*=\s*(\d+)/ },
+  vanilla: { arquivo: 'nortear-design-system-vanilla/src/components/ui/tooltip.ts', declaracao: /SHOW_DELAY\s*=\s*(\d+)/ },
+  angular: { arquivo: 'nortear-design-system-angular/src/components/ui/tooltip.ts', declaracao: /NDS_TOOLTIP_DELAY\s*=\s*(\d+)/ },
+};
+
+function auditAtrasoDeTooltip() {
+  const violations = [];
+  const conteudo = readFile(join(ROOT, 'docs', 'shared', 'content', 'tooltip', 'translations.json'));
+  if (!conteudo) return violations;
+  let publicado = null;
+  try { publicado = JSON.parse(conteudo)['pt-BR']?.props?.table?.delay?.default ?? null; } catch { return violations; }
+
+  const declarados = {};
+  for (const [stack, d] of Object.entries(ATRASO_DE_TOOLTIP)) {
+    const src = readFile(join(ROOT, d.arquivo));
+    if (!src) continue;
+    const m = d.declaracao.exec(stripComments(src));
+    if (!m) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: 'tooltip', stack,
+        file: d.arquivo, line: 1, rule: 'atraso_de_tooltip_divergente',
+        message: 'a stack não declara mais o atraso de abertura no ponto que a regra conhece — sem declaração o '
+          + 'primitivo cai no default da LIB (600 no base-ui, 700 na reka-ui e na bits-ui), que é como o angular '
+          + 'ficou em 600 sem ninguém ter escolhido. Declare o valor, ou atualize `ATRASO_DE_TOOLTIP` se ele mudou de casa',
+      });
+      continue;
+    }
+    declarados[stack] = m[1];
+  }
+
+  const valores = [...new Set(Object.values(declarados))];
+  if (valores.length > 1) {
+    for (const [stack, v] of Object.entries(declarados)) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: 'tooltip', stack,
+        file: ATRASO_DE_TOOLTIP[stack].arquivo, line: 1, rule: 'atraso_de_tooltip_divergente',
+        message: `declara ${v} ms, e as cinco stacks têm de dizer o mesmo número: ${Object.entries(declarados).map(([s, n]) => `${s}=${n}`).join(', ')}`,
+      });
+    }
+    return violations;
+  }
+  if (publicado !== null && valores.length === 1 && String(publicado) !== valores[0]) {
+    violations.push({
+      category: 'quality', severity: 'high', slug: 'tooltip', stack: 'shared',
+      file: 'docs/shared/content/tooltip/translations.json', line: 1, rule: 'atraso_de_tooltip_divergente',
+      message: `a tabela de props publica \`${publicado}\` e as cinco stacks declaram \`${valores[0]}\` — `
+        + 'é o eixo que deixou três stacks em zero enquanto a doc dizia zero e o vanilla dizia 300: '
+        + 'código coerente entre si não prova nada se a documentação afirma outro número',
+    });
+  }
+  return violations;
+}
+
 function auditHasSobreOrdem() {
   const violations = [];
   const AFIRMA = /:has\(/;
@@ -10868,7 +10942,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

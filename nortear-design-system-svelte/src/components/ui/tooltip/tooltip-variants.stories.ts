@@ -50,7 +50,12 @@ type Story = StoryObj;
 
 const baseArgs = {
   defaultOpen: true,
-  delayDuration: 0,
+  // Sem `delayDuration`: as três cenas nascem abertas por `defaultOpen` e
+  // nenhuma `play` toca em ponteiro ou foco, então a espera nunca corre aqui — o
+  // `0` que morava nesta linha era arg morto que o painel Code PUBLICAVA, e
+  // código que alguém copia é o pior lugar para ensinar espera desligada.
+  // Quem depende de não esperar é a `PersistenceInBubble`, que faz hover de
+  // verdade e mantém o seu `0`.
   side: 'top' as const,
   align: 'center' as const,
   sideOffset: 4,

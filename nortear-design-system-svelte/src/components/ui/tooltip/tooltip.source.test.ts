@@ -49,8 +49,20 @@ describe('tooltipSource', () => {
 
   it('a espera é declarada no Provider, que a compartilha entre os vizinhos', () => {
     expect(tooltipSource()).toContain('<TooltipProvider>');
-    expect(tooltipSource('', { args: { delayDuration: 300 } })).toContain(
-      '<TooltipProvider delayDuration={300}>',
+    expect(tooltipSource('', { args: { delayDuration: 600 } })).toContain(
+      '<TooltipProvider delayDuration={600}>',
+    );
+  });
+
+  it('a espera só entra no snippet quando difere do padrão de 300 ms', () => {
+    // O padrão sai: escrever `delayDuration={300}` é repetir o default.
+    expect(tooltipSource('', { args: { delayDuration: 300 } })).toContain('<TooltipProvider>');
+    // E o ZERO entra, que é o caso que a mudança de 2026-09-12 destravou:
+    // enquanto o padrão era zero, `delayDuration ? …` omitia os dois casos pelo
+    // mesmo teste de falsy, e a story que desliga a espera mostrava um snippet
+    // sem ela — indistinguível do padrão.
+    expect(tooltipSource('', { args: { delayDuration: 0 } })).toContain(
+      '<TooltipProvider delayDuration={0}>',
     );
   });
 

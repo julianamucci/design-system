@@ -235,7 +235,7 @@ function buildCompositionCode(): Record<
   string
 > {
   return {
-  actionBar: `<div ndsTooltipProvider [delay]="400" [skipDelay]="200" class="nds-cluster">
+  actionBar: `<div ndsTooltipProvider [delay]="400" [timeout]="200" class="nds-cluster">
   @for (acao of acoes; track acao.id) {
     <span ndsTooltip>
       <button ndsTooltipTrigger ndsButton variant="outline" size="icon" [attr.aria-label]="acao.label">
@@ -1053,9 +1053,13 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
           {
             name: 'delay',
             type: 'number',
-            // 600 e não 0: sem valor no provider, o primitivo cai na
-            // configuração global do Radix NG, que é 600 ms.
-            defaultValue: '600',
+            // Sai do conteúdo compartilhado, e não de um número escrito aqui:
+            // desde 2026-09-12 a espera é 300 ms nas cinco stacks, declarada em
+            // `provideNdsTooltipConfig()` (constante `NDS_TOOLTIP_DELAY`). Até
+            // essa data esta linha dizia 600 — o default global do Radix NG,
+            // que a stack herdava por não declarar nada. Lendo daqui, a tabela
+            // não pode voltar a afirmar um valor que a casa não escolheu.
+            defaultValue: t('props.table.delay.default'),
             required: not,
             description: toPlainText(t('props.table.delay.description')),
           },

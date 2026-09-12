@@ -212,7 +212,7 @@ const codeLongText = `<Tooltip>
 
 const interfaceCode = `// Tooltip (reka-ui)
 interface TooltipProviderProps {
-  delayDuration?: number;     // default 0 (no UI lib é 700ms)
+  delayDuration?: number;     // default 300 (no UI lib é 700ms)
   disableHoverableContent?: boolean;
   skipDelayDuration?: number; // default 300
 }
