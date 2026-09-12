@@ -2861,6 +2861,423 @@ function auditCadeiaTransformOrigin() {
  */
 const VOCABULARIO_DE_FECHAMENTO = ['escape', 'overlay', 'close-button', 'api'];
 
+/**
+ * Cada `export type *CloseReason` do repositório, por nome de tipo.
+ *
+ * O trecho que a docs page EXIBE conta como declaração, de propósito: ele é o
+ * contrato que o leitor copia, e tipo publicado que diverge do tipo compilado é
+ * documentação mentindo com aval. Na prática é o que faz a regra irmã comparar
+ * `docs/AlertDialogDocs.ts` com `ui/alert-dialog.ts` dentro da mesma stack.
+ *
+ * A coleta é FUNÇÃO própria, e não efeito colateral de outra regra, porque as
+ * duas leitoras (`auditReasonEntreStacks` e `auditReasonDaMesmaFamilia`) saem na
+ * categoria `quality` e quem preenchia saía na `analytics`: rodar
+ * `--category quality` deixava o mapa vazio, e mapa vazio faz as duas
+ * reprovarem nada e reportarem limpo — a forma exata do portão que encolhe em
+ * silêncio.
+ */
+const _reasonPorTipo = {};
+let _reasonColetado = false;
+
+function coletarReasonPorTipo() {
+  if (_reasonColetado) return _reasonPorTipo;
+  _reasonColetado = true;
+  const canon = new Set(VOCABULARIO_DE_FECHAMENTO);
+  for (const stack of STACKS) {
+    // `.vue` e `.svelte` entram, e a falta deles era um ponto cego de verdade: o
+    // tipo de TRÊS palavras que sobrou no `DialogDocs.vue` ficava invisível
+    // justamente porque mora dentro de um SFC, que é onde a declaração local
+    // tende a nascer. O `export` deixa de ser exigido pelo mesmo motivo — dentro
+    // de um `<script setup>` ninguém exporta tipo.
+    for (const f of walkDir(join(ROOT, stackDir(stack), 'src', 'components'), ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const c = readFile(f) || '';
+      for (const m of c.matchAll(/(?:export )?type (\w*CloseReason)\s*=\s*([^;\n]+)/g)) {
+        const conj = [...m[2].matchAll(/['"]([a-z-]+)['"]/g)].map((w) => w[1]).filter((w) => canon.has(w)).sort();
+        (_reasonPorTipo[m[1]] ??= []).push({ stack, palavras: conj, file: relative(ROOT, f), line: c.slice(0, m.index).split('\n').length });
+      }
+    }
+  }
+  return _reasonPorTipo;
+}
+
+/**
+ * Desmontar não é fechar.
+ *
+ * O callback de limpeza do `tornarDestruivel` roda quando o wrapper sai do DOM:
+ * troca de story, desmonte de docs page, troca de idioma. Se ele avisa
+ * `onClose`, o analytics registra um fechamento que ninguém fez — e no GA4 ele
+ * fica indistinguível do fechamento por decisão de dentro, que é `api`.
+ *
+ * Medido em 2026-09-11, duas vezes no mesmo dia: as três fábricas de menu
+ * mandavam `api` ao serem destruídas (toda troca de idioma de uma docs page com
+ * menu aberto virava um fechamento falso), e o `dialog.ts` fazia o mesmo. O
+ * Sheet e o Drawer já desmontavam em silêncio — a forma certa é desmontar o
+ * painel e, no máximo, avisar `onOpenChange(false)`, que descreve estado, não
+ * gesto.
+ *
+ * A regra lê o ARGUMENTO de limpeza do `tornarDestruivel` (o último), por
+ * balanço de parênteses, e não o arquivo inteiro: `onClose` chamado nos
+ * caminhos de fechamento de verdade é o que se espera ver.
+ *
+ * E ela RESOLVE UM SALTO, que é o que a separa de um grep com nome de portão.
+ * Medido em 2026-09-11, varrendo as 26 chamadas de `tornarDestruivel` da stack:
+ * **nenhum** callback de limpeza contém a palavra `onClose`. Todos chamam uma
+ * função local um nível abaixo — `close`, `closeAll`, `closeWithReason`,
+ * `hideOpenMenu`, `registro.close` —, então a versão que procurava a palavra
+ * achava ZERO na árvore inteira, inclusive no `dialog.ts` que estava defeituoso.
+ * A primeira versão disto só pegou o Dialog por carregar `closeWithReason` numa
+ * lista fixa de dois nomes, e teria passado por cima do `alert-dialog.ts`, que
+ * chama `close('api')`.
+ */
+/**
+ * O corpo de uma função local do arquivo, achado pelo nome e fechado por balanço
+ * de chaves. Cobre as duas formas da stack: `function nome(…) {…}` e
+ * `const nome = (…) => {…}`.
+ */
+function corpoDaFuncaoLocal(nome, fonte) {
+  const decl = new RegExp(`(?:function\\s+${nome}\\s*\\(|(?:const|let)\\s+${nome}\\s*(?::[^=]+)?=\\s*(?:async\\s*)?\\()`);
+  const m = decl.exec(fonte);
+  if (!m) return '';
+  const abre = fonte.indexOf('{', m.index + m[0].length);
+  if (abre === -1) return '';
+  let nivel = 0;
+  for (let k = abre; k < fonte.length; k++) {
+    if (fonte[k] === '{') nivel++;
+    else if (fonte[k] === '}') { nivel--; if (nivel === 0) return fonte.slice(abre, k + 1); }
+  }
+  return '';
+}
+
+/**
+ * O caminho de chamadas do trecho até `onClose`, ou `null` se ele não chega lá.
+ *
+ * Dois saltos bastam e o limite é deliberado: `destroy → close → onClose` é a
+ * profundidade real das fábricas, e ir mais fundo transformaria o portão num
+ * alcançabilidade-geral que acabaria acusando todo caminho de fechamento
+ * legítimo por algum atalho de leitura.
+ *
+ * Chamada de MÉTODO não resolve por nome, e a primeira versão resolvia: ela
+ * acusou o ContextMenu e o DropdownMenu por `dismantle → close → onClose`, e o
+ * `close` daquele caminho é o `submenu.close()` — outro objeto, mesma palavra. O
+ * desmonte dos dois estava correto desde a véspera. Resolver `obj.metodo` pelo
+ * nome é palpite, e palpite que acusa vale menos que o salto que se perde.
+ */
+function caminhoAteOnClose(trecho, fonte, visitados = new Set(), profundidade = 0) {
+  if (/(?<![.\w$])onClose\s*\??\.?\s*\(/.test(trecho)) return ['onClose'];
+  if (profundidade >= 2) return null;
+  for (const m of trecho.matchAll(/(?<![.\w$])([a-zA-Z_$][\w$]*)\s*\(/g)) {
+    const nome = m[1];
+    if (visitados.has(nome) || /^(if|for|while|switch|catch|return|typeof|require|Boolean|String|Number)$/.test(nome)) continue;
+    visitados.add(nome);
+    const corpo = corpoDaFuncaoLocal(nome, fonte);
+    if (!corpo) continue;
+    const adiante = caminhoAteOnClose(corpo, fonte, visitados, profundidade + 1);
+    if (adiante) return [nome, ...adiante];
+  }
+  return null;
+}
+
+function auditDesmonteNaoFecha() {
+  const violations = [];
+  const dir = join(ROOT, stackDir('vanilla'), 'src', 'components', 'ui');
+  if (!existsSync(dir)) return violations;
+
+  for (const file of walkDir(dir, ['.ts'])) {
+    if (/\.(stories|fixtures|source|test|spec)\.ts$/.test(file)) continue;
+    const src = readFile(file);
+    if (!src) continue;
+    const limpo = stripComments(src);
+    // a linha sai do arquivo ORIGINAL: `stripComments` encurta o texto, e o
+    // deslocamento do texto limpo apontaria para outro lugar
+    const linhaDaOcorrencia = (ordem) => {
+      let pos = -1;
+      for (let k = 0; k <= ordem; k++) pos = src.indexOf('tornarDestruivel(', pos + 1);
+      return pos === -1 ? 1 : src.slice(0, pos).split('\n').length;
+    };
+    let ordem = 0;
+    let i = limpo.indexOf('tornarDestruivel(');
+    while (i !== -1) {
+      let nivel = 0;
+      let fim = i + 'tornarDestruivel('.length - 1;
+      for (; fim < limpo.length; fim++) {
+        if (limpo[fim] === '(') nivel++;
+        else if (limpo[fim] === ')') { nivel--; if (nivel === 0) break; }
+      }
+      const chamada = limpo.slice(i, fim + 1);
+      // o callback de limpeza é o último argumento: da última seta até o fim
+      const seta = chamada.lastIndexOf('=>');
+      const limpeza = seta === -1 ? '' : chamada.slice(seta);
+      const caminho = caminhoAteOnClose(limpeza, limpo);
+      if (caminho) {
+        violations.push({
+          category: 'analytics', severity: 'high', slug: '_infra', stack: 'vanilla',
+          file: relative(ROOT, file), line: linhaDaOcorrencia(ordem),
+          rule: 'desmonte_emite_fechamento',
+          message: `o callback de limpeza do \`tornarDestruivel\` chega a \`onClose\` por ${caminho.join(' → ')} — `
+            + 'desmontar não é fechar: a troca de idioma de uma docs page com o painel aberto vira um fechamento falso no GA4, '
+            + 'com a mesma palavra do fechamento por código. Desmonte o painel e, se precisar, avise só `onOpenChange(false)`',
+        });
+      }
+      ordem += 1;
+      i = limpo.indexOf('tornarDestruivel(', fim);
+    }
+  }
+  return violations;
+}
+
+/**
+ * O MESMO tipo de motivo, palavras diferentes conforme a stack.
+ *
+ * A regra irmã aceita o tipo com MENOS palavras de propósito: um componente que
+ * não fecha por clique fora não tem `overlay`, e o AlertDialog é esse caso. Só
+ * que ela julga cada declaração isolada, e "menos palavras" virou a porta por
+ * onde uma stack ficou para trás sem nada reprovar.
+ *
+ * Medido em 2026-09-11: `SheetCloseReason` declara `escape | overlay |
+ * close-button` no vanilla e as quatro no angular. O PRD do Sheet (§9) e a
+ * entrada `#vanilla-sheet-onclose-reason` do PATCHES pedem paridade com o
+ * Dialog, que tem `api` — e o vanilla é a stack de referência do contrato. A
+ * docs page dele sintetizava o `api` POR FORA, fingindo um clique no véu para
+ * fechar pelo rodapé: o inverso da regra da casa.
+ *
+ * A comparação é entre as stacks que DECLARAM o tipo, nunca uma exigência de
+ * declarar: a stack que deriva o motivo de outro tipo (o React usa
+ * `DialogCloseReason` para o Sheet, que é o mesmo evento) não entra na conta.
+ */
+function auditReasonEntreStacks() {
+  const violations = [];
+  for (const [tipo, decls] of Object.entries(coletarReasonPorTipo())) {
+    if (decls.length < 2) continue;
+    const assinatura = (d) => d.palavras.join(' | ');
+    const maior = decls.reduce((a, b) => (b.palavras.length > a.palavras.length ? b : a));
+    for (const d of decls) {
+      if (assinatura(d) === assinatura(maior)) continue;
+      const faltam = maior.palavras.filter((w) => !d.palavras.includes(w));
+      violations.push({
+        category: 'analytics', severity: 'high', slug: '_infra', stack: d.stack,
+        file: d.file, line: d.line, rule: 'reason_entre_stacks_divergente',
+        message: `${tipo} declara "${assinatura(d)}" aqui e "${assinatura(maior)}" em ${maior.file}`
+          + (faltam.length ? ` — falta ${faltam.join(', ')}` : '')
+          + '. O mesmo motivo tem de ter o mesmo vocabulário nas stacks que o declaram, ou a série do GA4 mede caminhos diferentes com o mesmo nome',
+      });
+    }
+  }
+  return violations;
+}
+
+/**
+ * Componentes que dividem UM evento dividem UM vocabulário de motivo.
+ *
+ * O `dialog_close` é do Dialog, do Sheet e do AlertDialog — três componentes, um
+ * evento, uma dimensão de `reason` no GA4. A regra irmã compara o MESMO tipo
+ * entre stacks; esta compara tipos DIFERENTES que alimentam o mesmo evento, que
+ * é o eixo por onde o Sheet ficou seis semanas com três palavras contra as
+ * quatro do Dialog da mesma stack.
+ *
+ * O que fechava esse buraco antes era uma frase no PATCHES — "manter paridade de
+ * assinatura com `DialogCloseReason` se o Dialog ganhar novos motivos", escrita
+ * em 2026-07-27 no único lugar que ninguém relê. O Dialog ganhou `api`, o Sheet
+ * não, e a docs page passou a sintetizar a palavra por fora.
+ *
+ * Componente que legitimamente tem MENOS palavras se declara em `excecoes`, com
+ * a premissa conferida contra o PRD: se o AlertDialog passar a fechar por clique
+ * no véu, a exceção cai e o portão volta a cobrar `overlay`.
+ */
+const FAMILIA_DE_MOTIVO = {
+  dialog_close: {
+    tipos: ['DialogCloseReason', 'SheetCloseReason', 'AlertDialogCloseReason'],
+    excecoes: {
+      AlertDialogCloseReason: {
+        faltam: ['overlay'],
+        motivo: 'o AlertDialog não fecha por clique no véu (D1 do prd/alert-dialog.md)',
+        premissa: { arquivo: 'docs/shared/prd/alert-dialog.md', presente: /clique no véu \*\*não\*\* fecha/ },
+      },
+    },
+  },
+};
+
+function auditReasonDaMesmaFamilia() {
+  const violations = [];
+  for (const [evento, { tipos, excecoes }] of Object.entries(FAMILIA_DE_MOTIVO)) {
+    // a premissa de cada exceção primeiro: exceção com premissa caída não vale
+    const vivas = {};
+    for (const [tipo, exc] of Object.entries(excecoes ?? {})) {
+      if (exc.premissa.presente.test(readFile(join(ROOT, exc.premissa.arquivo)) || '')) { vivas[tipo] = exc; continue; }
+      violations.push({
+        category: 'analytics', severity: 'high', slug: '_infra', stack: 'shared',
+        file: 'scripts/audit.mjs', rule: 'reason_da_familia_divergente',
+        message: `a exceção de ${tipo} em FAMILIA_DE_MOTIVO caiu: ${exc.premissa.arquivo} não diz mais que ${exc.motivo} — `
+          + `o tipo passa a precisar do vocabulário inteiro de ${evento}`,
+      });
+    }
+    const mapa = coletarReasonPorTipo();
+    const declaracoes = tipos.flatMap((t) => (mapa[t] ?? []).map((d) => ({ ...d, tipo: t })));
+    if (declaracoes.length < 2) continue;
+    const completo = declaracoes.reduce((a, b) => (b.palavras.length > a.palavras.length ? b : a));
+    for (const d of declaracoes) {
+      const dispensadas = vivas[d.tipo]?.faltam ?? [];
+      const faltam = completo.palavras.filter((w) => !d.palavras.includes(w) && !dispensadas.includes(w));
+      const sobram = dispensadas.filter((w) => d.palavras.includes(w));
+      if (!faltam.length && !sobram.length) continue;
+      violations.push({
+        category: 'analytics', severity: 'high', slug: '_infra', stack: d.stack,
+        file: d.file, line: d.line, rule: 'reason_da_familia_divergente',
+        message: faltam.length
+          ? `${d.tipo} alimenta o mesmo ${evento} que ${completo.tipo} (${completo.stack}) e não tem ${faltam.join(', ')} — `
+            + 'o componente que não sabe dizer o motivo faz o consumidor inventá-lo por fora, que é o contrato ao contrário'
+          : `${d.tipo} declara ${sobram.join(', ')}, que a exceção de FAMILIA_DE_MOTIVO diz que ele não tem — `
+            + 'ou o componente mudou e a exceção saiu, ou a palavra entrou sem comportamento atrás',
+      });
+    }
+  }
+  return violations;
+}
+
+/**
+ * Clique enfileirado em gatilho que pode nunca ter sido montado.
+ *
+ * O runner avalia o `render()` de uma story MAIS DE UMA VEZ e descarta as
+ * árvores que não chegam ao canvas. Um `queueMicrotask(() => trigger.click())`
+ * cru abre o painel da árvore descartada também: ela portala um painel no
+ * `body`, rouba o foco do painel vivo, e quando a varredura de graça do
+ * `tornarDestruivel` a recolhe, o painel órfão sai levando o foco junto.
+ *
+ * Medido em 2026-09-12, no `dialog-states`: a asserção "aberto, o foco está no
+ * painel" passou a reprovar com `activeElement === BODY`. A story passava ANTES
+ * por acidente — o desmonte antigo chamava o caminho de fechamento, que devolvia
+ * o foco ao `previousFocus`, e o `previousFocus` da instância órfã era justamente
+ * o botão do painel vivo. Consertar o desmonte tirou a restituição acidental.
+ *
+ * A guarda é `trigger.isConnected`: a árvore descartada nunca entra no documento.
+ * O portão existe porque sobraram sete pontos iguais no Sheet, verdes hoje, e é
+ * a forma exata do defeito que passa meses verde até a ordem de avaliação mudar.
+ */
+function auditCliqueSemMontagem() {
+  const violations = [];
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'ui');
+    if (!existsSync(dir)) continue;
+    for (const file of walkDir(dir, ['.ts', '.tsx'])) {
+      if (!/\.(stories|fixtures)\.tsx?$/.test(file)) continue;
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const src = stripComments(bruto);
+      // cursor que AVANÇA: os call sites são idênticos entre si, e procurar
+      // sempre do começo dava a mesma linha três vezes para três ocorrências
+      let cursor = 0;
+      for (const m of src.matchAll(/queueMicrotask\(\s*\(\s*\)\s*=>\s*([^)]{0,160}?\.click\(\))/g)) {
+        const agulha = m[0].slice(0, 50);
+        const achado = bruto.indexOf(agulha, cursor);
+        if (achado !== -1) cursor = achado + 1;
+        if (/isConnected/.test(m[1])) continue;
+        const pos = achado;
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack,
+          file: relative(ROOT, file), line: pos === -1 ? 1 : bruto.slice(0, pos).split('\n').length,
+          rule: 'clique_sem_montagem',
+          message: 'clique enfileirado sem conferir `isConnected` — o runner avalia o `render()` mais de uma vez e '
+            + 'descarta as árvores que não chegam ao canvas; o clique abre o painel da árvore DESCARTADA também, que '
+            + 'portala no body e rouba o foco do painel vivo. Guarde com `if (trigger.isConnected)`',
+        });
+      }
+    }
+  }
+  return violations;
+}
+
+/**
+ * A docs page traduzindo o motivo da lib por conta própria.
+ *
+ * As duas regras acima medem o VOCABULÁRIO; esta mede onde ele é produzido, que
+ * é a causa de raiz das duas. A página é consumidora: ela sabe que a pessoa
+ * confirmou (isso é dela), mas não pode saber por qual caminho a lib fechou o
+ * painel — isso é do componente, e quando a página deduz, cada página deduz de
+ * um jeito e nenhuma delas é testável sem navegador.
+ *
+ * Medido em 2026-09-12, depois de as duas regras acima darem verde: o Dialog e o
+ * AlertDialog do Angular traduziam num mapa `CLOSE_REASON` dentro da própria
+ * docs page, enquanto o Sheet e o Drawer da MESMA stack derivavam no primitivo.
+ * Nenhuma das duas regras via isso — um mapa não é `type`, e um objeto não tem
+ * nome de tipo. O Vue e o Svelte tinham a mesma forma escrita como tipo local.
+ *
+ * O que reprova é a TRADUÇÃO: duas ou mais palavras do vocabulário de fechamento
+ * como valores de um literal declarado na página. Marcar a confirmação, repassar
+ * a palavra pronta e listar os motivos numa tabela de props não são tradução —
+ * e trecho dentro de crase é código EXIBIDO ao leitor, que a `snippetMask`
+ * descarta.
+ */
+/**
+ * Os literais de string de um trecho, um a um, com o texto e o offset.
+ *
+ * Sequencial de propósito: consumir cada literal inteiro é o que impede que as
+ * aspas de DENTRO de uma string sejam lidas como literais próprios.
+ */
+function* literaisDe(trecho) {
+  for (let i = 0; i < trecho.length; i++) {
+    const aspa = trecho[i];
+    if (aspa !== '"' && aspa !== "'") continue;
+    let j = i + 1;
+    while (j < trecho.length && trecho[j] !== aspa) {
+      if (trecho[j] === '\\') j++;
+      j++;
+    }
+    const conteudo = trecho.slice(i + 1, j);
+    yield [trecho.slice(i, j + 1), conteudo, i];
+    i = j;
+  }
+}
+
+function auditMotivoSintetizadoNaDocsPage() {
+  const violations = [];
+  const canon = new Set(VOCABULARIO_DE_FECHAMENTO);
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    if (!existsSync(dir)) continue;
+    for (const file of walkDir(dir, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const mask = snippetMask(bruto);
+      const src = stripComments(bruto);
+      // a declaração e o que vem depois dela até o fim do literal: mapa
+      // (`{ … }`), união de tipo (`= 'a' | 'b'`) ou array
+      // ANOTAÇÃO e valor, os dois: a união anônima (`let reason: 'escape' |
+      // 'overlay' | 'api' = 'api'`) é a mesma síntese sem nome de tipo, e a
+      // primeira versão desta regra era cega para ela — uma docs page sintetizava
+      // assim e não apareceu em relatório nenhum; quem a achou leu o arquivo
+      // irmão. Portão que só enxerga a forma NOMEADA ensina a escrever a anônima.
+      for (const m of src.matchAll(/(?:const|let|var|type)\s+([A-Za-z_$][\w$]*)\s*((?::[^=;]{0,200})?(?:=\s*[^;]{0,400})?)/g)) {
+        // Varredura sequencial de literais, e não regex solta: a tabela de props
+        // publica `type: "(open: boolean, reason?: 'escape' | 'overlay') => void"`,
+        // onde as palavras estão DENTRO de uma string que é texto para o leitor.
+        // Só conta o literal que É a palavra — tradução usa a palavra como valor,
+        // documentação a usa dentro de uma frase.
+        const citadas = [...literaisDe(m[2])].filter((w) => canon.has(w[1]));
+        const palavras = new Set(citadas.map((w) => w[1]));
+        if (palavras.size < 2) continue;
+        // A máscara se consulta na posição da PALAVRA, não na da declaração: o
+        // `const interfaceCode = \`export type AlertDialogCloseReason = …\`` abre
+        // a crase depois do `=`, então a declaração está fora do trecho exibido e
+        // o vocabulário está dentro. Conferir a ponta errada transformava o
+        // snippet que a página ENSINA em achado — e ele é justamente o que deve
+        // estar escrito ali.
+        const posDeclaracao = bruto.indexOf(m[0].slice(0, 60));
+        const posPalavra = bruto.indexOf(citadas[0][0], posDeclaracao === -1 ? 0 : posDeclaracao);
+        if (posPalavra !== -1 && mask[posPalavra]) continue;
+        const pos = posDeclaracao;
+        violations.push({
+          category: 'analytics', severity: 'high', slug: '_infra', stack,
+          file: relative(ROOT, file), line: pos === -1 ? 1 : bruto.slice(0, pos).split('\n').length,
+          rule: 'motivo_sintetizado_na_docs_page',
+          message: `\`${m[1]}\` traduz o motivo do fechamento dentro da docs page (${[...palavras].sort().join(', ')}) — `
+            + 'quem sabe por qual caminho o painel fechou é o componente. O mapeador mora ao lado do primitivo, exportado pelo '
+            + 'mesmo índice das peças, e a página só repassa a palavra (`18-overlay.md` §Analytics)',
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 /** `*_close` que não leva `reason` DE PROPÓSITO — com o motivo e a premissa. */
 const FECHAMENTO_SEM_REASON = {
   hover_card_close: {
@@ -9905,7 +10322,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
