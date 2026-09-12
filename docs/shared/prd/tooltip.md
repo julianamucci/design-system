@@ -261,6 +261,30 @@ Ordem: folha → provedor → primitivo → seta → stories → docs page.
 - **vanilla** — `positionFloating` escreve o `position` no próprio painel, e a
   área de tolerância lê coordenada (D2).
 
+> **PENDÊNCIA · 2026-09-12** — o segundo bloco da seção **Importação**, que
+> ensina onde montar o Provider, é uma constante LOCAL em cada uma das cinco
+> docs pages, sem chave no conteúdo compartilhado. São cinco cópias do mesmo
+> código publicado, mantidas à mão, e pela regra da casa snippet publicado com
+> variante por stack mora no `translations.json`.
+> **Como isto foi medido**: ao esvaziar o atraso do `anatomy.structureCode` no
+> compartilhado, a edição não alcançou nenhuma das cinco páginas — duas agentes
+> bateram nisso ao mesmo tempo, por caminhos independentes, e foi preciso
+> corrigir as cinco à mão. A próxima mudança de política do Provider repete.
+> **Fecha quando** existir chave compartilhada para esse snippet e as cinco
+> páginas a consumirem, com o portão `soltos` do `audit-translation-literals`
+> cobrando o resto.
+
+> **PENDÊNCIA · 2026-09-12** — o `message-timing` publica `delayDuration={0}` no
+> painel Code em react, vue e svelte. É o mesmo resíduo que saiu do trilho do
+> Sidebar e das dez stories do Svelte nesta rodada: zero cravado em cena que
+> talvez nem faça hover, ensinando a desligar a espera.
+> **Adiado por decisão da dona** (rodada própria do componente), e não por
+> esquecimento: ali as stories montam balão DENTRO de balão para medir tempo de
+> mensagem, então o zero pode ser load-bearing — decidir sem medir seria trocar
+> um cravão por outro.
+> **Fecha quando** a revisão do `message-timing` medir cada ponto e remover os
+> que forem arg morto.
+
 ## 11. Onde está a verdade
 
 | assunto | arquivo |

@@ -174,8 +174,13 @@ export function TooltipDocs() {
   // vez, no topo da árvore que compartilha a espera — é ele que faz percorrer
   // uma barra de ícones parecer um movimento só, e sem ele cada balão espera
   // do zero.
+  //
+  // Sem `delay`: quem copia herda o padrão da casa (300 ms) em vez de redigitar
+  // um número que envelhece longe da tabela de props. O `timeout` fica, porque
+  // é a janela de cortesia do grupo — assunto próprio, sem padrão implícito
+  // para herdar.
   const codeImportProvider = `// Uma vez, no topo da árvore que compartilha a espera.
-<TooltipProvider delay={400} timeout={300}>
+<TooltipProvider timeout={300}>
   {/* \`timeout\`: janela em que o vizinho abre na hora, depois de um fechar. */}
   <App />
 </TooltipProvider>`;
@@ -303,9 +308,12 @@ interface TooltipContentProps {
 </div>`;
 
   return (
-    // 400 ms é o mesmo atraso que o snippet da Importação publica — a página
-    // demonstra o Provider que ela ensina a montar.
-    <TooltipProvider delay={400}>
+    // Sem `delay`: as demonstrações herdam o padrão da casa
+    // (`TOOLTIP_DEFAULT_DELAY`, 300 ms) — o mesmo número que a tabela de props
+    // publica, e o que o exemplo canônico ensina ao NÃO escrever o atributo.
+    // Repetir o valor aqui seria a página afirmar um atraso por conta própria,
+    // que é como 400 ficou vivo depois de o padrão virar 300.
+    <TooltipProvider>
       <DocsPageLayout
         navGroups={navGroups}
         activeSection={activeId}

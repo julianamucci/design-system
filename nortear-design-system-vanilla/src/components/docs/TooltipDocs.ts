@@ -366,10 +366,15 @@ export function createTooltipDocs(): HTMLElement {
             // composição `actionBar`, que é o que ela sempre foi.
             //
             // `side: 'top'` é o padrão da fábrica e o do Playground, e a espera
-            // vem de um GRUPO com 400 ms — o mesmo valor que o snippet da seção
-            // Importação publica. A demonstração ensina o caminho recomendado,
-            // então ela usa o provedor mesmo com um balão só.
-            const group = createTooltipProvider({ delayDuration: 400 });
+            // NÃO é declarada: o grupo herda os 300 ms do `SHOW_DELAY` da
+            // fábrica, que é o mesmo atraso nas cinco stacks. A ausência é a
+            // lição — quem copia a demonstração leva o padrão da casa junto, em
+            // vez de redigitar um número que envelhece sozinho aqui quando o
+            // padrão mudar. Onde a espera É o assunto — a composição
+            // `actionBar`, que customiza o grupo — ela aparece escrita.
+            // A demonstração ensina o caminho recomendado, então ela usa o
+            // provedor mesmo com um balão só.
+            const group = createTooltipProvider();
             wrap.appendChild(
               group.createTooltip({
                 trigger: demoIconButton('save', t('demonstration.labels.saveButton')),
@@ -472,9 +477,10 @@ export function createTooltipDocs(): HTMLElement {
           code: `import { createTooltip, createTooltipProvider } from '@/components/ui/tooltip';`,
           secondaryDescription: t('import.local.secondaryDescription'),
           secondaryCode: `// Uma barra de ícones: quem já parou uma vez não espera de novo no vizinho.
+// A espera de abertura fica de fora de propósito — sem ela o grupo herda o
+// padrão da casa, e é ele que se quer aqui.
 const { createTooltip: comEspera } = createTooltipProvider({
-  delayDuration: 300,
-  skipDelayDuration: 300,
+  skipDelayDuration: 300,   // a janela de cortesia do vizinho é assunto próprio
 });
 
 comEspera({ trigger: botaoCopiar, content: 'Copiar' });

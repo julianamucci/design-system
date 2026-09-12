@@ -173,9 +173,15 @@ const codeImportBasic = `import {
 // vez, no topo da árvore que compartilha a espera — é ele que faz percorrer
 // uma barra de ícones parecer um movimento só, e sem ele cada balão espera
 // do zero.
+//
+// SEM `delay-duration`, e isso é a lição: o atraso de abertura é o padrão da
+// casa, e o exemplo canônico o ensina pela AUSÊNCIA — quem copia herda os 300ms
+// do wrapper em vez de redigitar um número que envelhece à parte. O
+// `skip-delay-duration` fica porque é assunto próprio, sem padrão implícito a
+// herdar: é a janela de cortesia do vizinho, e só escrito ele existe.
 const codeImportProvider = `<!-- Uma vez, no topo da árvore que compartilha a espera. -->
 <!-- skip-delay-duration: janela em que o vizinho abre na hora, depois de um fechar. -->
-<TooltipProvider :delay-duration="400" :skip-delay-duration="300">
+<TooltipProvider :skip-delay-duration="300">
   <App />
 </TooltipProvider>`;
 
@@ -449,8 +455,14 @@ const a11yCritCols = computed(() => ({
 </script>
 
 <template>
-  <!-- Mesmo atraso que o snippet da Importação publica: 400ms. -->
-  <TooltipProvider :delay-duration="400">
+  <!-- SEM `delay-duration` de propósito: as demonstrações vivas herdam os 300ms
+       do wrapper da casa (`@/components/ui/tooltip`), que é a única fonte do
+       valor. É o mesmo que o exemplo canônico ensina — quem copia leva o padrão
+       da casa em vez de um número redigitado. Repetir o atributo aqui criaria a
+       segunda fonte, e é a segunda que deixa de ser corrigida. Trocar o import
+       pelo `TooltipProvider` do reka-ui sem o atributo cairia no default da LIB,
+       que é 700. -->
+  <TooltipProvider>
     <DocsPageLayout
       :nav-groups="navGroups"
       :active-section="activeSection"

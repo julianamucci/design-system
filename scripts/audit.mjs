@@ -3234,6 +3234,78 @@ const ATRASO_DE_TOOLTIP = {
   angular: { arquivo: 'nortear-design-system-angular/src/components/ui/tooltip.ts', declaracao: /NDS_TOOLTIP_DELAY\s*=\s*(\d+)/ },
 };
 
+/**
+ * Atraso REDIGITADO na docs page, onde a regra irmã não olha.
+ *
+ * Ela lê o primitivo de cada stack e o número que a tabela de props publica —
+ * e foi assim que ficou cega para 18 declarações espalhadas pelas cinco docs
+ * pages, treze delas só no Svelte. Medido em 2026-09-12 pela própria agente do
+ * Angular, que replantou `[delay]="400"` na página e viu o audit fechar limpo:
+ * número de atraso numa demonstração ou num snippet não compila diferente, não
+ * quebra play e não aparece em portão nenhum.
+ *
+ * O que a regra cobra é a CONTAGEM declarada, não a ausência: a página pode
+ * escrever o atraso onde ele É o assunto — a composição `actionBar` pareia
+ * `delay` com a janela de cortesia do vizinho, e tirar um deixaria o outro
+ * pendurado contra um valor implícito. O que não pode é aparecer uma declaração
+ * nova sem ninguém dizer por quê. Contagem diferente reprova, para cima ou para
+ * baixo: a menos também interessa, porque significa que uma lição sumiu.
+ */
+const ATRASO_EM_DOCS_PAGE = {
+  react: {
+    arquivo: 'nortear-design-system-react/src/components/docs/TooltipDocs.tsx',
+    declaracao: /delay=\{(\d+)\}/g, esperado: 1,
+    motivo: 'a composição `actionBar`, onde `delay` vem pareado com `timeout` e customizar o grupo é o assunto',
+  },
+  vue: {
+    arquivo: 'nortear-design-system-vue/src/components/docs/TooltipDocs.vue',
+    declaracao: /:delay-duration="(\d+)"/g, esperado: 1,
+    motivo: 'o `codeCompActionBar`, pareado com `skip-delay-duration`',
+  },
+  svelte: {
+    arquivo: 'nortear-design-system-svelte/src/components/docs/TooltipDocs.svelte',
+    declaracao: /delayDuration=\{(\d+)\}/g, esperado: 2,
+    motivo: 'a composição `actionBar` nos dois lados que a guideline 08 §15 exige iguais — o preview vivo e o snippet que ele publica',
+  },
+  vanilla: {
+    arquivo: 'nortear-design-system-vanilla/src/components/docs/TooltipDocs.ts',
+    declaracao: /delayDuration:\s*(\d+)/g, esperado: 2,
+    motivo: 'o `codeActionBar` (400, pareado com `skipDelayDuration`) e o `0` do snippet da Importação, que ensina o override POR BALÃO — apagar não faria herdar nada, mataria o exemplo',
+  },
+  angular: {
+    arquivo: 'nortear-design-system-angular/src/components/docs/TooltipDocs.ts',
+    declaracao: /\[delay\]="(\d+)"/g, esperado: 2,
+    motivo: 'o `actionBar` (400, pareado com `[timeout]`) e o `0` do `EXTENSIBILITY_CODE`, que é o próprio tema da seção: o atraso por gatilho vence o do provedor',
+  },
+};
+
+function auditAtrasoEmDocsPage() {
+  const violations = [];
+  for (const [stack, d] of Object.entries(ATRASO_EM_DOCS_PAGE)) {
+    const src = readFile(join(ROOT, d.arquivo));
+    if (!src) {
+      violations.push({
+        category: 'quality', severity: 'medium', slug: 'tooltip', stack,
+        file: d.arquivo, line: 1, rule: 'atraso_de_tooltip_divergente',
+        message: 'a docs page declarada em ATRASO_EM_DOCS_PAGE não existe — a premissa da contagem caiu',
+      });
+      continue;
+    }
+    d.declaracao.lastIndex = 0;
+    const achados = [...stripComments(src).matchAll(d.declaracao)];
+    if (achados.length === d.esperado) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: 'tooltip', stack,
+      file: d.arquivo, line: 1, rule: 'atraso_de_tooltip_divergente',
+      message: `a docs page declara o atraso ${achados.length} vez(es) (${achados.map((m) => m[1]).join(', ') || 'nenhuma'}) e o `
+        + `declarado é ${d.esperado}: ${d.motivo}. Atraso redigitado aqui é invisível aos outros portões — não compila `
+        + 'diferente, não quebra play e não aparece no audit. Ou a demonstração HERDA o padrão, ou a nova declaração '
+        + 'entra em ATRASO_EM_DOCS_PAGE com o motivo',
+    });
+  }
+  return violations;
+}
+
 function auditAtrasoDeTooltip() {
   const violations = [];
   const conteudo = readFile(join(ROOT, 'docs', 'shared', 'content', 'tooltip', 'translations.json'));
@@ -10942,7 +11014,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

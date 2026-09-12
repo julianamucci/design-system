@@ -599,10 +599,19 @@ function buildCompositionCode(): Record<
 
     <!-- O provider mora aqui, no elemento mais externo da página: é o exemplo
          vivo do que a anatomia manda fazer no root da app, e faz os tooltips
-         desta página compartilharem uma espera só. -->
+         desta página compartilharem uma espera só.
+
+         SEM atributo de atraso, de propósito, e a ausência é a lição: a espera
+         da casa é 300 ms, declarada uma vez em provideNdsTooltipConfig() (a
+         constante NDS_TOOLTIP_DELAY), e o provider a herda por não escrever
+         nada. Até 2026-09-12 esta linha dizia 400 — um número redigitado aqui,
+         que quem copiasse levaria junto sem saber que estava sobrepondo o
+         padrão. Agora todo balão desta página abre, ao vivo, na mesma espera
+         que o resto do design system. Quem PRECISA de outra espera escreve o
+         atributo, e a composição actionBar é onde isso está demonstrado.
+         (Sem crase aqui: o template inteiro é um template literal.) -->
     <nds-docs-page-layout
       ndsTooltipProvider
-      [delay]="400"
       [navGroups]="navGroups()"
       [activeSection]="activeSection()"
       componentSlug="tooltip"

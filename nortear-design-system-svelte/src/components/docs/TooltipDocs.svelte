@@ -143,7 +143,7 @@
 } from "@/components/ui/tooltip";`;
 
   const codeImportUsage = `<!-- No root da app — uma única vez -->
-<TooltipProvider delayDuration={400}>
+<TooltipProvider>
   <App />
 </TooltipProvider>
 
@@ -254,7 +254,7 @@ interface TooltipTriggerProps {
     <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma fonte,
          dois lugares. A barra de três ações que morava aqui virou a composição
          `actionBar`, que é o que ela sempre foi. -->
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <div class="nds-cluster nds-w-full nds-min-h-30" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; position: relative">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_demo', 'save', o)}>
           <TooltipTrigger>
@@ -371,7 +371,7 @@ interface TooltipTriggerProps {
        `contain: layout` para o balão em portal não empurrar a página. Sem ela o
        par nascia colado à borda e o balão saía do quadro do preview. -->
   {#snippet doPair1()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-do', o)}>
           <TooltipTrigger>
@@ -387,7 +387,7 @@ interface TooltipTriggerProps {
     </TooltipProvider>
   {/snippet}
   {#snippet dontPair1()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair1-dont', o)}>
           <TooltipTrigger>
@@ -405,7 +405,7 @@ interface TooltipTriggerProps {
     </TooltipProvider>
   {/snippet}
   {#snippet doPair2()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_do_dont', 'pair2-do', o)}>
           <TooltipTrigger>
@@ -423,7 +423,7 @@ interface TooltipTriggerProps {
     </TooltipProvider>
   {/snippet}
   {#snippet dontPair2()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <div class="nds-cluster nds-w-full nds-min-h-20" data-justify="center" data-align="center" style="contain: layout">
         <!-- Vivo de propósito: a lição é o TAMANHO do balão, e só renderizado
              ele mostra o que o texto longo faz. O limite de largura é o mesmo
@@ -484,7 +484,7 @@ interface TooltipTriggerProps {
   />
 
   {#snippet variantDefault()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'default', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
@@ -498,7 +498,7 @@ interface TooltipTriggerProps {
     </TooltipProvider>
   {/snippet}
   {#snippet variantWithShortcut()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'withShortcut', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
@@ -516,7 +516,7 @@ interface TooltipTriggerProps {
     </TooltipProvider>
   {/snippet}
   {#snippet variantLongText()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'longText', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
@@ -625,7 +625,7 @@ interface TooltipTriggerProps {
   />
 
   {#snippet compIconShortcut()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'iconButtonWithShortcut', o)}>
         <TooltipTrigger>
           {#snippet child({ props })}
@@ -645,7 +645,14 @@ interface TooltipTriggerProps {
 
   {#snippet compActionBar()}
     <!-- O Provider é do snippet, como nos irmãos: cada preview monta isolado, e
-         sem ele o bits-ui aborta com `Context "Tooltip.Provider" not found`. -->
+         sem ele o bits-ui aborta com `Context "Tooltip.Provider" not found`.
+
+         E aqui — só aqui — o atraso CONTINUA escrito, com o par
+         `skipDelayDuration`: a lição desta composição é justamente customizar a
+         espera do GRUPO (o primeiro balão espera, os vizinhos abrem na janela de
+         cortesia), e o par só se lê com os dois números à vista. Nos outros
+         previews o atributo saiu: eles ensinam o padrão da casa, que o wrapper
+         de `@/components/ui/tooltip` já fixa em 300 ms (D5 do PRD). -->
     <TooltipProvider delayDuration={400} skipDelayDuration={200}>
         <div class="nds-cluster" data-justify="center" data-align="center" data-spacing="lg">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_composicoes', 'actionBar-save', o)}>
@@ -683,7 +690,7 @@ interface TooltipTriggerProps {
   {/snippet}
 
   {#snippet compFormHelp()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="xs" style="align-items: flex-start">
         <div class="nds-cluster" data-spacing="sm">
           <label for="api-token-svelte-comp" class="nds-text-body nds-font-medium">{$tStore('demonstration.labels.apiTokenLabel')}</label>
@@ -707,7 +714,7 @@ interface TooltipTriggerProps {
   {/snippet}
 
   {#snippet compMetric()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <div class="nds-stack" data-spacing="xs" style="align-items: flex-start">
         <div class="nds-cluster" data-spacing="sm">
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground nds-uppercase nds-tracking-wider">{$tStore('demonstration.labels.lcpLabel')}</p>
@@ -726,7 +733,7 @@ interface TooltipTriggerProps {
   {/snippet}
 
   {#snippet variantPositioningSides()}
-    <TooltipProvider delayDuration={400}>
+    <TooltipProvider>
       <div class="nds-grid nds-w-full nds-min-h-40" data-cols="4" data-spacing="xl" style="contain: layout; place-items: center">
         <Tooltip onOpenChange={(o: boolean) => rastrearTooltip('docs_variantes', 'positioningSides-top', o)}>
           <TooltipTrigger>
