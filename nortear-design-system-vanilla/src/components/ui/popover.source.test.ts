@@ -2,12 +2,35 @@ import { describe, expect, it } from 'vitest';
 import {
   popoverWithActionsSnippet,
   popoverWithFormSnippet,
+  popoverControlledSnippet,
   popoverSnippet,
   popoverSource,
   popoverSourceActions,
   popoverSourceWith,
   popoverSourceForm,
 } from './popover.source';
+
+describe('popoverControladoSnippet', () => {
+  it('abre por `open()`, e não encenando um clique no gatilho', () => {
+    // `gatilho.click()` ALTERNA: um botão que promete abrir fecharia o painel na
+    // segunda vez, e o verbo público some da leitura de quem copia.
+    const code = popoverControlledSnippet();
+    expect(code).toContain('painel.open()');
+    expect(code).not.toMatch(/\.click\(\)/);
+  });
+
+  it('o gatilho FICA à vista: ele é a âncora do painel', () => {
+    const code = popoverControlledSnippet();
+    expect(code).toContain('const gatilho = createButton(');
+    expect(code).toContain('trigger: gatilho');
+    expect(code).not.toContain('nds-sr-only');
+    expect(code).not.toContain('aria-hidden');
+  });
+
+  it('e devolve o estado por `onOpenChange`, que é o assunto da story', () => {
+    expect(popoverControlledSnippet()).toContain('onOpenChange:');
+  });
+});
 
 describe('popoverSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do painel', () => {

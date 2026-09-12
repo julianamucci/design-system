@@ -1,11 +1,41 @@
 import { describe, expect, it } from 'vitest';
 import {
   drawerWithFormSnippet,
+  drawerControlledSnippet,
   drawerHeadingH3Source,
   drawerSnippet,
   drawerSource,
   drawerSourceWith,
 } from './drawer.source';
+
+describe('drawerControladoSnippet', () => {
+  it('abre por `open()` — a fábrica não expõe prop de estado, expõe verbos', () => {
+    const code = drawerControlledSnippet();
+    expect(code).toContain('gaveta.open()');
+    expect(code).toContain('onOpenChange:');
+    // Prop de estado continua não existindo, e o snippet não pode inventá-la.
+    expect(code).not.toContain('open: true');
+    expect(code).not.toContain('defaultOpen');
+  });
+
+  it('e NÃO ensina mais o gatilho escondido', () => {
+    // A story publicava um `<button>` com `.nds-sr-only`, `tabindex="-1"` e
+    // `aria-hidden="true"` só para ter em quem clicar — a forma que `open()`
+    // aposentou quando `trigger` deixou de ser obrigatório.
+    const code = drawerControlledSnippet();
+    expect(code).not.toContain('nds-sr-only');
+    expect(code).not.toContain('aria-hidden');
+    expect(code).not.toMatch(/\.click\(\)/);
+    // E sem gatilho nenhum: a opção `trigger` deixou de ser obrigatória.
+    expect(code).not.toContain('trigger:');
+  });
+
+  it('mantém o fechador explícito, que a gaveta precisa para fechar por dentro', () => {
+    // Sem gatilho a gaveta segue tendo rodapé, e sem o `data-slot` o Cancelar
+    // do rodapé é um botão inerte — é o mesmo elo que o snippet canônico ensina.
+    expect(drawerControlledSnippet()).toContain("dataset.slot = 'drawer-close'");
+  });
+});
 
 describe('drawerSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {

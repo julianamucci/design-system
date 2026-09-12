@@ -205,6 +205,68 @@ corpo.textContent = ${text(o.bodyText ?? 'Conteúdo do painel (formulário, mens
 }
 
 /**
+ * Abertura comandada de fora.
+ *
+ * Forma própria porque a fábrica NÃO expõe prop de estado: ela expõe VERBOS —
+ * `open()`, `close()`, `toggle()` e `isOpen()`, todos já públicos. O que faltava
+ * era a opção `trigger` deixar de ser obrigatória, e era essa obrigação que
+ * fabricava o GATILHO ESCONDIDO da story: um `<button>` com `.nds-sr-only`,
+ * `tabindex="-1"` e `aria-hidden="true"`, clicado por código só para a fábrica
+ * ter um alvo. O snippet do meta não mostrava aquele botão — mostrava um gatilho
+ * comum, que é outra coisa ainda —, então o painel Code e o preview ensinavam
+ * coisas diferentes. Agora os dois mostram o mesmo: sem gatilho, com `open()`.
+ */
+export function drawerControlledSnippet(o: DrawerSnippetOptions = {}): string {
+  const footer = footerBlock(actionsOf(o));
+
+  return snippet(
+    IMPORTS_BASE,
+    `const corpo = document.createElement('p');
+corpo.className = 'nds-text-body nds-text-muted-foreground';
+corpo.textContent = ${text(o.bodyText ?? 'Drawer comandado por estado externo.')};`,
+    footer,
+    `// Sem \`trigger\`: quem comanda a gaveta é o botão de fora, e a opção é
+// opcional justamente para não exigir um gatilho que ninguém vai clicar.
+const gaveta = ${callLine(
+      'createDrawer',
+      options([
+        ['title', text(o.title ?? 'Controlado pelo pai')],
+        ['description', text(o.description ?? 'Abertura comandada de fora.')],
+        ['content', 'corpo'],
+        ['footer', footer !== undefined ? 'rodape' : undefined],
+        [
+          'onOpenChange',
+          typeof o.onOpenChange === 'string'
+            ? o.onOpenChange
+            : '(aberto) => sincronizarEstadoExterno(aberto)',
+        ],
+      ]),
+    )};`,
+    `const externo = ${callLine(
+      'createButton',
+      options([['label', text(o.triggerLabel ?? 'Abrir via estado externo')]]),
+    )};
+// O anúncio do controle é de quem o montou: a fábrica não sabe qual elemento
+// da página comanda a gaveta.
+externo.setAttribute('aria-haspopup', 'dialog');
+// Sem espelho de estado: a guarda de "já aberta" mora em \`open()\`.
+externo.addEventListener('click', () => gaveta.open());`,
+    `// E os outros verbos, para quem comanda a gaveta inteira por código:
+// gaveta.close();   // informa o motivo 'api'
+// gaveta.toggle();
+// gaveta.isOpen();  // true enquanto o painel está na tela`,
+    `document.querySelector('#app')?.append(externo, gaveta);`,
+  );
+}
+
+/** Transform de story para a abertura comandada de fora. */
+export function drawerSourceControlled(
+  fixas: DrawerSnippetOptions = {},
+): SourceTransform<DrawerSnippetOptions> {
+  return (_gerado, ctx) => drawerControlledSnippet({ ...ctx.args, ...fixas });
+}
+
+/**
  * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls
  * do Playground; nas stories sem args cai nos padrões da fábrica, que é o uso
  * canônico do componente.

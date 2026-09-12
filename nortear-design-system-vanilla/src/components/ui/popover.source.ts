@@ -108,24 +108,33 @@ function blockFinal(o: PopoverSnippetOptions): string {
 painel.destroy();`;
 }
 
-/** A chamada real de `createPopover` com as opções da story. */
-export function popoverSnippet(o: PopoverSnippetOptions = {}): string {
-  const soText = typeof o.text === 'string';
+/**
+ * Os imports do painel, conforme ele tenha cabeçalho ou só texto.
+ *
+ * Extraído do corpo de `popoverSnippet` quando o snippet controlado passou a
+ * precisar do mesmo par: duas listas divergindo em silêncio é como um snippet
+ * começa a ensinar import que não resolve.
+ */
+function panelImports(soText: boolean): string {
+  return (
+    soText
+      ? [importing('popover', 'createPopover'), importing('button', 'createButton')]
+      : [
+          importing(
+            'popover',
+            'createPopover',
+            'createPopoverDescription',
+            'createPopoverHeader',
+            'createPopoverTitle',
+          ),
+          importing('button', 'createButton'),
+        ]
+  ).join('\n');
+}
 
-  const importes = soText
-    ? [importing('popover', 'createPopover'), importing('button', 'createButton')]
-    : [
-        importing(
-          'popover',
-          'createPopover',
-          'createPopoverDescription',
-          'createPopoverHeader',
-          'createPopoverTitle',
-        ),
-        importing('button', 'createButton'),
-      ];
-
-  const header = `// Cabeçalho, título e descrição são peças do próprio Popover: são elas que
+/** O bloco que monta o conteúdo do painel a partir das peças do próprio Popover. */
+function blockHeader(o: PopoverSnippetOptions): string {
+  return `// Cabeçalho, título e descrição são peças do próprio Popover: são elas que
 // carregam a classe e o \`data-slot\` de cada parte, e é o título que dá nome
 // acessível ao painel.
 const conteudo = createPopoverHeader();
@@ -145,11 +154,16 @@ conteudo.append(
     '  ',
   )},
 );`;
+}
+
+/** A chamada real de `createPopover` com as opções da story. */
+export function popoverSnippet(o: PopoverSnippetOptions = {}): string {
+  const soText = typeof o.text === 'string';
 
   return snippet(
-    importes.join('\n'),
+    panelImports(soText),
     blockTrigger(o),
-    soText ? undefined : header,
+    soText ? undefined : blockHeader(o),
     `const painel = ${callLine(
       'createPopover',
       panelLines(o, soText ? text(o.text as string) : 'conteudo'),
@@ -167,6 +181,57 @@ export function popoverSourceWith(
   fixas: PopoverSnippetOptions,
 ): SourceTransform<PopoverSnippetOptions> {
   return (_gerado, ctx) => popoverSnippet({ ...ctx.args, ...fixas });
+}
+
+/**
+ * Abertura comandada de fora.
+ *
+ * O gatilho FICA — ele é a âncora de que o painel sai e o dono do
+ * `aria-expanded` e do `aria-controls` —, e o que muda é o que o botão de fora
+ * faz: `painel.open()`, e não `gatilho.click()`.
+ *
+ * Não é o gatilho escondido que o portão `gatilho_escondido_clicado` acusa; o
+ * gatilho daqui sempre esteve à vista. É o degrau ao lado, e ele custa duas
+ * coisas a quem copia: esconde a API pública da fábrica atrás de um clique
+ * encenado, e ALTERNA — clique no gatilho aberto fecha, então um botão chamado
+ * "abrir" fechava o painel na segunda vez.
+ */
+export function popoverControlledSnippet(o: PopoverSnippetOptions = {}): string {
+  const soText = typeof o.text === 'string';
+  const withCallback: PopoverSnippetOptions = {
+    ...o,
+    description: o.description ?? 'Estado observado por fora via onOpenChange.',
+    onOpenChange: o.onOpenChange ?? '(aberto) => mostrarEstado(aberto)',
+  };
+
+  return snippet(
+    panelImports(soText),
+    blockTrigger(o),
+    soText ? undefined : blockHeader(withCallback),
+    `const painel = ${callLine(
+      'createPopover',
+      panelLines(withCallback, soText ? text(o.text as string) : 'conteudo'),
+    )};`,
+    `const externo = ${callLine(
+      'createButton',
+      options([
+        ['variant', text('secondary')],
+        ['label', text('Abrir por código')],
+      ]),
+    )};
+// O verbo, e não um clique encenado no gatilho: clique no gatilho ALTERNA,
+// então um botão que promete abrir fecharia o painel na segunda vez. A guarda
+// de "já aberto" mora no verbo, e por isso não há espelho de estado aqui.
+externo.addEventListener('click', () => painel.open());`,
+    `document.querySelector('#app')?.append(externo, painel);`,
+  );
+}
+
+/** Transform de story para a abertura comandada de fora. */
+export function popoverSourceControlled(
+  fixas: PopoverSnippetOptions = {},
+): SourceTransform<PopoverSnippetOptions> {
+  return (_gerado, ctx) => popoverControlledSnippet({ ...ctx.args, ...fixas });
 }
 
 /**

@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
-import { createDrawer } from './drawer';
-import { drawerSource, drawerSourceWith } from './drawer.source';
+import { createDrawer, type DrawerElement } from './drawer';
+import { drawerSource, drawerSourceControlled, drawerSourceWith } from './drawer.source';
 import { createButton } from './button';
 import { drawerClearPortais } from './drawer-portal-cleanup';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
@@ -155,18 +155,12 @@ export const Controlled: Story = {
     // Override de story: o assunto é o callback que devolve cada mudança a quem
     // é dono do estado, e ele não passa por control nenhum neste arquivo.
     docs: {
-      source: {
-        transform: drawerSourceWith({
-          triggerLabel: 'Abrir',
-          title: 'Controlado pelo pai',
-          description: 'Abertura comandada de fora.',
-          bodyText: 'Drawer comandado por estado externo.',
-          onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
-        }),
-      },
+      // A fábrica não expõe prop de estado: ela expõe VERBOS. Quem abre por
+      // código chama `open()` e acompanha a gaveta por `onOpenChange`.
+      source: { transform: drawerSourceControlled() },
       description: {
         story:
-          'Estado do lado de fora: um botão externo comanda a abertura e recebe de volta cada mudança pelo callback, que é o que mantém os dois lados em sincronia.',
+          'Estado do lado de fora: um botão externo comanda a abertura por open() e recebe de volta cada mudança pelo callback, que é o que mantém os dois lados em sincronia.',
       },
     },
   },
@@ -175,16 +169,11 @@ export const Controlled: Story = {
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'md';
 
-    const stateExterno = { isOpen: false };
     const externo = createButton({ variant: 'default', label: 'Abrir via estado externo' });
-
-    // Gatilho interno fora do fluxo visual e do fluxo de leitura: quem comanda é
-    // o botão externo. `nds-sr-only` é a classe REAL do projeto — antes havia um
-    // `sr-only` sem prefixo, que não esconde nada.
-    const triggerInterno = createButton({ variant: 'outline', label: 'gatilho interno' });
-    triggerInterno.classList.add('nds-sr-only');
-    triggerInterno.setAttribute('tabindex', '-1');
-    triggerInterno.setAttribute('aria-hidden', 'true');
+    externo.dataset.open = 'false';
+    // O botão que comanda a gaveta não é o gatilho da fábrica: o anúncio dele é
+    // de quem o montou, e é por isso que o `aria-haspopup` vem escrito aqui.
+    externo.setAttribute('aria-haspopup', 'dialog');
 
     const content = document.createElement('div');
     content.className = 'nds-text-body nds-text-muted-foreground';
@@ -194,21 +183,23 @@ export const Controlled: Story = {
     cancel.dataset.slot = 'drawer-close';
     const footer = [cancel, createButton({ variant: 'default', label: 'Confirmar' })];
 
+    // SEM gatilho. Era um `<button>` com `.nds-sr-only`, `tabindex="-1"` e
+    // `aria-hidden="true"`, clicado por código — um botão que existia para não
+    // ser visto, só porque `trigger` era obrigatório. `open()` já era público
+    // aqui; o que faltava era a opção deixar de ser exigida.
     const drawer = createDrawer({
-      trigger: triggerInterno,
       title: 'Controlado pelo pai',
       description: 'Abertura comandada de fora.',
       content,
       footer,
       onOpenChange: (isOpen) => {
-        stateExterno.isOpen = isOpen;
         externo.dataset.open = String(isOpen);
       },
     });
 
-    externo.addEventListener('click', () => {
-      if (!stateExterno.isOpen) triggerInterno.click();
-    });
+    // Sem espelho de estado: a guarda de "já aberta" mora em `open()`, e um
+    // `if (!estaAberta)` aqui seria a mesma guarda no lugar errado.
+    externo.addEventListener('click', () => drawer.open());
 
     wrapper.append(externo, drawer);
     return wrapper;
@@ -217,19 +208,51 @@ export const Controlled: Story = {
     drawerClearPortais();
     const canvas = within(canvasElement);
     const externo = canvas.getByRole('button', { name: /abrir via estado externo/i });
+    // O wrapper que a fábrica devolve É o `DrawerElement`: `Object.assign` põe
+    // os verbos no próprio nó, então a play alcança a API pública pelo DOM.
+    const drawerEl = canvasElement.querySelector<HTMLElement>('[data-slot="drawer"]') as DrawerElement;
 
     await step('O painel nasce fechado, e o estado externo diz o mesmo', async () => {
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
       await expect(externo).not.toHaveAttribute('data-open', 'true');
     });
 
-    await step('O estado externo abre o painel', async () => {
+    await step('E NÃO existe gatilho escondido — a forma que `open()` aposentou', async () => {
+      // Era um `<button>` com `.nds-sr-only`, `tabindex="-1"` e `aria-hidden`,
+      // clicado por código. Um botão que existe para não ser visto é ruído na
+      // árvore de acessibilidade e na leitura de quem copia a story; a prova é
+      // que o wrapper da fábrica não tem filho NENHUM.
+      //
+      // `isOpen()` NÃO é conferido aqui: `drawerClearPortais()` acabou de tirar
+      // do `body` o painel que a story anterior deixou, e se a instância tiver
+      // sobrevivido à limpeza o verbo ainda apontaria para um nó já removido. O
+      // estado da TELA é o que vale antes de abrir; o verbo é conferido depois.
+      await expect(drawerEl.children).toHaveLength(0);
+      await expect(drawerEl.querySelector('.nds-sr-only')).toBeNull();
+      await expect(canvasElement.querySelector('button.nds-sr-only')).toBeNull();
+    });
+
+    await step('O estado externo abre o painel — e quem abre é `open()`', async () => {
       await userEvent.click(externo);
       const panel = await waitForPortal('dialog');
       await expect(panel).toBeVisible();
       await expect(panel).toHaveAccessibleName('Controlado pelo pai');
       // O callback devolveu a mudança a quem é dono do estado.
       await expect(externo).toHaveAttribute('data-open', 'true');
+      // E o verbo de leitura concorda com a tela.
+      await expect(drawerEl.isOpen()).toBe(true);
+    });
+
+    await step('`open()` com o painel aberto não empilha um segundo', async () => {
+      // A guarda de reentrância mora na fábrica, e é ela que substitui o espelho
+      // `stateExterno.isOpen` que esta story mantinha. Sem ela, o segundo
+      // `open()` montaria outro painel e deixaria o primeiro órfão no `body`.
+      drawerEl.open();
+      drawerEl.open();
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
+      await expect(
+        document.body.querySelectorAll('[data-slot="drawer-overlay"]'),
+      ).toHaveLength(1);
     });
 
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {

@@ -6,7 +6,12 @@ import {
   createPopoverTitle,
 } from './popover';
 import { open, empilharCentrado, panel } from './popover.fixtures';
-import { popoverSource, popoverSourceActions, popoverSourceWith } from './popover.source';
+import {
+  popoverSource,
+  popoverSourceActions,
+  popoverSourceControlled,
+  popoverSourceWith,
+} from './popover.source';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
@@ -114,10 +119,11 @@ export const Open: Story = {
 export const Controlled: Story = {
   parameters: {
     covers: ['functional.item3'],
-    // Override de story: quem observa o estado por fora é `onOpenChange`, e é
-    // essa linha que o snippet do meta não teria como adivinhar.
+    // Override de story: o assunto é o comando de fora por `open()` mais o
+    // `onOpenChange` que devolve o estado — duas linhas que o snippet do meta
+    // não teria como adivinhar.
     docs: {
-      source: { transform: popoverSourceWith({ onOpenChange: '(aberto) => mostrarEstado(aberto)' }) },
+      source: { transform: popoverSourceControlled() },
     },
   },
   render: () => {
@@ -130,7 +136,12 @@ export const Controlled: Story = {
     // Sem `size: 'sm'`: o botão pequeno mede 23px de altura e reprova na regra
     // target-size do axe (mínimo 24px). O alvo aqui é externo ao painel e fica
     // sozinho na coluna — não há motivo para encolhê-lo.
-    const externalBtn = createButton({ variant: 'secondary', label: 'Toggle externo' });
+    //
+    // O rótulo diz ABRIR, e não "alternar": até 2026-09-12 este botão encenava
+    // um `trigger.click()`, e clique no gatilho é alternância — fechava o painel
+    // que ele diz abrir. Quem comanda de fora chama o verbo, e o verbo desta
+    // fábrica que ABRE é `open()`.
+    const externalBtn = createButton({ variant: 'secondary', label: 'Abrir por código' });
 
     const el = createPopover({
       trigger,
@@ -145,17 +156,25 @@ export const Controlled: Story = {
     externo.dataset.testid = 'area-externa';
     externo.textContent = 'Área externa';
 
-    externalBtn.addEventListener('click', () => trigger.click());
+    // `el.open()`, e não `trigger.click()`. Não é o gatilho escondido que o
+    // portão acusa — este gatilho está à vista, e ele é a âncora do painel —,
+    // mas encenar o clique de outra pessoa esconde a API pública de quem lê a
+    // story e alterna quando o rótulo promete abrir. A guarda de "já aberto"
+    // mora em `open()`, então não há espelho de estado aqui.
+    externalBtn.addEventListener('click', () => el.open());
 
     return empilharCentrado([status, externalBtn, el, externo]);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /abrir popover/i });
-    const externo = canvas.getByRole('button', { name: /toggle externo/i });
+    const externo = canvas.getByRole('button', { name: /abrir por código/i });
 
     await step('O botão externo abre o painel e o estado sai por onOpenChange', async () => {
-      if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(externo);
+      // Um clique só, e ele basta nas duas rodadas: `open()` é idempotente, e o
+      // replay do painel Interactions parte do mesmo lugar sem a dança de
+      // "clica para fechar antes de clicar para abrir" que o `trigger.click()`
+      // exigia.
       await userEvent.click(externo);
       await waitFor(() => {
         if (!panel()) throw new Error('popover ainda fechado');

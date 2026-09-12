@@ -1,9 +1,37 @@
 import { describe, expect, it } from 'vitest';
 import {
+  dropdownMenuControlledSnippet,
   dropdownMenuSnippet,
   dropdownMenuSource,
   dropdownMenuSourceWith,
 } from './dropdown-menu.source';
+
+describe('dropdownMenuControladoSnippet', () => {
+  it('abre por `open()`, e não por um clique encenado no gatilho', () => {
+    const code = dropdownMenuControlledSnippet();
+    expect(code).toContain('menu.open()');
+    expect(code).toContain('onOpenChange:');
+    expect(code).not.toMatch(/\.click\(\)/);
+  });
+
+  it('e NÃO ensina o gatilho escondido', () => {
+    // A story montava um `<button>` com `.nds-sr-only`, `tabindex="-1"` e
+    // `aria-hidden="true"` só para clicar nele por código — e o menu ancorava
+    // naquele retângulo de 1px fora da tela.
+    const code = dropdownMenuControlledSnippet();
+    expect(code).not.toContain('nds-sr-only');
+    expect(code).not.toContain('aria-hidden');
+    expect(code).not.toContain('tabindex');
+  });
+
+  it('o gatilho FICA: ele é a âncora do menu, não um alvo de clique', () => {
+    // Ao contrário do Sheet e do Dialog, aqui `trigger` continua obrigatório —
+    // é dele que o menu desce e é ele que carrega o contrato ARIA.
+    const code = dropdownMenuControlledSnippet();
+    expect(code).toContain('const gatilho = createButton(');
+    expect(code).toContain('trigger: gatilho');
+  });
+});
 
 describe('dropdownMenuSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {

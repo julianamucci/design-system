@@ -280,6 +280,18 @@ componentes.
 | vanilla, angular | motor de ponteiro PRÓPRIO, que escreve `[data-swiping]` (D9); do compartilhado vêm só os limiares e as funções que decidem |
 | svelte | `shouldScaleBackground` e `activeSnapPoint` chegaram a ser expostos contra o que o comentário compartilhado afirma, e foram recolhidos em `3807596f8` |
 | angular | consulta `[ndsDrawerClose]` para o foco inicial, porque host binding disputa `data-slot` (D12) |
+| vanilla | `trigger` é OPCIONAL desde 2026-09-12 — a gaveta comandada de fora se abre por `open()`, sem gatilho nenhum |
+
+**Por que `trigger` pôde ficar opcional aqui, e a medição que decidiu**: a
+fábrica o usava em DOIS lugares — anexar ao wrapper e ouvir o clique. Não escreve
+`aria-haspopup`, `aria-expanded` nem `aria-controls`, e não o usa como âncora,
+porque a gaveta encosta na borda da tela. Sem gatilho, quem anuncia o papel é
+quem montou o botão externo.
+
+**No DropdownMenu a mesma pergunta tem resposta oposta, e vale escrever**: lá o
+gatilho tem SETE usos, e um deles é ser a âncora do posicionamento — menu
+suspenso não tem onde ficar sem ela. Contar os usos antes de afrouxar o tipo é o
+que separa as duas respostas; simetria de API teria dado a mesma para os dois.
 
 ### Peças, por stack
 

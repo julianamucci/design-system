@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
-import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
+import {
+  dropdownMenuSource,
+  dropdownMenuSourceControlled,
+  dropdownMenuSourceWith,
+} from './dropdown-menu.source';
 import { createButton } from './button';
 import { clicarQuandoMontado, montar, wrap } from './dropdown-menu.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
@@ -173,21 +177,49 @@ export const Open: Story = {
   },
 };
 
+// ─── Controlled ───────────────────────────────────────────────────────────────
+//
+// POR QUE ESTE MENU CONTINUA COM GATILHO, e o Sheet e o Dialog não.
+//
+// Os três tinham a mesma forma — um `<button>` com `.nds-sr-only`,
+// `tabindex="-1"` e `aria-hidden="true"`, clicado por código — e nos três ela
+// nasceu de `trigger` ser obrigatório. Lá a opção virou opcional; aqui NÃO, e a
+// diferença é medida, não estilística: no Sheet o gatilho é usado em dois
+// pontos (entra no wrapper, escuta o clique), e este menu o usa em SETE —
+//
+//   · `positionFloating(trigger, panelEl, …)`, que é a ÂNCORA: um menu suspenso
+//     não tem onde ficar sem o elemento de que ele desce;
+//   · `aria-haspopup`, `aria-expanded` e `aria-controls`, escritos nele;
+//   · `trigger.focus()` na devolução de foco;
+//   · `tabExitTarget(e, trigger)`, o destino do Tab que sai do painel;
+//   · `trigger.contains(target)` no clique de fora, que é o que impede o
+//     segundo clique no gatilho de fechar e reabrir no mesmo gesto.
+//
+// Tornar a opção opcional aqui não seria copiar a solução do Sheet — seria
+// inventar uma política de posicionamento sem âncora, que é outro assunto. O
+// que o gatilho escondido tinha de errado continua valendo: ele era INVISÍVEL, e
+// o menu ancorava num retângulo de 1px fora da tela. A correção é a mesma do
+// Popover — o gatilho é o que ele sempre foi, uma âncora à vista —, e o botão de
+// fora deixa de encenar um clique para chamar o verbo público.
+
 export const Controlled: Story = {
   parameters: {
-    // Override de story: o assunto é o callback que devolve cada mudança a quem
-    // é dono do estado — sem ele o snippet mostraria um menu que ninguém
-    // acompanha de fora.
+    // Override de story: o assunto é o comando de fora por `open()` mais o
+    // callback que devolve cada mudança a quem é dono do estado — sem ele o
+    // snippet mostraria um menu que ninguém acompanha nem comanda de fora.
     docs: {
       source: {
-        transform: dropdownMenuSourceWith({
-          triggerLabel: 'Abrir menu',
+        transform: dropdownMenuSourceControlled({
+          triggerLabel: 'Ações',
           items: [
             { label: 'Comando A', value: 'a' },
             { label: 'Comando B', value: 'b' },
           ],
-          onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
         }),
+      },
+      description: {
+        story:
+          'Estado do lado de fora: um botão externo abre o menu por open() e recebe de volta cada mudança pelo callback. O gatilho continua à vista porque é ele a âncora de que o menu desce — comandar de fora não é escondê-lo.',
       },
     },
   },
@@ -199,33 +231,30 @@ export const Controlled: Story = {
     wrapper.className = 'nds-stack nds-min-h-50';
     wrapper.dataset.spacing = 'md';
 
-    const externalState = { isOpen: false };
     const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });
+    externalBtn.dataset.open = 'false';
 
-    const hiddenTrigger = createButton({ variant: 'outline', label: 'internal-trigger' });
-    // `nds-sr-only`, COM prefixo: `sr-only` sozinho não existe na folha
-    // compartilhada — a classe estava morta e o gatilho interno, que só existe
-    // para o botão de fora comandar o menu, aparecia na tela.
-    hiddenTrigger.classList.add('nds-sr-only');
-    hiddenTrigger.setAttribute('tabindex', '-1');
-    hiddenTrigger.setAttribute('aria-hidden', 'true');
+    // Gatilho VISÍVEL: ele é a âncora do menu e o dono do `aria-expanded`, não
+    // um alvo de clique sintético. Era um botão `.nds-sr-only` com
+    // `tabindex="-1"` e `aria-hidden="true"`, e o menu descia de um retângulo
+    // de 1px fora da tela.
+    const trigger = createButton({ variant: 'outline', label: 'Ações' });
 
     const menu = createDropdownMenu({
-      trigger: hiddenTrigger,
+      trigger,
       items: [
         { type: 'item', label: 'Comando A', value: 'a' },
         { type: 'item', label: 'Comando B', value: 'b' },
       ],
       onOpenChange: (open) => {
-        externalState.isOpen = open;
         externalBtn.dataset.open = String(open);
       },
     });
     menu.dataset.slot = 'dropdown-menu';
 
-    externalBtn.addEventListener('click', () => {
-      if (!externalState.isOpen) hiddenTrigger.click();
-    });
+    // Sem espelho de estado: a guarda de "já aberto" mora em `open()`, e um
+    // `if (!externalState.isOpen)` aqui seria a mesma guarda no lugar errado.
+    externalBtn.addEventListener('click', () => menu.open());
 
     wrapper.append(externalBtn, menu);
     return wrapper;
@@ -234,23 +263,37 @@ export const Controlled: Story = {
     const canvas = within(canvasElement);
     const body = within(document.body);
     const buttonExterno = canvas.getByRole('button', { name: /open programmatically/i });
+    const trigger = canvas.getByRole('button', { name: /^ações$/i });
 
-    await step('O botão externo abre o menu', async () => {
-      // Idempotente: só clica quando o estado atual não é o desejado, então o
-      // replay do painel Interactions chega ao mesmo lugar.
-      if (buttonExterno.dataset.open !== 'true') await userEvent.click(buttonExterno);
+    await step('NÃO existe gatilho escondido — quem abre por fora é `open()`', async () => {
+      // A âncora do menu está à vista e alcançável por teclado. O que saiu foi o
+      // `<button>` invisível que existia só para receber um clique sintético.
+      await expect(trigger).toBeVisible();
+      await expect(trigger).not.toHaveAttribute('aria-hidden');
+      await expect(trigger).not.toHaveAttribute('tabindex', '-1');
+      await expect(canvasElement.querySelector('button.nds-sr-only')).toBeNull();
+    });
+
+    await step('O botão externo abre o menu — e quem abre é `open()`', async () => {
+      // `open()` é idempotente na fábrica, então o replay do painel Interactions
+      // chega ao mesmo lugar sem o espelho de estado que guardava este clique.
+      await userEvent.click(buttonExterno);
       const menu = await body.findByRole('menu');
       await expect(menu).toBeVisible();
       // O `data-open` do botão de fora é escrito pelo `onOpenChange`: se o
       // callback não tivesse voltado, o estado externo ficaria dessincronizado
-      // do menu e um segundo clique não abriria nada.
+      // do menu e quem espelha o estado pararia de acompanhar.
       await expect(buttonExterno.dataset.open).toBe('true');
+      // E o gatilho, que é quem carrega o contrato ARIA, acompanha a abertura
+      // mesmo tendo sido o código a abrir.
+      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('ESC fecha e o estado de fora acompanha', async () => {
       await closeAfter();
       await expect(buttonExterno.dataset.open).toBe('false');
       await expect(body.queryAllByRole('menu')).toHaveLength(0);
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
   },
 };

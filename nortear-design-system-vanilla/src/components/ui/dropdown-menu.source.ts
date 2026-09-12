@@ -130,3 +130,59 @@ export function dropdownMenuSourceWith(
 ): SourceTransform<DropdownMenuSnippetOptions> {
   return (_gerado, ctx) => dropdownMenuSnippet({ ...ctx.args, ...fixas });
 }
+
+/**
+ * Abertura comandada de fora.
+ *
+ * Forma própria porque a fábrica NÃO expõe prop de estado para este uso: ela
+ * expõe VERBOS — `open()`, `close()`, `toggle()` e `setOpen()`. (A prop `open`
+ * existe e é outra coisa: ela entrega o estado inteiro a quem chama, e aí o
+ * menu só ANUNCIA a intenção. Aqui quem manda continua sendo o menu.)
+ *
+ * O gatilho FICA, e é a diferença em relação ao snippet controlado do Sheet e
+ * do Dialog: ele é a âncora de que o menu desce, o dono do `aria-haspopup`, do
+ * `aria-expanded` e do `aria-controls`, o destino do foco ao fechar e o alvo do
+ * Tab que sai do painel. O que o snippet deixou de ensinar é o gatilho
+ * ESCONDIDO — um `<button>` com `.nds-sr-only`, `tabindex="-1"` e
+ * `aria-hidden="true"`, clicado por código —, que além de ruído na árvore de
+ * acessibilidade ancorava o menu num retângulo de 1px fora da tela.
+ */
+export function dropdownMenuControlledSnippet(o: DropdownMenuSnippetOptions = {}): string {
+  const items = o.items ?? ITEMS_DEFAULT;
+
+  return snippet(
+    [importing('dropdown-menu', 'createDropdownMenu'), importing('button', 'createButton')].join('\n'),
+    `// O gatilho continua à vista: é dele que o menu desce, e é ele que carrega
+// \`aria-haspopup\`, \`aria-expanded\` e \`aria-controls\`. Comandar de fora não
+// é escondê-lo.
+const gatilho = createButton({ variant: 'outline', label: ${text(o.triggerLabel ?? 'Ações')} });`,
+    `const menu = ${callLine(
+      'createDropdownMenu',
+      options([
+        ['trigger', 'gatilho'],
+        ['items', `[\n${items.map((i) => `    ${item(i)},`).join('\n')}\n  ]`],
+        [
+          'onOpenChange',
+          typeof o.onOpenChange === 'string'
+            ? o.onOpenChange
+            : '(aberto) => sincronizarEstadoExterno(aberto)',
+        ],
+      ]),
+    )};`,
+    `const externo = createButton({ label: ${text('Open programmatically')} });
+// Sem espelho de estado: a guarda de "já aberto" mora em \`open()\`.
+externo.addEventListener('click', () => menu.open());`,
+    `// E os outros verbos, para quem comanda o menu inteiro por código:
+// menu.close();
+// menu.toggle();
+// menu.setOpen(true);`,
+    `document.querySelector('#app')?.append(externo, menu);`,
+  );
+}
+
+/** Transform de story para a abertura comandada de fora. */
+export function dropdownMenuSourceControlled(
+  fixas: DropdownMenuSnippetOptions = {},
+): SourceTransform<DropdownMenuSnippetOptions> {
+  return (_gerado, ctx) => dropdownMenuControlledSnippet({ ...ctx.args, ...fixas });
+}

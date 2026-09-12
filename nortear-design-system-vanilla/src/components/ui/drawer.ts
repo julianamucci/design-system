@@ -113,7 +113,25 @@ export type DrawerElement = DestroyableElement & {
 };
 
 export type DrawerOptions = {
-  trigger: HTMLElement;
+  /**
+   * Elemento que abre a gaveta ao ser clicado. OPCIONAL desde 2026-09-12.
+   *
+   * Mesma medição que tornou `trigger` opcional no `sheet.ts` e no `dialog.ts`,
+   * e o mesmo motivo: era a obrigação que fabricava o GATILHO ESCONDIDO — um
+   * `<button>` com `.nds-sr-only`, `tabindex="-1"` e `aria-hidden="true"`,
+   * clicado por código só porque a fábrica exigia um alvo em que clicar. Com
+   * `open()` público (que esta fábrica já tinha), gaveta sem gatilho é caso
+   * legítimo, e o botão invisível deixa de ser ensinado como padrão.
+   *
+   * O que a ausência do gatilho NÃO muda, e foi conferido antes de afrouxar o
+   * tipo: esta fábrica não escreve `aria-haspopup`, `aria-expanded` nem
+   * `aria-controls` no gatilho — ao contrário do Sheet e do Dialog, ela nunca os
+   * escreveu, então não há atributo órfão quando não há gatilho. E a devolução
+   * de foco não passa por aqui: quem fecha devolve o foco a `previousFocus`, que
+   * é o `document.activeElement` lido na abertura — com a gaveta comandada de
+   * fora, é o botão de fora que o recebe de volta, sem nada a declarar.
+   */
+  trigger?: HTMLElement;
   /** Borda de entrada. Só em `bottom` a alça aparece. */
   direction?: DrawerDirection;
   title?: string;
@@ -250,7 +268,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'drawer';
-  wrapper.appendChild(trigger);
+  if (trigger) wrapper.appendChild(trigger);
 
   function isOpen(): boolean {
     return panelEl !== null;
@@ -458,7 +476,7 @@ export function createDrawer(options: DrawerOptions): DrawerElement {
     }
   }
 
-  trigger.addEventListener('click', open);
+  trigger?.addEventListener('click', open);
 
   /*
    * Painel e overlay moram no `document.body`, e o `keydown` de Escape/Tab vive
