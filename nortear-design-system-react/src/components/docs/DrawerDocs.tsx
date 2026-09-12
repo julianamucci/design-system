@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, type PointerEvent } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import {
   Drawer,
   DrawerBody,
@@ -38,6 +38,12 @@ import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
 import { stripHtml, toPlainText } from "@/lib/strip-html";
+import {
+  drawerCloseReasonWatch,
+  drawerDragWatch,
+  resetDrawerCloseReason,
+  takeDrawerCloseReason,
+} from "@/components/ui/drawer-close-reason";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -119,62 +125,6 @@ const A11Y_TEST_HOW = [
 type DrawerDirection = "bottom" | "top" | "left" | "right";
 
 /**
- * Caminho que fechou o painel, no vocabulário do design system.
- *
- * É o mesmo conjunto fechado que `AnalyticsEvents["drawer_close"]` cobra: quatro
- * palavras, iguais nas cinco stacks. Um quinto valor aqui partiria a mesma
- * dimensão do GA4 em duas leituras.
- */
-type DrawerCloseReason = "escape" | "overlay" | "close-button" | "api";
-
-/**
- * O motivo do fechamento, guardado até o `onOpenChange` chegar.
- *
- * O primitivo desta stack avisa QUE o painel fechou (`onOpenChange` recebe um
- * booleano e nada mais), nunca POR QUÊ — e o payload de `drawer_close` promete
- * `reason`. Cada caminho que a lib anuncia por evento próprio deixa o motivo
- * anotado aqui antes de o fechamento acontecer; o que sobra é o botão de saída
- * do rodapé, que é o default.
- *
- * Uma variável para a página inteira basta: os painéis são modais, e nunca há
- * dois abertos ao mesmo tempo.
- */
-let pendingCloseReason: DrawerCloseReason | null = null;
-
-/**
- * Ouvintes para o `DrawerContent`: tecla de escape e clique no véu.
- */
-const closeReasonWatch = {
-  onEscapeKeyDown: () => {
-    pendingCloseReason = "escape";
-  },
-  onPointerDownOutside: () => {
-    pendingCloseReason = "overlay";
-  },
-};
-
-/**
- * Ouvintes para a raiz: o arraste que dispensa o painel.
- *
- * Arrastar para fora fecha por `overlay` — para quem usa, é a mesma decisão de
- * "saí sem decidir nada" do clique no véu.
- *
- * O motivo é anotado no ARRASTE, e não na soltura, porque a lib fecha antes de
- * anunciar a soltura (`closeDrawer(); onRelease(event, false)`): anotado ali, o
- * `onOpenChange` já teria passado. Arraste curto, que volta ao repouso, é
- * anunciado com `open = true` e limpa a anotação — sem isso, o próximo
- * fechamento por botão herdaria um motivo que não é o dele.
- */
-const dragWatch = {
-  onDrag: () => {
-    pendingCloseReason = "overlay";
-  },
-  onRelease: (_event: PointerEvent<HTMLDivElement>, open: boolean) => {
-    if (open) pendingCloseReason = null;
-  },
-};
-
-/**
  * `trigger_id` leva a DIREÇÃO, valor estável — nunca o título, que é texto
  * traduzido e partiria a mesma série em três valores no GA4.
  *
@@ -185,17 +135,16 @@ const dragWatch = {
  */
 function trackDrawer(location: string, direction: DrawerDirection, open: boolean) {
   if (open) {
-    pendingCloseReason = null;
+    resetDrawerCloseReason();
     track("drawer_open", { component: "drawer", trigger_id: direction, location });
     return;
   }
   track("drawer_close", {
     component: "drawer",
     trigger_id: direction,
-    reason: pendingCloseReason ?? "close-button",
+    reason: takeDrawerCloseReason(),
     location,
   });
-  pendingCloseReason = null;
 }
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
@@ -400,14 +349,14 @@ interface DrawerProps {
       <Drawer
         direction={dir}
         onOpenChange={(open) => trackDrawer(location, dir, open)}
-        {...dragWatch}
+        {...drawerDragWatch}
       >
         <DrawerTrigger asChild>
           <Button variant="outline" size="sm" className="nds-w-full">
             {ex.title}
           </Button>
         </DrawerTrigger>
-        <DrawerContent {...closeReasonWatch}>
+        <DrawerContent {...drawerCloseReasonWatch}>
           <DrawerHeader>
             <DrawerTitle>{ex.title}</DrawerTitle>
             <DrawerDescription>{ex.description}</DrawerDescription>
@@ -543,13 +492,13 @@ interface DrawerProps {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...dragWatch}>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...drawerDragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline" size="sm">
                     {tContent("usage.uxWriting.table.trigger.good")}
                   </Button>
                 </DrawerTrigger>
-                <DrawerContent {...closeReasonWatch}>
+                <DrawerContent {...drawerCloseReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle>{tContent("usage.uxWriting.table.title.good")}</DrawerTitle>
                     <DrawerDescription>
@@ -572,13 +521,13 @@ interface DrawerProps {
             // a forma CORRETA. A lição fica no corpo do painel — o que se evita
             // é o painel sem título nenhum, não o título visualmente oculto.
             dontPreview: (
-              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...dragWatch}>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...drawerDragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline" size="sm">
                     {tContent("usage.uxWriting.table.trigger.good")}
                   </Button>
                 </DrawerTrigger>
-                <DrawerContent {...closeReasonWatch}>
+                <DrawerContent {...drawerCloseReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle className="nds-sr-only">
                       {tContent("usage.uxWriting.table.title.good")}
@@ -611,13 +560,13 @@ interface DrawerProps {
             // que é exatamente o que a legenda condena. O painel é um só, e o
             // que ele explica no corpo é o motivo de não haver um segundo.
             dontPreview: (
-              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...dragWatch}>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_do_dont", "bottom", open)} {...drawerDragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline" size="sm">
                     {tContent("usage.uxWriting.table.trigger.good")}
                   </Button>
                 </DrawerTrigger>
-                <DrawerContent {...closeReasonWatch}>
+                <DrawerContent {...drawerCloseReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle>{tContent("usage.uxWriting.table.title.good")}</DrawerTitle>
                     <DrawerDescription>
@@ -715,11 +664,11 @@ interface DrawerProps {
   </DrawerContent>
 </Drawer>`,
             preview: (
-              <Drawer onOpenChange={(open) => trackDrawer("docs_variantes", "bottom", open)} {...dragWatch}>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_variantes", "bottom", open)} {...drawerDragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline">Ler termos</Button>
                 </DrawerTrigger>
-                <DrawerContent {...closeReasonWatch}>
+                <DrawerContent {...drawerCloseReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle>Termos de uso</DrawerTitle>
                     <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
@@ -806,11 +755,11 @@ interface DrawerProps {
   </DrawerContent>
 </Drawer>`,
             preview: (
-              <Drawer onOpenChange={(open) => trackDrawer("docs_composicoes", "bottom", open)} {...dragWatch}>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_composicoes", "bottom", open)} {...drawerDragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline">{tContent("demonstration.labels.trigger")}</Button>
                 </DrawerTrigger>
-                <DrawerContent {...closeReasonWatch}>
+                <DrawerContent {...drawerCloseReasonWatch}>
                   <DrawerHeader>
                     <DrawerTitle>{tContent("demonstration.labels.title")}</DrawerTitle>
                     <DrawerDescription>
@@ -896,12 +845,12 @@ interface DrawerProps {
   </DrawerContent>
 </Drawer>`,
             preview: (
-              <Drawer onOpenChange={(open) => trackDrawer("docs_composicoes", "bottom", open)} {...dragWatch}>
+              <Drawer onOpenChange={(open) => trackDrawer("docs_composicoes", "bottom", open)} {...drawerDragWatch}>
                 <DrawerTrigger asChild>
                   <Button variant="outline">{tContent("demonstration.labels.destroy")}</Button>
                 </DrawerTrigger>
                 <DrawerContent
-                  {...closeReasonWatch}
+                  {...drawerCloseReasonWatch}
                   onOpenAutoFocus={(event) => {
                     // A decisão É a tela: o foco vai para a saída segura, e não
                     // para o primeiro tabbável. O Enter por reflexo não pode

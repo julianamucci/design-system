@@ -34,7 +34,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-import { mapCloseReason, markConfirmation } from "@/components/docs/shared/close-reason";
+import { dialogCloseReason, markConfirmation } from "@/components/ui/dialog-close-reason";
 import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
@@ -132,7 +132,7 @@ function AlertDialogDemo({
           trigger_id: triggerId,
           // Escape chega aqui como `escape-key` e sai `escape`; o Cancelar,
           // como `close-button`; a ação, como `api` pela marca abaixo.
-          ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+          ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
           location,
         })
       }

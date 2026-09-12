@@ -17,7 +17,7 @@ export type DialogCloseReason = "escape" | "overlay" | "close-button" | "api"
  * as duas são partes de fechar da lib, e a base-ui entrega `close-press` para
  * ambas. Sem esta marca, "confirmou a exclusão" chegaria ao relatório como
  * "apertou o botão de fechar". Quem confirma chama `markConfirmation()` antes
- * de o painel fechar, e o próximo `mapCloseReason` devolve `api`.
+ * de o painel fechar, e o próximo `dialogCloseReason` devolve `api`.
  *
  * Uma variável para a página inteira basta: o painel é modal, e nunca há dois
  * abertos ao mesmo tempo — é a mesma forma do motivo pendente do Vue e do
@@ -36,7 +36,7 @@ export function markConfirmation(): void {
  * painel modal o gatilho fica coberto pelo véu, e só código fecha por ele — a
  * mesma leitura do drawer.
  */
-export function mapCloseReason(reason?: string): DialogCloseReason {
+export function dialogCloseReason(reason?: string): DialogCloseReason {
   if (confirmed) {
     confirmed = false
     return "api"

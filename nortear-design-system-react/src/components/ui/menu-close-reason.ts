@@ -10,12 +10,14 @@
 
 /**
  * Por qual caminho um menu da família fechou, no vocabulário do DESIGN SYSTEM:
- * as mesmas quatro palavras do `drawer_close`, do `popover_close` e do
- * `dialog_close`, para a família ser uma dimensão só no GA4. O menu não tem
- * botão de fechar, então `close-button` nunca sai daqui; o tipo carrega as
- * quatro porque é o do evento.
+ * as palavras do `drawer_close`, do `popover_close` e do `dialog_close`, para
+ * a família ser uma dimensão só no GA4. São TRÊS: menu não tem botão de fechar,
+ * e `close-button` nunca sairia daqui — o tipo do EVENTO, em `lib/analytics.ts`,
+ * é que carrega as quatro da família. O vanilla e o angular já declaravam três,
+ * e esta era a única stack fora (medido em 2026-09-11 pelo
+ * `reason_entre_stacks_divergente`).
  */
-export type MenuCloseReason = "escape" | "overlay" | "close-button" | "api"
+export type MenuCloseReason = "escape" | "overlay" | "api"
 
 /**
  * Traduz o motivo da base-ui (`eventDetails.reason` do `onOpenChange`).

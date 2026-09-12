@@ -35,7 +35,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-import { mapCloseReason }    from "@/components/docs/shared/close-reason";
+import { dialogCloseReason }    from "@/components/ui/dialog-close-reason";
 import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
@@ -148,7 +148,7 @@ function trackOpenChange(triggerId: DialogTriggerId, location: DocsLocation) {
     track("dialog_close", {
       component: "dialog",
       trigger_id: triggerId,
-      reason: mapCloseReason(details?.reason),
+      reason: dialogCloseReason(details?.reason),
       location,
     });
   };

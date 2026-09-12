@@ -395,6 +395,25 @@ mudaram, e o tipo proíbe o campo antigo (`label?: never`).
 system, não o da lib — motivo inventado contamina a série, e motivo ausente
 esconde a diferença entre desistir e concluir.
 
+**E quem deduz o motivo fica AO LADO DO PRIMITIVO**, exportado pelo mesmo índice
+das peças — a docs page só repassa a palavra (`18-overlay.md` §Analytics, portão
+`motivo_sintetizado_na_docs_page`). O vanilla e o Angular já faziam assim; o
+React mudou de casa em 2026-09-12 (`ui/drawer-close-reason.ts`), e enquanto a
+dedução morava na página ela não tinha teste nenhum.
+
+**O default do Drawer é `close-button`, e ele é diferente do da família do
+Dialog de propósito**: aqui o que sobra depois de Escape, véu e arraste é o botão
+de saída do rodapé, que a lib não anuncia por evento próprio. Na família do
+Dialog o botão TEM anúncio, e o que sobra é o fechamento por código, que é `api`.
+Trocar um pelo outro faz "confirmou e fechou" chegar ao relatório como "apertou o
+botão de fechar".
+
+**O arraste que dispensa é anotado no ARRASTE, não na soltura** — a lib fecha
+antes de anunciar a soltura (`closeDrawer(); onRelease(event, false)`), então
+anotar ali chegaria depois do evento. Arraste curto, que volta ao repouso, é
+anunciado com `open = true` e limpa a anotação; sem isso o próximo fechamento por
+botão herdaria um motivo que não é dele.
+
 **As duas pendências registradas em 2026-09-07 fecharam em 2026-09-08**: a prosa
 pedia o título traduzido (`2f64c9b2d`), e o evento era disparado só pelo
 Angular. Hoje as cinco disparam.

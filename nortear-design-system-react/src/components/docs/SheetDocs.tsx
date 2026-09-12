@@ -37,7 +37,7 @@ import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated
 import { DocsNotes }         from "@/components/docs/shared/sections/DocsNotes";
 import { DocsAnalytics }     from "@/components/docs/shared/sections/DocsAnalytics";
 import { DocsTestes }        from "@/components/docs/shared/sections/DocsTestes";
-import { mapCloseReason }    from "@/components/docs/shared/close-reason";
+import { dialogCloseReason }    from "@/components/ui/dialog-close-reason";
 import { stripHtml, toPlainText } from "@/lib/strip-html";
 
 const priorityKeyMap: Record<string, string> = {
@@ -145,7 +145,7 @@ function SheetDemo({ trigger, title, description, cancel, apply, body, side = "r
           track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
             trigger_id: side,
-            ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+            ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
             location,
           })
         }
@@ -193,7 +193,7 @@ function FiltersFormDemo({ trigger, title, description, cancel, apply, fieldCate
           track(open ? "dialog_open" : "dialog_close", {
             component: "sheet",
             trigger_id: side,
-            ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+            ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
             location,
           })
         }
@@ -484,7 +484,7 @@ export function SheetDocs() {
                     track(open ? "dialog_open" : "dialog_close", {
                       component: "sheet",
                       trigger_id: "right",
-                      ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                      ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
                       location: "docs_do_dont",
                     })
                   }
@@ -720,7 +720,7 @@ export function SheetDocs() {
                     track(open ? "dialog_open" : "dialog_close", {
                       component: "sheet",
                       trigger_id: "left",
-                      ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                      ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
                       location: "docs_composicoes",
                     })
                   }
@@ -803,7 +803,7 @@ export function SheetDocs() {
                     track(open ? "dialog_open" : "dialog_close", {
                       component: "sheet",
                       trigger_id: "right",
-                      ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                      ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
                       location: "docs_composicoes",
                     })
                   }
@@ -912,7 +912,7 @@ export function SheetDocs() {
                     track(open ? "dialog_open" : "dialog_close", {
                       component: "sheet",
                       trigger_id: "bottom",
-                      ...(open ? {} : { reason: mapCloseReason(details?.reason) }),
+                      ...(open ? {} : { reason: dialogCloseReason(details?.reason) }),
                       location: "docs_composicoes",
                     })
                   }
