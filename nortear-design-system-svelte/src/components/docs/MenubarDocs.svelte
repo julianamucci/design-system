@@ -16,6 +16,7 @@
     MenubarSub,
     MenubarSubTrigger,
     MenubarSubContent,
+    createMenuCloseWatch,
   } from '@/components/ui/menubar';
   import { menubarEntriesSource, type MenubarDocsMenu } from '@/components/ui/menubar/menubar.source';
   import {
@@ -191,9 +192,6 @@
   /** As seções desta página que renderizam a barra VIVA. */
   type MenuLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
 
-  /** O vocabulário do fechamento na família — o menu não tem botão de fechar. */
-  type MenuCloseReason = 'escape' | 'overlay' | 'api';
-
   /** O painel de submenu, pelo `data-slot` que o wrapper escreve nele. */
   const SUB_CONTENT_SELECTOR = '[data-slot="menubar-sub-content"]';
 
@@ -216,29 +214,22 @@
    * fechamento por Tab que o wrapper faz quando a lib deixa o menu aberto
    * (`menubar/tab-leaves-menu.ts`), que escreve o valor por fora da lib.
    *
-   * O MOTIVO: cada caminho se anota ANTES do aviso. `escape` pelo
-   * `onEscapeKeydown` do painel; `overlay` — sair sem decidir — pelo clique
-   * fora (`onInteractOutside`), pelo Tab (o `onkeydown` do painel e o do
-   * submenu, que vive num portal à parte), pelo clique no gatilho do menu
-   * aberto e pela passagem ao menu vizinho (o valor troca direto por outro);
-   * `api` pela escolha do item de ação. O que não se anotou fecha como `api`:
-   * fechamento pelo código ou por caminho que a página não conhece — "decisão
-   * de dentro" (18-overlay §Analytics). Até 2026-09-11 o padrão era `overlay`.
-   * O Escape dentro de um submenu fecha só o submenu e não anota nada no menu
-   * de cima.
+   * O MOTIVO vem do `menu-close-reason.ts`, ao lado das peças e compartilhado
+   * pelos três membros da família: o aviso da lib diz só que o menu fechou, e
+   * quem traduz gesto em palavra é o componente — esta página só repassa. Até
+   * 2026-09-12 a tradução morava AQUI, e a mesma dedução vivia copiada em três
+   * docs pages, nenhuma com teste. A passagem ao menu VIZINHO (um valor que
+   * troca direto por outro) é o gesto que só a barra tem, e é ela que o anota.
    *
    * `select` é o item de AÇÃO, que fecha e arma `api`; `toggle` é a marcação e a
    * opção de rádio, que alternam e deixam o menu aberto sem armar motivo.
    */
   function menubarTracker(preview: string, location: MenuLocation, severalMenus = false) {
     let current = '';
-    let reason: MenuCloseReason = 'api';
-    const leave = () => {
-      reason = 'overlay';
-    };
-    const leaveOnTab = (event: KeyboardEvent) => {
-      if (event.key === 'Tab') leave();
-    };
+    const closeWatch = createMenuCloseWatch({
+      subContentSelector: SUB_CONTENT_SELECTOR,
+      isOpen: () => Boolean(current),
+    });
     const menuId = (value: string) => (severalMenus ? `${preview}-${value}` : preview);
     const announce = (label: string) =>
       track('menubar_item_select', { component: 'menubar', menu: menuId(current), label, location });
@@ -247,37 +238,27 @@
         if (next === current) return;
         if (current) {
           // Um valor que troca direto por outro é a passagem ao menu vizinho.
-          if (next) leave();
-          track('menubar_close', { component: 'menubar', menu: menuId(current), reason, location });
+          if (next) closeWatch.markSiblingOpen();
+          track('menubar_close', {
+            component: 'menubar',
+            menu: menuId(current),
+            reason: closeWatch.takeReason(),
+            location,
+          });
         }
         current = next;
-        reason = 'api';
+        closeWatch.reset();
         if (next) track('menubar_open', { component: 'menubar', menu: menuId(next), location });
       },
       /** O que o PAINEL anota — espalhado no `Content`: Escape, clique fora e Tab. */
-      content: {
-        onEscapeKeydown: () => {
-          reason = 'escape';
-        },
-        onInteractOutside: (event: PointerEvent) => {
-          // O clique num painel de submenu também chega aqui, e a lib não fecha
-          // por ele: é interação DENTRO do menu, não fora.
-          if (event.target instanceof Element && event.target.closest(SUB_CONTENT_SELECTOR)) return;
-          leave();
-        },
-        onkeydown: leaveOnTab,
-      },
+      content: closeWatch.content,
       /** O painel do submenu vive num portal à parte: o Tab dado nele não passa pelo de cima. */
-      subContent: { onkeydown: leaveOnTab },
+      subContent: closeWatch.subContent,
       /** O clique no gatilho do menu ABERTO o fecha sem decidir nada. */
-      trigger: {
-        onpointerdown: () => {
-          if (current) leave();
-        },
-      },
+      trigger: closeWatch.trigger,
       select(label: string) {
         return () => {
-          reason = 'api';
+          closeWatch.markItemPress();
           announce(label);
         };
       },

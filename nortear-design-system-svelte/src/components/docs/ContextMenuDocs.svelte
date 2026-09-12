@@ -1,6 +1,9 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import * as ContextMenu from '@/components/ui/context-menu';
+  // Import nomeado ao lado do namespace, e não `ContextMenu.createMenuCloseWatch`:
+  // pelo namespace nenhuma varredura por nome enxerga o uso do tradutor.
+  import { createMenuCloseWatch } from '@/components/ui/context-menu';
   import { contextMenuEntriesSource } from '@/components/ui/context-menu/context-menu.source';
   import {
     contextMenuEntriesState,
@@ -207,65 +210,46 @@
    * da Demonstração. `label` é o valor estável do item. Nenhum dos três leva
    * texto traduzido, sob pena de partir o mesmo evento em um por idioma.
    *
-   * O MOTIVO do fechamento: o `onOpenChange` da lib diz só que fechou, e cada
-   * caminho se anota ANTES do aviso. `escape` pelo `onEscapeKeydown` do painel;
-   * `overlay` — sair sem decidir — pelo clique fora (`onInteractOutside`) e pelo
-   * Tab que leva o foco embora (o `onkeydown` do painel e o do submenu, que vive
-   * num portal à parte); `api` pela escolha do item de ação. O que não se anotou
-   * fecha como `api`: fechamento pelo código ou por caminho que a página não
-   * conhece — "decisão de dentro" (18-overlay §Analytics). Até 2026-09-11 o
-   * padrão era `overlay`, e todo fechamento de origem desconhecida contava como
-   * clique fora. O Escape dentro de um submenu fecha só o submenu (o wrapper
-   * barra a tecla antes do painel de cima), e por isso não anota nada no menu
-   * de cima.
+   * O MOTIVO do fechamento vem do `menu-close-reason.ts`, ao lado das peças e
+   * compartilhado pelos três membros da família: o `onOpenChange` da lib diz só
+   * que o menu fechou, e quem traduz gesto em palavra é o componente — esta
+   * página só repassa. Até 2026-09-12 a tradução morava AQUI, numa união
+   * anônima que nem os portões de vocabulário enxergavam, e a mesma dedução
+   * vivia copiada em três docs pages, nenhuma com teste.
    *
    * Duas portas para o item, porque só uma decide: `select` é o item de AÇÃO,
    * que fecha o menu e arma `api`; `toggle` é a marcação e a opção de rádio,
    * que alternam e deixam o menu aberto sem armar motivo.
    */
   function contextMenuTracker(menu: string, location: string) {
-    let reason: 'escape' | 'overlay' | 'api' = 'api';
-    const leave = () => {
-      reason = 'overlay';
-    };
-    const leaveOnTab = (event: KeyboardEvent) => {
-      if (event.key === 'Tab') leave();
-    };
+    // Não há `isOpen`: o menu de contexto não tem gatilho que se clique aberto —
+    // ele nasce do botão direito sobre a área.
+    const closeWatch = createMenuCloseWatch({
+      subContentSelector: '[data-slot="context-menu-sub-content"]',
+    });
     const announce = (label: string) =>
       track('context_menu_item_select', { component: 'context-menu', label, menu, location });
     return {
       onOpenChange(open: boolean) {
         if (open) {
-          reason = 'api';
+          closeWatch.reset();
           track('context_menu_open', { component: 'context-menu', menu, location });
           return;
         }
-        track('context_menu_close', { component: 'context-menu', menu, reason, location });
-        reason = 'api';
+        track('context_menu_close', {
+          component: 'context-menu',
+          menu,
+          reason: closeWatch.takeReason(),
+          location,
+        });
       },
       /** O que o PAINEL anota — espalhado no `Content`: Escape, clique fora e Tab. */
-      content: {
-        onEscapeKeydown: () => {
-          reason = 'escape';
-        },
-        onInteractOutside: (event: PointerEvent) => {
-          // O clique num painel de submenu também chega aqui, e a lib não fecha
-          // por ele: é interação DENTRO do menu, não fora.
-          if (
-            event.target instanceof Element &&
-            event.target.closest('[data-slot="context-menu-sub-content"]')
-          ) {
-            return;
-          }
-          leave();
-        },
-        onkeydown: leaveOnTab,
-      },
+      content: closeWatch.content,
       /** O painel do submenu vive num portal à parte: o Tab dado nele não passa pelo de cima. */
-      subContent: { onkeydown: leaveOnTab },
+      subContent: closeWatch.subContent,
       select(label: string) {
         return () => {
-          reason = 'api';
+          closeWatch.markItemPress();
           announce(label);
         };
       },

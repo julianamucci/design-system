@@ -17,6 +17,19 @@ import Label from "./context-menu-label.svelte";
 // `Portal` não é reexportado: o `Content` já portaliza por dentro, então a peça
 // solta só serviria para portalizar duas vezes. Nenhuma outra stack a expõe e a
 // anatomia do conteúdo compartilhado não lista peça de portal.
+// O motivo do fechamento é contrato do componente, não da página que o usa: sai
+// pelo mesmo barril das peças. O tradutor é UM para a família inteira — o
+// ContextMenu, o DropdownMenu e o Menubar fecham pelos mesmos caminhos e
+// escrevem a mesma palavra no GA4.
+export {
+	createMenuCloseWatch,
+	menuCloseReason,
+	type MenuCloseReason,
+	type MenuCloseSignal,
+	type MenuCloseWatch,
+	type MenuCloseWatchOptions,
+} from "../menu-close-reason";
+
 export {
 	Root,
 	Sub,

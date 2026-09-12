@@ -15,6 +15,16 @@ import Portal from "./drawer-portal.svelte";
 // page, e drawer aninhado não aparece no conteúdo compartilhado nem em stack
 // nenhuma. Promessa de API que o produto não cumpria (rule `export_sem_story`).
 
+// O motivo do fechamento é contrato do componente, não da página que o usa: sai
+// pelo mesmo barril das peças.
+export {
+	createDrawerCloseWatch,
+	drawerCloseReason,
+	type DrawerCloseReason,
+	type DrawerCloseSignal,
+	type DrawerCloseWatch,
+} from "./close-reason";
+
 export {
 	Root,
 	Body,

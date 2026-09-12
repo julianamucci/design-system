@@ -392,7 +392,25 @@ cinco `analytics.ts` que o cobra: evento fora dele não compila.
   aberto e, no Menubar, a passagem ao menu vizinho — saiu sem decidir) ou `api`
   (item escolhido que fecha, ou fechamento pelo código — "decisão de dentro",
   como no resto da categoria). `close-button` não ocorre — menu não tem
-  controle de fechar —, mas o tipo carrega as quatro palavras da família.
+  controle de fechar —, e **o tipo declara três palavras**, não quatro: até
+  2026-09-11 o React carregava a quarta, que nenhum caminho produzia, enquanto as
+  outras declaravam três. Palavra sem comportamento atrás é a mesma dívida do
+  comportamento sem palavra, do outro lado.
+- **A tradução do motivo mora AO LADO DO PRIMITIVO, e é UMA para a família
+  inteira** — `ui/menu-close-reason.ts` no react, no angular e no svelte, plano
+  ao lado das três pastas de propósito, porque um arquivo por componente vira
+  três cópias que divergem; no vanilla cada fábrica entrega `onClose(reason)` de
+  primeira mão; no vue o motivo já vem do contexto do próprio wrapper
+  (`ui/<menu>/<menu>.context.ts`), um por componente, que é a forma da stack.
+  Até 2026-09-12 as docs pages do Svelte declaravam o vocabulário por conta
+  própria, e uma delas numa união ANÔNIMA, que não tinha nome para ninguém
+  procurar. Portão: `motivo_sintetizado_na_docs_page`.
+
+  O que a mudança de casa pagou de imediato: a guarda de submenu usava
+  `event.target instanceof Element`, que só existe no navegador — assim que a
+  dedução passou a ter teste de unidade em node, ela quebrou com
+  `ReferenceError`. Enquanto morava na página, esse trecho não tinha como ser
+  exercitado fora do navegador.
 - **`location`** é a seção da página onde a prévia está (`docs_demo`,
   `docs_variantes`, `docs_composicoes`, `docs_do_dont`) — toda prévia viva
   rastreia, e a seção vem do chamador.

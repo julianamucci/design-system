@@ -10,6 +10,7 @@
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
+    createDrawerCloseWatch,
   } from '@/components/ui/drawer';
   import { Button } from '@/components/ui/button';
   import { Input } from '@/components/ui/input';
@@ -220,31 +221,17 @@
    * `@/lib/analytics`, e há portão para isso (`analytics_in_ui_primitive`).
    *
    * O `onOpenChange` da lib avisa QUE o painel fechou, nunca POR QUÊ — e o
-   * payload de `drawer_close` promete `reason`. Os caminhos que a lib anuncia
-   * por evento próprio ficam anotados aqui; o que sobra é o botão, a saída do
-   * rodapé, que fecha pelo `DrawerClose`.
+   * payload de `drawer_close` promete `reason`. Quem traduz gesto em palavra é o
+   * `close-reason.ts` do primitivo, ao lado das peças: esta página é só mais um
+   * consumidor dele, como qualquer app seria. Até 2026-09-12 a tradução morava
+   * AQUI, e a dedução não tinha teste.
    *
-   * Arrastar o painel para fora fecha por `overlay`: o vocabulário é o do design
-   * system, não o da lib — para quem usa, o gesto é a mesma decisão de "saí sem
-   * decidir nada" do clique no véu. O aviso tem de sair do `onDrag`, e não do
-   * `onRelease`: a lib FECHA a gaveta antes de chamar o release
-   * (`closeDrawer(); onRelease(event, false)`), então o motivo chegaria depois do
-   * evento que ele explica. Arraste que não fecha se desmarca no release com
-   * `open === true`.
-   *
-   * Uma variável para a página inteira basta: o painel é modal, e nunca há dois
+   * Uma instância para a página inteira basta: o painel é modal, e nunca há dois
    * abertos ao mesmo tempo.
    */
-  type DrawerCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
   type DrawerDirection = 'bottom' | 'top' | 'left' | 'right';
 
-  let pendingCloseReason: DrawerCloseReason | null = null;
-
-  /** Ouvintes do CONTEÚDO, prontos para espalhar — o painel os repassa à lib. */
-  const closeWatch = {
-    onEscapeKeydown: () => { pendingCloseReason = 'escape'; },
-    onInteractOutside: () => { pendingCloseReason = 'overlay'; },
-  };
+  const closeWatch = createDrawerCloseWatch();
 
   /**
    * Props da RAIZ de cada painel vivo desta página.
@@ -266,22 +253,21 @@
       direction,
       onOpenChange: (open: boolean) => {
         if (open) {
-          pendingCloseReason = null;
+          closeWatch.reset();
           track('drawer_open', { component: 'drawer', trigger_id: direction, location });
           return;
         }
         track('drawer_close', {
           component: 'drawer',
           trigger_id: direction,
-          reason: pendingCloseReason ?? 'close-button',
+          reason: closeWatch.takeReason(),
           location,
         });
-        pendingCloseReason = null;
       },
-      onDrag: () => { pendingCloseReason = 'overlay'; },
-      onRelease: (_event: PointerEvent, open: boolean) => {
-        if (open) pendingCloseReason = null;
-      },
+      // O arraste que dispensa o painel: os dois ouvintes vêm prontos do
+      // primitivo, porque o pareamento entre eles é o que mantém o motivo
+      // certo — anotar no arraste, limpar na soltura que não fecha.
+      ...closeWatch.drag,
     };
   }
 
@@ -384,7 +370,7 @@ interface TriggerProps {
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.bottom')}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -406,7 +392,7 @@ interface TriggerProps {
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.right')}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -428,7 +414,7 @@ interface TriggerProps {
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.left')}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -450,7 +436,7 @@ interface TriggerProps {
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.top')}</Button>
           {/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -546,7 +532,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -567,7 +553,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.bad')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
           </DrawerHeader>
@@ -584,7 +570,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>Filtros</DrawerTitle>
             <DrawerDescription>Refine os resultados.</DrawerDescription>
@@ -605,7 +591,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('usage.uxWriting.table.trigger.good')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>Externo</DrawerTitle>
             <DrawerDescription>Drawer aninhado quebra focus trap.</DrawerDescription>
@@ -680,7 +666,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.bottom')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>Bottom</DrawerTitle>
             <DrawerDescription>Drawer mobile padrão com handle de drag.</DrawerDescription>
@@ -701,7 +687,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.top')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>Top</DrawerTitle>
             <DrawerDescription>Drawer entra por cima.</DrawerDescription>
@@ -722,7 +708,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.left')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>Left</DrawerTitle>
             <DrawerDescription>Painel lateral à esquerda.</DrawerDescription>
@@ -743,7 +729,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('variants.items.right')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>Right</DrawerTitle>
             <DrawerDescription>Painel lateral à direita (padrão desktop).</DrawerDescription>
@@ -765,7 +751,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>Ler termos</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>Termos de uso</DrawerTitle>
             <DrawerDescription>Leia atentamente antes de aceitar.</DrawerDescription>
@@ -895,7 +881,7 @@ interface TriggerProps {
         <DrawerTrigger>
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>{/snippet}
         </DrawerTrigger>
-        <DrawerContent {...closeWatch}>
+        <DrawerContent {...closeWatch.listeners}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.title')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.description')}</DrawerDescription>
@@ -934,7 +920,7 @@ interface TriggerProps {
           {#snippet child({ props })}<Button variant="outline" {...props}>{$tStore('demonstration.labels.destroy')}</Button>{/snippet}
         </DrawerTrigger>
         <!-- A decisão É a tela: o foco entra na saída segura, e não no corpo. -->
-        <DrawerContent {...closeWatch} bind:ref={confirmationPanel} onOpenAutoFocus={focusSafeExit}>
+        <DrawerContent {...closeWatch.listeners} bind:ref={confirmationPanel} onOpenAutoFocus={focusSafeExit}>
           <DrawerHeader>
             <DrawerTitle>{$tStore('demonstration.labels.destroy')}</DrawerTitle>
             <DrawerDescription>{$tStore('demonstration.labels.destroyMessage')}</DrawerDescription>

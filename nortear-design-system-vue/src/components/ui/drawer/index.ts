@@ -8,3 +8,12 @@ export { default as DrawerHeader } from './DrawerHeader.vue'
 export { default as DrawerOverlay } from './DrawerOverlay.vue'
 export { default as DrawerTitle } from './DrawerTitle.vue'
 export { default as DrawerTrigger } from './DrawerTrigger.vue'
+export {
+  createDrawerCloseWatch,
+  createDrawerDragWatch,
+  drawerCloseReason,
+  type DrawerCloseGesture,
+  type DrawerCloseReason,
+  type DrawerCloseWatch,
+  type DrawerDragWatch,
+} from './drawer.close-reason'

@@ -15,6 +15,7 @@
     DropdownMenuSub,
     DropdownMenuSubTrigger,
     DropdownMenuSubContent,
+    createMenuCloseWatch,
   } from '@/components/ui/dropdown-menu';
   import { dropdownMenuEntriesSource } from '@/components/ui/dropdown-menu/dropdown-menu.source';
   import {
@@ -103,9 +104,6 @@
   /** As seções desta página que renderizam o menu VIVO. */
   type MenuLocation = 'docs_demo' | 'docs_variantes' | 'docs_do_dont';
 
-  /** O vocabulário do fechamento na família — o menu não tem botão de fechar. */
-  type MenuCloseReason = 'escape' | 'overlay' | 'api';
-
   /** O painel de submenu, pelo `data-slot` que o wrapper escreve nele. */
   const SUB_CONTENT_SELECTOR = '[data-slot="dropdown-menu-sub-content"]';
 
@@ -121,18 +119,11 @@
    * Demonstração. Nenhum dos três leva texto traduzido, sob pena de partir o
    * mesmo evento em um por idioma.
    *
-   * O MOTIVO do fechamento: o `onOpenChange` da lib diz só que fechou, e cada
-   * caminho se anota ANTES do aviso. `escape` pelo `onEscapeKeydown` do painel;
-   * `overlay` — sair sem decidir — pelo clique fora (`onInteractOutside`), pelo
-   * Tab (o `onkeydown` do painel e o do submenu, que vive num portal à parte) e
-   * pelo clique no gatilho do menu aberto; `api` pela escolha do item de ação.
-   * O que não se anotou fecha como `api`: é o fechamento pelo código ou por um
-   * caminho que a página não conhece — "decisão de dentro" (18-overlay
-   * §Analytics). Até 2026-09-11 o padrão era `overlay`, e todo fechamento de
-   * origem desconhecida contava como clique fora.
-   *
-   * O Escape dentro de um submenu fecha só o submenu (o wrapper barra a tecla
-   * antes do painel de cima), e por isso não anota nada no menu de cima.
+   * O MOTIVO do fechamento vem do `menu-close-reason.ts`, ao lado das peças e
+   * compartilhado pelos três membros da família: o `onOpenChange` da lib diz só
+   * que o menu fechou, e quem traduz gesto em palavra é o componente — esta
+   * página só repassa. Até 2026-09-12 a tradução morava AQUI, e a mesma dedução
+   * vivia copiada em três docs pages, nenhuma com teste.
    *
    * Duas portas para o item, porque só uma decide: `select` é o item de AÇÃO,
    * que fecha o menu e arma `api`; `toggle` é a marcação e a opção de rádio,
@@ -140,50 +131,36 @@
    */
   function dropdownMenuTracker(menu: string, location: MenuLocation) {
     let open = false;
-    let reason: MenuCloseReason = 'api';
-    const leave = () => {
-      reason = 'overlay';
-    };
-    const leaveOnTab = (event: KeyboardEvent) => {
-      if (event.key === 'Tab') leave();
-    };
+    const closeWatch = createMenuCloseWatch({
+      subContentSelector: SUB_CONTENT_SELECTOR,
+      isOpen: () => open,
+    });
     const announce = (label: string) =>
       track('dropdown_menu_item_select', { component: 'dropdown-menu', menu, label, location });
     return {
       onOpenChange(next: boolean) {
         open = next;
         if (next) {
-          reason = 'api';
+          closeWatch.reset();
           track('dropdown_menu_open', { component: 'dropdown-menu', menu, location });
           return;
         }
-        track('dropdown_menu_close', { component: 'dropdown-menu', menu, reason, location });
-        reason = 'api';
+        track('dropdown_menu_close', {
+          component: 'dropdown-menu',
+          menu,
+          reason: closeWatch.takeReason(),
+          location,
+        });
       },
       /** O que o PAINEL anota — espalhado no `Content`: Escape, clique fora e Tab. */
-      content: {
-        onEscapeKeydown: () => {
-          reason = 'escape';
-        },
-        onInteractOutside: (event: PointerEvent) => {
-          // O clique num painel de submenu também chega aqui, e a lib não fecha
-          // por ele: é interação DENTRO do menu, não fora.
-          if (event.target instanceof Element && event.target.closest(SUB_CONTENT_SELECTOR)) return;
-          leave();
-        },
-        onkeydown: leaveOnTab,
-      },
+      content: closeWatch.content,
       /** O painel do submenu vive num portal à parte: o Tab dado nele não passa pelo de cima. */
-      subContent: { onkeydown: leaveOnTab },
+      subContent: closeWatch.subContent,
       /** O clique no gatilho do menu ABERTO o fecha sem decidir nada. */
-      trigger: {
-        onpointerdown: () => {
-          if (open) leave();
-        },
-      },
+      trigger: closeWatch.trigger,
       select(label: string) {
         return () => {
-          reason = 'api';
+          closeWatch.markItemPress();
           announce(label);
         };
       },

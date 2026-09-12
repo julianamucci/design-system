@@ -397,9 +397,13 @@ esconde a diferença entre desistir e concluir.
 
 **E quem deduz o motivo fica AO LADO DO PRIMITIVO**, exportado pelo mesmo índice
 das peças — a docs page só repassa a palavra (`18-overlay.md` §Analytics, portão
-`motivo_sintetizado_na_docs_page`). O vanilla e o Angular já faziam assim; o
-React mudou de casa em 2026-09-12 (`ui/drawer-close-reason.ts`), e enquanto a
-dedução morava na página ela não tinha teste nenhum.
+`motivo_sintetizado_na_docs_page`). O vanilla e o Angular já faziam assim; as
+outras três mudaram de casa em 2026-09-12 — `react/ui/drawer-close-reason.ts`,
+`vue/ui/drawer/drawer.close-reason.ts` e `svelte/ui/drawer/close-reason.ts` —, e
+enquanto a dedução morava na página ela não tinha teste nenhum.
+
+O par `onDrag`/`onRelease` sai JUNTO do mesmo observador, nas três: é o
+pareamento que mantém o motivo certo, e separá-los é o defeito.
 
 **O default do Drawer é `close-button`, e ele é diferente do da família do
 Dialog de propósito**: aqui o que sobra depois de Escape, véu e arraste é o botão

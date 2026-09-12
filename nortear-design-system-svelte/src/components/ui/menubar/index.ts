@@ -16,6 +16,19 @@ import Label from "./menubar-label.svelte";
 import GroupHeading from "./menubar-group-heading.svelte";
 import Portal from "./menubar-portal.svelte";
 
+// O motivo do fechamento é contrato do componente, não da página que o usa: sai
+// pelo mesmo barril das peças. O tradutor é UM para a família inteira — o
+// ContextMenu, o DropdownMenu e o Menubar fecham pelos mesmos caminhos e
+// escrevem a mesma palavra no GA4.
+export {
+	createMenuCloseWatch,
+	menuCloseReason,
+	type MenuCloseReason,
+	type MenuCloseSignal,
+	type MenuCloseWatch,
+	type MenuCloseWatchOptions,
+} from "../menu-close-reason";
+
 export {
 	Root,
 	CheckboxItem,
