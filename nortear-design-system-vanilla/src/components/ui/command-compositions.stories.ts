@@ -349,8 +349,6 @@ export const CommandPalette: Story = {
       },
     });
 
-    let isOpen = false;
-
     const dialog = createDialog({
       trigger,
       // Título e descrição existem para o leitor de tela: o diálogo precisa de
@@ -363,7 +361,6 @@ export const CommandPalette: Story = {
       class: 'nds-command-dialog-content',
       content: cmd,
       onOpenChange: (state) => {
-        isOpen = state;
         // O Dialog reaproveita o mesmo nó a cada abertura: sem isto a paleta
         // reabria com a busca e o destaque de quando foi fechada. Cada abertura
         // começa com a busca vazia e o primeiro comando em destaque (D11).
@@ -371,18 +368,21 @@ export const CommandPalette: Story = {
       },
     });
 
-    // Fechar de fora é o mesmo caminho que a Playground do Dialog usa: a
-    // factory não expõe `close()`, e o overlay é o controle de dispensa que já
-    // existe no markup.
+    // Fechar de fora é `close()`, que informa `'api'`: a paleta foi recolhida
+    // pelo programa depois de executar o comando, e não dispensada por um
+    // clique no véu. O `document.querySelector('[data-slot="dialog-overlay"]')`
+    // que morava aqui ainda pegava o véu do PRIMEIRO diálogo do documento.
     function closePalette(): void {
-      if (isOpen) document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
+      dialog.close();
     }
 
     const onKeyDown = (e: KeyboardEvent): void => {
       if (e.key.toLowerCase() !== 'k' || !(e.metaKey || e.ctrlKey)) return;
       // Sem isto o navegador leva o Cmd+K para a barra de endereço.
       e.preventDefault();
-      if (!isOpen) trigger.click();
+      // Só ABRE, e quem sabe se já está aberta é a fábrica — o `let isOpen`
+      // daqui era um espelho do estado dela.
+      if (!dialog.isOpen()) dialog.open();
     };
     window.addEventListener('keydown', onKeyDown);
 

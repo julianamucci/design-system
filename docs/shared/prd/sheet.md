@@ -210,7 +210,7 @@ Fonte: `docs/shared/styles/nds/sheet.css`.
 
 | stack | como difere |
 |---|---|
-| vanilla | fábrica com `onClose(reason)` espelhando o Dialog, mais `close()` público e fechamento por `data-slot="sheet-close"` — `PATCHES.md#vanilla-sheet-onclose-reason` e `#vanilla-overlay-close-api` |
+| vanilla | fábrica com `onClose(reason)` espelhando o Dialog, mais `open()`/`close()`/`isOpen()` públicos, `trigger` OPCIONAL e fechamento por `data-slot="sheet-close"` — `PATCHES.md#vanilla-sheet-onclose-reason` e `#vanilla-overlay-close-api` |
 | angular | `sheetCloseReason(RdxDialogOpenChangeReason)` exportado de `ui/sheet.ts` |
 | vue | `sheetCloseReason(gesture)` + `createSheetCloseWatch()` de `ui/sheet/sheet.close-reason.ts` — a reka-ui não publica motivo, então o gesto é OBSERVADO |
 | svelte | `sheetCloseReason(signal)` + `createSheetCloseWatch()` de `ui/sheet/close-reason.ts`, e `SheetContent` ganhou `onClosePress` — a bits-ui também não publica motivo |
@@ -226,6 +226,31 @@ do primitivo e nunca inventadas na página que consome. Até 2026-09-11 o vanill
 que é a referência, tinha três palavras e a docs page dele fabricava a quarta por
 fora, fingindo um clique no véu: o contrato remendado no consumidor.
 
+**Abrir por código, e o gatilho escondido que ele aposentou (2026-09-12).** As
+quatro stacks com lib abrem pelo estado (`open`/`defaultOpen` da prop
+controlada); o vanilla não tem estado externo, tem verbos — e até esta data
+tinha só `close()`. Sem `open()`, e com `trigger` obrigatório, quem comandava o
+painel de fora precisava montar um GATILHO ESCONDIDO: um `<button>` com
+`.nds-sr-only`, `tabindex="-1"` e `aria-hidden="true"`, clicado por código só
+para a fábrica ter um alvo. Essa forma estava na story `Controlled`, no snippet
+que o painel Code publica e na `Controlled` do Dialog — um botão que existe para
+não ser visto, ensinado como padrão da casa.
+
+`SheetElement` e `DialogElement` passam a ter `open()` e `isOpen()`, e `trigger`
+passa a ser opcional. **`toggle()` do `DrawerElement` fica fora, de propósito**:
+zero consumidores medidos, e os dois candidatos reais — o Ctrl+K das duas
+paletas de comando — exigem por escrito "só ABRE" (§9 do PRD do command). Num
+painel modal o controle que abriu fica atrás do véu e inerte, então quem
+chamaria `toggle()` é sempre um atalho de teclado, e fechar modal por teclado já
+tem caminho e já tem palavra: Escape, que informa `escape`. Um `toggle()`
+fecharia o mesmo gesto como `api` e partiria a série do GA4 em duas.
+
+Junto entrou a guarda de reentrância no `open()` do Sheet (o Dialog já a tinha):
+sem ela um segundo `open()` montava outro painel, deixava o primeiro órfão no
+`body` e travava a rolagem duas vezes. O que a substituía era um `let isOpen` em
+cada consumidor — a guarda no lugar errado, e num lugar em que nenhum portão a
+via.
+
 ### Peças, por stack
 
 Migrado das guidelines de catálogo em 2026-09-07, e extraído dos exports e dos
@@ -236,7 +261,7 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | react | `Sheet`, `SheetBody`, `SheetClose`, `SheetContent`, `SheetDescription`, `SheetFooter`, `SheetHeader`, `SheetTitle`, `SheetTrigger` |
 | vue | `Sheet`, `SheetBody`, `SheetClose`, `SheetContent`, `SheetDescription`, `SheetFooter`, `SheetHeader`, `SheetTitle`, `SheetTrigger` |
 | svelte | `Sheet`, `SheetBody`, `SheetClose`, `SheetContent`, `SheetDescription`, `SheetFooter`, `SheetHeader`, `SheetOverlay`, `SheetPortal`, `SheetTitle`, `SheetTrigger`, e do mesmo índice `createSheetCloseWatch`, `sheetCloseReason` e os tipos `SheetCloseReason`/`SheetCloseSignal`/`SheetCloseWatch` |
-| vanilla | `createSheet` (devolve `SheetElement = DestroyableElement & { close() }`) |
+| vanilla | `createSheet` (devolve `SheetElement = DestroyableElement & { open(), close(), isOpen() }`) |
 | angular | `button[ndsSheetClose]`, `button[ndsSheetTrigger]`, `div[ndsSheetBody]`, `div[ndsSheetFooter]`, `div[ndsSheetHeader]`, `h1[ndsSheetTitle]` … `h6[ndsSheetTitle]` (os seis), `nds-sheet`, `ng-template[ndsSheetContent]`, `p[ndsSheetDescription]` |
 
 O índice do svelte também reexporta as formas curtas — `Body`, `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,

@@ -592,6 +592,9 @@ createDialog({ trigger, title: 'Termos de uso', description: '...', content: bod
 // Footer com action destrutiva — uso secundário; para confirmação primária use AlertDialog.`;
 
         const codeCustomClose = `const fechar = createButton({ variant: 'ghost', label: 'Fechar' });
+// O slot é o que faz o botão fechar: a delegação do painel alcança qualquer
+// descendente marcado assim, e o fechamento informa o motivo 'close-button'.
+fechar.dataset.slot = 'dialog-close';
 const voltar = createButton({ variant: 'outline', label: 'Voltar' });
 const continuar = createButton({ variant: 'default', label: 'Continuar' });
 
@@ -725,24 +728,21 @@ createDialog({
                 // desenhado o exemplo mostrava só um par comum de ações — o
                 // snippet ao lado ensinava três botões e a prévia trazia dois.
                 //
-                // Ele fecha de verdade: a fábrica não expõe fechamento
-                // programático (só `destroy()`, que encerra a instância), e o
-                // clique no véu é o caminho público. A consulta parte do
-                // PRÓPRIO botão, e não do documento — a página monta vários
-                // diálogos, e `document.querySelector` devolveria o primeiro da
-                // ordem do DOM. Na rota A a fábrica anexa véu e painel ao
-                // `body` nessa ordem, então o véu é o irmão anterior do painel.
+                // Ele fecha de verdade, e fecha pelo caminho que a própria
+                // página ENSINA: `data-slot="dialog-close"`. A delegação do
+                // painel alcança qualquer descendente com esse slot, então não
+                // há ouvinte a ligar aqui.
+                //
+                // Era um clique FALSO no véu — o botão subia até o painel,
+                // achava o irmão anterior e clicava nele. Fechava, mas
+                // reportava `reason: 'overlay'` para um gesto que foi de BOTÃO:
+                // no GA4 a série de dispensa por véu contava este clique junto
+                // com quem clicou fora do painel para sair.
                 const closeAction = createButton({
                   variant: 'ghost',
                   label: t('demonstration.labels.close'),
                 });
-                closeAction.addEventListener('click', () => {
-                  const panelEl = closeAction.closest<HTMLElement>('[data-slot="dialog-content"]');
-                  const overlayEl = panelEl?.previousElementSibling;
-                  if (overlayEl instanceof HTMLElement && overlayEl.dataset.slot === 'dialog-overlay') {
-                    overlayEl.click();
-                  }
-                });
+                closeAction.dataset.slot = 'dialog-close';
                 return buildDialogDemo({
                 demoId: 'custom-close-in-footer',
                 actionId: 'continue',

@@ -328,6 +328,26 @@ montada, só ABRE (nunca alterna) e emite `trigger: "keyboard"`. Dica que a
 página não honra é uma promessa falsa na frente de quem está aprendendo o
 componente.
 
+**A paleta não emite evento de FECHAMENTO, e isso é decisão.** Escolher um item
+já emite `command_item_select`; o fechamento que vem logo atrás é consequência
+dele, e um evento próprio contaria o mesmo gesto duas vezes. O Dialog hospedeiro
+do vanilla emite `dialog_open`/`dialog_close` quando a página os fia — a paleta
+da docs page **não** fia `onClose`, de propósito.
+
+Isso importa para ler a mudança de 2026-09-12: até ali a paleta se fechava
+disparando um clique FALSO no véu do próprio diálogo
+(`document.querySelector('[data-slot="dialog-overlay"]')?.click()`), na docs page
+e na story de composição do vanilla. Agora ela chama `close()` na fábrica, que é
+o caminho de verdade e informa o motivo `api` — "o programa recolheu o painel
+depois de executar o comando". **Nenhum valor de analytics mudou**, porque não
+havia `onClose` escutando; o que mudou foi o caminho, e com ele três defeitos
+silenciosos: o seletor pegava o véu do PRIMEIRO diálogo do documento e não o
+desta paleta, o gesto encenado não tinha autor, e a próxima página que fiasse
+`onClose` herdaria `overlay` para um fechamento que nunca foi de véu. No mesmo
+dia o Ctrl+K deixou de disparar um `MouseEvent` sintético no gatilho — chama
+`open()`, e a guarda "só ABRE" pergunta `isOpen()` à fábrica em vez de espelhar
+o estado dela numa variável de página.
+
 
 ## 10. Reconstruir do zero
 

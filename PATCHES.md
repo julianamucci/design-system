@@ -277,7 +277,7 @@ contrato, e contrato remendado no consumidor não é contrato. Junto veio o
 
 - **Arquivos:** `nortear-design-system-vanilla/src/components/ui/sheet.ts`, `nortear-design-system-vanilla/src/components/ui/dialog.ts`
 - **Categoria:** api
-- **Data:** 2026-09-11
+- **Data:** 2026-09-11, ampliado em 2026-09-12
 - **Upstream ref:** — (fábricas standalone)
 
 **Antes:**
@@ -291,15 +291,20 @@ export type SheetCloseReason = 'escape' | 'overlay' | 'close-button';
 **Depois:**
 ```ts
 export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
-export type SheetElement = DestroyableElement & { close: () => void };
-export type DialogElement = DestroyableElement & { close: () => void };
+// 2026-09-12: os verbos de ABERTURA entraram, e `trigger` virou opcional
+export type SheetElement = DestroyableElement
+  & { open: () => void; close: () => void; isOpen: () => boolean };
+export type DialogElement = DestroyableElement
+  & { open: () => void; close: () => void; isOpen: () => boolean };
 // delegação no painel: [data-slot="sheet-close"] / [data-slot="dialog-close"]
 // fecham com 'close-button'; o X carrega o slot e perdeu o ouvinte próprio
 ```
 
 **Motivo:** o vocabulário de fechamento da família é `escape | overlay | close-button | api` (`18-overlay.md` §Analytics), e o `SheetCloseReason` do vanilla — a stack de referência de contrato — tinha três palavras contra as quatro do Dialog, do Drawer e do Sheet do Angular. Sem `api`, a docs page SINTETIZAVA o motivo por fora: fingia um clique no véu para fechar pelo rodapé e sobrescrevia o motivo relatado com uma variável de página. O Dialog tinha o buraco do outro lado: a docs page ensinava marcar o Cancelar do rodapé com `data-slot="dialog-close"` e nada escutava o slot, então o padrão documentado renderizava um Cancelar inerte. Mudança aditiva; `onOpenChange(false)` continua disparando depois de `onClose`. Junto entrou a guarda de fechamento repetido no `sheet.ts` (o `dialog.ts` já a tinha).
 
-**Verificação após bump:** n/a (sem upstream). Manter os quatro motivos iguais nas cinco stacks — o portão `reason_entre_stacks_divergente` reprova a divergência, e o `reason_da_familia_divergente` reprova o Sheet ficar atrás do Dialog dentro da MESMA stack, que é por onde esta diferença passou seis semanas. `open()`/`toggle()`/`isOpen()` do `DrawerElement` seguem FORA destas duas por decisão: a abertura comandada delas ainda passa pelo gatilho interno.
+**Ampliação de 2026-09-12 — `open()`, `isOpen()` e `trigger` opcional.** A decisão anterior (`open()`/`toggle()`/`isOpen()` seguem FORA, "a abertura comandada ainda passa pelo gatilho interno") foi revista medindo o que aquele gatilho interno CUSTAVA. Ele era um `<button>` com `.nds-sr-only`, `tabindex="-1"` e `aria-hidden="true"`, clicado por código, e existia só porque `trigger` era obrigatório e a fábrica não sabia abrir — um botão que existe para não ser visto, publicado como padrão da casa em quatro pontos: a story `Controlled` do Sheet, o snippet que o painel Code dela publica, a `Controlled` do Dialog e, em outra roupa, o `MouseEvent` sintético do Ctrl+K das duas paletas de comando. `isOpen()` tem consumidor próprio (a atribuição `button`/`keyboard` da paleta) e aposenta o `let isOpen` que cada consumidor mantinha como espelho do estado da fábrica — espelho que era, na prática, a única guarda de reentrância do `open()` do Sheet, que não tinha a sua. **`toggle()` fica FORA, e agora por medição e não por omissão:** zero consumidores, e os dois candidatos reais exigem por escrito "só ABRE" (§9 do PRD do command); num painel modal o gesto que ele serviria já é o Escape, que informa `escape` — um `toggle()` fecharia o mesmo gesto como `api`.
+
+**Verificação após bump:** n/a (sem upstream). Manter os quatro motivos iguais nas cinco stacks — o portão `reason_entre_stacks_divergente` reprova a divergência, e o `reason_da_familia_divergente` reprova o Sheet ficar atrás do Dialog dentro da MESMA stack, que é por onde esta diferença passou seis semanas. A divergência de VERBOS com o `DrawerElement` (que tem `toggle()`) é deliberada e está registrada acima; ao tocar em qualquer uma das três fábricas, conferir se `toggle()` ganhou consumidor antes de reabrir a decisão.
 
 ### vanilla/overlay — desmontar não é fechar {#vanilla-desmonte-nao-fecha}
 

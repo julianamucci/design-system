@@ -215,14 +215,21 @@ function buildPaletteTrigger(withShortcut: boolean): HTMLButtonElement {
 function buildDemoPalette(register: (openByKeyboard: () => void) => void): HTMLElement {
   const trigger = buildPaletteTrigger(true);
 
-  let isOpen = false;
   // Quem abriu a paleta. O clique é o caso padrão; o atalho marca antes de abrir.
   let openedBy: 'button' | 'keyboard' = 'button';
 
-  // A factory do Dialog não expõe `close()`: o véu é o controle de dispensa que
-  // já existe no markup — mesmo caminho da story `CommandPalette`.
+  /*
+   * Fechar é `close()`, e não mais um clique FALSO no véu.
+   *
+   * O `document.querySelector('[data-slot="dialog-overlay"]')?.click()` era
+   * errado em três frentes de uma vez: pegava o véu do PRIMEIRO diálogo do
+   * documento, e não o desta paleta; encenava um gesto que ninguém fez; e
+   * informaria `'overlay'` a quem escutasse `onClose`, quando o que aconteceu
+   * foi o programa recolher o painel depois de executar o comando — que é
+   * exatamente o que `'api'` nomeia.
+   */
   function closePalette(): void {
-    if (isOpen) document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
+    dialog.close();
   }
 
   const content = trackedCommand({
@@ -246,7 +253,6 @@ function buildDemoPalette(register: (openByKeyboard: () => void) => void): HTMLE
     class: 'nds-command-dialog-content',
     content,
     onOpenChange: (open) => {
-      isOpen = open;
       if (open) {
         // O Dialog reaproveita o mesmo nó a cada abertura: cada uma começa com
         // a busca vazia e o primeiro comando em destaque (D11), e não com o que
@@ -263,13 +269,17 @@ function buildDemoPalette(register: (openByKeyboard: () => void) => void): HTMLE
   });
 
   register(() => {
-    // Só ABRE: com a paleta já aberta, o atalho não faz nada (PRD §9).
-    if (isOpen) return;
+    // Só ABRE: com a paleta já aberta, o atalho não faz nada (PRD §9). A
+    // pergunta vai à fábrica, que é quem sabe — o `let isOpen` que vivia aqui
+    // era um espelho do estado dela, alimentado por `onOpenChange`, e espelho é
+    // o que sai de sincronia sem ninguém ver.
+    if (dialog.isOpen()) return;
     openedBy = 'keyboard';
-    // Clique SEM propagação: o ouvinte do Dialog está no próprio gatilho, e o
-    // clique sintético não sobe até a seção — onde o rastreamento automático da
-    // demonstração o contaria como um clique de gente no botão.
-    trigger.dispatchEvent(new MouseEvent('click'));
+    // `open()` e não um `MouseEvent` sintético no gatilho: o clique falso
+    // existia porque a fábrica não sabia abrir, e ainda tinha de ser disparado
+    // SEM propagação para o rastreamento automático da seção não o contar como
+    // clique de gente no botão. Chamando o verbo, não há evento a conter.
+    dialog.open();
   });
 
   return dialog;
@@ -610,16 +620,19 @@ const dialog = createDialog({
   },
 });
 
-// A factory do Dialog não expõe close(): o véu é o controle de dispensa.
+// Fechar por código é close(), que informa o motivo 'api' a quem escuta
+// onClose — a paleta foi recolhida pelo programa, não dispensada por ninguém.
 function closePalette() {
-  document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
+  dialog.close();
 }
 
 // Atalho global Ctrl+K / Cmd+K — é de quem consome, componente nenhum o registra.
+// Só ABRE: com a paleta aberta o atalho não faz nada, e quem sabe se ela está
+// aberta é a própria fábrica.
 window.addEventListener('keydown', (e) => {
   if (e.key.toLowerCase() !== 'k' || !(e.metaKey || e.ctrlKey)) return;
   e.preventDefault();
-  trigger.click();
+  if (!dialog.isOpen()) dialog.open();
 });`;
 
         const codeWithGroups = `const wrap = document.createElement('div');

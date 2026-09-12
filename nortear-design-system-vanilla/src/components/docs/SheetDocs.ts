@@ -974,12 +974,16 @@ createSheet({
 export type SheetSide = 'top' | 'bottom' | 'left' | 'right';
 
 export type SheetOptions = {
-  trigger: HTMLElement;
+  trigger?: HTMLElement;
   side?: SheetSide;
   title?: string;
+  titleLevel?: 1 | 2 | 3 | 4 | 5 | 6;
   description?: string;
   content: HTMLElement;
   footer?: HTMLElement;
+  bodyLabel?: string;
+  showCloseButton?: boolean;
+  closeLabel?: string;
   onOpenChange?: (open: boolean) => void;
   onClose?: (reason: SheetCloseReason) => void;
   class?: string;
@@ -987,9 +991,11 @@ export type SheetOptions = {
 
 export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
 
-// O que a fábrica devolve fecha por código, informando 'api'.
+// O que a fábrica devolve abre e fecha por código — o fechamento informa 'api'.
 export function createSheet(options: SheetOptions): HTMLElement & {
+  open: () => void;
   close: () => void;
+  isOpen: () => boolean;
   destroy: () => void;
 };`;
 
@@ -1008,18 +1014,21 @@ export function createSheet(options: SheetOptions): HTMLElement & {
               title: 'createSheet(options)',
               cols: propsCols,
               items: [
-                { name: 'trigger',         type: 'HTMLElement',                                       defaultValue: '—',       required: 'Sim', description: 'Elemento que abre o Sheet ao receber click (geralmente Button).' },
+                { name: 'trigger',         type: 'HTMLElement',                                       defaultValue: '—',       required: 'Não', description: 'Elemento que abre o Sheet ao receber click (geralmente Button). Opcional: sem ele, o painel só abre por open(), e o anúncio do controle que comanda a abertura é de quem o montou.' },
                 { name: 'side',            type: "'top' | 'right' | 'bottom' | 'left'",               defaultValue: "'right'", required: 'Não', description: toPlainText(t('props.table.side.description')) },
                 { name: 'title',           type: 'string',                                            defaultValue: '—',       required: 'Não', description: 'Texto do SheetTitle — fonte do aria-labelledby. RECOMENDADO para acessibilidade.' },
+                { name: 'titleLevel',      type: '1 | 2 | 3 | 4 | 5 | 6',                             defaultValue: '2',       required: 'Não', description: 'Nível do cabeçalho do título. Abrindo o painel de dentro de uma seção que já está em h2, o título entra em h3 para não pular nível.' },
                 { name: 'description',     type: 'string',                                            defaultValue: '—',       required: 'Não', description: 'Texto da SheetDescription — fonte do aria-describedby. RECOMENDADO para acessibilidade.' },
                 { name: 'content',         type: 'HTMLElement',                                       defaultValue: '—',       required: 'Sim', description: 'Body do painel (formulário, lista, mensagem).' },
                 { name: 'footer',          type: 'HTMLElement',                                       defaultValue: '—',       required: 'Não', description: 'Container das ações (Cancelar + ação primária).' },
+                { name: 'bodyLabel',       type: 'string',                                            defaultValue: '—',       required: 'Não', description: 'Nome acessível do corpo que rola. O corpo entra na ordem de tabulação porque rola, e parada de teclado precisa de nome; sem nome, papel nenhum é emitido.' },
+                { name: 'showCloseButton', type: 'boolean',                                           defaultValue: 'true',    required: 'Não', description: toPlainText(t('props.table.showCloseButton.description')) + ' Desligar só faz sentido com o rodapé oferecendo uma saída explícita — Escape e o clique no véu continuam fechando.' },
+                { name: 'closeLabel',      type: 'string',                                            defaultValue: "'Fechar'", required: 'Não', description: 'Nome acessível do botão X do canto.' },
                 { name: 'onOpenChange',    type: '(open: boolean) => void',                           defaultValue: '—',       required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
                 { name: 'onClose',         type: "(reason: 'escape' | 'overlay' | 'close-button' | 'api') => void", defaultValue: '—', required: 'Não', description: 'Chamado no fechamento com o caminho que o causou: escape, overlay (clique no véu), close-button (o X do canto ou qualquer elemento marcado com data-slot="sheet-close" dentro do painel) e api (a chamada de close() no que a fábrica devolve). Dispara antes do callback de mudança.' },
                 { name: 'class',           type: 'string',                                            defaultValue: '—',       required: 'Não', description: toPlainText(t('props.table.className.description')) },
-                { name: 'open',            type: 'boolean',                                           defaultValue: '—',       required: 'Não', description: 'NÃO SUPORTADO pela factory Nortear — estado é interno (uncontrolled). Use onOpenChange para observar mudanças.' },
-                { name: 'defaultOpen',     type: 'boolean',                                           defaultValue: 'false',   required: 'Não', description: 'NÃO SUPORTADO pela factory Nortear — para abrir programaticamente, chame `trigger.click()`.' },
-                { name: 'showCloseButton', type: 'boolean',                                           defaultValue: 'true',    required: 'Não', description: 'NÃO SUPORTADO como prop — o botão X é sempre exibido. Esconda via CSS no `class` se necessário.' },
+                { name: 'open',            type: 'boolean',                                           defaultValue: '—',       required: 'Não', description: 'Não existe como OPÇÃO — o estado é interno. O que a fábrica devolve tem open(), close() e isOpen(); use onOpenChange para observar as mudanças.' },
+                { name: 'defaultOpen',     type: 'boolean',                                           defaultValue: '—',       required: 'Não', description: 'Não existe como opção. Para nascer aberto, chame open() logo após montar o painel na página.' },
               ],
             },
           ],
@@ -1087,7 +1096,7 @@ export function createSheet(options: SheetOptions): HTMLElement & {
             { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Divergência idiomática Nortear — camada 1 (notes) do padrão 3-layer.
-            { title: '', content: DOMPurify.sanitize('<strong>Divergência Nortear</strong>: a factory <code>createSheet</code> não expõe props <code>open</code>/<code>defaultOpen</code>/<code>showCloseButton</code>. Para abertura programática, mantenha referência ao <code>trigger</code> e chame <code>trigger.click()</code>. O X embutido sempre é renderizado.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Divergência Nortear</strong>: a factory <code>createSheet</code> não expõe props de estado (<code>open</code>/<code>defaultOpen</code>) — ela expõe verbos. O que ela devolve tem <code>open()</code>, <code>close()</code> e <code>isOpen()</code>, e <code>onOpenChange</code> devolve cada mudança a quem é dono do estado. <code>showCloseButton</code> é opção real, com padrão <code>true</code>.') },
           ],
         });
 

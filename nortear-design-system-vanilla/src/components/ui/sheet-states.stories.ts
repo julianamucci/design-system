@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
-import { createSheet } from './sheet';
+import { createSheet, type SheetElement } from './sheet';
 import { sheetSource, sheetSourceWith, sheetSourceControlled } from './sheet.source';
 import { createButton } from './button';
 import { clicarQuandoMontado, makeBody, makeFooter } from './sheet.fixtures';
@@ -27,7 +27,8 @@ const meta: Meta = {
         component:
           'Estados canônicos do Sheet: Closed (inicial), Open (aberto programaticamente), ' +
           'LongScrollBody (corpo mais alto que o painel), WithCloseButtonHidden (sem o X ' +
-          'do canto) e Controlled (abertura externa — a factory não expõe uma prop open).',
+          'do canto) e Controlled (abertura externa — a factory não expõe prop de estado, ' +
+          'expõe os verbos open/close/isOpen).',
       },
     },
   },
@@ -281,13 +282,13 @@ export const Controlled: Story = {
   parameters: {
     controls: { disable: true },
     docs: {
-      // A fábrica não expõe prop de estado: quem abre por código aciona o
-      // gatilho interno. Um snippet com o gatilho visível esconderia isso.
+      // A fábrica não expõe prop de estado: ela expõe VERBOS. Quem abre por
+      // código chama `open()` e acompanha o painel por `onOpenChange`.
       source: { transform: sheetSourceControlled() },
       description: {
         story:
           'Abertura comandada de fora. A factory não expõe uma prop de estado — o pai ' +
-          'aciona o gatilho interno e acompanha o painel por onOpenChange.',
+          'chama open() no que a fábrica devolve e acompanha o painel por onOpenChange.',
       },
     },
   },
@@ -296,13 +297,10 @@ export const Controlled: Story = {
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'sm';
 
-    // Gatilho interno oculto: permite reusar a factory sem expor um open()
-    // público, que nenhuma das outras stacks tem.
-    const hiddenTrigger = createButton({ variant: 'outline', label: 'internal-trigger' });
-    hiddenTrigger.classList.add('nds-sr-only');
-    hiddenTrigger.setAttribute('tabindex', '-1');
-    hiddenTrigger.setAttribute('aria-hidden', 'true');
-
+    // SEM gatilho. Era um `<button>` com `.nds-sr-only`, `tabindex="-1"` e
+    // `aria-hidden="true"` — um botão que existia para não ser visto, só porque
+    // `trigger` era obrigatório e `open()` não existia. Agora a opção é
+    // opcional e o verbo é público: o painel nasce sem gatilho nenhum.
     const body = document.createElement('div');
     body.className = 'nds-text-body nds-text-muted-foreground';
     body.textContent = 'Este painel é comandado por estado externo.';
@@ -314,24 +312,24 @@ export const Controlled: Story = {
     footer.dataset.spacing = 'md';
     footer.append(cancel, action);
 
-    let isOpen = false;
     const sheet = createSheet({
-      trigger: hiddenTrigger,
       side: 'right',
       title: 'Controlado pelo pai',
-      description: 'Abertura programática pelo gatilho interno.',
+      description: 'Abertura programática por open().',
       content: body,
       footer,
       onOpenChange: (open) => {
-        isOpen = open;
         externalBtn.dataset.open = String(open);
       },
     });
 
     const externalBtn = createButton({ variant: 'default', label: 'Abrir pelo estado externo' });
-    externalBtn.addEventListener('click', () => {
-      if (!isOpen) hiddenTrigger.click();
-    });
+    // O botão que comanda o painel não é o gatilho da fábrica: o anúncio dele é
+    // de quem o montou, e é por isso que o `aria-haspopup` vem escrito aqui.
+    externalBtn.setAttribute('aria-haspopup', 'dialog');
+    // Sem espelho de estado: a guarda de reentrância mora em `open()`, e um
+    // `if (!isOpen)` aqui seria a mesma guarda no lugar errado.
+    externalBtn.addEventListener('click', () => sheet.open());
 
     wrapper.appendChild(externalBtn);
     wrapper.appendChild(sheet);
@@ -341,6 +339,10 @@ export const Controlled: Story = {
     const canvas = within(canvasElement);
     const externo = canvas.getByRole('button', { name: /Abrir pelo estado externo/i });
 
+    // O wrapper que a fábrica devolve É o `SheetElement`: `Object.assign` põe
+    // os verbos no próprio nó, então a play alcança a API pública pelo DOM.
+    const sheetEl = canvasElement.querySelector<HTMLElement>('[data-slot="sheet"]') as SheetElement;
+
     await step('Sem gatilho visível, o painel nasce fechado', async () => {
       if (within(document.body).queryAllByRole('dialog').length > 0) {
         await userEvent.keyboard('{Escape}');
@@ -349,17 +351,43 @@ export const Controlled: Story = {
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
 
+    await step('E não existe gatilho ESCONDIDO — a forma que `open()` aposentou', async () => {
+      // Era um `<button>` com `.nds-sr-only`, `tabindex="-1"` e `aria-hidden`,
+      // clicado por código. Um botão que existe para não ser visto é ruído na
+      // árvore de acessibilidade e na leitura de quem copia a story; a prova é
+      // que o wrapper da fábrica não tem filho NENHUM.
+      await expect(sheetEl.children).toHaveLength(0);
+      await expect(sheetEl.querySelector('.nds-sr-only')).toBeNull();
+      await expect(canvasElement.querySelector('[data-slot="sheet-trigger"]')).toBeNull();
+      await expect(sheetEl.isOpen()).toBe(false);
+    });
+
     // Lido ANTES de abrir: o que o fechamento tem de devolver é isto, e não a
     // string vazia — outro painel pode estar segurando a trava.
     const overflowAntes = document.body.style.overflow;
 
-    await step('O comando externo abre o painel', async () => {
+    await step('O comando externo abre o painel — e quem abre é `open()`', async () => {
       await userEvent.click(externo);
       const panel = await waitForPortal('dialog');
       await expect(panel).toBeVisible();
       await expect(panel).toHaveAttribute('data-slot', 'sheet-content');
       // O callback devolveu o estado a quem é dono dele.
       await expect(externo).toHaveAttribute('data-open', 'true');
+      // E o verbo de leitura concorda com a tela.
+      await expect(sheetEl.isOpen()).toBe(true);
+    });
+
+    await step('`open()` com o painel aberto não empilha um segundo', async () => {
+      // A guarda de reentrância mora na fábrica, e é ela que substitui o
+      // espelho `let isOpen` que cada consumidor mantinha. Sem ela, o segundo
+      // `open()` montaria outro painel, deixaria o primeiro órfão no `body` e
+      // travaria a rolagem uma segunda vez sem o destravar correspondente.
+      sheetEl.open();
+      sheetEl.open();
+      await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(1);
+      await expect(
+        document.body.querySelectorAll('[data-slot="sheet-overlay"]'),
+      ).toHaveLength(1);
     });
 
     await step('Com o painel aberto, a página atrás não rola', async () => {
@@ -373,6 +401,7 @@ export const Controlled: Story = {
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('dialog');
       await expect(externo).toHaveAttribute('data-open', 'false');
+      await expect(sheetEl.isOpen()).toBe(false);
       await expect(document.body.style.overflow).toBe(overflowAntes);
     });
   },

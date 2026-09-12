@@ -3,10 +3,33 @@ import {
   dialogWithBodyScrollableSnippet,
   dialogWithFormSnippet,
   dialogHeadingH3Source,
+  dialogControlledSnippet,
   dialogSnippet,
   dialogSource,
   dialogSourceWith,
 } from './dialog.source';
+
+describe('dialogControladoSnippet', () => {
+  it('abre por `open()` — a fábrica não expõe prop de estado, expõe verbos', () => {
+    const code = dialogControlledSnippet();
+    expect(code).toContain('dialogo.open()');
+    expect(code).toContain('onOpenChange:');
+    expect(code).not.toContain('open: true');
+    expect(code).not.toContain('defaultOpen');
+  });
+
+  it('e NÃO ensina o gatilho escondido nem o clique falso no véu', () => {
+    // O par de defeitos que `open()`/`close()` aposentaram: um `<button>`
+    // invisível para ter em quem clicar, e um clique encenado no véu para
+    // fechar. Os dois ensinados como padrão na página que é a referência.
+    const code = dialogControlledSnippet();
+    expect(code).not.toContain('nds-sr-only');
+    expect(code).not.toContain('aria-hidden');
+    expect(code).not.toContain('dialog-overlay');
+    expect(code).not.toMatch(/\.click\(\)/);
+    expect(code).not.toContain('trigger:');
+  });
+});
 
 describe('dialogSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {

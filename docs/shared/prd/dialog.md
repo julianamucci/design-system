@@ -335,7 +335,7 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | react | `Dialog`, `DialogClose`, `DialogContent`, `DialogDescription`, `DialogFooter`, `DialogHeader`, `DialogOverlay`, `DialogPortal`, `DialogTitle`, `DialogTrigger` |
 | vue | `Dialog`, `DialogClose`, `DialogContent`, `DialogDescription`, `DialogFooter`, `DialogHeader`, `DialogOverlay`, `DialogTitle`, `DialogTrigger` |
 | svelte | `Dialog`, `DialogClose`, `DialogContent`, `DialogDescription`, `DialogFooter`, `DialogHeader`, `DialogOverlay`, `DialogPortal`, `DialogTitle`, `DialogTrigger` |
-| vanilla | `createDialog` |
+| vanilla | `createDialog` (devolve `DialogElement = DestroyableElement & { open(), close(), isOpen() }`; `trigger` é opcional) |
 | angular | `button[ndsDialogClose]`, `button[ndsDialogTrigger]`, `div[ndsDialogBody]`, `div[ndsDialogContent]`, `div[ndsDialogFooter]`, `div[ndsDialogHeader]`, `div[ndsDialogOverlay]`, `div[ndsDialog]`, `h1[ndsDialogTitle]` … `h6[ndsDialogTitle]` (os seis), `ng-template[ndsDialogPortal]`, `p[ndsDialogDescription]` |
 
 O índice do svelte também reexporta as formas curtas — `Close`, `Content`, `Description`, `Footer`, `Header`, `Overlay`, `Portal`, `Root`, `Title`, `Trigger` —,
@@ -478,6 +478,17 @@ avisa só `onOpenChange(false)`, que descreve estado e não gesto. Portão:
 callbacks de limpeza contém a palavra `onClose`, todos chamam uma função local,
 e por isso a primeira versão do portão, que procurava a palavra, achava zero com
 três fábricas defeituosas.
+
+**MUDANÇA DE CONTRATO, 2026-09-12: o "Fechar" próprio do rodapé relata
+`close-button`, e não mais `overlay`.** A variante `customCloseInFooter` da docs
+page do vanilla montava um botão de fechar que, ao ser clicado, subia até o
+painel, achava o véu irmão e CLICAVA nele. Fechava, mas relatava um gesto de véu
+para um clique que foi de botão, e na série do GA4 aquela dispensa contava junto
+com quem clicou fora do painel para sair. O botão passa a levar
+`data-slot="dialog-close"` — o caminho que a própria página ENSINA no snippet ao
+lado, e que a delegação do painel escuta desde 2026-09-11. Mesma raiz que o
+clique falso no véu das duas paletas de comando, retirado no mesmo dia: aquelas
+não escutavam `onClose`, então nenhum evento mudou de valor ali.
 
 **Desde 2026-09-10 quem cobra o campo é o TIPO.** Nas cinco `analytics.ts`,
 `dialog_open`, `dialog_close` e `dialog_confirm` exigem `trigger_id` e proíbem

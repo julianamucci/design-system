@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createDialog } from './dialog';
-import { dialogSource, dialogSourceWith } from './dialog.source';
+import { dialogSource, dialogSourceWith, dialogSourceControlled } from './dialog.source';
 import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
@@ -32,7 +32,7 @@ const meta: Meta = {
       source: { transform: dialogSource },
       description: {
         component:
-          'Configurações canônicas do Dialog: closed, open, sem botão Close e controlled (abertura programática via referência ao triggerEl).',
+          'Configurações canônicas do Dialog: closed, open, sem botão Close e controlled (abertura programática por open(), sem gatilho).',
       },
     },
   },
@@ -205,18 +205,17 @@ export const Controlled: Story = {
     // mostraria um diálogo que ninguém acompanha de fora.
     docs: {
       source: {
-        transform: dialogSourceWith({
-          triggerLabel: 'Abrir',
+        transform: dialogSourceControlled({
+          triggerLabel: 'Open programmatically',
           title: 'Controlado pelo pai',
-          description: 'Abertura programática via referência ao triggerEl.',
+          description: 'Abertura programática por open().',
           bodyText: 'Este diálogo é comandado por estado externo.',
           footer: [{ label: 'Cancelar', variant: 'outline' }, { label: 'Confirmar' }],
-          onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
         }),
       },
       description: {
         story:
-          'Abertura controlada externamente. O triggerEl interno do dialog fica escondido e a abertura acontece via `triggerEl.click()` a partir de um botão externo. `onOpenChange` rastreia o estado para o pai.',
+          'Abertura controlada externamente. A factory não expõe prop de estado — o botão de fora chama `open()` no que ela devolve, e `onOpenChange` rastreia o estado para o pai.',
       },
     },
   },
@@ -225,31 +224,22 @@ export const Controlled: Story = {
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'md';
 
-    // Trigger interno do dialog (oculto): permite reuso da factory createDialog
-    // sem expor um método open() público — o pai controla via .click().
-    // `nds-sr-only` e não `sr-only`: a classe sem prefixo não existe mais no
-    // CSS, e o gatilho "escondido" aparecia na tela ao lado do externo.
-    const hiddenTrigger = createButton({ variant: 'outline', label: 'internal-trigger' });
-    hiddenTrigger.classList.add('nds-sr-only');
-    hiddenTrigger.setAttribute('tabindex', '-1');
-    hiddenTrigger.setAttribute('aria-hidden', 'true');
-
+    // SEM gatilho. Era um `<button>` com `.nds-sr-only`, `tabindex="-1"` e
+    // `aria-hidden="true"` — um botão que existia para não ser visto, só porque
+    // `trigger` era obrigatório e `open()` não existia.
     const content = document.createElement('div');
     content.className = 'nds-text-body nds-text-muted-foreground';
     content.textContent = 'Este diálogo é comandado por estado externo.';
 
-    let isOpen = false;
     const dialog = createDialog({
-      trigger: hiddenTrigger,
       title: 'Controlado pelo pai',
-      description: 'Abertura programática via referência ao triggerEl.',
+      description: 'Abertura programática por open().',
       content,
       footer: [
         createButton({ variant: 'outline', label: 'Cancelar' }),
         createButton({ variant: 'default', label: 'Confirmar' }),
       ],
       onOpenChange: (open) => {
-        isOpen = open;
         externalBtn.dataset.open = String(open);
         spyControlled(open);
       },
@@ -257,9 +247,11 @@ export const Controlled: Story = {
 
     const externalBtn = createButton({ variant: 'default', label: 'Open programmatically' });
     externalBtn.dataset.open = 'false';
-    externalBtn.addEventListener('click', () => {
-      if (!isOpen) hiddenTrigger.click();
-    });
+    // O botão que comanda o diálogo não é o gatilho da fábrica: o anúncio é de
+    // quem o montou.
+    externalBtn.setAttribute('aria-haspopup', 'dialog');
+    // Sem espelho de estado: a guarda de "já aberto" mora em `open()`.
+    externalBtn.addEventListener('click', () => dialog.open());
 
     wrapper.appendChild(externalBtn);
     wrapper.appendChild(dialog);
@@ -275,13 +267,14 @@ export const Controlled: Story = {
       await expect(externo).toHaveAttribute('data-open', 'false');
     });
 
-    await step('O gatilho interno está fora da tela e fora do teclado', async () => {
-      // Ele existe só para a factory ter um alvo: visível ou tabulável, seria
-      // um segundo botão sem sentido para quem usa.
-      const interno = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"] > button')!;
-      await expect(interno).toHaveClass('nds-sr-only');
-      await expect(interno).toHaveAttribute('tabindex', '-1');
-      await expect(interno).toHaveAttribute('aria-hidden', 'true');
+    await step('NÃO existe gatilho escondido — a forma que `open()` aposentou', async () => {
+      // Era um `<button>` com `.nds-sr-only`, `tabindex="-1"` e `aria-hidden`,
+      // que existia só para a factory ter um alvo em que clicar. A prova é que
+      // o wrapper da fábrica não tem filho nenhum.
+      const dialogEl = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
+      await expect(dialogEl.children).toHaveLength(0);
+      await expect(dialogEl.querySelector('.nds-sr-only')).toBeNull();
+      await expect(canvasElement.querySelector('[data-slot="dialog-trigger"]')).toBeNull();
     });
 
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {

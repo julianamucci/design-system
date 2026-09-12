@@ -84,20 +84,49 @@ export type SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
  * `close()` é o caminho público para fechar por decisão de dentro — a ação
  * primária do rodapé que aplica e sai, um fluxo que terminou, uma rota que
  * mudou. Ele informa `'api'`, que é o que separa, no analytics, o painel que a
- * pessoa dispensou do que o programa recolheu. Mesma forma de `DrawerElement`.
+ * pessoa dispensou do que o programa recolheu.
  *
- * Só `close()`: `open()` e `toggle()` do Drawer não entram aqui porque a
- * abertura comandada desta fábrica ainda passa pelo gatilho interno (é o que a
- * story `Controlled` e o snippet dela documentam), e API nova sem consumidor é
- * superfície para manter de graça.
+ * `open()` e `isOpen()` entraram em 2026-09-12, e a medição que os trouxe é a
+ * do CONSUMIDOR, não a da simetria: sem abrir por código, quem comanda o painel
+ * de fora tinha de montar um GATILHO ESCONDIDO — um `<button>` com
+ * `.nds-sr-only`, `tabindex="-1"` e `aria-hidden="true"` — só para ter em quem
+ * clicar. Essa forma estava na story `Controlled`, no snippet que o painel Code
+ * publica e na `Controlled` do Dialog: um botão que existe para não ser visto,
+ * ensinado como padrão.
+ *
+ * `toggle()` do `DrawerElement` NÃO entra, e a divergência é deliberada — zero
+ * consumidores medidos, e os dois candidatos reais (o Ctrl+K das duas paletas
+ * de comando) exigem por escrito "só ABRE, com a paleta aberta o atalho não faz
+ * nada" (PRD do command §9). Num painel MODAL o controle que abriu fica atrás
+ * do véu e inerte, então quem chamaria `toggle()` é sempre um atalho de
+ * teclado — e fechar modal por atalho já tem nome e já tem caminho: Escape, que
+ * informa `'escape'`. Um `toggle()` fecharia o mesmo gesto como `'api'`,
+ * partindo a série do GA4 em duas por um verbo que ninguém pediu.
  */
 export type SheetElement = DestroyableElement & {
+  /** Abre o painel. Sem efeito se já estiver aberto. */
+  open: () => void;
   /** Fecha o painel informando `'api'`. Sem efeito se já estiver fechado. */
   close: () => void;
+  /** O painel está na tela agora? */
+  isOpen: () => boolean;
 };
 
 export type SheetOptions = {
-  trigger: HTMLElement;
+  /**
+   * Elemento que abre o painel ao ser clicado. OPCIONAL desde 2026-09-12.
+   *
+   * Era obrigatório, e essa obrigação era a única razão de existir do gatilho
+   * escondido: quem comandava o painel de fora não queria gatilho nenhum —
+   * queria abrir por código, e não havia como. Com `open()` público, o painel
+   * sem gatilho é um caso legítimo, e o `<button>` invisível deixa de ser
+   * ensinado como padrão.
+   *
+   * Quando o gatilho existe, ele recebe `aria-haspopup="dialog"`. Quando não
+   * existe, o anúncio do controle é de quem chama `open()` — a fábrica não tem
+   * como saber qual elemento da página comanda o painel.
+   */
+  trigger?: HTMLElement;
   side?: SheetSide;
   title?: string;
   /**
@@ -256,10 +285,11 @@ export function createSheet(options: SheetOptions): SheetElement {
   // O gatilho anuncia que existe um diálogo por trás dele. As libs headless das
   // outras stacks emitem os dois atributos; aqui não existia lib para emitir, e
   // o leitor de tela ouvia um botão comum — WAI-ARIA APG para diálogo modal.
-  trigger.setAttribute('aria-haspopup', 'dialog');
-  trigger.dataset.slot = 'sheet-trigger';
-
-  wrapper.appendChild(trigger);
+  if (trigger) {
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.dataset.slot = 'sheet-trigger';
+    wrapper.appendChild(trigger);
+  }
 
   /*
    * O que a PILHA de painéis chama para tirar este daqui da tela.
@@ -282,7 +312,26 @@ export function createSheet(options: SheetOptions): SheetElement {
     close: () => closeWithReason('api'),
   };
 
+  function isOpen(): boolean {
+    return panelEl !== null;
+  }
+
   function open(): void {
+    /*
+     * Já aberto: um segundo `open()` montaria um painel novo, perderia a
+     * referência do anterior — que ficaria órfão no `body`, com o véu por cima
+     * do painel vivo — e travaria a rolagem uma segunda vez sem o destravar
+     * correspondente. `closeOutrosPanels` NÃO cobre este caso: ele pula o
+     * próprio registro, de propósito.
+     *
+     * A guarda faltava aqui, e o que a substituía era o consumidor: a story
+     * `Controlled` escrevia `if (!isOpen) gatilho.click()` com um espelho de
+     * estado próprio. Espelho de estado em quem consome é a guarda no lugar
+     * errado — e agora que `open()` é público, o lugar errado seria a única
+     * guarda. O `dialog.ts` desta stack já a tinha.
+     */
+    if (isOpen()) return;
+
     // O foco anterior é lido ANTES de fechar os outros, e a ordem passou a
     // importar: fechar o painel A devolve o foco ao gatilho DELE, e lendo
     // depois este painel adotaria aquele gatilho como alvo de retorno — B
@@ -456,7 +505,7 @@ export function createSheet(options: SheetOptions): SheetElement {
     }
   }
 
-  trigger.addEventListener('click', open);
+  trigger?.addEventListener('click', open);
 
   /*
    * O painel mora em `document.body`, não dentro do wrapper: quem tira o
@@ -478,9 +527,11 @@ export function createSheet(options: SheetOptions): SheetElement {
   return tornarDestruivel(
     wrapper,
     Object.assign(wrapper, {
+      open,
       // Fechar por código informa `'api'`: quem escuta `onClose` separa o
       // painel que a pessoa dispensou do que o programa recolheu.
       close: () => closeWithReason('api'),
+      isOpen,
     }),
     () => {
       // DESMONTE NÃO É FECHAMENTO: sai o painel e sai o estado, não sai motivo.

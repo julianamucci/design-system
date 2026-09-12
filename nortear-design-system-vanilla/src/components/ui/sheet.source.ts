@@ -313,9 +313,15 @@ painel.destroy();`
 /**
  * Abertura comandada de fora.
  *
- * Forma própria porque a fábrica NÃO expõe uma prop de estado: quem abre por
- * código aciona o gatilho interno e acompanha o painel por `onOpenChange`. Um
- * snippet com o gatilho visível esconderia exatamente isso.
+ * Forma própria porque a fábrica NÃO expõe uma prop de estado: ela expõe
+ * VERBOS. Quem abre por código chama `open()` e acompanha o painel por
+ * `onOpenChange`.
+ *
+ * Até 2026-09-12 este snippet ensinava um GATILHO ESCONDIDO — um `<button>` com
+ * `.nds-sr-only`, `tabindex="-1"` e `aria-hidden="true"`, clicado por código —,
+ * e ensinava porque a fábrica não sabia abrir e `trigger` era obrigatório. Um
+ * botão que existe para não ser visto é ruído na árvore de acessibilidade, e
+ * era o snippet que o publicava como padrão da casa.
  */
 export function sheetControlledSnippet(o: SheetSnippetOptions = {}): string {
   const body = bodyOf(o);
@@ -325,24 +331,23 @@ export function sheetControlledSnippet(o: SheetSnippetOptions = {}): string {
       .filter((line, i, all) => all.indexOf(line) === i)
       .join('\n'),
     body.block,
-    `// O gatilho da fábrica continua existindo, fora da tela e fora do percurso do
-// teclado: é por ele que a abertura programática passa.
-const gatilhoInterno = createButton({ variant: 'outline', label: 'Abrir painel' });
-gatilhoInterno.classList.add('nds-sr-only');
-gatilhoInterno.setAttribute('tabindex', '-1');
-gatilhoInterno.setAttribute('aria-hidden', 'true');`,
-    `let aberto = false;
+    `// Sem \`trigger\`: quem comanda o painel é o botão de fora, e a opção é
+// opcional justamente para não exigir um gatilho que ninguém vai clicar.
 const painel = ${callLine('createSheet', [
-      'trigger: gatilhoInterno,',
       `title: ${text(o.title ?? 'Controlado pelo pai')},`,
-      `description: ${text(o.description ?? 'Abertura programática pelo gatilho interno.')},`,
+      `description: ${text(o.description ?? 'Abertura programática por open().')},`,
       'content: corpo,',
-      'onOpenChange: (estado) => { aberto = estado; },',
+      'onOpenChange: (estado) => sincronizarEstadoExterno(estado),',
     ])};`,
     `const externo = createButton({ label: ${text(o.triggerLabel ?? 'Abrir pelo estado externo')} });
-externo.addEventListener('click', () => {
-  if (!aberto) gatilhoInterno.click();
-});`,
+// O anúncio do controle é de quem o montou: a fábrica não sabe qual elemento
+// da página comanda o painel.
+externo.setAttribute('aria-haspopup', 'dialog');
+// Sem espelho de estado: a guarda de "já aberto" mora em \`open()\`.
+externo.addEventListener('click', () => painel.open());`,
+    `// E para fechar por código, sem fingir um clique no véu:
+// painel.close();   // informa o motivo 'api'
+// painel.isOpen();  // true enquanto o painel está na tela`,
     `document.querySelector('#app')?.append(externo, painel);`,
   );
 }

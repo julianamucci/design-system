@@ -133,6 +133,53 @@ corpo.textContent = ${text(o.bodyText ?? 'Conteúdo do corpo do diálogo (formul
 }
 
 /**
+ * Abertura comandada de fora.
+ *
+ * Forma própria porque a fábrica NÃO expõe prop de estado: ela expõe VERBOS.
+ * Até 2026-09-12 esta story era desenhada com um GATILHO ESCONDIDO — um
+ * `<button>` com `.nds-sr-only`, `tabindex="-1"` e `aria-hidden="true"`,
+ * clicado por código — e o snippet ao lado mostrava um gatilho comum, que é
+ * outra coisa ainda. Agora os dois mostram o mesmo: sem gatilho, com `open()`.
+ */
+export function dialogControlledSnippet(o: DialogSnippetOptions = {}): string {
+  return snippet(
+    IMPORTS_BASE,
+    `const corpo = document.createElement('p');
+corpo.className = 'nds-text-body nds-text-muted-foreground';
+corpo.textContent = ${text(o.bodyText ?? 'Este diálogo é comandado por estado externo.')};`,
+    `// Sem \`trigger\`: quem comanda o diálogo é o botão de fora, e a opção é
+// opcional justamente para não exigir um gatilho que ninguém vai clicar.
+const dialogo = ${callLine(
+      'createDialog',
+      options([
+        ['title', text(o.title ?? 'Controlado pelo pai')],
+        ['description', text(o.description ?? 'Abertura programática por open().')],
+        ['content', 'corpo'],
+        ['footer', footer(actionsOf(o))],
+        ['onOpenChange', '(aberto) => sincronizarEstadoExterno(aberto)'],
+      ]),
+    )};`,
+    `const externo = createButton({ label: ${text(o.triggerLabel ?? 'Open programmatically')} });
+// O anúncio do controle é de quem o montou: a fábrica não sabe qual elemento
+// da página comanda o diálogo.
+externo.setAttribute('aria-haspopup', 'dialog');
+// Sem espelho de estado: a guarda de "já aberto" mora em \`open()\`.
+externo.addEventListener('click', () => dialogo.open());`,
+    `// E para fechar por código, sem fingir um clique no véu:
+// dialogo.close();   // informa o motivo 'api'
+// dialogo.isOpen();  // true enquanto o painel está na tela`,
+    `document.querySelector('#app')?.append(externo, dialogo);`,
+  );
+}
+
+/** Transform de story para a abertura comandada de fora. */
+export function dialogSourceControlled(
+  fixas: DialogSnippetOptions = {},
+): SourceTransform<DialogSnippetOptions> {
+  return (_gerado, ctx) => dialogControlledSnippet({ ...ctx.args, ...fixas });
+}
+
+/**
  * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls
  * do Playground; nas stories sem args cai nos padrões da fábrica, que é o uso
  * canônico do componente.

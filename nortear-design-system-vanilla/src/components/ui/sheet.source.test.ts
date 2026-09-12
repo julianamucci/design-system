@@ -246,12 +246,26 @@ describe('sheetHeadingH3Source', () => {
 });
 
 describe('sheetControladoSnippet', () => {
-  it('abre pelo gatilho interno — a fábrica não expõe prop de estado', () => {
+  it('abre por `open()` — a fábrica não expõe prop de estado, expõe verbos', () => {
     const code = sheetControlledSnippet();
-    expect(code).toContain("gatilhoInterno.classList.add('nds-sr-only');");
-    expect(code).toContain('gatilhoInterno.click();');
-    expect(code).toContain('onOpenChange: (estado) => { aberto = estado; }');
+    expect(code).toContain('painel.open()');
+    expect(code).toContain('onOpenChange:');
+    // Prop de estado continua não existindo, e o snippet não pode inventá-la.
     expect(code).not.toContain('open: true');
+    expect(code).not.toContain('defaultOpen');
+  });
+
+  it('e NÃO ensina mais o gatilho escondido', () => {
+    // O snippet publicava um `<button>` com `.nds-sr-only`, `tabindex="-1"` e
+    // `aria-hidden="true"` só para ter em quem clicar — a forma que `open()`
+    // aposentou. Quem copiasse levaria o botão invisível junto.
+    const code = sheetControlledSnippet();
+    expect(code).not.toContain('nds-sr-only');
+    expect(code).not.toContain('aria-hidden');
+    expect(code).not.toContain('gatilhoInterno');
+    expect(code).not.toMatch(/\.click\(\)/);
+    // E sem gatilho nenhum: a opção `trigger` deixou de ser obrigatória.
+    expect(code).not.toContain('trigger:');
   });
 });
 

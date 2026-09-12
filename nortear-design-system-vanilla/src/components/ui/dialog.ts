@@ -84,15 +84,44 @@ export type DialogCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
  * analytics o painel dispensado pela pessoa do recolhido pelo programa. Até
  * 2026-09-11 só havia `destroy()`, que encerra a INSTÂNCIA: quem só queria
  * fechar tinha de fingir um clique no véu, e as stories diziam isso por
- * extenso. Mesma forma de `DrawerElement` e de `SheetElement`.
+ * extenso.
+ *
+ * `open()` e `isOpen()` entraram em 2026-09-12, pela mesma medição que os levou
+ * ao `SheetElement`: sem eles, abrir por código exigia um GATILHO ESCONDIDO
+ * (`.nds-sr-only` + `tabindex="-1"` + `aria-hidden="true"`) só para ter em quem
+ * clicar. Eram QUATRO consumidores nesta stack — a `Controlled` do Sheet e a do
+ * Dialog, e o Ctrl+K das duas paletas de comando, que disparavam um
+ * `MouseEvent` sintético no gatilho. `isOpen()` tem consumidor próprio: a
+ * paleta da docs page atribui a abertura a `button` ou `keyboard`, e precisa
+ * saber se a abertura de fato vai acontecer antes de marcar a atribuição.
+ *
+ * `toggle()` do `DrawerElement` fica FORA, aqui e no Sheet: zero consumidores,
+ * e num painel modal o gesto que ele serviria — atalho de teclado fechando o
+ * painel — já é o Escape, que informa `'escape'`. Ver o docblock de
+ * `SheetElement` para a medição inteira.
  */
 export type DialogElement = DestroyableElement & {
+  /** Abre o painel. Sem efeito se já estiver aberto. */
+  open: () => void;
   /** Fecha o painel informando `'api'`. Sem efeito se já estiver fechado. */
   close: () => void;
+  /** O painel está na tela agora? */
+  isOpen: () => boolean;
 };
 
 export type DialogOptions = {
-  trigger: HTMLElement;
+  /**
+   * Elemento que abre o diálogo ao ser clicado. OPCIONAL desde 2026-09-12.
+   *
+   * Era obrigatório, e a obrigação é o que fabricava o gatilho escondido: quem
+   * comandava o diálogo de fora não queria gatilho, queria abrir por código.
+   * Com `open()` público, diálogo sem gatilho é caso legítimo.
+   *
+   * Quando existe, ele recebe `aria-haspopup="dialog"` e o `aria-expanded` que
+   * acompanha a abertura. Quando não existe, o anúncio do controle é de quem
+   * chama `open()`.
+   */
+  trigger?: HTMLElement;
   title: string;
   /**
    * Nível do cabeçalho do título, de 1 a 6. Padrão `2`.
@@ -222,10 +251,16 @@ export function createDialog(options: DialogOptions): DialogElement {
   // O gatilho abre um diálogo: anuncia isso ANTES do clique, e o aria-expanded
   // acompanha a abertura — é o que base-ui, reka-ui, bits-ui e radix-ng fazem
   // sozinhas, e o que o AlertDialog desta stack já escrevia à mão.
-  trigger.dataset.slot = 'dialog-trigger';
-  trigger.setAttribute('aria-haspopup', 'dialog');
-  trigger.setAttribute('aria-expanded', 'false');
-  wrapper.appendChild(trigger);
+  if (trigger) {
+    trigger.dataset.slot = 'dialog-trigger';
+    trigger.setAttribute('aria-haspopup', 'dialog');
+    trigger.setAttribute('aria-expanded', 'false');
+    wrapper.appendChild(trigger);
+  }
+
+  function isOpen(): boolean {
+    return panelEl !== null;
+  }
 
   function open(): void {
     // Já aberto: um segundo open() montaria um painel novo, perderia a
@@ -355,7 +390,7 @@ export function createDialog(options: DialogOptions): DialogElement {
     // Popover, e é ela que faz diálogos empilhados destravarem só no último.
     lockBodyScroll();
 
-    trigger.setAttribute('aria-expanded', 'true');
+    trigger?.setAttribute('aria-expanded', 'true');
     document.addEventListener('keydown', handleKeydown);
     onOpenChange?.(true);
   }
@@ -376,7 +411,7 @@ export function createDialog(options: DialogOptions): DialogElement {
   function desmontarPanel(): void {
     if (!panelEl && !overlayEl) return;
     unlockBodyScroll();
-    trigger.setAttribute('aria-expanded', 'false');
+    trigger?.setAttribute('aria-expanded', 'false');
     if (overlayEl) overlayEl.dataset.state = 'closed';
     if (panelEl) panelEl.dataset.state = 'closed';
     overlayEl?.remove();
@@ -413,7 +448,7 @@ export function createDialog(options: DialogOptions): DialogElement {
     }
   }
 
-  trigger.addEventListener('click', open);
+  trigger?.addEventListener('click', open);
 
   // Limpeza quando o wrapper sai do DOM (troca de story, desmonte de página).
   // Forma compartilhada: `destroy()` público, idempotente e disparado sozinho.
@@ -424,7 +459,9 @@ export function createDialog(options: DialogOptions): DialogElement {
   return tornarDestruivel(
     wrapper,
     Object.assign(wrapper, {
+      open,
       close: () => closeWithReason('api'),
+      isOpen,
     }),
     () => {
       /*
