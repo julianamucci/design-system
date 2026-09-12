@@ -1,7 +1,7 @@
 {
   "radius": {
     "$type": "number",
-    "$value": 14
+    "$value": 24
   },
   "radius-none": {
     "$type": "number",
@@ -9,23 +9,23 @@
   },
   "radius-xs": {
     "$type": "number",
-    "$value": 8
+    "$value": 18
   },
   "radius-sm": {
     "$type": "number",
-    "$value": 10
+    "$value": 20
   },
   "radius-md": {
     "$type": "number",
-    "$value": 12
+    "$value": 22
   },
   "radius-lg": {
     "$type": "number",
-    "$value": 14
+    "$value": 24
   },
   "radius-xl": {
     "$type": "number",
-    "$value": 18
+    "$value": 28
   },
   "radius-full": {
     "$type": "number",
@@ -33,19 +33,19 @@
   },
   "radius-button": {
     "$type": "number",
-    "$value": 14
+    "$value": 24
   },
   "radius-input": {
     "$type": "number",
-    "$value": 14
+    "$value": 24
   },
   "radius-alert": {
     "$type": "number",
-    "$value": 14
+    "$value": 24
   },
   "radius-card": {
     "$type": "number",
-    "$value": 24
+    "$value": 28
   },
   "radius-badge": {
     "$type": "number",

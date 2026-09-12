@@ -84,7 +84,7 @@
 .nds-tabs-trigger[data-state="active"] {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+  box-shadow: var(--elevation-xs);
 }
 
 .nds-tabs-trigger:disabled {
@@ -141,7 +141,7 @@
 .nds-tabs-trigger[data-active]:not([data-active="false"]) {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+  box-shadow: var(--elevation-xs);
 }
 
 .nds-tabs-trigger[aria-disabled="true"] {

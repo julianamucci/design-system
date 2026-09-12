@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed } from '@angular/core';
 import { NdsFoundationPage } from './shared/FoundationPage';
 import { useTranslation } from '@/lib/i18n';
 import translations from '@shared/content/foundations/elevacao-bordas-sombras/translations.json';
@@ -6,15 +6,12 @@ import translations from '@shared/content/foundations/elevacao-bordas-sombras/tr
 /**
  * Elevação, Bordas e Sombras — fundamento COM desenho próprio.
  *
- * Três amostras: os cinco degraus de sombra, os sete tokens de radius e o par
+ * Três amostras: a escada de sombra, os sete tokens de radius e o par
  * certo/errado de raio aninhado (Rᵢ = Rₑ − E).
  *
  * Sombra e raio já têm utilitário `.nds-*` no CSS compartilhado
  * (`nds-shadow-*`, `nds-rounded-*`), então nenhuma amostra precisa de style
- * inline nem de classe nova: cada uma escolhe a classe do seu degrau. O único
- * degrau que faltava era o `nds-shadow-xl` (nível 4, tooltip), criado em
- * `colors.css` junto dos irmãos — esta é a única página que desenha os cinco
- * lado a lado.
+ * inline nem de classe nova: cada uma escolhe a classe do seu degrau.
  *
  * A lista de classes vem INTEIRA do TypeScript, sem `class="…"` estático no
  * mesmo elemento. Misturar atributo estático com `[class]` depende de uma
@@ -26,7 +23,7 @@ import translations from '@shared/content/foundations/elevacao-bordas-sombras/tr
  * `nds-rounded-lg` — é o utilitário do valor que as outras stacks escrevem como
  * `var(--radius)`.
  */
-const { t } = useTranslation(translations as Record<string, unknown>);
+const { t, locale } = useTranslation(translations as Record<string, unknown>);
 
 const CARTAO_DE_SOMBRA =
   'nds-bg-card nds-border-soft nds-rounded-lg nds-p-4 nds-text-caption nds-text-muted-foreground nds-text-center';
@@ -34,20 +31,52 @@ const CARTAO_DE_SOMBRA =
 const CARTAO_DE_RAIO =
   'nds-bg-primary-soft nds-border-primary-soft nds-p-6 nds-text-caption nds-text-muted-foreground nds-text-center';
 
-/** Degrau da escada de elevação. */
+/**
+ * A escada de elevação do mostruário é DERIVADA de `elevation.rows` do conteúdo
+ * compartilhado — nunca recravada aqui. A lista cravada tinha quatro degraus e o
+ * conteúdo passou a seis em 2026-09-12 (entrou `--elevation-xs`, relevo de
+ * controle): a tabela mostrava o degrau novo e o mostruário não, e a página se
+ * contradizia. Ordem, rótulo e token saem todos da mesma fonte.
+ *
+ * O `token` do nível plano é o travessão (`—`) no conteúdo; aqui ele vira
+ * `null`, que é o que distingue "sem sombra" de "sombra deste token".
+ */
 interface ElevationDegrau {
+  /** Chave da linha no conteúdo — `plano`, `controle`, `card`, … */
+  key: string;
+  /** Rótulo traduzido (`elevation.rows.<key>.level`). */
   label: string;
-  token: string;
+  /** Custom property da sombra, ou `null` no nível plano. */
+  token: string | null;
+  /** Classe pronta do cartão, degrau incluído. */
   classes: string;
 }
 
-const ELEVACOES: ElevationDegrau[] = [
-  { label: '0 — Plano', token: '—', classes: `${CARTAO_DE_SOMBRA} nds-shadow-none` },
-  { label: '1 — Card', token: '--elevation-sm', classes: `${CARTAO_DE_SOMBRA} nds-shadow-sm` },
-  { label: '2 — Dropdown', token: '--elevation-md', classes: `${CARTAO_DE_SOMBRA} nds-shadow-md` },
-  { label: '3 — Dialog', token: '--elevation-lg', classes: `${CARTAO_DE_SOMBRA} nds-shadow-lg` },
-  { label: '4 — Tooltip', token: '--elevation-xl', classes: `${CARTAO_DE_SOMBRA} nds-shadow-xl` },
-];
+/** Classe utilitária que pinta o degrau: `--elevation-md` → `.nds-shadow-md`. */
+function shadowClass(token: string | null): string {
+  return token ? `nds-shadow-${token.replace('--elevation-', '')}` : 'nds-shadow-none';
+}
+
+// A ORDEM e o conjunto de degraus vêm das chaves do dicionário; os textos vêm
+// do `t()`, que já resolve locale e overrides. `computed` e não constante: o
+// rótulo é traduzido, e a barra de idioma tem de repintar a escada.
+const ELEVACOES = computed<ElevationDegrau[]>(() => {
+  const dict = translations as Record<
+    string,
+    { elevation?: { rows?: Record<string, unknown> } } | undefined
+  >;
+  const rows = (dict[locale()] ?? dict['pt-BR'])?.elevation?.rows ?? {};
+  return Object.keys(rows).map((key) => {
+    const token = t(`elevation.rows.${key}.token`);
+    const shadow = token.startsWith('--') ? token : null;
+    return {
+      key,
+      label: t(`elevation.rows.${key}.level`),
+      token: shadow,
+      classes: `${CARTAO_DE_SOMBRA} ${shadowClass(shadow)}`,
+    };
+  });
+});
 
 /** Degrau da escala de radius. `label` é o que a amostra imprime. */
 interface DegrauDeRadius {
@@ -108,10 +137,10 @@ const ANINHAMENTOS: RaioNesting[] = [
         <div class="nds-stack" data-spacing="sm">
           <h3 class="nds-text-body nds-font-medium">{{ t('specimens.shadows') }}</h3>
           <div class="nds-grid nds-elevation-grid nds-p-6 nds-rounded-lg" data-spacing="lg">
-            @for (level of elevacoes; track level.label) {
-              <div [class]="level.classes">
+            @for (level of elevacoes(); track level.key) {
+              <div [class]="level.classes" [attr.data-elevation-step]="level.key">
                 <div class="nds-font-medium nds-text-foreground nds-mb-1">{{ level.label }}</div>
-                <code class="nds-specimen-token-code">{{ level.token }}</code>
+                <code class="nds-specimen-token-code">{{ level.token ?? '—' }}</code>
               </div>
             }
           </div>

@@ -5942,6 +5942,10 @@
   "Elevacao": {
     "modes": {
       "light": {
+        "elevation-xs": {
+          "$type": "string",
+          "$value": "0px 1px 2px 0px rgba(0, 0, 0, 0.05)"
+        },
         "elevation-sm": {
           "$type": "string",
           "$value": "0px 1px 2px 0px rgba(0, 0, 0, 0.1)"
@@ -5960,6 +5964,10 @@
         }
       },
       "dark": {
+        "elevation-xs": {
+          "$type": "string",
+          "$value": "0px 1px 2px 0px rgba(0, 0, 0, 0.15)"
+        },
         "elevation-sm": {
           "$type": "string",
           "$value": "0px 1px 2px 0px rgba(0, 0, 0, 0.3)"

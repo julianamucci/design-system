@@ -21,7 +21,7 @@
     },
     "elevation": {
       "title": "Sistema de elevação",
-      "subtitle": "Cinco níveis nomeados pelo papel, não pelo valor. Use o nível apropriado ao contexto de UI, não à intensidade visual desejada.",
+      "subtitle": "Seis níveis nomeados pelo papel, não pelo valor. Escolha o nível pelo contexto de UI, não pela intensidade visual desejada.",
       "cols": {
         "level": "Nível",
         "token": "Token",
@@ -33,37 +33,47 @@
           "token": "—",
           "usage": "Fundo da página, conteúdo embutido sem container"
         },
+        "controle": {
+          "level": "1 — Controle",
+          "token": "--elevation-xs",
+          "usage": "Botão, aba selecionada, campo de OTP, barra de menu, thumb — relevo sem sair do plano"
+        },
         "card": {
-          "level": "1 — Card",
+          "level": "2 — Card",
           "token": "--elevation-sm",
           "usage": "Card, Tile, item de lista em superfície elevada"
         },
         "dropdown": {
-          "level": "2 — Dropdown",
+          "level": "3 — Flutuante interativo",
           "token": "--elevation-md",
-          "usage": "Dropdown, Popover, Select aberto, ComboBox, menus"
-        },
-        "dialog": {
-          "level": "3 — Dialog",
-          "token": "--elevation-lg",
-          "usage": "Dialog, Sheet, Drawer, Sidebar overlay"
+          "usage": "Dropdown, Popover, Select aberto, ComboBox, menus, Calendar"
         },
         "tooltip": {
-          "level": "4 — Tooltip",
+          "level": "4 — Flutuante passivo",
+          "token": "--elevation-lg",
+          "usage": "Tooltip e HoverCard — aparecem sem que ninguém os abra"
+        },
+        "dialog": {
+          "level": "5 — Modal",
           "token": "--elevation-xl",
-          "usage": "Tooltip, Toast, HoverCard — flutuam acima de tudo"
+          "usage": "Dialog, AlertDialog, Sheet, Drawer e Toast — interrompem ou cobrem tudo"
         }
       }
     },
     "shadows": {
       "title": "Tokens de sombra",
-      "subtitle": "Quatro tokens cobrem toda a escala. No tema dark, as sombras ficam mais opacas para preservar contraste sobre fundo escuro.",
+      "subtitle": "Cinco tokens cobrem toda a escala. No tema dark, as sombras ficam mais opacas para preservar contraste sobre fundo escuro.",
       "cols": {
         "token": "Token",
         "light": "Light",
         "dark": "Dark"
       },
       "rows": {
+        "r0": {
+          "token": "--elevation-xs",
+          "light": "0 1px 2px rgba(0,0,0,.05)",
+          "dark": "0 1px 2px rgba(0,0,0,.15)"
+        },
         "r1": {
           "token": "--elevation-sm",
           "light": "0 1px 2px rgba(0,0,0,.1)",
@@ -238,7 +248,7 @@
         "1": {
           "component": "Button",
           "radius": "radius-button (10px)",
-          "shadow": "—",
+          "shadow": "elevation-xs",
           "border": "transparent / border"
         },
         "2": {
@@ -256,13 +266,13 @@
         "4": {
           "component": "Dialog / Sheet",
           "radius": "radius-card (14px)",
-          "shadow": "elevation-lg",
+          "shadow": "elevation-xl",
           "border": "ring 1px"
         },
         "5": {
-          "component": "Tooltip / Toast / HoverCard",
+          "component": "Tooltip / HoverCard",
           "radius": "radius-sm (6px)",
-          "shadow": "elevation-xl",
+          "shadow": "elevation-lg",
           "border": "—"
         },
         "6": {
@@ -270,6 +280,12 @@
           "radius": "radius-badge (pill)",
           "shadow": "—",
           "border": "transparent"
+        },
+        "7": {
+          "component": "Toast",
+          "radius": "radius (14px)",
+          "shadow": "elevation-xl",
+          "border": "—"
         }
       }
     },
@@ -316,7 +332,7 @@
     },
     "elevation": {
       "title": "Elevation system",
-      "subtitle": "Five levels named by role, not by value. Pick the level by UI context, not by desired visual intensity.",
+      "subtitle": "Six levels named by role, not by value. Pick the level by UI context, not by desired visual intensity.",
       "cols": {
         "level": "Level",
         "token": "Token",
@@ -328,37 +344,47 @@
           "token": "—",
           "usage": "Page background, inline content without a container"
         },
+        "controle": {
+          "level": "1 — Control",
+          "token": "--elevation-xs",
+          "usage": "Button, selected tab, OTP field, menu bar, thumb — relief without leaving the plane"
+        },
         "card": {
-          "level": "1 — Card",
+          "level": "2 — Card",
           "token": "--elevation-sm",
           "usage": "Card, Tile, list item on a raised surface"
         },
         "dropdown": {
-          "level": "2 — Dropdown",
+          "level": "3 — Interactive floating",
           "token": "--elevation-md",
-          "usage": "Dropdown, Popover, open Select, ComboBox, menus"
-        },
-        "dialog": {
-          "level": "3 — Dialog",
-          "token": "--elevation-lg",
-          "usage": "Dialog, Sheet, Drawer, Sidebar overlay"
+          "usage": "Dropdown, Popover, open Select, ComboBox, menus, Calendar"
         },
         "tooltip": {
-          "level": "4 — Tooltip",
+          "level": "4 — Passive floating",
+          "token": "--elevation-lg",
+          "usage": "Tooltip and HoverCard — they appear without anyone opening them"
+        },
+        "dialog": {
+          "level": "5 — Modal",
           "token": "--elevation-xl",
-          "usage": "Tooltip, Toast, HoverCard — float above everything"
+          "usage": "Dialog, AlertDialog, Sheet, Drawer and Toast — they interrupt or cover everything"
         }
       }
     },
     "shadows": {
       "title": "Shadow tokens",
-      "subtitle": "Four tokens cover the full scale. In dark mode, shadows become more opaque to preserve contrast on dark backgrounds.",
+      "subtitle": "Five tokens cover the full scale. In dark mode, shadows become more opaque to preserve contrast on dark backgrounds.",
       "cols": {
         "token": "Token",
         "light": "Light",
         "dark": "Dark"
       },
       "rows": {
+        "r0": {
+          "token": "--elevation-xs",
+          "light": "0 1px 2px rgba(0,0,0,.05)",
+          "dark": "0 1px 2px rgba(0,0,0,.15)"
+        },
         "r1": {
           "token": "--elevation-sm",
           "light": "0 1px 2px rgba(0,0,0,.1)",
@@ -533,7 +559,7 @@
         "1": {
           "component": "Button",
           "radius": "radius-button (10px)",
-          "shadow": "—",
+          "shadow": "elevation-xs",
           "border": "transparent / border"
         },
         "2": {
@@ -551,13 +577,13 @@
         "4": {
           "component": "Dialog / Sheet",
           "radius": "radius-card (14px)",
-          "shadow": "elevation-lg",
+          "shadow": "elevation-xl",
           "border": "1px ring"
         },
         "5": {
-          "component": "Tooltip / Toast / HoverCard",
+          "component": "Tooltip / HoverCard",
           "radius": "radius-sm (6px)",
-          "shadow": "elevation-xl",
+          "shadow": "elevation-lg",
           "border": "—"
         },
         "6": {
@@ -565,6 +591,12 @@
           "radius": "radius-badge (pill)",
           "shadow": "—",
           "border": "transparent"
+        },
+        "7": {
+          "component": "Toast",
+          "radius": "radius (14px)",
+          "shadow": "elevation-xl",
+          "border": "—"
         }
       }
     },
@@ -611,7 +643,7 @@
     },
     "elevation": {
       "title": "Sistema de elevación",
-      "subtitle": "Cinco niveles nombrados por su rol, no por su valor. Elige el nivel según el contexto de UI, no según la intensidad visual deseada.",
+      "subtitle": "Seis niveles nombrados por su rol, no por su valor. Elige el nivel según el contexto de UI, no según la intensidad visual deseada.",
       "cols": {
         "level": "Nivel",
         "token": "Token",
@@ -623,37 +655,47 @@
           "token": "—",
           "usage": "Fondo de la página, contenido embebido sin contenedor"
         },
+        "controle": {
+          "level": "1 — Control",
+          "token": "--elevation-xs",
+          "usage": "Botón, pestaña seleccionada, campo de OTP, barra de menú, thumb — relieve sin salir del plano"
+        },
         "card": {
-          "level": "1 — Card",
+          "level": "2 — Card",
           "token": "--elevation-sm",
           "usage": "Card, Tile, ítem de lista en superficie elevada"
         },
         "dropdown": {
-          "level": "2 — Dropdown",
+          "level": "3 — Flotante interactivo",
           "token": "--elevation-md",
-          "usage": "Dropdown, Popover, Select abierto, ComboBox, menús"
-        },
-        "dialog": {
-          "level": "3 — Dialog",
-          "token": "--elevation-lg",
-          "usage": "Dialog, Sheet, Drawer, Sidebar overlay"
+          "usage": "Dropdown, Popover, Select abierto, ComboBox, menús, Calendar"
         },
         "tooltip": {
-          "level": "4 — Tooltip",
+          "level": "4 — Flotante pasivo",
+          "token": "--elevation-lg",
+          "usage": "Tooltip y HoverCard — aparecen sin que nadie los abra"
+        },
+        "dialog": {
+          "level": "5 — Modal",
           "token": "--elevation-xl",
-          "usage": "Tooltip, Toast, HoverCard — flotan encima de todo"
+          "usage": "Dialog, AlertDialog, Sheet, Drawer y Toast — interrumpen o cubren todo"
         }
       }
     },
     "shadows": {
       "title": "Tokens de sombra",
-      "subtitle": "Cuatro tokens cubren toda la escala. En el tema dark, las sombras se vuelven más opacas para preservar contraste sobre fondos oscuros.",
+      "subtitle": "Cinco tokens cubren toda la escala. En el tema dark, las sombras se vuelven más opacas para preservar contraste sobre fondos oscuros.",
       "cols": {
         "token": "Token",
         "light": "Light",
         "dark": "Dark"
       },
       "rows": {
+        "r0": {
+          "token": "--elevation-xs",
+          "light": "0 1px 2px rgba(0,0,0,.05)",
+          "dark": "0 1px 2px rgba(0,0,0,.15)"
+        },
         "r1": {
           "token": "--elevation-sm",
           "light": "0 1px 2px rgba(0,0,0,.1)",
@@ -828,7 +870,7 @@
         "1": {
           "component": "Button",
           "radius": "radius-button (10px)",
-          "shadow": "—",
+          "shadow": "elevation-xs",
           "border": "transparent / border"
         },
         "2": {
@@ -846,13 +888,13 @@
         "4": {
           "component": "Dialog / Sheet",
           "radius": "radius-card (14px)",
-          "shadow": "elevation-lg",
+          "shadow": "elevation-xl",
           "border": "ring 1px"
         },
         "5": {
-          "component": "Tooltip / Toast / HoverCard",
+          "component": "Tooltip / HoverCard",
           "radius": "radius-sm (6px)",
-          "shadow": "elevation-xl",
+          "shadow": "elevation-lg",
           "border": "—"
         },
         "6": {
@@ -860,6 +902,12 @@
           "radius": "radius-badge (pill)",
           "shadow": "—",
           "border": "transparent"
+        },
+        "7": {
+          "component": "Toast",
+          "radius": "radius (14px)",
+          "shadow": "elevation-xl",
+          "border": "—"
         }
       }
     },

@@ -45,7 +45,7 @@
   font-size: var(--text-control);                            /* 14px */
   text-align: center;
   outline: 0;
-  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
+  box-shadow: var(--elevation-xs);
   transition: box-shadow var(--duration-fast), border-color var(--duration-fast);
 }
 

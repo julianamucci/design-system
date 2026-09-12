@@ -1,18 +1,37 @@
 <script lang="ts">
   import { untrack } from 'svelte';
   import FoundationPage from './shared/FoundationPage.svelte';
-  import { useTranslation } from '@/lib/i18n';
+  import { locale, useTranslation } from '@/lib/i18n';
   import translations from '@shared/content/foundations/elevacao-bordas-sombras/translations.json';
 
   const { tStore } = untrack(() => useTranslation(translations));
 
-  const ELEVATIONS: Array<{ token: string | null; label: string }> = [
-    { token: null, label: '0 — Plano' },
-    { token: '--elevation-sm', label: '1 — Card' },
-    { token: '--elevation-md', label: '2 — Dropdown' },
-    { token: '--elevation-lg', label: '3 — Dialog' },
-    { token: '--elevation-xl', label: '4 — Tooltip' },
-  ];
+  /** Linha da tabela de elevação no conteúdo compartilhado. */
+  type LinhaDeElevacao = { level: string; token: string; usage: string };
+
+  /* Os degraus do mostruário SAEM de `elevation.rows` — a mesma fonte que o
+   * FoundationSection já usa para desenhar a tabela desta página. O array
+   * cravado que vivia aqui era uma segunda fonte, e foi a que deixou de ser
+   * corrigida: ficou com CINCO degraus depois que o nível de controle
+   * (`--elevation-xs`) entrou, e com os rótulos deslocados um degrau (o token
+   * de Dialog aparecia como "Tooltip"). Nada liga uma cópia à outra, então
+   * nenhum portão via. A classe deriva do sufixo do token —
+   * `--elevation-md` → `.nds-shadow-md`; token que não é de elevação (o nível
+   * plano traz "—") cai em `.nds-shadow-none`. */
+  const PREFIXO = '--elevation-';
+
+  const elevacoes = $derived.by(() => {
+    const raiz = ((translations as Record<string, unknown>)[$locale]
+      ?? (translations as Record<string, unknown>)['pt-BR']) as
+      { elevation?: { rows?: Record<string, LinhaDeElevacao> } } | undefined;
+    return Object.values(raiz?.elevation?.rows ?? {}).map((linha) => ({
+      label: linha.level,
+      token: linha.token,
+      classe: linha.token.startsWith(PREFIXO)
+        ? `nds-shadow-${linha.token.slice(PREFIXO.length)}`
+        : 'nds-shadow-none',
+    }));
+  });
 
   const RADII: Array<{ token: string | null; label: string }> = [
     { token: '--radius-none', label: 'none' },
@@ -40,13 +59,12 @@
           data-spacing="lg"
           style="--grid-min: 8rem; background-color: hsl(var(--muted) / 0.2)"
         >
-          {#each ELEVATIONS as el (el.label)}
+          {#each elevacoes as el (el.label)}
             <div
-              class="nds-bg-card nds-border-soft nds-rounded-lg nds-p-4 nds-text-caption nds-text-muted-foreground nds-text-center"
-              style={el.token ? `box-shadow: var(${el.token})` : undefined}
+              class="nds-bg-card nds-border-soft nds-rounded-lg nds-p-4 nds-text-caption nds-text-muted-foreground nds-text-center {el.classe}"
             >
               <div class="nds-font-medium nds-text-foreground nds-mb-1">{el.label}</div>
-              <code style="font-size: 10px">{el.token ?? '—'}</code>
+              <code class="nds-text-code">{el.token}</code>
             </div>
           {/each}
         </div>

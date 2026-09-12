@@ -107,7 +107,7 @@
    * Mesmo token, sem valor novo. */
   border: 1px solid hsl(var(--primary));
   border-radius: var(--radius-full);
-  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.1);
+  box-shadow: var(--elevation-sm);
   transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
 }
 

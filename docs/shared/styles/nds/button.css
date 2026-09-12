@@ -224,7 +224,7 @@
 .nds-button-default {
   background-color: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  box-shadow: var(--elevation-xs);
 }
 .nds-button-default:hover {
   background-color: hsl(var(--primary) / 0.9);
@@ -237,7 +237,7 @@
 .nds-button-secondary {
   background-color: hsl(var(--secondary));
   color: hsl(var(--secondary-foreground));
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  box-shadow: var(--elevation-xs);
 }
 .nds-button-secondary:hover,
 .nds-button-secondary[aria-pressed="true"] {
@@ -249,7 +249,7 @@
   background-color: hsl(var(--background));
   border-color: hsl(var(--border));
   color: hsl(var(--foreground));
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  box-shadow: var(--elevation-xs);
 }
 .nds-button-outline:hover,
 .nds-button-outline[aria-pressed="true"],
@@ -307,7 +307,7 @@
 .nds-button-destructive {
   background-color: hsl(var(--destructive) / 0.1);
   color: hsl(var(--destructive));
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  box-shadow: var(--elevation-xs);
 }
 .nds-button-destructive:hover,
 .nds-button-destructive[aria-pressed="true"] {

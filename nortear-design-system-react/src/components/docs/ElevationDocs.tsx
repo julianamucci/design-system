@@ -1,15 +1,51 @@
-import type { CSSProperties } from 'react';
+import { useMemo, type CSSProperties } from 'react';
 import { FoundationPage } from './shared/FoundationPage';
 import { useTranslation } from '@/lib/i18n';
 import translations from '@shared/content/foundations/elevacao-bordas-sombras/translations.json';
 
-const ELEVATIONS: Array<{ token: string | null; label: string }> = [
-  { token: null, label: '0 — Plano' },
-  { token: '--elevation-sm', label: '1 — Card' },
-  { token: '--elevation-md', label: '2 — Dropdown' },
-  { token: '--elevation-lg', label: '3 — Dialog' },
-  { token: '--elevation-xl', label: '4 — Tooltip' },
-];
+/**
+ * A escada de elevação do mostruário é DERIVADA de `elevation.rows` do conteúdo
+ * compartilhado — nunca recravada aqui. A lista cravada tinha quatro degraus e o
+ * conteúdo passou a seis em 2026-09-12 (entrou `--elevation-xs`, relevo de
+ * controle): a tabela mostrava o degrau novo e o mostruário não, e a página se
+ * contradizia. Ordem, rótulo e token saem todos da mesma fonte.
+ *
+ * O `token` do nível plano é o travessão (`—`) no conteúdo; aqui ele vira
+ * `null`, que é o que distingue "sem sombra" de "sombra deste token".
+ */
+interface ElevationStep {
+  /** Chave da linha no conteúdo — `plano`, `controle`, `card`, … */
+  key: string;
+  /** Rótulo traduzido (`elevation.rows.<key>.level`). */
+  label: string;
+  /** Custom property da sombra, ou `null` no nível plano. */
+  token: string | null;
+}
+
+/** Classe utilitária que pinta o degrau: `--elevation-md` → `.nds-shadow-md`. */
+function shadowClass(token: string | null): string {
+  return token ? `nds-shadow-${token.replace('--elevation-', '')}` : 'nds-shadow-none';
+}
+
+function useElevationSteps(t: (key: string) => string, locale: string): ElevationStep[] {
+  // A ORDEM e o conjunto de degraus vêm das chaves do dicionário; os textos vêm
+  // do `t()`, que já resolve locale e overrides.
+  return useMemo(() => {
+    const dict = translations as Record<
+      string,
+      { elevation?: { rows?: Record<string, unknown> } } | undefined
+    >;
+    const rows = (dict[locale] ?? dict['pt-BR'])?.elevation?.rows ?? {};
+    return Object.keys(rows).map((key) => {
+      const token = t(`elevation.rows.${key}.token`);
+      return {
+        key,
+        label: t(`elevation.rows.${key}.level`),
+        token: token.startsWith('--') ? token : null,
+      };
+    });
+  }, [t, locale]);
+}
 
 const RADII: Array<{ token: string | null; label: string }> = [
   { token: '--radius-none', label: 'none' },
@@ -22,7 +58,8 @@ const RADII: Array<{ token: string | null; label: string }> = [
 ];
 
 function ElevationSpecimens() {
-  const { t } = useTranslation(translations);
+  const { t, locale } = useTranslation(translations);
+  const elevations = useElevationSteps(t, locale);
 
   return (
     <section className="nds-stack nds-docs-section-divider" data-spacing="md">
@@ -38,14 +75,14 @@ function ElevationSpecimens() {
           data-spacing="lg"
           style={{ '--grid-min': '8rem', backgroundColor: 'hsl(var(--muted) / 0.2)' } as CSSProperties}
         >
-          {ELEVATIONS.map((el) => (
+          {elevations.map((el) => (
             <div
-              key={el.label}
-              className="nds-bg-card nds-border-soft nds-rounded-lg nds-p-4 nds-text-caption nds-text-muted-foreground nds-text-center"
-              style={el.token ? { boxShadow: `var(${el.token})` } : undefined}
+              key={el.key}
+              data-elevation-step={el.key}
+              className={`nds-bg-card nds-border-soft nds-rounded-lg nds-p-4 nds-text-caption nds-text-muted-foreground nds-text-center ${shadowClass(el.token)}`}
             >
               <div className="nds-font-medium nds-text-foreground nds-mb-1">{el.label}</div>
-              <code style={{ fontSize: '10px' }}>{el.token ?? '—'}</code>
+              <code className="nds-text-code">{el.token ?? '—'}</code>
             </div>
           ))}
         </div>

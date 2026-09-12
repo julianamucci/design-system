@@ -192,7 +192,21 @@
   --spacing-40:  calc(var(--spacing-base) * 40);    /* 160px — comprimento mínimo do trilho de slider vertical */
   --spacing-96:  calc(var(--spacing-base) * 96);    /* 384px — audit-ignore: orphan-token — degrau da régua. O único consumidor era `.nds-scroll-area-md`, o teto de 384px que o Angular usava sozinho; a escada `--box-height-*` o substituiu nas cinco stacks em 2026-08-19. O degrau fica porque a régua é contínua, não porque alguém o use */
 
-  /* Elevation / Shadows */
+  /* Elevation / Shadows
+
+     `xs` é RELEVO DE CONTROLE, e é eixo diferente dos outros quatro. A regra de
+     elevação por tipo — card `sm`, flutuante interativo `md`, flutuante passivo
+     `lg`, modal e drawer `xl` — fala de SUPERFÍCIE: algo que paira sobre a
+     página. O `xs` é o fio de relevo de um controle que continua no plano dela:
+     botão, aba selecionada, campo de OTP, thumb, barra de menu.
+
+     Ele nasceu em 2026-09-12 de uma medição: dezoito declarações de box-shadow
+     nas folhas compartilhadas cravavam o valor em vez de ler token, e quinze
+     delas eram exatamente esta sombra. Cravadas, não seguiam o MODO — ficavam em
+     0.05 no escuro, onde `sm` vai a 0.3, ou seja praticamente invisíveis sobre
+     fundo escuro. O alfa do escuro aqui é 0.15, que é a mesma proporção de três
+     para um que `sm`, `md`, `lg` e `xl` aplicam entre os dois modos. */
+  --elevation-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
   --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
   --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -325,6 +339,7 @@
      precisa de mais alfa para existir sobre um fundo escuro, e esse ajuste vale
      igual para Default, Warm e Cold. Token que muda com o modo mas não com o
      tema é exatamente o que este arquivo guarda. */
+  --elevation-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
   --elevation-md: 0px 4px 6px -1px rgba(0, 0, 0, 0.3), 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
   --elevation-lg: 0px 10px 15px -3px rgba(0, 0, 0, 0.3), 0px 4px 6px -2px rgba(0, 0, 0, 0.2);

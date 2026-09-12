@@ -96,6 +96,10 @@
 
 /* ── Shadow tokens ─────────────────────────────────────────────────────────── */
 .nds-shadow-none { box-shadow: none; }
+/* Relevo de CONTROLE, não elevação de superfície — ver o bloco de elevação em
+ * `tokens/tokens.css`. É o degrau que as folhas de botão, aba, campo e barra
+ * cravavam à mão até 2026-09-12. */
+.nds-shadow-xs   { box-shadow: var(--elevation-xs); }
 .nds-shadow-sm   { box-shadow: var(--elevation-sm); }
 .nds-shadow-md   { box-shadow: var(--elevation-md); }
 .nds-shadow-lg   { box-shadow: var(--elevation-lg); }

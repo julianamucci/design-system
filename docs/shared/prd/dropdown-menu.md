@@ -241,7 +241,8 @@ Fonte: `docs/shared/styles/nds/dropdown-menu.css`.
 | borda | 1px | `--border` |
 | raio do painel | — | `--radius` |
 | raio do item | — | `--radius-sm` — ver D7 |
-| sombra | — | `--elevation-md` |
+| sombra do painel | — | `--elevation-md` |
+| sombra da BARRA do Menubar | — | `--elevation-xs` (desde 2026-09-12) |
 | padding do item | 8px lateral, 6px vertical | `--spacing-2` e `--spacing-1-5` |
 | gap do item | 8px | `--spacing-2` |
 | ícone do item | 16px | `--spacing-4` |
@@ -258,6 +259,16 @@ Fonte: `docs/shared/styles/nds/dropdown-menu.css`.
 
 **O separador aqui é `--muted`; no `command` é `--border`.** Dois menus, dois
 tokens.
+
+**A barra do Menubar tem DOIS degraus de sombra em jogo, e eles não são o mesmo
+assunto**: o painel que abre é flutuante (`md`), e a barra em si continua no
+plano da página — relevo de controle, `xs`. Até 2026-09-12 a barra cravava
+`0 1px 2px hsl(0 0% 0% / 0.05)` na folha em vez de ler token, e o efeito não era
+estético: valor cravado não segue o MODO, então no escuro ela ficava em 0.05
+onde a escada vai a 0.15 — sombra praticamente inexistente sobre fundo escuro.
+Era uma de dezoito declarações assim nas folhas compartilhadas. Portão:
+`sombra_cravada`, que reprova valor literal, e `elevacao_fora_do_mapa`, que
+agora conhece o degrau de controle.
 
 ## 6. Estados
 

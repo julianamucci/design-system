@@ -1,13 +1,46 @@
 import { createFoundationsDocs } from './shared/foundationsRenderer';
+import { getLocale } from '@/lib/i18n';
 import translations from '@shared/content/foundations/elevacao-bordas-sombras/translations.json';
 
-const ELEVATIONS: Array<{ token: string | null; label: string }> = [
-  { token: null, label: '0 — Plano' },
-  { token: '--elevation-sm', label: '1 — Card' },
-  { token: '--elevation-md', label: '2 — Dropdown' },
-  { token: '--elevation-lg', label: '3 — Dialog' },
-  { token: '--elevation-xl', label: '4 — Tooltip' },
-];
+/**
+ * A escada do mostruário é DERIVADA de `elevation.rows` do conteúdo
+ * compartilhado — nunca recravada aqui. A lista cravada tinha quatro degraus e o
+ * conteúdo passou a seis em 2026-09-12 (entrou `--elevation-xs`, relevo de
+ * CONTROLE): a tabela desta mesma página mostrava o degrau novo e o mostruário
+ * não, e nada reprovava — o `docs-smoke` monta igual com quatro ou com seis.
+ * Ordem, cardinalidade, rótulo e token saem todos da mesma fonte.
+ *
+ * O `token` do nível plano é o travessão (`—`) no conteúdo; aqui ele vira
+ * `null`, que é o que distingue "sem sombra" de "sombra deste token".
+ */
+interface ElevationStep {
+  /** Chave da linha no conteúdo — `plano`, `controle`, `card`, … */
+  key: string;
+  /** Custom property da sombra, ou `null` no nível plano. */
+  token: string | null;
+}
+
+/** Classe utilitária que pinta o degrau: `--elevation-md` → `.nds-shadow-md`. */
+function shadowClass(token: string | null): string {
+  return token ? `nds-shadow-${token.replace('--elevation-', '')}` : 'nds-shadow-none';
+}
+
+/**
+ * As chaves de `elevation.rows` dão a ORDEM e a cardinalidade da escada. O
+ * conjunto é o mesmo nos três idiomas (só o texto muda), então o locale atual
+ * serve de leitura e o pt-BR de rede.
+ */
+function readElevationSteps(t: (key: string) => string): ElevationStep[] {
+  const dict = translations as Record<
+    string,
+    { elevation?: { rows?: Record<string, unknown> } } | undefined
+  >;
+  const rows = (dict[getLocale()] ?? dict['pt-BR'])?.elevation?.rows ?? {};
+  return Object.keys(rows).map((key) => {
+    const token = t(`elevation.rows.${key}.token`);
+    return { key, token: token.startsWith('--') ? token : null };
+  });
+}
 
 const RADII: Array<{ token: string | null; label: string }> = [
   { token: '--radius-none', label: 'none' },
@@ -23,7 +56,7 @@ export function createElevationDocs(): HTMLElement {
   return createFoundationsDocs({
     translations: translations as Record<string, unknown>,
     componentSlug: 'elevacao-bordas-sombras',
-    extraSection: ({ addText }) => {
+    extraSection: ({ t, addText }) => {
       const section = document.createElement('section');
       section.className = 'nds-stack nds-docs-section-divider';
       section.dataset.spacing = 'md';
@@ -52,16 +85,19 @@ export function createElevationDocs(): HTMLElement {
       shadowsGrid.dataset.spacing = 'lg';
       shadowsGrid.style.setProperty('--grid-min', '8rem');
       shadowsGrid.style.backgroundColor = 'hsl(var(--muted) / 0.2)';
-      for (const el of ELEVATIONS) {
+      for (const el of readElevationSteps(t)) {
         const card = document.createElement('div');
-        card.className = 'nds-bg-card nds-border-soft nds-rounded-lg nds-p-4 nds-text-caption nds-text-muted-foreground nds-text-center';
-        if (el.token) card.style.boxShadow = `var(${el.token})`;
+        // A sombra é pintada pela utilitária `.nds-shadow-*`, não por
+        // `style.boxShadow`: valor de design em estilo inline deixa tema e
+        // modo atrás (guideline 12), e o inline venceria a folha.
+        card.className = `nds-bg-card nds-border-soft nds-rounded-lg nds-p-4 nds-text-caption nds-text-muted-foreground nds-text-center ${shadowClass(el.token)}`;
+        card.dataset.elevationStep = el.key;
         const label = document.createElement('div');
         label.className = 'nds-font-medium nds-text-foreground nds-mb-1';
-        label.textContent = el.label;
+        addText(label, `elevation.rows.${el.key}.level`);
         const code = document.createElement('code');
-        code.style.fontSize = '10px';
-        code.textContent = el.token ?? '—';
+        code.className = 'nds-text-code';
+        addText(code, `elevation.rows.${el.key}.token`);
         card.append(label, code);
         shadowsGrid.appendChild(card);
       }

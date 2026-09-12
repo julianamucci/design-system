@@ -4324,7 +4324,16 @@ function auditModalidadeNaoModal() {
  * é esta tabela que muda.
  */
 const ELEVACAO_POR_TIPO = {
-  sm: { tipo: 'card, sobre o background', folhas: ['card'] },
+  // `xs` não é superfície: é o fio de relevo de um controle que continua no
+  // plano da página. Os outros quatro degraus respondem "quão alto isto paira";
+  // este responde "isto tem relevo". Nasceu em 2026-09-12, quando a medição
+  // achou quinze declarações cravando exatamente esta sombra à mão — e, por
+  // cravadas, não seguindo o modo escuro.
+  xs: {
+    tipo: 'relevo de controle, no plano da página',
+    folhas: ['button', 'input-otp', 'menubar', 'number-field', 'related-card', 'sidebar', 'tabs', 'tags-input', 'toggle', 'toggle-group'],
+  },
+  sm: { tipo: 'card, sobre o background', folhas: ['card', 'slider'] },
   md: {
     tipo: 'flutuante interativo',
     folhas: ['popover', 'dropdown-menu', 'select', 'combobox', 'navigation-menu', 'calendar', 'composer'],
@@ -4349,6 +4358,178 @@ const ELEVACAO_FORA_DA_REGRA = {
   // em Chromium com o tema ativo: `.nds-command` sozinho computa sombra nenhuma.
   command: 'sem superfície própria — herda a do Dialog, onde mora; o `md` da folha é do combobox',
 };
+
+/**
+ * Sombra com VALOR cravado, em vez de token — declarada, com o motivo.
+ *
+ * A regra irmã (`elevacao_fora_do_mapa`) classifica folha que LÊ o token, e é
+ * por aí que ela era cega: folha que não lê nenhum caía num `continue`, então
+ * cravar o valor à mão era o caminho silencioso para sair da regra. Medido em
+ * 2026-09-12: dezoito declarações, em catorze folhas, nenhuma delas acusada —
+ * incluindo a barra do Menubar, que foi como isto apareceu.
+ *
+ * O custo de cravar não é estético: o valor não segue o MODO. As quinze
+ * declarações da família de relevo ficavam em 0.05 no escuro, onde o token vai a
+ * 0.15 — sombra praticamente inexistente sobre fundo escuro, e nenhum portão
+ * enxergava, porque não há o que compilar e a cor computada "existe".
+ *
+ * Anel de foco, `inset` e `none` não são elevação e não entram. O que sobra se
+ * declara aqui com a razão, e a razão é sobre o VALOR não estar na escada.
+ */
+const SOMBRA_CRAVADA_DECLARADA = {
+  'data-table': 'sombra de rolagem do cabeçalho fixo (`0 8px 24px -4px`), não degrau da escada: ela indica que há conteúdo por baixo, e o blur largo é o que faz esse papel. Aguarda decisão da dona sobre virar token próprio',
+  switch: 'relevo do thumb (`0 1px 3px / 0.2`), entre o `xs` e o `sm` e com blur próprio. Aguarda decisão da dona: adotar `xs` o deixa mais raso, adotar `sm` mais escuro',
+};
+
+/**
+ * A escada de elevação RECRAVADA na docs page, em vez de lida do conteúdo.
+ *
+ * A página de fundamento de Elevação desenhava o mostruário a partir de um array
+ * de quatro degraus escrito à mão, ao lado de uma tabela que sai do conteúdo
+ * compartilhado. Duas fontes para a mesma escada, e nesta casa a segunda é a que
+ * deixa de ser corrigida: quando o `xs` entrou, em 2026-09-12, a tabela passou a
+ * ter seis linhas e o mostruário continuaria com quatro cartões, na mesma
+ * página, sem nada reprovar — o `docs-smoke` monta e passa igual com quatro ou
+ * com seis.
+ *
+ * A régua é a CONTAGEM: página que nomeia três ou mais degraus distintos está
+ * enumerando a escada, e tem de derivá-la de `elevation.rows`. Página que nomeia
+ * UM degrau está documentando o próprio componente (a tabela de tokens do
+ * AlertDialog diz `xl`, e é o certo), então não entra.
+ */
+/**
+ * A pasta `tokens/figma/<Coleção>/<modo>.json` defasada do `figma-variables.json`.
+ *
+ * Os dois saem do MESMO gerador, mas de invocações diferentes: o arquivo único
+ * vem de `build-figma-variables.mjs` e a pasta vem de `--split`. E o `--check`
+ * do gerador confere só o arquivo único — a pasta pode ficar velha sem uma
+ * palavra, que é exatamente o que aconteceu em 2026-09-12 quando o
+ * `--elevation-xs` entrou: `--check` disse "em dia" com a pasta sem o token
+ * novo, e é ela que se importa no Figma.
+ *
+ * A comparação é de CONJUNTO DE CHAVES entre as duas saídas, não contra o CSS:
+ * assim a regra não reimplementa o parser de token do gerador — ela só cobra
+ * que as duas metades da mesma geração contem a mesma história.
+ */
+function auditFigmaSplitDefasado() {
+  const violations = [];
+  const base = join(ROOT, 'docs', 'shared', 'tokens');
+  const unico = readFile(join(base, 'figma-variables.json'));
+  if (!unico) return violations;
+  let doc;
+  try { doc = JSON.parse(unico); } catch { return violations; }
+
+  const chavesDe = (arvore, prefixo = '') => {
+    const fora = [];
+    for (const [k, v] of Object.entries(arvore || {})) {
+      if (k.startsWith('$')) continue;
+      if (v && typeof v === 'object' && '$value' in v) fora.push(prefixo + k);
+      else if (v && typeof v === 'object') fora.push(...chavesDe(v, `${prefixo + k}/`));
+    }
+    return fora;
+  };
+
+  for (const [colecao, col] of Object.entries(doc)) {
+    if (colecao.startsWith('$') || !col?.modes) continue;
+    for (const [modo, arvore] of Object.entries(col.modes)) {
+      const arq = join(base, 'figma', colecao, `${modo}.json`);
+      const bruto = readFile(arq);
+      if (!bruto) {
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: relative(ROOT, join(base, 'figma', colecao)), line: 1, rule: 'figma_split_defasado',
+          message: `${colecao}/${modo}.json não existe, e o \`figma-variables.json\` declara esse modo — `
+            + 'rode `node scripts/build-figma-variables.mjs --split`',
+        });
+        continue;
+      }
+      let split;
+      try { split = JSON.parse(bruto); } catch { continue; }
+      const esperado = new Set(chavesDe(arvore));
+      const presente = new Set(chavesDe(split));
+      const faltam = [...esperado].filter((k) => !presente.has(k));
+      const sobram = [...presente].filter((k) => !esperado.has(k));
+      if (!faltam.length && !sobram.length) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, arq), line: 1, rule: 'figma_split_defasado',
+        message: `a pasta do Figma está defasada do \`figma-variables.json\` em ${colecao}/${modo}`
+          + (faltam.length ? ` — falta ${faltam.slice(0, 4).join(', ')}${faltam.length > 4 ? ` (+${faltam.length - 4})` : ''}` : '')
+          + (sobram.length ? ` — sobra ${sobram.slice(0, 4).join(', ')}${sobram.length > 4 ? ` (+${sobram.length - 4})` : ''}` : '')
+          + '. As duas saem do mesmo gerador, mas de invocações diferentes, e o `--check` só confere o arquivo único: '
+          + 'rode `node scripts/build-figma-variables.mjs --split`',
+      });
+    }
+  }
+  return violations;
+}
+
+function auditEscadaCravada() {
+  const violations = [];
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    if (!existsSync(dir)) continue;
+    for (const file of walkDir(dir, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const src = stripComments(bruto);
+      const degraus = new Set([...src.matchAll(/['"`]--elevation-([a-z0-9]+)['"`]/g)].map((m) => m[1]));
+      if (degraus.size < 3) continue;
+      if (/elevation\.rows/.test(src)) continue;
+      const pos = src.search(/['"`]--elevation-/);
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack,
+        file: relative(ROOT, file), line: pos < 0 ? 1 : src.slice(0, pos).split('\n').length,
+        rule: 'escada_cravada_em_fundamento',
+        message: `a página enumera ${degraus.size} degraus de elevação em código (${[...degraus].sort().join(', ')}) `
+          + 'em vez de derivar de `elevation.rows` do conteúdo compartilhado — duas fontes para a mesma escada, e a '
+          + 'que vive no código é a que deixa de ser corrigida quando um degrau entra ou muda de papel',
+      });
+    }
+  }
+  return violations;
+}
+
+function auditSombraCravada() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  if (!existsSync(dir)) return violations;
+
+  for (const [folha, motivo] of Object.entries(SOMBRA_CRAVADA_DECLARADA)) {
+    if (existsSync(join(dir, `${folha}.css`))) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: relative(ROOT, dir), line: 1, rule: 'sombra_cravada',
+      message: `${folha}.css está declarada em SOMBRA_CRAVADA_DECLARADA (${motivo.slice(0, 40)}…) e não existe — a exceção perdeu o objeto`,
+    });
+  }
+
+  for (const caminho of walkDir(dir, ['.css'])) {
+    const arquivo = basename(caminho, '.css');
+    const bruto = readFile(caminho);
+    if (!bruto) continue;
+    const limpo = bruto.replace(/\/\*[\s\S]*?\*\//g, (s) => s.replace(/[^\n]/g, ' '));
+    for (const m of limpo.matchAll(/box-shadow\s*:\s*([^;]+);/g)) {
+      const valor = m[1].replace(/\s+/g, ' ').trim();
+      if (valor.includes('var(--elevation')) continue;
+      // anel de foco (`0 0 0 Npx`), sombra interna e ausência não são elevação
+      if (/^(?:none|inset|0 0 0 )/.test(valor)) continue;
+      // custom property própria da folha (`--code-block-highlight-accent`) já é
+      // ponto de extensão declarado; o que a regra caça é o literal
+      if (/var\(--/.test(valor) && !/rgba?\(|hsl\(/.test(valor)) continue;
+      if (SOMBRA_CRAVADA_DECLARADA[arquivo]) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, caminho), line: limpo.slice(0, m.index).split('\n').length,
+        rule: 'sombra_cravada',
+        message: `sombra com valor cravado (\`${valor.slice(0, 48)}\`) em vez de \`var(--elevation-*)\` — `
+          + 'valor cravado não segue o MODO: fica igual no claro e no escuro, onde a escada triplica o alfa. '
+          + 'Leia o degrau, ou declare a folha em SOMBRA_CRAVADA_DECLARADA com o motivo',
+      });
+    }
+  }
+  return violations;
+}
 
 function auditElevacaoPorTipo() {
   const violations = [];
@@ -6727,6 +6908,82 @@ function auditFixtureDuplicada(slug) {
         message: divergiu
           ? `\`${nome}\` existe em ${usos.length} arquivos de story com CORPOS DIFERENTES (${usos.map((u) => u.file).join(', ')}) — mesmo nome, comportamento divergente; corrigir um não corrige os outros. Extraia para \`${slug}.fixtures.*\` com a variação em parâmetro`
           : `\`${nome}\` está copiada em ${usos.length} arquivos de story (${usos.map((u) => u.file).join(', ')}) — extraia para \`${slug}.fixtures.*\``,
+      });
+    }
+  }
+  return violations;
+}
+
+/**
+ * O mesmo `inline_style_design_value`, nas docs pages que NÃO têm slug.
+ *
+ * A regra irmã varre `filesForSlug(slug)`, e slug sai de
+ * `docs/shared/content/<slug>/` — então toda página de FUNDAMENTO (Elevação,
+ * Cores, Tipografia, Movimento…) ficava fora da varredura, para sempre e em
+ * silêncio. É a forma exata do `source-snippets.test.ts`: quem não entra na
+ * lista não reprova, e a contagem encolhe sem deixar rastro.
+ *
+ * Medido em 2026-09-12: três das cinco `ElevationDocs` carregavam
+ * `style="font-size: 10px"` no rótulo do token — valor de design em inline, que
+ * é justamente o que a regra existe para reprovar, num arquivo que ela nunca
+ * abria. Quem o achou foram as agentes, lendo o código.
+ */
+/**
+ * Valor inline de fundamento que fica, porque a UTILITÁRIA não existe.
+ *
+ * A regra da casa manda mover para classe `.nds-*` e, se a utilitária faltar,
+ * DIZER qual — nunca lascar outro valor no lugar. Estes dois são esse caso, e a
+ * premissa de cada um é verificável: a exceção cai no dia em que a classe
+ * nascer, e aí o portão volta a cobrar.
+ */
+const STYLE_INLINE_FUNDAMENTO_DIVIDA = {
+  MotionDocs: {
+    motivo: 'palco de demonstração com `min-height: 9rem`, que cai ENTRE `--box-height-xs` (7,5rem) e `--box-height-sm` (10rem)',
+    falta: 'um degrau de 9rem na escada `--box-height-*`, ou uma utilitária de altura de palco de demonstração',
+    premissa: { arquivo: 'docs/shared/tokens/tokens.css', ausente: /--box-height-(?:xs2|9|palco)/ },
+  },
+  SpacingDocs: {
+    motivo: 'calha do rótulo do token com `width: 8rem`; a escada `.nds-w-*` começa em 14rem (`3xs`), pensada para caixa de conteúdo e não para coluna de rótulo',
+    falta: 'uma utilitária de largura de CALHA DE RÓTULO (8rem), abaixo do `3xs`',
+    premissa: { arquivo: 'docs/shared/styles/nds/utilities.css', ausente: /\.nds-w-(?:label|gutter|4xs)\b/ },
+  },
+};
+
+function auditInlineStyleFundamento() {
+  const violations = [];
+  for (const [pagina, d] of Object.entries(STYLE_INLINE_FUNDAMENTO_DIVIDA)) {
+    const alvo = readFile(join(ROOT, d.premissa.arquivo)) || '';
+    if (!d.premissa.ausente.test(alvo)) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+      file: 'scripts/audit.mjs', line: 1, rule: 'inline_style_design_value',
+      message: `a dívida declarada de ${pagina} caiu: ${d.premissa.arquivo} passou a ter a utilitária que faltava `
+        + `(${d.falta}) — troque o style inline pela classe e tire a entrada de STYLE_INLINE_FUNDAMENTO_DIVIDA`,
+    });
+  }
+  const comSlug = new Set();
+  for (const s of slugsDoConteudo()) {
+    const Slug = s.charAt(0).toUpperCase() + s.slice(1).replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    comSlug.add(`${Slug}Docs`.toLowerCase());
+  }
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    if (!existsSync(dir)) continue;
+    for (const file of walkDir(dir, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const nome = basename(file).replace(/\.(ts|tsx|vue|svelte)$/, '');
+      if (!/Docs$/.test(nome) || comSlug.has(nome.toLowerCase())) continue;
+      if (STYLE_INLINE_FUNDAMENTO_DIVIDA[nome]) continue;
+      const content = readFile(file);
+      if (!content) continue;
+      const decls = inlineStyleDecls(content);
+      if (!decls.length) continue;
+      const amostra = [...new Set(decls.map((d) => d.decl))].slice(0, 3).join(' · ');
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, file), line: decls[0].line, rule: 'inline_style_design_value',
+        message: `${decls.length} valor(es) de design em style inline (linha ${decls[0].line}: ${amostra}) — `
+          + 'página de fundamento não tem slug, então a varredura por componente nunca a abria; '
+          + 'inline vence a folha e sai do tema, da densidade e da escala',
       });
     }
   }
@@ -10489,7 +10746,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

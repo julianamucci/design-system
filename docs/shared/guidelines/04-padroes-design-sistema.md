@@ -877,8 +877,13 @@ Problemas de overflow são comuns em layouts flex e grid. Aplique as seguintes r
 
 ```css
 /* Elevação usa rgba pois box-shadow não é uma cor de tema — é uma sombra com transparência */
+--elevation-xs: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);  /* relevo de controle */
 --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);
 ```
+
+No modo escuro cada degrau triplica o alfa (`0.05` → `0.15`, `0.1` → `0.3`), e é
+por isso que sombra se escreve como TOKEN e não como valor: valor cravado fica
+igual nos dois modos, e no escuro isso significa sombra que não existe.
 
 > **Nota**: `--elevation-*` é a única exceção ao padrão HSL. Box-shadows com transparência requerem `rgba()` por não serem cores de tema, e sim camadas de sombra sobrepostas.
 
@@ -902,10 +907,28 @@ de superfície, e a altura sobe com o quanto ela se separa da página.
 
 | tipo | degrau | componentes |
 |---|---|---|
-| card, sobre o background | `--elevation-sm` | card |
+| relevo de controle, no plano da página | `--elevation-xs` | button, tabs, toggle, toggle-group, tags-input, input-otp, number-field, sidebar, menubar, related-card |
+| card, sobre o background | `--elevation-sm` | card, o thumb do slider |
 | flutuante interativo | `--elevation-md` | popover, dropdown-menu (e context-menu, menubar), select, combobox, navigation-menu, o seletor do calendário, o popover do composer |
 | flutuante passivo | `--elevation-lg` | hover-card, tooltip |
 | modal (todos), drawer e toast | `--elevation-xl` | dialog, alert-dialog, sheet, drawer, toast |
+
+**`xs` é o único degrau que NÃO é superfície**, e é por isso que ele não se
+compara aos outros pela altura: os quatro de baixo respondem "quão alto isto
+paira sobre a página", e ele responde "isto tem relevo sem sair do plano dela".
+Botão, aba selecionada, campo de OTP, barra de menu e thumb não flutuam — só não
+são chapados.
+
+Entrou em 2026-09-12, e não por desenho: a medição achou **18 declarações de
+`box-shadow` cravando o valor à mão** nas folhas compartilhadas, e quinze delas
+eram exatamente esta sombra. Cravadas, não seguiam o MODO — ficavam em 0.05 no
+escuro, onde a escada triplica o alfa, ou seja praticamente invisíveis sobre
+fundo escuro. O portão `elevacao_fora_do_mapa` não as via porque classificava
+folha que LÊ o token, e folha que não lia nenhuma saía pela porta do `continue`.
+Quem cobre isso agora é o irmão de COBERTURA, `sombra_cravada`: valor literal
+reprova, salvo folha declarada com o motivo. Duas estão — o `data-table`, cuja
+sombra de rolagem de cabeçalho fixo tem blur largo de propósito, e o `switch`,
+cujo thumb fica entre `xs` e `sm`.
 
 **Interativo × passivo** é o que separa `md` de `lg`: o interativo recebe foco e
 aceita ação; o passivo só acompanha o que está embaixo e some quando o ponteiro
