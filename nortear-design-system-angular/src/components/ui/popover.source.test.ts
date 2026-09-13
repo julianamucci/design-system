@@ -2,11 +2,17 @@ import { describe, expect, it } from 'vitest';
 import * as popoverSource from './popover.source';
 import {
   popoverBasicSource,
+  popoverColorPickerSource,
   popoverControlledSource,
   popoverFormSource,
   popoverModalSource,
   popoverOpenSource,
   popoverPlaygroundSource,
+  popoverPlainSource,
+  popoverQuickSettingsSource,
+  popoverSideTopSource,
+  popoverTableFilterSource,
+  popoverTitledSource,
 } from './popover.source';
 
 /**
@@ -80,13 +86,19 @@ function transformsByStory(source: string): Map<string, string> {
   return out;
 }
 
-// ─── Os seis construtores, e a story que cada um serve ───────────────────────
+// ─── Os construtores, e a story que cada um serve ────────────────────────────
 //
 // A tabela existe para ser COBRADA: um caso a compara com o que o módulo
 // exporta e outro com o que os quatro arquivos de story publicam. Construtor
 // novo que não entre aqui reprova, e story nova sem transform também — em vez
 // de saírem calados da varredura, que é como o `source-snippets.test.ts` do Vue
 // perdeu 28 exports e seguiu verde medindo menos.
+//
+// Em 2026-09-13 ela passou a cobrir TODAS as stories do slug: a lista
+// `SEM_CONSTRUTOR`, que carregava as seis últimas como dívida declarada, deixou
+// de existir junto com o último item dela. Lista de exclusão vazia é pior que
+// exclusão nenhuma — continua parecendo que alguém a relê, e a próxima story
+// crua entraria nela sem discussão.
 
 const CONSTRUCTORS: Array<{
   name: string;
@@ -146,23 +158,40 @@ const CONSTRUCTORS: Array<{
     stories: [{ file: './popover-states.stories.ts', story: 'Modal' }],
     build: popoverModalSource,
   },
-];
-
-/**
- * As stories que AINDA publicam o template cru.
- *
- * Dívida medida, e não exclusão em silêncio: enquanto elas estiverem aqui o
- * caso de cobertura passa, e no dia em que uma ganhar `transform` ele reprova
- * pedindo que ela saia desta lista e entre na tabela acima. Foi assim que a
- * lista de exclusão do `source-snippets.test.ts` apodreceu sem ninguém ver.
- */
-const SEM_CONSTRUTOR = [
-  { file: './popover-variants.stories.ts', story: 'Default' },
-  { file: './popover-variants.stories.ts', story: 'WithTitle' },
-  { file: './popover-compositions.stories.ts', story: 'TableFilter' },
-  { file: './popover-compositions.stories.ts', story: 'ColorPicker' },
-  { file: './popover-compositions.stories.ts', story: 'QuickSettings' },
-  { file: './popover-compositions.stories.ts', story: 'SideTop' },
+  {
+    name: 'popoverPlainSource',
+    stories: [{ file: './popover-variants.stories.ts', story: 'Default' }],
+    build: popoverPlainSource,
+  },
+  {
+    // Construtor PRÓPRIO, e não um reaproveitamento de `popoverBasicSource`: o
+    // painel é o mesmo, mas o gatilho não ("Configurações de exibição" × "Abrir
+    // popover"). Markup diferente não compartilha construtor — é a mesma régua
+    // que aprova a dupla Closed/Focus por serem idênticas.
+    name: 'popoverTitledSource',
+    stories: [{ file: './popover-variants.stories.ts', story: 'WithTitle' }],
+    build: popoverTitledSource,
+  },
+  {
+    name: 'popoverTableFilterSource',
+    stories: [{ file: './popover-compositions.stories.ts', story: 'TableFilter' }],
+    build: popoverTableFilterSource,
+  },
+  {
+    name: 'popoverColorPickerSource',
+    stories: [{ file: './popover-compositions.stories.ts', story: 'ColorPicker' }],
+    build: popoverColorPickerSource,
+  },
+  {
+    name: 'popoverQuickSettingsSource',
+    stories: [{ file: './popover-compositions.stories.ts', story: 'QuickSettings' }],
+    build: popoverQuickSettingsSource,
+  },
+  {
+    name: 'popoverSideTopSource',
+    stories: [{ file: './popover-compositions.stories.ts', story: 'SideTop' }],
+    build: popoverSideTopSource,
+  },
 ];
 
 describe('cobertura das quatro stories', () => {
@@ -189,12 +218,12 @@ describe('cobertura das quatro stories', () => {
     // Cobre os dois sentidos: story sem transform (que publicaria o template
     // cru, que é a regra `story_file_sem_transform` do audit) e story que
     // herdou o transform do `meta` sem ninguém decidir isso.
+    //
+    // Sem lista de exclusão: story nova sem `transform` cai aqui como
+    // `(nenhum)` e reprova, em vez de ser anotada como dívida.
     const declared = new Map<string, string>();
     for (const { name, stories } of CONSTRUCTORS) {
       for (const { file, story } of stories) declared.set(`${file}#${story}`, name);
-    }
-    for (const { file, story } of SEM_CONSTRUTOR) {
-      declared.set(`${file}#${story}`, SEM_TRANSFORM);
     }
 
     const actual = new Map<string, string>();
@@ -231,6 +260,32 @@ const SCAFFOLD_OF_THE_STATES = [
     why:
       'States/Modal abre o painel para o axe varrer e o Chromatic fotografar. ' +
       'Um popover modal que nasce aberto prende o foco de quem acabou de chegar.',
+  },
+];
+
+/**
+ * O andaime das stories de COMPOSIÇÃO — e, hoje, só o de SideTop.
+ *
+ * O irmão que cria o espaço acima do gatilho existe para que o auto-flip não
+ * aconteça enquanto a play mede o lado pedido. É arranjo do quadro da story, e
+ * ensiná-lo faria quem copia achar que o popover precisa de um espaçador para
+ * abrir acima.
+ */
+const SCAFFOLD_OF_THE_COMPOSITIONS = [
+  {
+    name: '[data-slot="side-top-headroom"]',
+    pattern: /data-slot="side-top-headroom"/g,
+    why:
+      'Compositions/SideTop precisa de espaço acima do gatilho para provar que, ' +
+      'COM espaço, o painel não vira. O espaçador é do quadro da story, não do ' +
+      'componente.',
+  },
+  {
+    name: 'nds-min-h-60',
+    pattern: /nds-min-h-60/g,
+    why:
+      'É a altura do espaçador de SideTop. Some com ela e o irmão deixa de criar ' +
+      'espaço nenhum — a story mediria o flip nos dois passos.',
   },
 ];
 
@@ -300,6 +355,20 @@ describe('premissa das exceções', () => {
         new RegExp(pattern.source).test(source),
         `${name} não aparece mais em popover-states.stories.ts — a exceção declarada ` +
           `("${why}") perdeu a premissa e precisa ser reexaminada`,
+      ).toBe(true);
+    }
+  });
+
+  it('e o andaime declarado de SideTop ainda EXISTE na story de composição', () => {
+    // Mesma régua da lista acima, no outro arquivo: se o espaçador sumir ou
+    // mudar de gancho, a decisão de deixá-lo fora do snippet precisa ser tomada
+    // de novo — e não continuar valendo por inércia.
+    const source = storySources['./popover-compositions.stories.ts'] ?? '';
+    for (const { name, pattern, why } of SCAFFOLD_OF_THE_COMPOSITIONS) {
+      expect(
+        new RegExp(pattern.source).test(source),
+        `${name} não aparece mais em popover-compositions.stories.ts — a exceção ` +
+          `declarada ("${why}") perdeu a premissa e precisa ser reexaminada`,
       ).toBe(true);
     }
   });
@@ -637,5 +706,232 @@ describe('os estados', () => {
     expect(code).toContain("import { NdsCheckbox } from '@/components/ui/checkbox';");
     expect(code).toContain("import { NdsLabel } from '@/components/ui/label';");
     expect(code).toContain('imports: [...NDS_POPOVER, NdsButton, NdsCheckbox, NdsLabel]');
+  });
+});
+
+// ─── As duas variantes ───────────────────────────────────────────────────────
+
+describe('as variantes', () => {
+  it('o painel de conteúdo livre se nomeia por ariaLabel, e NÃO tem cabeçalho', () => {
+    // A ausência do título é o assunto da story, e ela tem consequência de nome
+    // acessível: sem `ndsPopoverTitle` não há `aria-labelledby`, e um dialog sem
+    // nome reprova em aria-dialog-name. Herdar o nome do gatilho anunciaria o
+    // botão no lugar do painel — por isso o nome se DECLARA.
+    const code = popoverPlainSource();
+    expect(panelTag(code)).toBe(
+      '<ng-template ndsPopoverContent ariaLabel="Informações adicionais">',
+    );
+    expect(code).not.toContain('ndsPopoverHeader');
+    expect(code).not.toContain('ndsPopoverTitle');
+    expect(code).not.toContain('ndsPopoverDescription');
+    // Conteúdo livre é conteúdo: as teclas vêm marcadas como teclas.
+    expect(code).toContain('<kbd class="nds-kbd">Ctrl</kbd>');
+  });
+
+  it('e não é controlado — sem rodapé de ações, não há o que fechar por código', () => {
+    const code = popoverPlainSource();
+    expect(code).not.toContain('[(open)]');
+    expect(code).not.toContain('signal(');
+    expect(code).not.toContain("import { signal } from '@angular/core';");
+    expect(code).toContain('<div ndsPopover>');
+    expect(code).toContain('export class Exemplo {}');
+  });
+
+  it('o painel COM título traz o par título + descrição, e nenhum aria-label junto', () => {
+    // A contrapartida exata do caso acima: com título, o nome sai do
+    // `aria-labelledby` que a diretiva escreve. Um `aria-label` aqui seriam dois
+    // contratos de nome no mesmo painel.
+    const code = popoverTitledSource();
+    expect(code).toContain('<div ndsPopoverHeader>');
+    expect(code).toContain('<h2 ndsPopoverTitle>Configurações de exibição</h2>');
+    expect(code).toContain(
+      '<p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>',
+    );
+    expect(code).not.toContain('aria-label');
+    expect(code).not.toContain('ariaLabel');
+    // E o gatilho é o da story, não o genérico das stories de estado.
+    expect(code).toContain('>Configurações de exibição</button>');
+  });
+
+  it('e ele só se separa do construtor de estado pelo RÓTULO DO GATILHO', () => {
+    // A premissa da escolha de ter construtor próprio em vez de reaproveitar
+    // `popoverBasicSource`: os dois publicam o mesmo painel, e o que muda é o
+    // gatilho. No dia em que um dos dois ganhar markup próprio este caso
+    // reprova, e a decisão é reexaminada — ou o painel comum se separa de vez,
+    // ou a diferença passa a ser declarada aqui.
+    expect(
+      popoverTitledSource().replace('>Configurações de exibição</button>', '>Abrir popover</button>'),
+      'Variants/WithTitle divergiu das stories de estado em algo além do rótulo do ' +
+        'gatilho — a razão de os dois construtores compartilharem o mesmo corpo ' +
+        'precisa ser reexaminada',
+    ).toBe(popoverBasicSource());
+  });
+
+  it('o rodapé do painel com título mantém os DOIS caminhos de fechar', () => {
+    const actions = footer(popoverTitledSource());
+    expect(actions.match(/ndsPopoverClose/g)).toHaveLength(1);
+    expect(actions).toContain('ndsButton variant="ghost" size="sm">Cancelar<');
+    expect(actions).toContain('ndsButton size="sm" (click)="salvar()">Salvar<');
+  });
+});
+
+// ─── As quatro composições ───────────────────────────────────────────────────
+
+/** O corpo de um método da classe do exemplo, da chave de abrir à de fechar. */
+function methodBody(code: string, signature: string): string {
+  const start = code.indexOf(signature);
+  expect(start, `${signature} não existe no snippet`).toBeGreaterThan(-1);
+  return code.slice(start + signature.length, code.indexOf('\n  }', start));
+}
+
+describe('popoverTableFilterSource', () => {
+  it('publica os três status combináveis, cada um com rótulo amarrado', () => {
+    const code = popoverTableFilterSource();
+    expect(code.match(/<button ndsCheckbox/g)).toHaveLength(3);
+    for (const [id, label] of [
+      ['filtro-ativo', 'Ativo'],
+      ['filtro-pendente', 'Pendente'],
+      ['filtro-arquivado', 'Arquivado'],
+    ]) {
+      expect(code).toContain(`<button ndsCheckbox id="${id}"></button>`);
+      expect(code).toContain(`<label ndsLabel for="${id}">${label}</label>`);
+    }
+    // O prefixo que existe só para dois exemplos não colidirem na mesma docs
+    // page é da STORY, e não do componente.
+    expect(code).not.toContain('pc-filtro');
+    expect(code).toContain('imports: [...NDS_POPOVER, NdsButton, NdsCheckbox, NdsLabel]');
+  });
+
+  it('Aplicar fecha por CÓDIGO e Limpar NÃO fecha — e nenhum é a peça de fechar', () => {
+    // Este é o par que a composição tem de próprio. "Aplicar" escreve no estado,
+    // então o motivo chega ao relatório como `api`; "Limpar" age e deixa o
+    // painel aberto, porque filtro é escolha múltipla e fechar obrigaria a
+    // reabrir. Com `ndsPopoverClose` em qualquer um dos dois, o relatório
+    // passaria a dizer "apertou o botão de fechar".
+    const code = popoverTableFilterSource();
+    const actions = footer(code);
+
+    expect(code).not.toContain('ndsPopoverClose');
+    expect(actions).toContain('<button ndsButton variant="ghost" size="sm" (click)="limpar()">Limpar<');
+    expect(actions).toContain('<button ndsButton size="sm" (click)="aplicar()">Aplicar<');
+    // Só a ação de descarte carrega `variant`: o peso da primária vem da
+    // ausência dele.
+    expect(actions.match(/variant=/g)).toHaveLength(1);
+
+    // E o que cada método faz com o painel, que é a diferença inteira.
+    expect(methodBody(code, 'aplicar(): void {')).toContain('this.aberto.set(false);');
+    expect(
+      methodBody(code, 'limpar(): void {'),
+      'Limpar passou a fechar o painel — com isso o snippet perde o contraste que ' +
+        'a composição existe para ensinar',
+    ).not.toContain('aberto.set');
+  });
+
+  it('e a raiz é controlada, que é o que dá ao Aplicar como fechar', () => {
+    const code = popoverTableFilterSource();
+    expect(code).toContain('<div ndsPopover [(open)]="aberto">');
+    expect(code).toContain('readonly aberto = signal(false);');
+    expect(code).toContain("import { signal } from '@angular/core';");
+  });
+});
+
+describe('popoverColorPickerSource', () => {
+  it('as seis amostras tiram a cor de TOKEN do tema, nunca de hexadecimal', () => {
+    // Amostra escrita em hex sai do tema na primeira troca de marca, e um
+    // `style="background:#…"` ainda venceria a folha — por isso a cor é classe.
+    // A grade é escrita amostra a amostra de propósito: classe montada em
+    // runtime não é legível por quem copia nem alcançável por portão.
+    const code = popoverColorPickerSource();
+    const tokens = code.match(/nds-bg-[a-z]+/g) ?? [];
+    expect(tokens).toEqual([
+      'nds-bg-primary',
+      'nds-bg-secondary',
+      'nds-bg-success',
+      'nds-bg-warning',
+      'nds-bg-info',
+      'nds-bg-destructive',
+    ]);
+    expect(code).not.toMatch(/#[0-9a-fA-F]{3}\b/);
+    expect(code).not.toMatch(/\b(?:rgb|hsl|oklch)a?\(/);
+  });
+
+  it('e cada amostra declara o próprio nome — cor não é nome', () => {
+    // Quem não distingue a cor não tem outra informação, e um botão só com cor
+    // reprova em button-name.
+    const code = popoverColorPickerSource();
+    const names = (code.match(/aria-label="([^"]+)"/g) ?? []).map((m) => m.slice(12, -1));
+    expect(names).toHaveLength(6);
+    expect(new Set(names).size).toBe(6);
+    expect(code.match(/type="button"/g)).toHaveLength(6);
+    // O anel de foco é o que faz a grade navegável por teclado ser visível.
+    expect(code.match(/nds-focus-ring/g)).toHaveLength(6);
+  });
+});
+
+describe('popoverQuickSettingsSource', () => {
+  it('publica os três alternadores, com rótulo à esquerda e controle à direita', () => {
+    const code = popoverQuickSettingsSource();
+    expect(code.match(/<button ndsCheckbox/g)).toHaveLength(3);
+    expect(code.match(/data-justify="between"/g)).toHaveLength(3);
+    for (const [id, label] of [
+      ['preferencia-notificacoes', 'Notificações'],
+      ['preferencia-escuro', 'Modo escuro'],
+      ['preferencia-compacto', 'Modo compacto'],
+    ]) {
+      expect(code).toContain(`<label ndsLabel for="${id}">${label}</label>`);
+      expect(code).toContain(`id="${id}"`);
+    }
+    // Uma delas já vem ligada, que é o que mostra o estado marcado na foto.
+    expect(code.match(/\[checked\]="true"/g)).toHaveLength(1);
+    expect(code).not.toContain('pc-pref');
+  });
+
+  it('e NÃO tem rodapé de confirmação — marcar já é o efeito', () => {
+    // Cada linha vale por si. Um par Cancelar/Salvar aqui prometeria uma
+    // transação que não existe, e deixaria a pergunta "o que acontece se eu
+    // fechar sem salvar?" sem resposta.
+    //
+    // A asserção é sobre o RÓTULO DE BOTÃO, e não sobre a palavra solta: o
+    // comentário do snippet explica justamente por que não há um par
+    // Cancelar/Salvar, e um `not.toContain('Cancelar')` reprovaria na PROSA que
+    // ensina a regra — foi o que ele fez na primeira rodada.
+    const code = popoverQuickSettingsSource();
+    expect(code).not.toContain('data-justify="end"');
+    expect(code).not.toContain('ndsPopoverClose');
+    expect(code).not.toMatch(/>\s*(?:Cancelar|Salvar|Aplicar)\s*</);
+    expect(code).not.toContain('[(open)]');
+  });
+});
+
+describe('popoverSideTopSource', () => {
+  it('pede o lado por atributo e a distância por binding', () => {
+    // `sideOffset` é número: escrito como `sideOffset="12"` chegaria à diretiva
+    // como a STRING "12". A posição é união de strings e dispensa colchete.
+    //
+    // As duas asserções medem a TAG, e não o arquivo: o comentário do snippet
+    // escreve `sideOffset="12"` para dizer que essa é a forma errada, e um
+    // `not.toContain` solto reprovaria na explicação — foi o que ele fez na
+    // primeira rodada.
+    const code = popoverSideTopSource();
+    const tag = panelTag(code);
+    expect(tag).toBe('<ng-template ndsPopoverContent side="top" [sideOffset]="12">');
+    expect(tag).not.toContain('sideOffset="12"');
+  });
+
+  it('e NÃO publica o espaçador da story, nem o embrulho que o segura', () => {
+    // O irmão existe para o auto-flip não acontecer enquanto a play mede o lado
+    // pedido. Ensiná-lo faria quem copia achar que o popover precisa de um
+    // espaçador para abrir acima — precisa é de ESPAÇO, e sem ele vira sozinho,
+    // que é justamente o contrato que a story prova no segundo passo.
+    const code = popoverSideTopSource();
+    for (const scaffold of SCAFFOLD_OF_THE_COMPOSITIONS) {
+      expect(code, `${scaffold.name} vazou para o snippet: ${scaffold.why}`).not.toMatch(
+        new RegExp(scaffold.pattern.source),
+      );
+    }
+    expect(code).not.toContain('aria-hidden');
+    expect(code).not.toContain('nds-w-full');
+    // A raiz do exemplo é o próprio popover, sem quadro em volta.
+    expect(code).toMatch(/template: `\n {4}<div ndsPopover>/);
   });
 });

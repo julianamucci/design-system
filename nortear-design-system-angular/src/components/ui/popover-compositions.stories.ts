@@ -3,7 +3,13 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
 import { close, open, panel } from './popover.fixtures';
-import { popoverFormSource } from './popover.source';
+import {
+  popoverColorPickerSource,
+  popoverFormSource,
+  popoverQuickSettingsSource,
+  popoverSideTopSource,
+  popoverTableFilterSource,
+} from './popover.source';
 import { NdsButton } from './button';
 import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
@@ -160,6 +166,11 @@ export const EditProfile: Story = {
 };
 
 export const TableFilter: Story = {
+  parameters: {
+    // O painel Code tem de ensinar o contraste do rodapé: "Aplicar" fecha por
+    // código e "Limpar" não fecha — nenhum dos dois é a peça de fechar.
+    docs: { source: { transform: popoverTableFilterSource } },
+  },
   render: () => ({
     // Estado controlado por causa do "Aplicar": ele fecha por CÓDIGO, depois de
     // aplicar o filtro, e é isso que faz o motivo chegar como `api`. Marcado
@@ -238,6 +249,11 @@ export const TableFilter: Story = {
 };
 
 export const ColorPicker: Story = {
+  parameters: {
+    // A grade de amostras, com a cor saindo de token do tema — nunca de
+    // hexadecimal — e o nome de cada amostra declarado.
+    docs: { source: { transform: popoverColorPickerSource } },
+  },
   render: () => ({
     template: `
       <div ndsPopover>
@@ -313,6 +329,11 @@ export const ColorPicker: Story = {
 };
 
 export const QuickSettings: Story = {
+  parameters: {
+    // Os alternadores independentes, sem rodapé de confirmação: marcar já é o
+    // efeito, e é isso que o painel Code precisa ensinar.
+    docs: { source: { transform: popoverQuickSettingsSource } },
+  },
   render: () => ({
     template: `
       <div ndsPopover>
@@ -389,6 +410,10 @@ export const SideTop: Story = {
   parameters: {
     covers: ['visual.item4'],
     layout: 'padded',
+    // O painel Code publica `side="top"` + `[sideOffset]="12"` e NADA do irmão
+    // que cria o espaço acima: ele é andaime do quadro, e ensiná-lo faria quem
+    // copia achar que o popover precisa de um espaçador para abrir acima.
+    docs: { source: { transform: popoverSideTopSource } },
   },
   render: () => ({
     template: `

@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
 import { open, panel } from './popover.fixtures';
-import { popoverFormSource } from './popover.source';
+import { popoverFormSource, popoverPlainSource, popoverTitledSource } from './popover.source';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
@@ -38,7 +38,12 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    // O painel Code ensina o painel SEM título — e, com ele, o `ariaLabel` que
+    // passa a ser o único contrato de nome do diálogo.
+    docs: { source: { transform: popoverPlainSource } },
+  },
   render: () => ({
     template: `
       <div ndsPopover>
@@ -74,7 +79,12 @@ export const Default: Story = {
 };
 
 export const WithTitle: Story = {
-  parameters: { covers: ['visual.item2', 'accessibility.item5'] },
+  parameters: {
+    covers: ['visual.item2', 'accessibility.item5'],
+    // O painel Code publica o componente, com o `[(open)]` num SINAL: o
+    // `isOpen` de `props` é do renderer do Storybook e não existe fora dele.
+    docs: { source: { transform: popoverTitledSource } },
+  },
   render: () => ({
     // Estado controlado só por causa do rodapé: o "Salvar" fecha por CÓDIGO, e
     // é isso que faz o motivo chegar como `api` em vez de `close-button`.
