@@ -79,11 +79,28 @@ afirmava "posicionado acima" medindo um painel que ninguém conseguia ler. O
 espaço virou um irmão de verdade, e um passo novo tira esse irmão e exige que o
 lado vire e que o `data-side` acompanhe.
 
-**Pendência aberta**: nas outras quatro o C9 continua sem prova. A `SideTop` do
-react afirma `data-side ∈ {top, bottom}` — aceita os dois, então passa com ou sem
-flip. Ali o recurso vem da lib e provavelmente funciona; o que falta é a
-asserção que o mostre. Fecha quando uma story de cada stack tirar o espaço e
-exigir a virada, como a do vanilla agora faz.
+**Fechado nas cinco no mesmo dia**, por decisão da dona de nunca deixar um
+conserto criar divergência nova — regra que entrou no `CLAUDE.md` nesta rodada.
+A `SideTop` das outras quatro afirmava `data-side ∈ {top, bottom}`: aceita os
+dois, passa com ou sem flip. Agora cada uma exige o lado EXATO com espaço, a
+virada sem espaço, e a geometria junto do atributo nos dois casos.
+
+**O flip existe nas quatro libs — medido, não presumido.** No angular a leitura
+foi até a fonte: o `RdxPopperContentWrapper` monta `flip()` com o padrão
+`side: 'flip'`, e o `data-side` sai do placement RESOLVIDO. Nenhuma bandeira foi
+ligada em stack nenhuma; faltava só a asserção.
+
+**E o arranjo falso era de todas, não do vanilla.** Três das quatro achavam o
+mesmo `data-split="last"` com o popover como filho único — o utilitário põe
+`margin-top: auto` no ÚLTIMO filho, e ele já era o último. No react ele nem isso:
+a lib deixa um nó depois do gatilho, então o `:last-child` daquela árvore nunca
+foi ele. O espaço vinha de `layout: 'centered'`, por acidente, e em duas stacks a
+story precisou virar `padded` para o passo medir o recurso em vez da altura da
+janela.
+
+**Efeito colateral registrado**: depois desta rodada, `data-split` não tem mais
+NENHUM consumidor vivo nas cinco stacks — só menções em comentário, explicando
+por que ele saiu. A regra continua em `layout.css`.
 
 ### D1 · Não-modal por padrão
 

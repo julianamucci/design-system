@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen, fn } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
 import { popoverPlaygroundSource, type PopoverArgs } from './popover.source';
-import { open, panel } from './popover.fixtures';
+import { close, open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
 import { NdsPopoverDocs } from '@/components/docs/PopoverDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -62,12 +62,6 @@ const meta: Meta<PopoverArgs> = {
 
 export default meta;
 type Story = StoryObj<PopoverArgs>;
-
-/** Fecha só se estiver aberto. */
-async function close(trigger: HTMLElement): Promise<void> {
-  if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
-  await waitFor(() => expect(panel()).toBeNull());
-}
 
 /** O lado oposto no MESMO eixo — o auto-flip troca de lado, nunca de eixo. */
 const OPOSTO: Record<string, string> = {

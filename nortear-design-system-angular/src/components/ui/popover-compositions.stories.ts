@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
-import { open, panel } from './popover.fixtures';
+import { close, open, panel } from './popover.fixtures';
 import { popoverFormSource } from './popover.source';
 import { NdsButton } from './button';
 import { NdsCheckbox } from './checkbox';
@@ -367,49 +367,111 @@ export const QuickSettings: Story = {
   },
 };
 
+/** Seletor do irmão que cria — e, escondido, tira — o espaço acima do gatilho. */
+const HEADROOM = '[data-slot="side-top-headroom"]';
+
+// O contrato C9 do PRD (sem espaço no lado pedido, o painel vira para o oposto)
+// é gateado por esta story, e até 2026-09-13 ela não podia reprovar: a asserção
+// aceitava `top` OU `bottom`, então passava com ou sem auto-flip.
+//
+// Duas coisas precisavam mudar junto com a asserção.
+//
+// O QUADRO. O meta abre estas stories em `centered`, e ali o espaço acima do
+// gatilho vem do próprio quadro: tirar o irmão que cria o espaço faria o quadro
+// recentralizar e DEVOLVER o espaço, medindo o oposto do que se quer. Esta story
+// abre ancorada no topo, e então todo o espaço acima é o que o irmão dá.
+//
+// O ESPAÇO. Ele é um IRMÃO de verdade, não `data-split`/`margin` no próprio
+// popover: no vanilla o espaço vinha de um utilitário que empurra o ÚLTIMO
+// filho, e o popover era filho único — nada era empurrado, e ninguém viu porque
+// sem flip o painel era desenhado acima do mesmo jeito, fora da tela.
 export const SideTop: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    layout: 'padded',
+  },
   render: () => ({
     template: `
-      <div ndsPopover>
-        <button ndsPopoverTrigger ndsButton variant="outline">Abrir acima</button>
+      <div class="nds-stack nds-w-full" data-align="center" data-spacing="sm">
+        <!-- Espaço acima do gatilho. aria-hidden porque é andaime de layout:
+             não há nada aqui para um leitor de tela anunciar. -->
+        <div class="nds-min-h-60" data-slot="side-top-headroom" aria-hidden="true"></div>
 
-        <ng-template ndsPopoverContent side="top" [sideOffset]="12">
-          <div ndsPopoverHeader>
-            <h2 ndsPopoverTitle>Ancorado acima</h2>
-            <p ndsPopoverDescription>
-              Sem espaço acima, o painel vira para baixo sozinho.
-            </p>
-          </div>
-        </ng-template>
+        <div ndsPopover>
+          <button ndsPopoverTrigger ndsButton variant="outline">Abrir acima</button>
+
+          <ng-template ndsPopoverContent side="top" [sideOffset]="12">
+            <div ndsPopoverHeader>
+              <h2 ndsPopoverTitle>Ancorado acima</h2>
+              <p ndsPopoverDescription>
+                Sem espaço acima, o painel vira para baixo sozinho.
+              </p>
+            </div>
+          </ng-template>
+        </div>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: 'Abrir acima' });
+    const headroom = canvasElement.querySelector<HTMLElement>(HEADROOM)!;
 
-    await step('O lado pedido no template chega ao posicionamento', async () => {
+    // Precondição do primeiro passo, e ela é do REPLAY: o painel Interactions
+    // reexecuta a play no mesmo DOM, e uma rodada interrompida no meio do
+    // segundo passo teria deixado o irmão escondido.
+    headroom.style.display = '';
+
+    await step('Com espaço acima, o painel abre ACIMA e o markup diz top', async () => {
       await open(trigger);
       const dialogo = screen.getByRole('dialog');
-      // `top` ou `bottom`, nunca um lado do outro eixo: o auto-flip troca de
-      // LADO por colisão, jamais de eixo. Se o input não tivesse chegado, o
-      // padrão seria `bottom` — que também passaria aqui, então a asserção
-      // seguinte, sobre o deslocamento, é a que fecha a prova.
-      await expect(['top', 'bottom']).toContain(dialogo.getAttribute('data-side'));
-    });
+      const rg = trigger.getBoundingClientRect();
+      const rp = dialogo.getBoundingClientRect();
 
-    await step('E o sideOffset separa painel e gatilho pela medida pedida', async () => {
-      const dialogo = screen.getByRole('dialog');
-      const r1 = trigger.getBoundingClientRect();
-      const r2 = dialogo.getBoundingClientRect();
-      const distancia =
-        dialogo.getAttribute('data-side') === 'top'
-          ? r1.top - r2.bottom
-          : r2.top - r1.bottom;
+      // O arranjo é MEDIDO, não presumido: sem esta linha a story afirmaria
+      // "há espaço acima" sobre um quadro que talvez não tenha.
+      await expect(rg.top).toBeGreaterThan(rp.height + 12);
+
+      // Exatamente `top`, e não "um dos dois lados do eixo": com espaço acima o
+      // flip não tem por que acontecer, e se acontecesse seria defeito.
+      await expect(dialogo).toHaveAttribute('data-side', 'top');
+
+      // E a geometria acompanha o atributo — o `data-side` sozinho é markup, e
+      // markup pode mentir sobre onde o painel foi parar.
+      await expect(rp.bottom).toBeLessThanOrEqual(rg.top + 1);
       // 12px pedidos, com 1px de folga para arredondamento sub-pixel do
       // floating-ui. No padrão (4px) esta asserção reprovaria.
-      await expect(Math.abs(distancia - 12)).toBeLessThanOrEqual(1);
+      await expect(Math.abs(rg.top - rp.bottom - 12)).toBeLessThanOrEqual(1);
+    });
+
+    await step('Sem espaço acima, o painel VIRA para baixo e a geometria acompanha', async () => {
+      try {
+        // Some com o irmão: o gatilho sobe para o topo do quadro.
+        headroom.style.display = 'none';
+        await close(trigger);
+        await open(trigger);
+
+        const dialogo = screen.getByRole('dialog');
+        const rg = trigger.getBoundingClientRect();
+        const rp = dialogo.getBoundingClientRect();
+
+        // De novo a precondição medida: agora o painel NÃO cabe acima.
+        await expect(rg.top).toBeLessThan(rp.height + 12);
+
+        await expect(dialogo).toHaveAttribute('data-side', 'bottom');
+        await expect(rp.top).toBeGreaterThanOrEqual(rg.bottom - 1);
+        await expect(Math.abs(rp.top - rg.bottom - 12)).toBeLessThanOrEqual(1);
+      } finally {
+        headroom.style.display = '';
+      }
+    });
+
+    // Termina ABERTA e no lado pedido: é o estado que o Chromatic fotografa, e
+    // é o mesmo estado em que a play começou.
+    await step('Estado final: o espaço volta, e o lado pedido também', async () => {
+      await close(trigger);
+      await open(trigger);
+      await expect(screen.getByRole('dialog')).toHaveAttribute('data-side', 'top');
     });
   },
 };

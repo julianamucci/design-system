@@ -32,3 +32,15 @@ export async function open(trigger: HTMLElement): Promise<void> {
   // próprio componente — a ordem de tabulação medida sairia invertida.
   await waitFor(() => expect(panel()!.contains(document.activeElement)).toBe(true));
 }
+
+/**
+ * Fecha pelo gatilho, e só se ele ainda estiver expandido.
+ *
+ * Par idempotente de `open`, e pelo mesmo motivo: a play REEXECUTA no mesmo DOM.
+ * Estava só em `popover.stories.ts`, onde nasceu; veio para cá quando a segunda
+ * story precisou fechar e reabrir o painel para medir uma reposição.
+ */
+export async function close(trigger: HTMLElement): Promise<void> {
+  if (trigger.getAttribute('aria-expanded') === 'true') await userEvent.click(trigger);
+  await waitFor(() => expect(panel()).toBeNull());
+}

@@ -41,6 +41,21 @@
     submitLabel?: string;
     variant?: Variant;
     /**
+     * Folga real ACIMA do gatilho — um irmão inerte antes do popover.
+     *
+     * Existe para a story do auto-flip poder medir os dois casos: com a folga o
+     * painel cabe no lado pedido, sem ela a lib tem de virar. É um IRMÃO de
+     * verdade e não `data-split="last"`, que é o que as stacks irmãs tinham até
+     * 2026-09-13 e não empurrava nada — aquele utilitário põe `margin-top: auto`
+     * no ÚLTIMO filho, e o popover já era o último.
+     */
+    spaceAbove?: boolean;
+    /**
+     * Detecção de colisão da lib — desligar é o plantio que prova que o passo
+     * do flip mede o RECURSO, e não um atributo que calhou de bater.
+     */
+    avoidCollisions?: boolean;
+    /**
      * Nome acessível DECLARADO do painel. Só faz sentido na composição sem
      * título: onde há `PopoverTitle`, quem nomeia é o `aria-labelledby`, e um
      * `aria-label` junto venceria o título visível.
@@ -72,6 +87,8 @@
     emailLabel = 'Email',
     submitLabel = 'Atualizar',
     variant = 'default',
+    spaceAbove = false,
+    avoidCollisions = undefined,
     panelLabel = undefined,
     onAction,
     onCancel,
@@ -138,6 +155,11 @@
 </script>
 
 <div class="nds-stack" data-align="center" data-spacing="md" style="contain: layout">
+  {#if spaceAbove}
+    <!-- Irmão inerte, FORA do `{#key}`: o remonte do popover não o recria, então
+         a play pode esconder e reexibir a folga sem disputar com o Svelte. -->
+    <div class="nds-min-h-60" aria-hidden="true"></div>
+  {/if}
   {#key `${side}-${align}-${defaultOpen}-${variant}`}
       <Popover bind:open {modal} {onOpenChange}>
         <PopoverTrigger>
@@ -151,6 +173,7 @@
           {side}
           {align}
           {sideOffset}
+          {avoidCollisions}
           aria-label={variant === 'default' ? panelLabel : undefined}
         >
           {#if variant === 'form'}

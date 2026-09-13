@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
@@ -203,6 +203,12 @@ export const SideTop: Story = {
   name: 'Side top (auto-flip)',
   parameters: {
     covers: ['visual.item4'],
+    // `padded` e não o `centered` do meta: com o conteúdo centrado na vertical,
+    // o espaço acima do gatilho é metade do que SOBRA do viewport, e some ou
+    // reaparece conforme a altura da janela. O passo que exige a virada mediria
+    // o tamanho da tela, não o auto-flip. Ancorado ao topo, o segundo caso não
+    // tem espaço acima em janela nenhuma.
+    layout: 'padded',
     docs: {
       description: {
         story:
@@ -214,6 +220,8 @@ export const SideTop: Story = {
     defaultOpen: true,
     side: 'top',
     sideOffset: 12,
+    // A folga acima é um IRMÃO inerte do popover — ver a prop no PopoverStory.
+    spaceAbove: true,
     variant: 'withTitle',
     triggerLabel: 'Abrir acima',
     title: 'Ancorado acima',
@@ -224,27 +232,80 @@ export const SideTop: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: /Abrir acima/i });
+    const spacer = () => canvasElement.querySelector<HTMLElement>('.nds-min-h-60')!;
 
-    await step('O lado pedido chega ao posicionamento', async () => {
-      const dialog = await waitForPortal('dialog', { timeout: 2000 });
-      // `top` ou `bottom`, nunca um lado do outro eixo: o auto-flip troca de
-      // LADO por colisão, jamais de eixo.
-      await expect(['top', 'bottom']).toContain(dialog.getAttribute('data-side'));
-    });
+    /**
+     * Fecha e reabre o painel, para que a lib recalcule a colisão com a folga
+     * que existe AGORA. Reabrir é o ponto: a posição é decidida na abertura.
+     */
+    async function reopen(): Promise<void> {
+      if (trigger.getAttribute('aria-expanded') === 'true') {
+        await userEvent.click(trigger);
+        await waitForPortalGone('dialog');
+      }
+      await userEvent.click(trigger);
+      await waitForPortal('dialog', { timeout: 2000 });
+    }
 
-    await step('E o sideOffset separa painel e gatilho pela medida pedida', async () => {
-      // Dentro de waitFor: o posicionador da lib nasce com um transform de
-      // reserva e só mede a posição num quadro seguinte. Medir antes disso lê o
-      // painel fora do lugar, e a falha aponta para o offset em vez do relógio.
+    /**
+     * Exige o lado NO ATRIBUTO e na GEOMETRIA — atributo que muda sozinho seria
+     * markup mentindo sobre onde o painel ficou.
+     *
+     * Só leitura pura aqui dentro: `waitFor` reagenda por mutação, e uma sonda
+     * que escrevesse no DOM provocaria a própria tentativa seguinte até a aba
+     * morrer sem reprovar. O laço existe porque o posicionador da lib nasce com
+     * um transform de reserva e só assenta num quadro seguinte.
+     */
+    async function expectSide(side: 'top' | 'bottom'): Promise<void> {
       await waitFor(() => {
-        const dialog = panel()!;
-        const r1 = trigger.getBoundingClientRect();
-        const r2 = dialog.getBoundingClientRect();
-        const distancia =
-          dialog.getAttribute('data-side') === 'top' ? r1.top - r2.bottom : r2.top - r1.bottom;
+        const dialog = panel();
+        expect(dialog).not.toBeNull();
+        expect(dialog!.getAttribute('data-side')).toBe(side);
+        const rt = trigger.getBoundingClientRect();
+        const rp = dialog!.getBoundingClientRect();
         // 12px pedidos, com 1px de folga para arredondamento sub-pixel.
+        const distancia = side === 'top' ? rt.top - rp.bottom : rp.top - rt.bottom;
         expect(Math.abs(distancia - 12)).toBeLessThanOrEqual(1);
       }, { timeout: 2000 });
+    }
+
+    await step('Com espaço acima, o painel abre EXATAMENTE no lado pedido', async () => {
+      // Precondição própria: no replay o irmão pode ter ficado escondido.
+      spacer().style.display = '';
+      await reopen();
+      await expectSide('top');
+    });
+
+    await step('E continua alinhado ao gatilho no outro eixo', async () => {
+      const rt = trigger.getBoundingClientRect();
+      const rp = panel()!.getBoundingClientRect();
+      await expect(
+        Math.abs(rt.left + rt.width / 2 - (rp.left + rp.width / 2)),
+      ).toBeLessThanOrEqual(2);
+    });
+
+    // ─── O contrato C9, que esta story afirmava e não media ──────────────────
+    //
+    // A asserção anterior era `expect(['top','bottom']).toContain(data-side)`:
+    // aceitava os dois lados, então passava com ou sem auto-flip. E o passo do
+    // offset LIA o `data-side` para escolher de que lado medir, ou seja, se
+    // adaptava a qualquer resultado. Este passo tira o espaço, o painel deixa
+    // de caber acima, e o lado tem de virar.
+    await step('Sem espaço acima, o painel VIRA para baixo e o markup acompanha', async () => {
+      spacer().style.display = 'none';
+      try {
+        await reopen();
+        await expectSide('bottom');
+      } finally {
+        spacer().style.display = '';
+      }
+    });
+
+    // Termina ABERTA e no lado pedido: é o estado que o Chromatic fotografa, e
+    // é o estado em que o próximo replay encontra a story.
+    await step('Estado final: de volta ao lado pedido', async () => {
+      await reopen();
+      await expectSide('top');
     });
   },
 };

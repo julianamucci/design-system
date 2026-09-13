@@ -201,6 +201,28 @@ Exception: divergence in **framework API** (prop name, composition shape, event 
 Process rules, each learned from a concrete failure. They bind the orchestrator and every subagent.
 
 - **The repository is public.** Never commit measurement IDs, tokens or credentials — GA4 IDs live in `manager-head.html`, which is why that file must not carry a real ID in a commit.
+- **Conserto numa stack NÃO pode criar divergência nova entre as cinco.** O
+  defeito quase nunca é de uma stack só — é de uma stack a mais. Ao consertar,
+  a última pergunta antes de fechar é: *as outras quatro ficaram iguais?* Se a
+  resposta for "não sei", a rodada não acabou.
+
+  Vale para as três formas, e a terceira é a que escapa:
+
+  1. **Comportamento** — ligar o `flip` no popover do vanilla sem olhar as
+     outras deixaria uma stack virando o painel e quatro não.
+  2. **Exemplo** — a story `Modal` mostrava dois checkboxes em quatro stacks e um
+     par Cancelar/Confirmar no vanilla. Nenhuma estava errada sozinha; juntas,
+     comparar as páginas deixava de responder alguma coisa.
+  3. **ASSERÇÃO** — consertar o código e dar dentes ao teste só onde o defeito
+     apareceu. As outras quatro seguem com a story que não pode reprovar, e o
+     próximo relato do mesmo defeito virá de lá. Medido em 2026-09-13: o auto-flip
+     do popover foi ligado e provado no vanilla, e a `SideTop` das outras quatro
+     continuava afirmando `data-side ∈ {top, bottom}` — asserção que passa com ou
+     sem o recurso.
+
+  Quando alinhar for legítimo NÃO fazer — divergência de API de framework, ou
+  mecânica que só existe numa lib —, a saída é **declarar**, com a premissa
+  verificada, e nunca deixar implícito. É a mesma regra da exceção de portão.
 - **Close every known pendency of a component in the same pass.** When a component is under review, resolve all of its open items across the five stacks; do not record them in `FIXES-NEEDED.md` and move on. Only a decision that is genuinely the user's may stay open, and it is asked for on the spot. The goal is finishing the list with every component correct in every stack.
 
   **And the unit is the FAMILY when a PRD declares one** (`<!-- prd-familia: … -->` — today `dropdown-menu.md` also describes ContextMenu and Menubar). A pass on any member covers every member; a PRD `PENDÊNCIA` is never addressed to "the pass of the sibling". Measured on 2026-09-11: after eight passes across the three menus, the family still had the Tab destination wrong in all fifteen implementations, the menu id in `label` on one event and `menu` on the next, and two pendencies addressed to passes that had already happened. Full rule in `.claude/commands/pipeline.md`, "A família é a unidade".

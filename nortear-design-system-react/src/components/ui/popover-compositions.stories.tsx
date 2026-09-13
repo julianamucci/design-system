@@ -58,9 +58,17 @@ const wrapperClass = "nds-min-h-90";
 
 /** A story do lado de cima precisa de espaço ACIMA do gatilho, senão o painel
  *  colide com o topo e o auto-flip o manda para baixo — medindo o oposto do que
- *  ela documenta. A pilha empurra o gatilho para o fim do wrapper por
- *  `margin-top: auto`, no lugar de um padding cravado. */
+ *  ela documenta.
+ *
+ *  O espaço é um IRMÃO de verdade, e não `data-split="last"`, que é o que
+ *  estava aqui até 2026-09-13. Aquele utilitário põe `margin-top: auto` no
+ *  ÚLTIMO filho, e aqui ele nunca empurrou nada: medido em 2026-09-13,
+ *  replantando o atributo no wrapper, o gatilho fica em `top: 0` do mesmo jeito
+ *  dentro de um wrapper de 400px — o `:last-child` desta árvore não é o gatilho.
+ *  Com o irmão, a altura acima do gatilho é dele, e some quando ele some. */
 const sideTopClass = "nds-stack nds-min-h-100";
+const SIDE_TOP_SPACER = "side-top-spacer";
+const sideTopSpacerClass = "nds-min-h-60";
 const wrapperStyle: React.CSSProperties = {
   contain: "layout",
   position: "relative",
@@ -68,6 +76,31 @@ const wrapperStyle: React.CSSProperties = {
 
 function panel(): HTMLElement {
   return screen.getByRole("dialog");
+}
+
+/** Fecha (se aberto) e reabre pelo gatilho, devolvendo o painel novo.
+ *
+ *  O painel Interactions REEXECUTA a play no mesmo DOM: um clique cego partiria
+ *  do estado que a rodada anterior deixou. E reabrir é o que força a lib a
+ *  recalcular o lado contra o espaço que existe AGORA — fechado, o painel não
+ *  existe no portal, então o nó de volta é sempre outro. */
+async function reopen(trigger: HTMLElement): Promise<HTMLElement> {
+  if (screen.queryByRole("dialog")) await userEvent.click(trigger);
+  await userEvent.click(trigger);
+  return waitFor(() => screen.getByRole("dialog"));
+}
+
+/** Espera de RELÓGIO pelo lado, nunca `waitFor`.
+ *
+ *  O reposicionamento do flip vem da lib e chega um quadro depois do clique.
+ *  `waitFor` reagenda por observador de mutação, e é a forma que pendura a aba
+ *  quando a condição mexe no DOM — aqui a leitura é pura, mas o laço de relógio
+ *  tem prazo de verdade e não depende de mutação nenhuma para tentar de novo. */
+async function waitForSide(el: HTMLElement, side: string, timeout = 1500): Promise<void> {
+  const deadline = Date.now() + timeout;
+  while (el.getAttribute("data-side") !== side && Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
 }
 
 const SWATCH_CLASSES = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring";
@@ -362,7 +395,11 @@ export const SideTop: Story = {
     },
   },
   render: () => (
-    <div className={sideTopClass} data-split="last" data-align="center" style={wrapperStyle}>
+    <div className={sideTopClass} data-align="center" style={wrapperStyle}>
+      {/* O irmão que cria o espaço acima — a play o esconde para provar o
+          auto-flip e o devolve no fim. `aria-hidden` porque ele é geometria,
+          não conteúdo. */}
+      <div className={sideTopSpacerClass} data-testid={SIDE_TOP_SPACER} aria-hidden="true" />
       <Popover defaultOpen>
         <PopoverTrigger asChild>
           <Button variant="outline">Abrir acima</Button>
@@ -382,23 +419,64 @@ export const SideTop: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole("button", { name: /Abrir acima/i });
 
-    await step("O lado pedido chega ao posicionamento", async () => {
-      const dialog = await waitFor(() => screen.getByRole("dialog"));
-      // `top` ou `bottom`, nunca um lado do outro eixo: o auto-flip troca de
-      // LADO por colisão, jamais de eixo.
-      await expect(["top", "bottom"]).toContain(dialog.getAttribute("data-side"));
+    const spacer = canvasElement.querySelector<HTMLElement>(
+      `[data-testid="${SIDE_TOP_SPACER}"]`
+    )!;
+    // Precondição do primeiro passo, e ela é do REPLAY: a rodada anterior pode
+    // ter morrido no meio do passo que esconde o irmão.
+    spacer.style.display = "";
+
+    await step("Com espaço acima, o lado pedido é o lado obtido", async () => {
+      const dialog = await reopen(trigger);
+      // `top` EXATO. Aceitar `bottom` junto era o que fazia esta story passar
+      // com ou sem auto-flip — asserção que não pode reprovar.
+      await expect(dialog).toHaveAttribute("data-side", "top");
     });
 
     await step("E o sideOffset separa painel e gatilho pela medida pedida", async () => {
       const dialog = panel();
       const r1 = trigger.getBoundingClientRect();
       const r2 = dialog.getBoundingClientRect();
-      const distancia =
-        dialog.getAttribute("data-side") === "top" ? r1.top - r2.bottom : r2.top - r1.bottom;
+      // Geometria acompanhando o atributo: o painel INTEIRO acima do gatilho.
+      await expect(r2.bottom).toBeLessThanOrEqual(r1.top + 1);
       // 12px pedidos, com 1px de folga para arredondamento sub-pixel. Esta
       // asserção é a que pegou o painel crescendo POR CIMA do gatilho quando o
       // CSS compartilhado tirava o painel do fluxo do positioner.
-      await expect(Math.abs(distancia - 12)).toBeLessThanOrEqual(1);
+      await expect(Math.abs(r1.top - r2.bottom - 12)).toBeLessThanOrEqual(1);
+    });
+
+    // ─── O contrato C9, que esta story afirmava e não media ──────────────────
+    //
+    // Os passos acima provam que `side="top"` chega ao posicionamento — e é só
+    // isso. A story GARANTE espaço acima, de propósito, então o auto-flip nunca
+    // acontece nela. Este passo tira o espaço: o painel deixa de caber acima, o
+    // lado vira, e o `data-side` acompanha.
+    await step("Sem espaço acima, o painel VIRA para baixo e o markup acompanha", async () => {
+      try {
+        spacer.style.display = "none";
+        const flipped = await reopen(trigger);
+        await waitForSide(flipped, "bottom");
+        await expect(flipped).toHaveAttribute("data-side", "bottom");
+        const rg = trigger.getBoundingClientRect();
+        const rp = flipped.getBoundingClientRect();
+        // Medido em 2026-09-13, com o irmão escondido: viewport de 900px,
+        // gatilho em `top: 0 / bottom: 37.5` — encostado no topo, sem nenhum
+        // espaço acima —, painel de 94px em `top: 50 / bottom: 144`, ou seja
+        // abaixo do gatilho e a 12,5px dele. O arranjo NÃO é presumido: sem o
+        // irmão o gatilho vai mesmo para a borda de cima, e um painel de 94px
+        // com 12px de afastamento não tem onde caber ali.
+        await expect(rp.top).toBeGreaterThanOrEqual(rg.bottom - 1);
+      } finally {
+        spacer.style.display = "";
+      }
+    });
+
+    // Termina ABERTA, com espaço e no lado pedido: é o estado que o Chromatic
+    // fotografa, e é o estado em que o replay precisa encontrar a story.
+    await step("Estado final: de volta ao lado pedido", async () => {
+      const restored = await reopen(trigger);
+      await waitForSide(restored, "top");
+      await expect(restored).toHaveAttribute("data-side", "top");
     });
   },
 };
