@@ -317,12 +317,32 @@ uma família com duas folhas.
 > reintroduziria, ao contrário, o defeito que a D12 acabou de remover — uma folha
 > disputando posição com o posicionador da lib. Medido em 2026-09-13.
 >
-> **Fecha quando** as duas responsabilidades que hoje moram na mesma classe forem
-> separadas: o `overflow: visible`, que as cinco precisam, e a ancoragem por
-> folha, que é do painel aninhado do vanilla e só dele. Enquanto estiverem
-> juntas, não há como dar uma às quatro sem dar a outra. A alternativa é a folha
-> declarar a exceção medida com um menu longo — o que exige medir, não deduzir,
-> como o próprio bloco em `menubar.css` já exige.
+> **A rodada tem TRÊS passos, nesta ordem, e o primeiro pode dispensar os
+> outros dois.** Endereçada à passagem do Menubar (2026-09-13).
+>
+> **1. MEDIR se o problema existe nas quatro.** A razão ORIGINAL da regra acabou:
+> o submenu passou a ir para o `body` em 2026-09-07, e era ele que virava região
+> rolável. A razão atual — um menu LONGO estourando a altura e virando região
+> rolável alcançável por seta e não por Tab — nunca foi medida. O próprio bloco
+> em `menubar.css` diz isso com todas as letras: "precisa ser MEDIDO com um menu
+> longo, não deduzido". Monte uma story com itens suficientes para estourar a
+> altura nas quatro stacks de lib e rode o axe. **Se o achado não aparecer, a
+> regra inteira é obsoleta e a saída é apagá-la** — não replicá-la.
+>
+> **2. Se aparecer, SEPARAR as duas responsabilidades.** Hoje `.nds-menubar-panel`
+> carrega o `overflow: visible`, que as cinco precisam, junto com a ancoragem por
+> folha (`position` mais `top`/`left` por `[data-side]`), que é do painel aninhado
+> do vanilla e só dele. Enquanto estiverem na mesma classe não há como dar uma às
+> quatro sem dar a outra — e dar a outra é reintroduzir o defeito da D12 pelo
+> avesso. Precisa de um seletor que leve só o `overflow`, aplicável nas cinco, e
+> de um marcador próprio para a ancoragem.
+>
+> **3. Só então aplicar nas quatro stacks**, com a asserção correspondente nas
+> cinco — a terceira forma da regra de não criar divergência nova.
+>
+> Qualquer que seja o caminho, o que fecha é MEDIÇÃO no documento, não dedução:
+> foi deduzindo que esta pendência nasceu com uma receita que teria quebrado as
+> quatro stacks.
 
 ### D12 · A folha NÃO posiciona o painel, e o vão do Menubar é 8
 
