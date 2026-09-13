@@ -1,13 +1,16 @@
 # PRD — AlertDialog
 
-> **Estado descrito**: 2026-09-07, revisado em 2026-09-10 (pipeline `fix` — D3,
-> D4, D6, §5, §7, §8 e §9 mudaram, cada um com a linha antiga registrada no lugar).
-> **⚠ Escrito ANTES da revisão serial deste componente.** Espere que decisões
-> mudem — e quando mudarem, a linha se move para o histórico com a nova data e a
-> nova medição, em vez de ser reescrita por cima.
->
+> **Estado descrito**: 2026-09-12. **Revisão serial fechada em** 2026-09-10
+> (`eff06ba10`), com a rodada de categoria de 2026-09-12 por cima — D3, D6, C7 e
+> §5 conferidos linha a linha contra o código daquele dia.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
+>
+> **Até 2026-09-12 este cabeçalho ainda dizia "⚠ Escrito ANTES da revisão serial
+> deste componente"**, com a revisão fechada havia dois dias e sete linhas do
+> próprio arquivo já registrando o que ela mudou. Aviso que descreve o passado
+> do documento é pior do que aviso nenhum: ele autoriza o leitor a desconfiar de
+> tudo, inclusive do que foi medido.
 
 ## 1. Identidade
 
@@ -43,7 +46,17 @@ alert dispensável.
 | C4 | Ao fechar, o foco volta ao gatilho | `accessibility.item4` |
 | C5 | `Escape` fecha sem executar a ação; clique no véu **não** fecha | `accessibility.item5` |
 | C6 | Todo texto e borda cumprem 4,5:1 pelos tokens do tema | `accessibility.item6` |
-| C7 | O rodapé traz o par Cancelar + Ação, e é a saída visível | `notes` e o docblock da folha |
+| C7 | O rodapé traz o par Cancelar + Ação, e é a saída visível | o docblock de `alert-dialog.css` — ver a nota |
+
+**O C7 é o único contrato desta lista sem portão e sem conteúdo**, e a linha
+dizia o contrário. **Até 2026-09-12 o ponteiro era "`notes` e o docblock da
+folha"**; medido no conteúdo compartilhado daquele dia, nenhuma das quatro
+`notes` fala do rodapé — a `tip1` é o foco inicial, a `tip2` o tom do botão, a
+`tip3` a operação assíncrona e a `tip4` o aninhamento em Portal. O que o
+conteúdo diz do rodapé é `anatomy.item7`, "agrupa Cancel e Action. Empilhado em
+mobile, lado a lado em desktop": geometria, não saída obrigatória. Quem afirma a
+obrigatoriedade é só o docblock da folha, em prosa que nenhum portão lê — e uma
+composição que entregasse o painel sem rodapé passaria nas cinco stacks.
 
 ## 3. Decisões fixadas
 
@@ -86,7 +99,21 @@ do DOM.
 | angular | o `NdsAlertDialogCancel` se registra na raiz, que o foca no `(openAutoFocus)` do `rdxDialogPopup`, cancelando o evento |
 
 Vale também na abertura por TOQUE, em que a base-ui e o radix-ng focariam o
-painel; a story `Open` do react cobre esse caminho.
+painel — e a cobertura desse caminho é de DUAS stacks, não de uma:
+
+| stack | o que a story `Open` mede |
+|---|---|
+| react | painel aberto na montagem **e** abertura por toque — `openByTouch()` dispara `pointerdown`/`pointerup` com `pointerType: 'touch'`, porque `userEvent` não carrega tipo de ponteiro |
+| angular | o mesmo par, com o mesmo helper `openByTouch()` — o `rdxDialogPopup` é a outra lib que focaria o painel no toque |
+| vue, svelte, vanilla | só o painel aberto na montagem: o foco no Cancelar é afirmado, e a negativa (a ação NÃO tem foco) junto, mas sem passar pelo ponteiro |
+
+**Até 2026-09-12 esta linha creditava só o react.** O `openByTouch` entrou nas
+DUAS stacks no mesmo commit (`eff06ba10`, 2026-09-10) — mesmo nome, mesmo
+comentário sobre o `userEvent` não carregar tipo de ponteiro —, então a linha
+nasceu contando metade do que a própria rodada tinha feito. A story do angular
+existe justamente porque o radix-ng foca o painel no toque, que é a metade que a
+ordem do DOM não resolve. Nas outras três o painel nasce aberto sem clique
+nenhum: mede-se a escolha explícita, não o desempate contra a lib.
 
 **Até 2026-09-10 isto era verdade em três stacks**: react e angular chegavam ao
 Cancelar pela ORDEM do DOM (ele vem antes da ação no rodapé), e a base-ui ainda
@@ -133,12 +160,22 @@ frase se espalhou para quatro stories e para `testes.visual.item6`. A regra
 repetia `text-align` à toa; saiu, com o estilo computado medido idêntico antes e
 depois, nas duas larguras, com e sem mídia.
 
-**E a segunda versão da mesma frase sobreviveu até 2026-09-12**: onze comentários
-nas cinco stacks diziam que a mídia tem de ser o primeiro filho do cabeçalho, e
-**sete** davam o `:has()` como a razão. O seletor casa em qualquer posição — lê
-PRESENÇA, não ordem —, e o motivo verdadeiro é só a leitura ícone → título →
-descrição. O Vue e o vanilla foram corrigidos numa rodada; os outros cinco
-ficaram, mais dois que a busca por frase não achou porque a redação era outra.
+**A segunda versão da mesma frase sobreviveu até 2026-09-12, e fechou naquele
+dia** (`6ee93ef4b`, com o portão em `269343eff`). O defeito era: comentários nas
+cinco stacks diziam que a mídia tem de ser o primeiro filho do cabeçalho, e
+davam o `:has()` como a razão. O seletor casa em qualquer posição — lê PRESENÇA,
+não ordem —, e o motivo verdadeiro é só a leitura ícone → título → descrição.
+
+**Estado medido em 2026-09-12, depois da correção**: as **catorze** menções ao
+`:has()` no código das cinco stacks — um por arquivo, nos três arquivos de cada
+stack (primitivo ou `source`, `stories` e `variants`; no svelte são dois) — dizem
+hoje que ele não depende da ordem, e a folha continua sem `:first-child` e sem
+combinador.
+
+**Até 2026-09-12 esta linha dizia "onze comentários, sete com o `:has()` como
+razão; o Vue e o vanilla foram corrigidos numa rodada, os outros cinco ficaram"**
+— contagem do meio da correção, que deixou de valer no mesmo dia em que foi
+escrita.
 
 O que torna esta família caro de pegar: a asserção ao lado (`firstElementChild`)
 está CERTA e continua verde, então nada denuncia a explicação errada. Quem lesse
@@ -146,6 +183,15 @@ o comentário aprenderia que mover a mídia quebra o layout, e mexeria no CSS pa
 consertar o que já funciona. Portão: `afirmacao_de_has_sobre_ordem`, que confere
 a premissa na folha do próprio slug — se `<slug>.css` tiver um `:has()` que de
 fato leia posição, como o `.nds-card:has(> img:first-child)`, a afirmação passa.
+
+**E o portão tem um alcance declarado, que é o que sobra desta família**: ele só
+lê blocos de comentário que mencionem `:has(`, porque é essa saída antecipada que
+o mantém barato (sem ela a varredura abre os ~3.000 arquivos das cinco stacks, e
+a auditoria de um slug passava de segundos para 59s). Afirmação falsa sobre a
+folha que NÃO nomeie o seletor passa por baixo dele — há uma viva hoje, medida
+em 2026-09-12, em `nortear-design-system-svelte/.../alert-dialog.source.test.ts`,
+linha 75: "é dessa ordem que dependem o CSS e a leitura". É defeito de código,
+não deste arquivo, e está relatado como tal.
 
 ### D7 · A superfície é `--background`, e a família não concorda
 
@@ -203,9 +249,17 @@ Fonte: `docs/shared/styles/nds/alert-dialog.css`.
 | título | 18px, semi-bold, entrelinha 1, tracking -0.025em | `--text-control-xl` |
 | descrição | 14px, entrelinha 1.5 | `--text-control`, cor `--muted-foreground` |
 | gap do rodapé | 8px | `--spacing-2` |
-| caixa de mídia | 40px, raio médio, fundo neutro | `--spacing-10`, `--radius-md`, `--muted` |
+| caixa de mídia | 40px, raio médio, fundo neutro, margem inferior de 8px | `--spacing-10`, `--radius-md`, `--muted`, `--spacing-2` |
 | ícone dentro da mídia | 24px | `--spacing-6` |
 | camadas | — | `--z-modal-backdrop` e `--z-modal` |
+
+**Conferida linha a linha em 2026-09-12, depois da tokenização de elevação**
+(`aaa9ea44c`, `7975f6b53`): as dezesseis linhas fecham com a folha, e a sombra é a
+única que aquela rodada tocaria — já lia token antes dela, e continua em
+`--elevation-xl`. O degrau `xs` que nasceu ali não chega a este painel: nenhuma
+das onze folhas que o consomem é de superfície modal. O instrumento
+`node scripts/tabela-tokens.mjs alert-dialog` fecha com zero token lido pela
+folha e ausente das tabelas, nas cinco stacks.
 
 **Sem raio variável**: aqui o `--radius-card` vale em qualquer largura — diferente
 do Dialog, que é reto abaixo de 40rem.

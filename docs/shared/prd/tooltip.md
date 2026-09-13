@@ -1,6 +1,6 @@
 # PRD — Tooltip
 
-> **Estado descrito**: 2026-09-07. **Revisão serial fechada em** 2026-09-06.
+> **Estado descrito**: 2026-09-12. **Revisão serial fechada em** 2026-09-06.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
 
@@ -114,6 +114,22 @@ Três leituras que essa tabela dá, e todas custam:
 O foco pelo teclado continua abrindo na hora, sem esperar, nas cinco: o atraso é
 do hover, e prender o teclado a ele quebraria a WCAG 1.4.13.
 
+**E o exemplo canônico ensina o atraso pela AUSÊNCIA** — decisão da dona em
+2026-09-12 (`19f9b1342`), na mesma noite da padronização: quem copia o
+`anatomy.structureCode` monta o Provider SEM número e herda os 300 ms da casa, em
+vez de redigitar um valor que envelhece sozinho. Número redigitado sobrevive: onde
+o atraso é o próprio assunto do bloco ele fica, e o motivo de cada sobrevivente
+está declarado no portão.
+
+**Dois portões guardam isto**, os dois sob a regra `atraso_de_tooltip_divergente`:
+um compara o valor do primitivo de cada stack com o que a tabela de props publica;
+o outro cobra a CONTAGEM de declarações de atraso em cada uma das cinco docs
+pages, contra o número e o motivo escritos em `ATRASO_EM_DOCS_PAGE`. O segundo
+nasceu porque nenhuma docs page entrava na varredura — provado replantando
+`[delay]="400"` na página do Angular e vendo o audit fechar limpo. Ele reprova
+para os dois lados: a mais, porque entrou declaração que ninguém justificou; a
+menos, porque uma lição sumiu.
+
 ### D6 · A cadeia de `transform-origin` cita as três libs
 
 **Fixada em** 2026-09-04 — o tooltip foi o primeiro da família a ser corrigido, e
@@ -158,9 +174,20 @@ Fonte: `docs/shared/styles/nds/tooltip.css`.
 | sombra | — | `--elevation-lg` — flutuante passivo; era `xl` até 2026-09-10 |
 | camada | — | `--z-tooltip` |
 | seta | 10×5px | **literais** — base e altura do triângulo |
+| superfície da seta | — | `--primary`, a mesma do balão — é o que faz o triângulo continuar o balão em vez de encostar nele |
 
-**Animação**: só a saída anima (opacidade e `scale(0.95)`), pelo mesmo motivo do
-popover e do hover-card.
+**O degrau da sombra sai do TIPO de superfície**: flutuante passivo é `lg`, pela
+regra em `04-padroes-design-sistema.md` §Qual degrau, cobrada por
+`elevacao_fora_do_mapa`. O que separa `md` de `lg` ali é interativo × passivo, e
+o tooltip é o caso extremo do segundo lado — nem foco recebe.
+
+**Animação**: só a saída anima (opacidade e `scale(0.95)`), para evitar corrida
+entre opacidade zero na entrada e a checagem síncrona de visibilidade das plays.
+É a mesma forma do hover-card.
+
+**Até 2026-09-12 esta linha dizia "pelo mesmo motivo do popover e do
+hover-card"**, e o popover saiu do exemplo: em 2026-09-12 ele deixou de animar por
+completo, por decisão da dona, e com isso não há mais lado dele para comparar.
 
 ## 6. Estados
 
@@ -175,26 +202,50 @@ Não há estado de foco DENTRO do balão: ele não recebe foco (C6).
 
 ## 7. API
 
-| prop | tipo | padrão |
-|---|---|---|
-| `delay` | number | `300` — no provedor (ver D-espera) |
-| `open` | boolean | — |
-| `defaultOpen` | boolean | `false` |
-| `onOpenChange` | `(open: boolean) => void` | — |
-| `side` | `top \| right \| bottom \| left` | `top` |
-| `align` | `start \| center \| end` | `center` |
-| `sideOffset` | number | `4` |
+| prop | tipo | padrão | onde não vale |
+|---|---|---|---|
+| `delay` | number | `300`, no provedor — ver D5 | o NOME é `delayDuration` em vue, svelte e vanilla |
+| `open` | boolean | — | vanilla |
+| `defaultOpen` | boolean | `false` | vanilla |
+| `onOpenChange` | `(open: boolean) => void` | — | vanilla |
+| `side` | `top \| right \| bottom \| left` | `top` | — |
+| `align` | `start \| center \| end` | `center` | vanilla |
+| `sideOffset` | number | `4` | vanilla |
 
 Repare no `side`: o padrão aqui é `top`, e no popover é `bottom`. Rótulo nasce
 acima do que ele descreve; painel nasce abaixo do que o abriu.
+
+**Cinco das sete linhas não valem no vanilla, e a coluna existe por isso.**
+Medido em 2026-09-12 em `TooltipOptions` e `TooltipProviderOptions`
+(`nortear-design-system-vanilla/src/components/ui/tooltip.ts`): a fábrica recebe
+`trigger`, `content`, `side`, `delayDuration`, `onShow` e `class`, e mais nada.
+Não há estado controlado, não há `defaultOpen`, não há aviso de mudança e não há
+encosto — o balão é sempre centrado, que é o `align: 'center'` de `@/lib/floating`.
+O `sideOffset` também não é opção: o vão é a constante `GAP = ARROW_HEIGHT + 4`,
+ou seja 9px, e o 4 que esta tabela documenta está DENTRO dela somado à altura da
+seta, que fica fora do balão — nas stacks com lib essa soma é a lib que faz.
+**Até 2026-09-12 as cinco linhas não traziam ressalva nenhuma**, e o PRD prometia
+uma API que a stack de referência não tem.
+
+**A linha do `delay` dizia `0`** até `d65716fec` (2026-09-12), com a tabela
+afirmando um valor que não valia para duas das cinco — ver a medição inteira em
+D5. E o NOME continuava sem ressalva: medido em 2026-09-12, é `delay` em react
+(`TooltipProvider`, default `TOOLTIP_DEFAULT_DELAY`) e em angular (input `delay`
+do `[ndsTooltipProvider]`, com `NDS_TOOLTIP_DELAY` registrado como padrão do
+primitivo), e `delayDuration` em vue (`TooltipProvider.vue`), svelte
+(`tooltip-provider.svelte`) e vanilla (`createTooltipProvider`). Os cinco valem
+`300`. Divergência de forma de API não tem fonte de verdade: fica registrada.
 
 ### Divergências de forma, registradas
 
 | stack | como difere |
 |---|---|
-| vanilla | fábrica `createTooltip`, com `onShow` disparado na exibição REAL — registrado em `PATCHES.md#vanilla-tooltip-onshow`, e existe para o evento não depender de duplicar o timer privado da fábrica |
+| vanilla | fábrica `createTooltip`, com `onShow` disparado na exibição REAL — registrado em `PATCHES.md#vanilla-tooltip-onshow`, e existe para o evento não depender de duplicar o timer privado da fábrica. A fábrica é também a única sem `open`/`defaultOpen`/`onOpenChange`/`align`/`sideOffset` — ver a tabela acima |
+| vanilla | o grupo é `createTooltipProvider`, uma fábrica que devolve o próprio `createTooltip` já amarrado ao padrão do grupo; nas outras quatro o provedor é contexto |
+| vue, svelte, vanilla | a espera se chama `delayDuration`; em react e angular é `delay` |
 | react, angular | nomeiam o positioner; vue e svelte usam wrapper anônimo da lib |
 | angular | a lib projeta um `<svg>` dentro da seta (D3) |
+| angular | a espera da casa entra como CONFIGURAÇÃO do primitivo (`provideNdsTooltipConfig`), e não só como default de wrapper — é o que tira o último degrau da resolução do default da biblioteca |
 
 ### Peças, por stack
 
@@ -242,11 +293,20 @@ está. O balão não entra na ordem de tabulação.
   `aria-label` é obrigatório no botão, e o balão é complemento;
 - em touch não há hover, então nenhuma informação essencial mora aqui.
 
-**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
-para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
+**Movimento reduzido**: o balão para sob `prefers-reduced-motion`, e quem o para
+é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
 `docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
-mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
-segura, está por extenso em `hover-card.md` §8.
+mecanismo está por extenso em `hover-card.md` §8.
+
+**E aqui a leitura é literal: o bloco `@media` desta folha NÃO é quem segura.**
+Medido em 2026-09-12: a guarda no fim de `tooltip.css` mira `.nds-tooltip-content`
+(0,1,0) e a transição de saída está em `.nds-tooltip-content[data-ending-style]`
+(0,2,0) — a declaração vence, e `@media` não acrescenta especificidade. O balão
+para de qualquer forma, pela camada de token, e é por isso que ninguém notou. Esta
+folha é uma das quatro nessa situação, junto com `dialog.css`,
+`dropdown-menu.css` e `sheet.css`; a pendência aberta que as conta está em
+`hover-card.md` §8, e o `tooltip.css` foi acrescentado a ela em 2026-09-12 —
+tinha a mesma forma desde sempre e nunca havia sido listado.
 
 ## 9. Analytics
 

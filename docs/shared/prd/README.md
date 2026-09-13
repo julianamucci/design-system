@@ -149,33 +149,31 @@ consome, que publica `guidelines/` e não `prd/`.
 
 ## Índice
 
-Começando pela categoria Overlay, na ordem em que a revisão serial fechou cada um.
+A categoria Overlay inteira — dez componentes em nove PRDs — passou pela revisão
+serial e, depois dela, pela pipeline `fix`. As duas colunas de data são
+diferentes de propósito: a primeira é quando a revisão fechou o componente, a
+segunda é a última passagem que mudou o código dele e, com ele, este registro.
 
-| componente | PRD | revisão fechada em |
-|---|---|---|
-| Popover | [popover.md](popover.md) | 2026-09-06 |
-| HoverCard | [hover-card.md](hover-card.md) | 2026-09-06 |
-| Tooltip | [tooltip.md](tooltip.md) | 2026-09-06 |
-| Sheet | [sheet.md](sheet.md) | 2026-09-06 |
-| DropdownMenu | [dropdown-menu.md](dropdown-menu.md) | 2026-09-07 |
-| Drawer | [drawer.md](drawer.md) | 2026-09-07 |
+| componente | PRD | revisão serial | última pipeline `fix` |
+|---|---|---|---|
+| Popover | [popover.md](popover.md) | 2026-09-06 | 2026-09-12 |
+| HoverCard | [hover-card.md](hover-card.md) | 2026-09-06 | 2026-09-10 |
+| Tooltip | [tooltip.md](tooltip.md) | 2026-09-06 | 2026-09-12 |
+| Sheet | [sheet.md](sheet.md) | 2026-09-06 | 2026-09-11 |
+| DropdownMenu, ContextMenu, Menubar | [dropdown-menu.md](dropdown-menu.md) | 2026-09-07 | 2026-09-11 |
+| Drawer | [drawer.md](drawer.md) | 2026-09-07 | 2026-09-11 |
+| Dialog | [dialog.md](dialog.md) | 2026-09-10 | 2026-09-11 |
+| AlertDialog | [alert-dialog.md](alert-dialog.md) | 2026-09-10 | 2026-09-12 |
+| Command | [command.md](command.md) | 2026-09-10 | 2026-09-10 |
 
-O ContextMenu **não terá PRD próprio**: ele não tem folha, e o componente inteiro
-é montado com as classes do DropdownMenu — está registrado como decisão D9 lá.
+**Três membros da família de menus dividem um PRD.** O ContextMenu e o Menubar
+não têm PRD próprio: os dois são montados com as peças do DropdownMenu, e o que
+os separa está registrado como decisão lá (D9). O cabeçalho do arquivo declara a
+família em `<!-- prd-familia: context-menu menubar -->`, e um portão cobra o PRD
+quando o código de qualquer um dos três muda.
 
-### Escritos ANTES da revisão serial
-
-| componente | PRD |
-|---|---|
-| Dialog | [dialog.md](dialog.md) |
-| AlertDialog | [alert-dialog.md](alert-dialog.md) |
-| Command | [command.md](command.md) |
-
-Estes três descrevem o estado atual de componentes que a revisão ainda vai
-atravessar, e o cabeçalho de cada um diz isso. A diferença não é de rigor — as
-decisões são medidas do mesmo jeito — e sim de expectativa: aqui é normal que uma
-linha mude, e a forma de mudar é a mesma de sempre, movendo-a para o histórico
-com a nova data e a nova medição.
-
-Com o Drawer, a categoria Overlay inteira tem registro: os seis revisados acima e
-os três de pré-revisão aqui.
+**Até 2026-09-12 esta seção tinha duas tabelas**, e a segunda dizia que Dialog,
+AlertDialog e Command eram "escritos ANTES da revisão serial". Os três já foram
+revisados em 2026-09-10; a tabela de pré-revisão sobreviveu dois dias à própria
+condição, que é exatamente o envelhecimento que os portões de pendência deste
+diretório existem para pegar — e que nenhum deles vê num índice.

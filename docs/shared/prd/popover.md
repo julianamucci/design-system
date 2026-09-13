@@ -1,6 +1,6 @@
 # PRD — Popover
 
-> **Estado descrito**: 2026-09-07. **Revisão serial fechada em** 2026-09-06.
+> **Estado descrito**: 2026-09-12. **Revisão serial fechada em** 2026-09-06.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
 
@@ -283,7 +283,8 @@ dispara precisa existir nas cinco libs, ou volta a divergência de agora.
 
 ## 7. API
 
-Props compartilhadas — mesmo nome e mesmo padrão nas cinco:
+Props compartilhadas — mesmo nome nas cinco, e mesmo padrão em todas menos uma
+linha:
 
 | prop | tipo | padrão |
 |---|---|---|
@@ -293,7 +294,23 @@ Props compartilhadas — mesmo nome e mesmo padrão nas cinco:
 | `modal` | boolean | `false` |
 | `side` | `top \| right \| bottom \| left` | `bottom` |
 | `align` | `start \| center \| end` | `center` |
-| `sideOffset` | number | `4` |
+| `sideOffset` | number | `4` — **exceto no vanilla, que é `8`**; ver abaixo |
+
+**O `sideOffset` do vanilla é o DOBRO, e isso está medido e não resolvido.**
+Medido em 2026-09-12: `createPopover` abre com `sideOffset = 8`
+(`nortear-design-system-vanilla/src/components/ui/popover.ts`), contra `4` no
+`PopoverContent` do react, no do vue, no do svelte e no `input` do angular. O
+valor não é compensação de seta — o popover não tem seta — e o `positionFloating`
+recebe o número como vão puro, então o painel do vanilla nasce 4px mais longe do
+gatilho que os outros quatro. Pior: o docblock da opção naquela fábrica diz "mesmo
+nome e mesmo padrão das outras stacks", e esta tabela dizia o mesmo — duas
+afirmações concordando entre si e discordando do código.
+
+**Até 2026-09-12 esta seção abria com "mesmo nome e mesmo padrão nas cinco"**, sem
+ressalva. Qual dos dois números fica é decisão de CÓDIGO e tem dono: pela regra da
+casa o vanilla é a referência e os outros quatro se alinham a ele, mas o `4` é o
+que as quatro libs, o conteúdo compartilhado e a tabela de props publicam. Está
+RELATADO, não decidido aqui.
 
 ### Divergências de forma, registradas e não "alinhadas"
 
@@ -301,7 +318,7 @@ Forma de API não tem fonte de verdade — cada lib tem a sua.
 
 | stack | como difere |
 |---|---|
-| vanilla | fábrica: `createPopover({ trigger, content, … })` devolve `{ open, close, toggle, setOpen }` — verbos em inglês. Sub-fábricas `createPopoverHeader/Title/Description`; `createPopoverTitle` aceita `level` |
+| vanilla | fábrica: `createPopover({ trigger, content, … })` devolve `{ open, close, toggle, setOpen }` — é `setOpen` que dá forma ao modo controlado, e não há leitor de estado. Sub-fábricas `createPopoverHeader/Title/Description`; `createPopoverTitle` aceita `level` |
 | vanilla, angular | recebem o nome acessível por opção/`input` (`ariaLabel`); nas outras três é atributo no elemento |
 | angular | `modal` não é booleano na lib: o `radix-ng` aceita a string `'trap-focus'`, e o wrapper traduz |
 | svelte | a lib não tem `modal`; o mecanismo é `trapFocus` + `preventScroll` no Content |
@@ -316,7 +333,7 @@ seletores do código — não transcrito da guideline, que é a fonte aposentada
 | react | `Popover`, `PopoverClose`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverTitle`, `PopoverTrigger` |
 | vue | `Popover`, `PopoverAnchor`, `PopoverClose`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverTitle`, `PopoverTrigger` |
 | svelte | `Popover`, `PopoverClose`, `PopoverContent`, `PopoverDescription`, `PopoverHeader`, `PopoverPortal`, `PopoverTitle`, `PopoverTrigger` |
-| vanilla | `createPopover`, `createPopoverDescription`, `createPopoverHeader`, `createPopoverTitle` — e o controle de fechar, que aqui é uma MARCA e não uma fábrica: `data-slot="popover-close"` em qualquer elemento do painel, com delegação na raiz |
+| vanilla | `createPopover`, `createPopoverDescription`, `createPopoverHeader`, `createPopoverTitle` — e o controle de fechar, que aqui é uma MARCA e não uma fábrica: `data-slot="popover-close"` em qualquer elemento do painel, com delegação no PAINEL |
 | angular | `[ndsPopoverDescription]`, `[ndsPopoverTitle]`, `button[ndsPopoverClose]`, `button[ndsPopoverTrigger]`, `div[ndsPopoverHeader]`, `div[ndsPopover]`, `ng-template[ndsPopoverContent]` |
 
 **O snippet de extensibilidade publicava `<nds-popover>` e `<nds-form>` até 2026-09-12**, e no Angular o
@@ -335,11 +352,19 @@ No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
 semântica, não só o estilo.
 
 **O título do popover é a exceção da família, nas duas pontas.** No vanilla ele é
-o único com `level` (padrão `h4`, porque o painel é `role="dialog"` e o
+o único com `level` (padrão `h2`, porque o painel é `role="dialog"` e o
 `aria-labelledby` procura um cabeçalho antes de cair no nome do gatilho); no
 Angular o seletor é `[ndsPopoverTitle]` **sem elemento**, então a tag é escolha
 de quem escreve, sem os dois níveis fixos que dialog, sheet, drawer e
 alert-dialog impõem.
+
+**Até 2026-09-12 esta linha dizia "padrão `h4`"**, e contradizia a D10 do mesmo
+arquivo, que registra a passagem para `h2` em 2026-09-09. Medido em 2026-09-12
+no código: `createPopoverTitle` abre com `const { level = 2 }`
+(`nortear-design-system-vanilla/src/components/ui/popover.ts`), e o docblock
+acima dela carrega o histórico do `h4`. Duas afirmações sobre o mesmo default no
+mesmo documento é a forma de defeito que o PRD existe para não ter: a que a
+revisão de componente lê é a da §7, e era a errada.
 
 ## 8. Acessibilidade
 
@@ -360,11 +385,18 @@ fecha e devolve o foco ao gatilho. Enter e Espaço ativam o gatilho.
 - não se usa região viva: o painel não é anúncio, ele é alcançado;
 - não se prende o foco por padrão — ver D1.
 
-**Movimento reduzido**: o painel para sob `prefers-reduced-motion`, e quem o
-para é a camada de TOKEN — a folha declara duração só por `var(--duration-*)`, e
-`docs/shared/tokens/motion.css` zera a escada inteira sob a preferência. O
-mecanismo, incluindo por que o bloco `@media` da própria folha não é o que
-segura, está por extenso em `hover-card.md` §8.
+**Movimento reduzido**: não há movimento para reduzir. Desde 2026-09-12 a folha
+não declara transição nem animação nenhuma (§5), e a guarda de
+`prefers-reduced-motion` saiu junto — com o motivo escrito no fim de
+`popover.css`, porque guarda que não tem o que desligar anuncia proteção
+inexistente e sobrevive à leitura de quem procura por ela.
+
+**Até 2026-09-12 esta linha dizia** que "o painel para sob
+`prefers-reduced-motion`, e quem o para é a camada de TOKEN". Era verdade
+enquanto a saída animava em `var(--duration-fast)`. Se o movimento voltar, volta
+com ela: o mecanismo da categoria — por que a camada de token é quem para, e por
+que o bloco `@media` da própria folha costuma NÃO ser quem segura — está por
+extenso em `hover-card.md` §8.
 
 ## 9. Analytics
 
@@ -387,15 +419,30 @@ palavras do `drawer_close`, para a família ser uma dimensão só no GA4.
 | `escape` | tecla Escape |
 | `overlay` | saiu do painel sem decidir nada — clique fora, foco que saiu, ou clique no gatilho de novo |
 | `close-button` | controle de fechar explícito DENTRO do painel — existe nas cinco desde 2026-09-12 |
+| `api` | fechado por código — é aqui que cai "salvou e fechou" |
+
+**Até 2026-09-12 a linha do `api` ficava FORA da tabela**, empurrada para depois
+dos parágrafos abaixo por uma edição que cresceu no meio dela — em markdown,
+linha em branco encerra a tabela, então o quarto motivo renderizava como texto
+solto e a tabela do vocabulário fechado mostrava três palavras.
 
 **A peça de fechar tem duas formas, e a diferença é de framework, não de
-contrato**: no svelte e no angular ela é componente/diretiva que MARCA um botão
-de quem compõe (`PopoverClose`, `button[ndsPopoverClose]`); no vanilla é a marca
-direta, `data-slot="popover-close"`, com delegação na raiz — e não uma
-sub-fábrica, porque o conteúdo do painel é montado ANTES de `createPopover()`
-existir, então uma `createPopoverClose()` não teria em que popover chamar
-`close()`. É a mesma escolha que o Dialog e o Sheet desta stack fizeram em
-2026-09-11 (`PATCHES.md#vanilla-overlay-close-api`).
+contrato**: nas quatro stacks de framework ela é componente ou diretiva sobre um
+botão — `PopoverClose` em react, vue e svelte, `button[ndsPopoverClose]` no
+angular; no vanilla é a marca direta, `data-slot="popover-close"`, com delegação
+no PAINEL — e não uma sub-fábrica, porque o conteúdo do painel é montado ANTES de
+`createPopover()` existir, então uma `createPopoverClose()` não teria em que
+popover chamar `close()`. É a mesma escolha que o Dialog e o Sheet desta stack
+fizeram em 2026-09-11 (`PATCHES.md#vanilla-overlay-close-api`).
+
+**Até 2026-09-12 esta linha dizia "no svelte e no angular"**, e o react e o vue
+tinham acabado de ganhar a peça na mesma rodada (`a2ef8471a`). Medido em
+2026-09-12: `PopoverClose` está exportado no índice das três stacks de
+componente, e nas três ele acrescenta a anotação do motivo por cima do
+fechamento da lib — no react o `Popover.Close` do base-ui já publica
+`close-press` e o `popoverCloseReason` traduz; no vue a anotação vai na FASE DE
+CAPTURA, porque o handler da lib nasce antes e com `@click` simples a raiz
+emitiria `api`; no svelte o `onclick` do wrapper anota antes de repassar.
 
 **Até 2026-09-12 o `close-button` era inalcançável em três das cinco.** react,
 vue e vanilla declaravam a palavra no tipo e não tinham como produzi-la; o
@@ -404,7 +451,6 @@ sintoma que a dona viu foi concreto — na story do vanilla com botões no paine
 PRD afirmava, na mesma página, que a família "não expõe um `Popover.Close`" (§3) e
 que o controle "existe no react, no svelte e no angular" (§9): duas linhas
 erradas em sentidos opostos, e nenhuma delas sobre o vanilla, que é a referência.
-| `api` | fechado por código — é aqui que cai "salvou e fechou" |
 
 **Duas diferenças deliberadas em relação ao drawer**, e as duas vêm de o popover
 ser não-modal:
@@ -421,9 +467,20 @@ ser não-modal:
 
 | stack | caminho |
 |---|---|
-| react, angular | a lib entrega o motivo cru; `popoverCloseReason`, exportada do primitivo, traduz |
+| react, angular | a lib entrega o motivo cru; `popoverCloseReason` traduz — e ela mora em `popover-close-reason.ts`, arquivo PRÓPRIO ao lado do primitivo |
 | vanilla | a fábrica conhece todos os caminhos e o passa em `onOpenChange(open, reason)` |
 | vue, svelte | a lib NÃO publica o motivo; o painel, o gatilho e o botão de fechar o ANOTAM pelo contexto, e a raiz o entrega junto com a mudança de estado |
+
+**Até 2026-09-12 a linha das duas primeiras dizia que a função era "exportada do
+primitivo"**, e o arquivo separado não é detalhe de arrumação: cada uma das duas
+stacks tem o próprio motivo escrito no topo dele. No react, exportar função de um
+arquivo de componente quebra o fast refresh (`react-refresh/only-export-components`),
+e a regra aponta esse caminho; no angular, o arquivo separado é o que deixa a
+tradução ser PURA e se testar sem instanciar as diretivas. As duas versões da
+função carregam o MESMO mapa de propósito — `escape-key` → `escape`,
+`outside-press`/`focus-out`/`trigger-press` → `overlay`, `close-press` →
+`close-button`, e todo o resto em `api` —, e cada uma tem o seu
+`popover-close-reason.test.ts` cobrando a tabela.
 
 **Histórico — revertido em 2026-09-10.** Até então a linha dizia "`reason` é
 opcional por medição, não por descuido": o `base-ui` publicava o motivo e ele ia
@@ -460,7 +517,8 @@ Ordem: folha → primitivo da stack → sub-partes → stories → docs page.
   atributo estático do template: `data-slot` disputado se resolve na diretiva,
   não no ponto de uso.
 - **vanilla** — sem lib: `position: absolute` inline é responsabilidade da
-  fábrica, e não há animação de entrada.
+  fábrica. Animação não é armadilha de stack nenhuma desde 2026-09-12: a folha é
+  uma só e não declara movimento, então as cinco abrem e fecham na hora.
 
 ## 11. Onde está a verdade
 
@@ -498,5 +556,23 @@ em vez de passar a ser proibido. Portões: `titulo_de_secao_no_conteudo`,
 `titulo_de_secao_pedido_ao_conteudo` e `titulo_passado_ao_container` — o
 terceiro existe porque no Angular um `[title]` esquecido **não** reprova no
 `ngc` (é atributo global do HTML) e viraria tooltip silencioso no cabeçalho.
+
+> **PENDÊNCIA · 2026-09-12** — no Angular, três arquivos de story do popover não
+> têm `transform` no painel Code: `popover-compositions` (5 stories),
+> `popover-states` (5) e `popover-variants` (3). `node scripts/audit.mjs popover
+> --json` reprova os três por `story_file_sem_transform`, e é a ÚNICA coisa que
+> ele acha neste slug.
+> **Medido em 2026-09-12**: `popover.source.ts` daquela stack tem **um**
+> construtor, o `popoverPlaygroundSource`, contra 12 no react, 13 no vue e 9 no
+> vanilla — o svelte tem um só e passa, porque as quatro stories de lá o
+> reaproveitam por `transform`. Ou seja: treze stories do Angular publicam o
+> template da story no painel que existe para ser COPIADO.
+> **É a mesma forma que o hover-card fechou em 2026-09-09**, quando aquela stack
+> passou de 1 construtor para dez, um por story, com `hover-card.source.test.ts`
+> guardando os dez em 32 casos — e com a exceção das stories de markup idêntico
+> declarada e a premissa verificada. O caminho é esse, e a proporção a alcançar é
+> a das outras quatro.
+> **Fecha quando** as treze stories tiverem construtor (ou exceção declarada com
+> a premissa cobrada por caso) e o audit deste slug voltar vazio.
 
 

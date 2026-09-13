@@ -1,6 +1,6 @@
 # PRD — HoverCard
 
-> **Estado descrito**: 2026-09-07. **Revisão serial fechada em** 2026-09-06.
+> **Estado descrito**: 2026-09-12. **Revisão serial fechada em** 2026-09-06.
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
 
@@ -139,13 +139,16 @@ métrica.
 
 ## 5. Geometria e tokens
 
-Fonte: `docs/shared/styles/nds/hover-card.css` — dezesseis declarações, e a
-lista abaixo é toda ela.
+Fonte: `docs/shared/styles/nds/hover-card.css` — **dezessete declarações**, e o
+arquivo é pequeno o bastante para a conta fechar: **onze** nas dez linhas da
+tabela abaixo — a linha da largura vale por duas, a declaração no `:root` e a
+leitura no painel — e **seis** fora dela, nomeadas logo depois.
 
 | propriedade | valor | token |
 |---|---|---|
 | largura | 320px | `--hover-card-width`, default em `:root` — ver D3 |
 | teto de largura | `none` | por regra própria — ver D4 |
+| posicionamento | `absolute` | **literal**, NO PAINEL — e é o ponto em que esta folha discorda das vizinhas; ver abaixo |
 | padding | 16px | `--spacing-4` |
 | superfície | — | `--popover` |
 | texto | — | `--popover-foreground` |
@@ -154,30 +157,64 @@ lista abaixo é toda ela.
 | sombra | — | `--elevation-lg` — flutuante passivo; era `xl` até 2026-09-10 |
 | camada | — | `--z-popover` |
 
-**A sombra é `lg`**, a mesma do Tooltip e mais alta que a do Popover (`md`): é um
-painel que flutua sobre o texto, não um painel de trabalho.
+As seis de fora: o `transform-origin` da cadeia de três libs (D6), o `isolation`
+e o `z-index` do `.nds-hover-card-positioner`, e as três da saída animada
+(`opacity`, `transform`, `transition`).
 
-**Animação**: só a saída anima (`data-ending-style`), pelo mesmo motivo do
-Popover — evitar corrida entre opacidade zero na entrada e checagem síncrona de
-visibilidade.
+**Até 2026-09-12 esta seção prometia "dezesseis declarações, e a lista abaixo é
+toda ela"**, e a lista tinha nove linhas. Medido em 2026-09-12, contando a folha:
+são dezessete, e a que faltava na tabela era justamente o `position: absolute` do
+painel — a declaração de que dependem as duas medições da D4.
+
+**O degrau da sombra sai do TIPO de superfície**, não da comparação com os
+vizinhos: flutuante passivo é `lg`, pela regra em
+`04-padroes-design-sistema.md` §Qual degrau, cobrada por `elevacao_fora_do_mapa`.
+Esta linha dizia "a mesma do Tooltip e mais alta que a do Popover (`md`)", e
+descrever vizinho é o que já envelheceu a linha equivalente do popover no dia em
+que tooltip e hover-card desceram de `xl` para `lg`.
+
+**Animação**: só a saída anima (`data-ending-style`), para evitar corrida entre
+opacidade zero na entrada e checagem síncrona de visibilidade — foi ela que
+derrubava `toBeVisible` nas plays.
+
+**Até 2026-09-12 esta linha dizia "pelo mesmo motivo do Popover"**, e o motivo do
+Popover deixou de existir: naquele dia ele parou de animar por completo, por
+decisão da dona, e não sobrou lado nenhum para comparar. Citar vizinho pelo nome
+envelhece sozinho — a mesma lição que a pendência da §8 vem medindo.
+
+**`position: absolute` no painel é a divergência ABERTA desta folha.** O
+`tooltip.css` tirou a declaração equivalente em 2026-09-04 (ver `tooltip.md` D1) e
+o `popover.css` a RECUSA num comentário no topo do seletor (ver `popover.md` §4),
+pelo mesmo defeito medido nos dois: fora do fluxo, o invólucro que a lib posiciona
+colapsa para 0×0, e é contra essa caixa que ela calcula tudo. Aqui a declaração continua, e a D4 registra
+`pai=nds-hover-card-positioner:0` como premissa de uma regra de largura — ou seja,
+o colapso está MEDIDO nesta folha e tratado como dado, não como defeito. Só o
+vanilla não depende dela: a fábrica já escreve `panelEl.style.position =
+'absolute'` antes de medir. **Isto é decisão de CÓDIGO e está relatado, não
+resolvido aqui** — o PRD registra o que a folha faz hoje.
 
 **`prefers-reduced-motion` é atendido pela camada de TOKEN, e a ausência de um
 bloco `@media` nesta folha NÃO é defeito** — foi relatada como tal duas vezes,
-em 2026-09-08 e 2026-09-09, sempre pela mesma leitura: `hover-card.css` é a
-única da categoria sem o bloco, e as outras oito têm. Sob a preferência,
+em 2026-09-08 e 2026-09-09, sempre pela mesma leitura: `hover-card.css` era a
+única da categoria sem o bloco, e as outras oito tinham. Sob a preferência,
 `docs/shared/tokens/motion.css` zera a escada inteira de `--duration-*`, e a
 transição da saída usa `var(--duration-fast)`. Medido em 2026-09-09 em motor de
 CSS real (Chromium com `reducedMotion: 'reduce'`, lendo `getComputedStyle`):
 este painel para, junto com os outros 21 alvos de overlay sondados.
 
+**Até 2026-09-12 a frase acima estava no presente — "é a única da categoria".**
+São DUAS desde aquele dia: o `popover.css` perdeu a guarda junto com a animação,
+e o motivo está escrito no fim daquela folha. Sete das nove têm bloco.
+
 Os blocos por folha das vizinhas são redundância, e vários deles não seguram
-nada: a guarda do popover mira `.nds-popover-content`, (0,1,0), contra uma
-declaração em `.nds-popover-content[data-ending-style]`, (0,2,0), e perde no
-cascata — `@media` não acrescenta especificidade. Ninguém tinha notado porque a
-camada de token já fazia o trabalho. O único caso que o token não alcança é
-duração LITERAL, fora de `var(--duration-*)`; aqui não é o caso, e as duas
-utilitárias que estavam nessa situação foram corrigidas no fim de
-`utilities.css`.
+nada: a guarda mira a classe nua, (0,1,0), contra uma declaração em
+`[data-ending-style]` ou `[data-open]`, (0,2,0), e perde na cascata — `@media`
+não acrescenta especificidade. Ninguém tinha notado porque a camada de token já
+fazia o trabalho. Quem está nessa situação hoje está listado na pendência da §8;
+o exemplo que morava aqui era o do popover, e ele saiu do mundo em 2026-09-12. O
+único caso que o token não alcança é duração LITERAL, fora de
+`var(--duration-*)`; aqui não é o caso, e as duas utilitárias que estavam nessa
+situação foram corrigidas no fim de `utilities.css`.
 
 ## 6. Estados
 
@@ -203,13 +240,28 @@ utilitárias que estavam nessa situação foram corrigidas no fim de
 
 `side` e `align` moram no Content, não na raiz.
 
+**`open` é a única linha da tabela que não vale nas cinco**: o vanilla não a tem —
+lá o modo controlado é imperativo, e os outros seis nomes existem em todas.
+Medido em 2026-09-12 em `HoverCardOptions`.
+
 ### Divergências de forma, registradas
 
 | stack | como difere |
 |---|---|
 | svelte | a lib é `LinkPreview`, não `HoverCard`; `defaultOpen` não existe nela e é implementado no wrapper — registrado em `PATCHES.md#svelte-hovercard-defaultopen` |
-| vanilla | fábrica `createHoverCard`, e ela ainda expõe `open`/`close` em vez dos verbos em inglês que o popover e o sidebar adotaram. Renomear é mudança de API pública e tem dono |
+| vanilla | fábrica `createHoverCard`, que devolve `{ open, close, toggle, isOpen }` — o modo controlado é imperativo, e não há `open` como opção: quem controla chama os verbos e recebe cada mudança de volta em `onOpenChange` |
 | react, angular | montam o `hover-card-positioner` nomeado; vue, svelte e vanilla não |
+
+**Até 2026-09-12 a linha do vanilla dizia** que a fábrica "ainda expõe
+`open`/`close` em vez dos verbos em inglês que o popover e o sidebar adotaram", e
+a frase não fechava consigo mesma: `open` e `close` SÃO os verbos em inglês, e são
+os mesmos que `createPopover` devolve. Medido em 2026-09-12 nos dois arquivos, a
+divergência real é o quarto membro de cada tupla — `createHoverCard` devolve
+`isOpen()`, um LEITOR de estado, e `createPopover` devolve `setOpen()`, um
+ESCRITOR. Ela cai do gesto: o popover tem modo controlado por opção (`open`), e
+`setOpen` é por onde ele anda; o cartão não tem opção controlada nenhuma, e quem o
+comanda por fora precisa saber se ele está aberto. Divergência de forma de API não
+tem fonte de verdade, então isto fica registrado e não "alinhado".
 
 ### Peças, por stack
 
@@ -273,12 +325,16 @@ declarado com `var(--duration-*)` para sozinho.
 2026-09-09, zero durações literais em `popover`, `hover-card`, `tooltip`,
 `sheet`, `dropdown-menu`, `drawer`, `dialog`, `alert-dialog` e `command`. Logo
 os nove param, e o `b3f525fde` confirmou num motor de CSS real com a preferência
-emulada — 28 declarações lidas por `getComputedStyle`, 22 alvos de overlay.
+emulada — 28 declarações lidas por `getComputedStyle`, 22 alvos de overlay. Desde
+2026-09-12 o `popover` não declara movimento NENHUM, o que o tira da conta pelo
+lado de cima: são oito folhas com movimento, todas por token.
 
 **O bloco `@media` por folha é cinto e suspensório, e alguns não seguram nada.**
-A guarda do `popover.css` mira `.nds-popover-content`, (0,1,0), contra uma
-declaração em `.nds-popover-content[data-ending-style]`, (0,2,0), e perde no
-cascata — `@media` não acrescenta especificidade. Esta folha não tem bloco
+A guarda mira a classe nua, (0,1,0), contra uma declaração em
+`[data-ending-style]`, `[data-open]` ou `[data-state]`, (0,2,0), e perde na
+cascata — `@media` não acrescenta especificidade. Quais folhas estão assim hoje
+está na pendência abaixo; o exemplo que este parágrafo dava era o do `popover.css`,
+e ele saiu do mundo em 2026-09-12 junto com a animação. Esta folha não tem bloco
 próprio, e isso **não é defeito**: já foi relatado como tal duas vezes, e é o
 motivo de esta seção existir.
 
@@ -294,27 +350,47 @@ especificidade menor ou por vir antes com especificidade igual. Movimento por
 `var(--duration-*)` fica de fora de propósito, porque a camada de token já o
 alcança.
 
-> **PENDÊNCIA · 2026-09-09** — três guardas de overlay não seguram nada, por
-> especificidade: `popover.css`, `dialog.css` e `dropdown-menu.css` miram a
-> classe nua (0,1,0) contra declarações em `[data-state]`, `[data-closed]` ou
-> `[data-ending-style]` (0,2,0), e perdem.
+> **PENDÊNCIA · 2026-09-09** — guardas de overlay que não seguram nada, por
+> especificidade: miram a classe nua (0,1,0) contra declarações em `[data-state]`,
+> `[data-closed]`, `[data-open]` ou `[data-ending-style]` (0,2,0), e perdem.
 > **Estreitada em 2026-09-10, porque metade fechou.** O que esta linha temia —
 > "a próxima duração literal cai no vão" — passou a ser cobrado pelo
 > `movimento_sem_guarda_eficaz`, que reprova exatamente a guarda que perde. O que
-> sobra é enfeite: três blocos que anunciam proteção sobre movimento que o token
-> já para, e que o portão não acusa porque ali não há duração literal.
-> **Estreitada de novo em 2026-09-12: são DUAS.** A do `popover.css` saiu — não
-> por ter sido consertada, mas porque o Popover deixou de animar por decisão da
-> dona, e sem `[data-ending-style]` não há declaração para a guarda perder. As
-> duas coisas saíram juntas da folha, com o motivo escrito lá.
+> sobra é enfeite: blocos que anunciam proteção sobre movimento que o token já
+> para, e que o portão não acusa porque ali não há duração literal.
+> **REFEITA em 2026-09-12, varrendo as nove folhas: são QUATRO, e duas nunca
+> estiveram na lista.** A do `popover.css` saiu — não por ter sido consertada, mas
+> porque o Popover deixou de animar por decisão da dona, e sem `[data-ending-style]`
+> não há declaração para a guarda perder; as duas coisas saíram juntas da folha,
+> com o motivo escrito lá. Em troca entraram o `tooltip.css` e o `sheet.css`, que
+> têm a mesma forma desde sempre e nunca foram contados:
+>
+> | folha | a guarda mira | a declaração que ela deveria desligar | quem vence |
+> |---|---|---|---|
+> | `tooltip.css` | `.nds-tooltip-content` | `…[data-ending-style]` — a transição de saída | a declaração; a guarda é INERTE por inteiro |
+> | `dialog.css` | `.nds-dialog-overlay`, `.nds-dialog-content` | `…[data-open]`, `…[data-state="open"]`, `…[data-closed]` — as quatro animações | a declaração; a guarda é inerte por inteiro |
+> | `dropdown-menu.css` | `.nds-dropdown-menu-item`, `.nds-dropdown-menu-content` | `…[data-open]`, `…[data-state="open"]` — a animação de entrada | a declaração; **metade** da guarda serve, porque a transição do ITEM está na classe nua e a guarda vem depois |
+> | `sheet.css` | `.nds-sheet-overlay`, `.nds-sheet-content` | `.nds-sheet-content[data-side="…"]` — as quatro animações de entrada, uma por lado | a declaração; **metade** da guarda serve, porque a animação do VÉU e as duas transições estão na classe nua |
+>
+> As três que seguram: `drawer.css` (a guarda repete o próprio
+> `:not([data-swiping])` da declaração e vem depois), `alert-dialog.css` (a guarda
+> ENUMERA os dez seletores de atributo, um a um) e `command.css` (declaração e
+> guarda na mesma classe nua). O `hover-card.css` não tem guarda, de propósito.
+>
+> **Até 2026-09-12 esta pendência dizia "são DUAS"**, e o erro não foi de
+> contagem: foi ter estreitado a lista tirando o caso que fechou sem varrer a
+> categoria de novo. Lista de defeito que só encolhe é lista que envelhece — e
+> aqui ela encolheu duas vezes enquanto dois casos iguais estavam de pé o tempo
+> todo. Quem fechar isto varre as nove folhas, não relê a lista.
 > **E uma referência apodreceu junto**: o comentário desta mesma família no
 > `hover-card.css` usava a guarda do popover como exemplo VIVO da perda na
 > cascata. Os dois lados do exemplo deixaram de existir, e ele passou a descrever
 > a FORMA do defeito em vez do caso — citar vizinho pelo nome envelhece sozinho,
 > que é exatamente o que esta pendência vem medindo desde 2026-09-09.
-> **Fecha quando**: as duas guardas restantes (`dialog.css` e
-> `dropdown-menu.css`) forem removidas com o motivo escrito na folha, ou
-> passarem a mirar seletor que vença a declaração.
+> **Fecha quando**: as quatro guardas (`tooltip.css`, `dialog.css`,
+> `dropdown-menu.css` e `sheet.css`) forem removidas com o motivo escrito na
+> folha, ou passarem a mirar seletor que vença a declaração — e quando a varredura
+> que decide isso for a das nove folhas da categoria, não a leitura desta lista.
 
 ## 9. Analytics
 

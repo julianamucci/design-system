@@ -109,8 +109,28 @@ longo empurrava o rodapé com os botões para fora da tela.
 ### D7 · O painel tem sombra `xl`, como toda a família modal
 
 **Estado desde 2026-09-10**: `box-shadow: var(--elevation-xl)` em `.nds-drawer-content`.
-**Por quê**: a dona fixou nesse dia a regra de elevação da categoria inteira —
-card `sm` · flutuante interativo `md` · flutuante passivo `lg` · modal e drawer `xl` —, e o drawer entrou como os outros painéis que interrompem a página.
+**Por quê**: a dona fixou nesse dia a regra de elevação por TIPO de superfície, e
+o drawer entrou como os outros painéis que interrompem a página. A escada, como
+`ELEVACAO_POR_TIPO` a declara hoje:
+
+| degrau | tipo | folhas |
+|---|---|---|
+| `xs` | relevo de controle, no plano da página | `button`, `input-otp`, `menubar`, `number-field`, `related-card`, `sidebar`, `tabs`, `tags-input`, `toggle`, `toggle-group` |
+| `sm` | card, sobre o background | `card`, `slider` |
+| `md` | flutuante interativo | `popover`, `dropdown-menu`, `select`, `combobox`, `navigation-menu`, `calendar`, `composer` |
+| `lg` | flutuante passivo | `hover-card`, `tooltip` |
+| `xl` | modal, drawer e toast | `dialog`, `alert-dialog`, `sheet`, **`drawer`**, `toast` |
+
+**Até 2026-09-12 esta linha listava quatro degraus** — "card `sm` · flutuante
+interativo `md` · flutuante passivo `lg` · modal e drawer `xl`" —, e ela já estava
+incompleta no próprio 2026-09-10: o toast entrou em `xl` naquele mesmo dia
+(`d65c42a67`), por motivo de CAMADA e não de tipo (`--z-toast` é 1080, acima do
+`--z-modal` 1050). O degrau `xs` nasceu dois dias depois (`aaa9ea44c`, quando a
+medição achou quinze declarações cravando aquela sombra à mão, sem seguir o modo
+escuro). Enumerar a categoria inteira dentro do PRD de UM componente é justamente
+a forma que envelhece: o que vale para o drawer é a linha do `xl`; a escada de
+verdade mora em `ELEVACAO_POR_TIPO`, que é o que o portão
+`elevacao_fora_do_mapa` lê.
 **A sombra é direcional**: as camadas do token descem em y. No drawer de baixo
 quase toda ela cai fora do viewport e o que se vê é a borda de cima; no de cima
 ela desce sobre o conteúdo e fica bem mais visível. É o mesmo token nos quatro
@@ -155,8 +175,17 @@ gancho que ninguém puxava. Agora duas stacks o puxam, e nas outras três a
 supressão continua vindo do inline: mesmo efeito, dois mecanismos.
 **Consequência para `prefers-reduced-motion`**: ao soltar, o transform inline é
 apagado e a volta ao repouso é ESTA transição — por isso é ela que precisa parar
-sob movimento reduzido. O arraste em si não é animação: é o painel acompanhando o
-ponteiro, e não há o que reduzir enquanto o dedo está na tela.
+sob movimento reduzido (§8). O arraste em si não é animação: é o painel
+acompanhando o ponteiro, e não há o que reduzir enquanto o dedo está na tela.
+
+**Pendência de comentário, medida em 2026-09-12 e ainda de pé**: o docblock da
+transição em `drawer.css` diz "`[data-swiping]` é escrito pelo motor de ponteiro
+compartilhado — vanilla e angular". Compartilhado ele não é desde 2026-09-08
+(`2dcd473fa`): o que ficou em `docs/shared/primitives/drawer-swipe.ts` são os
+limiares e as funções que DECIDEM, e a fiação é de cada stack — `ui/drawer-swipe.ts`
+no vanilla, a diretiva `NdsDrawerSwipe` em `ui/drawer.ts` no angular. A palavra
+sobreviveu à mudança na folha que as CINCO leem, e é defeito de código: não se
+corrige aqui.
 
 ### D10 · O cabeçalho centraliza em `bottom` e `top`, e vai à esquerda a partir de **48rem**
 
@@ -243,9 +272,24 @@ Fonte: `docs/shared/styles/nds/drawer.css`.
 | padding do cabeçalho e do rodapé | 16px | `--spacing-4` |
 | padding lateral do corpo | 16px | `--spacing-4` |
 | gap do rodapé | 8px | `--spacing-2` |
+| sombra | — | `--elevation-xl` — modal; ver D7 |
+| entrada, saída e volta ao repouso | — | `--duration-base`, com `ease-in-out` literal |
 | camada | — | `--z-modal` |
 
-**Sombra `--elevation-xl`** (D7, revertida em 2026-09-10).
+**Conferida linha a linha em 2026-09-12, depois da tokenização de elevação**
+(`aaa9ea44c`, `7975f6b53`): as dezesseis linhas fecham com a folha. A sombra
+ganhou linha própria nessa conferência — **até então ela vivia só numa nota solta
+abaixo da tabela** ("Sombra `--elevation-xl` (D7, revertida em 2026-09-10)"), que
+era a única propriedade pintada da folha fora da tabela e ainda lia como se o
+`xl` fosse o que tinha sido revertido; o que foi revertido é a decisão ANTERIOR,
+de não ter sombra. O instrumento
+`node scripts/tabela-tokens.mjs drawer` confirma: nenhuma linha das tabelas das
+cinco stacks deixa de fechar com a folha, e os dois tokens que a folha lê sem
+aparecer nas tabelas das docs pages são justamente `--elevation-xl` e
+`--radius-full` — o segundo já estava aqui, na linha da alça.
+
+**O degrau `xs` que nasceu naquela rodada não toca este painel**: nenhuma das
+onze folhas que o consomem é de superfície modal (ver D7).
 
 **O título e a descrição não estão nesta tabela de propósito**: eles são regra do
 `sheet.css` (`.nds-sheet-title` e `.nds-sheet-description`), reusada aqui. Os
@@ -272,6 +316,30 @@ componentes.
 | `direction` | `bottom \| top \| left \| right` | `bottom` |
 | `modal` | boolean | `true` |
 | `dismissible` | boolean | `true` — Escape, clique no véu e arraste |
+| `onClose` | `(reason: DrawerCloseReason) => void` | — · **só o vanilla** |
+
+**O `onClose(reason)` da fábrica é quem alimenta o `reason` do `drawer_close` no
+vanilla**, e faltava nesta tabela. As quatro palavras são as mesmas do §9
+(`escape` · `overlay` · `close-button` · `api`), e é a fábrica que sabe qual
+caminho fechou: o Escape, o clique no véu, o botão de saída e o `close()` de
+código chegam ali já nomeados, sem a dedução que as outras quatro stacks têm de
+fazer a partir do evento da lib. Nas outras quatro o motivo sai do
+`<slug>-close-reason` ao lado do primitivo (§9). **Até 2026-09-12 esta tabela não
+tinha a linha**, e a docs page do vanilla já publicava a prop na tabela de API.
+
+**A fábrica do vanilla também tem API imperativa, e ela é o que tornou o gatilho
+dispensável**: o que `createDrawer` devolve é o wrapper com `open()`, `close()`,
+`toggle()` e `isOpen()` — mais o descarte de `tornarDestruivel`. `close()` e o
+`toggle()` que fecha informam `api`; o descarte chama `onOpenChange(false)` e
+**não** chama `onClose`, porque desmontar não é a pessoa fechando (mesma decisão
+do AlertDialog, `alert-dialog.md` §9). Os verbos são os do Sidebar, em inglês.
+
+**O que mudou em 2026-09-12 foi o `trigger`, não os verbos.** `open()` e
+`isOpen()` já existiam nesta fábrica; a rodada do gatilho escondido
+(`7f24ea325`) tornou `trigger` opcional e apagou o espelho `stateExterno`, com a
+guarda de reentrância passando a morar no próprio `open()`. É a distinção que
+separa esta fábrica do Sheet e do Dialog, que naquela semana ganharam `open()` e
+`isOpen()` de fato (`efdf144cd`).
 
 ### Divergências de forma, registradas
 
@@ -317,11 +385,20 @@ jeito** — medido na fonte de cada lib, não na documentação delas:
 
 | stack | mecanismo | padrão |
 |---|---|---|
-| react | prop `render` (`BaseUIComponentProps<'h2'>`) | `h2` |
+| react | prop `asChild` no `DrawerTitle` — o filho escrito por quem compõe recebe id, classe e slot por fusão de props | `h2` |
 | vue | prop `as` (ou `as-child`) | `as: 'h2'` |
 | svelte | snippet `child` + prop `level` | `div` com `aria-level="2"` |
 | angular | seletor por elemento, nos SEIS níveis | o que quem escreve usar |
 | vanilla | opção `titleLevel` da fábrica | `2` |
+
+**Até 2026-09-12 a linha do react dizia `prop render (BaseUIComponentProps<'h2'>)`**,
+que é o mecanismo do **AlertDialog** — daquela stack, e da base-ui. O Drawer do
+react não roda base-ui: roda `vaul`, cujo `Title` é o `Title` do dialog do radix,
+e a delegação de elemento dali chama-se `asChild`. A story `HeadingH3` daquela
+stack escreve exatamente isso (`<DrawerTitle asChild><h3>…</h3></DrawerTitle>`),
+então a linha errada convivia com a prova ao lado — a mesma forma de apodrecer da
+D9 e do §8 deste arquivo: texto copiado do PRD vizinho porque a estrutura das duas
+seções é igual.
 
 As cinco aceitam qualquer nível desde 2026-09-08, e chegaram lá por caminhos
 diferentes. O Angular oferecia só `h2` e `h3` e ganhou os seis por decisão da
@@ -384,17 +461,55 @@ ligando `aria-describedby`.
 - animação própria acrescentada por quem consome precisa parar sob
   `prefers-reduced-motion`: o painel e o véu já param, o extra não.
 
-**Movimento reduzido** — o C6 afirma que painel e véu param, e é verdade. Quem o para é a camada de TOKEN: a folha
-declara duração só por `var(--duration-*)`, e `docs/shared/tokens/motion.css`
-zera a escada inteira sob a preferência. O mecanismo está por extenso em
-`hover-card.md` §8.
+**Movimento reduzido** — o C6 afirma que painel e véu param, e é verdade. Aqui
+DUAS camadas seguram, como no `alert-dialog.md` §8:
+
+- **a de token**: a folha declara duração só por `var(--duration-base)`, e
+  `docs/shared/tokens/motion.css` zera a escada inteira sob a preferência;
+- **a da própria folha**: o bloco `@media (prefers-reduced-motion: reduce)` no
+  FIM de `drawer.css` zera `animation` e `transition` de `.nds-drawer-content` e
+  de `.nds-drawer-content:not([data-swiping])`. Ele vem depois das regras de
+  transição, com os mesmos seletores, e por isso vence.
+
+O véu é do Sheet e a folha de lá o desliga — é a única metade do C6 que não mora
+neste arquivo.
+
+**Até 2026-09-12 este parágrafo creditava só a camada de token**, e mandava ler o
+mecanismo em `hover-card.md` §8 — que descreve guardas INERTES. A guarda desta
+folha não é inerte, e o comentário dela até diz o que ela faz com o gesto: a volta
+ao repouso passa a ser instantânea, o acompanhamento do ponteiro continua (não é
+animação, é a posição do dedo), e a resistência elástica para além do aberto é
+desligada pelo motor de ponteiro, não pelo CSS. Descrever a folha do vizinho é o
+defeito que a D8 deste mesmo arquivo já tinha registrado uma vez.
 
 ## 9. Analytics
 
-| evento | quando | payload |
-|---|---|---|
-| `drawer_open` | o painel abre | `{ component: "drawer", trigger_id, location }` |
-| `drawer_close` | o painel fecha | idem, mais `reason` |
+| evento | quando | payload | quem dispara |
+|---|---|---|---|
+| `drawer_open` | o painel abre | `{ component: "drawer", trigger_id, location }` | as cinco |
+| `drawer_close` | o painel fecha | idem, mais `reason` | as cinco |
+| `dialog_confirm` | a ação primária do rodapé da composição é acionada | `{ component: "drawer", action: "confirm", trigger_id, location }` | **só o angular** |
+
+**O `dialog_confirm` é de UMA stack, e o estado é divergência, não decisão.**
+Medido em 2026-09-12: a única chamada da árvore está em
+`nortear-design-system-angular/src/components/docs/DrawerDocs.ts`, no
+`aoConfirmar(qual, secao)` que o rodapé das Composições chama — e ali o
+`location` vem do TEMPLATE, para que clique nascido nas Composições não se
+registre como `docs_demo`. Nas outras quatro o botão primário existe nas mesmas
+composições e não rastreia nada: o `confirm` só aparece como rótulo traduzido.
+
+O conteúdo compartilhado está do lado das quatro — `analytics.description`
+publica dois eventos, `drawer_open` e `drawer_close` —, então o angular dispara
+um terceiro que a própria página dele não lista na tabela. A pendência é de
+código ou de conteúdo, não deste arquivo, e vai relatada: ou as outras quatro
+passam a disparar e o conteúdo ganha a terceira linha, ou o angular para. A
+palavra `dialog_confirm` já é tipada em `AnalyticsEvents` pela família do Dialog,
+então nenhum portão de tipo reprova a assimetria.
+
+**Até 2026-09-12 esta tabela tinha duas linhas e nenhuma coluna de quem
+dispara**, e a última frase da seção — "o evento era disparado só pelo Angular.
+Hoje as cinco disparam" — se lia como se valesse para todos. Ela vale para
+`drawer_open` e `drawer_close`; o `dialog_confirm` continua sozinho.
 
 **`trigger_id` carrega a DIREÇÃO** — `bottom`, `right`, `left` ou `top` —, nunca
 o título traduzido, que partiria a mesma série em um valor por idioma no GA4. O
@@ -431,8 +546,14 @@ anunciado com `open = true` e limpa a anotação; sem isso o próximo fechamento
 botão herdaria um motivo que não é dele.
 
 **As duas pendências registradas em 2026-09-07 fecharam em 2026-09-08**: a prosa
-pedia o título traduzido (`2f64c9b2d`), e o evento era disparado só pelo
-Angular. Hoje as cinco disparam.
+pedia o título traduzido (`2f64c9b2d`), e o PAR `drawer_open`/`drawer_close` era
+disparado só pelo Angular. Hoje as cinco disparam esses dois — o `dialog_confirm`
+é o que continua sozinho, e está na tabela acima.
+
+**Até 2026-09-12 esta linha dizia "o evento era disparado só pelo Angular. Hoje
+as cinco disparam"**, sem nomear qual evento. Escrita quando a tabela tinha duas
+linhas, ela passou a ler como quitação geral no dia em que apareceu um terceiro
+evento que só o Angular manda. Pendência fechada se nomeia pelo que fechou.
 
 ## 10. Reconstruir do zero
 
@@ -454,7 +575,7 @@ Ordem: folha → primitivo → alça → cabeçalho, corpo e rodapé → motor d
 |---|---|
 | geometria, direções, alça, gesto, rodapé | `docs/shared/styles/nds/drawer.css` |
 | véu, título e descrição (reusados) | `docs/shared/styles/nds/sheet.css` |
-| regra do par de botões | `docs/shared/guidelines/04-padroes-design-sistema.md` |
+| regra do par de botões | `docs/shared/guidelines/02-alinhamento-botoes.md` — **o texto canônico**; a seção homônima da `04-padroes-design-sistema.md` só aponta para lá |
 | regra do gesto (constantes e as três decisões) | `docs/shared/primitives/drawer-swipe.ts` |
 | fiação do gesto, por stack | `ui/drawer-swipe.ts` no vanilla · diretiva `NdsDrawerSwipe` no angular · a lib nas outras três |
 | texto, props, critérios de teste | `docs/shared/content/drawer/translations.json` |

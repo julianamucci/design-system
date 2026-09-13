@@ -1,6 +1,13 @@
 # PRD — Sheet
 
-> **Estado descrito**: 2026-09-07. **Revisão serial fechada em** 2026-09-06.
+> **Estado descrito**: 2026-09-12, conferido linha a linha contra o código das
+> cinco stacks. **Revisão serial fechada em** 2026-09-06.
+> Nesta conferência mudaram **§1** (o empréstimo de peças é no sentido
+> contrário), **§5** (o fio e a elevação entram na tabela; o canto do botão de
+> fechar tem dois valores), **§6** (`longScrollBody`) e **§7** (`closeLabel`, e o
+> "espelha o Dialog" do vanilla passa a dizer o que mede) — cada linha antiga
+> registrada no lugar, com data e medição.
+>
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
 
@@ -17,8 +24,30 @@ enquanto está aberto e trava a rolagem da página.
 | Drawer | é componente PRÓPRIO, com folha própria — arrastável, com alça, cantos arredondados do lado de dentro |
 | Popover | não é modal, fica ao lado da página em vez de interrompê-la |
 
-Do Drawer o Sheet empresta três peças, e só três: o véu, o título e a descrição.
-Editar qualquer uma delas alcança os dois componentes.
+**O empréstimo é do Drawer PARA CÁ, não daqui para lá**: as três peças —
+`.nds-sheet-overlay`, `.nds-sheet-title` e `.nds-sheet-description` — são
+declaradas em `sheet.css`, e é o `drawer.css` que as consome, dizendo isso no
+próprio docblock ("o que NÃO se mudou de lugar, de propósito"). Editar qualquer
+uma delas alcança os dois componentes.
+
+**Até 2026-09-12 esta linha dizia "Do Drawer o Sheet empresta três peças".**
+Medido em 2026-09-12, nas folhas e nas cinco stacks: as três regras estão em
+`sheet.css`; `drawer.css` só as cita em comentário; e o painel do Drawer escreve
+`class="nds-sheet-overlay"` nas cinco (`drawer.tsx`, `DrawerOverlay.vue`,
+`drawer-overlay.svelte`, `drawer.ts` do vanilla e do angular). Sentido invertido
+não é detalhe de redação: quem lesse a versão antiga iria mexer em `drawer.css`
+para mudar o véu do Sheet, e a mudança não aconteceria — o arquivo não tem a
+regra.
+
+**E o Drawer não é o único consumidor**: o Sidebar em modo móvel também veste
+esta folha, e mais que três peças. Medido nas cinco em 2026-09-12 — react, vue,
+svelte e angular compõem `Sheet` + `SheetContent` + `SheetHeader`/`Title`/
+`Description` (o cabeçalho em `.nds-sr-only`), e o vanilla monta as classes à mão
+(`sidebar.ts`: `.nds-sheet-overlay`, `.nds-sheet-content` com
+`.nds-sidebar-mobile`, `-header`, `-title`, `-description`). É por isso que a
+largura do painel é custom property e o default mora em `:root` (D2): o
+`.nds-sidebar-mobile` é exatamente o override do mesmo elemento que a medição de
+lá usa como alvo.
 
 ## 2. Contrato de comportamento
 
@@ -147,7 +176,8 @@ stack sem ela, e o defeito só apareceu quando o religamento o destravou.
 ## 4. Anatomia
 
 ```
-sheet-overlay                 o véu — compartilhado com o Drawer
+sheet-overlay                 o véu — declarado aqui, consumido pelo Drawer e
+                              pelo Sidebar móvel (§1)
 sheet-content [data-side]     role="dialog" · aria-modal="true"
 ├── sheet-header              coluna; margem inferior própria (D6)
 │   ├── sheet-title           obrigatório — nomeia o painel
@@ -174,17 +204,33 @@ Fonte: `docs/shared/styles/nds/sheet.css`.
 | padding do painel | 24px | `--spacing-6` |
 | gap do painel | 16px | `--spacing-4` |
 | borda (só do lado de dentro) | 1px | `--border` |
+| fio + elevação | 1px preto a 5% + xl | fio **literal**, sem token; `--elevation-xl` — ver D4 |
 | largura (esquerda e direita) | 75%, teto 384px | `--sheet-width` / `--sheet-max-width` — ver D2 |
 | gap do cabeçalho | 6px | `--spacing-1-5` |
 | margem do cabeçalho e do rodapé | 16px | `--spacing-4` — ver D6 |
 | gap do rodapé | 8px | `--spacing-2` |
 | título | 18px, semi-bold, entrelinha 1, tracking -0.025em | `--text-control-xl` |
 | descrição | 14px, entrelinha 1.5 | `--text-control`, cor `--muted-foreground` |
-| botão de fechar | canto a 16px, raio `--radius-xs`, padding `--spacing-1` | — |
+| botão de fechar (forma do vanilla) | canto a 16px, raio `--radius-xs`, padding `--spacing-1`, opacidade 0.7 | `--spacing-4` no canto |
+| botão de fechar (forma composta) | só posicionamento: canto a 12px | `--spacing-3` — `.nds-sheet-close-position` |
 | anel de foco do fechar | halo 2px + anel 5px | `--background` e `--ring` — ver D5 |
 | camadas | — | `--z-modal-backdrop` e `--z-modal` |
 
 **Sem raio**: o painel encosta na borda da tela.
+
+**Duas correções de 2026-09-12 nesta tabela.** A primeira: **faltava a linha do
+fio e da elevação**, que a D4 já registrava — `box-shadow: 0 0 0 1px
+hsl(0 0% 0% / 0.05), var(--elevation-xl)` —, e uma tabela de geometria sem a
+sombra do painel deixa de fora o degrau que a regra de categoria fixou. Conferido
+contra a folha em 2026-09-12: o `--elevation-xl` está de pé desde 2026-09-10
+(`898889c9e`), e a tokenização das 16 sombras cravadas de 2026-09-12
+(`aaa9ea44c`) **não tocou esta folha** — ela já lia token; o único valor literal
+que sobra aqui é o fio de 1px, que a D4 marca como ponto a revisitar. A segunda:
+**a linha do botão de fechar dizia só "canto a
+16px"**, e são dois valores, um por forma — a do vanilla a 16px e a composta a
+12px (`.nds-sheet-close-position`), que é a mesma dobra de forma que a §4
+descreve. No Dialog a composta é a 8px, então o par de números não é o mesmo nas
+duas folhas irmãs.
 
 ## 6. Estados
 
@@ -194,6 +240,15 @@ Fonte: `docs/shared/styles/nds/sheet.css`.
 | Open | gatilho | painel montado, foco preso, rolagem travada |
 | Focused | Tab dentro | anel de duas camadas no elemento focado (D5) |
 | Transitioning | entrada e saída | deslizamento a partir da borda do `side` |
+| longScrollBody | o conteúdo passa da altura do painel | o corpo rola por dentro (`flex: 1 1 auto` + `min-height: 0`, D3) e o rodapé fica parado; o corpo entra na ordem de tabulação com `role="group"` e nome (C7) |
+
+**`longScrollBody` faltava aqui até 2026-09-12**, e ele não é estado inventado
+pela documentação: está publicado em `states.longScrollBody` do conteúdo
+compartilhado, nos três idiomas, e as cinco docs pages o listam na tabela de
+estados (medido em 2026-09-12 nas cinco `SheetDocs.*`). Ele é o único
+dos cinco que muda o CONTRATO de acessibilidade em vez do visual — é a condição
+que obriga o trio `tabindex="0"` + `role="group"` + `aria-label` —, então omiti-lo
+tirava da tabela de estados exatamente a linha que tem regra.
 
 ## 7. API
 
@@ -204,18 +259,36 @@ Fonte: `docs/shared/styles/nds/sheet.css`.
 | `onOpenChange` | `(open: boolean) => void` | — |
 | `side` | `top \| right \| bottom \| left` | `right` |
 | `showCloseButton` | boolean | `true` |
+| `closeLabel` | string | `'Fechar'` |
 | `className` | string | — |
+
+**`closeLabel` faltava nesta tabela até 2026-09-12, e existe nas cinco** — medido
+nos primitivos: `sheet.tsx` do react, `SheetContent.vue`, `sheet-content.svelte`,
+`NdsSheetContent` do angular (`input('Fechar')`) e `SheetOptions` do vanilla, as
+cinco com o mesmo default. É o nome acessível do X do canto, que vai num
+`.nds-sr-only` dentro do botão; sem ele o rótulo volta a ser literal em português
+dentro do primitivo, que é o defeito que a passagem de 2026-09-07 no Dialog
+existiu para fechar (§7 do [`dialog.md`](dialog.md)).
+
+**A tabela de props do conteúdo compartilhado também não o traz** —
+`props.table` de `docs/shared/content/sheet/translations.json` lista `open`,
+`defaultOpen`, `onOpenChange`, `side`, `showCloseButton`, `className` e para aí.
+É defeito de CONTEÚDO, não deste arquivo, e não foi corrigido aqui de propósito:
+prop que existe nas cinco e não aparece na tabela da docs page é capacidade
+invisível a quem consome — a mesma forma de "some quem nunca entrou na lista" que
+o `closeLabel` do Dialog já pagou uma vez.
 
 ### Divergências de forma, registradas
 
 | stack | como difere |
 |---|---|
-| vanilla | fábrica com `onClose(reason)` espelhando o Dialog, mais `open()`/`close()`/`isOpen()` públicos, `trigger` OPCIONAL e fechamento por `data-slot="sheet-close"` — `PATCHES.md#vanilla-sheet-onclose-reason` e `#vanilla-overlay-close-api` |
+| vanilla | fábrica com `onClose(reason)` nas MESMAS quatro palavras do Dialog (`escape`, `overlay`, `close-button`, `api` — conferido em `sheet.ts`), mais `open()`/`close()`/`isOpen()` públicos, `trigger` OPCIONAL e fechamento por `data-slot="sheet-close"` — `PATCHES.md#vanilla-sheet-onclose-reason` e `#vanilla-overlay-close-api` |
 | angular | `sheetCloseReason(RdxDialogOpenChangeReason)` exportado de `ui/sheet.ts` |
 | vue | `sheetCloseReason(gesture)` + `createSheetCloseWatch()` de `ui/sheet/sheet.close-reason.ts` — a reka-ui não publica motivo, então o gesto é OBSERVADO |
 | svelte | `sheetCloseReason(signal)` + `createSheetCloseWatch()` de `ui/sheet/close-reason.ts`, e `SheetContent` ganhou `onClosePress` — a bits-ui também não publica motivo |
 | react | não declara tipo próprio: o Sheet é o mesmo `dialog_close` do Dialog e usa o `dialogCloseReason` de `ui/dialog-close-reason.ts`, ao lado dos irmãos `ui/menu-close-reason.ts` e `ui/popover-close-reason.ts` |
 | todas | **onde a opção de lado mora varia por stack**; a tabela de props de cada página mostra a forma dela. O lado em si é sempre do painel (C8) |
+| nome do corpo rolável | quatro stacks recebem `aria-label` na peça do corpo e emitem `role="group"` **só quando ele vem** (no angular é `input` com apelido `aria-label`, para o markup ficar idêntico); no vanilla é a opção `bodyLabel` da fábrica, com a mesma regra. Sem nome, nenhum papel — ver C7 e §8. Medido nas cinco em 2026-09-12 |
 
 **Por que cada stack tem uma peça diferente aqui, e isso não é divergência para
 alinhar:** o motivo do fechamento é conhecimento da LIB, e três das cinco não o
@@ -225,6 +298,16 @@ que o contrato exige é o resultado — as mesmas quatro palavras, derivadas ao 
 do primitivo e nunca inventadas na página que consome. Até 2026-09-11 o vanilla,
 que é a referência, tinha três palavras e a docs page dele fabricava a quarta por
 fora, fingindo um clique no véu: o contrato remendado no consumidor.
+
+**Até 2026-09-12 a linha do vanilla dizia só "espelhando o Dialog", e essa era a
+forma de a divergência passar**: em 2026-07-27 o `SheetCloseReason` nasceu com
+TRÊS palavras e o pedido de paridade ficou numa linha de texto do `PATCHES.md`
+(ver o histórico da §9), então "espelha o Dialog" era ao mesmo tempo o que se
+queria e o que não acontecia — afirmação por semelhança não tem como reprovar.
+Medido em 2026-09-12, `nortear-design-system-vanilla/src/components/ui/sheet.ts`
+declara `SheetCloseReason = 'escape' | 'overlay' | 'close-button' | 'api'`, as
+quatro do Dialog, e agora a linha nomeia as palavras em vez de comparar com o
+vizinho. Portão: `reason_da_familia_divergente`.
 
 **Abrir por código, e o gatilho escondido que ele aposentou (2026-09-12).** As
 quatro stacks com lib abrem pelo estado (`open`/`defaultOpen` da prop
@@ -367,8 +450,21 @@ texto traduzido: nas demonstrações cada gatilho abre um lado, e o lado é o id
 dele. Até 2026-09-10 o campo era `label`, e o Dialog, na mesma família, mandava
 `trigger_id`; a dona unificou em `trigger_id` (`18-overlay.md` §Analytics). Os
 valores não mudaram. O `dialog_confirm` já era disparado pelas cinco e faltava
-nesta tabela. O evento é o do Dialog de propósito: as duas peças respondem à mesma
-pergunta de produto, e separar as séries esconderia isso.
+nesta tabela. `dialog_open` e `dialog_close` são os do Dialog de propósito: as
+duas peças respondem à mesma pergunta de produto, e separar as séries esconderia
+isso.
+
+**O terceiro evento, esse NÃO é compartilhado, e a §9 desta página dizia o
+contrário por omissão.** Medido nas cinco em 2026-09-12: o Sheet dispara
+`dialog_confirm` (`{ component: "sheet", trigger_id, action, location }`) e o
+Dialog dispara `dialog_action` (`{ component: "dialog", action_label, location }`)
+— nenhuma `SheetDocs.*` manda `dialog_action`, nenhuma `DialogDocs.*` manda
+`dialog_confirm`, e os dois eventos estão tipados nas cinco `analytics.ts`. São
+dois nomes e dois formatos para a mesma pergunta ("a ação primária do rodapé foi
+executada"), em componentes que compartilham os outros dois eventos de propósito;
+o `dialog_confirm` leva `trigger_id` e o `dialog_action` não. Unificar é decisão
+da dona — registrado aqui e na §9 do [`dialog.md`](dialog.md), não consertado por
+conta própria.
 
 **`reason` é obrigatório, no vocabulário da família** — `escape`, `overlay`,
 `close-button`, `api` —, com o registro da decisão de 2026-09-10 na §9 do

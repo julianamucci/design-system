@@ -1,11 +1,21 @@
 # PRD — Dialog
 
-> **Estado descrito**: 2026-09-07.
-> **⚠ Escrito ANTES da revisão serial deste componente.** Os cinco PRDs de
-> Overlay anteriores descrevem componentes já revisados; este descreve o estado
-> atual de um que a revisão ainda vai atravessar. Espere que decisões mudem — e
-> quando mudarem, a linha se move para o histórico com a nova data e a nova
-> medição, em vez de ser reescrita por cima.
+> **Estado descrito**: 2026-09-12, conferido linha a linha contra o código das
+> cinco stacks. **Revisão serial fechada em** 2026-09-10 (`1a6ca4fbb`), e as
+> rodadas de CATEGORIA de 2026-09-11 e 2026-09-12 passaram por aqui depois: o
+> motivo do fechamento saiu da docs page, o vanilla ganhou `open()`/`isOpen()` e
+> perdeu o gatilho escondido, o rótulo do menu das docs pages foi unificado.
+>
+> Nesta conferência mudaram **§5** (o véu não desfoca), **§6** e **§7** (os dois
+> `showCloseButton`), **§9** (`dialog_action` entra na tabela), **C3** e **D1** —
+> cada linha antiga registrada no lugar, com data e medição, em vez de reescrita
+> por cima.
+>
+> **Até 2026-09-12 este cabeçalho dizia "Estado descrito: 2026-09-07" e trazia o
+> aviso "⚠ Escrito ANTES da revisão serial deste componente".** O aviso
+> sobreviveu dois dias à revisão que ele anunciava, e as rodadas que
+> reescreveram §7 e §9 nesse meio-tempo não o releram: cabeçalho que avisa sobre
+> o futuro é a linha que ninguém volta para fechar.
 >
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
@@ -36,6 +46,17 @@ reusa as keyframes `nds-dialog-fade-in` / `-fade-out` declaradas aqui.
 | C6 | O botão de fechar tem nome acessível para leitor de tela | `accessibility.item6` |
 | C7 | Corpo mais alto que o painel precisa de `tabindex="0"`, `role="group"` e `aria-label` juntos | docblock da folha — sem portão automático |
 
+**O portão da C3 descreve uma rota que não existe mais, e isto é defeito de
+CONTEÚDO, não deste arquivo.** Medido em 2026-09-12 nos três idiomas: o
+`accessibility.item3` de `docs/shared/content/dialog/translations.json` diz
+"…na rota de rolagem, em que o corpo inteiro rola, ele vai para o painel, que é
+quem recebe a rolagem" — o painel recebendo a rolagem é exatamente o par
+`-overlay-scroll` + `-content-scroll` que a D7 retirou em 2026-09-08. Hoje quem
+rola é o corpo, e é o corpo que carrega `tabindex="0"`. A metade da frase que
+ainda vale é a primeira: foco preso, foco inicial no primeiro focável. A chave
+não foi corrigida aqui de propósito — o conteúdo tem dono próprio, e PRD que
+edita conteúdo troca uma divergência por duas.
+
 ## 3. Decisões fixadas
 
 ### D1 · A superfície é `--popover`, e o Dialog está sozinho entre QUATRO painéis modais
@@ -61,16 +82,27 @@ não passa por este arquivo quando um deles muda. É a mesma lição que a D8 do
 apodrecer do mesmo jeito. A defesa aqui é a tabela: ela nomeia as quatro, então
 uma quinta folha modal que apareça não cabe sem ser escrita.
 
-**O registro é ESTE arquivo, não a guideline.** As versões anteriores desta
-linha e da D7 do `alert-dialog.md` apontavam para "a guideline de overlay" sem
-dizer qual das cinco, e as cinco discordam: em 2026-09-09, quatro delas ainda
-afirmam `--card` para os painéis, que nenhuma folha lê. Ponteiro para fonte que
-se contradiz não é lastro.
+**O registro é ESTE arquivo, e a guideline aponta para cá.** Desde 2026-09-10 a
+regra da categoria mora uma vez só, em `docs/shared/guidelines/18-overlay.md`
+§Superfície: a tabela de lá nomeia as dez classes com o par de tokens de cada
+uma, diz que **nenhuma lê `--card`** e manda a divergência dos quatro painéis
+modais para esta D1. Não há mais duas fontes para a mesma coisa, e o ponteiro
+agora é para uma seção, não para "a guideline" sem dizer qual.
+
+**Até 2026-09-12 este parágrafo dizia "as cinco discordam: em 2026-09-09, quatro
+delas ainda afirmam `--card` para os painéis".** A medição estava certa no dia em
+que foi feita e o mundo que ela descreve durou um dia: `b77b4d155` unificou as
+cinco cópias de `10-overlay-components.md`, e o `--card` que quatro delas
+afirmavam ficou registrado no histórico da própria guideline unificada (§Por que
+este arquivo existe). O mecanismo é o mesmo da contagem de painéis acima —
+**afirmação sobre o estado de OUTRO arquivo não se corrige quando aquele arquivo
+muda** —, e a defesa foi a mesma: trocar a afirmação por um ponteiro para a
+seção que responde.
 
 **Enquanto a divergência existir**, o que vale é a regra estrutural: a classe do
-painel resolve a superfície, e ninguém pinta fundo por fora.
-**Esta é a decisão mais provável de mudar na revisão** — ela está aberta, não
-fechada.
+painel resolve a superfície, e ninguém pinta fundo por fora. A revisão serial
+passou (2026-09-10) sem mexer no degrau de superfície, então a decisão segue
+**aberta** — e fechá-la é escolha da dona, não de rodada de conferência.
 
 ### D2 · O rodapé É a aresta de baixo do painel
 
@@ -101,6 +133,12 @@ expressa consulta de mídia.
 contorno externo de 1px, não borda.
 **Contraste**: o Sheet usa um fio equivalente, mas **literal** — preto a 5%, sem
 token. Os dois não são o mesmo valor.
+**Conferido em 2026-09-12, depois da tokenização de elevação**: `aaa9ea44c` fez
+16 sombras cravadas passarem a ler token e criou o degrau `--elevation-xs`, e
+nenhuma das duas coisas alcança esta folha — ela já lia `--elevation-xl`, e o `xs`
+é fio de relevo de controle que continua no plano da página, não superfície que
+paira: folha modal nenhuma o lê. O degrau daqui continua `xl`, e o portão que o
+cobra é `elevacao_fora_do_mapa`.
 
 ### D5 · Nenhum véu desfoca o fundo
 
@@ -243,13 +281,18 @@ dialog-content                role="dialog" · aria-modal="true" · centralizado
 **O corpo não tem estilo próprio**, e a folha diz isso por escrito: o consumidor
 define padding e espaçamento do conteúdo.
 
+**O botão de fechar tem duas formas**, como no Sheet: o vanilla monta
+`.nds-dialog-close`, e as quatro stacks com lib compõem o botão do design system
+e usam só `.nds-dialog-close-position`, com o rótulo em `.nds-sr-only`. A folha
+traz as duas regras, com afastamentos diferentes — ver §5.
+
 ## 5. Geometria e tokens
 
 Fonte: `docs/shared/styles/nds/dialog.css`.
 
 | propriedade | valor | token |
 |---|---|---|
-| véu | 80% de opacidade, desfoque de 4px | `--overlay` |
+| véu | 80% de opacidade, **sem desfoque** | `--overlay` — ver D5 |
 | superfície | — | `--popover` — ver D1 |
 | texto | — | `--popover-foreground` |
 | largura | `100% − 32px`, teto de 512px | `--spacing-8` na folga; teto **literal** (`32rem`) |
@@ -261,10 +304,29 @@ Fonte: `docs/shared/styles/nds/dialog.css`.
 | título | 16px, peso médio, entrelinha 1 | `--text-control-lg`, `--font-weight-medium`, cor `--foreground` |
 | descrição | 14px, entrelinha 1.5 | `--text-control`, cor `--muted-foreground` |
 | rodapé | fundo a 50%, borda superior, padding 16px, gap 8px | `--muted`, `--border`, `--spacing-4`, `--spacing-2` |
-| botão de fechar | canto a 16px, raio `--radius-xs`, padding `--spacing-1`, opacidade 0.7 | — |
+| botão de fechar (forma do vanilla) | canto a 16px, raio `--radius-xs`, padding `--spacing-1`, opacidade 0.7 | `--spacing-4` no canto |
+| botão de fechar (forma composta) | só posicionamento: canto a 8px | `--spacing-2` — `.nds-dialog-close-position` |
 | anel de foco do fechar | halo 2px + anel 5px | `--background` e `--ring` |
 | corpo rolável | teto de 60vh, respiro lateral | `--spacing-2` |
 | camadas | — | `--z-modal-backdrop` e `--z-modal` |
+
+**Até 2026-09-12 a linha do véu dizia "80% de opacidade, desfoque de 4px".** O
+`backdrop-filter` saiu em 2026-09-08 e a D5 deste mesmo arquivo registrou a saída
+no dia — a tabela ficou quatro dias contradizendo a D5, que está duas seções
+acima dela. Medido em 2026-09-12: nenhuma das quatro folhas modais
+(`dialog.css`, `sheet.css`, `alert-dialog.css`, `drawer.css`) declara
+`backdrop-filter`. Duas linhas sobre o mesmo valor no mesmo arquivo é uma linha
+que ninguém relê; a tabela agora só aponta para a D5.
+
+**O canto do botão de fechar tem DOIS valores, e é a mesma diferença de forma
+que o Sheet registra na §4 dele**: o vanilla monta `.nds-dialog-close`, afastado
+16px, e as quatro stacks com lib compõem o botão do design system usando só
+`.nds-dialog-close-position`, afastado 8px. Medido em 2026-09-12 na folha;
+**até essa data esta tabela tinha uma linha só, "canto a 16px"**, que descrevia a
+forma de uma stack como se fosse das cinco. Por que os dois números diferem não
+está escrito em lugar nenhum da folha — o botão composto traz padding próprio, e
+o afastamento menor é compatível com compensá-lo, mas isso é leitura, não
+medição: se a diferença óptica importa, ela se mede em tela, e não aqui.
 
 **Animação**: entrada com fade e zoom (`--duration-base`, `--ease-entrance`),
 saída mais rápida (`--duration-fast`, `--ease-exit`). Sob
@@ -278,7 +340,7 @@ saída mais rápida (`--duration-fast`, `--ease-exit`). Sob
 | Opening | de fechado para aberto | `data-state="open"`: o véu aparece e o painel cresce a partir de 95% |
 | Open | gatilho, ou `open=true` | véu semitransparente, foco preso, rolagem da página travada |
 | Closing | de aberto para fechado | `data-state="closed"`: o painel encolhe e o véu some, em `--duration-fast` |
-| WithCloseButtonHidden | `showCloseButtonContent` desligado | sem X no canto; a saída fica sendo Escape, clique no véu ou ação do rodapé |
+| WithCloseButtonHidden | o `showCloseButton` do Content desligado | sem X no canto; a saída fica sendo Escape, clique no véu ou ação do rodapé |
 
 **Entrada e saída são estados SEPARADOS**, e não um `Transitioning` só — foi o
 conteúdo compartilhado que os separou, e eles não são simétricos: a entrada usa
@@ -295,10 +357,25 @@ no botão de fechar ele tem as duas camadas descritas na §5.
 | `open` | estado controlado |
 | `defaultOpen` | estado inicial não controlado |
 | `onOpenChange` | callback com o novo estado |
-| `showCloseButtonContent` | exibe o X no canto do painel |
-| `showCloseButtonFooter` | exibe um botão de fechar dentro do rodapé, como ação TERCIÁRIA — variante `ghost`, primeiro no DOM (D9) |
-| `closeLabel` | rótulo do botão de fechar — o visível do rodapé e o de leitor de tela do X |
+| `showCloseButton` **do Content** | exibe o X no canto do painel — padrão `true` |
+| `showCloseButton` **do Footer** | exibe um botão de fechar dentro do rodapé, como ação TERCIÁRIA — variante `ghost`, primeiro no DOM (D9). Padrão `false` |
+| `closeLabel` | rótulo do botão de fechar, prop das DUAS peças: no Content é o nome de leitor de tela do X, no Footer é o texto visível. Padrão `'Fechar'` em cada uma |
 | `className` | classes `.nds-*` adicionais |
+
+**São duas props com o MESMO nome, em peças diferentes — e até 2026-09-12 esta
+tabela as chamava de `showCloseButtonContent` e `showCloseButtonFooter`, que não
+são props de stack nenhuma.** Medido nas cinco em 2026-09-12: react, vue, svelte
+e angular declaram `showCloseButton` no Content (padrão `true`) e outro
+`showCloseButton` no Footer (padrão `false`); o vanilla tem um só, em
+`DialogOptions`, porque ali o rodapé é a opção `footer`, que recebe os botões
+**já montados** por quem compõe — não há peça de rodapé para pendurar um botão
+de fechar próprio (D9). Os dois nomes longos existem, e é daí que a confusão
+vinha: são as CHAVES do conteúdo compartilhado
+(`props.table.showCloseButtonContent` e `.showCloseButtonFooter` em
+`docs/shared/content/dialog/translations.json`), que precisam ser distintas
+porque a tabela da docs page é plana e as duas linhas moram na mesma lista. Chave
+de conteúdo vestida de nome de prop leva quem lê a escrever uma prop que nenhuma
+stack aceita — e `tsc` não reprova o que ninguém escreveu ainda.
 
 `closeLabel` existia só no Angular e foi levado a react, vue e svelte em
 2026-09-07, com o mesmo default (`'Fechar'`), de modo que nenhum call site
@@ -322,8 +399,19 @@ quando 28 exports saíram da varredura.
 quem compõe, por `data-slot="drawer-close"` —, e o `alert-dialog` não tem botão
 de canto por decisão (D2 do PRD dele).
 
-Os dois `showCloseButton*` são independentes: um é o X do canto, o outro é uma
-ação no rodapé.
+Os dois `showCloseButton` são independentes: o do Content é o X do canto, o do
+Footer é uma ação no rodapé. Ligar um não liga o outro, e nada impede os dois
+ligados ao mesmo tempo — é a composição que decide.
+
+**E o vanilla ganhou `open()`/`isOpen()` em 2026-09-12** (`efdf144cd`), com
+`trigger` passando a ser OPCIONAL: `DialogElement` é
+`DestroyableElement & { open(), close(), isOpen() }`. O que isso aposentou foi o
+gatilho escondido — `<button>` com `.nds-sr-only`, `tabindex="-1"` e
+`aria-hidden="true"`, clicado por código só para a fábrica ter um alvo —, que
+estava na story `Controlled` deste componente e no snippet que o painel Code
+publica. O registro por extenso, com o `toggle()` que ficou fora de propósito e a
+guarda de reentrância, está na §7 do [`sheet.md`](sheet.md), que é onde a mesma
+passagem foi medida. Portão: `gatilho_escondido_clicado`.
 
 ### Peças, por stack
 
@@ -441,6 +529,32 @@ zera a escada inteira sob a preferência. O mecanismo está por extenso em
 |---|---|---|
 | `dialog_open` | abre por gatilho ou estado controlado | `{ component: "dialog", trigger_id, location }` |
 | `dialog_close` | fecha | `{ component: "dialog", trigger_id, location, reason }` |
+| `dialog_action` | clique na ação primária do rodapé | `{ component: "dialog", action_label, location }` |
+
+**Até 2026-09-12 esta tabela tinha duas linhas, e o componente disparava três.**
+Medido nas cinco em 2026-09-12: `dialog_action` está tipado em todas as cinco
+`analytics.ts` e é disparado pelas cinco docs pages (`DialogDocs.*`), e a tabela
+`analytics.table` do conteúdo compartilhado o documenta desde 2026-04-29
+(`2c9115827`, a primeira gravação do conteúdo deste slug) — evento que
+existe no tipo, no call site e no conteúdo, e faltava só no documento que se
+propõe a descrever o componente. Nenhum portão via: o `event_not_typed` do
+`audit.mjs` cobra o caminho contrário — evento disparado que a `analytics.ts` não
+declara — e a tabela deste arquivo não é lida por regra nenhuma. Falta de linha
+em PRD é ausência, e ausência não tem quem a acuse.
+
+**Ele é o ÚNICO dos três que não leva `trigger_id`**, e a diferença é de
+pergunta: `dialog_open` e `dialog_close` respondem "qual painel", e o
+`action_label` responde "qual ação foi confirmada" — id estável, nunca texto
+traduzido (`save`, `ok`, `delete`, `remove`, `continue`, `confirm-email` nas
+prévias da página). Vale saber, porque **o Sheet chama o dele de
+`dialog_confirm`** e manda
+`{ component: "sheet", trigger_id, action, location }` — dois nomes de evento e
+dois formatos para a mesma pergunta de produto, em componentes que
+deliberadamente COMPARTILHAM `dialog_open` e `dialog_close`. Os dois eventos estão
+tipados nas cinco stacks, e cada componente dispara só o seu: nenhuma docs page
+de Dialog manda `dialog_confirm`, nenhuma de Sheet manda `dialog_action`.
+Unificar é decisão da dona — está registrado aqui e na §9 do
+[`sheet.md`](sheet.md), não consertado por conta própria.
 
 O Sheet e o AlertDialog emitem os MESMOS eventos, com `component: "sheet"` e
 `component: "alert-dialog"` — as peças respondem à mesma pergunta de produto, e
@@ -492,7 +606,13 @@ não escutavam `onClose`, então nenhum evento mudou de valor ali.
 
 **Desde 2026-09-10 quem cobra o campo é o TIPO.** Nas cinco `analytics.ts`,
 `dialog_open`, `dialog_close` e `dialog_confirm` exigem `trigger_id` e proíbem
-`label` (`label?: never`), e `location` é obrigatório no abrir e no fechar. O
+`label` (`label?: never`), e `location` é obrigatório no abrir e no fechar — o
+`dialog_confirm` entra nessa lista porque é da FAMÍLIA (quem o dispara é o Sheet,
+ver acima), e o `dialog_action`, que é o terceiro evento deste componente, está
+fora dela: nas cinco ele é `{ component: string; action_label: string;
+location?: string }` — sem `trigger_id`, sem a guarda `label?: never` e com o
+`component` aberto em `string` em vez da união de três palavras. Medido em
+2026-09-12; o aperto é decisão da dona, e as cinco declarações mudam juntas. O
 primeiro desenho foi uma união discriminada pelo `component` — `dialog` com
 `trigger_id`, `alert-dialog` e `sheet` com `label` —, e ela durou o mesmo dia:
 com a unificação não há mais o que discriminar. Até ali os dois campos eram

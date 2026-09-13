@@ -16,7 +16,7 @@ decisões com data e medição, tokens, peças das cinco stacks — está no PRD
 | Popover | [popover.md](../prd/popover.md) |
 | HoverCard | [hover-card.md](../prd/hover-card.md) |
 | Tooltip | [tooltip.md](../prd/tooltip.md) |
-| DropdownMenu, ContextMenu, Menubar | [dropdown-menu.md](../prd/dropdown-menu.md) — o ContextMenu e o Menubar não têm folha própria (D9) |
+| DropdownMenu, ContextMenu, Menubar | [dropdown-menu.md](../prd/dropdown-menu.md) — o ContextMenu não tem folha própria; o Menubar tem uma que só posiciona a barra e o painel, e veste o miolo com as classes do DropdownMenu (D9) |
 | Command | [command.md](../prd/command.md) |
 
 ## Por que este arquivo existe
@@ -133,7 +133,11 @@ Os dois atravessam mais que esta categoria, e moram na guideline do assunto:
 
 - **Elevação** sai do TIPO de superfície — flutuante interativo `md`, flutuante
   passivo `lg`, modal e drawer `xl` —, em
-  [`04-padroes-design-sistema.md`](04-padroes-design-sistema.md) §Qual degrau.
+  [`04-padroes-design-sistema.md`](04-padroes-design-sistema.md) §Qual degrau. A
+  barra do Menubar é a única peça desta categoria fora dos três: ela não flutua,
+  e desde 2026-09-12 lê o degrau `xs`, que nasceu para relevo no plano da página
+  — antes era uma sombra cravada na folha, invisível ao portão, que só classifica
+  quem LÊ `var(--elevation-*)`.
 - **Movimento reduzido**: quem para o movimento é a camada de token, que zera a
   escada de `--duration-*` sob a preferência; as nove folhas desta categoria
   declaram duração só por token. Regra em [`13-animacao.md`](13-animacao.md); o
@@ -227,9 +231,11 @@ gatilho, `label` estável e nunca texto — é regra de todos os eventos, e est�
 
 - **O fechamento diz por que fechou**, com `reason` **obrigatório** e de
   vocabulário do design system, nunca o da lib — quatro palavras, iguais em
-  `dialog_close` (Dialog, Sheet, AlertDialog), `drawer_close`,
-  `popover_close` e `context_menu_close` (este nunca emite `close-button`: o
-  menu não tem controle de fechar):
+  `dialog_close` (Dialog, Sheet, AlertDialog), `drawer_close`, `popover_close` e
+  os três da família de menus — `dropdown_menu_close`, `context_menu_close` e
+  `menubar_close`, que nunca emitem `close-button`, porque menu não tem controle
+  de fechar (o tipo carrega as quatro palavras mesmo assim, para o vocabulário
+  ser um só no GA4):
 
   | motivo | caminho |
   |---|---|
@@ -313,7 +319,7 @@ evitar.
 | Elevação por tipo de superfície | `04-padroes-design-sistema.md` | `elevacao_fora_do_mapa` · `prd_token_sem_lastro` confere cada PRD contra a folha | — |
 | `reason` no fechamento | aqui, §Analytics | `reason_parcial_entre_stacks` (presença entre stacks) · `reason_vocabulario_divergente` (obrigatório e com as quatro palavras, em todo `*_close` e todo `*CloseReason`) | que a docs page deduza o motivo CERTO — o portão lê o tipo, não o caminho que o preenche |
 | Nível do título | aqui, §Título | `nivel_de_titulo_divergente` | lê o default no vanilla, onde está ESCRITO; nas outras quatro ele vem da lib |
-| Cadeia de `transform-origin` | aqui, §Posicionamento | `cadeia_transform_origin_sem_bits` · `_premissa` · `_nao_declarada` | `navigation-menu` fica de fora, declarado: o bits não publica origem para ele. E o portão lê a cadeia da FOLHA, não se a stack escreve a variável: o ContextMenu do vanilla não escrevia `--transform-origin` nenhum e caía em `center` (medido em 2026-09-10) |
+| Cadeia de `transform-origin` | aqui, §Posicionamento | `cadeia_transform_origin_sem_bits` · `cadeia_transform_origin_premissa` · `cadeia_transform_origin_nao_declarada` (os dois últimos NÃO levam `sem_bits` no nome — a forma abreviada que esta linha usava até 2026-09-12 devolvia zero a quem procurasse por ela) | `navigation-menu` fica de fora, declarado: o bits não publica origem para ele. E o portão lê a cadeia da FOLHA, não se a stack escreve a variável: o ContextMenu do vanilla não escrevia `--transform-origin` nenhum e caía em `center` (medido em 2026-09-10) |
 | Anel de foco | `01-acessibilidade.md` | `focus_ring_sobrescrito` · `focus_ring_translucido` · `anel_de_foco_ausente` (peça que zera o `outline` sem regra de foco que desenhe anel; 10 exceções declaradas em `ANEL_DE_FOCO_EXCECOES`, cada uma com premissa conferida em arquivo) | que o anel CONTRASTE com o fundo em cada tema — a regra lê presença; a razão é da `focus_ring_translucido` só para `box-shadow`. Nasceu em 2026-09-10 e achou o navigation-menu sem anel em três peças, corrigido junto |
 | O ponteiro pinta o destaque em toda peça | D4 do `dropdown-menu.md` | `destaque_sem_hover` (peça pintada por `[data-highlighted]` sem o `:hover` par na folha; select e combobox são exceções declaradas, porque o vanilla destaca por ponteiro ali — premissa conferida no arquivo) | a COR do hover — a regra lê a presença do par, não se ele pinta o mesmo que o destaque. Nasceu em 2026-09-10: no vanilla o mouse não pintava marcação, rádio nem sub-gatilho |
 | Modalidade | aqui, §Modalidade | `modalidade_sem_condicao` | só a família NÃO-modal; o inverso é da suíte, que assere `aria-modal="true"` |

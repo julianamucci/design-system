@@ -1,12 +1,17 @@
 # PRD — Command
 
-> **Estado descrito**: 2026-09-07, revisado em 2026-09-10 (pipeline `fix` — ver §12).
-> **⚠ Escrito ANTES da revisão serial deste componente.** Espere que decisões
-> mudem — e quando mudarem, a linha se move para o histórico com a nova data e a
-> nova medição, em vez de ser reescrita por cima.
+> **Estado descrito**: 2026-09-12, conferido linha por linha contra as cinco
+> stacks (§12). **Revisão serial fechada em** 2026-09-10 (`00fa34458`, pipeline
+> `fix` — ver §12).
 >
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
-> defeito é dele — corrija aqui, nunca o código para bater com o texto.
+> defeito é dele — corrija aqui, nunca o código para bater com o texto. Quando
+> uma linha muda, ela se move para o histórico com a nova data e a nova medição,
+> em vez de ser reescrita por cima.
+>
+> **Até 2026-09-12 este cabeçalho trazia o aviso "⚠ Escrito ANTES da revisão
+> serial deste componente"** — dois dias depois de a revisão fechar, e na linha
+> seguinte à que já citava a pipeline `fix` que a executou.
 
 ## 1. Identidade
 
@@ -39,7 +44,7 @@ que a hospeda.
 | C6 | Dentro do Dialog, título e descrição ficam em `sr-only` e precisam de valores descritivos | `accessibility.item3` |
 | C7 | O campo de busca não tem altura fixa | ver D5 |
 | C8 | As setas param nas pontas da lista — a de baixo no último item não volta ao primeiro | story `WithDisabledItems` |
-| C9 | O filtro compara a busca com o valor e o rótulo do item, nunca com o texto do atalho | story `WithShortcuts` ("ctrl" → nenhum resultado) |
+| C9 | O filtro compara a busca com o valor e o rótulo do item, nunca com o texto do atalho — **menos no angular, que compara só o rótulo** (§7, "C9 no angular está pela metade") | story `WithShortcuts` ("ctrl" → nenhum resultado) |
 | C10 | A lista se chama pelo placeholder do campo | story `Playground` |
 | C11 | O separador some quando um dos lados fica sem item (react e svelte o tiram em qualquer busca — padrão da lib, aceito) | stories `Playground` e `WithGroups` ("badge") |
 | C12 | O campo inline não rouba o foco ao montar; só a paleta aberta num Dialog foca o campo sozinha | story `Playground` |
@@ -129,8 +134,11 @@ queria: centro na horizontal, 33% do topo.
 
 **Estado**: `--radius-sm`, que é `--radius` (**14px**) menos **4px**: 10px. O
 inset que o raio aninhado desconta é o padding do grupo (`--spacing-1`, 4px).
-**Os 4px do token são LITERAIS** (`tokens.css:222`), não `--spacing-1`: hoje os
+**Os 4px do token são LITERAIS** — a declaração é
+`--radius-sm: max(0px, calc(var(--radius) - 4px))`, em `docs/shared/tokens/tokens.css` —, e não `--spacing-1`: hoje os
 dois coincidem, e mudar um não muda o outro — os cantos derivam em silêncio.
+(Até 2026-09-12 esta linha citava `tokens.css:222`; a declaração está na 236, e
+número de linha em documento é referência que envelhece sozinha.)
 
 ### D11 · O primeiro item fica em destaque sozinho
 
@@ -148,17 +156,26 @@ command                       flex column, 100%×100%, overflow hidden
 ├── command-input-wrapper      ícone de busca + campo; borda inferior
 │   ├── [ícone]                  16px, 50% de opacidade
 │   └── command-input            sem altura fixa (D5)
-└── command-list               teto de 300px, rola
-    ├── command-group          padding de 4px — é ele que dá o raio aninhado (D10)
-    │   ├── command-group-heading
-    │   └── command-item        role de opção · aria-selected
-    │       ├── [ícone]
-    │       ├── [rótulo]
-    │       ├── command-shortcut    exclui o tique (D7)
-    │       └── command-item-check  tique à direita
-    ├── command-separator      filho da lista, de ponta a ponta (D8)
-    └── command-empty          aviso de busca sem resultado
+├── command-list               teto de 300px, rola · role de listbox
+│   ├── command-group          padding de 4px — é ele que dá o raio aninhado (D10)
+│   │   ├── command-group-heading
+│   │   └── command-item        role de opção · aria-selected
+│   │       ├── [ícone]
+│   │       ├── [rótulo]
+│   │       ├── command-shortcut    exclui o tique (D7)
+│   │       └── command-item-check  tique à direita
+│   └── command-separator      filho da lista, de ponta a ponta (D8)
+└── command-empty              IRMÃO da lista: região viva do aviso de vazio
 ```
+
+**Até 2026-09-12 esta árvore punha o `command-empty` DENTRO da lista.** Ele é
+IRMÃO dela nas cinco stacks, e o `command.css` diz isso por escrito no bloco de
+abertura: `role="status"` não é filho permitido de `role="listbox"` — só `option`
+e `group` são —, e o axe reprova por `aria-required-children`. O nó fica montado
+o tempo todo (região viva criada na hora não anuncia nada) e o que entra e sai é
+a CLASSE e o texto; sem a classe ele segue na árvore de acessibilidade com
+altura zero, que é o oposto de `display: none`. É também a única região viva do
+componente.
 
 ## 5. Geometria e tokens
 
@@ -176,7 +193,8 @@ Fonte: `docs/shared/styles/nds/command.css`.
 | placeholder | — | `--muted-foreground` |
 | teto da lista | 300px | **literal** (`18.75rem`) |
 | padding do grupo | 4px | `--spacing-1` |
-| cabeçalho de grupo | 12px, peso médio | `--text-control-sm`, cor `--muted-foreground` |
+| texto do grupo | — | `--foreground` |
+| cabeçalho de grupo | 12px, peso médio, respiro de 8px lateral e 6px vertical | `--text-control-sm`, `--spacing-2` e `--spacing-1-5`, cor `--muted-foreground` |
 | padding do item | 8px lateral, 6px vertical | `--spacing-2` e `--spacing-1-5` |
 | gap do item | 8px | `--spacing-2` |
 | raio do item | — | `--radius-sm` — ver D10 |
@@ -185,13 +203,29 @@ Fonte: `docs/shared/styles/nds/command.css`.
 | texto do item selecionado | — | `--accent-foreground` |
 | anel do item | 2px interno | `--accent-foreground` — ver D2 |
 | ícone do item | 16px | `--spacing-4` |
-| aviso de vazio | padding de 24px, centralizado | `--spacing-6`, cor `--muted-foreground` |
+| transição do item | fundo e cor | `--duration-fast` — ver §8 |
+| atalho do item | 12px, espaçamento de 0.1em | `--text-control-sm`, cor `--muted-foreground`; sobre item destacado, `--accent-foreground` a 85% — ver D4 |
+| aviso de vazio | respiro de 24px em cima e 24px embaixo, texto centralizado | `--spacing-6`, cor `--muted-foreground` |
 | separador | 1px | `--border` — ver D8 |
 | item desabilitado | 50% de opacidade | — |
+
+**Até 2026-09-12 a linha do aviso de vazio dizia "padding de 24px,
+centralizado".** A folha declara `padding-block: var(--spacing-6)` e
+`text-align: center`: não há padding lateral nenhum, e os 24px são de cima e de
+baixo — é por isso que a classe que entra e sai custa 48px de altura, que é o
+vão que ela deixaria embaixo da lista cheia. Na mesma data entraram as linhas
+que a tabela não tinha: o texto do grupo (`--foreground`, e é ele que dá a cor
+base do item), o respiro do cabeçalho de grupo, a transição do item e o atalho.
 
 **Sem borda, sem sombra e sem camada próprias**: quem hospeda resolve. A folha
 não declara camada nem degrau de elevação; dentro do Dialog, a paleta herda a
 elevação `xl` dele (regra de elevação por tipo de superfície, 2026-09-10).
+Conferido de novo em 2026-09-12, depois do nascimento do degrau `xs` e da
+tokenização das 16 sombras cravadas: a folha desta paleta continua sem uma única
+ocorrência de token de elevação, e o degrau `xl` que o `dialog.css` lê segue
+sendo o único que a paleta vê. A tabela acima também fecha com a folha nos dois
+sentidos (`node scripts/tabela-tokens.mjs command`: zero linhas sem lastro, zero
+tokens do componente ausentes das tabelas das cinco docs pages).
 
 A folha também não declara classe de nenhum outro componente — o bloco
 `.nds-combobox-*` que morava no fim dela saiu em 2026-09-10 (ver o histórico), e
@@ -202,28 +236,66 @@ o portão `seletor_em_duas_folhas` reprova a volta.
 | estado | quando ocorre | o que muda |
 |---|---|---|
 | Item padrão | — | sem preenchimento |
-| Item em destaque | seta ou ponteiro | accent a 10%, texto `--accent-foreground`, anel interno — é o que o Enter ativa |
+| Item em destaque | ao abrir e a cada busca, no primeiro habilitado (D11); depois, seta ou ponteiro | accent a 10%, texto `--accent-foreground`, anel interno — é o que o Enter ativa |
 | Item desabilitado | `aria-disabled` ou `data-disabled` | 50% de opacidade, sem ponteiro nem teclado |
 | Item filtrado para fora | filtro | sai da lista: desmontado em quatro stacks; no angular fica com `hidden`, e aí depende da regra de D6 |
 | Item marcado | `data-checked` | tique à direita, salvo se houver atalho (D7) |
-| Vazio | filtro sem resultado | o aviso ocupa a lista |
+| Vazio | filtro sem resultado (no vue, só com busca digitada — ver §7) | o aviso aparece embaixo da lista |
+
+**Até 2026-09-12 a linha do item em destaque dizia só "seta ou ponteiro"** —
+deixava de fora o destaque automático do D11, que é justamente o estado em que a
+paleta ABRE. E a do vazio dizia que o aviso "ocupa a lista": ele é irmão dela
+(§4), aparece embaixo, e a lista some por não ter mais item nenhum.
 
 ## 7. API
 
 | prop | o que faz |
 |---|---|
 | `commandFilter` | filtro customizado: recebe o valor do item e a busca e decide se o item fica. A assinatura é da stack — número (0 esconde) no react e no svelte, booleano no angular; vue e vanilla não expõem a prop |
-| `commandValue` | valor controlado do item em destaque |
-| `commandOnValueChange` | callback ao mudar o destaque |
-| `inputPlaceholder` | placeholder do campo |
+| `commandValue` | valor controlado do item em destaque — **só no react e no svelte** com esse sentido; ver a divergência de API abaixo |
+| `commandOnValueChange` | callback ao mudar o destaque — mesma ressalva do `commandValue` |
+| `inputPlaceholder` | placeholder do campo, e o nome acessível do campo E da lista (C10) |
 | `itemValue` | valor único do item, usado pelo filtro |
 | `itemOnSelect` | callback ao selecionar por clique ou Enter |
 | `itemDisabled` | desabilita o item |
+| `checked` | marca o comando como escolhido: vira `data-checked`, e o tique acende à direita — salvo se o item tiver atalho (D7). Sem valor a prop não emite atributo nenhum: comando que não representa escolha não declara estado de escolha, nem `false`. Existe nas cinco — no vanilla como campo do item na lista, não como prop |
+| `loopFocus` | ligado, a seta passa do último comando ao primeiro; desligado — o padrão — as setas param nas pontas (C8). O NOME é do angular, que declara a prop no próprio `NdsCommand` porque o padrão do primitivo é laçar; no react e no svelte o mesmo interruptor é o `loop` da lib, que já nasce desligado; vue e vanilla não expõem nenhum |
+| `reset()` | **só no vanilla**, e é um verbo na raiz devolvida pela fábrica, não uma prop: limpa a busca e redesenha, o que devolve o destaque ao primeiro habilitado e a lista ao topo. É o que cumpre a metade "a cada abertura" do D11 — a fábrica não sabe quando o hospedeiro abre, então quem monta a paleta num Dialog o chama no `onOpenChange(true)`. Nas outras quatro o conteúdo desmonta ao fechar e começa do zero sozinho |
 | `dialogTitle` | título do Dialog hospedeiro, em `sr-only` |
 | `dialogDescription` | descrição do Dialog hospedeiro, em `sr-only` |
 | `dialogShowCloseButton` | exibe o X do Dialog; padrão `false` no `CommandDialog` (react, vue, svelte). Vanilla e angular compõem com o Dialog, cujo padrão é `true` — a paleta passa `false` explicitamente |
 
 ### Divergência de forma, registrada
+
+**`commandValue` e `commandOnValueChange` NÃO querem dizer a mesma coisa nas
+cinco, e aqui não há fonte de verdade** — é divergência de API de framework, que
+a regra da casa manda registrar em vez de alinhar. Medido em 2026-09-12, na raiz
+de cada stack:
+
+| stack | o que a prop da raiz controla |
+|---|---|
+| react | o item em DESTAQUE (`value`/`onValueChange` do cmdk) |
+| svelte | o item em DESTAQUE (`value` do `Command.Root`, ligável) |
+| vue | o item ESCOLHIDO — é o `modelValue` do `ListboxRoot` da reka, e o destaque mora em `highlightedElement`, que não é prop |
+| angular | o TEXTO DA BUSCA — no autocomplete do radix-ng o `value` da raiz É o valor do campo |
+| vanilla | não existe: a fábrica não tem valor controlado, e a busca se zera por `reset()` |
+
+Consequência prática para quem lê a linha da tabela: no vue e no angular, passar
+`commandValue` não move destaque nenhum. **Até 2026-09-12 a tabela de API
+apresentava as duas props como se valessem igual nas cinco.**
+
+**C9 no angular está pela metade, e é defeito de código, não de texto.** O
+`NdsCommand` repassa o `filter` do primitivo e não instala filtro próprio, e o
+padrão do radix-ng compara a busca com `item.textValue()` e só com ele
+(`radix-ng-primitives-combobox.mjs`, `contains(item.textValue(), query)`) — o
+`value` do item fica de fora. O rótulo casa porque `textValue` nasce do texto do
+elemento, e o atalho não entra nele porque o `NdsCommandShortcut` carrega o
+atributo `rdxAutocompleteItemIndicator`, que o primitivo descarta ao montar esse
+texto. Ou seja: a metade do atalho está cumprida, a metade do valor não. O
+defeito é LATENTE nas stories, porque nenhum `value` delas é um id que o rótulo
+não contenha — `value="novo"` para "Novo arquivo" casa pelo rótulo. O react e o
+svelte precisaram de trabalho justamente para isso (ver abaixo); o angular ainda
+não o tem.
 
 O `cmdk` gera o cabeçalho de grupo com o atributo `[cmdk-group-heading]`, não com
 uma classe — por isso a folha estiliza o cabeçalho **por atributo** além da
@@ -254,14 +326,60 @@ de quem consome. Limite medido e documentado no arquivo: item que nasce escondid
 por uma busca inicial que só o rótulo casaria não tem de onde ler até a busca
 mudar — nenhuma story ou docs page cai nisso.
 
-**O ponteiro que sai da lista**: no vue e no angular (reka, radix-ng) o destaque
-é apagado, e o Enter não faz nada até a próxima busca ou seta; cmdk e bits
-mantêm o último item apontado. Aceito como divergência de lib — o D11 fala de
-abrir e de buscar, e nenhum texto das docs promete o que acontece aqui.
+**O ponteiro que sai da lista**: no vue e no angular o destaque é APAGADO, e o
+Enter não faz nada até a próxima busca ou seta; no react, no svelte e no vanilla
+o último item apontado FICA. A divisão é de três contra dois, e a referência está
+na maioria: o `command.ts` do vanilla não tem `mouseleave` nem `pointerleave`
+nenhum, e quem apaga são os ouvintes das duas libs — `onPointerleave: onLeave` no
+`ListboxRoot` da reka, que zera `highlightedElement`, e o `onPointerLeave` do
+`RdxAutocompleteItem`, que chama `clearHighlight()` quando o ponteiro sai da
+lista (ele só corre porque `highlightItemOnHover` nasce `true` no primitivo). No
+cmdk e no bits não existe ouvinte de saída.
+
+**Até 2026-09-12 esta linha omitia o vanilla** e deixava a divisão parecer "as
+duas libs que apagam contra as duas que mantêm", sem a referência dentro da
+conta. Segue aceito como divergência de lib — o D11 fala de abrir e de buscar, e
+nenhum texto das docs promete o que acontece aqui —, mas agora com o lado certo
+nomeado: quem divergiu do vanilla foram o vue e o angular.
+
+**A busca depois da escolha: três zeram, duas mantêm.** Vanilla (`selectItem`
+chama `reset()`), vue (`onSelect` escreve `filterState.search = ''`) e angular (o
+`aoMudarValor` veta a escrita do rótulo no campo e faz `value.set('')`) devolvem
+o campo ao vazio, e com ele a lista inteira e o destaque no primeiro comando.
+React e svelte deixam a busca como estava, que é o padrão do cmdk e do bits. Nas
+três que zeram isso é decisão registrada no código — o campo não pode virar o
+nome do comando que acabou de rodar —; nas duas que não, é o padrão da lib.
+Registrado, não alinhado: a decisão de uniformizar é da dona, e a diferença só é
+visível no uso INLINE, porque a paleta dentro do Dialog desmonta ao fechar nas
+quatro stacks com lib (no vanilla é o `reset()` que faz esse papel — ver §7).
+
+**A ordem da lista filtrada: duas reordenam, três mantêm.** No react e no svelte
+a busca REORDENA — o cmdk reordena itens e grupos por pontuação (`sort` no estado
+da raiz), e o `#sort()` do bits faz o mesmo, com os grupos na pontuação do melhor
+item deles. No vue, no vanilla e no angular a ordem do documento é preservada: o
+filtro só decide quem fica (a pontuação da reka é 1 ou 0, o vanilla redesenha na
+ordem original e o radix-ng percorre os itens registrados). Isso muda QUAL é o
+"primeiro habilitado" do D11 depois de digitar: nas duas que reordenam é o mais
+relevante, nas três que mantêm é o primeiro que sobrou na ordem da tela.
+Divergência de lib, não alinhada — as duas leituras são defensáveis, e nenhum
+texto das docs promete uma delas.
+
+**O aviso de vazio do vue exige busca digitada.** O `CommandEmpty` do vue
+condiciona a `!!filterState.search && filtered.count === 0`; nas outras quatro a
+condição é só a contagem zero (react e svelte leem `filtered.count` da lib,
+vanilla conta os filtrados, angular lê `visibleCount()`). A diferença aparece num
+caso só: paleta montada SEM comando nenhum e sem busca — as quatro anunciam
+"nenhum resultado", o vue fica calado. O único lugar do repositório em que isso
+acontece é a story de carregamento do svelte, que é a única stack com peça de
+carregamento (ver "Peças, por stack"): lá a lista nasce vazia, e o aviso aparece
+ao lado do indicador. O `command.svelte` defende a escolha por escrito — a
+contagem nasce em 0 justamente para a paleta sem comando se declarar vazia.
 
 **Home e End**: react, vue e svelte movem o destaque para as pontas (vem das
 libs — no bits, `kbd.HOME`/`kbd.END` no `command.svelte.js`); vanilla e angular
-não. Aceito como divergência de lib — o padrão ARIA de
+não. No angular é condição explícita da lib: o primitivo só trata as duas teclas
+em modo GRADE, e fora dela as deixa para o cursor de texto do campo. Aceito como
+divergência de lib — o padrão ARIA de
 listbox trata as duas teclas como opcionais, e nenhum texto das docs as promete.
 
 ### Peças, por stack
@@ -319,8 +437,29 @@ segura, está por extenso em `hover-card.md` §8.
 a mesma seleção em contextos diferentes sem misturar as séries. `label` é o
 VALOR do item e `group` a chave estável do grupo, nunca o texto traduzido.
 
-`component` e `location` são obrigatórios no tipo, como os outros oito overlays
-os mandam; `location` é a seção da docs page de onde o gesto saiu.
+`component` e `location` são obrigatórios no tipo dos dois eventos, nos cinco
+`src/lib/analytics.ts`; `location` é a seção da docs page de onde o gesto saiu.
+
+**Até 2026-09-12 esta linha dizia "como os outros oito overlays os mandam", e a
+categoria não é uniforme.** Medido nos cinco `analytics.ts` em 2026-09-12:
+`location` é OBRIGATÓRIO em `dialog_open`/`dialog_close` (Dialog, AlertDialog,
+Sheet), em `dropdown_menu_open`/`_close` e nos dois do Command; é OPCIONAL em
+`drawer_open`/`_close`, `popover_open`/`_close`, `hover_card_open`/`_close` e
+`tooltip_view`. Ou seja: quatro dos nove painéis da categoria mandam, cinco
+deixam escolher. O `component` também não é igual: em `dialog_*`, `dropdown_*`,
+`drawer_*` e nos dois do Command é união de literais, e em `popover_*`,
+`hover_card_*` e `tooltip_view` é `string` solta. O Command está no grupo mais
+estrito por decisão da dona (2026-09-10), e não por seguir a categoria — que
+nisto não tem um padrão só.
+
+**Colisão de nome com a categoria, registrada**: o `command_palette_open` usa o
+campo `trigger` para dizer COMO a paleta abriu (`"keyboard"` ou `"button"`),
+enquanto a guideline de overlay reserva `trigger_id` para o id ESTÁVEL do gatilho
+— dois campos de nome quase igual e papel diferente na mesma família, e os dois
+ainda de pé hoje nas cinco stacks. Ler as duas séries juntas no GA4 exige saber
+disso: em `dialog_*`, `drawer_*`, `popover_open`, `hover_card_open` e
+`tooltip_view`, `trigger_id` responde "qual gatilho"; aqui, `trigger` responde
+"por qual caminho". A paleta não manda o id do gatilho em campo nenhum.
 
 **Ctrl+K nas cinco docs pages.** A demonstração da paleta exibe a dica do
 atalho, então a página responde a ela: o ouvinte vive enquanto a página está
@@ -371,9 +510,15 @@ hospedeiro (Dialog) → stories → docs page.
 | texto, props, critérios de teste | `docs/shared/content/command/translations.json` |
 | desenho e anotações | Figma, página `Command` (componente `702:8`) |
 | portões determinísticos | `node scripts/audit.mjs command --json` |
-| código do painel Code | `ui/command/command.source.ts` (só construtores de snippet) e `command.fixtures.ts` (as listas que story e snippet dividem), por stack — a varredura `source-snippets.test.ts` de cada uma cobra a fronteira |
+| código do painel Code | `command.source.ts` (só construtores de snippet) — em `ui/command/` no vue e no svelte, solto em `ui/` no react, no vanilla e no angular. Os andaimes que as stories dividem moram no `command.fixtures.ts` ao lado, que existe em QUATRO stacks: o react não tem, porque o único auxiliar dele é de uma linha, repetido em dois arquivos de story — corpo de uma linha é exceção declarada do portão `fixture_duplicada_entre_stories`. A varredura `source-snippets.test.ts` de cada stack cobra a fronteira |
 | rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
 | título (`h2`) de cada seção | o mesmo rótulo do menu, derivado do id da seção — ver `docs-page-landmarks.ts` |
+
+**Até 2026-09-12 a linha do painel Code dava um caminho só,
+`ui/command/command.source.ts`, e dizia que o `command.fixtures.ts` existe "por
+stack".** O caminho com pasta vale para o vue e o svelte; nas outras três o
+arquivo é irmão do primitivo, em `ui/`. E o `fixtures` existe em quatro, não em
+cinco.
 
 **As 54 chaves `nav` saíram do conteúdo em 2026-09-12.** Aqui elas não
 produziam sintoma — nenhuma das cinco páginas deste slug lia o conteúdo para
@@ -403,6 +548,39 @@ terceiro existe porque no Angular um `[title]` esquecido **não** reprova no
 
 
 ## 12. Histórico
+
+**2026-09-12 · o documento foi lido contra as cinco stacks, e onze afirmações
+não fechavam.** Nenhuma delas era decisão nova: é o que a revisão do Command
+(00fa34458) escreveu antes da rodada de Overlay e o que ela nunca tinha medido
+peça por peça. O que mudou, na ordem das seções:
+
+- §4 punha o `command-empty` DENTRO da lista. Ele é irmão dela nas cinco e no
+  comentário do `command.css`, por `aria-required-children`;
+- §5 dizia "padding de 24px, centralizado" no aviso de vazio — a folha declara só
+  `padding-block`. Faltavam quatro linhas: texto do grupo, respiro do cabeçalho de
+  grupo, transição do item e atalho;
+- §6 descrevia o destaque como "seta ou ponteiro", sem o destaque automático do
+  D11, e punha o aviso de vazio dentro da lista;
+- §7 apresentava `commandValue`/`commandOnValueChange` como se valessem igual nas
+  cinco (o vue controla o item ESCOLHIDO, o angular o TEXTO DA BUSCA, o vanilla não
+  tem), não tinha `checked`, `loopFocus` nem `reset()`, e a linha do ponteiro que
+  sai da lista omitia o vanilla — a divisão é de três que mantêm o destaque
+  (react, svelte, vanilla) contra dois que apagam (vue, angular);
+- §7 ganhou três divergências que ninguém tinha registrado: a busca zerada depois
+  da escolha (vanilla, vue e angular zeram; react e svelte não), a reordenação por
+  relevância (só react e svelte, e ela muda qual é o "primeiro habilitado" do D11)
+  e o aviso de vazio do vue, que exige busca digitada;
+- §9 dizia que `component` e `location` são obrigatórios "como os outros oito
+  overlays os mandam" — em `drawer_*`, `popover_*`, `hover_card_*` e
+  `tooltip_view` o `location` é opcional, então quatro dos nove mandam e cinco
+  não. E a colisão `trigger` × `trigger_id` passou a estar escrita;
+- §11 dava um caminho de `command.source.ts` que só vale para duas stacks, e
+  cobrava `command.fixtures.ts` de cinco quando são quatro.
+
+Aberto no CÓDIGO, medido nesta passagem e não corrigido aqui porque este
+documento não edita código: **C9 está pela metade no angular** (o filtro do
+radix-ng compara só `textValue()`, e o `value` do item fica de fora — §7). A §2 e
+a §7 descrevem o estado real enquanto isso não fecha.
 
 **2026-09-10 · a varredura do painel Code reprovava no svelte, e ninguém a rodava.** A
 rodada que fez as cinco cumprirem o mesmo contrato deixou o `command.source.ts` do
