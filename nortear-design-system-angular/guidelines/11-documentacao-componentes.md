@@ -139,6 +139,22 @@ Só o que **difere do default** entra no snippet — documentação que repete v
 
 **Nenhum teste alcança esse painel**: o `play` roda no canvas, não no addon-docs. Só se vê abrindo a story.
 
+**E não é só a Playground: é toda story.** O portão `story_file_sem_transform` era de ARQUIVO, e aprovava o arquivo inteiro assim que achava **um** `transform` em qualquer lugar dele — oito stories com um transform passavam. Virou de STORY em 2026-09-13, e nomeia as cruas.
+
+Medido no dia da troca, contando a herança do `meta` como cobertura legítima:
+
+| stack | stories publicando template cru |
+|---|---|
+| **angular** | **388 de 840** |
+| vanilla | 12 de 963 |
+| react, vue, svelte | 0 |
+
+Quase metade das stories desta stack. O svelte fica limpo com **um** construtor porque as stories dele herdam o `transform` do `meta` — é o caminho mais barato quando o markup é o mesmo, e o portão o aceita.
+
+A dívida aparece por slug, na revisão de cada componente: `node scripts/audit.mjs <slug>` lista o arquivo e nomeia as stories cruas. Não há baseline nem catraca, de propósito — catraca esconderia a dívida justamente de quem foi consertá-la.
+
+**O caminho, medido duas vezes**: o hover-card fechou a mesma forma em 2026-09-09 (1 → 10 construtores, com `hover-card.source.test.ts` guardando os dez em 32 casos), e o popover em 2026-09-13 (1 → 6, depois 6 → 12, teste de 12 → 34 casos). Nos dois, reaproveitar construtor entre stories de markup idêntico é legítimo **desde que declarado**, com um caso cobrando a premissa: no dia em que uma delas ganhar markup próprio, a dupla reprova.
+
 ### Função em `args` sem entrada em `argTypes` não chega ao template
 
 O renderer só repassa em `props` o que tem entrada em `argTypes`. Uma função declarada apenas em `args` — um espião, por exemplo — **não** chega ao template, e o `(click)` fica ligado a nada.

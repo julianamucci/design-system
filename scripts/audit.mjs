@@ -11038,10 +11038,29 @@ function auditQuality(slug) {
  *   vanilla  870/952 (91%)   5   (páginas de fundamento, sem componente)
  *   angular  343/833 (41%)   124
  *
- * A regra é de ARQUIVO e não de story, de propósito. O `transform` do `meta`
+ * **A régua era de ARQUIVO, e passou a ser de STORY em 2026-09-13.** O
+ * argumento antigo estava escrito aqui e era este: "o `transform` do `meta`
  * serve todas as stories do arquivo, e cobrar uma por uma acusaria as que estão
- * corretamente cobertas pelo meta. Arquivo sem nenhuma é o caso em que ninguém
- * pensou no painel — que é o que se quer pegar.
+ * corretamente cobertas pelo meta". A primeira metade é verdadeira; a segunda é
+ * o buraco. A implementação fazia `if (/transform:/.test(content)) continue` —
+ * **um** `transform` em qualquer lugar aprovava o arquivo inteiro, inclusive um
+ * declarado numa story só. Arquivo com oito stories e um transform passava.
+ *
+ * Medido no dia da troca, com a herança do `meta` contada como cobertura
+ * legítima: **400 stories publicam template cru, em 113 arquivos**.
+ *
+ *   angular  388 de 840     react   0 de 933
+ *   vanilla   12 de 963     vue     0 de 923
+ *                           svelte  0 de 933
+ *
+ * O svelte fica limpo com UM construtor porque as stories dele herdam do `meta`
+ * — é o caso que a régua nova precisa continuar aprovando, e aprova.
+ *
+ * **Uma violação por ARQUIVO, nomeando as stories cruas.** São 113 achados em
+ * vez de 400, e por slug caem em um ou dois — tamanho que se resolve na revisão
+ * daquele componente, que é para onde esta dívida tem de aparecer. Sem baseline
+ * e sem catraca de propósito: a dívida é o que a dona vai encontrar ao revisar
+ * cada componente, e catraca a esconderia justamente de quem foi consertá-la.
  */
 function auditStoryFileSemTransform(slug) {
   const violations = [];
@@ -11057,16 +11076,31 @@ function auditStoryFileSemTransform(slug) {
       if (!bruto) continue;
       const content = stripComments(bruto);
 
-      const exportadas = (content.match(/^export const [A-Z][\w]*\s*[:=]/gm) || []).length;
-      if (!exportadas) continue;
-      if (/transform\s*:/.test(content)) continue;
+      const declaracoes = [...content.matchAll(/^export const ([A-Z][\w]*)\s*[:=]/gm)];
+      if (!declaracoes.length) continue;
 
+      // O `meta` cobre o arquivo inteiro: o que vem ANTES do `export default`
+      // é dele. Um `transform` ali serve todas as stories, e é como o svelte
+      // mantém um construtor só sem publicar template cru.
+      const fimDoMeta = content.search(/^export default /m);
+      const metaCobre = fimDoMeta > 0 && /transform\s*:/.test(content.slice(0, fimDoMeta));
+      if (metaCobre) continue;
+
+      const cruas = [];
+      declaracoes.forEach((m, i) => {
+        const fim = i + 1 < declaracoes.length ? declaracoes[i + 1].index : content.length;
+        if (!/transform\s*:/.test(content.slice(m.index, fim))) cruas.push(m[1]);
+      });
+      if (!cruas.length) continue;
+
+      const todas = cruas.length === declaracoes.length;
       violations.push({
         category: 'quality', severity: 'medium', slug, stack,
         file: relative(ROOT, file), line: 0, rule: 'story_file_sem_transform',
         message:
-          `${exportadas} stories e nenhum \`transform\` no painel Code — ele publica o template da story ` +
-          `(\`args.\`, andaime de captura, binding do renderer), e o painel é a única parte da página feita para ser COPIADA`,
+          `${cruas.length} de ${declaracoes.length} stories sem \`transform\` no painel Code `
+          + `(${cruas.join(', ')})${todas ? ' — o arquivo inteiro' : ''}: ele publica o template da story `
+          + '(`args.`, andaime de captura, binding do renderer), e o painel é a única parte da página feita para ser COPIADA',
       });
     }
   }
