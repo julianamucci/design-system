@@ -246,6 +246,44 @@ No Storybook, o CSS é injetado inline pelo Vite — não há necessidade de cri
 
 ## 5. JavaScript
 
+### Ouvinte global se solta, e a soltura se PROVA
+
+Componente que registra em `document` ou `window` carrega para fora de si a única
+coisa que o desmonte não leva junto: o nó some da página, o ouvinte fica, e a
+partir dali cada montagem empilha mais um. Não há compilador, tipo ou folha que
+veja — e a tela não muda, porque o sintoma é o acúmulo, não o pixel.
+
+Duas coisas são cobradas, e elas medem coisas diferentes:
+
+1. **Pareamento** — quem registra `keydown` solta `keydown` (ou usa
+   `AbortController`, que é a forma moderna e dispensa o par). Verde nas cinco
+   hoje: 34 arquivos, todos pareados. É guarda de regressão.
+2. **Prova medida** — uma play que CONTA ouvinte vivo depois de o nó sair da
+   página. É a única que separa "solta" de "acha que solta": espiar a chamada de
+   `destroy()` passaria com um `destroy()` vazio, e um ouvinte guardado porém
+   INERTE — a barra de navegação fazia isso, com `isConnected` no topo do
+   handler — passa em qualquer prova de comportamento. Quem responde é a
+   contagem. Instrumento: `listener-ledger.ts` + `leak-probe.ts`, consumidos por
+   uma story `ListenerCleanup`.
+
+**O instrumento existe numa stack só, e isso foi medido em 2026-09-13**: 16
+arquivos no vanilla e **zero** nas outras quatro. São 19 slugs registrando
+ouvinte global no vanilla (14 com prova) e 15 nas outras quatro (nenhum com
+prova) — vinte pontos sem prova, e três deles são o mesmo componente em quatro
+stacks: `media-player`, `inline-citation` e `composer-model-picker`.
+
+A pergunta que descobriu isso veio da dona, ao ver `ListenerCleanup` como story
+solitária. **Nenhum portão podia ter visto**: o `coverage_divergence` compara a
+mesma story entre stacks e abre com `if (counts.length < 2) continue` — story que
+existe numa stack só é pulada, e esse é o caso mais forte de divergência,
+descartado antes de qualquer comparação.
+
+Portões: `ouvinte_global_sem_soltura` (pareamento) e `prova_de_soltura_ausente`
+(prova medida, em CATRACA — os vinte de hoje estão declarados no `audit.mjs` com
+o motivo, e `prova_de_soltura_declarada_vencida` confere as duas premissas de
+cada declaração). Catraca e não cobrança imediata porque despejar vinte achados
+no meio de outra tarefa é como esta casa ensina a ignorar portão.
+
 ### Evitar computações pesadas no render
 
 ```tsx

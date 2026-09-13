@@ -4770,6 +4770,157 @@ const SOMBRA_CRAVADA_DECLARADA = {
  * uma decisão.
  */
 /**
+ * Ouvinte em `document`/`window` sem prova de que ele SAI.
+ *
+ * Esta é a classe de defeito que o componente desmontado carrega para fora de
+ * si: o nó some da página, o ouvinte fica no documento, e a partir dali cada
+ * montagem empilha mais um. Não há compilador, tipo ou folha que veja — e a
+ * tela não muda, porque o sintoma é o acúmulo, não o pixel.
+ *
+ * A regra tem DOIS braços, e eles medem coisas diferentes de propósito:
+ *
+ *  1. **Pareamento estático** — quem registra `keydown` solta `keydown`. Barato,
+ *     e verde nas cinco hoje (34 arquivos, todos pareados). É guarda de
+ *     regressão: o dia em que alguém acrescentar um `addEventListener` sem o par
+ *     é o dia em que ele reprova.
+ *  2. **Prova MEDIDA** — uma play que conta ouvinte vivo depois de o nó sair da
+ *     página. É a única que separa "solta" de "acha que solta": espiar a chamada
+ *     de `destroy()` passaria com um `destroy()` vazio, e um ouvinte guardado
+ *     mas INERTE (a barra de navegação fazia isso, com `isConnected` no topo do
+ *     handler) passa em qualquer prova de comportamento. Quem responde é a
+ *     contagem, e o instrumento é o `listener-ledger.ts`.
+ *
+ * **Medido em 2026-09-13, e foi a dona que perguntou por quê:** o instrumento
+ * existe numa stack só. São 16 arquivos no vanilla e **zero** nas outras quatro,
+ * e a pergunta veio de ver `ListenerCleanup` como story solitária. Nenhum portão
+ * podia ver: o `coverage_divergence` compara a mesma story entre stacks e começa
+ * com `if (counts.length < 2) continue` — story que existe numa stack só é
+ * pulada, que é o caso mais forte de divergência, descartado antes de comparar.
+ *
+ * Por isso o braço 2 é CATRACA e não cobrança imediata: os 20 pontos sem prova
+ * hoje estão declarados abaixo, com a premissa conferida. Cobrar os 20 de uma
+ * vez seria despejar backlog no meio de outra tarefa, que é como esta casa
+ * ensina a ignorar portão.
+ */
+const PROVA_DE_SOLTURA_PENDENTE = {
+  // As quatro stacks de lib não têm o `listener-ledger.ts`: o instrumento nasceu
+  // no vanilla, onde a fábrica é dona de todos os ouvintes. Levá-lo às outras é
+  // rodada própria — e é lá que estes quinze deixam de ser dívida.
+  react: ['composer-model-picker', 'inline-citation', 'media-player', 'sidebar'],
+  vue: ['composer-model-picker', 'inline-citation', 'media-player'],
+  // `command-palette` é o `CommandPaletteStory.svelte`: ANDAIME de story, e o
+  // atalho de teclado é da demonstração, não do componente. Fica declarado em
+  // vez de filtrado — filtro por nome de arquivo exclui em silêncio, que é o
+  // defeito do `source-snippets.test.ts` quando 28 exports sumiram da varredura.
+  svelte: ['command-palette', 'composer-model-picker', 'inline-citation', 'media-player'],
+  // No vanilla o instrumento existe e cobre 14 dos 19. Estes cinco são a cauda,
+  // e três deles são os mesmos das outras stacks.
+  vanilla: ['combobox', 'composer-model-picker', 'inline-citation', 'media-player', 'select'],
+  angular: ['composer-model-picker', 'inline-citation', 'media-player', 'sidebar'],
+};
+
+function auditProvaDeSoltura() {
+  const violations = [];
+  const REGISTRA = /\b(?:document|window)\s*\.\s*addEventListener\s*\(\s*['"`]([\w-]+)/g;
+  const SOLTA = /\b(?:document|window)\s*\.\s*removeEventListener\s*\(\s*['"`]([\w-]+)/g;
+  // `AbortController` é soltura, e é a forma moderna — sem isto a regra mandaria
+  // escrever o `removeEventListener` que o `signal` existe para dispensar.
+  const ABORTA = /new AbortController\(\)/;
+  // A prova medida: o livro-caixa de ouvintes, consumido por uma play.
+  const PROVA = /listener-ledger|espiarOuvintes|leak-probe|ListenerCleanup/;
+
+  const slugDoArquivo = (nome) =>
+    nome
+      .replace(/\.(stories|source|test)\..*$/, '')
+      .replace(/\.(ts|tsx|vue|svelte)$/, '')
+      .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+      .toLowerCase()
+      .replace(/-(variants|states|compositions|modes|layouts|sizes|story|fixtures|context)$/, '');
+
+  for (const stack of STACKS) {
+    const raiz = join(ROOT, stackDir(stack), 'src', 'components', 'ui');
+    if (!existsSync(raiz)) continue;
+
+    const registra = new Map();   // slug -> { file, eventos }
+    const temProva = new Set();
+
+    const varrer = (dir, prof = 0) => {
+      if (prof > 3) return;
+      for (const nome of readdirSync(dir)) {
+        const p = join(dir, nome);
+        if (statSync(p).isDirectory()) { varrer(p, prof + 1); continue; }
+        if (!/\.(ts|tsx|vue|svelte)$/.test(nome)) continue;
+        const bruto = readFile(p);
+        if (!bruto) continue;
+        const slug = slugDoArquivo(nome);
+
+        if (/\.stories\.|\.test\./.test(nome)) {
+          if (PROVA.test(bruto)) temProva.add(slug);
+          continue;
+        }
+        if (/\.source\./.test(nome)) continue;
+
+        const src = stripComments(bruto);
+        const eventos = [...new Set([...src.matchAll(REGISTRA)].map((m) => m[1]))];
+        if (!eventos.length) continue;
+        registra.set(slug, { file: relative(ROOT, p), eventos, src });
+      }
+    };
+    varrer(raiz);
+
+    for (const [slug, { file, eventos, src }] of registra) {
+      // ── braço 1: pareamento estático ──────────────────────────────────────
+      const soltos = new Set([...src.matchAll(SOLTA)].map((m) => m[1]));
+      const orfaos = eventos.filter((e) => !soltos.has(e));
+      if (orfaos.length && !ABORTA.test(src)) {
+        violations.push({
+          category: 'quality', severity: 'high', slug, stack,
+          file, rule: 'ouvinte_global_sem_soltura',
+          message: `registra \`${orfaos.join('`, `')}\` em document/window e não solta — o nó some da página `
+            + 'e o ouvinte fica, e cada montagem empilha mais um; nenhum compilador vê isso e a tela não muda',
+        });
+      }
+
+      // ── braço 2: prova medida, em catraca ─────────────────────────────────
+      const declarado = (PROVA_DE_SOLTURA_PENDENTE[stack] ?? []).includes(slug);
+      if (temProva.has(slug)) {
+        // premissa da exceção: ganhou prova, então a declaração venceu
+        if (declarado) {
+          violations.push({
+            category: 'quality', severity: 'medium', slug, stack,
+            file, rule: 'prova_de_soltura_declarada_vencida',
+            message: `\`${slug}\` está declarado como sem prova de soltura no \`audit.mjs\` e já TEM a prova — `
+              + 'tire-o da lista, ou ela passa a autorizar o que ninguém mais faz',
+          });
+        }
+        continue;
+      }
+      if (declarado) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file, rule: 'prova_de_soltura_ausente',
+        message: `registra ouvinte em document/window e nenhuma play prova que ele SAI — pareamento estático `
+          + 'não basta: `destroy()` vazio e ouvinte guardado porém inerte passam nele. O instrumento é o '
+          + '`listener-ledger.ts` do vanilla, consumido por uma story `ListenerCleanup`',
+      });
+    }
+
+    // premissa da outra ponta: declarado e não registra mais
+    for (const slug of PROVA_DE_SOLTURA_PENDENTE[stack] ?? []) {
+      if (registra.has(slug)) continue;
+      violations.push({
+        category: 'quality', severity: 'medium', slug, stack,
+        file: relative(ROOT, raiz), rule: 'prova_de_soltura_declarada_vencida',
+        message: `\`${slug}\` está declarado como dívida de prova de soltura e não registra mais ouvinte global — `
+          + 'tire-o da lista; mapa que envelhece em silêncio é o defeito de volta com outra roupa',
+      });
+    }
+  }
+
+  return violations;
+}
+
+/**
  * Peça de título que é CABEÇALHO e cuja folha não declara `font-size`.
  *
  * As duas pontas são inofensivas sozinhas e o defeito só existe no encontro
@@ -11612,7 +11763,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
