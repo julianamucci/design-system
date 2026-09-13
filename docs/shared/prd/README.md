@@ -166,6 +166,28 @@ segunda é a última passagem que mudou o código dele e, com ele, este registro
 | AlertDialog | [alert-dialog.md](alert-dialog.md) | 2026-09-10 | 2026-09-12 |
 | Command | [command.md](command.md) | 2026-09-10 | 2026-09-10 |
 
+### Feedback — escritos ANTES da revisão de código
+
+Esta categoria inverteu a ordem, por decisão da dona: os cinco PRDs nasceram do
+CÓDIGO em 2026-09-13, e é a revisão de código que vai usá-los como base, em vez de
+o contrário. Cada um traz a divergência entre as cinco stacks medida, arquivo a
+arquivo, e o que precisa de decisão está na §"O que está aberto" da
+[`19-feedback.md`](../guidelines/19-feedback.md).
+
+| componente | PRD | escrito em |
+|---|---|---|
+| Alert | [alert.md](alert.md) | 2026-09-13 |
+| Badge | [badge.md](badge.md) | 2026-09-13 |
+| Progress | [progress.md](progress.md) | 2026-09-13 |
+| Skeleton | [skeleton.md](skeleton.md) | 2026-09-13 |
+| Sonner | [sonner.md](sonner.md) | 2026-09-13 |
+
+**A diferença de ordem é deliberada, e vale registrar por quê**: na categoria
+Overlay o PRD nasceu DEPOIS da revisão serial, e duas vezes o documento saiu
+descrevendo o vizinho — porque quem revisava tinha o código fresco e o registro
+por escrever. Aqui o documento vem primeiro e a revisão tem contra o que ser
+conferida.
+
 **Três membros da família de menus dividem um PRD.** O ContextMenu e o Menubar
 não têm PRD próprio: os dois são montados com as peças do DropdownMenu, e o que
 os separa está registrado como decisão lá (D9). O cabeçalho do arquivo declara a

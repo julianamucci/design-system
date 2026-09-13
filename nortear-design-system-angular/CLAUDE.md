@@ -30,7 +30,8 @@ Leia primeiro o [`CLAUDE.md` da raiz](../CLAUDE.md): as convenções cross-stack
 | [`04-layout-components.md`](guidelines/04-layout-components.md) | componentes de layout |
 | [`05-navigation-components.md`](guidelines/05-navigation-components.md) | componentes de navegação |
 | [`06-form-components.md`](guidelines/06-form-components.md) | componentes de formulário |
-| [`07-feedback-components.md`](guidelines/07-feedback-components.md) | componentes de feedback |
+| [`07-feedback-components.md`](guidelines/07-feedback-components.md) | a mecânica de feedback DESTA stack — a regra da categoria está na 19 |
+| [`19-feedback.md`](../docs/shared/guidelines/19-feedback.md) | **a regra da categoria Feedback**, uma vez para as cinco stacks |
 | [`08-display-components.md`](guidelines/08-display-components.md) | componentes de exibição |
 | [`09-disclosure-components.md`](guidelines/09-disclosure-components.md) | componentes de divulgação |
 | [`10-overlay-components.md`](guidelines/10-overlay-components.md) | a MECÂNICA de overlay desta stack; as regras da categoria estão na `18-overlay.md` compartilhada |

@@ -87,9 +87,16 @@ div.nds-table-wrapper                        (rola na horizontal, tabindex="0")
 
 ---
 
-## Skeleton
+## Skeleton — componente de Feedback
 
-Ver `07-feedback-components.md`.
+Ele mora em
+[`docs/shared/prd/skeleton.md`](../../docs/shared/prd/skeleton.md) — contrato,
+tokens e peças das cinco stacks. A regra da categoria está em
+[`19-feedback.md`](../../docs/shared/guidelines/19-feedback.md).
+
+Aparece aqui porque quem procura "placeholder de conteúdo" pensa em exibição: ele
+reserva a FORMA do que vem, e é decoração para o leitor de tela (`aria-hidden`
+fixo nas cinco) — quem anuncia a espera é a região que vai receber o conteúdo.
 
 ---
 

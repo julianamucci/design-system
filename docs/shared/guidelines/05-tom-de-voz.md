@@ -337,5 +337,5 @@ Para outros indicadores de estado (ex: "feature presente" na seção de acessibi
 | Arquivo | O que define | Relação com este arquivo |
 |---------|-------------|--------------------------|
 | `06-form-components.md` | Labels e placeholders específicos de cada componente de formulário | Terminologia específica deve ser consistente com este arquivo |
-| `07-feedback-components.md` | Alert, Badge, Progress, Sonner | Tom de feedback deve seguir as seções "Confirmação", "Aviso" e "Erro" deste arquivo |
+| `19-feedback.md` | a categoria Feedback (Alert, Badge, Progress, Skeleton, Sonner), nas cinco stacks | Tom de feedback deve seguir as seções "Confirmação", "Aviso" e "Erro" deste arquivo |
 | `18-overlay.md` | a categoria Overlay, nas cinco stacks | Títulos e descrições de overlays seguem as seções "Ação" e "Diálogo" deste arquivo |

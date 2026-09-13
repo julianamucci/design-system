@@ -57,7 +57,7 @@ As 5 stacks têm cópia própria dessas guidelines. Leia a da **stack Vanilla** 
 | Layout | `nortear-design-system-vanilla/guidelines/04-layout-components.md` |
 | Navegação | `nortear-design-system-vanilla/guidelines/05-navigation-components.md` |
 | Formulário | `nortear-design-system-vanilla/guidelines/06-form-components.md` |
-| Feedback | `nortear-design-system-vanilla/guidelines/07-feedback-components.md` |
+| Feedback | `docs/shared/guidelines/19-feedback.md` — a regra da categoria, uma vez para as cinco stacks |
 | Display | `nortear-design-system-vanilla/guidelines/08-display-components.md` |
 | Disclosure | `nortear-design-system-vanilla/guidelines/09-disclosure-components.md` |
 | Overlay | `docs/shared/guidelines/18-overlay.md` — a regra da categoria, uma vez para as cinco stacks |
