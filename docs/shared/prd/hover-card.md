@@ -60,20 +60,62 @@ varre o CSS à procura de declaração — gancho real de customização, invis�
 leitor. E o lugar da declaração é `:root` porque valor declarado no seletor da
 própria peça vence por especificidade e APAGA o override de quem consome.
 
-### D4 · Teto percentual não vale neste painel
+### D4 · ~~Teto percentual não vale neste painel~~ — REVOGADA pela D8
 
-**Fixada em** 2026-08-21 (`186d2dfdf`).
-**Medição**: a família `nds-w-*` carrega `max-width: 100%` para não transbordar o
-pai — e aqui o pai é o invólucro de posicionamento, com largura **zero**. Uma
-porcentagem de zero é zero: `nds-w-md` no painel o derrubava de 448px para 34px,
-o mínimo do texto. Medido: `pai=nds-hover-card-positioner:0`.
-**Forma da correção**: a classe REPETIDA (`.nds-hover-card-content.nds-hover-card-content`)
-leva a (0,2,0) e vence a utilitária sem `!important`. E **sem seletor de
-ancestral**: `.nds-hover-card-positioner` só existe na marcação do React e do
-Angular — as outras três montam o painel sem esse invólucro nomeado e continuavam
-colapsando. Regra que depende de ancestral vale onde o ancestral existe.
-**Contraste**: o Popover não precisa disto, porque o positioner dele tem largura
-de verdade.
+**Fixada em** 2026-08-21 (`186d2dfdf`), **revogada em** 2026-09-13.
+**O que ela dizia**: a família `nds-w-*` carrega `max-width: 100%` para não
+transbordar o pai, e aqui o pai — o invólucro de posicionamento — tinha largura
+**zero**. Uma porcentagem de zero é zero: `nds-w-md` derrubava o painel de 448px
+para 34px. A correção foi `max-width: none` pela classe REPETIDA
+(`.nds-hover-card-content.nds-hover-card-content`, especificidade (0,2,0)).
+**Por que caiu**: a medição estava certa e a causa era outra. A largura zero do
+invólucro não era natureza dele — era o `position: absolute` da folha (D8)
+tirando o painel do fluxo. Com o painel de volta ao fluxo o invólucro tem a
+largura do conteúdo, a porcentagem resolve contra um número de verdade, e a
+regra virou inerte: medido removendo-a com a suíte do React em 32 de 32 verdes.
+**O que sobreviveu**: a regra não podia depender de ancestral, e isso continua
+valendo para a próxima. `.nds-hover-card-positioner` só existe na marcação do
+React e do Angular; Vue, Svelte e Vanilla montam o painel sem invólucro nomeado.
+
+### D8 · A folha NÃO posiciona o cartão
+
+**Fixada em** 2026-09-13.
+**Medição**: `position: absolute` morava em `hover-card.css` e derrubava as
+quatro stacks de lib de uma vez. Replantado e medido pela story `Sides` do
+React, com o cartão pedindo `side="top"`: `involucro=0x0`, painel publicando
+`top` e terminando **76,6px ABAIXO** do topo do gatilho. Em toda stack de lib o
+painel vive em FLUXO dentro de um elemento que a lib posiciona; fora do fluxo,
+esse elemento colapsa para 0×0 e é contra uma caixa sem tamanho que a lib
+calcula tudo — inclusive a colisão, que fica sem o que comparar.
+**Quem escreve `position`**: o Vanilla, na fábrica, porque lá quem se posiciona é
+o próprio painel (`measurePanel`, dentro de `positionFloating`).
+**Por que ninguém viu**: a folha é válida, a lib não reclama de invólucro vazio e
+o cartão APARECE. A story dos lados existia e passava, porque afirmava o
+`data-side` — que a lib publica corretamente — e não a coordenada.
+**Instrumento**: `expectOndeDiz` (`docs/shared/testing/hover-card-probe.ts`) cobra
+o invariante que sobrevive ao flip — o painel está ONDE ELE DIZ QUE ESTÁ —, nas
+cinco stacks. Portão da folha: `folha_tira_do_fluxo_sem_dizer_onde`.
+**Precedente**: o tooltip mediu e removeu a mesma declaração em 2026-09-04 e
+fechou sem deixar instrumento. Foi assim que a declaração sobreviveu nove dias na
+folha vizinha e teve de ser medida do zero.
+
+### D9 · O vão é 4px nas cinco, e a conta é uma só
+
+**Fixada em** 2026-09-13.
+**Medição**: o `sideOffset` era 8 no Vanilla e no Angular contra 4 nas outras
+três — o Angular documentando "8 para bater com o Vanilla", premissa que era
+verdadeira. Os dois foram para 4, que é o que a dona já tinha decidido para o
+Popover na mesma semana: o vão é decisão do design system, e a divergência vinha
+de cada stack herdar o padrão da própria lib.
+**Junto veio a conta**: o Vanilla tinha um `positionHoverCard` próprio — uma
+QUARTA cópia da geometria, fora da consolidação que `lib/floating.ts` registra —
+e por isso nunca ganhou limite de viewport, troca de lado nem `sideOffset` como
+parâmetro. Passou a chamar `positionFloating(..., { flip: true })`, que também é
+quem escreve o `data-side` final.
+**Terceira divergência da mesma família**: só o Vanilla não marcava o gatilho com
+`data-slot="hover-card-trigger"`. A ausência não aparecia porque nenhuma story
+consultava o gatilho por `data-slot` — a primeira que consultou achou zero pares
+no Vanilla e quatro em todas as outras.
 
 ### D5 · O casco é o contrato; o miolo é exemplo
 
@@ -147,8 +189,7 @@ leitura no painel — e **seis** fora dela, nomeadas logo depois.
 | propriedade | valor | token |
 |---|---|---|
 | largura | 320px | `--hover-card-width`, default em `:root` — ver D3 |
-| teto de largura | `none` | por regra própria — ver D4 |
-| posicionamento | `absolute` | **literal**, NO PAINEL — e é o ponto em que esta folha discorda das vizinhas; ver abaixo |
+| posicionamento | — | **a folha não posiciona**: quem posiciona é a lib de cada stack, e o Vanilla na fábrica; ver D8 |
 | padding | 16px | `--spacing-4` |
 | superfície | — | `--popover` |
 | texto | — | `--popover-foreground` |
@@ -163,8 +204,9 @@ e o `z-index` do `.nds-hover-card-positioner`, e as três da saída animada
 
 **Até 2026-09-12 esta seção prometia "dezesseis declarações, e a lista abaixo é
 toda ela"**, e a lista tinha nove linhas. Medido em 2026-09-12, contando a folha:
-são dezessete, e a que faltava na tabela era justamente o `position: absolute` do
-painel — a declaração de que dependem as duas medições da D4.
+eram dezessete, e a que faltava na tabela era justamente o `position: absolute`
+do painel. Ela foi contada, virou linha da tabela, e **saiu da folha em
+2026-09-13** (D8) — junto com o `max-width: none` que dependia dela (D4).
 
 **O degrau da sombra sai do TIPO de superfície**, não da comparação com os
 vizinhos: flutuante passivo é `lg`, pela regra em
@@ -182,16 +224,20 @@ Popover deixou de existir: naquele dia ele parou de animar por completo, por
 decisão da dona, e não sobrou lado nenhum para comparar. Citar vizinho pelo nome
 envelhece sozinho — a mesma lição que a pendência da §8 vem medindo.
 
-**`position: absolute` no painel é a divergência ABERTA desta folha.** O
-`tooltip.css` tirou a declaração equivalente em 2026-09-04 (ver `tooltip.md` D1) e
-o `popover.css` a RECUSA num comentário no topo do seletor (ver `popover.md` §4),
-pelo mesmo defeito medido nos dois: fora do fluxo, o invólucro que a lib posiciona
-colapsa para 0×0, e é contra essa caixa que ela calcula tudo. Aqui a declaração continua, e a D4 registra
-`pai=nds-hover-card-positioner:0` como premissa de uma regra de largura — ou seja,
-o colapso está MEDIDO nesta folha e tratado como dado, não como defeito. Só o
-vanilla não depende dela: a fábrica já escreve `panelEl.style.position =
-'absolute'` antes de medir. **Isto é decisão de CÓDIGO e está relatado, não
-resolvido aqui** — o PRD registra o que a folha faz hoje.
+**`position: absolute` no painel foi a divergência ABERTA desta folha, e fechou
+em 2026-09-13** (D8). Vale guardar como ela sobreviveu, porque o mecanismo é o
+que esta casa vem pagando repetido: o `tooltip.css` tirou a declaração
+equivalente em 2026-09-04 (ver `tooltip.md` D1) e o `popover.css` a RECUSA num
+comentário no topo do seletor (ver `popover.md` §4), pelo mesmo defeito medido
+nos dois — fora do fluxo, o invólucro que a lib posiciona colapsa para 0×0.
+
+Aqui a declaração continuou, e este parágrafo dizia, com todas as letras, que o
+colapso estava **medido e tratado como dado, não como defeito**, e que era
+"decisão de CÓDIGO, relatada e não resolvida aqui". Ou seja: a medição certa, no
+documento certo, e a correção esperando uma rodada que só veio quando outro
+agente a relatou como achado NOVO. É a regra do CLAUDE.md sobre defeito medido e
+adiado — o que fecha a rodada não é a linha no documento, é o portão. Agora ele
+existe: `folha_tira_do_fluxo_sem_dizer_onde`.
 
 **`prefers-reduced-motion` é atendido pela camada de TOKEN, e a ausência de um
 bloco `@media` nesta folha NÃO é defeito** — foi relatada como tal duas vezes,
@@ -431,7 +477,7 @@ Ordem: folha → primitivo → stories → docs page.
 - **svelte (`bits-ui`)** — o componente se chama `LinkPreview`. Isso contamina
   dois pontos: o import e o nome da custom property de origem (D6).
 - **react (`base-ui`) e angular (`radix-ng`)** — nomeiam o positioner; qualquer
-  regra que dependa dele vale só nessas duas (D4).
+  regra que dependa dele vale só nessas duas (D4, e foi por isso que ela caiu).
 - **vue (`reka-ui`)** — sem positioner nomeado.
 - **vanilla** — sem lib: as duas esperas são timers próprios, e o cartão precisa
   ouvir `mouseenter` para cumprir C3.

@@ -20,6 +20,8 @@ import {
   panelOpen,
   contrastRatio,
   leaveWithPointer,
+  paresAbertos,
+  expectOndeDiz,
 } from '@shared/testing/hover-card-probe';
 
 export {
@@ -31,6 +33,8 @@ export {
   panelOpen,
   contrastRatio,
   leaveWithPointer,
+  paresAbertos,
+  expectOndeDiz,
 };
 
 /**

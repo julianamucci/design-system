@@ -8,6 +8,8 @@ import {
   waitForOpen,
   waitForQuantidade,
   panelsAbertos,
+  paresAbertos,
+  expectOndeDiz,
 } from './hover-card.fixtures';
 import {
   hoverCardClassNameExtraSource,
@@ -336,7 +338,7 @@ export const Sides: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
     await step('Os quatro cartões abrem e cada um declara o lado que usou', async () => {
       const panels = await waitForQuantidade(4);
       await expect(panels).toHaveLength(4);
@@ -355,6 +357,15 @@ export const Sides: Story = {
       await expect(['top', 'bottom']).toContain(abaixo);
       await expect(['left', 'right']).toContain(esquerda);
       await expect(['left', 'right']).toContain(direita);
+    });
+
+    await step('E cada cartão está ANCORADO no lado que publicou', async () => {
+      // O passo acima mede a AFIRMAÇÃO da lib; este mede o resultado dela. Com
+      // o painel fora do fluxo os quatro publicavam o lado certo e pousavam
+      // mais de 100px do lado errado, e a story passava. Ver `expectOndeDiz`.
+      const pares = paresAbertos(canvasElement);
+      await expect(pares).toHaveLength(4);
+      for (const [trigger, panel] of pares) expectOndeDiz(trigger, panel);
     });
   },
 };

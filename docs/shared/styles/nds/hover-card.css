@@ -36,8 +36,41 @@
   --hover-card-width: 20rem;                     /* 320px */
 }
 
+/*
+ * A folha NÃO posiciona o cartão, e isso é o contrato — o mesmo do tooltip, que
+ * o fechou em 2026-09-04 e cuja folha o descreve por extenso. Em toda stack
+ * existe um elemento de FORA que é posicionado, e o painel fica em fluxo dentro
+ * dele:
+ *
+ *   react e angular  → `.nds-hover-card-positioner`
+ *   vue e svelte     → um invólucro sem classe, da própria lib
+ *   vanilla          → o próprio painel, e por isso a fábrica escreve
+ *                      `position: absolute` nele antes de medir
+ *                      (`hover-card.ts`, em `positionHoverCard`)
+ *
+ * `position: absolute` morava aqui e derrubava as QUATRO stacks de lib de uma
+ * vez, em silêncio — o painel saía do fluxo, o invólucro colapsava para 0×0, e
+ * era contra essa caixa de tamanho zero que a lib calculava tudo.
+ *
+ * Medido em 2026-09-13 replantando a declaração e rodando a story `Sides` do
+ * React, que pede `side="top"`:
+ *
+ *   involucro=0x0 · publicou "top" · folga acima = -76,6px
+ *
+ * Ou seja: o painel declarava estar acima e terminava 76,6px ABAIXO do topo do
+ * gatilho, sobrepondo-o. O `data-side` não mentia — a lib posicionou acima de
+ * uma caixa sem altura, e uma caixa sem altura fica onde o gatilho está. Junto
+ * ia a detecção de colisão: sem caixa, o `flip` não tem o que comparar e o
+ * `shift` não tem o que limitar.
+ *
+ * Nada disso reprova em compilador, suíte ou axe: a folha é válida, a lib não
+ * reclama de invólucro vazio, e o cartão APARECE — só aparece no lugar errado.
+ * A story dos lados existia e passava, porque afirmava o `data-side` e não a
+ * coordenada. Quem cobra agora é `expectOndeDiz`, em
+ * `docs/shared/testing/hover-card-probe.ts`, nas cinco stacks; e o portão
+ * `folha_tira_do_fluxo_sem_dizer_onde` do `audit.mjs` cobre a folha.
+ */
 .nds-hover-card-content {
-  position: absolute;
   z-index: var(--z-popover);
   /* Dois caminhos para trocar a largura, e os dois valem:
    *
@@ -95,32 +128,26 @@
 }
 
 /*
- * Neste painel, TETO PERCENTUAL não vale — e não é preferência.
+ * AQUI HAVIA `max-width: none`, e ele saiu em 2026-09-13 — junto com a causa.
  *
- * A família `nds-w-*` carrega `max-width: 100%` para não transbordar o pai.
- * Aqui o pai é o invólucro de posicionamento, e ele tem largura ZERO: o painel
- * é posicionado fora do fluxo, então não há conteúdo em fluxo que lhe dê
- * largura. Medido: `pai=nds-hover-card-positioner:0`. Uma porcentagem de zero é
- * zero, e um `nds-w-md` no painel o derrubava de 448px para 34px — o mínimo do
- * texto.
+ * A regra existia por um defeito real e bem medido: a família `nds-w-*` carrega
+ * `max-width: 100%` para não transbordar o pai, e o pai deste painel media
+ * `pai=nds-hover-card-positioner:0`. Uma porcentagem de zero é zero, e um
+ * `nds-w-md` derrubava o cartão de 448px para 34px — a largura mínima do texto.
  *
- * A classe REPETIDA é o que vence a utilitária: `utilities.css` é importado
- * depois desta folha, então com especificidade igual (0,1,0) ela ganharia por
- * ordem. Repetir leva a (0,2,0) sem depender de `!important`.
+ * Só que a largura zero do pai não era natureza do invólucro: era o
+ * `position: absolute` que morava nesta folha e tirava o painel do fluxo. Com o
+ * painel de volta ao fluxo, o invólucro passa a ter a largura do conteúdo, a
+ * porcentagem resolve contra um número de verdade, e o teto deixa de morder.
+ * Medido removendo a regra e rodando a suíte do React: as 28rem da story
+ * `ExtraPanelClass` continuam de pé, 32 de 32 verdes.
  *
- * E sem seletor de ancestral, que foi a primeira tentativa e cobria só duas das
- * cinco stacks: `.nds-hover-card-positioner` só existe na marcação do React e
- * do Angular — Vue, Svelte e Vanilla montam o painel sem esse invólucro
- * nomeado, e continuavam colapsando. Regra que depende de ancestral é regra que
- * vale onde o ancestral existe.
- *
- * Quem limita este painel é a lib de posicionamento, que já o mantém dentro do
- * espaço disponível na tela. O popover não precisa disto: o posicionador dele
- * tem largura de verdade, e ali a porcentagem resolve.
+ * Fica registrado porque a regra tinha uma segunda lição, que segue valendo:
+ * ela não podia depender de ancestral. `.nds-hover-card-positioner` só existe
+ * na marcação do React e do Angular — Vue, Svelte e Vanilla montam o painel sem
+ * invólucro nomeado. Regra que depende de ancestral é regra que vale onde o
+ * ancestral existe.
  */
-.nds-hover-card-content.nds-hover-card-content {
-  max-width: none;
-}
 /* Entrada aparece direto; saída animada (evita corrida com toBeVisible).
  *
  * NÃO FALTA UM BLOCO `@media (prefers-reduced-motion: reduce)` AQUI, e esta

@@ -121,10 +121,15 @@ export class NdsHoverCardContent {
   readonly align = input<HoverCardAlign>('center');
 
   /**
-   * Distância entre gatilho e painel, em px. 8 para bater com o Vanilla, que é
-   * a referência de medida do sistema.
+   * Distância entre gatilho e painel, em px.
+   *
+   * Era 8 "para bater com o Vanilla", e a premissa valia: o Vanilla tinha um
+   * `gap = 8` cravado. Os dois foram para 4 em 2026-09-13, que é o que React,
+   * Vue e Svelte já diziam e o que a dona decidiu para o popover na mesma
+   * semana — o vão é decisão do design system, e a divergência vinha de cada
+   * stack ter herdado o padrão da própria lib.
    */
-  readonly sideOffset = input<number>(8);
+  readonly sideOffset = input<number>(4);
 
   /** Deslocamento no eixo de alinhamento, em px. */
   readonly alignOffset = input<number>(0);

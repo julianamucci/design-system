@@ -87,6 +87,7 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type Destroyable } from '@/lib/destroy';
+import { positionFloating } from '@/lib/floating';
 
 export type HoverCardSide = 'top' | 'bottom' | 'left' | 'right';
 export type HoverCardAlign = 'start' | 'center' | 'end';
@@ -96,6 +97,8 @@ export type HoverCardOptions = {
   content: HTMLElement;
   side?: HoverCardSide;
   align?: HoverCardAlign;
+  /** Vão entre gatilho e painel, em px. O `sideOffset` das outras quatro. */
+  sideOffset?: number;
   /** Espera em ms antes de abrir, depois que o ponteiro entra no gatilho. */
   openDelay?: number;
   /** Espera em ms antes de fechar, depois que o ponteiro sai. */
@@ -136,51 +139,41 @@ let _hoverCardCounter = 0;
 const WAIT_DEFAULT_OPEN = 600;
 const WAIT_DEFAULT_CLOSE = 300;
 
+/**
+ * Vão padrão entre gatilho e painel, igual nas cinco stacks.
+ *
+ * Era 8 aqui e no Angular contra 4 nas outras três — a mesma divergência que o
+ * popover carregava, e fechada do mesmo jeito e pelo mesmo motivo: o vão é
+ * decisão do design system, não da lib de cada stack, e três quintos já diziam
+ * 4. Quem quiser outro passa `sideOffset`.
+ */
+const SIDE_OFFSET_DEFAULT = 4;
+
+/**
+ * Posiciona o painel com a conta COMPARTILHADA, não com uma cópia.
+ *
+ * Havia aqui uma quarta cópia da geometria — as três que `lib/floating.ts`
+ * consolidou mais esta, que ficou de fora da consolidação e por isso nunca
+ * ganhou o que as outras ganharam desde então: limite de viewport, troca de
+ * lado quando o pedido não cabe, e o `sideOffset` como parâmetro em vez de um
+ * `gap` cravado. O cartão pedido para cima numa menção perto do topo da tela
+ * saía da tela em silêncio, porque nada aqui olhava para a janela.
+ *
+ * `flip: true` faz o `positionFloating` escrever o `data-side` FINAL — que é o
+ * que a folha e as stories leem. Com o lado cravado, o atributo continuaria
+ * dizendo `top` depois de o painel ter descido, e atributo que contradiz a
+ * coordenada é pior que atributo nenhum.
+ */
 function positionHoverCard(
   anchor: HTMLElement,
   panel: HTMLElement,
   side: HoverCardSide,
-  align: HoverCardAlign
+  align: HoverCardAlign,
+  sideOffset: number
 ): void {
-  const rect = anchor.getBoundingClientRect();
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
-  const gap = 8;
-
-  panel.style.visibility = 'hidden';
-  panel.style.display = 'block';
-  const pw = panel.offsetWidth;
-  const ph = panel.offsetHeight;
-  panel.style.visibility = '';
-
-  let top = 0;
-  let left = 0;
-
-  if (side === 'bottom') {
-    top = rect.bottom + scrollY + gap;
-  } else if (side === 'top') {
-    top = rect.top + scrollY - ph - gap;
-  } else if (side === 'left') {
-    left = rect.left + scrollX - pw - gap;
-  } else {
-    left = rect.right + scrollX + gap;
-  }
-
-  if (side === 'bottom' || side === 'top') {
-    if (align === 'start') left = rect.left + scrollX;
-    else if (align === 'end') left = rect.right + scrollX - pw;
-    else left = rect.left + scrollX + rect.width / 2 - pw / 2;
-  } else {
-    if (align === 'start') top = rect.top + scrollY;
-    else if (align === 'end') top = rect.bottom + scrollY - ph;
-    else top = rect.top + scrollY + rect.height / 2 - ph / 2;
-  }
-
-  panel.style.top = `${top}px`;
-  panel.style.left = `${left}px`;
-  // O lado escolhido é publicado como nas outras stacks: é por ele que o CSS e
-  // os testes sabem para onde o cartão abriu.
-  panel.dataset.side = side;
+  positionFloating(anchor, panel, side, align, sideOffset, { flip: true });
+  // O `align` não muda com o flip, então continua sendo escrito aqui; o `side`
+  // é do `positionFloating`, que conhece o lado final.
   panel.dataset.align = align;
 }
 
@@ -192,6 +185,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     content,
     side = 'bottom',
     align = 'center',
+    sideOffset = SIDE_OFFSET_DEFAULT,
     openDelay = WAIT_DEFAULT_OPEN,
     closeDelay = WAIT_DEFAULT_CLOSE,
     defaultOpen = false,
@@ -211,6 +205,11 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
   const wrapper = document.createElement('div') as unknown as HoverCardElement;
   wrapper.dataset.slot = 'hover-card';
   wrapper.style.display = 'contents';
+  // O gatilho se NOMEIA, como nas outras quatro stacks. Faltava só aqui, e a
+  // ausência não aparecia porque nenhuma story consultava o gatilho por
+  // `data-slot` — a primeira que consultou (a asserção de ancoragem) encontrou
+  // zero pares no vanilla e quatro em todas as outras.
+  trigger.dataset.slot = 'hover-card-trigger';
   wrapper.appendChild(trigger);
 
   // Escape fecha (WCAG 1.4.13, dismissable). O listener é do DOCUMENTO porque o
@@ -230,11 +229,14 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     panelEl.id = cardId;
     panelEl.className = cn('nds-hover-card-content', options.class);
     panelEl.dataset.slot = 'hover-card-content';
-    panelEl.style.position = 'absolute';
     panelEl.appendChild(content);
 
+    // `position: absolute` sai daqui e não da folha: nas outras quatro stacks o
+    // painel fica em FLUXO dentro de um invólucro que a lib posiciona, e uma
+    // declaração compartilhada colapsaria esse invólucro para 0×0. Quem escreve
+    // é o `measurePanel` do `positionFloating`, antes de medir.
     document.body.appendChild(panelEl);
-    positionHoverCard(trigger, panelEl, side, align);
+    positionHoverCard(trigger, panelEl, side, align, sideOffset);
 
     // O gatilho é DESCRITO pelo painel, e só enquanto o painel EXISTE — o
     // `id` acima é o alvo. Escrever o atributo na montagem, com o cartão ainda

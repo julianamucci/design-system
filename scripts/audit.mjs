@@ -4133,6 +4133,109 @@ function regrasCss(css) {
   return saida;
 }
 
+/**
+ * A folha que tira o painel do fluxo tem de dizer ONDE ele fica.
+ *
+ * `position: absolute` sem nenhum deslocamento na família de seletores é a
+ * assinatura de uma folha que abdica do posicionamento para uma lib e mantém a
+ * declaração que quebra essa lib. Em toda stack de lib o painel flutuante vive
+ * em FLUXO dentro de um invólucro que a lib posiciona; tirá-lo do fluxo colapsa
+ * esse invólucro para 0×0, e é contra uma caixa de tamanho zero que a lib passa
+ * a calcular tudo — inclusive a detecção de colisão, que deixa de ter o que
+ * comparar.
+ *
+ * Custou duas folhas e nove dias. O tooltip mediu e removeu a declaração em
+ * 2026-09-04 e fechou sem deixar instrumento; o `hover-card.css` seguiu com ela
+ * até 2026-09-13, quando foi medida de novo do zero — painel publicando `top`
+ * com a base 76,6px ABAIXO do topo do gatilho, e `involucro=0x0`. Nenhum
+ * compilador, suíte ou axe reprova: a folha é válida e o painel APARECE.
+ *
+ * A superfície inteira das folhas compartilhadas foi medida ao escrever isto:
+ * 57 regras declaram `position: absolute` e 5 não declaram deslocamento em
+ * seletor nenhum da família. O portão é pequeno de propósito — quem declara
+ * `top`/`inset-*` junto É o posicionador, e essas são maioria.
+ *
+ * A família é por PREFIXO, e não por seletor exato: `.nds-carousel-arrow`
+ * declara a posição e quem deposita as coordenadas é
+ * `.nds-carousel-arrow-prev[data-orientation]`. Sem o prefixo, a seta do
+ * carrossel entraria como falso positivo.
+ */
+const POSICAO_SEM_DESLOCAMENTO_DECLARADA = {
+  '.nds-sr-only': {
+    motivo: 'ocultação visual: a caixa é de 1px e recortada, então ONDE ela fica não tem efeito visível',
+    premissa: /clip\s*:\s*rect\(/,
+  },
+  '.nds-chat-thread-announcer': {
+    motivo: 'mesma ocultação visual do `.nds-sr-only`, aqui numa região aria-live',
+    premissa: /clip-path\s*:\s*inset\(/,
+  },
+  '.nds-slider-range': {
+    motivo: 'o preenchimento da trilha: a posição ESTÁTICA dentro da trilha é onde ele deve ficar, '
+      + 'e a largura é escrita inline pela stack conforme o valor',
+    premissa: /height\s*:\s*100%/,
+  },
+};
+
+function auditFolhaQuePosiciona() {
+  const violations = [];
+  const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  const DESLOCAMENTO = /(?:^|[\s;])(?:top|right|bottom|left|inset(?:-block|-inline)?(?:-start|-end)?|translate)\s*:/;
+
+  for (const caminho of walkDir(dir, ['.css'])) {
+    const bruto = readFile(caminho);
+    if (!bruto) continue;
+    const rel = relative(ROOT, caminho);
+    const limpo = bruto.replace(/\/\*[\s\S]*?\*\//g, (s) => s.replace(/[^\n]/g, ' '));
+    const linhaDe = (idx) => limpo.slice(0, idx).split('\n').length;
+
+    const regras = regrasCss(limpo).filter((r) => !r.sel.startsWith('@'));
+
+    // Quem declara deslocamento, por classe. A leitura é do arquivo inteiro:
+    // o deslocamento costuma morar numa regra de modificador, longe da que
+    // declara a posição.
+    const comDeslocamento = new Set();
+    for (const r of regras) {
+      if (!DESLOCAMENTO.test(r.corpo)) continue;
+      for (const c of r.sel.match(/\.nds-[a-z0-9-]+/g) ?? []) comDeslocamento.add(c);
+    }
+    const familiaPosiciona = (classe) => [...comDeslocamento]
+      .some((c) => c === classe || c.startsWith(`${classe}-`) || classe.startsWith(`${c}-`));
+
+    for (const r of regras) {
+      if (!/(?:^|[\s;])position\s*:\s*(?:absolute|fixed)/.test(r.corpo)) continue;
+      const classes = r.sel.match(/\.nds-[a-z0-9-]+/g);
+      if (!classes) continue;
+      const alvo = classes[classes.length - 1];
+      if (familiaPosiciona(alvo)) continue;
+
+      const excecao = POSICAO_SEM_DESLOCAMENTO_DECLARADA[alvo];
+      if (excecao) {
+        // A premissa é conferida nos DOIS sentidos: se o que justificava a
+        // exceção sair da regra, a exceção cai e o portão volta a cobrar.
+        if (excecao.premissa.test(r.corpo)) continue;
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'shared',
+          file: rel, line: linhaDe(r.index), rule: 'posicao_sem_deslocamento_declarada_vencida',
+          message: `\`${alvo}\` está declarado em POSICAO_SEM_DESLOCAMENTO_DECLARADA por "${excecao.motivo}", `
+            + 'e a premissa não vale mais nesta regra — ou a regra mudou, ou a exceção envelheceu',
+        });
+        continue;
+      }
+
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: rel, line: linhaDe(r.index), rule: 'folha_tira_do_fluxo_sem_dizer_onde',
+        message: `\`${alvo}\` declara \`position\` e nenhum deslocamento em seletor algum da família — `
+          + 'a folha tira o painel do fluxo e não diz onde ele fica, então quem posiciona é a lib de cada '
+          + 'stack, e o invólucro dela colapsa para 0×0 (tooltip 2026-09-04, hover-card 2026-09-13). '
+          + 'Ou a folha declara o deslocamento e É o posicionador, ou ela não declara `position`',
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditInvariantesOverlayCss() {
   const violations = [];
   const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
@@ -11797,7 +11900,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 
