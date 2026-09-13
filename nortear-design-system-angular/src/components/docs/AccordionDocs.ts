@@ -753,11 +753,8 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: g.labelKey === 'nav.compositions' ? tNav(g.labelKey) : t(g.labelKey),
-      sections: g.sections.map((s) => ({
-        id: s.id,
-        label: s.labelKey === 'nav.compositions' ? tNav(s.labelKey) : t(s.labelKey),
-      })),
+      label: tNav(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: tNav(s.labelKey) })),
     }));
   });
 

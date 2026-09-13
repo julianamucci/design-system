@@ -796,8 +796,8 @@ export class NdsComboboxDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((group) => ({
-      label: t(group.labelKey),
-      sections: group.sections.map((section) => ({ id: section.id, label: t(section.labelKey) })),
+      label: tNav(group.labelKey),
+      sections: group.sections.map((section) => ({ id: section.id, label: tNav(section.labelKey) })),
     }));
   });
 

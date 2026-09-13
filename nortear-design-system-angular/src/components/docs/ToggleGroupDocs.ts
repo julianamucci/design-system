@@ -428,8 +428,8 @@ import { NdsToggleGroup, NdsToggleGroupIcon } from '@/components/ui/toggle-group
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: t(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: t(s.labelKey) })),
+      label: tNav(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: tNav(s.labelKey) })),
     }));
   });
 

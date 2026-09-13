@@ -531,10 +531,10 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: t(g.labelKey),
+      label: tNav(g.labelKey),
       sections: g.sections.map((s) => ({
         id: s.id,
-        label: s.fromUi ? tNav(s.labelKey) : t(s.labelKey),
+        label: s.fromUi ? tNav(s.labelKey) : tNav(s.labelKey),
       })),
     }));
   });

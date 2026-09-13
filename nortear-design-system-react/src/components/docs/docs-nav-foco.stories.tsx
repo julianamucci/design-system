@@ -207,7 +207,18 @@ export const NavTrackReportsTargetSection: Story = {
         const navEvent = calls.find(([, name]) => name === 'docs_nav_click');
         expect(navEvent).toBeTruthy();
         expect(navEvent![2].section_id).toBe(id);
-        expect(navEvent![2].label).toBe(label);
+        // O `label` é ID ESTÁVEL, nunca o texto da tela — decisão de 2026-09-10,
+        // e `docs/shared/primitives/track-label.ts` é quem a aplica. Esta
+        // asserção exigia o texto humano (`label`), que é exatamente o que a
+        // regra proíbe: o mesmo clique viraria "Seção um", "Section one" e
+        // "Sección uno" no GA4, três valores que a série não junta.
+        //
+        // Ela ficou vermelha desde aquela mudança e passou despercebida porque
+        // ninguém rodou a suíte inteira do React desde então — apareceu na
+        // varredura completa de 2026-09-13, que era de outro assunto. Asserção
+        // que cobra o comportamento ANTIGO é o espelho da que guarda o bug: as
+        // duas impedem que o código certo feche verde.
+        expect(navEvent![2].label).toBe(id);
         expect(navEvent![2].component).toBeTruthy();
       }
     } finally {

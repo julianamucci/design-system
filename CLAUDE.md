@@ -306,6 +306,37 @@ Process rules, each learned from a concrete failure. They bind the orchestrator 
 
 - **Ao testar mais de uma stack, PARALELIZE em até três agentes.** Sequencial custa a soma; três em paralelo custam o máximo. O teto é três porque cinco vitest de navegador ao mesmo tempo disputam CPU e porta nesta máquina, e disputa vira o impasse descrito na regra da suíte destacada. Cada agente pega uma stack inteira (lint, build, build-storybook, suítes) e não compartilha diretório de saída com os outros.
 
+  **O teto de três vale para suíte FILTRADA. Para a suíte INTEIRA, o limite é a
+  RAM, e ele é de UMA.** Medido em 2026-09-13, na varredura das cinco stacks
+  atrás de regressão do `reset.css`. Com react, vue e svelte rodando juntos —
+  três, dentro do teto — sobravam **387 MB de 16 GB**, e as três rodadas
+  produziram vermelho FALSO:
+
+  | stack | o que a contenção produziu |
+  |---|---|
+  | vue | `EXIT=127` aos 13m sem uma linha; depois `0xC0000409` aos 18m; um `context-menu > Playground` estourando o `testTimeout` de 120s |
+  | svelte | sumário dizendo `2 failed \| 137 passed (383)` — **244 arquivos nunca reportaram**, e o sumário NÃO os rotula como skipped |
+  | react | `button-variants > Default` em 120006ms, `calendar.stories.tsx (0 test)`, e um impasse com 0,4s de CPU somado em 30s |
+
+  Rodando cada uma sozinha, as três fecharam limpas: react 5290/5290, svelte
+  4263/4263, vue 3370/3370 — e o vue caiu de 18 minutos para **360s**. Ou seja, a
+  serialização foi mais rápida em relógio, não só mais confiável.
+
+  Duas consequências práticas:
+
+  1. **Conte ARQUIVOS, não só falhas** — a regra já existe abaixo e foi ela que
+     salvou a rodada do svelte. `2 failed | 137 passed (383)` parece duas falhas
+     e é um terço da stack medida. Compare o total reportado com o que existe no
+     disco antes de acreditar em qualquer sumário.
+  2. **O que pesa não é só a suíte.** Naquele instante havia dois `storybook dev`
+     ociosos desde a manhã (~1,2 GB) que ninguém contava, e `limpar-orfaos.mjs`
+     não mexe neles de propósito. Antes de lançar, meça a memória livre — não o
+     número de agentes.
+
+  E o corolário de coordenação: **nunca mate processo que não é seu.** Nesta
+  mesma rodada uma agente "limpou órfãos" e encerrou as suítes de duas irmãs,
+  custando duas varreduras inteiras.
+
   **GPU não ajuda aqui, e vale saber por quê antes de tentar:** a suíte é limitada por processo e por E/S, não por rasterização. O `chrome-headless-shell` roda com renderização por software de propósito — habilitar GPU nele troca velocidade por instabilidade, e a VRAM não é endereçável como memória de sistema para o node. O gargalo medido nunca foi throughput: foi um impasse com os workers a 1s de CPU.
 
 - **Agente que delega em segundo plano é SUSPENSA, e não volta para conferir.** Medido três vezes na campanha da guideline 17, sempre igual: a agente dispara as quatro portas, relata "as portas estão rodando em paralelo, vou verificar quando voltarem", e o harness a encerra ali — porque ela não tem mais nada a fazer. A verificação prometida nunca acontece, e as filhas reportam soltas, cada uma sabendo só da sua stack. Instruir "não encerre com as portas pela metade" NÃO resolve: não é desatenção, é o mecanismo. Ou a agente delega em **primeiro plano** (bloqueante), ou quem orquestra assume a conferência das cinco.

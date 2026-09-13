@@ -5256,6 +5256,44 @@ function auditRotuloDeNav() {
     }
   }
 
+  // 4 · a chave do menu chega ao tradutor do CONTEÚDO por VARIÁVEL
+  //
+  // O braço 2 casa a chave literal (`tContent('nav.overview')`) e é cego quando
+  // ela vem de um campo: `label: t(g.labelKey)`. Foi por esse buraco que a
+  // migração para `tNav` ficou pela metade no Angular — 23 docs pages seguiram
+  // pedindo `nav.*` ao tradutor do componente, que não tem bloco `nav` e devolve
+  // a própria chave. O trilho lateral renderizava `nav.overview`, `nav.techRef`,
+  // `nav.context` e `nav.quality` como TEXTO, em 23 páginas, nos três idiomas.
+  //
+  // Quem viu foi o `chave_i18n_visivel` do `docs-smoke` — instrumento certo, e
+  // caro: só aparece na varredura das 98 páginas. Este braço mede o mesmo em
+  // milissegundos.
+  //
+  // A regra não olha o NOME da variável (`g`, `group`, `section`), e sim quem
+  // recebe: toda chave de rótulo de menu passa pelo resolvedor de menu.
+  const RESOLVEDOR_DE_NAV = /^(?:tNav|navT|tUi)$/;
+  const CHAMADA_COM_LABELKEY = /\b([A-Za-z_$][\w$]*)\s*\(\s*[\w$]+\.labelKey\s*\)/g;
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    if (!existsSync(dir)) continue;
+    for (const nome of readdirSync(dir)) {
+      if (!/Docs\.(tsx|vue|svelte|ts)$/.test(nome)) continue;
+      const src = readFile(join(dir, nome));
+      if (!src) continue;
+      const limpo = stripComments(src);
+      const erradas = new Set();
+      for (const m of limpo.matchAll(CHAMADA_COM_LABELKEY)) {
+        if (!RESOLVEDOR_DE_NAV.test(m[1])) erradas.add(m[1]);
+      }
+      if (!erradas.size) continue;
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, join(dir, nome)), rule: 'chave_de_nav_por_variavel',
+        message: `resolve \`labelKey\` do menu com \`${[...erradas].sort().join('`, `')}\` — o tradutor do CONTEÚDO não tem bloco \`nav\` e devolve a própria chave, então o trilho renderiza "nav.overview" como texto; o resolvedor do menu é \`tNav\``,
+      });
+    }
+  }
+
   return violations;
 }
 
