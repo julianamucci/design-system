@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
+import {
+  popoverBasicSource,
+  popoverControlledSource,
+  popoverModalSource,
+  popoverOpenSource,
+} from './popover.source';
 import { open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
 import { NdsCheckbox } from './checkbox';
@@ -64,6 +70,12 @@ const SIMPLE_PANEL = `
         </ng-template>`;
 
 export const Closed: Story = {
+  parameters: {
+    // O painel Code publica o componente que se escreve, e não este template:
+    // ele interpola `SIMPLE_PANEL` e amarra o `[(open)]` a uma propriedade solta
+    // que só existe dentro do renderer do Storybook.
+    docs: { source: { transform: popoverBasicSource } },
+  },
   render: () => ({
     props: { aberto: false },
     template: `
@@ -99,7 +111,12 @@ export const Open: Story = {
   // este estado que o axe varre (ARIA e contraste do painel) e que o Chromatic
   // fotografa. Os dois itens vieram do Playground na revalidação do contrato —
   // lá a play termina com o painel fechado.
-  parameters: { covers: ['accessibility.item1', 'accessibility.item2'] },
+  parameters: {
+    covers: ['accessibility.item1', 'accessibility.item2'],
+    // O snippet desta story afirma o que ela afirma: o painel nasce aberto, e
+    // num painel controlado isso mora no SINAL — `signal(true)`.
+    docs: { source: { transform: popoverOpenSource } },
+  },
   render: () => ({
     // Nasce aberta pelo estado externo, e não por `defaultOpen`: o rodapé fecha
     // por código no "Salvar", e isso exige o par `[open]`/`(openChange)`. O
@@ -131,7 +148,12 @@ export const Open: Story = {
 };
 
 export const Controlled: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    // O par por extenso é o assunto, e o snippet o publica com um sinal — sem
+    // o parágrafo `data-testid`, que é alvo da play e não do componente.
+    docs: { source: { transform: popoverControlledSource } },
+  },
   render: () => ({
     props: { aberto: false },
     // O par `[open]`/`(openChange)` escrito por extenso, que é o assunto desta
@@ -188,7 +210,13 @@ export const Controlled: Story = {
 };
 
 export const Focus: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item3'],
+    // Mesmo markup de `Closed`, e por isso o MESMO construtor: o que separa as
+    // duas é interação, que não aparece em snippet. A premissa é cobrada em
+    // `popover.source.test.ts`, que compara os dois templates.
+    docs: { source: { transform: popoverBasicSource } },
+  },
   render: () => ({
     props: { aberto: false },
     template: `
@@ -233,6 +261,10 @@ export const Focus: Story = {
 export const Modal: Story = {
   parameters: {
     docs: {
+      // O snippet leva `[modal]="true"`, os dois checkboxes rotulados e nenhuma
+      // peça de fechar — a ausência é o assunto. O `[defaultOpen]="true"` daqui
+      // NÃO vai: ele abre o painel para o axe e o Chromatic.
+      source: { transform: popoverModalSource },
       description: {
         story:
           'Modo modal — o foco fica preso no painel, a rolagem da página trava e o painel se anuncia como diálogo modal. As três coisas andam juntas: anunciar inércia sem prender o foco engana quem navega por leitor de tela.',

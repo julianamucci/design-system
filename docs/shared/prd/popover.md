@@ -743,5 +743,26 @@ terceiro existe porque no Angular um `[title]` esquecido **não** reprova no
 > a das outras quatro.
 > **Fecha quando** as treze stories tiverem construtor (ou exceção declarada com
 > a premissa cobrada por caso) e o audit deste slug voltar vazio.
+>
+> **FECHADA em 2026-09-13.** `node scripts/audit.mjs popover --json` devolve
+> `{"popover": []}` com exit 0. O Angular foi de 1 construtor para **6**:
+> `popover-variants` e `popover-compositions` ganharam o `popoverFormSource` na
+> rodada do submit de formulário, e as cinco stories de `popover-states` ganharam
+> os quatro restantes.
+>
+> **Uma delas serve duas stories, e a premissa é cobrada**: `Closed` e `Focus`
+> têm `template` byte a byte idêntico e o mesmo `props` — o que as separa é
+> interação, que não aparece em snippet. `Open` tem construtor próprio porque o
+> estado inicial dela difere, e um caso deriva o snippet dela do irmão trocando
+> `signal(true)` por `signal(false)`: no dia em que uma das duas ganhar markup
+> próprio, a dupla reprova.
+>
+> **A dívida que sobra está DECLARADA, não esquecida**: seis stories de
+> `variants`/`compositions` ainda publicam template cru, numa lista nomeada
+> `SEM_CONSTRUTOR` do teste — quem lhes der transform sem tirá-las da lista
+> reprova. O teste foi de 12 para 34 casos, cobrando a tabela de construtores nos
+> dois sentidos e a premissa de cada exceção, inclusive a do andaime que os
+> snippets removem de propósito (o alvo inerte da `Controlled` e o
+> `[defaultOpen]` da `Modal`).
 
 
