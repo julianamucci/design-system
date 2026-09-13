@@ -40,7 +40,7 @@ valer — e `—` é dívida declarada, não ausência de risco.
 | C6 | O painel SEMPRE tem nome acessível — `aria-labelledby` quando há título visível, `aria-label` quando o conteúdo é livre | `testes.accessibility.item5` + regra `aria-dialog-name` do axe |
 | C7 | No modo padrão o painel NÃO recebe `aria-modal` — nem como `"false"` | asserção de ausência, nas cinco |
 | C8 | `modal: true` liga três coisas JUNTAS: foco preso, rolagem travada, `aria-modal="true"` | story `Modal`, nas cinco |
-| C9 | Sem espaço no `side` pedido, o painel vira para o lado oposto (auto-flip) | story `SideTop` |
+| C9 | Sem espaço no `side` pedido, o painel vira para o lado oposto (auto-flip) | story `SideTop` — e **só no vanilla ela mede isso**; ver abaixo |
 | C10 | Renderiza em portal no `body`; fechado, não existe no DOM | `notes.item3` |
 | C11 | Nenhuma região viva: o painel não é anúncio, é alcançado | inspeção — nenhuma regra de axe cobre ausência de `aria-live` |
 
@@ -48,6 +48,42 @@ valer — e `—` é dívida declarada, não ausência de risco.
 
 A tabela existe para que reverter custe uma leitura. Reverter é permitido; fazer
 sem saber, não.
+
+### D0 · O C9 era falso no vanilla, e a story que o gateava não podia reprovar
+
+**Fixada em** 2026-09-13, a partir de uma captura de tela da dona: o Playground
+do vanilla com `side: 'top'` abria o painel **fora da tela**, e o mesmo
+Playground no angular abria certo.
+
+Eram três camadas, e só a primeira estava à vista:
+
+1. **O quadro da story.** O Playground do vanilla era `layout: 'padded'` contra
+   `centered` no react, no svelte e no angular. Com `padded` o quadro começa no
+   topo do canvas e o gatilho não tem nada acima dele. Corrigido para `centered`.
+2. **O `flip` não estava ligado.** `positionFloating` tem `flip` **opt-in** — por
+   uma razão escrita e boa, que é o lado ser LIDO pela folha em outros
+   componentes (a seta do tooltip) — e o popover nunca o pediu. O eixo PRINCIPAL
+   não é clampado de propósito, porque clampar empurraria o painel por cima do
+   gatilho. Sem flip e sem clamp, "não cabe" significa "sai da tela". Ligado
+   aqui, e é seguro: a folha do popover não lê `[data-side]` e não há seta.
+3. **O `data-side` mentiria.** Ele era escrito do lado PEDIDO, na montagem, e o
+   retorno de `positionFloating` — que traz o lado onde o painel de fato ficou —
+   era descartado. Agora o atributo vem do retorno.
+
+**E a story que "prova" o C9 não podia reprovar.** No vanilla ela GARANTIA espaço
+acima, de propósito, para o flip não acontecer — mas o espaço vinha de
+`data-split="last"`, que põe `margin-top: auto` no ÚLTIMO filho, e o popover era
+filho único: já era o último, e nada era empurrado. Ninguém viu porque, sem
+flip, o painel era desenhado acima do mesmo jeito — **fora da tela**. A story
+afirmava "posicionado acima" medindo um painel que ninguém conseguia ler. O
+espaço virou um irmão de verdade, e um passo novo tira esse irmão e exige que o
+lado vire e que o `data-side` acompanhe.
+
+**Pendência aberta**: nas outras quatro o C9 continua sem prova. A `SideTop` do
+react afirma `data-side ∈ {top, bottom}` — aceita os dois, então passa com ou sem
+flip. Ali o recurso vem da lib e provavelmente funciona; o que falta é a
+asserção que o mostre. Fecha quando uma story de cada stack tirar o espaço e
+exigir a virada, como a do vanilla agora faz.
 
 ### D1 · Não-modal por padrão
 

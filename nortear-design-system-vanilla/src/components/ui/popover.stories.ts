@@ -30,7 +30,11 @@ const meta: Meta<PopoverArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     design: figmaDesign('popover'),
-    layout: 'padded',
+    // `centered`, como react, svelte e angular. Com `padded` o quadro começa no
+    // TOPO do canvas e o gatilho não tem nada acima dele: o Playground com
+    // `side: 'top'` abria o painel para fora da tela. Visto na tela em
+    // 2026-09-13, lado a lado com o angular, que já era `centered`.
+    layout: 'centered',
     docs: { page: withAutoDocsTab(createPopoverDocs), source: { transform: popoverSource } },
   },
   argTypes: {

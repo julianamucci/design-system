@@ -379,6 +379,9 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     panelEl.dataset.state = 'open';
     // O lado e o encosto escolhidos ficam legíveis no markup, como nas outras
     // stacks — é o que permite a uma story provar que a opção chegou ao painel.
+    //
+    // O lado aqui é o PEDIDO, e ele é reescrito com o lado REAL logo depois de
+    // posicionar: com `flip` ligado, os dois podem diferir.
     panelEl.dataset.side = side;
     panelEl.dataset.align = align;
     panelEl.setAttribute('role', 'dialog');
@@ -433,7 +436,24 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     }
 
     document.body.appendChild(panelEl);
-    positionFloating(trigger, panelEl, side, align, sideOffset);
+    // `flip: true`, e o retorno é ESCRITO no painel.
+    //
+    // O contrato C9 diz que sem espaço no lado pedido o painel vira para o
+    // oposto, e até 2026-09-13 ele era falso aqui: o `flip` do `positionFloating`
+    // é opt-in, o popover não o pedia, e o eixo PRINCIPAL não é clampado de
+    // propósito (clampá-lo empurraria o painel por cima do gatilho, desfazendo o
+    // `side`). Sem espaço acima, o painel simplesmente saía da tela — visto na
+    // tela, no Playground com `side: 'top'`, onde o gatilho fica no topo.
+    //
+    // Ligar o flip sem a linha de baixo faria o atributo MENTIR: `data-side` era
+    // escrito do lado PEDIDO, na montagem, e o retorno de `positionFloating` —
+    // que traz o lado onde o painel de fato ficou — era descartado. Quem lesse o
+    // markup veria `top` num painel que abriu embaixo.
+    //
+    // Aqui ligar é seguro, e no tooltip não seria: a folha do popover não lê
+    // `[data-side]` para desenhar nada, e não há seta cuja coordenada cruzada
+    // precise ser refeita.
+    panelEl.dataset.side = positionFloating(trigger, panelEl, side, align, sideOffset, { flip: true });
 
     trigger.setAttribute('aria-expanded', 'true');
     trigger.setAttribute('aria-controls', contentId);

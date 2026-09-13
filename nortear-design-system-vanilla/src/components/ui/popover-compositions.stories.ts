@@ -308,12 +308,19 @@ export const SideTop: Story = {
     queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
 
     // Espaço ACIMA do gatilho, senão o painel não cabe e o auto-flip o manda
-    // para baixo — a story mediria o recurso oposto ao que documenta. Vem da
-    // pilha (`margin-top: auto` no último filho) e de um degrau da escada, não
-    // de um padding cravado.
-    const w = empilharCentrado([el], 'nds-min-h-100');
-    w.dataset.split = 'last';
-    return w;
+    // para baixo — a story mediria o recurso oposto ao que documenta.
+    //
+    // O espaço é um IRMÃO, e não `data-split="last"`, que é o que estava aqui
+    // até 2026-09-13 e não empurrava nada: aquele utilitário põe `margin-top:
+    // auto` no ÚLTIMO filho, e o popover era filho único — ele já era o último.
+    // Ninguém viu porque, sem `flip`, o painel era desenhado acima do mesmo
+    // jeito: fora da tela. A story afirmava "posicionado acima" medindo um
+    // painel que ninguém conseguia ler.
+    const espaco = document.createElement('div');
+    espaco.className = 'nds-min-h-60';
+    espaco.setAttribute('aria-hidden', 'true');
+
+    return empilharCentrado([espaco, el], 'nds-min-h-100');
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -332,6 +339,41 @@ export const SideTop: Story = {
       const centerTrigger = rg.left + rg.width / 2;
       const centerPanel = rp.left + rp.width / 2;
       await expect(Math.abs(centerTrigger - centerPanel)).toBeLessThanOrEqual(2);
+    });
+
+    // ─── O contrato C9, que esta story afirmava e não media ──────────────────
+    //
+    // Os dois passos acima provam que `side: 'top'` chega ao posicionamento —
+    // e é só isso. A story GARANTE espaço acima, de propósito, então o
+    // auto-flip nunca acontece nela: até 2026-09-13 o C9 estava gateado por uma
+    // asserção que não podia reprovar, e o flip nem ligado estava.
+    //
+    // Este passo tira o espaço. O painel deixa de caber acima, o lado vira, e o
+    // `data-side` acompanha — se ele continuasse dizendo `top`, o markup estaria
+    // mentindo sobre onde o painel ficou.
+    await step('Sem espaço acima, o painel VIRA para baixo e o markup acompanha', async () => {
+      const p = panel()!;
+      const espaco = canvasElement.querySelector<HTMLElement>('.nds-min-h-60')!;
+      try {
+        // Some com o irmão que cria o espaço: o gatilho sobe para o topo.
+        espaco.style.display = 'none';
+        await userEvent.click(trigger);           // fecha
+        await userEvent.click(trigger);           // reabre já sem espaço
+        const reaberto = panel()!;
+        await expect(reaberto).toHaveAttribute('data-side', 'bottom');
+        const rg = trigger.getBoundingClientRect();
+        await expect(reaberto.getBoundingClientRect().top).toBeGreaterThanOrEqual(rg.bottom - 1);
+      } finally {
+        espaco.style.display = '';
+        void p;
+      }
+    });
+
+    // Termina ABERTA e no lado pedido: é o estado que o Chromatic fotografa.
+    await step('Estado final: de volta ao lado pedido', async () => {
+      await userEvent.click(trigger);
+      await userEvent.click(trigger);
+      await expect(panel()).toHaveAttribute('data-side', 'top');
     });
   },
 };
