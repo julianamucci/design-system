@@ -88,7 +88,22 @@ type Story = StoryObj<PopoverArgs>;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function buildContent(args: PopoverArgs): HTMLElement {
+/**
+ * O conteúdo do painel, e o botão de CONFIRMAR devolvido junto.
+ *
+ * O rodapé tem dois caminhos de fechamento, e a diferença é o que separa
+ * "desistiu" de "concluiu" no relatório:
+ *
+ *  - **Cancelar** é a PEÇA de fechar — marca `data-slot="popover-close"`, que a
+ *    delegação da fábrica encontra e relata como `close-button`;
+ *  - **Salvar** fecha por CÓDIGO depois de salvar, chamando `close()` no que a
+ *    fábrica devolve, e o motivo que chega ao `onOpenChange` é `api`.
+ *
+ * Por isso o Salvar sai daqui em vez de ficar preso na `<div>`: o conteúdo é
+ * montado ANTES de `createPopover()` existir, e só quem tem a instância pode
+ * ligar o ouvinte.
+ */
+function buildContent(args: PopoverArgs): { content: HTMLElement; save: HTMLButtonElement } {
   const content = document.createElement('div');
   content.className = 'nds-stack';
   content.dataset.spacing = 'sm';
@@ -114,13 +129,14 @@ function buildContent(args: PopoverArgs): HTMLElement {
   const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
   cancelar.dataset.slot = 'popover-close';
 
-  actions.append(
-    cancelar,
-    createButton({ variant: 'default', size: 'sm', label: 'Salvar' }),
-  );
+  // O Salvar NÃO leva a marca: com ela, "concluiu" chegaria ao relatório como
+  // "apertou o botão de fechar". Quem o fecha é o `close()` ligado no render.
+  const save = createButton({ variant: 'default', size: 'sm', label: 'Salvar' });
+
+  actions.append(cancelar, save);
 
   content.append(header, actions);
-  return content;
+  return { content, save };
 }
 
 /** Fecha só se estiver aberto. */
@@ -150,12 +166,21 @@ export const Playground: Story = {
     container.dataset.align = 'center';
 
     const trigger = createButton({ variant: 'outline', label: args.triggerLabel });
+    const { content, save } = buildContent(args);
     const el = createPopover({
       trigger,
-      content: buildContent(args),
+      content,
       side: args.side,
       align: args.align,
       onOpenChange: args.onOpenChange,
+    });
+
+    // O ouvinte só pode ser ligado DEPOIS da fábrica: é ela que tem o `close()`.
+    // Fechar por código relata `api` — "salvou e fechou" —, e não o
+    // `close-button` do Cancelar.
+    save.addEventListener('click', () => {
+      // …aqui entraria a gravação do formulário…
+      el.close();
     });
 
     // Alvo inerte para o teste de dispensa: clicar em `document.body` depende
@@ -277,6 +302,19 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'close-button');
       // O foco estava dentro do painel, então volta ao gatilho (WCAG 2.4.3).
       await expect(trigger).toHaveFocus();
+    });
+
+    await step('O Salvar fecha por CÓDIGO e informa api', async () => {
+      const p = await open(trigger);
+      const save = within(p).getByRole('button', { name: 'Salvar' });
+      // Sem a marca de propósito: marcá-lo faria "concluiu" chegar ao GA4 como
+      // `close-button`, apagando a diferença entre desistir e concluir.
+      await expect(save).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(save);
+      await waitFor(() => {
+        if (panel()) throw new Error('popover ainda aberto');
+      });
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'api');
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

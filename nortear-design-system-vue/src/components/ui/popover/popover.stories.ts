@@ -108,6 +108,7 @@ export const Playground: Story = {
     template: `
       <div class="nds-stack nds-min-h-80" style="contain: layout" data-align="center" data-spacing="md">
         <Popover
+          v-slot="{ close }"
           :key="String(args.defaultOpen) + String(args.modal)"
           :default-open="args.defaultOpen"
           :modal="args.modal"
@@ -123,11 +124,20 @@ export const Playground: Story = {
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>
+            <!-- As duas ações fecham, por CAMINHOS diferentes, e a diferença é
+                 o que separa desistiu de concluiu no relatório:
+
+                   Cancelar -> PopoverClose, e o motivo chega como close-button
+                   Salvar   -> por CÓDIGO, depois de salvar, e o motivo é api
+
+                 O "close" vem do slot da raiz. Envolver o Salvar em
+                 PopoverClose faria "concluiu" chegar ao GA4 como "apertou o
+                 botão de fechar", apagando o sinal que justifica o campo. -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <PopoverClose as-child>
                 <Button variant="ghost" size="sm">Cancelar</Button>
               </PopoverClose>
-              <Button size="sm">Salvar</Button>
+              <Button size="sm" @click="close()">Salvar</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -241,6 +251,21 @@ export const Playground: Story = {
       // chega aqui é `api`, e "apertou cancelar" viraria "fechou por código"
       // no relatório.
       await expect(spy).toHaveBeenLastCalledWith(false, 'close-button');
+    });
+
+    await step('E o Salvar fecha pelo OUTRO caminho, com motivo api', async () => {
+      // Confirmar não é a peça de fechar: fecha por CÓDIGO, como um formulário
+      // faz depois de salvar. Envolvê-lo em `PopoverClose` — o defeito que o
+      // react e o angular tinham — reporta `close-button`, e o relatório perde
+      // a distinção entre desistiu e concluiu. Esta asserção é quem a guarda.
+      await open();
+      const save = within(panel()!).getByRole('button', { name: /Salvar/i });
+      await expect(save).not.toHaveAttribute('data-slot', 'popover-close');
+
+      await userEvent.click(save);
+      await closed();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(spy).toHaveBeenLastCalledWith(false, 'api');
     });
 
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.

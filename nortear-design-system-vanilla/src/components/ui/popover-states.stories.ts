@@ -224,10 +224,11 @@ export const Focused: Story = {
     // `[data-slot="popover-close"]` e informa `close-button`.
     const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
     cancelar.dataset.slot = 'popover-close';
-    actions.append(
-      cancelar,
-      createButton({ variant: 'default', size: 'sm', label: 'Confirmar' }),
-    );
+    // O Confirmar NÃO leva a marca: ele fecha por CÓDIGO depois de concluir, e o
+    // motivo que chega ao `onOpenChange` é `api`. Marcá-lo faria "concluiu"
+    // chegar ao relatório como "apertou o botão de fechar".
+    const confirmar = createButton({ variant: 'default', size: 'sm', label: 'Confirmar' });
+    actions.append(cancelar, confirmar);
     content.appendChild(actions);
 
     // Esta story NÃO abre na renderização: quem abre é a play, por clique. O
@@ -235,6 +236,9 @@ export const Focused: Story = {
     // montado põe o foco num painel que o Storybook ainda vai reposicionar, e a
     // medição não veria a política, veria a corrida.
     const el = createPopover({ trigger, content });
+    // Só depois da fábrica há um `close()` para chamar — o conteúdo é montado
+    // antes dela existir.
+    confirmar.addEventListener('click', () => el.close());
     return empilharCentrado([el]);
   },
   play: async ({ canvasElement, step }) => {
@@ -309,6 +313,18 @@ export const Focused: Story = {
       await expect(trigger).toHaveFocus();
     });
 
+    await step('E o Confirmar fecha por CÓDIGO — ele não é a peça de fechar', async () => {
+      const p = await open(trigger);
+      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
+      // A ausência da marca é o contrato: com ela, o fechamento seria relatado
+      // como `close-button` e "concluiu" viraria "desistiu" no GA4.
+      await expect(confirmar).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(confirmar);
+      await waitFor(() => {
+        if (panel()) throw new Error('popover ainda aberto');
+      });
+    });
+
     // Termina ABERTA: é este estado que o axe varre e o Chromatic fotografa.
     await step('Estado final: painel aberto', async () => {
       await expect(await open(trigger)).toBeVisible();
@@ -350,13 +366,15 @@ export const Modal: Story = {
     // Escape tem de existir DENTRO do painel.
     const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
     cancelar.dataset.slot = 'popover-close';
-    actions.append(
-      cancelar,
-      createButton({ variant: 'default', size: 'sm', label: 'Confirmar' }),
-    );
+    // O Confirmar fecha por CÓDIGO (motivo `api`), o Cancelar pela marca (motivo
+    // `close-button`) — os dois caminhos existem justamente para o relatório
+    // distinguir concluir de desistir.
+    const confirmar = createButton({ variant: 'default', size: 'sm', label: 'Confirmar' });
+    actions.append(cancelar, confirmar);
     content.appendChild(actions);
 
     const el = createPopover({ trigger, content, modal: true });
+    confirmar.addEventListener('click', () => el.close());
     return empilharCentrado([el]);
   },
   play: async ({ canvasElement, step }) => {
@@ -416,6 +434,16 @@ export const Modal: Story = {
         if (panel()) throw new Error('popover ainda aberto');
       });
       await expect(trigger).toHaveFocus();
+    });
+
+    await step('E o Confirmar fecha por CÓDIGO, sem ser peça de fechar', async () => {
+      const p = await open(trigger);
+      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
+      await expect(confirmar).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(confirmar);
+      await waitFor(() => {
+        if (panel()) throw new Error('popover ainda aberto');
+      });
     });
 
     // Termina ABERTA: é este estado que o axe varre e o Chromatic fotografa.

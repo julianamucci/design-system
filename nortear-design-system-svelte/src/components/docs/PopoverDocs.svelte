@@ -38,6 +38,54 @@
       track('popover_close', { component: 'popover', reason: reason ?? 'api', location });
     };
   }
+
+  /**
+   * Os quatro popovers VIVOS desta página que têm botão de confirmação.
+   *
+   * Confirmar fecha por CÓDIGO — escrevendo no `bind:open` —, e nunca por
+   * `PopoverClose`: a peça de fechar anota `close-button`, e com ela "concluiu"
+   * chegaria ao relatório como "apertou o botão de fechar", apagando o sinal
+   * que justifica o campo existir. Cancelar continua sendo a peça de fechar.
+   *
+   * A entrega do motivo é MANUAL, e não por descuido: medido na fonte do
+   * bits-ui, `onOpenChange` só é chamado pelo escritor da raiz da lib — ou
+   * seja, quando quem fecha é a própria lib. Escrever no `bind:open` de fora
+   * fecha o painel EM SILÊNCIO, sem chamar ninguém. Daí o `(false, 'api')`
+   * explícito depois de cada fechamento por código.
+   *
+   * Nos dois formulários o fechamento vai no `submit`, depois do
+   * `preventDefault`, e nunca no `click` do botão: fechar no clique desmontaria
+   * o formulário antes de ele submeter, e o "salvar" nunca aconteceria.
+   */
+  const rastrearDemo = rastrearPopover('demo', 'docs_demo');
+  let demoOpen = $state(false);
+  function concluirDemo(): void {
+    demoOpen = false;
+    rastrearDemo(false, 'api');
+  }
+
+  const rastrearVariantForm = rastrearPopover('form', 'docs_variantes');
+  let variantFormOpen = $state(false);
+  function concluirVariantForm(evento: SubmitEvent): void {
+    evento.preventDefault();
+    variantFormOpen = false;
+    rastrearVariantForm(false, 'api');
+  }
+
+  const rastrearEditProfile = rastrearPopover('edit-profile', 'docs_composicoes');
+  let editProfileOpen = $state(false);
+  function concluirEditProfile(evento: SubmitEvent): void {
+    evento.preventDefault();
+    editProfileOpen = false;
+    rastrearEditProfile(false, 'api');
+  }
+
+  const rastrearTableFilter = rastrearPopover('table-filter', 'docs_composicoes');
+  let tableFilterOpen = $state(false);
+  function concluirTableFilter(): void {
+    tableFilterOpen = false;
+    rastrearTableFilter(false, 'api');
+  }
   import { createActiveSection } from '@/lib/use-active-section.svelte';
   import DOMPurify from 'dompurify';
   import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.svelte';
@@ -230,7 +278,18 @@
   </PopoverContent>
 </Popover>`;
 
-  const codeForm = `<Popover>
+  const codeForm = `<script lang="ts">
+  let open = $state(false);
+
+  // Salvar fecha por CÓDIGO, e no submit — nunca no clique do botão, que
+  // cancelaria o próprio submit. Só o Cancelar é PopoverClose.
+  function salvar(evento: SubmitEvent) {
+    evento.preventDefault();
+    open = false;
+  }
+<\/script>
+
+<Popover bind:open={open}>
   <PopoverTrigger>
     {#snippet child({ props })}
       <Button {...props}>Editar perfil</Button>
@@ -240,7 +299,7 @@
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="md" onsubmit={(e) => e.preventDefault()}>
+    <form class="nds-stack" data-spacing="md" onsubmit={salvar}>
       <div class="nds-stack" data-spacing="xs">
         <Label for="perfil-nome">Nome</Label>
         <Input id="perfil-nome" value="Maria Silva" />
@@ -310,7 +369,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration>
     <div class="nds-cluster" data-spacing="sm" data-justify="center">
-      <Popover onOpenChange={rastrearPopover('demo', 'docs_demo')}>
+      <Popover bind:open={demoOpen} onOpenChange={rastrearDemo}>
         <PopoverTrigger>
           {#snippet child({ props })}
             <Button variant="outline" {...props}>{$tStore('demonstration.labels.trigger')}</Button>
@@ -327,7 +386,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
                 <Button variant="ghost" size="sm" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
               {/snippet}
             </PopoverClose>
-            <Button size="sm">{$tStore('demonstration.labels.save')}</Button>
+            <!-- Fecha por CÓDIGO, fora do `PopoverClose`: ver o bloco de
+                 documentação de `concluirDemo`, no script. -->
+            <Button size="sm" onclick={concluirDemo}>{$tStore('demonstration.labels.save')}</Button>
           </div>
         </PopoverContent>
       </Popover>
@@ -547,7 +608,18 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         name: $tStore('variants.compositions.editProfile.name'),
         description: $tStore('variants.compositions.editProfile.description'),
         useWhen: $tStore('variants.compositions.editProfile.use'),
-        code: `<Popover>
+        code: `<script lang="ts">
+  let open = $state(false);
+
+  // Atualizar fecha por CÓDIGO, e no submit — no clique do botão o fechamento
+  // cancelaria o próprio submit.
+  function salvar(evento: SubmitEvent) {
+    evento.preventDefault();
+    open = false;
+  }
+<\/script>
+
+<Popover bind:open={open}>
   <PopoverTrigger>
     {#snippet child({ props })}
       <Button variant="outline" {...props}>Editar perfil</Button>
@@ -558,7 +630,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
       <PopoverTitle>Dados do perfil</PopoverTitle>
       <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="md" onsubmit={(e) => e.preventDefault()}>
+    <form class="nds-stack" data-spacing="md" onsubmit={salvar}>
       <div class="nds-stack" data-spacing="xs">
         <Label for="perfil-nome">Nome</Label>
         <Input id="perfil-nome" value="Joana Silva" />
@@ -578,7 +650,17 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         name: $tStore('variants.compositions.tableFilter.name'),
         description: $tStore('variants.compositions.tableFilter.description'),
         useWhen: $tStore('variants.compositions.tableFilter.use'),
-        code: `<Popover>
+        code: `<script lang="ts">
+  let open = $state(false);
+
+  // Aplicar É a decisão: fecha por CÓDIGO, fora do PopoverClose — a peça de
+  // fechar reportaria "apertou o botão de fechar" em vez de "concluiu".
+  function aplicar() {
+    open = false;
+  }
+<\/script>
+
+<Popover bind:open={open}>
   <PopoverTrigger>
     {#snippet child({ props })}
       <Button variant="outline" {...props}>Filtros</Button>
@@ -601,7 +683,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
     </div>
  <div class="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
       <Button variant="ghost" size="sm">Limpar</Button>
-      <Button size="sm">Aplicar</Button>
+      <Button size="sm" onclick={aplicar}>Aplicar</Button>
     </div>
   </PopoverContent>
 </Popover>`,
@@ -676,7 +758,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   />
 
   {#snippet compEditProfile()}
-    <Popover onOpenChange={rastrearPopover('edit-profile', 'docs_composicoes')}>
+    <Popover bind:open={editProfileOpen} onOpenChange={rastrearEditProfile}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
@@ -686,7 +768,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <PopoverHeader>
           <PopoverTitle>{$tStore('variants.compositions.editProfile.name')}</PopoverTitle>
         </PopoverHeader>
-        <form class="nds-stack nds-pt-1" data-spacing="md" onsubmit={(e) => e.preventDefault()}>
+        <form class="nds-stack nds-pt-1" data-spacing="md" onsubmit={concluirEditProfile}>
           <div class="nds-stack" data-spacing="xs">
             <Label for="popover-comp-nome">{$tStore('demonstration.labels.form.name')}</Label>
             <Input id="popover-comp-nome" value="Joana Silva" />
@@ -704,7 +786,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet compTableFilter()}
-    <Popover onOpenChange={rastrearPopover('table-filter', 'docs_composicoes')}>
+    <Popover bind:open={tableFilterOpen} onOpenChange={rastrearTableFilter}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('variants.compositions.tableFilter.trigger')}</Button>
@@ -730,7 +812,9 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         </div>
  <div class="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
           <Button variant="ghost" size="sm">{$tStore('variants.compositions.tableFilter.clear')}</Button>
-          <Button size="sm">{$tStore('variants.compositions.tableFilter.apply')}</Button>
+          <!-- Aplicar É a decisão: fecha por código, e o motivo chega como
+               `api`. Limpar não fecha — limpar não decide nada. -->
+          <Button size="sm" onclick={concluirTableFilter}>{$tStore('variants.compositions.tableFilter.apply')}</Button>
         </div>
       </PopoverContent>
     </Popover>
@@ -790,7 +874,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   {#snippet variantForm()}
-    <Popover onOpenChange={rastrearPopover('form', 'docs_variantes')}>
+    <Popover bind:open={variantFormOpen} onOpenChange={rastrearVariantForm}>
       <PopoverTrigger>
         {#snippet child({ props })}
           <Button variant="outline" {...props}>{$tStore('demonstration.labels.form.trigger')}</Button>
@@ -800,7 +884,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <PopoverHeader>
           <PopoverTitle>{$tStore('demonstration.labels.form.trigger')}</PopoverTitle>
         </PopoverHeader>
-        <form class="nds-stack nds-pt-1" data-spacing="md" onsubmit={(e: SubmitEvent) => e.preventDefault()}>
+        <form class="nds-stack nds-pt-1" data-spacing="md" onsubmit={concluirVariantForm}>
           <div class="nds-stack" data-spacing="xs">
             <Label for="popover-var-nome">{$tStore('demonstration.labels.form.name')}</Label>
             <Input id="popover-var-nome" value="Maria Silva" />

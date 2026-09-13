@@ -252,7 +252,6 @@ export function popoverWithFormSnippet(o: PopoverSnippetOptions = {}): string {
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack';
 formulario.dataset.spacing = 'md';
-formulario.addEventListener('submit', (e) => e.preventDefault());
 
 // Rótulo e campo amarrados por \`htmlFor\`/\`id\`: sem o par, o campo chega ao
 // leitor de tela sem nome nenhum.
@@ -271,6 +270,14 @@ formulario.append(
   createButton({ size: 'sm', label: 'Atualizar', type: 'submit' }),
 );`,
     `const painel = ${callLine('createPopover', panelLines(o, 'formulario'))};`,
+    `// Confirmar fecha por CÓDIGO, depois de salvar: o motivo que chega ao
+// \`onOpenChange\` é \`api\`, e não o \`close-button\` de quem desistiu — só a peça
+// marcada com \`dataset.slot = 'popover-close'\` relata aquele.
+formulario.addEventListener('submit', (e) => {
+  e.preventDefault();
+  // …grave o formulário…
+  painel.close();
+});`,
     blockFinal(o),
   );
 }
@@ -288,6 +295,11 @@ export function popoverSourceForm(
  * O foco entra no PRIMEIRO focável do painel — aqui, em `Cancelar`. É a
  * política que faz quem navega por teclado alcançar as ações sem atravessar o
  * resto da página.
+ *
+ * Os dois botões fecham, e por caminhos DIFERENTES — é o que o snippet precisa
+ * ensinar, porque é a diferença que chega ao relatório: `Cancelar` é a PEÇA de
+ * fechar (marca `data-slot="popover-close"`, motivo `close-button`, desistiu) e
+ * `Confirmar` fecha por CÓDIGO depois de salvar (motivo `api`, concluiu).
  */
 export function popoverWithActionsSnippet(o: PopoverSnippetOptions = {}): string {
   return snippet(
@@ -308,13 +320,24 @@ acoes.dataset.justify = 'end';
 const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
 cancelar.dataset.slot = 'popover-close';
 
-acoes.append(cancelar, createButton({ size: 'sm', label: 'Confirmar' }));
+// O Confirmar NÃO leva a marca: ele fecha por CÓDIGO, logo abaixo. Marcá-lo
+// faria "concluiu" chegar ao relatório como "apertou o botão de fechar".
+const confirmar = createButton({ size: 'sm', label: 'Confirmar' });
+
+acoes.append(cancelar, confirmar);
 
 conteudo.append(${recuar(
       callLine('createPopoverTitle', options([['text', text(o.title ?? 'Confirmar alteração')]])),
       '  ',
     )}, acoes);`,
     `const painel = ${callLine('createPopover', panelLines(o, 'conteudo'))};`,
+    `// Fechar por código informa \`api\` ao \`onOpenChange\` — "salvou e fechou". O
+// ouvinte entra só aqui porque o \`close()\` nasce com a fábrica, e o conteúdo
+// do painel é montado antes dela.
+confirmar.addEventListener('click', () => {
+  // …grave o formulário…
+  painel.close();
+});`,
     blockFinal(o),
   );
 }

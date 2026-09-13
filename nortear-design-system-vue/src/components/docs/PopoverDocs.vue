@@ -250,7 +250,11 @@ const codeWithTitle = `<Popover>
   </PopoverContent>
 </Popover>`;
 
-const codeForm = `<Popover>
+// O formulário fecha por CÓDIGO ao salvar — `close` sai do slot da raiz —, e o
+// fechamento vai no SUBMIT, nunca no clique do botão: fechar no clique
+// desmontaria o formulário antes de ele submeter, e só este caminho cobre
+// também o Enter num campo. O snippet ensina a mesma forma da prévia viva.
+const codeForm = `<Popover v-slot="{ close }">
   <PopoverTrigger as-child>
     <Button>Editar perfil</Button>
   </PopoverTrigger>
@@ -258,7 +262,7 @@ const codeForm = `<Popover>
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="sm">
+    <form class="nds-stack" data-spacing="sm" @submit.prevent="salvar(); close()">
       <Label for="name">Nome</Label>
       <Input id="name" />
       <Label for="email">Email</Label>
@@ -301,7 +305,9 @@ const variantItems = computed(() => [
   { trackId: 'form', name: tContent('variants.items.form'),      description: stripHtml(tContent('variants.styles.form')),      code: codeForm      },
 ]);
 
-const codeEditProfile = `<Popover>
+// Mesma regra do `codeForm`: o "Atualizar" é `type="submit"`, e quem fecha é o
+// `@submit` do formulário, depois de salvar — o motivo chega como `api`.
+const codeEditProfile = `<Popover v-slot="{ close }">
   <PopoverTrigger as-child>
     <Button variant="outline">Editar perfil</Button>
   </PopoverTrigger>
@@ -310,7 +316,7 @@ const codeEditProfile = `<Popover>
       <PopoverTitle>Dados do perfil</PopoverTitle>
       <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="md" @submit.prevent>
+    <form class="nds-stack" data-spacing="md" @submit.prevent="salvar(); close()">
       <div class="nds-stack" data-spacing="xs">
         <Label for="pc-name">Nome</Label>
         <Input id="pc-name" model-value="Joana Silva" />
@@ -324,7 +330,10 @@ const codeEditProfile = `<Popover>
   </PopoverContent>
 </Popover>`;
 
-const codeTableFilter = `<Popover>
+// O Aplicar fecha por CÓDIGO — `close` sai do slot da raiz —, e por isso o
+// motivo do fechamento chega como `api`, não como `close-button`. O snippet
+// ensina a mesma forma da prévia viva logo ao lado.
+const codeTableFilter = `<Popover v-slot="{ close }">
   <PopoverTrigger as-child>
     <Button variant="outline">Filtros</Button>
   </PopoverTrigger>
@@ -345,7 +354,7 @@ const codeTableFilter = `<Popover>
     </div>
     <div class="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
       <Button variant="ghost" size="sm">Limpar</Button>
-      <Button size="sm">Aplicar</Button>
+      <Button size="sm" @click="close()">Aplicar</Button>
     </div>
   </PopoverContent>
 </Popover>`;
@@ -563,7 +572,10 @@ const a11yCritCols = computed(() => ({
         data-justify="center"
         data-spacing="sm"
       >
-        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('demo', 'docs_demo', open, reason)">
+        <Popover
+          v-slot="{ close }"
+          @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('demo', 'docs_demo', open, reason)"
+        >
           <PopoverTrigger as-child>
             <Button variant="outline">
               {{ tContent('demonstration.labels.trigger') }}
@@ -594,7 +606,15 @@ const a11yCritCols = computed(() => ({
                   {{ tContent('demonstration.labels.cancel') }}
                 </Button>
               </PopoverClose>
-              <Button size="sm">
+              <!-- O Salvar fecha pelo OUTRO caminho: por CÓDIGO, com o `close`
+                   do slot da raiz, e o evento chega ao GA4 com `api`. Envolvê-lo
+                   no `PopoverClose` faria "concluiu" ser contado como "apertou
+                   o botão de fechar", que é o sinal que o campo existe para
+                   separar. -->
+              <Button
+                size="sm"
+                @click="close()"
+              >
                 {{ tContent('demonstration.labels.save') }}
               </Button>
             </div>
@@ -822,7 +842,10 @@ const a11yCritCols = computed(() => ({
         </Popover>
       </template>
       <template #variant-preview-2>
-        <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('form', 'docs_variantes', open, reason)">
+        <Popover
+          v-slot="{ close }"
+          @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('form', 'docs_variantes', open, reason)"
+        >
           <PopoverTrigger as-child>
             <Button
               variant="outline"
@@ -837,10 +860,15 @@ const a11yCritCols = computed(() => ({
                 {{ tContent('demonstration.labels.form.trigger') }}
               </PopoverTitle>
             </PopoverHeader>
+            <!-- O formulário fecha por CÓDIGO ao salvar (motivo api), e o
+                 fechamento vai no SUBMIT — nunca no clique do botão: fechar no
+                 clique desmontaria o formulário antes de ele submeter, e só
+                 este caminho cobre também o Enter num campo. O Cancelar ao
+                 lado é a PEÇA de fechar, e chega como close-button. -->
             <form
               class="nds-stack"
               data-spacing="md"
-              @submit.prevent
+              @submit.prevent="close()"
             >
               <div
                 class="nds-stack"
@@ -902,7 +930,10 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('edit-profile', 'docs_composicoes', open, reason)">
+          <Popover
+            v-slot="{ close }"
+            @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('edit-profile', 'docs_composicoes', open, reason)"
+          >
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -918,10 +949,15 @@ const a11yCritCols = computed(() => ({
               <PopoverHeader>
                 <PopoverTitle>{{ tContent('demonstration.labels.form.trigger') }}</PopoverTitle>
               </PopoverHeader>
+              <!-- O formulário fecha por CÓDIGO ao salvar (motivo api), e o
+                   fechamento vai no SUBMIT — nunca no clique do "Atualizar":
+                   fechar no clique desmontaria o formulário antes de ele
+                   submeter, e só este caminho cobre também o Enter num
+                   campo. -->
               <form
                 class="nds-stack"
                 data-spacing="md"
-                @submit.prevent
+                @submit.prevent="close()"
               >
                 <div
                   class="nds-stack"
@@ -966,7 +1002,10 @@ const a11yCritCols = computed(() => ({
           style="contain: layout"
           class="nds-w-full nds-min-h-16"
         >
-          <Popover @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('table-filter', 'docs_composicoes', open, reason)">
+          <Popover
+            v-slot="{ close }"
+            @update:open="(open: boolean, reason?: PopoverCloseReason) => handlePopoverOpenChange('table-filter', 'docs_composicoes', open, reason)"
+          >
             <PopoverTrigger as-child>
               <Button
                 variant="outline"
@@ -1026,7 +1065,13 @@ const a11yCritCols = computed(() => ({
                 >
                   {{ tContent('variants.compositions.tableFilter.clear') }}
                 </Button>
-                <Button size="sm">
+                <!-- Aplicar É a decisão: fecha por CÓDIGO depois de aplicar, e
+                     o evento chega com `api`. Limpar devolve a escolha a quem
+                     ainda está decidindo, e por isso não fecha. -->
+                <Button
+                  size="sm"
+                  @click="close()"
+                >
                   {{ tContent('variants.compositions.tableFilter.apply') }}
                 </Button>
               </div>

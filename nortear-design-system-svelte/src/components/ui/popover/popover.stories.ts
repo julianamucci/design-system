@@ -231,8 +231,22 @@ export const Playground: Story = {
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'close-button');
     });
 
+    await step('8. Salvar fecha por CÓDIGO, e o motivo é api', async () => {
+      // O contraste com o passo 7 é o ponto inteiro: os dois botões fecham, e é
+      // o CAMINHO que separa "desistiu" de "concluiu" no relatório. Salvar não
+      // é `PopoverClose` — dentro dele, "concluiu" chegaria ao GA4 como
+      // "apertou o botão de fechar", apagando o sinal que justifica o campo.
+      await open();
+      const save = body.getByRole('button', { name: args.saveLabel as string });
+      await expect(save).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(save);
+      await closed();
+      await expect(args.onAction).toHaveBeenCalled();
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'api');
+    });
+
     // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
-    await step('8. Estado final: painel aberto', async () => {
+    await step('9. Estado final: painel aberto', async () => {
       await expect(await open()).toBeVisible();
     });
   },

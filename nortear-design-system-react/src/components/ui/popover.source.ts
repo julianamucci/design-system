@@ -42,6 +42,14 @@ const DISTANCIA_DEFAULT = 4;
 
 const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
+/**
+ * O import do estado. Sai daqui e não de cada construtor porque agora são
+ * CINCO os snippets que fecham por código, e um `useState` sem import chega a
+ * quem copiou como `useState is not defined` — o mesmo defeito do nome elidido,
+ * uma linha acima.
+ */
+const IMPORT_USE_STATE = 'import { useState } from "react";';
+
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
 function importingPopover(...parts: string[]): string {
   const list = [...parts].sort();
@@ -83,31 +91,98 @@ ${content}
 /**
  * Par de ações do rodapé do painel, encostado à direita.
  *
- * As duas FECHAM, e por isso as duas são `PopoverClose`: um "Cancelar" que não
- * fecha é botão que promete saída e não entrega — foi o defeito que a dona viu
- * na tela. Fora de um `<form>`, "Salvar" também só tem o fechamento como
- * efeito visível, então ensinar um botão inerte ali seria ensinar o defeito.
+ * As duas FECHAM, e por CAMINHOS diferentes — é o snippet que ensina isso, e
+ * por isso ele carrega o `onClick` em vez de dois `PopoverClose`:
+ *
+ *   Cancelar → `PopoverClose`, motivo `close-button` — desistiu
+ *   Salvar   → código, depois de salvar, motivo `api` — concluiu
+ *
+ * Um "Cancelar" que não fecha é botão que promete saída e não entrega — foi o
+ * defeito que a dona viu na tela em 2026-09-12. Um "Salvar" que fecha COMO
+ * peça de fechar é o defeito seguinte, e mais silencioso: o painel some do
+ * mesmo jeito, e os dois desfechos chegam ao relatório com o mesmo motivo.
  */
 const ACTIONS_DEFAULT = `    <div className="nds-cluster" data-justify="end" data-spacing="sm">
       <PopoverClose asChild>
         <Button variant="ghost" size="sm">Cancelar</Button>
       </PopoverClose>
-      <PopoverClose asChild>
-        <Button size="sm">Salvar</Button>
-      </PopoverClose>
+      <Button size="sm" onClick={() => { salvar(); setOpen(false); }}>Salvar</Button>
     </div>`;
+
+/**
+ * Abertura do `<form>` do painel, com o fechamento já no lugar certo.
+ *
+ * O fechamento vai no `onSubmit`, DEPOIS do `preventDefault`, e nunca no
+ * `onClick` do botão que confirma. Dois motivos, e os dois são do formulário:
+ *
+ *   1. fechar no clique DESMONTA o formulário antes de ele submeter — o
+ *      "salvar" nunca acontece;
+ *   2. só o caminho do `submit` cobre também o Enter num campo, que é como
+ *      metade das pessoas envia formulário.
+ *
+ * E fecha por CÓDIGO, motivo `api`: envolver o confirmar num `PopoverClose`
+ * faria "concluiu" chegar ao relatório como "apertou o botão de fechar".
+ */
+const FORM_ABERTURA = `    <form
+      className="nds-stack"
+      data-spacing="sm"
+      onSubmit={(e) => {
+        // Fechar no \`onClick\` do botão desmontaria o formulário antes do
+        // submit, e deixaria de fora o Enter num campo.
+        e.preventDefault();
+        salvar();
+        setOpen(false);
+      }}
+    >`;
+
+/**
+ * Estado do painel e o nome da ação que ele conclui.
+ *
+ * A base-ui não tem fechamento imperativo: quem fecha por código é o estado de
+ * quem compõe, então TODO painel cuja ação primária fecha é CONTROLADO — a
+ * mesma forma do Playground desta stack.
+ *
+ * Até 2026-09-13 só os dois snippets de formulário liam isso; os outros três
+ * imprimiam `<Popover>` cru e um rodapé que chamava `setOpen(false)`, ou seja
+ * ensinavam exatamente o Salvar inerte que esta campanha existiu para
+ * consertar. Um construtor por vez é como o defeito volta: o par mora aqui.
+ *
+ * E a ação entra DECLARADA porque o snippet é para copiar: manipulador em
+ * linha não tem passe na varredura de snippets, e um nome elidido chega a quem
+ * copiou como `salvar is not defined` na primeira renderização.
+ */
+function controlledPreamble(action: string, note: string, initiallyOpen = false): string {
+  return `const [open, setOpen] = useState(${initiallyOpen});
+
+function ${action}() {
+  // …${note}…
+}`;
+}
+
+const FORM_PREAMBULO = controlledPreamble('salvar', 'grave o formulário');
+
+/** Raiz controlada — o par que deixa o \`setOpen\` do submit ter efeito. */
+const RAIZ_CONTROLADA = ' open={open} onOpenChange={setOpen}';
 
 /**
  * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls do
  * Playground; nas stories sem args cai no painel fechado, que é o padrão do
  * componente e o uso canônico. Só o que difere do padrão entra no snippet.
  *
- * `onOpenChange` NÃO é interpolado: o Storybook o entrega como espião, e o corpo
- * do mock apareceria no painel como se fosse código do design system.
+ * O espião de `onOpenChange` NÃO é interpolado: o Storybook o entrega como
+ * função, e o corpo do mock apareceria no painel como se fosse código do design
+ * system. O `onOpenChange` que o snippet imprime é o do ESTADO — `setOpen` —, e
+ * é sempre esse, venha o control como vier.
+ *
+ * `defaultOpen` do control vira o valor INICIAL do estado, e não prop da raiz.
+ * A raiz é controlada porque o Salvar do rodapé fecha por código, e numa raiz
+ * controlada `defaultOpen` é prop morta — a lib lê `open`. Imprimir os dois
+ * juntos ensinaria um controle que não controla nada. É a mesma decisão da
+ * story ao lado, que faz `useState(Boolean(defaultOpen))`.
  */
 export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const root = attrs(propBool('defaultOpen', args.defaultOpen), propBool('modal', args.modal));
+  const root = RAIZ_CONTROLADA + attrs(propBool('modal', args.modal));
   const panel = attrsMultilinha([
     propOption('side', args.side, LADOS, 'bottom'),
     propOption('align', args.align, ALINHAMENTOS, 'center'),
@@ -117,16 +192,19 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   ]);
 
   return jsxSnippet(
-    `${importingPopover(
-      'Popover',
-      'PopoverClose',
-      'PopoverContent',
-      'PopoverDescription',
-      'PopoverHeader',
-      'PopoverTitle',
-      'PopoverTrigger',
-    )}
-${IMPORT_BUTTON}`,
+    `${IMPORT_USE_STATE}
+${importingPopover(
+  'Popover',
+  'PopoverClose',
+  'PopoverContent',
+  'PopoverDescription',
+  'PopoverHeader',
+  'PopoverTitle',
+  'PopoverTrigger',
+)}
+${IMPORT_BUTTON}
+
+${controlledPreamble('salvar', 'grave o que o painel ajustou', args.defaultOpen === true)}`,
     popover(
       root,
       'Abrir popover',
@@ -148,21 +226,29 @@ ${ACTIONS_DEFAULT}`,
  *
  * O painel da story mostra o motivo num parágrafo ao lado; aquilo é andaime de
  * demonstração e não entra aqui, pela mesma razão do resto do quadro.
+ *
+ * A raiz é CONTROLADA e nasce aberta pelo estado inicial, e não por
+ * `defaultOpen`: o Salvar deste rodapé é justamente o ramo que fecha por
+ * código, e sem o par `open`/`onOpenChange` ele seria um botão inerte — que é o
+ * defeito que a story ao lado existe para separar do outro ramo.
  */
 export function popoverCloseSource(): string {
   return jsxSnippet(
-    `${importingPopover(
-      'Popover',
-      'PopoverClose',
-      'PopoverContent',
-      'PopoverDescription',
-      'PopoverHeader',
-      'PopoverTitle',
-      'PopoverTrigger',
-    )}
-${IMPORT_BUTTON}`,
+    `${IMPORT_USE_STATE}
+${importingPopover(
+  'Popover',
+  'PopoverClose',
+  'PopoverContent',
+  'PopoverDescription',
+  'PopoverHeader',
+  'PopoverTitle',
+  'PopoverTrigger',
+)}
+${IMPORT_BUTTON}
+
+${controlledPreamble('salvar', 'grave o que o painel ajustou', true)}`,
     popover(
-      ' defaultOpen',
+      RAIZ_CONTROLADA,
       'Abrir popover',
       '',
       `${header('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.')}
@@ -196,25 +282,31 @@ ${IMPORT_BUTTON}`,
  * Formulário curto dentro do painel. É o que separa popover de tooltip: o
  * conteúdo é interativo, então o foco entra nele ao abrir e o Tab caminha pelos
  * campos sem sair do painel.
+ *
+ * O fechamento vive no `onSubmit`, depois do `preventDefault` — nunca no
+ * `onClick` do botão: ver `FORM_ABERTURA`.
  */
 export function popoverFormSource(): string {
   return jsxSnippet(
-    `${importingPopover(
-      'Popover',
-      'PopoverContent',
-      'PopoverHeader',
-      'PopoverTitle',
-      'PopoverTrigger',
-    )}
+    `${IMPORT_USE_STATE}
+${importingPopover(
+  'Popover',
+  'PopoverContent',
+  'PopoverHeader',
+  'PopoverTitle',
+  'PopoverTrigger',
+)}
 ${IMPORT_BUTTON}
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";`,
+import { Label } from "@/components/ui/label";
+
+${FORM_PREAMBULO}`,
     popover(
-      '',
+      RAIZ_CONTROLADA,
       'Editar perfil',
       '',
       `${header('Editar perfil')}
-    <form className="nds-stack" data-spacing="sm">
+${FORM_ABERTURA}
       <Label htmlFor="perfil-nome" className="nds-text-caption">Nome</Label>
       <Input id="perfil-nome" defaultValue="Joana" />
       <Label htmlFor="perfil-email" className="nds-text-caption">Email</Label>
@@ -257,7 +349,7 @@ ${IMPORT_BUTTON}`,
  */
 export function popoverControlledSource(): string {
   return jsxSnippet(
-    `import { useState } from "react";
+    `${IMPORT_USE_STATE}
 ${importingPopover(
   'Popover',
   'PopoverContent',
@@ -343,27 +435,33 @@ ${IMPORT_BUTTON}`,
  * `<form>` ele ficaria inerte e o Enter num campo não dispararia nada — que é o
  * gesto de quem acabou de digitar. Fechar por dentro sem salvar é papel do
  * descarte.
+ *
+ * E quem fecha ao salvar é o `onSubmit`, não o clique do "Atualizar" — o motivo
+ * está em `FORM_ABERTURA`.
  */
 export function popoverEditarPerfilSource(): string {
   return jsxSnippet(
-    `${importingPopover(
-      'Popover',
-      'PopoverClose',
-      'PopoverContent',
-      'PopoverDescription',
-      'PopoverHeader',
-      'PopoverTitle',
-      'PopoverTrigger',
-    )}
+    `${IMPORT_USE_STATE}
+${importingPopover(
+  'Popover',
+  'PopoverClose',
+  'PopoverContent',
+  'PopoverDescription',
+  'PopoverHeader',
+  'PopoverTitle',
+  'PopoverTrigger',
+)}
 ${IMPORT_BUTTON}
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";`,
+import { Label } from "@/components/ui/label";
+
+${FORM_PREAMBULO}`,
     popover(
-      '',
+      RAIZ_CONTROLADA,
       'Editar perfil',
       '',
       `${header('Editar perfil', 'Altere o nome e o email da conta.')}
-    <form className="nds-stack" data-spacing="sm">
+${FORM_ABERTURA}
       <Label htmlFor="conta-nome" className="nds-text-caption">Nome</Label>
       <Input id="conta-nome" defaultValue="Ana Ribeiro" />
       <Label htmlFor="conta-email" className="nds-text-caption">Email</Label>
@@ -384,10 +482,17 @@ import { Label } from "@/components/ui/label";`,
  * obrigaria a reabrir o painel para cada critério —, e o par Limpar / Aplicar
  * fica no fim, na ordem em que a decisão acontece.
  *
- * Só "Aplicar" é `PopoverClose`: aplicar É a decisão, e depois dela o painel não
- * tem mais o que oferecer. "Limpar" desmarca e devolve a escolha a quem está
- * decidindo — fechar ali seria tirar o painel de quem acabou de pedir para
- * recomeçar.
+ * Só "Aplicar" fecha, e fecha por CÓDIGO: aplicar É a decisão, e depois dela o
+ * painel não tem mais o que oferecer. "Limpar" desmarca e devolve a escolha a
+ * quem está decidindo — fechar ali seria tirar o painel de quem acabou de pedir
+ * para recomeçar.
+ *
+ * Era `PopoverClose` até 2026-09-13, e por isso este snippet não importa mais a
+ * peça: aplicar é "concluiu", e a peça de fechar reporta "desistiu".
+ *
+ * Trocada a peça por código, a raiz TEM de ser controlada — foi o degrau que
+ * ficou para trás na mesma rodada, e por meio dia este snippet ensinou um
+ * Aplicar que não fechava nada.
  */
 export function popoverFilterSource(): string {
   const opcao = (label: string, marcada = false) => `      <label className="nds-cluster" data-spacing="sm">
@@ -396,18 +501,20 @@ export function popoverFilterSource(): string {
       </label>`;
 
   return jsxSnippet(
-    `${importingPopover(
-      'Popover',
-      'PopoverClose',
-      'PopoverContent',
-      'PopoverDescription',
-      'PopoverHeader',
-      'PopoverTitle',
-      'PopoverTrigger',
-    )}
-${IMPORT_BUTTON}`,
+    `${IMPORT_USE_STATE}
+${importingPopover(
+  'Popover',
+  'PopoverContent',
+  'PopoverDescription',
+  'PopoverHeader',
+  'PopoverTitle',
+  'PopoverTrigger',
+)}
+${IMPORT_BUTTON}
+
+${controlledPreamble('aplicar', 'aplique os filtros à listagem')}`,
     popover(
-      '',
+      RAIZ_CONTROLADA,
       'Filtros',
       '',
       `${header('Filtrar por status', 'Combine quantos status quiser na listagem.')}
@@ -418,9 +525,7 @@ ${opcao('Arquivado')}
     </div>
     <div className="nds-cluster" data-justify="end" data-spacing="sm">
       <Button variant="ghost" size="sm">Limpar</Button>
-      <PopoverClose asChild>
-        <Button size="sm">Aplicar</Button>
-      </PopoverClose>
+      <Button size="sm" onClick={() => { aplicar(); setOpen(false); }}>Aplicar</Button>
     </div>`,
     ),
   );

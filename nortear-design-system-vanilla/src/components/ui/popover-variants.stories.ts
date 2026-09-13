@@ -145,7 +145,6 @@ export const Form: Story = {
     const content = document.createElement('form');
     content.className = 'nds-stack';
     content.dataset.spacing = 'md';
-    content.addEventListener('submit', (e) => e.preventDefault());
 
     const title = createPopoverTitle({ text: 'Editar perfil' });
     content.appendChild(title);
@@ -171,6 +170,15 @@ export const Form: Story = {
     content.append(nameRow, emailRow, submit);
 
     const el = createPopover({ trigger, content });
+    // Confirmar fecha por CÓDIGO, depois de salvar — o motivo que chega ao
+    // `onOpenChange` é `api`. Só a peça marcada com `data-slot="popover-close"`
+    // relata `close-button`, e ela é a de DESISTIR. O ouvinte entra aqui porque
+    // o `close()` só existe depois da fábrica.
+    content.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // …aqui entraria a gravação do perfil…
+      el.close();
+    });
     queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },

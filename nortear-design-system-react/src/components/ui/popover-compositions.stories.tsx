@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, waitFor, screen, within, userEvent } from "storybook/test";
 import {
@@ -83,9 +84,15 @@ export const EditProfile: Story = {
       },
     },
   },
-  render: () => (
+  render: () => {
+    const EditProfileDemo = () => {
+      // CONTROLADO porque salvar fecha por CÓDIGO — motivo `api` —, e a
+      // base-ui não tem fechamento imperativo: quem fecha precisa ser o estado
+      // de quem compõe. Mesma forma do Playground.
+      const [open, setOpen] = useState(true);
+      return (
     <div className={wrapperClass} style={wrapperStyle}>
-      <Popover defaultOpen>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline">Editar perfil</Button>
         </PopoverTrigger>
@@ -98,7 +105,16 @@ export const EditProfile: Story = {
           </PopoverHeader>
           <form
             className="nds-stack" data-spacing="sm"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={(e) => {
+              // O fechamento vai no `onSubmit`, depois do `preventDefault`, e
+              // NUNCA no `onClick` do "Atualizar": fechar no clique
+              // desmontaria o formulário antes de ele submeter, e só o
+              // caminho do `submit` cobre também o Enter num campo — que é
+              // como metade das pessoas envia formulário.
+              e.preventDefault();
+              // …aqui entraria a gravação do perfil…
+              setOpen(false);
+            }}
           >
             <Label htmlFor="comp-name" className="nds-text-caption">Nome</Label>
             <Input id="comp-name" defaultValue="Ana Ribeiro" />
@@ -107,7 +123,8 @@ export const EditProfile: Story = {
             {/* "Atualizar" é o submit DO formulário, e não um controle de
                 fechar: fora do `<form>` ele ficaria inerte e o Enter num campo
                 não dispararia nada — que é o gesto de quem acabou de digitar.
-                Sair sem salvar é papel do "Cancelar", e esse fecha. */}
+                Sair sem salvar é papel do "Cancelar", e esse fecha PELA PEÇA,
+                que é o que separa desistiu de concluiu no relatório. */}
             <div className="nds-cluster" data-justify="end" data-spacing="sm">
               <PopoverClose asChild>
                 <Button variant="ghost" size="sm">Cancelar</Button>
@@ -118,7 +135,10 @@ export const EditProfile: Story = {
         </PopoverContent>
       </Popover>
     </div>
-  ),
+      );
+    };
+    return <EditProfileDemo />;
+  },
   play: async ({ step }) => {
     await step("O formulário abre preenchido e pronto para edição", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
@@ -140,9 +160,14 @@ export const TableFilter: Story = {
       },
     },
   },
-  render: () => (
+  render: () => {
+    const FiltrosDemo = () => {
+      // CONTROLADO por causa do Aplicar: confirmar fecha por CÓDIGO, e é o
+      // código que produz o motivo `api` — "concluiu", não "desistiu".
+      const [open, setOpen] = useState(true);
+      return (
     <div className={wrapperClass} style={wrapperStyle}>
-      <Popover defaultOpen>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline">Filtros</Button>
         </PopoverTrigger>
@@ -172,14 +197,15 @@ export const TableFilter: Story = {
               quem ainda está decidindo. */}
           <div className="nds-cluster" data-justify="end" data-spacing="sm">
             <Button variant="ghost" size="sm">Limpar</Button>
-            <PopoverClose asChild>
-              <Button size="sm">Aplicar</Button>
-            </PopoverClose>
+            <Button size="sm" onClick={() => setOpen(false)}>Aplicar</Button>
           </div>
         </PopoverContent>
       </Popover>
     </div>
-  ),
+      );
+    };
+    return <FiltrosDemo />;
+  },
   play: async ({ step }) => {
     await step("Os três status são combináveis", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));

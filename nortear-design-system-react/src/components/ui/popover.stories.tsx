@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor, screen, fn } from "storybook/test";
 import {
@@ -114,13 +115,17 @@ export const Playground: Story = {
       // estoura um SecurityError ao serializar o `Window` do iframe.
       onOpenChange?: (open: boolean) => void;
     };
-    return (
-      <div className={`nds-stack ${wrapperClass}`} style={wrapperStyle} data-spacing="md" data-align="center">
+    // CONTROLADO por causa do Salvar: confirmar fecha por CÓDIGO, e código só
+    // tem como fechar se o estado for de quem compõe. Era `defaultOpen` puro
+    // até 2026-09-13, e o `defaultOpen` continua sendo o valor INICIAL —
+    // o `key` remonta quando o control muda, como antes.
+    const PlaygroundDemo = () => {
+      const [open, setOpen] = useState(Boolean(defaultOpen));
+      return (
         <Popover
-          key={`${String(defaultOpen)}-${String(modal)}`}
-          defaultOpen={defaultOpen}
+          open={open}
           modal={modal}
-          onOpenChange={(open) => onOpenChange?.(open)}
+          onOpenChange={(next) => { setOpen(next); onOpenChange?.(next); }}
         >
           <PopoverTrigger asChild>
             <Button variant="outline">Abrir popover</Button>
@@ -132,19 +137,32 @@ export const Playground: Story = {
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>
-            {/* As duas ações FECHAM o painel, e por isso as duas são
-                `PopoverClose`. Um "Cancelar" que não fecha é a promessa de saída
-                que não se cumpre — o defeito visto na tela em 2026-09-12. */}
+            {/* As duas ações fecham, por CAMINHOS diferentes, e a diferença é o
+                que separa desistiu de concluiu no relatório:
+
+                  Cancelar → `PopoverClose`, e o motivo é `close-button`
+                  Salvar   → código, depois de salvar, e o motivo é `api`
+
+                Um "Cancelar" que não fecha é promessa de saída não cumprida — o
+                defeito visto na tela em 2026-09-12. Um "Salvar" que fecha COMO
+                se fosse o botão de fechar é o mesmo evento para os dois
+                desfechos, e apaga o sinal que justifica o campo existir. */}
             <div className="nds-cluster" data-justify="end" data-spacing="sm">
               <PopoverClose asChild>
                 <Button variant="ghost" size="sm">Cancelar</Button>
               </PopoverClose>
-              <PopoverClose asChild>
-                <Button size="sm">Salvar</Button>
-              </PopoverClose>
+              <Button
+                size="sm"
+                onClick={() => { setOpen(false); onOpenChange?.(false); }}
+              >Salvar</Button>
             </div>
           </PopoverContent>
         </Popover>
+      );
+    };
+    return (
+      <div className={`nds-stack ${wrapperClass}`} style={wrapperStyle} data-spacing="md" data-align="center">
+        <PlaygroundDemo key={`${String(defaultOpen)}-${String(modal)}`} />
 
         {/* Alvo inerte para a dispensa por clique fora: clicar em `document.body`
             depende da geometria da página e do ponto exato do clique sintético. */}

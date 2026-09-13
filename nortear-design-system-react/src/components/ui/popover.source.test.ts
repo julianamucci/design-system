@@ -100,15 +100,28 @@ describe('popoverSource (transform do meta)', () => {
     expect(output).toContain('<PopoverContent>');
   });
 
-  it('defaultOpen e modal entram na raiz na forma abreviada, e somem quando falsos', () => {
-    expect(popoverSource(undefined, { args: { defaultOpen: false, modal: false } })).toContain(
-      '<Popover>',
-    );
-    expect(popoverSource(undefined, { args: { defaultOpen: true } })).toContain(
-      '<Popover defaultOpen>',
+  it('o defaultOpen do control vira estado INICIAL, e nunca prop de uma raiz controlada', () => {
+    // A raiz é controlada porque o Salvar do rodapé fecha por código. Numa raiz
+    // controlada `defaultOpen` é prop morta — a lib lê `open` —, então o control
+    // entra pelo único lugar em que ainda decide alguma coisa: o valor inicial
+    // do estado. É a mesma forma da story ao lado, `useState(Boolean(defaultOpen))`.
+    const closed = popoverSource(undefined, { args: { defaultOpen: false, modal: false } });
+    expect(closed).toContain('const [open, setOpen] = useState(false);');
+    expect(closed).toContain('<Popover open={open} onOpenChange={setOpen}>');
+
+    const opened = popoverSource(undefined, { args: { defaultOpen: true } });
+    expect(opened).toContain('const [open, setOpen] = useState(true);');
+    expect(opened).toContain('<Popover open={open} onOpenChange={setOpen}>');
+    // O par que dá dentes: `defaultOpen` de volta na raiz seria o controle morto.
+    expect(opened).not.toContain('defaultOpen');
+  });
+
+  it('modal entra na raiz na forma abreviada, e some quando falso', () => {
+    expect(popoverSource(undefined, { args: { modal: false } })).toContain(
+      '<Popover open={open} onOpenChange={setOpen}>',
     );
     expect(popoverSource(undefined, { args: { defaultOpen: true, modal: true } })).toContain(
-      '<Popover defaultOpen modal>',
+      '<Popover open={open} onOpenChange={setOpen} modal>',
     );
   });
 
@@ -120,7 +133,11 @@ describe('popoverSource (transform do meta)', () => {
       args: { onOpenChange: spy, sideOffset: spy } as never,
     });
     expect(output).not.toContain('CORPO_DO_MOCK');
-    expect(output).not.toContain('onOpenChange');
+    // O único `onOpenChange` impresso é o do estado. Antes de a raiz virar
+    // controlada, este caso afirmava a AUSÊNCIA da prop; medir ausência deixou
+    // de distinguir o espião do binding legítimo, então agora ele conta.
+    expect(output.match(/onOpenChange/g)).toHaveLength(1);
+    expect(output).toContain('onOpenChange={setOpen}');
     expect(output).toContain('<PopoverContent>');
   });
 });
@@ -169,7 +186,10 @@ describe('a lição do rodapé', () => {
     // padrão do Button. Escrever `variant="default"` ali ensinaria ruído.
     const actions = footer(popoverSource());
     expect(actions).toContain('<Button variant="ghost" size="sm">Cancelar</Button>');
-    expect(actions).toContain('<Button size="sm">Salvar</Button>');
+    // O Salvar carrega o `onClick` porque ele fecha por CÓDIGO — e é a
+    // ausência de `PopoverClose` em volta dele que separa concluiu de desistiu.
+    expect(actions).toContain('onClick={() => { salvar(); setOpen(false); }}>Salvar</Button>');
+    expect(actions).not.toMatch(/<PopoverClose[^>]*>\s*<Button size="sm">Salvar/);
     expect(actions.match(/variant=/g)).toHaveLength(1);
   });
 
@@ -177,7 +197,7 @@ describe('a lição do rodapé', () => {
     for (const [fn, primary] of [
       [popoverModalSource, '<Button size="sm">OK</Button>'],
       [popoverEditarPerfilSource, '<Button type="submit" size="sm">Atualizar</Button>'],
-      [popoverFilterSource, '<Button size="sm">Aplicar</Button>'],
+      [popoverFilterSource, 'onClick={() => { aplicar(); setOpen(false); }}>Aplicar</Button>'],
     ] as const) {
       const actions = footer(fn());
       expect(actions).toContain('variant="ghost"');
@@ -193,37 +213,93 @@ describe('a lição do controle de fechar', () => {
    * aqui reprova no caso de cobertura abaixo. É a forma que a lista de exclusão
    * do `source-snippets.test.ts` não tinha quando encolheu em silêncio.
    */
-  const COM_FECHAR: Array<[() => string, string[], string[]]> = [
-    // construtor, o que FECHA, o que não fecha
-    [popoverSource, ['Cancelar', 'Salvar'], []],
-    [popoverCloseSource, ['Cancelar', 'Salvar'], []],
-    // Submit do form: fora do `<form>` ficaria inerte e o Enter num campo não
-    // dispararia nada.
-    [popoverEditarPerfilSource, ['Cancelar'], ['Atualizar']],
+  // Quatro colunas, não duas. A terceira e a quarta são caminhos diferentes de
+  // fechar por CÓDIGO, e a diferença entre eles e a peça é o que separa
+  // desistiu de concluiu no relatório. Enquanto o teste media só "está dentro
+  // de `PopoverClose`", um Salvar marcado como peça de fechar passava como
+  // correto — e era o defeito.
+  //
+  // A quarta é do formulário, e é a que a rodada de 2026-09-13 acrescentou:
+  // quem fecha ali é o `onSubmit`, DEPOIS do `preventDefault`, e nunca o
+  // `onClick` do botão. Medir as duas com a mesma régua deixaria passar
+  // justamente o defeito que o caso existe para cobrar — fechar no clique
+  // desmonta o formulário antes do submit, e ignora o Enter num campo.
+  const COM_FECHAR: Array<[() => string, string[], string[], string[], string[]]> = [
+    // construtor, fecha pela PEÇA, fecha por CÓDIGO no clique, fecha no SUBMIT, não fecha
+    [popoverSource, ['Cancelar'], ['Salvar'], [], []],
+    [popoverCloseSource, ['Cancelar'], ['Salvar'], [], []],
+    // O formulário da variante não tem rodapé: o submit é a única ação.
+    [popoverFormSource, [], [], ['Atualizar'], []],
+    [popoverEditarPerfilSource, ['Cancelar'], [], ['Atualizar'], []],
     // "Limpar" devolve a escolha a quem ainda está decidindo.
-    [popoverFilterSource, ['Aplicar'], ['Limpar']],
+    [popoverFilterSource, [], ['Aplicar'], [], ['Limpar']],
     // A ausência é o assunto da story modal: sem controle de fechar registrado,
     // quem prende o foco é o laço do PopoverContent, e não a lib.
-    [popoverModalSource, [], ['Cancelar', 'OK']],
+    [popoverModalSource, [], [], [], ['Cancelar', 'OK']],
   ];
 
   /** O bloco `<PopoverClose …>…</PopoverClose>` que envolve um rótulo, se houver. */
-  function envolvido(output: string, label: string): boolean {
+  function wrappedInClose(output: string, label: string): boolean {
     const i = output.indexOf(`>${label}<`);
     if (i === -1) return false;
-    const abertura = output.lastIndexOf('<PopoverClose asChild>', i);
-    if (abertura === -1) return false;
-    const fechamento = output.indexOf('</PopoverClose>', abertura);
-    return fechamento > i;
+    const openTag = output.lastIndexOf('<PopoverClose asChild>', i);
+    if (openTag === -1) return false;
+    const closeTag = output.indexOf('</PopoverClose>', openTag);
+    return closeTag > i;
   }
 
-  it.each(COM_FECHAR)('%# ensina quem fecha e quem não fecha', (fn, fecham, naoFecham) => {
+  /** O rótulo cujo próprio botão fecha por código — `setOpen(false)` no clique. */
+  function closesByCode(output: string, label: string): boolean {
+    const i = output.indexOf(`>${label}<`);
+    if (i === -1) return false;
+    const start = output.lastIndexOf('<Button', i);
+    if (start === -1) return false;
+    return /onClick=\{[^}]*setOpen\(false\)/.test(output.slice(start, i));
+  }
+
+  /**
+   * O rótulo que fecha pelo SUBMIT do formulário que o contém.
+   *
+   * Medição diferente da de cima porque o caminho é outro: o botão é
+   * `type="submit"` e não carrega handler nenhum; quem fecha é o `<form>` em
+   * volta, no `onSubmit`, e só DEPOIS do `preventDefault` — a ordem faz parte
+   * da lição, porque fechar antes de barrar o envio recarregaria a página.
+   */
+  function closesBySubmit(output: string, label: string): boolean {
+    const i = output.indexOf(`>${label}<`);
+    if (i === -1) return false;
+    const button = output.lastIndexOf('<Button', i);
+    if (button === -1 || !output.slice(button, i).includes('type="submit"')) return false;
+    const form = output.lastIndexOf('<form', i);
+    if (form === -1) return false;
+    return /onSubmit=\{[\s\S]*?preventDefault\(\)[\s\S]*?setOpen\(false\)/.test(
+      output.slice(form, i),
+    );
+  }
+
+  it.each(COM_FECHAR)('%# ensina quem fecha, por qual caminho, e quem não fecha', (fn, byPiece, byCode, bySubmit, neverClose) => {
     const output = fn();
-    for (const label of fecham) {
-      expect(envolvido(output, label), `"${label}" devia fechar`).toBe(true);
+    for (const label of byPiece) {
+      expect(wrappedInClose(output, label), `"${label}" devia fechar PELA PEÇA`).toBe(true);
+      expect(closesByCode(output, label), `"${label}" não devia fechar por código`).toBe(false);
     }
-    for (const label of naoFecham) {
-      expect(envolvido(output, label), `"${label}" não devia fechar`).toBe(false);
+    for (const label of byCode) {
+      expect(closesByCode(output, label), `"${label}" devia fechar POR CÓDIGO`).toBe(true);
+      // O par que dá dentes: marcado como peça de fechar, ele reportaria
+      // `close-button` e apagaria a distinção que o campo existe para carregar.
+      expect(wrappedInClose(output, label), `"${label}" não devia ser peça de fechar`).toBe(false);
+    }
+    for (const label of bySubmit) {
+      expect(closesBySubmit(output, label), `"${label}" devia fechar NO SUBMIT`).toBe(true);
+      // Os dois pares que dão dentes a este caso. Fechar no clique é o defeito
+      // que ele existe para pegar: desmonta o formulário antes do submit, e o
+      // Enter num campo — metade dos envios — não fecharia nada.
+      expect(closesByCode(output, label), `"${label}" não devia fechar no clique`).toBe(false);
+      expect(wrappedInClose(output, label), `"${label}" não devia ser peça de fechar`).toBe(false);
+    }
+    for (const label of neverClose) {
+      expect(wrappedInClose(output, label), `"${label}" não devia fechar`).toBe(false);
+      expect(closesBySubmit(output, label), `"${label}" não devia fechar no submit`).toBe(false);
     }
     // Quem usa a peça importa a peça. O `source-snippets.test.ts` cobra que o
     // nome EXISTA no componente; aqui se cobra que ele seja importado quando o
@@ -232,13 +308,52 @@ describe('a lição do controle de fechar', () => {
     expect(importa).toBe(output.includes('<PopoverClose'));
   });
 
-  it('todo construtor com rodapé de ações está declarado no mapa acima', () => {
+  it('todo construtor com rodapé de ações ou com submit está declarado no mapa acima', () => {
     // Cobertura, e não filtro: construtor novo com rodapé que ninguém declarar
     // reprova aqui, em vez de sair da varredura em silêncio.
-    const declarados = new Set(COM_FECHAR.map(([fn]) => fn));
+    //
+    // O `type="submit"` entrou na peneira junto com a coluna do submit: um
+    // formulário sem rodapé — a variante Form é exatamente isso — não tem
+    // `data-justify="end"` e escaparia da varredura calado, que é a forma como
+    // o `source-snippets.test.ts` encolheu sem ninguém ver.
+    const declared = new Set(COM_FECHAR.map(([fn]) => fn));
     for (const fn of ALL) {
-      if (!fn().includes('data-justify="end"')) continue;
-      expect(declarados.has(fn), `${fn.name} tem rodapé e não está no mapa`).toBe(true);
+      const output = fn();
+      if (!output.includes('data-justify="end"') && !output.includes('type="submit"')) continue;
+      expect(declared.has(fn), `${fn.name} tem ação de fechar e não está no mapa`).toBe(true);
+    }
+  });
+
+  /**
+   * O degrau que faltava, e o defeito que ele reprova é MUDO.
+   *
+   * Até 2026-09-13 três construtores — o transform do `meta`, o do fechar e o do
+   * filtro — imprimiam a raiz NÃO controlada e um rodapé que chamava
+   * `setOpen(false)`. Nada disso reprova: o snippet é string, o `tsc` não o
+   * compila, e o preview ao lado fecha porque a STORY é controlada. Quem copiava
+   * recebia um Salvar inerte — o mesmo defeito da campanha, agora no painel Code.
+   *
+   * Por isso a regra é do ARQUIVO e não dos três: construtor novo que feche por
+   * código sem o par `open`/`onOpenChange` reprova aqui, em vez de esperar a
+   * próxima revisão do componente.
+   */
+  it('quem fecha por CÓDIGO ensina a raiz controlada e o estado que a alimenta', () => {
+    for (const fn of ALL) {
+      const output = fn();
+      if (!/\bset(?:Open|Aberto)\(false\)/.test(output)) continue;
+      const root = output.match(/<Popover(?:\s[^>]*)?>/)?.[0];
+      expect(root, `${fn.name}: snippet sem raiz <Popover>`).toBeTruthy();
+      expect(root, `${fn.name}: fecha por código com a raiz NÃO controlada`).toMatch(/\sopen=\{/);
+      expect(root, `${fn.name}: raiz controlada sem onOpenChange`).toMatch(/\sonOpenChange=\{/);
+      // Raiz controlada com `defaultOpen` junto é controle morto: a lib lê
+      // `open` e ignora o outro, e o snippet ensinaria uma prop que não faz nada.
+      expect(root, `${fn.name}: defaultOpen numa raiz controlada`).not.toContain('defaultOpen');
+      expect(output, `${fn.name}: fecha por código sem declarar o estado`).toMatch(
+        /const \[\w+, set\w+\] = useState\(/,
+      );
+      expect(output, `${fn.name}: usa useState sem importar`).toContain(
+        'import { useState } from "react";',
+      );
     }
   });
 });

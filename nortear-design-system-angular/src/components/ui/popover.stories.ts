@@ -88,9 +88,14 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    props: { ...args },
+    // Painel CONTROLADO, com o estado semeado pelo control `defaultOpen`. É o
+    // que permite ao "Salvar" fechar por CÓDIGO: o `ndsPopoverClose` fecha com
+    // `close-press`, que chega ao relatório como `close-button` — o motivo de
+    // quem DESISTIU. Quem conclui fecha escrevendo no estado, e aí o motivo é
+    // `api`. Ver `popover-close-reason.ts` para o mapa inteiro.
+    props: { ...args, isOpen: Boolean(args.defaultOpen) },
     template: `
-      <div ndsPopover [defaultOpen]="defaultOpen" (openChange)="onOpenChange($event)">
+      <div ndsPopover [open]="isOpen" (openChange)="isOpen = $event; onOpenChange($event)">
         <button ndsPopoverTrigger ndsButton variant="outline">{{ triggerLabel }}</button>
 
         <ng-template
@@ -105,8 +110,14 @@ export const Playground: Story = {
           </div>
 
           <div class="nds-cluster" data-justify="end" data-spacing="sm">
+            <!-- Cancelar é a PEÇA DE FECHAR: sai sem decidir nada, e o motivo
+                 chega como close-button. -->
             <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-            <button ndsPopoverClose ndsButton size="sm">Salvar</button>
+            <!-- Salvar fecha por CÓDIGO, depois de salvar: o motivo é api, e é
+                 ele que separa "concluiu" de "desistiu" no relatório. -->
+            <button ndsButton size="sm" (click)="isOpen = false; onOpenChange(false)">
+              Salvar
+            </button>
           </div>
         </ng-template>
       </div>
@@ -130,7 +141,9 @@ export const Playground: Story = {
     await step('O estado inicial vem do input', async () => {
       // Esta é a asserção que prova o binding de input: sob JIT o componente
       // renderiza no default e `aria-expanded` viria sempre "false" com o
-      // control em true (armadilha 1 do CLAUDE.md deste stack).
+      // control em true (armadilha 1 do CLAUDE.md deste stack). Aqui quem
+      // carrega o valor é o `[open]` controlado, semeado pelo control; o
+      // `defaultOpen` do componente é provado por `States/Modal`.
       await expect(trigger.getAttribute('aria-expanded')).toBe(String(args.defaultOpen));
       await expect(trigger).toHaveAttribute('data-state', args.defaultOpen ? 'open' : 'closed');
     });
@@ -225,6 +238,34 @@ export const Playground: Story = {
       await userEvent.click(cancelar);
       await waitFor(async () => {
         await expect(panel()).toBeNull();
+      });
+    });
+
+    await step('Salvar fecha por CÓDIGO, não pela peça de fechar', async () => {
+      // A distinção é a que separa "desistiu" de "concluiu" no relatório: a
+      // peça de fechar publica `close-press`, que vira `close-button`, e o
+      // fechamento por código cai em `api`. Marcado com `ndsPopoverClose`, o
+      // Salvar reportaria o motivo de quem desistiu — e quem copiasse o
+      // exemplo levaria a forma errada.
+      await open(trigger);
+      const save = screen.getByRole('button', { name: 'Salvar' });
+      await expect(save).not.toHaveAttribute('data-slot', 'popover-close');
+
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      await userEvent.click(save);
+      await waitFor(async () => {
+        await expect(panel()).toBeNull();
+      });
+      // O estado externo acompanha: o `openChange` da story recebe o mesmo
+      // `false` que o painel, senão o gatilho ficaria dizendo "aberto".
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await expect(
+        (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
+      ).toBe(callsBefore + 1);
+      // E o foco volta ao gatilho: fechar por código não pode deixar o foco no
+      // corpo do documento, que é onde ele cairia com o painel desmontado.
+      await waitFor(async () => {
+        await expect(trigger).toHaveFocus();
       });
     });
 

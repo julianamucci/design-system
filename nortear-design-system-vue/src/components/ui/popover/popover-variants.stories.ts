@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
 import {
   Popover,
   PopoverClose,
@@ -123,7 +123,7 @@ export const WithTitle: Story = {
     components: sharedComponents,
     template: `
       <div class="nds-min-h-70" style="contain: layout">
-        <Popover :default-open="true">
+        <Popover v-slot="{ close }" :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Configurações</Button>
           </PopoverTrigger>
@@ -134,11 +134,13 @@ export const WithTitle: Story = {
                 Ajuste a aparência do conteúdo da página.
               </PopoverDescription>
             </PopoverHeader>
+            <!-- Cancelar é a PEÇA de fechar (motivo close-button); Salvar fecha
+                 por CÓDIGO, com o "close" do slot da raiz (motivo api). -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <PopoverClose as-child>
                 <Button variant="ghost" size="sm">Cancelar</Button>
               </PopoverClose>
-              <Button size="sm">Salvar</Button>
+              <Button size="sm" @click="close()">Salvar</Button>
             </div>
           </PopoverContent>
         </Popover>
@@ -164,21 +166,21 @@ export const WithTitle: Story = {
     await step('Tab caminha entre os controles internos', async () => {
       const ctx = within(panel()!);
       const cancelar = ctx.getByRole('button', { name: /Cancelar/i });
-      const salvar = ctx.getByRole('button', { name: /Salvar/i });
+      const save = ctx.getByRole('button', { name: /Salvar/i });
       cancelar.focus();
       await userEvent.tab();
-      await expect(salvar).toHaveFocus();
+      await expect(save).toHaveFocus();
     });
 
     await step('E o elemento focado por teclado mostra o anel de foco', async () => {
       // `:focus-visible` é a condição exata que o CSS compartilhado usa para
       // desenhar o anel — se o foco tivesse vindo do ponteiro, o navegador não
       // casaria a pseudo-classe e o anel não apareceria.
-      const salvar = within(panel()!).getByRole('button', { name: /Salvar/i });
-      await expect(salvar.matches(':focus-visible')).toBe(true);
+      const save = within(panel()!).getByRole('button', { name: /Salvar/i });
+      await expect(save.matches(':focus-visible')).toBe(true);
       // O anel de `.nds-button` é box-shadow, não outline — medir a propriedade
       // errada daria verde em qualquer elemento.
-      await expect(getComputedStyle(salvar).boxShadow).not.toBe('none');
+      await expect(getComputedStyle(save).boxShadow).not.toBe('none');
     });
   },
 };
@@ -199,7 +201,7 @@ export const Form: Story = {
     components: sharedComponents,
     template: `
       <div class="nds-min-h-90" style="contain: layout">
-        <Popover :default-open="true">
+        <Popover v-slot="{ close }" :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Editar perfil</Button>
           </PopoverTrigger>
@@ -207,7 +209,12 @@ export const Form: Story = {
             <PopoverHeader>
               <PopoverTitle>Editar perfil</PopoverTitle>
             </PopoverHeader>
-            <form class="nds-stack" data-spacing="sm" @submit.prevent>
+            <!-- O formulário fecha por CÓDIGO ao salvar, e o fechamento vai no
+                 SUBMIT — nunca no clique do "Atualizar": fechar no clique
+                 desmontaria o formulário antes de ele submeter, e só este
+                 caminho cobre também o Enter num campo, que é como metade das
+                 pessoas envia formulário. -->
+            <form class="nds-stack" data-spacing="sm" @submit.prevent="close()">
               <Label for="popover-var-name" class="nds-text-caption">Nome</Label>
               <Input id="popover-var-name" model-value="Ana Ribeiro" />
               <Label for="popover-var-email" class="nds-text-caption">Email</Label>
@@ -219,7 +226,19 @@ export const Form: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: /Editar perfil/i });
+    const closed = async () => {
+      // Só LEITURA dentro do `waitFor`: condição que mexe no DOM reagenda a si
+      // mesma pelo observador de mutação e pendura o arquivo inteiro.
+      await waitFor(
+        () => {
+          if (panel()) throw new Error('popover ainda aberto');
+        },
+        { timeout: 2000 },
+      );
+    };
+
     await step('Os campos existem e estão associados aos rótulos', async () => {
       await waitForPortal('dialog');
       const ctx = within(panel()!);
@@ -233,6 +252,30 @@ export const Form: Story = {
       await userEvent.clear(name);
       await userEvent.type(name, 'Bruno Lima');
       await expect(name).toHaveValue('Bruno Lima');
+    });
+
+    await step('Enter num campo envia o formulário e fecha o painel', async () => {
+      // É por isto que o fechamento mora no `submit`, e não no clique do
+      // "Atualizar": metade das pessoas envia formulário pelo teclado, e o
+      // caminho do clique não cobriria este gesto.
+      const name = within(panel()!).getByLabelText(/Nome/i);
+      name.focus();
+      await userEvent.keyboard('{Enter}');
+      await closed();
+      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    await step('E o "Atualizar" fecha pelo mesmo caminho', async () => {
+      await userEvent.click(trigger);
+      await waitForPortal('dialog');
+      await userEvent.click(within(panel()!).getByRole('button', { name: /Atualizar/i }));
+      await closed();
+    });
+
+    // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await userEvent.click(trigger);
+      await expect(await waitForPortal('dialog')).toBeVisible();
     });
   },
 };

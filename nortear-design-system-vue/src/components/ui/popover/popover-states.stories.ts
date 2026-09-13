@@ -60,11 +60,14 @@ const SIMPLE_PANEL = `
               <PopoverTitle>Configurações de exibição</PopoverTitle>
               <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
             </PopoverHeader>
+            <!-- Cancelar é a PEÇA de fechar (motivo close-button); Salvar fecha
+                 por CÓDIGO, com o "close" do slot da raiz (motivo api). Por
+                 isso toda raiz deste arquivo declara v-slot="{ close }". -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <PopoverClose as-child>
                 <Button variant="ghost" size="sm">Cancelar</Button>
               </PopoverClose>
-              <Button size="sm">Salvar</Button>
+              <Button size="sm" @click="close()">Salvar</Button>
             </div>
           </PopoverContent>`;
 
@@ -78,7 +81,7 @@ export const Closed: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout">
-        <Popover>
+        <Popover v-slot="{ close }">
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
@@ -124,7 +127,7 @@ export const Open: Story = {
     components: sharedComponents,
     template: `
       <div class="nds-min-h-70" style="contain: layout">
-        <Popover :default-open="true">
+        <Popover v-slot="{ close }" :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir popover</Button>
           </PopoverTrigger>
@@ -178,7 +181,7 @@ export const Controlled: Story = {
           <Button @click="open = true">Abrir externamente</Button>
           <Button variant="outline" @click="open = false">Fechar externamente</Button>
         </div>
-        <Popover v-model:open="open">
+        <Popover v-slot="{ close }" v-model:open="open">
           <PopoverTrigger as-child>
             <Button variant="outline">Trigger</Button>
           </PopoverTrigger>
@@ -237,7 +240,7 @@ export const Modal: Story = {
     components: sharedComponents,
     template: `
       <div class="nds-min-h-70" style="contain: layout">
-        <Popover :default-open="true" :modal="true">
+        <Popover v-slot="{ close }" :default-open="true" :modal="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir modal</Button>
           </PopoverTrigger>

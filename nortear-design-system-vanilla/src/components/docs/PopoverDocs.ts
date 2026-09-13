@@ -189,6 +189,10 @@ function buildWithTitlePopover(
 
   content.appendChild(header);
 
+  // O botão de CONFIRMAR do rodapé, quando ele existe. Sai daqui para ser ligado
+  // depois da fábrica: ele fecha por CÓDIGO, e o `close()` só existe lá.
+  let save: HTMLButtonElement | undefined;
+
   if (showActions) {
     const actions = document.createElement('div');
     actions.className = 'nds-cluster';
@@ -201,18 +205,28 @@ function buildWithTitlePopover(
     // ensinava um Cancelar inerte e o motivo `close-button` da tabela de
     // analytics não tinha caminho nenhum que o produzisse.
     cancel.dataset.slot = 'popover-close';
-    const save = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.save') });
+    save = createButton({ variant: 'default', size: 'sm', label: t('demonstration.labels.save') });
     actions.append(cancel, save);
     content.appendChild(actions);
   }
 
-  return createPopover({
+  const popover = createPopover({
     trigger,
     content,
     side: 'bottom',
     align: 'center',
     onOpenChange: trackPopoverOpenChange(triggerId, location),
   });
+
+  // Salvar fecha por CÓDIGO, e é isso que manda `api` ao GA4 — "concluiu". Se o
+  // Salvar levasse a marca do Cancelar, o relatório receberia `close-button` e
+  // "concluiu" ficaria indistinguível de "desistiu".
+  save?.addEventListener('click', () => {
+    // …aqui entraria a gravação das preferências…
+    popover.close();
+  });
+
+  return popover;
 }
 
 /**
@@ -252,7 +266,6 @@ function buildFormPopover(location: string, triggerId = 'form'): HTMLElement {
   const content = document.createElement('form');
   content.className = 'nds-stack';
   content.dataset.spacing = 'md';
-  content.addEventListener('submit', (e) => e.preventDefault());
 
   const nameRow = document.createElement('div');
   nameRow.className = 'nds-stack';
@@ -283,13 +296,24 @@ function buildFormPopover(location: string, triggerId = 'form'): HTMLElement {
 
   content.append(nameRow, emailRow, actions);
 
-  return createPopover({
+  const popover = createPopover({
     trigger,
     content,
     side: 'bottom',
     align: 'start',
     onOpenChange: trackPopoverOpenChange(triggerId, location),
   });
+
+  // Os dois botões fecham por caminhos DIFERENTES, e é a diferença que o
+  // relatório lê: o Cancelar é a peça de fechar (`close-button`, desistiu), e
+  // o envio do formulário fecha por código depois de salvar (`api`, concluiu).
+  content.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // …aqui entraria a gravação do formulário…
+    popover.close();
+  });
+
+  return popover;
 }
 
 // ─── createPopoverDocs ────────────────────────────────────────────────────────
@@ -564,7 +588,15 @@ cancel.dataset.slot = 'popover-close';
 
 form.append(cancel, createButton({ variant: 'default', size: 'sm', label: 'Atualizar', type: 'submit' }));
 
-createPopover({ trigger, content: form });`;
+const popover = createPopover({ trigger, content: form });
+
+// Confirmar fecha por CÓDIGO, depois de salvar — o motivo que chega ao
+// onOpenChange é 'api'. Só a peça marcada relata 'close-button', e é ela que
+// diz "desistiu": é essa diferença que o relatório lê.
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  popover.close();
+});`;
 
         return createDocsVariants({
           items: [
@@ -599,7 +631,6 @@ createPopover({ trigger, content: form });`;
 const form = document.createElement('form');
 form.className = 'nds-stack';
 form.dataset.spacing = 'md';
-form.addEventListener('submit', (e) => e.preventDefault());
 
 const title = createPopoverTitle({ text: 'Dados do perfil' });
 
@@ -626,7 +657,13 @@ emailRow.append(
 const submit = createButton({ variant: 'default', size: 'sm', label: 'Atualizar', type: 'submit' });
 form.append(title, desc, nameRow, emailRow, submit);
 
-createPopover({ trigger, content: form });`;
+const popover = createPopover({ trigger, content: form });
+
+// Confirmar fecha por CÓDIGO, depois de salvar — motivo 'api'.
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  popover.close();
+});`;
 
         const codeTableFilter = `const trigger = createButton({ variant: 'outline', label: 'Filtros' });
 
@@ -655,13 +692,15 @@ const actions = document.createElement('div');
 actions.className = 'nds-cluster nds-pt-2';
 actions.dataset.spacing = 'sm';
 actions.dataset.justify = 'end';
-actions.append(
-  createButton({ variant: 'ghost',   size: 'sm', label: 'Limpar'  }),
-  createButton({ variant: 'default', size: 'sm', label: 'Aplicar' }),
-);
+const apply = createButton({ variant: 'default', size: 'sm', label: 'Aplicar' });
+actions.append(createButton({ variant: 'ghost', size: 'sm', label: 'Limpar' }), apply);
 content.appendChild(actions);
 
-createPopover({ trigger, content });`;
+const popover = createPopover({ trigger, content });
+
+// Aplicar é a CONFIRMAÇÃO: aplica o filtro e fecha por código, relatando
+// 'api'. A marca data-slot="popover-close" é do botão de desistir.
+apply.addEventListener('click', () => popover.close());`;
 
         const codeColorPicker = `const trigger = createButton({ variant: 'outline', label: 'Escolher cor da etiqueta' });
 
@@ -755,7 +794,6 @@ createPopover({ trigger, content });`;
           const form = document.createElement('form');
           form.className = 'nds-stack';
           form.dataset.spacing = 'md';
-          form.addEventListener('submit', (e) => e.preventDefault());
 
           const heading = createPopoverTitle({ text: t('demonstration.labels.form.trigger') });
 
@@ -780,13 +818,21 @@ createPopover({ trigger, content });`;
 
           // A composição também é componente vivo: o clique aqui vale tanto
           // quanto o da demonstração, e `location` diz de QUAL seção ele veio.
-          return createPopover({
+          const popover = createPopover({
             trigger,
             content: form,
             side: 'bottom',
             align: 'start',
             onOpenChange: trackPopoverOpenChange('edit-profile', 'docs_composicoes'),
           });
+
+          // Confirmar fecha por código, com o motivo `api`.
+          form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            popover.close();
+          });
+
+          return popover;
         }
 
         function buildTableFilterPreview(): HTMLElement {
@@ -820,19 +866,27 @@ createPopover({ trigger, content });`;
           actions.className = 'nds-cluster nds-pt-2';
           actions.dataset.spacing = 'sm';
           actions.dataset.justify = 'end';
+          const apply = createButton({ variant: 'default', size: 'sm', label: t('variants.compositions.tableFilter.apply') });
           actions.append(
             createButton({ variant: 'ghost',   size: 'sm', label: t('variants.compositions.tableFilter.clear') }),
-            createButton({ variant: 'default', size: 'sm', label: t('variants.compositions.tableFilter.apply') }),
+            apply,
           );
           content.appendChild(actions);
 
-          return createPopover({
+          const popover = createPopover({
             trigger,
             content,
             side: 'bottom',
             align: 'start',
             onOpenChange: trackPopoverOpenChange('table-filter', 'docs_composicoes'),
           });
+
+          // Aplicar é a CONFIRMAÇÃO: aplica o filtro e fecha por código
+          // (`api`). A marca `data-slot="popover-close"` é do Cancelar, e
+          // relataria `close-button` — o motivo de quem saiu sem decidir.
+          apply.addEventListener('click', () => popover.close());
+
+          return popover;
         }
 
         function buildColorPickerPreview(): HTMLElement {
@@ -1064,7 +1118,15 @@ export function createPopoverDescription(options?: PopoverPartOptions): HTMLElem
 // compõe. A fábrica delega o clique em [data-slot="popover-close"] dentro do
 // painel, em qualquer profundidade, e relata 'close-button'.
 const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
-cancelar.dataset.slot = 'popover-close';`;
+cancelar.dataset.slot = 'popover-close';
+
+// ─── Fechar por CÓDIGO, depois de salvar ────────────────────────────────────
+// O botão de confirmar NÃO leva a marca: ele chama close() na instância, e o
+// motivo que chega ao onOpenChange é 'api'. É o que separa "concluiu" de
+// "desistiu" no relatório — com a marca, os dois chegariam como 'close-button'.
+const salvar = createButton({ variant: 'default', size: 'sm', label: 'Salvar' });
+const popover = createPopover({ trigger, content });
+salvar.addEventListener('click', () => popover.close());`;
 
         const propsCols = {
           prop: t('props.table.prop'),

@@ -111,6 +111,22 @@ describe('popoverComFormularioSnippet', () => {
     expect(code).toContain('content: formulario');
     expect(code).not.toContain('data-slot=');
   });
+
+  it('e o envio do formulário FECHA o painel por código', () => {
+    // "Salvou e fechou" é o motivo `api`. Até 2026-09-13 o snippet ensinava um
+    // submit que só chamava `preventDefault()`: o painel ficava aberto depois de
+    // confirmar, e o exemplo canônico publicava um botão que não conclui nada.
+    const code = popoverWithFormSnippet();
+    expect(code).toContain("formulario.addEventListener('submit'");
+    expect(code).toContain('painel.close()');
+    // O formulário não tem peça de fechar — se tivesse a marca aqui, o motivo
+    // viraria `close-button` e "concluiu" chegaria ao relatório como "desistiu".
+    //
+    // A busca é por ATRIBUIÇÃO no começo da linha, não por substring: o próprio
+    // snippet EXPLICA a marca num comentário, e um `toContain` cru reprovava na
+    // prosa que ensina a regra em vez de na violação dela.
+    expect(code).not.toMatch(/^\s*\w+\.dataset\.slot = 'popover-close'/m);
+  });
 });
 
 describe('popoverComAcoesSnippet', () => {
@@ -127,6 +143,20 @@ describe('popoverComAcoesSnippet', () => {
     const code = popoverWithActionsSnippet();
     expect(code).toContain("cancelar.dataset.slot = 'popover-close'");
     expect(code).toContain('acoes.append(cancelar,');
+  });
+
+  it('e o Confirmar que fecha por CÓDIGO, não uma segunda peça de fechar', () => {
+    // Os dois caminhos são o assunto: `close-button` é quem desistiu, `api` é
+    // quem concluiu. Marcar o Confirmar apagaria a diferença no relatório, e é
+    // o defeito que este caso guarda.
+    const code = popoverWithActionsSnippet();
+    expect(code).toContain("confirmar.addEventListener('click'");
+    expect(code).toContain('painel.close()');
+    expect(code).not.toContain('confirmar.dataset.slot');
+    // Uma marca só no snippet inteiro, e ela é a do Cancelar. Casa a ATRIBUIÇÃO
+    // no começo da linha: o comentário que explica a regra também cita o valor,
+    // e um casamento solto contaria prosa.
+    expect(code.match(/^\s*\w+\.dataset\.slot = 'popover-close'/gm)).toHaveLength(1);
   });
 });
 

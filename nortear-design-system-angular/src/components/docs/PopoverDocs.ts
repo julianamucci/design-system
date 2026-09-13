@@ -9,6 +9,7 @@ import {
   TemplateRef,
   viewChild,
   ViewEncapsulation,
+  type WritableSignal,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import type { RdxPopoverOpenChange } from '@radix-ng/primitives/popover';
@@ -160,9 +161,13 @@ export class NdsPopoverContent {
 
 // Exemplo local porque o `props.extensibilityCode` compartilhado abre um
 // `form[ndsForm]` vazio, e aqui o assunto é outro: o que este stack tem de
-// extensível é o par `[open]` / `(openChange)`, que também habilita `[(open)]`,
-// com o fechamento por `button[ndsPopoverClose]` por fora do estado externo.
+// extensível é o par `[open]` / `(openChange)`, que também habilita `[(open)]`.
 // A raiz é `div[ndsPopover]` — seletor de atributo, como no snippet da Anatomia.
+//
+// Os DOIS caminhos de fechar aparecem aqui de propósito, porque a diferença
+// entre eles é o que chega ao relatório: `button[ndsPopoverClose]` fecha sem
+// passar pelo estado externo e reporta `close-button` (desistiu); escrever no
+// estado reporta `api` (concluiu, depois de salvar).
 const EXTENSIBILITY_CODE = `<!-- Controle externo do estado aberto/fechado -->
 <div ndsPopover [(open)]="aberto">
   <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
@@ -172,8 +177,12 @@ const EXTENSIBILITY_CODE = `<!-- Controle externo do estado aberto/fechado -->
       <h2 ndsPopoverTitle>Editar perfil</h2>
     </div>
 
-    <!-- fechar sem passar pelo estado externo -->
-    <button ndsPopoverClose ndsButton size="sm">Concluir</button>
+    <div class="nds-cluster" data-justify="end" data-spacing="sm">
+      <!-- sair sem decidir: fecha sem passar pelo estado externo -->
+      <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
+      <!-- concluir: salva e fecha por CÓDIGO -->
+      <button ndsButton size="sm" (click)="salvar()">Concluir</button>
+    </div>
   </ng-template>
 </div>`;
 
@@ -196,7 +205,10 @@ const VARIANT_CODE = {
     </div>
   </ng-template>
 </div>`,
-  form: `<div ndsPopover>
+  form: `<!-- "Atualizar" fecha por CÓDIGO, e o fechamento mora no submit:
+     fechar no clique desmontaria o formulário antes do envio, e só este
+     caminho cobre também o Enter num campo. -->
+<div ndsPopover [(open)]="aberto">
   <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
 
   <ng-template ndsPopoverContent align="start">
@@ -204,7 +216,7 @@ const VARIANT_CODE = {
       <h2 ndsPopoverTitle>Editar perfil</h2>
     </div>
 
-    <form class="nds-stack" data-spacing="md" (submit)="$event.preventDefault()">
+    <form class="nds-stack" data-spacing="md" (submit)="atualizar($event)">
       <div class="nds-stack" data-spacing="xs">
         <label ndsLabel for="nome">Nome</label>
         <input ndsInput id="nome" value="Ana Ribeiro" />
@@ -221,7 +233,9 @@ const VARIANT_CODE = {
 
 const COMPOSITION_CODE = {
   editProfile: VARIANT_CODE.form,
-  tableFilter: `<div ndsPopover>
+  tableFilter: `<!-- "Aplicar" fecha por CÓDIGO, depois de aplicar o filtro:
+     é o que faz o fechamento chegar ao relatório como "concluiu". -->
+<div ndsPopover [(open)]="aberto">
   <button ndsPopoverTrigger ndsButton variant="outline">Filtros</button>
 
   <ng-template ndsPopoverContent align="start">
@@ -236,7 +250,7 @@ const COMPOSITION_CODE = {
 
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
       <button ndsButton variant="ghost" size="sm">Limpar</button>
-      <button ndsPopoverClose ndsButton size="sm">Aplicar</button>
+      <button ndsButton size="sm" (click)="aplicar()">Aplicar</button>
     </div>
   </ng-template>
 </div>`,
@@ -396,8 +410,12 @@ const COMPOSITION_CODE = {
          "veio das Variantes". Os dois contextos são campos estáveis da classe:
          objeto literal no template muda de identidade a cada verificação e o
          outlet recriaria a view, fechando o painel sozinho. -->
-    <ng-template #tplFormulario let-gatilho="gatilho" let-secao="secao">
-      <div ndsPopover (onOpenChange)="onChange(gatilho, secao, $event)">
+    <ng-template #tplFormulario let-trigger="trigger" let-secao="secao" let-isOpen="isOpen">
+      <div
+        ndsPopover
+        [open]="isOpen()"
+        (onOpenChange)="aoMudarFormulario(trigger, secao, isOpen, $event)"
+      >
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('demonstration.labels.form.trigger') }}
         </button>
@@ -411,7 +429,17 @@ const COMPOSITION_CODE = {
                grupo ficavam MAIORES que a distância entre grupos — a segunda
                label encostava no input da primeira. Mesma forma das outras
                quatro stacks. -->
-          <form class="nds-stack" data-spacing="md" (submit)="$event.preventDefault()">
+          <!-- E o fechamento por CÓDIGO mora no submit, não no clique de
+               "Atualizar": fechar no clique desmontaria o formulário antes de
+               ele enviar, e só o caminho do submit cobre também o Enter num
+               campo, que é como metade das pessoas envia formulário. O evento
+               popover_close com motivo api sai do concluir, porque escrever no
+               input open fecha o painel sem passar pela lib. -->
+          <form
+            class="nds-stack"
+            data-spacing="md"
+            (submit)="$event.preventDefault(); concluir(isOpen, secao)"
+          >
             <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="pd-perfil-nome">{{ t('demonstration.labels.form.name') }}</label>
               <input ndsInput id="pd-perfil-nome" value="Ana Ribeiro" />
@@ -422,10 +450,12 @@ const COMPOSITION_CODE = {
               <input ndsInput id="pd-perfil-email" type="email" value="ana@nortear.com.br" />
             </div>
 
-            <!-- A ação primária é submit DO form, não um ndsPopoverClose: um
-                 botão de fechar fora do fluxo de submissão deixa o Enter num
-                 campo sem efeito, e o popover é justamente onde se edita em
-                 linha. Fechar por dentro é papel do "Cancelar". -->
+            <!-- Os dois fecham, por CAMINHOS diferentes: "Cancelar" é a peça de
+                 fechar (close-button, desistiu) e a ação primária é submit DO
+                 form, que fecha por código (api, concluiu). Marcá-la com
+                 ndsPopoverClose apagaria a diferença e deixaria o Enter num
+                 campo sem efeito — e o popover é justamente onde se edita em
+                 linha. -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <button ndsPopoverClose ndsButton variant="ghost" size="sm">
                 {{ t('demonstration.labels.cancel') }}
@@ -454,7 +484,11 @@ const COMPOSITION_CODE = {
     </ng-template>
 
     <ng-template #tplCompFiltro>
-      <div ndsPopover (onOpenChange)="onChange('table-filter', 'docs_composicoes', $event)">
+      <div
+        ndsPopover
+        [(open)]="filterOpen"
+        (onOpenChange)="onChange('table-filter', 'docs_composicoes', $event)"
+      >
         <button ndsPopoverTrigger ndsButton variant="outline">
           {{ t('variants.compositions.tableFilter.trigger') }}
         </button>
@@ -476,7 +510,12 @@ const COMPOSITION_CODE = {
             <button ndsButton variant="ghost" size="sm">
               {{ t('variants.compositions.tableFilter.clear') }}
             </button>
-            <button ndsPopoverClose ndsButton size="sm">
+            <!-- Aplicar CONCLUI: fecha por código, e o motivo vai como api. -->
+            <button
+              ndsButton
+              size="sm"
+              (click)="concluir(filterOpen, 'docs_composicoes')"
+            >
               {{ t('variants.compositions.tableFilter.apply') }}
             </button>
           </div>
@@ -555,7 +594,11 @@ const COMPOSITION_CODE = {
              na sua seção. -->
         <nds-docs-demonstration>
           <div class="nds-cluster" data-justify="center" data-spacing="sm">
-            <div ndsPopover (onOpenChange)="onChange('demo', 'docs_demo', $event)">
+            <div
+              ndsPopover
+              [(open)]="demoOpen"
+              (onOpenChange)="onChange('demo', 'docs_demo', $event)"
+            >
               <button ndsPopoverTrigger ndsButton variant="outline">
                 {{ t('demonstration.labels.trigger') }}
               </button>
@@ -566,11 +609,15 @@ const COMPOSITION_CODE = {
                   <p ndsPopoverDescription>{{ t('demonstration.labels.description') }}</p>
                 </div>
 
+                <!-- Os dois fecham, por CAMINHOS diferentes, e é a diferença
+                     que o relatório precisa: Cancelar é a peça de fechar
+                     (close-button, desistiu) e Salvar fecha por código depois
+                     de salvar (api, concluiu). -->
                 <div class="nds-cluster" data-justify="end" data-spacing="sm">
                   <button ndsPopoverClose ndsButton variant="ghost" size="sm">
                     {{ t('demonstration.labels.cancel') }}
                   </button>
-                  <button ndsPopoverClose ndsButton size="sm">
+                  <button ndsButton size="sm" (click)="concluir(demoOpen, 'docs_demo')">
                     {{ t('demonstration.labels.save') }}
                   </button>
                 </div>
@@ -708,9 +755,22 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * Os dois contextos do molde do formulário. São campos, não literais no
    * template: o `ngTemplateOutlet` recria a view quando o contexto troca de
    * identidade, e um literal nova a cada verificação fecharia o painel aberto.
+   *
+   * Cada contexto carrega o PRÓPRIO sinal de aberto: o molde é um só, mas as
+   * duas instâncias são painéis distintos na mesma página — um sinal
+   * compartilhado abriria os dois de uma vez. É esse sinal que dá ao submit
+   * como fechar por código, do mesmo jeito que `filterOpen` dá ao "Aplicar".
    */
-  protected readonly ctxVarFormulario = { gatilho: 'form', secao: 'docs_variantes' };
-  protected readonly ctxCompPerfil = { gatilho: 'edit-profile', secao: 'docs_composicoes' };
+  protected readonly ctxVarFormulario = {
+    trigger: 'form',
+    secao: 'docs_variantes',
+    isOpen: signal(false),
+  };
+  protected readonly ctxCompPerfil = {
+    trigger: 'edit-profile',
+    secao: 'docs_composicoes',
+    isOpen: signal(false),
+  };
 
   /**
    * Os três status do filtro de tabela.
@@ -798,6 +858,56 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
    * respondiam "veio da demonstração". `docs_demo` é herança do vocabulário do
    * GA4, não exceção de estilo.
    */
+  /**
+   * Estado aberto/fechado dos DOIS exemplos cujo rodapé conclui.
+   *
+   * Só eles são controlados: os outros popovers desta página abrem e fecham
+   * pelos caminhos do próprio componente, e estado externo ali seria peso morto.
+   */
+  protected readonly demoOpen = signal(false);
+  protected readonly filterOpen = signal(false);
+
+  /**
+   * A ação que CONCLUI — "Salvar", "Aplicar", "Confirmar".
+   *
+   * Fecha por CÓDIGO, e não pela peça de fechar, porque é o motivo que separa
+   * desistiu de concluiu no relatório: `button[ndsPopoverClose]` publica
+   * `close-press`, que o design system lê como `close-button`, e o formulário
+   * que salvou tem de chegar como `api`.
+   *
+   * O evento é emitido AQUI porque a lib não emite: `onOpenChange` só nasce nos
+   * caminhos que ela mesma conduz (`show()` / `close()`), e escrever no input
+   * `open` fecha o painel sem passar por eles. Sem esta chamada, "concluiu"
+   * sumiria do relatório em vez de chegar com o motivo errado — que é pior.
+   */
+  protected concluir(isOpen: WritableSignal<boolean>, secao: string): void {
+    // …aqui viveria a persistência do formulário…
+    isOpen.set(false);
+    track('popover_close', { component: 'popover', reason: 'api', location: secao });
+  }
+
+  /**
+   * O `onOpenChange` dos DOIS painéis com formulário, que precisam de estado
+   * externo para o submit ter como fechar por código.
+   *
+   * O molde é um só e as duas instâncias são painéis distintos, então o sinal
+   * viaja pelo CONTEXTO do `ngTemplateOutlet` — e variável de contexto não
+   * aceita `[(open)]`: `let-isOpen` é somente leitura no template, e o açúcar
+   * do binding de mão dupla é uma atribuição a ela. Daí a mão única mais este
+   * handler, que sincroniza o sinal com o que a lib decidiu antes de repassar o
+   * evento ao rastreio — sem isso, o painel fechado pela lib deixaria o sinal
+   * em `true` e o gatilho seguinte não reabriria nada.
+   */
+  protected aoMudarFormulario(
+    qual: string,
+    secao: string,
+    isOpen: WritableSignal<boolean>,
+    evento: RdxPopoverOpenChange,
+  ): void {
+    isOpen.set(evento.open);
+    this.onChange(qual, secao, evento);
+  }
+
   protected onChange(qual: string, secao: string, evento: RdxPopoverOpenChange): void {
     if (evento.open) {
       track('popover_open', {

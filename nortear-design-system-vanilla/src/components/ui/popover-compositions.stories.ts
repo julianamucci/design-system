@@ -57,7 +57,6 @@ export const EditProfile: Story = {
     const form = document.createElement('form');
     form.className = 'nds-stack';
     form.dataset.spacing = 'md';
-    form.addEventListener('submit', (e) => e.preventDefault());
 
     const title = createPopoverTitle({ text: 'Dados do perfil' });
 
@@ -84,6 +83,14 @@ export const EditProfile: Story = {
     form.append(title, desc, nameRow, emailRow, submit);
 
     const el = createPopover({ trigger, content: form });
+    // Confirmar o formulário fecha por CÓDIGO — motivo `api`, "salvou e
+    // fechou". O ouvinte é ligado aqui, e não junto do `<form>`: o conteúdo é
+    // montado antes de a fábrica existir, e é ela que tem o `close()`.
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // …aqui entraria a gravação do perfil…
+      el.close();
+    });
     queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },
@@ -139,6 +146,13 @@ export const TableFilter: Story = {
     content.appendChild(actions);
 
     const el = createPopover({ trigger, content });
+    // O Aplicar é a CONFIRMAÇÃO: aplica o filtro e fecha por código, relatando
+    // `api`. Marcá-lo com `data-slot="popover-close"` o faria relatar
+    // `close-button`, que é o motivo de quem desistiu.
+    apply.addEventListener('click', () => {
+      // …aqui entraria a aplicação do filtro…
+      el.close();
+    });
     queueMicrotask(() => { if (trigger.isConnected) trigger.click(); });
     return centralizar(el);
   },

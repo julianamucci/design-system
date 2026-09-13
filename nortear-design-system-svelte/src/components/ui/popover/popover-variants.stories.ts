@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 import { panel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
@@ -137,8 +137,10 @@ export const Form: Story = {
     emailLabel: 'Email',
     submitLabel: 'Atualizar',
     cancelLabel: 'Cancelar',
+    onAction: fn(),
+    onOpenChange: fn(),
   },
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step, args }) => {
     await step('Os campos existem e estão associados aos rótulos', async () => {
       const dialog = await waitForPortal('dialog', { timeout: 2000 });
       const ctx = within(dialog);
@@ -152,6 +154,35 @@ export const Form: Story = {
       await userEvent.clear(name);
       await userEvent.type(name, 'Bruno Lima');
       await expect(name).toHaveValue('Bruno Lima');
+    });
+
+    await step('Atualizar salva e fecha por código — motivo api', async () => {
+      // O confirmar do formulário é `type="submit"`, e o fechamento vive no
+      // `submit`, depois do `preventDefault`: fechar no `click` desmontaria o
+      // formulário antes de ele submeter, e o "salvar" nunca aconteceria.
+      // Ele também não é `PopoverClose` — a peça de fechar reportaria
+      // `close-button`, e "concluiu" viraria "apertou o botão de fechar".
+      const update = within(panel()!).getByRole('button', { name: 'Atualizar' });
+      await expect(update).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(update);
+      // Leitura PURA dentro do `waitFor`: `panel()` é um `querySelector` e não
+      // toca no DOM — condição que muta aqui dentro se reagenda sozinha pelo
+      // observador de mutação e pendura o arquivo inteiro.
+      await waitFor(
+        () => {
+          if (panel()) throw new Error('o painel não fechou ao salvar');
+        },
+        { timeout: 2000 },
+      );
+      await expect(args.onAction).toHaveBeenCalled();
+      await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, 'api');
+    });
+
+    // Termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      const trigger = within(canvasElement).getByRole('button', { name: /Editar perfil/i });
+      await userEvent.click(trigger);
+      await expect(await waitForPortal('dialog', { timeout: 2000 })).toBeVisible();
     });
   },
 };

@@ -94,6 +94,27 @@
     onCancel?.();
   }
 
+  /**
+   * Confirma a ação e fecha o painel POR CÓDIGO — o outro caminho de saída.
+   *
+   * O botão de confirmação NÃO é envolvido em `PopoverClose`: a peça de fechar
+   * anota `close-button`, e com ela "concluiu" chegaria ao relatório como
+   * "apertou o botão de fechar", apagando a diferença que justifica o campo
+   * existir. Cancelar é a peça de fechar; Salvar/Aplicar/Confirmar fecham por
+   * código, depois de agir, e por isso o motivo é `api`.
+   *
+   * A entrega do motivo é MANUAL aqui, e não por descuido: medido na fonte do
+   * bits-ui (`popover.svelte` da lib), `onOpenChange` só é chamado pelo
+   * ESCRITOR do `boxWith` da raiz — ou seja, quando quem fecha é a própria
+   * lib. Escrever no `bind:open` de fora fecha o painel EM SILÊNCIO, sem
+   * chamar ninguém. Então a mudança de estado sai daqui, com o motivo junto.
+   */
+  function confirmAndClose(): void {
+    onAction?.();
+    open = false;
+    onOpenChange?.(false, 'api');
+  }
+
   const STATUS = ['Ativo', 'Pendente', 'Arquivado'];
 
   const PREFERENCIAS = [
@@ -128,8 +149,14 @@
               class="nds-stack"
               data-spacing="md"
               onsubmit={(e) => {
+                // O confirmar do formulário é `type="submit"`, e o fechamento
+                // vai AQUI, nunca no `click` do botão: fechar no clique
+                // desmontaria o formulário antes de ele submeter, e o submit
+                // — que é o "salvar" — nunca aconteceria. Depois do
+                // `preventDefault` é literalmente "salvou, então fechou por
+                // código".
                 e.preventDefault();
-                onAction?.();
+                confirmAndClose();
               }}
             >
               <div class="nds-stack" data-spacing="xs">
@@ -172,7 +199,7 @@
                   >{cancelLabel}</Button>
                 {/snippet}
               </PopoverClose>
-              <Button size="sm" onclick={onAction}>{saveLabel}</Button>
+              <Button size="sm" onclick={confirmAndClose}>{saveLabel}</Button>
             </div>
           {:else if variant === 'tableFilter'}
             <PopoverHeader>
@@ -189,7 +216,7 @@
             </div>
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <Button variant="ghost" size="sm">Limpar</Button>
-              <Button size="sm" onclick={onAction}>Aplicar</Button>
+              <Button size="sm" onclick={confirmAndClose}>Aplicar</Button>
             </div>
           {:else if variant === 'colorPicker'}
             <PopoverHeader>

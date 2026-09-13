@@ -497,6 +497,34 @@ ser não-modal:
   como "apertou o botão de fechar" — apagando o sinal que justifica o campo
   existir, que é desistiu × concluiu.
 
+**E até 2026-09-13 essa regra não valia em stack nenhuma**, apesar de escrita
+aqui. Medido naquele dia, a partir de outra captura de tela da dona:
+
+| stack | Cancelar | confirmar (Salvar / Aplicar) |
+|---|---|---|
+| react, angular | fecha · `close-button` | fecha · `close-button` — motivo ERRADO |
+| vue, svelte, vanilla | fecha · `close-button` | **não fecha** — botão inerte |
+
+Os dois lados erravam, em sentidos opostos, e o segundo é o mais silencioso: o
+painel some do mesmo jeito, e os dois desfechos chegam ao relatório com o mesmo
+motivo. Corrigido nas cinco: **o Cancelar é a peça de fechar; o confirmar fecha
+por CÓDIGO.**
+
+Três coisas que só apareceram implementando, e cada uma muda o conserto:
+
+1. **Fechar por código não emite evento em duas libs.** No `@radix-ng` o
+   `onOpenChange` só sai de dentro de `show()`/`close()`, e no `bits-ui` a raiz
+   só chama o callback quando quem escreve o estado é a lib. Nas duas, escrever
+   no `open` de fora fecha o painel **em silêncio** — trocar a peça pelo código
+   sem mais nada transformaria "motivo errado" em "evento nenhum", que é pior. O
+   `api` passou a ser emitido onde a decisão acontece.
+2. **A `reka-ui` publica `close()` no slot da raiz**, então o vue não precisou
+   tornar story nenhuma controlada — e o fechamento por ali já chega como `api`,
+   porque não há anotação pendente.
+3. **O submit de formulário é confirmação, e fecha no `submit`, não no clique.**
+   Fechar no clique desmontaria o formulário antes do envio, e só o caminho do
+   `submit` cobre o **Enter num campo**.
+
 **Como cada stack chega ao motivo**, porque só duas o recebem pronto:
 
 | stack | caminho |

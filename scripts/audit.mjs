@@ -8719,7 +8719,18 @@ function identsPtNoCodigo(bruto, caminho = '') {
   let codigo = stripComments(semMarcacao)
     .replace(/(^|[^\w'])'(?:[^'\\]|\\.)*'/g, "$1''")
     .replace(/(^|[^\w"])"(?:[^"\\]|\\.)*"/g, '$1""')
-    .replace(/`(?:[^`\\]|\\.)*`/g, '``');
+    .replace(/`(?:[^`\\]|\\.)*`/g, '``')
+    // LITERAL DE REGEX também é texto, e faltava. Medido em 2026-09-13: a play
+    // do vanilla consultava o botão por `{ name: /salvar/i }` — nome ACESSÍVEL,
+    // que é interface e está em português por obrigação —, e a palavra dentro
+    // das barras contava como identificador declarado. O portão pedia para
+    // renomear o que a tela mostra.
+    //
+    // O padrão exige um delimitador de EXPRESSÃO antes da barra (`(`, `,`, `=`,
+    // `:`, `[`, `&&`, `!`, `return`…), que é o que separa regex de divisão:
+    // `a / b` tem operando à esquerda e não casa. Barra dentro de classe de
+    // caractere (`[/]`) fica coberta porque a classe é consumida inteira.
+    .replace(/([(,=:[!?&|+{;]|\breturn|\bcase)(\s*)\/(?![/*])(?:[^/\\\n[]|\\.|\[(?:[^\]\\]|\\.)*\])+\/[gimsuy]*/g, '$1$2/x/');
 
   // TEXTO ENTRE TAGS é interface, não código: `<Trigger>Item fechado</Trigger>`
   // não declara nada. O contador lia isso, e não reprovava só por acidente —

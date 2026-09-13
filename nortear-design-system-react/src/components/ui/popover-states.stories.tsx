@@ -236,12 +236,16 @@ export const CloseButton: Story = {
       // ramo `close-press` só existiria na tabela do teste de unidade — nenhuma
       // story desta stack conseguia produzi-lo antes de 2026-09-12.
       const [reason, setReason] = useState("—");
+      // CONTROLADO por causa do Salvar: confirmar fecha por CÓDIGO, e código só
+      // tem como fechar se o estado for de quem compõe.
+      const [open, setOpen] = useState(true);
       return (
         <div className={`nds-stack ${wrapperClass}`} data-spacing="sm" style={wrapperStyle}>
           <Popover
-            defaultOpen
-            onOpenChange={(open, evento) => {
-              if (!open) setReason(popoverCloseReason(evento?.reason));
+            open={open}
+            onOpenChange={(next, details) => {
+              setOpen(next);
+              if (!next) setReason(popoverCloseReason(details?.reason));
             }}
           >
             <PopoverTrigger asChild>
@@ -254,13 +258,20 @@ export const CloseButton: Story = {
                   Ajuste a aparência do conteúdo da página.
                 </PopoverDescription>
               </PopoverHeader>
+              {/* Os DOIS ramos, lado a lado — é isto que esta story existe para
+                  mostrar. O Cancelar é a peça de fechar e produz `close-button`;
+                  o Salvar fecha por código, como um formulário faz depois de
+                  salvar, e produz `api`. Até 2026-09-13 os dois eram
+                  `PopoverClose`, e a story que promete separar desistiu de
+                  concluiu media a mesma coisa duas vezes. */}
               <div className="nds-cluster" data-justify="end" data-spacing="sm">
                 <PopoverClose asChild>
                   <Button variant="ghost" size="sm">Cancelar</Button>
                 </PopoverClose>
-                <PopoverClose asChild>
-                  <Button size="sm">Salvar</Button>
-                </PopoverClose>
+                <Button
+                  size="sm"
+                  onClick={() => { setOpen(false); setReason(popoverCloseReason(undefined)); }}
+                >Salvar</Button>
               </div>
             </PopoverContent>
           </Popover>
@@ -296,6 +307,16 @@ export const CloseButton: Story = {
       // do `popoverCloseReason` era inalcançável desta stack: nenhuma story tinha
       // como produzi-lo, e o teste de unidade só provava a TABELA, nunca a fiação.
       await expect(reasonText()).toBe("close-button");
+    });
+
+    await step("E o Salvar fecha pelo OUTRO caminho, com motivo `api`", async () => {
+      // O par que dá sentido ao passo anterior. Sem ele, "close-button" seria
+      // apenas o que o painel sempre responde, e a distinção que justifica o
+      // campo — desistiu × concluiu — não estaria medida em lugar nenhum.
+      const dialog = await openPanel();
+      await userEvent.click(within(dialog).getByRole("button", { name: /Salvar/i }));
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      await expect(reasonText()).toBe("api");
     });
 
     await step("Controle negativo: Escape fecha pelo outro caminho", async () => {

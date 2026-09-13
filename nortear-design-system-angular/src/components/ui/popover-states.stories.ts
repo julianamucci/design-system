@@ -43,6 +43,11 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// O rodapé fecha por DOIS caminhos, e a diferença é o que separa "desistiu" de
+// "concluiu" no relatório: o "Cancelar" é a peça de fechar (`close-press`, que
+// o design system lê como `close-button`) e o "Salvar" escreve no estado
+// (`api`). Por isso toda story que usa este painel liga `[(open)]="aberto"` —
+// sem estado externo não há como fechar por código.
 const SIMPLE_PANEL = `
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
@@ -52,14 +57,15 @@ const SIMPLE_PANEL = `
 
           <div class="nds-cluster" data-justify="end" data-spacing="sm">
             <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-            <button ndsPopoverClose ndsButton size="sm">Salvar</button>
+            <button ndsButton size="sm" (click)="aberto = false">Salvar</button>
           </div>
         </ng-template>`;
 
 export const Closed: Story = {
   render: () => ({
+    props: { aberto: false },
     template: `
-      <div ndsPopover>
+      <div ndsPopover [(open)]="aberto">
         <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
         ${SIMPLE_PANEL}
       </div>
@@ -93,8 +99,13 @@ export const Open: Story = {
   // lá a play termina com o painel fechado.
   parameters: { covers: ['accessibility.item1', 'accessibility.item2'] },
   render: () => ({
+    // Nasce aberta pelo estado externo, e não por `defaultOpen`: o rodapé fecha
+    // por código no "Salvar", e isso exige o par `[open]`/`(openChange)`. O
+    // `defaultOpen` continua provado pela story `Modal` logo abaixo, que abre
+    // por ele e reprovaria se o input não chegasse.
+    props: { aberto: true },
     template: `
-      <div ndsPopover [defaultOpen]="true">
+      <div ndsPopover [(open)]="aberto">
         <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
         ${SIMPLE_PANEL}
       </div>
@@ -104,7 +115,7 @@ export const Open: Story = {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button', { name: 'Abrir popover' });
 
-    await step('defaultOpen abre o painel já na primeira renderização', async () => {
+    await step('O estado inicial abre o painel já na primeira renderização', async () => {
       // Prova o binding de input: sob JIT o componente cairia no valor padrão
       // do próprio componente e nasceria fechado, sem erro nenhum.
       await waitFor(async () => {
@@ -120,15 +131,17 @@ export const Open: Story = {
 export const Controlled: Story = {
   parameters: { covers: ['functional.item3'] },
   render: () => ({
-    props: { isOpen: false },
+    props: { aberto: false },
+    // O par `[open]`/`(openChange)` escrito por extenso, que é o assunto desta
+    // story — `[(open)]="aberto"` das outras é o mesmo par açucarado.
     template: `
       <div class="nds-cluster" data-spacing="md">
-        <div ndsPopover [open]="isOpen" (openChange)="isOpen = $event">
+        <div ndsPopover [open]="aberto" (openChange)="aberto = $event">
           <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
           ${SIMPLE_PANEL}
         </div>
 
-        <button ndsButton variant="ghost" (click)="isOpen = !isOpen">
+        <button ndsButton variant="ghost" (click)="aberto = !aberto">
           Alternar por fora
         </button>
 
@@ -175,8 +188,9 @@ export const Controlled: Story = {
 export const Focus: Story = {
   parameters: { covers: ['functional.item4', 'accessibility.item3'] },
   render: () => ({
+    props: { aberto: false },
     template: `
-      <div ndsPopover>
+      <div ndsPopover [(open)]="aberto">
         <button ndsPopoverTrigger ndsButton variant="outline">Abrir popover</button>
         ${SIMPLE_PANEL}
       </div>

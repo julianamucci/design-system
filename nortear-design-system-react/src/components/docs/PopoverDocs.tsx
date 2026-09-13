@@ -134,7 +134,7 @@ type PopoverOpenChange = NonNullable<ComponentProps<typeof Popover>["onOpenChang
 
 const rastrearPopover =
   (location: string, triggerId: string): PopoverOpenChange =>
-  (open, evento) => {
+  (open, details) => {
     if (open) {
       track("popover_open", {
         component: "popover",
@@ -145,7 +145,7 @@ const rastrearPopover =
     }
     track("popover_close", {
       component: "popover",
-      reason: popoverCloseReason(evento?.reason),
+      reason: popoverCloseReason(details?.reason),
       location,
     });
   };
@@ -163,9 +163,21 @@ export function PopoverDocs() {
   // O estado é anunciado por `aria-pressed` — o atributo de botão alternador
   // que o `toggle` deste sistema já usa. O `label` do evento é a CHAVE da cor,
   // nunca o texto traduzido, que dividiria uma série em três no GA4.
-  const [selectedColor, setCorSelecionada] = useState<string>("primary");
+  const [selectedColor, setSelectedColor] = useState<string>("primary");
+  // O painel de filtros é CONTROLADO porque o "Aplicar" fecha por CÓDIGO:
+  // aplicar é a decisão, e depois dela o painel não tem mais o que oferecer.
+  // Fechá-lo pela peça de fechar faria "concluiu" chegar ao relatório como
+  // "apertou o botão de fechar" — ver a seção de analytics do PRD.
+  const [filterOpen, setFilterOpen] = useState(false);
+  // Os dois painéis com FORMULÁRIO são controlados pela mesma razão, e o
+  // fechamento deles vive no `onSubmit` — nunca no `onClick` do "Atualizar":
+  // fechar no clique desmontaria o formulário antes de ele submeter, e só o
+  // caminho do `submit` cobre o Enter num campo, que é como metade das pessoas
+  // envia formulário.
+  const [formVariantOpen, setFormVariantOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const selectColor = useCallback((key: string) => {
-    setCorSelecionada(key);
+    setSelectedColor(key);
     track("option_select", {
       component: "popover",
       field_name: "label_color",
@@ -269,7 +281,13 @@ export function PopoverDocs() {
   </PopoverContent>
 </Popover>`;
 
-  const codeForm = `<Popover>
+  const codeForm = `const [aberto, setAberto] = useState(false);
+
+function salvar() {
+  // …grave o formulário…
+}
+
+<Popover open={aberto} onOpenChange={setAberto}>
   <PopoverTrigger asChild>
     <Button variant="outline">Editar perfil</Button>
   </PopoverTrigger>
@@ -277,7 +295,17 @@ export function PopoverDocs() {
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
-    <form className="nds-stack" data-spacing="sm">
+    <form
+      className="nds-stack"
+      data-spacing="sm"
+      onSubmit={(e) => {
+        // Fechar no onClick do botão desmontaria o formulário antes do
+        // submit, e deixaria de fora o Enter num campo.
+        e.preventDefault();
+        salvar();
+        setAberto(false);
+      }}
+    >
       <Label htmlFor="name">Nome</Label>
       <Input id="name" />
       <Label htmlFor="email">Email</Label>
@@ -612,7 +640,15 @@ interface PopoverContentProps {
             description: stripHtml(tContent("variants.styles.form")),
             code: codeForm,
             preview: (
-              <Popover onOpenChange={rastrearPopover("docs_variantes", "form")}>
+              <Popover
+                open={formVariantOpen}
+                onOpenChange={(next, details) => {
+                  setFormVariantOpen(next);
+                  // O evento SEGUE junto: é dele que sai o motivo traduzido, e
+                  // engoli-lo mandaria todo fechamento como `api` ao GA4.
+                  rastrearPopover("docs_variantes", "form")(next, details);
+                }}
+              >
                 <PopoverTrigger asChild>
                   <Button variant="outline" size="sm">
                     {tContent("demonstration.labels.form.trigger")}
@@ -627,7 +663,13 @@ interface PopoverContentProps {
                   <form
                     className="nds-stack"
                     data-spacing="sm"
-                    onSubmit={(e) => e.preventDefault()}
+                    onSubmit={(e) => {
+                      // Depois do `preventDefault`, e não no `onClick` do
+                      // botão: fechar no clique desmontaria o formulário antes
+                      // do submit, e o Enter num campo não fecharia nada.
+                      e.preventDefault();
+                      setFormVariantOpen(false);
+                    }}
                   >
                     <Label htmlFor="popover-var-name" className="nds-text-caption">
                       {tContent("demonstration.labels.form.name")}
@@ -654,7 +696,13 @@ interface PopoverContentProps {
             name: tContent("variants.compositions.editProfile.name"),
             description: tContent("variants.compositions.editProfile.description"),
             useWhen: tContent("variants.compositions.editProfile.use"),
-            code: `<Popover>
+            code: `const [aberto, setAberto] = useState(false);
+
+function salvar() {
+  // …grave o formulário…
+}
+
+<Popover open={aberto} onOpenChange={setAberto}>
   <PopoverTrigger asChild>
     <Button variant="outline">Editar perfil</Button>
   </PopoverTrigger>
@@ -668,7 +716,13 @@ interface PopoverContentProps {
     <form
       className="nds-stack"
       data-spacing="md"
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={(e) => {
+        // Fechar no onClick do botão desmontaria o formulário antes do
+        // submit, e deixaria de fora o Enter num campo.
+        e.preventDefault();
+        salvar();
+        setAberto(false);
+      }}
     >
       <div className="nds-stack" data-spacing="xs">
         <Label htmlFor="pc-name">Nome</Label>
@@ -684,7 +738,14 @@ interface PopoverContentProps {
 </Popover>`,
             preview: (
               <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
-                <Popover onOpenChange={rastrearPopover("docs_composicoes", "edit-profile")}>
+                <Popover
+                  open={profileOpen}
+                  onOpenChange={(next, details) => {
+                    setProfileOpen(next);
+                    // O evento SEGUE junto: é dele que sai o motivo traduzido.
+                    rastrearPopover("docs_composicoes", "edit-profile")(next, details);
+                  }}
+                >
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">
                       {tContent("demonstration.labels.form.trigger")}
@@ -699,7 +760,14 @@ interface PopoverContentProps {
                     <form
                       className="nds-stack"
                       data-spacing="md"
-                      onSubmit={(e) => e.preventDefault()}
+                      onSubmit={(e) => {
+                        // Depois do `preventDefault`, e não no `onClick` do
+                        // botão: fechar no clique desmontaria o formulário
+                        // antes do submit, e o Enter num campo não fecharia
+                        // nada.
+                        e.preventDefault();
+                        setProfileOpen(false);
+                      }}
                     >
                       <div className="nds-stack" data-spacing="xs">
                         <Label htmlFor="pc-name" className="nds-text-caption">
@@ -727,7 +795,13 @@ interface PopoverContentProps {
             name: tContent("variants.compositions.tableFilter.name"),
             description: tContent("variants.compositions.tableFilter.description"),
             useWhen: tContent("variants.compositions.tableFilter.use"),
-            code: `<Popover>
+            code: `const [open, setOpen] = useState(false);
+
+function aplicar() {
+  // …aplique os filtros à listagem…
+}
+
+<Popover open={open} onOpenChange={setOpen}>
   <PopoverTrigger asChild>
     <Button variant="outline">Filtros</Button>
   </PopoverTrigger>
@@ -751,13 +825,21 @@ interface PopoverContentProps {
     </div>
     <div className="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
       <Button variant="ghost" size="sm">Limpar</Button>
-      <Button size="sm">Aplicar</Button>
+      <Button size="sm" onClick={() => { aplicar(); setOpen(false); }}>Aplicar</Button>
     </div>
   </PopoverContent>
 </Popover>`,
             preview: (
               <div className="nds-min-h-16" style={{ contain: "layout", position: "relative" }}>
-                <Popover onOpenChange={rastrearPopover("docs_composicoes", "table-filter")}>
+                <Popover
+                  open={filterOpen}
+                  onOpenChange={(next, details) => {
+                    setFilterOpen(next);
+                    // O evento SEGUE junto: é dele que sai o motivo traduzido, e
+                    // engoli-lo mandaria todo fechamento como `api` ao GA4.
+                    rastrearPopover("docs_composicoes", "table-filter")(next, details);
+                  }}
+                >
                   <PopoverTrigger asChild>
                     <Button variant="outline" size="sm">
                       {tContent("variants.compositions.tableFilter.trigger")}
@@ -785,7 +867,7 @@ interface PopoverContentProps {
                       <Button variant="ghost" size="sm">
                         {tContent("variants.compositions.tableFilter.clear")}
                       </Button>
-                      <Button size="sm">
+                      <Button size="sm" onClick={() => setFilterOpen(false)}>
                         {tContent("variants.compositions.tableFilter.apply")}
                       </Button>
                     </div>
@@ -824,7 +906,7 @@ interface PopoverContentProps {
           type="button"
           aria-label={s.name}
           aria-pressed={selectedColor === s.key}
-          onClick={() => setCorSelecionada(s.key)}
+          onClick={() => setSelectedColor(s.key)}
           className={"nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-ring-selected " + s.className}
         />
       ))}

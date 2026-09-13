@@ -49,6 +49,11 @@ function header(title: string, description: string): string {
  * Botão que fecha o painel por dentro — o único papel do `PopoverClose`.
  * Sempre `ghost`: a ação secundária não disputa peso com o botão primário do
  * rodapé, e é essa a variante que a story renderiza.
+ *
+ * DESISTIR é o que a peça de fechar representa, e só o Cancelar entra aqui. O
+ * botão de confirmação fecha por CÓDIGO (`open = false`), porque é a diferença
+ * entre os dois caminhos que separa "desistiu" de "concluiu" no relatório: pela
+ * peça, o fechamento é reportado como `close-button`; por código, como `api`.
  */
 function close(label: string, indentacao: string): string {
   return `${indentacao}<PopoverClose>
@@ -67,6 +72,12 @@ type Part = {
   state: string;
   /** Conteúdo do `PopoverContent`, já indentado em 4 espaços. */
   markup: string;
+  /**
+   * A composição tem botão de CONFIRMAÇÃO, e ele fecha o painel por código —
+   * o que exige `bind:open` e o `$state` de abertura no snippet, mesmo quando
+   * o painel não nasce aberto.
+   */
+  fechaPorCodigo: boolean;
 };
 
 function part(a: PopoverArgs): Part {
@@ -78,6 +89,7 @@ function part(a: PopoverArgs): Part {
       externos: [],
       state: '',
       markup: `    <p>${a.description}</p>`,
+      fechaPorCodigo: false,
     };
   }
 
@@ -93,7 +105,10 @@ function part(a: PopoverArgs): Part {
 let email = $state("ana@nortear.com.br");
 
 function salvar(evento: SubmitEvent) {
+  // Fechar no clique do botão cancelaria o submit: o fechamento vai no
+  // \`submit\`, depois do \`preventDefault\` — salvou, e só então fechou.
   evento.preventDefault();
+  open = false;
 }`,
       markup: `${head}
     <form class="nds-stack" data-spacing="md" onsubmit={salvar}>
@@ -110,6 +125,7 @@ ${close(a.cancelLabel, '        ')}
         <Button type="submit" size="sm">${a.submitLabel}</Button>
       </div>
     </form>`,
+      fechaPorCodigo: true,
     };
   }
 
@@ -117,7 +133,11 @@ ${close(a.cancelLabel, '        ')}
     return {
       names: HEADER,
       externos: [`import { Button } from "@/components/ui/button";`],
-      state: '',
+      state: `function aplicar() {
+  // Aplicar É a decisão: fecha por código, e o motivo do fechamento chega como
+  // \`api\`. Dentro de \`PopoverClose\` chegaria como \`close-button\`.
+  open = false;
+}`,
       markup: `${head}
     <div class="nds-stack nds-text-body" data-spacing="xs">
       <label class="nds-cluster" data-spacing="sm">
@@ -135,8 +155,9 @@ ${close(a.cancelLabel, '        ')}
     </div>
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
       <Button variant="ghost" size="sm">Limpar</Button>
-      <Button size="sm">Aplicar</Button>
+      <Button size="sm" onclick={aplicar}>Aplicar</Button>
     </div>`,
+      fechaPorCodigo: true,
     };
   }
 
@@ -156,6 +177,7 @@ ${close(a.cancelLabel, '        ')}
       <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-bg-info" aria-label="Informação"></button>
       <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-bg-destructive" aria-label="Destrutiva"></button>
     </div>`,
+      fechaPorCodigo: false,
     };
   }
 
@@ -179,18 +201,24 @@ ${close(a.cancelLabel, '        ')}
         <input type="checkbox" class="nds-size-4" />
       </label>
     </div>`,
+      fechaPorCodigo: false,
     };
   }
 
   return {
     names: [...HEADER, 'PopoverClose'],
     externos: [`import { Button } from "@/components/ui/button";`],
-    state: '',
+    state: `function salvar() {
+  // Salvou: fecha por CÓDIGO. Só o Cancelar é \`PopoverClose\` — é a diferença
+  // entre os dois caminhos que separa "desistiu" de "concluiu" no relatório.
+  open = false;
+}`,
     markup: `${head}
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
 ${close(a.cancelLabel, '      ')}
-      <Button size="sm">${a.saveLabel}</Button>
+      <Button size="sm" onclick={salvar}>${a.saveLabel}</Button>
     </div>`,
+    fechaPorCodigo: true,
   };
 }
 
@@ -217,13 +245,16 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     ...ctx?.args,
   };
 
-  const { names, externos, state, markup } = part(a);
+  const { names, externos, state, markup, fechaPorCodigo } = part(a);
   const isOpen = Boolean(a.open || a.defaultOpen);
+  // O estado de abertura entra por dois motivos independentes: o painel nasce
+  // aberto, ou o rodapé tem confirmação — que fecha escrevendo nele.
+  const hasState = isOpen || fechaPorCodigo;
 
   const script = [
     importDoPopover(['Popover', 'PopoverTrigger', 'PopoverContent', ...names]),
     ...(externos.length ? externos : [`import { Button } from "@/components/ui/button";`]),
-    ...(isOpen ? ['', 'let aberto = $state(true);'] : []),
+    ...(hasState ? ['', `let open = $state(${isOpen});`] : []),
     ...(state ? ['', state] : []),
   ].join('\n');
 
@@ -238,7 +269,7 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
 
   return svelteSnippet(
     script,
-    `<Popover${isOpen ? ' bind:open={aberto}' : ''}>
+    `<Popover${hasState ? ' bind:open={open}' : ''}>
   <PopoverTrigger>
     {#snippet child({ props })}
       <Button variant="outline" {...props}>${a.triggerLabel}</Button>

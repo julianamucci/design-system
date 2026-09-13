@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect, userEvent, screen } from 'storybook/test';
+import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
 import { open, panel } from './popover.fixtures';
+import { popoverFormSource } from './popover.source';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
@@ -75,8 +76,11 @@ export const Default: Story = {
 export const WithTitle: Story = {
   parameters: { covers: ['visual.item2', 'accessibility.item5'] },
   render: () => ({
+    // Estado controlado só por causa do rodapé: o "Salvar" fecha por CÓDIGO, e
+    // é isso que faz o motivo chegar como `api` em vez de `close-button`.
+    props: { isOpen: false },
     template: `
-      <div ndsPopover>
+      <div ndsPopover [(open)]="isOpen">
         <button ndsPopoverTrigger ndsButton variant="outline">Configurações de exibição</button>
 
         <ng-template ndsPopoverContent>
@@ -86,8 +90,10 @@ export const WithTitle: Story = {
           </div>
 
           <div class="nds-cluster" data-justify="end" data-spacing="sm">
+            <!-- Cancelar é a peça de fechar: desistiu, motivo close-button. -->
             <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
-            <button ndsPopoverClose ndsButton size="sm">Salvar</button>
+            <!-- Salvar fecha por código: concluiu, motivo api. -->
+            <button ndsButton size="sm" (click)="isOpen = false">Salvar</button>
           </div>
         </ng-template>
       </div>
@@ -124,10 +130,20 @@ export const WithTitle: Story = {
 };
 
 export const Form: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // O painel Code do formulário tem de ensinar a MESMA forma que o preview:
+    // o fechamento no `(submit)`, e não no clique da ação primária.
+    docs: { source: { transform: popoverFormSource } },
+  },
   render: () => ({
+    // Controlada por causa do "Atualizar": ele fecha por CÓDIGO depois de
+    // gravar, e é isso que faz o motivo chegar como `api`. Marcado com
+    // `ndsPopoverClose` ele reportaria `close-button`, que é o motivo de quem
+    // desistiu — e o "Cancelar" ao lado é justamente esse caminho.
+    props: { isOpen: false },
     template: `
-      <div ndsPopover>
+      <div ndsPopover [(open)]="isOpen">
         <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
 
         <ng-template ndsPopoverContent>
@@ -136,7 +152,15 @@ export const Form: Story = {
             <p ndsPopoverDescription>Altere o nome e o email da conta.</p>
           </div>
 
-          <form class="nds-stack" data-spacing="md" (submit)="$event.preventDefault()">
+          <!-- Fechar mora AQUI, no submit, e não no clique de "Atualizar":
+               fechar no clique desmontaria o formulário antes de ele enviar, e
+               só o caminho do submit cobre também o Enter num campo, que é como
+               metade das pessoas envia formulário. -->
+          <form
+            class="nds-stack"
+            data-spacing="md"
+            (submit)="$event.preventDefault(); isOpen = false"
+          >
             <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="pv-form-nome">Nome</label>
               <input ndsInput id="pv-form-nome" value="Ana Ribeiro" />
@@ -147,9 +171,10 @@ export const Form: Story = {
               <input ndsInput id="pv-form-email" type="email" value="ana@nortear.com.br" />
             </div>
 
-            <!-- "Atualizar" é submit do form, não ndsPopoverClose: fora do form o
-                 botão fica inerte e o Enter num campo não dispara nada. Fechar
-                 por dentro é papel do "Cancelar", que sai sem salvar. -->
+            <!-- Os dois fecham, por CAMINHOS diferentes: "Cancelar" é a peça de
+                 fechar (close-button, desistiu) e "Atualizar" é submit do form,
+                 que fecha por código (api, concluiu). Marcá-lo com
+                 ndsPopoverClose apagaria a diferença e ainda tiraria o Enter. -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
               <button ndsButton type="submit" size="sm">Atualizar</button>
@@ -179,6 +204,33 @@ export const Form: Story = {
       await userEvent.clear(name);
       await userEvent.type(name, 'Bruno Lima');
       await expect(name).toHaveValue('Bruno Lima');
+    });
+
+    await step('Enter num campo envia o formulário e fecha o painel', async () => {
+      // O gesto que o clique não cobre: quem digitou um valor aperta Enter. Com
+      // o fechamento pendurado no clique de "Atualizar", este caminho deixaria
+      // o painel aberto depois de gravar.
+      await userEvent.type(screen.getByLabelText('Nome'), '{Enter}');
+      await waitFor(async () => {
+        await expect(panel()).toBeNull();
+      });
+    });
+
+    await step('E "Atualizar" fecha por código, não pela peça de fechar', async () => {
+      await open(trigger);
+      const update = screen.getByRole('button', { name: 'Atualizar' });
+      await expect(update).not.toHaveAttribute('data-slot', 'popover-close');
+      await expect(update).toHaveAttribute('type', 'submit');
+      await userEvent.click(update);
+      await waitFor(async () => {
+        await expect(panel()).toBeNull();
+      });
+    });
+
+    // Termina ABERTA: é o estado que o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await open(trigger);
+      await expect(panel()).toBeInTheDocument();
     });
   },
 };

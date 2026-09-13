@@ -87,6 +87,49 @@ ${recuo}</PopoverClose>`;
 }
 
 /**
+ * A ação de CONFIRMAR do rodapé — Salvar, Aplicar, Confirmar.
+ *
+ * Ela também fecha, mas por outro caminho, e a diferença é o que separa
+ * "desistiu" de "concluiu" no relatório: o Cancelar é a peça de fechar e chega
+ * ao GA4 como `close-button`; a confirmação fecha por CÓDIGO, depois de salvar,
+ * e chega como `api`. Envolvê-la num `PopoverClose` — o defeito corrigido em
+ * 2026-09-13 — faria os dois desfechos virarem o mesmo evento.
+ *
+ * O `close` vem do slot da raiz (`v-slot="{ close }"`), que `popover()`
+ * acrescenta sozinha quando o painel o usa.
+ */
+function confirmar(label: string, recuo: string): string {
+  return `${recuo}<!-- Confirmar fecha por CÓDIGO, depois de salvar: o motivo do
+${recuo}     fechamento é api, e não close-button -->
+${recuo}<Button size="sm" @click="close()">${label}</Button>`;
+}
+
+/**
+ * A função de salvar do formulário, para o snippet não chamar o que não existe.
+ *
+ * Fica no `<script setup>` porque é ela que grava; o fechamento NÃO vem daqui —
+ * o `close` é publicado pelo slot da raiz e só existe dentro do template.
+ */
+const SALVAR = `function salvar() {
+  // grava nome e email — e só então o painel fecha, por CÓDIGO
+}`;
+
+/**
+ * Abertura do `<form>` do painel, com o fechamento pendurado no SUBMIT.
+ *
+ * O fechamento não vai no `@click` do botão de confirmar: fechar no clique
+ * desmontaria o formulário antes de ele submeter, e o salvar nunca aconteceria.
+ * E só o caminho do `submit` cobre também o Enter num campo, que é como metade
+ * das pessoas envia formulário.
+ */
+function formAbertura(recuo: string): string {
+  return `${recuo}<!-- O fechamento vai no submit, nunca no clique do botão: fechar no
+${recuo}     clique desmontaria o formulário antes de ele submeter, e só este
+${recuo}     caminho cobre também o Enter num campo -->
+${recuo}<form class="nds-stack" data-spacing="sm" @submit.prevent="salvar(); close()">`;
+}
+
+/**
  * Painel de exemplo: cabeçalho com título e descrição, e o par de ações no pé.
  *
  * O título não é enfeite — é ele que REIVINDICA o nome acessível do painel.
@@ -102,7 +145,7 @@ ${p}    <PopoverDescription>Ajuste a aparência do conteúdo da página.</Popove
 ${p}  </PopoverHeader>
 ${p}  <div class="nds-cluster" data-justify="end" data-spacing="sm">
 ${close('Cancelar', `${p}    `)}
-${p}    <Button size="sm">Salvar</Button>
+${confirmar('Salvar', `${p}    `)}
 ${p}  </div>
 ${p}</PopoverContent>`;
 }
@@ -113,9 +156,14 @@ ${p}</PopoverContent>`;
  * `as-child` no gatilho é o que faz o `Button` do design system VIRAR o
  * gatilho, em vez de ganhar um botão em volta: dois botões aninhados são
  * markup inválido, e o de fora roubaria o clique.
+ *
+ * O `v-slot="{ close }"` entra sozinho quando o painel chama `close()` — é a
+ * raiz que publica a função, então snippet que a usa sem declará-la não
+ * compila. Derivar em vez de pedir mantém as duas pontas juntas.
  */
 function popover(options: { root?: string; label: string; panel: string }): string {
-  return `<Popover${attrs(options.root)}>
+  const slot = options.panel.includes('close()') ? 'v-slot="{ close }"' : '';
+  return `<Popover${attrs(options.root, slot)}>
   <PopoverTrigger as-child>
     <Button variant="outline">${options.label}</Button>
   </PopoverTrigger>
@@ -134,6 +182,9 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   const root = attrs(
     bool('default-open', ctx?.args?.defaultOpen, false),
     bool('modal', ctx?.args?.modal, false),
+    // A raiz publica o `close` que o Salvar do rodapé chama; sem declará-lo
+    // aqui, o snippet copiado não compila.
+    'v-slot="{ close }"',
   );
   const position = attrs(
     attr('side', ctx?.args?.side, SIDE_DEFAULT),
@@ -155,7 +206,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
     </PopoverHeader>
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
 ${close('Cancelar', '      ')}
-      <Button size="sm">Salvar</Button>
+${confirmar('Salvar', '      ')}
     </div>
   </PopoverContent>
 </Popover>`,
@@ -213,7 +264,9 @@ import { Label } from '@/components/ui/label'
 import { ref } from 'vue'
 
 const nome = ref('Ana Ribeiro')
-const email = ref('ana@nortear.com.br')`,
+const email = ref('ana@nortear.com.br')
+
+${SALVAR}`,
     popover({
       root: ':default-open="true"',
       label: 'Editar perfil',
@@ -221,7 +274,7 @@ const email = ref('ana@nortear.com.br')`,
     <PopoverHeader>
       <PopoverTitle>Editar perfil</PopoverTitle>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="sm" @submit.prevent>
+${formAbertura('    ')}
       <Label for="perfil-nome" class="nds-text-caption">Nome</Label>
       <Input id="perfil-nome" v-model="nome" />
       <Label for="perfil-email" class="nds-text-caption">Email</Label>
@@ -294,7 +347,7 @@ const aberto = ref(false)`,
     <Button @click="aberto = true">Abrir externamente</Button>
     <Button variant="outline" @click="aberto = false">Fechar externamente</Button>
   </div>
-  <Popover v-model:open="aberto">
+  <Popover v-slot="{ close }" v-model:open="aberto">
     <PopoverTrigger as-child>
       <Button variant="outline">Trigger</Button>
     </PopoverTrigger>
@@ -342,7 +395,9 @@ import { Label } from '@/components/ui/label'
 import { ref } from 'vue'
 
 const nome = ref('Ana Ribeiro')
-const email = ref('ana@nortear.com.br')`,
+const email = ref('ana@nortear.com.br')
+
+${SALVAR}`,
     popover({
       root: ':default-open="true"',
       label: 'Editar perfil',
@@ -351,7 +406,7 @@ const email = ref('ana@nortear.com.br')`,
       <PopoverTitle>Editar perfil</PopoverTitle>
       <PopoverDescription>Altere o nome e o email da conta.</PopoverDescription>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="sm" @submit.prevent>
+${formAbertura('    ')}
       <Label for="conta-nome" class="nds-text-caption">Nome</Label>
       <Input id="conta-nome" v-model="nome" />
       <Label for="conta-email" class="nds-text-caption">Email</Label>
@@ -407,7 +462,7 @@ const status = reactive<Record<string, boolean>>({
     </div>
     <div class="nds-cluster" data-justify="end" data-spacing="sm">
       <Button variant="ghost" size="sm">Limpar</Button>
-      <Button size="sm">Aplicar</Button>
+${confirmar('Aplicar', '      ')}
     </div>
   </PopoverContent>`,
     }),

@@ -3,6 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
 import { open, panel } from './popover.fixtures';
+import { popoverFormSource } from './popover.source';
 import { NdsButton } from './button';
 import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
@@ -49,18 +50,27 @@ type Story = StoryObj;
  * O painel Interactions REEXECUTA a play no mesmo DOM: um clique cego partiria
  * do estado que a rodada anterior deixou e inverteria a asserção seguinte.
  */
-async function marcar(box: HTMLElement): Promise<void> {
+async function check(box: HTMLElement): Promise<void> {
   if (box.getAttribute('aria-checked') !== 'true') await userEvent.click(box);
 }
 
-async function desmarcar(box: HTMLElement): Promise<void> {
+async function uncheck(box: HTMLElement): Promise<void> {
   if (box.getAttribute('aria-checked') !== 'false') await userEvent.click(box);
 }
 
 export const EditProfile: Story = {
+  parameters: {
+    // O painel Code tem de ensinar a MESMA forma que o preview: o fechamento
+    // vive no `(submit)`, e não no clique da ação primária.
+    docs: { source: { transform: popoverFormSource } },
+  },
   render: () => ({
+    // Controlada por causa do "Atualizar": ele fecha por CÓDIGO depois de
+    // gravar, e é isso que faz o motivo chegar como `api`. Com `ndsPopoverClose`
+    // ele reportaria `close-button`, que é o motivo de quem desistiu.
+    props: { isOpen: false },
     template: `
-      <div ndsPopover>
+      <div ndsPopover [(open)]="isOpen">
         <button ndsPopoverTrigger ndsButton variant="outline">Editar perfil</button>
 
         <ng-template ndsPopoverContent>
@@ -69,7 +79,15 @@ export const EditProfile: Story = {
             <p ndsPopoverDescription>Altere o nome e o email da conta.</p>
           </div>
 
-          <form class="nds-stack" data-spacing="md" (submit)="$event.preventDefault()">
+          <!-- Fechar mora AQUI, no submit, e não no clique de "Atualizar":
+               fechar no clique desmontaria o formulário antes de ele enviar, e
+               só o caminho do submit cobre também o Enter num campo, que é como
+               metade das pessoas envia formulário. -->
+          <form
+            class="nds-stack"
+            data-spacing="md"
+            (submit)="$event.preventDefault(); isOpen = false"
+          >
             <div class="nds-stack" data-spacing="xs">
               <label ndsLabel for="pc-perfil-nome">Nome</label>
               <input ndsInput id="pc-perfil-nome" value="Ana Ribeiro" />
@@ -80,10 +98,12 @@ export const EditProfile: Story = {
               <input ndsInput id="pc-perfil-email" type="email" value="ana@nortear.com.br" />
             </div>
 
-            <!-- "Atualizar" é submit do form, não ndsPopoverClose: fora do form o
-                 botão fica inerte e o Enter num campo não dispara nada — que é o
-                 gesto natural de quem digitou um valor numa edição em linha.
-                 Fechar por dentro é papel do "Cancelar", que sai sem salvar. -->
+            <!-- Os dois fecham, por CAMINHOS diferentes: "Cancelar" é a peça de
+                 fechar (close-button, desistiu) e "Atualizar" é submit do form,
+                 que fecha por código (api, concluiu). Marcá-lo com
+                 ndsPopoverClose apagaria a diferença e ainda deixaria o Enter
+                 num campo sem efeito — o gesto natural de quem digitou um valor
+                 numa edição em linha. -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <button ndsPopoverClose ndsButton variant="ghost" size="sm">Cancelar</button>
               <button ndsButton type="submit" size="sm">Atualizar</button>
@@ -103,7 +123,29 @@ export const EditProfile: Story = {
       await expect(screen.getByLabelText('Email')).toHaveValue('ana@nortear.com.br');
     });
 
+    await step('Atualizar CONCLUI: fecha por código, e pelo caminho do submit', async () => {
+      // O botão é `type="submit"`, e não a peça de fechar: assim o motivo chega
+      // ao relatório como `api` — "gravou e fechou" — e o Enter num campo,
+      // testado logo abaixo, fecha pelo mesmo caminho.
+      const update = screen.getByRole('button', { name: 'Atualizar' });
+      await expect(update).not.toHaveAttribute('data-slot', 'popover-close');
+      await expect(update).toHaveAttribute('type', 'submit');
+      await userEvent.click(update);
+      await waitFor(async () => {
+        await expect(panel()).toBeNull();
+      });
+    });
+
+    await step('E o Enter num campo faz o mesmo, sem passar pelo clique', async () => {
+      await open(trigger);
+      await userEvent.type(screen.getByLabelText('Nome'), '{Enter}');
+      await waitFor(async () => {
+        await expect(panel()).toBeNull();
+      });
+    });
+
     await step('Cancelar fecha sem sair do contexto', async () => {
+      await open(trigger);
       await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
       await waitFor(async () => {
         await expect(panel()).toBeNull();
@@ -119,8 +161,13 @@ export const EditProfile: Story = {
 
 export const TableFilter: Story = {
   render: () => ({
+    // Estado controlado por causa do "Aplicar": ele fecha por CÓDIGO, depois de
+    // aplicar o filtro, e é isso que faz o motivo chegar como `api`. Marcado
+    // com `ndsPopoverClose` ele reportaria `close-button`, que é o motivo de
+    // quem desistiu — e o "Limpar" ao lado, que não fecha, é o contraste.
+    props: { isOpen: false },
     template: `
-      <div ndsPopover>
+      <div ndsPopover [(open)]="isOpen">
         <button ndsPopoverTrigger ndsButton variant="outline">Filtros</button>
 
         <ng-template ndsPopoverContent>
@@ -146,7 +193,7 @@ export const TableFilter: Story = {
 
           <div class="nds-cluster" data-justify="end" data-spacing="sm">
             <button ndsButton variant="ghost" size="sm">Limpar</button>
-            <button ndsPopoverClose ndsButton size="sm">Aplicar</button>
+            <button ndsButton size="sm" (click)="isOpen = false">Aplicar</button>
           </div>
         </ng-template>
       </div>
@@ -165,8 +212,26 @@ export const TableFilter: Story = {
       // Filtro é escolha múltipla: fechar no primeiro clique obrigaria a
       // reabrir para cada critério.
       const active = screen.getByRole('checkbox', { name: 'Ativo' });
-      await marcar(active);
+      await check(active);
       await expect(active).toHaveAttribute('aria-checked', 'true');
+      await expect(panel()).toBeInTheDocument();
+    });
+
+    await step('Aplicar fecha por código, e não pela peça de fechar', async () => {
+      // Quem CONCLUIU fecha escrevendo no estado: assim o motivo chega ao
+      // relatório como `api`. Com `ndsPopoverClose` ele chegaria como
+      // `close-button`, apagando a diferença entre desistir e concluir.
+      const aplicar = screen.getByRole('button', { name: 'Aplicar' });
+      await expect(aplicar).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(aplicar);
+      await waitFor(async () => {
+        await expect(panel()).toBeNull();
+      });
+    });
+
+    // Termina ABERTA: é o estado que o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await open(trigger);
       await expect(panel()).toBeInTheDocument();
     });
   },
@@ -288,12 +353,12 @@ export const QuickSettings: Story = {
 
       // Ponto de partida conhecido antes de medir — no replay o painel chega
       // com o que a rodada anterior deixou.
-      await marcar(notificacoes);
-      await desmarcar(escuro);
+      await check(notificacoes);
+      await uncheck(escuro);
       await expect(notificacoes).toHaveAttribute('aria-checked', 'true');
       await expect(escuro).toHaveAttribute('aria-checked', 'false');
 
-      await marcar(escuro);
+      await check(escuro);
       await expect(escuro).toHaveAttribute('aria-checked', 'true');
       // A que já estava marcada não se mexe: são preferências, não um grupo de
       // escolha única.

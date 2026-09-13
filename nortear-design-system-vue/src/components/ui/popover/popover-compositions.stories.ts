@@ -75,7 +75,7 @@ export const EditProfile: Story = {
     components: sharedComponents,
     template: `
       <div class="nds-min-h-90" style="contain: layout">
-        <Popover :default-open="true">
+        <Popover v-slot="{ close }" :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Editar perfil</Button>
           </PopoverTrigger>
@@ -84,7 +84,12 @@ export const EditProfile: Story = {
               <PopoverTitle>Editar perfil</PopoverTitle>
               <PopoverDescription>Altere o nome e o email da conta.</PopoverDescription>
             </PopoverHeader>
-            <form class="nds-stack" data-spacing="sm" @submit.prevent>
+            <!-- Cancelar é a PEÇA de fechar (motivo close-button); o
+                 "Atualizar" fecha por CÓDIGO ao salvar, e o fechamento vai no
+                 SUBMIT — nunca no clique do botão: fechar no clique
+                 desmontaria o formulário antes de ele submeter, e só este
+                 caminho cobre também o Enter num campo. -->
+            <form class="nds-stack" data-spacing="sm" @submit.prevent="close()">
               <Label for="popover-comp-name" class="nds-text-caption">Nome</Label>
               <Input id="popover-comp-name" model-value="Ana Ribeiro" />
               <Label for="popover-comp-email" class="nds-text-caption">Email</Label>
@@ -101,12 +106,49 @@ export const EditProfile: Story = {
       </div>
     `,
   }),
-  play: async ({ step }) => {
+  play: async ({ canvasElement, step }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: /Editar perfil/i });
+    const closed = async () => {
+      // Só LEITURA dentro do `waitFor`: condição que mexe no DOM reagenda a si
+      // mesma pelo observador de mutação e pendura o arquivo inteiro.
+      await waitFor(
+        () => {
+          if (panel()) throw new Error('popover ainda aberto');
+        },
+        { timeout: 2000 },
+      );
+    };
+
     await step('O formulário abre preenchido e pronto para edição', async () => {
       await waitForPortal('dialog');
       const ctx = within(panel()!);
       await expect(ctx.getByLabelText(/Nome/i)).toHaveValue('Ana Ribeiro');
       await expect(ctx.getByLabelText(/Email/i)).toHaveValue('ana@nortear.com.br');
+    });
+
+    await step('O Cancelar é a PEÇA de fechar, e fecha o painel', async () => {
+      const cancelar = within(panel()!).getByRole('button', { name: /Cancelar/i });
+      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(cancelar);
+      await closed();
+    });
+
+    await step('E o Atualizar fecha pelo SUBMIT do formulário', async () => {
+      // O fechamento mora no `@submit`, e não no clique: fechar no clique
+      // desmontaria o formulário antes de ele submeter. O mesmo caminho é o que
+      // atende o Enter num campo.
+      await userEvent.click(trigger);
+      await waitForPortal('dialog');
+      const update = within(panel()!).getByRole('button', { name: /Atualizar/i });
+      await expect(update).not.toHaveAttribute('data-slot', 'popover-close');
+      await userEvent.click(update);
+      await closed();
+    });
+
+    // A story termina ABERTA: é o estado que o axe varre e o Chromatic fotografa.
+    await step('Estado final: painel aberto', async () => {
+      await userEvent.click(trigger);
+      await expect(await waitForPortal('dialog')).toBeVisible();
     });
   },
 };
@@ -127,7 +169,7 @@ export const TableFilter: Story = {
     components: sharedComponents,
     template: `
       <div class="nds-min-h-80" style="contain: layout">
-        <Popover :default-open="true">
+        <Popover v-slot="{ close }" :default-open="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Filtros</Button>
           </PopoverTrigger>
@@ -150,9 +192,12 @@ export const TableFilter: Story = {
                 <span>Arquivado</span>
               </label>
             </div>
+            <!-- Aplicar É a decisão: fecha por CÓDIGO depois de aplicar, com o
+                 "close" do slot da raiz, e o motivo chega como api. Limpar
+                 devolve a escolha a quem ainda está decidindo, e não fecha. -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <Button variant="ghost" size="sm">Limpar</Button>
-              <Button size="sm">Aplicar</Button>
+              <Button size="sm" @click="close()">Aplicar</Button>
             </div>
           </PopoverContent>
         </Popover>
