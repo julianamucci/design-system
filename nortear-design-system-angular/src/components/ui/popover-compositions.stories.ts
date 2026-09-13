@@ -65,7 +65,7 @@ export const EditProfile: Story = {
 
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Editar perfil</h3>
+            <h2 ndsPopoverTitle>Editar perfil</h2>
             <p ndsPopoverDescription>Altere o nome e o email da conta.</p>
           </div>
 
@@ -125,7 +125,7 @@ export const TableFilter: Story = {
 
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Filtrar por status</h3>
+            <h2 ndsPopoverTitle>Filtrar por status</h2>
             <p ndsPopoverDescription>Combine quantos status quiser na listagem.</p>
           </div>
 
@@ -180,7 +180,7 @@ export const ColorPicker: Story = {
 
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Cor da etiqueta</h3>
+            <h2 ndsPopoverTitle>Cor da etiqueta</h2>
             <p ndsPopoverDescription>Escolha uma cor da paleta do tema.</p>
           </div>
 
@@ -255,7 +255,7 @@ export const QuickSettings: Story = {
 
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Preferências</h3>
+            <h2 ndsPopoverTitle>Preferências</h2>
             <p ndsPopoverDescription>Cada linha vale por si — nada aqui depende do resto.</p>
           </div>
 
@@ -311,7 +311,7 @@ export const SideTop: Story = {
 
         <ng-template ndsPopoverContent side="top" [sideOffset]="12">
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Ancorado acima</h3>
+            <h2 ndsPopoverTitle>Ancorado acima</h2>
             <p ndsPopoverDescription>
               Sem espaço acima, o painel vira para baixo sozinho.
             </p>

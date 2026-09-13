@@ -511,7 +511,7 @@ const popover = createPopover({
   content,
   side: 'bottom',
   align: 'start',
-  sideOffset: 8,
+  sideOffset: 4,
   open: aberto,                     // presente = quem manda é quem chama
   onOpenChange: (proximo) => {
     aberto = proximo;
@@ -1031,7 +1031,7 @@ export type PopoverOptions = {
   content: HTMLElement | string;
   side?: PopoverSide;          // default 'bottom'
   align?: PopoverAlign;        // default 'center'
-  sideOffset?: number;         // default 8
+  sideOffset?: number;         // default 4
   open?: boolean;              // presente = modo controlado
   defaultOpen?: boolean;
   modal?: boolean;             // default false — foco preso + rolagem travada
@@ -1084,7 +1084,7 @@ cancelar.dataset.slot = 'popover-close';`;
                 { name: 'content',      type: 'HTMLElement | string',                defaultValue: '—',         required: 'Sim', description: 'Conteúdo do painel. String é renderizada via textContent.' },
                 { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'",  required: 'Não', description: toPlainText(t('props.table.side.description')) + ' Sai no markup como data-side. A posição é fixa: não há reposicionamento automático por colisão.' },
                 { name: 'align',        type: "'start' | 'center' | 'end'",          defaultValue: "'center'",  required: 'Não', description: toPlainText(t('props.table.align.description')) + ' Sai no markup como data-align.' },
-                { name: 'sideOffset',   type: 'number',                              defaultValue: '8',         required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) },
+                { name: 'sideOffset',   type: 'number',                              defaultValue: '4',         required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) },
                 { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.open.description')) + ' Definida, o painel passa ao modo controlado: clique, Escape e clique fora só anunciam a intenção por onOpenChange, e quem move o painel é setOpen().' },
                 { name: 'defaultOpen',  type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: 'Estado inicial no modo não-controlado.' },
                 { name: 'modal',        type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: toPlainText(t('props.table.modal.description')) },

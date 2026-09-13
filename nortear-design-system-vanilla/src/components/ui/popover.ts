@@ -319,7 +319,7 @@ export function createPopover(options: PopoverOptions): PopoverElement {
     content,
     side = 'bottom',
     align = 'center',
-    sideOffset = 8,
+    sideOffset = 4,
     modal = false,
     onOpenChange,
   } = options;

@@ -109,7 +109,7 @@ describe('as lições do componente', () => {
     // `aria-label` — é o motivo de a variante `default` existir, para o conteúdo
     // livre. Este construtor é o do Playground, e o Playground tem cabeçalho.
     const code = popoverPlaygroundSource();
-    expect(code).toContain('<h3 ndsPopoverTitle>Configurações de exibição</h3>');
+    expect(code).toContain('<h2 ndsPopoverTitle>Configurações de exibição</h2>');
     expect(code).toContain('<p ndsPopoverDescription>');
     expect(code).not.toContain('aria-label');
   });

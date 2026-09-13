@@ -294,10 +294,11 @@ linha:
 | `modal` | boolean | `false` |
 | `side` | `top \| right \| bottom \| left` | `bottom` |
 | `align` | `start \| center \| end` | `center` |
-| `sideOffset` | number | `4` — **exceto no vanilla, que é `8`**; ver abaixo |
+| `sideOffset` | number | `4` nas cinco — ver abaixo |
 
-**O `sideOffset` do vanilla é o DOBRO, e isso está medido e não resolvido.**
-Medido em 2026-09-12: `createPopover` abre com `sideOffset = 8`
+**O `sideOffset` do vanilla era o DOBRO, e virou `4` por decisão da dona em
+2026-09-12.**
+Medido no mesmo dia: `createPopover` abria com `sideOffset = 8`
 (`nortear-design-system-vanilla/src/components/ui/popover.ts`), contra `4` no
 `PopoverContent` do react, no do vue, no do svelte e no `input` do angular. O
 valor não é compensação de seta — o popover não tem seta — e o `positionFloating`
@@ -307,10 +308,28 @@ nome e mesmo padrão das outras stacks", e esta tabela dizia o mesmo — duas
 afirmações concordando entre si e discordando do código.
 
 **Até 2026-09-12 esta seção abria com "mesmo nome e mesmo padrão nas cinco"**, sem
-ressalva. Qual dos dois números fica é decisão de CÓDIGO e tem dono: pela regra da
-casa o vanilla é a referência e os outros quatro se alinham a ele, mas o `4` é o
-que as quatro libs, o conteúdo compartilhado e a tabela de props publicam. Está
-RELATADO, não decidido aqui.
+ressalva.
+
+**Por que o `4` venceu, contra a regra de que o vanilla é a referência**: aqui o
+vanilla não era a referência, era o desalinhado. O `4` é o que as quatro libs
+entregam, o que o conteúdo compartilhado publica na tabela de props e o que os
+snippets de três stacks ensinam; o `8` existia em um lugar só, sem justificativa
+escrita, e a própria docs page do vanilla o repetia sobrescrevendo a tabela
+compartilhada. A regra da referência resolve divergência de MARKUP e de
+COMPORTAMENTO, onde a lib esconde o contrato — não escolha de número em que
+quatro implementações e a documentação já concordam.
+
+Mudou junto o corte do snippet: `popover.source.ts` omitia `sideOffset` quando o
+valor era 8, então depois da troca ele esconderia o override real e imprimiria o
+default como se fosse escolha. Passou a omitir o 4.
+
+**Também mudou o nível do título no Angular**, no mesmo dia e pelo mesmo relato:
+os 27 títulos de popover da stack saíam em `<h3>` contra o `<h2>` das outras
+quatro. Ali o nível não tem default a herdar — o título é diretiva de ATRIBUTO,
+e quem escreve o template escolhe a tag —, então o portão que lia o default não
+tinha o que ler. Ganhou um ramo que mede call site. Detalhe do inventário: o
+popover não era o único, e os outros 12 pontos do Angular (onze demos do Drawer,
+um título só-para-leitor do Command) foram junto, porque a regra é da categoria.
 
 ### Divergências de forma, registradas e não "alinhadas"
 

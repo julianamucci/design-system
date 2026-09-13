@@ -46,7 +46,7 @@ type Story = StoryObj;
 const SIMPLE_PANEL = `
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Configurações de exibição</h3>
+            <h2 ndsPopoverTitle>Configurações de exibição</h2>
             <p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>
           </div>
 
@@ -239,7 +239,7 @@ export const Modal: Story = {
 
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Popover modal</h3>
+            <h2 ndsPopoverTitle>Popover modal</h2>
             <p ndsPopoverDescription>O foco fica preso no painel enquanto ele está aberto.</p>
           </div>
 

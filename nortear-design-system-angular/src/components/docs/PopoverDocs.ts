@@ -169,7 +169,7 @@ const EXTENSIBILITY_CODE = `<!-- Controle externo do estado aberto/fechado -->
 
   <ng-template ndsPopoverContent side="bottom" align="start" [sideOffset]="8">
     <div ndsPopoverHeader>
-      <h3 ndsPopoverTitle>Editar perfil</h3>
+      <h2 ndsPopoverTitle>Editar perfil</h2>
     </div>
 
     <!-- fechar sem passar pelo estado externo -->
@@ -191,7 +191,7 @@ const VARIANT_CODE = {
 
   <ng-template ndsPopoverContent>
     <div ndsPopoverHeader>
-      <h3 ndsPopoverTitle>Configurações de exibição</h3>
+      <h2 ndsPopoverTitle>Configurações de exibição</h2>
       <p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>
     </div>
   </ng-template>
@@ -201,7 +201,7 @@ const VARIANT_CODE = {
 
   <ng-template ndsPopoverContent align="start">
     <div ndsPopoverHeader>
-      <h3 ndsPopoverTitle>Editar perfil</h3>
+      <h2 ndsPopoverTitle>Editar perfil</h2>
     </div>
 
     <form class="nds-stack" data-spacing="md" (submit)="$event.preventDefault()">
@@ -226,7 +226,7 @@ const COMPOSITION_CODE = {
 
   <ng-template ndsPopoverContent align="start">
     <div ndsPopoverHeader>
-      <h3 ndsPopoverTitle>Filtrar por status</h3>
+      <h2 ndsPopoverTitle>Filtrar por status</h2>
     </div>
 
     <div class="nds-cluster" data-spacing="sm">
@@ -247,7 +247,7 @@ const COMPOSITION_CODE = {
 
   <ng-template ndsPopoverContent>
     <div ndsPopoverHeader>
-      <h3 ndsPopoverTitle>Cor da etiqueta</h3>
+      <h2 ndsPopoverTitle>Cor da etiqueta</h2>
     </div>
 
     <!-- \`data-fixed\` é o que faz o grid respeitar as seis colunas: sem ele,
@@ -270,7 +270,7 @@ const COMPOSITION_CODE = {
 
   <ng-template ndsPopoverContent align="end">
     <div ndsPopoverHeader>
-      <h3 ndsPopoverTitle>Preferências rápidas</h3>
+      <h2 ndsPopoverTitle>Preferências rápidas</h2>
     </div>
 
     <div class="nds-cluster" data-justify="between">
@@ -305,7 +305,7 @@ const COMPOSITION_CODE = {
         </button>
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('demonstration.labels.title') }}</h3>
+            <h2 ndsPopoverTitle>{{ t('demonstration.labels.title') }}</h2>
             <p ndsPopoverDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
         </ng-template>
@@ -335,7 +335,7 @@ const COMPOSITION_CODE = {
         </button>
         <ng-template ndsPopoverContent align="start">
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h3>
+            <h2 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h2>
           </div>
         </ng-template>
       </div>
@@ -352,7 +352,7 @@ const COMPOSITION_CODE = {
         </button>
         <ng-template ndsPopoverContent align="start">
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h3>
+            <h2 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h2>
           </div>
         </ng-template>
       </div>
@@ -381,7 +381,7 @@ const COMPOSITION_CODE = {
         </button>
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('demonstration.labels.title') }}</h3>
+            <h2 ndsPopoverTitle>{{ t('demonstration.labels.title') }}</h2>
             <p ndsPopoverDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
         </ng-template>
@@ -403,7 +403,7 @@ const COMPOSITION_CODE = {
         </button>
         <ng-template ndsPopoverContent align="start">
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h3>
+            <h2 ndsPopoverTitle>{{ t('demonstration.labels.form.trigger') }}</h2>
           </div>
 
           <!-- Os grupos de campo vivem DENTRO de um form com respiro md: o
@@ -460,7 +460,7 @@ const COMPOSITION_CODE = {
         </button>
         <ng-template ndsPopoverContent align="start">
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('variants.compositions.tableFilter.title') }}</h3>
+            <h2 ndsPopoverTitle>{{ t('variants.compositions.tableFilter.title') }}</h2>
           </div>
 
           <div class="nds-stack" data-spacing="sm">
@@ -491,7 +491,7 @@ const COMPOSITION_CODE = {
         </button>
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('variants.compositions.colorPicker.title') }}</h3>
+            <h2 ndsPopoverTitle>{{ t('variants.compositions.colorPicker.title') }}</h2>
           </div>
 
           <div class="nds-grid" data-cols="6" data-fixed data-spacing="xs">
@@ -516,7 +516,7 @@ const COMPOSITION_CODE = {
         </button>
         <ng-template ndsPopoverContent align="end">
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>{{ t('variants.compositions.quickSettings.title') }}</h3>
+            <h2 ndsPopoverTitle>{{ t('variants.compositions.quickSettings.title') }}</h2>
           </div>
 
           <div class="nds-stack" data-spacing="sm">
@@ -562,7 +562,7 @@ const COMPOSITION_CODE = {
 
               <ng-template ndsPopoverContent align="center">
                 <div ndsPopoverHeader>
-                  <h3 ndsPopoverTitle>{{ t('demonstration.labels.title') }}</h3>
+                  <h2 ndsPopoverTitle>{{ t('demonstration.labels.title') }}</h2>
                   <p ndsPopoverDescription>{{ t('demonstration.labels.description') }}</p>
                 </div>
 

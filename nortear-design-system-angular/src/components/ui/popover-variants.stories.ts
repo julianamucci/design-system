@@ -81,7 +81,7 @@ export const WithTitle: Story = {
 
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Configurações de exibição</h3>
+            <h2 ndsPopoverTitle>Configurações de exibição</h2>
             <p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>
           </div>
 
@@ -132,7 +132,7 @@ export const Form: Story = {
 
         <ng-template ndsPopoverContent>
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Editar perfil</h3>
+            <h2 ndsPopoverTitle>Editar perfil</h2>
             <p ndsPopoverDescription>Altere o nome e o email da conta.</p>
           </div>
 

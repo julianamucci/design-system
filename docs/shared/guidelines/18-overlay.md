@@ -184,7 +184,23 @@ O título do painel sai em **`h2` por padrão**, e aceita qualquer nível de `h1
 a `h6`. Cada stack chega lá pelo mecanismo da própria lib — a tabela "Nível do
 título, por stack" está no PRD de cada painel. No angular não há padrão a
 herdar: o SELETOR carrega o elemento (`h2[ndsAlertDialogTitle]`), então o nível
-é o que quem escreve usa — e todos os exemplos da stack usam `h2`.
+é o que quem escreve usa.
+
+**Até 2026-09-12 esta linha terminava em "e todos os exemplos da stack usam
+`h2`", e era falso em 39 pontos.** O inventário daquele dia achou, no Angular,
+**39 títulos de overlay em `h3` contra 138 em `h2`** — o popover INTEIRO (27),
+onze demos do `DrawerDocs` e um título só-para-leitor do `CommandDocs`. O defeito
+chegou por captura de tela: o mesmo popover, lado a lado, saía `h2` no vanilla e
+`h3` no Angular.
+
+Duas coisas o mantiveram invisível. A primeira é que **qualquer nível é HTML
+válido** — não há compilador, teste ou folha que reprove. A segunda é que o
+portão `nivel_de_titulo_divergente` lia o DEFAULT declarado pela peça, e no
+Angular não existe default para ler: o nível é escolha do call site. O portão
+ganhou o ramo que mede call site, com exceção declarada para as stories
+`HeadingH3`, que demonstram a capacidade de trocar o nível de propósito — e com
+o irmão que confere a premissa, que na primeira medição já derrubou uma entrada
+que eu tinha escrito errado.
 
 **O nome da opção é relativo ao escopo da fábrica, e isso não é divergência** —
 já foi relatado como tal três vezes. No vanilla, fábrica que monta só o título

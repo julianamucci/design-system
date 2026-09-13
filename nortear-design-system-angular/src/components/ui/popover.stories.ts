@@ -100,7 +100,7 @@ export const Playground: Story = {
           [sideOffset]="sideOffset"
         >
           <div ndsPopoverHeader>
-            <h3 ndsPopoverTitle>Configurações de exibição</h3>
+            <h2 ndsPopoverTitle>Configurações de exibição</h2>
             <p ndsPopoverDescription>Ajuste a aparência do conteúdo da página.</p>
           </div>
 

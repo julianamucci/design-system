@@ -23,7 +23,7 @@
 // Princípio: tudo que é grep+regex determinístico vive aqui; tudo que exige julgamento
 // fica nos agents. Isso corta ~80% dos tokens do pipeline `audit` e `new`.
 
-import { readFileSync, existsSync, readdirSync, writeFileSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, writeFileSync, statSync } from 'node:fs';
 import { join, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -4428,6 +4428,38 @@ function auditReasonParcial() {
  * `card` NÃO entra: card é conteúdo em fluxo, e o default dele é não afirmar
  * nível nenhum (`<div>`), igual a react, vue e svelte. É outro invariante.
  */
+/**
+ * No Angular o nível NÃO tem default para o portão ler: o título é diretiva de
+ * ATRIBUTO, e quem escreve o template escolhe a tag. Por isso a régua ali é o
+ * call site, e não a declaração da peça.
+ *
+ * Medido em 2026-09-12, e o defeito chegou por captura de tela da dona: o mesmo
+ * popover saía `<h2>` no vanilla e `<h3>` no Angular. Inventariados os cinco
+ * overlays da stack, eram **39 títulos em nível 3** contra 138 em nível 2 — o
+ * popover inteiro (27) mais onze demos do DrawerDocs e um título só-para-leitor
+ * do CommandDocs. As outras quatro stacks anunciam 2 sem exceção: react pelo
+ * `Popover.Title` do base-ui, vue e svelte por `aria-level="2"` escrito à mão, e
+ * o vanilla pelo default das fábricas que o mapa acima confere.
+ *
+ * A exceção é declarada e tem premissa conferida: as stories `HeadingH3`
+ * demonstram a CAPACIDADE de trocar o nível, e o par `*.source.test.ts` afirma
+ * a forma trocada. Arquivo que entrar aqui sem demonstrar a troca reprova — é a
+ * lista de exclusão apodrecendo em silêncio que esta casa já pagou uma vez.
+ */
+const NIVEL_TROCADO_DE_PROPOSITO = new Set([
+  'dialog-variants.stories.ts',
+  'drawer-variants.stories.ts',
+  'sheet-variants.stories.ts',
+  // `alert-dialog-variants.stories.ts` NÃO entra: no Angular a story `HeadingH3`
+  // do alert-dialog escreve o nível pelo snippet, não no template — e a lista
+  // nasceu com ela dentro. Quem avisou foi o próprio irmão que confere premissa,
+  // na primeira medição depois de escrito.
+  'dialog.source.test.ts',
+  'drawer.source.test.ts',
+  'sheet.source.test.ts',
+  'alert-dialog.source.test.ts',
+]);
+
 const NIVEL_PADRAO_ESPERADO = {
   'dialog.ts': { opcao: 'titleLevel', nivel: 2 },
   'alert-dialog.ts': { opcao: 'titleLevel', nivel: 2 },
@@ -4471,6 +4503,64 @@ function auditNivelDeTituloPadrao() {
       rule: 'nivel_de_titulo_divergente',
       message: `\`${opcao}\` sai em h${m[1]} e a família anuncia nível ${nivel} — nenhum compilador vê `
         + 'isto porque qualquer nível é HTML válido, e este assunto já voltou como achado novo três vezes',
+    });
+  }
+
+  violations.push(...auditNivelDeTituloAngular());
+  return violations;
+}
+
+/** O ramo do Angular: régua no call site, porque a peça não tem default. */
+function auditNivelDeTituloAngular() {
+  const violations = [];
+  const raiz = join(ROOT, stackDir('angular'), 'src', 'components');
+  if (!existsSync(raiz)) return violations;
+
+  const TITULO = /<h([1-6])(\s[^>]*?nds(?:Popover|Dialog|AlertDialog|Sheet|Drawer|HoverCard)Title\b)/g;
+  const usados = new Set();
+
+  const varrer = (dir) => {
+    for (const nome of readdirSync(dir)) {
+      const p = join(dir, nome);
+      if (statSync(p).isDirectory()) { varrer(p); continue; }
+      if (!nome.endsWith('.ts')) continue;
+      const src = stripComments(readFile(p) || '');
+      const fora = [];
+      for (const m of src.matchAll(TITULO)) {
+        if (m[1] === '2') continue;
+        fora.push({ nivel: m[1], linha: src.slice(0, m.index).split('\n').length });
+      }
+      if (fora.length === 0) continue;
+      if (NIVEL_TROCADO_DE_PROPOSITO.has(nome)) {
+        usados.add(nome);
+        // premissa: o arquivo tem de DEMONSTRAR a troca, não só carregá-la
+        if (/HeadingH3/.test(src)) continue;
+        violations.push({
+          category: 'quality', severity: 'medium', slug: '_infra', stack: 'angular',
+          file: relative(ROOT, p), line: fora[0].linha, rule: 'nivel_de_titulo_divergente',
+          message: `${nome} está declarado como exceção por demonstrar a troca de nível, e não há `
+            + '`HeadingH3` nele — ou a story mudou de nome, ou a exceção deixou de valer',
+        });
+        continue;
+      }
+      violations.push({
+        category: 'quality', severity: 'medium', slug: '_infra', stack: 'angular',
+        file: relative(ROOT, p), line: fora[0].linha, rule: 'nivel_de_titulo_divergente',
+        message: `${fora.length} título(s) de overlay em h${fora.map((f) => f.nivel).join('/h')} — a família `
+          + 'anuncia nível 2 nas cinco stacks, e aqui o nível é escolha do call site porque o título é '
+          + 'diretiva de ATRIBUTO; nenhum compilador vê, porque qualquer nível é HTML válido',
+      });
+    }
+  };
+  varrer(raiz);
+
+  for (const nome of NIVEL_TROCADO_DE_PROPOSITO) {
+    if (usados.has(nome)) continue;
+    violations.push({
+      category: 'quality', severity: 'medium', slug: '_infra', stack: 'angular',
+      file: relative(ROOT, raiz), line: 1, rule: 'nivel_de_titulo_divergente',
+      message: `${nome} está na lista de exceção e não tem mais título fora do nível 2 — tire-o da lista, `
+        + 'ou a lista passa a autorizar o que ninguém mais faz',
     });
   }
 

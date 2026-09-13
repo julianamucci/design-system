@@ -356,7 +356,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('usage.uxWriting.table.trigger.good') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ t('usage.uxWriting.table.title.good') }}</h3>
+            <h2 ndsDrawerTitle>{{ t('usage.uxWriting.table.title.good') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -377,7 +377,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('usage.uxWriting.table.trigger.bad') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ t('usage.uxWriting.table.title.bad') }}</h3>
+            <h2 ndsDrawerTitle>{{ t('usage.uxWriting.table.title.bad') }}</h2>
           </div>
           <div ndsDrawerFooter>
             <button ndsDrawerClose ndsButton variant="outline">{{ t('usage.uxWriting.table.close.good') }}</button>
@@ -391,7 +391,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('usage.uxWriting.table.trigger.good') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ t('variants.items.bottom') }}</h3>
+            <h2 ndsDrawerTitle>{{ t('variants.items.bottom') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -418,7 +418,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.bottom') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ rotuloDirecao('bottom') }}</h3>
+            <h2 ndsDrawerTitle>{{ rotuloDirecao('bottom') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -433,7 +433,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.top') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ rotuloDirecao('top') }}</h3>
+            <h2 ndsDrawerTitle>{{ rotuloDirecao('top') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -448,7 +448,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.left') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ rotuloDirecao('left') }}</h3>
+            <h2 ndsDrawerTitle>{{ rotuloDirecao('left') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -463,7 +463,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.right') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ rotuloDirecao('right') }}</h3>
+            <h2 ndsDrawerTitle>{{ rotuloDirecao('right') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerFooter>
@@ -478,7 +478,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('variants.items.withScroll.name') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ t('variants.items.withScroll.name') }}</h3>
+            <h2 ndsDrawerTitle>{{ t('variants.items.withScroll.name') }}</h2>
             <p ndsDrawerDescription>{{ t('usage.uxWriting.table.description.good') }}</p>
           </div>
           <div ndsDrawerBody class="nds-stack" data-spacing="sm">
@@ -502,7 +502,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         </button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ t('demonstration.labels.title') }}</h3>
+            <h2 ndsDrawerTitle>{{ t('demonstration.labels.title') }}</h2>
             <p ndsDrawerDescription>{{ t('demonstration.labels.description') }}</p>
           </div>
 
@@ -568,7 +568,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         <button ndsDrawerTrigger ndsButton variant="outline">{{ t('demonstration.labels.destroy') }}</button>
         <ng-template ndsDrawerContent>
           <div ndsDrawerHeader>
-            <h3 ndsDrawerTitle>{{ t('demonstration.labels.destroy') }}</h3>
+            <h2 ndsDrawerTitle>{{ t('demonstration.labels.destroy') }}</h2>
             <p ndsDrawerDescription>{{ t('demonstration.labels.destroyMessage') }}</p>
           </div>
 
@@ -628,7 +628,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
                   -->
                   <ng-template ndsDrawerContent>
                     <div ndsDrawerHeader>
-                      <h3 ndsDrawerTitle>{{ t('demonstration.labels.title') }}</h3>
+                      <h2 ndsDrawerTitle>{{ t('demonstration.labels.title') }}</h2>
                       <p ndsDrawerDescription>{{ t('demonstration.labels.description') }}</p>
                     </div>
 

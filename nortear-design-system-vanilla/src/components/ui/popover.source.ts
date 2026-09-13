@@ -81,7 +81,7 @@ function panelLines(o: PopoverSnippetOptions, content: string): string[] {
     ['content', content],
     ['side', o.side && o.side !== 'bottom' ? text(o.side) : undefined],
     ['align', o.align && o.align !== 'center' ? text(o.align) : undefined],
-    ['sideOffset', o.sideOffset !== undefined && o.sideOffset !== 8 ? String(o.sideOffset) : undefined],
+    ['sideOffset', o.sideOffset !== undefined && o.sideOffset !== 4 ? String(o.sideOffset) : undefined],
     // Só o painel sem título declara nome: `o.text` é justamente a forma que
     // troca cabeçalho por texto solto.
     ['ariaLabel', o.ariaLabel && typeof o.text === 'string' ? text(o.ariaLabel) : undefined],

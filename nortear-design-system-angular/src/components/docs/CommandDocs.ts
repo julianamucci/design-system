@@ -422,9 +422,9 @@ export class NdsDocsInitialSearch {
                   class="nds-command-dialog-content"
                   [showCloseButton]="false"
                 >
-                  <h3 ndsDialogTitle class="nds-sr-only">
+                  <h2 ndsDialogTitle class="nds-sr-only">
                     {{ t('demonstration.labels.dialogTitle') }}
-                  </h3>
+                  </h2>
                   <p ndsDialogDescription class="nds-sr-only">
                     {{ t('demonstration.labels.dialogDescription') }}
                   </p>
