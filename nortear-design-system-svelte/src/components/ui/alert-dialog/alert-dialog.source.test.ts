@@ -72,8 +72,12 @@ describe('alertDialogSource', () => {
     const withMedia = alertDialogSource('', { args: { showMedia: true } });
     expect(withMedia).toContain('    AlertDialogMedia,');
     expect(withMedia).toContain('icons/triangle-alert');
-    // A mídia é o PRIMEIRO filho do header: é dessa ordem que dependem o CSS e
-    // a leitura ícone → título → descrição.
+    // A mídia é o PRIMEIRO filho do header, pela leitura ícone → título →
+    // descrição. O CSS NÃO depende da ordem: a folha usa
+    // `:has(.nds-alert-dialog-media)`, que lê presença em qualquer posição.
+    // Até 2026-09-12 este comentário dava o CSS como dependente da ordem — a
+    // última sobrevivente de catorze; o portão `afirmacao_de_has_sobre_ordem`
+    // não a alcançava, porque ela não nomeia o `:has(`.
     expect(withMedia).toContain(`<AlertDialogHeader>
       <AlertDialogMedia>`);
   });

@@ -313,7 +313,7 @@
       "tip5": "Para indicar ao usuário que a área tem menu de contexto, exiba uma dica sutil na interface (ex: texto auxiliar ou tooltip no hover)."
     },
     "analytics": {
-      "description": "Rastreie interações relevantes com o Context Menu para entender quais ações contextuais os usuários utilizam.",
+      "description": "O Context Menu fala a mesma língua da família de menus (DropdownMenu e Menubar): três eventos, e todo payload leva <code>component</code>, <code>menu</code> e <code>location</code>. O de item soma <code>label</code>; o de fechamento soma <code>reason</code> — <code>escape</code>, <code>overlay</code> (clique fora, Tab ou novo clique direito: saiu sem decidir) ou <code>api</code> (item escolhido ou fechamento pelo código); o tipo carrega também <code>close-button</code>, a quarta palavra da família, que o menu não usa por não ter botão de fechar. <code>menu</code> e <code>label</code> são identificadores estáveis, em inglês e kebab-case — nesta página, <code>menu</code> é o id da prévia (<code>demo</code>, <code>pair1-do</code>) e <code>label</code> é o valor do item. Nunca o texto traduzido: \"Excluir\", \"Delete\" e \"Eliminar\" virariam três linhas de uma ação só no GA4. <code>location</code> é a seção da página onde a área de clique direito está.",
       "table": {
         "event": "Evento",
         "trigger": "Gatilho",
@@ -787,7 +787,7 @@
       "tip5": "To indicate to the user that an area has a context menu, display a subtle hint in the interface (e.g., helper text or hover tooltip)."
     },
     "analytics": {
-      "description": "Track relevant Context Menu interactions to understand which contextual actions users take.",
+      "description": "Context Menu speaks the menu family's language (DropdownMenu and Menubar): three events, and every payload carries <code>component</code>, <code>menu</code> and <code>location</code>. The item event adds <code>label</code>; the close event adds <code>reason</code> — <code>escape</code>, <code>overlay</code> (click outside, Tab or a new right-click: left without deciding) or <code>api</code> (item picked, or closed from code); the type also carries <code>close-button</code>, the family's fourth word, which the menu never sends because it has no close button. <code>menu</code> and <code>label</code> are stable identifiers in English kebab-case — on this page <code>menu</code> is the preview id (<code>demo</code>, <code>pair1-do</code>) and <code>label</code> is the item value. Never the translated text: \"Excluir\", \"Delete\" and \"Eliminar\" would become three rows of a single action in GA4. <code>location</code> is the page section the right-click area lives in.",
       "table": {
         "event": "Event",
         "trigger": "Trigger",
@@ -1261,7 +1261,7 @@
       "tip5": "Para indicar al usuario que el área tiene menú de contexto, muestra una pista sutil en la interfaz (ej: texto auxiliar o tooltip al pasar el cursor)."
     },
     "analytics": {
-      "description": "Rastrea las interacciones relevantes con el Context Menu para entender qué acciones contextuales usan los usuarios.",
+      "description": "El Context Menu habla el mismo idioma que la familia de menús (DropdownMenu y Menubar): tres eventos, y todo payload lleva <code>component</code>, <code>menu</code> y <code>location</code>. El de ítem suma <code>label</code>; el de cierre suma <code>reason</code> — <code>escape</code>, <code>overlay</code> (clic fuera, Tab o un nuevo clic derecho: salió sin decidir) o <code>api</code> (ítem elegido o cierre por código); el tipo lleva también <code>close-button</code>, la cuarta palabra de la familia, que el menú no usa porque no tiene botón de cerrar. <code>menu</code> y <code>label</code> son identificadores estables, en inglés y kebab-case — en esta página, <code>menu</code> es el id de la vista previa (<code>demo</code>, <code>pair1-do</code>) y <code>label</code> es el valor del ítem. Nunca el texto traducido: \"Excluir\", \"Delete\" y \"Eliminar\" serían tres filas de una sola acción en GA4. <code>location</code> es la sección de la página donde está el área de clic derecho.",
       "table": {
         "event": "Evento",
         "trigger": "Disparador",

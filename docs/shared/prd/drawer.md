@@ -178,14 +178,15 @@ apagado e a volta ao repouso é ESTA transição — por isso é ela que precisa
 sob movimento reduzido (§8). O arraste em si não é animação: é o painel
 acompanhando o ponteiro, e não há o que reduzir enquanto o dedo está na tela.
 
-**Pendência de comentário, medida em 2026-09-12 e ainda de pé**: o docblock da
-transição em `drawer.css` diz "`[data-swiping]` é escrito pelo motor de ponteiro
-compartilhado — vanilla e angular". Compartilhado ele não é desde 2026-09-08
+**Comentário corrigido em 2026-09-12**: o docblock da transição em `drawer.css`
+dizia "`[data-swiping]` é escrito pelo motor de ponteiro compartilhado — vanilla e
+angular". Compartilhado ele não é desde 2026-09-08
 (`2dcd473fa`): o que ficou em `docs/shared/primitives/drawer-swipe.ts` são os
 limiares e as funções que DECIDEM, e a fiação é de cada stack — `ui/drawer-swipe.ts`
 no vanilla, a diretiva `NdsDrawerSwipe` em `ui/drawer.ts` no angular. A palavra
-sobreviveu à mudança na folha que as CINCO leem, e é defeito de código: não se
-corrige aqui.
+sobreviveu quatro dias numa folha que as CINCO leem, e o que a derrubou não foi
+portão nenhum: foi a conferência do PRD contra o código, que é o trabalho que este
+arquivo existe para provocar.
 
 ### D10 · O cabeçalho centraliza em `bottom` e `top`, e vai à esquerda a partir de **48rem**
 

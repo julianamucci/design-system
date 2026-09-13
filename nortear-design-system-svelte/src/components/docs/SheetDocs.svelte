@@ -1038,6 +1038,7 @@ interface TriggerProps {
           { name: 'onOpenChange',    type: $tStore('props.table.onOpenChange.type'),    defaultValue: $tStore('props.table.onOpenChange.default'),    required: $tStore('props.table.onOpenChange.required'),    description: $tStore('props.table.onOpenChange.description')               },
           { name: 'side',            type: $tStore('props.table.side.type'),            defaultValue: $tStore('props.table.side.default'),            required: $tStore('props.table.side.required'),            description: toPlainText($tStore('props.table.side.description'))            },
           { name: 'showCloseButton', type: $tStore('props.table.showCloseButton.type'), defaultValue: $tStore('props.table.showCloseButton.default'), required: $tStore('props.table.showCloseButton.required'), description: toPlainText($tStore('props.table.showCloseButton.description')) },
+          { name: 'closeLabel', type: $tStore('props.table.closeLabel.type'), defaultValue: $tStore('props.table.closeLabel.default'), required: $tStore('props.table.closeLabel.required'), description: toPlainText($tStore('props.table.closeLabel.description')) },
           { name: 'class',           type: $tStore('props.table.className.type'),       defaultValue: $tStore('props.table.className.default'),       required: $tStore('props.table.className.required'),       description: toPlainText($tStore('props.table.className.description'))       },
         ],
       },

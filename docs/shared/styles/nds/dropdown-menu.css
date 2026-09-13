@@ -1,8 +1,12 @@
 /*
  * ─── nds-dropdown-menu ──────────────────────────────────────────────────────
  * Menu suspenso disparado por um trigger. Renderizado em portal (body) com
- * navegação por teclado (Arrow/Home/End/Escape) e foco automático no primeiro
- * item ao abrir.
+ * navegação por teclado (Arrow/Home/End/Escape). Ao abrir, o foco entra no
+ * painel; ONDE ele pousa depende da stack — o vanilla foca o primeiro item, e as
+ * libs pousam no painel e chegam ao item na primeira seta. Até 2026-09-12 esta
+ * nota dizia "foco automático no primeiro item" como se valesse nas cinco, que é
+ * a mesma afirmação que o C1 do `prd/dropdown-menu.md` carregava; o quadro por
+ * membro e por stack está lá.
  *
  *   <ul class="nds-dropdown-menu-content" role="menu" id="dropdown-menu-1">
  *     <li class="nds-dropdown-menu-group" role="presentation">

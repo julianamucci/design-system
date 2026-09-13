@@ -510,6 +510,7 @@ const propRows = computed(() => [
   { name: 'onUpdate:open',   type: tContent('props.table.onOpenChange.type'),    defaultValue: tContent('props.table.onOpenChange.default'),    required: tContent('props.table.onOpenChange.required'),    description: toPlainText(tContent('props.table.onOpenChange.description'))    },
   { name: 'side',            type: tContent('props.table.side.type'),            defaultValue: tContent('props.table.side.default'),            required: tContent('props.table.side.required'),            description: toPlainText(tContent('props.table.side.description'))            },
   { name: 'showCloseButton', type: tContent('props.table.showCloseButton.type'), defaultValue: tContent('props.table.showCloseButton.default'), required: tContent('props.table.showCloseButton.required'), description: toPlainText(tContent('props.table.showCloseButton.description')) },
+  { name: 'closeLabel', type: tContent('props.table.closeLabel.type'), defaultValue: tContent('props.table.closeLabel.default'), required: tContent('props.table.closeLabel.required'), description: toPlainText(tContent('props.table.closeLabel.description')) },
   { name: 'class',           type: tContent('props.table.className.type'),       defaultValue: tContent('props.table.className.default'),       required: tContent('props.table.className.required'),       description: toPlainText(tContent('props.table.className.description'))       },
 ]);
 

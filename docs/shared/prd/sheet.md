@@ -270,13 +270,15 @@ cinco com o mesmo default. É o nome acessível do X do canto, que vai num
 dentro do primitivo, que é o defeito que a passagem de 2026-09-07 no Dialog
 existiu para fechar (§7 do [`dialog.md`](dialog.md)).
 
-**A tabela de props do conteúdo compartilhado também não o traz** —
-`props.table` de `docs/shared/content/sheet/translations.json` lista `open`,
-`defaultOpen`, `onOpenChange`, `side`, `showCloseButton`, `className` e para aí.
-É defeito de CONTEÚDO, não deste arquivo, e não foi corrigido aqui de propósito:
-prop que existe nas cinco e não aparece na tabela da docs page é capacidade
-invisível a quem consome — a mesma forma de "some quem nunca entrou na lista" que
-o `closeLabel` do Dialog já pagou uma vez.
+**A tabela de props do conteúdo compartilhado também não o trazia**, e ganhou a
+chave em 2026-09-12, com a linha nas cinco docs pages: até ali `props.table` de
+`docs/shared/content/sheet/translations.json` listava `open`, `defaultOpen`,
+`onOpenChange`, `side`, `showCloseButton` e `className`, e parava. Prop que existe
+nas cinco e não aparece na tabela da docs page é capacidade invisível a quem
+consome — a mesma forma de "some quem nunca entrou na lista" que o `closeLabel` do
+Dialog já pagou uma vez. O vanilla era o único com a linha na página, com a
+descrição escrita dentro do próprio arquivo; hoje as cinco leem a chave
+compartilhada.
 
 ### Divergências de forma, registradas
 

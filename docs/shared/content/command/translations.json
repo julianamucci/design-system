@@ -326,7 +326,7 @@
         "item1": "Sem violações reportadas pelo axe-core no estado padrão (inline e dialog)",
         "item2": "Navegação por Arrow Down/Up percorre os CommandItem habilitados em sequência e para nas pontas da lista",
         "item3": "CommandDialog anuncia título (sr-only) ao abrir via leitor de tela",
-        "item4": "Itens desabilitados não recebem foco na navegação por teclado"
+        "item4": "Itens desabilitados não recebem o destaque na navegação por teclado"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -678,7 +678,7 @@
         "item1": "No violations reported by axe-core in the default state (inline and dialog)",
         "item2": "Arrow Down/Up navigation moves through the enabled CommandItem elements in sequence and stops at the ends of the list",
         "item3": "CommandDialog announces title (sr-only) on open via screen reader",
-        "item4": "Disabled items do not receive focus during keyboard navigation"
+        "item4": "Disabled items do not receive the highlight during keyboard navigation"
       },
       "visual": {
         "title": "Visual Regression (Chromatic)",
@@ -1030,7 +1030,7 @@
         "item1": "Sin violaciones reportadas por axe-core en el estado predeterminado (inline y dialog)",
         "item2": "La navegación con Arrow Down/Up recorre los CommandItem habilitados en secuencia y se detiene en los extremos de la lista",
         "item3": "CommandDialog anuncia el título (sr-only) al abrirse vía lector de pantalla",
-        "item4": "Los ítems deshabilitados no reciben foco durante la navegación por teclado"
+        "item4": "Los ítems deshabilitados no reciben el resalte durante la navegación por teclado"
       },
       "visual": {
         "title": "Pruebas Visuales (Chromatic)",

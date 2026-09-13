@@ -290,6 +290,12 @@
           "required": "Não",
           "description": "Exibe botão X no canto superior direito do <code>SheetContent</code>."
         },
+        "closeLabel": {
+          "type": "string",
+          "default": "'Fechar'",
+          "required": "Não",
+          "description": "Nome acessível do botão de fechar, lido por leitor de tela. O botão só mostra o ícone, então sem um nome ele seria anunciado sem função."
+        },
         "className": {
           "type": "string",
           "default": "—",
@@ -777,6 +783,12 @@
           "required": "No",
           "description": "Shows X button in top right corner of <code>SheetContent</code>."
         },
+        "closeLabel": {
+          "type": "string",
+          "default": "'Fechar'",
+          "required": "No",
+          "description": "Accessible name of the close button, read by screen readers. The button shows only the icon, so without a name it would be announced with no purpose."
+        },
         "className": {
           "type": "string",
           "default": "—",
@@ -1263,6 +1275,12 @@
           "default": "true",
           "required": "No",
           "description": "Muestra botón X en la esquina superior derecha del <code>SheetContent</code>."
+        },
+        "closeLabel": {
+          "type": "string",
+          "default": "'Fechar'",
+          "required": "No",
+          "description": "Nombre accesible del botón de cerrar, leído por lector de pantalla. El botón solo muestra el icono, así que sin nombre se anunciaría sin función."
         },
         "className": {
           "type": "string",

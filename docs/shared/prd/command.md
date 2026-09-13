@@ -60,6 +60,11 @@ nunca** no item, então o gatilho do anel tem de ser o mesmo atributo que a lib
 move com as setas — `aria-selected` / `data-selected`.
 **O preço, e ele é honesto**: o anel aparece também ao pousar o ponteiro. O item
 marcado É o que o Enter vai ativar, venha a marcação de onde vier.
+**O conteúdo contradizia esta decisão até 2026-09-12**: o `testes.accessibility.item4`
+prometia, nos três idiomas, que "itens desabilitados não recebem foco na navegação
+por teclado" — aqui NENHUM item recebe foco, e o que o desabilitado não recebe é o
+DESTAQUE. Frase que descreve o comportamento de um vizinho (o menu, onde o item é
+focável de verdade) e passa por verdade porque ninguém lê os dois lados juntos.
 
 ### D2 · O anel é INTERNO e em `--accent-foreground`
 

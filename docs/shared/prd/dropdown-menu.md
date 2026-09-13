@@ -72,10 +72,11 @@ membros (`menu.contains(document.activeElement)`).
 **Até 2026-09-12 o C1 dizia** "o painel recebe o foco ao abrir", e isso descrevia
 três das cinco stacks em um dos três membros. A referência faz o contrário do que
 estava escrito: as fábricas do vanilla nunca dão `focus()` no painel — ele não
-recebe `tabindex` — e focam o primeiro item nos três menus. O mesmo texto errado
-está no cabeçalho da folha compartilhada (`dropdown-menu.css:3-5`, "foco
-automático no primeiro item ao abrir"), pelo lado oposto: ali a frase descreve o
-vanilla e afirma das cinco.
+recebe `tabindex` — e focam o primeiro item nos três menus. O cabeçalho da folha
+compartilhada carregava o mesmo erro pelo lado oposto — "foco automático no
+primeiro item ao abrir", que é o vanilla afirmado das cinco — e foi corrigido no
+mesmo dia; hoje ele diz que o foco entra no painel e que ONDE ele pousa depende da
+stack, remetendo ao quadro acima.
 
 **O destino do Tab sai do GATILHO, não do painel.** O painel vive num portal no
 fim do `<body>`: o Tab nativo a partir dele leva o foco para fora do documento,
@@ -320,6 +321,12 @@ uma família com duas folhas.
 item" — e texto localizado divide o mesmo evento em um valor por idioma no GA4. A
 contradição estava no conteúdo que ENSINA, não no código que envia, e por isso
 sobreviveria a qualquer correção de stack.
+**O terceiro membro ficou um dia atrás**: a `analytics.description` do
+`context-menu` seguiu com a frase anterior à unificação — "rastreie interações
+relevantes", sem campo nenhum nomeado — enquanto as do dropdown e do menubar foram
+reescritas com `menu`, `label`, `reason` e `location`. Corrigida em 2026-09-12, nos
+três idiomas. A tabela do context-menu já estava certa: o que envelheceu foi a
+PROSA ao lado dela, que é onde o leitor decide se entendeu.
 
 ### D11 · A cadeia de `transform-origin` enumera QUATRO peças do bits
 

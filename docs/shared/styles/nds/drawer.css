@@ -75,8 +75,9 @@
    *
    * Até 2026-09-10 este painel não tinha sombra nenhuma (era a D7 do PRD), com
    * o motivo de que ele encosta na borda da tela e quem o separa do fundo é o
-   * véu. A dona fixou a regra da categoria inteira nesse dia — card `sm`,
-   * flutuante interativo `md`, flutuante passivo `lg`, modal e drawer `xl` —, e
+   * véu. A dona fixou a regra da categoria inteira nesse dia — relevo de
+   * controle `xs` (degrau que nasceu em 2026-09-12), card `sm`, flutuante
+   * interativo `md`, flutuante passivo `lg`, modal, drawer e toast `xl` —, e
    * o drawer passou a ser medido como os outros painéis que interrompem a página.
    *
    * A sombra é DIRECIONAL (as camadas descem em y), e isso tem uma consequência
@@ -214,10 +215,11 @@
 }
 
 /*
- * O rodapé segue a regra transversal de grupos de botões, que a guideline
- * `04-padroes-design-sistema.md` §"Alinhamento de Grupos de Botões" nomeia para
- * cards, formulários, dialogs, DRAWERS, sheets e footers de seção: primário à
- * direita no horizontal, primário em cima no empilhamento vertical.
+ * O rodapé segue a regra transversal de grupos de botões, canônica em
+ * `02-alinhamento-botoes.md` — que nomeia cards, formulários, dialogs, DRAWERS,
+ * sheets e footers de seção: primário à direita no horizontal, primário em cima
+ * no empilhamento vertical. A seção homônima do `04-padroes-design-sistema.md`,
+ * que esta nota citava até 2026-09-12, só redireciona para lá.
  *
  * Uma ordem de DOM serve os dois eixos, e é por isso que o `-reverse` está aqui
  * e não na marcação: escreve-se secundário primeiro — `Cancelar`, depois
@@ -286,8 +288,13 @@
  * escrito a cada quadro seguindo o ponteiro, e interpolar por cima dele deixaria
  * o painel atrasado em relação ao dedo.
  *
- * `[data-swiping]` é escrito pelo motor de ponteiro compartilhado — vanilla e
- * angular. A versão anterior desta nota dizia que a lib de gaveta escrevia o
+ * `[data-swiping]` é escrito pela fiação de ponteiro de CADA stack que implementa
+ * o gesto — `ui/drawer-swipe.ts` no vanilla e a diretiva `NdsDrawerSwipe` no
+ * angular. Até 2026-09-12 esta nota dizia "motor de ponteiro compartilhado", e
+ * era falso desde 2026-09-08: `docs/shared/primitives/drawer-swipe.ts` ficou só
+ * com limiar e função pura, porque anexar ouvinte a elemento de componente é
+ * implementação, não regra (ver o CLAUDE.md sobre o que `docs/shared` publica).
+ * A versão anterior desta nota dizia que a lib de gaveta escrevia o
  * atributo, e era FALSO: procurado na fonte publicada, `data-swiping` não
  * aparece uma única vez; a lib suprime a transição por `style` inline
  * (`transition: none`), que vence esta folha de qualquer jeito. O seletor era um

@@ -289,7 +289,7 @@
       "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.2 AA: 2.1.2 (sem armadilhas de teclado), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — sinaliza ao leitor que o conteúdo fora do diálogo está inativo.",
       "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente a partir de <code>DialogTitle</code> e <code>DialogDescription</code>. Title é obrigatório; Description é altamente recomendado.",
-      "item3": "<strong>Foco preso</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. O foco inicial vai para o primeiro elemento focável; na rota de rolagem, em que o corpo inteiro rola, ele vai para o painel, que é quem recebe a rolagem.",
+      "item3": "<strong>Foco preso</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. O foco inicial vai para o primeiro elemento focável; quando o conteúdo é longo, quem rola é o CORPO do painel, que entra na ordem de tabulação com papel e nome próprios.",
       "item4": "<strong>Retorno de foco</strong> — ao fechar, o foco volta ao trigger que abriu o diálogo.",
       "item5": "<strong>Escape e clique no overlay</strong> — fecham o diálogo sem disparar ações do Footer. Body scroll-lock é restaurado.",
       "item6": "<strong>Botão de fechar</strong> — carrega um rótulo visível só para leitor de tela, na classe <code>.nds-sr-only</code>."
@@ -748,7 +748,7 @@
       "summary": "Dialog uses <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> with automatic focus trap and focus return to trigger. Meets WCAG 2.2 AA: 2.1.2 (no keyboard trap), 2.4.3 (focus order), 4.1.2 (name, role, value).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — signals to the reader that content outside the dialog is inert.",
       "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically from <code>DialogTitle</code> and <code>DialogDescription</code>. Title is required; Description is highly recommended.",
-      "item3": "<strong>Focus is trapped</strong> — Tab and Shift+Tab move only inside the dialog. Initial focus goes to the first focusable element; on the scrolling route, where the whole body scrolls, it goes to the panel, which is what receives the scroll.",
+      "item3": "<strong>Focus is trapped</strong> — Tab and Shift+Tab move only inside the dialog. Initial focus goes to the first focusable element; when the content is long, the panel BODY is what scrolls, and it joins the tab order with a role and a name of its own.",
       "item4": "<strong>Focus return</strong> — when closed, focus returns to the trigger that opened the dialog.",
       "item5": "<strong>Escape and overlay click</strong> — close the dialog without firing Footer actions. Body scroll-lock is restored.",
       "item6": "<strong>Close button</strong> — carries a label visible only to screen readers, in the <code>.nds-sr-only</code> class."
@@ -1207,7 +1207,7 @@
       "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.2 AA: 2.1.2 (sin trampas de teclado), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — señala al lector que el contenido fuera del diálogo está inerte.",
       "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente desde <code>DialogTitle</code> y <code>DialogDescription</code>. Title es obligatorio; Description es muy recomendado.",
-      "item3": "<strong>Foco atrapado</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. El foco inicial va al primer elemento enfocable; en la ruta de scroll, donde el cuerpo entero se desplaza, va al panel, que es quien recibe el scroll.",
+      "item3": "<strong>Foco atrapado</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. El foco inicial va al primer elemento enfocable; cuando el contenido es largo, quien se desplaza es el CUERPO del panel, que entra en el orden de tabulación con rol y nombre propios.",
       "item4": "<strong>Retorno de foco</strong> — al cerrar, el foco vuelve al trigger que abrió el diálogo.",
       "item5": "<strong>Escape y clic en overlay</strong> — cierran el diálogo sin disparar acciones del Footer. El scroll-lock del body se restaura.",
       "item6": "<strong>Botón de cerrar</strong> — lleva una etiqueta visible solo para lectores de pantalla, en la clase <code>.nds-sr-only</code>."

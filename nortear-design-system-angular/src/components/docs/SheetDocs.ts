@@ -1178,6 +1178,13 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
             description: toPlainText(t('props.table.showCloseButton.description')),
           },
           {
+            name: 'closeLabel',
+            type: t('props.table.closeLabel.type'),
+            defaultValue: t('props.table.closeLabel.default'),
+            required: not,
+            description: toPlainText(t('props.table.closeLabel.description')),
+          },
+          {
             // A escotilha que o conteúdo compartilhado chama de `className` nas
             // outras stacks: aqui o painel é construído dentro do portal, então
             // não há elemento onde escrever a classe — ela entra por input.

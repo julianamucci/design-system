@@ -1035,6 +1035,13 @@ export function SheetDocs() {
                 description: toPlainText(tContent("props.table.showCloseButton.description")),
               },
               {
+                name: "closeLabel",
+                type: tContent("props.table.closeLabel.type"),
+                defaultValue: tContent("props.table.closeLabel.default"),
+                required: tContent("props.table.closeLabel.required"),
+                description: toPlainText(tContent("props.table.closeLabel.description")),
+              },
+              {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),

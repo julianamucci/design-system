@@ -46,16 +46,15 @@ reusa as keyframes `nds-dialog-fade-in` / `-fade-out` declaradas aqui.
 | C6 | O botão de fechar tem nome acessível para leitor de tela | `accessibility.item6` |
 | C7 | Corpo mais alto que o painel precisa de `tabindex="0"`, `role="group"` e `aria-label` juntos | docblock da folha — sem portão automático |
 
-**O portão da C3 descreve uma rota que não existe mais, e isto é defeito de
-CONTEÚDO, não deste arquivo.** Medido em 2026-09-12 nos três idiomas: o
-`accessibility.item3` de `docs/shared/content/dialog/translations.json` diz
-"…na rota de rolagem, em que o corpo inteiro rola, ele vai para o painel, que é
-quem recebe a rolagem" — o painel recebendo a rolagem é exatamente o par
-`-overlay-scroll` + `-content-scroll` que a D7 retirou em 2026-09-08. Hoje quem
-rola é o corpo, e é o corpo que carrega `tabindex="0"`. A metade da frase que
-ainda vale é a primeira: foco preso, foco inicial no primeiro focável. A chave
-não foi corrigida aqui de propósito — o conteúdo tem dono próprio, e PRD que
-edita conteúdo troca uma divergência por duas.
+**O portão da C3 descrevia uma rota que não existe mais, e foi corrigido em
+2026-09-12.** Medido naquele dia nos três idiomas: o `accessibility.item3` de
+`docs/shared/content/dialog/translations.json` dizia "…na rota de rolagem, em que
+o corpo inteiro rola, ele vai para o painel, que é quem recebe a rolagem" — o
+painel recebendo a rolagem era exatamente o par `-overlay-scroll` +
+`-content-scroll` que a D7 retirou em 2026-09-08. Hoje a chave diz o que o código
+faz: quem rola é o CORPO, e é ele que entra na ordem de tabulação com papel e nome
+próprios. A metade que sempre valeu é a primeira — foco preso, foco inicial no
+primeiro focável.
 
 ## 3. Decisões fixadas
 
