@@ -4768,6 +4768,81 @@ const SOMBRA_CRAVADA_DECLARADA = {
  * comparar as cinco cópias, um erro de digitação numa delas é indistinguível de
  * uma decisão.
  */
+/**
+ * Peça de título que é CABEÇALHO e cuja folha não declara `font-size`.
+ *
+ * As duas pontas são inofensivas sozinhas e o defeito só existe no encontro
+ * delas: o elemento é `h*`, o agente de usuário dá a ele um multiplicador
+ * RELATIVO (`h2` é `1.5em`, `h3` é `1.17em`), e sem `font-size` na folha o
+ * tamanho passa a ser decidido pelo NÍVEL DE CABEÇALHO que quem escreve o
+ * template escolheu. A mesma peça sai em dois tamanhos na mesma página.
+ *
+ * Medido em 2026-09-13, e chegou por captura de tela da dona: o
+ * `.nds-popover-title` declarava margem e peso e nada mais; o painel fixa
+ * `--text-control` (14px), então o título saía **21px** com `h2` e **16px** com
+ * `h3` — que era exatamente a diferença entre o vanilla e o angular na tela.
+ * Corrigido para `--text-control-lg`, o mesmo do dialog.
+ *
+ * O inventário do mesmo dia achou treze regras `.nds-*-title` sem `font-size`, e
+ * **doze eram legítimas**: dez são regra de ESTADO ou de variante de cor, que
+ * herda o tamanho da regra base, e as outras três (`tool-group`,
+ * `inline-citation`, `context-breakdown`) montam `<span>`/`<a>`, onde não há
+ * multiplicador. Por isso a régua não é "toda peça de título declara tamanho" —
+ * seria ruído em doze pontos. É o CRUZAMENTO: a fábrica do vanilla cria
+ * cabeçalho **e** a folha se cala.
+ */
+function auditTituloSemTamanho() {
+  const violations = [];
+  const dirUi = join(ROOT, stackDir('vanilla'), 'src', 'components', 'ui');
+  const dirCss = join(ROOT, 'docs', 'shared', 'styles', 'nds');
+  if (!existsSync(dirUi) || !existsSync(dirCss)) return violations;
+
+  // ponta 1: classe de título que a fábrica monta como `h*`
+  const comoCabecalho = new Map();
+  for (const nome of readdirSync(dirUi)) {
+    if (!nome.endsWith('.ts') || /\.stories\.|\.source\./.test(nome)) continue;
+    const src = stripComments(readFile(join(dirUi, nome)) || '');
+    // `createElement('h2')`, `createElement(\`h${nivel}\`)` e `createParte(\`h${…}\`, …)`
+    for (const m of src.matchAll(/createElement\(\s*[`'"]h(?:[1-6]|\$\{[^}]+\})[`'"]|createParte\(\s*`h\$\{[^}]+\}`[^,]*,\s*[^,]+,\s*'([\w-]+)'/g)) {
+      const daParte = m[1];
+      if (daParte) { comoCabecalho.set(daParte, nome); continue; }
+      // forma solta: a classe vem numa das linhas seguintes
+      const depois = src.slice(m.index, m.index + 400);
+      const cls = depois.match(/className\s*=\s*'(nds-[\w-]*title)'/);
+      if (cls) comoCabecalho.set(cls[1], nome);
+    }
+  }
+
+  // ponta 2: a regra BASE daquela classe declara tamanho?
+  for (const [classe, fabrica] of comoCabecalho) {
+    let achouBase = false;
+    let temTamanho = false;
+    let arquivo = null;
+    for (const nome of readdirSync(dirCss)) {
+      if (!nome.endsWith('.css')) continue;
+      const css = stripComments(readFile(join(dirCss, nome)) || '');
+      for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+        const seletor = m[1].trim().replace(/\s+/g, ' ');
+        // só a regra BASE: a classe sozinha, sem estado, sem ancestral
+        if (seletor !== `.${classe}`) continue;
+        achouBase = true;
+        arquivo = nome;
+        if (/font-size\s*:/.test(m[2])) temTamanho = true;
+      }
+    }
+    if (!achouBase || temTamanho) continue;
+    violations.push({
+      category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+      file: relative(ROOT, join(dirCss, arquivo)), rule: 'titulo_sem_tamanho',
+      message: `\`.${classe}\` é montado como CABEÇALHO por \`${fabrica}\` e a regra base não declara \`font-size\` — `
+        + 'o agente de usuário dá a `h*` um multiplicador relativo, então o tamanho passa a depender do nível que quem '
+        + 'escreve escolheu, e a mesma peça sai em dois tamanhos na mesma página',
+    });
+  }
+
+  return violations;
+}
+
 function auditRotuloDeNav() {
   const violations = [];
 
@@ -11441,7 +11516,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

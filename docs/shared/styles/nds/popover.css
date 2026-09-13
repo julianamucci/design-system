@@ -115,8 +115,22 @@
  * colapsa. As duas somavam, e o espaço entre título e descrição saía quase do
  * tamanho de uma linha. Medido pela dona na tela, em 2026-09-05 — nenhum portão
  * desta casa abre folha de estilo. */
+/* O TAMANHO precisa estar aqui, e a ausência dele custou uma captura de tela.
+ *
+ * Até 2026-09-13 esta regra declarava margem e peso e mais nada. Como o painel
+ * fixa `font-size: var(--text-control)` (14px) e o título é `h*` sem tamanho
+ * próprio, o multiplicador do agente de usuário decidia: `h2` é `1.5em` (21px)
+ * e `h3` é `1.17em` (16px). O tamanho do título do popover dependia do NÍVEL DE
+ * CABEÇALHO que quem escreve escolhesse — e foi assim que a mesma peça apareceu
+ * em dois tamanhos lado a lado, vanilla contra angular.
+ *
+ * 16px, o mesmo do `dialog`, por decisão da dona: é o irmão de papel mais
+ * próximo (painel com título, descrição e ações), fica um degrau acima do corpo
+ * — que é o que separa título de texto — e um degrau abaixo de sheet e
+ * alert-dialog, que são superfícies maiores. */
 .nds-popover-title {
   margin: 0;
+  font-size: var(--text-control-lg);
   font-weight: var(--font-weight-medium, 500);
 }
 

@@ -114,8 +114,22 @@ revelou um valor fora da escala da família; 6px é o que dialog e sheet usam.
 **Medição**: enquanto vivia em `.nds-popover-header`, a variante `Default` — que
 é painel de conteúdo livre e não tem header — ficava com texto visivelmente maior
 que as outras duas na mesma página.
-**Regra que fica**: o popover é superfície pequena e o corpo dele tem um tamanho
+**Regra que fica**: o popover é superfície pequena e o CORPO dele tem um tamanho
 só, com header ou sem.
+
+**O título é a exceção, e ela precisou ser escrita em 2026-09-13.** Até esse dia
+`.nds-popover-title` declarava margem e peso e **nenhum `font-size`** — e "um
+tamanho só" era falso de um jeito que ninguém enxergava: o título é `h*`, o
+agente de usuário dá a ele um multiplicador RELATIVO sobre os 14px do painel
+(`h2` é `1.5em`, `h3` é `1.17em`), então ele saía **21px** ou **16px** conforme o
+nível de cabeçalho que quem escreve escolhesse. O mesmo popover apareceu nos dois
+tamanhos numa captura de tela lado a lado, vanilla contra angular.
+
+Fixado em `--text-control-lg` (16px), por decisão da dona: é o mesmo do Dialog, o
+irmão de papel mais próximo; fica um degrau acima do corpo, que é o que separa
+título de texto, e um degrau abaixo de sheet e alert-dialog, que são superfícies
+maiores. Portão: `titulo_sem_tamanho`, que cruza as DUAS pontas — a fábrica do
+vanilla montar cabeçalho e a folha se calar. Sozinha, nenhuma das duas é defeito.
 
 ### D6 · A largura é literal, e é a única da família sem gancho de customização
 
@@ -226,6 +240,7 @@ Fonte: `docs/shared/styles/nds/popover.css`.
 | raio | — | `--radius` |
 | sombra | — | `--elevation-md` |
 | tamanho de texto | 14px | `--text-control`, **no content** — ver D5 |
+| tamanho do título | 16px | `--text-control-lg`, o mesmo do Dialog — ver D5 |
 | peso do título | 500 | `--font-weight-medium` |
 | camada | — | `--z-popover` |
 
