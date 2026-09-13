@@ -22,3 +22,53 @@
 *::after {
   box-sizing: border-box;
 }
+
+/*
+ * ─── Margem de bloco dos elementos de texto ──────────────────────────────────
+ *
+ * O design system declara ritmo vertical por PRIMITIVO de layout: `.nds-stack`
+ * tem `gap`, `.nds-cluster` tem `gap`, e `data-spacing` escolhe o degrau da
+ * escala. Só que a margem padrão do navegador é `1em` em `<p>` e nos títulos, e
+ * ela entra POR CIMA desse gap. Nada reprova — é comportamento correto de CSS —,
+ * e o resultado é que o número escrito no markup não é o número na tela.
+ *
+ * Medido em 2026-09-13, no cartão de perfil do HoverCard (react), que é um
+ * `.nds-cluster[data-spacing="sm"]` com avatar de 40px e um
+ * `.nds-stack[data-spacing="xs"]` de duas linhas dentro:
+ *
+ *   gap declarado no stack           4px        ← o que o design system diz
+ *   margem do título                 16px/16px  (1em de 16px)
+ *   margem da descrição              13,33px/13,33px  (1em de 13,33px)
+ *   vão RENDERIZADO entre as duas    33,3px     ← 4 + 16 + 13,33
+ *   topo do título contra o avatar   16px abaixo, em vez de alinhado
+ *
+ * O espaçamento do design system estava correto o tempo todo; quem o afogava era
+ * a margem. E a IRREGULARIDADE que se vê na tela vem de `1em` acompanhar o
+ * tamanho de fonte de cada parágrafo: dois textos de tamanhos diferentes no mesmo
+ * bloco recebem margens diferentes, então o ritmo nunca fecha.
+ *
+ * O custo de não ter esta regra estava espalhado: 117 declarações de `margin: 0`
+ * nas folhas compartilhadas, cada uma compensando o navegador num lugar só. Elas
+ * continuam válidas e passam a ser redundantes — remover em lote é outra rodada,
+ * com outra medição.
+ *
+ * ESCOPO: só margem de BLOCO, e só nos elementos de texto. O `padding` de lista
+ * fica de fora DE PROPÓSITO — é ele que dá lugar ao marcador, e zerá-lo é decisão
+ * de tipografia, não de ritmo; quem quer lista sem recuo usa `.nds-list-none`,
+ * que já existe. Mesma especificidade 0 do bloco acima: qualquer regra de
+ * componente vence.
+ */
+h1, h2, h3, h4, h5, h6,
+p,
+figure,
+blockquote,
+dl, dd,
+ul, ol {
+  margin-block: 0;
+}
+
+figure,
+blockquote,
+dd {
+  margin-inline: 0;
+}

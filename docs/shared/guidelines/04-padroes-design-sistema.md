@@ -649,6 +649,44 @@ focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
 
 ## Layout, Grid e Responsividade
 
+### Quem declara ritmo vertical é o PRIMITIVO, e nada pode entrar por cima
+
+`.nds-stack` e `.nds-cluster` declaram `gap`, e `data-spacing` escolhe o degrau da
+escala. Esse número é o contrato: o que está escrito no markup é o que tem de
+aparecer na tela.
+
+Até 2026-09-13 não era. A margem padrão do navegador é `1em` em `<p>` e nos
+títulos, e ela somava ao `gap` sem nada reprovar — é comportamento correto de
+CSS, não há compilador, suíte nem folha que veja. Medido no cartão de perfil do
+HoverCard, um `.nds-cluster[data-spacing="sm"]` com um
+`.nds-stack[data-spacing="xs"]` dentro:
+
+| | declarado | renderizado |
+|---|---:|---:|
+| vão entre as duas linhas | 4px | **33,3px** (4 + 16 + 13,33) |
+| topo do título contra o avatar | alinhado | **16px abaixo** |
+
+E a IRREGULARIDADE que se via na tela vinha de `1em` acompanhar o tamanho de
+fonte de CADA parágrafo: dois textos de tamanhos diferentes no mesmo bloco
+recebiam margens diferentes, então o ritmo nunca fechava. O sintoma parecia de
+espaçamento mal escolhido, e o espaçamento estava certo.
+
+`docs/shared/styles/nds/reset.css` passou a zerar a margem de bloco dos elementos
+de texto. O custo de não ter feito isso antes estava espalhado em **117**
+declarações de `margin: 0` nas folhas compartilhadas, cada uma compensando o
+navegador num lugar só.
+
+**O que isto NÃO autoriza**: zerar `padding` de lista. É ele que dá lugar ao
+marcador, e removê-lo é decisão de tipografia, não de ritmo — quem quer lista sem
+recuo usa `.nds-list-none`.
+
+**A leitura que fica**: espaçamento que não bate com o declarado raramente é
+degrau errado na escala. Meça o elemento antes de trocar o `data-spacing` — foi
+essa troca às cegas que fez uma rodada inteira de "corrigi e continua igual" no
+popover, quando o culpado era a resolução de `var()` no filho.
+
+---
+
 ### Breakpoints
 
 O projeto adota uma abordagem **mobile-first**: defina o comportamento base para mobile e sobrescreva em telas maiores. Os breakpoints canônicos abaixo valem tanto para media queries em CSS quanto para as classes utilitárias responsivas `.nds-*`.
