@@ -83,6 +83,21 @@ O laço à mão FICA, e não é redundância esquecida: ele é o único trap qua
 painel modal não tem controle de fechar, e o contrato de `modal` não pode
 depender do conteúdo que alguém pôs dentro.
 
+**A story que guarda isso mostra a mesma composição nas cinco desde 2026-09-13**:
+dois CHECKBOX e nenhuma peça de fechar. Nas quatro stacks de lib a ausência é
+obrigatória — com um controle registrado, quem prende o foco é a lib, e a story
+mediria a lib. No vanilla não é, e ainda assim ela segue a mesma forma, por
+decisão da dona: a story de um contrato tem de mostrar a mesma coisa nas cinco,
+senão comparar as páginas deixa de responder alguma coisa.
+
+Eram um par Cancelar/Confirmar, e nas quatro de lib os dois eram **inertes** —
+botão que promete ação e não entrega, publicado como exemplo canônico. Checkbox
+é controle que se basta: ele não promete nada além de marcar. **E com isso o
+Escape passou a ser a única saída daquele painel** — com o foco preso e a
+rolagem travada, um Escape que falhasse deixaria quem usa sem caminho nenhum —,
+então ele ganhou asserção própria na play do vanilla. Provado desligando o ramo
+do Escape na fábrica: a story reprova com "popover ainda aberto".
+
 **E ele contava como focável um elemento que o Tab nunca visita, até 2026-09-13.**
 A lista de seletores declarava no docblock que `[tabindex="-1"]` fica de fora —
 "é marcador de foco programático, não parada na ordem de tabulação" — e **só o

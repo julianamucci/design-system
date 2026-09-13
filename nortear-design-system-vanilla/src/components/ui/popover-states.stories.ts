@@ -10,9 +10,12 @@ import {
   popoverSource,
   popoverSourceActions,
   popoverSourceControlled,
+  popoverSourceModal,
   popoverSourceWith,
 } from './popover.source';
 import { createButton } from './button';
+import { createCheckbox } from './checkbox';
+import { createLabel } from './label';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -40,6 +43,27 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/**
+ * Uma linha "caixa + rótulo", no idioma que o `checkbox-compositions` já usa.
+ *
+ * O `htmlFor` é o que dá NOME ACESSÍVEL à caixa — sem ele o `getByRole`
+ * ('checkbox', { name }) da play não acha nada, e a caixa chega ao leitor de
+ * tela anônima.
+ */
+function buildOptionRow(id: string, label: string): HTMLElement {
+  const row = document.createElement('div');
+  row.className = 'nds-cluster';
+  row.dataset.spacing = 'sm';
+
+  const box = createCheckbox({ id });
+
+  const text = createLabel({ text: label, htmlFor: id });
+  text.classList.add('nds-cursor-pointer');
+
+  row.append(box, text);
+  return row;
+}
 
 function buildSimpleContent(text: string): HTMLElement {
   const c = document.createElement('div');
@@ -338,7 +362,7 @@ export const Modal: Story = {
     // um painel só de texto — sem focável nenhum, não haveria prisão para ver.
     docs: {
       source: {
-        transform: popoverSourceActions({ title: 'Popover modal', modal: true, defaultOpen: true }),
+        transform: popoverSourceModal({ title: 'Popover modal', modal: true, defaultOpen: true }),
       },
       description: {
         story:
@@ -357,24 +381,29 @@ export const Modal: Story = {
     // DOIS focáveis de propósito: com um só, "o Tab do último volta ao
     // primeiro" seria verdade sem laço nenhum — primeiro e último seriam o
     // mesmo elemento, e a asserção nasceria sem dentes.
-    const actions = document.createElement('div');
-    actions.className = 'nds-cluster';
-    actions.dataset.spacing = 'sm';
-    actions.dataset.justify = 'end';
-    // No modo modal o controle de fechar dentro do painel pesa mais: o foco
-    // está preso e a rolagem travada, então o caminho de saída que não é o
-    // Escape tem de existir DENTRO do painel.
-    const cancelar = createButton({ variant: 'ghost', size: 'sm', label: 'Cancelar' });
-    cancelar.dataset.slot = 'popover-close';
-    // O Confirmar fecha por CÓDIGO (motivo `api`), o Cancelar pela marca (motivo
-    // `close-button`) — os dois caminhos existem justamente para o relatório
-    // distinguir concluir de desistir.
-    const confirmar = createButton({ variant: 'default', size: 'sm', label: 'Confirmar' });
-    actions.append(cancelar, confirmar);
-    content.appendChild(actions);
+    //
+    // E são CAIXAS DE MARCAÇÃO, não um par Cancelar/Confirmar. O motivo é o
+    // mesmo das outras quatro stacks, e ele vale aqui por tabela: lá o painel
+    // não pode ter controle de fechar registrado — com um, quem prenderia o
+    // foco seria a lib, e a story mediria a lib em vez deste laço —, e um
+    // "Cancelar" que não cancela é botão que promete saída e não entrega.
+    // Checkbox é controle que se basta: ele não promete nada além de marcar.
+    //
+    // Aqui a fábrica não tem essa restrição (não há lib), e até 2026-09-13 esta
+    // story trazia o par funcionando. Padronizada com as outras por decisão da
+    // dona: a story de um contrato tem de mostrar a mesma coisa nas cinco, e o
+    // caminho de saída do modo modal já é medido pela story `CloseButton` e
+    // pelo Escape, que continua aqui.
+    const options = document.createElement('div');
+    options.className = 'nds-stack';
+    options.dataset.spacing = 'sm';
+    options.append(
+      buildOptionRow('popover-modal-remember', 'Lembrar minha escolha'),
+      buildOptionRow('popover-modal-email', 'Receber aviso por e-mail'),
+    );
+    content.appendChild(options);
 
     const el = createPopover({ trigger, content, modal: true });
-    confirmar.addEventListener('click', () => el.close());
     return empilharCentrado([el]);
   },
   play: async ({ canvasElement, step }) => {
@@ -401,49 +430,47 @@ export const Modal: Story = {
       // O par desta asserção está na story Focused, que é a não-modal: lá a
       // MESMA tecla, no MESMO lugar, tem de tirar o foco do painel.
       const p = panel()!;
-      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
-      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
+      const firstBox = within(p).getByRole('checkbox', { name: 'Lembrar minha escolha' });
+      const lastBox = within(p).getByRole('checkbox', { name: 'Receber aviso por e-mail' });
 
-      confirmar.focus();
-      await expect(confirmar).toHaveFocus();
+      lastBox.focus();
+      await expect(lastBox).toHaveFocus();
 
       await userEvent.tab();
 
       await expect(p.contains(document.activeElement)).toBe(true);
-      await expect(cancelar).toHaveFocus();
+      await expect(firstBox).toHaveFocus();
     });
 
     await step('E Shift+Tab a partir do primeiro volta ao último', async () => {
       const p = panel()!;
-      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
-      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
+      const firstBox = within(p).getByRole('checkbox', { name: 'Lembrar minha escolha' });
+      const lastBox = within(p).getByRole('checkbox', { name: 'Receber aviso por e-mail' });
 
-      cancelar.focus();
+      firstBox.focus();
       await userEvent.tab({ shift: true });
 
       await expect(p.contains(document.activeElement)).toBe(true);
-      await expect(confirmar).toHaveFocus();
+      await expect(lastBox).toHaveFocus();
     });
 
-    await step('O Cancelar fecha o painel — a saída que não é o Escape', async () => {
+    // Sem peça de fechar no painel, o Escape é a ÚNICA saída — e com o foco
+    // preso e a rolagem travada, um Escape que falhasse deixaria quem usa sem
+    // caminho nenhum. Este passo entrou em 2026-09-13, junto com a troca do par
+    // Cancelar/Confirmar pelas caixas: até então quem media a saída eram os
+    // cliques nos dois botões, e removê-los sem pôr isto no lugar teria tirado
+    // a asserção junto com o botão.
+    await step('Sem peça de fechar, o Escape é a única saída — e ela funciona', async () => {
       const p = panel()!;
-      const cancelar = within(p).getByRole('button', { name: /cancelar/i });
-      await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
-      await userEvent.click(cancelar);
-      await waitFor(() => {
-        if (panel()) throw new Error('popover ainda aberto');
-      });
-      await expect(trigger).toHaveFocus();
-    });
+      await expect(within(p).queryByRole('button', { name: /cancelar|confirmar/i })).toBeNull();
 
-    await step('E o Confirmar fecha por CÓDIGO, sem ser peça de fechar', async () => {
-      const p = await open(trigger);
-      const confirmar = within(p).getByRole('button', { name: /confirmar/i });
-      await expect(confirmar).not.toHaveAttribute('data-slot', 'popover-close');
-      await userEvent.click(confirmar);
+      await userEvent.keyboard('{Escape}');
       await waitFor(() => {
         if (panel()) throw new Error('popover ainda aberto');
       });
+      // O foco volta ao gatilho: sem isso, quem fechou por teclado fica com o
+      // foco no `body` e recomeça a navegação do topo da página.
+      await expect(trigger).toHaveFocus();
     });
 
     // Termina ABERTA: é este estado que o axe varre e o Chromatic fotografa.

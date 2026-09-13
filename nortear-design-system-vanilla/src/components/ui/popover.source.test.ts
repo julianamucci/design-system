@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  popoverModalSnippet,
   popoverWithActionsSnippet,
   popoverWithFormSnippet,
   popoverControlledSnippet,
@@ -126,6 +127,31 @@ describe('popoverComFormularioSnippet', () => {
     // snippet EXPLICA a marca num comentário, e um `toContain` cru reprovava na
     // prosa que ensina a regra em vez de na violação dela.
     expect(code).not.toMatch(/^\s*\w+\.dataset\.slot = 'popover-close'/m);
+  });
+});
+
+describe('popoverModalSnippet', () => {
+  it('traz DOIS focáveis rotulados, e eles são caixas de marcação', () => {
+    const code = popoverModalSnippet({ title: 'Popover modal' });
+    expect(code).toContain("createCheckbox({ id })");
+    expect(code).toContain("linhaDeOpcao('popover-modal-remember', 'Lembrar minha escolha')");
+    expect(code).toContain("linhaDeOpcao('popover-modal-email', 'Receber aviso por e-mail')");
+    // O `htmlFor` é o que nomeia a caixa. Sem ele a linha renderiza igual e o
+    // controle chega anônimo ao leitor de tela — defeito que não aparece na tela.
+    expect(code).toContain('createLabel({ text: rotulo, htmlFor: id })');
+    expect(code).toContain("createPopoverTitle({ text: 'Popover modal' })");
+  });
+
+  it('e NENHUMA peça de fechar, que é o assunto deste painel', () => {
+    // Com um controle de fechar registrado, o gerenciador de foco da lib
+    // trapearia sozinho nas stacks que têm uma, e a story mediria a lib em vez
+    // do laço de tabulação do design system. Aqui a régua é a mesma para o
+    // snippet ficar igual nas cinco.
+    const code = popoverModalSnippet();
+    expect(code).not.toMatch(/^\s*\w+\.dataset\.slot = 'popover-close'/m);
+    expect(code).not.toContain("label: 'Cancelar'");
+    expect(code).not.toContain("label: 'Confirmar'");
+    expect(code).not.toContain('painel.close()');
   });
 });
 

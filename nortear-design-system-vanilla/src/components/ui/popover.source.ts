@@ -342,6 +342,69 @@ confirmar.addEventListener('click', () => {
   );
 }
 
+/**
+ * Painel do modo MODAL — lista de opções, sem peça de fechar.
+ *
+ * A ausência do controle de fechar é o assunto, e não descuido: nas stacks de
+ * lib o gerenciador de foco só trapeia quando existe um registrado, e é o laço
+ * de tabulação do design system que tapa esse buraco. Um painel de exemplo com
+ * botão de fechar mediria a lib, não o laço.
+ *
+ * Aqui a fábrica não tem essa condição, e ainda assim o snippet mostra a mesma
+ * composição das outras quatro: a story de um contrato ensina a mesma coisa nas
+ * cinco. Com o painel assim, o **Escape é a única saída** — e é por isso que ele
+ * é medido na play.
+ *
+ * DOIS focáveis de propósito: com um só, "o Tab do último volta ao primeiro"
+ * seria verdade sem laço nenhum.
+ */
+export function popoverModalSnippet(o: PopoverSnippetOptions = {}): string {
+  return snippet(
+    [
+      importing('popover', 'createPopover', 'createPopoverTitle'),
+      importing('button', 'createButton'),
+      importing('checkbox', 'createCheckbox'),
+      importing('label', 'createLabel'),
+    ].join('\n'),
+    blockTrigger(o),
+    `const conteudo = document.createElement('div');
+conteudo.className = 'nds-stack';
+conteudo.dataset.spacing = 'sm';
+
+// O \`htmlFor\` é o que dá NOME ACESSÍVEL à caixa; sem ele ela chega anônima ao
+// leitor de tela, e nenhuma consulta por nome a encontra.
+function linhaDeOpcao(id, rotulo) {
+  const linha = document.createElement('div');
+  linha.className = 'nds-cluster';
+  linha.dataset.spacing = 'sm';
+  linha.append(createCheckbox({ id }), createLabel({ text: rotulo, htmlFor: id }));
+  return linha;
+}
+
+const opcoes = document.createElement('div');
+opcoes.className = 'nds-stack';
+opcoes.dataset.spacing = 'sm';
+opcoes.append(
+  linhaDeOpcao('popover-modal-remember', 'Lembrar minha escolha'),
+  linhaDeOpcao('popover-modal-email', 'Receber aviso por e-mail'),
+);
+
+conteudo.append(${recuar(
+      callLine('createPopoverTitle', options([['text', text(o.title ?? 'Popover modal')]])),
+      '  ',
+    )}, opcoes);`,
+    `const painel = ${callLine('createPopover', panelLines(o, 'conteudo'))};`,
+    blockFinal(o),
+  );
+}
+
+/** Transform de story para o painel do modo modal. */
+export function popoverSourceModal(
+  fixas: PopoverSnippetOptions = {},
+): SourceTransform<PopoverSnippetOptions> {
+  return (_gerado, ctx) => popoverModalSnippet({ ...ctx.args, ...fixas });
+}
+
 /** Transform de story para o painel com ações. */
 export function popoverSourceActions(
   fixas: PopoverSnippetOptions = {},
