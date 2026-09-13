@@ -14,7 +14,6 @@
       "discard": "Descartar rascunho"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "found": "Um rascunho encontrado",
         "dated": "Com o carimbo de tempo",
@@ -23,7 +22,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A faixa fica acima do campo, e não dentro dele: o campo desenha o que se escreve agora, e isto é uma pergunta sobre antes.",
       "item2": "O título diz o que foi encontrado, e leva junto o carimbo de tempo quando existe um.",
@@ -35,7 +33,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use acima do campo, quando havia texto por enviar da vez anterior e a pessoa precisa decidir o que fazer com ele.",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O rascunho inteiro chega à faixa, e o desenho corta a prévia em duas linhas.",
         "dont": "O texto chega já cortado com reticências: some da busca do navegador e nunca chega inteiro a quem ouve."
@@ -137,7 +133,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createDraftRestore } from '@/components/ui/draft-restore';\n\nconst faixa = createDraftRestore({\n  labels: rotulos,\n  draft: rascunhoGuardado,\n  onAction: (action) => (action === 'restore' ? restaurar() : descartar()),\n});\n\ntela.prepend(faixa);",
@@ -152,7 +147,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -180,7 +174,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -244,7 +237,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -296,7 +288,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Uma região de estado, e não de alerta: ela nasce junto com a tela e espera a primeira pausa de quem lê. O rascunho inteiro fica no documento, o corte é só visual, e cada controle nomeia o que ele faz sobre o quê.",
       "items": {
         "item1": "A faixa é região de estado, e não de alerta — ela nasce junto com a tela, e interromper a leitura em curso por algo que não é urgente cobra caro de quem ouve.",
@@ -325,7 +316,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -346,7 +336,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A faixa não guarda rascunho, não decide quando um expira e não diz o que descartar apaga. Ela mostra o que foi encontrado e avisa qual controle foi apertado; o resto é política de produto, e política envelhece por produto, não por sistema.",
       "item2": "Ela é região de estado, e não de alerta. A faixa nasce junto com a tela e quem lê está começando a ler: um alerta interromperia a leitura em curso por algo que não é urgente.",
       "item3": "A prévia é cortada pelo desenho, nunca por corte no texto. O rascunho inteiro continua no documento, e é isso que o mantém achável pela busca do navegador e audível por completo — reticências feitas em código viram mentira para quem ouve.",
@@ -355,7 +344,6 @@
       "item6": "A faixa é autônoma: o campo não sabe que ela existe. Quem monta a tela a põe acima dele, e nenhum arquivo do campo precisou mudar por causa dela."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a faixa em si não instrumenta a recuperação do rascunho, que é do produto.",
       "table": {
         "event": "Evento",
@@ -373,7 +361,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -468,7 +455,6 @@
       "discard": "Discard draft"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "found": "A draft was found",
         "dated": "With the time stamp",
@@ -477,7 +463,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The band sits above the field, not inside it: the field draws what is being written now, and this is a question about before.",
       "item2": "The title says what was found, and carries the time stamp along when there is one.",
@@ -489,7 +474,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it above the field, when there was unsent text from last time and the person has to decide what to do with it.",
@@ -580,7 +564,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The whole draft reaches the band, and the design clips the preview to two lines.",
         "dont": "The text arrives already clipped with an ellipsis: it disappears from browser search and never reaches whoever listens in full."
@@ -591,7 +574,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createDraftRestore } from '@/components/ui/draft-restore';\n\nconst faixa = createDraftRestore({\n  labels: rotulos,\n  draft: rascunhoGuardado,\n  onAction: (action) => (action === 'restore' ? restaurar() : descartar()),\n});\n\ntela.prepend(faixa);",
@@ -606,7 +588,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -634,7 +615,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -698,7 +678,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -750,7 +729,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "A status region, not an alert one: it is born together with the screen and waits for the first pause of whoever is reading. The whole draft stays in the document, the clipping is only visual, and each control names what it acts upon.",
       "items": {
         "item1": "The band is a status region, not an alert one — it is born together with the screen, and interrupting the reading in progress for something that is not urgent costs whoever listens dearly.",
@@ -779,7 +757,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "composer": {
           "name": "Composer",
@@ -800,7 +777,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The band does not store drafts, does not decide when one expires and does not say what discarding erases. It shows what was found and reports which control was pressed; the rest is product policy, and policy ages by product, not by system.",
       "item2": "It is a status region, not an alert one. The band is born together with the screen and whoever reads is just starting to read: an alert would interrupt the reading in progress for something that is not urgent.",
       "item3": "The preview is clipped by the design, never by clipping the text. The whole draft stays in the document, and that is what keeps it findable by browser search and audible in full — an ellipsis made in code becomes a lie for whoever listens.",
@@ -809,7 +785,6 @@
       "item6": "The band is autonomous: the field does not know it exists. Whoever builds the screen puts it above the field, and no file of the field had to change because of it."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the band itself does not instrument draft recovery, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -827,7 +802,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function verifies in each story.",
@@ -922,7 +896,6 @@
       "discard": "Descartar borrador"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "found": "Un borrador encontrado",
         "dated": "Con la marca de tiempo",
@@ -931,7 +904,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La franja está encima del campo, y no dentro de él: el campo dibuja lo que se escribe ahora, y esto es una pregunta sobre antes.",
       "item2": "El título dice lo que se encontró, y lleva consigo la marca de tiempo cuando existe una.",
@@ -943,7 +915,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala encima del campo, cuando había texto sin enviar de la vez anterior y la persona tiene que decidir qué hacer con él.",
@@ -1034,7 +1005,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El borrador entero llega a la franja, y el diseño recorta la vista previa en dos líneas.",
         "dont": "El texto llega ya recortado con puntos suspensivos: desaparece de la búsqueda del navegador y nunca llega entero a quien escucha."
@@ -1045,7 +1015,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createDraftRestore } from '@/components/ui/draft-restore';\n\nconst faixa = createDraftRestore({\n  labels: rotulos,\n  draft: rascunhoGuardado,\n  onAction: (action) => (action === 'restore' ? restaurar() : descartar()),\n});\n\ntela.prepend(faixa);",
@@ -1060,7 +1029,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1088,7 +1056,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1152,7 +1119,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1204,7 +1170,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Una región de estado, y no de alerta: nace junto con la pantalla y espera la primera pausa de quien lee. El borrador entero queda en el documento, el recorte es solo visual, y cada control nombra sobre qué actúa.",
       "items": {
         "item1": "La franja es región de estado, y no de alerta — nace junto con la pantalla, e interrumpir la lectura en curso por algo que no es urgente sale caro a quien escucha.",
@@ -1233,7 +1198,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -1254,7 +1218,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La franja no guarda borradores, no decide cuándo caduca uno y no dice qué borra descartar. Muestra lo que se encontró y avisa qué control se pulsó; el resto es política de producto, y la política envejece por producto, no por sistema.",
       "item2": "Es región de estado, y no de alerta. La franja nace junto con la pantalla y quien lee está empezando a leer: una alerta interrumpiría la lectura en curso por algo que no es urgente.",
       "item3": "La vista previa la recorta el diseño, nunca un recorte en el texto. El borrador entero sigue en el documento, y eso es lo que lo mantiene localizable por la búsqueda del navegador y audible completo — unos puntos suspensivos hechos en código se vuelven mentira para quien escucha.",
@@ -1263,7 +1226,6 @@
       "item6": "La franja es autónoma: el campo no sabe que existe. Quien monta la pantalla la pone encima de él, y ningún archivo del campo tuvo que cambiar por ella."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la franja en sí no instrumenta la recuperación del borrador, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1281,7 +1243,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

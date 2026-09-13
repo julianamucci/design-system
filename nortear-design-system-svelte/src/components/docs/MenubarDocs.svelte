@@ -554,7 +554,7 @@ interface MenubarRadioGroupProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <!--
       UMA barra com quatro menus, como no vanilla. Tudo pela chave do conteúdo:
       até 2026-09-11 a barra desta stack tinha itens próprios — "Status bar" e
@@ -686,7 +686,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -704,7 +703,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -767,7 +765,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -888,7 +885,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -896,7 +892,6 @@ interface MenubarRadioGroupProps {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="menubar"
     items={[
@@ -1019,7 +1014,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -1035,7 +1029,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: propsTableCols,
@@ -1055,7 +1048,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -1082,7 +1074,6 @@ interface MenubarRadioGroupProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -1106,7 +1097,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.navigationMenu.name'), description: $tStore('related.items.navigationMenu.description'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
       { name: $tStore('related.items.dropdownMenu.name'),   description: $tStore('related.items.dropdownMenu.description'),   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
@@ -1117,7 +1107,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -1135,7 +1124,6 @@ interface MenubarRadioGroupProps {
     dois eventos que nenhum tipo declara e que a página nunca disparou.
   -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event:   $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -1153,7 +1141,6 @@ interface MenubarRadioGroupProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

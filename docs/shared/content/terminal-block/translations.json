@@ -19,7 +19,6 @@
       "exitCode": "código de saída {code}"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "running": "Enquanto a saída ainda chega",
         "complete": "Quando terminou bem",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A linha do comando abre a peça e mostra o que foi executado, como se escreveu. Ela quebra em várias linhas em vez de ser cortada.",
       "item2": "O sinal antes do comando diz que aquilo é um comando, e fica fora do que é lido em voz.",
@@ -40,7 +38,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para mostrar o que o agente executou e o que a máquina respondeu, preservando a saída como ela veio.",
@@ -131,7 +128,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "A saída chega com o espaçamento intacto, e as colunas ficam alinhadas.",
         "dont": "A saída é rearrumada para caber na largura, e a tabela que alinhava os números vira um parágrafo."
@@ -142,7 +138,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: labels,\n});",
@@ -157,7 +152,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -190,7 +184,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -254,7 +247,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -341,7 +333,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Nada aqui é região viva: saída de comando chega em rajada, e anunciá-la pedaço a pedaço torna a tela impossível de ouvir. O que diz que a tela ainda se escreve é a peça se declarar ocupada; a palavra descreve o estado, o código de saída chega escrito, e a caixa que rola é alcançável pelo teclado e tem o comando por nome.",
       "items": {
         "item1": "A palavra do estado está sempre presente: o ponto colorido não descreve estado sozinho.",
@@ -373,7 +364,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "codeBlock": {
           "name": "Bloco de código",
@@ -394,7 +384,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Não é o bloco de código, e a diferença não é de aparência. Aquele mostra código para ler e copiar, e tokeniza por gramática; este mostra o que uma máquina já escreveu, e saída não tem gramática para colorir sem inventar sentido.",
       "item2": "O estado é o mesmo vocabulário da execução, de propósito: um comando fica na fila, corre, é interrompido, termina ou quebra. O interrompido daqui é o mais literal dos cinco — é o Ctrl-C, que é escolha de pessoa e não falha de máquina.",
       "item3": "O código de saída é dado, e não estado. A peça mostra o número e não o interpreta: há comando que devolve um sem ter falhado, e deduzir o estado do número daria duas fontes de verdade que podem discordar.",
@@ -404,7 +393,6 @@
       "item7": "A peça não executa nada. Ela não abre processo, não revela linha por linha, não conta tempo e não oferece parar — parar e repetir são do estado da execução, e dois botões de parar para uma execução só fariam quem apertasse um deles não saber qual parou."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não oferece ação.",
       "table": {
         "event": "Evento",
@@ -422,7 +410,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -565,7 +552,6 @@
       "exitCode": "exit code {code}"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "running": "While the output is still arriving",
         "complete": "When it finished well",
@@ -574,7 +560,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The command line opens the piece and shows what was run, exactly as written. It wraps onto several lines instead of being cut short.",
       "item2": "The sign before the command says that this is a command, and stays out of what is read aloud.",
@@ -586,7 +571,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to show what the agent ran and what the machine answered, keeping the output exactly as it arrived.",
@@ -677,7 +661,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The output arrives with its spacing intact, and the columns stay aligned.",
         "dont": "The output is rearranged to fit the width, and the table that aligned the numbers becomes a paragraph."
@@ -688,7 +671,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: labels,\n});",
@@ -703,7 +685,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -736,7 +717,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -800,7 +780,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -887,7 +866,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Nothing here is a live region: command output arrives in bursts, and announcing it piece by piece makes the screen impossible to listen to. What says the screen is still being written is the piece declaring itself busy; the word describes the state, the exit code arrives written, and the scrolling box is reachable by keyboard and named after the command.",
       "items": {
         "item1": "The state word is always present: the coloured dot does not describe a state on its own.",
@@ -919,7 +897,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "codeBlock": {
           "name": "Code block",
@@ -940,7 +917,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "It is not the code block, and the difference is not one of appearance. That one shows code to read and copy, and tokenises by grammar; this one shows what a machine has already written, and output has no grammar to colour without inventing meaning.",
       "item2": "The state is the same vocabulary as the run, on purpose: a command queues, runs, is interrupted, finishes or breaks. The stopped state here is the most literal of the five — it is Ctrl-C, a person's choice rather than a machine failure.",
       "item3": "The exit code is data, not state. The piece shows the number and does not interpret it: some commands return one without having failed, and deducing the state from the number would give two sources of truth that can disagree.",
@@ -950,7 +926,6 @@
       "item7": "The piece runs nothing. It opens no process, reveals nothing line by line, counts no time and offers no stop — stopping and repeating belong to the run status line, and two stop buttons for one run would leave whoever pressed one unsure which they stopped."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the piece itself instruments nothing, because it offers no action.",
       "table": {
         "event": "Event",
@@ -968,7 +943,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1111,7 +1085,6 @@
       "exitCode": "código de salida {code}"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "running": "Mientras la salida todavía llega",
         "complete": "Cuando terminó bien",
@@ -1120,7 +1093,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La línea del comando abre la pieza y muestra lo que se ejecutó, tal como se escribió. Se parte en varias líneas en vez de cortarse.",
       "item2": "El signo delante del comando dice que aquello es un comando, y queda fuera de lo que se lee en voz.",
@@ -1132,7 +1104,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala para mostrar lo que el agente ejecutó y lo que la máquina respondió, conservando la salida tal como llegó.",
@@ -1223,7 +1194,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "La salida llega con el espaciado intacto, y las columnas quedan alineadas.",
         "dont": "La salida se reacomoda para caber en el ancho, y la tabla que alineaba los números se vuelve un párrafo."
@@ -1234,7 +1204,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createTerminalBlock } from '@/components/ui/terminal-block';\n\ncreateTerminalBlock({\n  command: 'npm run build',\n  lines: saida,\n  status: 'complete',\n  exitCode: 0,\n  labels: labels,\n});",
@@ -1249,7 +1218,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1282,7 +1250,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1346,7 +1313,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1433,7 +1399,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Nada aquí es región viva: la salida de un comando llega a ráfagas, y anunciarla trozo a trozo vuelve la pantalla imposible de escuchar. Lo que dice que la pantalla todavía se escribe es que la pieza se declara ocupada; la palabra describe el estado, el código de salida llega escrito, y la caja que se desplaza es alcanzable con el teclado y lleva el comando por nombre.",
       "items": {
         "item1": "La palabra del estado está siempre presente: el punto de color no describe un estado por sí solo.",
@@ -1465,7 +1430,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "codeBlock": {
           "name": "Bloque de código",
@@ -1486,7 +1450,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "No es el bloque de código, y la diferencia no es de apariencia. Aquel muestra código para leer y copiar, y tokeniza por gramática; este muestra lo que una máquina ya escribió, y la salida no tiene gramática que colorear sin inventar sentido.",
       "item2": "El estado es el mismo vocabulario de la ejecución, a propósito: un comando espera en la cola, corre, es interrumpido, termina o se rompe. El interrumpido de aquí es el más literal de los cinco — es el Ctrl-C, que es elección de una persona y no fallo de la máquina.",
       "item3": "El código de salida es dato, y no estado. La pieza muestra el número y no lo interpreta: hay comandos que devuelven uno sin haber fallado, y deducir el estado del número daría dos fuentes de verdad que pueden discrepar.",
@@ -1496,7 +1459,6 @@
       "item7": "La pieza no ejecuta nada. No abre proceso, no revela línea a línea, no cuenta tiempo y no ofrece detener — detener y repetir son del estado de la ejecución, y dos botones de detener para una sola ejecución dejarían a quien apretara uno sin saber cuál detuvo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no ofrece acción.",
       "table": {
         "event": "Evento",
@@ -1514,7 +1476,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

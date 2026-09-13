@@ -366,7 +366,7 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <!-- Cada alert da demo mostra uma capacidade diferente: sem título,
                com título, dismissible e com ação. -->
           <div class="nds-w-full nds-stack" data-spacing="sm">
@@ -407,7 +407,6 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -415,7 +414,6 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -423,10 +421,9 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="importBasico"
           [secondaryDescription]="t('import.withIcon')"
@@ -437,7 +434,6 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
 
         <nds-docs-variants
           id="variantes"
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="alert"
@@ -446,20 +442,17 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
 
         <nds-docs-variants
           id="composicoes"
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           componentSlug="alert"
           language="html"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -467,7 +460,6 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -475,7 +467,6 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -485,21 +476,18 @@ type ChaveDeVariante = 'default' | 'destructive' | 'success' | 'warning' | 'info
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="alert"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="alert" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="alert" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

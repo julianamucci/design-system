@@ -11,7 +11,6 @@
       "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "alignmentLabel": "Alinhamento do texto",
         "left": "Alinhar à esquerda",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>ToggleGroup</strong> — container configurado em modo de seleção única ou múltipla; controla seleção compartilhada e orientação.",
       "item2": "<strong>ToggleGroupItem</strong> — Toggle individual com <code>value</code> único; ARIA controlado pelo grupo.",
       "item3": "<strong>aria-label</strong> no ToggleGroup — OBRIGATÓRIO para descrever o agrupamento.",
@@ -42,7 +40,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use o modo de seleção única para escolha exclusiva (ex: alinhamento) e o modo de seleção múltipla para combinação (ex: negrito + itálico).",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Use type=single para alinhamento e type=multiple para formatação.",
         "dont": "Não use múltiplos Toggle soltos quando representam escolha conjunta."
@@ -136,11 +132,8 @@
         "dont": "Não omita aria-label no grupo — leitores de tela perdem contexto."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "single": "Single",
         "multiple": "Multiple",
@@ -151,7 +144,6 @@
         "multiple": "Modo de seleção múltipla — seleção combinada; <code>value</code> é array de strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — items empilhados; navegação por setas verticais."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "alignmentBar": {
           "name": "Barra de alinhamento (single)",
@@ -171,7 +163,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "disabledItem": {
         "label": "Com item desabilitado",
         "trigger": "Item marcado como desabilitado",
@@ -209,7 +200,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -275,7 +265,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -315,7 +304,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-label</code> obrigatório no <code>ToggleGroup</code> descrevendo a categoria",
@@ -352,7 +340,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "toggle": {
           "name": "Toggle",
@@ -373,14 +360,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: cada stack compõe a lib headless idiomática do seu ecossistema; roving tabindex e navegação por setas vêm dela.",
       "item2": "<strong>Modo define o value</strong> — seleção única usa string; seleção múltipla usa array de strings.",
       "item3": "<strong>Itens sempre emendados</strong> — o grupo não separa os botões: as bordas se conectam e só as pontas do conjunto ficam arredondadas.",
       "item4": "<strong>Variants herdadas</strong> — <code>variant</code> e <code>size</code> do grupo se aplicam a todos os items via Context."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -393,7 +378,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -466,7 +450,6 @@
       "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "alignmentLabel": "Text alignment",
         "left": "Align left",
@@ -483,7 +466,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>ToggleGroup</strong> — container configured in single or multiple selection mode; controls shared selection and orientation.",
       "item2": "<strong>ToggleGroupItem</strong> — individual Toggle with unique <code>value</code>; ARIA managed by group.",
       "item3": "<strong>aria-label</strong> on ToggleGroup — REQUIRED to describe the grouping.",
@@ -497,7 +479,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use single selection mode for exclusive choice (e.g. alignment) and multiple selection mode for combination (e.g. bold + italic).",
@@ -581,7 +562,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Use type=single for alignment and type=multiple for formatting.",
         "dont": "Don't use multiple loose Toggles when representing a joint choice."
@@ -591,11 +571,8 @@
         "dont": "Don't omit aria-label on group — screen readers lose context."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "single": "Single",
         "multiple": "Multiple",
@@ -606,7 +583,6 @@
         "multiple": "Multiple selection mode — combined selection; <code>value</code> is array of strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — stacked items; vertical arrow navigation."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "alignmentBar": {
           "name": "Alignment bar (single)",
@@ -626,7 +602,6 @@
       }
     },
     "states": {
-      "title": "States",
       "disabledItem": {
         "label": "With disabled item",
         "trigger": "Item marked as disabled",
@@ -664,7 +639,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -730,7 +704,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -770,7 +743,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-label</code> required on <code>ToggleGroup</code> describing the category",
@@ -807,7 +779,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "toggle": {
           "name": "Toggle",
@@ -828,14 +799,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: each stack composes the headless lib idiomatic to its ecosystem; roving tabindex and arrow navigation come from it.",
       "item2": "<strong>Mode defines value</strong> — single selection uses string; multiple selection uses array of strings.",
       "item3": "<strong>Items always joined</strong> — the group does not separate the buttons: the borders connect and only the outer ends of the set stay rounded.",
       "item4": "<strong>Inherited variants</strong> — <code>variant</code> and <code>size</code> from group apply to all items via Context."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -848,7 +817,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -921,7 +889,6 @@
       "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "alignmentLabel": "Alineación del texto",
         "left": "Alinear a la izquierda",
@@ -938,7 +905,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>ToggleGroup</strong> — contenedor configurado en modo de selección única o múltiple; controla selección compartida y orientación.",
       "item2": "<strong>ToggleGroupItem</strong> — Toggle individual con <code>value</code> único; ARIA gestionado por el grupo.",
       "item3": "<strong>aria-label</strong> en ToggleGroup — OBLIGATORIO para describir la agrupación.",
@@ -952,7 +918,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa el modo de selección única para elección exclusiva (ej. alineación) y el modo de selección múltiple para combinación (ej. negrita + itálica).",
@@ -1036,7 +1001,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Usa type=single para alineación y type=multiple para formato.",
         "dont": "No uses múltiples Toggle sueltos cuando representan elección conjunta."
@@ -1046,11 +1010,8 @@
         "dont": "No omitas aria-label en el grupo — los lectores de pantalla pierden contexto."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "single": "Single",
         "multiple": "Multiple",
@@ -1061,7 +1022,6 @@
         "multiple": "Modo de selección múltiple — selección combinada; <code>value</code> es array de strings.",
         "vertical": "<code>orientation=\"vertical\"</code> — ítems apilados; navegación por flechas verticales."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "alignmentBar": {
           "name": "Barra de alineación (single)",
@@ -1081,7 +1041,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "disabledItem": {
         "label": "Con ítem deshabilitado",
         "trigger": "Ítem marcado como deshabilitado",
@@ -1119,7 +1078,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1185,7 +1143,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1225,7 +1182,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-label</code> obligatorio en <code>ToggleGroup</code> describiendo la categoría",
@@ -1262,7 +1218,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "toggle": {
           "name": "Toggle",
@@ -1283,14 +1238,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: cada stack compone la lib headless idiomática de su ecosistema; roving tabindex y navegación por flechas vienen de ella.",
       "item2": "<strong>Modo define el value</strong> — selección única usa string; selección múltiple usa array de strings.",
       "item3": "<strong>Ítems siempre unidos</strong> — el grupo no separa los botones: los bordes se conectan y solo los extremos del conjunto quedan redondeados.",
       "item4": "<strong>Variants heredados</strong> — <code>variant</code> y <code>size</code> del grupo se aplican a todos los ítems vía Context."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1303,7 +1256,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

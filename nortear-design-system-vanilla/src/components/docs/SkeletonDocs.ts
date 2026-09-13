@@ -280,7 +280,6 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const grid = document.createElement('div');
             grid.className = 'nds-grid nds-w-full';
@@ -299,7 +298,6 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             DOMPurify.sanitize(t('anatomy.item1')),
             DOMPurify.sanitize(t('anatomy.item2')),
@@ -311,7 +309,6 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -357,7 +354,6 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -418,7 +414,6 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createSkeleton } from '@/components/ui/skeleton';`,
         });
 
@@ -428,7 +423,6 @@ export function createSkeletonDocs(): HTMLElement {
         const codeLine = `const linha = createSkeleton({ shape: 'text', width: '3-4' });`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'rectangle',
@@ -457,7 +451,6 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -490,7 +483,6 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createSkeleton(options)',
@@ -517,7 +509,6 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -537,7 +528,6 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             DOMPurify.sanitize(t('accessibility.items.item1')),
@@ -555,7 +545,6 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.progress.name'),    description: toPlainText(t('related.items.progress.description')),    path: '?path=/docs/components-feedback-progress--docs' },
             { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/components-layout-aspectratio--docs' },
@@ -565,7 +554,6 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -577,7 +565,6 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: tNav('common.event'),
             trigger: tNav('common.eventTrigger'),
@@ -594,7 +581,6 @@ export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

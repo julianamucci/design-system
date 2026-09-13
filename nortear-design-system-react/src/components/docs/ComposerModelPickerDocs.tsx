@@ -238,7 +238,6 @@ export function ComposerModelPickerDocs() {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration
-        title={tContent("demonstration.title")}
         componentSlug="composer-model-picker"
       >
         <div className="nds-stack nds-w-full" data-spacing="lg">
@@ -253,7 +252,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`anatomy.item${i}`))}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -262,7 +260,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -307,7 +304,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -332,7 +328,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withUnavailable")}
@@ -341,7 +336,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: tContent("states.cols.trigger"),
@@ -356,7 +350,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: "ComposerModelPicker",
@@ -398,7 +391,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.value"),
@@ -419,7 +411,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`accessibility.items.item${i}`))}
         keyboardTitle={tContent("accessibility.keyboard.title")}
@@ -435,7 +426,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           { name: tContent("related.items.composer.name"),               description: toPlainText(tContent("related.items.composer.description")),               path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.composerTriggerPopover.name"), description: toPlainText(tContent("related.items.composerTriggerPopover.description")), path: "?path=/docs/components-conversational-composertriggerpopover--docs" },
@@ -446,14 +436,12 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="composer-model-picker"
         items={[1, 2, 3, 4, 5].map((i) => ({ title: "", content: tContent(`notes.item${i}`) }))}
       />
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: tContent("analytics.table.trigger"),
@@ -468,7 +456,6 @@ export function ComposerModelPickerDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

@@ -39,14 +39,12 @@ const meta: Meta<typeof DocsDemonstration> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     componentSlug: {
       control: 'text',
       description: 'Informativo. Não injeta rastreio — quem o faz é o gatilho dentro do slot.',
     },
   },
   args: {
-    title: 'Demonstração',
     componentSlug: 'button',
   },
   render: (args) => ({

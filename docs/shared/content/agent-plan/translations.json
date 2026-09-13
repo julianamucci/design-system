@@ -19,7 +19,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "proposed": "O plano proposto, antes de agir",
         "running": "A mesma lista, mantida enquanto o trabalho acontece",
@@ -27,7 +26,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A lista é ordenada, e a ordem é a informação: ela responde o que vem antes e o que vem depois.",
       "item2": "O passo em curso é anunciado como o atual — é ele que responde onde estamos, sem depender da cor do marcador.",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para mostrar os passos de um trabalho longo — o que se pretende fazer, ou o que já foi feito.",
@@ -130,7 +127,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O passo pulado continua na lista, e o detalhe diz por quê.",
         "dont": "O passo pulado some, e o plano passa a contar uma história diferente da que aconteceu."
@@ -141,7 +137,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createAgentPlan } from '@/components/ui/agent-plan';\n\nconst plan = createAgentPlan({ steps, labels });\n\n// Lista vazia não desenha nada: uma lista com zero itens promete o que não há.\nif (plan) document.querySelector('#app')?.append(plan);",
@@ -156,7 +151,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -189,7 +183,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -260,7 +253,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -327,7 +319,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A palavra descreve cada passo, o marcador fica fora do que é lido, o passo em curso se anuncia como o atual, e a lista não interrompe quem está ouvindo a resposta.",
       "items": {
         "item1": "A lista é uma lista ordenada de verdade, então quantos passos há e em qual deles se está são anunciados sem nenhum trabalho extra.",
@@ -356,7 +347,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado da execução",
@@ -377,7 +367,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A lista de tarefas do catálogo é esta peça. Plano e lista de tarefas têm o mesmo desenho, os mesmos estados e o mesmo vocabulário — o que muda é quando a lista aparece e quem a propôs, e isso é política de produto, não forma.",
       "item2": "O passo em curso é anunciado como o atual. É o padrão que responde onde estamos sem depender da cor do marcador, e o atual é sempre o primeiro passo que ainda não terminou.",
       "item3": "O passo pulado continua na lista, com o motivo. Sumir com ele reescreveria o plano depois do fato, e quem lê perderia a informação de que havia outro caminho.",
@@ -386,7 +375,6 @@
       "item6": "A peça não executa o plano e não decide o que pular significa. Ela desenha os passos que recebe, e quem trabalha manda a lista nova."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a lista em si não instrumenta nada, porque não há nada nela para acionar.",
       "table": {
         "event": "Evento",
@@ -404,7 +392,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -517,7 +504,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "proposed": "The plan proposed, before acting",
         "running": "The same list, kept while the work happens",
@@ -525,7 +511,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The list is ordered, and the order is the information: it answers what comes before and what comes after.",
       "item2": "The step under way is announced as the current one — it is what answers where we are, without depending on the marker's colour.",
@@ -537,7 +522,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to show the steps of a long piece of work — what is meant to happen, or what already did.",
@@ -628,7 +612,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The skipped step stays on the list, and the detail says why.",
         "dont": "The skipped step disappears, and the plan starts telling a different story from the one that happened."
@@ -639,7 +622,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic use",
       "basicCode": {
         "vanilla": "import { createAgentPlan } from '@/components/ui/agent-plan';\n\nconst plan = createAgentPlan({ steps, labels });\n\n// Lista vazia não desenha nada: uma lista com zero itens promete o que não há.\nif (plan) document.querySelector('#app')?.append(plan);",
@@ -654,7 +636,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -687,7 +668,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -758,7 +738,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -825,7 +804,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The word describes each step, the marker stays out of what is read, the step under way announces itself as the current one, and the list never interrupts someone listening to the answer.",
       "items": {
         "item1": "The list is a real ordered list, so how many steps there are and which one you are on are announced with no extra work.",
@@ -854,7 +832,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "agentStatus": {
           "name": "Run status",
@@ -875,7 +852,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The catalogue's task list is this piece. A plan and a task list share the same design, the same states, and the same vocabulary — what changes is when the list shows up and who proposed it, and that is product policy, not form.",
       "item2": "The step under way is announced as the current one. It is the pattern that answers where we are without depending on the marker's colour, and the current step is always the first one that has not finished.",
       "item3": "The skipped step stays on the list, with its reason. Removing it would rewrite the plan after the fact, and the reader would lose the information that another path existed.",
@@ -884,7 +860,6 @@
       "item6": "The piece does not run the plan and does not decide what skipping means. It draws the steps it receives, and whoever is working sends the new list."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the list itself instruments nothing, because there is nothing in it to activate.",
       "table": {
         "event": "Event",
@@ -902,7 +877,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1015,7 +989,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "proposed": "El plan propuesto, antes de actuar",
         "running": "La misma lista, mantenida mientras el trabajo ocurre",
@@ -1023,7 +996,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La lista es ordenada, y el orden es la información: responde qué viene antes y qué viene después.",
       "item2": "El paso en curso se anuncia como el actual — es el que responde dónde estamos, sin depender del color del marcador.",
@@ -1035,7 +1007,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para mostrar los pasos de un trabajo largo — lo que se pretende hacer, o lo que ya se hizo.",
@@ -1126,7 +1097,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El paso omitido sigue en la lista, y el detalle dice por qué.",
         "dont": "El paso omitido desaparece, y el plan pasa a contar una historia distinta de la que ocurrió."
@@ -1137,7 +1107,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createAgentPlan } from '@/components/ui/agent-plan';\n\nconst plan = createAgentPlan({ steps, labels });\n\n// Lista vazia não desenha nada: uma lista com zero itens promete o que não há.\nif (plan) document.querySelector('#app')?.append(plan);",
@@ -1152,7 +1121,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1185,7 +1153,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1256,7 +1223,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1323,7 +1289,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La palabra describe cada paso, el marcador queda fuera de lo que se lee, el paso en curso se anuncia como el actual, y la lista no interrumpe a quien está escuchando la respuesta.",
       "items": {
         "item1": "La lista es una lista ordenada de verdad, así que cuántos pasos hay y en cuál se está se anuncian sin trabajo extra.",
@@ -1352,7 +1317,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado de la ejecución",
@@ -1373,7 +1337,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La lista de tareas del catálogo es esta pieza. Plan y lista de tareas tienen el mismo dibujo, los mismos estados y el mismo vocabulario — lo que cambia es cuándo aparece la lista y quién la propuso, y eso es política de producto, no forma.",
       "item2": "El paso en curso se anuncia como el actual. Es el patrón que responde dónde estamos sin depender del color del marcador, y el actual es siempre el primer paso que todavía no terminó.",
       "item3": "El paso omitido sigue en la lista, con su motivo. Quitarlo reescribiría el plan después del hecho, y quien lee perdería la información de que había otro camino.",
@@ -1382,7 +1345,6 @@
       "item6": "La pieza no ejecuta el plan y no decide qué significa omitir. Dibuja los pasos que recibe, y quien trabaja manda la lista nueva."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la lista en sí no instrumenta nada, porque no hay nada en ella para accionar.",
       "table": {
         "event": "Evento",
@@ -1400,7 +1362,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

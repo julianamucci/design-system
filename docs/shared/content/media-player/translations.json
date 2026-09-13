@@ -11,7 +11,6 @@
       "aiEntities": "reprodutor de vídeo, reprodutor de áudio, controles acessíveis, velocidade de reprodução, tela cheia, picture-in-picture, legenda, YouTube, Vimeo"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "video": "Vídeo",
         "audio": "Áudio",
@@ -20,7 +19,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "Moldura — desenha a borda, recebe o anel de foco e é ela que entra em tela cheia, para que a superfície e os controles cresçam juntos.",
       "item2": "Superfície — o elemento de mídia nativo, ou o quadro do provedor externo. Nunca recebe os controles do navegador: quem controla é a barra abaixo.",
       "item3": "Barra de controles — anunciada como grupo, com nome próprio. Não é barra de ferramentas: as setas pertencem à barra de progresso.",
@@ -34,7 +32,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Guidelines obrigatórias",
         "item1": "Vídeo com áudio exige faixa de legenda. O componente não gera legenda, e vídeo sem ela reprova em critério de nível A.",
@@ -90,7 +87,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "countLabel": "Reproduções contadas",
       "outsideLabel": "Tocar por fora da barra",
       "pair1": {
@@ -103,7 +99,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "basicCode": {
         "react": "import { MediaPlayer } from \"@/components/ui/media-player\";",
@@ -122,8 +117,6 @@
       }
     },
     "variants": {
-      "title": "Fontes",
-      "visualTitle": "Exemplos visuais",
       "note": "A fonte troca o motor por baixo, e não a interface: a barra, os eventos e os rótulos são os mesmos nos quatro casos. O que muda é o que o motor consegue oferecer.",
       "items": {
         "video": {
@@ -145,7 +138,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -183,7 +175,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Contrato",
       "table": {
         "prop": "Propriedade",
@@ -273,7 +264,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Propriedade CSS",
@@ -330,7 +320,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Os controles são elementos nativos sempre que existe um que sirva, e o que a fonte não oferece não vira botão.",
       "item1": "A barra de progresso é um controle deslizante nativo: já é operável por teclado e já anuncia posição. O texto do valor é o relógio, porque um número solto não é posição para quem ouve.",
       "item2": "A velocidade é uma lista nativa, pelo mesmo motivo: teclado, anúncio de opção e comportamento de toque vêm prontos.",
@@ -367,7 +356,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Usado com",
       "aspectRatio": "Proporção fixa, para quando basta reservar o espaço da mídia.",
@@ -376,7 +364,6 @@
       "card": "Cartão, quando o reprodutor entra numa lista de conteúdo."
     },
     "notes": {
-      "title": "Notas",
       "tip1": "O navegador emite parada também quando a mídia termina, e antes do evento de fim. Contar parada sem olhar a marca de fim faz toda reprodução completa virar uma pausa — e o número continua plausível, que é o que torna o erro caro.",
       "tip2": "Início e pedido de início são coisas diferentes: entre pedir e o primeiro quadro está o carregamento. O componente avisa o início de fato.",
       "tip3": "A janela flutuante exige faixa de vídeo, e não apenas um elemento de vídeo: mídia só de áudio dentro de um elemento de vídeo passa em toda detecção e recusa o pedido.",
@@ -385,7 +372,6 @@
       "tip6": "O componente não carrega a biblioteca dos provedores: a conversa é pelo canal de mensagens do próprio quadro. Isso evita script de terceiro no pacote e uma entrada a mais na política de segurança."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos que a docs page do reprodutor dispara.",
       "table": {
         "event": "Evento",
@@ -403,7 +389,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Comportamento funcional",
         "description": "O que deve acontecer em cada caminho do reprodutor.",
@@ -531,7 +516,6 @@
       "aiEntities": "video player, audio player, accessible controls, playback speed, fullscreen, picture-in-picture, captions, YouTube, Vimeo"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "video": "Video",
         "audio": "Audio",
@@ -540,7 +524,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "Frame — draws the border, receives the focus ring, and is the element that goes fullscreen, so surface and controls grow together.",
       "item2": "Surface — the native media element, or the external provider's frame. It never gets the browser's controls: the bar below is what controls it.",
       "item3": "Control bar — announced as a group, with its own name. Not a toolbar: the arrows belong to the progress bar.",
@@ -554,7 +537,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Required guidelines",
         "item1": "Video with audio requires a caption track. The component cannot generate captions, and video without them fails a level A criterion.",
@@ -610,7 +592,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "countLabel": "Plays counted",
       "outsideLabel": "Play from outside the bar",
       "pair1": {
@@ -623,7 +604,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "basicCode": {
         "react": "import { MediaPlayer } from \"@/components/ui/media-player\";",
@@ -642,8 +622,6 @@
       }
     },
     "variants": {
-      "title": "Sources",
-      "visualTitle": "Visual examples",
       "note": "The source swaps the engine underneath, not the interface: the bar, the events and the labels are the same in all four cases. What changes is what the engine can offer.",
       "items": {
         "video": {
@@ -665,7 +643,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -703,7 +680,6 @@
       }
     },
     "props": {
-      "title": "Props",
       "interface": "Contract",
       "table": {
         "prop": "Prop",
@@ -793,7 +769,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "CSS property",
@@ -850,7 +825,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Controls are native elements whenever one fits, and whatever the source does not offer never becomes a button.",
       "item1": "The progress bar is a native slider: already keyboard operable and already announcing position. Its value text is the clock, because a bare number is not a position for someone listening.",
       "item2": "Speed is a native list, for the same reason: keyboard, option announcement and touch behaviour come for free.",
@@ -887,7 +861,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "alternatives": "Alternatives",
       "usedWith": "Used with",
       "aspectRatio": "Fixed ratio, when reserving the media's space is enough.",
@@ -896,7 +869,6 @@
       "card": "Card, when the player sits in a content list."
     },
     "notes": {
-      "title": "Notes",
       "tip1": "The browser reports a stop when the media ends too, and before the end event. Counting stops without checking the end marker turns every complete playback into a pause — and the number stays plausible, which is what makes the mistake expensive.",
       "tip2": "Starting and requesting a start are different things: between the request and the first frame sits the loading. The component reports the actual start.",
       "tip3": "Picture-in-picture requires a video track, not merely a video element: audio-only media inside a video element passes every detection and then refuses the request.",
@@ -905,7 +877,6 @@
       "tip6": "The component does not load the providers' library: the conversation goes through the frame's own message channel. That avoids third-party script in the bundle and one more entry in the security policy."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Events fired by the player's docs page.",
       "table": {
         "event": "Event",
@@ -923,7 +894,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional behaviour",
         "description": "What must happen on each path through the player.",
@@ -1051,7 +1021,6 @@
       "aiEntities": "reproductor de vídeo, reproductor de audio, controles accesibles, velocidad de reproducción, pantalla completa, picture-in-picture, subtítulos, YouTube, Vimeo"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "video": "Vídeo",
         "audio": "Audio",
@@ -1060,7 +1029,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "Marco — dibuja el borde, recibe el anillo de foco y es el que entra en pantalla completa, para que la superficie y los controles crezcan juntos.",
       "item2": "Superficie — el elemento de medios nativo, o el marco del proveedor externo. Nunca recibe los controles del navegador: quien controla es la barra de abajo.",
       "item3": "Barra de controles — se anuncia como grupo, con nombre propio. No es barra de herramientas: las flechas pertenecen a la barra de progreso.",
@@ -1074,7 +1042,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Guidelines obligatorias",
         "item1": "El vídeo con audio exige pista de subtítulos. El componente no genera subtítulos, y el vídeo sin ellos incumple un criterio de nivel A.",
@@ -1130,7 +1097,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "countLabel": "Reproducciones contadas",
       "outsideLabel": "Reproducir fuera de la barra",
       "pair1": {
@@ -1143,7 +1109,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "basicCode": {
         "react": "import { MediaPlayer } from \"@/components/ui/media-player\";",
@@ -1162,8 +1127,6 @@
       }
     },
     "variants": {
-      "title": "Fuentes",
-      "visualTitle": "Ejemplos visuales",
       "note": "La fuente cambia el motor por debajo, no la interfaz: la barra, los eventos y las etiquetas son los mismos en los cuatro casos. Lo que cambia es lo que el motor puede ofrecer.",
       "items": {
         "video": {
@@ -1185,7 +1148,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1223,7 +1185,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Contrato",
       "table": {
         "prop": "Propiedad",
@@ -1313,7 +1274,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Propiedad CSS",
@@ -1370,7 +1330,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Los controles son elementos nativos siempre que existe uno que sirva, y lo que la fuente no ofrece nunca se convierte en botón.",
       "item1": "La barra de progreso es un control deslizante nativo: ya es operable por teclado y ya anuncia posición. El texto de su valor es el reloj, porque un número suelto no es una posición para quien escucha.",
       "item2": "La velocidad es una lista nativa, por el mismo motivo: teclado, anuncio de opción y comportamiento táctil vienen hechos.",
@@ -1407,7 +1366,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Usado con",
       "aspectRatio": "Proporción fija, cuando basta con reservar el espacio del contenido.",
@@ -1416,7 +1374,6 @@
       "card": "Tarjeta, cuando el reproductor entra en una lista de contenido."
     },
     "notes": {
-      "title": "Notas",
       "tip1": "El navegador informa una parada también cuando el contenido termina, y antes del evento de final. Contar paradas sin mirar la marca de final convierte toda reproducción completa en una pausa — y el número sigue siendo plausible, que es lo que encarece el error.",
       "tip2": "Empezar y pedir empezar son cosas distintas: entre la petición y el primer fotograma está la carga. El componente informa el inicio real.",
       "tip3": "La ventana flotante exige pista de vídeo, y no solo un elemento de vídeo: contenido solo de audio dentro de un elemento de vídeo pasa toda la detección y luego rechaza la petición.",
@@ -1425,7 +1382,6 @@
       "tip6": "El componente no carga la biblioteca de los proveedores: la conversación va por el canal de mensajes del propio marco. Eso evita script de terceros en el paquete y una entrada más en la política de seguridad."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos que dispara la docs page del reproductor.",
       "table": {
         "event": "Evento",
@@ -1443,7 +1399,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Comportamiento funcional",
         "description": "Qué debe ocurrir en cada camino del reproductor.",

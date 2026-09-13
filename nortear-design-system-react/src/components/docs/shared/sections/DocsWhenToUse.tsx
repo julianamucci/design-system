@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { Card } from '@/components/ui/card';
 import {
   Table,
@@ -39,7 +40,6 @@ export interface DocsWhenToUseUXRow {
  * componentes têm.
  */
 export interface DocsWhenToUseProps {
-  title: string;
   guidelines: {
     title: string;
     items: string[];
@@ -58,7 +58,8 @@ export interface DocsWhenToUseProps {
   dont: { title: string; items: string[] };
 }
 
-export function DocsWhenToUse({ title, guidelines, scenarios, uxWriting, do: doBlock, dont: dontBlock }: DocsWhenToUseProps) {
+export function DocsWhenToUse({ guidelines, scenarios, uxWriting, do: doBlock, dont: dontBlock }: DocsWhenToUseProps) {
+  const title = useTituloDeSecao('quando-usar');
   return (
     <section id="quando-usar">
       <h2 className="nds-section-title">{title}</h2>

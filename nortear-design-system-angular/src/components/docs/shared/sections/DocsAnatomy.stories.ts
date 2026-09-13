@@ -22,10 +22,6 @@ const meta: Meta = {
     docs: { description: { component: "As partes do componente, em lista, mais a árvore de estrutura como código copiável. A lista nomeia cada peça; a árvore mostra como elas se encaixam." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     items: {
       control: "object",
       description: "Uma linha por parte do componente."
@@ -44,7 +40,6 @@ const meta: Meta = {
     }
   },
   args: {
-    title: "Anatomia",
     items: [
       "Raiz — o `<button>`, que carrega variante, tamanho e estado.",
       "Ícone à esquerda — opcional, decorativo, fora da árvore de acessibilidade.",
@@ -58,7 +53,6 @@ const meta: Meta = {
   render: (args) => ({
     props: args,
     template: `<nds-docs-anatomy
-      [title]="title"
       [items]="items"
       [structureCode]="structureCode"
       [structureLabel]="structureLabel"

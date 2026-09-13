@@ -201,7 +201,6 @@ export interface ModelOption {
     entraria no fluxo — ela é absoluta.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="composer-model-picker"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -243,7 +242,6 @@ export interface ModelOption {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -252,7 +250,6 @@ export interface ModelOption {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -310,7 +307,6 @@ export interface ModelOption {
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -337,7 +333,6 @@ export interface ModelOption {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withUnavailable')}
@@ -346,7 +341,6 @@ export interface ModelOption {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -361,7 +355,6 @@ export interface ModelOption {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'ComposerModelPicker',
@@ -406,7 +399,6 @@ export interface ModelOption {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -427,7 +419,6 @@ export interface ModelOption {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -443,7 +434,6 @@ export interface ModelOption {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.composer.name'),               description: toPlainText($tStore('related.items.composer.description')),               path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.composerTriggerPopover.name'), description: toPlainText($tStore('related.items.composerTriggerPopover.description')), path: '?path=/docs/components-conversational-composertriggerpopover--docs' },
@@ -454,14 +444,12 @@ export interface ModelOption {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="composer-model-picker"
     items={[1, 2, 3, 4, 5].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -476,7 +464,6 @@ export interface ModelOption {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

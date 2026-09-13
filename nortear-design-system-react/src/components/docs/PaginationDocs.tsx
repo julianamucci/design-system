@@ -248,7 +248,7 @@ type PaginationDirectionalProps =
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-stack nds-w-full" data-spacing="xl">
           {/* Demo 1 — paginação simples interativa */}
           <div className="nds-stack" data-spacing="sm" style={{ contain: "layout" }}>
@@ -397,7 +397,6 @@ type PaginationDirectionalProps =
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -412,7 +411,6 @@ type PaginationDirectionalProps =
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -509,7 +507,6 @@ type PaginationDirectionalProps =
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -580,12 +577,11 @@ type PaginationDirectionalProps =
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="pagination"
         items={[
@@ -830,7 +826,6 @@ const total = 8;
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -872,7 +867,6 @@ const total = 8;
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -931,7 +925,6 @@ const total = 8;
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -982,7 +975,6 @@ const total = 8;
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -1012,7 +1004,6 @@ const total = 8;
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="pagination"
         items={[
           {
@@ -1035,7 +1026,6 @@ const total = 8;
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="pagination"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -1047,7 +1037,6 @@ const total = 8;
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
           {
@@ -1060,7 +1049,6 @@ const total = 8;
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

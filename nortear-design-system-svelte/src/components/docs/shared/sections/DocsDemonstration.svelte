@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
   import ComponentDemo from '@/components/ComponentDemo.svelte';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   /**
    * DocsDemonstration — wrapper da seção "Demonstração".
@@ -10,7 +11,7 @@
    * docs page. Consumidores devem aplicar manualmente os atributos nos triggers:
    *
    * @example
-   *   <DocsDemonstration title="..." componentSlug="alert">
+   *   <DocsDemonstration componentSlug="alert">
    *     <Button data-track="demo" data-track-id="alert:demo:save">
    *       Salvar
    *     </Button>
@@ -18,11 +19,12 @@
    *
    * O observer global do DocsPageLayout captura o click via `.closest('[data-track]')`.
    */
-  const { title, children, componentSlug }: {
-    title: string;
+  const { children, componentSlug }: {
     children: Snippet;
     componentSlug?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao('demonstracao', $rotulosDeSecao));
 </script>
 
 <section id="demonstracao" data-track="demo" data-track-container="true" data-track-id="page:demonstracao:demo">

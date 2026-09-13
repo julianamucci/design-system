@@ -484,7 +484,7 @@ const RELATED = [
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-stack nds-w-full" data-spacing="md">
             <nds-code-block
               class="nds-w-full"
@@ -545,7 +545,6 @@ const RELATED = [
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -553,7 +552,6 @@ const RELATED = [
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -561,10 +559,9 @@ const RELATED = [
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="importBasic"
           [secondaryDescription]="t('import.withFooter')"
@@ -574,7 +571,6 @@ const RELATED = [
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="code-block"
@@ -583,13 +579,11 @@ const RELATED = [
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -599,7 +593,6 @@ const RELATED = [
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -607,7 +600,6 @@ const RELATED = [
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -617,25 +609,21 @@ const RELATED = [
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="code-block"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="code-block"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

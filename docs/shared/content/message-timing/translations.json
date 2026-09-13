@@ -20,7 +20,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "settled": "A medição encerrada",
         "measuring": "Enquanto a resposta ainda corre",
@@ -29,7 +28,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O nome da medição abre a peça e não aparece na tela: quem vê já sabe de que resposta se trata pelo lugar em que a linha está, e quem ouve não sabe.",
       "item2": "A palavra que diz que a medição ainda não acabou vem antes dos números, porque é ela que avisa que o que vem a seguir ainda não vale.",
@@ -41,7 +39,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use ao pé de uma resposta pronta, quando quanto ela demorou muda o que a pessoa faz a seguir — repetir, encurtar o pedido, trocar de modelo.",
@@ -132,7 +129,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "A medição que ainda corre chega com a palavra que diz isso, e quem lê sabe que o número vai mudar.",
         "dont": "A medição que ainda corre chega igual à encerrada — o número parcial se lê como final, e ninguém tem como saber."
@@ -143,7 +139,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: labels,\n});",
@@ -158,7 +153,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -186,7 +180,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -250,7 +243,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customização",
       "customizationCode": {
         "web": ".nds-message-timing {\n  max-inline-size: 32rem;\n}\n\n/* O valor é quem se lê primeiro, e o termo é apoio. Mexer no peso não muda o\n   que chega a quem ouve — a lista de definição já pareia os dois. */\n.nds-message-timing-value {\n  font-weight: var(--font-weight-semibold);\n}"
@@ -297,7 +289,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Os números são o conteúdo e ficam dentro do que é lido em voz; a medição que ainda corre é dita por atributo e por palavra, nunca por cor nem por região viva; e cada termo fica preso ao seu valor numa lista de definição.",
       "items": {
         "item1": "Não há região viva. A medição muda enquanto a resposta é gerada, e anunciá-la a cada mudança corta a leitura do que estiver sendo lido.",
@@ -327,7 +318,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado da execução",
@@ -348,7 +338,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Tempo não tem teto, e é isso que faz desta peça a única da família sem medidor. Uma duração só viraria fração se comparasse com alguma coisa, e comparar com o quê é decisão de produto — não de design system.",
       "item2": "As medidas são grandezas diferentes e não somam: duas durações, uma taxa e uma contagem convivem na mesma linha. A repartição do contexto também carrega várias medidas, mas todas são parcelas de um total; aqui não há total.",
       "item3": "Tudo chega escrito, e por isso não há conta nenhuma nesta peça nem no primitivo compartilhado da família. Uma peça sem conta é resultado legítimo: a decisão que ela guarda é de marcação e de leitura em voz.",
@@ -359,7 +348,6 @@
       "item8": "A forma compacta é composição, e não uma variante. Um controle com uma dica de ferramenta guarda a linha quando o espaço é uma linha só — e a peça não ganha camada flutuante nem a política de foco que vem com ela."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a linha em si não instrumenta nada, porque não há controle nela.",
       "table": {
         "event": "Evento",
@@ -377,7 +365,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -488,7 +475,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "settled": "The measurement is done",
         "measuring": "While the response is still running",
@@ -497,7 +483,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The name of the measurement opens the piece and never shows on screen: whoever sees it already knows which response it is about from where the line sits, and whoever hears it does not.",
       "item2": "The word saying the measurement is not done yet comes before the numbers, because it warns that what follows is not final.",
@@ -509,7 +494,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it under a finished response, when how long it took changes what the person does next — retry, shorten the prompt, switch models.",
@@ -600,7 +584,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The measurement still running arrives with the word that says so, and the reader knows the number will change.",
         "dont": "The measurement still running arrives just like a finished one — the partial number reads as final, and nobody can tell."
@@ -611,7 +594,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: labels,\n});",
@@ -626,7 +608,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -654,7 +635,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -718,7 +698,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customization",
       "customizationCode": {
         "web": ".nds-message-timing {\n  max-inline-size: 32rem;\n}\n\n/* The value is what is read first, and the term is support. Changing the weight\n   does not change what reaches whoever hears it — the definition list already\n   pairs the two. */\n.nds-message-timing-value {\n  font-weight: var(--font-weight-semibold);\n}"
@@ -765,7 +744,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The numbers are the content and stay inside what is read aloud; the measurement still running is said by attribute and by word, never by colour nor by a live region; and each term stays bound to its value in a definition list.",
       "items": {
         "item1": "There is no live region. The measurement changes while the response is generated, and announcing it on every change cuts into whatever is being read.",
@@ -795,7 +773,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "agentStatus": {
           "name": "Agent status",
@@ -816,7 +793,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "Time has no ceiling, and that is what makes this the only piece in the family without a meter. A duration would only become a fraction if it were compared with something, and comparing with what is a product decision — not a design system one.",
       "item2": "The measures are different quantities and do not add up: two durations, a rate and a count share the same line. The context breakdown also carries several measures, but they are all shares of one total; here there is no total.",
       "item3": "Everything arrives written, and so there is no computation in this piece nor in the family's shared primitive. A piece without a computation is a legitimate result: what it holds is a decision about markup and about being read aloud.",
@@ -827,7 +803,6 @@
       "item8": "The compact form is a composition, not a variant. A control with a tooltip keeps the line when the space is a single line — and the piece gains no floating layer nor the focus policy that comes with it."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the line itself instruments nothing, because there is no control in it.",
       "table": {
         "event": "Event",
@@ -845,7 +820,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -956,7 +930,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "settled": "La medición terminada",
         "measuring": "Mientras la respuesta sigue corriendo",
@@ -965,7 +938,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El nombre de la medición abre la pieza y no aparece en pantalla: quien la ve ya sabe de qué respuesta se trata por el lugar donde está la línea, y quien la oye no lo sabe.",
       "item2": "La palabra que dice que la medición aún no terminó viene antes de los números, porque es ella la que avisa que lo que sigue todavía no vale.",
@@ -977,7 +949,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala al pie de una respuesta terminada, cuando cuánto tardó cambia lo que la persona hace después — repetir, acortar el pedido, cambiar de modelo.",
@@ -1068,7 +1039,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "La medición que aún corre llega con la palabra que lo dice, y quien lee sabe que el número va a cambiar.",
         "dont": "La medición que aún corre llega igual que la terminada — el número parcial se lee como definitivo, y nadie tiene cómo saberlo."
@@ -1079,7 +1049,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createMessageTiming } from '@/components/ui/message-timing';\n\ncreateMessageTiming({\n  stats: medidas,\n  streaming: false,\n  labels: labels,\n});",
@@ -1094,7 +1063,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1122,7 +1090,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1186,7 +1153,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Personalización",
       "customizationCode": {
         "web": ".nds-message-timing {\n  max-inline-size: 32rem;\n}\n\n/* El valor es lo que se lee primero, y el término es apoyo. Cambiar el peso no\n   cambia lo que llega a quien oye — la lista de definición ya empareja los\n   dos. */\n.nds-message-timing-value {\n  font-weight: var(--font-weight-semibold);\n}"
@@ -1233,7 +1199,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Los números son el contenido y quedan dentro de lo que se lee en voz; la medición que aún corre se dice por atributo y por palabra, nunca por color ni por región viva; y cada término queda unido a su valor en una lista de definición.",
       "items": {
         "item1": "No hay región viva. La medición cambia mientras se genera la respuesta, y anunciarla en cada cambio corta la lectura de lo que se esté leyendo.",
@@ -1263,7 +1228,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado de la ejecución",
@@ -1284,7 +1248,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El tiempo no tiene techo, y eso es lo que hace de esta la única pieza de la familia sin medidor. Una duración solo sería fracción si se comparara con algo, y comparar con qué es una decisión de producto — no del sistema de diseño.",
       "item2": "Las medidas son magnitudes distintas y no suman: dos duraciones, una tasa y un conteo conviven en la misma línea. El reparto del contexto también carga varias medidas, pero todas son partes de un total; aquí no hay total.",
       "item3": "Todo llega escrito, y por eso no hay cuenta alguna en esta pieza ni en el primitivo compartido de la familia. Una pieza sin cuenta es un resultado legítimo: lo que guarda es una decisión de marcado y de lectura en voz.",
@@ -1295,7 +1258,6 @@
       "item8": "La forma compacta es composición, y no una variante. Un control con una descripción emergente guarda la línea cuando el espacio es de una sola línea — y la pieza no gana capa flotante ni la política de foco que viene con ella."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la línea en sí no instrumenta nada, porque no hay control en ella.",
       "table": {
         "event": "Evento",
@@ -1313,7 +1275,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

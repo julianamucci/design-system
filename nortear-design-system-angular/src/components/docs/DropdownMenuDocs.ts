@@ -894,7 +894,7 @@ export class NdsDropdownMenuPreview {
              cima e o menu embaixo — a legenda diz o que a célula demonstra, e o
              gatilho diz o que o menu é (Conta, Colunas, Tema, Arquivo), como no
              Vanilla. Até 2026-09-11 a legenda ia DENTRO do botão. -->
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-cluster" data-spacing="md">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
@@ -948,7 +948,6 @@ export class NdsDropdownMenuPreview {
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -956,7 +955,6 @@ export class NdsDropdownMenuPreview {
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -964,17 +962,15 @@ export class NdsDropdownMenuPreview {
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           componentSlug="dropdown-menu"
           language="ts"
         />
 
         <nds-docs-compositions
-          [title]="t('variants.title')"
           [items]="variantItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="dropdown-menu"
@@ -982,13 +978,11 @@ export class NdsDropdownMenuPreview {
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -996,7 +990,6 @@ export class NdsDropdownMenuPreview {
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -1004,7 +997,6 @@ export class NdsDropdownMenuPreview {
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -1014,25 +1006,21 @@ export class NdsDropdownMenuPreview {
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="dropdown-menu"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="dropdown-menu"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

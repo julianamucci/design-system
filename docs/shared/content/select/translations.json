@@ -11,7 +11,6 @@
       "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role combobox"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "placeholder": "Selecione...",
         "stateLabel": "Estado",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Select</strong> — root que controla o estado open/closed e o valor selecionado.",
       "item2": "<strong>SelectTrigger</strong> — botão que abre o dropdown; recebe <code>role=\"combobox\"</code>.",
       "item3": "<strong>SelectValue</strong> — exibe o valor selecionado ou o <code>placeholder</code>.",
@@ -45,7 +43,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para 3+ opções fixas. Para 2 opções, use <code>RadioGroup</code>.",
@@ -129,7 +126,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Use placeholder \"Selecione...\" e mantenha estilo consistente entre opções.",
         "dont": "Não misture siglas com nomes completos no mesmo Select."
@@ -139,11 +135,8 @@
         "dont": "Não crie grupos com apenas 1 item — usa só lista plana."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withGroups": "Com grupos",
@@ -154,7 +147,6 @@
         "withGroups": "<code>SelectGroup</code> + <code>SelectLabel</code> agrupam opções por categoria.",
         "withIcon": "<code>SelectItem</code> com ícone inline antes do texto via filho direto."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "inForm": {
           "name": "Em formulário",
@@ -164,7 +156,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -207,7 +198,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -267,7 +257,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -311,7 +300,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> no trigger e <code>role=\"listbox\"</code> no content",
@@ -349,7 +337,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "combobox": {
           "name": "Combobox",
@@ -370,14 +357,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong> — cada stack monta o campo sobre a lib headless idiomática da sua plataforma; o markup, as classes <code>.nds-*</code> e os tokens são os mesmos.",
       "item2": "<strong>Portal</strong> — a lista de opções é renderizada em portal para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
       "item3": "<strong>Busca por digitação</strong> — digitar a inicial de uma opção salta direto para ela, sem percorrer a lista item a item. Em algumas plataformas isso já funciona com a lista fechada.",
       "item4": "<strong>Sem busca</strong> — para filtrar por texto, use <code>Combobox</code> (Command + Popover) em vez de Select."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -390,7 +375,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -463,7 +447,6 @@
       "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role combobox"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "placeholder": "Select...",
         "stateLabel": "State",
@@ -480,7 +463,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Select</strong> — root that controls open/closed state and selected value.",
       "item2": "<strong>SelectTrigger</strong> — button that opens the dropdown; receives <code>role=\"combobox\"</code>.",
       "item3": "<strong>SelectValue</strong> — displays selected value or <code>placeholder</code>.",
@@ -497,7 +479,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for 3+ fixed options. For 2 options, use <code>RadioGroup</code>.",
@@ -581,7 +562,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Use \"Select...\" placeholder and keep style consistent across options.",
         "dont": "Don't mix abbreviations with full names in the same Select."
@@ -591,11 +571,8 @@
         "dont": "Don't create groups with only 1 item — use a flat list."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "withGroups": "With groups",
@@ -606,7 +583,6 @@
         "withGroups": "<code>SelectGroup</code> + <code>SelectLabel</code> group options by category.",
         "withIcon": "<code>SelectItem</code> with inline icon before the text via direct child."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "inForm": {
           "name": "In a form",
@@ -616,7 +592,6 @@
       }
     },
     "states": {
-      "title": "States",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -659,7 +634,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -719,7 +693,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -763,7 +736,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> on trigger and <code>role=\"listbox\"</code> on content",
@@ -801,7 +773,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "combobox": {
           "name": "Combobox",
@@ -822,14 +793,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong> — each stack builds the field on the headless library idiomatic to its platform; markup, <code>.nds-*</code> classes and tokens are the same.",
       "item2": "<strong>Portal</strong> — the option list renders in a portal to avoid <code>z-index</code> and <code>overflow</code> issues.",
       "item3": "<strong>Type-ahead</strong> — typing the first letter of an option jumps straight to it instead of stepping through the list. On some platforms this already works with the list closed.",
       "item4": "<strong>No search</strong> — to filter by text, use <code>Combobox</code> (Command + Popover) instead of Select."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -842,7 +811,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -915,7 +883,6 @@
       "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role combobox"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "placeholder": "Selecciona...",
         "stateLabel": "Estado",
@@ -932,7 +899,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Select</strong> — root que controla el estado open/closed y el valor seleccionado.",
       "item2": "<strong>SelectTrigger</strong> — botón que abre el dropdown; recibe <code>role=\"combobox\"</code>.",
       "item3": "<strong>SelectValue</strong> — muestra el valor seleccionado o el <code>placeholder</code>.",
@@ -949,7 +915,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para 3+ opciones fijas. Para 2 opciones, usa <code>RadioGroup</code>.",
@@ -1033,7 +998,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Usa el placeholder \"Selecciona...\" y mantén el estilo consistente entre opciones.",
         "dont": "No mezcles siglas con nombres completos en el mismo Select."
@@ -1043,11 +1007,8 @@
         "dont": "No crees grupos con un solo ítem — usa una lista plana."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withGroups": "Con grupos",
@@ -1058,7 +1019,6 @@
         "withGroups": "<code>SelectGroup</code> + <code>SelectLabel</code> agrupan opciones por categoría.",
         "withIcon": "<code>SelectItem</code> con icono inline antes del texto vía hijo directo."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "inForm": {
           "name": "En formulario",
@@ -1068,7 +1028,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -1111,7 +1070,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1171,7 +1129,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1215,7 +1172,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> en el trigger y <code>role=\"listbox\"</code> en el content",
@@ -1253,7 +1209,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "combobox": {
           "name": "Combobox",
@@ -1274,14 +1229,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong> — cada stack monta el campo sobre la lib headless idiomática de su plataforma; el markup, las clases <code>.nds-*</code> y los tokens son los mismos.",
       "item2": "<strong>Portal</strong> — la lista de opciones se renderiza en portal para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
       "item3": "<strong>Búsqueda por digitación</strong> — escribir la inicial de una opción salta directo a ella, sin recorrer la lista ítem a ítem. En algunas plataformas ya funciona con la lista cerrada.",
       "item4": "<strong>Sin búsqueda</strong> — para filtrar por texto, usa <code>Combobox</code> (Command + Popover) en vez de Select."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1294,7 +1247,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

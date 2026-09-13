@@ -384,7 +384,7 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
             <div class="nds-stack" data-spacing="xs">
               <p id="demo-pag-titulo" class="nds-text-body nds-font-semibold">
@@ -441,7 +441,6 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -449,7 +448,6 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -457,17 +455,15 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           componentSlug="radio-group"
           language="ts"
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [items]="variantItems()"
           componentSlug="radio-group"
           id="variantes"
@@ -475,20 +471,17 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="radio-group"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -496,7 +489,6 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -504,7 +496,6 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -514,21 +505,18 @@ const EXTENSIBILITY_CODE = `<!-- Reactive Forms: o grupo é um ControlValueAcces
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="radio-group"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="radio-group" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="radio-group" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

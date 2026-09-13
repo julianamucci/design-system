@@ -376,7 +376,7 @@ function handleDemoClick(variant: string) {
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')">
+    <DocsDemonstration>
       <!-- .nds-cluster já traz flex-wrap: wrap; o style inline era inerte. -->
       <div
         class="nds-cluster"
@@ -431,7 +431,6 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Anatomia ───────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -439,7 +438,6 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Quando Usar ────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="{
         title: tContent('usage.guidelines.title'),
         items: [tContent('usage.guidelines.item1'), tContent('usage.guidelines.item2'), tContent('usage.guidelines.item3'), tContent('usage.guidelines.item4')],
@@ -470,7 +468,6 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
@@ -506,7 +503,6 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="codeImportBasic"
       :secondary-description="tContent('import.withIcon')"
@@ -516,7 +512,6 @@ function handleDemoClick(variant: string) {
     <!-- ── Variantes ──────────────────────────────────────────────── -->
     <DocsCompositions
       id="variantes"
-      :title="tContent('variants.title')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="button"
       :items="variantItems"
@@ -558,7 +553,6 @@ function handleDemoClick(variant: string) {
     <!-- ── Tamanhos ──────────────────────────────────────────────── -->
     <DocsVariants
       id="tamanhos"
-      :title="tContent('variants.sizesTitle')"
       :items="sizeItems"
     >
       <template #variant-preview-0>
@@ -602,7 +596,6 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Composições ─────────────────────────────────────────────── -->
     <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="button"
       :items="compositionItems"
@@ -640,14 +633,12 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Estados ───────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
     <!-- ── Propriedades ───────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.buttonTitle'), cols: propCols, items: buttonPropItems },
       ]"
@@ -658,7 +649,6 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
@@ -669,7 +659,6 @@ function handleDemoClick(variant: string) {
     <DocsAccessibility
       :screen-reader-title="tNav('common.screenReader')"
       :screen-reader-items="screenReaderItems"
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
@@ -678,26 +667,22 @@ function handleDemoClick(variant: string) {
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 
     <!-- ── Testes ─────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },

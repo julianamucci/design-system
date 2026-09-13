@@ -11,7 +11,6 @@
       "aiEntities": "Carousel, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-roledescription, motion-reduce"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "previous": "Item anterior",
         "next": "Próximo item",
@@ -21,7 +20,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Carousel</strong> — container <code>&lt;div role=\"region\" aria-roledescription=\"carousel\"&gt;</code>. Recebe <code>opts</code>, <code>plugins</code>, <code>orientation</code> e <code>setApi</code>.",
       "item2": "<strong>CarouselContent</strong> — wrapper do viewport que controla overflow e direção do flex.",
       "item3": "<strong>CarouselItem</strong> — cada slide individual, com <code>role=\"group\"</code> e <code>aria-roledescription=\"slide\"</code>. Use <code>basis-*</code> para definir quantos itens exibir.",
@@ -36,7 +34,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Sempre exiba <code>CarouselPrevious</code> e <code>CarouselNext</code> — não oculte a navegação em favor apenas do gesto de arrastar.",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Navegação visível, aria-label descritivo e descrição textual do carrossel.",
         "dont": "Esconder os botões de navegação — o gesto de arrastar não é descoberto por todos."
@@ -137,13 +133,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withPlugin": "Com plugin de autoplay:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Orientações Disponíveis",
       "note": "O Carousel não tem variantes visuais via prop. O comportamento de layout é controlado por <code>orientation</code> (horizontal ou vertical) e pela classe <code>basis-*</code> no <code>CarouselItem</code>.",
       "items": {
         "horizontal": "Orientação padrão. Slides deslizam lateralmente. Navegação com setas esquerda/direita no teclado.",
@@ -156,7 +149,6 @@
           "use": "Destaques em homepages e banners promocionais não-críticos. Evite em conteúdo informacional essencial — usuários com leitores de tela ou cognição reduzida podem perder o conteúdo."
         }
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "withDots": {
           "name": "Carrossel com dots",
@@ -171,7 +163,6 @@
       }
     },
     "states": {
-      "title": "Configurações",
       "cols": {
         "state": "Configuração",
         "trigger": "Como ativar",
@@ -184,7 +175,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "carouselTitle": "Carousel",
       "contentTitle": "CarouselContent",
@@ -209,7 +199,6 @@
       "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code>. Use <code>basis-*</code> no <code>CarouselItem</code> para controlar quantos itens aparecem por vez. A <code>CarouselApi</code> exposta via <code>setApi</code> permite implementar dots, contadores e sincronização externa sem forks."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Classe .nds-*",
@@ -226,7 +215,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Carousel usa <code>role=\"region\"</code> com <code>aria-roledescription=\"carousel\"</code> e cada slide é <code>role=\"group\"</code> com <code>aria-roledescription=\"slide\"</code>. Navegação por teclado com setas. Cumpre WCAG 2.2 AA: 1.4.13 (conteúdo em hover/foco), 2.2.2 (pause/stop/hide para autoplay).",
       "item1": "<strong>role=\"region\" automático</strong> — o container recebe <code>role=\"region\"</code> e <code>aria-roledescription=\"carousel\"</code>, fazendo leitores de tela anunciarem a natureza do conteúdo.",
@@ -254,7 +242,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "tabs": "Para navegação explícita entre conteúdos de mesmo nível com rótulos visíveis.",
@@ -263,14 +250,12 @@
       "pagination": "Para indicar posição quando há muitos slides (acima de 5)."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O espaçamento entre itens sai de uma margem negativa no container somada a um preenchimento igual em cada item. O componente já aplica esse par — sobrescreva apenas se necessário.",
       "tip2": "Para implementar dots, capture a <code>CarouselApi</code> via <code>setApi</code> e escute o evento <code>select</code>. Use <code>scrollTo(i)</code> para ativar o slide pelo índice.",
       "tip3": "Evite autoplay em conteúdo informacional crítico — usuários com leitores de tela ou motores cognitivos podem perder o conteúdo antes de lê-lo. Prefira loop sem autoplay.",
       "tip4": "Em orientação vertical, defina altura explícita no container — sem altura o viewport não é calculado corretamente."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "O Carousel dispara eventos quando o produto quer medir engajamento com slides ou autoplay. Eventos da docs page já são capturados automaticamente pelo observer de tracking.",
       "table": {
         "event": "Evento",
@@ -294,7 +279,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Carousel.",
@@ -430,7 +414,6 @@
       "aiEntities": "Carousel, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-roledescription, motion-reduce"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "previous": "Previous item",
         "next": "Next item",
@@ -440,7 +423,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Carousel</strong> — <code>&lt;div role=\"region\" aria-roledescription=\"carousel\"&gt;</code> container. Accepts <code>opts</code>, <code>plugins</code>, <code>orientation</code>, and <code>setApi</code>.",
       "item2": "<strong>CarouselContent</strong> — viewport wrapper that controls overflow and flex direction.",
       "item3": "<strong>CarouselItem</strong> — each individual slide, with <code>role=\"group\"</code> and <code>aria-roledescription=\"slide\"</code>. Use <code>basis-*</code> to control how many items are visible.",
@@ -455,7 +437,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Always show <code>CarouselPrevious</code> and <code>CarouselNext</code> — don't hide navigation in favor of drag alone.",
@@ -545,7 +526,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Visible navigation, descriptive aria-label, and a text description of the carousel.",
         "dont": "Hide navigation buttons — drag is not discoverable for everyone."
@@ -556,13 +536,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withPlugin": "With autoplay plugin:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Available Orientations",
       "note": "Carousel has no visual variants as a prop. Layout behavior is controlled by <code>orientation</code> (horizontal or vertical) and by the <code>basis-*</code> class on <code>CarouselItem</code>.",
       "items": {
         "horizontal": "Default orientation. Slides move sideways. Keyboard navigation with left/right arrows.",
@@ -575,7 +552,6 @@
           "use": "Homepage highlights and non-critical promotional banners. Avoid for essential informational content — screen reader or cognitive-load users may miss it."
         }
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "withDots": {
           "name": "Carousel with dots",
@@ -590,7 +566,6 @@
       }
     },
     "states": {
-      "title": "Configurations",
       "cols": {
         "state": "Configuration",
         "trigger": "How to activate",
@@ -603,7 +578,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "carouselTitle": "Carousel",
       "contentTitle": "CarouselContent",
@@ -628,7 +602,6 @@
       "extensibility": "<code>className</code> — all subcomponents accept <code>className</code>. Use <code>basis-*</code> on <code>CarouselItem</code> to control how many items appear at once. The <code>CarouselApi</code> exposed via <code>setApi</code> lets you implement dots, counters, and external sync without forks."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": ".nds-* Class",
@@ -645,7 +618,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Carousel uses <code>role=\"region\"</code> with <code>aria-roledescription=\"carousel\"</code>, and each slide is <code>role=\"group\"</code> with <code>aria-roledescription=\"slide\"</code>. Arrow-key keyboard navigation. Meets WCAG 2.2 AA: 1.4.13 (content on hover/focus), 2.2.2 (pause/stop/hide for autoplay).",
       "item1": "<strong>Automatic role=\"region\"</strong> — the container receives <code>role=\"region\"</code> and <code>aria-roledescription=\"carousel\"</code>, so screen readers announce the nature of the content.",
@@ -673,7 +645,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "tabs": "For explicit navigation between peer content with visible labels.",
@@ -682,14 +653,12 @@
       "pagination": "To indicate position when there are many slides (more than 5)."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "The spacing between items comes from a negative margin on the container plus an equal padding on each item. The component already applies that pair — override only if needed.",
       "tip2": "To implement dots, capture the <code>CarouselApi</code> via <code>setApi</code> and listen to the <code>select</code> event. Use <code>scrollTo(i)</code> to activate a slide by index.",
       "tip3": "Avoid autoplay on critical informational content — screen reader and cognitive users may miss content before reading it. Prefer loop without autoplay.",
       "tip4": "In vertical orientation, set an explicit height on the container — without a height the viewport is not computed correctly."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Carousel emits events when the product wants to measure slide or autoplay engagement. Docs page events are captured automatically by the tracking observer.",
       "table": {
         "event": "Event",
@@ -713,7 +682,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Carousel configuration.",
@@ -849,7 +817,6 @@
       "aiEntities": "Carousel, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-roledescription, motion-reduce"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "previous": "Ítem anterior",
         "next": "Próximo ítem",
@@ -859,7 +826,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Carousel</strong> — contenedor <code>&lt;div role=\"region\" aria-roledescription=\"carousel\"&gt;</code>. Acepta <code>opts</code>, <code>plugins</code>, <code>orientation</code> y <code>setApi</code>.",
       "item2": "<strong>CarouselContent</strong> — wrapper del viewport que controla overflow y dirección del flex.",
       "item3": "<strong>CarouselItem</strong> — cada slide individual, con <code>role=\"group\"</code> y <code>aria-roledescription=\"slide\"</code>. Usa <code>basis-*</code> para definir cuántos ítems mostrar.",
@@ -874,7 +840,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Muestra siempre <code>CarouselPrevious</code> y <code>CarouselNext</code> — no ocultes la navegación en favor solo del gesto de arrastrar.",
@@ -964,7 +929,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Navegación visible, aria-label descriptivo y descripción textual del carrusel.",
         "dont": "Esconder los botones de navegación — el gesto de arrastrar no es descubierto por todos."
@@ -975,13 +939,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withPlugin": "Con plugin de autoplay:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Orientaciones Disponibles",
       "note": "Carousel no tiene variantes visuales como prop. El comportamiento de layout es controlado por <code>orientation</code> (horizontal o vertical) y por la clase <code>basis-*</code> en <code>CarouselItem</code>.",
       "items": {
         "horizontal": "Orientación predeterminada. Slides se deslizan lateralmente. Navegación con flechas izquierda/derecha en el teclado.",
@@ -994,7 +955,6 @@
           "use": "Destacados en homepages y banners promocionales no críticos. Evita en contenido informacional esencial — usuarios con lectores de pantalla o carga cognitiva pueden perderlo."
         }
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "withDots": {
           "name": "Carrusel con dots",
@@ -1009,7 +969,6 @@
       }
     },
     "states": {
-      "title": "Configuraciones",
       "cols": {
         "state": "Configuración",
         "trigger": "Cómo activar",
@@ -1022,7 +981,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "carouselTitle": "Carousel",
       "contentTitle": "CarouselContent",
@@ -1047,7 +1005,6 @@
       "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code>. Usa <code>basis-*</code> en <code>CarouselItem</code> para controlar cuántos ítems aparecen por vez. La <code>CarouselApi</code> expuesta vía <code>setApi</code> permite implementar dots, contadores y sincronización externa sin forks."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Clase .nds-*",
@@ -1064,7 +1021,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Carousel usa <code>role=\"region\"</code> con <code>aria-roledescription=\"carousel\"</code>, y cada slide es <code>role=\"group\"</code> con <code>aria-roledescription=\"slide\"</code>. Navegación por teclado con flechas. Cumple WCAG 2.2 AA: 1.4.13 (contenido en hover/foco), 2.2.2 (pause/stop/hide para autoplay).",
       "item1": "<strong>role=\"region\" automático</strong> — el contenedor recibe <code>role=\"region\"</code> y <code>aria-roledescription=\"carousel\"</code>, haciendo que los lectores de pantalla anuncien la naturaleza del contenido.",
@@ -1092,7 +1048,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "tabs": "Para navegación explícita entre contenidos del mismo nivel con etiquetas visibles.",
@@ -1101,14 +1056,12 @@
       "pagination": "Para indicar posición cuando hay muchos slides (más de 5)."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El espaciado entre ítems sale de un margen negativo en el contenedor más un relleno igual en cada ítem. El componente ya aplica ese par — sobrescribe solo si es necesario.",
       "tip2": "Para implementar dots, captura la <code>CarouselApi</code> vía <code>setApi</code> y escucha el evento <code>select</code>. Usa <code>scrollTo(i)</code> para activar el slide por índice.",
       "tip3": "Evita autoplay en contenido informacional crítico — usuarios con lectores de pantalla o motores cognitivos pueden perder el contenido antes de leerlo. Prefiere loop sin autoplay.",
       "tip4": "En orientación vertical, define una altura explícita en el contenedor — sin altura el viewport no se calcula correctamente."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Carousel dispara eventos cuando el producto quiere medir engagement con slides o autoplay. Eventos de la docs page son capturados automáticamente por el observer de tracking.",
       "table": {
         "event": "Evento",
@@ -1132,7 +1085,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Carousel.",

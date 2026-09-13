@@ -3,6 +3,7 @@
   import { Card } from '@/components/ui/card';
   import { CodeBlock } from '@/components/ui/code-block';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface DocsPropItem {
     name: string; type: string; defaultValue: string; required: string; description: string;
@@ -13,8 +14,7 @@
     items: DocsPropItem[];
   }
 
-  const { title, tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode, language = 'svelte', copyLabel, copiedLabel }: {
-    title: string;
+  const { tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode, language = 'svelte', copyLabel, copiedLabel }: {
     tables: DocsPropsTableDef[];
     interfaceCode?: string;
     extensibilityTitle?: string;
@@ -25,6 +25,8 @@
     copyLabel?: string;
     copiedLabel?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao('propriedades', $rotulosDeSecao));
 </script>
 
 <section id="propriedades">

@@ -225,7 +225,7 @@ interface ToggleGroupItemProps {
   {/snippet}
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="toggle-group">
+  <DocsDemonstration componentSlug="toggle-group">
     <div class="nds-stack" data-spacing="lg" data-align="start">
       <!-- Single — alinhamento -->
       <ToggleGroup
@@ -291,7 +291,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -303,7 +302,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Quando Usar ───────────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -379,7 +377,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Do & Don't ───────────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -464,14 +461,12 @@ interface ToggleGroupItemProps {
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImport}
     componentSlug="toggle-group"
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     componentSlug="toggle-group"
     items={[
       {
@@ -539,7 +534,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Composições ──────────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="toggle-group"
     items={[
@@ -628,7 +622,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -646,7 +639,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Propriedades ─────────────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -673,7 +665,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Tokens ────────────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -699,7 +690,6 @@ interface ToggleGroupItemProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -725,7 +715,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.toggle.name'),      description: $tStore('related.items.toggle.description'),      path: '?path=/docs/components-form-toggle--docs' },
       { name: $tStore('related.items.tabs.name'),        description: $tStore('related.items.tabs.description'),        path: '?path=/docs/components-navigation-tabs--docs' },
@@ -736,7 +725,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -747,7 +735,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Analytics ────────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -774,7 +761,6 @@ interface ToggleGroupItemProps {
 
   <!-- ── Testes ────────────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

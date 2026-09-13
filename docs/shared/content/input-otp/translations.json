@@ -11,7 +11,6 @@
       "aiEntities": "InputOTP, React, Vue, Svelte, Vanilla, Angular, OTP, PIN, one-time-code, código de verificação, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "sixDigits": "Código de 6 dígitos (padrão)",
         "fourDigits": "PIN de 4 dígitos",
@@ -20,7 +19,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>InputOTP (Root)</strong> — wrapper que controla <code>maxLength</code>, <code>value</code>/<code>onChange</code> e padrão (<code>pattern</code>).",
       "item2": "<strong>InputOTPGroup</strong> — agrupa slots visualmente; aceita múltiplos grupos quando há separator.",
       "item3": "<strong>InputOTPSlot</strong> — renderiza um caractere por <code>index</code>; aplica estilos de foco e estado.",
@@ -35,7 +33,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use InputOTP <strong>somente</strong> para códigos de verificação curtos (4-8 caracteres) — para inputs livres, use <code>Input</code>.",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "InputOTP de 6 dígitos com autoComplete=one-time-code para autofill SMS.",
         "dont": "InputOTP sem autoComplete — usuário digita manualmente."
@@ -136,11 +132,8 @@
         "dont": "InputOTP sem label — leitor de tela não anuncia propósito."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "sixDigits": "6 dígitos (padrão SMS)",
         "fourDigits": "4 dígitos (PIN)",
@@ -153,7 +146,6 @@
         "withSeparator": "Dois <code>InputOTPGroup</code> separados por <code>InputOTPSeparator</code> — formato 3-3 ou 4-4.",
         "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> e <code>inputMode=\"text\"</code>; útil para auth codes do GitHub/Google."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "withLabel": {
           "name": "Com Label",
@@ -178,7 +170,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "empty": {
         "label": "Vazio",
         "trigger": "inicial",
@@ -211,7 +202,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -271,7 +261,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Seletor",
@@ -323,7 +312,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via input + role=separator), 2.1.1 (operável por teclado: setas, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value via aria-invalid).",
       "items": {
         "item1": "O campo é um controle de texto de verdade — o leitor de tela o anuncia como campo editável, e não como um bloco de caixas decorativas.",
@@ -356,7 +344,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "input": {
           "name": "Input",
@@ -377,7 +364,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Duas famílias de markup</strong>: onde há biblioteca de OTP, o campo é um <code>&lt;input&gt;</code> único recortado por trás de caixas desenhadas; onde não há, é um <code>&lt;input maxlength=\"1\"&gt;</code> por dígito. O visual e as classes são os mesmos; o que muda é quem recebe o foco.",
       "item2": "<strong>autoComplete one-time-code</strong>: essencial para autofill nativo. Sem isso, o usuário precisa digitar manualmente mesmo com SMS recebido.",
       "item3": "<strong>Colar</strong>: o código colado é distribuído pelas caixas a partir da que está em edição; caracteres fora do conjunto aceito são descartados.",
@@ -385,11 +371,9 @@
       "item5": "<strong>Toque</strong>: a caixa de 36 px é apertada no celular quando o código é a ação principal da tela — aumente <code>width</code> e <code>height</code> de <code>.nds-input-otp-slot</code> para 44 px ou mais."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes: <code>otp_complete</code> (todos slots preenchidos), <code>otp_paste</code> (código colado), <code>otp_resend</code> (botão reenviar). Payload obrigatório: <code>component='input-otp'</code>, <code>location</code>, <code>length</code>. Disparar via <code>onComplete</code> e <code>onPaste</code>."
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação.",
@@ -478,7 +462,6 @@
       "aiEntities": "InputOTP, React, Vue, Svelte, Vanilla, Angular, OTP, PIN, one-time-code, verification code, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "sixDigits": "6-digit code (default)",
         "fourDigits": "4-digit PIN",
@@ -487,7 +470,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>InputOTP (Root)</strong> — wrapper that controls <code>maxLength</code>, <code>value</code>/<code>onChange</code>, and <code>pattern</code>.",
       "item2": "<strong>InputOTPGroup</strong> — visually groups slots; allows multiple groups when there's a separator.",
       "item3": "<strong>InputOTPSlot</strong> — renders a single character per <code>index</code>; applies focus and state styles.",
@@ -502,7 +484,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
         "item1": "Use InputOTP <strong>only</strong> for short verification codes (4-8 chars) — for free input, use <code>Input</code>.",
@@ -593,7 +574,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "6-digit InputOTP with autoComplete=one-time-code for SMS autofill.",
         "dont": "InputOTP without autoComplete — user types manually."
@@ -603,11 +583,8 @@
         "dont": "InputOTP without label — screen reader can't announce purpose."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "sixDigits": "6 digits (default SMS)",
         "fourDigits": "4 digits (PIN)",
@@ -620,7 +597,6 @@
         "withSeparator": "Two <code>InputOTPGroup</code> separated by <code>InputOTPSeparator</code> — 3-3 or 4-4 format.",
         "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> and <code>inputMode=\"text\"</code>; useful for GitHub/Google auth codes."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "withLabel": {
           "name": "With Label",
@@ -645,7 +621,6 @@
       }
     },
     "states": {
-      "title": "States",
       "empty": {
         "label": "Empty",
         "trigger": "initial",
@@ -678,7 +653,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -738,7 +712,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Selector",
@@ -790,7 +763,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via input + role=separator), 2.1.1 (keyboard operable: arrows, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value via aria-invalid).",
       "items": {
         "item1": "The field is a real text control — screen readers announce it as an editable field, not as a row of decorative boxes.",
@@ -823,7 +795,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "input": {
           "name": "Input",
@@ -844,7 +815,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Two markup families</strong>: where an OTP library is available, the field is a single clipped <code>&lt;input&gt;</code> behind drawn boxes; where it is not, it is one <code>&lt;input maxlength=\"1\"&gt;</code> per digit. Visuals and classes are the same; what changes is which element takes focus.",
       "item2": "<strong>autoComplete one-time-code</strong>: essential for native autofill. Without it, the user must type manually even when SMS is received.",
       "item3": "<strong>Paste</strong>: the pasted code is spread across the boxes starting from the one being edited; characters outside the accepted set are dropped.",
@@ -852,11 +822,9 @@
       "item5": "<strong>Touch</strong>: the 36 px box is cramped on mobile when the code is the main action on screen — raise <code>width</code> and <code>height</code> on <code>.nds-input-otp-slot</code> to 44 px or more."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant events: <code>otp_complete</code> (all slots filled), <code>otp_paste</code> (code pasted), <code>otp_resend</code> (resend button). Required payload: <code>component='input-otp'</code>, <code>location</code>, <code>length</code>. Dispatch via <code>onComplete</code> and <code>onPaste</code>."
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each interaction.",
@@ -945,7 +913,6 @@
       "aiEntities": "InputOTP, React, Vue, Svelte, Vanilla, Angular, OTP, PIN, one-time-code, código de verificación, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "sixDigits": "Código de 6 dígitos (predeterminado)",
         "fourDigits": "PIN de 4 dígitos",
@@ -954,7 +921,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>InputOTP (Root)</strong> — wrapper que controla <code>maxLength</code>, <code>value</code>/<code>onChange</code> y <code>pattern</code>.",
       "item2": "<strong>InputOTPGroup</strong> — agrupa slots visualmente; admite múltiples grupos cuando hay separator.",
       "item3": "<strong>InputOTPSlot</strong> — renderiza un carácter por <code>index</code>; aplica estilos de foco y estado.",
@@ -969,7 +935,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa InputOTP <strong>solo</strong> para códigos de verificación cortos (4-8 caracteres) — para inputs libres, usa <code>Input</code>.",
@@ -1060,7 +1025,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "InputOTP de 6 dígitos con autoComplete=one-time-code para autofill SMS.",
         "dont": "InputOTP sin autoComplete — usuario escribe manualmente."
@@ -1070,11 +1034,8 @@
         "dont": "InputOTP sin label — el lector de pantalla no anuncia el propósito."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "sixDigits": "6 dígitos (predeterminado SMS)",
         "fourDigits": "4 dígitos (PIN)",
@@ -1087,7 +1048,6 @@
         "withSeparator": "Dos <code>InputOTPGroup</code> separados por <code>InputOTPSeparator</code> — formato 3-3 o 4-4.",
         "alphanumeric": "<code>pattern={REGEXP_ONLY_DIGITS_AND_CHARS}</code> e <code>inputMode=\"text\"</code>; útil para auth codes de GitHub/Google."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "withLabel": {
           "name": "Con Label",
@@ -1112,7 +1072,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "empty": {
         "label": "Vacío",
         "trigger": "inicial",
@@ -1145,7 +1104,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1205,7 +1163,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Selector",
@@ -1257,7 +1214,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía input + role=separator), 2.1.1 (operable por teclado: flechas, backspace, paste), 3.3.2 (Labels and Instructions), 4.1.2 (name/role/value vía aria-invalid).",
       "items": {
         "item1": "El campo es un control de texto real — el lector de pantalla lo anuncia como campo editable, no como un bloque de cajas decorativas.",
@@ -1290,7 +1246,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "input": {
           "name": "Input",
@@ -1311,7 +1266,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Dos familias de markup</strong>: donde hay biblioteca de OTP, el campo es un <code>&lt;input&gt;</code> único recortado detrás de cajas dibujadas; donde no la hay, es un <code>&lt;input maxlength=\"1\"&gt;</code> por dígito. El visual y las clases son los mismos; lo que cambia es quién recibe el foco.",
       "item2": "<strong>autoComplete one-time-code</strong>: esencial para autofill nativo. Sin esto, el usuario debe escribir manualmente aún recibiendo SMS.",
       "item3": "<strong>Pegar</strong>: el código pegado se reparte por las cajas a partir de la que está en edición; los caracteres fuera del conjunto aceptado se descartan.",
@@ -1319,11 +1273,9 @@
       "item5": "<strong>Toque</strong>: la caja de 36 px queda apretada en el móvil cuando el código es la acción principal de la pantalla — sube <code>width</code> y <code>height</code> de <code>.nds-input-otp-slot</code> a 44 px o más."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes: <code>otp_complete</code> (todos los slots llenos), <code>otp_paste</code> (código pegado), <code>otp_resend</code> (botón reenviar). Payload obligatorio: <code>component='input-otp'</code>, <code>location</code>, <code>length</code>. Dispara vía <code>onComplete</code> y <code>onPaste</code>."
     },
     "testes": {
-      "title": "Criterios de Test",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción.",

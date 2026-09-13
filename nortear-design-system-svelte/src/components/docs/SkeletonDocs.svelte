@@ -131,7 +131,7 @@
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" style="--grid-min: 16rem">
       <!-- Card de perfil -->
       <div class="nds-stack" data-spacing="sm">
@@ -192,7 +192,6 @@
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -203,7 +202,6 @@
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -251,7 +249,6 @@
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -305,14 +302,12 @@
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { trackId: 'rectangle', name: $tStore('variants.items.rectangle'), description: stripHtml($tStore('variants.styles.rectangle')), code: codeRectangle, preview: variantRectangle },
       { trackId: 'circle', name: $tStore('variants.items.circle'),    description: stripHtml($tStore('variants.styles.circle')),    code: codeCircle,    preview: variantCircle    },
@@ -339,7 +334,6 @@
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -353,7 +347,6 @@
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -380,7 +373,6 @@
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -401,7 +393,6 @@
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -418,7 +409,6 @@
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.progress.name'),    description: $tStore('related.items.progress.description'),    path: '?path=/docs/components-feedback-progress--docs'    },
       { name: $tStore('related.items.aspectRatio.name'), description: $tStore('related.items.aspectRatio.description'), path: '?path=/docs/components-layout-aspectratio--docs' },
@@ -428,7 +418,6 @@
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -440,7 +429,6 @@
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: 'Evento',
       trigger: 'Trigger',
@@ -453,7 +441,6 @@
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

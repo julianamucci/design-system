@@ -335,7 +335,6 @@ export function createTooltipDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             // Barra de ações com três botões de ícone — o MESMO exemplo que as
             // outras quatro stacks mostram. Antes daqui saía um grid de três
@@ -390,7 +389,6 @@ export function createTooltipDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -398,7 +396,6 @@ export function createTooltipDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -443,7 +440,6 @@ export function createTooltipDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -472,7 +468,6 @@ export function createTooltipDocs(): HTMLElement {
         });
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           componentSlug: 'tooltip',
           code: `import { createTooltip, createTooltipProvider } from '@/components/ui/tooltip';`,
           secondaryDescription: t('import.local.secondaryDescription'),
@@ -573,7 +568,6 @@ createTooltip({ trigger, content: conteudo, side: 'bottom' });`;
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'tooltip',
           items: [
@@ -784,7 +778,6 @@ createTooltip({
         }
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'tooltip',
           items: [
@@ -826,7 +819,6 @@ createTooltip({
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -876,7 +868,6 @@ export function createTooltipProvider(
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createTooltip(options)',
@@ -913,7 +904,6 @@ export function createTooltipProvider(
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -937,7 +927,6 @@ export function createTooltipProvider(
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -950,7 +939,6 @@ export function createTooltipProvider(
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           componentSlug: 'tooltip',
           items: [
             { name: t('related.items.popover.name'),   description: toPlainText(t('related.items.popover.description')),   path: '?path=/docs/components-overlay-popover--docs'    },
@@ -967,7 +955,6 @@ export function createTooltipProvider(
           : '<strong>O que o balão não faz</strong>: não há estado controlado nem seta apontando para o gatilho, e o <code>side</code> escolhido é o final — nada reposiciona o balão quando falta espaço na tela, então escolha um lado que caiba. O resto está aqui: <code>delayDuration</code> por chamada, espera compartilhada por grupo com <code>createTooltipProvider</code>, Escape para dispensar sem tirar o foco do lugar, e marcação em <code>content</code> como elemento já montado (uma tecla em <code>&lt;kbd&gt;</code>, uma palavra em <code>&lt;strong&gt;</code>).';
 
         return createDocsNotes({
-          title: t('notes.title'),
           componentSlug: 'tooltip',
           items: [
             ...[1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
@@ -978,7 +965,6 @@ export function createTooltipProvider(
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: tNav('common.event'),
             trigger: tNav('common.eventTrigger'),
@@ -995,7 +981,6 @@ export function createTooltipProvider(
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

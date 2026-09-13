@@ -329,7 +329,7 @@ export function createMediaPlayerDocs(): HTMLElement {
     controls.className = 'nds-cluster';
     controls.dataset.spacing = 'sm';
     controls.setAttribute('role', 'group');
-    controls.setAttribute('aria-label', t('demonstration.title'));
+    controls.setAttribute('aria-label', tNav('nav.demonstration'));
 
     const slot = document.createElement('div');
     slot.className = 'nds-w-full';
@@ -396,14 +396,12 @@ export function createMediaPlayerDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'media-player',
           demoFactory: buildDemo,
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7].map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -411,7 +409,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -441,7 +438,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -473,7 +469,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           componentSlug: 'media-player',
           description: t('import.basic'),
           code: t('import.basicCode'),
@@ -483,7 +478,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'variantes':
         return createDocsVariants({
-          title: t('variants.title'),
           note: t('variants.note'),
           componentSlug: 'media-player',
           items: SOURCE_KEYS.map(key => ({
@@ -500,7 +494,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: t('states.cols.trigger'),
@@ -515,7 +508,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'propriedades':
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               cols: {
@@ -542,7 +534,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.value'),
@@ -559,7 +550,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => t(`accessibility.item${i}`)),
           keyboardTitle: t('accessibility.keyboardTitle'),
@@ -571,7 +561,6 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           componentSlug: 'media-player',
           items: [
             { name: 'AspectRatio', description: toPlainText(t('related.aspectRatio')), path: '?path=/docs/components-layout-aspectratio--docs' },
@@ -583,14 +572,12 @@ export function createMediaPlayerDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           componentSlug: 'media-player',
           items: [1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: t(`notes.tip${i}`) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -609,7 +596,6 @@ export function createMediaPlayerDocs(): HTMLElement {
         // visual foram desenhados para outra: aqui cada campo entra no lugar
         // que o preserva, sem descartar texto.
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             description: t('testes.functional.description'),

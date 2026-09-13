@@ -13,7 +13,6 @@
       "position": "{index} de {total}"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "running": "Enquanto o agente dirige a tela",
         "finished": "Quando a sessão termina",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A barra de endereço abre a peça e diz qual tela está sendo dirigida. Ela é cortada quando não cabe, e ganha uma palavra que só quem ouve recebe.",
       "item2": "O quadro tem proporção e recorta o que está dentro: nada rola aqui, porque uma moldura que rolasse seria uma segunda camada rolável dentro de uma conversa que já rola.",
@@ -40,7 +38,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "item1": "Use para mostrar a tela que o agente está dirigindo, com o ponto em que ele tocou e o que ele fez ali.",
         "item2": "Passe a tela como elemento pronto: a peça desenha a moldura, e o que aparece dentro dela é seu.",
@@ -131,7 +128,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "A legenda diz o verbo, o alvo e a posição, e a marca só reforça o lugar.",
         "dont": "Só a marca sobre a imagem indica o passo, e quem não vê a tela não fica sabendo de nada."
@@ -142,7 +138,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComputerUse } from '@/components/ui/computer-use';\n\nconst computerUse = createComputerUse({\n  url: 'app.exemplo.com/entrar',\n  screen: tela,\n  steps: passos,\n  activeIndex: 3,\n  status: 'running',\n  labels: labels,\n});\n\ndocument.querySelector('#app')?.append(computerUse);",
@@ -161,7 +156,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -194,7 +188,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -297,7 +290,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -389,7 +381,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Nada aqui é região viva: uma tela dirigida por agente troca de passo mais depressa do que se lê, e anunciar cada um tornaria a tela impossível de ouvir. O que chega a quem não vê a imagem é a legenda, que é também o nome da figura.",
       "items": {
         "item1": "A legenda diz o passo em palavras: verbo, alvo e posição na sequência.",
@@ -421,7 +412,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado da execução",
@@ -442,7 +432,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "É a primeira peça da família cujo eixo é o espaço. As irmãs desenham listas e linhas, em que a posição é consequência da ordem; aqui a posição é dado, e nada no sistema colocava dado em coordenada sobre uma superfície que ele não conhece.",
       "item2": "A tela é espaço, e a peça nunca a cria. Captura de sistema real traz marca registrada e conteúdo de terceiro — a mesma razão pela qual os logotipos de modelo não entram no repositório.",
       "item3": "O texto alternativo da tela é de quem a passa. Quando a legenda ao lado já diz o que está acontecendo, a captura é decorativa e vai com texto vazio; quando ela carrega o que a legenda não diz, o texto é obrigatório.",
@@ -452,7 +441,6 @@
       "item7": "O passo não tem estado próprio. O que está acontecendo vale para a sessão inteira, e um estado por passo faria a peça pintar cores sobre uma tela de terceiro — que é justamente a codificação que a legenda existe para não precisar."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não tem ação.",
       "table": {
         "event": "Evento",
@@ -470,7 +458,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -607,7 +594,6 @@
       "position": "{index} of {total}"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "running": "While the agent drives the screen",
         "finished": "When the session ends",
@@ -622,7 +608,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The address bar opens the piece and says which screen is being driven. It is cut when it does not fit, and it carries a word only listeners receive.",
       "item2": "The frame has a ratio and clips what is inside: nothing scrolls here, because a frame that scrolled would be a second scrollable layer inside a conversation that already scrolls.",
@@ -634,7 +619,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "item1": "Use it to show the screen the agent is driving, with the point it touched and what it did there.",
         "item2": "Pass the screen in as a ready element: the piece draws the frame, and what shows inside is yours.",
@@ -725,7 +709,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The caption says the verb, the target and the position, and the mark only reinforces the place.",
         "dont": "Only the mark over the image indicates the step, and whoever cannot see the screen learns nothing."
@@ -736,7 +719,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createComputerUse } from '@/components/ui/computer-use';\n\nconst computerUse = createComputerUse({\n  url: 'app.exemplo.com/entrar',\n  screen: tela,\n  steps: passos,\n  activeIndex: 3,\n  status: 'running',\n  labels: labels,\n});\n\ndocument.querySelector('#app')?.append(computerUse);",
@@ -755,7 +737,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -788,7 +769,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -891,7 +871,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -983,7 +962,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Nothing here is a live region: a screen driven by an agent changes step faster than anyone reads, and announcing each one would make the screen impossible to listen to. What reaches whoever cannot see the image is the caption, which is also the name of the figure.",
       "items": {
         "item1": "The caption says the step in words: verb, target and position in the sequence.",
@@ -1015,7 +993,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "agentStatus": {
           "name": "Run status",
@@ -1036,7 +1013,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "It is the family's first piece whose axis is space. Its sisters draw lists and lines, where position follows from order; here position is data, and nothing in the system placed data at a coordinate over a surface it does not know.",
       "item2": "The screen is a slot, and the piece never creates it. A capture of a real system brings a trademark and third-party content — the same reason model logos do not enter the repository.",
       "item3": "The screen's alternative text belongs to whoever passes it. When the caption beside it already says what is happening, the capture is decorative and goes with empty text; when it carries what the caption does not say, the text is required.",
@@ -1046,7 +1022,6 @@
       "item7": "The step has no state of its own. What is happening applies to the whole session, and a state per step would make the piece paint colours over a third party's screen — which is exactly the encoding the caption exists to avoid."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the piece itself instruments nothing, because it has no action.",
       "table": {
         "event": "Event",
@@ -1064,7 +1039,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1201,7 +1175,6 @@
       "position": "{index} de {total}"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "running": "Mientras el agente dirige la pantalla",
         "finished": "Cuando la sesión termina",
@@ -1216,7 +1189,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La barra de dirección abre la pieza y dice qué pantalla se está dirigiendo. Se corta cuando no cabe, y lleva una palabra que solo recibe quien escucha.",
       "item2": "El marco tiene proporción y recorta lo que hay dentro: aquí no se desplaza nada, porque un marco que se desplazara sería una segunda capa desplazable dentro de una conversación que ya se desplaza.",
@@ -1228,7 +1200,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "item1": "Úsala para mostrar la pantalla que el agente dirige, con el punto que tocó y lo que hizo allí.",
         "item2": "Pasa la pantalla como elemento ya montado: la pieza dibuja el marco, y lo que aparece dentro es tuyo.",
@@ -1319,7 +1290,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El pie dice el verbo, el objetivo y la posición, y la marca solo refuerza el lugar.",
         "dont": "Solo la marca sobre la imagen indica el paso, y quien no ve la pantalla no se entera de nada."
@@ -1330,7 +1300,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComputerUse } from '@/components/ui/computer-use';\n\nconst computerUse = createComputerUse({\n  url: 'app.exemplo.com/entrar',\n  screen: tela,\n  steps: passos,\n  activeIndex: 3,\n  status: 'running',\n  labels: labels,\n});\n\ndocument.querySelector('#app')?.append(computerUse);",
@@ -1349,7 +1318,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1382,7 +1350,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1485,7 +1452,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1577,7 +1543,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Aquí nada es región viva: una pantalla dirigida por un agente cambia de paso más deprisa de lo que se lee, y anunciar cada uno haría la pantalla imposible de escuchar. Lo que llega a quien no ve la imagen es el pie, que además es el nombre de la figura.",
       "items": {
         "item1": "El pie dice el paso en palabras: verbo, objetivo y posición en la secuencia.",
@@ -1609,7 +1574,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado de la ejecución",
@@ -1630,7 +1594,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Es la primera pieza de la familia cuyo eje es el espacio. Sus hermanas dibujan listas y líneas, donde la posición es consecuencia del orden; aquí la posición es dato, y nada en el sistema colocaba dato en una coordenada sobre una superficie que no conoce.",
       "item2": "La pantalla es un hueco, y la pieza nunca la crea. Una captura de un sistema real trae marca registrada y contenido ajeno — la misma razón por la que los logotipos de modelo no entran en el repositorio.",
       "item3": "El texto alternativo de la pantalla es de quien la pasa. Cuando el pie ya dice lo que ocurre, la captura es decorativa y va con texto vacío; cuando ella lleva lo que el pie no dice, el texto es obligatorio.",
@@ -1640,7 +1603,6 @@
       "item7": "El paso no tiene estado propio. Lo que ocurre vale para la sesión entera, y un estado por paso haría que la pieza pintara colores sobre la pantalla de un tercero — que es justo la codificación que el pie existe para no necesitar."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no tiene acción.",
       "table": {
         "event": "Evento",
@@ -1658,7 +1620,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

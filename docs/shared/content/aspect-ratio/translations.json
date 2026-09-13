@@ -11,7 +11,6 @@
       "aiEntities": "AspectRatio, React, Vue, Svelte, Vanilla, Angular, CSS aspect-ratio, responsive media, object-fit, embed"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "sixteenNine": "16 / 9 — Vídeo",
         "fourThree": "4 / 3 — Produto",
@@ -20,13 +19,11 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Root</strong> — wrapper que aplica a proporção via propriedade CSS <code>aspect-ratio</code>.",
       "item2": "<strong>Slot</strong> — elemento filho (imagem, vídeo, iframe) que preenche o container absolutamente.",
       "item3": "<strong>ratio</strong> — número representando largura dividida por altura (<code>16/9</code>, <code>1</code>, <code>4/3</code>)."
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Envolver toda mídia cuja proporção precisa ser preservada independente do tamanho do container.",
@@ -117,7 +114,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Imagem com <code>object-fit: cover</code> preenche o container sem distorcer.",
         "dont": "Imagem com <code>object-contain</code> deixa bordas vazias dentro do ratio."
@@ -127,11 +123,8 @@
         "dont": "<code>border-radius</code> aplicado ao AspectRatio corta filho sem cantos arredondados."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Ratios Canônicos",
       "note": "AspectRatio não tem variantes via <code>cva()</code>. Os cinco ratios abaixo são padrões canônicos adotados no design system.",
       "items": {
         "sixteenNine": "Paisagem 16:9 — vídeos, banners, hero images.",
@@ -142,7 +135,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "note": "AspectRatio é um container passivo e stateless. Não tem <code>disabled</code>, <code>loading</code> ou <code>error</code> — quem tem estado é o conteúdo filho (imagem carregando, vídeo pausado, iframe falhando).",
       "item1": {
         "label": "Conteúdo carregado",
@@ -161,7 +153,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -177,7 +168,6 @@
       "extensibility": "Use <code>className</code> para espaçamento externo, border-radius e sombras no wrapper. No filho, aplique <code>object-fit: cover</code> e <code>width: 100%; height: 100%</code> (ou classes utilitárias equivalentes)."
     },
     "tokens": {
-      "title": "Design Tokens",
       "note": "AspectRatio é um container de layout sem cor própria. Não usa tokens semânticos — herda do filho.",
       "table": {
         "token": "Token",
@@ -191,7 +181,6 @@
       "customization": "Aplique tokens de cor e raio ao elemento filho — nunca ao AspectRatio. Exemplo: <code>&lt;img style=\"object-fit: cover; width: 100%; height: 100%; border-radius: 0.375rem\" /&gt;</code>."
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "AspectRatio não tem semântica própria. Toda a acessibilidade vem do conteúdo filho — atenda WCAG 2.2 AA no <code>alt</code>, <code>title</code>, legendas e foco.",
       "keyboard": {
         "title": "Teclado",
@@ -216,21 +205,18 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "aspectRatio": "AspectRatio — este componente.",
       "avatar": "Avatar para imagens circulares de perfil com fallback automático.",
       "card": "Card quando a mídia é parte de um agrupamento semântico maior.",
       "skeleton": "Skeleton para estado de carregamento sem reservar a proporção final."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "Em implementações modernas o componente usa a propriedade CSS nativa <code>aspect-ratio</code>; o ratio é preservado antes do carregamento da mídia, sem reflow.",
       "item2": "O cálculo é reativo: mudar o valor de <code>ratio</code> recalcula a caixa no lugar, sem recriar o nó nem perder o que já estava carregado dentro dele.",
       "item3": "Onde a propriedade nativa não é uma opção, a mesma proporção sai do truque de preenchimento — <code>padding-bottom</code> igual a <code>(1 / ratio) * 100%</code> no wrapper, com o conteúdo posicionado por cima.",
       "item4": "Aspect Ratio nativa do CSS (<code>aspect-ratio: 16 / 9</code>) é alternativa moderna sem JS — use AspectRatio quando precisar de compatibilidade ampla ou de compor com o restante do design system."
     },
     "analytics": {
-      "title": "Analytics",
       "note": "AspectRatio é container passivo e não dispara eventos próprios. Analytics de mídia (play, pause, erro de imagem) é responsabilidade do filho.",
       "table": {
         "event": "Evento",
@@ -239,7 +225,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada uso do AspectRatio.",
@@ -337,7 +322,6 @@
       "aiEntities": "AspectRatio, React, Vue, Svelte, Vanilla, Angular, CSS aspect-ratio, responsive media, object-fit, embed"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "sixteenNine": "16 / 9 — Video",
         "fourThree": "4 / 3 — Product",
@@ -346,13 +330,11 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Root</strong> — wrapper that enforces the ratio via the CSS <code>aspect-ratio</code> property.",
       "item2": "<strong>Slot</strong> — child element (image, video, iframe) that fills the container absolutely.",
       "item3": "<strong>ratio</strong> — number representing width divided by height (<code>16/9</code>, <code>1</code>, <code>4/3</code>)."
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Wrap any media whose ratio must be preserved independently of container size.",
@@ -443,7 +425,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Image with <code>object-fit: cover</code> fills the container without distortion.",
         "dont": "Image with <code>object-contain</code> leaves empty borders inside the ratio."
@@ -453,11 +434,8 @@
         "dont": "<code>border-radius</code> on AspectRatio clips a child without rounded corners."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Canonical Ratios",
       "note": "AspectRatio has no <code>cva()</code> variants. The five ratios below are canonical patterns adopted in the design system.",
       "items": {
         "sixteenNine": "Landscape 16:9 — videos, banners, hero images.",
@@ -468,7 +446,6 @@
       }
     },
     "states": {
-      "title": "States",
       "note": "AspectRatio is a passive, stateless container. It has no <code>disabled</code>, <code>loading</code>, or <code>error</code> — the child content owns state (image loading, video paused, iframe failing).",
       "item1": {
         "label": "Content loaded",
@@ -487,7 +464,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -503,7 +479,6 @@
       "extensibility": "Use <code>className</code> for outer spacing, border-radius, and shadows on the wrapper. On the child, apply <code>object-fit: cover</code> and <code>width: 100%; height: 100%</code> (or equivalent utility classes)."
     },
     "tokens": {
-      "title": "Design Tokens",
       "note": "AspectRatio is a layout container without its own color. It does not use semantic tokens — it inherits from the child.",
       "table": {
         "token": "Token",
@@ -517,7 +492,6 @@
       "customization": "Apply color and radius tokens to the child element — never to AspectRatio. Example: <code>&lt;img style=\"object-fit: cover; width: 100%; height: 100%; border-radius: 0.375rem\" /&gt;</code>."
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "AspectRatio has no semantics of its own. All accessibility comes from the child — meet WCAG 2.2 AA on <code>alt</code>, <code>title</code>, captions, and focus.",
       "keyboard": {
         "title": "Keyboard",
@@ -542,21 +516,18 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "aspectRatio": "AspectRatio — this component.",
       "avatar": "Avatar for circular profile images with automatic fallback.",
       "card": "Card when media is part of a larger semantic grouping.",
       "skeleton": "Skeleton for loading state without reserving the final ratio."
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "Modern implementations use the native CSS <code>aspect-ratio</code> property; the ratio is preserved before media loads, with no reflow.",
       "item2": "The calculation is reactive: changing the <code>ratio</code> value recomputes the box in place, without recreating the node or losing what was already loaded inside it.",
       "item3": "Where the native property is not an option, the same ratio comes from the padding trick — <code>padding-bottom</code> equal to <code>(1 / ratio) * 100%</code> on the wrapper, with the content positioned on top.",
       "item4": "The native CSS aspect-ratio (<code>aspect-ratio: 16 / 9</code>) is a modern JS-free alternative — use AspectRatio when you need broad support or composition with the rest of the design system."
     },
     "analytics": {
-      "title": "Analytics",
       "note": "AspectRatio is a passive container and does not fire its own events. Media analytics (play, pause, image error) are the child's responsibility.",
       "table": {
         "event": "Event",
@@ -565,7 +536,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in each AspectRatio use.",
@@ -663,7 +633,6 @@
       "aiEntities": "AspectRatio, React, Vue, Svelte, Vanilla, Angular, CSS aspect-ratio, responsive media, object-fit, embed"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "sixteenNine": "16 / 9 — Vídeo",
         "fourThree": "4 / 3 — Producto",
@@ -672,13 +641,11 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Root</strong> — wrapper que aplica la proporción vía la propiedad CSS <code>aspect-ratio</code>.",
       "item2": "<strong>Slot</strong> — elemento hijo (imagen, vídeo, iframe) que rellena el contenedor de forma absoluta.",
       "item3": "<strong>ratio</strong> — número que representa ancho dividido por alto (<code>16/9</code>, <code>1</code>, <code>4/3</code>)."
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Envolver cualquier medio cuya proporción deba preservarse independiente del tamaño del contenedor.",
@@ -769,7 +736,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Imagen con <code>object-fit: cover</code> rellena el contenedor sin distorsionar.",
         "dont": "Imagen con <code>object-contain</code> deja bordes vacíos dentro del ratio."
@@ -779,11 +745,8 @@
         "dont": "<code>border-radius</code> aplicado al AspectRatio recorta un hijo sin esquinas redondeadas."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Ratios Canónicos",
       "note": "AspectRatio no tiene variantes vía <code>cva()</code>. Los cinco ratios siguientes son patrones canónicos adoptados en el design system.",
       "items": {
         "sixteenNine": "Paisaje 16:9 — vídeos, banners, hero images.",
@@ -794,7 +757,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "note": "AspectRatio es un contenedor pasivo y sin estado. No tiene <code>disabled</code>, <code>loading</code> ni <code>error</code> — el contenido hijo tiene el estado (imagen cargando, vídeo pausado, iframe fallando).",
       "item1": {
         "label": "Contenido cargado",
@@ -813,7 +775,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -829,7 +790,6 @@
       "extensibility": "Usa <code>className</code> para espaciado externo, border-radius y sombras en el wrapper. En el hijo, aplica <code>object-fit: cover</code> y <code>width: 100%; height: 100%</code> (o clases utilitarias equivalentes)."
     },
     "tokens": {
-      "title": "Design Tokens",
       "note": "AspectRatio es un contenedor de layout sin color propio. No usa tokens semánticos — hereda del hijo.",
       "table": {
         "token": "Token",
@@ -843,7 +803,6 @@
       "customization": "Aplica tokens de color y radio al elemento hijo — nunca al AspectRatio. Ejemplo: <code>&lt;img style=\"object-fit: cover; width: 100%; height: 100%; border-radius: 0.375rem\" /&gt;</code>."
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "AspectRatio no tiene semántica propia. Toda la accesibilidad viene del contenido hijo — cumple WCAG 2.2 AA en <code>alt</code>, <code>title</code>, subtítulos y foco.",
       "keyboard": {
         "title": "Teclado",
@@ -868,21 +827,18 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "aspectRatio": "AspectRatio — este componente.",
       "avatar": "Avatar para imágenes circulares de perfil con fallback automático.",
       "card": "Card cuando el medio es parte de una agrupación semántica mayor.",
       "skeleton": "Skeleton para estado de carga sin reservar la proporción final."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "Las implementaciones modernas usan la propiedad CSS nativa <code>aspect-ratio</code>; la proporción se preserva antes de la carga del medio, sin reflow.",
       "item2": "El cálculo es reactivo: cambiar el valor de <code>ratio</code> recalcula la caja en el sitio, sin recrear el nodo ni perder lo que ya estaba cargado dentro.",
       "item3": "Donde la propiedad nativa no es una opción, la misma proporción sale del truco de relleno — <code>padding-bottom</code> igual a <code>(1 / ratio) * 100%</code> en el wrapper, con el contenido posicionado encima.",
       "item4": "El aspect-ratio nativo del CSS (<code>aspect-ratio: 16 / 9</code>) es alternativa moderna sin JS — usa AspectRatio cuando necesites soporte amplio o composición con el resto del design system."
     },
     "analytics": {
-      "title": "Analytics",
       "note": "AspectRatio es contenedor pasivo y no dispara eventos propios. Analytics de medio (play, pause, error de imagen) es responsabilidad del hijo.",
       "table": {
         "event": "Evento",
@@ -891,7 +847,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Qué debe pasar en cada uso de AspectRatio.",

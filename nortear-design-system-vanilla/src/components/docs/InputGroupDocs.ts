@@ -403,14 +403,12 @@ export function createInputGroupDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: SLUG,
           demoFactory: () => buildPasswordDemo('docs_demo'),
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6].map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -418,7 +416,6 @@ export function createInputGroupDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -463,7 +460,6 @@ export function createInputGroupDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -544,7 +540,6 @@ export function createInputGroupDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: stripHtml(t('description')),
           componentSlug: SLUG,
           code: `import {
@@ -566,7 +561,6 @@ export function createInputGroupDocs(): HTMLElement {
         ];
 
         return createDocsVariants({
-          title: t('variants.title'),
           note: t('variants.note'),
           componentSlug: SLUG,
           items: alinhamentos.map(({ key, align }) => {
@@ -608,7 +602,6 @@ export function createInputGroupDocs(): HTMLElement {
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           componentSlug: SLUG,
           useWhenLabel: tNav('common.useWhen'),
           items: [
@@ -677,7 +670,6 @@ export function createInputGroupDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -738,7 +730,6 @@ export function createInputGroupTextarea(options?: TextareaOptions): HTMLTextAre
         });
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createInputGroup(options)',
@@ -798,7 +789,6 @@ export function createInputGroupTextarea(options?: TextareaOptions): HTMLTextAre
         ];
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -816,7 +806,6 @@ export function createInputGroupTextarea(options?: TextareaOptions): HTMLTextAre
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => stripHtml(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -832,7 +821,6 @@ export function createInputGroupTextarea(options?: TextareaOptions): HTMLTextAre
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           componentSlug: SLUG,
           items: [
             { name: t('related.items.input.name'),    description: toPlainText(t('related.items.input.description')),    path: '?path=/docs/components-form-input--docs' },
@@ -844,7 +832,6 @@ export function createInputGroupTextarea(options?: TextareaOptions): HTMLTextAre
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           componentSlug: SLUG,
           items: [
             ...[1, 2, 3, 4, 5].map(i => ({ title: '', content: t(`notes.item${i}`) })),
@@ -865,7 +852,6 @@ export function createInputGroupTextarea(options?: TextareaOptions): HTMLTextAre
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -880,7 +866,6 @@ export function createInputGroupTextarea(options?: TextareaOptions): HTMLTextAre
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             description: t('testes.functional.description'),

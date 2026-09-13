@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { Card } from '@/components/ui/card';
 import DOMPurify from 'dompurify';
 
@@ -7,7 +8,6 @@ export interface DocsKeyboardItem {
 }
 
 export interface DocsAccessibilityProps {
-  title: string;
   summary: string;
   items: string[];
   keyboardTitle: string;
@@ -23,9 +23,7 @@ export interface DocsAccessibilityProps {
   contrast?: string;
 }
 
-export function DocsAccessibility({
-  title,
-  summary,
+export function DocsAccessibility({ summary,
   items,
   keyboardTitle,
   keyboardItems,
@@ -33,6 +31,7 @@ export function DocsAccessibility({
   screenReaderItems,
   contrast,
 }: DocsAccessibilityProps) {
+  const title = useTituloDeSecao('acessibilidade');
   return (
     <section id="acessibilidade">
       <h2 className="nds-section-title">{title}</h2>

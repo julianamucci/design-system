@@ -25,7 +25,6 @@ import { NdsDocsCompositionsStory } from './DocsCompositionsStory';
  */
 
 type DocsCompositionsArgs = {
-  title: string;
   note: string;
   useWhenLabel: string;
   id: string;
@@ -48,7 +47,6 @@ const meta: Meta<DocsCompositionsArgs> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     note: { control: 'text', description: 'Opcional. Nota acima da lista.' },
     useWhenLabel: { control: 'text', description: 'Rótulo da linha de "quando usar". Vem da i18n da página.' },
     id: { control: 'text', description: 'Âncora da seção. Padrão `composicoes`.' },
@@ -59,7 +57,6 @@ const meta: Meta<DocsCompositionsArgs> = {
     },
   },
   args: {
-    title: 'Composições',
     note: '',
     useWhenLabel: 'Quando usar:',
     id: 'composicoes',
@@ -69,7 +66,6 @@ const meta: Meta<DocsCompositionsArgs> = {
   render: (args) => ({
     props: args,
     template: `<nds-docs-compositions-story
-      [title]="title"
       [note]="note"
       [useWhenLabel]="useWhenLabel"
       [id]="id"

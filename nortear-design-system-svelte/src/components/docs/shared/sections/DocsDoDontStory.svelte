@@ -7,7 +7,7 @@
    * se passa como arg de um `.stories.ts` — é sintaxe de template, não valor.
    * Mesmo padrão do `DocsVariantsStory.svelte`.
    */
-  let { title, umParSo = false }: { title: string; umParSo?: boolean } = $props();
+  let { umParSo = false }: { umParSo?: boolean } = $props();
 </script>
 
 {#snippet rotuloBom()}<Button>Salvar alterações</Button>{/snippet}
@@ -26,7 +26,6 @@
 {/snippet}
 
 <DocsDoDont
-  {title}
   pairs={umParSo
     ? [
         {

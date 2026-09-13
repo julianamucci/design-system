@@ -18,7 +18,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "idle": "Em repouso",
         "recording": "Captando",
@@ -27,7 +26,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O controle mora no início do trilho, junto do que se acrescenta à mensagem — e não do lado de quem a envia.",
       "item2": "O alternador é UM botão que muda de estado, e não dois que se trocam: botão que some leva o foco junto.",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use no início do trilho, para escrever a mensagem falando em vez de digitando.",
@@ -130,7 +127,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O estado chega em palavra, ao lado do medidor.",
         "dont": "Só o medidor separa uma captura de pé de uma parada, e desenho não chega a quem ouve a tela."
@@ -141,7 +137,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposerVoice } from '@/components/ui/composer-voice';\n\nconst voz = createComposerVoice({\n  labels: rotulos,\n  state: estado,\n  onToggle: (intent) => (intent === 'start' ? comecar() : parar()),\n});\n\ncreateComposer({ labels, railStart: [voz] });",
@@ -156,7 +151,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -184,7 +178,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -262,7 +255,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -314,7 +306,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Um alternador só, com estado de pressionado; o medidor é desenho e o estado é palavra; o tempo decorrido fica fora do que se anuncia.",
       "items": {
         "item1": "O alternador é um botão só, que muda de estado e de nome — dois botões que se trocam levariam o foco junto ao sumir.",
@@ -343,7 +334,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -368,11 +358,9 @@
       "item2": "Captando e transcrevendo são estados separados porque só o primeiro se interrompe: quando a transcrição começa, a captura já acabou, e apertar de novo não devolve o áudio. Parecem iguais na tela e são opostos — esse é o critério que faz um estado existir.",
       "item3": "O medidor é decorativo e o estado é texto. É a mesma decisão do contador de caracteres e do relógio do reprodutor de mídia, e pelo mesmo motivo: número que muda a cada quadro, se anunciado, torna a tela impossível de ouvir. Quem ouve recebe a palavra, que é o que decide o que fazer.",
       "item4": "O tempo decorrido chega já escrito, e não como número de segundos. Formato de duração é decisão de idioma, e o componente que o formatasse decidiria idioma em cinco lugares diferentes — o mesmo motivo que mantém a fala dos exemplos fora da tradução.",
-      "item5": "O pedido sai como intenção — começar ou parar —, e não como estado novo. Entre pedir para começar e estar captando existe uma permissão que pode demorar ou ser negada, e um componente que anunciasse o estado seguinte estaria adivinhando o que ainda não aconteceu.",
-      "title": "Notas"
+      "item5": "O pedido sai como intenção — começar ou parar —, e não como estado novo. Entre pedir para começar e estar captando existe uma permissão que pode demorar ou ser negada, e um componente que anunciasse o estado seguinte estaria adivinhando o que ainda não aconteceu."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; o controle em si não instrumenta o ditado, que é do produto.",
       "table": {
         "event": "Evento",
@@ -390,7 +378,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -494,7 +481,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "idle": "At rest",
         "recording": "Capturing",
@@ -503,7 +489,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The control lives at the start of the rail, next to what is added to the message — not next to what sends it.",
       "item2": "The toggle is ONE button that changes state, not two that swap places: a button that disappears takes the focus with it.",
@@ -515,7 +500,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it at the start of the rail, to write the message by speaking instead of typing.",
@@ -606,7 +590,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The state arrives in words, beside the meter.",
         "dont": "Only the meter separates a running capture from a stopped one, and drawing never reaches whoever listens to the screen."
@@ -617,7 +600,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic use",
       "basicCode": {
         "vanilla": "import { createComposerVoice } from '@/components/ui/composer-voice';\n\nconst voz = createComposerVoice({\n  labels: rotulos,\n  state: estado,\n  onToggle: (intent) => (intent === 'start' ? comecar() : parar()),\n});\n\ncreateComposer({ labels, railStart: [voz] });",
@@ -632,7 +614,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -660,7 +641,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -738,7 +718,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -790,7 +769,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "One toggle, with a pressed state; the meter is drawing and the state is a word; the elapsed time stays out of what is announced.",
       "items": {
         "item1": "The toggle is a single button that changes state and name — two buttons swapping places would take the focus with them as they vanish.",
@@ -819,7 +797,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "composer": {
           "name": "Composer",
@@ -844,11 +821,9 @@
       "item2": "Capturing and transcribing are separate states because only the first can be interrupted: by the time transcription starts, capture is over, and pressing again does not give the audio back. They look alike on screen and are opposites — that is the test that makes a state exist.",
       "item3": "The meter is decorative and the state is text. It is the same decision as the character counter and the media player's clock, and for the same reason: a number that changes every frame, if announced, makes the screen impossible to listen to. Whoever listens gets the word, which is what decides what to do.",
       "item4": "The elapsed time arrives already written, not as a number of seconds. Duration format is a language call, and a component that formatted it would be deciding language in five different places — the same reason the example speech stays out of the translation.",
-      "item5": "The request leaves as an intent — start or stop —, not as a new state. Between asking to start and actually capturing there is a permission that may take time or be refused, and a component that announced the next state would be guessing at what has not happened yet.",
-      "title": "Notes"
+      "item5": "The request leaves as an intent — start or stop —, not as a new state. Between asking to start and actually capturing there is a permission that may take time or be refused, and a component that announced the next state would be guessing at what has not happened yet."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the control itself does not instrument dictation, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -866,7 +841,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -970,7 +944,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "idle": "En reposo",
         "recording": "Captando",
@@ -979,7 +952,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El control vive al inicio del riel, junto a lo que se agrega al mensaje — y no junto a quien lo envía.",
       "item2": "El alternador es UN botón que cambia de estado, y no dos que se intercambian: un botón que desaparece se lleva el foco consigo.",
@@ -991,7 +963,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo al inicio del riel, para escribir el mensaje hablando en vez de tecleando.",
@@ -1082,7 +1053,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El estado llega en palabra, al lado del medidor.",
         "dont": "Solo el medidor separa una captura en pie de una parada, y el dibujo no llega a quien escucha la pantalla."
@@ -1093,7 +1063,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposerVoice } from '@/components/ui/composer-voice';\n\nconst voz = createComposerVoice({\n  labels: rotulos,\n  state: estado,\n  onToggle: (intent) => (intent === 'start' ? comecar() : parar()),\n});\n\ncreateComposer({ labels, railStart: [voz] });",
@@ -1108,7 +1077,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1136,7 +1104,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1214,7 +1181,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1266,7 +1232,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Un solo alternador, con estado de presionado; el medidor es dibujo y el estado es palabra; el tiempo transcurrido queda fuera de lo que se anuncia.",
       "items": {
         "item1": "El alternador es un solo botón que cambia de estado y de nombre — dos botones que se intercambian se llevarían el foco al desaparecer.",
@@ -1295,7 +1260,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -1320,11 +1284,9 @@
       "item2": "Captando y transcribiendo son estados separados porque solo el primero se interrumpe: cuando empieza la transcripción, la captura ya terminó, y pulsar de nuevo no devuelve el audio. Se parecen en la pantalla y son opuestos — ese es el criterio que hace existir a un estado.",
       "item3": "El medidor es decorativo y el estado es texto. Es la misma decisión del contador de caracteres y del reloj del reproductor de medios, y por el mismo motivo: un número que cambia en cada cuadro, si se anuncia, vuelve la pantalla imposible de escuchar. Quien escucha recibe la palabra, que es lo que decide qué hacer.",
       "item4": "El tiempo transcurrido llega ya escrito, y no como número de segundos. El formato de duración es cosa del idioma, y un componente que lo formateara estaría decidiendo idioma en cinco lugares distintos — el mismo motivo que mantiene el habla de los ejemplos fuera de la traducción.",
-      "item5": "La petición sale como intención — empezar o parar —, y no como estado nuevo. Entre pedir empezar y estar captando hay un permiso que puede tardar o ser negado, y un componente que anunciara el estado siguiente estaría adivinando lo que aún no ocurrió.",
-      "title": "Notas"
+      "item5": "La petición sale como intención — empezar o parar —, y no como estado nuevo. Entre pedir empezar y estar captando hay un permiso que puede tardar o ser negado, y un componente que anunciara el estado siguiente estaría adivinando lo que aún no ocurrió."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; el control en sí no instrumenta el dictado, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1342,7 +1304,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

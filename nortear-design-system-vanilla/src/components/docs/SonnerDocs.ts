@@ -336,14 +336,12 @@ export function createSonnerDocs(): HTMLElement {
         ];
 
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => createDemoToastArea(demoConfigs),
         });
       }
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -351,7 +349,6 @@ export function createSonnerDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -396,7 +393,6 @@ export function createSonnerDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel:    tNav('common.do'),
@@ -439,7 +435,6 @@ export function createSonnerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { toast, injectToastStyles, createSonnerToaster } from '@/components/ui/sonner';\n\n// Setup (uma vez no root da aplicação)\ninjectToastStyles();\ndocument.body.appendChild(\n  createSonnerToaster({ position: 'top-right', richColors: true })\n);\n\n// Disparar toasts\ntoast('Código copiado.');\ntoast.success('Alterações salvas.');\ntoast.error('Não foi possível salvar.');\ntoast.promise(asyncFn(), {\n  loading: 'Enviando arquivo...',\n  success: 'Arquivo enviado com sucesso.',\n  error: 'Erro ao enviar. Tente novamente.',\n});`,
         });
 
@@ -469,7 +464,6 @@ export function createSonnerDocs(): HTMLElement {
         };
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: toastTypes.map(({ type, descKey }) => ({
             name: type,
             description: stripHtml(t(descKey)),
@@ -496,7 +490,6 @@ export function createSonnerDocs(): HTMLElement {
         ];
 
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state:    t('states.cols.state'),
             trigger:  t('states.cols.trigger'),
@@ -549,7 +542,6 @@ export interface ToastOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.toasterTitle'),
@@ -589,7 +581,6 @@ export interface ToastOptions {
 }`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token:       t('tokens.table.token'),
             value:       t('tokens.table.value'),
@@ -610,7 +601,6 @@ export interface ToastOptions {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`accessibility.item${i}`))),
           keyboardTitle: t('accessibility.keyboardTitle'),
@@ -624,7 +614,6 @@ export interface ToastOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Alert',       description: toPlainText(t('related.alert')),       path: '?path=/docs/components-feedback-alert--docs'       },
             { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
@@ -635,7 +624,6 @@ export interface ToastOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4, 5].map(i => ({
             title:   '',
             content: DOMPurify.sanitize(t(`notes.item${i}`)),
@@ -644,7 +632,6 @@ export interface ToastOptions {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -660,7 +647,6 @@ export interface ToastOptions {
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

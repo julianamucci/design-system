@@ -271,7 +271,6 @@ export function createSelectDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack nds-w-sm';
@@ -361,7 +360,6 @@ export function createSelectDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -376,7 +374,6 @@ export function createSelectDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -490,7 +487,6 @@ export function createSelectDocs(): HTMLElement {
           });
 
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -514,7 +510,6 @@ export function createSelectDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: 'Importação da fábrica:',
           code: `import { createSelect, type SelectOptions, type SelectItem } from '@/components/ui/select';`,
           secondaryDescription: 'Uso básico:',
@@ -543,7 +538,6 @@ campo.destroy();`,
       case 'variantes': {
         return createDocsVariants({
           id: 'variantes',
-          title: t('variants.title'),
           componentSlug: 'select',
           items: [
             {
@@ -618,7 +612,6 @@ campo.destroy();`,
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'select',
           items: [
@@ -716,7 +709,6 @@ form.addEventListener('submit', (e) => {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -772,7 +764,6 @@ export type SelectOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createSelect(options)',
@@ -804,7 +795,6 @@ export type SelectOptions = {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -829,7 +819,6 @@ export type SelectOptions = {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
             t('accessibility.items.item1'),
@@ -854,7 +843,6 @@ export type SelectOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.combobox.name'),     description: stripHtml(t('related.items.combobox.description')),     path: '?path=/docs/components-form-combobox--docs'     },
             { name: t('related.items.radioGroup.name'),   description: stripHtml(t('related.items.radioGroup.description')),   path: '?path=/docs/components-form-radiogroup--docs'   },
@@ -865,7 +853,6 @@ export type SelectOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2') + ' A raiz aceita <code>destroy()</code>, e ele também dispara sozinho quando a raiz sai do documento — sem isso o painel em portal sobreviveria por cima da tela seguinte, junto com o ouvinte de clique-fora.') },
@@ -876,7 +863,6 @@ export type SelectOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -891,7 +877,6 @@ export type SelectOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

@@ -29,6 +29,7 @@ import { mountDocsTracking } from '@/lib/docs-tracking';
 import { DOCS_PAGE_TITLE_ID } from './shared/sections/DocsHeader';
 import { NdsLucideGlyph } from './shared/LucideGlyph';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 import { CATALOGO_LUCIDE, ICON_NAMES } from '@shared/primitives/lucide-catalog';
 
 /**
@@ -48,6 +49,7 @@ import { CATALOGO_LUCIDE, ICON_NAMES } from '@shared/primitives/lucide-catalog';
  * Vanilla é a referência de markup.
  */
 const { t } = useTranslation(iconsTranslations as Record<string, unknown>);
+const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 
 /** Nome + geometria de cada ícone, na ordem em que o pacote os expõe. */
 interface CatalogoIcon {
@@ -180,7 +182,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
 
         <!-- ── Acessibilidade ────────────────────────────────────────────── -->
         <section class="nds-stack nds-docs-section-divider" data-spacing="md">
-          <h2 class="nds-text-h2 nds-text-foreground">{{ t('accessibility.title') }}</h2>
+          <h2 class="nds-text-h2 nds-text-foreground">{{ tNav('nav.accessibility') }}</h2>
           <div class="nds-grid" data-spacing="sm" data-cols="2">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-body nds-font-medium">{{ t('accessibility.decorative.title') }}</p>

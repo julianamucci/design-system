@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import DOMPurify from 'dompurify';
 
@@ -7,7 +8,6 @@ export interface DocsNoteItem {
 }
 
 export interface DocsNotesProps {
-  title: string;
   items: DocsNoteItem[];
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, cada
@@ -20,7 +20,8 @@ export interface DocsNotesProps {
   componentSlug?: string;
 }
 
-export function DocsNotes({ title, items, componentSlug }: DocsNotesProps) {
+export function DocsNotes({ items, componentSlug }: DocsNotesProps) {
+  const title = useTituloDeSecao('notas');
   return (
     <section id="notas">
       <h2 className="nds-section-title">{title}</h2>

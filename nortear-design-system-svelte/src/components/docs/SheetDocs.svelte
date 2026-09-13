@@ -458,7 +458,7 @@ interface TriggerProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <!--
       UM gatilho só. Os quatro `side` viviam aqui e repetiam integralmente a
       seção Variantes logo abaixo — quem lê via o mesmo exemplo duas vezes.
@@ -495,7 +495,6 @@ interface TriggerProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -513,7 +512,6 @@ interface TriggerProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -576,7 +574,6 @@ interface TriggerProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -700,14 +697,12 @@ interface TriggerProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { trackId: 'right',  name: $tStore('variants.items.right'),  description: stripHtml($tStore('variants.styles.right')),  code: codeSide('right',  $tStore('demonstration.labels.rightLabel'),  $tStore), preview: variantRight  },
       { trackId: 'left',   name: $tStore('variants.items.left'),   description: stripHtml($tStore('variants.styles.left')),   code: codeSide('left',   $tStore('demonstration.labels.leftLabel'),   $tStore), preview: variantLeft   },
@@ -823,7 +818,6 @@ interface TriggerProps {
 
   <!-- ── Composições ──────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="sheet"
     items={[
@@ -1019,7 +1013,6 @@ interface TriggerProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -1036,7 +1029,6 @@ interface TriggerProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: propsTableCols,
@@ -1057,7 +1049,6 @@ interface TriggerProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -1081,7 +1072,6 @@ interface TriggerProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       stripHtml($tStore('accessibility.items.item1')),
@@ -1104,7 +1094,6 @@ interface TriggerProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.drawer.name'),      description: $tStore('related.items.drawer.description'),      path: '?path=/docs/components-overlay-drawer--docs'      },
       { name: $tStore('related.items.dialog.name'),      description: $tStore('related.items.dialog.description'),      path: '?path=/docs/components-overlay-dialog--docs'      },
@@ -1115,7 +1104,6 @@ interface TriggerProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: stripHtml($tStore('notes.item1')) },
       { title: '', content: stripHtml($tStore('notes.item2')) },
@@ -1126,7 +1114,6 @@ interface TriggerProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -1141,7 +1128,6 @@ interface TriggerProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

@@ -13,7 +13,6 @@
       "unsafeSource": "Endereço recusado"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "inSentence": "Dentro de uma frase",
         "open": "Com a prévia aberta",
@@ -22,7 +21,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A raiz fica em linha e não abre caixa própria no parágrafo: o que se vê é a marca, e o texto continua correndo em volta dela.",
       "item2": "A marca é um botão que se expande. O número é o texto que se vê; o nome acessível traz a palavra, o número e o título da fonte.",
@@ -34,7 +32,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando uma afirmação específica dentro de uma frase precisa dizer em que se apoia. Para as fontes do turno inteiro, a lista da conversa responde melhor.",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O nome acessível traz a palavra, o número e o título — quem ouve sabe de que fonte se trata antes de abrir.",
         "dont": "O nome acessível é o número. Quem vê tem o texto em volta para se orientar; quem ouve recebe um botão chamado um."
@@ -137,7 +133,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\nconst marca = createInlineCitation({ citation, index: 1, labels: labels });\n\n// SEM ESPAÇO ANTES: assim a marca não se separa da palavra na quebra de linha.\nfrase.append('A receita cresceu doze por cento', marca, '.');",
@@ -152,7 +147,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -180,7 +174,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -283,7 +276,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customização",
       "customizationCode": {
         "web": "/* A marca lê a superfície apagada do tema. Para destacá-la mais, troque o par\n   de cores — nunca a altura, que é resultado do respiro e da entrelinha. */\n.nds-inline-citation-marker {\n  background-color: hsl(var(--accent) / 0.2);\n}\n\n/* A prévia herda a superfície flutuante compartilhada; o que é só dela é o\n   espaço entre as linhas. */\n.nds-inline-citation-panel {\n  gap: var(--spacing-3);\n}"
@@ -355,7 +347,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A marca é um botão que se expande, e não um gatilho de diálogo: quem ouve recebe o nome da fonte e o estado da prévia. O clique abre, e é ele que faz a peça existir em toque, no teclado e no ponteiro ao mesmo tempo.",
       "items": {
         "item1": "A marca é um botão que se expande, e a prévia é o conteúdo que ele controla. Não é diálogo, e por isso não precisa de nome próprio — um diálogo chamado um não diz nada.",
@@ -388,7 +379,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chatThread": {
           "name": "Conversa",
@@ -409,7 +399,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A peça é a marca, e não o parágrafo. Quem escreve a frase decide onde cada afirmação precisa de apoio, e o design system não fica dono do texto da resposta.",
       "item2": "O trecho mora na citação, e não na fonte. A mesma fonte apoia afirmações diferentes com trechos diferentes, e guardá-lo dentro dela faria o documento aparecer três vezes na lista de fontes.",
       "item3": "A numeração é conteúdo e chega de fora. Uma marca que se numerasse sozinha precisaria conhecer as irmãs, e marcas irmãs podem nem estar no mesmo parágrafo.",
@@ -422,7 +411,6 @@
       "item10": "A exclusão mútua entre prévias é de quem monta a página. A peça não conhece as vizinhas, e é isso que permite que duas marcas da mesma frase venham de lugares diferentes da resposta."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a marca em si não instrumenta nada, porque abrir uma prévia é leitura e não conversão.",
       "table": {
         "event": "Evento",
@@ -440,7 +428,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -541,7 +528,6 @@
       "unsafeSource": "Address refused"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "inSentence": "Inside a sentence",
         "open": "With the preview open",
@@ -550,7 +536,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The root stays inline and opens no box of its own in the paragraph: what you see is the marker, and the text keeps running around it.",
       "item2": "The marker is a button that expands. The number is the visible text; the accessible name carries the word, the number and the source title.",
@@ -562,7 +547,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when a specific claim inside a sentence has to say what it rests on. For the sources of a whole turn, the conversation's list answers better.",
@@ -654,7 +638,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The accessible name carries the word, the number and the title — whoever listens knows which source it is before opening it.",
         "dont": "The accessible name is the number. Whoever sees it has the surrounding text to go by; whoever listens gets a button called one."
@@ -665,7 +648,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\nconst marca = createInlineCitation({ citation, index: 1, labels: labels });\n\n// NO SPACE BEFORE IT: this is how the marker stays with the word on a line break.\nfrase.append('Revenue grew twelve percent', marca, '.');",
@@ -680,7 +662,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -708,7 +689,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -811,7 +791,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customization",
       "customizationCode": {
         "web": "/* The marker reads the theme's muted surface. To make it stand out more, swap\n   the colour pair — never the height, which is a result of padding and leading. */\n.nds-inline-citation-marker {\n  background-color: hsl(var(--accent) / 0.2);\n}\n\n/* The preview inherits the shared floating surface; what belongs to it alone is\n   the space between its lines. */\n.nds-inline-citation-panel {\n  gap: var(--spacing-3);\n}"
@@ -883,7 +862,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The marker is a button that expands, not a dialog trigger: whoever listens gets the source's name and the preview's state. The click opens it, and that is what makes the piece exist on touch, on the keyboard and on the pointer at once.",
       "items": {
         "item1": "The marker is a button that expands, and the preview is the content it controls. It is not a dialog, so it needs no name of its own — a dialog called one says nothing.",
@@ -916,7 +894,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "chatThread": {
           "name": "Conversation",
@@ -937,7 +914,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The piece is the marker, not the paragraph. Whoever writes the sentence decides where each claim needs backing, and the design system does not own the text of the answer.",
       "item2": "The excerpt lives in the citation, not in the source. The same source backs different claims with different excerpts, and keeping it inside the source would make the document appear three times in the source list.",
       "item3": "The numbering is content and arrives from outside. A marker that numbered itself would have to know its siblings, and sibling markers may not even share a paragraph.",
@@ -950,7 +926,6 @@
       "item10": "Mutual exclusion between previews belongs to whoever builds the page. The piece does not know its neighbours, and that is what lets two markers in the same sentence come from different places in the answer."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the marker itself instruments nothing, because opening a preview is reading and not conversion.",
       "table": {
         "event": "Event",
@@ -968,7 +943,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1069,7 +1043,6 @@
       "unsafeSource": "Dirección rechazada"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "inSentence": "Dentro de una frase",
         "open": "Con la vista previa abierta",
@@ -1078,7 +1051,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La raíz permanece en línea y no abre una caja propia en el párrafo: lo que se ve es la marca, y el texto sigue corriendo a su alrededor.",
       "item2": "La marca es un botón que se expande. El número es el texto visible; el nombre accesible lleva la palabra, el número y el título de la fuente.",
@@ -1090,7 +1062,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala cuando una afirmación concreta dentro de una frase necesita decir en qué se apoya. Para las fuentes de todo un turno, la lista de la conversación responde mejor.",
@@ -1182,7 +1153,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El nombre accesible lleva la palabra, el número y el título — quien escucha sabe de qué fuente se trata antes de abrirla.",
         "dont": "El nombre accesible es el número. Quien ve tiene el texto alrededor para orientarse; quien escucha recibe un botón llamado uno."
@@ -1193,7 +1163,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createInlineCitation } from '@/components/ui/inline-citation';\n\nconst marca = createInlineCitation({ citation, index: 1, labels: labels });\n\n// SIN ESPACIO ANTES: así la marca no se separa de la palabra al cortarse la línea.\nfrase.append('Los ingresos crecieron doce por ciento', marca, '.');",
@@ -1208,7 +1177,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1236,7 +1204,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1339,7 +1306,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Personalización",
       "customizationCode": {
         "web": "/* La marca lee la superficie apagada del tema. Para destacarla más, cambia el\n   par de colores — nunca la altura, que es resultado del respiro y el interlineado. */\n.nds-inline-citation-marker {\n  background-color: hsl(var(--accent) / 0.2);\n}\n\n/* La vista previa hereda la superficie flotante compartida; lo que es solo suyo\n   es el espacio entre sus líneas. */\n.nds-inline-citation-panel {\n  gap: var(--spacing-3);\n}"
@@ -1411,7 +1377,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La marca es un botón que se expande, y no un disparador de diálogo: quien escucha recibe el nombre de la fuente y el estado de la vista previa. El clic la abre, y eso es lo que hace que la pieza exista a la vez en pantalla táctil, con el teclado y con el puntero.",
       "items": {
         "item1": "La marca es un botón que se expande, y la vista previa es el contenido que controla. No es un diálogo, y por eso no necesita nombre propio — un diálogo llamado uno no dice nada.",
@@ -1444,7 +1409,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chatThread": {
           "name": "Conversación",
@@ -1465,7 +1429,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La pieza es la marca, y no el párrafo. Quien escribe la frase decide dónde cada afirmación necesita apoyo, y el design system no se queda como dueño del texto de la respuesta.",
       "item2": "El fragmento vive en la cita, y no en la fuente. La misma fuente respalda afirmaciones distintas con fragmentos distintos, y guardarlo dentro de ella haría que el documento apareciera tres veces en la lista de fuentes.",
       "item3": "La numeración es contenido y llega de fuera. Una marca que se numerara sola tendría que conocer a sus hermanas, y las marcas hermanas pueden ni siquiera estar en el mismo párrafo.",
@@ -1478,7 +1441,6 @@
       "item10": "La exclusión mutua entre vistas previas es de quien monta la página. La pieza no conoce a sus vecinas, y eso es lo que permite que dos marcas de la misma frase vengan de lugares distintos de la respuesta."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la marca en sí no instrumenta nada, porque abrir una vista previa es lectura y no conversión.",
       "table": {
         "event": "Evento",
@@ -1496,7 +1458,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

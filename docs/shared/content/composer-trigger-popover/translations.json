@@ -14,7 +14,6 @@
       "team": "Produto"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "mentions": "Menção, em começo de palavra",
         "commands": "Comando, só no começo do campo",
@@ -23,7 +22,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O campo aponta a lista só enquanto ela existe para ele — fora disso é um campo de texto comum, sem atributo sobrando.",
       "item2": "O foco nunca sai do campo. Quem escreve continua escrevendo enquanto escolhe, e a opção ativa é apontada, não focada.",
@@ -35,7 +33,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para escolher algo que continua sendo texto: quem se menciona, que comando se executa.",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Com a lista aberta, a tecla de envio escolhe a opção.",
         "dont": "Enviar no meio de uma menção manda a mensagem pela metade, e é o primeiro defeito que quem escreve encontra."
@@ -137,7 +133,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Menções",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\nimport { MENTION_TRIGGER } from '@shared/primitives/composer-trigger';\n\ncreateComposer({\n  labels,\n  triggerLabels,\n  triggers: [{ spec: MENTION_TRIGGER, options: pessoas }],\n});",
@@ -152,8 +147,6 @@
       }
     },
     "variants": {
-      "title": "Onde o gatilho vale",
-      "visualTitle": "Exemplos visuais",
       "note": "O painel é o mesmo; o que muda é onde o caractere abre a lista. Menção vale em começo de qualquer palavra; comando vale só na primeira posição do campo, porque no meio da frase aquele caractere é pontuação.",
       "items": {
         "mention": {
@@ -171,7 +164,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -199,7 +191,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -263,7 +254,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -320,7 +310,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O foco continua no campo do começo ao fim: o campo aponta a lista, a opção ativa se anuncia, e nada precisa receber foco.",
       "items": {
         "item1": "O campo aponta a lista só enquanto ela existe. Ele não muda de papel: a especificação de ARIA em HTML não admite caixa de combinação num campo de várias linhas.",
@@ -349,7 +338,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -370,7 +358,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O painel é ancorado no campo, e não no pixel do cursor. Ancorar no cursor exige espelhar o campo num elemento invisível e medir onde o caractere caiu — e esse espelho quebra com o zoom, com a fonte aumentada e entre navegadores.",
       "item2": "A escolha por ponteiro acontece ao apertar o botão, e não ao soltá-lo: soltar tiraria o foco do campo antes, e a escolha aconteceria com o cursor já perdido.",
       "item3": "A lista circula: quem está na última opção e desce volta à primeira. Uma lista que para no fim obriga a subir de volta contando.",
@@ -378,7 +365,6 @@
       "item5": "O seletor também relê o campo ao clicar e ao andar com as setas: essas ações movem o cursor sem digitar nada, e o gatilho depende de onde o cursor está."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; o seletor em si não instrumenta a escolha, que é do produto.",
       "table": {
         "event": "Evento",
@@ -396,7 +382,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -506,7 +491,6 @@
       "team": "Product"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "mentions": "Mention, at the start of a word",
         "commands": "Command, only at the start of the field",
@@ -515,7 +499,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The field points at the list only while it exists for it — otherwise it is an ordinary text field, with no attribute left over.",
       "item2": "Focus never leaves the field. Whoever is writing keeps writing while choosing, and the active option is pointed at, not focused.",
@@ -527,7 +510,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to pick something that stays text: who is mentioned, which command runs.",
@@ -618,7 +600,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "With the list open, the submit key picks the option.",
         "dont": "Sending mid-mention sends half a message, and it is the first defect whoever writes runs into."
@@ -629,7 +610,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Mentions",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\nimport { MENTION_TRIGGER } from '@shared/primitives/composer-trigger';\n\ncreateComposer({\n  labels,\n  triggerLabels,\n  triggers: [{ spec: MENTION_TRIGGER, options: pessoas }],\n});",
@@ -644,8 +624,6 @@
       }
     },
     "variants": {
-      "title": "Where the trigger is valid",
-      "visualTitle": "Visual examples",
       "note": "The panel is the same; what changes is where the character opens the list. A mention is valid at the start of any word; a command only at the first position of the field, because mid-sentence that character is punctuation.",
       "items": {
         "mention": {
@@ -663,7 +641,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -691,7 +668,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -755,7 +731,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -812,7 +787,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Focus stays in the field from start to end: the field points at the list, the active option announces itself, and nothing needs to receive focus.",
       "items": {
         "item1": "The field points at the list only while it exists. It does not change role: the ARIA in HTML specification does not allow a combo box on a multiline field.",
@@ -841,7 +815,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "composer": {
           "name": "Composer",
@@ -862,7 +835,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The panel is anchored to the field, not to the cursor pixel. Anchoring to the cursor requires mirroring the field in an invisible element and measuring where the character landed — and that mirror breaks with zoom, with enlarged fonts and across browsers.",
       "item2": "Pointer choice happens on button press, not on release: releasing would take focus from the field first, and the choice would happen with the cursor already lost.",
       "item3": "The list wraps: whoever is on the last option and moves down returns to the first. A list that stops at the end forces counting back up.",
@@ -870,7 +842,6 @@
       "item5": "The picker also re-reads the field on click and on arrow movement: those actions move the cursor without typing anything, and the trigger depends on where the cursor is."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the picker itself does not instrument the choice, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -888,7 +859,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -998,7 +968,6 @@
       "team": "Producto"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "mentions": "Mención, al inicio de una palabra",
         "commands": "Comando, solo al inicio del campo",
@@ -1007,7 +976,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El campo señala la lista solo mientras ella existe para él — fuera de eso es un campo de texto común, sin atributo sobrante.",
       "item2": "El foco nunca sale del campo. Quien escribe sigue escribiendo mientras elige, y la opción activa se señala, no se enfoca.",
@@ -1019,7 +987,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para elegir algo que sigue siendo texto: a quién se menciona, qué comando se ejecuta.",
@@ -1110,7 +1077,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Con la lista abierta, la tecla de envío elige la opción.",
         "dont": "Enviar a mitad de una mención manda medio mensaje, y es el primer defecto que encuentra quien escribe."
@@ -1121,7 +1087,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Menciones",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\nimport { MENTION_TRIGGER } from '@shared/primitives/composer-trigger';\n\ncreateComposer({\n  labels,\n  triggerLabels,\n  triggers: [{ spec: MENTION_TRIGGER, options: pessoas }],\n});",
@@ -1136,8 +1101,6 @@
       }
     },
     "variants": {
-      "title": "Dónde vale el disparador",
-      "visualTitle": "Ejemplos visuales",
       "note": "El panel es el mismo; lo que cambia es dónde el carácter abre la lista. La mención vale al inicio de cualquier palabra; el comando solo en la primera posición del campo, porque a mitad de frase ese carácter es puntuación.",
       "items": {
         "mention": {
@@ -1155,7 +1118,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1183,7 +1145,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1247,7 +1208,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1304,7 +1264,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El foco sigue en el campo de principio a fin: el campo señala la lista, la opción activa se anuncia, y nada necesita recibir el foco.",
       "items": {
         "item1": "El campo señala la lista solo mientras ella existe. No cambia de rol: la especificación de ARIA en HTML no admite una caja de combinación en un campo de varias líneas.",
@@ -1333,7 +1292,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -1354,7 +1312,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El panel se ancla al campo, no al píxel del cursor. Anclar al cursor exige espejar el campo en un elemento invisible y medir dónde cayó el carácter — y ese espejo se rompe con el zoom, con la fuente aumentada y entre navegadores.",
       "item2": "La elección por puntero ocurre al presionar el botón, no al soltarlo: soltar quitaría el foco del campo antes, y la elección ocurriría con el cursor ya perdido.",
       "item3": "La lista da la vuelta: quien está en la última opción y baja vuelve a la primera. Una lista que se detiene al final obliga a subir contando.",
@@ -1362,7 +1319,6 @@
       "item5": "El selector también relee el campo al hacer clic y al moverse con las flechas: esas acciones mueven el cursor sin escribir nada, y el disparador depende de dónde está el cursor."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; el selector en sí no instrumenta la elección, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1380,7 +1336,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

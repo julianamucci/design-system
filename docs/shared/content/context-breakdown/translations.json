@@ -19,7 +19,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "typical": "Uma conversa já andada",
         "sliver": "Quando uma parcela vale quase nada",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O título abre o bloco e diz o que está sendo repartido; o total ao lado dele é o denominador de tudo o que vem abaixo.",
       "item2": "A barra vem depois e é só desenho — ela não carrega os números, não tem papel de controle e fica fora do que é lido em voz.",
@@ -40,7 +38,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para responder de onde veio o contexto já gasto, quando saber a procedência muda o que a pessoa faz a seguir.",
@@ -125,7 +122,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "As parcelas saem na ordem em que foram medidas, e a mesma origem fica sempre na mesma linha.",
         "dont": "As parcelas saem ordenadas por tamanho, e a legenda troca de linha a cada turno — duas fotos diferentes parecem a mesma."
@@ -136,7 +132,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: labels,\n});",
@@ -151,7 +146,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -179,7 +173,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -229,7 +222,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customização",
       "customizationCode": {
         "web": ".nds-context-breakdown {\n  max-inline-size: 24rem;\n}\n\n/* A cor é REFORÇO, e não a pista: o nome e o número de cada parcela estão em\n   texto na legenda. Trocar a paleta não muda o que chega a quem ouve. */\n.nds-context-breakdown-slice:nth-child(8n + 1),\n.nds-context-breakdown-part:nth-child(8n + 1) {\n  --nds-context-slice-color: var(--chart-5);\n}"
@@ -326,7 +318,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Os números são texto e a barra é desenho: nada aqui se anuncia, cada parcela chega com nome e número, e a legenda é uma lista de verdade.",
       "items": {
         "item1": "Cada parcela tem nome e número em texto: a cor da fatia é reforço, e nunca a única pista.",
@@ -353,7 +344,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "contextDisplay": {
           "name": "Uso do contexto",
@@ -374,7 +364,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A repartição divide pelo total repartido, e nunca por um teto. \"De onde veio\" e \"quanto cabe\" são duas perguntas, e esta se responde sem saber quanto cabe — é o que separa esta peça da vizinha.",
       "item2": "A ordem é a de quem mediu, e nunca a do tamanho. A legenda se lê por posição, e uma parcela que sobe de lugar entre um turno e o seguinte faz comparar duas fotos diferentes achando que é a mesma.",
       "item3": "A parcela zerada continua na lista. Fatia e legenda se emparelham por posição para dividirem a cor; sumir com a zerada faria a cor apontar para a fatia da vizinha — e continuaria parecendo certa.",
@@ -384,7 +373,6 @@
       "item7": "A paleta tem oito matizes e recomeça depois deles. Repetir cor é seguro porque o nome e o número de cada parcela são texto; quem chega a nove origens tem um problema de agrupamento, e a repetição é o sinal disso."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a repartição em si não instrumenta nada, porque não há interação nela.",
       "table": {
         "event": "Evento",
@@ -402,7 +390,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -510,7 +497,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "typical": "A conversation already under way",
         "sliver": "When one share is worth almost nothing",
@@ -519,7 +505,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The title opens the block and says what is being divided; the total beside it is the denominator of everything below.",
       "item2": "The bar comes next and is only drawing — it carries no numbers, has no control role and stays out of what is read aloud.",
@@ -531,7 +516,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to answer where the context already spent came from, when knowing the provenance changes what the person does next.",
@@ -616,7 +600,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The shares come out in the order they were measured, and the same source always stays on the same row.",
         "dont": "The shares come out sorted by size, and the legend changes rows every turn — two different pictures look like the same one."
@@ -627,7 +610,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: labels,\n});",
@@ -642,7 +624,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -670,7 +651,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -720,7 +700,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customisation",
       "customizationCode": {
         "web": ".nds-context-breakdown {\n  max-inline-size: 24rem;\n}\n\n/* A cor é REFORÇO, e não a pista: o nome e o número de cada parcela estão em\n   texto na legenda. Trocar a paleta não muda o que chega a quem ouve. */\n.nds-context-breakdown-slice:nth-child(8n + 1),\n.nds-context-breakdown-part:nth-child(8n + 1) {\n  --nds-context-slice-color: var(--chart-5);\n}"
@@ -817,7 +796,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The numbers are text and the bar is drawing: nothing here announces itself, every share arrives with a name and a number, and the legend is a real list.",
       "items": {
         "item1": "Every share has a name and a number in text: the slice colour is reinforcement, never the only cue.",
@@ -844,7 +822,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "contextDisplay": {
           "name": "Context display",
@@ -865,7 +842,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The breakdown divides by the total divided, never by a ceiling. \"Where it came from\" and \"how much fits\" are two questions, and this one is answered without knowing how much fits — that is what separates this piece from its neighbour.",
       "item2": "The order is the one of whoever measured, never the one of size. The legend is read by position, and a share that moves up a row between one turn and the next makes two different pictures look like the same one.",
       "item3": "The zeroed share stays on the list. Slice and legend pair up by position to share the colour; removing the zeroed one would make the colour point at the neighbouring slice — and it would keep looking right.",
@@ -875,7 +851,6 @@
       "item7": "The palette has eight hues and starts over after them. Repeating a colour is safe because the name and the number of each share are text; whoever reaches nine sources has a grouping problem, and the repetition is the sign of it."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the breakdown itself instruments nothing, because there is no interaction in it.",
       "table": {
         "event": "Event",
@@ -893,7 +868,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1001,7 +975,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "typical": "Una conversación ya avanzada",
         "sliver": "Cuando una parte vale casi nada",
@@ -1010,7 +983,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El título abre el bloque y dice qué se está repartiendo; el total a su lado es el denominador de todo lo que viene abajo.",
       "item2": "La barra viene después y es solo dibujo — no lleva los números, no tiene papel de control y queda fuera de lo que se lee en voz.",
@@ -1022,7 +994,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para responder de dónde vino el contexto ya gastado, cuando saber la procedencia cambia lo que la persona hace después.",
@@ -1107,7 +1078,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Las partes salen en el orden en que se midieron, y el mismo origen queda siempre en la misma fila.",
         "dont": "Las partes salen ordenadas por tamaño, y la leyenda cambia de fila en cada turno — dos fotos distintas parecen la misma."
@@ -1118,7 +1088,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createContextBreakdown } from '@/components/ui/context-breakdown';\n\ncreateContextBreakdown({\n  parts: parcelas,\n  labels: labels,\n});",
@@ -1133,7 +1102,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1161,7 +1129,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1211,7 +1178,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Personalización",
       "customizationCode": {
         "web": ".nds-context-breakdown {\n  max-inline-size: 24rem;\n}\n\n/* A cor é REFORÇO, e não a pista: o nome e o número de cada parcela estão em\n   texto na legenda. Trocar a paleta não muda o que chega a quem ouve. */\n.nds-context-breakdown-slice:nth-child(8n + 1),\n.nds-context-breakdown-part:nth-child(8n + 1) {\n  --nds-context-slice-color: var(--chart-5);\n}"
@@ -1308,7 +1274,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Los números son texto y la barra es dibujo: nada aquí se anuncia, cada parte llega con nombre y número, y la leyenda es una lista de verdad.",
       "items": {
         "item1": "Cada parte tiene nombre y número en texto: el color de la porción es refuerzo, y nunca la única pista.",
@@ -1335,7 +1300,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "contextDisplay": {
           "name": "Uso del contexto",
@@ -1356,7 +1320,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El reparto divide por el total repartido, y nunca por un techo. \"De dónde vino\" y \"cuánto cabe\" son dos preguntas, y esta se responde sin saber cuánto cabe — es lo que separa esta pieza de la vecina.",
       "item2": "El orden es el de quien midió, y nunca el del tamaño. La leyenda se lee por posición, y una parte que sube de fila entre un turno y el siguiente hace comparar dos fotos distintas creyendo que es la misma.",
       "item3": "La parte en cero sigue en la lista. Porción y leyenda se emparejan por posición para compartir el color; quitar la que quedó en cero haría que el color apuntara a la porción vecina — y seguiría pareciendo correcto.",
@@ -1366,7 +1329,6 @@
       "item7": "La paleta tiene ocho matices y recomienza tras ellos. Repetir color es seguro porque el nombre y el número de cada parte son texto; quien llega a nueve orígenes tiene un problema de agrupación, y la repetición es la señal de eso."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; el reparto en sí no instrumenta nada, porque no hay interacción en él.",
       "table": {
         "event": "Evento",
@@ -1384,7 +1346,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

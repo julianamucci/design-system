@@ -11,7 +11,6 @@
       "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, placeholder de carregamento, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "card": "Card de perfil — avatar + 2 linhas",
         "list": "Lista — 5 ítens com avatar e texto",
@@ -20,7 +19,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Raiz</strong> — <code>div</code> com a classe base do esqueleto: fundo suave, cantos arredondados e pulso por opacidade.",
       "item2": "<strong>Forma e largura</strong> — <code>data-shape</code> escolhe a forma (linha de texto, título, avatar ou preenchimento) e <code>data-width</code> escolhe a fração da largura do container. A folha de estilo continua dona das medidas.",
       "item3": "<strong>Container</strong> — o wrapper externo recebe <code>role=\"status\"</code>, <code>aria-busy</code> e <code>aria-label</code>; o esqueleto recebe <code>aria-hidden</code>.",
@@ -34,7 +32,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use Skeleton quando o tempo de carregamento esperado é maior que 300ms e a estrutura final é conhecida.",
@@ -125,7 +122,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Esqueleto que imita a caixa do conteúdo final — título, linha cheia, linha curta.",
         "dont": "Bloco único genérico, que causa salto de layout quando o conteúdo chega."
@@ -135,11 +131,8 @@
         "dont": "Esqueleto solto, sem região que anuncie o carregamento — o leitor não sabe que algo está vindo."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "rectangle": "Retângulo",
         "circle": "Círculo",
@@ -152,7 +145,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Padrão",
         "trigger": "Enquanto o conteúdo carrega",
@@ -170,7 +162,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -224,7 +215,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -261,7 +251,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA — 2.3.3 (Animation from Interactions), porque o pulso é desligado sob movimento reduzido, e 4.1.2 (Name, Role, Value), porque a região que carrega tem papel e nome enquanto o placeholder fica fora da árvore de acessibilidade.",
       "items": {
         "item1": "Skeleton recebe <code>aria-hidden=\"true\"</code> — leitor de tela ignora o placeholder.",
@@ -289,7 +278,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "progress": {
           "name": "Progress",
@@ -306,7 +294,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Tempo mínimo</strong>: não exiba Skeleton para loading inferior a 300ms — flash visual atrapalha. Use <code>setTimeout</code> antes de mostrar.",
       "item2": "<strong>Layout shift</strong>: dimensões do Skeleton devem aproximar do conteúdo final. Erro comum é Skeleton menor que conteúdo, causando shift ao carregar.",
       "item3": "<strong>Aninhamento</strong>: 2–3 elementos por bloco bastam. Evite reconstruir toda a estrutura final — gera ruído visual.",
@@ -314,11 +301,9 @@
       "item5": "<strong>Container aria-busy</strong>: alternar para <code>false</code> ao terminar é o que dispara o anúncio de \"pronto\" pelo leitor de tela."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Skeleton é um componente passivo — não dispara eventos. Para rastrear tempo de carregamento, instrumente o callback que substitui o Skeleton pelo conteúdo real (ex: <code>track('list_loaded', { duration_ms })</code>)."
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada estado e variante.",
@@ -396,7 +381,6 @@
       "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, loading placeholder, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "card": "Profile card — avatar + 2 lines",
         "list": "List — 5 items with avatar and text",
@@ -405,7 +389,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Root</strong> — <code>div</code> with the skeleton base class: soft background, rounded corners, and an opacity pulse.",
       "item2": "<strong>Shape and width</strong> — <code>data-shape</code> picks the shape (text line, heading, avatar, or fill) and <code>data-width</code> picks the fraction of the container width. The stylesheet stays the owner of the measurements.",
       "item3": "<strong>Container</strong> — the outer wrapper holds <code>role=\"status\"</code>, <code>aria-busy</code>, and <code>aria-label</code>; the skeleton holds <code>aria-hidden</code>.",
@@ -419,7 +402,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
         "item1": "Use Skeleton when expected loading time exceeds 300ms and the final structure is known.",
@@ -510,7 +492,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Skeleton mirroring the final content box — heading, full line, short line.",
         "dont": "A single generic block, which makes the layout jump when the content arrives."
@@ -520,11 +501,8 @@
         "dont": "Loose skeleton, with no region announcing the load — the screen reader has no idea something is coming."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "rectangle": "Rectangle",
         "circle": "Circle",
@@ -537,7 +515,6 @@
       }
     },
     "states": {
-      "title": "States",
       "default": {
         "label": "Default",
         "trigger": "While the content loads",
@@ -555,7 +532,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -609,7 +585,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -646,7 +621,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA — 2.3.3 (Animation from Interactions), because the pulse is switched off under reduced motion, and 4.1.2 (Name, Role, Value), because the loading region has a role and a name while the placeholder stays out of the accessibility tree.",
       "items": {
         "item1": "Skeleton gets <code>aria-hidden=\"true\"</code> — screen reader ignores the placeholder.",
@@ -674,7 +648,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "progress": {
           "name": "Progress",
@@ -691,7 +664,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Minimum time</strong>: do not show Skeleton for loading shorter than 300ms — visual flash hurts. Use <code>setTimeout</code> before showing.",
       "item2": "<strong>Layout shift</strong>: Skeleton dimensions must approximate the final content. Common error is Skeleton smaller than content, shifting layout on load.",
       "item3": "<strong>Nesting</strong>: 2–3 elements per block is enough. Avoid rebuilding the full final structure — visual noise.",
@@ -699,11 +671,9 @@
       "item5": "<strong>Container aria-busy</strong>: switching to <code>false</code> on completion is what triggers the \"ready\" announcement by the screen reader."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Skeleton is a passive component — does not dispatch events. To track loading time, instrument the callback that replaces the Skeleton with real content (e.g., <code>track('list_loaded', { duration_ms })</code>)."
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in each state and variant.",
@@ -781,7 +751,6 @@
       "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, placeholder de carga, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "card": "Card de perfil — avatar + 2 líneas",
         "list": "Lista — 5 ítems con avatar y texto",
@@ -790,7 +759,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Raíz</strong> — <code>div</code> con la clase base del esqueleto: fondo suave, esquinas redondeadas y pulso por opacidad.",
       "item2": "<strong>Forma y ancho</strong> — <code>data-shape</code> elige la forma (línea de texto, título, avatar o relleno) y <code>data-width</code> elige la fracción del ancho del container. La hoja de estilo sigue siendo dueña de las medidas.",
       "item3": "<strong>Container</strong> — el wrapper externo recibe <code>role=\"status\"</code>, <code>aria-busy</code> y <code>aria-label</code>; el esqueleto recibe <code>aria-hidden</code>.",
@@ -804,7 +772,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa Skeleton cuando el tiempo de carga supere 300ms y la estructura final sea conocida.",
@@ -895,7 +862,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Esqueleto que imita la caja del contenido final — título, línea completa, línea corta.",
         "dont": "Un bloque genérico único, que provoca salto de layout cuando llega el contenido."
@@ -905,11 +871,8 @@
         "dont": "Esqueleto suelto, sin región que anuncie la carga — el lector no sabe que algo viene."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "rectangle": "Rectángulo",
         "circle": "Círculo",
@@ -922,7 +885,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Predeterminado",
         "trigger": "Mientras el contenido carga",
@@ -940,7 +902,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -994,7 +955,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1031,7 +991,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA — 2.3.3 (Animation from Interactions), porque el pulso se apaga bajo movimiento reducido, y 4.1.2 (Name, Role, Value), porque la región que carga tiene rol y nombre mientras el placeholder queda fuera del árbol de accesibilidad.",
       "items": {
         "item1": "Skeleton recibe <code>aria-hidden=\"true\"</code> — el lector de pantalla ignora el placeholder.",
@@ -1059,7 +1018,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "progress": {
           "name": "Progress",
@@ -1076,7 +1034,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Tiempo mínimo</strong>: no muestres Skeleton para loading menor a 300ms — el flash visual incomoda. Usa <code>setTimeout</code> antes de mostrar.",
       "item2": "<strong>Layout shift</strong>: las dimensiones del Skeleton deben aproximarse al contenido final. Error común es Skeleton menor que el contenido, causando shift al cargar.",
       "item3": "<strong>Anidamiento</strong>: 2–3 elementos por bloque bastan. Evita reconstruir toda la estructura final — genera ruido visual.",
@@ -1084,11 +1041,9 @@
       "item5": "<strong>Container aria-busy</strong>: cambiarlo a <code>false</code> al terminar es lo que dispara el anuncio de \"listo\" del lector de pantalla."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Skeleton es un componente pasivo — no dispara eventos. Para rastrear tiempo de carga, instrumenta el callback que reemplaza el Skeleton por el contenido real (ej.: <code>track('list_loaded', { duration_ms })</code>)."
     },
     "testes": {
-      "title": "Criterios de Test",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada estado y variante.",

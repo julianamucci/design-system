@@ -1,3 +1,4 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
@@ -15,7 +16,6 @@ export interface DocsStateItem { label: string; trigger: string; behavior: strin
  * três campos —, então a exceção não tem mais quem a use.
  */
 export interface DocsStatesProps {
-  title: string;
   cols: { state: string; trigger: string; behavior: string };
   items: DocsStateItem[];
 }
@@ -26,7 +26,7 @@ export function createDocsStates(props: DocsStatesProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('estados');
 
   const wrapper = createCard({ className: 'nds-p-4 nds-overflow-x' });
 

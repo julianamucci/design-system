@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { managerHref } from '@shared/primitives/manager-href';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 interface DocsRelatedItem { name: string; description: string; path: string }
 
@@ -11,10 +12,11 @@ interface DocsRelatedItem { name: string; description: string; path: string }
  * o rótulo do evento sai do fim do id, nunca do nome exibido. Se ausente, omite `data-track-id`.
  */
 const props = defineProps<{
-  title: string;
   items: DocsRelatedItem[];
   componentSlug?: string;
 }>();
+
+const title = useTituloDeSecao('relacionados');
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/\s+/g, '-');

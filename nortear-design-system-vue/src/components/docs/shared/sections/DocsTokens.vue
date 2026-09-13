@@ -2,6 +2,7 @@
 import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 interface DocsTokenItem { token: string; value: string; description: string }
 
@@ -17,7 +18,6 @@ interface DocsTokenItem { token: string; value: string; description: string }
  * contrato volta ao que as 66 páginas já praticam.
  */
 withDefaults(defineProps<{
-  title: string;
   cols: { token: string; value: string; description: string };
   items: DocsTokenItem[];
   customizationTitle?: string;
@@ -29,6 +29,8 @@ withDefaults(defineProps<{
 }>(), {
   language: 'css',
 });
+
+const title = useTituloDeSecao('tokens');
 </script>
 
 <template>

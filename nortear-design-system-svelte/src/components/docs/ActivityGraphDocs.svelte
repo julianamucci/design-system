@@ -309,7 +309,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="activity-graph"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -382,7 +381,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -391,7 +389,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -488,7 +485,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -511,7 +507,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -520,7 +515,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -535,7 +529,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'ActivityGraph',
@@ -602,7 +595,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -624,7 +616,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5, 6, 7, 8].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -639,7 +630,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.chart.name'),          description: toPlainText($tStore('related.items.chart.description')),          path: '?path=/docs/components-display-chart--docs'                 },
       { name: $tStore('related.items.calendar.name'),       description: toPlainText($tStore('related.items.calendar.description')),       path: '?path=/docs/components-form-calendar--docs'                 },
@@ -650,14 +640,12 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="activity-graph"
     items={[1, 2, 3, 4, 5, 6, 7, 8].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -672,7 +660,6 @@ type RunStatus = 'idle' | 'running' | 'stopped' | 'complete' | 'failed';`;
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

@@ -161,7 +161,6 @@ export function createComposerDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'composer',
           demoFactory: () => {
             const stack = document.createElement('div');
@@ -206,7 +205,6 @@ export function createComposerDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5].map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -215,7 +213,6 @@ export function createComposerDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -260,7 +257,6 @@ export function createComposerDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -309,7 +305,6 @@ export function createComposerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withRunning'),
@@ -318,7 +313,6 @@ export function createComposerDocs(): HTMLElement {
 
       case 'variantes':
         return createDocsVariants({
-          title: t('variants.title'),
           note: stripHtml(t('variants.note')),
           componentSlug: 'composer',
           items: (['enter', 'modifier'] as const).map(modo => ({
@@ -332,7 +326,6 @@ export function createComposerDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: t('states.cols.trigger'),
@@ -375,7 +368,6 @@ export interface ComposerOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createComposer',
@@ -401,7 +393,6 @@ export interface ComposerOptions {
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.value'),
@@ -422,7 +413,6 @@ export interface ComposerOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5].map(i => t(`accessibility.items.item${i}`)),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -437,7 +427,6 @@ export interface ComposerOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.chatThread.name'), description: toPlainText(t('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
             { name: t('related.items.textarea.name'),   description: toPlainText(t('related.items.textarea.description')),   path: '?path=/docs/components-form-textarea--docs' },
@@ -448,14 +437,12 @@ export interface ComposerOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           componentSlug: 'composer',
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: t(`notes.item${i}`) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: t('analytics.table.trigger'),
@@ -470,7 +457,6 @@ export interface ComposerOptions {
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             description: t('testes.functional.description'),

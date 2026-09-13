@@ -197,10 +197,10 @@ interface NavigationMenuLinkProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
       <!-- aria-label por instância: a página monta vários <nav>; com o mesmo rótulo o axe acusa landmark-unique -->
-      <NavigationMenuRoot delayDuration={80} aria-label={$tStore('demonstration.title')}>
+      <NavigationMenuRoot delayDuration={80} aria-label={$tNavStore('nav.demonstration')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home">
             <NavigationMenuLink href="/" aria-current="page">Início</NavigationMenuLink>
@@ -236,7 +236,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -253,7 +252,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -316,7 +314,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -405,7 +402,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -413,7 +409,6 @@ interface NavigationMenuLinkProps {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="navigation-menu"
     items={[
@@ -633,7 +628,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -648,7 +642,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: propsTableCols,
@@ -671,7 +664,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -695,7 +687,6 @@ interface NavigationMenuLinkProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -717,7 +708,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.menubar.name'),    description: $tStore('related.items.menubar.description'),    path: '?path=/docs/components-navigation-menubar--docs'    },
       { name: $tStore('related.items.sidebar.name'),    description: $tStore('related.items.sidebar.description'),    path: '?path=/docs/components-layout-sidebar--docs'    },
@@ -728,7 +718,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -741,7 +730,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: 'Evento',
       trigger: 'Trigger',
@@ -756,7 +744,6 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

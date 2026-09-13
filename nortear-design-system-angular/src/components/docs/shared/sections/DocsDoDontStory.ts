@@ -38,11 +38,10 @@ import { NdsDocsDoDont, type DocsDoDontPair } from './DocsDoDont';
       </span>
     </ng-template>
 
-    <nds-docs-do-dont [title]="title()" [pairs]="pares()" />
+    <nds-docs-do-dont [pairs]="pares()" />
   `,
 })
 export class NdsDocsDoDontStory {
-  readonly title = input.required<string>();
   /** Só da story: reduz a um par, para mostrar que a forma da seção não muda. */
   readonly umParSo = input<boolean>(false);
 

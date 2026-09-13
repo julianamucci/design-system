@@ -181,7 +181,7 @@ const CODE_16_9 = `<div ndsAspectRatio [ratio]="16 / 9">
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 13rem">
             @for (p of demoProporcoes(); track p.key) {
               <div class="nds-stack" data-spacing="sm">
@@ -195,14 +195,12 @@ const CODE_16_9 = `<div ndsAspectRatio [ratio]="16 / 9">
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureCode]="anatomyCode"
           language="html"
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -210,17 +208,15 @@ const CODE_16_9 = `<div ndsAspectRatio [ratio]="16 / 9">
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           componentSlug="aspect-ratio"
           language="ts"
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="aspect-ratio"
@@ -229,13 +225,11 @@ const CODE_16_9 = `<div ndsAspectRatio [ratio]="16 / 9">
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -243,14 +237,12 @@ const CODE_16_9 = `<div ndsAspectRatio [ratio]="16 / 9">
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -260,21 +252,18 @@ const CODE_16_9 = `<div ndsAspectRatio [ratio]="16 / 9">
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="aspect-ratio"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="aspect-ratio" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="aspect-ratio" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

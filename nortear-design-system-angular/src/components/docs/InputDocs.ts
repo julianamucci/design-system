@@ -239,7 +239,7 @@ const TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 16rem">
             <div class="nds-stack" data-spacing="sm">
               <label ndsLabel for="demo-default">{{ t('demonstration.labels.defaultLabel') }}</label>
@@ -268,7 +268,6 @@ const TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -276,24 +275,21 @@ const TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [do]="usageDo()"
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="t('import.basic')"
           componentSlug="input"
           language="ts"
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="input"
@@ -302,20 +298,17 @@ const TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="input"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -323,13 +316,11 @@ const TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="tNav('common.keyboardNav')"
@@ -339,21 +330,18 @@ const TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'd
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="input"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="input" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="input" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

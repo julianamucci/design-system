@@ -10,9 +10,9 @@
  * ignora o click.
  */
 import { CodeBlock } from '@/components/ui/code-block';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 const props = withDefaults(defineProps<{
-  title: string;
   description?: string;
   code: string;
   secondaryCode?: string;
@@ -25,6 +25,8 @@ const props = withDefaults(defineProps<{
 }>(), {
   language: 'vue',
 });
+
+const title = useTituloDeSecao('importacao');
 
 function trackId(kind: 'import-primary' | 'import-secondary'): string | undefined {
   return props.componentSlug ? `${props.componentSlug}:code:${kind}` : undefined;

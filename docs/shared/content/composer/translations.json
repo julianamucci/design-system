@@ -18,7 +18,6 @@
       "attach": "Anexar"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "basic": "Em repouso",
         "running": "Enquanto gera",
@@ -27,7 +26,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A moldura é do conjunto, e não do campo: o anel de foco acende no formulário inteiro, porque o trilho faz parte do que está em foco.",
       "item2": "O campo cresce com o conteúdo até um teto, e a partir dali rola. Sem altura fixa: ela é resultado do respiro e da entrelinha.",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use como entrada de qualquer conversa, ao pé de uma thread.",
@@ -130,7 +127,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O botão troca de nome ao interromper: é o mesmo controle fazendo outra coisa, e o nome diz qual.",
         "dont": "Trocar só a forma deixa quem usa leitor de tela sem saber o que o botão faz agora."
@@ -141,7 +137,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\nconst composer = createComposer({\n  labels,\n  onSubmit: (texto) => enviar(texto),\n});",
@@ -160,8 +155,6 @@
       }
     },
     "variants": {
-      "title": "Modos de envio",
-      "visualTitle": "Exemplos visuais",
       "note": "O modo não muda o desenho: muda qual tecla envia e o que a dica promete. É a mesma superfície falando a verdade sobre o dispositivo em que está.",
       "items": {
         "enter": {
@@ -187,7 +180,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -220,7 +212,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -323,7 +314,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -380,7 +370,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O campo tem nome, a dica o descreve, o contador é invisível a quem ouve, e o botão que interrompe diz que interrompe.",
       "items": {
         "item1": "O campo tem nome acessível próprio, e não depende do marca-lugar — que some assim que se digita a primeira letra.",
@@ -409,7 +398,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chatThread": {
           "name": "ChatThread",
@@ -430,7 +418,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O componente não limpa o campo depois de enviar. Limpar cedo perde a mensagem quando o envio falha, e só quem recebe sabe se ela saiu.",
       "item2": "A tecla de envio é ignorada durante composição de escrita — em teclados com candidatos, ela confirma o caractere, e enviar ali cortaria a palavra pela metade.",
       "item3": "O teto de altura do campo é uma fração da janela, e não uma medida fixa: numa tela baixa o composer não pode empurrar a conversa para fora.",
@@ -438,7 +425,6 @@
       "item5": "Só o texto sem espaços nas pontas é enviado, e um campo com apenas espaços conta como vazio."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; o componente em si não instrumenta o envio, que é do produto.",
       "table": {
         "event": "Evento",
@@ -456,7 +442,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -574,7 +559,6 @@
       "attach": "Attach"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "basic": "At rest",
         "running": "While generating",
@@ -583,7 +567,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The frame belongs to the whole, not to the field: the focus ring lights up on the entire form, because the rail is part of what has focus.",
       "item2": "The field grows with its content up to a ceiling, and scrolls from there. No fixed height: it results from padding and line height.",
@@ -595,7 +578,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it as the input of any conversation, at the foot of a thread.",
@@ -686,7 +668,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The button changes its name when it stops: the same control doing something else, and the name says which.",
         "dont": "Changing only the shape leaves screen reader users unaware of what the button now does."
@@ -697,7 +678,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\nconst composer = createComposer({\n  labels,\n  onSubmit: (texto) => enviar(texto),\n});",
@@ -716,8 +696,6 @@
       }
     },
     "variants": {
-      "title": "Submit modes",
-      "visualTitle": "Visual examples",
       "note": "The mode does not change the design: it changes which key sends and what the hint promises. It is the same surface telling the truth about the device it is on.",
       "items": {
         "enter": {
@@ -743,7 +721,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -776,7 +753,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -879,7 +855,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -936,7 +911,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The field has a name, the hint describes it, the counter is invisible to those listening, and the button that stops says it stops.",
       "items": {
         "item1": "The field has its own accessible name, and does not rely on the placeholder — which disappears at the first letter typed.",
@@ -965,7 +939,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "chatThread": {
           "name": "ChatThread",
@@ -986,7 +959,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The component does not clear the field after sending. Clearing early loses the message when sending fails, and only the receiver knows whether it left.",
       "item2": "The submit key is ignored during text composition — on keyboards with candidates it confirms the character, and sending there would cut the word in half.",
       "item3": "The field height ceiling is a fraction of the window, not a fixed measure: on a short screen the composer must not push the conversation off view.",
@@ -994,7 +966,6 @@
       "item5": "Only the trimmed text is sent, and a field with nothing but spaces counts as empty."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the component itself does not instrument sending, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -1012,7 +983,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1130,7 +1100,6 @@
       "attach": "Adjuntar"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "basic": "En reposo",
         "running": "Mientras genera",
@@ -1139,7 +1108,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El marco es del conjunto, no del campo: el anillo de foco se enciende en todo el formulario, porque el riel forma parte de lo que tiene el foco.",
       "item2": "El campo crece con su contenido hasta un techo, y a partir de ahí se desplaza. Sin altura fija: es resultado del espaciado y el interlineado.",
@@ -1151,7 +1119,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo como entrada de cualquier conversación, al pie de un hilo.",
@@ -1242,7 +1209,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El botón cambia de nombre al interrumpir: el mismo control haciendo otra cosa, y el nombre dice cuál.",
         "dont": "Cambiar solo la forma deja a quien usa lector de pantalla sin saber qué hace ahora el botón."
@@ -1253,7 +1219,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\nconst composer = createComposer({\n  labels,\n  onSubmit: (texto) => enviar(texto),\n});",
@@ -1272,8 +1237,6 @@
       }
     },
     "variants": {
-      "title": "Modos de envío",
-      "visualTitle": "Ejemplos visuales",
       "note": "El modo no cambia el diseño: cambia qué tecla envía y qué promete la pista. Es la misma superficie diciendo la verdad sobre el dispositivo en que está.",
       "items": {
         "enter": {
@@ -1299,7 +1262,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1332,7 +1294,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1435,7 +1396,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1492,7 +1452,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El campo tiene nombre, la pista lo describe, el contador es invisible para quien escucha, y el botón que interrumpe dice que interrumpe.",
       "items": {
         "item1": "El campo tiene nombre accesible propio, y no depende del marcador — que desaparece con la primera letra escrita.",
@@ -1521,7 +1480,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chatThread": {
           "name": "ChatThread",
@@ -1542,7 +1500,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El componente no limpia el campo tras enviar. Limpiar pronto pierde el mensaje cuando el envío falla, y solo quien recibe sabe si salió.",
       "item2": "La tecla de envío se ignora durante la composición de escritura — en teclados con candidatos confirma el carácter, y enviar ahí cortaría la palabra por la mitad.",
       "item3": "El techo de altura del campo es una fracción de la ventana, no una medida fija: en una pantalla baja el composer no puede empujar la conversación fuera.",
@@ -1550,7 +1507,6 @@
       "item5": "Solo se envía el texto sin espacios en los extremos, y un campo con solo espacios cuenta como vacío."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; el componente en sí no instrumenta el envío, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1568,7 +1524,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

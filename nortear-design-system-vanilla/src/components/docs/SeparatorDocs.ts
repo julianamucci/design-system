@@ -287,7 +287,6 @@ export function createSeparatorDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const grid = document.createElement('div');
             grid.className = 'nds-grid nds-w-full';
@@ -308,7 +307,6 @@ export function createSeparatorDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             DOMPurify.sanitize(t('anatomy.item1')),
             DOMPurify.sanitize(t('anatomy.item2')),
@@ -321,7 +319,6 @@ export function createSeparatorDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -367,7 +364,6 @@ export function createSeparatorDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -441,7 +437,6 @@ export function createSeparatorDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createSeparator } from '@/components/ui/separator';`,
         });
 
@@ -456,7 +451,6 @@ export function createSeparatorDocs(): HTMLElement {
           `row.append(itemA, createSeparator({ orientation: 'vertical' }), itemB);`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'horizontal',
@@ -478,7 +472,6 @@ export function createSeparatorDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -512,7 +505,6 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createSeparator(options)',
@@ -557,7 +549,6 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -581,7 +572,6 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             DOMPurify.sanitize(t('accessibility.items.item1')),
@@ -599,7 +589,6 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.card.name'),           description: toPlainText(t('related.items.card.description')),           path: '?path=/docs/components-layout-card--docs' },
             { name: t('related.items.sheet.name'),          description: toPlainText(t('related.items.sheet.description')),          path: '?path=/docs/components-overlay-sheet--docs' },
@@ -610,7 +599,6 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -621,7 +609,6 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: tNav('common.event'),
             trigger: tNav('common.eventTrigger'),
@@ -638,7 +625,6 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

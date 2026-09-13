@@ -35,11 +35,9 @@ const meta = {
     },
   },
   argTypes: {
-    title: { control: "text", description: "Título da seção." },
     pairs: { control: false, description: "Um par por comparação. Os previews são nós React." },
   },
   args: {
-    title: "Boas práticas",
     pairs: [
       {
         doLabel: "Faça",

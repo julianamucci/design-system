@@ -269,7 +269,7 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-w-full nds-stack" data-spacing="xl">
           {/* Default — uncontrolled */}
           <div className="nds-stack" data-spacing="sm">
@@ -340,7 +340,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -352,7 +351,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -399,7 +397,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -484,7 +481,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withButton")}
@@ -494,7 +490,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       {/* ── Variantes (Modos) ─────────────────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="collapsible"
         items={[
@@ -562,7 +557,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="collapsible"
         items={[
@@ -727,7 +721,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -759,7 +752,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.collapsibleTitle"),
@@ -882,7 +874,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -904,7 +895,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -924,7 +914,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: "Accordion",
@@ -951,7 +940,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -961,7 +949,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -993,7 +980,6 @@ interface CollapsibleContentProps extends CollapsiblePrimitive.Panel.Props {}`;
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

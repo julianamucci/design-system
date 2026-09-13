@@ -333,7 +333,7 @@ render(items, total);`;
 
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
-      <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="code-block">
+      <DocsDemonstration componentSlug="code-block">
         <div class="nds-w-full nds-stack" data-spacing="md">
           <CodeBlock
             class="nds-w-full"
@@ -395,7 +395,6 @@ render(items, total);`;
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->
       <DocsAnatomy
-        title={$tStore('anatomy.title')}
         items={[
           $tStore('anatomy.item1'),
           $tStore('anatomy.item2'),
@@ -412,7 +411,6 @@ render(items, total);`;
 
       <!-- ── Quando Usar ────────────────────────────────────────────── -->
       <DocsWhenToUse
-        title={$tStore('usage.title')}
         guidelines={{
           title: $tStore('usage.guidelines.title'),
           items: [
@@ -472,7 +470,6 @@ render(items, total);`;
 
       <!-- ── Do & Don't ─────────────────────────────────────────────── -->
       <DocsDoDont
-        title={$tStore('doDont.title')}
         pairs={[
           {
             doLabel: $tNavStore('common.do'),
@@ -495,7 +492,6 @@ render(items, total);`;
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
       <DocsImport
-        title={$tStore('import.title')}
         description={$tStore('import.basic')}
         code={codeImportBasic}
         secondaryDescription={$tStore('import.withFooter')}
@@ -506,7 +502,6 @@ render(items, total);`;
       <!-- ── Variantes (linguagens suportadas) ──────────────────────── -->
       <DocsCompositions
         id="variantes"
-        title={$tStore('variants.title')}
         note={$tStore('variants.note')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="code-block"
@@ -554,7 +549,6 @@ render(items, total);`;
 
       <!-- ── Configurações (estados) ────────────────────────────────── -->
       <DocsStates
-        title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
           trigger: toPlainText($tStore('states.cols.trigger')),
@@ -572,7 +566,6 @@ render(items, total);`;
 
       <!-- ── Propriedades ───────────────────────────────────────────── -->
       <DocsProps
-        title={$tStore('props.title')}
         tables={[
           {
             cols: {
@@ -593,7 +586,6 @@ render(items, total);`;
 
       <!-- ── Tokens ─────────────────────────────────────────────────── -->
       <DocsTokens
-        title={$tStore('tokens.title')}
         cols={{
           token: $tStore('tokens.table.token'),
           value: $tStore('tokens.table.group'),
@@ -608,7 +600,6 @@ render(items, total);`;
       <DocsAccessibility
         screenReaderTitle={$tNavStore('common.screenReader')}
         screenReaderItems={screenReaderItems}
-        title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
           $tStore('accessibility.item1'),
@@ -630,7 +621,6 @@ render(items, total);`;
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
       <DocsRelated
-        title={$tStore('related.title')}
         componentSlug="code-block"
         items={[
           { name: 'Table', description: $tStore('related.table'), path: '?path=/docs/components-tables-table--docs' },
@@ -642,7 +632,6 @@ render(items, total);`;
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
       <DocsNotes
-        title={$tStore('notes.title')}
         componentSlug="code-block"
         items={[
           { title: '', content: $tStore('notes.tip1') },
@@ -655,7 +644,6 @@ render(items, total);`;
 
       <!-- ── Analytics ──────────────────────────────────────────────── -->
       <DocsAnalytics
-        title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
           trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -671,7 +659,6 @@ render(items, total);`;
 
       <!-- ── Testes ─────────────────────────────────────────────────── -->
       <DocsTestes
-        title={$tStore('testes.title')}
         functional={{
           title: $tStore('testes.functional.title'),
           description: $tStore('testes.functional.description'),

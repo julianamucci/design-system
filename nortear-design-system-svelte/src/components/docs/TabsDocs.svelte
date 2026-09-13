@@ -223,9 +223,9 @@ interface TabsContentProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <Tabs bind:value={demoValue} class="nds-w-full nds-max-w-lg">
-      <TabsList aria-label={$tStore('demonstration.title')}>
+      <TabsList aria-label={$tNavStore('nav.demonstration')}>
         <TabsTrigger value="overview">{$tStore('demonstration.labels.overview')}</TabsTrigger>
         <TabsTrigger value="properties">{$tStore('demonstration.labels.properties')}</TabsTrigger>
         <TabsTrigger value="examples">{$tStore('demonstration.labels.examples')}</TabsTrigger>
@@ -238,7 +238,6 @@ interface TabsContentProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -251,7 +250,6 @@ interface TabsContentProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -312,7 +310,6 @@ interface TabsContentProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -376,13 +373,11 @@ interface TabsContentProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImport}
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { trackId: 'default', name: $tStore('variants.items.default'),  description: stripHtml($tStore('variants.styles.default')),  code: codeDefault,  preview: variantDefault  },
       { trackId: 'line', name: $tStore('variants.items.line'),     description: stripHtml($tStore('variants.styles.line')),     code: codeLine,     preview: variantLine     },
@@ -427,7 +422,6 @@ interface TabsContentProps {
 
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="tabs"
     items={[
@@ -536,7 +530,6 @@ interface TabsContentProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -553,7 +546,6 @@ interface TabsContentProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: propsTableCols,
@@ -578,7 +570,6 @@ interface TabsContentProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -601,7 +592,6 @@ interface TabsContentProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -628,7 +618,6 @@ interface TabsContentProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.stepper.name'),     description: $tStore('related.items.stepper.description'),     path: '?path=/docs/components-navigation-stepper--docs'      },
       { name: $tStore('related.items.accordion.name'),   description: $tStore('related.items.accordion.description'),   path: '?path=/docs/components-disclosure-accordion--docs'    },
@@ -639,7 +628,6 @@ interface TabsContentProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -650,7 +638,6 @@ interface TabsContentProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -663,7 +650,6 @@ interface TabsContentProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

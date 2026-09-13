@@ -285,7 +285,6 @@ export function createDrawerDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
@@ -311,7 +310,6 @@ export function createDrawerDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: numberedItems('anatomy').map(item => DOMPurify.sanitize(item)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -319,7 +317,6 @@ export function createDrawerDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: numberedItems('usage.guidelines').map(item => DOMPurify.sanitize(item)),
@@ -360,7 +357,6 @@ export function createDrawerDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -414,7 +410,6 @@ export function createDrawerDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createDrawer } from '@/components/ui/drawer';
 import { createButton } from '@/components/ui/button';`,
           secondaryDescription: 'Abrir e fechar por código:',
@@ -470,7 +465,6 @@ const drawer = createDrawer({
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'drawer',
           items: [
@@ -680,7 +674,6 @@ const drawer = createDrawer({
 });`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'drawer',
           items: [
@@ -751,7 +744,6 @@ const drawer = createDrawer({
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -803,7 +795,6 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createDrawer(options)',
@@ -831,7 +822,6 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -855,7 +845,6 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: numberedItems('accessibility.items').map(item => DOMPurify.sanitize(item)),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -868,7 +857,6 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/components-overlay-sheet--docs'       },
             { name: t('related.items.dialog.name'),      description: toPlainText(t('related.items.dialog.description')),      path: '?path=/docs/components-overlay-dialog--docs'      },
@@ -879,13 +867,11 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: numberedItems('notes').map(item => ({ title: '', content: DOMPurify.sanitize(item) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: tNav('common.event'),
             trigger: tNav('common.eventTrigger'),
@@ -912,7 +898,6 @@ export function createDrawer(options: DrawerOptions): DrawerElement;`;
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

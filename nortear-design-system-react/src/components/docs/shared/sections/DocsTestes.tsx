@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 /*
  * audit-ignore: card-nested — os três cartões desta seção são IRMÃOS, não
  * aninhados: quem os agrupa é um `div` de layout, sem raio e sem padding. Não
@@ -34,7 +35,6 @@ export interface DocsVisualTestItem {
 }
 
 export interface DocsTestesProps {
-  title: string;
   functional: {
     title: string;
     /** Linha de contexto abaixo do título da sub-seção. */
@@ -66,7 +66,8 @@ function PriorityBadge({ priority }: { priority: string }) {
   return <Badge variant={prioridadeVariant(priority)}>{priority}</Badge>;
 }
 
-export function DocsTestes({ title, functional, accessibility, visual }: DocsTestesProps) {
+export function DocsTestes({ functional, accessibility, visual }: DocsTestesProps) {
+  const title = useTituloDeSecao('testes');
   return (
     <section id="testes">
       <h2 className="nds-section-title">{title}</h2>

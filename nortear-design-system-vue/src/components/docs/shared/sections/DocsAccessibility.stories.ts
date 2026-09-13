@@ -26,10 +26,6 @@ const meta: Meta<typeof DocsAccessibility> = {
     docs: { description: { component: "O contrato de acessibilidade: o resumo, a lista de garantias, a tabela de teclado e o que o leitor de tela anuncia. É a seção que diz o que o componente promete a quem não usa o ponteiro." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     summary: {
       control: "text",
       description: "Uma frase sobre o comportamento geral."
@@ -60,7 +56,6 @@ const meta: Meta<typeof DocsAccessibility> = {
     }
   },
   args: {
-    title: "Acessibilidade",
     summary: "O controle é um `<button>` nativo, então foco, teclado e semântica vêm do navegador — não são reimplementados.",
     items: [
       "Alvo de toque de 24px no mínimo, medido na área clicável e não no glifo (WCAG 2.5.8).",

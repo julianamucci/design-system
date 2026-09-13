@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import {
@@ -16,7 +17,6 @@ export interface DocsTokenItem {
 }
 
 export interface DocsTokensProps {
-  title: string;
   cols: { token: string; value: string; description: string };
   items: DocsTokenItem[];
   customizationTitle?: string;
@@ -27,7 +27,8 @@ export interface DocsTokensProps {
   copiedLabel?: string;
 }
 
-export function DocsTokens({ title, cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: DocsTokensProps) {
+export function DocsTokens({ cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: DocsTokensProps) {
+  const title = useTituloDeSecao('tokens');
   return (
     <section id="tokens">
       <h2 className="nds-section-title">{title}</h2>

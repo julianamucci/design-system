@@ -11,7 +11,6 @@
       "aiEntities": "CodeBlock, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "fileName": "exemplo.tsx",
         "terminalTitle": "terminal",
@@ -24,7 +23,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Raiz</strong> — container com borda, superfície própria e recorte do conteúdo.",
       "item2": "<strong>Header</strong> — faixa superior com rótulo opcional à esquerda e ação de copiar à direita.",
       "item3": "<strong>Ação copiar</strong> — botão de ícone que troca para o ícone de confirmação por 2 segundos.",
@@ -43,7 +41,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Informe sempre a linguagem do trecho — sem ela o código aparece monoespaçado e sem cor.",
@@ -127,7 +124,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Linguagem informada, rótulo com o nome do arquivo e destaque só nas linhas que o texto explica.",
         "dont": "Bloco sem linguagem, sem rótulo e com metade das linhas destacadas."
@@ -138,13 +134,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withFooter": "Com observação no rodapé:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Linguagens Suportadas",
       "note": "A classificação aceita o nome da linguagem ou a extensão do arquivo, com ou sem ponto. Valor não reconhecido cai em texto simples, sem cor — nunca quebra o bloco. As cores saem de CSS custom properties, então cada tema claro ou escuro tem a própria paleta.",
       "items": {
         "script": "TypeScript e JavaScript, com ou sem sintaxe de componente. Palavras-chave, tipos, strings, números e comentários recebem cor própria.",
@@ -176,7 +169,6 @@
       }
     },
     "states": {
-      "title": "Configurações",
       "cols": {
         "state": "Configuração",
         "trigger": "Como ativar",
@@ -214,7 +206,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "table": {
         "prop": "Propriedade",
@@ -332,7 +323,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "surfaceTitle": "Superfície e estrutura",
       "syntaxTitle": "Paleta de sintaxe",
       "inheritedTitle": "Herdados do tema",
@@ -451,7 +441,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O bloco é operável só com teclado: a ação de copiar e a região de scroll entram na ordem de tabulação, a região de scroll carrega papel e nome, e a confirmação de cópia é anunciada por uma região de status fora do botão. Cumpre WCAG 2.2 AA: 1.4.1 (cor não é o único indicador), 1.4.3 (contraste), 2.1.1 (teclado), 4.1.2 (nome e papel) e 4.1.3 (mensagens de status).",
       "item1": "<strong>Confirmação anunciada</strong> — a confirmação vive em uma região <code>role=\"status\"</code> com <code>aria-live=\"polite\"</code> fora do botão, então o leitor de tela anuncia sem que o rótulo mude no meio da interação.",
@@ -482,7 +471,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "table": "Para conteúdo em linhas e colunas — código não é dado tabular e perde a leitura em colunas.",
@@ -491,7 +479,6 @@
       "card": "Para agrupar o bloco com título, descrição e ações em uma superfície própria."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O destaque de sintaxe é próprio e devolve dados estruturados, não HTML: cada trecho vira um nó do template. Não há conteúdo injetado como markup e, portanto, nada a sanitizar.",
       "tip2": "O escopo é snippet de documentação, não parser completo de linguagem. Trecho ambíguo fica sem cor — o pior resultado é perder a cor, nunca quebrar a marcação.",
       "tip3": "A paleta de sintaxe não deriva dos tokens semânticos do tema: aqueles são cores de acento, com mínimo de 3:1, e texto de código é corpo e precisa de 4.5:1.",
@@ -499,7 +486,6 @@
       "tip5": "A altura máxima é uma custom property da raiz: para um trecho longo em destaque na página, sobrescreva-a na instância em vez de remover o scroll."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "O bloco emite um evento próprio ao copiar. Os demais são os eventos padrão de qualquer docs page.",
       "table": {
         "event": "Evento",
@@ -520,7 +506,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do bloco.",
@@ -632,7 +617,6 @@
       "aiEntities": "CodeBlock, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "fileName": "example.tsx",
         "terminalTitle": "terminal",
@@ -645,7 +629,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Root</strong> — container with border, its own surface, and content clipping.",
       "item2": "<strong>Header</strong> — top bar with the optional label on the left and the copy action on the right.",
       "item3": "<strong>Copy action</strong> — icon button that swaps to the confirmation icon for 2 seconds.",
@@ -664,7 +647,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Always declare the snippet language — without it the code renders monospaced and colorless.",
@@ -748,7 +730,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Language declared, label with the file name, and highlighting only on the lines the text explains.",
         "dont": "Block with no language, no label, and half the lines highlighted."
@@ -759,13 +740,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withFooter": "With a footer note:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Supported Languages",
       "note": "The classification accepts the language name or the file extension, with or without the leading dot. An unrecognized value falls back to plain text with no coloring — it never breaks the block. Colors come from CSS custom properties, so every light or dark theme carries its own palette.",
       "items": {
         "script": "TypeScript and JavaScript, with or without component syntax. Keywords, types, strings, numbers, and comments each get their own color.",
@@ -797,7 +775,6 @@
       }
     },
     "states": {
-      "title": "Configurations",
       "cols": {
         "state": "Configuration",
         "trigger": "How to activate",
@@ -835,7 +812,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "table": {
         "prop": "Property",
@@ -953,7 +929,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "surfaceTitle": "Surface and structure",
       "syntaxTitle": "Syntax palette",
       "inheritedTitle": "Inherited from the theme",
@@ -1072,7 +1047,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "The block is fully operable by keyboard: the copy action and the scroll region are both in the tab order, the scroll region carries a role and a name, and the copy confirmation is announced by a status region outside the button. Meets WCAG 2.2 AA: 1.4.1 (color is not the only indicator), 1.4.3 (contrast), 2.1.1 (keyboard), 4.1.2 (name and role), and 4.1.3 (status messages).",
       "item1": "<strong>Announced confirmation</strong> — the confirmation lives in a <code>role=\"status\"</code> region with <code>aria-live=\"polite\"</code> outside the button, so screen readers announce it without the button label changing mid-interaction.",
@@ -1103,7 +1077,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "table": "For content in rows and columns — code is not tabular data and loses readability in columns.",
@@ -1112,7 +1085,6 @@
       "card": "To group the block with a title, description, and actions on its own surface."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "Syntax highlighting is in-house and returns structured data, not HTML: each fragment becomes a template node. No content is injected as markup, so there is nothing to sanitize.",
       "tip2": "The scope is documentation snippets, not a full language parser. An ambiguous fragment simply loses its color — the worst outcome is missing color, never broken markup.",
       "tip3": "The syntax palette does not derive from the theme's semantic tokens: those are accent colors with a 3:1 minimum, while code text is body copy and needs 4.5:1.",
@@ -1120,7 +1092,6 @@
       "tip5": "Maximum height is a custom property on the root: for a long featured snippet, override it on that instance instead of removing the scroll."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The block emits one event of its own on copy. The rest are the standard docs page events.",
       "table": {
         "event": "Event",
@@ -1141,7 +1112,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each configuration of the block.",
@@ -1253,7 +1223,6 @@
       "aiEntities": "CodeBlock, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, syntax highlighting, clipboard, aria-live, CSS custom properties"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "fileName": "ejemplo.tsx",
         "terminalTitle": "terminal",
@@ -1266,7 +1235,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Raíz</strong> — contenedor con borde, superficie propia y recorte del contenido.",
       "item2": "<strong>Header</strong> — franja superior con etiqueta opcional a la izquierda y acción de copiar a la derecha.",
       "item3": "<strong>Acción copiar</strong> — botón de ícono que cambia al ícono de confirmación por 2 segundos.",
@@ -1285,7 +1253,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Indica siempre el lenguaje del fragmento — sin él el código se muestra monoespaciado y sin color.",
@@ -1369,7 +1336,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Lenguaje indicado, etiqueta con el nombre del archivo y destaque solo en las líneas que el texto explica.",
         "dont": "Bloque sin lenguaje, sin etiqueta y con la mitad de las líneas destacadas."
@@ -1380,13 +1346,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withFooter": "Con observación en el pie:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Lenguajes Soportados",
       "note": "La clasificación acepta el nombre del lenguaje o la extensión del archivo, con o sin punto inicial. Un valor no reconocido cae en texto simple, sin color — nunca rompe el bloque. Los colores salen de CSS custom properties, así que cada tema claro u oscuro tiene su propia paleta.",
       "items": {
         "script": "TypeScript y JavaScript, con o sin sintaxis de componente. Palabras clave, tipos, strings, números y comentarios reciben color propio.",
@@ -1418,7 +1381,6 @@
       }
     },
     "states": {
-      "title": "Configuraciones",
       "cols": {
         "state": "Configuración",
         "trigger": "Cómo activar",
@@ -1456,7 +1418,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "table": {
         "prop": "Propiedad",
@@ -1574,7 +1535,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "surfaceTitle": "Superficie y estructura",
       "syntaxTitle": "Paleta de sintaxis",
       "inheritedTitle": "Heredados del tema",
@@ -1693,7 +1653,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "El bloque es operable solo con teclado: la acción de copiar y la región de scroll entran en el orden de tabulación, la región de scroll lleva papel y nombre, y la confirmación de copia se anuncia por una región de estado fuera del botón. Cumple WCAG 2.2 AA: 1.4.1 (el color no es el único indicador), 1.4.3 (contraste), 2.1.1 (teclado), 4.1.2 (nombre y papel) y 4.1.3 (mensajes de estado).",
       "item1": "<strong>Confirmación anunciada</strong> — la confirmación vive en una región <code>role=\"status\"</code> con <code>aria-live=\"polite\"</code> fuera del botón, así el lector de pantalla la anuncia sin que la etiqueta cambie en medio de la interacción.",
@@ -1724,7 +1683,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "table": "Para contenido en filas y columnas — el código no es dato tabular y pierde legibilidad en columnas.",
@@ -1733,7 +1691,6 @@
       "card": "Para agrupar el bloque con título, descripción y acciones en una superficie propia."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El resaltado de sintaxis es propio y devuelve datos estructurados, no HTML: cada fragmento se convierte en un nodo del template. No hay contenido inyectado como markup y, por lo tanto, nada que sanitizar.",
       "tip2": "El alcance son fragmentos de documentación, no un parser completo de lenguaje. Un fragmento ambiguo queda sin color — el peor resultado es perder el color, nunca romper el marcado.",
       "tip3": "La paleta de sintaxis no deriva de los tokens semánticos del tema: aquellos son colores de acento, con mínimo de 3:1, y el texto de código es cuerpo y necesita 4.5:1.",
@@ -1741,7 +1698,6 @@
       "tip5": "La altura máxima es una custom property de la raíz: para un fragmento largo destacado en la página, sobrescríbela en esa instancia en vez de quitar el scroll."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "El bloque emite un evento propio al copiar. Los demás son los eventos estándar de cualquier docs page.",
       "table": {
         "event": "Evento",
@@ -1762,7 +1718,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del bloque.",

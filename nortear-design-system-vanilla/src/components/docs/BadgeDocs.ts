@@ -186,7 +186,6 @@ export function createBadgeDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster';
@@ -205,7 +204,6 @@ export function createBadgeDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -213,7 +211,6 @@ export function createBadgeDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -272,7 +269,6 @@ export function createBadgeDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -328,7 +324,6 @@ export function createBadgeDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createBadge } from '@/components/ui/badge';`,
           secondaryDescription: t('import.withIcon'),
@@ -343,7 +338,6 @@ export function createBadgeDocs(): HTMLElement {
         const codeInfo = `const badge = createBadge({ variant: 'info', children: 'Novidade' });`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               name: 'default',
@@ -395,7 +389,6 @@ export function createBadgeDocs(): HTMLElement {
         }
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'badge',
           items: [
@@ -457,7 +450,6 @@ export function createBadgeDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -487,7 +479,6 @@ export interface BadgeOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.badgeTitle'),
@@ -507,7 +498,6 @@ export interface BadgeOptions {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -540,7 +530,6 @@ export interface BadgeOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -559,7 +548,6 @@ export interface BadgeOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Alert',  description: toPlainText(t('related.alert')),  path: '?path=/docs/components-feedback-alert--docs'  },
             { name: 'Button', description: toPlainText(t('related.button')), path: '?path=/docs/components-form-button--docs' },
@@ -568,7 +556,6 @@ export interface BadgeOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -578,7 +565,6 @@ export interface BadgeOptions {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -594,7 +580,6 @@ export interface BadgeOptions {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

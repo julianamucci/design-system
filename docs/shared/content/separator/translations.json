@@ -11,7 +11,6 @@
       "aiEntities": "Separator, React, Vue, Svelte, Vanilla, Angular, divisor, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "horizontal": "Horizontal — entre seções",
         "vertical": "Vertical — entre itens em flex",
@@ -20,7 +19,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Raiz</strong> — um <code>div</code> com a classe <code>.nds-separator</code>, que pinta a linha com o token de borda do tema.",
       "item2": "<strong>orientation</strong> — <code>horizontal</code> dá 1px de altura e 100% da largura; <code>vertical</code> dá 1px de largura e deixa a altura para o <code>align-self: stretch</code>, que só funciona em contêiner flex ou grade.",
       "item3": "<strong>decorative</strong> — quando <code>true</code> (padrão) aplica <code>role=\"none\"</code> e <code>aria-hidden</code>, sem anunciar orientação; quando <code>false</code> usa <code>role=\"separator\"</code> com <code>aria-orientation</code>.",
@@ -35,7 +33,6 @@
       "item4": "<strong>emphasis</strong> — <code>strong</code> dobra a espessura para 2px e troca a cor da linha, para separar blocos de assunto diferente."
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use Separator quando a divisão tem significado — agrupa itens relacionados em listas, menus ou cards.",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Separator entre grupos com significado de um menu ou Card.",
         "dont": "Separator no lugar do espaçamento, só para criar respiro visual."
@@ -136,11 +132,8 @@
         "dont": "Separator vertical em contêiner de bloco — fica com 0px e invisível."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "horizontal": "Horizontal",
         "vertical": "Vertical"
@@ -151,7 +144,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "decorative": {
         "label": "Decorativo",
         "trigger": "Quando o separador é puramente visual",
@@ -169,7 +161,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -211,7 +202,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Seletor",
@@ -248,7 +238,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA — 1.3.1 (Informação e Relações) ao expor a separação por <code>role=\"separator\"</code>, e 1.4.1 (Uso de Cor) porque a divisão nunca depende só da linha.",
       "items": {
         "item1": "O separador decorativo recebe <code>role=\"none\"</code> e <code>aria-hidden=\"true\"</code> — o leitor de tela ignora o elemento.",
@@ -276,7 +265,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "card": {
           "name": "Card",
@@ -297,18 +285,15 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Separator ou <code>&lt;hr&gt;</code> nativo</strong>: prefira o Separator pelo controle de orientação e pelo modo decorativo; o <code>&lt;hr&gt;</code> é sempre semântico e sempre horizontal.",
       "item2": "<strong>Separator ou espaçamento</strong>: espaçamento é para o respiro entre itens; o Separator é para a divisão desenhada. Não use um no lugar do outro.",
       "item3": "<strong>Vertical depende do contêiner</strong>: a altura vem de <code>align-self: stretch</code>, que só tem efeito em contêiner flex ou de grade. Em contêiner de bloco a linha fica com 0px de altura e desaparece, mesmo que o contêiner tenha altura própria.",
       "item4": "<strong>Personalização visual</strong>: prefira o modificador de ênfase para mudar o peso da linha, e uma classe <code>.nds-*</code> adicional para o resto — a classe extra convive com a base."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "O Separator é um componente passivo — não dispara eventos de analytics. O tracking fica nos elementos interativos vizinhos (botões, links, cards) que ele divide."
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada estado e variante.",
@@ -391,7 +376,6 @@
       "aiEntities": "Separator, React, Vue, Svelte, Vanilla, Angular, divider, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "horizontal": "Horizontal — between sections",
         "vertical": "Vertical — between flex items",
@@ -400,7 +384,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Root</strong> — a <code>div</code> with the <code>.nds-separator</code> class, painting the line with the theme border token.",
       "item2": "<strong>orientation</strong> — <code>horizontal</code> gives 1px of height and 100% of the width; <code>vertical</code> gives 1px of width and leaves height to <code>align-self: stretch</code>, which only works in a flex or grid container.",
       "item3": "<strong>decorative</strong> — when <code>true</code> (default) it applies <code>role=\"none\"</code> and <code>aria-hidden</code>, announcing no orientation; when <code>false</code> it uses <code>role=\"separator\"</code> with <code>aria-orientation</code>.",
@@ -415,7 +398,6 @@
       "item4": "<strong>emphasis</strong> — <code>strong</code> doubles the thickness to 2px and changes the line colour, to separate blocks of different subjects."
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
         "item1": "Use Separator when the division carries meaning — grouping related items in lists, menus, or cards.",
@@ -506,7 +488,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Separator between meaningful groups in a menu or Card.",
         "dont": "Separator in place of spacing, just to create visual breathing room."
@@ -516,11 +497,8 @@
         "dont": "Vertical Separator in a block container — it ends up 0px and invisible."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "horizontal": "Horizontal",
         "vertical": "Vertical"
@@ -531,7 +509,6 @@
       }
     },
     "states": {
-      "title": "States",
       "decorative": {
         "label": "Decorative",
         "trigger": "When the separator is purely visual",
@@ -549,7 +526,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -591,7 +567,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Selector",
@@ -628,7 +603,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA — 1.3.1 (Info and Relationships) by exposing the separation through <code>role=\"separator\"</code>, and 1.4.1 (Use of Color) because the division never relies on the line alone.",
       "items": {
         "item1": "The decorative Separator gets <code>role=\"none\"</code> and <code>aria-hidden=\"true\"</code> — screen readers ignore the element.",
@@ -656,7 +630,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "card": {
           "name": "Card",
@@ -677,18 +650,15 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Separator or native <code>&lt;hr&gt;</code></strong>: prefer Separator for orientation control and decorative mode; <code>&lt;hr&gt;</code> is always semantic and always horizontal.",
       "item2": "<strong>Separator or spacing</strong>: spacing is for breathing room between items; Separator is for the drawn division. Do not use one in place of the other.",
       "item3": "<strong>Vertical depends on the container</strong>: the height comes from <code>align-self: stretch</code>, which only takes effect in a flex or grid container. In a block container the line ends up 0px tall and disappears, even if the container has a height of its own.",
       "item4": "<strong>Visual customization</strong>: prefer the emphasis modifier to change the weight of the line, and an extra <code>.nds-*</code> class for the rest — the extra class coexists with the base one."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Separator is a passive component — it dispatches no analytics events. Tracking belongs on the adjacent interactive elements (buttons, links, cards) that it divides."
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in each state and variant.",
@@ -771,7 +741,6 @@
       "aiEntities": "Separator, React, Vue, Svelte, Vanilla, Angular, divisor, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "horizontal": "Horizontal — entre secciones",
         "vertical": "Vertical — entre ítems en flex",
@@ -780,7 +749,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Raíz</strong> — un <code>div</code> con la clase <code>.nds-separator</code>, que pinta la línea con el token de borde del tema.",
       "item2": "<strong>orientation</strong> — <code>horizontal</code> da 1px de alto y 100% del ancho; <code>vertical</code> da 1px de ancho y deja el alto a <code>align-self: stretch</code>, que solo funciona en un contenedor flex o de rejilla.",
       "item3": "<strong>decorative</strong> — cuando es <code>true</code> (predeterminado) aplica <code>role=\"none\"</code> y <code>aria-hidden</code>, sin anunciar orientación; cuando es <code>false</code> usa <code>role=\"separator\"</code> con <code>aria-orientation</code>.",
@@ -795,7 +763,6 @@
       "item4": "<strong>emphasis</strong> — <code>strong</code> duplica el grosor a 2px y cambia el color de la línea, para separar bloques de asuntos distintos."
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa Separator cuando la división tiene significado — agrupa ítems relacionados en listas, menús o cards.",
@@ -886,7 +853,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Separator entre grupos con significado de un menú o Card.",
         "dont": "Separator en lugar del espaciado, solo para crear respiro visual."
@@ -896,11 +862,8 @@
         "dont": "Separator vertical en contenedor de bloque — queda con 0px e invisible."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "horizontal": "Horizontal",
         "vertical": "Vertical"
@@ -911,7 +874,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "decorative": {
         "label": "Decorativo",
         "trigger": "Cuando el separador es puramente visual",
@@ -929,7 +891,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -971,7 +932,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Selector",
@@ -1008,7 +968,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA — 1.3.1 (Información y Relaciones) al exponer la separación por <code>role=\"separator\"</code>, y 1.4.1 (Uso del Color) porque la división nunca depende solo de la línea.",
       "items": {
         "item1": "El separador decorativo recibe <code>role=\"none\"</code> y <code>aria-hidden=\"true\"</code> — el lector de pantalla ignora el elemento.",
@@ -1036,7 +995,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "card": {
           "name": "Card",
@@ -1057,18 +1015,15 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Separator o <code>&lt;hr&gt;</code> nativo</strong>: prefiere Separator por el control de orientación y el modo decorativo; <code>&lt;hr&gt;</code> es siempre semántico y siempre horizontal.",
       "item2": "<strong>Separator o espaciado</strong>: el espaciado es para el respiro entre ítems; Separator es para la división dibujada. No uses uno en lugar del otro.",
       "item3": "<strong>Vertical depende del contenedor</strong>: el alto viene de <code>align-self: stretch</code>, que solo tiene efecto en contenedor flex o de rejilla. En un contenedor de bloque la línea queda con 0px de alto y desaparece, aunque el contenedor tenga altura propia.",
       "item4": "<strong>Personalización visual</strong>: prefiere el modificador de énfasis para cambiar el peso de la línea, y una clase <code>.nds-*</code> adicional para el resto — la clase extra convive con la base."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Separator es un componente pasivo — no dispara eventos de analytics. El tracking va en los elementos interactivos vecinos (botones, enlaces, cards) que divide."
     },
     "testes": {
-      "title": "Criterios de Test",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada estado y variante.",

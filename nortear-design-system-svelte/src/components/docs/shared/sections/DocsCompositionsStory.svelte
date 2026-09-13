@@ -7,8 +7,7 @@
    * passa como arg de um arquivo `.stories.ts` — é sintaxe de template, não
    * valor. Mesmo padrão do `DocsVariantsStory.svelte`.
    */
-  let { title, note = '', useWhenLabel = 'Quando usar:', id = 'composicoes', componentSlug = '', semUseWhen = false }: {
-    title: string;
+  let { note = '', useWhenLabel = 'Quando usar:', id = 'composicoes', componentSlug = '', semUseWhen = false }: {
     note?: string;
     useWhenLabel?: string;
     id?: string;
@@ -27,7 +26,6 @@
 {#snippet comIcone()}<Button>Salvar</Button>{/snippet}
 
 <DocsCompositions
-  {title}
   {note}
   {useWhenLabel}
   {id}

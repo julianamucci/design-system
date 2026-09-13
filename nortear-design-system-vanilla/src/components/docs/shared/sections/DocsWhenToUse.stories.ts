@@ -20,10 +20,6 @@ const meta: Meta<DocsWhenToUseProps> = {
     docs: { description: { component: "Quando escolher o componente e quando não: diretrizes, tabela de cenários com a alternativa, e os pares de faça/não faça. É a seção que resolve a dúvida antes de a pessoa escrever a primeira linha." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     guidelines: {
       control: "object",
       description: "Diretrizes gerais, em lista."
@@ -46,7 +42,6 @@ const meta: Meta<DocsWhenToUseProps> = {
     }
   },
   args: {
-    title: "Quando usar",
     guidelines: {
       title: "Diretrizes",
       items: [

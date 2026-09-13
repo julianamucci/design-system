@@ -20,7 +20,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "connected": "Quando está tudo de pé",
         "reconnecting": "Quando caiu e algo já está tentando",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A linha fica junto de onde a conversa acontece — acima do campo de mensagem ou no alto da tela. Ela não mora dentro de nenhuma moldura.",
       "item2": "O ponto abre a linha e é só desenho: a cor sozinha não descreve estado.",
@@ -40,7 +38,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para dizer se ainda há por onde pedir, quando a resposta depende de uma ligação que pode cair.",
@@ -131,7 +128,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O estado chega em palavra, ao lado do ponto.",
         "dont": "Só a cor do ponto separa a ligação de pé da que caiu, e cor não chega a quem ouve a tela."
@@ -142,7 +138,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'em 5 s',\n  labels: labels,\n  onRetry: () => religar(),\n});",
@@ -157,7 +152,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -180,7 +174,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -237,7 +230,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -294,7 +286,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A palavra descreve o estado e é a única parte que se anuncia; o ponto e a contagem ficam fora do que é lido, e o anúncio é polido — ele entra na fila e nunca corta o que estiver sendo lido.",
       "items": {
         "item1": "A palavra do estado está sempre na linha: a cor do ponto não descreve estado sozinha.",
@@ -323,7 +314,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado da execução",
@@ -349,11 +339,9 @@
       "item3": "O anúncio é polido: ele entra na fila e nunca corta o que estiver sendo lido no momento.",
       "item4": "A contagem chega já formatada, como texto. Formato de duração é decisão de idioma, e um componente que a formatasse decidiria idioma em cinco lugares.",
       "item5": "A contagem só é desenhada enquanto alguma tentativa está marcada. Mostrá-la com a ligação caída e ninguém tentando é um relógio que não corre, e uma espera que nunca termina.",
-      "item6": "A peça não reconecta nada. Ela não abre transporte, não conta o tempo e não reagenda: desenha o estado que recebe e avisa que alguém pediu para tentar de novo.",
-      "title": "Notas"
+      "item6": "A peça não reconecta nada. Ela não abre transporte, não conta o tempo e não reagenda: desenha o estado que recebe e avisa que alguém pediu para tentar de novo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a linha em si não instrumenta a ação, que é do produto.",
       "table": {
         "event": "Evento",
@@ -371,7 +359,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -477,7 +464,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "connected": "When everything is up",
         "reconnecting": "When it dropped and something is already trying",
@@ -485,7 +471,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The line sits next to where the conversation happens — above the message field or at the top of the screen. It does not live inside any frame.",
       "item2": "The dot opens the line and is only drawing: colour alone does not describe a state.",
@@ -497,7 +482,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to say whether there is still somewhere to send things, when the answer depends on a link that can drop.",
@@ -588,7 +572,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The state arrives as a word, next to the dot.",
         "dont": "Only the colour of the dot separates a link that is up from one that dropped, and colour never reaches whoever listens to the screen."
@@ -599,7 +582,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'in 5s',\n  labels: labels,\n  onRetry: () => religar(),\n});",
@@ -614,7 +596,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -637,7 +618,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -694,7 +674,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -751,7 +730,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The word describes the state and is the only part that gets announced; the dot and the countdown stay out of what is read, and the announcement is polite — it queues and never cuts into whatever is being read.",
       "items": {
         "item1": "The state word is always in the line: the colour of the dot does not describe a state on its own.",
@@ -780,7 +758,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "agentStatus": {
           "name": "Agent status",
@@ -801,7 +778,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "This is the second piece in the family where a live region exists, and the exception has a reason of its own. The sheet's rule holds because a state that re-announces itself cuts into the reading of the answer; losing the link is of another kind — it is the floor going away, and everything written from now on goes nowhere.",
       "item2": "The region wraps only the word, never the whole line. The label carries one thing and changes at most when the state changes; the countdown, which rewrites itself every second, stays outside it by construction.",
       "item3": "The announcement is polite: it queues and never cuts into whatever is being read at the moment.",
@@ -810,7 +786,6 @@
       "item6": "The piece reconnects nothing. It does not open transport, does not count time and does not reschedule: it draws the state it receives and reports that someone asked to try again."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the line itself does not instrument the action, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -828,7 +803,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -934,7 +908,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "connected": "Cuando todo está en pie",
         "reconnecting": "Cuando se cayó y algo ya está intentando",
@@ -942,7 +915,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La línea va junto a donde ocurre la conversación — encima del campo de mensaje o en lo alto de la pantalla. No vive dentro de ningún marco.",
       "item2": "El punto abre la línea y es solo dibujo: el color por sí solo no describe un estado.",
@@ -954,7 +926,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala para decir si todavía hay por dónde pedir, cuando la respuesta depende de una conexión que puede caerse.",
@@ -1045,7 +1016,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El estado llega en palabra, al lado del punto.",
         "dont": "Solo el color del punto separa la conexión en pie de la que se cayó, y el color no llega a quien escucha la pantalla."
@@ -1056,7 +1026,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createConnectionState } from '@/components/ui/connection-state';\n\ncreateConnectionState({\n  state: 'reconnecting',\n  countdown: 'en 5 s',\n  labels: labels,\n  onRetry: () => religar(),\n});",
@@ -1071,7 +1040,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1094,7 +1062,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1151,7 +1118,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1208,7 +1174,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La palabra describe el estado y es la única parte que se anuncia; el punto y la cuenta quedan fuera de lo que se lee, y el anuncio es cortés — entra en la fila y nunca corta lo que se esté leyendo.",
       "items": {
         "item1": "La palabra del estado está siempre en la línea: el color del punto no describe un estado por sí solo.",
@@ -1237,7 +1202,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado de la ejecución",
@@ -1258,7 +1222,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Esta es la segunda pieza de la familia en la que existe región viva, y la excepción tiene motivo propio. La regla de la hoja vale porque un estado que se reanuncia corta la lectura de la respuesta; perder la conexión es de otra naturaleza — es el suelo que se va, y todo lo que se escriba de aquí en adelante no va a ninguna parte.",
       "item2": "La región envuelve solo la palabra, nunca la línea entera. La etiqueta lleva una sola cosa y cambia como mucho cuando cambia el estado; la cuenta, que se reescribe cada segundo, queda fuera por construcción.",
       "item3": "El anuncio es cortés: entra en la fila y nunca corta lo que se esté leyendo en ese momento.",
@@ -1267,7 +1230,6 @@
       "item6": "La pieza no reconecta nada. No abre transporte, no cuenta el tiempo y no reagenda: dibuja el estado que recibe y avisa que alguien pidió intentar de nuevo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la línea en sí no instrumenta la acción, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1285,7 +1247,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

@@ -247,7 +247,7 @@ const CODE_ACTION = `<div ndsCardHeader>
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 17rem">
             <div ndsCard>
               <div ndsCardHeader>
@@ -301,7 +301,6 @@ const CODE_ACTION = `<div ndsCardHeader>
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -309,7 +308,6 @@ const CODE_ACTION = `<div ndsCardHeader>
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -317,10 +315,9 @@ const CODE_ACTION = `<div ndsCardHeader>
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="t('import.basic')"
           [secondaryCode]="t('import.full')"
           componentSlug="card"
@@ -328,7 +325,6 @@ const CODE_ACTION = `<div ndsCardHeader>
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="card"
@@ -337,13 +333,11 @@ const CODE_ACTION = `<div ndsCardHeader>
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -351,7 +345,6 @@ const CODE_ACTION = `<div ndsCardHeader>
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -359,7 +352,6 @@ const CODE_ACTION = `<div ndsCardHeader>
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -369,21 +361,18 @@ const CODE_ACTION = `<div ndsCardHeader>
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="card"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="card" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="card" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

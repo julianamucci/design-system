@@ -685,7 +685,7 @@ export function ContextMenuDocs() {
       }
     >
       {/* ── Demonstração ───────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-cluster nds-p-8 nds-min-h-50" data-align="center" data-justify="center">
           <MenuPreview entries={demoMenu(tContent)} tracking={{ menu: "demo", location: "docs_demo" }} trigger={trigger} />
         </div>
@@ -693,7 +693,6 @@ export function ContextMenuDocs() {
 
       {/* ── Anatomia ───────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={stringsFromDict(tContent, "anatomy")}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -701,7 +700,6 @@ export function ContextMenuDocs() {
 
       {/* ── Quando Usar ────────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: stringsFromDict(tContent, "usage.guidelines"),
@@ -727,7 +725,6 @@ export function ContextMenuDocs() {
 
       {/* ── Do & Don't ─────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -810,7 +807,6 @@ export function ContextMenuDocs() {
 
       {/* ── Importação ─────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withCheckbox")}
@@ -827,7 +823,6 @@ export function ContextMenuDocs() {
           título era a chave crua. */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         note={tContent("variants.note")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="context-menu"
@@ -883,7 +878,6 @@ export function ContextMenuDocs() {
 
       {/* ── Estados ────────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -935,7 +929,6 @@ export function ContextMenuDocs() {
           recua; `indeterminate` entra, porque o wrapper o implementa. Os
           padrões de `ContextMenuContent` são os do wrapper, que é quem os fixa. */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.rootTitle"),
@@ -1088,7 +1081,6 @@ export function ContextMenuDocs() {
 
       {/* ── Tokens ─────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1128,7 +1120,6 @@ export function ContextMenuDocs() {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.warning"),
@@ -1159,7 +1150,6 @@ export function ContextMenuDocs() {
 
       {/* ── Relacionados ───────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: "DropdownMenu",
@@ -1191,7 +1181,6 @@ export function ContextMenuDocs() {
 
       {/* ── Notas ──────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={stringsFromDict(tContent, "notes", "tip").map((content) => ({
           title: "",
           content,
@@ -1200,7 +1189,6 @@ export function ContextMenuDocs() {
 
       {/* ── Analytics ──────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1242,7 +1230,6 @@ export function ContextMenuDocs() {
 
       {/* ── Testes ─────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

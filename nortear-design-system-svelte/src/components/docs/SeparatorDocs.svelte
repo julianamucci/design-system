@@ -142,7 +142,7 @@
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
       <!-- Horizontal -->
       <div class="nds-stack" data-spacing="sm">
@@ -195,7 +195,6 @@
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -207,7 +206,6 @@
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -255,7 +253,6 @@
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -308,14 +305,12 @@
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { trackId: 'horizontal', name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
       { trackId: 'vertical', name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
@@ -341,7 +336,6 @@
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -355,7 +349,6 @@
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -383,7 +376,6 @@
        cada stack escrevia a primeira coluna à mão, e as cinco divergiram: uma
        trazia `--border`, outra `bg-border`, outra o próprio seletor. -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -402,7 +394,6 @@
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -419,7 +410,6 @@
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.card.name'),           description: $tStore('related.items.card.description'),           path: '?path=/docs/components-layout-card--docs'           },
       { name: $tStore('related.items.sheet.name'),          description: $tStore('related.items.sheet.description'),          path: '?path=/docs/components-overlay-sheet--docs'          },
@@ -430,7 +420,6 @@
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -441,7 +430,6 @@
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: 'Evento',
       trigger: 'Trigger',
@@ -454,7 +442,6 @@
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

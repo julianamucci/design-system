@@ -198,7 +198,7 @@ interface AlertTitleProps {
   {/snippet}
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
-      <DocsDemonstration title={$tStore('demonstration.title')}>
+      <DocsDemonstration>
         <div class="nds-w-full nds-stack" data-spacing="sm">
           <!-- default: sem título — só ícone + descrição -->
           <Alert>
@@ -239,7 +239,6 @@ interface AlertTitleProps {
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->
       <DocsAnatomy
-        title={$tStore('anatomy.title')}
         items={[
           $tStore('anatomy.item1'),
           $tStore('anatomy.item2'),
@@ -252,7 +251,6 @@ interface AlertTitleProps {
 
       <!-- ── Quando Usar ────────────────────────────────────────────── -->
       <DocsWhenToUse
-        title={$tStore('usage.title')}
         guidelines={{
           title: $tStore('usage.guidelines.title'),
           items: [
@@ -312,7 +310,6 @@ interface AlertTitleProps {
 
       <!-- ── Do & Don't ─────────────────────────────────────────────── -->
       <DocsDoDont
-        title={$tStore('doDont.title')}
         pairs={[
           {
             doLabel: $tNavStore('common.do'),
@@ -359,7 +356,6 @@ interface AlertTitleProps {
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
       <DocsImport
-        title={$tStore('import.title')}
         description={$tStore('import.basic')}
         code={codeImportBasic}
         secondaryDescription={$tStore('import.withIcon')}
@@ -369,7 +365,6 @@ interface AlertTitleProps {
       <!-- ── Variantes ──────────────────────────────────────────────── -->
       <DocsCompositions
         id="variantes"
-        title={$tStore('variants.title')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="alert"
         items={[
@@ -437,7 +432,6 @@ interface AlertTitleProps {
       {/snippet}
       <!-- ── Composições ──────────────────────────────────────────────── -->
       <DocsCompositions
-        title={$tStore('variants.compositionsTitle')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="alert"
         items={[
@@ -483,7 +477,6 @@ interface AlertTitleProps {
 
       <!-- ── Estados ────────────────────────────────────────────────── -->
       <DocsStates
-        title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
           trigger: toPlainText($tStore('states.cols.trigger')),
@@ -500,7 +493,6 @@ interface AlertTitleProps {
 
       <!-- ── Propriedades ───────────────────────────────────────────── -->
       <DocsProps
-        title={$tStore('props.title')}
         tables={[
           {
             title: $tStore('props.alertTitle'),
@@ -556,7 +548,6 @@ interface AlertTitleProps {
 
       <!-- ── Tokens ─────────────────────────────────────────────────── -->
       <DocsTokens
-        title={$tStore('tokens.title')}
         cols={{
           token: $tStore('tokens.table.token'),
           value: $tStore('tokens.table.class'),
@@ -588,7 +579,6 @@ interface AlertTitleProps {
       <DocsAccessibility
         screenReaderTitle={$tNavStore('common.screenReader')}
         screenReaderItems={screenReaderItems}
-        title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
           $tStore('accessibility.item1'),
@@ -607,7 +597,6 @@ interface AlertTitleProps {
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
       <DocsRelated
-        title={$tStore('related.title')}
         items={[
           { name: 'Sonner',      description: $tStore('related.sonner'),      path: '?path=/docs/components-feedback-sonner--docs'      },
           { name: 'AlertDialog', description: $tStore('related.alertDialog'), path: '?path=/docs/components-overlay-alertdialog--docs' },
@@ -618,7 +607,6 @@ interface AlertTitleProps {
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
       <DocsNotes
-        title={$tStore('notes.title')}
         items={[
           { title: '', content: $tStore('notes.tip1') },
           { title: '', content: $tStore('notes.tip2') },
@@ -628,7 +616,6 @@ interface AlertTitleProps {
 
       <!-- ── Analytics ─────────────────────────────────────────────── -->
       <DocsAnalytics
-        title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
           trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -644,7 +631,6 @@ interface AlertTitleProps {
 
       <!-- ── Testes ─────────────────────────────────────────────────── -->
       <DocsTestes
-        title={$tStore('testes.title')}
         functional={{
           title: $tStore('testes.functional.title'),
           cols: {

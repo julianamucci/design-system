@@ -327,15 +327,14 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-cluster nds-w-full" data-justify="center">
-          {previewSingle(tContent("demonstration.title"))}
+          {previewSingle(tNav("nav.demonstration"))}
         </div>
       </DocsDemonstration>
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -350,7 +349,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -434,7 +432,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -457,7 +454,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withLocale")}
@@ -467,7 +463,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       {/* ── Variantes (Modos e Layouts) ───────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.visualTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="calendar"
         items={[
@@ -552,7 +547,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -594,7 +588,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.calendarTitle"),
@@ -643,7 +636,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -670,7 +662,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -692,7 +683,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: "Popover",
@@ -714,7 +704,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -725,7 +714,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -762,7 +750,6 @@ interface CalendarDayButtonProps extends React.ComponentProps<typeof DayButton> 
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

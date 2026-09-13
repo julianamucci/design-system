@@ -1,3 +1,4 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createCodeBlock } from '@/components/ui/code-block';
@@ -12,7 +13,6 @@ export interface DocsPropsTableDef {
   items: DocsPropItem[];
 }
 export interface DocsPropsProps {
-  title: string;
   tables: DocsPropsTableDef[];
   interfaceCode?: string;
   extensibilityTitle?: string;
@@ -74,7 +74,7 @@ export function createDocsProps(props: DocsPropsProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('propriedades');
   section.appendChild(h2);
 
   const container = document.createElement('div');

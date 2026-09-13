@@ -352,7 +352,7 @@ declare function buildRadarOption(o: {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-stack nds-w-full" data-spacing="md" style="align-items: center">
       <div class="nds-cluster" data-spacing="sm">
         <button
@@ -391,7 +391,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -404,7 +403,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -468,7 +466,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -519,7 +516,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryCode={codeImportSecondary}
@@ -528,7 +524,6 @@ declare function buildRadarOption(o: {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="chart"
@@ -653,7 +648,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="chart"
     items={[
@@ -692,7 +686,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Estados ───────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -710,7 +703,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.containerTitle'),
@@ -756,7 +748,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -786,7 +777,6 @@ declare function buildRadarOption(o: {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -806,7 +796,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Table',     description: $tStore('related.table'),     path: '?path=/docs/components-tables-table--docs'     },
       { name: 'Card',      description: $tStore('related.card'),      path: '?path=/docs/components-layout-card--docs'      },
@@ -816,7 +805,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -828,7 +816,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -843,7 +830,6 @@ declare function buildRadarOption(o: {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

@@ -19,7 +19,6 @@
       "unbounded": "Sem teto declarado"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "normal": "Com folga no orçamento",
         "threshold": "Na borda do aviso",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A quantia abre a linha, escrita como quem mediu a escreveu — com o símbolo, o separador e as casas decimais da moeda.",
       "item2": "O detalhe ao lado diz quanto disso é o teto, em por cento e em dinheiro; sem teto declarado, ele diz que não há.",
@@ -40,7 +38,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para dizer quanto uma execução custou, quando o dinheiro muda o que a pessoa faz a seguir.",
@@ -125,7 +122,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O teto declarado chega junto com a quantia, e a peça mostra a fração, a palavra do nível e o medidor.",
         "dont": "O teto existe mas não é passado, e a peça só pode dizer o que custou — a notícia de que o gasto está perto do limite se perde."
@@ -136,7 +132,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: labels,\n});",
@@ -151,7 +146,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -184,7 +178,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -262,7 +255,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customização",
       "customizationCode": {
         "web": ".nds-cost-meter {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível e o por cento ao lado\n   são o que descreve. Mexer na cor não muda o que chega a quem ouve. */\n.nds-cost-meter[data-level=\"warning\"] {\n  --nds-cost-meter-color: var(--chart-4);\n}"
@@ -324,7 +316,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Os números são texto e a barra é desenho: nada aqui se anuncia, o nível chega em palavra, e a quantia tem nome mesmo sem título visível.",
       "items": {
         "item1": "A palavra do nível está sempre na linha quando há teto: a cor do medidor não descreve folga sozinha.",
@@ -352,7 +343,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "contextDisplay": {
           "name": "Uso do contexto",
@@ -373,7 +363,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O dinheiro chega escrito, e a peça nunca o formata. Símbolo, posição do símbolo, separador de milhar, separador decimal e número de casas variam por idioma E por moeda: a mesma quantia se escreve \"US$ 0,84\", \"$0.84\" ou \"0,84 US$\", e o símbolo troca de ponta entre um idioma e outro. É o mesmo precedente do tempo decorrido do ditado, do relógio do estado da execução e do carimbo da faixa de rascunho.",
       "item2": "O que atravessa a conta é a fração, e nunca a quantia. A razão entre o gasto e o teto é número puro, sem moeda e sem idioma — uma conta que recebesse dinheiro escrito teria de analisar a cadeia para dividir, e analisar dinheiro escrito é como se erra de moeda em silêncio.",
       "item3": "O teto anda em par: a quantia escrita e a fração já calculada. Como duas propriedades soltas existiria o estado meio declarado, e nem uma frase sem medidor nem um medidor sem teto escrito são peças que alguém queira montar.",
@@ -383,7 +372,6 @@
       "item7": "Não há forma alternativa aqui, ao contrário da medição da janela. Lá o anel existe para o trilho estreito; aqui quem decide a largura da linha é uma cadeia escrita fora da peça, e é justamente essa largura que ela não pode medir."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; o medidor em si não instrumenta nada, porque não há interação nele.",
       "table": {
         "event": "Evento",
@@ -401,7 +389,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -510,7 +497,6 @@
       "unbounded": "No cap declared"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "normal": "With room in the budget",
         "threshold": "Right at the warning edge",
@@ -519,7 +505,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The amount opens the line, written exactly as whoever measured wrote it — with the currency symbol, the separators and the decimal places.",
       "item2": "The detail beside it says how much of the cap that is, as a share and in money; with no cap declared, it says there is none.",
@@ -531,7 +516,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to say what a run cost, when the money changes what the person does next.",
@@ -616,7 +600,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The declared cap arrives together with the amount, and the piece shows the share, the level word and the meter.",
         "dont": "The cap exists but is not passed, so the piece can only say what it cost — the news that spending is near the limit is lost."
@@ -627,7 +610,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: labels,\n});",
@@ -642,7 +624,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -675,7 +656,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -753,7 +733,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customisation",
       "customizationCode": {
         "web": ".nds-cost-meter {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível e o por cento ao lado\n   são o que descreve. Mexer na cor não muda o que chega a quem ouve. */\n.nds-cost-meter[data-level=\"warning\"] {\n  --nds-cost-meter-color: var(--chart-4);\n}"
@@ -815,7 +794,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The numbers are text and the bar is drawing: nothing here announces itself, the level arrives as a word, and the amount has a name even without a visible title.",
       "items": {
         "item1": "The level word is always on the line when there is a cap: the meter colour does not describe the room left on its own.",
@@ -843,7 +821,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "contextDisplay": {
           "name": "Context display",
@@ -864,7 +841,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "Money arrives already written, and the piece never formats it. Symbol, symbol position, thousands separator, decimal separator and number of places vary by language AND by currency: the same amount is written \"US$ 0,84\", \"$0.84\" or \"0,84 US$\", and the symbol swaps ends between one language and another. It is the same precedent as the elapsed time of voice dictation, the clock of the run status and the stamp of the draft banner.",
       "item2": "What crosses into the arithmetic is the share, never the amount. The ratio between spending and cap is a pure number, with no currency and no language — arithmetic that received written money would have to parse the string to divide, and parsing written money is how a currency gets mistaken in silence.",
       "item3": "The cap travels as a pair: the written amount and the already computed share. As two loose properties there would be a half-declared state, and neither a sentence without a meter nor a meter without a written cap is a piece anyone wants to assemble.",
@@ -874,7 +850,6 @@
       "item7": "There is no alternative form here, unlike the context window reading. There the ring exists for the narrow rail; here what decides the width of the line is a string written outside the piece, and it is precisely that width the piece cannot measure."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the meter itself instruments nothing, because there is no interaction in it.",
       "table": {
         "event": "Event",
@@ -892,7 +867,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1001,7 +975,6 @@
       "unbounded": "Sin tope declarado"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "normal": "Con margen en el presupuesto",
         "threshold": "Justo en el borde del aviso",
@@ -1010,7 +983,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La cantidad abre la línea, escrita tal como la escribió quien midió — con el símbolo, el separador y los decimales de la moneda.",
       "item2": "El detalle al lado dice cuánto de eso es el tope, en porcentaje y en dinero; sin tope declarado, dice que no hay.",
@@ -1022,7 +994,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para decir cuánto costó una ejecución, cuando el dinero cambia lo que la persona hace a continuación.",
@@ -1107,7 +1078,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El tope declarado llega junto con la cantidad, y la pieza muestra la fracción, la palabra del nivel y el medidor.",
         "dont": "El tope existe pero no se pasa, y la pieza solo puede decir lo que costó — la noticia de que el gasto está cerca del límite se pierde."
@@ -1118,7 +1088,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createCostMeter } from '@/components/ui/cost-meter';\n\ncreateCostMeter({\n  amount: quantia,\n  budget: teto,\n  labels: labels,\n});",
@@ -1133,7 +1102,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1166,7 +1134,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1244,7 +1211,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Personalización",
       "customizationCode": {
         "web": ".nds-cost-meter {\n  max-inline-size: 24rem;\n}\n\n/* O medidor é REFORÇO, e não a pista: a palavra do nível e o por cento ao lado\n   são o que descreve. Mexer na cor não muda o que chega a quem ouve. */\n.nds-cost-meter[data-level=\"warning\"] {\n  --nds-cost-meter-color: var(--chart-4);\n}"
@@ -1306,7 +1272,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Los números son texto y la barra es dibujo: nada aquí se anuncia, el nivel llega en palabra, y la cantidad tiene nombre incluso sin título visible.",
       "items": {
         "item1": "La palabra del nivel está siempre en la línea cuando hay tope: el color del medidor no describe el margen por sí solo.",
@@ -1334,7 +1299,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "contextDisplay": {
           "name": "Uso del contexto",
@@ -1355,7 +1319,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El dinero llega escrito, y la pieza nunca lo formatea. Símbolo, posición del símbolo, separador de miles, separador decimal y número de decimales varían por idioma Y por moneda: la misma cantidad se escribe \"US$ 0,84\", \"$0.84\" o \"0,84 US$\", y el símbolo cambia de punta entre un idioma y otro. Es el mismo precedente del tiempo transcurrido del dictado, del reloj del estado de la ejecución y del sello de la franja de borrador.",
       "item2": "Lo que atraviesa la cuenta es la fracción, y nunca la cantidad. La razón entre el gasto y el tope es número puro, sin moneda y sin idioma — una cuenta que recibiera dinero escrito tendría que analizar la cadena para dividir, y analizar dinero escrito es como se equivoca uno de moneda en silencio.",
       "item3": "El tope va en par: la cantidad escrita y la fracción ya calculada. Como dos propiedades sueltas existiría el estado a medio declarar, y ni una frase sin medidor ni un medidor sin tope escrito son piezas que alguien quiera montar.",
@@ -1365,7 +1328,6 @@
       "item7": "No hay forma alternativa aquí, al contrario de la medición de la ventana. Allí el anillo existe para el carril estrecho; aquí quien decide el ancho de la línea es una cadena escrita fuera de la pieza, y es justamente ese ancho el que ella no puede medir."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; el medidor en sí no instrumenta nada, porque no hay interacción en él.",
       "table": {
         "event": "Evento",
@@ -1383,7 +1345,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

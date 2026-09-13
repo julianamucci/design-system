@@ -11,7 +11,6 @@
       "aiEntities": "Switch, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role switch"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "notifications": "Receber notificações",
         "marketing": "Emails de marketing",
@@ -23,7 +22,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Switch</strong> — root com <code>role=\"switch\"</code> e <code>aria-checked</code>, que reflete ligado/desligado.",
       "item2": "<strong>Thumb</strong> (interno) — bola que desliza entre as duas posições, com deslocamento animado.",
       "item3": "<strong>Label</strong> — externo, OBRIGATÓRIO, vinculado via <code>htmlFor</code> ao <code>id</code> do Switch.",
@@ -37,7 +35,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para configurações com efeito imediato (sem submit). Para checkbox em form com submit, use <code>Checkbox</code>.",
@@ -121,7 +118,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Label descreve a ação ativa: \"Receber notificações\".",
         "dont": "Não use label ambíguo como \"Notificações\"."
@@ -131,11 +127,8 @@
         "dont": "Não use texto solto sem associação — leitores de tela perdem contexto."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withDescription": "Com descrição",
@@ -146,7 +139,6 @@
         "withDescription": "Switch com Label + descrição auxiliar — em painel, com o texto à esquerda e o controle à direita.",
         "sm": "Tamanho compacto — trilho de <code>24×16px</code> com thumb de <code>12px</code>."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "withLabel": {
           "name": "Com label",
@@ -171,7 +163,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "unchecked": {
         "label": "Unchecked",
         "trigger": "—",
@@ -209,7 +200,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -269,7 +259,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -301,7 +290,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"switch\"</code> aplicado automaticamente",
@@ -332,7 +320,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "checkbox": {
           "name": "Checkbox",
@@ -353,7 +340,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o papel <code>switch</code>, o estado <code>aria-checked</code>, a alternância por ponteiro e por teclado e a participação no formulário vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-switch-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Efeito imediato</strong> — o Switch dispara o callback de mudança a cada toggle. Não usar dentro de form que exige submit.",
       "item3": "<strong>Label descritivo</strong> — sempre descreva o estado ativo (\"Receber notificações\", não \"Notificações\").",
@@ -361,7 +347,6 @@
       "item5": "<strong>Envio em formulário</strong> — onde a implementação não emitir um campo oculto próprio, sincronize o estado em um <code>&lt;input type=\"hidden\"&gt;</code> pelo callback de mudança. O estado inicial de uma implementação não-controlada vem da prop de estado inicial."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -374,7 +359,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -443,7 +427,6 @@
       "aiEntities": "Switch, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role switch"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "notifications": "Receive notifications",
         "marketing": "Marketing emails",
@@ -455,7 +438,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Switch</strong> — root with <code>role=\"switch\"</code> and <code>aria-checked</code>, which reflects on/off.",
       "item2": "<strong>Thumb</strong> (internal) — ball that slides between the two positions, with an animated shift.",
       "item3": "<strong>Label</strong> — external, REQUIRED, linked via <code>htmlFor</code> to the Switch <code>id</code>.",
@@ -469,7 +451,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for settings with immediate effect (no submit). For checkbox in form with submit, use <code>Checkbox</code>.",
@@ -553,7 +534,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Label describes the active action: \"Receive notifications\".",
         "dont": "Don't use ambiguous label like \"Notifications\"."
@@ -563,11 +543,8 @@
         "dont": "Don't use loose text without association — screen readers lose context."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "withDescription": "With description",
@@ -578,7 +555,6 @@
         "withDescription": "Switch with Label + helper description — in a panel, text on the left and control on the right.",
         "sm": "Compact size — <code>24×16px</code> track with a <code>12px</code> thumb."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "withLabel": {
           "name": "With label",
@@ -603,7 +579,6 @@
       }
     },
     "states": {
-      "title": "States",
       "unchecked": {
         "label": "Unchecked",
         "trigger": "—",
@@ -641,7 +616,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -701,7 +675,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -733,7 +706,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"switch\"</code> applied automatically",
@@ -764,7 +736,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "checkbox": {
           "name": "Checkbox",
@@ -785,7 +756,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the <code>switch</code> role, the <code>aria-checked</code> state, toggling by pointer and by keyboard, and taking part in the form come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-switch-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Immediate effect</strong> — Switch fires the change callback on every toggle. Don't use inside form that requires submit.",
       "item3": "<strong>Descriptive Label</strong> — always describe the active state (\"Receive notifications\", not \"Notifications\").",
@@ -793,7 +763,6 @@
       "item5": "<strong>Form submission</strong> — where the implementation emits no hidden field of its own, sync the state into an <code>&lt;input type=\"hidden\"&gt;</code> through the change callback. The starting state of an uncontrolled implementation comes from its initial-state prop."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -806,7 +775,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -875,7 +843,6 @@
       "aiEntities": "Switch, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role switch"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "notifications": "Recibir notificaciones",
         "marketing": "Emails de marketing",
@@ -887,7 +854,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Switch</strong> — root con <code>role=\"switch\"</code> y <code>aria-checked</code>, que refleja encendido/apagado.",
       "item2": "<strong>Thumb</strong> (interno) — bola que se desliza entre las dos posiciones, con desplazamiento animado.",
       "item3": "<strong>Label</strong> — externo, OBLIGATORIO, vinculado vía <code>htmlFor</code> al <code>id</code> del Switch.",
@@ -901,7 +867,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para configuraciones con efecto inmediato (sin submit). Para checkbox en form con submit, usa <code>Checkbox</code>.",
@@ -985,7 +950,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Label describe la acción activa: \"Recibir notificaciones\".",
         "dont": "No uses label ambiguo como \"Notificaciones\"."
@@ -995,11 +959,8 @@
         "dont": "No uses texto suelto sin asociación — los lectores de pantalla pierden contexto."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withDescription": "Con descripción",
@@ -1010,7 +971,6 @@
         "withDescription": "Switch con Label + descripción auxiliar — en panel, con el texto a la izquierda y el control a la derecha.",
         "sm": "Tamaño compacto — riel de <code>24×16px</code> con thumb de <code>12px</code>."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "withLabel": {
           "name": "Con label",
@@ -1035,7 +995,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "unchecked": {
         "label": "Unchecked",
         "trigger": "—",
@@ -1073,7 +1032,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1133,7 +1091,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1165,7 +1122,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"switch\"</code> aplicado automáticamente",
@@ -1196,7 +1152,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "checkbox": {
           "name": "Checkbox",
@@ -1217,7 +1172,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el rol <code>switch</code>, el estado <code>aria-checked</code>, la alternancia por puntero y por teclado y la participación en el formulario vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-switch-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Efecto inmediato</strong> — el Switch dispara el callback de cambio en cada toggle. No usar dentro de form que requiere submit.",
       "item3": "<strong>Label descriptivo</strong> — describe siempre el estado activo (\"Recibir notificaciones\", no \"Notificaciones\").",
@@ -1225,7 +1179,6 @@
       "item5": "<strong>Envío en formulario</strong> — donde la implementación no emita un campo oculto propio, sincroniza el estado en un <code>&lt;input type=\"hidden\"&gt;</code> mediante el callback de cambio. El estado inicial de una implementación no controlada viene de su prop de estado inicial."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1238,7 +1191,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

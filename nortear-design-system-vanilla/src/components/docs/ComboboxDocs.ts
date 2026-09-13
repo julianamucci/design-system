@@ -456,7 +456,6 @@ export function createComboboxDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'combobox',
           demoFactory: () => {
             const wrap = document.createElement('div');
@@ -510,7 +509,6 @@ export function createComboboxDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -529,7 +527,6 @@ export function createComboboxDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -665,7 +662,6 @@ export function createComboboxDocs(): HTMLElement {
         };
 
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -689,7 +685,6 @@ export function createComboboxDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           componentSlug: 'combobox',
           description: t('import.local.factory'),
           code: `import { createCombobox, type ComboboxOptions, type ComboboxItem } from '@/components/ui/combobox';`,
@@ -722,7 +717,6 @@ field.destroy();`,
       case 'variantes': {
         return createDocsVariants({
           id: 'variantes',
-          title: t('variants.title'),
           componentSlug: 'combobox',
           items: [
             {
@@ -809,7 +803,6 @@ field.destroy();`,
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'combobox',
           items: [
@@ -886,7 +879,6 @@ form.addEventListener('submit', (e) => {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -962,7 +954,6 @@ export type ComboboxElement = HTMLDivElement & {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createCombobox(options)',
@@ -1009,7 +1000,6 @@ export type ComboboxElement = HTMLDivElement & {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -1043,7 +1033,6 @@ export type ComboboxElement = HTMLDivElement & {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
             t('accessibility.items.item1'),
@@ -1070,7 +1059,6 @@ export type ComboboxElement = HTMLDivElement & {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.select.name'),  description: stripHtml(t('related.items.select.description')),  path: '?path=/docs/components-form-select--docs'  },
             { name: t('related.items.command.name'), description: stripHtml(t('related.items.command.description')), path: '?path=/docs/components-overlay-command--docs' },
@@ -1081,7 +1069,6 @@ export type ComboboxElement = HTMLDivElement & {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -1094,7 +1081,6 @@ export type ComboboxElement = HTMLDivElement & {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -1110,7 +1096,6 @@ export type ComboboxElement = HTMLDivElement & {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

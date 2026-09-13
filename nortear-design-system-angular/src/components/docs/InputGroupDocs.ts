@@ -535,7 +535,7 @@ const TOKEN_ROWS: Array<[string, string]> = [
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <!-- A composição que prova a decisão que mais custa quando se erra: o
                que age dentro da moldura é um BOTÃO, e o que ele fez é contado
                pela PALAVRA, não pelo desenho do ícone. -->
@@ -572,7 +572,6 @@ const TOKEN_ROWS: Array<[string, string]> = [
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -580,7 +579,6 @@ const TOKEN_ROWS: Array<[string, string]> = [
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -588,10 +586,9 @@ const TOKEN_ROWS: Array<[string, string]> = [
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="importDescription()"
           [code]="importCode"
           componentSlug="input-group"
@@ -599,7 +596,6 @@ const TOKEN_ROWS: Array<[string, string]> = [
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="input-group"
@@ -607,20 +603,17 @@ const TOKEN_ROWS: Array<[string, string]> = [
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="input-group"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -628,7 +621,6 @@ const TOKEN_ROWS: Array<[string, string]> = [
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -636,7 +628,6 @@ const TOKEN_ROWS: Array<[string, string]> = [
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -646,25 +637,21 @@ const TOKEN_ROWS: Array<[string, string]> = [
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="input-group"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="input-group"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

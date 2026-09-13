@@ -246,7 +246,6 @@ export function createResizableDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack nds-w-full';
@@ -258,7 +257,6 @@ export function createResizableDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -266,7 +264,6 @@ export function createResizableDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -311,7 +308,6 @@ export function createResizableDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -376,7 +372,6 @@ export function createResizableDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createResizablePanel } from '@/components/ui/resizable';`,
         });
 
@@ -417,7 +412,6 @@ const root = createResizablePanel({
 });`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'horizontal',
@@ -446,7 +440,6 @@ const root = createResizablePanel({
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -493,7 +486,6 @@ export function createResizablePanel(
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createResizablePanel(options) — ResizablePanelOptions',
@@ -542,7 +534,6 @@ export function createResizablePanel(
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -566,7 +557,6 @@ export function createResizablePanel(
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -584,7 +574,6 @@ export function createResizablePanel(
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.scrollArea.name'),  description: toPlainText(t('related.items.scrollArea.description')),  path: '?path=/docs/components-layout-scrollarea--docs'  },
             { name: t('related.items.sheet.name'),       description: toPlainText(t('related.items.sheet.description')),       path: '?path=/docs/components-overlay-sheet--docs'       },
@@ -595,13 +584,11 @@ export function createResizablePanel(
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -623,7 +610,6 @@ export function createResizablePanel(
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

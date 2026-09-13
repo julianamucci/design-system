@@ -8,6 +8,8 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { NdsCard } from '@/components/ui/card';
 
+import { tituloDeSecao } from './titulo-de-secao';
+
 export interface DocsDoDontPair {
   doLabel: string;
   dontLabel: string;
@@ -87,6 +89,6 @@ export interface DocsDoDontPair {
   `,
 })
 export class NdsDocsDoDont {
-  readonly title = input.required<string>();
+  protected readonly title = tituloDeSecao('do-dont');
   readonly pairs = input.required<DocsDoDontPair[]>();
 }

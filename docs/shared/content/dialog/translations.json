@@ -11,7 +11,6 @@
       "aiEntities": "Dialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog, focus trap, modal"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "triggerLabel": "Editar perfil",
         "title": "Editar perfil",
@@ -50,7 +49,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Dialog</strong> — container raiz que gerencia o estado de abertura e o foco.",
       "item2": "<strong>DialogTrigger</strong> — elemento que dispara a abertura. Compõe com <code>Button</code> via composição, delegando a renderização ao filho.",
       "item3": "<strong>DialogPortal</strong> — renderiza o conteúdo fora da árvore do pai, isolando de overflow e transform.",
@@ -71,7 +69,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para formulários modais, edição de recursos ou conteúdo informativo que precisa de atenção temporária.",
@@ -174,7 +171,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Título nomeia o objeto, descrição orienta a ação, botão primário usa verbo específico (\"Salvar alterações\").",
         "dont": "Título genérico (\"Atenção\"), descrição vazia e botão \"OK\" sem indicar o que será feito."
@@ -185,13 +181,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withScroll": "Com scroll interno:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Composições Disponíveis",
       "note": "Dialog não usa <code>cva()</code> nem expõe prop <code>variant</code> ou <code>size</code>. As \"variantes\" abaixo são composições estruturais recorrentes — escolha a que melhor descreve o caso de uso.",
       "items": {
         "default": "Title + Description + Footer com ação primária. Composição padrão para formulários e edições.",
@@ -206,7 +199,6 @@
           "use": "Confirmar envio de link, mensagem ou convite. O usuário pode revisar o endereço/destinatário antes de prosseguir e cancelar sem consequência."
         }
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "profileEdit": {
           "name": "Edição de perfil",
@@ -221,7 +213,6 @@
       }
     },
     "states": {
-      "title": "Configurações",
       "cols": {
         "state": "Configuração",
         "trigger": "Como ativar",
@@ -254,7 +245,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "rootTitle": "Dialog (root)",
       "contentTitle": "DialogContent",
@@ -278,7 +268,6 @@
       "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props HTML nativos. O conteúdo repassa as props do painel flutuante da camada de comportamento (interceptar o ponteiro fora e a tecla Escape, por exemplo) para customizar o fechamento."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Classe .nds-*",
@@ -296,7 +285,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.2 AA: 2.1.2 (sem armadilhas de teclado), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — sinaliza ao leitor que o conteúdo fora do diálogo está inativo.",
@@ -324,7 +312,6 @@
       "onFocus": "Ao mover foco entre campos: leitor anuncia o label e o tipo de cada controle."
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "alertDialog": "Para confirmação de ação destrutiva. Três coisas o separam deste: <code>role=\"alertdialog\"</code>, que faz o leitor de tela anunciar com urgência; clique no véu NÃO fecha; e o foco entra no cancelar, não no primeiro focável.",
@@ -334,14 +321,12 @@
       "drawer": "Variante mobile-first que sobe da base da tela. Boa para edições rápidas em touch."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O conteúdo do diálogo é renderizado em portal, o que o isola de <code>overflow</code> e <code>transform</code> de ancestrais. Se algo da sua aplicação precisar aparecer ACIMA dele, use um valor maior que <code>--z-modal</code> — o painel já está na camada de modal, não numa camada baixa.",
       "tip2": "Para fechar Dialog após submit assíncrono, controle <code>open</code> via state e feche apenas em caso de sucesso. Em erro, mantenha aberto e exiba feedback inline.",
       "tip3": "Conteúdo mais alto que a janela rola por dentro do corpo: dê a ele uma altura máxima relativa à janela e rolagem no eixo vertical, e o painel continua centralizado e fixo. Caixa que rola é parada de teclado, então o corpo precisa de <code>tabindex=\"0\"</code>, <code>role=\"group\"</code> e um rótulo acessível, os três juntos.",
       "tip4": "Evite aninhar Dialog dentro de DropdownMenu ou Popover — o focus trap pode conflitar. Feche o menu antes de abrir o diálogo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Dialog rastreia abertura, fechamento e ação primária para medir engajamento e taxa de conclusão de fluxos modais.",
       "table": {
         "event": "Evento",
@@ -368,7 +353,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Dialog.",
@@ -486,7 +470,6 @@
       "aiEntities": "Dialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog, focus trap, modal"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "triggerLabel": "Edit profile",
         "title": "Edit profile",
@@ -525,7 +508,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Dialog</strong> — root container managing open state and focus.",
       "item2": "<strong>DialogTrigger</strong> — element that opens the dialog. Composes with <code>Button</code> by delegating rendering to the child element.",
       "item3": "<strong>DialogPortal</strong> — renders content outside the parent tree, isolating from overflow and transform.",
@@ -546,7 +528,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for modal forms, resource editing, or informational content needing temporary attention.",
@@ -649,7 +630,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Title names the object, description guides the action, primary button uses a specific verb (\"Save changes\").",
         "dont": "Generic title (\"Notice\"), empty description, and \"OK\" button without indicating what will happen."
@@ -660,13 +640,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withScroll": "With internal scroll:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Available Compositions",
       "note": "Dialog does not use <code>cva()</code> nor expose <code>variant</code> or <code>size</code> props. The \"variants\" below are recurring structural compositions — pick the one that best describes the use case.",
       "items": {
         "default": "Title + Description + Footer with primary action. Default composition for forms and editing.",
@@ -681,7 +658,6 @@
           "use": "Confirm sending a link, message, or invite. The user can review the address/recipient before proceeding and cancel without consequence."
         }
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "profileEdit": {
           "name": "Profile editing",
@@ -696,7 +672,6 @@
       }
     },
     "states": {
-      "title": "Configurations",
       "cols": {
         "state": "Configuration",
         "trigger": "How to activate",
@@ -729,7 +704,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "rootTitle": "Dialog (root)",
       "contentTitle": "DialogContent",
@@ -753,7 +727,6 @@
       "extensibility": "All subcomponents accept <code>className</code> and native HTML props. The content forwards the behaviour layer floating-panel props (intercepting the outside pointer and the Escape key, for instance) to customize closing."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": ".nds-* Class",
@@ -771,7 +744,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Dialog uses <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> with automatic focus trap and focus return to trigger. Meets WCAG 2.2 AA: 2.1.2 (no keyboard trap), 2.4.3 (focus order), 4.1.2 (name, role, value).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — signals to the reader that content outside the dialog is inert.",
@@ -799,7 +771,6 @@
       "onFocus": "On moving focus between fields: reader announces each control's label and type."
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "alertDialog": "For confirming a destructive action. Three things separate it from this one: <code>role=\"alertdialog\"</code>, which makes the screen reader announce with urgency; clicking the overlay does NOT close it; and focus enters the cancel button, not the first focusable.",
@@ -809,14 +780,12 @@
       "drawer": "Mobile-first variant that slides up from the bottom. Good for quick edits on touch."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "The dialog content renders in a portal, which isolates it from ancestor <code>overflow</code> and <code>transform</code>. If something in your application must appear ABOVE it, use a value higher than <code>--z-modal</code> — the panel already sits on the modal layer, not on a low one.",
       "tip2": "To close Dialog after async submit, control <code>open</code> via state and close only on success. On error, keep open and show inline feedback.",
       "tip3": "Content taller than the window scrolls inside the body: give it a max height relative to the window plus vertical scrolling, and the panel stays centred and fixed. A scrolling box is a keyboard stop, so the body needs <code>tabindex=\"0\"</code>, <code>role=\"group\"</code> and an accessible name, all three together.",
       "tip4": "Avoid nesting Dialog inside DropdownMenu or Popover — focus trap may conflict. Close the menu before opening the dialog."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Dialog tracks open, close, and primary action to measure engagement and modal flow completion rate.",
       "table": {
         "event": "Event",
@@ -843,7 +812,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Dialog interaction.",
@@ -961,7 +929,6 @@
       "aiEntities": "Dialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog, focus trap, modal"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "triggerLabel": "Editar perfil",
         "title": "Editar perfil",
@@ -1000,7 +967,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Dialog</strong> — contenedor raíz que gestiona el estado de apertura y el foco.",
       "item2": "<strong>DialogTrigger</strong> — elemento que dispara la apertura. Compone con <code>Button</code> delegando la renderización al hijo.",
       "item3": "<strong>DialogPortal</strong> — renderiza el contenido fuera del árbol del padre, aislando de overflow y transform.",
@@ -1021,7 +987,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Úsalo para formularios modales, edición de recursos o contenido informativo que requiera atención temporal.",
@@ -1124,7 +1089,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El título nombra el objeto, la descripción orienta la acción, el botón primario usa un verbo específico (\"Guardar cambios\").",
         "dont": "Título genérico (\"Atención\"), descripción vacía y botón \"OK\" sin indicar lo que hará."
@@ -1135,13 +1099,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withScroll": "Con scroll interno:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Composiciones Disponibles",
       "note": "Dialog no usa <code>cva()</code> ni expone props <code>variant</code> o <code>size</code>. Las \"variantes\" abajo son composiciones estructurales recurrentes — elige la que mejor describa el caso de uso.",
       "items": {
         "default": "Title + Description + Footer con acción primaria. Composición estándar para formularios y ediciones.",
@@ -1156,7 +1117,6 @@
           "use": "Confirmar el envío de un enlace, mensaje o invitación. El usuario puede revisar la dirección/destinatario antes de continuar y cancelar sin consecuencia."
         }
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "profileEdit": {
           "name": "Edición de perfil",
@@ -1171,7 +1131,6 @@
       }
     },
     "states": {
-      "title": "Configuraciones",
       "cols": {
         "state": "Configuración",
         "trigger": "Cómo activar",
@@ -1204,7 +1163,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "rootTitle": "Dialog (root)",
       "contentTitle": "DialogContent",
@@ -1228,7 +1186,6 @@
       "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props HTML nativos. El contenido reenvía las props del panel flotante de la capa de comportamiento (interceptar el puntero fuera y la tecla Escape, por ejemplo) para personalizar el cierre."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Clase .nds-*",
@@ -1246,7 +1203,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Dialog usa <code>role=\"dialog\"</code> + <code>aria-modal=\"true\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.2 AA: 2.1.2 (sin trampas de teclado), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
       "item1": "<strong>role=\"dialog\" + aria-modal=\"true\"</strong> — señala al lector que el contenido fuera del diálogo está inerte.",
@@ -1274,7 +1230,6 @@
       "onFocus": "Al mover el foco entre campos: el lector anuncia el label y el tipo de cada control."
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "alertDialog": "Para confirmar una acción destructiva. Tres cosas lo separan de este: <code>role=\"alertdialog\"</code>, que hace que el lector de pantalla anuncie con urgencia; el clic en el velo NO cierra; y el foco entra en cancelar, no en el primer enfocable.",
@@ -1284,14 +1239,12 @@
       "drawer": "Variante mobile-first que sube desde la base de la pantalla. Útil para ediciones rápidas en touch."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El contenido del diálogo se renderiza en portal, lo que lo aísla del <code>overflow</code> y el <code>transform</code> de sus ancestros. Si algo de tu aplicación debe aparecer POR ENCIMA, usa un valor mayor que <code>--z-modal</code> — el panel ya está en la capa de modal, no en una capa baja.",
       "tip2": "Para cerrar Dialog tras submit asíncrono, controla <code>open</code> vía state y cierra solo en caso de éxito. En error, mantén abierto y muestra feedback inline.",
       "tip3": "El contenido más alto que la ventana se desplaza dentro del cuerpo: dale una altura máxima relativa a la ventana y desplazamiento vertical, y el panel sigue centrado y fijo. Una caja que se desplaza es una parada de teclado, así que el cuerpo necesita <code>tabindex=\"0\"</code>, <code>role=\"group\"</code> y un nombre accesible, los tres juntos.",
       "tip4": "Evita anidar Dialog dentro de DropdownMenu o Popover — el focus trap puede chocar. Cierra el menú antes de abrir el diálogo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Dialog rastrea apertura, cierre y acción primaria para medir engagement y tasa de finalización de flujos modales.",
       "table": {
         "event": "Evento",
@@ -1318,7 +1271,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada interacción del Dialog.",

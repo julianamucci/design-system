@@ -383,7 +383,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md" style="flex-wrap: wrap">
       <Dialog onOpenChange={(o: boolean) => trackDialog('docs_demo', 'default', o)}>
         <DialogTrigger>
@@ -423,7 +423,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -442,7 +441,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -508,7 +506,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -608,7 +605,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withScroll')}
@@ -618,7 +614,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     note={stripHtml($tStore('variants.note'))}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="dialog"
@@ -834,7 +829,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
   {/snippet}
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="dialog"
     items={[
@@ -939,7 +933,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Configurações (States) ─────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -956,7 +949,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.rootTitle'),
@@ -1003,7 +995,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -1026,7 +1017,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={stripHtml($tStore('accessibility.summary'))}
     items={[
       $tStore('accessibility.item1'),
@@ -1047,7 +1037,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'AlertDialog', description: toPlainText($tStore('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
       { name: 'Sheet',       description: $tStore('related.sheet'),                  path: '?path=/docs/components-overlay-sheet--docs'       },
@@ -1059,7 +1048,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -1070,7 +1058,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -1088,7 +1075,6 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

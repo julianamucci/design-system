@@ -266,7 +266,7 @@ interface TabsContentProps {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <Tabs
           defaultValue="overview"
           onValueChange={(next) => {
@@ -280,7 +280,7 @@ interface TabsContentProps {
           }}
           className="nds-w-full"
         >
-          <TabsList aria-label={tContent("demonstration.title")}>
+          <TabsList aria-label={tNav("nav.demonstration")}>
             <TabsTrigger value="overview">
               {tContent("demonstration.labels.overview")}
             </TabsTrigger>
@@ -305,7 +305,6 @@ interface TabsContentProps {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -318,7 +317,6 @@ interface TabsContentProps {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -377,7 +375,6 @@ interface TabsContentProps {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -475,11 +472,10 @@ interface TabsContentProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         items={[
           {
             trackId: "default",
@@ -580,7 +576,6 @@ interface TabsContentProps {
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="tabs"
         items={[
@@ -759,7 +754,6 @@ interface TabsContentProps {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -796,7 +790,6 @@ interface TabsContentProps {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: "Tabs",
@@ -840,7 +833,6 @@ interface TabsContentProps {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -859,7 +851,6 @@ interface TabsContentProps {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5, 6, 7].map((i) =>
           tContent(`accessibility.items.item${i}`)
@@ -898,7 +889,6 @@ interface TabsContentProps {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="tabs"
         items={[
           {
@@ -926,7 +916,6 @@ interface TabsContentProps {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },
@@ -937,7 +926,6 @@ interface TabsContentProps {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -964,7 +952,6 @@ interface TabsContentProps {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

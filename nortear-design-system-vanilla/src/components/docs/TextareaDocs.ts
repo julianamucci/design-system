@@ -268,7 +268,6 @@ export function createTextareaDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack nds-w-full';
@@ -305,7 +304,6 @@ export function createTextareaDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -318,7 +316,6 @@ export function createTextareaDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -363,7 +360,6 @@ export function createTextareaDocs(): HTMLElement {
 
       case 'do-dont': {
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -419,7 +415,6 @@ export function createTextareaDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: 'Importação do factory custom (Nortear):',
           code: `import { createTextarea, type TextareaOptions } from '@/components/ui/textarea';`,
           secondaryDescription: 'Uso básico com label + contador acessível:',
@@ -452,7 +447,6 @@ textarea.addEventListener('input', () => {
       case 'variantes': {
         return createDocsVariants({
           id: 'variantes',
-          title: t('variants.title'),
           componentSlug: 'textarea',
           items: [
             {
@@ -651,7 +645,6 @@ form.addEventListener('submit', (e) => {
 });`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'textarea',
           items: [
@@ -764,7 +757,6 @@ form.dataset.spacing = 'md';
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -801,7 +793,6 @@ export type TextareaOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createTextarea(options) — Nortear',
@@ -875,7 +866,6 @@ export type TextareaOptions = {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -903,7 +893,6 @@ export type TextareaOptions = {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
             t('accessibility.items.item1'),
@@ -925,7 +914,6 @@ export type TextareaOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           componentSlug: 'textarea',
           items: [
             { name: t('related.items.input.name'),    description: stripHtml(t('related.items.input.description')),    path: '?path=/docs/components-form-input--docs'    },
@@ -937,7 +925,6 @@ export type TextareaOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -950,7 +937,6 @@ export type TextareaOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -965,7 +951,6 @@ export type TextareaOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

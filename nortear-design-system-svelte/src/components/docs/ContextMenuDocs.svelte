@@ -497,7 +497,7 @@ interface ContextMenuLabelProps {
   {/snippet}
 
   <!-- ── Demonstração ──────────────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
       <ContextMenu.Root onOpenChange={menus.demo.onOpenChange}>
         <ContextMenu.Trigger class={areaClasse} data-align="center" data-justify="center">
@@ -534,7 +534,6 @@ interface ContextMenuLabelProps {
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={stringsFromDict($tStore, 'anatomy')}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -542,7 +541,6 @@ interface ContextMenuLabelProps {
 
   <!-- ── Quando Usar ───────────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: stringsFromDict($tStore, 'usage.guidelines'),
@@ -572,7 +570,6 @@ interface ContextMenuLabelProps {
     `toPlainText` a tag chegaria à tela como texto.
   -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -740,7 +737,6 @@ interface ContextMenuLabelProps {
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withCheckbox')}
@@ -759,7 +755,6 @@ interface ContextMenuLabelProps {
   -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="context-menu"
@@ -873,7 +868,6 @@ interface ContextMenuLabelProps {
 
   <!-- ── Estados ───────────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -903,7 +897,6 @@ interface ContextMenuLabelProps {
     `indeterminate`, que ele tem e que o bloco de interface já declarava.
   -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.rootTitle'),
@@ -1015,7 +1008,6 @@ interface ContextMenuLabelProps {
 
   <!-- ── Tokens ────────────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -1056,7 +1048,6 @@ interface ContextMenuLabelProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.warning'),
@@ -1088,7 +1079,6 @@ interface ContextMenuLabelProps {
   <!-- ── Relacionados ─────────────────────────────────────────────────── -->
   <!-- A descrição é TEXTO no container: sem `toPlainText`, tag vira texto. -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'DropdownMenu', description: toPlainText($tStore('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
       { name: 'Menubar',      description: toPlainText($tStore('related.menubar')),      path: '?path=/docs/components-navigation-menubar--docs'      },
@@ -1100,13 +1090,11 @@ interface ContextMenuLabelProps {
 
   <!-- ── Notas ────────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={stringsFromDict($tStore, 'notes', 'tip').map((content) => ({ title: '', content }))}
   />
 
   <!-- ── Analytics ────────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event:   $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -1124,7 +1112,6 @@ interface ContextMenuLabelProps {
 
   <!-- ── Testes ────────────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

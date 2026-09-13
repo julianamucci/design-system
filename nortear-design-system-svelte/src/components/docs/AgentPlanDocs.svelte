@@ -174,7 +174,6 @@ interface PlanStep {
     elas.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="agent-plan"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -207,7 +206,6 @@ interface PlanStep {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -216,7 +214,6 @@ interface PlanStep {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -287,7 +284,6 @@ interface PlanStep {
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -310,7 +306,6 @@ interface PlanStep {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -323,7 +318,6 @@ interface PlanStep {
     lista, e nenhuma das duas fica para trás quando o tipo cresce.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -338,7 +332,6 @@ interface PlanStep {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'AgentPlan',
@@ -400,7 +393,6 @@ interface PlanStep {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -422,7 +414,6 @@ interface PlanStep {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -437,7 +428,6 @@ interface PlanStep {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
       { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs'  },
@@ -448,14 +438,12 @@ interface PlanStep {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="agent-plan"
     items={[1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -470,7 +458,6 @@ interface PlanStep {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

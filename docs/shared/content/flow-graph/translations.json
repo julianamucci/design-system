@@ -19,7 +19,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "order": "Enquanto o agente trabalha, com dois caminhos em paralelo",
         "failure": "Quando um dos caminhos quebra",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A camada que rola envolve o grafo inteiro. Ela é a única que rola, recebe foco pelo teclado e tem papel e nome — sem eles, quem chega ali ouvindo não sabe onde entrou.",
       "item2": "O desenho ocupa a largura disponível e passa dela quando as colunas encostam na largura mínima. É aí que a rolagem começa.",
@@ -40,7 +38,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando o trabalho se ramifica e volta a se juntar — dois caminhos que correm em paralelo, uma decisão com dois desfechos, um passo que espera por dois outros.",
@@ -131,7 +128,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Cada nó diz, em palavras, o estado e de quais nós ele depende — o grafo se reconstrói de ouvido.",
         "dont": "Só a curva liga um nó ao outro, e quem lê de ouvido recebe uma lista de caixas soltas."
@@ -142,7 +138,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createFlowGraph } from '@/components/ui/flow-graph';\n\nconst flowGraph = createFlowGraph({\n  nodes: nos,\n  edges: arestas,\n  status: 'running',\n  labels: labels,\n});\n\n// Sem nó nenhum não há grafo, e a fábrica devolve nada.\nif (flowGraph) document.querySelector('#app')?.append(flowGraph);",
@@ -161,7 +156,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -189,7 +183,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -306,7 +299,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -408,7 +400,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Um grafo desenhado não é lido: posição não tem ordem, e curva não tem palavra. A regra desta peça é que a estrutura acessível é a MESMA estrutura — cada nó é um item de lista de verdade, na ordem em que foi declarado, e o que a posição diz sem palavras ele diz com palavras dentro de si.",
       "items": {
         "item1": "Cada nó carrega, em texto que só quem ouve recebe, a palavra do seu estado e os rótulos dos nós de que ele depende.",
@@ -440,7 +431,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentPlan": {
           "name": "Plano do agente",
@@ -461,7 +451,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O que faz esta peça existir não é a posição: é a ligação. Dizer que um passo depende de outro é uma relação entre dois itens, e nada no vocabulário desta família sabia dizer isso — uma fila ordenada não se ramifica nem se reencontra.",
       "item2": "Antes de construir, foi medido: o único conector do design system é a linha de 1 px entre etapas vizinhas de uma fila linear, e o gráfico tem oito tipos e nenhum deles é grafo.",
       "item3": "A grade não tem vão entre as casas, e a folga é margem da caixa. É o que faz o desenho das curvas fechar com a grade sem medir elemento nenhum — com vão, o centro de uma casa deixaria de ser calculável, e medir traria observador de redimensionamento e cinco implementações de uma conta que hoje se testa sem navegador.",
@@ -471,7 +460,6 @@
       "item7": "Não existe contador de revelação. Ele é da folha de animação, e sem ele some junto o segundo tom de traço que existia só para mostrar a ligação adiante da revelação — sem revelação não há adiante."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não tem ação.",
       "table": {
         "event": "Evento",
@@ -489,7 +477,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -613,7 +600,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "order": "While the agent works, with two paths running in parallel",
         "failure": "When one of the paths breaks",
@@ -622,7 +608,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The scrolling layer wraps the whole graph. It is the only one that scrolls, it takes keyboard focus and it carries a role and a name — without them, whoever lands there by ear does not know where they are.",
       "item2": "The drawing takes the available width and goes past it once the columns reach the minimum width. That is where scrolling starts.",
@@ -634,7 +619,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when work branches and rejoins — two paths running in parallel, a decision with two outcomes, a step waiting on two others.",
@@ -725,7 +709,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Each node says, in words, its state and which nodes it depends on — the graph rebuilds itself by ear.",
         "dont": "Only the curve links one node to another, and whoever reads by ear receives a list of loose boxes."
@@ -736,7 +719,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createFlowGraph } from '@/components/ui/flow-graph';\n\nconst flowGraph = createFlowGraph({\n  nodes: nos,\n  edges: arestas,\n  status: 'running',\n  labels: labels,\n});\n\n// Sem nó nenhum não há grafo, e a fábrica devolve nada.\nif (flowGraph) document.querySelector('#app')?.append(flowGraph);",
@@ -755,7 +737,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -783,7 +764,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -900,7 +880,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -1002,7 +981,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "A drawn graph is not read: position has no order, and a curve has no words. The rule of this piece is that the accessible structure is the SAME structure — each node is a real list item, in the order it was declared, and what the position says without words it says with words inside itself.",
       "items": {
         "item1": "Each node carries, in text only listeners receive, the word for its state and the labels of the nodes it depends on.",
@@ -1034,7 +1012,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "agentPlan": {
           "name": "Agent plan",
@@ -1055,7 +1032,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "What makes this piece exist is not the position: it is the link. Saying that one step depends on another is a relation between two items, and nothing in this family’s vocabulary could say that — an ordered queue neither branches nor rejoins.",
       "item2": "Measured before building: the only connector in the design system is the 1 px line between neighbouring steps of a linear queue, and the chart has eight types and none of them is a graph.",
       "item3": "The grid has no gutter between cells, and the breathing room is a box margin. That is what makes the curves close with the grid without measuring any element — with a gutter, the centre of a cell would stop being computable, and measuring would bring a resize observer and five implementations of a calculation that today is tested without a browser.",
@@ -1065,7 +1041,6 @@
       "item7": "There is no reveal counter. It belongs to the animation sheet, and with it goes the second stroke tone that existed only to show the link ahead of the reveal — with no reveal there is no ahead."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the piece itself instruments nothing, because it has no action.",
       "table": {
         "event": "Event",
@@ -1083,7 +1058,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1207,7 +1181,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "order": "Mientras el agente trabaja, con dos caminos en paralelo",
         "failure": "Cuando uno de los caminos se rompe",
@@ -1216,7 +1189,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La capa que se desplaza envuelve el grafo entero. Es la única que se desplaza, recibe foco por teclado y tiene rol y nombre — sin ellos, quien llega ahí oyendo no sabe dónde entró.",
       "item2": "El dibujo ocupa el ancho disponible y lo supera cuando las columnas llegan al ancho mínimo. Ahí empieza el desplazamiento.",
@@ -1228,7 +1200,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo cuando el trabajo se ramifica y vuelve a juntarse — dos caminos en paralelo, una decisión con dos desenlaces, un paso que espera a otros dos.",
@@ -1319,7 +1290,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Cada nodo dice, en palabras, su estado y de qué nodos depende — el grafo se reconstruye de oído.",
         "dont": "Solo la curva une un nodo con otro, y quien lee de oído recibe una lista de cajas sueltas."
@@ -1330,7 +1300,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createFlowGraph } from '@/components/ui/flow-graph';\n\nconst flowGraph = createFlowGraph({\n  nodes: nos,\n  edges: arestas,\n  status: 'running',\n  labels: labels,\n});\n\n// Sem nó nenhum não há grafo, e a fábrica devolve nada.\nif (flowGraph) document.querySelector('#app')?.append(flowGraph);",
@@ -1349,7 +1318,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1377,7 +1345,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1494,7 +1461,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1596,7 +1562,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Un grafo dibujado no se lee: la posición no tiene orden, y una curva no tiene palabras. La regla de esta pieza es que la estructura accesible es la MISMA estructura — cada nodo es un elemento de lista de verdad, en el orden en que fue declarado, y lo que la posición dice sin palabras él lo dice con palabras dentro de sí.",
       "items": {
         "item1": "Cada nodo lleva, en texto que solo recibe quien escucha, la palabra de su estado y las etiquetas de los nodos de los que depende.",
@@ -1628,7 +1593,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentPlan": {
           "name": "Plan del agente",
@@ -1649,7 +1613,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Lo que hace existir a esta pieza no es la posición: es el enlace. Decir que un paso depende de otro es una relación entre dos elementos, y nada en el vocabulario de esta familia sabía decirlo — una fila ordenada no se ramifica ni se reencuentra.",
       "item2": "Medido antes de construir: el único conector del design system es la línea de 1 px entre etapas vecinas de una fila lineal, y el gráfico tiene ocho tipos y ninguno es un grafo.",
       "item3": "La cuadrícula no tiene separación entre casillas, y el hueco es margen de la caja. Es lo que hace que el dibujo de las curvas cierre con la cuadrícula sin medir ningún elemento — con separación, el centro de una casilla dejaría de ser calculable, y medir traería un observador de redimensionamiento y cinco implementaciones de una cuenta que hoy se prueba sin navegador.",
@@ -1659,7 +1622,6 @@
       "item7": "No existe contador de revelación. Es de la hoja de animación, y con él se va el segundo tono de trazo que existía solo para mostrar el enlace por delante de la revelación — sin revelación no hay delante."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no tiene acción.",
       "table": {
         "event": "Evento",
@@ -1677,7 +1639,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

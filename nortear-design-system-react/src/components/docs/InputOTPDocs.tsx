@@ -257,7 +257,7 @@ interface InputOTPProps {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div
           className="nds-grid nds-w-full"
           data-spacing="lg"
@@ -362,7 +362,6 @@ interface InputOTPProps {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -375,7 +374,6 @@ interface InputOTPProps {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -458,7 +456,6 @@ interface InputOTPProps {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -493,11 +490,10 @@ interface InputOTPProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="input-otp"
         items={[
           {
@@ -549,7 +545,6 @@ interface InputOTPProps {
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="input-otp"
         items={[
@@ -705,7 +700,6 @@ interface InputOTPProps {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -742,7 +736,6 @@ interface InputOTPProps {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -812,7 +805,6 @@ interface InputOTPProps {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -878,7 +870,6 @@ interface InputOTPProps {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -899,7 +890,6 @@ interface InputOTPProps {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="input-otp"
         items={[
           {
@@ -927,7 +917,6 @@ interface InputOTPProps {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="input-otp"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -940,7 +929,6 @@ interface InputOTPProps {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
           {
@@ -953,7 +941,6 @@ interface InputOTPProps {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

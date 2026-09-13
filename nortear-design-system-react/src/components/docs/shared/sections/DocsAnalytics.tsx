@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { Card } from '@/components/ui/card';
 import {
   Table,
@@ -15,12 +16,12 @@ export interface DocsAnalyticsEventItem {
 }
 
 export interface DocsAnalyticsProps {
-  title: string;
   cols: { event: string; trigger: string; payload: string };
   items: DocsAnalyticsEventItem[];
 }
 
-export function DocsAnalytics({ title, cols, items }: DocsAnalyticsProps) {
+export function DocsAnalytics({ cols, items }: DocsAnalyticsProps) {
+  const title = useTituloDeSecao('analytics');
   return (
     <section id="analytics">
       <h2 className="nds-section-title">{title}</h2>

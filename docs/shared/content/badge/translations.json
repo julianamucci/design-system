@@ -11,7 +11,6 @@
       "aiEntities": "Badge, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "defaultLabel": "Novo",
         "destructiveLabel": "Urgente",
@@ -24,7 +23,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Badge</strong> — container <code>&lt;span&gt;</code>. Etiqueta inline: cabe dentro de frase, título e célula de tabela sem quebrar a linha.",
       "item2": "<strong>Conteúdo</strong> — texto curto ou número. Ideal: 1 a 3 palavras ou valores numéricos compactos.",
       "item3": "<strong>Ícone (opcional)</strong> — usado antes do texto para reforçar status. Deve ter <code>aria-hidden=\"true\"</code>.",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para rótulos curtos — status, contagens, categorias ou tags. Nunca para frases completas.",
@@ -123,7 +120,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Texto curto e direto (1 a 3 palavras). Rótulo complementa o item, não substitui.",
         "dont": "Frases completas ou texto longo que quebra o layout inline."
@@ -134,13 +130,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withIcon": "Com ícone Lucide:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Variantes Disponíveis",
       "note": "O Badge oferece 5 variantes nativas via prop <code>variant</code>, e todas mudam apenas a COR DA BORDA — fundo e texto são sempre neutros. Não possui prop <code>size</code>: a dimensão é única.",
       "items": {
         "default": "Destaque principal. Borda em <code>primary</code>, ideal para itens novos ou ações em evidência.",
@@ -149,7 +142,6 @@
         "success": "Confirmação. Estado concluído ou aprovado, como pagamento compensado ou publicação no ar.",
         "info": "Neutro discreto. A borda mais silenciosa do conjunto, para contexto que não deve competir por atenção."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "withIcon": {
           "name": "Com ícone",
@@ -169,7 +161,6 @@
       }
     },
     "states": {
-      "title": "Configurações",
       "cols": {
         "state": "Configuração",
         "trigger": "Como ativar",
@@ -182,7 +173,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "badgeTitle": "Badge",
       "table": {
@@ -199,7 +189,6 @@
       "extensibility": "O <code>Badge</code> aceita os atributos do elemento — <code>aria-*</code>, <code>data-*</code> e classes. Para torná-lo interativo, envolva em <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code>: quem gerencia foco, teclado e evento é o pai, e o badge fica só com a aparência."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicação no tema",
@@ -224,7 +213,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Badge é um elemento visual não interativo por padrão. Quando usado para comunicar estado, garanta que o significado também esteja no texto — cor sozinha não comunica status (WCAG 1.4.1).",
       "item1": "<strong>Não interativo por padrão</strong> — Badge é um <code>&lt;div&gt;</code> sem foco nem tabindex. Para interação, envolva em <code>&lt;button&gt;</code> ou <code>&lt;a&gt;</code>.",
@@ -251,20 +239,17 @@
       "icons": "Ícones com <code>aria-hidden</code> são ignorados — apenas o texto é lido."
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "alert": "Para mensagens com título e descrição que exigem mais contexto.",
       "button": "Para tornar o Badge clicável, envolva em Button ou use como slot interno."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "Badge não tem prop <code>size</code>. Se precisar de variações de tamanho, crie utilitárias via <code>className</code> com tokens do projeto — nunca altere o componente base.",
       "tip2": "Para contadores acima de 99, trunque para <code>99+</code> no código da aplicação. O Badge não faz esse tratamento automaticamente.",
       "tip3": "Para Badge interativo, prefira compor com <code>&lt;button&gt;</code> externo em vez de adicionar <code>onClick</code> no <code>&lt;div&gt;</code> — preserva semântica e acessibilidade de teclado."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Badge raramente emite eventos. Rastreie apenas quando funciona como trigger clicável (ex: filtro ou navegação).",
       "table": {
         "event": "Evento",
@@ -285,7 +270,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Badge.",
@@ -391,7 +375,6 @@
       "aiEntities": "Badge, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "defaultLabel": "New",
         "destructiveLabel": "Urgent",
@@ -404,7 +387,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Badge</strong> — <code>&lt;span&gt;</code> container. An inline label: it fits inside a sentence, a heading, or a table cell without breaking the line.",
       "item2": "<strong>Content</strong> — short text or number. Ideal: 1 to 3 words or compact numeric values.",
       "item3": "<strong>Icon (optional)</strong> — placed before text to reinforce status. Must have <code>aria-hidden=\"true\"</code>.",
@@ -419,7 +401,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for short labels — status, counts, categories, or tags. Never for full sentences.",
@@ -503,7 +484,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Short, direct text (1 to 3 words). The label complements the item, never replaces it.",
         "dont": "Full sentences or long text that breaks the inline layout."
@@ -514,13 +494,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withIcon": "With Lucide icon:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Available Variants",
       "note": "Badge offers 5 native variants via the <code>variant</code> prop, and all of them change only the BORDER COLOUR — fill and text are always neutral. It has no <code>size</code> prop: the dimension is fixed.",
       "items": {
         "default": "Primary emphasis. <code>primary</code> border, ideal for new items or highlighted actions.",
@@ -529,7 +506,6 @@
         "success": "Confirmation. A finished or approved state, such as a cleared payment or a published item.",
         "info": "Quiet neutral. The subtlest border of the set, for context that should not compete for attention."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "withIcon": {
           "name": "With icon",
@@ -549,7 +525,6 @@
       }
     },
     "states": {
-      "title": "Configurations",
       "cols": {
         "state": "Configuration",
         "trigger": "How to activate",
@@ -562,7 +537,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "badgeTitle": "Badge",
       "table": {
@@ -579,7 +553,6 @@
       "extensibility": "<code>Badge</code> accepts the element's attributes — <code>aria-*</code>, <code>data-*</code>, and classes. To make it interactive, wrap it in <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>: the parent handles focus, keyboard, and events, and the badge only carries the appearance."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": "Theme application",
@@ -604,7 +577,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Badge is a non-interactive visual element by default. When used to communicate state, make sure the meaning is also in the text — color alone does not convey status (WCAG 1.4.1).",
       "item1": "<strong>Non-interactive by default</strong> — Badge is a <code>&lt;div&gt;</code> with no focus or tabindex. For interaction, wrap it in a <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>.",
@@ -631,20 +603,17 @@
       "icons": "Icons with <code>aria-hidden</code> are ignored — only the text is read."
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "alert": "For messages with title and description that need more context.",
       "button": "To make Badge clickable, wrap it in a Button or use it as an internal slot."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "Badge has no <code>size</code> prop. If you need size variations, create utilities via <code>className</code> with project tokens — never modify the base component.",
       "tip2": "For counters above 99, truncate to <code>99+</code> at the application level. Badge does not handle this automatically.",
       "tip3": "For an interactive Badge, prefer composing with an outer <code>&lt;button&gt;</code> rather than attaching <code>onClick</code> to the <code>&lt;div&gt;</code> — it preserves semantics and keyboard accessibility."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Badge rarely emits events. Track only when it acts as a clickable trigger (e.g., filter or navigation).",
       "table": {
         "event": "Event",
@@ -665,7 +634,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Badge configuration.",
@@ -771,7 +739,6 @@
       "aiEntities": "Badge, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, status indicator, tag, pill"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "defaultLabel": "Nuevo",
         "destructiveLabel": "Urgente",
@@ -784,7 +751,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Badge</strong> — contenedor <code>&lt;span&gt;</code>. Etiqueta inline: cabe dentro de una frase, un título o una celda de tabla sin romper la línea.",
       "item2": "<strong>Contenido</strong> — texto corto o número. Ideal: 1 a 3 palabras o valores numéricos compactos.",
       "item3": "<strong>Ícono (opcional)</strong> — colocado antes del texto para reforzar el estado. Debe tener <code>aria-hidden=\"true\"</code>.",
@@ -799,7 +765,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Úsalo para etiquetas cortas — estados, conteos, categorías o tags. Nunca para frases completas.",
@@ -883,7 +848,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Texto corto y directo (1 a 3 palabras). La etiqueta complementa al ítem, no lo sustituye.",
         "dont": "Frases completas o texto largo que rompe el layout inline."
@@ -894,13 +858,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withIcon": "Con ícono Lucide:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Variantes Disponibles",
       "note": "Badge ofrece 5 variantes nativas vía la prop <code>variant</code>, y todas cambian solo el COLOR DEL BORDE — fondo y texto son siempre neutros. No tiene prop <code>size</code>: la dimensión es única.",
       "items": {
         "default": "Énfasis principal. Borde en <code>primary</code>, ideal para ítems nuevos o acciones destacadas.",
@@ -909,7 +870,6 @@
         "success": "Confirmación. Estado concluido o aprobado, como un pago acreditado o una publicación en línea.",
         "info": "Neutro discreto. El borde más silencioso del conjunto, para contexto que no debe competir por atención."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "withIcon": {
           "name": "Con ícono",
@@ -929,7 +889,6 @@
       }
     },
     "states": {
-      "title": "Configuraciones",
       "cols": {
         "state": "Configuración",
         "trigger": "Cómo activar",
@@ -942,7 +901,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "badgeTitle": "Badge",
       "table": {
@@ -959,7 +917,6 @@
       "extensibility": "El <code>Badge</code> acepta los atributos del elemento — <code>aria-*</code>, <code>data-*</code> y clases. Para hacerlo interactivo, envuélvelo en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code>: el padre gestiona foco, teclado y eventos, y el badge se queda solo con la apariencia."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicación en el tema",
@@ -984,7 +941,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Badge es un elemento visual no interactivo por defecto. Cuando comunica estado, asegúrate de que el significado también esté en el texto — el color solo no comunica estado (WCAG 1.4.1).",
       "item1": "<strong>No interactivo por defecto</strong> — Badge es un <code>&lt;div&gt;</code> sin foco ni tabindex. Para interacción, envuélvelo en <code>&lt;button&gt;</code> o <code>&lt;a&gt;</code>.",
@@ -1011,20 +967,17 @@
       "icons": "Íconos con <code>aria-hidden</code> son ignorados — solo se lee el texto."
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "alert": "Para mensajes con título y descripción que requieren más contexto.",
       "button": "Para hacer Badge clicable, envuélvelo en Button o úsalo como slot interno."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "Badge no tiene prop <code>size</code>. Si necesitas variaciones de tamaño, crea utilitarias vía <code>className</code> con tokens del proyecto — nunca modifiques el componente base.",
       "tip2": "Para contadores mayores a 99, trunca a <code>99+</code> en el código de la aplicación. Badge no hace este tratamiento automáticamente.",
       "tip3": "Para un Badge interactivo, prefiere componer con un <code>&lt;button&gt;</code> externo en lugar de agregar <code>onClick</code> al <code>&lt;div&gt;</code> — preserva semántica y accesibilidad de teclado."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Badge raramente emite eventos. Rastrea solo cuando funciona como trigger clicable (ej: filtro o navegación).",
       "table": {
         "event": "Evento",
@@ -1045,7 +998,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Badge.",

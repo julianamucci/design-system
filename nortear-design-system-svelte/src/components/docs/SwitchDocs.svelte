@@ -211,7 +211,7 @@ interface SwitchProps {
   {/snippet}
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="switch">
+  <DocsDemonstration componentSlug="switch">
     <div class="nds-stack nds-w-sm" data-spacing="lg">
       <!-- Default -->
       <div class="nds-cluster" data-spacing="sm">
@@ -272,7 +272,6 @@ interface SwitchProps {
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -284,7 +283,6 @@ interface SwitchProps {
 
   <!-- ── Quando Usar ───────────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -360,7 +358,6 @@ interface SwitchProps {
 
   <!-- ── Do & Don't ───────────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -413,14 +410,12 @@ interface SwitchProps {
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImport}
     componentSlug="switch"
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     componentSlug="switch"
     items={[
       {
@@ -473,7 +468,6 @@ interface SwitchProps {
 
   <!-- ── Composições ──────────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="switch"
     items={[
@@ -581,7 +575,6 @@ interface SwitchProps {
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -599,7 +592,6 @@ interface SwitchProps {
 
   <!-- ── Propriedades ─────────────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -625,7 +617,6 @@ interface SwitchProps {
 
   <!-- ── Tokens ────────────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -646,7 +637,6 @@ interface SwitchProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -666,7 +656,6 @@ interface SwitchProps {
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.checkbox.name'),   description: $tStore('related.items.checkbox.description'),   path: '?path=/docs/components-form-checkbox--docs' },
       { name: $tStore('related.items.toggle.name'),     description: $tStore('related.items.toggle.description'),     path: '?path=/docs/components-form-toggle--docs' },
@@ -677,7 +666,6 @@ interface SwitchProps {
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -688,7 +676,6 @@ interface SwitchProps {
 
   <!-- ── Analytics ────────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -705,7 +692,6 @@ interface SwitchProps {
 
   <!-- ── Testes ────────────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

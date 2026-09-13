@@ -354,7 +354,7 @@ import { NdsButton } from '@/components/ui/button';
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-cluster" data-spacing="md" data-justify="center">
             <nds-alert-dialog (onOpenChange)="trackOpenChange('destructive', 'docs_demo', $event)">
               <button ndsAlertDialogTrigger ndsButton variant="destructive">
@@ -406,7 +406,6 @@ import { NdsButton } from '@/components/ui/button';
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -414,7 +413,6 @@ import { NdsButton } from '@/components/ui/button';
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -422,10 +420,9 @@ import { NdsButton } from '@/components/ui/button';
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="importCode"
           [secondaryDescription]="t('import.withTrigger')"
@@ -435,7 +432,6 @@ import { NdsButton } from '@/components/ui/button';
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="alert-dialog"
@@ -444,13 +440,11 @@ import { NdsButton } from '@/components/ui/button';
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -458,7 +452,6 @@ import { NdsButton } from '@/components/ui/button';
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -466,7 +459,6 @@ import { NdsButton } from '@/components/ui/button';
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -476,25 +468,21 @@ import { NdsButton } from '@/components/ui/button';
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="alert-dialog"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="alert-dialog"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

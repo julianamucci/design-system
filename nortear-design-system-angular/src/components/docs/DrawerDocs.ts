@@ -605,7 +605,7 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-cluster nds-w-full" data-spacing="md">
             @for (d of direcoes(); track d.key) {
               <div class="nds-stack" data-spacing="xs">
@@ -645,7 +645,6 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -653,7 +652,6 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -661,10 +659,9 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           [secondaryCode]="importCodeComponente"
           componentSlug="drawer"
@@ -672,7 +669,6 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [items]="variantItems()"
           componentSlug="drawer"
           id="variantes"
@@ -680,20 +676,17 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="drawer"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -702,7 +695,6 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -710,7 +702,6 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -720,25 +711,21 @@ const CHAVE_DIRECAO: Record<DrawerDirection, string> = {
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="drawer"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="drawer"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

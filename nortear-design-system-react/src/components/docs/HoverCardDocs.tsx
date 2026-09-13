@@ -380,7 +380,7 @@ interface HoverCardContentProps {
         é a menção dentro da frase, não o atraso, e a página exige ≥300ms
         para abrir. Quem quiser ver atraso customizado tem a variante própria.
       */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <p
           className="nds-text-body nds-max-w-sm nds-min-h-50"
           style={{ contain: "layout", position: "relative" }}
@@ -402,7 +402,6 @@ interface HoverCardContentProps {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -414,7 +413,6 @@ interface HoverCardContentProps {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -491,7 +489,6 @@ interface HoverCardContentProps {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -577,12 +574,11 @@ interface HoverCardContentProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="hover-card"
         items={[
@@ -736,7 +732,6 @@ interface HoverCardContentProps {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -763,7 +758,6 @@ interface HoverCardContentProps {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -833,7 +827,6 @@ interface HoverCardContentProps {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -860,7 +853,6 @@ interface HoverCardContentProps {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -881,7 +873,6 @@ interface HoverCardContentProps {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="hover-card"
         items={[
           {
@@ -909,7 +900,6 @@ interface HoverCardContentProps {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="hover-card"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -922,7 +912,6 @@ interface HoverCardContentProps {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
           {
@@ -945,7 +934,6 @@ interface HoverCardContentProps {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

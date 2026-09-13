@@ -13,7 +13,6 @@
       "list": "Modelos"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "closed": "Fechado, com o nome escolhido",
         "open": "Aberto, com as descrições",
@@ -22,7 +21,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O gatilho mora no início do trilho, ao lado dos outros controles do campo, e leva só o nome do modelo escolhido.",
       "item2": "O painel abre para cima, porque o campo mora no pé da conversa e embaixo dele não sobra espaço.",
@@ -34,7 +32,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando houver mais de um modelo para responder e a escolha mudar o que se recebe de volta.",
@@ -131,7 +128,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O modelo que não pode responder agora fica na lista, com o motivo escrito ao lado do nome.",
         "dont": "Ele some da lista, e com ele a resposta para a pergunta \"por que não posso?\"."
@@ -142,7 +138,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposerModelPicker } from '@/components/ui/composer-model-picker';\nimport { createComposer } from '@/components/ui/composer';\n\nconst picker = createComposerModelPicker({\n  labels: pickerLabels,\n  models,\n  value: 'fast',\n  onValueChange: (model) => escolher(model.id),\n});\n\nconst composer = createComposer({ labels, railStart: [picker] });",
@@ -157,7 +152,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -185,7 +179,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -284,7 +277,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -341,7 +333,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O gatilho diz o que escolhe e se a lista está aberta; a lista tem nome próprio e cursor anunciado; e o que não pode ser escolhido continua legível, com o motivo em texto.",
       "items": {
         "item1": "O nome acessível do gatilho diz o que ele escolhe, e não só o valor escolhido: \"Rápido, botão\" não informa nada.",
@@ -371,7 +362,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -392,7 +382,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O gatilho leva o nome e a lista leva a descrição. Um trilho é estreito, e o nome é o que se confere de relance; a descrição é o que se lê na hora de trocar. Pôr as duas no gatilho encolhe o campo, que é o que importa ali.",
       "item2": "A lista abre para cima porque o campo mora no pé da conversa. É a mesma decisão do seletor do caractere gatilho, e pelo mesmo motivo: embaixo não sobra espaço.",
       "item3": "O que não pode ser escolhido agora não sai da lista. Apagar a opção sem explicação deixa a pergunta \"por que não posso?\" sem resposta na tela, e quem não enxerga o cinza não recebe nem a pista — por isso a opção continua legível e traz o motivo em texto.",
@@ -400,7 +389,6 @@
       "item5": "O componente não troca de modelo. Ele avisa qual foi confirmado e devolve o controle: quem sabe o que a troca custa e quando ela vale é quem monta a conversa."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; o seletor em si não instrumenta a troca, que é do produto.",
       "table": {
         "event": "Evento",
@@ -418,7 +406,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -517,7 +504,6 @@
       "list": "Models"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "closed": "Closed, with the chosen name",
         "open": "Open, with the descriptions",
@@ -526,7 +512,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The trigger sits at the start of the rail, next to the other field controls, and carries only the chosen model's name.",
       "item2": "The panel opens upward, because the field lives at the foot of the conversation and there is no room below it.",
@@ -538,7 +523,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when more than one model can answer and the choice changes what comes back.",
@@ -635,7 +619,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The model that cannot answer right now stays in the list, with the reason written beside the name.",
         "dont": "It disappears from the list, and with it the answer to \"why can't I?\"."
@@ -646,7 +629,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createComposerModelPicker } from '@/components/ui/composer-model-picker';\nimport { createComposer } from '@/components/ui/composer';\n\nconst picker = createComposerModelPicker({\n  labels: pickerLabels,\n  models,\n  value: 'fast',\n  onValueChange: (model) => escolher(model.id),\n});\n\nconst composer = createComposer({ labels, railStart: [picker] });",
@@ -661,7 +643,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -689,7 +670,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -788,7 +768,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -845,7 +824,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The trigger says what it chooses and whether the list is open; the list has its own name and an announced cursor; and what cannot be chosen stays readable, with the reason in words.",
       "items": {
         "item1": "The trigger's accessible name says what it chooses, not just the chosen value: \"Fast, button\" tells you nothing.",
@@ -875,7 +853,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "composer": {
           "name": "Composer",
@@ -896,7 +873,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The trigger carries the name and the list carries the description. A rail is narrow, and the name is what you check at a glance; the description is what you read when switching. Putting both on the trigger shrinks the field, which is what matters there.",
       "item2": "The list opens upward because the field lives at the foot of the conversation. It is the same decision as the trigger-character picker, and for the same reason: there is no room below.",
       "item3": "What cannot be chosen right now does not leave the list. Greying an option out without explanation leaves \"why can't I?\" unanswered on screen, and whoever does not perceive the grey gets no hint at all — so the option stays readable and carries the reason in words.",
@@ -904,7 +880,6 @@
       "item5": "The component does not switch models. It reports which one was confirmed and hands control back: whoever knows what the switch costs and when it is worth it is whoever runs the conversation."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the picker itself does not instrument the switch, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -922,7 +897,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1021,7 +995,6 @@
       "list": "Modelos"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "closed": "Cerrado, con el nombre elegido",
         "open": "Abierto, con las descripciones",
@@ -1030,7 +1003,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El disparador vive al inicio del riel, junto a los demás controles del campo, y lleva solo el nombre del modelo elegido.",
       "item2": "El panel se abre hacia arriba, porque el campo vive al pie de la conversación y debajo no queda espacio.",
@@ -1042,7 +1014,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Pautas",
         "item1": "Úsalo cuando haya más de un modelo que pueda responder y la elección cambie lo que se recibe.",
@@ -1139,7 +1110,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El modelo que no puede responder ahora sigue en la lista, con el motivo escrito junto al nombre.",
         "dont": "Desaparece de la lista, y con él la respuesta a \"¿por qué no puedo?\"."
@@ -1150,7 +1120,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposerModelPicker } from '@/components/ui/composer-model-picker';\nimport { createComposer } from '@/components/ui/composer';\n\nconst picker = createComposerModelPicker({\n  labels: pickerLabels,\n  models,\n  value: 'fast',\n  onValueChange: (model) => escolher(model.id),\n});\n\nconst composer = createComposer({ labels, railStart: [picker] });",
@@ -1165,7 +1134,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1193,7 +1161,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1292,7 +1259,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1349,7 +1315,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El disparador dice qué elige y si la lista está abierta; la lista tiene nombre propio y un cursor que se anuncia; y lo que no se puede elegir sigue legible, con el motivo en palabras.",
       "items": {
         "item1": "El nombre accesible del disparador dice qué elige, y no solo el valor elegido: \"Rápido, botón\" no informa nada.",
@@ -1379,7 +1344,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -1400,7 +1364,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El disparador lleva el nombre y la lista lleva la descripción. Un riel es estrecho, y el nombre es lo que se comprueba de un vistazo; la descripción es lo que se lee a la hora de cambiar. Poner las dos en el disparador encoge el campo, que es lo que importa allí.",
       "item2": "La lista se abre hacia arriba porque el campo vive al pie de la conversación. Es la misma decisión del selector del carácter disparador, y por el mismo motivo: debajo no queda espacio.",
       "item3": "Lo que no se puede elegir ahora no sale de la lista. Apagar la opción sin explicación deja la pregunta \"¿por qué no puedo?\" sin respuesta en pantalla, y quien no percibe el gris no recibe ni la pista — por eso la opción sigue legible y trae el motivo en palabras.",
@@ -1408,7 +1371,6 @@
       "item5": "El componente no cambia de modelo. Avisa cuál se confirmó y devuelve el control: quien sabe lo que cuesta el cambio y cuándo vale la pena es quien arma la conversación."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; el selector en sí no instrumenta el cambio, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1426,7 +1388,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

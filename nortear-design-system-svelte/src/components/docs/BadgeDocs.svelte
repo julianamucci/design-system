@@ -134,7 +134,7 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-cluster" data-spacing="sm" style="flex-wrap: wrap">
       <Badge variant="default">{$tStore('demonstration.labels.defaultLabel')}</Badge>
       <Badge variant="destructive">{$tStore('demonstration.labels.destructiveLabel')}</Badge>
@@ -157,7 +157,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -170,7 +169,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -230,7 +228,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -266,7 +263,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withIcon')}
@@ -275,7 +271,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { name: 'default',     description: stripHtml($tStore('variants.items.default')),     code: codeDefault,     preview: variantDefault     },
       { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')), code: codeDestructive, preview: variantDestructive },
@@ -303,7 +298,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="badge"
     items={[
@@ -354,7 +348,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -367,7 +360,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.badgeTitle'),
@@ -396,7 +388,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
        info é pintada por `--border`, e linha com travessão só ocuparia
        espaço dizendo que o token não faz nada aqui. -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -423,7 +414,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -442,7 +432,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Alert',   description: $tStore('related.alert'),  path: '?path=/docs/components-feedback-alert--docs'   },
       { name: 'Button',  description: $tStore('related.button'), path: '?path=/docs/components-form-button--docs'  },
@@ -451,7 +440,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -461,7 +449,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -477,7 +464,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

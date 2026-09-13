@@ -349,7 +349,7 @@ export function SheetDocs() {
         />
       }
     >
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-cluster" data-justify="center" data-spacing="sm">
           <SheetDemo
             trigger={tContent("demonstration.labels.trigger")}
@@ -365,7 +365,6 @@ export function SheetDocs() {
       </DocsDemonstration>
 
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -382,7 +381,6 @@ export function SheetDocs() {
       />
 
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -461,15 +459,14 @@ export function SheetDocs() {
       />
 
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
               <SheetDemo
-                trigger={tContent("demonstration.labels.trigger")}
                 title={tContent("demonstration.labels.title")}
+                trigger={tContent("demonstration.labels.trigger")}
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
@@ -564,10 +561,9 @@ export function SheetDocs() {
         ]}
       />
 
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="sheet"
         items={[
           {
@@ -577,8 +573,8 @@ export function SheetDocs() {
             code: codeRight,
             preview: (
               <SheetDemo
-                trigger={tContent("demonstration.labels.trigger")}
                 title={tContent("demonstration.labels.rightLabel")}
+                trigger={tContent("demonstration.labels.trigger")}
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
@@ -642,7 +638,6 @@ export function SheetDocs() {
       />
 
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="sheet"
         items={[
@@ -678,8 +673,8 @@ export function SheetDocs() {
 </Sheet>`,
             preview: (
               <FiltersFormDemo
-                trigger={tContent("demonstration.labels.trigger")}
                 title={tContent("demonstration.labels.title")}
+                trigger={tContent("demonstration.labels.trigger")}
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 apply={tContent("demonstration.labels.apply")}
@@ -959,7 +954,6 @@ export function SheetDocs() {
       />
 
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -995,7 +989,6 @@ export function SheetDocs() {
       />
 
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -1056,7 +1049,6 @@ export function SheetDocs() {
       />
 
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1079,7 +1071,6 @@ export function SheetDocs() {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={stripHtml(tContent("accessibility.summary"))}
         items={[
           stripHtml(tContent("accessibility.items.item1")),
@@ -1101,7 +1092,6 @@ export function SheetDocs() {
       />
 
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="sheet"
         items={[
           { name: tContent("related.items.drawer.name"),      description: toPlainText(tContent("related.items.drawer.description")),      path: "?path=/docs/components-overlay-drawer--docs" },
@@ -1112,7 +1102,6 @@ export function SheetDocs() {
       />
 
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="sheet"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -1123,7 +1112,6 @@ export function SheetDocs() {
       />
 
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event:   tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1149,7 +1137,6 @@ export function SheetDocs() {
       />
 
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

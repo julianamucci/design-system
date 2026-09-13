@@ -184,7 +184,6 @@ export function createJobProgressDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'job-progress',
           demoFactory: () => {
             const stack = document.createElement('div');
@@ -206,7 +205,6 @@ export function createJobProgressDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5].map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -215,7 +213,6 @@ export function createJobProgressDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -260,7 +257,6 @@ export function createJobProgressDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -312,7 +308,6 @@ export function createJobProgressDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLabels'),
@@ -321,7 +316,6 @@ export function createJobProgressDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: t('states.cols.trigger'),
@@ -364,7 +358,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createJobProgress',
@@ -398,7 +391,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.value'),
@@ -420,7 +412,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6, 7].map(i => t(`accessibility.items.item${i}`)),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -435,7 +426,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.agentStatus.name'),     description: toPlainText(t('related.items.agentStatus.description')),     path: '?path=/docs/components-conversational-agentstatus--docs'     },
             { name: t('related.items.agentPlan.name'),       description: toPlainText(t('related.items.agentPlan.description')),       path: '?path=/docs/components-conversational-agentplan--docs'       },
@@ -446,14 +436,12 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           componentSlug: 'job-progress',
           items: [1, 2, 3, 4, 5, 6, 7].map(i => ({ title: '', content: t(`notes.item${i}`) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: t('analytics.table.trigger'),
@@ -468,7 +456,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             description: t('testes.functional.description'),

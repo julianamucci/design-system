@@ -12,6 +12,8 @@ import { NdsButton } from '@/components/ui/button';
 import { NdsCodeBlock } from '@/components/ui/code-block';
 import DOMPurify from 'dompurify';
 
+import { tituloDeSecao } from './titulo-de-secao';
+
 export interface DocsVariantItem {
   name: string;
   description: string;
@@ -86,11 +88,11 @@ export interface DocsVariantItem {
   `,
 })
 export class NdsDocsVariants {
-  readonly title = input.required<string>();
   readonly items = input.required<DocsVariantItem[]>();
   /** Nota introdutória (HTML inline permitido) — chave `variants.note`. */
   readonly note = input<string>('');
   readonly id = input<string>('variantes');
+  protected readonly title = tituloDeSecao(this.id);
   /** Slug do componente para o `data-track-id` dos toggles. */
   readonly componentSlug = input<string | undefined>(undefined);
   readonly language = input<string>('ts');

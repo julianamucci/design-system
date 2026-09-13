@@ -11,7 +11,6 @@
       "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "trigger": "Abrir filtros",
         "title": "Filtros avançados",
@@ -26,7 +25,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Sheet</strong> — root que controla o estado aberto/fechado.",
       "item2": "<strong>SheetTrigger</strong> — botão que abre o painel; compõe com um elemento filho para envolver um Button.",
       "item3": "<strong>SheetContent</strong> — painel deslizante com a direção em <code>side</code> (right/left/top/bottom).",
@@ -46,7 +44,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para painéis laterais em desktop — filtros avançados, configurações, navegação secundária.",
@@ -141,7 +138,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Dê sempre título e descrição visíveis ao painel: é o título que nomeia o diálogo para quem usa leitor de tela, e a descrição que explica o que fazer ali.",
         "dont": "Não esconda o cabeçalho: sem título e descrição visíveis, quem enxerga a tela perde o contexto que o leitor de tela recebe.",
@@ -155,11 +151,8 @@
         "dont": "Não fixe o mesmo lado para tudo — em tela estreita, o painel que entra por baixo fica ao alcance do polegar; o lateral, não."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "right": "Right",
         "left": "Left",
@@ -172,7 +165,6 @@
         "top": "Desliza do topo — ocupa a altura que o conteúdo pedir.",
         "bottom": "Desliza de baixo — equivalente ao Drawer, mas sem o gesto de arrastar."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "advancedFilters": {
           "name": "Filtros avançados",
@@ -230,7 +222,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "longScrollBody": {
         "label": "Body com scroll interno",
         "trigger": "Conteúdo excede a altura do painel",
@@ -263,7 +254,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -317,7 +307,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -361,7 +350,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.1.2, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> aplicado automaticamente ao SheetContent",
@@ -395,7 +383,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "drawer": {
           "name": "Drawer",
@@ -416,14 +403,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a modalidade do overlay, a retenção do foco enquanto aberto, o bloqueio da rolagem de fundo, o fechamento por Escape e o retorno do foco ao gatilho vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-sheet-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>É um diálogo, não um painel decorativo</strong> — o painel toma o foco, prende a navegação por teclado dentro dele enquanto está aberto e devolve o foco ao gatilho ao fechar. É daí que vem a obrigatoriedade de título e descrição: sem eles o diálogo abre sem nome acessível.",
       "item3": "<strong>O lado é do painel, não do conjunto</strong> — de onde ele entra é decisão do painel que está sendo aberto, e não um modo global. Onde a opção mora no código varia por stack; a tabela de propriedades da página mostra a forma desta.",
       "item4": "<strong>Largura padrão</strong> — nos lados esquerdo e direito: 75% da largura da tela, com teto de 24rem. Para painéis maiores, redefina <code>--sheet-width</code> e <code>--sheet-max-width</code>. Uma classe de largura não resolve: a regra de lado é mais específica que qualquer utilitário, e custom property não disputa especificidade."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -444,7 +429,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -514,7 +498,6 @@
       "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "trigger": "Open filters",
         "title": "Advanced filters",
@@ -529,7 +512,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Sheet</strong> — root that controls the open/closed state.",
       "item2": "<strong>SheetTrigger</strong> — button that opens the panel; compose with a child element to wrap a Button.",
       "item3": "<strong>SheetContent</strong> — sliding panel with the direction in <code>side</code> (right/left/top/bottom).",
@@ -549,7 +531,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for side panels on desktop — advanced filters, settings, secondary navigation.",
@@ -644,7 +625,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Always give the panel a visible title and description: the title is what names the dialog for screen reader users, and the description explains what to do there.",
         "dont": "Do not hide the header: with no visible title and description, sighted readers lose the context the screen reader gets.",
@@ -658,11 +638,8 @@
         "dont": "Do not fix one side for everything — on a narrow screen, a panel entering from the bottom is within thumb reach; a side panel is not."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "right": "Right",
         "left": "Left",
@@ -675,7 +652,6 @@
         "top": "Slides in from the top — takes whatever height the content asks for.",
         "bottom": "Slides in from the bottom — the same as Drawer, without the drag gesture."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "advancedFilters": {
           "name": "Advanced filters",
@@ -733,7 +709,6 @@
       }
     },
     "states": {
-      "title": "States",
       "longScrollBody": {
         "label": "Body with internal scroll",
         "trigger": "Content exceeds the panel height",
@@ -766,7 +741,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -820,7 +794,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -864,7 +837,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.1.2, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> applied automatically to SheetContent",
@@ -898,7 +870,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "drawer": {
           "name": "Drawer",
@@ -919,14 +890,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the modal overlay, keeping focus inside while open, locking background scroll, closing on Escape and returning focus to the trigger come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-sheet-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>It is a dialog, not a decorative panel</strong> — the panel takes focus, keeps keyboard navigation inside itself while open, and returns focus to the trigger on close. That is where the title and description requirement comes from: without them the dialog opens with no accessible name.",
       "item3": "<strong>The side belongs to the panel, not to the set</strong> — where it enters from is a decision of the panel being opened, not a global mode. Where that option lives in code varies per stack; the properties table on this page shows this one.",
       "item4": "<strong>Default width</strong> — on the left and right sides: 75% of the viewport width, capped at 24rem. For wider panels, redefine <code>--sheet-width</code> and <code>--sheet-max-width</code>. A width utility class will not do it: the side rule is more specific than any utility, and custom properties do not compete on specificity."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -947,7 +916,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -1017,7 +985,6 @@
       "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "trigger": "Abrir filtros",
         "title": "Filtros avanzados",
@@ -1032,7 +999,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Sheet</strong> — root que controla el estado abierto/cerrado.",
       "item2": "<strong>SheetTrigger</strong> — botón que abre el panel; compón con un elemento hijo para envolver un Button.",
       "item3": "<strong>SheetContent</strong> — panel deslizante con la dirección en <code>side</code> (right/left/top/bottom).",
@@ -1052,7 +1018,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para paneles laterales en desktop — filtros avanzados, configuración, navegación secundaria.",
@@ -1147,7 +1112,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Dale siempre al panel un título y una descripción visibles: el título es lo que nombra el diálogo para quien usa lector de pantalla, y la descripción explica qué hacer ahí.",
         "dont": "No escondas el encabezado: sin título ni descripción visibles, quien ve la pantalla pierde el contexto que sí recibe el lector de pantalla.",
@@ -1161,11 +1125,8 @@
         "dont": "No fijes un mismo lado para todo — en pantalla estrecha, el panel que entra desde abajo queda al alcance del pulgar; el lateral, no."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "right": "Right",
         "left": "Left",
@@ -1178,7 +1139,6 @@
         "top": "Se desliza desde arriba — ocupa la altura que pida el contenido.",
         "bottom": "Se desliza desde abajo — equivalente a Drawer, pero sin el gesto de arrastrar."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "advancedFilters": {
           "name": "Filtros avanzados",
@@ -1236,7 +1196,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "longScrollBody": {
         "label": "Body con scroll interno",
         "trigger": "El contenido excede la altura del panel",
@@ -1269,7 +1228,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1323,7 +1281,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1367,7 +1324,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.1.2, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> aplicado automáticamente al SheetContent",
@@ -1401,7 +1357,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "drawer": {
           "name": "Drawer",
@@ -1422,14 +1377,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la modalidad del overlay, la retención del foco mientras está abierto, el bloqueo del desplazamiento de fondo, el cierre por Escape y el retorno del foco al disparador vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-sheet-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Es un diálogo, no un panel decorativo</strong> — el panel toma el foco, mantiene la navegación por teclado dentro de él mientras está abierto y devuelve el foco al disparador al cerrar. De ahí viene la obligatoriedad de título y descripción: sin ellos el diálogo abre sin nombre accesible.",
       "item3": "<strong>El lado es del panel, no del conjunto</strong> — desde dónde entra es decisión del panel que se abre, no un modo global. Dónde vive esa opción en el código varía por stack; la tabla de propiedades de la página muestra la de esta.",
       "item4": "<strong>Ancho por defecto</strong> — en los lados izquierdo y derecho: 75% del ancho de la pantalla, con tope de 24rem. Para paneles más grandes, redefine <code>--sheet-width</code> y <code>--sheet-max-width</code>. Una clase de ancho no lo resuelve: la regla de lado es más específica que cualquier utilidad, y las custom properties no compiten por especificidad."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1450,7 +1403,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

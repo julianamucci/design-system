@@ -278,7 +278,7 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-stack nds-w-full" data-spacing="lg">
             <div ndsToggleGroup variant="outline" defaultValue="left" [attr.aria-label]="t('demonstration.labels.alignmentLabel')">
               <button ndsToggle variant="outline" value="left" [attr.aria-label]="t('demonstration.labels.left')">
@@ -321,7 +321,6 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -329,7 +328,6 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -337,10 +335,9 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           componentSlug="toggle-group"
           language="ts"
@@ -348,27 +345,23 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
 
         <nds-docs-compositions
           id="variantes"
-          [title]="t('variants.title')"
           [items]="variantItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="toggle-group"
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="toggle-group"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -376,7 +369,6 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -384,7 +376,6 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -394,21 +385,18 @@ const INTERFACE_CODE = `// <div ndsToggleGroup> — o item é o Toggle do design
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="toggle-group"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="toggle-group" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="toggle-group" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

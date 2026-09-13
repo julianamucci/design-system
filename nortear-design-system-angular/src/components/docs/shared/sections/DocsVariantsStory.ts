@@ -33,7 +33,6 @@ import { NdsDocsVariants, type DocsVariantItem } from './DocsVariants';
     <ng-template #tplEditar><button ndsButton variant="ghost">Editar</button></ng-template>
 
     <nds-docs-variants
-      [title]="title()"
       [note]="note()"
       [id]="id()"
       [componentSlug]="componentSlug()"
@@ -42,7 +41,6 @@ import { NdsDocsVariants, type DocsVariantItem } from './DocsVariants';
   `,
 })
 export class NdsDocsVariantsStory {
-  readonly title = input.required<string>();
   readonly note = input<string>('');
   readonly id = input<string>('variantes');
   readonly componentSlug = input<string | undefined>(undefined);

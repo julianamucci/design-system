@@ -220,7 +220,6 @@ export function createScrollAreaDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const container = document.createElement('div');
             container.className = 'nds-w-full nds-stack';
@@ -284,7 +283,6 @@ export function createScrollAreaDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -298,7 +296,6 @@ export function createScrollAreaDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -358,7 +355,6 @@ export function createScrollAreaDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -424,7 +420,6 @@ export function createScrollAreaDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('description'),
           code: `import { createScrollArea } from '@/components/ui/scroll-area';`,
           secondaryDescription: stripHtml(t('anatomy.structureLabel')),
@@ -460,7 +455,6 @@ export function createScrollAreaDocs(): HTMLElement {
           `});`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'vertical',
@@ -502,7 +496,6 @@ export function createScrollAreaDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -537,7 +530,6 @@ export interface ScrollAreaOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createScrollArea',
@@ -566,7 +558,6 @@ export interface ScrollAreaOptions {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -594,7 +585,6 @@ export interface ScrollAreaOptions {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.items.item1'),
@@ -620,7 +610,6 @@ export interface ScrollAreaOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: stripHtml(t('related.items.resizable.name')), description: stripHtml(t('related.items.resizable.description')), path: '?path=/docs/components-layout-resizable--docs' },
             { name: stripHtml(t('related.items.sheet.name')),     description: stripHtml(t('related.items.sheet.description')),     path: '?path=/docs/components-overlay-sheet--docs' },
@@ -631,7 +620,6 @@ export interface ScrollAreaOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.item1') },
             { title: '', content: t('notes.item2') },
@@ -647,7 +635,6 @@ export interface ScrollAreaOptions {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -669,7 +656,6 @@ export interface ScrollAreaOptions {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

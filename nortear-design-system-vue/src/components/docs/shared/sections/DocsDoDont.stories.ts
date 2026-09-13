@@ -56,10 +56,8 @@ const meta: Meta<typeof DocsDoDont> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
   },
   args: {
-    title: 'Boas práticas',
     pairs: PARES,
   },
   render: (args) => ({

@@ -95,7 +95,7 @@ function buildCarouselPreview(): HTMLElement {
       });
     },
   });
-  carousel.setAttribute('aria-label', t('demonstration.title'));
+  carousel.setAttribute('aria-label', tNav('nav.demonstration'));
   wrap.appendChild(carousel);
   return wrap;
 }
@@ -228,13 +228,11 @@ export function createCarouselDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => buildCarouselPreview(),
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -242,7 +240,6 @@ export function createCarouselDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map((i) => t(`usage.guidelines.item${i}`)),
@@ -287,7 +284,6 @@ export function createCarouselDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -352,7 +348,6 @@ export function createCarouselDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createCarousel } from '@/components/ui/carousel';`,
           secondaryDescription: t('import.withPlugin'),
@@ -404,7 +399,6 @@ const carousel = createCarousel({
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.visualTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'carousel',
           items: [
@@ -624,7 +618,6 @@ const items = photos.map((photo) => {
 const carousel = createCarousel({ items });`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'carousel',
           items: [
@@ -650,7 +643,6 @@ const carousel = createCarousel({ items });`;
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -689,7 +681,6 @@ export type CarouselOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.carouselTitle'),
@@ -767,7 +758,6 @@ export type CarouselOptions = {
 }`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -797,7 +787,6 @@ export type CarouselOptions = {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5].map((i) => t(`accessibility.item${i}`)),
           keyboardTitle: t('accessibility.keyboardTitle'),
@@ -812,7 +801,6 @@ export type CarouselOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Tabs', description: toPlainText(t('related.tabs')), path: '?path=/docs/components-navigation-tabs--docs' },
             { name: 'ScrollArea', description: toPlainText(t('related.scrollArea')), path: '?path=/docs/components-layout-scrollarea--docs' },
@@ -823,7 +811,6 @@ export type CarouselOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -834,7 +821,6 @@ export type CarouselOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -871,7 +857,6 @@ export type CarouselOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

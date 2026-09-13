@@ -11,7 +11,6 @@
       "aiEntities": "Pagination, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, aria-label"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "previous": "Anterior",
         "next": "Próxima",
@@ -21,7 +20,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Pagination</strong> — container <code>&lt;nav&gt;</code> com <code>aria-label=\"Paginação\"</code>.",
       "item2": "<strong>PaginationContent</strong> — lista <code>&lt;ul&gt;</code> que agrupa os itens horizontalmente.",
       "item3": "<strong>PaginationItem</strong> — wrapper <code>&lt;li&gt;</code> de cada controle.",
@@ -38,7 +36,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use quando a lista tiver mais de 10 itens — abaixo disso, exiba tudo sem paginação.",
@@ -123,7 +120,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Marque a página ativa com isActive e use ellipsis para listas longas.",
         "dont": "Não exiba dezenas de números seguidos sem ellipsis."
@@ -133,11 +129,8 @@
         "dont": "Não use apenas setas \"<\" e \">\" sem aria-label."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "directional": "Directional",
@@ -163,7 +156,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "lastPage": {
         "label": "Última página (Next desabilitado)",
         "trigger": "Página atual é a última",
@@ -201,7 +193,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -249,7 +240,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -289,7 +279,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 e 4.1.2.",
       "items": {
         "item1": "<code>nav</code> com <code>aria-label=\"Paginação\"</code> diferencia de outros elementos de navegação",
@@ -321,7 +310,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "breadcrumb": {
           "name": "Breadcrumb",
@@ -338,14 +326,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por padrão</strong> — em SPAs sem URLs reais, componha com elemento filho para renderizar <code>&lt;button&gt;</code>.",
       "item2": "<strong>Estado disabled</strong> — em <code>&lt;a&gt;</code> não existe <code>disabled</code>. O par correto é <code>aria-disabled=\"true\"</code> mais <code>tabindex=\"-1\"</code>; a opacidade e o bloqueio do ponteiro vêm do CSS do design system.",
       "item3": "<strong>Reticências tipográficas</strong> — o caractere <code>…</code> (U+2026) como texto do elemento, não três pontos <code>...</code> nem um ícone. É o que o leitor de tela ignora e o que o CSS dimensiona.",
       "item4": "<strong>Mobile</strong> — o texto de Previous e Next é oculto em telas menores que <code>sm</code>; o ícone permanece visível."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -358,7 +344,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -428,7 +413,6 @@
       "aiEntities": "Pagination, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, aria-label"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "previous": "Previous",
         "next": "Next",
@@ -438,7 +422,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Pagination</strong> — <code>&lt;nav&gt;</code> container with <code>aria-label=\"Paginação\"</code>.",
       "item2": "<strong>PaginationContent</strong> — <code>&lt;ul&gt;</code> list grouping items horizontally.",
       "item3": "<strong>PaginationItem</strong> — <code>&lt;li&gt;</code> wrapper for each control.",
@@ -455,7 +438,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use when the list has more than 10 items — below that, show everything without pagination.",
@@ -540,7 +522,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Mark the active page with isActive and use ellipsis for long lists.",
         "dont": "Don't show dozens of consecutive numbers without ellipsis."
@@ -550,11 +531,8 @@
         "dont": "Don't use only \"<\" and \">\" arrows without aria-label."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "directional": "Directional",
@@ -580,7 +558,6 @@
       }
     },
     "states": {
-      "title": "States",
       "lastPage": {
         "label": "Last page (Next disabled)",
         "trigger": "Current page is the last",
@@ -618,7 +595,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -666,7 +642,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -706,7 +681,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 and 4.1.2.",
       "items": {
         "item1": "<code>nav</code> with <code>aria-label=\"Paginação\"</code> distinguishes from other navigation elements",
@@ -738,7 +712,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "breadcrumb": {
           "name": "Breadcrumb",
@@ -755,14 +728,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Renders <code>&lt;a&gt;</code> by default</strong> — in SPAs without real URLs, compose with a child element to render <code>&lt;button&gt;</code>.",
       "item2": "<strong>Disabled state</strong> — <code>&lt;a&gt;</code> has no <code>disabled</code>. The correct pair is <code>aria-disabled=\"true\"</code> plus <code>tabindex=\"-1\"</code>; opacity and pointer blocking come from the design system CSS.",
       "item3": "<strong>Typographic ellipsis</strong> — the <code>…</code> character (U+2026) as the element text, not three dots <code>...</code> and not an icon. It is what the screen reader ignores and what the CSS sizes.",
       "item4": "<strong>Mobile</strong> — Previous and Next text is hidden below <code>sm</code> screens; the icon stays visible."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -775,7 +746,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -845,7 +815,6 @@
       "aiEntities": "Pagination, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, aria-label"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "previous": "Anterior",
         "next": "Siguiente",
@@ -855,7 +824,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Pagination</strong> — contenedor <code>&lt;nav&gt;</code> con <code>aria-label=\"Paginação\"</code>.",
       "item2": "<strong>PaginationContent</strong> — lista <code>&lt;ul&gt;</code> que agrupa los ítems horizontalmente.",
       "item3": "<strong>PaginationItem</strong> — wrapper <code>&lt;li&gt;</code> de cada control.",
@@ -872,7 +840,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa cuando la lista tenga más de 10 ítems — debajo de eso, muestra todo sin paginación.",
@@ -957,7 +924,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Marca la página activa con isActive y usa ellipsis para listas largas.",
         "dont": "No muestres docenas de números seguidos sin ellipsis."
@@ -967,11 +933,8 @@
         "dont": "No uses solo flechas \"<\" y \">\" sin aria-label."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "directional": "Directional",
@@ -997,7 +960,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "lastPage": {
         "label": "Última página (Next deshabilitado)",
         "trigger": "La página actual es la última",
@@ -1035,7 +997,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1083,7 +1044,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1123,7 +1083,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 1.4.13, 2.1.1, 2.4.3, 2.4.4 y 4.1.2.",
       "items": {
         "item1": "<code>nav</code> con <code>aria-label=\"Paginação\"</code> diferencia de otros elementos de navegación",
@@ -1155,7 +1114,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "breadcrumb": {
           "name": "Breadcrumb",
@@ -1172,14 +1130,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por defecto</strong> — en SPAs sin URLs reales, compón con elemento hijo para renderizar <code>&lt;button&gt;</code>.",
       "item2": "<strong>Estado disabled</strong> — en <code>&lt;a&gt;</code> no existe <code>disabled</code>. El par correcto es <code>aria-disabled=\"true\"</code> más <code>tabindex=\"-1\"</code>; la opacidad y el bloqueo del puntero vienen del CSS del design system.",
       "item3": "<strong>Puntos suspensivos tipográficos</strong> — el carácter <code>…</code> (U+2026) como texto del elemento, no tres puntos <code>...</code> ni un icono. Es lo que el lector de pantalla ignora y lo que el CSS dimensiona.",
       "item4": "<strong>Mobile</strong> — el texto de Previous y Next se oculta en pantallas menores que <code>sm</code>; el icono permanece visible."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1192,7 +1148,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

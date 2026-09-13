@@ -35,11 +35,9 @@ const meta: Meta<DocsDoDontProps> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     pairs: { control: false, description: 'Um par por comparação. As fábricas são o slot desta stack.' },
   },
   args: {
-    title: 'Boas práticas',
     pairs: [
       {
         doLabel: 'Faça',

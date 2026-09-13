@@ -11,7 +11,6 @@
       "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "triggerOpen": "Ocultar filtros avançados",
         "triggerClosed": "Exibir filtros avançados",
@@ -22,7 +21,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Collapsible</strong> — container raiz. Gerencia o estado aberto/fechado via <code>open</code> ou <code>defaultOpen</code>.",
       "item2": "<strong>CollapsibleTrigger</strong> — botão que alterna o estado. Componha com elemento filho <code>Button</code> para aproveitar seus estilos.",
       "item3": "<strong>CollapsibleContent</strong> — painel expansível. Anima a altura entre fechado e aberto e recebe <code>aria-hidden</code> conforme o estado.",
@@ -36,7 +34,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para uma única seção expansível isolada no layout — múltiplas seções relacionadas pedem <code>Accordion</code>.",
@@ -97,7 +94,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Trigger com label descritivo e alternado com o estado: 'Exibir filtros avançados' / 'Ocultar filtros avançados'.",
         "dont": "Trigger genérico sem contexto: 'Ver mais', 'Toggle' ou apenas ícone sem label acessível."
@@ -108,13 +104,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withButton": "Com Button e ícone Lucide:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Modos de Uso",
       "note": "O Collapsible não tem variantes visuais nativas. A aparência é definida pelo conteúdo e pelas classes do trigger e painel. Os dois modos de operação são <code>controlado</code> e <code>não-controlado</code>.",
       "items": {
         "controlled": "Modo controlado: estado externo combinado com callback de mudança. Use quando o estado influencia outros elementos da UI ou precisa ser sincronizado externamente.",
@@ -125,7 +118,6 @@
           "use": "Quando o trigger precisa de visual específico (ex.: botão outlined com hover de accent). Mantém total liberdade visual."
         }
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "iconTrigger": {
           "name": "Com ícone no trigger",
@@ -145,7 +137,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -173,7 +164,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "collapsibleTitle": "Collapsible (Root)",
       "triggerTitle": "CollapsibleTrigger",
@@ -196,7 +186,6 @@
       "extensibility": "Todos os subcomponentes aceitam classes <code>.nds-*</code> adicionais para customização. Para o trigger, aplique as classes do <code>Button</code> no próprio elemento do trigger: ele passa a ter foco, hover e estados visuais do Button sem reimplementar nada, e continua sendo quem carrega o ARIA."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Classe .nds-*",
@@ -211,7 +200,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Collapsible implementa o padrão de disclosure do ARIA. O componente aplica <code>aria-expanded</code> e <code>aria-controls</code> automaticamente no trigger. Cumpre WCAG 2.2 AA: 4.1.2 (nome, função, valor), 2.1.1 (teclado).",
       "item1": "<strong>aria-expanded automático</strong> — o componente mantém <code>aria-expanded=\"true\"</code> quando aberto e <code>\"false\"</code> quando fechado no CollapsibleTrigger.",
@@ -240,7 +228,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "accordion": "Para múltiplas seções expansíveis relacionadas entre si.",
@@ -249,13 +236,11 @@
       "tabs": "Para alternância entre views paralelas sem hierarquia de conteúdo."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "Sempre componha o <code>CollapsibleTrigger</code> com <code>Button</code> como elemento filho — aproveita foco, hover, estados de acessibilidade e estilos do Button sem reimplementar.",
       "tip2": "Para ícone giratório sem JavaScript, use a classe <code>.nds-chevron</code> no chevron — ela gira 180° sozinha quando o trigger está em <code>[data-state=\"open\"]</code> ou <code>[aria-expanded=\"true\"]</code>, atributos que o componente aplica automaticamente.",
       "tip3": "Animações customizadas no CollapsibleContent devem ser desligadas dentro de <code>@media (prefers-reduced-motion: reduce)</code> — é o que a folha compartilhada já faz com a transição de altura padrão."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastreie <code>collapsible_toggle</code> apenas quando a seção tem importância na jornada do usuário. Não rastreie colapsáveis decorativos ou de baixo valor de negócio.",
       "table": {
         "event": "Evento",
@@ -276,7 +261,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Collapsible.",
@@ -378,7 +362,6 @@
       "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "triggerOpen": "Hide advanced filters",
         "triggerClosed": "Show advanced filters",
@@ -389,7 +372,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Collapsible</strong> — root container. Manages the open/closed state via <code>open</code> or <code>defaultOpen</code>.",
       "item2": "<strong>CollapsibleTrigger</strong> — button that toggles the state. Compose with a child <code>Button</code> to leverage its styles.",
       "item3": "<strong>CollapsibleContent</strong> — expandable panel. Animates height between closed and open and receives <code>aria-hidden</code> according to state.",
@@ -403,7 +385,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for a single expandable section isolated in the layout — multiple related sections call for <code>Accordion</code>.",
@@ -464,7 +445,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Trigger with descriptive label toggled by state: 'Show advanced filters' / 'Hide advanced filters'.",
         "dont": "Generic trigger without context: 'See more', 'Toggle', or icon-only without accessible label."
@@ -475,13 +455,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withButton": "With Button and Lucide icon:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Usage Modes",
       "note": "Collapsible has no native visual variants. Appearance is defined by content and trigger/panel classes. The two operation modes are <code>controlled</code> and <code>uncontrolled</code>.",
       "items": {
         "controlled": "Controlled mode: external state combined with a change callback. Use when the state affects other UI elements or needs external synchronization.",
@@ -492,7 +469,6 @@
           "use": "When the trigger needs specific styling (e.g., outlined button with accent hover). Full visual freedom retained."
         }
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "iconTrigger": {
           "name": "With icon in trigger",
@@ -512,7 +488,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -540,7 +515,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "collapsibleTitle": "Collapsible (Root)",
       "triggerTitle": "CollapsibleTrigger",
@@ -563,7 +537,6 @@
       "extensibility": "All subcomponents accept extra <code>.nds-*</code> classes for customization. For the trigger, apply the <code>Button</code> classes to the trigger element itself: it then gets focus, hover, and the Button visual states without reimplementing anything, and it remains the element carrying the ARIA."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": ".nds-* Class",
@@ -578,7 +551,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Collapsible implements the ARIA disclosure pattern. The component automatically applies <code>aria-expanded</code> and <code>aria-controls</code> to the trigger. Meets WCAG 2.2 AA: 4.1.2 (name, role, value), 2.1.1 (keyboard).",
       "item1": "<strong>Automatic aria-expanded</strong> — the component keeps <code>aria-expanded=\"true\"</code> when open and <code>\"false\"</code> when closed on CollapsibleTrigger.",
@@ -607,7 +579,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "accordion": "For multiple related expandable sections.",
@@ -616,13 +587,11 @@
       "tabs": "For switching between parallel views without content hierarchy."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "Always compose <code>CollapsibleTrigger</code> with a child <code>Button</code> — leverages focus, hover, accessibility states, and Button styles without reimplementing.",
       "tip2": "For a JavaScript-free rotating icon, use the <code>.nds-chevron</code> class on the chevron — it rotates 180° on its own when the trigger is in <code>[data-state=\"open\"]</code> or <code>[aria-expanded=\"true\"]</code>, attributes the component applies automatically.",
       "tip3": "Custom animations on CollapsibleContent must be switched off inside <code>@media (prefers-reduced-motion: reduce)</code> — which is what the shared stylesheet already does for the default height transition."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Track <code>collapsible_toggle</code> only when the section has importance in the user journey. Do not track decorative or low business-value collapsibles.",
       "table": {
         "event": "Event",
@@ -643,7 +612,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Collapsible configuration.",
@@ -745,7 +713,6 @@
       "aiEntities": "Collapsible, CollapsibleTrigger, CollapsibleContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-expanded, aria-controls, disclosure pattern"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "triggerOpen": "Ocultar filtros avanzados",
         "triggerClosed": "Mostrar filtros avanzados",
@@ -756,7 +723,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Collapsible</strong> — contenedor raíz. Gestiona el estado abierto/cerrado mediante <code>open</code> o <code>defaultOpen</code>.",
       "item2": "<strong>CollapsibleTrigger</strong> — botón que alterna el estado. Compón con un <code>Button</code> como hijo para aprovechar sus estilos.",
       "item3": "<strong>CollapsibleContent</strong> — panel expandible. Anima la altura entre cerrado y abierto y recibe <code>aria-hidden</code> según el estado.",
@@ -770,7 +736,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Úsalo para una única sección expandible aislada en el layout — múltiples secciones relacionadas requieren <code>Accordion</code>.",
@@ -831,7 +796,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Trigger con label descriptivo alternado según el estado: 'Mostrar filtros avanzados' / 'Ocultar filtros avanzados'.",
         "dont": "Trigger genérico sin contexto: 'Ver más', 'Toggle' o solo ícono sin label accesible."
@@ -842,13 +806,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withButton": "Con Button e ícono Lucide:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Modos de Uso",
       "note": "Collapsible no tiene variantes visuales nativas. La apariencia la definen el contenido y las clases del trigger y del panel. Los dos modos de operación son <code>controlado</code> y <code>no controlado</code>.",
       "items": {
         "controlled": "Modo controlado: estado externo combinado con un callback de cambio. Úsalo cuando el estado afecta otros elementos de la UI o necesita sincronizarse externamente.",
@@ -859,7 +820,6 @@
           "use": "Cuando el trigger necesita un estilo específico (ej.: botón outlined con hover de accent). Mantiene total libertad visual."
         }
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "iconTrigger": {
           "name": "Con ícono en el trigger",
@@ -879,7 +839,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -907,7 +866,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "collapsibleTitle": "Collapsible (Root)",
       "triggerTitle": "CollapsibleTrigger",
@@ -930,7 +888,6 @@
       "extensibility": "Todos los subcomponentes aceptan clases <code>.nds-*</code> adicionales para personalización. Para el trigger, aplica las clases del <code>Button</code> al propio elemento del trigger: así obtiene foco, hover y los estados visuales del Button sin reimplementar nada, y sigue siendo quien carga el ARIA."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Clase .nds-*",
@@ -945,7 +902,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Collapsible implementa el patrón de disclosure de ARIA. El componente aplica <code>aria-expanded</code> y <code>aria-controls</code> automáticamente en el trigger. Cumple WCAG 2.2 AA: 4.1.2 (nombre, función, valor), 2.1.1 (teclado).",
       "item1": "<strong>aria-expanded automático</strong> — el componente mantiene <code>aria-expanded=\"true\"</code> cuando está abierto y <code>\"false\"</code> cuando está cerrado en el CollapsibleTrigger.",
@@ -974,7 +930,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "accordion": "Para múltiples secciones expandibles relacionadas entre sí.",
@@ -983,13 +938,11 @@
       "tabs": "Para alternancia entre vistas paralelas sin jerarquía de contenido."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "Compón siempre el <code>CollapsibleTrigger</code> con un <code>Button</code> como hijo — aprovecha foco, hover, estados de accesibilidad y estilos del Button sin reimplementar.",
       "tip2": "Para un ícono giratorio sin JavaScript, usa la clase <code>.nds-chevron</code> en el chevron — gira 180° por sí sola cuando el trigger está en <code>[data-state=\"open\"]</code> o <code>[aria-expanded=\"true\"]</code>, atributos que el componente aplica automáticamente.",
       "tip3": "Las animaciones personalizadas en CollapsibleContent deben desactivarse dentro de <code>@media (prefers-reduced-motion: reduce)</code> — que es lo que la hoja compartida ya hace con la transición de altura por defecto."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastrea <code>collapsible_toggle</code> solo cuando la sección tiene importancia en el recorrido del usuario. No rastrear colapsables decorativos o de bajo valor de negocio.",
       "table": {
         "event": "Evento",
@@ -1010,7 +963,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Collapsible.",

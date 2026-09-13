@@ -449,7 +449,7 @@ const visualTestItems = computed(() => [
     </template>
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')">
+    <DocsDemonstration>
       <div
         class="nds-stack nds-w-full nds-max-w-md"
         data-spacing="lg"
@@ -540,7 +540,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Anatomia ─────────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -548,7 +547,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Quando Usar ──────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="{
         title: tContent('usage.guidelines.title'),
         items: [
@@ -624,7 +622,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Do & Don't ───────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         {
           doLabel: tNav('common.do'),
@@ -766,13 +763,11 @@ const visualTestItems = computed(() => [
 
     <!-- ── Importação ───────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :code="codeImportBasic"
     />
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
     <DocsVariants
-      :title="tContent('variants.title')"
       :items="variantItems"
       component-slug="toggle-group"
     >
@@ -859,7 +854,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Composições ──────────────────────────────────────────────── -->
     <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="toggle-group"
       :items="compositionItems"
@@ -933,14 +927,12 @@ const visualTestItems = computed(() => [
 
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="stateCols"
       :items="stateItems"
     />
 
     <!-- ── Propriedades ─────────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: 'ToggleGroup', cols: propCols, items: groupPropItems },
         { title: 'ToggleGroupItem', cols: propCols, items: itemPropItems },
@@ -950,7 +942,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Tokens ────────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{
         token: tContent('tokens.table.token'),
         value: tContent('tokens.table.class'),
@@ -965,7 +956,6 @@ const visualTestItems = computed(() => [
     <DocsAccessibility
       :screen-reader-title="tNav('common.screenReader')"
       :screen-reader-items="screenReaderItems"
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-items="keyboardItems"
@@ -973,19 +963,16 @@ const visualTestItems = computed(() => [
 
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
         trigger: toPlainText(tContent('analytics.table.trigger')),
@@ -996,7 +983,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Testes ────────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         cols: {

@@ -475,7 +475,7 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div ndsAccordion class="nds-max-w-lg" defaultValue="demo-1">
             @for (p of perguntas(); track p.value) {
               <div
@@ -491,7 +491,6 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="anatomyCode"
@@ -499,7 +498,6 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -507,10 +505,9 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.note')"
           [code]="importCode"
           componentSlug="accordion"
@@ -518,7 +515,6 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [items]="variantItems()"
           componentSlug="accordion"
           id="variantes"
@@ -526,20 +522,17 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="accordion"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -548,7 +541,6 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -556,7 +548,6 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [contrast]="t('accessibility.contrast')"
@@ -567,21 +558,18 @@ const CODE_FAQ = `<h2 class="nds-text-base nds-font-semibold">Perguntas frequent
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="accordion"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="accordion" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="accordion" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

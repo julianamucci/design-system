@@ -186,7 +186,7 @@ export class NdsSeparator {
 
       <ng-container docsMain>
         <!-- 1. Demonstração -->
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 18rem">
             <div class="nds-stack" data-spacing="sm">
               <p class="nds-text-caption nds-text-muted-foreground">
@@ -235,7 +235,6 @@ export class NdsSeparator {
 
         <!-- 2. Anatomia -->
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -244,7 +243,6 @@ export class NdsSeparator {
 
         <!-- 3. Quando usar -->
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -253,11 +251,10 @@ export class NdsSeparator {
         />
 
         <!-- 4. Do / Don't -->
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <!-- 5. Importação -->
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           componentSlug="separator"
           language="ts"
@@ -265,7 +262,6 @@ export class NdsSeparator {
 
         <!-- 6. Variantes -->
         <nds-docs-variants
-          [title]="t('variants.title')"
           [items]="variantItems()"
           componentSlug="separator"
           id="variantes"
@@ -273,14 +269,12 @@ export class NdsSeparator {
 
         <!-- 7. Estados -->
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <!-- 8. Propriedades -->
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -289,7 +283,6 @@ export class NdsSeparator {
 
         <!-- 9. Tokens -->
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -298,7 +291,6 @@ export class NdsSeparator {
 
         <!-- 10. Acessibilidade -->
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -309,28 +301,24 @@ export class NdsSeparator {
 
         <!-- 11. Relacionados -->
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="separator"
         />
 
         <!-- 12. Notas -->
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="separator"
         />
 
         <!-- 13. Analytics -->
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <!-- 14. Testes -->
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

@@ -11,13 +11,11 @@
       "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, aria-describedby, openDelay, closeDelay"
     },
     "demonstration": {
-      "title": "Demonstração",
       "mention": "@joana",
       "sentenceBefore": "Comentário de",
       "sentenceAfter": "há 2 horas."
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>HoverCard (Root)</strong> — provider de estado controlado com callback de mudança e delays configuráveis.",
       "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara o hover (link, botão, texto). Componha com elemento filho para herdar seus estilos.",
       "item3": "<strong>HoverCardContent</strong> — cartão flutuante posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
@@ -31,7 +29,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use HoverCard para conteúdo <strong>opcional</strong> que enriquece a experiência sem ser obrigatório para a tarefa.",
@@ -116,7 +113,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "HoverCard com preview de perfil acessível também por clique no link.",
         "dont": "HoverCard como única forma de acessar uma ação — quebra para usuários touch."
@@ -126,11 +122,8 @@
         "dont": "Espera de abertura em zero — abre a cada passada de cursor, vira ruído visual."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withDelay": "Com delay customizado",
@@ -169,7 +162,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Fechado",
         "trigger": "estado inicial",
@@ -192,7 +184,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -252,7 +243,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Propriedade",
@@ -288,7 +278,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA — critérios 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (operável por teclado: Tab abre por foco, ESC fecha), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>HoverCardTrigger</code> abre o Content ao receber foco via Tab — não exige hover.",
@@ -318,7 +307,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "tooltip": {
           "name": "Tooltip",
@@ -339,7 +327,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — os atrasos de abertura e de fechamento, o posicionamento ancorado no gatilho com desvio por colisão e a amarração ARIA entre gatilho e painel vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-hover-card-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Touch devices</strong>: hover não funciona em touch. SEMPRE forneça alternativa (clique no link, página dedicada). HoverCard é enriquecimento, não único caminho.",
@@ -347,11 +334,9 @@
       "item5": "<strong>Composição no Trigger</strong>: componha com link <code>&lt;a&gt;</code> ou Button como elemento filho para preservar semântica nativa do elemento."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes: <code>hover_card_open</code> e <code>hover_card_close</code>. Útil para medir engajamento com previews. Na abertura o payload é <code>component='hover-card'</code>, <code>trigger_id</code> (id estável em kebab-case, nunca o texto traduzido) e <code>location</code>; no fechamento, <code>component</code> e <code>location</code>. Disparar via callback de mudança no consumidor — evite trackear em hover de baixa intenção (use openDelay como filtro natural)."
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação.",
@@ -435,13 +420,11 @@
       "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, aria-describedby, openDelay, closeDelay"
     },
     "demonstration": {
-      "title": "Demonstration",
       "mention": "@joana",
       "sentenceBefore": "Comment by",
       "sentenceAfter": "2 hours ago."
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>HoverCard (Root)</strong> — controlled state provider with change callback and configurable delays.",
       "item2": "<strong>HoverCardTrigger</strong> — element triggering the hover (link, button, text). Compose with a child element to inherit its styles.",
       "item3": "<strong>HoverCardContent</strong> — floating card positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
@@ -455,7 +438,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
         "item1": "Use HoverCard for <strong>optional</strong> content that enriches the experience without being mandatory for the task.",
@@ -540,7 +522,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "HoverCard with profile preview also accessible via click on the link.",
         "dont": "HoverCard as the only way to access an action — breaks for touch users."
@@ -550,11 +531,8 @@
         "dont": "Zero open delay — opens on every hover, becomes visual noise."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "withDelay": "With custom delay",
@@ -593,7 +571,6 @@
       }
     },
     "states": {
-      "title": "States",
       "closed": {
         "label": "Closed",
         "trigger": "initial state",
@@ -616,7 +593,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -676,7 +652,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Property",
@@ -712,7 +687,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA — criteria 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (keyboard operable: Tab opens by focus, ESC closes), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>HoverCardTrigger</code> opens Content when receiving Tab focus — does not require hover.",
@@ -742,7 +716,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "tooltip": {
           "name": "Tooltip",
@@ -763,7 +736,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the open and close delays, the trigger-anchored positioning with collision shifting and the ARIA wiring between trigger and panel come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-hover-card-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Touch devices</strong>: hover doesn't work on touch. ALWAYS provide alternative (link click, dedicated page). HoverCard is enrichment, not the only path.",
@@ -771,11 +743,9 @@
       "item5": "<strong>Composition on Trigger</strong>: compose with a <code>&lt;a&gt;</code> link or Button as the child to preserve native element semantics."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant events: <code>hover_card_open</code> and <code>hover_card_close</code>. Useful to measure preview engagement. On open the payload is <code>component='hover-card'</code>, <code>trigger_id</code> (a stable kebab-case id, never the translated text) and <code>location</code>; on close, <code>component</code> and <code>location</code>. Dispatch via the change callback in the consumer — avoid tracking low-intent hovers (use openDelay as natural filter)."
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each interaction.",
@@ -859,13 +829,11 @@
       "aiEntities": "HoverCard, React, Vue, Svelte, Vanilla, Angular, hover, focus, WCAG 2.2, aria-describedby, openDelay, closeDelay"
     },
     "demonstration": {
-      "title": "Demostración",
       "mention": "@joana",
       "sentenceBefore": "Comentario de",
       "sentenceAfter": "hace 2 horas."
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>HoverCard (Root)</strong> — provider de estado controlado con callback de cambio y delays configurables.",
       "item2": "<strong>HoverCardTrigger</strong> — elemento que dispara el hover (link, botón, texto). Compón con un elemento hijo para heredar sus estilos.",
       "item3": "<strong>HoverCardContent</strong> — tarjeta flotante posicionada vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
@@ -879,7 +847,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa HoverCard para contenido <strong>opcional</strong> que enriquece la experiencia sin ser obligatorio para la tarea.",
@@ -964,7 +931,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "HoverCard con preview de perfil accesible también por clic en el link.",
         "dont": "HoverCard como única forma de acceder a una acción — rompe para usuarios touch."
@@ -974,11 +940,8 @@
         "dont": "Espera de apertura en cero — abre en cada hover, se vuelve ruido visual."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withDelay": "Con delay personalizado",
@@ -1017,7 +980,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Cerrado",
         "trigger": "estado inicial",
@@ -1040,7 +1002,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1100,7 +1061,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Propiedad",
@@ -1136,7 +1096,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA — criterios 1.4.13 (Content on Hover or Focus: hoverable, dismissable, persistent), 2.1.1 (operable por teclado: Tab abre por foco, ESC cierra), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>HoverCardTrigger</code> abre el Content al recibir foco vía Tab — no requiere hover.",
@@ -1166,7 +1125,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "tooltip": {
           "name": "Tooltip",
@@ -1187,7 +1145,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — los retrasos de apertura y de cierre, el posicionamiento anclado al disparador con desvío por colisión y el vínculo ARIA entre disparador y panel vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-hover-card-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Touch devices</strong>: hover no funciona en touch. SIEMPRE proporciona alternativa (clic en el link, página dedicada). HoverCard es enriquecimiento, no único camino.",
@@ -1195,11 +1152,9 @@
       "item5": "<strong>Composición en Trigger</strong>: compón con link <code>&lt;a&gt;</code> o Button como elemento hijo para preservar la semántica nativa del elemento."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes: <code>hover_card_open</code> y <code>hover_card_close</code>. Útil para medir engagement con previews. Al abrir el payload es <code>component='hover-card'</code>, <code>trigger_id</code> (id estable en kebab-case, nunca el texto traducido) y <code>location</code>; al cerrar, <code>component</code> y <code>location</code>. Dispara vía el callback de cambio en el consumidor — evita trackear hover de baja intención (usa openDelay como filtro natural)."
     },
     "testes": {
-      "title": "Criterios de Test",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción.",

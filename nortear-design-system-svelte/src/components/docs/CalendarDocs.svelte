@@ -247,7 +247,7 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <!-- `nds-cluster` com `data-justify`, e não `nds-stack` com `data-align`:
          a pilha não tem esse atributo, então a centralização era inerte e a
          demo ficava encostada à esquerda enquanto as outras três centralizavam.
@@ -265,7 +265,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -286,7 +285,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -350,7 +348,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -391,7 +388,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withLocale')}
@@ -401,7 +397,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   <!-- ── Modos e Layouts (Variants) ─────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.visualTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="calendar"
     items={[
@@ -476,7 +471,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -494,7 +488,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.calendarTitle'),
@@ -532,7 +525,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -557,7 +549,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -579,7 +570,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Popover',  description: $tStore('related.popover'),  path: '?path=/docs/components-overlay-popover--docs'  },
       { name: 'Form',     description: toPlainText($tStore('related.form')),     path: '?path=/docs/components-form-form--docs'     },
@@ -589,7 +579,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: 'Na stack Svelte (bits-ui), o <code>locale</code> é uma <strong>string BCP-47</strong> (ex: <code>"pt-BR"</code>) — não o objeto <code>Locale</code> do <code>date-fns</code> que o React utiliza.' },
       { title: '', content: 'Valores são instâncias de <code>DateValue</code> do <code>@internationalized/date</code> — use <code>CalendarDate</code> para criar e <code>.toString()</code> para serializar como ISO (YYYY-MM-DD).' },
@@ -600,7 +589,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -617,7 +605,6 @@ interface RangeCalendarProps extends Omit<CalendarProps, 'type' | 'value' | 'day
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

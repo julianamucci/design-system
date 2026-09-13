@@ -195,7 +195,7 @@ interface ProgressProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
       <!-- Upload animado com label e valor -->
       <div class="nds-stack" data-spacing="sm">
@@ -244,7 +244,6 @@ interface ProgressProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -258,7 +257,6 @@ interface ProgressProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -319,7 +317,6 @@ interface ProgressProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -364,11 +361,10 @@ interface ProgressProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport title={$tStore('import.title')} code={codeImport} />
+  <DocsImport code={codeImport} />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { trackId: 'determinate', name: $tStore('variants.items.determinate'),   description: stripHtml($tStore('variants.styles.determinate')),   code: codeDeterminate,   preview: variantDeterminate   },
       { trackId: 'withLabel', name: $tStore('variants.items.withLabel'),     description: stripHtml($tStore('variants.styles.withLabel')),     code: codeWithLabel,     preview: variantWithLabel     },
@@ -399,7 +395,6 @@ interface ProgressProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -415,7 +410,6 @@ interface ProgressProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -443,7 +437,6 @@ interface ProgressProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -462,7 +455,6 @@ interface ProgressProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -481,7 +473,6 @@ interface ProgressProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.skeleton.name'), description: $tStore('related.items.skeleton.description'), path: '?path=/docs/components-feedback-skeleton--docs' },
       { name: $tStore('related.items.alert.name'),    description: $tStore('related.items.alert.description'),    path: '?path=/docs/components-feedback-alert--docs'    },
@@ -491,7 +482,6 @@ interface ProgressProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -502,7 +492,6 @@ interface ProgressProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -516,7 +505,6 @@ interface ProgressProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

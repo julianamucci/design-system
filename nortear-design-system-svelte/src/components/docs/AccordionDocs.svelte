@@ -288,7 +288,7 @@ type AccordionProps = {
   {/snippet}
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
-      <DocsDemonstration title={$tStore('demonstration.title')}>
+      <DocsDemonstration>
         <Accordion type="single" value="q1" class="nds-max-w-lg">
           {#each demoItems as item (item.value)}
             <AccordionItem value={item.value}>
@@ -303,7 +303,6 @@ type AccordionProps = {
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->
       <DocsAnatomy
-        title={$tStore('anatomy.title')}
         items={[
           $tStore('anatomy.item1'),
           $tStore('anatomy.item2'),
@@ -316,7 +315,6 @@ type AccordionProps = {
 
       <!-- ── Quando Usar ────────────────────────────────────────────── -->
       <DocsWhenToUse
-        title={$tStore('usage.title')}
         guidelines={{
           title: $tStore('usage.guidelines.title'),
           items: [
@@ -378,7 +376,6 @@ type AccordionProps = {
 
       <!-- ── Do & Don't ─────────────────────────────────────────────── -->
       <DocsDoDont
-        title={$tStore('doDont.title')}
         pairs={[
           {
             doLabel: $tNavStore('common.do'),
@@ -438,7 +435,6 @@ type AccordionProps = {
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
       <DocsImport
-        title={$tStore('import.title')}
         description={$tStore('import.note')}
         code={codeImport}
       />
@@ -446,7 +442,6 @@ type AccordionProps = {
       <!-- ── Modos de Operação ──────────────────────────────────────── -->
       <DocsVariants
         id="variantes"
-        title={$tStore('variants.title')}
         items={[
           { trackId: 'single', name: $tStore('variants.items.single.label'),      description: stripHtml($tStore('variants.items.single.description')),      code: codeSingle,      preview: modeSingle      },
           { trackId: 'multiple', name: $tStore('variants.items.multiple.label'),    description: stripHtml($tStore('variants.items.multiple.description')),    code: codeMultiple,    preview: modeMultiple    },
@@ -506,7 +501,6 @@ type AccordionProps = {
 
       <!-- ── Composições ──────────────────────────────────────────────── -->
       <DocsCompositions
-        title={$tStore('variants.compositionsTitle')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="accordion"
         items={[
@@ -732,7 +726,6 @@ type AccordionProps = {
 
       <!-- ── Estados ───────────────────────────────────────────────── -->
       <DocsStates
-        title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
           trigger: toPlainText($tStore('states.cols.trigger')),
@@ -748,7 +741,6 @@ type AccordionProps = {
 
       <!-- ── Propriedades ───────────────────────────────────────────── -->
       <DocsProps
-        title={$tStore('props.title')}
         tables={[
           {
             title: $tStore('props.accordion.title'),
@@ -802,7 +794,6 @@ type AccordionProps = {
 
       <!-- ── Tokens ─────────────────────────────────────────────────── -->
       <DocsTokens
-        title={$tStore('tokens.title')}
         cols={{
           token: $tStore('tokens.table.token'),
           value: $tStore('tokens.table.class'),
@@ -817,7 +808,6 @@ type AccordionProps = {
 
       <!-- ── Acessibilidade ─────────────────────────────────────────── -->
       <DocsAccessibility
-        title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
           $tStore('accessibility.aria.ariaExpanded'),
@@ -843,7 +833,6 @@ type AccordionProps = {
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
       <DocsRelated
-        title={$tStore('related.title')}
         items={[
           { name: $tStore('related.collapsible.name'), description: $tStore('related.collapsible.description'), path: `?path=/docs/${$tStore('related.collapsible.href')}` },
           { name: $tStore('related.tabs.name'),        description: $tStore('related.tabs.description'),        path: `?path=/docs/${$tStore('related.tabs.href')}`        },
@@ -853,7 +842,6 @@ type AccordionProps = {
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
       <DocsNotes
-        title={$tStore('notes.title')}
         items={[
           { title: '', content: $tStore('notes.item1') },
           { title: '', content: $tStore('notes.item2') },
@@ -865,7 +853,6 @@ type AccordionProps = {
 
       <!-- ── Analytics ─────────────────────────────────────────────── -->
       <DocsAnalytics
-        title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
           trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -879,7 +866,6 @@ type AccordionProps = {
 
       <!-- ── Testes ─────────────────────────────────────────────────── -->
       <DocsTestes
-        title={$tStore('testes.title')}
         functional={{
           title: $tStore('testes.functional.title'),
           cols: {

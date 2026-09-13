@@ -502,7 +502,7 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         />
       }
     >
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-cluster" data-justify="center" data-spacing="md" style={{ flexWrap: "wrap" }}>
           <DefaultDemo
             triggerId="default"
@@ -538,7 +538,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       </DocsDemonstration>
 
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -556,7 +555,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -652,7 +650,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         também.
       */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -768,7 +765,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withScroll")}
@@ -777,7 +773,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
 
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="dialog"
         items={[
@@ -789,8 +784,8 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
               <DefaultDemo
                 triggerId="basic"
                 location="docs_variantes"
-                triggerLabel={tContent("demonstration.labels.triggerLabel")}
                 title={tContent("demonstration.labels.title")}
+                triggerLabel={tContent("demonstration.labels.triggerLabel")}
                 description={tContent("demonstration.labels.description")}
                 cancel={tContent("demonstration.labels.cancel")}
                 action={tContent("demonstration.labels.action")}
@@ -1061,7 +1056,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
         lá.
       */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="dialog"
         items={[
@@ -1178,7 +1172,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -1194,7 +1187,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.rootTitle"),
@@ -1264,7 +1256,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1286,7 +1277,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={stripHtml(tContent("accessibility.summary"))}
         items={[
           stripHtml(tContent("accessibility.item1")),
@@ -1306,7 +1296,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           { name: "AlertDialog", description: toPlainText(tContent("related.alertDialog")), path: "?path=/docs/components-overlay-alertdialog--docs" },
           { name: "Sheet",       description: toPlainText(tContent("related.sheet")),                  path: "?path=/docs/components-overlay-sheet--docs" },
@@ -1317,7 +1306,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -1327,7 +1315,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event:   tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1344,7 +1331,6 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
       />
 
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

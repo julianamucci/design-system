@@ -11,7 +11,6 @@
       "aiEntities": "editor de texto rico, campo de formulário, barra de formatação, texto alternativo, fórmula matemática, tabela, acessibilidade por teclado"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "basic": "Conjunto básico",
         "advanced": "Conjunto avançado",
@@ -20,7 +19,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "Moldura — desenha a borda, recebe o anel de foco e é onde se solta arquivo arrastado, inclusive fora da área de texto.",
       "item2": "Barra de formatação — anunciada como barra de ferramentas, com uma única parada de tabulação e navegação por seta entre todos os botões.",
       "item3": "Blocos — cada assunto é um bloco separado por divisória: marcas, títulos, alinhamento, listas, blocos, ações, imagem, tabela e fórmula.",
@@ -34,7 +32,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Guidelines obrigatórias",
         "item1": "Use quando o texto precisa de estrutura que um campo simples não guarda: ênfase, títulos, listas, links, imagens ou tabelas. Para uma linha de texto sem formatação, o campo de texto comum é mais barato e mais previsível.",
@@ -95,7 +92,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Rótulo de botão com o verbo da ação: \"Inserir link\". Todos os botões são só de ícone, e o rótulo é o que o leitor de tela anuncia.",
         "dont": "Rótulo com o nome da marcação: \"Link\". Ouvir um substantivo não diz o que o clique faz."
@@ -106,7 +102,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "basicCode": {
         "react": "import { Editor } from \"@/components/ui/editor\";",
@@ -125,8 +120,6 @@
       }
     },
     "variants": {
-      "title": "Conjuntos",
-      "visualTitle": "Exemplos visuais",
       "note": "O conjunto muda o que a barra expõe, não o que o documento aceita: texto colado com título continua com título no conjunto básico.",
       "items": {
         "basic": {
@@ -140,7 +133,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -178,7 +170,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Contrato",
       "table": {
         "prop": "Propriedade",
@@ -247,7 +238,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Propriedade CSS",
@@ -304,7 +294,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A barra cumpre o contrato do papel que declara, e toda ação de arrastar tem caminho equivalente por teclado.",
       "item1": "A barra declara papel de barra de ferramentas e entrega o que ele promete: uma única parada de tabulação, com seta, Home e End andando entre todos os botões, inclusive atravessando os grupos.",
       "item2": "Cada botão é só de ícone e carrega nome acessível próprio; cada bloco carrega o seu, para não ser anunciado apenas como \"grupo\".",
@@ -340,7 +329,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Usado com",
       "textarea": "Campo de texto de várias linhas, quando o conteúdo não precisa de estrutura.",
@@ -349,7 +337,6 @@
       "button": "Botão, usado nas ações que não alternam."
     },
     "notes": {
-      "title": "Notas",
       "tip1": "O armazenamento padrão de imagem embute o arquivo no conteúdo. Isso faz o exemplo funcionar sem servidor, e infla o documento em cerca de um terço do tamanho do arquivo — decida o armazenamento antes de produção.",
       "tip2": "O endereço do link aceita apenas os esquemas de página, de correio e seguro. Endereço digitado sem esquema recebe o seguro por padrão.",
       "tip3": "Colar e arrastar arquivo de imagem passam pelo mesmo caminho do botão, com o mesmo armazenamento e a mesma descrição.",
@@ -358,7 +345,6 @@
       "tip6": "As fórmulas são renderizadas com notação matemática acessível junto do desenho visual, e acompanham o tamanho do texto em volta."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos que a docs page do editor dispara.",
       "table": {
         "event": "Evento",
@@ -376,7 +362,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Comportamento funcional",
         "description": "O que deve acontecer em cada caminho do editor.",
@@ -562,7 +547,6 @@
       "aiEntities": "rich text editor, form field, formatting toolbar, alternative text, mathematical formula, table, keyboard accessibility"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "basic": "Basic set",
         "advanced": "Advanced set",
@@ -571,7 +555,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "Frame — draws the border, receives the focus ring, and is where a dragged file lands, including outside the text area.",
       "item2": "Formatting toolbar — announced as a toolbar, with a single tab stop and arrow navigation across every button.",
       "item3": "Blocks — each subject is its own block, separated by a divider: marks, headings, alignment, lists, blocks, actions, image, table and formula.",
@@ -585,7 +568,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Required guidelines",
         "item1": "Use it when the text needs structure a plain field cannot hold: emphasis, headings, lists, links, images or tables. For a single line of unformatted text, the plain text field is cheaper and more predictable.",
@@ -646,7 +628,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Button label with the action verb: \"Insert link\". Every button is icon-only, and the label is what the screen reader announces.",
         "dont": "Label with the markup name: \"Link\". Hearing a noun does not say what the click does."
@@ -657,7 +638,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "basicCode": {
         "react": "import { Editor } from \"@/components/ui/editor\";",
@@ -676,8 +656,6 @@
       }
     },
     "variants": {
-      "title": "Sets",
-      "visualTitle": "Visual examples",
       "note": "The set changes what the toolbar exposes, not what the document accepts: text pasted with a heading keeps its heading in the basic set.",
       "items": {
         "basic": {
@@ -691,7 +669,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -729,7 +706,6 @@
       }
     },
     "props": {
-      "title": "Props",
       "interface": "Contract",
       "table": {
         "prop": "Prop",
@@ -798,7 +774,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "CSS property",
@@ -855,7 +830,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The toolbar honours the role it declares, and every dragging action has an equivalent keyboard path.",
       "item1": "The toolbar declares a toolbar role and delivers what it promises: a single tab stop, with arrows, Home and End moving across every button, including across groups.",
       "item2": "Every button is icon-only and carries its own accessible name; every block carries its own, so it is not announced merely as \"group\".",
@@ -891,7 +865,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "alternatives": "Alternatives",
       "usedWith": "Used with",
       "textarea": "Multi-line text field, when the content needs no structure.",
@@ -900,7 +873,6 @@
       "button": "Button, used for the actions that do not toggle."
     },
     "notes": {
-      "title": "Notes",
       "tip1": "The default image storage embeds the file in the content. That makes the example work without a server, and inflates the document by roughly a third of the file size — decide on storage before production.",
       "tip2": "The link address accepts only the page, mail and secure schemes. An address typed without a scheme gets the secure one by default.",
       "tip3": "Pasting and dragging an image file go through the same path as the button, with the same storage and the same description.",
@@ -909,7 +881,6 @@
       "tip6": "Formulas are rendered with accessible mathematical notation alongside the visual drawing, and follow the size of the surrounding text."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Events fired by the editor's docs page.",
       "table": {
         "event": "Event",
@@ -927,7 +898,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional behaviour",
         "description": "What must happen on each path through the editor.",
@@ -1113,7 +1083,6 @@
       "aiEntities": "editor de texto enriquecido, campo de formulario, barra de formato, texto alternativo, fórmula matemática, tabla, accesibilidad por teclado"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "basic": "Conjunto básico",
         "advanced": "Conjunto avanzado",
@@ -1122,7 +1091,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "Marco — dibuja el borde, recibe el anillo de foco y es donde cae el archivo arrastrado, incluso fuera del área de texto.",
       "item2": "Barra de formato — se anuncia como barra de herramientas, con una única parada de tabulación y navegación por flechas entre todos los botones.",
       "item3": "Bloques — cada asunto es un bloque separado por divisoria: marcas, títulos, alineación, listas, bloques, acciones, imagen, tabla y fórmula.",
@@ -1136,7 +1104,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Guidelines obligatorias",
         "item1": "Úsalo cuando el texto necesita estructura que un campo simple no guarda: énfasis, títulos, listas, enlaces, imágenes o tablas. Para una línea de texto sin formato, el campo de texto común es más barato y más previsible.",
@@ -1197,7 +1164,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Etiqueta de botón con el verbo de la acción: \"Insertar enlace\". Todos los botones son solo de icono, y la etiqueta es lo que anuncia el lector de pantalla.",
         "dont": "Etiqueta con el nombre del marcado: \"Enlace\". Oír un sustantivo no dice qué hace el clic."
@@ -1208,7 +1174,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "basicCode": {
         "react": "import { Editor } from \"@/components/ui/editor\";",
@@ -1227,8 +1192,6 @@
       }
     },
     "variants": {
-      "title": "Conjuntos",
-      "visualTitle": "Ejemplos visuales",
       "note": "El conjunto cambia lo que la barra expone, no lo que el documento acepta: texto pegado con título conserva el título en el conjunto básico.",
       "items": {
         "basic": {
@@ -1242,7 +1205,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1280,7 +1242,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Contrato",
       "table": {
         "prop": "Propiedad",
@@ -1349,7 +1310,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Propiedad CSS",
@@ -1406,7 +1366,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La barra cumple el contrato del rol que declara, y toda acción de arrastrar tiene un camino equivalente por teclado.",
       "item1": "La barra declara rol de barra de herramientas y entrega lo que promete: una única parada de tabulación, con flechas, Inicio y Fin recorriendo todos los botones, incluso atravesando los grupos.",
       "item2": "Cada botón es solo de icono y lleva nombre accesible propio; cada bloque lleva el suyo, para no anunciarse apenas como \"grupo\".",
@@ -1442,7 +1401,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Usado con",
       "textarea": "Campo de texto de varias líneas, cuando el contenido no necesita estructura.",
@@ -1451,7 +1409,6 @@
       "button": "Botón, usado en las acciones que no alternan."
     },
     "notes": {
-      "title": "Notas",
       "tip1": "El almacenamiento por defecto incrusta el archivo en el contenido. Eso hace que el ejemplo funcione sin servidor, e infla el documento en cerca de un tercio del tamaño del archivo — decide el almacenamiento antes de producción.",
       "tip2": "La dirección del enlace acepta solo los esquemas de página, de correo y seguro. Una dirección escrita sin esquema recibe el seguro por defecto.",
       "tip3": "Pegar y arrastrar un archivo de imagen pasan por el mismo camino del botón, con el mismo almacenamiento y la misma descripción.",
@@ -1460,7 +1417,6 @@
       "tip6": "Las fórmulas se renderizan con notación matemática accesible junto al dibujo visual, y siguen el tamaño del texto alrededor."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos que dispara la docs page del editor.",
       "table": {
         "event": "Evento",
@@ -1478,7 +1434,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Comportamiento funcional",
         "description": "Qué debe ocurrir en cada camino del editor.",

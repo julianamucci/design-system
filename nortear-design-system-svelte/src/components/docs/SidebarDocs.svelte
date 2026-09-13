@@ -281,7 +281,7 @@ interface SidebarMenuButtonProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-min-h-100" style="contain: layout">
       <SidebarProvider defaultOpen={true} bind:open={demoSidebarOpen}>
         <nav aria-label={$tStore('demonstration.labels.mainNav')}>
@@ -337,7 +337,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -362,7 +361,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -409,7 +407,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -592,7 +589,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withSubcomponents')}
@@ -602,7 +598,6 @@ interface SidebarMenuButtonProps {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="sidebar"
     items={[
@@ -839,7 +834,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Composições ─────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="sidebar"
     items={[
@@ -1117,7 +1111,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -1134,7 +1127,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.providerTitle'),
@@ -1209,7 +1201,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -1235,7 +1226,6 @@ interface SidebarMenuButtonProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -1259,7 +1249,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
       { name: 'Tabs',           description: $tStore('related.tabs'),           path: '?path=/docs/components-navigation-tabs--docs'           },
@@ -1273,7 +1262,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -1285,7 +1273,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -1302,7 +1289,6 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

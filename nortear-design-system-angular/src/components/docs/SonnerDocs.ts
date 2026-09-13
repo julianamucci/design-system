@@ -246,10 +246,10 @@ const TYPE_CODE: Record<string, string> = {
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-stack nds-w-full" data-spacing="lg">
             <div class="nds-stack" data-spacing="sm">
-              <span class="nds-text-caption">{{ t('variants.title') }}</span>
+              <span class="nds-text-caption">{{ tNav('nav.variants') }}</span>
               <div class="nds-cluster" data-spacing="sm">
                 @for (trigger of gatilhosDeTipo(); track trigger.type) {
                   <button
@@ -269,7 +269,7 @@ const TYPE_CODE: Record<string, string> = {
             <!-- As composições documentadas em \`states.items\` vivem aqui: cada
                  uma é um disparo, e é disparando que se entende a diferença. -->
             <div class="nds-stack" data-spacing="sm">
-              <span class="nds-text-caption">{{ t('states.title') }}</span>
+              <span class="nds-text-caption">{{ tNav('nav.states') }}</span>
               <div class="nds-cluster" data-spacing="sm">
                 <button ndsButton variant="outline" size="sm" data-track="demo" data-track-id="sonner:demo:with-description" (click)="dispararComDescricao()">
                   {{ t('demonstration.labels.triggerWithDescription') }}
@@ -289,7 +289,6 @@ const TYPE_CODE: Record<string, string> = {
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="anatomyCode"
@@ -297,7 +296,6 @@ const TYPE_CODE: Record<string, string> = {
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -305,17 +303,15 @@ const TYPE_CODE: Record<string, string> = {
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           componentSlug="sonner"
           language="ts"
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [items]="variantItems()"
           componentSlug="sonner"
           id="variantes"
@@ -323,19 +319,16 @@ const TYPE_CODE: Record<string, string> = {
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -343,7 +336,6 @@ const TYPE_CODE: Record<string, string> = {
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -353,21 +345,18 @@ const TYPE_CODE: Record<string, string> = {
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="sonner"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="sonner" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="sonner" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

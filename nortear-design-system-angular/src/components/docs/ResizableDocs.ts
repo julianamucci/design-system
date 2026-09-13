@@ -313,7 +313,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-stack nds-w-full" data-spacing="lg">
             <div class="nds-stack" data-spacing="sm">
               <span class="nds-text-caption nds-text-muted-foreground">
@@ -405,7 +405,6 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="anatomyCode"
@@ -413,7 +412,6 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -421,17 +419,15 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           componentSlug="resizable"
           language="ts"
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [items]="variantItems()"
           componentSlug="resizable"
           id="variantes"
@@ -439,13 +435,11 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -454,7 +448,6 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -462,7 +455,6 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -472,21 +464,18 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="resizable"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="resizable" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="resizable" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

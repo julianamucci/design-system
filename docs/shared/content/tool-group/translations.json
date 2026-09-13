@@ -27,7 +27,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "failure": "Quando algo falhou no meio",
         "done": "Quando tudo deu certo",
@@ -36,7 +35,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O grupo é uma caixa que abre e fecha, e nasce fechada: o que interessa é a resposta, e o passo a passo é para quem for conferir.",
       "item2": "O resumo é a linha sempre visível — a seta, o título com a contagem e a etiqueta que diz o que há dentro.",
@@ -48,7 +46,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para reunir o que o agente fez para responder, junto da resposta e sem competir com ela.",
@@ -139,7 +136,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O resumo diz que algo falhou, com a caixa ainda fechada.",
         "dont": "O resumo só conta as ferramentas, e a falha fica escondida até alguém abrir."
@@ -150,7 +146,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: labels,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
@@ -165,7 +160,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -193,7 +187,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -257,7 +250,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -319,7 +311,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O estado de cada chamada é palavra, o resumo carrega o que há dentro mesmo com a caixa fechada, e quem abre e fecha é o próprio navegador.",
       "items": {
         "item1": "O resumo diz em palavra o que há dentro, inclusive que algo falhou: quem não abriu a caixa fica sabendo assim mesmo.",
@@ -347,7 +338,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chatThread": {
           "name": "Conversa",
@@ -368,7 +358,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O bloco abre e fecha com o elemento que o navegador já traz pronto. Ele dá o botão, o estado de expansão e o teclado; recriar isso à mão é reimplementar o que já funciona.",
       "item2": "O grupo nasce recolhido, e o resumo diz em palavra o que há dentro. Um grupo fechado que esconde uma falha é uma falha que ninguém vê — e a saída não é forçar a abertura, que brigaria com quem acabou de fechar.",
       "item3": "Não é região viva, apesar de as chamadas chegarem sozinhas. Quem lê está ouvindo a resposta ser gerada logo abaixo, e um anúncio por chamada corta a leitura no meio.",
@@ -378,7 +367,6 @@
       "item7": "A peça não executa nada e não decide o que uma falha significa. Ela desenha as chamadas que recebe, e avisa quando alguém abre ou fecha."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; o grupo em si não instrumenta nada.",
       "table": {
         "event": "Evento",
@@ -396,7 +384,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -509,7 +496,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "failure": "When something failed along the way",
         "done": "When everything worked",
@@ -518,7 +504,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The group is a box that opens and closes, and it starts closed: the answer is what matters, and the step by step is for whoever wants to check.",
       "item2": "The summary is the line that is always visible — the arrow, the title with the count, and the tag that says what is inside.",
@@ -530,7 +515,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to gather what the agent did in order to answer, next to the answer and without competing with it.",
@@ -621,7 +605,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The summary says that something failed, with the box still closed.",
         "dont": "The summary only counts the tools, and the failure stays hidden until someone opens it."
@@ -632,7 +615,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: labels,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
@@ -647,7 +629,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -675,7 +656,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -739,7 +719,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -801,7 +780,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Each call's state is a word, the summary carries what is inside even with the box closed, and the one opening and closing it is the browser itself.",
       "items": {
         "item1": "The summary says in words what is inside, including that something failed: whoever did not open the box finds out anyway.",
@@ -829,7 +807,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "chatThread": {
           "name": "Chat thread",
@@ -850,7 +827,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The block opens and closes with the element the browser already ships. It gives the button, the expansion state and the keyboard; rebuilding that by hand is reimplementing what already works.",
       "item2": "The group starts collapsed, and the summary says in words what is inside. A closed group that hides a failure is a failure nobody sees — and the way out is not to force it open, which would fight whoever has just closed it.",
       "item3": "It is not a live region, even though the calls arrive on their own. Whoever is reading is listening to the answer being generated right below, and one announcement per call cuts into the reading.",
@@ -860,7 +836,6 @@
       "item7": "The piece runs nothing and does not decide what a failure means. It draws the calls it receives, and reports when someone opens or closes it."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the group itself instruments nothing.",
       "table": {
         "event": "Event",
@@ -878,7 +853,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -991,7 +965,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "failure": "Cuando algo falló por el camino",
         "done": "Cuando todo salió bien",
@@ -1000,7 +973,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El grupo es una caja que abre y cierra, y nace cerrada: lo que importa es la respuesta, y el paso a paso es para quien quiera comprobarlo.",
       "item2": "El resumen es la línea siempre visible — la flecha, el título con el recuento y la etiqueta que dice qué hay dentro.",
@@ -1012,7 +984,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para reunir lo que el agente hizo para responder, junto a la respuesta y sin competir con ella.",
@@ -1103,7 +1074,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El resumen dice que algo falló, con la caja todavía cerrada.",
         "dont": "El resumen solo cuenta las herramientas, y el fallo queda escondido hasta que alguien abra."
@@ -1114,7 +1084,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createToolGroup } from '@/components/ui/tool-group';\n\ncreateToolGroup({\n  calls: chamadas,\n  labels: labels,\n  onOpenChange: (aberto) => registrar(aberto),\n});",
@@ -1129,7 +1098,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1157,7 +1125,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1221,7 +1188,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1283,7 +1249,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El estado de cada llamada es palabra, el resumen lleva lo que hay dentro incluso con la caja cerrada, y quien abre y cierra es el propio navegador.",
       "items": {
         "item1": "El resumen dice en palabras qué hay dentro, incluso que algo falló: quien no abrió la caja se entera igual.",
@@ -1311,7 +1276,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chatThread": {
           "name": "Conversación",
@@ -1332,7 +1296,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El bloque abre y cierra con el elemento que el navegador ya trae listo. Da el botón, el estado de expansión y el teclado; rehacer eso a mano es reimplementar lo que ya funciona.",
       "item2": "El grupo nace plegado, y el resumen dice en palabras qué hay dentro. Un grupo cerrado que esconde un fallo es un fallo que nadie ve — y la salida no es forzar la apertura, que pelearía con quien acaba de cerrar.",
       "item3": "No es región viva, aunque las llamadas lleguen solas. Quien lee está escuchando la respuesta generarse justo debajo, y un anuncio por llamada corta la lectura por la mitad.",
@@ -1342,7 +1305,6 @@
       "item7": "La pieza no ejecuta nada y no decide qué significa un fallo. Dibuja las llamadas que recibe, y avisa cuando alguien abre o cierra."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; el grupo en sí no instrumenta nada.",
       "table": {
         "event": "Evento",
@@ -1360,7 +1322,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

@@ -34,7 +34,6 @@ const meta = {
     },
   },
   argTypes: {
-    title: { control: "text", description: "Título da seção." },
     componentSlug: {
       control: "text",
       description: "Informativo. Não injeta rastreio — quem o faz é o gatilho dentro do slot.",
@@ -42,7 +41,6 @@ const meta = {
     children: { control: false, description: "Conteúdo do palco. É o slot desta stack." },
   },
   args: {
-    title: "Demonstração",
     componentSlug: "button",
     children: <Button>Salvar</Button>,
   },

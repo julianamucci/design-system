@@ -213,7 +213,6 @@ interface ToasterProps {
 
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration
-        title={tContent("demonstration.title")}
         componentSlug="sonner"
       >
         <div
@@ -281,7 +280,6 @@ interface ToasterProps {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -297,7 +295,6 @@ interface ToasterProps {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -379,7 +376,6 @@ interface ToasterProps {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -463,13 +459,11 @@ interface ToasterProps {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         code={codeImport}
       />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="sonner"
         items={[
           {
@@ -577,7 +571,7 @@ interface ToasterProps {
 
       {/* ── Estados (Composições) ─────────────────────────────────── */}
       <section id="estados">
-        <h2 className="nds-section-title">{tContent("states.title")}</h2>
+        <h2 className="nds-section-title">{tNav("nav.states")}</h2>
         <div className="nds-stack" data-spacing="md">
           {/* WithDescription */}
           <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
@@ -710,7 +704,6 @@ interface ToasterProps {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.toasterTitle"),
@@ -779,7 +772,6 @@ interface ToasterProps {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.value"),
@@ -799,7 +791,6 @@ interface ToasterProps {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -819,7 +810,6 @@ interface ToasterProps {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: "Alert",
@@ -846,7 +836,6 @@ interface ToasterProps {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="sonner"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -859,7 +848,6 @@ interface ToasterProps {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -891,7 +879,6 @@ interface ToasterProps {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

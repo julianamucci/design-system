@@ -46,15 +46,21 @@ Partes específicas de framework (package name, sintaxe de import, exemplos de c
 
 O menu da docs page é **cromo**: as mesmas quinze seções, na mesma ordem, em
 toda página das cinco stacks. Ele lê `src/i18n/ui.json` da própria stack, e nada
-mais. Quem nomeia o que o componente tem de próprio é o **título da seção**, que
-sai do `translations.json` compartilhado.
+mais — e o `h2` da seção sai do MESMO lugar, pelo mesmo motivo (ver a regra
+seguinte).
 
 O corte é o do modo de leitura: a barra lateral se lê de relance e **comparando
 páginas** — "onde ficam os tokens neste componente?" —, então vocabulário
-diferente por página é ruído. O título se lê dentro de uma página, e ali a
-palavra do componente informa. Chart pode intitular a seção "Tipos de gráfico"
-com o menu dizendo "Variantes"; o inverso obriga o leitor a reaprender a barra a
-cada página.
+diferente por página é ruído.
+
+**Uma decisão intermediária foi revertida no mesmo dia**, e vale registrar
+porque ela é sedutora: a primeira versão desta regra deixava o menu no `ui.json`
+e o título no conteúdo, para o chart poder intitular "Tipos de gráfico" com o
+menu dizendo "Variantes". Durou uma rodada. O que a derruba é que o menu não é
+um índice ao lado do texto — ele **salta para o cabeçalho**, e clicar em
+"Estados" para chegar em "Configurações" é o defeito original com outra roupa.
+Onde o componente precisa da palavra própria, ela vai no subtítulo, que continua
+sendo dele.
 
 **Medido em 2026-09-12**, e o custo estava distribuído em 82 slugs: 79 dos 85
 conteúdos declaravam um bloco `nav` com **2949 chaves** nos três idiomas, das
@@ -70,7 +76,36 @@ O relato que abriu a investigação era o menor dos 173 — o AlertDialog dizia
 `en.nav.anatomy: "Anatomity"` no `ui.json` do vue: palavra que não existe em
 inglês, no menu das 82 docs pages daquela stack, desde sempre.
 
-Portão: `rotulo_de_nav_no_conteudo` (conteúdo declarando `nav`),
+### E o `h2` da seção é a MESMA frase do item de menu
+
+Não parecida: a mesma. O leitor clica em "Estados" e tem de chegar a um
+cabeçalho escrito "Estados" — enquanto as duas pontas eram escritas em lugares
+diferentes, ele clicava em "Estados" e chegava em "Configurações", com o âncora
+funcionando e a página renderizando certo.
+
+Por isso **o título não é prop**: o container da seção o deriva do `id` que ele
+já declara, pelo mapa `CHAVE_DE_ROTULO_POR_SECAO` de
+`docs/shared/primitives/docs-page-landmarks.ts`. A divergência deixa de ser
+possível em vez de passar a ser proibida, e nas cinco stacks o type-checker
+cobra a prop que sumiu.
+
+**Medido em 2026-09-12**: 900 dos 3375 títulos diziam palavra diferente da do
+menu. A maior parte era deriva de escrita — "Design Tokens" contra "Tokens",
+"Critérios de Teste" contra "Testes", "Quando e Como Usar" contra "Quando
+Usar" —, e 65 eram renomeação por componente, como "Tipos de Gráfico" no lugar
+de "Variantes".
+
+O que **continua** vindo do conteúdo é tudo que não é o `h2`: `props.extensibilityTitle`,
+`tokens.customizationTitle`, `usage.guidelines.title`, `testes.functional.title`,
+`accessibility.keyboardTitle` e os `title` de item de lista são h3 e rótulo
+interno, e ali a palavra do componente informa.
+
+Portão: `titulo_de_secao_no_conteudo` e `titulo_de_secao_pedido_ao_conteudo`. O
+segundo existe porque a falha aqui é MUDA: tradutor sem chave devolve a própria
+string, então a página mostraria `states.title` na tela sem erro de tipo nem de
+runtime.
+
+Portão do menu: `rotulo_de_nav_no_conteudo` (conteúdo declarando `nav`),
 `rotulo_de_nav_do_conteudo` (docs page resolvendo o rótulo pelo tradutor do
 conteúdo, ou reintroduzindo a ponte) e `vocabulario_de_nav_divergente` (os cinco
 `ui.json` discordando entre si). O terceiro é o que pegaria o "Anatomity": sem

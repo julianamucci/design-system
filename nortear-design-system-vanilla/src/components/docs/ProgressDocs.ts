@@ -245,7 +245,6 @@ export function createProgressDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const grid = document.createElement('div');
             grid.className = 'nds-stack nds-w-full';
@@ -317,7 +316,6 @@ export function createProgressDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             DOMPurify.sanitize(t('anatomy.item1')),
             DOMPurify.sanitize(t('anatomy.item2')),
@@ -331,7 +329,6 @@ export function createProgressDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -391,7 +388,6 @@ export function createProgressDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -417,7 +413,6 @@ export function createProgressDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createProgress } from '@/components/ui/progress';`,
         });
 
@@ -447,7 +442,6 @@ export function createProgressDocs(): HTMLElement {
           `});`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'determinate',
@@ -486,7 +480,6 @@ export function createProgressDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -526,7 +519,6 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createProgress(options)',
@@ -578,7 +570,6 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -598,7 +589,6 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             DOMPurify.sanitize(t('accessibility.items.item1')),
@@ -617,7 +607,6 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.skeleton.name'), description: toPlainText(t('related.items.skeleton.description')), path: '?path=/docs/components-feedback-skeleton--docs' },
             { name: t('related.items.alert.name'),    description: toPlainText(t('related.items.alert.description')),    path: '?path=/docs/components-feedback-alert--docs' },
@@ -627,7 +616,6 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -641,7 +629,6 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -655,7 +642,6 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

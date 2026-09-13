@@ -214,7 +214,6 @@ export function createAspectRatioDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const grid = document.createElement('div');
             grid.className = 'nds-grid nds-w-full';
@@ -231,9 +230,8 @@ export function createAspectRatioDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3')],
-          structureLabel: t('anatomy.title'),
+          structureLabel: tNav('nav.anatomy'),
           structureCode:
             `<div class="relative nds-w-full" style="padding-bottom: 56.25%">   // Root — wrapper com ratio\n` +
             `  <div class="absolute inset-0">                               // Inner — preenche o container\n` +
@@ -244,7 +242,6 @@ export function createAspectRatioDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -290,7 +287,6 @@ export function createAspectRatioDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -357,7 +353,6 @@ export function createAspectRatioDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('description'),
           code: `import { createAspectRatio } from '@/components/ui/aspect-ratio';`,
           secondaryDescription: stripHtml(t('variants.items.sixteenNine')),
@@ -378,7 +373,6 @@ export function createAspectRatioDocs(): HTMLElement {
           `const el = createAspectRatio({ ratio: ${ratioExpr}, content: img });`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               name: '16 / 9',
@@ -429,7 +423,6 @@ export function createAspectRatioDocs(): HTMLElement {
           behavior: tNav('common.stateBehavior'),
         };
         return createDocsStates({
-          title: t('states.title'),
           cols: statesCols,
           items: [
             { label: t('states.item1.label'), trigger: toPlainText(t('states.item1.trigger')), behavior: toPlainText(t('states.item1.behavior'))},
@@ -456,7 +449,6 @@ export interface AspectRatioOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createAspectRatio',
@@ -484,7 +476,6 @@ export interface AspectRatioOptions {
 <div class="absolute inset-0 nds-bg-muted nds-rounded-md" aria-hidden="true"></div>`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -504,7 +495,6 @@ export interface AspectRatioOptions {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.aria.item1'),
@@ -522,7 +512,6 @@ export interface AspectRatioOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Card',       description: toPlainText(t('related.card')),       path: '?path=/docs/components-layout-card--docs' },
             { name: 'Avatar',     description: toPlainText(t('related.avatar')),     path: '?path=/docs/components-display-avatar--docs' },
@@ -532,7 +521,6 @@ export interface AspectRatioOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.item1') },
             { title: '', content: t('notes.item2') },
@@ -543,7 +531,6 @@ export interface AspectRatioOptions {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -560,7 +547,6 @@ export interface AspectRatioOptions {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

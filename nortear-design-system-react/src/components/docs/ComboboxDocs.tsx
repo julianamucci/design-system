@@ -691,7 +691,7 @@ interface ComboboxContentProps {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-grid nds-w-full" data-cols="3" data-spacing="lg">
           <div className="nds-stack" data-spacing="xs">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
@@ -741,7 +741,6 @@ interface ComboboxContentProps {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -760,7 +759,6 @@ interface ComboboxContentProps {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -828,7 +826,6 @@ interface ComboboxContentProps {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -906,11 +903,10 @@ interface ComboboxContentProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="combobox"
         items={[
           {
@@ -968,7 +964,6 @@ interface ComboboxContentProps {
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="combobox"
         items={[
@@ -1008,7 +1003,6 @@ interface ComboboxContentProps {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -1032,7 +1026,6 @@ interface ComboboxContentProps {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={propTables}
         interfaceCode={interfaceCode}
         extensibilityTitle={tContent("props.extensibilityTitle")}
@@ -1041,7 +1034,6 @@ interface ComboboxContentProps {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1078,7 +1070,6 @@ interface ComboboxContentProps {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5, 6, 7].map((i) =>
           tContent(`accessibility.items.item${i}`),
@@ -1099,7 +1090,6 @@ interface ComboboxContentProps {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="combobox"
         items={[
           {
@@ -1127,7 +1117,6 @@ interface ComboboxContentProps {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="combobox"
         items={[1, 2, 3, 4, 5, 6].map((i) => ({
           title: "",
@@ -1137,7 +1126,6 @@ interface ComboboxContentProps {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1159,7 +1147,6 @@ interface ComboboxContentProps {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

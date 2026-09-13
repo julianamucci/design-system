@@ -286,7 +286,6 @@ export function createToggleGroupDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack';
@@ -338,7 +337,6 @@ export function createToggleGroupDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -350,7 +348,6 @@ export function createToggleGroupDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map(i => t(`usage.guidelines.item${i}`)),
@@ -461,7 +458,6 @@ export function createToggleGroupDocs(): HTMLElement {
         };
 
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -485,7 +481,6 @@ export function createToggleGroupDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: 'Importação do factory custom (Nortear):',
           code: `import { createToggleGroup, type ToggleGroupItem } from '@/components/ui/toggle-group';`,
           secondaryDescription: 'Uso básico (icon-only — aria-label OBRIGATÓRIO no grupo e em cada item):',
@@ -505,7 +500,6 @@ export function createToggleGroupDocs(): HTMLElement {
 
       case 'variantes': {
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'single',
@@ -599,7 +593,6 @@ export function createToggleGroupDocs(): HTMLElement {
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'toggle-group',
           items: [
@@ -746,7 +739,6 @@ wrapper.appendChild(group);`,
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -798,7 +790,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
         const DIVERGENCE = ' (Nortear: NÃO suportado pela factory custom — aplicar manualmente).';
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createToggleGroup(options) — Nortear',
@@ -904,7 +895,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -931,7 +921,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
             t('accessibility.items.item1'),
@@ -957,7 +946,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.toggle.name'),     description: stripHtml(t('related.items.toggle.description')),     path: '?path=/docs/components-form-toggle--docs'     },
             { name: t('related.items.tabs.name'),       description: stripHtml(t('related.items.tabs.description')),       path: '?path=/docs/components-navigation-tabs--docs'       },
@@ -968,7 +956,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -981,7 +968,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -996,7 +982,6 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

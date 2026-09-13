@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ComponentDemo from '@/components/ComponentDemo.vue';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 /**
  * DocsDemonstration — wrapper da seção "Demonstração".
@@ -9,7 +10,7 @@ import ComponentDemo from '@/components/ComponentDemo.vue';
  * docs page. Consumidores devem aplicar manualmente os atributos nos triggers:
  *
  * @example
- *   <DocsDemonstration title="..." component-slug="alert">
+ *   <DocsDemonstration component-slug="alert">
  *     <Button data-track="demo" data-track-id="alert:demo:save">
  *       Salvar
  *     </Button>
@@ -17,7 +18,9 @@ import ComponentDemo from '@/components/ComponentDemo.vue';
  *
  * O observer global do DocsPageLayout captura o click via `.closest('[data-track]')`.
  */
-defineProps<{ title: string; componentSlug?: string }>();
+defineProps<{ componentSlug?: string }>();
+
+const title = useTituloDeSecao('demonstracao');
 </script>
 
 <template>

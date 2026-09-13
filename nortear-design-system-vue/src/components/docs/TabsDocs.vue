@@ -447,13 +447,13 @@ function handleTabChange(value: string) {
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')">
+    <DocsDemonstration>
       <Tabs
         default-value="overview"
         class="nds-w-full nds-max-w-md"
         @update:model-value="handleTabChange(String($event))"
       >
-        <TabsList :aria-label="tContent('demonstration.title')">
+        <TabsList :aria-label="tNav('nav.demonstration')">
           <TabsTrigger value="overview">
             {{ demoLabels.overview }}
           </TabsTrigger>
@@ -487,7 +487,6 @@ function handleTabChange(value: string) {
 
     <!-- ── Anatomia ───────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -495,7 +494,6 @@ function handleTabChange(value: string) {
 
     <!-- ── Quando Usar ────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="{
         title: tContent('usage.guidelines.title'),
         items: [
@@ -540,7 +538,6 @@ function handleTabChange(value: string) {
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
@@ -658,13 +655,11 @@ function handleTabChange(value: string) {
 
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :code="codeImport"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
     <DocsVariants
-      :title="tContent('variants.title')"
       :items="variantItems"
     >
       <template #variant-preview-0>
@@ -783,7 +778,6 @@ function handleTabChange(value: string) {
 
     <!-- ── Composições ────────────────────────────────────────────── -->
     <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="tabs"
       :items="compositionItems"
@@ -946,14 +940,12 @@ function handleTabChange(value: string) {
 
     <!-- ── Estados ───────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="stateCols"
       :items="stateItems"
     />
 
     <!-- ── Propriedades ───────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: 'Tabs', cols: propCols, items: tabsPropItems },
         { title: 'TabsList', cols: propCols, items: listPropItems },
@@ -967,7 +959,6 @@ function handleTabChange(value: string) {
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
@@ -978,7 +969,6 @@ function handleTabChange(value: string) {
     <DocsAccessibility
       :screen-reader-title="tNav('common.screenReader')"
       :screen-reader-items="screenReaderItems"
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboard.title')"
@@ -987,26 +977,22 @@ function handleTabChange(value: string) {
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 
     <!-- ── Testes ─────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },

@@ -28,7 +28,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "decorative": {
         "title": "Ícone decorativo — com texto adjacente"
       },
@@ -74,7 +73,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "decorative": {
         "title": "Decorative icon — with adjacent text"
       },
@@ -120,7 +118,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "decorative": {
         "title": "Ícono decorativo — con texto adyacente"
       },

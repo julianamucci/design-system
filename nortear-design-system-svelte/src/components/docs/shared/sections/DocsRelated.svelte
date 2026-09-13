@@ -1,5 +1,6 @@
 <script lang="ts">
   import { managerHref } from '@shared/primitives/manager-href';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface DocsRelatedItem { name: string; description: string; path: string }
 
@@ -10,11 +11,12 @@
    * `data-track="related"` + `data-track-id="{slug}:related:{item.name.slug}"`
    * — o rótulo do evento sai do fim do id, nunca do nome exibido.
    */
-  const { title, items, componentSlug }: {
-    title: string;
+  const { items, componentSlug }: {
     items: DocsRelatedItem[];
     componentSlug?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao('relacionados', $rotulosDeSecao));
 
   function slugify(s: string) {
     return s.toLowerCase().replace(/\s+/g, '-');

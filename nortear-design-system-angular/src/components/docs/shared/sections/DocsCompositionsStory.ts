@@ -37,7 +37,6 @@ import { NdsDocsCompositions, type DocsCompositionItem } from './DocsComposition
     </ng-template>
 
     <nds-docs-compositions
-      [title]="title()"
       [note]="note()"
       [useWhenLabel]="useWhenLabel()"
       [id]="id()"
@@ -47,7 +46,6 @@ import { NdsDocsCompositions, type DocsCompositionItem } from './DocsComposition
   `,
 })
 export class NdsDocsCompositionsStory {
-  readonly title = input.required<string>();
   readonly note = input<string>('');
   readonly useWhenLabel = input<string>('Quando usar:');
   readonly id = input<string>('composicoes');

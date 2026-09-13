@@ -621,7 +621,7 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-stack nds-w-full" data-spacing="lg">
             <div class="nds-stack nds-w-full" data-spacing="sm">
               <span class="nds-text-caption">{{ t('demonstration.labels.bar') }}</span>
@@ -664,7 +664,6 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="anatomyCode"
@@ -672,7 +671,6 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -680,10 +678,9 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="importCode"
           componentSlug="chart"
@@ -692,7 +689,6 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
 
         <nds-docs-variants
           id="variantes"
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="chart"
@@ -701,20 +697,17 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
 
         <nds-docs-variants
           id="composicoes"
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           componentSlug="chart"
           language="html"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -722,7 +715,6 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -730,7 +722,6 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -740,21 +731,18 @@ const TOKENS_CSS = `/* As cores de série saem dos tokens do tema, na ordem das 
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="chart"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="chart" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="chart" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

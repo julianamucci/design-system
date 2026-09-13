@@ -1,7 +1,7 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import { createComponentDemo } from '@/components/ComponentDemo';
 
 export interface DocsDemonstrationProps {
-  title: string;
   demoFactory: () => HTMLElement;
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Informativo — este
@@ -11,7 +11,6 @@ export interface DocsDemonstrationProps {
    *
    * @example
    *   createDocsDemonstration({
-   *     title: '...',
    *     componentSlug: 'alert',
    *     demoFactory: () => {
    *       const btn = createButton({ label: 'Salvar' });
@@ -37,7 +36,7 @@ export function createDocsDemonstration(props: DocsDemonstrationProps): HTMLElem
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('demonstracao');
 
   const demo = createComponentDemo(props.demoFactory());
 

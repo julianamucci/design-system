@@ -7,6 +7,8 @@ import {
 import { NdsCard } from '@/components/ui/card';
 import DOMPurify from 'dompurify';
 
+import { tituloDeSecao } from './titulo-de-secao';
+
 export interface DocsWhenToUseScenario { s: string; u: string; a: string }
 export interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
 
@@ -162,7 +164,7 @@ export interface DocsWhenToUseList { title: string; items: string[] }
   `,
 })
 export class NdsDocsWhenToUse {
-  readonly title = input.required<string>();
+  protected readonly title = tituloDeSecao('quando-usar');
   readonly guidelines = input.required<DocsWhenToUseGuidelines>();
   readonly scenarios = input.required<DocsWhenToUseScenarios>();
   readonly uxWriting = input<DocsWhenToUseUXWriting | undefined>(undefined);

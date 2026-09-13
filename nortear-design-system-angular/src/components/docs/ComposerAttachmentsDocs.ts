@@ -190,7 +190,6 @@ const QUEUE_PAIR = queue().slice(0, 2);
 
       <ng-container docsMain>
         <nds-docs-demonstration
-          [title]="t('demonstration.title')"
           componentSlug="composer-attachments"
         >
           <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -245,7 +244,6 @@ const QUEUE_PAIR = queue().slice(0, 2);
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -253,7 +251,6 @@ const QUEUE_PAIR = queue().slice(0, 2);
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -261,10 +258,9 @@ const QUEUE_PAIR = queue().slice(0, 2);
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="t('import.basicCode')"
           [secondaryDescription]="t('import.withProgress')"
@@ -274,13 +270,11 @@ const QUEUE_PAIR = queue().slice(0, 2);
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -290,7 +284,6 @@ const QUEUE_PAIR = queue().slice(0, 2);
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -299,7 +292,6 @@ const QUEUE_PAIR = queue().slice(0, 2);
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -309,25 +301,21 @@ const QUEUE_PAIR = queue().slice(0, 2);
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="composer-attachments"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="composer-attachments"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

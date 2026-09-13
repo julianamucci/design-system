@@ -11,7 +11,6 @@
       "aiEntities": "DropdownMenu, React, Vue, Svelte, Vanilla, Angular, aria-expanded, role=menu, role=menuitem, WCAG 2.2, aria-checked, aria-haspopup"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "basic": "Menu de ações",
         "withCheckbox": "Com checkbox-items (toggles)",
@@ -51,7 +50,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>DropdownMenu (Root)</strong> — provider de estado de abertura controlado (com callback de mudança) ou estado inicial não controlado.",
       "item2": "<strong>DropdownMenuTrigger</strong> — botão que abre o menu; use composição (delegando a renderização ao filho) com <code>Button</code> para herdar estilos.",
       "item3": "<strong>DropdownMenuContent</strong> — popup posicionado via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza em portal.",
@@ -71,7 +69,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use DropdownMenu para 3 ou mais ações relacionadas que não cabem visualmente como botões inline.",
@@ -162,7 +159,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "DropdownMenu com Label, Items agrupados e Separator entre grupos.",
         "dont": "DropdownMenu com 10+ items planos sem agrupamento — vira lista de scroll."
@@ -172,11 +168,8 @@
         "dont": "Excluir conta como Item normal sem aviso visual."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "destructive": "Destructive",
@@ -207,7 +200,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Fechado",
         "trigger": "estado inicial",
@@ -235,7 +227,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -289,7 +280,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -329,7 +319,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via role=menu/menuitem), 2.1.1 (operável por teclado: setas, Enter, ESC, Home/End), 2.4.3 (foco retorna ao trigger ao fechar), 4.1.2 (name/role/value via aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> recebe <code>aria-haspopup=\"menu\"</code> e <code>aria-expanded</code> automáticos.",
@@ -365,7 +354,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "contextMenu": {
           "name": "ContextMenu",
@@ -390,7 +378,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: o menu é construído sobre a lib headless desta stack, que fornece portal, foco e teclado. Onde não há lib, a fábrica própria entrega o mesmo contrato de papéis ARIA, submenu incluído.",
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews de Storybook, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Submenus</strong>: limite a 1 nível de aninhamento. Submenu aninhado em submenu confunde e quebra navegação por teclado em mobile.",
@@ -398,7 +385,6 @@
       "item5": "<strong>Trigger via composição</strong>: delegar a renderização ao <code>Button</code> filho evita <code>&lt;button&gt;&lt;button&gt;</code> aninhado (NestedInteractive ARIA violation)."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "O DropdownMenu fala a mesma língua da família de menus (Context Menu e Menubar): três eventos, e todo payload leva <code>component</code>, <code>menu</code> e <code>location</code>. O de item soma <code>label</code>; o de fechamento soma <code>reason</code> — <code>escape</code>, <code>overlay</code> (clique fora, Tab ou clique no gatilho: saiu sem decidir) ou <code>api</code> (item escolhido ou fechamento pelo código); o tipo carrega também <code>close-button</code>, a quarta palavra da família, que o menu não usa por não ter botão de fechar. <code>menu</code> e <code>label</code> são identificadores estáveis, em inglês e kebab-case — nesta página, <code>menu</code> é o id da prévia (<code>demo-account</code>, <code>pair1-do</code>, <code>with-checkbox-items</code>) e <code>label</code> é o id do item (<code>profile</code>, <code>column-email</code>). Nunca o texto traduzido: \"Configurações\", \"Settings\" e \"Configuración\" virariam três linhas de uma ação só no GA4. <code>location</code> é a seção da página onde o menu está.",
       "table": {
         "event": "Evento",
@@ -425,7 +411,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação.",
@@ -550,7 +535,6 @@
       "aiEntities": "DropdownMenu, React, Vue, Svelte, Vanilla, Angular, aria-expanded, role=menu, role=menuitem, WCAG 2.2, aria-checked, aria-haspopup"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "basic": "Action menu",
         "withCheckbox": "With checkbox-items (toggles)",
@@ -590,7 +574,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>DropdownMenu (Root)</strong> — state provider for controlled open state (with change callback) or uncontrolled initial state.",
       "item2": "<strong>DropdownMenuTrigger</strong> — button that opens the menu; use composition (delegating rendering to the child) with <code>Button</code> to inherit styles.",
       "item3": "<strong>DropdownMenuContent</strong> — popup positioned via <code>side</code>/<code>align</code>/<code>sideOffset</code>; renders in a portal.",
@@ -610,7 +593,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
         "item1": "Use DropdownMenu for 3 or more related actions that don't fit visually as inline buttons.",
@@ -701,7 +683,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "DropdownMenu with Label, grouped Items, and Separator between groups.",
         "dont": "DropdownMenu with 10+ flat items without grouping — becomes a scroll list."
@@ -711,11 +692,8 @@
         "dont": "Delete account as a regular Item without visual warning."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "destructive": "Destructive",
@@ -746,7 +724,6 @@
       }
     },
     "states": {
-      "title": "States",
       "closed": {
         "label": "Closed",
         "trigger": "initial state",
@@ -774,7 +751,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -828,7 +804,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -868,7 +843,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via role=menu/menuitem), 2.1.1 (keyboard operable: arrows, Enter, ESC, Home/End), 2.4.3 (focus returns to trigger on close), 4.1.2 (name/role/value via aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> automatically gets <code>aria-haspopup=\"menu\"</code> and <code>aria-expanded</code>.",
@@ -904,7 +878,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "contextMenu": {
           "name": "ContextMenu",
@@ -929,7 +902,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: the menu is built on this stack's headless library, which provides the portal, focus and keyboard handling. Where there is no library, the in-house factory delivers the same ARIA role contract, submenus included.",
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In Storybook previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Submenus</strong>: limit to 1 nesting level. Submenu within submenu confuses and breaks keyboard navigation on mobile.",
@@ -937,7 +909,6 @@
       "item5": "<strong>Trigger via composition</strong>: delegating rendering to a <code>Button</code> child avoids nested <code>&lt;button&gt;&lt;button&gt;</code> (NestedInteractive ARIA violation)."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "DropdownMenu speaks the menu family's language (Context Menu and Menubar): three events, and every payload carries <code>component</code>, <code>menu</code> and <code>location</code>. The item event adds <code>label</code>; the close event adds <code>reason</code> — <code>escape</code>, <code>overlay</code> (click outside, Tab or a click on the trigger: left without deciding) or <code>api</code> (item picked, or closed from code); the type also carries <code>close-button</code>, the family's fourth word, which the menu never sends because it has no close button. <code>menu</code> and <code>label</code> are stable identifiers in English kebab-case — on this page <code>menu</code> is the preview id (<code>demo-account</code>, <code>pair1-do</code>, <code>with-checkbox-items</code>) and <code>label</code> is the item id (<code>profile</code>, <code>column-email</code>). Never the translated text: \"Configurações\", \"Settings\" and \"Configuración\" would become three rows of a single action in GA4. <code>location</code> is the page section the menu lives in.",
       "table": {
         "event": "Event",
@@ -964,7 +935,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each interaction.",
@@ -1089,7 +1059,6 @@
       "aiEntities": "DropdownMenu, React, Vue, Svelte, Vanilla, Angular, aria-expanded, role=menu, role=menuitem, WCAG 2.2, aria-checked, aria-haspopup"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "basic": "Menú de acciones",
         "withCheckbox": "Con checkbox-items (toggles)",
@@ -1129,7 +1098,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>DropdownMenu (Root)</strong> — provider de estado de apertura controlado (con callback de cambio) o estado inicial no controlado.",
       "item2": "<strong>DropdownMenuTrigger</strong> — botón que abre el menú; usa composición (delegando la renderización al hijo) con <code>Button</code> para heredar estilos.",
       "item3": "<strong>DropdownMenuContent</strong> — popup posicionado vía <code>side</code>/<code>align</code>/<code>sideOffset</code>; renderiza en portal.",
@@ -1149,7 +1117,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa DropdownMenu para 3 o más acciones relacionadas que no caben visualmente como botones inline.",
@@ -1240,7 +1207,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "DropdownMenu con Label, Items agrupados y Separator entre grupos.",
         "dont": "DropdownMenu con 10+ items planos sin agrupamiento — se vuelve lista de scroll."
@@ -1250,11 +1216,8 @@
         "dont": "Eliminar cuenta como Item normal sin aviso visual."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "destructive": "Destructive",
@@ -1285,7 +1248,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Cerrado",
         "trigger": "estado inicial",
@@ -1313,7 +1275,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1367,7 +1328,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1407,7 +1367,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía role=menu/menuitem), 2.1.1 (operable por teclado: flechas, Enter, ESC, Home/End), 2.4.3 (foco vuelve al trigger al cerrar), 4.1.2 (name/role/value vía aria-checked/aria-haspopup).",
       "items": {
         "item1": "<code>DropdownMenuTrigger</code> recibe <code>aria-haspopup=\"menu\"</code> y <code>aria-expanded</code> automáticos.",
@@ -1443,7 +1402,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "contextMenu": {
           "name": "ContextMenu",
@@ -1468,7 +1426,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: el menú se construye sobre la librería headless de este stack, que aporta portal, foco y teclado. Donde no hay librería, la factory propia entrega el mismo contrato de roles ARIA, submenú incluido.",
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews de Storybook, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Submenús</strong>: limita a 1 nivel de anidamiento. Submenú dentro de submenú confunde y rompe la navegación por teclado en mobile.",
@@ -1476,7 +1433,6 @@
       "item5": "<strong>Trigger vía composición</strong>: delegar la renderización a un <code>Button</code> hijo evita <code>&lt;button&gt;&lt;button&gt;</code> anidado (NestedInteractive ARIA violation)."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "El DropdownMenu habla el mismo idioma que la familia de menús (Context Menu y Menubar): tres eventos, y todo payload lleva <code>component</code>, <code>menu</code> y <code>location</code>. El de ítem suma <code>label</code>; el de cierre suma <code>reason</code> — <code>escape</code>, <code>overlay</code> (clic fuera, Tab o clic en el disparador: salió sin decidir) o <code>api</code> (ítem elegido o cierre por código); el tipo lleva también <code>close-button</code>, la cuarta palabra de la familia, que el menú no usa porque no tiene botón de cerrar. <code>menu</code> y <code>label</code> son identificadores estables, en inglés y kebab-case — en esta página, <code>menu</code> es el id de la vista previa (<code>demo-account</code>, <code>pair1-do</code>, <code>with-checkbox-items</code>) y <code>label</code> es el id del ítem (<code>profile</code>, <code>column-email</code>). Nunca el texto traducido: \"Configurações\", \"Settings\" y \"Configuración\" serían tres filas de una sola acción en GA4. <code>location</code> es la sección de la página donde está el menú.",
       "table": {
         "event": "Evento",
@@ -1503,7 +1459,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Test",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción.",

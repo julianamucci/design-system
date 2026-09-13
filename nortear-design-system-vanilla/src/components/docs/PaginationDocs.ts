@@ -173,21 +173,19 @@ export function createPaginationDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
             wrap.className = 'nds-cluster nds-w-full nds-p-2';
             wrap.dataset.justify = 'center';
             wrap.classList.add('nds-min-h-30');
-            wrap.appendChild(buildDemoPagination(10, 3, t('demonstration.title')));
+            wrap.appendChild(buildDemoPagination(10, 3, tNav('nav.demonstration')));
             return wrap;
           },
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -195,7 +193,6 @@ export function createPaginationDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -240,7 +237,6 @@ export function createPaginationDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -347,7 +343,6 @@ export function createPaginationDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createPagination } from '@/components/ui/pagination';`,
           secondaryDescription: 'Com endereços reais, para a página ser compartilhável e indexável:',
           secondaryCode: `const nav = createPagination({
@@ -382,7 +377,6 @@ const nav = createPagination({
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'pagination',
           items: [
@@ -543,7 +537,6 @@ const nav = createPagination({
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -583,7 +576,6 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createPagination(options)',
@@ -608,7 +600,6 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -631,7 +622,6 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -645,7 +635,6 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.breadcrumb.name'), description: toPlainText(t('related.items.breadcrumb.description')), path: '?path=/docs/components-navigation-breadcrumb--docs' },
             { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/components-navigation-tabs--docs'       },
@@ -655,13 +644,11 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -688,7 +675,6 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

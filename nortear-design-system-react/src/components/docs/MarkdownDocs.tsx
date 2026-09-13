@@ -165,7 +165,7 @@ export function MarkdownDocs() {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")} componentSlug="markdown">
+      <DocsDemonstration componentSlug="markdown">
         <div className="nds-stack nds-w-full" data-spacing="lg">
           {example("demonstration.labels.prose", MARKDOWN_PROSE)}
           {example("demonstration.labels.code", MARKDOWN_CODE)}
@@ -176,7 +176,6 @@ export function MarkdownDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -189,7 +188,6 @@ export function MarkdownDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -234,7 +232,6 @@ export function MarkdownDocs() {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -264,7 +261,6 @@ export function MarkdownDocs() {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withStreaming")}
@@ -273,7 +269,6 @@ export function MarkdownDocs() {
 
       {/* ── Listas brancas ────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         note={tContent("variants.note")}
         componentSlug="markdown"
         items={[
@@ -300,7 +295,6 @@ export function MarkdownDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: tContent("states.cols.trigger"),
@@ -315,7 +309,6 @@ export function MarkdownDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: "Markdown",
@@ -351,7 +344,6 @@ export function MarkdownDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.value"),
@@ -372,7 +364,6 @@ export function MarkdownDocs() {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`accessibility.items.item${i}`))}
         keyboardTitle={tContent("accessibility.keyboard.title")}
@@ -387,7 +378,6 @@ export function MarkdownDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           { name: tContent("related.items.codeBlock.name"), description: toPlainText(tContent("related.items.codeBlock.description")), path: "?path=/docs/components-display-codeblock--docs" },
           { name: tContent("related.items.editor.name"),    description: toPlainText(tContent("related.items.editor.description")),    path: "?path=/docs/components-form-editor--docs" },
@@ -398,14 +388,12 @@ export function MarkdownDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="markdown"
         items={[1, 2, 3, 4].map((i) => ({ title: "", content: tContent(`notes.item${i}`) }))}
       />
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: tContent("analytics.table.trigger"),
@@ -420,7 +408,6 @@ export function MarkdownDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

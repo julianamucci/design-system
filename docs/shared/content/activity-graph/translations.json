@@ -65,7 +65,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "quarter": "Um trimestre de trabalho, com os cinco níveis da escala",
         "empty": "A mesma janela sem atividade nenhuma",
@@ -74,7 +73,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A frase do total abre a peça. Ela diz quanto aconteceu e em que janela — sem ela, a grade mostra densidade relativa e nunca diz relativa a quanto.",
       "item2": "A camada que rola envolve o calendário. Ela é a única que rola, recebe foco pelo teclado e tem papel e nome — sem eles, quem chega ali ouvindo não sabe onde entrou.",
@@ -86,7 +84,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando o que importa é a densidade ao longo do tempo — em que semanas houve trabalho, onde ficaram os vazios, quando foi o pico.",
@@ -177,7 +174,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Cada casa diz, em palavras, a data, a contagem e a força com que foi pintada — a grade se reconstrói de ouvido.",
         "dont": "Só a tinta diz quanto aconteceu, e quem lê de ouvido recebe uma lista de casas sem número nenhum."
@@ -188,7 +184,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "withLabels": "Os rótulos",
       "basicCode": {
@@ -207,7 +202,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -235,7 +229,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Nome",
         "type": "Tipo",
@@ -401,7 +394,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -488,7 +480,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Uma casa mais escura que a vizinha não é lida: densidade não tem palavra. A regra desta peça é que a estrutura acessível é a MESMA estrutura — cada dia é um item de lista de verdade, na ordem do calendário, e o que a tinta diz sem palavras ele diz com palavras dentro de si.",
       "items": {
         "item1": "Cada casa carrega, em texto que só quem ouve recebe, a data, a contagem e a palavra do nível com que foi pintada.",
@@ -520,7 +511,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chart": {
           "name": "Gráfico",
@@ -541,7 +531,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O teste que aprovou esta peça não foi se o gráfico poderia crescer até cobri-la — tudo pode crescer —, foi se o desenho já existia. Ele tem oito tipos e nenhum é mapa de calor, e o calendário desta casa é uma tabela de mês para escolher data.",
       "item2": "Ela absorve o mapa de calor do catálogo, que é a mesma grade sabendo menos: um prop só, sem classe de quem consome, janela fixa nos 365 dias que terminam hoje e cinco cores em hexadecimal puro, sem modo escuro. A própria fonte dele manda quem quiser uma versão restilizável começar por esta.",
       "item3": "A janela é dado, e é o coração da absorção: nada aqui olha o relógio, então a fotografia da documentação é a mesma amanhã.",
@@ -552,7 +541,6 @@
       "item8": "A classificação da contagem em nível virou primitivo compartilhado, e não arquivo próprio: a regra cabe em duas frases e renderia cinco implementações que divergem nas bordas, mas um módulo com uma função de três linhas é o que a guideline já dispensou uma vez. Ela mora ao lado da geometria do calendário, que é onde é usada."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não tem ação.",
       "table": {
         "event": "Evento",
@@ -570,7 +558,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -740,7 +727,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "quarter": "A quarter of work, with all five levels of the scale",
         "empty": "The same window with no activity at all",
@@ -749,7 +735,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The total sentence opens the piece. It says how much happened and in which window — without it, the grid shows relative density and never says relative to how much.",
       "item2": "The scrolling layer wraps the calendar. It is the only one that scrolls, it takes keyboard focus and it carries a role and a name — without them, whoever lands there by ear does not know where they are.",
@@ -761,7 +746,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when what matters is density over time — which weeks had work, where the gaps sit, when the peak was.",
@@ -852,7 +836,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Each cell says, in words, the date, the count and the strength it was painted with — the grid rebuilds itself by ear.",
         "dont": "Only the ink says how much happened, and whoever reads by ear receives a list of cells with no number at all."
@@ -863,7 +846,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "withLabels": "The labels",
       "basicCode": {
@@ -882,7 +864,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -910,7 +891,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Name",
         "type": "Type",
@@ -1076,7 +1056,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -1163,7 +1142,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "A cell darker than its neighbour is not read: density has no words. The rule for this piece is that the accessible structure is the SAME structure — each day is a real list item, in calendar order, and what the ink says without words it says with words inside itself.",
       "items": {
         "item1": "Each cell carries, in text only listeners receive, the date, the count and the word for the level it was painted with.",
@@ -1195,7 +1173,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "chart": {
           "name": "Chart",
@@ -1216,7 +1193,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The test that approved this piece was not whether the chart could grow to cover it — everything can grow — but whether the drawing already existed. It has eight types and none is a heat map, and the calendar in this house is a month table for picking a date.",
       "item2": "It absorbs the catalogue’s heat map, which is the same grid knowing less: a single prop, no consumer class, a window fixed to the 365 days ending today, and five raw hex colours with no dark mode. Its own source tells anyone wanting a restylable version to start from this one.",
       "item3": "The window is data, and that is the heart of the absorption: nothing here looks at the clock, so the documentation capture is the same tomorrow.",
@@ -1227,7 +1203,6 @@
       "item8": "Classifying a count into a level became a shared primitive, and not a file of its own: the rule fits in two sentences and would render five implementations that diverge at the edges, but a module with a three-line function is what the guideline has already dispensed with once. It lives beside the calendar geometry, which is where it is used."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the piece itself instruments nothing, because it has no action.",
       "table": {
         "event": "Event",
@@ -1245,7 +1220,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function verifies in each story.",
@@ -1415,7 +1389,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "quarter": "Un trimestre de trabajo, con los cinco niveles de la escala",
         "empty": "La misma ventana sin actividad alguna",
@@ -1424,7 +1397,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La frase del total abre la pieza. Dice cuánto ocurrió y en qué ventana — sin ella, la rejilla muestra densidad relativa y nunca dice relativa a cuánto.",
       "item2": "La capa que se desplaza envuelve el calendario. Es la única que se desplaza, recibe foco por teclado y tiene rol y nombre — sin ellos, quien llega ahí escuchando no sabe dónde entró.",
@@ -1436,7 +1408,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala cuando lo que importa es la densidad a lo largo del tiempo — en qué semanas hubo trabajo, dónde quedaron los vacíos, cuándo fue el pico.",
@@ -1527,7 +1498,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Cada casilla dice, en palabras, la fecha, el conteo y la fuerza con que fue pintada — la rejilla se reconstruye de oído.",
         "dont": "Solo la tinta dice cuánto ocurrió, y quien lee de oído recibe una lista de casillas sin número alguno."
@@ -1538,7 +1508,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "withLabels": "Las etiquetas",
       "basicCode": {
@@ -1557,7 +1526,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1585,7 +1553,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Nombre",
         "type": "Tipo",
@@ -1751,7 +1718,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1838,7 +1804,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Una casilla más oscura que la vecina no se lee: la densidad no tiene palabra. La regla de esta pieza es que la estructura accesible es la MISMA estructura — cada día es un elemento de lista de verdad, en orden de calendario, y lo que la tinta dice sin palabras él lo dice con palabras dentro de sí.",
       "items": {
         "item1": "Cada casilla lleva, en texto que solo recibe quien escucha, la fecha, el conteo y la palabra del nivel con que fue pintada.",
@@ -1870,7 +1835,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chart": {
           "name": "Gráfico",
@@ -1891,7 +1855,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La prueba que aprobó esta pieza no fue si el gráfico podría crecer hasta cubrirla — todo puede crecer —, fue si el dibujo ya existía. Él tiene ocho tipos y ninguno es mapa de calor, y el calendario de esta casa es una tabla de mes para elegir fecha.",
       "item2": "Ella absorbe el mapa de calor del catálogo, que es la misma rejilla sabiendo menos: un solo prop, sin clase de quien consume, ventana fija en los 365 días que terminan hoy y cinco colores en hexadecimal puro, sin modo oscuro. Su propia fuente manda a quien quiera una versión reestilizable empezar por esta.",
       "item3": "La ventana es dato, y es el corazón de la absorción: nada aquí mira el reloj, así que la fotografía de la documentación es la misma mañana.",
@@ -1902,7 +1865,6 @@
       "item8": "La clasificación del conteo en nivel se volvió primitivo compartido, y no archivo propio: la regla cabe en dos frases y rendiría cinco implementaciones que divergen en los bordes, pero un módulo con una función de tres líneas es lo que la guía ya descartó una vez. Vive junto a la geometría del calendario, que es donde se usa."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no tiene acción.",
       "table": {
         "event": "Evento",
@@ -1920,7 +1882,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

@@ -250,7 +250,7 @@ interface TooltipTriggerProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma fonte,
          dois lugares. A barra de três ações que morava aqui virou a composição
          `actionBar`, que é o que ela sempre foi. -->
@@ -272,7 +272,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -285,7 +284,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -346,7 +344,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -445,7 +442,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
     componentSlug="tooltip"
@@ -454,7 +450,6 @@ interface TooltipTriggerProps {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="tooltip"
     items={[
@@ -530,7 +525,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Composições ─────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="tooltip"
     items={[
@@ -773,7 +767,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -790,7 +783,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: propsTableCols,
@@ -813,7 +805,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -837,7 +828,6 @@ interface TooltipTriggerProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       stripHtml($tStore('accessibility.items.item1')),
@@ -857,7 +847,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     componentSlug="tooltip"
     items={[
       { name: $tStore('related.items.popover.name'),   description: $tStore('related.items.popover.description'),   path: '?path=/docs/components-overlay-popover--docs'   },
@@ -868,7 +857,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="tooltip"
     items={[
       { title: '', content: $tStore('notes.item1') },
@@ -880,7 +868,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -893,7 +880,6 @@ interface TooltipTriggerProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

@@ -22,7 +22,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "order": "Enquanto o agente trabalha, com dois trechos que se sobrepõem",
         "failure": "Quando um dos trechos quebra",
@@ -31,7 +30,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A régua dita em palavras abre a peça. Ela diz contra que eixo as barras estão posicionadas — sem ela, a posição é relativa a algo que ninguém consegue conferir.",
       "item2": "A camada que rola envolve a fila de linhas. Ela é a única que rola, recebe foco pelo teclado e tem papel e nome — sem eles, quem chega ali ouvindo não sabe onde entrou.",
@@ -43,7 +41,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando o que importa é quando cada trecho aconteceu dentro de um todo — dois trechos que correm ao mesmo tempo, um que espera, um que consumiu quase todo o tempo.",
@@ -134,7 +131,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Cada linha diz, em palavras, o estado e a posição no eixo em números — a cascata se reconstrói de ouvido.",
         "dont": "Só a barra diz onde o trecho está, e quem lê de ouvido recebe uma lista de nomes sem tempo nenhum."
@@ -145,7 +141,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "withLabels": "Os rótulos",
       "basicCode": {
@@ -164,7 +159,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -192,7 +186,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Nome",
         "type": "Tipo",
@@ -323,7 +316,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -435,7 +427,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Uma barra deslocada num eixo não é lida: posição não tem palavra. A regra desta peça é que a estrutura acessível é a MESMA estrutura — cada trecho é um item de lista de verdade, na ordem em que foi declarado, e o que a posição diz sem palavras ele diz com palavras dentro de si.",
       "items": {
         "item1": "Cada linha carrega, em texto que só quem ouve recebe, a palavra do seu estado, o instante em que começa e quanto dura.",
@@ -467,7 +458,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "flowGraph": {
           "name": "Grafo de fluxo",
@@ -488,7 +478,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O que faz esta peça existir não é a barra: é o começo. Medido antes de construir, a barra de progresso desta casa preenche a partir do zero por construção, e não tem como começar no meio de um eixo.",
       "item2": "A medição do tempo de uma resposta, que era a outra objeção, não tem eixo: ela é um par de rótulo e valor, e não há teto de que caiba uma fração.",
       "item3": "O eixo não é derivado dos trechos, e essa é a decisão que separa esta peça de uma fila de barras. Derivado, ele encolheria a cada trecho retirado, e as barras restantes reescalariam — perdendo exatamente a posição que a peça existe para mostrar.",
@@ -498,7 +487,6 @@
       "item7": "A barra do trecho instantâneo desenha com a menor largura visível, e é o único lugar onde a conta mente sobre a duração. Largura zero diria que não houve trecho, que não é o que o dado diz."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a peça em si não instrumenta nada, porque não tem ação.",
       "table": {
         "event": "Evento",
@@ -516,7 +504,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -643,7 +630,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "order": "While the agent works, with two spans overlapping",
         "failure": "When one of the spans breaks",
@@ -652,7 +638,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The ruler spelled out in words opens the piece. It says which axis the bars are placed against — without it, the position is relative to something nobody can check.",
       "item2": "The scrolling layer wraps the row list. It is the only one that scrolls, it takes keyboard focus and it carries a role and a name — without them, whoever lands there by ear does not know where they are.",
@@ -664,7 +649,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when what matters is when each span happened inside a whole — two spans running at once, one waiting, one that ate almost all the time.",
@@ -755,7 +739,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Each row says, in words, its state and its position on the axis in numbers — the waterfall rebuilds itself by ear.",
         "dont": "Only the bar says where the span is, and whoever reads by ear receives a list of names with no time at all."
@@ -766,7 +749,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "withLabels": "The labels",
       "basicCode": {
@@ -785,7 +767,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -813,7 +794,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Name",
         "type": "Type",
@@ -944,7 +924,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -1056,7 +1035,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "A bar offset on an axis is not read: position has no words. The rule for this piece is that the accessible structure is the SAME structure — each span is a real list item, in the order it was declared, and what the position says without words it says with words inside itself.",
       "items": {
         "item1": "Each row carries, in text only listeners receive, the word for its state, the moment it starts and how long it lasts.",
@@ -1088,7 +1066,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "flowGraph": {
           "name": "Flow graph",
@@ -1109,7 +1086,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "What makes this piece exist is not the bar: it is the start. Measured before building, the progress bar in this house fills from zero by construction, and cannot begin midway on an axis.",
       "item2": "Message timing, the other objection, has no axis: it is a label and value pair, and there is no ceiling for a fraction to fit into.",
       "item3": "The axis is not derived from the spans, and that is the decision that separates this piece from a queue of bars. Derived, it would shrink with every span removed, and the remaining bars would rescale — losing exactly the position the piece exists to show.",
@@ -1119,7 +1095,6 @@
       "item7": "The bar of an instant span draws at the smallest visible width, and it is the only place where the arithmetic lies about the duration. Zero width would say there was no span, which is not what the data says."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the piece itself instruments nothing, because it has no action.",
       "table": {
         "event": "Event",
@@ -1137,7 +1112,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function verifies in each story.",
@@ -1264,7 +1238,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "order": "Mientras el agente trabaja, con dos tramos que se solapan",
         "failure": "Cuando uno de los tramos se rompe",
@@ -1273,7 +1246,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La regla dicha en palabras abre la pieza. Dice contra qué eje están colocadas las barras — sin ella, la posición es relativa a algo que nadie puede comprobar.",
       "item2": "La capa que se desplaza envuelve la lista de filas. Es la única que se desplaza, recibe foco por teclado y tiene rol y nombre — sin ellos, quien llega ahí escuchando no sabe dónde entró.",
@@ -1285,7 +1257,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala cuando lo que importa es cuándo ocurrió cada tramo dentro de un todo — dos tramos que corren a la vez, uno que espera, uno que consumió casi todo el tiempo.",
@@ -1376,7 +1347,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Cada fila dice, en palabras, su estado y su posición en el eje en números — la cascada se reconstruye de oído.",
         "dont": "Solo la barra dice dónde está el tramo, y quien lee de oído recibe una lista de nombres sin tiempo alguno."
@@ -1387,7 +1357,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "withLabels": "Las etiquetas",
       "basicCode": {
@@ -1406,7 +1375,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1434,7 +1402,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Nombre",
         "type": "Tipo",
@@ -1565,7 +1532,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1677,7 +1643,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Una barra desplazada en un eje no se lee: la posición no tiene palabra. La regla de esta pieza es que la estructura accesible es la MISMA estructura — cada tramo es un elemento de lista de verdad, en el orden en que fue declarado, y lo que la posición dice sin palabras él lo dice con palabras dentro de sí.",
       "items": {
         "item1": "Cada fila lleva, en texto que solo recibe quien escucha, la palabra de su estado, el instante en que empieza y cuánto dura.",
@@ -1709,7 +1674,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "flowGraph": {
           "name": "Grafo de flujo",
@@ -1730,7 +1694,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Lo que hace existir a esta pieza no es la barra: es el inicio. Medido antes de construir, la barra de progreso de esta casa se llena desde cero por construcción, y no puede empezar a la mitad de un eje.",
       "item2": "La medición del tiempo de una respuesta, que era la otra objeción, no tiene eje: es un par de etiqueta y valor, y no hay techo en el que quepa una fracción.",
       "item3": "El eje no se deriva de los tramos, y esa es la decisión que separa esta pieza de una fila de barras. Derivado, encogería con cada tramo retirado, y las barras restantes reescalarían — perdiendo justo la posición que la pieza existe para mostrar.",
@@ -1740,7 +1703,6 @@
       "item7": "La barra del tramo instantáneo se dibuja con el menor ancho visible, y es el único lugar donde la cuenta miente sobre la duración. Ancho cero diría que no hubo tramo, que no es lo que dice el dato."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta nada, porque no tiene acción.",
       "table": {
         "event": "Evento",
@@ -1758,7 +1720,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

@@ -167,7 +167,7 @@ interface ScrollAreaRootProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-stack nds-w-full" data-spacing="xl">
       <!-- Demo 1: Vertical -->
       <div class="nds-stack" data-spacing="sm">
@@ -231,7 +231,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -245,7 +244,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -306,7 +304,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -380,11 +377,10 @@ interface ScrollAreaRootProps {
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport title={$tStore('import.title')} code={codeImportBasic} />
+  <DocsImport code={codeImportBasic} />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { trackId: 'vertical', name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
       { trackId: 'horizontal', name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
@@ -436,7 +432,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -452,7 +447,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -478,7 +472,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -509,7 +502,6 @@ interface ScrollAreaRootProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -535,7 +527,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.resizable.name'), description: $tStore('related.items.resizable.description'), path: '?path=/docs/components-layout-resizable--docs' },
       { name: $tStore('related.items.sheet.name'),     description: $tStore('related.items.sheet.description'),     path: '?path=/docs/components-overlay-sheet--docs'     },
@@ -546,7 +537,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: stripHtml($tStore('notes.item1')) },
       { title: '', content: stripHtml($tStore('notes.item2')) },
@@ -557,7 +547,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -570,7 +559,6 @@ interface ScrollAreaRootProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

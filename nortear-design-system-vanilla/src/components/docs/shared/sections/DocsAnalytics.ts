@@ -1,9 +1,9 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
 export interface DocsAnalyticsEventItem { event: string; trigger: string; payload: string }
 export interface DocsAnalyticsProps {
-  title: string;
   cols: { event: string; trigger: string; payload: string };
   items: DocsAnalyticsEventItem[];
 }
@@ -14,7 +14,7 @@ export function createDocsAnalytics(props: DocsAnalyticsProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('analytics');
 
   const wrapper = createCard({ className: 'nds-p-4 nds-overflow-x' });
 

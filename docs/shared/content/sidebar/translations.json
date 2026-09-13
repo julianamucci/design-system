@@ -11,7 +11,6 @@
       "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "dashboard": "Dashboard",
         "components": "Componentes",
@@ -26,7 +25,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>SidebarProvider</strong> — contexto raiz que gerencia estado open/collapsed, cookie de persistência e atalho Ctrl+B.",
       "item2": "<strong>Sidebar</strong> — container principal com props para lado, variante visual e modo de recolhimento.",
       "item3": "<strong>SidebarHeader</strong> — área superior da sidebar; altura deve coincidir com a navbar.",
@@ -53,7 +51,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Envolva sempre o layout inteiro no <code>SidebarProvider</code> — nunca replique o estado manualmente.",
@@ -110,7 +107,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Use SidebarProvider na raiz do layout e nav com aria-label contextual.",
         "dont": "Replicar o estado open/collapsed manualmente fora do SidebarProvider."
@@ -125,13 +121,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withSubcomponents": "Com subcomponentes:"
     },
     "variants": {
-      "title": "Variantes",
-      "compositionsTitle": "Composições",
       "compositions": {
         "withGroups": {
           "name": "Com grupos de navegação",
@@ -169,7 +162,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -202,7 +194,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "providerTitle": "SidebarProvider",
       "sidebarTitle": "Sidebar",
       "menuButtonTitle": "SidebarMenuButton",
@@ -249,7 +240,6 @@
       "extensibility": "O hook <code>useSidebar()</code> expõe: <code>state</code> (\"expanded\" | \"collapsed\"), <code>open</code> (boolean), <code>isMobile</code> (boolean) e <code>toggleSidebar()</code>. Deve ser usado dentro do <code>SidebarProvider</code>."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Classe .nds-*",
@@ -268,7 +258,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A Sidebar usa <code>&lt;nav aria-label&gt;</code>, <code>aria-current=\"page\"</code> no item ativo e tooltips no modo colapsado. Cumpre WCAG 2.2 AA: 1.3.1 (informação e relações), 2.1.1 (teclado), 2.4.3 (ordem do foco) e 4.1.2 (nome, função, valor).",
       "item1": "<strong>nav com aria-label</strong> — envolva o Sidebar com <code>&lt;nav aria-label=\"Navegação principal\"&gt;</code> para que leitores de tela identifiquem o landmark de navegação.",
       "item2": "<strong>aria-current=\"page\"</strong> — aplique no <code>SidebarMenuButton</code> do item ativo. Anuncia ao leitor de tela qual seção está selecionada.",
@@ -302,7 +291,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "navigationMenu": "Navegação horizontal para sites com poucos itens de nível superior.",
@@ -314,7 +302,6 @@
       "skeleton": "SidebarMenuSkeleton usa o Skeleton para loading states dos itens de menu."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O <code>SidebarProvider</code> persiste o estado em cookie (<code>sidebar_state</code>, TTL de 7 dias). Em SSR, leia o cookie no servidor e passe <code>defaultOpen</code> para evitar flash de conteúdo.",
       "tip2": "O botão de menu troca o próprio elemento raiz — para links de roteador, passe o componente de link do seu roteador no lugar do <code>&lt;button&gt;</code> padrão, e o item continua com o desenho e o estado ativo do menu.",
       "tip3": "No modo de recolhimento <strong>icon</strong>, elementos marcados com a classe utilitária correspondente ao estado recolhido são ocultados automaticamente — labels de grupo, subitens e badges desaparecem sem CSS extra.",
@@ -322,7 +309,6 @@
       "tip5": "Nunca aninhe <code>SidebarProvider</code> — ele fornece contexto global de layout. Use apenas uma instância por página."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastreie navegação e interações com o toggle. Não rastreie o container da sidebar em si.",
       "table": {
         "event": "Evento",
@@ -346,7 +332,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração e interação da Sidebar.",
@@ -472,7 +457,6 @@
       "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "dashboard": "Dashboard",
         "components": "Components",
@@ -487,7 +471,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>SidebarProvider</strong> — root context managing open/collapsed state, persistence cookie, and Ctrl+B shortcut.",
       "item2": "<strong>Sidebar</strong> — main container with props for side, visual variant, and collapse mode.",
       "item3": "<strong>SidebarHeader</strong> — top area of the sidebar; height should match the navbar.",
@@ -514,7 +497,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Always wrap the entire layout in <code>SidebarProvider</code> — never replicate state manually.",
@@ -571,7 +553,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Use SidebarProvider at layout root and nav with contextual aria-label.",
         "dont": "Replicate the open/collapsed state manually outside SidebarProvider."
@@ -586,13 +567,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withSubcomponents": "With subcomponents:"
     },
     "variants": {
-      "title": "Variants",
-      "compositionsTitle": "Compositions",
       "compositions": {
         "withGroups": {
           "name": "With navigation groups",
@@ -630,7 +608,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -663,7 +640,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "providerTitle": "SidebarProvider",
       "sidebarTitle": "Sidebar",
       "menuButtonTitle": "SidebarMenuButton",
@@ -710,7 +686,6 @@
       "extensibility": "The <code>useSidebar()</code> hook exposes: <code>state</code> (\"expanded\" | \"collapsed\"), <code>open</code> (boolean), <code>isMobile</code> (boolean), and <code>toggleSidebar()</code>. Must be used inside <code>SidebarProvider</code>."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": ".nds-* Class",
@@ -729,7 +704,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Sidebar uses <code>&lt;nav aria-label&gt;</code>, <code>aria-current=\"page\"</code> on the active item, and tooltips in collapsed mode. Meets WCAG 2.2 AA: 1.3.1 (info and relationships), 2.1.1 (keyboard), 2.4.3 (focus order), and 4.1.2 (name, role, value).",
       "item1": "<strong>nav with aria-label</strong> — wrap Sidebar in <code>&lt;nav aria-label=\"Main navigation\"&gt;</code> so screen readers identify the navigation landmark.",
       "item2": "<strong>aria-current=\"page\"</strong> — apply to the active <code>SidebarMenuButton</code>. Announces to screen readers which section is selected.",
@@ -763,7 +737,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "navigationMenu": "Horizontal navigation for sites with few top-level items.",
@@ -775,7 +748,6 @@
       "skeleton": "SidebarMenuSkeleton uses Skeleton for menu item loading states."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "The <code>SidebarProvider</code> persists state in a cookie (<code>sidebar_state</code>, 7-day TTL). In SSR, read the cookie server-side and pass <code>defaultOpen</code> to avoid content flash.",
       "tip2": "The menu button swaps its own root element — for router links, pass your router link component in place of the default <code>&lt;button&gt;</code>, and the item keeps the menu design and active state.",
       "tip3": "In the <strong>icon</strong> collapse mode, elements marked with the utility class that targets the collapsed state are hidden automatically — group labels, sub-items, and badges disappear without extra CSS.",
@@ -783,7 +755,6 @@
       "tip5": "Never nest <code>SidebarProvider</code> — it provides global layout context. Use only one instance per page."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Track navigation and toggle interactions. Do not track the sidebar container itself.",
       "table": {
         "event": "Event",
@@ -807,7 +778,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Sidebar configuration and interaction.",
@@ -933,7 +903,6 @@
       "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "dashboard": "Dashboard",
         "components": "Componentes",
@@ -948,7 +917,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>SidebarProvider</strong> — contexto raíz que gestiona el estado open/collapsed, cookie de persistencia y atajo Ctrl+B.",
       "item2": "<strong>Sidebar</strong> — contenedor principal con props para lado, variante visual y modo de colapso.",
       "item3": "<strong>SidebarHeader</strong> — área superior del sidebar; la altura debe coincidir con la navbar.",
@@ -975,7 +943,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Envuelve siempre todo el layout en <code>SidebarProvider</code> — nunca repliques el estado manualmente.",
@@ -1032,7 +999,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Usa SidebarProvider en la raíz del layout y nav con aria-label contextual.",
         "dont": "Replicar el estado open/collapsed manualmente fuera del SidebarProvider."
@@ -1047,13 +1013,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withSubcomponents": "Con subcomponentes:"
     },
     "variants": {
-      "title": "Variantes",
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "withGroups": {
           "name": "Con grupos de navegación",
@@ -1091,7 +1054,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1124,7 +1086,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "providerTitle": "SidebarProvider",
       "sidebarTitle": "Sidebar",
       "menuButtonTitle": "SidebarMenuButton",
@@ -1171,7 +1132,6 @@
       "extensibility": "El hook <code>useSidebar()</code> expone: <code>state</code> (\"expanded\" | \"collapsed\"), <code>open</code> (boolean), <code>isMobile</code> (boolean) y <code>toggleSidebar()</code>. Debe usarse dentro de <code>SidebarProvider</code>."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Clase .nds-*",
@@ -1190,7 +1150,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Sidebar usa <code>&lt;nav aria-label&gt;</code>, <code>aria-current=\"page\"</code> en el ítem activo y tooltips en modo colapsado. Cumple WCAG 2.2 AA: 1.3.1 (información y relaciones), 2.1.1 (teclado), 2.4.3 (orden de foco) y 4.1.2 (nombre, función, valor).",
       "item1": "<strong>nav con aria-label</strong> — envuelve el Sidebar con <code>&lt;nav aria-label=\"Navegación principal\"&gt;</code> para que los lectores de pantalla identifiquen el landmark de navegación.",
       "item2": "<strong>aria-current=\"page\"</strong> — aplica en el <code>SidebarMenuButton</code> del ítem activo. Anuncia al lector de pantalla qué sección está seleccionada.",
@@ -1224,7 +1183,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "navigationMenu": "Navegación horizontal para sitios con pocos ítems de nivel superior.",
@@ -1236,7 +1194,6 @@
       "skeleton": "SidebarMenuSkeleton usa el Skeleton para estados de carga de ítems de menú."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El <code>SidebarProvider</code> persiste el estado en cookie (<code>sidebar_state</code>, TTL de 7 días). En SSR, lee el cookie en el servidor y pasa <code>defaultOpen</code> para evitar flash de contenido.",
       "tip2": "El botón de menú cambia su propio elemento raíz — para enlaces de enrutador, pasa el componente de enlace de tu enrutador en lugar del <code>&lt;button&gt;</code> predeterminado, y el ítem conserva el diseño y el estado activo del menú.",
       "tip3": "En el modo de colapso <strong>icon</strong>, los elementos marcados con la clase utilitaria que apunta al estado colapsado se ocultan automáticamente — labels de grupo, subítems y badges desaparecen sin CSS extra.",
@@ -1244,7 +1201,6 @@
       "tip5": "Nunca anides <code>SidebarProvider</code> — provee contexto global de layout. Usa solo una instancia por página."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastrea navegación e interacciones con el toggle. No rastrees el contenedor del sidebar en sí.",
       "table": {
         "event": "Evento",
@@ -1268,7 +1224,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración e interacción del Sidebar.",

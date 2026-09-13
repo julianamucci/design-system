@@ -21,7 +21,6 @@
       "automatic": "Automático"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "kinds": "As cinco espécies",
         "detail": "Com o recorte",
@@ -30,7 +29,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A lista mora dentro da mesma moldura do campo: o que a pergunta leva junto faz parte do que está sendo escrito.",
       "item2": "É uma lista de verdade, e é isso que faz o leitor de tela dizer quantos itens a pergunta leva antes de percorrê-los — saber que são sete muda o que se pergunta.",
@@ -42,7 +40,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para o que já existe e vai junto com a pergunta: arquivo aberto, trecho marcado, página em que se está.",
@@ -139,7 +136,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "A espécie chega em palavra, junto do nome do item.",
         "dont": "Só o ícone separa um trecho de um arquivo inteiro, e ícone não chega a quem ouve a tela."
@@ -150,7 +146,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  contextLabels,\n  context: referencias,\n  onRemoveContext: (item) => tirar(item.id),\n});",
@@ -165,7 +160,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -193,7 +187,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -257,7 +250,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -309,7 +301,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A espécie chega em palavra, o ícone é só desenho, e cada botão de remover diz qual item remove.",
       "items": {
         "item1": "A lista é uma lista, e o leitor de tela diz quantos itens a pergunta leva antes de percorrê-los.",
@@ -338,7 +329,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -359,7 +349,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Carga e referência se parecem na tela e não são a mesma peça. O que sobe tem bytes, progresso e pode falhar no meio; o que se referencia já existe, não sobe nada e não tem o que esperar — por isso o item de contexto não carrega estado nem progresso.",
       "item2": "A lista NÃO descreve o campo. A mensagem citada descreve, porque saber a quem se responde muda o que se escreve; sete arquivos na descrição do campo viram ruído que se ouve a cada foco. A lista tem nome próprio e se percorre.",
       "item3": "A espécie viaja em texto porque o ícone é decorativo. Ele é a única pista de que aquilo é um trecho e não o arquivo inteiro, e pista que só existe em desenho não chega a quem ouve.",
@@ -367,7 +356,6 @@
       "item5": "As espécies vêm em ordem, do mais estreito para o mais largo — trecho, arquivo, pasta, página, repositório. A ordem mora no vocabulário compartilhado, e não em cada tela."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a lista em si não instrumenta a remoção, que é do produto.",
       "table": {
         "event": "Evento",
@@ -385,7 +373,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -492,7 +479,6 @@
       "automatic": "Automatic"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "kinds": "The five kinds",
         "detail": "With the range",
@@ -501,7 +487,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The list lives inside the same frame as the field: what the question carries is part of what is being written.",
       "item2": "It is a real list, and that is what makes the screen reader say how many items the question carries before walking through them — knowing there are seven changes what you ask.",
@@ -513,7 +498,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it for what already exists and travels with the question: the open file, the marked excerpt, the page you are on.",
@@ -610,7 +594,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The kind arrives in words, next to the item name.",
         "dont": "Only the icon separates an excerpt from a whole file, and an icon never reaches whoever listens."
@@ -621,7 +604,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic use",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  contextLabels,\n  context: referencias,\n  onRemoveContext: (item) => tirar(item.id),\n});",
@@ -636,7 +618,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -664,7 +645,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -728,7 +708,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -780,7 +759,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The kind arrives in words, the icon is drawing only, and each remove button says which item it removes.",
       "items": {
         "item1": "The list is a list, and the screen reader says how many items the question carries before walking through them.",
@@ -809,7 +787,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "composer": {
           "name": "Composer",
@@ -830,7 +807,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "Cargo and reference look alike on screen and are not the same piece. What uploads has bytes, progress and can fail midway; what is referenced already exists, uploads nothing and has nothing to wait for — which is why the context item carries neither state nor progress.",
       "item2": "The list does NOT describe the field. The quoted message does, because knowing who you are answering changes what you write; seven files in the field's description become noise heard on every focus. The list has a name of its own and is walked through.",
       "item3": "The kind travels as text because the icon is decorative. It is the only cue that this is an excerpt and not the whole file, and a cue that exists only in drawing never reaches whoever listens.",
@@ -838,7 +814,6 @@
       "item5": "The kinds come in order, from narrowest to widest — excerpt, file, folder, page, repository. The order lives in the shared vocabulary, not in each screen."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the list itself does not instrument removal, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -856,7 +831,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -963,7 +937,6 @@
       "automatic": "Automático"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "kinds": "Las cinco especies",
         "detail": "Con el recorte",
@@ -972,7 +945,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La lista vive dentro del mismo marco del campo: lo que la pregunta lleva consigo forma parte de lo que se está escribiendo.",
       "item2": "Es una lista de verdad, y eso es lo que hace que el lector de pantalla diga cuántos elementos lleva la pregunta antes de recorrerlos — saber que son siete cambia lo que se pregunta.",
@@ -984,7 +956,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para lo que ya existe y va junto a la pregunta: archivo abierto, fragmento marcado, página en la que se está.",
@@ -1081,7 +1052,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "La especie llega en palabra, junto al nombre del elemento.",
         "dont": "Solo el icono separa un fragmento de un archivo entero, y el icono no llega a quien escucha la pantalla."
@@ -1092,7 +1062,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  contextLabels,\n  context: referencias,\n  onRemoveContext: (item) => tirar(item.id),\n});",
@@ -1107,7 +1076,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1135,7 +1103,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1199,7 +1166,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1251,7 +1217,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La especie llega en palabra, el icono es solo dibujo, y cada botón de quitar dice qué elemento quita.",
       "items": {
         "item1": "La lista es una lista, y el lector de pantalla dice cuántos elementos lleva la pregunta antes de recorrerlos.",
@@ -1280,7 +1245,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -1301,7 +1265,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Carga y referencia se parecen en la pantalla y no son la misma pieza. Lo que sube tiene bytes, progreso y puede fallar a mitad de camino; lo que se referencia ya existe, no sube nada y no tiene nada que esperar — por eso el elemento de contexto no lleva ni estado ni progreso.",
       "item2": "La lista NO describe el campo. El mensaje citado sí lo describe, porque saber a quién se responde cambia lo que se escribe; siete archivos en la descripción del campo se vuelven ruido que se oye en cada foco. La lista tiene nombre propio y se recorre.",
       "item3": "La especie viaja como texto porque el icono es decorativo. Él es la única pista de que aquello es un fragmento y no el archivo entero, y una pista que solo existe en el dibujo no llega a quien escucha.",
@@ -1309,7 +1272,6 @@
       "item5": "Las especies vienen en orden, de lo más estrecho a lo más amplio — fragmento, archivo, carpeta, página, repositorio. El orden vive en el vocabulario compartido, y no en cada pantalla."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la lista en sí no instrumenta la eliminación, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1327,7 +1289,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

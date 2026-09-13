@@ -23,7 +23,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "running": "Enquanto a resposta vem",
         "stopped": "Quando alguém pediu para parar",
@@ -32,7 +31,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A linha fica junto de onde a resposta vai aparecer — acima do campo de mensagem ou ao pé da conversa. Ela não mora dentro de nenhuma moldura.",
       "item2": "O ponto abre a linha e é só desenho: a cor sozinha não descreve estado.",
@@ -44,7 +42,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para dizer em que pé está a resposta que está sendo gerada logo abaixo.",
@@ -135,7 +132,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O estado chega em palavra, ao lado do ponto.",
         "dont": "Só a cor do ponto separa a execução em curso da que falhou, e cor não chega a quem ouve a tela."
@@ -146,7 +142,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: labels,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
@@ -161,7 +156,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -194,7 +188,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -251,7 +244,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -308,7 +300,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A palavra descreve o estado, o ponto e o relógio ficam fora do que é lido, e a linha não interrompe quem está ouvindo a resposta.",
       "items": {
         "item1": "A palavra do estado está sempre na linha: a cor do ponto não descreve estado sozinha.",
@@ -337,7 +328,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chatThread": {
           "name": "Conversa",
@@ -358,7 +348,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A linha não é região viva, apesar de o estado mudar sozinho. Quem lê está ouvindo a resposta ser gerada logo abaixo, e um anúncio a cada troca corta a leitura no meio. Quem quiser anunciar põe a região por fora.",
       "item2": "O ponto é decorativo e a palavra é o estado. Cor sozinha não descreve estado, e aqui a cor é a única diferença visual entre três dos cinco.",
       "item3": "O relógio chega já formatado, como texto, e não se anuncia. Formato de duração é decisão de idioma, e um componente que o formatasse decidiria idioma em cinco lugares.",
@@ -367,7 +356,6 @@
       "item6": "A peça não executa nada. Parar, retomar e repetir são de quem consome, e é ele quem decide se retomar continua de onde parou ou refaz do zero."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a linha em si não instrumenta a ação, que é do produto.",
       "table": {
         "event": "Evento",
@@ -385,7 +373,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -494,7 +481,6 @@
       }
     },
     "demonstration": {
-      "title": "Demo",
       "labels": {
         "running": "While the answer comes",
         "stopped": "When someone asked it to stop",
@@ -503,7 +489,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The line sits next to where the answer will show up — above the message field or at the foot of the conversation. It does not live inside any frame.",
       "item2": "The dot opens the line and is only drawing: colour alone does not describe a state.",
@@ -515,7 +500,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to say where the answer being generated right below stands.",
@@ -606,7 +590,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The state arrives in words, next to the dot.",
         "dont": "Only the colour of the dot separates a run in flight from one that failed, and colour does not reach whoever listens to the screen."
@@ -617,7 +600,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: labels,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
@@ -632,7 +614,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -665,7 +646,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -722,7 +702,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -779,7 +758,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The word describes the state, the dot and the clock stay out of what is read, and the line never interrupts whoever is listening to the answer.",
       "items": {
         "item1": "The state word is always in the line: the colour of the dot does not describe a state on its own.",
@@ -808,7 +786,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "chatThread": {
           "name": "Thread",
@@ -829,7 +806,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The line is not a live region, even though the state changes on its own. The reader is listening to the answer being generated right below, and an announcement at every change cuts the reading in half. Whoever wants to announce puts the region outside.",
       "item2": "The dot is decorative and the word is the state. Colour alone does not describe a state, and here colour is the only visual difference between three of the five.",
       "item3": "The clock arrives already formatted, as text, and never announces itself. Duration format is a language decision, and a component that formatted it would decide language in five places.",
@@ -838,7 +814,6 @@
       "item6": "The piece runs nothing. Stopping, resuming and retrying belong to the consumer, and it is the consumer who decides whether resuming continues from where it stopped or redoes it from scratch."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the line itself does not instrument the action, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -856,7 +831,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -965,7 +939,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "running": "Mientras llega la respuesta",
         "stopped": "Cuando alguien pidió detenerla",
@@ -974,7 +947,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La línea queda junto a donde va a aparecer la respuesta — encima del campo de mensaje o al pie de la conversación. No vive dentro de ningún marco.",
       "item2": "El punto abre la línea y es solo dibujo: el color por sí solo no describe un estado.",
@@ -986,7 +958,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala para decir en qué punto está la respuesta que se está generando justo debajo.",
@@ -1077,7 +1048,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El estado llega en palabra, al lado del punto.",
         "dont": "Solo el color del punto separa la ejecución en curso de la que falló, y el color no llega a quien escucha la pantalla."
@@ -1088,7 +1058,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createAgentStatus } from '@/components/ui/agent-status';\n\ncreateAgentStatus({\n  status: 'running',\n  elapsed: '1:04',\n  labels: labels,\n  onAction: (intent) => (intent === 'stop' ? parar() : comecar()),\n});",
@@ -1103,7 +1072,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1136,7 +1104,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1193,7 +1160,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1250,7 +1216,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La palabra describe el estado, el punto y el reloj quedan fuera de lo que se lee, y la línea no interrumpe a quien está escuchando la respuesta.",
       "items": {
         "item1": "La palabra del estado está siempre en la línea: el color del punto no describe un estado por sí solo.",
@@ -1279,7 +1244,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "chatThread": {
           "name": "Conversación",
@@ -1300,7 +1264,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La línea no es una región viva, aunque el estado cambie solo. Quien lee está escuchando la respuesta generarse justo debajo, y un anuncio en cada cambio corta la lectura por la mitad. Quien quiera anunciar pone la región por fuera.",
       "item2": "El punto es decorativo y la palabra es el estado. El color por sí solo no describe un estado, y aquí el color es la única diferencia visual entre tres de los cinco.",
       "item3": "El reloj llega ya formateado, como texto, y no se anuncia. El formato de duración es decisión de idioma, y un componente que lo formateara decidiría idioma en cinco lugares.",
@@ -1309,7 +1272,6 @@
       "item6": "La pieza no ejecuta nada. Detener, reanudar y repetir son de quien consume, y es él quien decide si reanudar continúa desde donde se detuvo o rehace desde cero."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la línea en sí no instrumenta la acción, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1327,7 +1289,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

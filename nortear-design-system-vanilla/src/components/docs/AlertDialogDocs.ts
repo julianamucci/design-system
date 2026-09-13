@@ -299,7 +299,6 @@ export function createAlertDialogDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster';
@@ -315,7 +314,6 @@ export function createAlertDialogDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -334,7 +332,6 @@ export function createAlertDialogDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -399,7 +396,6 @@ export function createAlertDialogDocs(): HTMLElement {
       // rótulos de `demonstration.labels` e o Cancelar presente nos dois (C7).
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -443,7 +439,6 @@ export function createAlertDialogDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createAlertDialog } from '@/components/ui/alert-dialog';
 import { createButton } from '@/components/ui/button';`,
@@ -479,7 +474,6 @@ const dialog = createAlertDialog({
         const codeDefault = toSnippet(neutralContent());
 
         return createDocsVariants({
-          title: t('variants.title'),
           note: stripHtml(t('variants.note')),
           items: [
             {
@@ -508,7 +502,6 @@ const dialog = createAlertDialog({
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -562,7 +555,6 @@ export interface AlertDialogMediaOptions {
         // subtabelas descreviam as opções do `createButton` (variante, rótulo),
         // que não são API deste componente — e com texto em pt-BR cravado.
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.rootTitle'),
@@ -622,7 +614,6 @@ export interface AlertDialogMediaOptions {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -658,7 +649,6 @@ export interface AlertDialogMediaOptions {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -680,7 +670,6 @@ export interface AlertDialogMediaOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Dialog', description: toPlainText(t('related.dialog')), path: '?path=/docs/components-overlay-dialog--docs' },
             { name: 'Sonner', description: toPlainText(t('related.sonner')), path: '?path=/docs/components-feedback-sonner--docs' },
@@ -691,7 +680,6 @@ export interface AlertDialogMediaOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -702,7 +690,6 @@ export interface AlertDialogMediaOptions {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -720,7 +707,6 @@ export interface AlertDialogMediaOptions {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

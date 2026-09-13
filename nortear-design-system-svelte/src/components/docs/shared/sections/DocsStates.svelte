@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface DocsStateItem { label: string; trigger: string; behavior: string }
 
@@ -15,11 +16,12 @@
    * qualquer componente NOVO, e nenhum portão reclamaria. Corrigido o conteúdo
    * (`f5f2ef555`), o contrato volta ao que as demais páginas já praticam.
    */
-  const { title, cols, items }: {
-    title: string;
+  const { cols, items }: {
     cols: { state: string; trigger: string; behavior: string };
     items: DocsStateItem[];
   } = $props();
+
+  const title = $derived(tituloDeSecao('estados', $rotulosDeSecao));
 </script>
 
 <section id="estados">

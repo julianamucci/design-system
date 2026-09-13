@@ -326,7 +326,7 @@ interface CarouselNavProps extends ButtonProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div
       class="nds-w-full nds-max-w-sm"
       style="margin-inline: auto"
@@ -369,7 +369,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -382,7 +381,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -444,7 +442,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -551,7 +548,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withPlugin')}
@@ -561,7 +557,6 @@ interface CarouselNavProps extends ButtonProps {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="carousel"
     items={[
@@ -682,7 +677,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="carousel"
     items={[
@@ -772,7 +766,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Estados / Configurações ───────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -785,7 +778,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.carouselTitle'),
@@ -856,7 +848,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -884,7 +875,6 @@ interface CarouselNavProps extends ButtonProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -905,7 +895,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Tabs',       description: $tStore('related.tabs'),       path: '?path=/docs/components-navigation-tabs--docs'       },
       { name: 'ScrollArea', description: $tStore('related.scrollArea'), path: '?path=/docs/components-layout-scrollarea--docs' },
@@ -916,7 +905,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -927,7 +915,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -944,7 +931,6 @@ interface CarouselNavProps extends ButtonProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

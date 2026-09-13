@@ -79,7 +79,6 @@ const meta = {
     ),
     children: (
       <DocsStates
-        title="Estados"
         cols={{ state: "Estado", trigger: "Gatilho", behavior: "Comportamento" }}
         items={[
           { label: "Padrão", trigger: "Nenhum", behavior: "Fundo --primary." },

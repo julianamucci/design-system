@@ -11,7 +11,6 @@
       "aiEntities": "Resizable, React, Vue, Svelte, Vanilla, Angular, ResizablePanelGroup, ResizablePanel, ResizableHandle, painéis redimensionáveis, divisor, separator, WCAG 2.2, WCAG 2.5.7"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "horizontal": "Layout horizontal",
         "vertical": "Layout vertical",
@@ -25,7 +24,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>ResizablePanelGroup</strong> — container que define a direção (<code>horizontal</code> ou <code>vertical</code>) e agrupa os painéis.",
       "item2": "<strong>ResizablePanel</strong> — área redimensionável com <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> em porcentagem.",
       "item3": "<strong>ResizableHandle</strong> — divisor focável entre painéis; aceita <code>withHandle</code> para mostrar pegador visual.",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Sempre defina <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> em cada painel.",
@@ -123,7 +120,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Sempre defina minSize/maxSize para evitar colapso acidental.",
         "dont": "Não omita os limites — painéis podem ficar invisíveis."
@@ -133,11 +129,8 @@
         "dont": "Não use \"Handle\" ou texto genérico no aria-label."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "horizontal": "Horizontal",
         "vertical": "Vertical",
@@ -150,7 +143,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "idle": {
         "label": "Idle",
         "trigger": "estado inicial",
@@ -183,7 +175,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -243,7 +234,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Seletor",
@@ -287,7 +277,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
       "items": {
         "item1": "<code>aria-orientation</code> aplicado automaticamente conforme <code>direction</code>",
@@ -323,7 +312,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "scrollArea": {
           "name": "ScrollArea",
@@ -344,14 +332,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Base de cada stack</strong> — cada stack apoia-se na biblioteca de painéis idiomática ou numa implementação própria; a marcação <code>.nds-*</code>, os papéis ARIA e o comportamento de teclado são os mesmos em todas.",
       "item2": "<strong>Tamanhos em porcentagem</strong> — <code>defaultSize</code>, <code>minSize</code> e <code>maxSize</code> são percentuais do grupo (0–100), não pixels.",
       "item3": "<strong>Persistência</strong> — onde a stack expõe uma chave de persistência, o layout final de cada gesto é gravado no <code>localStorage</code> e restaurado na visita seguinte. Sem chave, nada é gravado.",
       "item4": "<strong>Mobile</strong> — considere ocultar o componente em telas pequenas e usar layout empilhado ou <code>Sheet</code> em vez."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -364,7 +350,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -433,7 +418,6 @@
       "aiEntities": "Resizable, React, Vue, Svelte, Vanilla, Angular, ResizablePanelGroup, ResizablePanel, ResizableHandle, resizable panels, divider, separator, WCAG 2.2, WCAG 2.5.7"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "horizontal": "Horizontal layout",
         "vertical": "Vertical layout",
@@ -447,7 +431,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>ResizablePanelGroup</strong> — container that defines direction (<code>horizontal</code> or <code>vertical</code>) and groups panels.",
       "item2": "<strong>ResizablePanel</strong> — resizable area with <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> in percentage.",
       "item3": "<strong>ResizableHandle</strong> — focusable divider between panels; accepts <code>withHandle</code> to show visual grabber.",
@@ -461,7 +444,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Always define <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> on each panel.",
@@ -545,7 +527,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Always define minSize/maxSize to prevent accidental collapse.",
         "dont": "Don't omit limits — panels may become invisible."
@@ -555,11 +536,8 @@
         "dont": "Don't use \"Handle\" or generic text in aria-label."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "horizontal": "Horizontal",
         "vertical": "Vertical",
@@ -572,7 +550,6 @@
       }
     },
     "states": {
-      "title": "States",
       "idle": {
         "label": "Idle",
         "trigger": "initial state",
@@ -605,7 +582,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -665,7 +641,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Selector",
@@ -709,7 +684,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
       "items": {
         "item1": "<code>aria-orientation</code> applied automatically based on <code>direction</code>",
@@ -745,7 +719,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "scrollArea": {
           "name": "ScrollArea",
@@ -766,14 +739,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Foundation per stack</strong> — each stack builds on the idiomatic panel library or on its own implementation; the <code>.nds-*</code> markup, the ARIA roles and the keyboard behavior are the same across all of them.",
       "item2": "<strong>Sizes in percentage</strong> — <code>defaultSize</code>, <code>minSize</code> and <code>maxSize</code> are group percentages (0–100), not pixels.",
       "item3": "<strong>Persistence</strong> — where the stack exposes a persistence key, the final layout of each gesture is written to <code>localStorage</code> and restored on the next visit. Without a key, nothing is stored.",
       "item4": "<strong>Mobile</strong> — consider hiding the component on small screens and using stacked layout or <code>Sheet</code> instead."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -786,7 +757,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -855,7 +825,6 @@
       "aiEntities": "Resizable, React, Vue, Svelte, Vanilla, Angular, ResizablePanelGroup, ResizablePanel, ResizableHandle, paneles redimensionables, divisor, separator, WCAG 2.2, WCAG 2.5.7"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "horizontal": "Layout horizontal",
         "vertical": "Layout vertical",
@@ -869,7 +838,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>ResizablePanelGroup</strong> — contenedor que define la dirección (<code>horizontal</code> o <code>vertical</code>) y agrupa los paneles.",
       "item2": "<strong>ResizablePanel</strong> — área redimensionable con <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> en porcentaje.",
       "item3": "<strong>ResizableHandle</strong> — divisor focalizable entre paneles; acepta <code>withHandle</code> para mostrar agarre visual.",
@@ -883,7 +851,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Define siempre <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> en cada panel.",
@@ -967,7 +934,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Define siempre minSize/maxSize para evitar colapso accidental.",
         "dont": "No omitas los límites — los paneles pueden volverse invisibles."
@@ -977,11 +943,8 @@
         "dont": "No uses \"Handle\" o texto genérico en aria-label."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "horizontal": "Horizontal",
         "vertical": "Vertical",
@@ -994,7 +957,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "idle": {
         "label": "Idle",
         "trigger": "estado inicial",
@@ -1027,7 +989,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1087,7 +1048,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Selector",
@@ -1131,7 +1091,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
       "items": {
         "item1": "<code>aria-orientation</code> aplicado automáticamente según <code>direction</code>",
@@ -1167,7 +1126,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "scrollArea": {
           "name": "ScrollArea",
@@ -1188,14 +1146,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Base de cada stack</strong> — cada stack se apoya en la biblioteca de paneles idiomática o en una implementación propia; el marcado <code>.nds-*</code>, los roles ARIA y el comportamiento de teclado son los mismos en todas.",
       "item2": "<strong>Tamaños en porcentaje</strong> — <code>defaultSize</code>, <code>minSize</code> y <code>maxSize</code> son porcentajes del grupo (0–100), no píxeles.",
       "item3": "<strong>Persistencia</strong> — donde el stack expone una clave de persistencia, el layout final de cada gesto se guarda en <code>localStorage</code> y se restaura en la visita siguiente. Sin clave, no se guarda nada.",
       "item4": "<strong>Móvil</strong> — considera ocultar el componente en pantallas pequeñas y usar layout apilado o <code>Sheet</code> en su lugar."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1208,7 +1164,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

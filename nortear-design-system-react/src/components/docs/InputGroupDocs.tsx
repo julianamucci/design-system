@@ -372,7 +372,6 @@ export function InputGroupDocs() {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration
-        title={tContent("demonstration.title")}
         componentSlug={SLUG}
       >
         <PasswordDemo
@@ -385,7 +384,6 @@ export function InputGroupDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[1, 2, 3, 4, 5, 6].map((i) => tContent(`anatomy.item${i}`))}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -393,7 +391,6 @@ export function InputGroupDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -438,7 +435,6 @@ export function InputGroupDocs() {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -531,7 +527,6 @@ export function InputGroupDocs() {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={stripHtml(tContent("description"))}
         code={codeImport}
         componentSlug={SLUG}
@@ -539,7 +534,6 @@ export function InputGroupDocs() {
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         note={tContent("variants.note")}
         componentSlug={SLUG}
         items={alignments.map(({ key, align }) => {
@@ -570,7 +564,6 @@ export function InputGroupDocs() {
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug={SLUG}
         items={[
@@ -649,7 +642,6 @@ export function InputGroupDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -664,7 +656,6 @@ export function InputGroupDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: "InputGroup",
@@ -707,7 +698,6 @@ export function InputGroupDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -724,7 +714,6 @@ export function InputGroupDocs() {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) =>
           tContent(`accessibility.items.item${i}`),
@@ -745,7 +734,6 @@ export function InputGroupDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug={SLUG}
         items={[
           {
@@ -775,7 +763,6 @@ export function InputGroupDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug={SLUG}
         items={[
           ...[1, 2, 3, 4, 5].map((i) => ({
@@ -795,7 +782,6 @@ export function InputGroupDocs() {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -824,7 +810,6 @@ export function InputGroupDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

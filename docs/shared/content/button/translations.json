@@ -11,7 +11,6 @@
       "aiEntities": "Button, React, Vue, Svelte, Vanilla, Angular, botão, design system, componente de formulário, WCAG 2.2, acessibilidade, foco visível, ícone"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "primary": "Salvar",
         "secondary": "Cancelar",
@@ -24,7 +23,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Button</strong> — elemento <code>&lt;button&gt;</code> nativo. Aceita todos os atributos HTML de botão (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Ícone (opcional)</strong> — filho do Button com <code>aria-hidden=\"true\"</code>. Posicionado automaticamente via gap interno.",
       "item3": "<strong>Label</strong> — texto visível do botão. Verbo no infinitivo, máximo 3 palavras, sem pontuação.",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use <code>variant=\"default\"</code> apenas uma vez por seção — a ação primária deve ser única.",
@@ -129,7 +126,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Verbo no infinitivo, máximo 3 palavras (\"Salvar\", \"Criar conta\").",
         "dont": "Textos genéricos ou instrutivos (\"Clique aqui\", \"OK\", \"Sim\")."
@@ -140,13 +136,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withIcon": "Com ícone Lucide:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Variantes Disponíveis",
       "note": "O Button tem variantes nativas definidas em <code>buttonVariants</code>. Cada variante comunica uma intenção diferente de ação — escolha com base na hierarquia visual e na severidade da ação.",
       "items": {
         "default": "Ação primária do fluxo. Fundo <code>primary</code>, texto <code>primary-foreground</code>.",
@@ -161,7 +154,6 @@
           "linkLabel": "Ver documentação"
         }
       },
-      "sizesTitle": "Tamanhos",
       "sizes": {
         "default": "Texto 14px, padding vertical 8px. Tamanho padrão para a maioria dos contextos.",
         "xs": "Texto 12px, padding vertical 2px. Para densidades máximas: chips de filtro e ações dentro de linha de tabela.",
@@ -172,7 +164,6 @@
         "icon-sm": "Quadrado 32px. Para toolbars compactos com ícone.",
         "icon-lg": "Quadrado 40px. Para ações de ícone com destaque."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "iconLeft": {
           "name": "Ícone à esquerda",
@@ -197,7 +188,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -235,7 +225,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "buttonTitle": "Button",
       "table": {
@@ -256,7 +245,6 @@
       "extensibility": "Classes adicionais são mescladas com as da variante, permitindo override de qualquer aspecto visual do componente. A composição com elemento filho preserva a semântica de navegação ao usar um link no lugar do botão."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicação no tema",
@@ -274,7 +262,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Button usa o elemento <code>&lt;button&gt;</code> nativo, que já tem suporte completo a teclado e leitor de tela. Cumpre WCAG 2.2 AA: 2.1.1 (acessível por teclado), 2.4.7 (foco visível), 4.1.2 (name, role, value).",
       "item1": "<strong>Elemento nativo &lt;button&gt;</strong> — a semântica, o role e o comportamento de teclado vêm do HTML. Nunca substitua por <code>&lt;div onClick&gt;</code>.",
@@ -301,7 +288,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "toggle": "Para opções visuais de dois estados (negrito, alinhamento) — usa <code>aria-pressed</code>.",
@@ -311,13 +297,11 @@
       "alertDialog": "Para botões de confirmação em ações destrutivas críticas."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "Para integrar com o roteador da aplicação, componha o Button com o componente de link como elemento filho — mantém a semântica de navegação (<code>&lt;a href&gt;</code>) e os estilos do botão.",
       "tip2": "Em formulários com submit assíncrono, bloqueie o botão com <code>disabled={form.formState.isSubmitting}</code> e troque o label para gerúndio (\"Salvando...\"). Evita duplo envio.",
       "tip3": "Ícones devem ter <code>aria-hidden=\"true\"</code> e tamanho 16px — o CSS do Button já dimensiona SVGs filhos automaticamente quando não há override."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos disparados por Button em interações do usuário.",
       "table": {
         "event": "Evento",
@@ -338,7 +322,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Button.",
@@ -440,7 +423,6 @@
       "aiEntities": "Button, React, Vue, Svelte, Vanilla, Angular, design system, form component, WCAG 2.2, accessibility, focus ring, icon button"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "primary": "Save",
         "secondary": "Cancel",
@@ -453,7 +435,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Button</strong> — native <code>&lt;button&gt;</code> element. Accepts all HTML button attributes (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Icon (optional)</strong> — Button child with <code>aria-hidden=\"true\"</code>. Positioned automatically via internal gap.",
       "item3": "<strong>Label</strong> — visible button text. Infinitive verb, max 3 words, no punctuation.",
@@ -468,7 +449,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use <code>variant=\"default\"</code> only once per section — the primary action must be unique.",
@@ -558,7 +538,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Infinitive verb, max 3 words (\"Save\", \"Create account\").",
         "dont": "Generic or instructional text (\"Click here\", \"OK\", \"Yes\")."
@@ -569,13 +548,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withIcon": "With Lucide icon:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Available Variants",
       "note": "Button has native variants defined in <code>buttonVariants</code>. Each variant communicates a different action intent — choose based on visual hierarchy and action severity.",
       "items": {
         "default": "Primary action of the flow. <code>primary</code> background, <code>primary-foreground</code> text.",
@@ -590,7 +566,6 @@
           "linkLabel": "View documentation"
         }
       },
-      "sizesTitle": "Sizes",
       "sizes": {
         "default": "Text 14px, vertical padding 8px. Standard size for most contexts.",
         "xs": "12px text, 2px vertical padding. For maximum density: filter chips and inline table row actions.",
@@ -601,7 +576,6 @@
         "icon-sm": "Square 32px. For compact toolbars with icons.",
         "icon-lg": "Square 40px. For emphasized icon actions."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "iconLeft": {
           "name": "Icon at left",
@@ -626,7 +600,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -664,7 +637,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "buttonTitle": "Button",
       "table": {
@@ -685,7 +657,6 @@
       "extensibility": "Additional classes are merged with the variant classes, allowing override of any visual aspect of the component. Child element composition keeps navigation semantics when a link replaces the button."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": "Theme application",
@@ -703,7 +674,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Button uses the native <code>&lt;button&gt;</code> element, which has full keyboard and screen reader support. Meets WCAG 2.2 AA: 2.1.1 (keyboard accessible), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
       "item1": "<strong>Native &lt;button&gt; element</strong> — semantics, role, and keyboard behavior come from HTML. Never replace with <code>&lt;div onClick&gt;</code>.",
@@ -730,7 +700,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "toggle": "For visual two-state options (bold, alignment) — uses <code>aria-pressed</code>.",
@@ -740,13 +709,11 @@
       "alertDialog": "For confirmation buttons in critical destructive actions."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "To integrate with the application router, compose the Button with the link component as a child — keeps navigation semantics (<code>&lt;a href&gt;</code>) and button styles.",
       "tip2": "In forms with async submit, block the button with <code>disabled={form.formState.isSubmitting}</code> and change the label to gerund (\"Saving...\"). Prevents double submission.",
       "tip3": "Icons must have <code>aria-hidden=\"true\"</code> and a default size of 16px — the Button CSS already sizes child SVGs automatically when no override is present."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Events fired by Button on user interactions.",
       "table": {
         "event": "Event",
@@ -767,7 +734,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each Button interaction.",
@@ -869,7 +835,6 @@
       "aiEntities": "Button, React, Vue, Svelte, Vanilla, Angular, botón, design system, componente de formulario, WCAG 2.2, accesibilidad, foco visible, ícono"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "primary": "Guardar",
         "secondary": "Cancelar",
@@ -882,7 +847,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Button</strong> — elemento <code>&lt;button&gt;</code> nativo. Acepta todos los atributos HTML de botón (<code>type</code>, <code>disabled</code>, <code>onClick</code>).",
       "item2": "<strong>Ícono (opcional)</strong> — hijo del Button con <code>aria-hidden=\"true\"</code>. Posicionado automáticamente vía gap interno.",
       "item3": "<strong>Label</strong> — texto visible del botón. Verbo en infinitivo, máximo 3 palabras, sin puntuación.",
@@ -897,7 +861,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Usa <code>variant=\"default\"</code> solo una vez por sección — la acción primaria debe ser única.",
@@ -987,7 +950,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Verbo en infinitivo, máximo 3 palabras (\"Guardar\", \"Crear cuenta\").",
         "dont": "Textos genéricos o instructivos (\"Haz clic aquí\", \"OK\", \"Sí\")."
@@ -998,13 +960,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withIcon": "Con ícono Lucide:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Variantes Disponibles",
       "note": "Button tiene variantes nativas definidas en <code>buttonVariants</code>. Cada variante comunica una intención diferente de acción — elige según la jerarquía visual y la severidad de la acción.",
       "items": {
         "default": "Acción primaria del flujo. Fondo <code>primary</code>, texto <code>primary-foreground</code>.",
@@ -1019,7 +978,6 @@
           "linkLabel": "Ver documentación"
         }
       },
-      "sizesTitle": "Tamaños",
       "sizes": {
         "default": "Texto 14px, padding vertical 8px. Tamaño estándar para la mayoría de contextos.",
         "xs": "Texto 12px, padding vertical 2px. Para densidades máximas: chips de filtro y acciones dentro de una fila de tabla.",
@@ -1030,7 +988,6 @@
         "icon-sm": "Cuadrado 32px. Para toolbars compactos con ícono.",
         "icon-lg": "Cuadrado 40px. Para acciones de ícono con énfasis."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "iconLeft": {
           "name": "Ícono a la izquierda",
@@ -1055,7 +1012,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1093,7 +1049,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "buttonTitle": "Button",
       "table": {
@@ -1114,7 +1069,6 @@
       "extensibility": "Las clases adicionales se combinan con las de la variante, permitiendo override de cualquier aspecto visual del componente. La composición con elemento hijo preserva la semántica de navegación al usar un enlace en lugar del botón."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicación en el tema",
@@ -1132,7 +1086,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Button usa el elemento <code>&lt;button&gt;</code> nativo, que ya tiene soporte completo de teclado y lector de pantalla. Cumple WCAG 2.2 AA: 2.1.1 (accesible por teclado), 2.4.7 (foco visible), 4.1.2 (name, role, value).",
       "item1": "<strong>Elemento nativo &lt;button&gt;</strong> — la semántica, el role y el comportamiento de teclado vienen del HTML. Nunca lo sustituyas por <code>&lt;div onClick&gt;</code>.",
@@ -1159,7 +1112,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "toggle": "Para opciones visuales de dos estados (negrita, alineación) — usa <code>aria-pressed</code>.",
@@ -1169,13 +1121,11 @@
       "alertDialog": "Para botones de confirmación en acciones destructivas críticas."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "Para integrar con el router de la aplicación, compón el Button con el componente de enlace como hijo — mantiene la semántica de navegación (<code>&lt;a href&gt;</code>) y los estilos del botón.",
       "tip2": "En formularios con submit asíncrono, bloquea el botón con <code>disabled={form.formState.isSubmitting}</code> y cambia el label a gerundio (\"Guardando...\"). Evita doble envío.",
       "tip3": "Los íconos deben tener <code>aria-hidden=\"true\"</code> y tamaño 16px — el CSS del Button ya dimensiona los SVG hijos automáticamente cuando no hay override."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos disparados por Button en interacciones del usuario.",
       "table": {
         "event": "Evento",
@@ -1196,7 +1146,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Button.",

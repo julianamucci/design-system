@@ -11,7 +11,6 @@
       "aiEntities": "NavigationMenu, React, Vue, Svelte, Vanilla, Angular, navegação, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "simpleLink": "Link simples (sem submenu)",
         "withDropdown": "Com dropdown de produtos",
@@ -20,7 +19,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>NavigationMenu (Root)</strong> — wrapper com <code>role=\"navigation\"</code> e <code>aria-label</code> obrigatório.",
       "item2": "<strong>NavigationMenuList</strong> — lista horizontal de items; aplica spacing entre Triggers.",
       "item3": "<strong>NavigationMenuItem</strong> — wrapper de cada item da lista (com ou sem dropdown).",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use NavigationMenu para navegação principal de sites e produtos web — posicionado no header ou topbar.",
@@ -130,7 +127,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "NavigationMenu com aria-label=\"Navegação principal\" e aria-current=\"page\" no link ativo.",
         "dont": "NavigationMenu sem aria-label — leitor de tela anuncia apenas \"navigation\"."
@@ -140,11 +136,8 @@
         "dont": "Mega-menu com 30+ links sem agrupamento — vira página inteira."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "horizontal": "Horizontal (padrão)",
         "vertical": "Vertical",
@@ -175,7 +168,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Fechado",
         "trigger": "estado inicial",
@@ -198,7 +190,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -252,7 +243,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -296,7 +286,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (landmark de navegação com lista de itens), 2.1.1 (operável por teclado: setas, Tab, Enter, Escape), 2.4.4 (o texto do destino diz para onde ele leva), 4.1.2 (estado do gatilho e página atual expostos por aria-expanded e aria-current).",
       "items": {
         "item1": "<code>NavigationMenu</code> recebe <code>role=\"navigation\"</code>; sempre forneça <code>aria-label</code> descrevendo o tipo (\"Navegação principal\", \"Navegação secundária\").",
@@ -329,7 +318,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "menubar": {
           "name": "Menubar",
@@ -350,7 +338,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a abertura por ponteiro e por foco, a navegação por teclado entre itens, o posicionamento do painel e os papéis ARIA do menu vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-navigation-menu-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Viewport compartilhado</strong>: ao contrário do DropdownMenu (cada Content em portal próprio), o NavigationMenu usa um único Viewport que muda de tamanho com transição.",
       "item3": "<strong>Mobile</strong>: NavigationMenu não funciona bem em telas pequenas — sempre tenha um <code>Drawer</code> com menu vertical como fallback responsive.",
@@ -359,11 +346,9 @@
       "item6": "<strong>aria-label obrigatório</strong>: sem ele, leitor de tela anuncia apenas \"navigation\" — não-descritivo. Use \"Navegação principal\", \"Navegação do footer\", etc."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (texto do Trigger/Link), <code>destination</code> (href). Disparar via callback de mudança e <code>onClick</code> nos Links."
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação.",
@@ -452,7 +437,6 @@
       "aiEntities": "NavigationMenu, React, Vue, Svelte, Vanilla, Angular, navigation, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "simpleLink": "Simple link (no submenu)",
         "withDropdown": "With products dropdown",
@@ -461,7 +445,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>NavigationMenu (Root)</strong> — wrapper with <code>role=\"navigation\"</code> and required <code>aria-label</code>.",
       "item2": "<strong>NavigationMenuList</strong> — horizontal list of items; applies spacing between Triggers.",
       "item3": "<strong>NavigationMenuItem</strong> — wrapper for each list item (with or without dropdown).",
@@ -480,7 +463,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
         "item1": "Use NavigationMenu for main site/product navigation — placed in header or topbar.",
@@ -571,7 +553,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "NavigationMenu with aria-label=\"Main navigation\" and aria-current=\"page\" on active link.",
         "dont": "NavigationMenu without aria-label — screen reader announces just \"navigation\"."
@@ -581,11 +562,8 @@
         "dont": "Mega-menu with 30+ links without grouping — becomes a full page."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "horizontal": "Horizontal (default)",
         "vertical": "Vertical",
@@ -616,7 +594,6 @@
       }
     },
     "states": {
-      "title": "States",
       "closed": {
         "label": "Closed",
         "trigger": "initial state",
@@ -639,7 +616,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -693,7 +669,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -737,7 +712,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA — 1.3.1 (navigation landmark with a list of items), 2.1.1 (keyboard operable: arrows, Tab, Enter, Escape), 2.4.4 (the destination text says where it leads), 4.1.2 (trigger state and current page exposed through aria-expanded and aria-current).",
       "items": {
         "item1": "<code>NavigationMenu</code> gets <code>role=\"navigation\"</code>; always provide <code>aria-label</code> describing the type (\"Main navigation\", \"Footer navigation\").",
@@ -770,7 +744,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "menubar": {
           "name": "Menubar",
@@ -791,7 +764,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — opening by pointer and by focus, keyboard navigation between items, panel positioning and the menu ARIA roles come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-navigation-menu-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Shared Viewport</strong>: unlike DropdownMenu (each Content in its own portal), NavigationMenu uses a single Viewport that resizes with transition.",
       "item3": "<strong>Mobile</strong>: NavigationMenu doesn't work well on small screens — always have a <code>Drawer</code> with vertical menu as a responsive fallback.",
@@ -800,11 +772,9 @@
       "item6": "<strong>Required aria-label</strong>: without it, screen reader announces only \"navigation\" — non-descriptive. Use \"Main navigation\", \"Footer navigation\", etc."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant events: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (Trigger/Link text), <code>destination</code> (href). Dispatch via the change callback and <code>onClick</code> on Links."
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each interaction.",
@@ -893,7 +863,6 @@
       "aiEntities": "NavigationMenu, React, Vue, Svelte, Vanilla, Angular, navegación, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "simpleLink": "Enlace simple (sin submenú)",
         "withDropdown": "Con dropdown de productos",
@@ -902,7 +871,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>NavigationMenu (Root)</strong> — wrapper con <code>role=\"navigation\"</code> y <code>aria-label</code> obligatorio.",
       "item2": "<strong>NavigationMenuList</strong> — lista horizontal de items; aplica spacing entre Triggers.",
       "item3": "<strong>NavigationMenuItem</strong> — wrapper de cada item de la lista (con o sin dropdown).",
@@ -921,7 +889,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa NavigationMenu para navegación principal de sitios y productos web — posicionado en el header o topbar.",
@@ -1012,7 +979,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "NavigationMenu con aria-label=\"Navegación principal\" y aria-current=\"page\" en el link activo.",
         "dont": "NavigationMenu sin aria-label — el lector de pantalla anuncia solo \"navigation\"."
@@ -1022,11 +988,8 @@
         "dont": "Mega-menú con 30+ links sin agrupamiento — se vuelve página entera."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "horizontal": "Horizontal (predeterminado)",
         "vertical": "Vertical",
@@ -1057,7 +1020,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Cerrado",
         "trigger": "estado inicial",
@@ -1080,7 +1042,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1134,7 +1095,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1178,7 +1138,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA — 1.3.1 (landmark de navegación con lista de elementos), 2.1.1 (operable por teclado: flechas, Tab, Enter, Escape), 2.4.4 (el texto del destino dice adónde lleva), 4.1.2 (estado del disparador y página actual expuestos con aria-expanded y aria-current).",
       "items": {
         "item1": "<code>NavigationMenu</code> recibe <code>role=\"navigation\"</code>; proporciona siempre <code>aria-label</code> describiendo el tipo (\"Navegación principal\", \"Navegación secundaria\").",
@@ -1211,7 +1170,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "menubar": {
           "name": "Menubar",
@@ -1232,7 +1190,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la apertura por puntero y por foco, la navegación por teclado entre ítems, el posicionamiento del panel y los roles ARIA del menú vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-navigation-menu-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Viewport compartido</strong>: a diferencia de DropdownMenu (cada Content en su propio portal), el NavigationMenu usa un único Viewport que cambia de tamaño con transición.",
       "item3": "<strong>Mobile</strong>: NavigationMenu no funciona bien en pantallas pequeñas — siempre ten un <code>Drawer</code> con menú vertical como fallback responsive.",
@@ -1241,11 +1198,9 @@
       "item6": "<strong>aria-label obligatorio</strong>: sin él, el lector de pantalla anuncia solo \"navigation\" — no descriptivo. Usa \"Navegación principal\", \"Navegación del footer\", etc."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes: <code>nav_menu_open</code>, <code>nav_link_click</code>. Payload: <code>component='navigation-menu'</code>, <code>label</code> (texto del Trigger/Link), <code>destination</code> (href). Dispara vía callback de cambio y <code>onClick</code> en los Links."
     },
     "testes": {
-      "title": "Criterios de Test",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción.",

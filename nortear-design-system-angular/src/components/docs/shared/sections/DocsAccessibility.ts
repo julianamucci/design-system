@@ -7,6 +7,8 @@ import {
 import { NdsCard } from '@/components/ui/card';
 import DOMPurify from 'dompurify';
 
+import { tituloDeSecao } from './titulo-de-secao';
+
 export interface DocsKeyboardItem { key: string; description: string }
 
 @Component({
@@ -70,7 +72,7 @@ export interface DocsKeyboardItem { key: string; description: string }
   `,
 })
 export class NdsDocsAccessibility {
-  readonly title = input.required<string>();
+  protected readonly title = tituloDeSecao('acessibilidade');
   readonly summary = input.required<string>();
   readonly items = input.required<string[]>();
   readonly keyboardTitle = input.required<string>();

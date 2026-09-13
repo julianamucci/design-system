@@ -22,10 +22,6 @@ const meta: Meta = {
     docs: { description: { component: "Tabela de estados do componente: o que dispara cada um e como ele responde. Uma linha por estado, e a coluna de comportamento é onde o token aparece." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     cols: {
       control: "object",
       description: "Cabeçalho das três colunas."
@@ -36,7 +32,6 @@ const meta: Meta = {
     }
   },
   args: {
-    title: "Estados",
     cols: {
       state: "Estado",
       trigger: "Gatilho",
@@ -68,7 +63,6 @@ const meta: Meta = {
   render: (args) => ({
     props: args,
     template: `<nds-docs-states
-      [title]="title"
       [cols]="cols"
       [items]="items"
     />`,

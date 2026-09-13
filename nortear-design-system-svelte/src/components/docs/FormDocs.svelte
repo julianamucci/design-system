@@ -276,7 +276,7 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="form">
+  <DocsDemonstration componentSlug="form">
     <div class="nds-stack nds-w-full nds-max-w-sm">
       <FormField
         label={$tStore('demonstration.labels.nameLabel')}
@@ -335,7 +335,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -344,7 +343,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -374,7 +372,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -405,7 +402,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={importCode}
     componentSlug="form"
@@ -417,7 +413,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
        usar" em cada item, e só este renderiza essa linha. -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="form"
@@ -443,7 +438,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="form"
     items={[
@@ -460,7 +454,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -475,7 +468,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.fieldTitle'),
@@ -517,7 +509,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -543,7 +534,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`accessibility.item${i}`))}
     keyboardTitle={$tNavStore('common.keyboard')}
@@ -557,7 +547,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     componentSlug="form"
     items={[
       { name: 'Input',    description: toPlainText($tStore('related.input')),    path: '?path=/docs/components-form-input--docs'    },
@@ -570,14 +559,12 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="form"
     items={[1, 2, 3, 4, 5].map(i => ({ title: '', content: $tStore(`notes.tip${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -592,7 +579,6 @@ type FieldsetProps = HTMLAttributes<HTMLFieldSetElement> & {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

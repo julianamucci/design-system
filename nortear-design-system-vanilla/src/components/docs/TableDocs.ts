@@ -213,13 +213,11 @@ export function createTableDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => buildDemoTable(),
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -236,7 +234,6 @@ export function createTableDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -296,7 +293,6 @@ export function createTableDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -387,7 +383,6 @@ export function createTableDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import {\n  createTable,\n  createTableHeader,\n  createTableBody,\n  createTableFooter,\n  createTableRow,\n  createTableHead,\n  createTableCell,\n  createTableCaption,\n} from '@/components/ui/table';`,
         });
 
@@ -401,7 +396,6 @@ export function createTableDocs(): HTMLElement {
         const codeActions = `const actionCell = createTableCell('');\nconst btn = createButton({\n  variant: 'ghost',\n  label: '...',\n  'aria-label': \`Ações para fatura \${inv.id}\`,\n});\nactionCell.appendChild(btn);\ntr.appendChild(actionCell);`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'basic',
@@ -736,7 +730,6 @@ container.appendChild(pagination);`;
         }
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'table',
           items: [
@@ -778,7 +771,6 @@ container.appendChild(pagination);`;
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -834,7 +826,6 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.tableTitle'),
@@ -889,7 +880,6 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
         const customizationCode = `/* Em styles.css — ajustar tokens semânticos */\n:root {\n  --muted: 210 40% 96%;\n  --muted-foreground: 215 16% 47%;\n  --border: 214 32% 91%;\n}\n\n.dark {\n  --muted: 217 33% 17%;\n  --muted-foreground: 215 20% 65%;\n  --border: 217 33% 17%;\n}`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.part'),
@@ -914,7 +904,6 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [
             DOMPurify.sanitize(t('accessibility.aria.scope')),
@@ -923,7 +912,7 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
             DOMPurify.sanitize(t('accessibility.aria.ariaSort')),
             DOMPurify.sanitize(t('accessibility.aria.tabIndex')),
           ],
-          keyboardTitle: t('accessibility.title'),
+          keyboardTitle: tNav('nav.accessibility'),
           keyboardItems: [
             { key: 'Tab',   description: t('accessibility.keyboard.tab') },
             { key: 'Enter', description: t('accessibility.keyboard.enter') },
@@ -934,7 +923,6 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Badge',        description: toPlainText(t('related.badge')),        path: '?path=/docs/components-feedback-badge--docs' },
             { name: 'Skeleton',     description: toPlainText(t('related.skeleton')),     path: '?path=/docs/components-feedback-skeleton--docs' },
@@ -946,7 +934,6 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },
@@ -958,7 +945,6 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -973,7 +959,6 @@ createTableCaption(text: string, extraClass?: string): HTMLTableCaptionElement`;
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

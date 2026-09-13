@@ -1,7 +1,7 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { CodeBlock } from '@/components/ui/code-block';
 
 export interface DocsImportProps {
-  title: string;
   description?: string;
   code: string;
   secondaryCode?: string;
@@ -22,9 +22,7 @@ export interface DocsImportProps {
   copiedLabel?: string;
 }
 
-export function DocsImport({
-  title,
-  description,
+export function DocsImport({ description,
   code,
   secondaryCode,
   secondaryDescription,
@@ -35,6 +33,7 @@ export function DocsImport({
   copyLabel,
   copiedLabel,
 }: DocsImportProps) {
+  const title = useTituloDeSecao('importacao');
   const track = (id: string) =>
     componentSlug
       ? {

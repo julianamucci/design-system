@@ -179,7 +179,7 @@ export function SeparatorDocs() {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
@@ -208,7 +208,6 @@ export function SeparatorDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -221,7 +220,6 @@ export function SeparatorDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -304,7 +302,6 @@ export function SeparatorDocs() {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -355,11 +352,10 @@ export function SeparatorDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="separator"
         items={[
           {
@@ -393,7 +389,6 @@ export function SeparatorDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -415,7 +410,6 @@ export function SeparatorDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -464,7 +458,6 @@ export function SeparatorDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -486,7 +479,6 @@ export function SeparatorDocs() {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -504,7 +496,6 @@ export function SeparatorDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="separator"
         items={[
           {
@@ -532,7 +523,6 @@ export function SeparatorDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="separator"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -544,7 +534,6 @@ export function SeparatorDocs() {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
           {
@@ -557,7 +546,6 @@ export function SeparatorDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

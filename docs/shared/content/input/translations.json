@@ -11,7 +11,6 @@
       "aiEntities": "Input, React, Vue, Svelte, Vanilla, Angular, InputGroup, WCAG 2.2, aria-invalid, campo de formulário, design system"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "defaultLabel": "Nome completo",
         "defaultPlaceholder": "ex: João da Silva",
@@ -30,7 +29,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Input</strong> — elemento <code>&lt;input&gt;</code> nativo com <code>data-slot=\"input\"</code>. Aceita todos os atributos HTML do input.",
       "item2": "<strong>type</strong> — define o tipo de entrada: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
       "item3": "<strong>placeholder</strong> — exemplo do formato esperado, nunca instrução. Nunca substitui o Label.",
@@ -45,7 +43,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use o <code>type</code> adequado ao dado: <code>email</code>, <code>password</code>, <code>tel</code>, <code>number</code>, <code>url</code>, <code>search</code>.",
@@ -107,7 +104,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Placeholder com exemplo real: 'ex: joao@empresa.com'. Orienta sem instruir.",
         "dont": "Placeholder como instrução: 'Digite seu email'. Redundante com o label."
@@ -122,14 +118,11 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withGroup": "Com InputGroup:"
     },
     "variants": {
-      "title": "Variantes",
       "note": "O Input não tem variantes via prop. A aparência muda conforme o <code>type</code> e o estado (disabled, aria-invalid). O <code>InputGroup</code> é o padrão para inputs com addons.",
-      "compositionsTitle": "Composições",
       "compositions": {
         "withLabel": {
           "name": "Com label",
@@ -180,7 +173,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -213,7 +205,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "inputTitle": "Input",
       "inputGroupTitle": "InputGroup e subcomponentes",
@@ -235,7 +226,6 @@
       "extensibility": "O Input aceita todos os atributos HTML nativos do elemento <code>&lt;input&gt;</code>. Para customizações pontuais, acrescente classes <code>.nds-*</code> em cima da classe base."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Seletor CSS",
@@ -256,7 +246,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O Input usa o elemento <code>&lt;input&gt;</code> nativo com semântica HTML completa. Dentro de um <code>FormField</code>, descrição e mensagem de erro entram no <code>aria-describedby</code> automaticamente; o <code>aria-invalid</code> é de quem valida. Cumpre WCAG 2.2 AA: 1.3.5 (propósito de entrada), 1.4.3 (contraste), 3.3.1 (identificação de erro).",
       "item1": "<strong>Label obrigatório</strong> — associe sempre o rótulo ao campo pelo atributo <code>for</code>, ou use o rótulo do componente de formulário. Nunca use apenas placeholder.",
       "item2": "<strong>aria-invalid é de quem valida</strong> — o campo não sabe se o valor é válido, então não escreve o atributo. Marque <code>aria-invalid=\"true\"</code> no Input quando houver erro.",
@@ -283,7 +272,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "textarea": "Para entradas de texto com múltiplas linhas.",
@@ -294,7 +282,6 @@
       "inputGroup": "Composição do Input com prefixos, sufixos, ícones e botões internos."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "Use sempre o <code>type</code> semântico correto — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Além de melhorar a UX mobile, ativa validações nativas do browser.",
       "tip2": "O <code>InputGroup</code> é um componente separado, não uma prop do Input. Use-o quando precisar de prefixo, sufixo, ícone interno ou botão dentro do campo.",
       "tip3": "Dentro de <code>FormField</code>, rótulo, descrição e mensagem de erro já ficam ligados ao Input — mas o <code>aria-invalid</code> não: é de quem valida, e precisa ser escrito no Input quando houver erro.",
@@ -302,7 +289,6 @@
       "tip5": "A altura do campo não é um token: ela nasce do respiro vertical mais a tipografia, para o campo crescer junto quando alguém aumenta a fonte do navegador. Ajuste <code>--spacing-2</code> e <code>--text-control</code> — nunca crave uma altura."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastreie o Input apenas em funis críticos. Nunca envie o valor de campos sensíveis (senha, CPF, cartão de crédito).",
       "table": {
         "event": "Evento",
@@ -329,7 +315,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada estado e configuração do Input.",
@@ -422,7 +407,6 @@
       "aiEntities": "Input, React, Vue, Svelte, Vanilla, Angular, InputGroup, WCAG 2.2, aria-invalid, form field, design system"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "defaultLabel": "Full name",
         "defaultPlaceholder": "e.g. John Smith",
@@ -441,7 +425,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Input</strong> — native <code>&lt;input&gt;</code> element with <code>data-slot=\"input\"</code>. Accepts all HTML input attributes.",
       "item2": "<strong>type</strong> — defines the input type: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
       "item3": "<strong>placeholder</strong> — example of the expected format, never an instruction. Never replaces Label.",
@@ -456,7 +439,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use the appropriate <code>type</code> for the data: <code>email</code>, <code>password</code>, <code>tel</code>, <code>number</code>, <code>url</code>, <code>search</code>.",
@@ -518,7 +500,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Placeholder as a real example: 'e.g. john@company.com'. Guides without instructing.",
         "dont": "Placeholder as an instruction: 'Enter your email'. Redundant with the label."
@@ -533,14 +514,11 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withGroup": "With InputGroup:"
     },
     "variants": {
-      "title": "Variants",
       "note": "Input has no variants via prop. Appearance changes based on <code>type</code> and state (disabled, aria-invalid). <code>InputGroup</code> is the standard for inputs with addons.",
-      "compositionsTitle": "Compositions",
       "compositions": {
         "withLabel": {
           "name": "With label",
@@ -591,7 +569,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -624,7 +601,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "inputTitle": "Input",
       "inputGroupTitle": "InputGroup and subcomponents",
@@ -646,7 +622,6 @@
       "extensibility": "Input accepts every native HTML attribute of the <code>&lt;input&gt;</code> element. For one-off customisation, add <code>.nds-*</code> classes on top of the base class."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": "CSS Selector",
@@ -667,7 +642,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Input uses the native <code>&lt;input&gt;</code> element with full HTML semantics. Inside a <code>FormField</code>, the description and the error message join <code>aria-describedby</code> automatically; <code>aria-invalid</code> belongs to whoever validates. Meets WCAG 2.2 AA: 1.3.5 (input purpose), 1.4.3 (contrast), 3.3.1 (error identification).",
       "item1": "<strong>Label required</strong> — always associate the label with the field through the <code>for</code> attribute, or use the form component label. Never use placeholder alone.",
       "item2": "<strong>aria-invalid belongs to whoever validates</strong> — the field does not know whether the value is valid, so it does not set the attribute. Set <code>aria-invalid=\"true\"</code> on the Input when there is an error.",
@@ -694,7 +668,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "textarea": "For multi-line text entries.",
@@ -705,7 +678,6 @@
       "inputGroup": "Composes Input with prefixes, suffixes, icons and internal buttons."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "Always use the correct semantic <code>type</code> — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Beyond improving mobile UX, it enables native browser validations.",
       "tip2": "<code>InputGroup</code> is a separate component, not a prop of Input. Use it when a prefix, suffix, internal icon or button inside the field is needed.",
       "tip3": "Inside <code>FormField</code>, the label, description and error message are already linked to the Input — but <code>aria-invalid</code> is not: it belongs to whoever validates, and must be set on the Input when there is an error.",
@@ -713,7 +685,6 @@
       "tip5": "Field height is not a token: it comes from vertical padding plus typography, so the field grows when someone increases the browser font size. Adjust <code>--spacing-2</code> and <code>--text-control</code> — never hard-code a height."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Track Input only in critical funnels. Never send the value of sensitive fields (password, SSN, credit card).",
       "table": {
         "event": "Event",
@@ -740,7 +711,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Input state and configuration.",
@@ -833,7 +803,6 @@
       "aiEntities": "Input, React, Vue, Svelte, Vanilla, Angular, InputGroup, WCAG 2.2, aria-invalid, campo de formulario, design system"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "defaultLabel": "Nombre completo",
         "defaultPlaceholder": "ej: Juan García",
@@ -852,7 +821,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Input</strong> — elemento <code>&lt;input&gt;</code> nativo con <code>data-slot=\"input\"</code>. Acepta todos los atributos HTML del input.",
       "item2": "<strong>type</strong> — define el tipo de entrada: <code>text</code>, <code>email</code>, <code>password</code>, <code>number</code>, <code>tel</code>, <code>url</code>, <code>search</code>, <code>date</code>, <code>file</code>.",
       "item3": "<strong>placeholder</strong> — ejemplo del formato esperado, nunca una instrucción. Nunca reemplaza al Label.",
@@ -867,7 +835,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Usa el <code>type</code> adecuado al dato: <code>email</code>, <code>password</code>, <code>tel</code>, <code>number</code>, <code>url</code>, <code>search</code>.",
@@ -929,7 +896,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Placeholder con ejemplo real: 'ej: juan@empresa.com'. Orienta sin instruir.",
         "dont": "Placeholder como instrucción: 'Ingresa tu email'. Redundante con el label."
@@ -944,14 +910,11 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withGroup": "Con InputGroup:"
     },
     "variants": {
-      "title": "Variantes",
       "note": "El Input no tiene variantes vía prop. La apariencia cambia según el <code>type</code> y el estado (disabled, aria-invalid). El <code>InputGroup</code> es el estándar para inputs con addons.",
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "withLabel": {
           "name": "Con label",
@@ -1002,7 +965,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1035,7 +997,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "inputTitle": "Input",
       "inputGroupTitle": "InputGroup y subcomponentes",
@@ -1057,7 +1018,6 @@
       "extensibility": "El Input acepta todos los atributos HTML nativos del elemento <code>&lt;input&gt;</code>. Para personalizaciones puntuales, añade clases <code>.nds-*</code> sobre la clase base."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Selector CSS",
@@ -1078,7 +1038,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El Input usa el elemento <code>&lt;input&gt;</code> nativo con semántica HTML completa. Dentro de un <code>FormField</code>, la descripción y el mensaje de error entran en el <code>aria-describedby</code> automáticamente; el <code>aria-invalid</code> es de quien valida. Cumple WCAG 2.2 AA: 1.3.5 (propósito de entrada), 1.4.3 (contraste), 3.3.1 (identificación de error).",
       "item1": "<strong>Label obligatorio</strong> — asocia siempre el rótulo al campo mediante el atributo <code>for</code>, o usa el rótulo del componente de formulario. Nunca uses solo el placeholder.",
       "item2": "<strong>aria-invalid es de quien valida</strong> — el campo no sabe si el valor es válido, así que no escribe el atributo. Marca <code>aria-invalid=\"true\"</code> en el Input cuando haya un error.",
@@ -1105,7 +1064,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "textarea": "Para entradas de texto con múltiples líneas.",
@@ -1116,7 +1074,6 @@
       "inputGroup": "Compone el Input con prefijos, sufijos, íconos y botones internos."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "Usa siempre el <code>type</code> semántico correcto — <code>email</code>, <code>tel</code>, <code>url</code>, <code>password</code>. Además de mejorar la UX mobile, activa validaciones nativas del browser.",
       "tip2": "El <code>InputGroup</code> es un componente separado, no una prop del Input. Úsalo cuando necesites prefijo, sufijo, ícono interno o botón dentro del campo.",
       "tip3": "Dentro de <code>FormField</code>, la etiqueta, la descripción y el mensaje de error ya quedan vinculados al Input — pero el <code>aria-invalid</code> no: es de quien valida, y hay que escribirlo en el Input cuando haya un error.",
@@ -1124,7 +1081,6 @@
       "tip5": "La altura del campo no es un token: nace del respiro vertical más la tipografía, para que el campo crezca cuando alguien aumenta la fuente del navegador. Ajusta <code>--spacing-2</code> y <code>--text-control</code> — nunca fijes una altura."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastrea el Input solo en embudos críticos. Nunca envíes el valor de campos sensibles (contraseña, DNI, tarjeta de crédito).",
       "table": {
         "event": "Evento",
@@ -1151,7 +1107,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada estado y configuración del Input.",

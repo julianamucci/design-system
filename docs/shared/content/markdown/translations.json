@@ -11,7 +11,6 @@
       "aiEntities": "Markdown, GFM, renderização, streaming, XSS, lista branca, acessibilidade, interface conversacional"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "prose": "Texto",
         "code": "Código",
@@ -20,7 +19,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "Raiz — container do documento renderizado, com a classe do componente e a medida de leitura.",
       "item2": "Blocos — parágrafo, título, citação, lista, regra e tabela, cada um como elemento semântico próprio.",
       "item3": "Bloco de código — delegado ao CodeBlock, que já traz destaque de sintaxe pelos tokens do tema.",
@@ -32,7 +30,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para qualquer texto que chegue de fora do código — resposta de modelo, comentário, campo de conteúdo, documentação carregada em tempo de execução.",
@@ -123,7 +120,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Endereço com esquema recusado perde o destino e mantém o texto: quem lê continua vendo o que foi escrito.",
         "dont": "Apagar o link inteiro esconde que havia um ali — e, numa conversa, esconde que o modelo tentou mandá-lo."
@@ -134,7 +130,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "O componente recebe o texto e cuida do resto. Nada precisa ser sanitizado antes: ele não interpreta HTML.",
       "basicCode": {
         "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={answer} />",
@@ -153,8 +148,6 @@
       }
     },
     "variants": {
-      "title": "Listas brancas",
-      "visualTitle": "Exemplos visuais",
       "note": "A variação deste componente é o que ele ACEITA estruturar, não a aparência. O mesmo texto rende documentos diferentes conforme a lista, e o que fica de fora nunca some — vira texto.",
       "items": {
         "full": {
@@ -172,7 +165,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -200,7 +192,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Contrato",
       "table": {
         "prop": "Propriedade",
@@ -258,7 +249,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Seletor",
@@ -300,7 +290,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O documento é montado com elementos semânticos reais — título é título, lista é lista —, então o leitor de tela navega por eles sem nada a mais. As duas decisões que exigem cuidado são o anúncio durante o streaming e o destino dos links.",
       "items": {
         "item1": "Texto em streaming NÃO é região viva. Anunciar a cada trecho tornaria a leitura impossível; a resposta é anunciada uma vez, inteira, ao terminar.",
@@ -332,7 +321,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "codeBlock": {
           "name": "CodeBlock",
@@ -353,14 +341,12 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O componente não interpreta HTML, e isso é decisão e não limitação: o texto vem de fora do código, e num contexto conversacional vem de um modelo.",
       "item2": "A árvore é montada por um módulo compartilhado pelas cinco stacks, então o mesmo texto rende a mesma estrutura em todas — divergência aqui seria impossível por construção.",
       "item3": "Bloco de código é delegado ao CodeBlock, que já traz destaque de sintaxe pelos tokens do tema — não há segunda paleta a manter.",
       "item4": "Durante o streaming, construção ainda aberta fica como texto até fechar. Sem isso o texto vira tabela, volta a ser parágrafo e vira tabela outra vez, várias vezes por segundo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página de documentação dispara os três eventos padrão. O componente em si não instrumenta nada: ele exibe texto.",
       "table": {
         "event": "Evento",
@@ -378,7 +364,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que cada story verifica.",
@@ -461,7 +446,6 @@
       "aiEntities": "Markdown, GFM, rendering, streaming, XSS, allow-list, accessibility, conversational interface"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "prose": "Prose",
         "code": "Code",
@@ -470,7 +454,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "Root — container of the rendered document, carrying the component class and the reading measure.",
       "item2": "Blocks — paragraph, heading, quote, list, rule and table, each as its own semantic element.",
       "item3": "Code block — delegated to CodeBlock, which already brings syntax highlighting from the theme tokens.",
@@ -482,7 +465,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it for any text arriving from outside the code — a model response, a comment, a content field, documentation loaded at runtime.",
@@ -573,7 +555,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "An address with a refused scheme loses its destination and keeps the text: the reader still sees what was written.",
         "dont": "Deleting the whole link hides that there was one — and, in a conversation, hides that the model tried to send it."
@@ -584,7 +565,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "The component takes the text and handles the rest. Nothing needs sanitising first: it does not interpret HTML.",
       "basicCode": {
         "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={answer} />",
@@ -603,8 +583,6 @@
       }
     },
     "variants": {
-      "title": "Allow-lists",
-      "visualTitle": "Visual examples",
       "note": "This component varies by what it ACCEPTS to structure, not by appearance. The same text yields different documents depending on the list, and whatever is left out never disappears — it becomes text.",
       "items": {
         "full": {
@@ -622,7 +600,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to trigger",
@@ -650,7 +627,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "Contract",
       "table": {
         "prop": "Property",
@@ -708,7 +684,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Selector",
@@ -750,7 +725,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The document is built from real semantic elements — a heading is a heading, a list is a list — so a screen reader navigates them with nothing extra. The two decisions that need care are the announcement during streaming and the link destinations.",
       "items": {
         "item1": "Streaming text is NOT a live region. Announcing each chunk would make reading impossible; the answer is announced once, whole, when it ends.",
@@ -782,7 +756,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "codeBlock": {
           "name": "CodeBlock",
@@ -803,14 +776,12 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The component does not interpret HTML, and that is a decision rather than a limitation: the text comes from outside the code, and in a conversational context it comes from a model.",
       "item2": "The tree is built by a module shared across the five stacks, so the same text yields the same structure in all of them — divergence here would be impossible by construction.",
       "item3": "A code block is delegated to CodeBlock, which already brings syntax highlighting from the theme tokens — there is no second palette to maintain.",
       "item4": "During streaming, a construction still open stays as text until it closes. Without that the text becomes a table, goes back to a paragraph and becomes a table again, several times per second."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The documentation page fires the three standard events. The component itself instruments nothing: it displays text.",
       "table": {
         "event": "Event",
@@ -828,7 +799,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What each story verifies.",
@@ -911,7 +881,6 @@
       "aiEntities": "Markdown, GFM, renderizado, streaming, XSS, lista blanca, accesibilidad, interfaz conversacional"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "prose": "Texto",
         "code": "Código",
@@ -920,7 +889,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "Raíz — contenedor del documento renderizado, con la clase del componente y la medida de lectura.",
       "item2": "Bloques — párrafo, título, cita, lista, regla y tabla, cada uno como su propio elemento semántico.",
       "item3": "Bloque de código — delegado a CodeBlock, que ya trae resaltado de sintaxis con los tokens del tema.",
@@ -932,7 +900,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para cualquier texto que llegue desde fuera del código — respuesta de modelo, comentario, campo de contenido, documentación cargada en tiempo de ejecución.",
@@ -1023,7 +990,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Una dirección con esquema rechazado pierde el destino y mantiene el texto: quien lee sigue viendo lo que se escribió.",
         "dont": "Borrar el enlace entero oculta que había uno — y, en una conversación, oculta que el modelo intentó enviarlo."
@@ -1034,7 +1000,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "El componente recibe el texto y se encarga del resto. Nada necesita saneamiento previo: no interpreta HTML.",
       "basicCode": {
         "react": "import { Markdown } from \"@/components/ui/markdown\";\n\n<Markdown content={answer} />",
@@ -1053,8 +1018,6 @@
       }
     },
     "variants": {
-      "title": "Listas blancas",
-      "visualTitle": "Ejemplos visuales",
       "note": "La variación de este componente es lo que ACEPTA estructurar, no la apariencia. El mismo texto rinde documentos distintos según la lista, y lo que queda fuera nunca desaparece — se vuelve texto.",
       "items": {
         "full": {
@@ -1072,7 +1035,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1100,7 +1062,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Contrato",
       "table": {
         "prop": "Propiedad",
@@ -1158,7 +1119,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Selector",
@@ -1200,7 +1160,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El documento se construye con elementos semánticos reales — un título es un título, una lista es una lista —, así que el lector de pantalla navega por ellos sin nada más. Las dos decisiones que exigen cuidado son el anuncio durante el streaming y el destino de los enlaces.",
       "items": {
         "item1": "El texto en streaming NO es una región viva. Anunciar cada fragmento haría imposible la lectura; la respuesta se anuncia una vez, entera, al terminar.",
@@ -1232,7 +1191,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "codeBlock": {
           "name": "CodeBlock",
@@ -1253,14 +1211,12 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El componente no interpreta HTML, y eso es una decisión y no una limitación: el texto viene de fuera del código, y en un contexto conversacional viene de un modelo.",
       "item2": "El árbol lo construye un módulo compartido por las cinco stacks, así que el mismo texto rinde la misma estructura en todas — la divergencia aquí sería imposible por construcción.",
       "item3": "El bloque de código se delega a CodeBlock, que ya trae resaltado de sintaxis con los tokens del tema — no hay una segunda paleta que mantener.",
       "item4": "Durante el streaming, una construcción aún abierta queda como texto hasta cerrarse. Sin eso el texto se vuelve tabla, regresa a párrafo y vuelve a ser tabla, varias veces por segundo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página de documentación dispara los tres eventos estándar. El componente en sí no instrumenta nada: muestra texto.",
       "table": {
         "event": "Evento",
@@ -1278,7 +1234,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que verifica cada story.",

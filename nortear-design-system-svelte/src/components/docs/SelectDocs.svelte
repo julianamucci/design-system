@@ -286,7 +286,7 @@ interface SelectItemProps {
   {/snippet}
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="select">
+  <DocsDemonstration componentSlug="select">
     <div class="nds-grid nds-w-full" data-cols="2" data-spacing="xl">
       <!-- Demo 1: default -->
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
@@ -370,7 +370,6 @@ interface SelectItemProps {
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -385,7 +384,6 @@ interface SelectItemProps {
 
   <!-- ── Quando Usar ───────────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -461,7 +459,6 @@ interface SelectItemProps {
 
   <!-- ── Do & Don't ───────────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -573,14 +570,12 @@ interface SelectItemProps {
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImport}
     componentSlug="select"
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     componentSlug="select"
     items={[
       {
@@ -677,7 +672,6 @@ interface SelectItemProps {
 
   <!-- ── Composições ──────────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="select"
     items={[
@@ -747,7 +741,6 @@ interface SelectItemProps {
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -766,7 +759,6 @@ interface SelectItemProps {
 
   <!-- ── Propriedades ─────────────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -792,7 +784,6 @@ interface SelectItemProps {
 
   <!-- ── Tokens ────────────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -816,7 +807,6 @@ interface SelectItemProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -842,7 +832,6 @@ interface SelectItemProps {
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.combobox.name'),   description: $tStore('related.items.combobox.description'),   path: '?path=/docs/components-form-combobox--docs' },
       { name: $tStore('related.items.radioGroup.name'), description: $tStore('related.items.radioGroup.description'), path: '?path=/docs/components-form-radiogroup--docs' },
@@ -853,7 +842,6 @@ interface SelectItemProps {
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -864,7 +852,6 @@ interface SelectItemProps {
 
   <!-- ── Analytics ────────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -881,7 +868,6 @@ interface SelectItemProps {
 
   <!-- ── Testes ────────────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

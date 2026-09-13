@@ -436,7 +436,7 @@ const a11yCritCols = computed(() => ({
     </template>
 
     <!-- ── Demonstração ─────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')">
+    <DocsDemonstration>
       <div
         class="nds-cluster nds-w-full"
         data-justify="center"
@@ -467,7 +467,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Anatomia ─────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -475,7 +474,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Quando Usar ──────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="{
         title: tContent('usage.guidelines.title'),
         items: [
@@ -538,7 +536,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Do & Don't ───────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
@@ -606,7 +603,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Importação ───────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="codeImportBasic"
       :secondary-description="tContent('import.withTrigger')"
@@ -615,7 +611,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Variantes ────────────────────────────────────────────── -->
     <DocsVariants
-      :title="tContent('variants.title')"
       :items="variantItems"
       :note="stripHtml(tContent('variants.note'))"
     >
@@ -646,7 +641,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Configurações (States) ──────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
         trigger: toPlainText(tContent('states.cols.trigger')),
@@ -657,7 +651,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Propriedades ─────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.rootTitle'), cols: propCols, items: rootProps },
         { title: tContent('props.triggerTitle'), cols: propCols, items: triggerProps },
@@ -672,7 +665,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Tokens ────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{
         token: tContent('tokens.table.token'),
         value: tContent('tokens.table.class'),
@@ -687,7 +679,6 @@ const a11yCritCols = computed(() => ({
     <DocsAccessibility
       :screen-reader-title="tNav('common.screenReader')"
       :screen-reader-items="screenReaderItems"
-      :title="tContent('accessibility.title')"
       :summary="stripHtml(tContent('accessibility.summary'))"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
@@ -696,19 +687,16 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Relacionados ─────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
         trigger: toPlainText(tContent('analytics.table.trigger')),
@@ -719,7 +707,6 @@ const a11yCritCols = computed(() => ({
 
     <!-- ── Testes ───────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },

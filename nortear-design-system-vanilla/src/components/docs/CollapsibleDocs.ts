@@ -302,7 +302,6 @@ export function createCollapsibleDocs(): HTMLElement {
         demoWrapper.appendChild(block3);
 
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => demoWrapper,
         });
       }
@@ -310,7 +309,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Anatomia ───────────────────────────────────────────────────────
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             DOMPurify.sanitize(t('anatomy.item1')),
             DOMPurify.sanitize(t('anatomy.item2')),
@@ -323,7 +321,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Quando Usar ────────────────────────────────────────────────────
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -354,7 +351,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Do & Don't ─────────────────────────────────────────────────────
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -402,7 +398,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Importação ─────────────────────────────────────────────────────
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createCollapsible } from '@/components/ui/collapsible';`,
         });
@@ -417,7 +412,6 @@ export function createCollapsibleDocs(): HTMLElement {
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'collapsible',
           items: [
@@ -490,7 +484,6 @@ export function createCollapsibleDocs(): HTMLElement {
         const codeRichContent = `const trigger = makeTriggerWithIcon(SettingsIcon, 'Configurações do sistema');\n\nconst content = document.createElement('div');\ncontent.className = 'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';\ncontent.dataset.spacing = 'sm';\n// append note + checkbox labels…\n\ncreateCollapsible({ trigger, content });`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'collapsible',
           items: [
@@ -612,7 +605,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Estados ────────────────────────────────────────────────────────
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -639,7 +631,6 @@ export function createCollapsibleDocs(): HTMLElement {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.collapsibleTitle'),
@@ -663,7 +654,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Tokens ─────────────────────────────────────────────────────────
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -686,7 +676,6 @@ export function createCollapsibleDocs(): HTMLElement {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [
             DOMPurify.sanitize(t('accessibility.item1')),
@@ -707,7 +696,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Relacionados ───────────────────────────────────────────────────
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Accordion',  description: toPlainText(t('related.accordion')), path: '?path=/docs/components-disclosure-accordion--docs'  },
             { name: 'Sheet',      description: toPlainText(t('related.sheet')),     path: '?path=/docs/components-overlay-sheet--docs'      },
@@ -719,7 +707,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Notas ──────────────────────────────────────────────────────────
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },
@@ -730,7 +717,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Analytics ──────────────────────────────────────────────────────
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -747,7 +733,6 @@ export function createCollapsibleDocs(): HTMLElement {
       // ── Testes ─────────────────────────────────────────────────────────
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

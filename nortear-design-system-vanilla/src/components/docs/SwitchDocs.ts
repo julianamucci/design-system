@@ -229,7 +229,6 @@ export function createSwitchDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack';
@@ -288,7 +287,6 @@ export function createSwitchDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -300,7 +298,6 @@ export function createSwitchDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -375,7 +372,6 @@ export function createSwitchDocs(): HTMLElement {
         };
 
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -399,7 +395,6 @@ export function createSwitchDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: 'Importação do factory custom (Nortear):',
           code: `import { createSwitch, type SwitchOptions } from '@/components/ui/switch';`,
           secondaryDescription: 'Uso básico:',
@@ -417,7 +412,6 @@ label.textContent = 'Receber notificações';`,
       case 'variantes': {
         return createDocsVariants({
           id: 'variantes',
-          title: t('variants.title'),
           items: [
             {
               trackId: 'default',
@@ -473,7 +467,6 @@ const sw = createSwitch({ id: 'marketing' });`,
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'switch',
           items: [
@@ -665,7 +658,6 @@ const sw = createSwitch({ id: 'marketing' });`,
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -702,7 +694,6 @@ export type SwitchOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createSwitch(options) — Nortear',
@@ -770,7 +761,6 @@ export type SwitchOptions = {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -792,7 +782,6 @@ export type SwitchOptions = {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
             t('accessibility.items.item1'),
@@ -812,7 +801,6 @@ export type SwitchOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.checkbox.name'),   description: stripHtml(t('related.items.checkbox.description')),   path: '?path=/docs/components-form-checkbox--docs'    },
             { name: t('related.items.toggle.name'),     description: stripHtml(t('related.items.toggle.description')),     path: '?path=/docs/components-form-toggle--docs'      },
@@ -823,7 +811,6 @@ export type SwitchOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -836,7 +823,6 @@ export type SwitchOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -851,7 +837,6 @@ export type SwitchOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

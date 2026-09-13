@@ -1,10 +1,10 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import { createCard } from '@/components/ui/card';
 import { createCodeBlock } from '@/components/ui/code-block';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
 
 export interface DocsTokenItem { token: string; value: string; description: string }
 export interface DocsTokensProps {
-  title: string;
   cols: { token: string; value: string; description: string };
   items: DocsTokenItem[];
   customizationTitle?: string;
@@ -23,7 +23,7 @@ export function createDocsTokens(props: DocsTokensProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('tokens');
   section.appendChild(h2);
 
   const container = document.createElement('div');

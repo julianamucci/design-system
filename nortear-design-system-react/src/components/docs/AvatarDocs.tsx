@@ -196,7 +196,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div
           className="nds-cluster"
           data-justify="center"
@@ -279,7 +279,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -293,7 +292,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -373,7 +371,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -419,7 +416,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withIcon")}
@@ -428,7 +424,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Variantes (composicionais) ────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         items={[
           {
             name: "image",
@@ -516,7 +511,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Configurações (States) ────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -548,7 +542,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.avatarTitle"),
@@ -664,7 +657,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -686,7 +678,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -717,7 +708,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: "Badge",
@@ -744,7 +734,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -754,7 +743,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -786,7 +774,6 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

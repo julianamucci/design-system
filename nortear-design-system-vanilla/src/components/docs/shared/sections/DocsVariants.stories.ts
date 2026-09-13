@@ -36,14 +36,12 @@ const meta: Meta<DocsVariantsProps> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     note: { control: 'text', description: 'Opcional. Nota acima da lista.' },
     items: { control: false, description: 'Uma entrada por variante. O preview é a fábrica desta stack.' },
     id: { control: 'text', description: 'Âncora da seção. Padrão `variantes`.' },
     componentSlug: { control: 'text', description: 'Opcional. Slug para o `data-track-id` do toggle de código.' },
   },
   args: {
-    title: 'Variantes',
     note: '',
     id: 'variantes',
     componentSlug: 'button',

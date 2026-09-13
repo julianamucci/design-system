@@ -11,7 +11,6 @@
       "aiEntities": "Breadcrumb, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "home": "Início",
         "components": "Componentes",
@@ -23,7 +22,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Breadcrumb</strong> — container <code>&lt;nav&gt;</code> com <code>aria-label=\"breadcrumb\"</code>.",
       "item2": "<strong>BreadcrumbList</strong> — lista ordenada <code>&lt;ol&gt;</code> que agrupa os itens.",
       "item3": "<strong>BreadcrumbItem</strong> — elemento <code>&lt;li&gt;</code> de cada nível da hierarquia.",
@@ -41,7 +39,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use em páginas com hierarquia de 2 ou mais níveis — não use na raiz (home, login).",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Início > Componentes > Breadcrumb — último item é a página atual sem link.",
         "dont": "Breadcrumb com todos os itens como link — o atual deve ser <code>BreadcrumbPage</code>."
@@ -137,13 +133,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withEllipsis": "Com ellipsis e DropdownMenu:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Configurações Disponíveis",
       "note": "O Breadcrumb não tem variantes visuais — sua aparência é consistente. O que varia é a <strong>composição</strong>: com ou sem ellipsis, separador customizado, colapso responsivo.",
       "items": {
         "default": "Composição padrão com <code>ChevronRight</code> como separador.",
@@ -153,7 +146,6 @@
       }
     },
     "states": {
-      "title": "Configurações",
       "cols": {
         "state": "Configuração",
         "trigger": "Como ativar",
@@ -171,7 +163,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "breadcrumbTitle": "Breadcrumb",
       "listTitle": "BreadcrumbList",
@@ -196,7 +187,6 @@
       "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Para integração com roteadores, o link do rastro assume o elemento de link do roteador em vez de criar um <code>&lt;a&gt;</code> próprio, preservando o pré-carregamento e o histórico que o roteador já cuida."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Classe .nds-*",
@@ -212,7 +202,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Breadcrumb usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> e <code>aria-current=\"page\"</code> no item atual. Cumpre WCAG 2.2 AA: 2.4.8 (localização), 4.1.2 (nome, função, valor).",
       "item1": "<strong>nav com aria-label</strong> — o container usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, diferenciando-se de outros <code>&lt;nav&gt;</code> da página.",
@@ -239,7 +228,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "navigationMenu": "Para navegação principal horizontal sem hierarquia.",
@@ -248,14 +236,12 @@
       "dropdownMenu": "Para exibir níveis ocultos dentro de <code>BreadcrumbEllipsis</code> no mobile."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O Breadcrumb gera automaticamente o JSON-LD <code>BreadcrumbList</code> quando passado ao hook <code>useSeoEffect</code> — não injete <code>&lt;script type=\"application/ld+json\"&gt;</code> manualmente.",
       "tip2": "No mobile, envolva o <code>BreadcrumbEllipsis</code> em um <code>DropdownMenu</code> para expor os níveis ocultos via clique; nunca os esconda permanentemente.",
       "tip3": "Para integração com routers, componha com elemento filho no <code>BreadcrumbLink</code> — isso preserva o comportamento de pré-carregamento do router.",
       "tip4": "O label do <code>BreadcrumbPage</code> deve espelhar o <code>&lt;h1&gt;</code> da página — evita inconsistência entre navegação e conteúdo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastreie apenas cliques em links do Breadcrumb — nunca no <code>BreadcrumbPage</code> (item atual não é navegável).",
       "table": {
         "event": "Evento",
@@ -279,7 +265,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Breadcrumb.",
@@ -382,7 +367,6 @@
       "aiEntities": "Breadcrumb, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "home": "Home",
         "components": "Components",
@@ -394,7 +378,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Breadcrumb</strong> — <code>&lt;nav&gt;</code> container with <code>aria-label=\"breadcrumb\"</code>.",
       "item2": "<strong>BreadcrumbList</strong> — ordered list <code>&lt;ol&gt;</code> grouping the items.",
       "item3": "<strong>BreadcrumbItem</strong> — <code>&lt;li&gt;</code> element for each hierarchy level.",
@@ -412,7 +395,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use on pages with 2 or more hierarchy levels — not on single-level pages (home, login).",
@@ -497,7 +479,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Home > Components > Breadcrumb — last item is the current page without a link.",
         "dont": "Breadcrumb with every item as a link — the current one must be <code>BreadcrumbPage</code>."
@@ -508,13 +489,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withEllipsis": "With ellipsis and DropdownMenu:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Available Configurations",
       "note": "Breadcrumb has no visual variants — its appearance is consistent. What varies is the <strong>composition</strong>: with or without ellipsis, custom separator, responsive collapse.",
       "items": {
         "default": "Default composition with <code>ChevronRight</code> as separator.",
@@ -524,7 +502,6 @@
       }
     },
     "states": {
-      "title": "Configurations",
       "cols": {
         "state": "Configuration",
         "trigger": "How to activate",
@@ -542,7 +519,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "breadcrumbTitle": "Breadcrumb",
       "listTitle": "BreadcrumbList",
@@ -567,7 +543,6 @@
       "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. For router integration, the trail link takes over the router link element instead of creating its own <code>&lt;a&gt;</code>, preserving the prefetching and history the router already handles."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": ".nds-* Class",
@@ -583,7 +558,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Breadcrumb uses <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> and <code>aria-current=\"page\"</code> on the current item. Meets WCAG 2.2 AA: 2.4.8 (location), 4.1.2 (name, role, value).",
       "item1": "<strong>nav with aria-label</strong> — the container uses <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, distinguishing it from other <code>&lt;nav&gt;</code> elements on the page.",
@@ -610,7 +584,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "navigationMenu": "For horizontal main navigation without hierarchy.",
@@ -619,14 +592,12 @@
       "dropdownMenu": "For exposing hidden levels inside <code>BreadcrumbEllipsis</code> on mobile."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "Breadcrumb automatically generates the <code>BreadcrumbList</code> JSON-LD when passed to the <code>useSeoEffect</code> hook — don't inject <code>&lt;script type=\"application/ld+json\"&gt;</code> manually.",
       "tip2": "On mobile, wrap <code>BreadcrumbEllipsis</code> in a <code>DropdownMenu</code> to expose the hidden levels on click; never hide them permanently.",
       "tip3": "For router integration, compose with a child element on <code>BreadcrumbLink</code> — this preserves the router's prefetch behavior.",
       "tip4": "The <code>BreadcrumbPage</code> label must mirror the page's <code>&lt;h1&gt;</code> — prevents inconsistency between navigation and content."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Track only link clicks in the Breadcrumb — never on <code>BreadcrumbPage</code> (the current item is not navigable).",
       "table": {
         "event": "Event",
@@ -650,7 +621,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Breadcrumb configuration.",
@@ -753,7 +723,6 @@
       "aiEntities": "Breadcrumb, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "home": "Inicio",
         "components": "Componentes",
@@ -765,7 +734,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Breadcrumb</strong> — contenedor <code>&lt;nav&gt;</code> con <code>aria-label=\"breadcrumb\"</code>.",
       "item2": "<strong>BreadcrumbList</strong> — lista ordenada <code>&lt;ol&gt;</code> que agrupa los ítems.",
       "item3": "<strong>BreadcrumbItem</strong> — elemento <code>&lt;li&gt;</code> de cada nivel de la jerarquía.",
@@ -783,7 +751,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Úsalo en páginas con 2 o más niveles jerárquicos — no lo uses en la raíz (home, login).",
@@ -868,7 +835,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Inicio > Componentes > Breadcrumb — último ítem es la página actual sin enlace.",
         "dont": "Breadcrumb con todos los ítems como enlace — el actual debe ser <code>BreadcrumbPage</code>."
@@ -879,13 +845,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withEllipsis": "Con ellipsis y DropdownMenu:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Configuraciones Disponibles",
       "note": "Breadcrumb no tiene variantes visuales — su apariencia es consistente. Lo que varía es la <strong>composición</strong>: con o sin ellipsis, separador personalizado, colapso responsivo.",
       "items": {
         "default": "Composición predeterminada con <code>ChevronRight</code> como separador.",
@@ -895,7 +858,6 @@
       }
     },
     "states": {
-      "title": "Configuraciones",
       "cols": {
         "state": "Configuración",
         "trigger": "Cómo activar",
@@ -913,7 +875,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "breadcrumbTitle": "Breadcrumb",
       "listTitle": "BreadcrumbList",
@@ -938,7 +899,6 @@
       "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Para integración con enrutadores, el enlace del rastro asume el elemento de enlace del enrutador en lugar de crear su propio <code>&lt;a&gt;</code>, preservando la precarga y el historial que el enrutador ya gestiona."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Clase .nds-*",
@@ -954,7 +914,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Breadcrumb usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code> y <code>aria-current=\"page\"</code> en el ítem actual. Cumple WCAG 2.2 AA: 2.4.8 (ubicación), 4.1.2 (nombre, rol, valor).",
       "item1": "<strong>nav con aria-label</strong> — el contenedor usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, diferenciándose de otros <code>&lt;nav&gt;</code> de la página.",
@@ -981,7 +940,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "navigationMenu": "Para navegación principal horizontal sin jerarquía.",
@@ -990,14 +948,12 @@
       "dropdownMenu": "Para exponer niveles ocultos dentro de <code>BreadcrumbEllipsis</code> en mobile."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El Breadcrumb genera automáticamente el JSON-LD <code>BreadcrumbList</code> cuando se pasa al hook <code>useSeoEffect</code> — no inyectes <code>&lt;script type=\"application/ld+json\"&gt;</code> manualmente.",
       "tip2": "En mobile, envuelve el <code>BreadcrumbEllipsis</code> en un <code>DropdownMenu</code> para exponer los niveles ocultos al hacer clic; nunca los ocultes permanentemente.",
       "tip3": "Para integración con routers, compón con elemento hijo en <code>BreadcrumbLink</code> — esto preserva el comportamiento de prefetch del router.",
       "tip4": "El label del <code>BreadcrumbPage</code> debe reflejar el <code>&lt;h1&gt;</code> de la página — evita inconsistencia entre navegación y contenido."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastrea solo clics en enlaces del Breadcrumb — nunca en <code>BreadcrumbPage</code> (el ítem actual no es navegable).",
       "table": {
         "event": "Evento",
@@ -1021,7 +977,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Breadcrumb.",

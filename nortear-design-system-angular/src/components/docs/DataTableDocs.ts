@@ -590,11 +590,11 @@ function formatarBRL(value: unknown): string {
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div
             ndsDataTable
             class="nds-w-full"
-            [caption]="caption(t('demonstration.title'))"
+            [caption]="caption(tNav('nav.demonstration'))"
             [columns]="colunasEditaveis()"
             [data]="faturas()"
             [labels]="rotulos()"
@@ -612,7 +612,6 @@ function formatarBRL(value: unknown): string {
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="anatomyCode"
@@ -620,7 +619,6 @@ function formatarBRL(value: unknown): string {
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -628,10 +626,9 @@ function formatarBRL(value: unknown): string {
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="importCode"
           [secondaryDescription]="t('import.withMeta')"
@@ -642,7 +639,6 @@ function formatarBRL(value: unknown): string {
 
         <nds-docs-variants
           id="variantes"
-          [title]="t('variants.title')"
           [note]="variantsNote()"
           [items]="variantItems()"
           componentSlug="data-table"
@@ -651,20 +647,17 @@ function formatarBRL(value: unknown): string {
 
         <nds-docs-variants
           id="composicoes"
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           componentSlug="data-table"
           language="html"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -672,7 +665,6 @@ function formatarBRL(value: unknown): string {
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -680,7 +672,6 @@ function formatarBRL(value: unknown): string {
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -690,21 +681,18 @@ function formatarBRL(value: unknown): string {
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="data-table"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="data-table" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="data-table" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

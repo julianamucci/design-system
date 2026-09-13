@@ -290,7 +290,6 @@ export function createSheetDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster';
@@ -312,7 +311,6 @@ export function createSheetDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -320,7 +318,6 @@ export function createSheetDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -365,7 +362,6 @@ export function createSheetDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -429,7 +425,6 @@ export function createSheetDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createSheet } from '@/components/ui/sheet';
 import { createButton } from '@/components/ui/button';`,
         });
@@ -468,7 +463,6 @@ createSheet({
         const codeBottom = variantCode('bottom', t('demonstration.labels.bottomLabel'));
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'right',
@@ -653,7 +647,6 @@ createSheet({
         };
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'sheet',
           items: [
@@ -954,7 +947,6 @@ createSheet({
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -1008,7 +1000,6 @@ export function createSheet(options: SheetOptions): HTMLElement & {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createSheet(options)',
@@ -1040,7 +1031,6 @@ export function createSheet(options: SheetOptions): HTMLElement & {
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -1064,7 +1054,6 @@ export function createSheet(options: SheetOptions): HTMLElement & {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -1078,7 +1067,6 @@ export function createSheet(options: SheetOptions): HTMLElement & {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.drawer.name'),      description: toPlainText(t('related.items.drawer.description')),      path: '?path=/docs/components-overlay-drawer--docs'      },
             { name: t('related.items.dialog.name'),      description: toPlainText(t('related.items.dialog.description')),      path: '?path=/docs/components-overlay-dialog--docs'       },
@@ -1089,7 +1077,6 @@ export function createSheet(options: SheetOptions): HTMLElement & {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -1102,7 +1089,6 @@ export function createSheet(options: SheetOptions): HTMLElement & {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -1117,7 +1103,6 @@ export function createSheet(options: SheetOptions): HTMLElement & {
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

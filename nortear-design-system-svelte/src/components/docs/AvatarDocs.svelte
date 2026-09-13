@@ -157,7 +157,7 @@ interface AvatarFallbackProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-cluster" data-justify="center" data-spacing="xl" style="align-items: flex-end; flex-wrap: wrap">
       <div class="nds-stack" data-spacing="xs" style="align-items: center">
         <Avatar delayMs={600}>
@@ -215,7 +215,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -229,7 +228,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -289,7 +287,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -342,7 +339,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withIcon')}
@@ -351,7 +347,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Variantes (composições) ────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { name: 'image',      description: stripHtml($tStore('variants.items.image')),      code: codeImage,    preview: variantImage },
       { name: 'initials',   description: stripHtml($tStore('variants.items.initials')),   code: codeInitials, preview: variantInitials },
@@ -414,7 +409,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -430,7 +424,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.avatarTitle'),
@@ -486,7 +479,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -508,7 +500,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -527,7 +518,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Badge',        description: $tStore('related.badge'),        path: '?path=/docs/components-feedback-badge--docs'        },
       { name: 'AspectRatio',  description: $tStore('related.aspectRatio'),  path: '?path=/docs/components-layout-aspectratio--docs'  },
@@ -538,7 +528,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -548,7 +537,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -564,7 +552,6 @@ interface AvatarFallbackProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

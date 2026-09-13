@@ -174,7 +174,7 @@ const columns: DataTableColumn<Invoice>[] = [
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="data-table">
+  <DocsDemonstration componentSlug="data-table">
     <div class="nds-w-full">
       <DataTable
         columns={demoColumns}
@@ -187,7 +187,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -202,7 +201,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -266,7 +264,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -310,7 +307,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withMeta')}
@@ -320,7 +316,6 @@ const columns: DataTableColumn<Invoice>[] = [
   <!-- ── Recursos (Variantes) ───────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="data-table"
     items={[
@@ -360,7 +355,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="data-table"
     items={[
@@ -381,7 +375,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -400,7 +393,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.containerTitle'),
@@ -459,7 +451,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -481,7 +472,6 @@ const columns: DataTableColumn<Invoice>[] = [
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={stripHtml($tStore('accessibility.summary'))}
     items={[
       $tStore('accessibility.item1'),
@@ -503,7 +493,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Table',        description: $tStore('related.table'),        path: '?path=/docs/components-tables-table--docs'        },
       { name: 'Chart',        description: $tStore('related.chart'),        path: '?path=/docs/components-display-chart--docs'        },
@@ -516,7 +505,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -529,7 +517,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -544,7 +531,6 @@ const columns: DataTableColumn<Invoice>[] = [
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

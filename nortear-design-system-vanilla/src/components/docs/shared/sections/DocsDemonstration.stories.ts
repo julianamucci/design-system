@@ -33,7 +33,6 @@ const meta: Meta<DocsDemonstrationProps> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     componentSlug: {
       control: 'text',
       description: 'Informativo. Não injeta rastreio — quem o faz é o gatilho dentro do slot.',
@@ -41,7 +40,6 @@ const meta: Meta<DocsDemonstrationProps> = {
     demoFactory: { control: false, description: 'Fábrica do conteúdo do palco. É o slot desta stack.' },
   },
   args: {
-    title: 'Demonstração',
     componentSlug: 'button',
   },
   render: (args) =>

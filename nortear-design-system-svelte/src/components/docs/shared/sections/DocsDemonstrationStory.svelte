@@ -7,14 +7,13 @@
    * se passa como arg de um arquivo `.stories.ts` — é sintaxe de template, não
    * valor. É o mesmo padrão do `AspectRatioStory.svelte`.
    */
-  let { title, componentSlug = '', rastreado = false }: {
-    title: string;
+  let { componentSlug = '', rastreado = false }: {
     componentSlug?: string;
     rastreado?: boolean;
   } = $props();
 </script>
 
-<DocsDemonstration {title} {componentSlug}>
+<DocsDemonstration {componentSlug}>
   {#if rastreado}
     <Button data-track="demo" data-track-id="button:demo:salvar">
       Salvar

@@ -9,9 +9,9 @@
    * conta como `docs_code_copy`.
    */
   import { CodeBlock } from '@/components/ui/code-block';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
-  const { title, description, code, secondaryCode, secondaryDescription, componentSlug, language = 'svelte', copyLabel, copiedLabel }: {
-    title: string;
+  const { description, code, secondaryCode, secondaryDescription, componentSlug, language = 'svelte', copyLabel, copiedLabel }: {
     description?: string;
     code: string;
     secondaryCode?: string;
@@ -21,6 +21,8 @@
     copyLabel?: string;
     copiedLabel?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao('importacao', $rotulosDeSecao));
 </script>
 
 <section id="importacao">

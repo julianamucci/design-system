@@ -158,7 +158,6 @@ interface TriggerPopoverLabels {
     para o Chromatic.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="composer-trigger-popover"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -200,7 +199,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -209,7 +207,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -272,7 +269,6 @@ interface TriggerPopoverLabels {
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -299,7 +295,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withCommands')}
@@ -315,7 +310,6 @@ interface TriggerPopoverLabels {
   {/snippet}
 
   <DocsVariants
-    title={$tStore('variants.title')}
     note={stripHtml($tStore('variants.note'))}
     componentSlug="composer-trigger-popover"
     items={[
@@ -336,7 +330,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -351,7 +344,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'Composer',
@@ -396,7 +388,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -417,7 +408,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -432,7 +422,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.composer.name'), description: toPlainText($tStore('related.items.composer.description')), path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.combobox.name'), description: toPlainText($tStore('related.items.combobox.description')), path: '?path=/docs/components-form-combobox--docs' },
@@ -443,14 +432,12 @@ interface TriggerPopoverLabels {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="composer-trigger-popover"
     items={[1, 2, 3, 4, 5].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -465,7 +452,6 @@ interface TriggerPopoverLabels {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

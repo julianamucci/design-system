@@ -1,14 +1,16 @@
 <script lang="ts">
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface DocsAnalyticsEventItem { event: string; trigger: string; payload: string }
 
-  const { title, cols, items }: {
-    title: string;
+  const { cols, items }: {
     cols: { event: string; trigger: string; payload: string };
     items: DocsAnalyticsEventItem[];
   } = $props();
+
+  const title = $derived(tituloDeSecao('analytics', $rotulosDeSecao));
 </script>
 
 <section id="analytics">

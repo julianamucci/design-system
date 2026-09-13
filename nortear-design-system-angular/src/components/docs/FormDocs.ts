@@ -328,7 +328,7 @@ const CUSTOMIZATION_CODE = `/* Em styles.css — sobrescrever tokens do form */
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <form ndsForm class="nds-w-full">
             <div ndsFormField>
               <label ndsFormLabel>{{ t('demonstration.labels.nameLabel') }}</label>
@@ -369,7 +369,6 @@ const CUSTOMIZATION_CODE = `/* Em styles.css — sobrescrever tokens do form */
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -377,17 +376,15 @@ const CUSTOMIZATION_CODE = `/* Em styles.css — sobrescrever tokens do form */
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [do]="usageDo()"
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="importCode"
           componentSlug="form"
@@ -395,7 +392,6 @@ const CUSTOMIZATION_CODE = `/* Em styles.css — sobrescrever tokens do form */
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="form"
@@ -404,20 +400,17 @@ const CUSTOMIZATION_CODE = `/* Em styles.css — sobrescrever tokens do form */
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="form"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -425,7 +418,6 @@ const CUSTOMIZATION_CODE = `/* Em styles.css — sobrescrever tokens do form */
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -433,7 +425,6 @@ const CUSTOMIZATION_CODE = `/* Em styles.css — sobrescrever tokens do form */
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="tNav('common.keyboardNav')"
@@ -441,21 +432,18 @@ const CUSTOMIZATION_CODE = `/* Em styles.css — sobrescrever tokens do form */
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="form"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="form" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="form" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

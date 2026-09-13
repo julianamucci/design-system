@@ -212,7 +212,7 @@ const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-stack nds-w-full" data-spacing="lg">
             <div class="nds-stack" data-spacing="sm">
               <span class="nds-text-caption">{{ t('demonstration.labels.singleLabel') }}</span>
@@ -227,14 +227,12 @@ const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -242,17 +240,15 @@ const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="tNav('nav.import')"
           [code]="importCode"
           componentSlug="calendar"
           language="ts"
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="calendar"
@@ -261,13 +257,11 @@ const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -275,7 +269,6 @@ const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -283,7 +276,6 @@ const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -293,21 +285,18 @@ const CUSTOMIZATION_CODE = `/* A grade lê os tokens do tema — personalizar é
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="calendar"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="calendar" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="calendar" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

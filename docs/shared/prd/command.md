@@ -373,6 +373,7 @@ hospedeiro (Dialog) → stories → docs page.
 | portões determinísticos | `node scripts/audit.mjs command --json` |
 | código do painel Code | `ui/command/command.source.ts` (só construtores de snippet) e `command.fixtures.ts` (as listas que story e snippet dividem), por stack — a varredura `source-snippets.test.ts` de cada uma cobra a fronteira |
 | rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
+| título (`h2`) de cada seção | o mesmo rótulo do menu, derivado do id da seção — ver `docs-page-landmarks.ts` |
 
 **As 54 chaves `nav` saíram do conteúdo em 2026-09-12.** Aqui elas não
 produziam sintoma — nenhuma das cinco páginas deste slug lia o conteúdo para
@@ -381,12 +382,24 @@ que ninguém lê é o que a próxima docs page copia sem saber, e foi assim que 
 dos 85 conteúdos passaram a declarar um menu.
 
 O menu da docs page é cromo: as mesmas quinze seções, na mesma ordem, em toda
-página das cinco stacks, lidas de relance e comparando páginas. A palavra própria
-do componente vive no TÍTULO da seção. Portões: `rotulo_de_nav_no_conteudo`,
+página das cinco stacks, lidas de relance e comparando páginas — e desde a mesma
+data o TÍTULO da seção é a mesma frase, derivada do mesmo lugar. A linha abaixo
+registra por quê. Portões: `rotulo_de_nav_no_conteudo`,
 `rotulo_de_nav_do_conteudo` e `vocabulario_de_nav_divergente`, este último
 porque `en.nav.anatomy` do vue dizia "Anatomity" — palavra inexistente, no menu
 das 82 docs pages daquela stack, e indistinguível de decisão enquanto ninguém
 comparava as cinco cópias.
+
+**As 42 chaves de título de seção saíram do conteúdo em 2026-09-12**, e
+**15 delas diziam palavra diferente da do item de menu que salta para a
+seção** — "Quando e Como Usar" contra "Quando Usar", "Design Tokens" contra
+"Tokens", "Componentes Relacionados" contra "Relacionados". Nenhum título deste slug divergia por decisão — os quinze são deriva de escrita, do tipo "Critérios de Teste" contra "Testes". O `h2` agora
+nasce do id que a própria seção declara, então divergir deixou de ser possível
+em vez de passar a ser proibido. Portões: `titulo_de_secao_no_conteudo`,
+`titulo_de_secao_pedido_ao_conteudo` e `titulo_passado_ao_container` — o
+terceiro existe porque no Angular um `[title]` esquecido **não** reprova no
+`ngc` (é atributo global do HTML) e viraria tooltip silencioso no cabeçalho.
+
 
 
 ## 12. Histórico

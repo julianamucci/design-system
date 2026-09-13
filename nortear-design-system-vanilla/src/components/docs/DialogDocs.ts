@@ -338,7 +338,6 @@ export function createDialogDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster';
@@ -364,7 +363,6 @@ export function createDialogDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1,2,3,4,5,6,7,8,9,10].map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -372,7 +370,6 @@ export function createDialogDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1,2,3,4,5,6].map(i => t(`usage.guidelines.item${i}`)),
@@ -417,7 +414,6 @@ export function createDialogDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -482,7 +478,6 @@ export function createDialogDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createDialog } from '@/components/ui/dialog';
 import { createButton } from '@/components/ui/button';`,
@@ -612,7 +607,6 @@ createDialog({
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           note: stripHtml(t('variants.note')),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'dialog',
@@ -803,7 +797,6 @@ createDialog({
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'dialog',
           items: [
@@ -942,7 +935,6 @@ media.style.placeItems = 'center';
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -986,7 +978,6 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.rootTitle'),
@@ -1044,7 +1035,6 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
 }`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -1068,7 +1058,6 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1,2,3,4,5,6].map(i => t(`accessibility.item${i}`)),
           keyboardTitle: t('accessibility.keyboardTitle'),
@@ -1082,7 +1071,6 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
             { name: 'Sheet',       description: toPlainText(t('related.sheet')),                  path: '?path=/docs/components-overlay-sheet--docs'       },
@@ -1094,7 +1082,6 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -1105,7 +1092,6 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -1123,7 +1109,6 @@ declare function createDialog(options: DialogOptions): HTMLElement & {
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

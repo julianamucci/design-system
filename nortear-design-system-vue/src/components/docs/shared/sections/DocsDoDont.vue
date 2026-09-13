@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Card } from '@/components/ui/card';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 /**
  * Um par tem DUAS legendas, e nada além delas.
@@ -20,9 +21,10 @@ interface DocsDoDontPair {
 }
 
 defineProps<{
-  title: string;
   pairs: DocsDoDontPair[];
 }>();
+
+const title = useTituloDeSecao('do-dont');
 </script>
 
 <template>

@@ -354,7 +354,6 @@ export function createCardDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-w-full nds-grid';
@@ -368,7 +367,6 @@ export function createCardDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7].map((i) => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -376,7 +374,6 @@ export function createCardDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map((i) => t(`usage.guidelines.item${i}`)),
@@ -421,7 +418,6 @@ export function createCardDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -464,7 +460,6 @@ export function createCardDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import {
   createCard,
@@ -535,7 +530,6 @@ img.className = 'nds-w-full object-cover';
 card.append(img, header);`;
 
         return createDocsVariants({
-          title: t('variants.visualTitle'),
           items: [
             {
               name: 'default',
@@ -573,7 +567,6 @@ card.append(img, header);`;
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -630,7 +623,6 @@ export interface CardFooterOptions      { class?: string; }`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.cardTitle'),
@@ -699,7 +691,6 @@ export interface CardFooterOptions      { class?: string; }`;
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -726,7 +717,6 @@ export interface CardFooterOptions      { class?: string; }`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5].map((i) => t(`accessibility.item${i}`)),
           keyboardTitle: t('accessibility.keyboardTitle'),
@@ -739,7 +729,6 @@ export interface CardFooterOptions      { class?: string; }`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Separator', description: toPlainText(t('related.separator')), path: '?path=/docs/components-layout-separator--docs' },
             { name: 'Accordion', description: toPlainText(t('related.accordion')), path: '?path=/docs/components-disclosure-accordion--docs' },
@@ -752,7 +741,6 @@ export interface CardFooterOptions      { class?: string; }`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -763,7 +751,6 @@ export interface CardFooterOptions      { class?: string; }`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -800,7 +787,6 @@ export interface CardFooterOptions      { class?: string; }`;
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

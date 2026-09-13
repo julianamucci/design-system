@@ -799,7 +799,7 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div ndsDialog (onOpenChange)="onDemoOpenChange($event)">
             <button ndsDialogTrigger ndsButton variant="outline">
               {{ t('demonstration.labels.triggerLabel') }}
@@ -855,7 +855,6 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -863,7 +862,6 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -871,10 +869,9 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="importCode"
           [secondaryDescription]="t('import.withScroll')"
@@ -884,7 +881,6 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="dialog"
@@ -893,20 +889,17 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="dialog"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -915,7 +908,6 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -923,7 +915,6 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -933,25 +924,21 @@ type DocsLocation = 'docs_demo' | 'docs_variantes' | 'docs_composicoes' | 'docs_
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="dialog"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="dialog"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

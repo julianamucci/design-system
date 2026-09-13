@@ -1,7 +1,7 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import { createCodeBlock } from '@/components/ui/code-block';
 
 export interface DocsImportProps {
-  title: string;
   description?: string;
   code: string;
   secondaryCode?: string;
@@ -30,7 +30,7 @@ export function createDocsImport(props: DocsImportProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('importacao');
   section.appendChild(h2);
 
   if (props.description) {

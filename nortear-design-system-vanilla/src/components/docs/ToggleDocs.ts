@@ -262,7 +262,6 @@ export function createToggleDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack';
@@ -295,7 +294,6 @@ export function createToggleDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -307,7 +305,6 @@ export function createToggleDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -381,7 +378,6 @@ export function createToggleDocs(): HTMLElement {
         };
 
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -405,7 +401,6 @@ export function createToggleDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: 'Importação do factory custom (Nortear):',
           code: `import { createToggle, type ToggleOptions } from '@/components/ui/toggle';`,
           secondaryDescription: 'Uso básico (icon-only — aria-label OBRIGATÓRIO):',
@@ -426,7 +421,6 @@ const toggle = createToggle({
       case 'variantes': {
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'toggle',
           items: [
@@ -515,7 +509,6 @@ row.dataset.spacing = 'sm';
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'toggle',
           items: [
@@ -620,7 +613,6 @@ row.style.flexWrap = 'wrap';
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -662,7 +654,6 @@ export type ToggleOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createToggle(options) — Nortear',
@@ -739,7 +730,6 @@ export type ToggleOptions = {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -773,7 +763,6 @@ export type ToggleOptions = {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
             t('accessibility.items.item1'),
@@ -793,7 +782,6 @@ export type ToggleOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.toggleGroup.name'), description: stripHtml(t('related.items.toggleGroup.description')), path: '?path=/docs/components-form-togglegroup--docs' },
             { name: t('related.items.switch.name'),      description: stripHtml(t('related.items.switch.description')),      path: '?path=/docs/components-form-switch--docs'      },
@@ -804,7 +792,6 @@ export type ToggleOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -817,7 +804,6 @@ export type ToggleOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -832,7 +818,6 @@ export type ToggleOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

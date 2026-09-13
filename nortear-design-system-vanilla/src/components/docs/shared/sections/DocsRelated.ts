@@ -1,10 +1,10 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import { managerHref } from '@shared/primitives/manager-href';
 
 import DOMPurify from 'dompurify';
 
 export interface DocsRelatedItem { name: string; description: string; path: string }
 export interface DocsRelatedProps {
-  title: string;
   items: DocsRelatedItem[];
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, cada
@@ -25,7 +25,7 @@ export function createDocsRelated(props: DocsRelatedProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('relacionados');
   section.appendChild(h2);
 
   const grid = document.createElement('div');

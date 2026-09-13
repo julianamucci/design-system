@@ -328,7 +328,7 @@ interface TooltipContentProps {
         }
       >
         {/* ── Demonstração ──────────────────────────────────────────── */}
-        <DocsDemonstration title={tContent("demonstration.title")}>
+        <DocsDemonstration >
           {/* O MESMO exemplo do Playground da story — guideline 08 §15. Uma
               fonte, dois lugares: a página abre mostrando exatamente o que o
               Playground exercita. A barra de três ações que morava aqui virou a
@@ -355,7 +355,6 @@ interface TooltipContentProps {
 
         {/* ── Anatomia ──────────────────────────────────────────────── */}
         <DocsAnatomy
-          title={tContent("anatomy.title")}
           items={[
             tContent("anatomy.item1"),
             tContent("anatomy.item2"),
@@ -368,7 +367,6 @@ interface TooltipContentProps {
 
         {/* ── Quando Usar ───────────────────────────────────────────── */}
         <DocsWhenToUse
-          title={tContent("usage.title")}
           guidelines={{
             title: tContent("usage.guidelines.title"),
             items: [
@@ -446,7 +444,6 @@ interface TooltipContentProps {
 
         {/* ── Do & Don't ────────────────────────────────────────────── */}
         <DocsDoDont
-          title={tContent("doDont.title")}
           pairs={[
             {
               doLabel: tNav("common.do"),
@@ -551,7 +548,6 @@ interface TooltipContentProps {
           ]}
         />
         <DocsImport
-          title={tContent("import.title")}
           code={codeImport}
           secondaryCode={codeImportProvider}
           componentSlug="tooltip"
@@ -560,7 +556,6 @@ interface TooltipContentProps {
         {/* ── Variantes ─────────────────────────────────────────────── */}
         <DocsCompositions
           id="variantes"
-          title={tContent("variants.title")}
           useWhenLabel={tNav("common.useWhen")}
           componentSlug="tooltip"
           items={[
@@ -663,7 +658,6 @@ interface TooltipContentProps {
 
         {/* ── Composições ───────────────────────────────────────────── */}
         <DocsCompositions
-          title={tContent("variants.compositionsTitle")}
           useWhenLabel={tNav("common.useWhen")}
           componentSlug="tooltip"
           items={[
@@ -834,7 +828,6 @@ interface TooltipContentProps {
 
         {/* ── Estados ───────────────────────────────────────────────── */}
         <DocsStates
-          title={tContent("states.title")}
           cols={{
             state: tContent("states.cols.state"),
             trigger: toPlainText(tContent("states.cols.trigger")),
@@ -871,7 +864,6 @@ interface TooltipContentProps {
 
         {/* ── Propriedades ──────────────────────────────────────────── */}
         <DocsProps
-          title={tContent("props.title")}
           tables={[
             {
               cols: {
@@ -952,7 +944,6 @@ interface TooltipContentProps {
 
         {/* ── Tokens ────────────────────────────────────────────────── */}
         <DocsTokens
-          title={tContent("tokens.title")}
           cols={{
             token: tContent("tokens.table.token"),
             value: tContent("tokens.table.class"),
@@ -996,7 +987,6 @@ interface TooltipContentProps {
         <DocsAccessibility
           screenReaderTitle={tNav("common.screenReader")}
           screenReaderItems={screenReaderItems}
-          title={tContent("accessibility.title")}
           summary={tContent("accessibility.summary")}
           items={[
             tContent("accessibility.items.item1"),
@@ -1016,7 +1006,6 @@ interface TooltipContentProps {
 
         {/* ── Relacionados ──────────────────────────────────────────── */}
         <DocsRelated
-          title={tContent("related.title")}
           componentSlug="tooltip"
           items={[
             {
@@ -1039,7 +1028,6 @@ interface TooltipContentProps {
 
         {/* ── Notas ─────────────────────────────────────────────────── */}
         <DocsNotes
-          title={tContent("notes.title")}
           componentSlug="tooltip"
           items={[
             { title: "", content: tContent("notes.item1") },
@@ -1051,7 +1039,6 @@ interface TooltipContentProps {
 
         {/* ── Analytics ─────────────────────────────────────────────── */}
         <DocsAnalytics
-          title={tContent("analytics.title")}
           cols={analyticsCols}
           items={[
             {
@@ -1064,7 +1051,6 @@ interface TooltipContentProps {
 
         {/* ── Testes ────────────────────────────────────────────────── */}
         <DocsTestes
-          title={tContent("testes.title")}
           functional={{
             title: tContent("testes.functional.title"),
             cols: {

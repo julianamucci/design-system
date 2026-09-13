@@ -402,7 +402,7 @@ const testesVisual = computed(() => ({
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')">
+    <DocsDemonstration>
       <div
         class="nds-cluster"
         data-justify="center"
@@ -528,7 +528,6 @@ const testesVisual = computed(() => ({
 
     <!-- ── Anatomia ───────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -536,7 +535,6 @@ const testesVisual = computed(() => ({
 
     <!-- ── Quando Usar ────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="whenToUseGuidelines"
       :scenarios="whenToUseScenarios"
       :ux-writing="whenToUseUxWriting"
@@ -546,7 +544,6 @@ const testesVisual = computed(() => ({
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="doDontPairs"
     >
       <template #do-preview-0>
@@ -582,7 +579,6 @@ const testesVisual = computed(() => ({
 
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="codeImportBasic"
       :secondary-description="tContent('import.withIcon')"
@@ -591,7 +587,6 @@ const testesVisual = computed(() => ({
 
     <!-- ── Variantes (composições) ─────────────────────────────────── -->
     <DocsVariants
-      :title="tContent('variants.title')"
       :items="variantItems"
     >
       <template #variant-preview-0>
@@ -679,14 +674,12 @@ const testesVisual = computed(() => ({
 
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="statesCols"
       :items="stateItems"
     />
 
     <!-- ── Propriedades ───────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="propsTables"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -695,7 +688,6 @@ const testesVisual = computed(() => ({
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="tokensCols"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
@@ -704,7 +696,6 @@ const testesVisual = computed(() => ({
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
@@ -713,26 +704,22 @@ const testesVisual = computed(() => ({
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="analyticsCols"
       :items="analyticsItems"
     />
 
     <!-- ── Testes ─────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="testesFunctional"
       :accessibility="testesAccessibility"
       :visual="testesVisual"

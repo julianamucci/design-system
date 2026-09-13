@@ -202,10 +202,10 @@ interface PaginationDirectionalProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
       <!-- aria-label por instância: a página monta vários nav "pagination"; sem rótulo distinto o axe acusa landmark-unique -->
-      <Pagination count={120} perPage={10} page={6} siblingCount={1} aria-label={$tStore('demonstration.title')} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
+      <Pagination count={120} perPage={10} page={6} siblingCount={1} aria-label={$tNavStore('nav.demonstration')} onPageChange={(p: number) => track('page_change', { component: 'pagination', page: p, total_pages: 12, location: 'docs_demo' })}>
         {#snippet children({ pages, currentPage })}
           <PaginationContent>
             <PaginationItem>
@@ -239,7 +239,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -254,7 +253,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -315,7 +313,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -431,7 +428,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -439,7 +435,6 @@ interface PaginationDirectionalProps {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="pagination"
     items={[
@@ -610,7 +605,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -628,7 +622,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: propsTableCols,
@@ -648,7 +641,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -671,7 +663,6 @@ interface PaginationDirectionalProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -692,7 +683,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.breadcrumb.name'), description: $tStore('related.items.breadcrumb.description'), path: '?path=/docs/components-navigation-breadcrumb--docs' },
       { name: $tStore('related.items.tabs.name'),       description: $tStore('related.items.tabs.description'),       path: '?path=/docs/components-navigation-tabs--docs'       },
@@ -702,7 +692,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -713,7 +702,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -728,7 +716,6 @@ interface PaginationDirectionalProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

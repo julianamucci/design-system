@@ -235,7 +235,7 @@ interface RadioGroupItemProps {
   {/snippet}
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="radio-group">
+  <DocsDemonstration componentSlug="radio-group">
     <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
       <!-- Demo 1: vertical -->
       <div class="nds-stack" data-spacing="sm">
@@ -326,7 +326,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -339,7 +338,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Quando Usar ───────────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -415,7 +413,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Do & Don't ───────────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -492,14 +489,12 @@ interface RadioGroupItemProps {
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImport}
     componentSlug="radio-group"
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     componentSlug="radio-group"
     items={[
       {
@@ -585,7 +580,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Composições ───────────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="radio-group"
     items={[
@@ -626,7 +620,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -644,7 +637,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Propriedades ─────────────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -670,7 +662,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Tokens ────────────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -691,7 +682,6 @@ interface RadioGroupItemProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -714,7 +704,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.checkbox.name'), description: $tStore('related.items.checkbox.description'), path: '?path=/docs/components-form-checkbox--docs' },
       { name: $tStore('related.items.switch.name'),   description: $tStore('related.items.switch.description'),   path: '?path=/docs/components-form-switch--docs' },
@@ -725,7 +714,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -736,7 +724,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Analytics ────────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -753,7 +740,6 @@ interface RadioGroupItemProps {
 
   <!-- ── Testes ────────────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

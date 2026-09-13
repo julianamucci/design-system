@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { managerHref } from '@shared/primitives/manager-href';
 
 export interface DocsRelatedItem {
@@ -7,7 +8,6 @@ export interface DocsRelatedItem {
 }
 
 export interface DocsRelatedProps {
-  title: string;
   items: DocsRelatedItem[];
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, cada
@@ -22,7 +22,8 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/\s+/g, '-');
 }
 
-export function DocsRelated({ title, items, componentSlug }: DocsRelatedProps) {
+export function DocsRelated({ items, componentSlug }: DocsRelatedProps) {
+  const title = useTituloDeSecao('relacionados');
   return (
     <section id="relacionados">
       <h2 className="nds-section-title">{title}</h2>

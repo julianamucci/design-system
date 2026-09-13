@@ -237,7 +237,6 @@ export function createInputDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-w-full nds-max-w-sm nds-stack';
@@ -282,7 +281,6 @@ export function createInputDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -290,7 +288,6 @@ export function createInputDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -335,7 +332,6 @@ export function createInputDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -392,7 +388,6 @@ export function createInputDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createInput } from '@/components/ui/input';`,
         });
@@ -413,7 +408,6 @@ export function createInputDocs(): HTMLElement {
         };
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               name: 'text',
@@ -526,7 +520,6 @@ export function createInputDocs(): HTMLElement {
           `wrapper.append(label, row);`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'input',
           items: [
@@ -630,7 +623,6 @@ export function createInputDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -666,7 +658,6 @@ export type InputOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.inputTitle'),
@@ -704,7 +695,6 @@ export type InputOptions = {
 }`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -724,7 +714,6 @@ export type InputOptions = {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -744,7 +733,6 @@ export type InputOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Textarea',  description: toPlainText(t('related.textarea')),  path: '?path=/docs/components-form-textarea--docs' },
             { name: 'InputOTP',  description: toPlainText(t('related.inputOTP')),  path: '?path=/docs/components-form-inputotp--docs' },
@@ -756,7 +744,6 @@ export type InputOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -768,7 +755,6 @@ export type InputOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -786,7 +772,6 @@ export type InputOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

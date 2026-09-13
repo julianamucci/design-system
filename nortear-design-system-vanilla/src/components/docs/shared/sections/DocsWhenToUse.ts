@@ -1,3 +1,4 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createTable, createTableHeader, createTableBody, createTableRow, createTableHead, createTableCell } from '@/components/ui/table';
@@ -20,7 +21,6 @@ export interface DocsWhenToUseUXRow { element: string; do: string; dont: string;
  * rótulos das colunas.
  */
 export interface DocsWhenToUseProps {
-  title: string;
   guidelines: { title: string; items: string[] };
   scenarios: { title?: string; cols: { scenario: string; use: string; alternative: string }; items: DocsWhenToUseScenario[] };
   uxWriting?: { title: string; cols: { element: string; do: string; dont: string; rules?: string }; items: DocsWhenToUseUXRow[] };
@@ -34,7 +34,7 @@ export function createDocsWhenToUse(props: DocsWhenToUseProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('quando-usar');
 
   const card = createCard({ className: 'nds-p-4 nds-stack' });
   card.dataset.spacing = 'lg';

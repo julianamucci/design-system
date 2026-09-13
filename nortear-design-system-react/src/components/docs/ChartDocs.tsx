@@ -402,7 +402,7 @@ declare function buildRadarOption(o: {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-cluster nds-w-full" data-justify="center">
           <ChartContainer
             option={buildBarOption({ xAxis: xMonths, series: multiSeries })}
@@ -415,7 +415,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -428,7 +427,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -512,7 +510,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -562,7 +559,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withBuilders")}
@@ -572,7 +568,6 @@ declare function buildRadarOption(o: {
       {/* ── Variantes (Tipos) ─────────────────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="chart"
         items={[
@@ -742,7 +737,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="chart"
         items={[
@@ -785,7 +779,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -827,7 +820,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.containerTitle"),
@@ -947,7 +939,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -977,7 +968,6 @@ declare function buildRadarOption(o: {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -997,7 +987,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="chart"
         items={[
           {
@@ -1020,7 +1009,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="chart"
         items={[
           { title: "", content: tContent("notes.tip1") },
@@ -1033,7 +1021,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1060,7 +1047,6 @@ declare function buildRadarOption(o: {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

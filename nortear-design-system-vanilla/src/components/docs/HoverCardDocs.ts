@@ -366,7 +366,6 @@ export function createHoverCardDocs(): HTMLElement {
         // gatilhos que moravam aqui não sumiram da página — são as variantes
         // `linkPreview`, `definitionTooltip` e `metricExplainer`, logo abaixo.
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'hover-card',
           demoFactory: () => {
             // A frase inteira vem do conteúdo compartilhado (`sentenceBefore` +
@@ -398,7 +397,6 @@ export function createHoverCardDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -406,7 +404,6 @@ export function createHoverCardDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -451,7 +448,6 @@ export function createHoverCardDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -497,7 +493,6 @@ export function createHoverCardDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createHoverCard } from '@/components/ui/hover-card';`,
         });
 
@@ -531,7 +526,6 @@ createHoverCard({
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'hover-card',
           items: [
@@ -684,7 +678,6 @@ const el = createHoverCard({ trigger, content, side: 'bottom', align: 'start' })
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -725,7 +718,6 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createHoverCard(options)',
@@ -751,7 +743,6 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -778,7 +769,6 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -792,7 +782,6 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
             { name: t('related.items.popover.name'),      description: toPlainText(t('related.items.popover.description')),      path: '?path=/docs/components-overlay-popover--docs'      },
@@ -803,13 +792,11 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: tNav('common.event'),
             trigger: tNav('common.eventTrigger'),
@@ -836,7 +823,6 @@ export function createHoverCard(options: HoverCardOptions): HTMLElement;`;
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

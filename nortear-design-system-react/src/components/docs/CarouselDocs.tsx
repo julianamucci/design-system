@@ -350,7 +350,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         {/* Listeners no wrapper (não no Carousel): o root do Carousel espalha
             {...props} após o onKeyDownCapture interno — um listener externo o
             sobrescreveria e quebraria a navegação por setas. */}
@@ -389,7 +389,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -402,7 +401,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -484,7 +482,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -553,7 +550,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withPlugin")}
@@ -563,7 +559,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="carousel"
         items={[
@@ -690,7 +685,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="carousel"
         items={[
@@ -826,7 +820,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Configurações (States) ────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -843,7 +836,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.carouselTitle"),
@@ -992,7 +984,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1016,7 +1007,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -1037,7 +1027,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="carousel"
         items={[
           {
@@ -1065,7 +1054,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="carousel"
         items={[
           { title: "", content: tContent("notes.tip1") },
@@ -1077,7 +1065,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1114,7 +1101,6 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

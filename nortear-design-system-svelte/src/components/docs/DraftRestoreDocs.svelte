@@ -173,7 +173,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
     elas.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="draft-restore"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -235,7 +234,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -244,7 +242,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -310,7 +307,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -338,7 +334,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withTimestamp')}
@@ -347,7 +342,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -362,7 +356,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'DraftRestore',
@@ -407,7 +400,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -428,7 +420,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -443,7 +434,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.composer.name'),    description: toPlainText($tStore('related.items.composer.description')),    path: '?path=/docs/components-conversational-composer--docs' },
       { name: $tStore('related.items.alert.name'),       description: toPlainText($tStore('related.items.alert.description')),       path: '?path=/docs/components-feedback-alert--docs' },
@@ -454,14 +444,12 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="draft-restore"
     items={[1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -476,7 +464,6 @@ export type DraftRestoreAction = 'restore' | 'discard';`;
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

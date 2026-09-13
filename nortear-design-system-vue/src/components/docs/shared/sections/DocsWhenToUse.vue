@@ -2,6 +2,7 @@
 import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 interface DocsWhenToUseScenario { s?: string; u?: string; a?: string; scenario?: string; use?: string; alternative?: string }
 interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?: string }
@@ -22,7 +23,6 @@ interface DocsWhenToUseUXRow { element: string; do: string; dont: string; rules?
  * componentes têm.
  */
 const props = defineProps<{
-  title: string;
   guidelines: { title: string; items: string[] };
   scenarios: {
     title?: string;
@@ -37,6 +37,8 @@ const props = defineProps<{
   do: { title: string; items: string[] };
   dont: { title: string; items: string[] };
 }>();
+
+const title = useTituloDeSecao('quando-usar');
 </script>
 
 <template>

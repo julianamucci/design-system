@@ -30,7 +30,6 @@
       "learnMore": "Saiba mais"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "publish": "Quando o que se aprova é usar uma ferramenta que escreve fora",
         "spend": "Quando o que se aprova é gastar",
@@ -38,7 +37,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O cartão fica à vista, fora de qualquer caixa recolhida: é uma pergunta, e pergunta dobrada é pergunta que não foi feita.",
       "item2": "A pergunta abre o cartão e diz o que vai acontecer se a resposta for sim.",
@@ -50,7 +48,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando algo com consequência depende de uma resposta: usar uma ferramenta que escreve fora, gastar, tocar um arquivo.",
@@ -141,7 +138,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O alcance vem em pares de termo e valor, e cada par continua junto para quem navega item a item.",
         "dont": "O alcance vem embutido na frase, e o pareamento fica na pontuação — que não sobrevive à navegação por lista."
@@ -152,7 +148,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: 'Permitir que o agente publique o relatório?',\n  scope: [\n    { term: 'Ferramenta', detail: 'publicar_relatorio' },\n    { term: 'Alvo', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
@@ -167,7 +162,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Forma",
         "trigger": "Quando acontece",
@@ -200,7 +194,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -257,7 +250,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -319,7 +311,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A pergunta e o alcance ficam numa região que se anuncia, e os controles ficam fora dela: cada um já se anuncia sozinho quando o foco chega nele. O anúncio é polido — entra na fila e nunca corta o que estiver sendo lido.",
       "items": {
         "item1": "A pergunta e o alcance estão dentro da região que se anuncia. Uma pergunta que aparece e não se anuncia é uma pergunta que ninguém responde: a máquina parou e espera por uma pessoa, e o silêncio é indistinguível de demora.",
@@ -349,7 +340,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "toolGroup": {
           "name": "Grupo de chamadas",
@@ -370,7 +360,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O design system desenha a pergunta e o espaço da resposta. Ele não decide o que a resposta significa: o que acontece ao recusar, se há campo de motivo, se a escolha vale para as próximas e o que uma autorização permanente abrange são decisões de produto.",
       "item2": "Este é o lugar para onde sai a chamada que espera por uma pessoa. Ela não fica dentro da caixa recolhida do grupo, porque pedir autorização sem mostrar é não pedir; quem faz essa separação é quem consome.",
       "item3": "Esta é a terceira peça da família em que existe região viva, e a exceção tem motivo próprio. Uma pergunta não é um estado: o estado se anuncia para informar, e este cartão se anuncia porque, sem ele, nada mais acontece.",
@@ -379,7 +368,6 @@
       "item6": "Não há nada recolhido: uma pergunta dobrada é uma pergunta que não foi feita, e foi essa decisão que tirou esta peça de dentro do grupo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; o cartão não instrumenta a escolha, que é do produto.",
       "table": {
         "event": "Evento",
@@ -397,7 +385,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -513,7 +500,6 @@
       "learnMore": "Learn more"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "publish": "When what is approved is using a tool that writes outside",
         "spend": "When what is approved is spending",
@@ -521,7 +507,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The card stays in plain sight, outside any collapsed box: it is a question, and a folded question is a question that was never asked.",
       "item2": "The question opens the card and says what will happen if the answer is yes.",
@@ -533,7 +518,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when something with consequences depends on an answer: using a tool that writes outside, spending, touching a file.",
@@ -624,7 +608,6 @@
       }
     },
     "doDont": {
-      "title": "Good practices",
       "pair1": {
         "do": "The reach comes as pairs of term and value, and each pair stays together for someone navigating item by item.",
         "dont": "The reach is folded into the sentence, and the pairing lives in the punctuation — which does not survive list navigation."
@@ -635,7 +618,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: 'Allow the agent to publish the report?',\n  scope: [\n    { term: 'Tool', detail: 'publicar_relatorio' },\n    { term: 'Target', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
@@ -650,7 +632,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "Shape",
         "trigger": "When it happens",
@@ -683,7 +664,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -740,7 +720,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -802,7 +781,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The question and the reach sit in a region that announces itself, and the controls stay outside it: each one already announces itself when focus reaches it. The announcement is polite — it joins the queue and never cuts what is being read.",
       "items": {
         "item1": "The question and the reach are inside the region that announces itself. A question that appears and does not announce itself is a question nobody answers: the machine stopped and is waiting for a person, and silence is indistinguishable from delay.",
@@ -832,7 +810,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "toolGroup": {
           "name": "Tool group",
@@ -853,7 +830,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The design system draws the question and the space for the answer. It does not decide what the answer means: what happens on refusal, whether there is a reason field, whether the choice carries over and what a standing approval covers are product decisions.",
       "item2": "This is where the call that waits for a person goes. It does not stay inside the collapsed box of the group, because asking for approval without showing is not asking; the consumer is the one who separates them.",
       "item3": "This is the third piece in the family where a live region exists, and the exception has a reason of its own. A question is not a state: a state announces itself to inform, and this card announces itself because, without it, nothing else happens.",
@@ -862,7 +838,6 @@
       "item6": "Nothing is collapsed: a folded question is a question that was never asked, and that decision is what took this piece out of the group."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the card does not instrument the choice, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -880,7 +855,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -996,7 +970,6 @@
       "learnMore": "Saber más"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "publish": "Cuando lo que se aprueba es usar una herramienta que escribe fuera",
         "spend": "Cuando lo que se aprueba es gastar",
@@ -1004,7 +977,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La tarjeta queda a la vista, fuera de cualquier caja plegada: es una pregunta, y una pregunta doblada es una pregunta que no se hizo.",
       "item2": "La pregunta abre la tarjeta y dice qué va a ocurrir si la respuesta es sí.",
@@ -1016,7 +988,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala cuando algo con consecuencias depende de una respuesta: usar una herramienta que escribe fuera, gastar, tocar un archivo.",
@@ -1107,7 +1078,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El alcance viene en pares de término y valor, y cada par sigue junto para quien navega ítem por ítem.",
         "dont": "El alcance va metido en la frase, y el emparejamiento queda en la puntuación — que no sobrevive a la navegación por lista."
@@ -1118,7 +1088,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createApprovalCard } from '@/components/ui/approval-card';\n\ncreateApprovalCard({\n  question: '¿Permitir que el agente publique el informe?',\n  scope: [\n    { term: 'Herramienta', detail: 'publicar_relatorio' },\n    { term: 'Destino', detail: 'docs/shared/relatorios/' },\n  ],\n  actions: [allowOnce, deny],\n  onChoose: (choice) => answer(choice),\n});",
@@ -1133,7 +1102,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Forma",
         "trigger": "Cuándo ocurre",
@@ -1166,7 +1134,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1223,7 +1190,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1285,7 +1251,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La pregunta y el alcance quedan en una región que se anuncia, y los controles quedan fuera de ella: cada uno ya se anuncia solo cuando el foco llega. El anuncio es cortés — entra en la fila y nunca corta lo que se está leyendo.",
       "items": {
         "item1": "La pregunta y el alcance están dentro de la región que se anuncia. Una pregunta que aparece y no se anuncia es una pregunta que nadie responde: la máquina se detuvo y espera a una persona, y el silencio es indistinguible de la demora.",
@@ -1315,7 +1280,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "toolGroup": {
           "name": "Grupo de llamadas",
@@ -1336,7 +1300,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El design system dibuja la pregunta y el espacio de la respuesta. No decide qué significa la respuesta: qué ocurre al rechazar, si hay campo de motivo, si la elección vale para las siguientes y qué abarca una autorización permanente son decisiones de producto.",
       "item2": "Este es el lugar al que sale la llamada que espera a una persona. No queda dentro de la caja plegada del grupo, porque pedir autorización sin mostrar es no pedir; quien hace esa separación es quien consume.",
       "item3": "Esta es la tercera pieza de la familia en la que existe región viva, y la excepción tiene motivo propio. Una pregunta no es un estado: el estado se anuncia para informar, y esta tarjeta se anuncia porque, sin ella, no ocurre nada más.",
@@ -1345,7 +1308,6 @@
       "item6": "No hay nada plegado: una pregunta doblada es una pregunta que no se hizo, y esa decisión es la que sacó esta pieza de dentro del grupo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la tarjeta no instrumenta la elección, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1363,7 +1325,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

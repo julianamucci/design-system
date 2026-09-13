@@ -155,7 +155,6 @@ export interface MessageTimingLabels {
     diferença entre elas.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="message-timing"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -203,7 +202,6 @@ export interface MessageTimingLabels {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -212,7 +210,6 @@ export interface MessageTimingLabels {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -286,7 +283,6 @@ export interface MessageTimingLabels {
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -309,7 +305,6 @@ export interface MessageTimingLabels {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -322,7 +317,6 @@ export interface MessageTimingLabels {
     outros três são o que a mesma linha faz conforme quantas medidas chegaram.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -337,7 +331,6 @@ export interface MessageTimingLabels {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'MessageTiming',
@@ -399,7 +392,6 @@ export interface MessageTimingLabels {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -425,7 +417,6 @@ export interface MessageTimingLabels {
     ausências.
   -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5, 6, 7].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -438,7 +429,6 @@ export interface MessageTimingLabels {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.agentStatus.name'),    description: toPlainText($tStore('related.items.agentStatus.description')),    path: '?path=/docs/components-conversational-agentstatus--docs'    },
       { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
@@ -449,14 +439,12 @@ export interface MessageTimingLabels {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="message-timing"
     items={[1, 2, 3, 4, 5, 6, 7, 8].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -471,7 +459,6 @@ export interface MessageTimingLabels {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

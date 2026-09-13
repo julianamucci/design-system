@@ -17,7 +17,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "waiting": "Três esperando a vez",
         "sending": "A primeira já está indo",
@@ -26,7 +25,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A fila fica acima do campo, e não dentro dele: ela é o que já saiu das mãos de quem escreve, e o campo é o que ainda está sendo escrito.",
       "item2": "É uma lista ordenada, e não uma lista qualquer: aqui a ordem é a informação, e quem espera quer saber em que lugar está.",
@@ -38,7 +36,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando a resposta ainda está vindo e a pessoa continua escrevendo: a fila mostra o que já saiu das mãos dela.",
@@ -135,7 +132,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Cada botão de retirar diz qual mensagem retira.",
         "dont": "Três botões chamados apenas \"Retirar\" são um botão só para quem navega por audição."
@@ -146,7 +142,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createMessageQueue } from '@/components/ui/message-queue';\n\nconst queue = createMessageQueue({\n  labels,\n  messages: [\n    { id: 'm1', text: 'Manda o resumo de ontem', state: 'sending' },\n    { id: 'm2', text: 'E o prazo?', state: 'waiting' },\n  ],\n  onWithdraw: (message) => withdraw(message.id),\n});\n\ndocument.querySelector('#app')?.append(queue);",
@@ -161,7 +156,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -184,7 +178,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -241,7 +234,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -293,7 +285,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A fila é uma lista ordenada com nome próprio, a posição é texto do documento, a palavra do estado acompanha o desenho, e cada botão de retirar diz qual mensagem retira. Nada aqui se anuncia sozinho.",
       "items": {
         "item1": "A lista é ordenada, e é isso que faz a posição significar alguma coisa: sem ordem, o terceiro lugar seria só o terceiro empilhamento.",
@@ -322,7 +313,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -343,7 +333,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A lista é ordenada porque a ordem é a informação. Numa lista sem ordem o leitor de tela anuncia quantos itens há, mas não em que lugar cada um está — e é justamente o lugar que quem espera quer saber.",
       "item2": "A posição é texto e não desenho. Conteúdo gerado pela folha some com a folha e chega mal a quem ouve a tela, e um número que some é pior que número nenhum.",
       "item3": "A fila não se anuncia. Cada item entrou porque a própria pessoa acabou de escrevê-lo, e uma região viva devolveria em voz o que ela mesma digitou.",
@@ -351,7 +340,6 @@
       "item5": "A peça não envia nada. Enviar, reordenar e decidir o que acontece com o que foi retirado é de quem consome — a fila desenha o que recebe e avisa que alguém pediu para retirar."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a fila em si não instrumenta a retirada, que é decisão de quem consome.",
       "table": {
         "event": "Evento",
@@ -369,7 +357,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -468,7 +455,6 @@
       }
     },
     "demonstration": {
-      "title": "Demo",
       "labels": {
         "waiting": "Three waiting their turn",
         "sending": "The first one is already going",
@@ -477,7 +463,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The queue sits above the field, not inside it: it is what already left the writer's hands, and the field is what is still being written.",
       "item2": "It is an ordered list, not just any list: order is the information here, and whoever waits wants to know their place.",
@@ -489,7 +474,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when the answer is still coming and the person keeps writing: the queue shows what already left their hands.",
@@ -586,7 +570,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Each withdraw button names the message it withdraws.",
         "dont": "Three buttons called just \"Withdraw\" are a single button for whoever navigates by ear."
@@ -597,7 +580,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createMessageQueue } from '@/components/ui/message-queue';\n\nconst queue = createMessageQueue({\n  labels,\n  messages: [\n    { id: 'm1', text: \"Send me yesterday's summary\", state: 'sending' },\n    { id: 'm2', text: 'And the deadline?', state: 'waiting' },\n  ],\n  onWithdraw: (message) => withdraw(message.id),\n});\n\ndocument.querySelector('#app')?.append(queue);",
@@ -612,7 +594,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -635,7 +616,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -692,7 +672,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -744,7 +723,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The queue is an ordered list with its own name, the position is document text, the state word travels with the drawing, and each withdraw button names the message it withdraws. Nothing here announces itself.",
       "items": {
         "item1": "The list is ordered, and that is what makes position mean anything: without order, third place would be just the third stacking.",
@@ -773,7 +751,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "composer": {
           "name": "Composer",
@@ -794,7 +771,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The list is ordered because order is the information. In an unordered list the screen reader announces how many items there are, but not where each one stands — and the place is exactly what whoever waits wants to know.",
       "item2": "The position is text, not drawing. Content generated by the stylesheet vanishes with the stylesheet and reaches poorly whoever listens to the screen, and a number that disappears is worse than no number.",
       "item3": "The queue does not announce itself. Each item is there because the person just wrote it, and a live region would speak back what they typed.",
@@ -802,7 +778,6 @@
       "item5": "The piece sends nothing. Sending, reordering and deciding what happens to what was withdrawn belong to whoever consumes — the queue draws what it receives and reports that someone asked to withdraw."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the queue itself does not instrument withdrawal, which is a decision of whoever consumes.",
       "table": {
         "event": "Event",
@@ -820,7 +795,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -919,7 +893,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "waiting": "Tres esperando su turno",
         "sending": "El primero ya va en camino",
@@ -928,7 +901,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La cola queda encima del campo, y no dentro de él: es lo que ya salió de las manos de quien escribe, y el campo es lo que todavía se está escribiendo.",
       "item2": "Es una lista ordenada, y no una lista cualquiera: aquí el orden es la información, y quien espera quiere saber en qué lugar está.",
@@ -940,7 +912,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala cuando la respuesta todavía viene y la persona sigue escribiendo: la cola muestra lo que ya salió de sus manos.",
@@ -1037,7 +1008,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Cada botón de retirar dice qué mensaje retira.",
         "dont": "Tres botones llamados solo \"Retirar\" son un único botón para quien navega de oído."
@@ -1048,7 +1018,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createMessageQueue } from '@/components/ui/message-queue';\n\nconst queue = createMessageQueue({\n  labels,\n  messages: [\n    { id: 'm1', text: 'Mándame el resumen de ayer', state: 'sending' },\n    { id: 'm2', text: '¿Y el plazo?', state: 'waiting' },\n  ],\n  onWithdraw: (message) => withdraw(message.id),\n});\n\ndocument.querySelector('#app')?.append(queue);",
@@ -1063,7 +1032,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1086,7 +1054,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1143,7 +1110,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1195,7 +1161,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La cola es una lista ordenada con nombre propio, la posición es texto del documento, la palabra del estado acompaña al dibujo, y cada botón de retirar dice qué mensaje retira. Nada aquí se anuncia solo.",
       "items": {
         "item1": "La lista es ordenada, y eso es lo que hace que la posición signifique algo: sin orden, el tercer lugar sería solo el tercer apilamiento.",
@@ -1224,7 +1189,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -1245,7 +1209,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La lista es ordenada porque el orden es la información. En una lista sin orden el lector de pantalla anuncia cuántos elementos hay, pero no en qué lugar está cada uno — y el lugar es justo lo que quien espera quiere saber.",
       "item2": "La posición es texto y no dibujo. El contenido generado por la hoja desaparece con la hoja y llega mal a quien escucha la pantalla, y un número que desaparece es peor que ningún número.",
       "item3": "La cola no se anuncia. Cada elemento está ahí porque la propia persona acaba de escribirlo, y una región viva le devolvería en voz lo que ella misma tecleó.",
@@ -1253,7 +1216,6 @@
       "item5": "La pieza no envía nada. Enviar, reordenar y decidir qué pasa con lo que se retiró es de quien la consume — la cola dibuja lo que recibe y avisa que alguien pidió retirar."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la cola en sí no instrumenta la retirada, que es decisión de quien la consume.",
       "table": {
         "event": "Evento",
@@ -1271,7 +1233,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

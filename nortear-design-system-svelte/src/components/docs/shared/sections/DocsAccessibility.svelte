@@ -1,6 +1,7 @@
 <script lang="ts">
   import DOMPurify from 'dompurify';
   import { Card } from '@/components/ui/card';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface DocsKeyboardItem { key: string; description: string }
 
@@ -8,7 +9,6 @@
   // (`closed/open/disabled`, `onOpen/onClose`, …), então o container recebe só
   // os valores — quem chama passa `Object.values(...)`.
   const {
-    title,
     summary,
     items,
     keyboardTitle = '',
@@ -17,7 +17,6 @@
     screenReaderItems = [],
     contrast = '',
   }: {
-    title: string;
     summary: string;
     items: string[];
     keyboardTitle?: string;
@@ -26,6 +25,8 @@
     screenReaderItems?: string[];
     contrast?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao('acessibilidade', $rotulosDeSecao));
 </script>
 
 <section id="acessibilidade">

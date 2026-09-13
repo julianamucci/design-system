@@ -183,7 +183,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
     mostra em cada estado é o vocabulário compartilhado, e não esta página.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="job-progress"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -230,7 +229,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -239,7 +237,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -345,7 +342,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -368,7 +364,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -381,7 +376,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
     lista, e nenhuma das duas fica para trás quando o tipo cresce.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -396,7 +390,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'JobProgress',
@@ -441,7 +434,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -463,7 +455,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5, 6, 7].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -478,7 +469,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.agentStatus.name'),     description: toPlainText($tStore('related.items.agentStatus.description')),     path: '?path=/docs/components-conversational-agentstatus--docs'     },
       { name: $tStore('related.items.agentPlan.name'),       description: toPlainText($tStore('related.items.agentPlan.description')),       path: '?path=/docs/components-conversational-agentplan--docs'       },
@@ -489,14 +479,12 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="job-progress"
     items={[1, 2, 3, 4, 5, 6, 7].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -511,7 +499,6 @@ declare function jobProgressValue(status: RunStatus, count?: JobCount): number |
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

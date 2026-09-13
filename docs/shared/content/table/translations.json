@@ -11,7 +11,6 @@
       "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "invoice": "Fatura",
         "status": "Status",
@@ -42,7 +41,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Table</strong> — <code>&lt;table&gt;</code> dentro de um container próprio com <code>overflow-x: auto</code>, criado automaticamente.",
       "item2": "<strong>TableHeader</strong> — elemento <code>&lt;thead&gt;</code> com borda inferior aplicada via <code>[&_tr]:border-b</code>.",
       "item3": "<strong>TableBody</strong> — elemento <code>&lt;tbody&gt;</code>; remove borda da última linha via <code>[&_tr:last-child]:border-0</code>.",
@@ -61,7 +59,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use Table para exibir dados relacionais estruturados em linhas e colunas — nunca para layout de página.",
@@ -151,7 +148,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "TableCaption descritivo (pode ficar só para leitor de tela) + scope=\"col\" em todos os cabeçalhos.",
         "dont": "Tabela sem caption e sem scope — inacessível para leitores de tela."
@@ -161,12 +157,8 @@
         "dont": "Tabela vazia sem mensagem — o usuário não sabe se é erro ou ausência de dados."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Padrões de Uso",
-      "compositionsTitle": "Composições",
       "compositions": {
         "filterableToolbar": {
           "name": "Toolbar de filtros",
@@ -213,7 +205,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -236,7 +227,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "tableTitle": "Table",
       "tableHeaderTitle": "TableHeader",
       "tableBodyTitle": "TableBody",
@@ -264,7 +254,6 @@
       "extensibility": "Todos os subcomponentes aceitam classe própria e repassam o restante dos atributos para o elemento HTML correspondente. Use tokens semânticos para customizações — nunca cores hardcoded."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token / Classe",
         "part": "Parte do componente",
@@ -283,7 +272,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Table usa semântica HTML nativa (<code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;caption&gt;</code>). Cumpre WCAG 2.2 AA: 1.3.1 (informação e relações), 4.1.2 (nome, função, valor). <code>scope=\"col\"</code> obrigatório em todos os <code>TableHead</code>. <code>TableCaption</code> obrigatório para leitores de tela.",
       "keyboard": {
         "tab": "Navega para elementos interativos dentro das células (botões, links, checkboxes).",
@@ -306,7 +294,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "dataTable": "Para tabelas com ordenação, filtros, seleção múltipla e paginação — usa Table internamente com TanStack Table.",
@@ -317,7 +304,6 @@
       "dropdownMenu": "Para menus de ações por linha — acionado por botão ghost na última coluna."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O componente <code>Table</code> já envolve o elemento <code>&lt;table&gt;</code> em um <code>&lt;div data-slot=\"table-container\"&gt;</code> que rola na horizontal — não é necessário adicionar um wrapper externo.",
       "tip2": "<code>scope=\"col\"</code> no <code>TableHead</code> não é adicionado automaticamente pelo componente — você deve incluir em cada <code>&lt;th&gt;</code> manualmente.",
       "tip3": "O empty state é responsabilidade do consumidor — renderize uma <code>TableRow</code> com <code>TableCell</code> e <code>colspan</code> igual ao número de colunas quando o array de dados estiver vazio.",
@@ -325,7 +311,6 @@
       "tip5": "O container interno do <code>Table</code> já nasce com <code>tabindex=\"0\"</code> — é o que torna a rolagem horizontal alcançável por teclado (WCAG 2.1.1). Não envolva a tabela num segundo wrapper focável: isso só criaria uma parada de tabulação vazia."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Table é um componente passivo — não dispara eventos por si. Rastreie as ações dentro da tabela pelos componentes responsáveis: <code>button_click</code> para botões de ação por linha, <code>navigation_click</code> para links em células.",
       "table": {
         "event": "Evento",
@@ -343,7 +328,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada padrão de uso do Table.",
@@ -449,7 +433,6 @@
       "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "invoice": "Invoice",
         "status": "Status",
@@ -480,7 +463,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Table</strong> — <code>&lt;table&gt;</code> inside its own container with <code>overflow-x: auto</code>, created automatically.",
       "item2": "<strong>TableHeader</strong> — <code>&lt;thead&gt;</code> element with bottom border applied via <code>[&_tr]:border-b</code>.",
       "item3": "<strong>TableBody</strong> — <code>&lt;tbody&gt;</code> element; removes border from last row via <code>[&_tr:last-child]:border-0</code>.",
@@ -499,7 +481,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use Table to display structured relational data in rows and columns — never for page layout.",
@@ -589,7 +570,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Descriptive TableCaption (can be screen-reader only) + scope=\"col\" on all header cells.",
         "dont": "Table without caption and scope — inaccessible to screen readers."
@@ -599,12 +579,8 @@
         "dont": "Empty table without a message — users can't tell if it's an error or just empty."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Usage Patterns",
-      "compositionsTitle": "Compositions",
       "compositions": {
         "filterableToolbar": {
           "name": "Filter toolbar",
@@ -651,7 +627,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -674,7 +649,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "tableTitle": "Table",
       "tableHeaderTitle": "TableHeader",
       "tableBodyTitle": "TableBody",
@@ -702,7 +676,6 @@
       "extensibility": "All subcomponents accept their own class and forward the remaining attributes to the corresponding HTML element. Use semantic tokens for customizations — never hardcoded colors."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token / Class",
         "part": "Component part",
@@ -721,7 +694,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Table uses native HTML semantics (<code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;caption&gt;</code>). Meets WCAG 2.2 AA: 1.3.1 (info and relationships), 4.1.2 (name, role, value). <code>scope=\"col\"</code> required on all <code>TableHead</code>. <code>TableCaption</code> required for screen readers.",
       "keyboard": {
         "tab": "Navigates to interactive elements inside cells (buttons, links, checkboxes).",
@@ -744,7 +716,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "dataTable": "For tables with sorting, filters, multi-selection, and pagination — uses Table internally with TanStack Table.",
@@ -755,7 +726,6 @@
       "dropdownMenu": "For row action menus — triggered by a ghost button in the last column."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "The <code>Table</code> component already wraps the <code>&lt;table&gt;</code> element in a <code>&lt;div data-slot=\"table-container\"&gt;</code> that scrolls horizontally — no external wrapper is needed.",
       "tip2": "<code>scope=\"col\"</code> on <code>TableHead</code> is not added automatically by the component — include it manually on each <code>&lt;th&gt;</code>.",
       "tip3": "The empty state is the consumer's responsibility — render a <code>TableRow</code> with a <code>TableCell</code> and a <code>colspan</code> equal to the number of columns when the data array is empty.",
@@ -763,7 +733,6 @@
       "tip5": "The internal container of <code>Table</code> already ships with <code>tabindex=\"0\"</code> — that is what makes the horizontal scroll reachable by keyboard (WCAG 2.1.1). Do not wrap the table in a second focusable wrapper: that would only create an empty tab stop."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Table is a passive component — it does not fire events on its own. Track actions inside the table via the responsible components: <code>button_click</code> for row action buttons, <code>navigation_click</code> for cell links.",
       "table": {
         "event": "Event",
@@ -781,7 +750,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Table usage pattern.",
@@ -887,7 +855,6 @@
       "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "invoice": "Factura",
         "status": "Estado",
@@ -918,7 +885,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Table</strong> — <code>&lt;table&gt;</code> dentro de un contenedor propio con <code>overflow-x: auto</code>, creado automáticamente.",
       "item2": "<strong>TableHeader</strong> — elemento <code>&lt;thead&gt;</code> con borde inferior aplicado via <code>[&_tr]:border-b</code>.",
       "item3": "<strong>TableBody</strong> — elemento <code>&lt;tbody&gt;</code>; elimina el borde de la última fila via <code>[&_tr:last-child]:border-0</code>.",
@@ -937,7 +903,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Usa Table para mostrar datos relacionales estructurados en filas y columnas — nunca para el layout de la página.",
@@ -1027,7 +992,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "TableCaption descriptivo (puede quedar solo para lector de pantalla) + scope=\"col\" en todos los encabezados.",
         "dont": "Tabla sin caption ni scope — inaccesible para lectores de pantalla."
@@ -1037,12 +1001,8 @@
         "dont": "Tabla vacía sin mensaje — el usuario no sabe si es un error o ausencia de datos."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Patrones de Uso",
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "filterableToolbar": {
           "name": "Toolbar de filtros",
@@ -1089,7 +1049,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1112,7 +1071,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "tableTitle": "Table",
       "tableHeaderTitle": "TableHeader",
       "tableBodyTitle": "TableBody",
@@ -1140,7 +1098,6 @@
       "extensibility": "Todos los subcomponentes aceptan clase propia y reenvían el resto de los atributos al elemento HTML correspondiente. Usa tokens semánticos para personalizaciones — nunca colores hardcodeados."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token / Clase",
         "part": "Parte del componente",
@@ -1159,7 +1116,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Table usa semántica HTML nativa (<code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;caption&gt;</code>). Cumple WCAG 2.2 AA: 1.3.1 (información y relaciones), 4.1.2 (nombre, función, valor). <code>scope=\"col\"</code> obligatorio en todos los <code>TableHead</code>. <code>TableCaption</code> obligatorio para lectores de pantalla.",
       "keyboard": {
         "tab": "Navega a los elementos interactivos dentro de las celdas (botones, links, checkboxes).",
@@ -1182,7 +1138,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "dataTable": "Para tablas con ordenación, filtros, selección múltiple y paginación — usa Table internamente con TanStack Table.",
@@ -1193,7 +1148,6 @@
       "dropdownMenu": "Para menús de acciones por fila — activado por un botón ghost en la última columna."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El componente <code>Table</code> ya envuelve el elemento <code>&lt;table&gt;</code> en un <code>&lt;div data-slot=\"table-container\"&gt;</code> que se desplaza en horizontal — no es necesario agregar un wrapper externo.",
       "tip2": "<code>scope=\"col\"</code> en <code>TableHead</code> no lo agrega el componente automáticamente — debes incluirlo manualmente en cada <code>&lt;th&gt;</code>.",
       "tip3": "El empty state es responsabilidad del consumidor — renderiza una <code>TableRow</code> con <code>TableCell</code> y <code>colspan</code> igual al número de columnas cuando el array de datos esté vacío.",
@@ -1201,7 +1155,6 @@
       "tip5": "El contenedor interno de <code>Table</code> ya nace con <code>tabindex=\"0\"</code> — es lo que hace que el desplazamiento horizontal sea alcanzable por teclado (WCAG 2.1.1). No envuelvas la tabla en un segundo wrapper enfocable: eso solo crearía una parada de tabulación vacía."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Table es un componente pasivo — no emite eventos por sí solo. Rastrea las acciones dentro de la tabla a través de los componentes responsables: <code>button_click</code> para botones de acción por fila, <code>navigation_click</code> para links en celdas.",
       "table": {
         "event": "Evento",
@@ -1219,7 +1172,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada patrón de uso del Table.",

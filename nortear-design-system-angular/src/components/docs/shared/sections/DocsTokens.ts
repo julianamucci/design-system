@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@a
 import { NdsCard } from '@/components/ui/card';
 import { NdsCodeBlock } from '@/components/ui/code-block';
 
+import { tituloDeSecao } from './titulo-de-secao';
+
 export interface DocsTokenItem { token: string; value: string; description: string }
 
 @Component({
@@ -58,7 +60,7 @@ export interface DocsTokenItem { token: string; value: string; description: stri
   `,
 })
 export class NdsDocsTokens {
-  readonly title = input.required<string>();
+  protected readonly title = tituloDeSecao('tokens');
   readonly cols = input.required<{ token: string; value: string; description: string }>();
   readonly items = input.required<DocsTokenItem[]>();
   readonly customizationTitle = input<string>('');

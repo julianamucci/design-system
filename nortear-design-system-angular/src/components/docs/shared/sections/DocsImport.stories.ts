@@ -22,10 +22,6 @@ const meta: Meta = {
     docs: { description: { component: "Como trazer o componente para o projeto. Aceita até três blocos — o import principal, e dois secundários para casos como subcomponentes ou o CSS." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     description: {
       control: "text",
       description: "Opcional. Linha acima do primeiro bloco."
@@ -48,7 +44,6 @@ const meta: Meta = {
     }
   },
   args: {
-    title: "Importação",
     description: "O componente sai do barril de `components/ui`.",
     code: "import { Button } from '@/components/ui/button';",
     secondaryCode: "",
@@ -58,7 +53,6 @@ const meta: Meta = {
   render: (args) => ({
     props: args,
     template: `<nds-docs-import
-      [title]="title"
       [description]="description"
       [code]="code"
       [secondaryCode]="secondaryCode"

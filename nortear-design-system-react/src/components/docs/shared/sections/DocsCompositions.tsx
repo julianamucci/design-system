@@ -7,8 +7,6 @@ export interface DocsCompositionItem extends DocsVariantItem {
 }
 
 export interface DocsCompositionsProps {
-  /** Título da seção (ex: t('variants.compositionsTitle')). */
-  title: string;
   /** Composições documentadas. */
   items: DocsCompositionItem[];
   /** Label da linha "Quando usar:" (i18n, ex: tNav('common.useWhen')). */
@@ -28,7 +26,6 @@ export interface DocsCompositionsProps {
  * Por baixo usa DocsVariants — layout idêntico ao de Variantes/Tamanhos.
  */
 export function DocsCompositions({
-  title,
   items,
   useWhenLabel = 'Quando usar:',
   componentSlug,
@@ -48,7 +45,6 @@ export function DocsCompositions({
   return (
     <DocsVariants
       id={id}
-      title={title}
       note={note}
       items={variantItems}
       componentSlug={componentSlug}

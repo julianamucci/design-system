@@ -682,7 +682,7 @@ interface CommandDialogProps
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         {/*
          * Os dois usos, e nada além deles: a paleta inline na página e a paleta
          * real num Dialog, aberta pelo gatilho ou pelo Ctrl+K da página.
@@ -700,7 +700,6 @@ interface CommandDialogProps
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -718,7 +717,6 @@ interface CommandDialogProps
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -764,7 +762,6 @@ interface CommandDialogProps
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -801,7 +798,6 @@ interface CommandDialogProps
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withDialog")}
@@ -811,7 +807,6 @@ interface CommandDialogProps
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         note={tContent("variants.note")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="command"
@@ -862,7 +857,6 @@ interface CommandDialogProps
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -904,7 +898,6 @@ interface CommandDialogProps
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.commandTitle"),
@@ -1090,7 +1083,6 @@ interface CommandDialogProps
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1127,7 +1119,6 @@ interface CommandDialogProps
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -1150,7 +1141,6 @@ interface CommandDialogProps
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: "Select",
@@ -1172,7 +1162,6 @@ interface CommandDialogProps
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -1182,7 +1171,6 @@ interface CommandDialogProps
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1219,7 +1207,6 @@ interface CommandDialogProps
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

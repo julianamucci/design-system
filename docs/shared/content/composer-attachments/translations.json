@@ -25,7 +25,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "queue": "A fila, com os quatro estados",
         "uploading": "Enviando, com progresso",
@@ -34,7 +33,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A fila mora dentro da mesma moldura do campo: os anexos fazem parte do que está sendo escrito, e uma fila fora dela pareceria uma lista de outra coisa.",
       "item2": "É uma lista de verdade, e é isso que faz o leitor de tela anunciar quantos anexos há antes de percorrê-los.",
@@ -46,7 +44,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para o que vai junto com a mensagem, e não para uma biblioteca de arquivos.",
@@ -137,7 +134,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O botão de remover diz qual arquivo remove.",
         "dont": "Três botões chamados \"Remover\" são o mesmo botão para quem ouve a tela."
@@ -148,7 +144,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  attachmentLabels,\n  attachments: arquivos,\n  onRemoveAttachment: (anexo) => remover(anexo.id),\n});",
@@ -163,7 +158,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -191,7 +185,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -255,7 +248,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -307,7 +299,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O estado chega em palavra, a barra é só desenho, e cada botão de remover diz qual arquivo remove.",
       "items": {
         "item1": "A fila é uma lista, e o leitor de tela anuncia quantos anexos há antes de percorrê-los.",
@@ -336,7 +327,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -357,7 +347,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A conversão de bytes vive num primitivo compartilhado, com três decisões dentro: mil e vinte e quatro em vez de mil, uma casa decimal abaixo de dez, e o limiar exato — mil e vinte e três bytes ficam em bytes.",
       "item2": "A palavra da unidade não vem do primitivo: unidade é texto de interface e tem três idiomas, então a conta é compartilhada e a frase é montada com o rótulo.",
       "item3": "O progresso entra por uma propriedade personalizada, e não por largura em estilo embutido: o valor é dado de runtime, e a folha é quem decide como ele vira desenho.",
@@ -365,7 +354,6 @@
       "item5": "Sem tamanho não há frase de tamanho. Quem produz o dado nem sempre sabe quanto o arquivo tem, e um zero ali seria informação inventada."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a fila em si não instrumenta a remoção, que é do produto.",
       "table": {
         "event": "Evento",
@@ -383,7 +371,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -494,7 +481,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "queue": "The queue, with the four states",
         "uploading": "Uploading, with progress",
@@ -503,7 +489,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The queue lives inside the same frame as the field: attachments are part of what is being written, and a queue outside it would look like a list of something else.",
       "item2": "It is a real list, and that is what makes the screen reader announce how many attachments there are before going through them.",
@@ -515,7 +500,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it for what goes along with the message, not for a file library.",
@@ -606,7 +590,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The remove button says which file it removes.",
         "dont": "Three buttons called \"Remove\" are the same button to whoever hears the screen."
@@ -617,7 +600,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  attachmentLabels,\n  attachments: arquivos,\n  onRemoveAttachment: (anexo) => remover(anexo.id),\n});",
@@ -632,7 +614,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -660,7 +641,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -724,7 +704,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -776,7 +755,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The state arrives in words, the bar is only drawing, and each remove button says which file it removes.",
       "items": {
         "item1": "The queue is a list, and the screen reader announces how many attachments there are before going through them.",
@@ -805,7 +783,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "composer": {
           "name": "Composer",
@@ -826,7 +803,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The byte conversion lives in a shared primitive, with three decisions inside it: 1024 rather than 1000, one decimal below ten, and the exact threshold — 1023 bytes stay in bytes.",
       "item2": "The unit word does not come from the primitive: a unit is interface text and has three languages, so the maths is shared and the sentence is assembled with the label.",
       "item3": "Progress goes in through a custom property, not through width in an inline style: the value is runtime data, and the stylesheet decides how it becomes drawing.",
@@ -834,7 +810,6 @@
       "item5": "With no size there is no size sentence. Whoever produces the data does not always know how large the file is, and a zero there would be invented information."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the queue itself does not instrument removal, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -852,7 +827,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -963,7 +937,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "queue": "La fila, con los cuatro estados",
         "uploading": "Enviando, con progreso",
@@ -972,7 +945,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La fila vive dentro del mismo marco del campo: los adjuntos son parte de lo que se escribe, y una fila fuera parecería una lista de otra cosa.",
       "item2": "Es una lista de verdad, y eso hace que el lector de pantalla anuncie cuántos adjuntos hay antes de recorrerlos.",
@@ -984,7 +956,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para lo que va junto con el mensaje, no para una biblioteca de archivos.",
@@ -1075,7 +1046,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El botón de eliminar dice qué archivo elimina.",
         "dont": "Tres botones llamados \"Eliminar\" son el mismo botón para quien oye la pantalla."
@@ -1086,7 +1056,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  attachmentLabels,\n  attachments: arquivos,\n  onRemoveAttachment: (anexo) => remover(anexo.id),\n});",
@@ -1101,7 +1070,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1129,7 +1097,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1193,7 +1160,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1245,7 +1211,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El estado llega en palabra, la barra es solo dibujo, y cada botón de eliminar dice qué archivo elimina.",
       "items": {
         "item1": "La fila es una lista, y el lector de pantalla anuncia cuántos adjuntos hay antes de recorrerlos.",
@@ -1274,7 +1239,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -1295,7 +1259,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La conversión de bytes vive en un primitivo compartido, con tres decisiones dentro: 1024 en vez de 1000, un decimal por debajo de diez, y el umbral exacto — 1023 bytes se quedan en bytes.",
       "item2": "La palabra de la unidad no viene del primitivo: la unidad es texto de interfaz y tiene tres idiomas, así que la cuenta es compartida y la frase se arma con la etiqueta.",
       "item3": "El progreso entra por una propiedad personalizada, y no por ancho en estilo embebido: el valor es dato de runtime, y la hoja decide cómo se vuelve dibujo.",
@@ -1303,7 +1266,6 @@
       "item5": "Sin tamaño no hay frase de tamaño. Quien produce el dato no siempre sabe cuánto pesa el archivo, y un cero ahí sería información inventada."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la fila en sí no instrumenta la eliminación, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1321,7 +1283,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

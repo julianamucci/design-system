@@ -11,7 +11,6 @@
       "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "defaultTitle": "Nova versão disponível",
         "defaultDesc": "Atualize para receber as últimas melhorias.",
@@ -27,7 +26,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Alert</strong> — container <code>&lt;div&gt;</code> com a semântica de anúncio escolhida pela prop de role. Recebe todos os atributos HTML do elemento.",
       "item2": "<strong>Ícone (opcional)</strong> — filho direto do Alert, sem wrapper. Deve ter <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir quando a descrição já é autoexplicativa.",
@@ -42,7 +40,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use apenas para mensagens que precisam permanecer visíveis enquanto o usuário lê ou age.",
@@ -126,7 +123,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Ícone + título + descrição. Informação completa, sem ambiguidade.",
         "dont": "Alert para notificação temporária de ação (ex: 'Salvo!'). Use Sonner."
@@ -137,13 +133,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withIcon": "Com ícone Lucide:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Variantes Disponíveis",
       "note": "As cinco variantes são expostas pela própria API do componente. Cada uma consome o par de tokens semânticos correspondente (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); o texto corrido permanece em <code>--foreground</code> para garantir contraste.",
       "items": {
         "default": "Mensagens informativas e neutras. Fundo e borda do tema padrão.",
@@ -157,7 +150,6 @@
           "use": "Mensagens que o usuário já leu e não precisam persistir: confirmações, avisos informativos. Não use em erros que exigem correção."
         }
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "withIcon": {
           "name": "Com ícone",
@@ -172,7 +164,6 @@
       }
     },
     "states": {
-      "title": "Configurações",
       "cols": {
         "state": "Configuração",
         "trigger": "Como ativar",
@@ -205,7 +196,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "alertTitle": "Alert",
       "alertTitleTitle": "AlertTitle",
@@ -229,7 +219,6 @@
       "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Prefira as classes de variante do tema ou tokens CSS semânticos (<code>--success</code>, <code>--warning</code>) definidos no arquivo de tema do projeto — nunca cores hardcoded."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicação no tema",
@@ -257,7 +246,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Alert escolhe a semântica de anúncio pelo uso: por padrão interrompe e anuncia ao ser inserido no DOM, e conteúdo estático pode optar por não anunciar. Cumpre WCAG 2.2 AA: 1.4.1 (cor não é o único indicador), 4.1.3 (mensagens de status).",
       "item1": "<strong>Semântica de anúncio escolhida por uso</strong> — <code>alert</code> (padrão) interrompe o leitor de tela e anuncia na hora: use só para mensagem urgente que surge em tempo de execução. Conteúdo estático, já presente ao carregar a página, deve usar <code>note</code>, que não é live region.",
@@ -283,7 +271,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "sonner": "Para confirmações temporárias que o usuário pode dispensar (toasts).",
@@ -292,13 +279,11 @@
       "progress": "Para comunicar progresso de operações assíncronas em andamento."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "Para variantes success e warning, use as classes de variante do tema baseadas nos tokens <code>--success</code> e <code>--warning</code> — nunca cores hardcoded. Isso garante consistência no dark mode.",
       "tip2": "O ícone deve ser filho direto do Alert — não envolva em <code>&lt;div&gt;</code>. O CSS do componente posiciona o SVG automaticamente via seletor de filho direto.",
       "tip3": "Em formulários, prefira inserir o Alert acima dos campos com erro, não dentro deles — assim a mensagem é anunciada assim que aparece, sem competir com o rótulo do campo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "O Alert raramente emite eventos por si. Rastreie apenas quando o alerta tem ação relevante para o produto.",
       "table": {
         "event": "Evento",
@@ -319,7 +304,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Alert.",
@@ -421,7 +405,6 @@
       "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "defaultTitle": "New version available",
         "defaultDesc": "Update to get the latest improvements.",
@@ -437,7 +420,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Alert</strong> — <code>&lt;div&gt;</code> container with the announcement semantics chosen by the role prop. Accepts all HTML attributes of the element.",
       "item2": "<strong>Icon (optional)</strong> — direct child of Alert, no wrapper needed. Must have <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>AlertTitle (optional)</strong> — <code>&lt;h5&gt;</code> element. Omit when the description is self-explanatory.",
@@ -452,7 +434,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use only for messages that need to remain visible while the user reads or acts.",
@@ -536,7 +517,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Icon + title + description. Complete information, no ambiguity.",
         "dont": "Alert for temporary action feedback (e.g., 'Saved!'). Use Sonner instead."
@@ -547,13 +527,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withIcon": "With Lucide icon:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Available Variants",
       "note": "All five variants are exposed by the component API itself. Each consumes the matching pair of semantic tokens (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); body text stays on <code>--foreground</code> to preserve contrast.",
       "items": {
         "default": "Informational and neutral messages. Default theme background and border.",
@@ -567,7 +544,6 @@
           "use": "Messages the user has read and that need not persist: confirmations, informative notices. Do not use on errors that require correction."
         }
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "withIcon": {
           "name": "With icon",
@@ -582,7 +558,6 @@
       }
     },
     "states": {
-      "title": "Configurations",
       "cols": {
         "state": "Configuration",
         "trigger": "How to activate",
@@ -615,7 +590,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "alertTitle": "Alert",
       "alertTitleTitle": "AlertTitle",
@@ -639,7 +613,6 @@
       "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. Prefer theme variant classes or semantic CSS tokens (<code>--success</code>, <code>--warning</code>) defined in the project's theme file — never hardcoded colors."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": "Theme application",
@@ -667,7 +640,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Alert picks its announcement semantics per use: by default it interrupts and announces when inserted into the DOM, and static content can opt out of announcing. Meets WCAG 2.2 AA: 1.4.1 (color is not the only indicator), 4.1.3 (status messages).",
       "item1": "<strong>Announcement semantics chosen per use</strong> — <code>alert</code> (default) interrupts the screen reader and announces immediately: use it only for urgent messages that appear at runtime. Static content, already present on page load, should use <code>note</code>, which is not a live region.",
@@ -693,7 +665,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "sonner": "For temporary confirmations the user can dismiss (toasts).",
@@ -702,13 +673,11 @@
       "progress": "For communicating progress of ongoing async operations."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "For success and warning variants, use the theme variant classes based on the <code>--success</code> and <code>--warning</code> tokens — never hardcoded colors. This ensures dark mode consistency.",
       "tip2": "The icon must be a direct child of Alert — don't wrap in a <code>&lt;div&gt;</code>. The component's CSS positions the SVG automatically via a direct-child selector.",
       "tip3": "In forms, insert the Alert above the fields with errors rather than inside them — the message is announced as soon as it appears, without competing with the field label."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Alert rarely emits events on its own. Track only when the alert has product-relevant actions.",
       "table": {
         "event": "Event",
@@ -729,7 +698,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Alert configuration.",
@@ -831,7 +799,6 @@
       "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "defaultTitle": "Nueva versión disponible",
         "defaultDesc": "Actualiza para recibir las últimas mejoras.",
@@ -847,7 +814,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Alert</strong> — contenedor <code>&lt;div&gt;</code> con la semántica de anuncio elegida por la prop de role. Acepta todos los atributos HTML del elemento.",
       "item2": "<strong>Ícono (opcional)</strong> — hijo directo del Alert, sin wrapper. Debe tener <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>AlertTitle (opcional)</strong> — elemento <code>&lt;h5&gt;</code>. Omitir cuando la descripción es autoexplicativa.",
@@ -862,7 +828,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Úsalo solo para mensajes que necesiten permanecer visibles mientras el usuario lee o actúa.",
@@ -946,7 +911,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Ícono + título + descripción. Información completa, sin ambigüedad.",
         "dont": "Alert para notificación temporal de acción (ej: '¡Guardado!'). Usa Sonner."
@@ -957,13 +921,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withIcon": "Con ícono Lucide:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Variantes Disponibles",
       "note": "Las cinco variantes son expuestas por la propia API del componente. Cada una consume el par de tokens semánticos correspondiente (<code>--destructive</code>, <code>--success</code>, <code>--warning</code>, <code>--info</code>); el texto corrido permanece en <code>--foreground</code> para garantizar el contraste.",
       "items": {
         "default": "Mensajes informativos y neutros. Fondo y borde del tema predeterminado.",
@@ -977,7 +938,6 @@
           "use": "Mensajes que el usuario ya leyó y no necesitan persistir: confirmaciones, avisos informativos. No usar en errores que exigen corrección."
         }
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "withIcon": {
           "name": "Con ícono",
@@ -992,7 +952,6 @@
       }
     },
     "states": {
-      "title": "Configuraciones",
       "cols": {
         "state": "Configuración",
         "trigger": "Cómo activar",
@@ -1025,7 +984,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "alertTitle": "Alert",
       "alertTitleTitle": "AlertTitle",
@@ -1049,7 +1007,6 @@
       "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Prefiere las clases de variante del tema o tokens CSS semánticos (<code>--success</code>, <code>--warning</code>) definidos en el archivo de tema del proyecto — nunca colores hardcoded."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicación en el tema",
@@ -1077,7 +1034,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "El Alert elige su semántica de anuncio según el uso: por defecto interrumpe y anuncia al insertarse en el DOM, y el contenido estático puede optar por no anunciar. Cumple WCAG 2.2 AA: 1.4.1 (el color no es el único indicador), 4.1.3 (mensajes de estado).",
       "item1": "<strong>Semántica de anuncio elegida por uso</strong> — <code>alert</code> (por defecto) interrumpe al lector de pantalla y anuncia de inmediato: úsalo solo para mensajes urgentes que aparecen en tiempo de ejecución. El contenido estático, ya presente al cargar la página, debe usar <code>note</code>, que no es una live region.",
@@ -1103,7 +1059,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "sonner": "Para confirmaciones temporales que el usuario puede descartar (toasts).",
@@ -1112,13 +1067,11 @@
       "progress": "Para comunicar el progreso de operaciones asíncronas en curso."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "Para las variantes success y warning, usa las clases de variante del tema basadas en los tokens <code>--success</code> y <code>--warning</code> — nunca colores hardcoded. Esto garantiza consistencia en dark mode.",
       "tip2": "El ícono debe ser hijo directo del Alert — no lo envuelvas en un <code>&lt;div&gt;</code>. El CSS del componente posiciona el SVG automáticamente vía un selector de hijo directo.",
       "tip3": "En formularios, inserta el Alert encima de los campos con error, no dentro de ellos — así el mensaje se anuncia en cuanto aparece, sin competir con la etiqueta del campo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Alert raramente emite eventos por sí solo. Rastrea solo cuando el alerta tiene acciones relevantes para el producto.",
       "table": {
         "event": "Evento",
@@ -1139,7 +1092,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Alert.",

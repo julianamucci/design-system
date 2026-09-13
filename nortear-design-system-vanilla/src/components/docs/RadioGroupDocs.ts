@@ -197,7 +197,6 @@ export function createRadioGroupDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack';
@@ -257,7 +256,6 @@ export function createRadioGroupDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -270,7 +268,6 @@ export function createRadioGroupDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -355,7 +352,6 @@ export function createRadioGroupDocs(): HTMLElement {
           });
 
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -379,7 +375,6 @@ export function createRadioGroupDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: 'Importação do factory custom (Nortear):',
           code: `import { createRadioGroup, type RadioGroupOptions, type RadioGroupItem } from '@/components/ui/radio-group';`,
           secondaryDescription: 'Uso básico:',
@@ -399,7 +394,6 @@ export function createRadioGroupDocs(): HTMLElement {
       case 'variantes': {
         return createDocsVariants({
           id: 'variantes',
-          title: t('variants.title'),
           componentSlug: 'radio-group',
           items: [
             {
@@ -558,7 +552,6 @@ form.addEventListener('submit', (e) => {
 });`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'radio-group',
           items: [
@@ -576,7 +569,6 @@ form.addEventListener('submit', (e) => {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -623,7 +615,6 @@ export type RadioGroupOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createRadioGroup(options) — Nortear',
@@ -650,7 +641,6 @@ export type RadioGroupOptions = {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -672,7 +662,6 @@ export type RadioGroupOptions = {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
             t('accessibility.items.item1'),
@@ -695,7 +684,6 @@ export type RadioGroupOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.checkbox.name'), description: stripHtml(t('related.items.checkbox.description')), path: '?path=/docs/components-form-checkbox--docs' },
             { name: t('related.items.switch.name'),   description: stripHtml(t('related.items.switch.description')),   path: '?path=/docs/components-form-switch--docs'   },
@@ -706,7 +694,6 @@ export type RadioGroupOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -717,7 +704,6 @@ export type RadioGroupOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -732,7 +718,6 @@ export type RadioGroupOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

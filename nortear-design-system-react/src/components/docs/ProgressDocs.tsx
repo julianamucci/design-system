@@ -247,7 +247,7 @@ interface ProgressProps extends Progress.Root.Props {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
           {/* Upload animado com label e valor */}
           <div className="nds-stack" data-spacing="sm">
@@ -314,7 +314,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -328,7 +327,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -404,7 +402,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -448,11 +445,10 @@ interface ProgressProps extends Progress.Root.Props {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="progress"
         items={[
           {
@@ -508,7 +504,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -540,7 +535,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -615,7 +609,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -634,7 +627,6 @@ interface ProgressProps extends Progress.Root.Props {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -653,7 +645,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="progress"
         items={[
           {
@@ -676,7 +667,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="progress"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -688,7 +678,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -710,7 +699,6 @@ interface ProgressProps extends Progress.Root.Props {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

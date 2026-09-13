@@ -9,6 +9,7 @@ import { mountDocsTracking } from '@/lib/docs-tracking';
 import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 import { CATALOGO_LUCIDE, ICON_NAMES } from '@shared/primitives/lucide-catalog';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
@@ -27,6 +28,7 @@ const ALL_ICON_NAMES = ICON_NAMES;
 
 export function IconsDocs() {
   const { t, locale } = useTranslation(iconsTranslations);
+  const { t: tNav } = useTranslation(uiTranslations);
   const [search, setSearch] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
 
@@ -179,7 +181,7 @@ export function IconsDocs() {
 
         {/* ── Acessibilidade ───────────────────────────────────────────────── */}
         <section className="nds-stack nds-docs-section-divider" data-spacing="md">
-          <h2 className="nds-text-h2 nds-text-foreground">{t('accessibility.title')}</h2>
+          <h2 className="nds-text-h2 nds-text-foreground">{tNav('nav.accessibility')}</h2>
           <div className="nds-grid" data-spacing="sm" data-cols="2">
             <div className="nds-stack" data-spacing="sm">
               <p className="nds-text-body nds-font-medium">

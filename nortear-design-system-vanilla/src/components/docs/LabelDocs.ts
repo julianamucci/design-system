@@ -191,7 +191,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack nds-w-full';
@@ -211,7 +210,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3')],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -219,7 +217,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -262,7 +259,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -318,7 +314,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createLabel } from '@/components/ui/label';`,
         });
 
@@ -326,7 +321,6 @@ export function createLabelDocs(): HTMLElement {
         const codeDefault = `const label = createLabel({ text: 'Nome completo', htmlFor: 'nome' });\nconst input = createInput({ id: 'nome', type: 'text' });\nwrapper.append(label, input);`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'default',
@@ -341,7 +335,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -378,7 +371,6 @@ export function createLabelDocs(): HTMLElement {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createLabel(options)',
@@ -399,7 +391,6 @@ export function createLabelDocs(): HTMLElement {
         const customizationCode = `/* Override label tokens */\n:root {\n  --foreground: 222.2 84% 4.9%;\n  --destructive: 0 84.2% 60.2%;\n}`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -420,7 +411,6 @@ export function createLabelDocs(): HTMLElement {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -437,7 +427,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Input',      description: toPlainText(t('related.input')),      path: '?path=/docs/components-form-input--docs' },
             { name: 'FormField',  description: toPlainText(t('related.formField')),  path: '?path=/docs/components-form-form--docs' },
@@ -448,7 +437,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.tip1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.tip2')) },
@@ -458,7 +446,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: tNav('common.event'),
             trigger: tNav('common.eventTrigger'),
@@ -480,7 +467,6 @@ export function createLabelDocs(): HTMLElement {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

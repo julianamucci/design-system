@@ -11,7 +11,6 @@
       "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "verticalTitle": "Lista vertical",
         "horizontalTitle": "Cards horizontais",
@@ -20,7 +19,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>ScrollArea</strong> — root <code>relative</code> que contém viewport, scrollbars e corner.",
       "item2": "<strong>Viewport</strong> — área visível com <code>size-full</code> que rola o conteúdo interno.",
       "item3": "<strong>ScrollBar</strong> — barra estilizada (<code>orientation=\"vertical\"</code> ou <code>\"horizontal\"</code>).",
@@ -36,7 +34,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Sempre defina a altura da área de rolagem — sem limite não há transbordo, e sem transbordo não há rolagem.",
@@ -120,7 +117,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Defina a altura da área de rolagem pela escada de tamanhos.",
         "dont": "Não envolva conteúdo de altura indefinida — ScrollArea fica invisível."
@@ -130,11 +126,8 @@
         "dont": "Não aninhe ScrollAreas — causa scroll duplo e desorientação."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "vertical": "Vertical",
         "horizontal": "Horizontal",
@@ -147,7 +140,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "idle": {
         "label": "Idle",
         "trigger": "—",
@@ -175,7 +167,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -223,7 +214,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -251,7 +241,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
       "items": {
         "item1": "Viewport recebe foco via Tab quando contém conteúdo focável",
@@ -286,7 +275,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "resizable": {
           "name": "Resizable",
@@ -307,14 +295,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a medição do conteúdo, o dimensionamento e a visibilidade das barras e o arrasto do polegar vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-scroll-area-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Altura obrigatória</strong> — a área de rolagem só rola quando tem altura definida; sem isso o conteúdo simplesmente expande.",
       "item3": "<strong>Mobile</strong> — em telas pequenas prefira <code>overflow-auto</code> nativo; ScrollArea pode quebrar gestos de swipe e inércia.",
       "item4": "<strong>Não aninhar</strong> — múltiplas ScrollAreas dentro umas das outras causam scroll duplo confuso."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "ScrollArea é passivo — não dispara eventos.",
       "table": {
         "event": "Evento",
@@ -327,7 +313,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -396,7 +381,6 @@
       "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "verticalTitle": "Vertical list",
         "horizontalTitle": "Horizontal cards",
@@ -405,7 +389,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>ScrollArea</strong> — <code>relative</code> root containing viewport, scrollbars and corner.",
       "item2": "<strong>Viewport</strong> — visible area with <code>size-full</code> that scrolls internal content.",
       "item3": "<strong>ScrollBar</strong> — styled bar (<code>orientation=\"vertical\"</code> or <code>\"horizontal\"</code>).",
@@ -421,7 +404,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Always define the height of the scroll area — without a limit there is no overflow, and without overflow there is no scrolling.",
@@ -505,7 +487,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Set the scroll area height from the size scale.",
         "dont": "Don't wrap undefined-height content — ScrollArea becomes invisible."
@@ -515,11 +496,8 @@
         "dont": "Don't nest ScrollAreas — causes double scroll and disorientation."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "vertical": "Vertical",
         "horizontal": "Horizontal",
@@ -532,7 +510,6 @@
       }
     },
     "states": {
-      "title": "States",
       "idle": {
         "label": "Idle",
         "trigger": "—",
@@ -560,7 +537,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -608,7 +584,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -636,7 +611,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
       "items": {
         "item1": "Viewport receives focus via Tab when it contains focusable content",
@@ -671,7 +645,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "resizable": {
           "name": "Resizable",
@@ -692,14 +665,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — measuring the content, sizing and showing the scrollbars, and dragging the thumb come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-scroll-area-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Required height</strong> — the scroll area only scrolls when it has a defined height; without it, content simply expands.",
       "item3": "<strong>Mobile</strong> — on small screens prefer native <code>overflow-auto</code>; ScrollArea can break swipe gestures and inertia.",
       "item4": "<strong>Don't nest</strong> — multiple ScrollAreas nested cause confusing double scroll."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "ScrollArea is passive — does not fire events.",
       "table": {
         "event": "Event",
@@ -712,7 +683,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -781,7 +751,6 @@
       "aiEntities": "ScrollArea, ScrollBar, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "verticalTitle": "Lista vertical",
         "horizontalTitle": "Cards horizontales",
@@ -790,7 +759,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>ScrollArea</strong> — root <code>relative</code> que contiene viewport, scrollbars y corner.",
       "item2": "<strong>Viewport</strong> — área visible con <code>size-full</code> que desplaza el contenido interno.",
       "item3": "<strong>ScrollBar</strong> — barra estilizada (<code>orientation=\"vertical\"</code> u <code>\"horizontal\"</code>).",
@@ -806,7 +774,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Define siempre la altura del área de desplazamiento — sin límite no hay desbordamiento, y sin desbordamiento no hay desplazamiento.",
@@ -890,7 +857,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Define la altura del área de desplazamiento por la escala de tamaños.",
         "dont": "No envuelvas contenido de altura indefinida — ScrollArea queda invisible."
@@ -900,11 +866,8 @@
         "dont": "No anides ScrollAreas — causa scroll doble y desorientación."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "vertical": "Vertical",
         "horizontal": "Horizontal",
@@ -917,7 +880,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "idle": {
         "label": "Idle",
         "trigger": "—",
@@ -945,7 +907,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -993,7 +954,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1021,7 +981,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.4.10 (Reflow), 2.1.1, 2.4.7.",
       "items": {
         "item1": "El viewport recibe foco vía Tab cuando contiene contenido focalizable",
@@ -1056,7 +1015,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "resizable": {
           "name": "Resizable",
@@ -1077,14 +1035,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la medición del contenido, el dimensionamiento y la visibilidad de las barras y el arrastre del pulgar vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-scroll-area-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Altura obligatoria</strong> — el área de desplazamiento solo se desplaza cuando tiene altura definida; sin eso el contenido simplemente se expande.",
       "item3": "<strong>Móvil</strong> — en pantallas pequeñas prefiere <code>overflow-auto</code> nativo; ScrollArea puede romper gestos de swipe e inercia.",
       "item4": "<strong>No anidar</strong> — múltiples ScrollAreas anidados causan scroll doble confuso."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "ScrollArea es pasivo — no dispara eventos.",
       "table": {
         "event": "Evento",
@@ -1097,7 +1053,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

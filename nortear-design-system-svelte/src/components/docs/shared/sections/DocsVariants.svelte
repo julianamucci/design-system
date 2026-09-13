@@ -4,6 +4,7 @@
   import { CodeBlock } from '@/components/ui/code-block';
   import { Button } from '@/components/ui/button';
   import DOMPurify from 'dompurify';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface DocsVariantItem {
     name: string;
@@ -26,8 +27,7 @@
    * `data-track-id="{slug}:code:{variant.trackId ?? variant.name}"`,
    * sem `data-track-label` (o `docs_code_copy` não leva rótulo).
    */
-  const { title, items, id = 'variantes', note, componentSlug, language = 'svelte', copyLabel, copiedLabel }: {
-    title: string;
+  const { items, id = 'variantes', note, componentSlug, language = 'svelte', copyLabel, copiedLabel }: {
     items: DocsVariantItem[];
     id?: string;
     /** Nota introdutória da seção (HTML inline permitido). */
@@ -37,6 +37,8 @@
     copyLabel?: string;
     copiedLabel?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao(id, $rotulosDeSecao));
 
   let openStates = $state<Record<number, boolean>>({});
   function toggleCode(i: number) {

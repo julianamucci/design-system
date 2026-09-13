@@ -11,7 +11,6 @@
       "aiEntities": "Drawer, painel deslizante, arraste para dispensar, foco preso, corpo rolável, WCAG 2.2, WCAG 2.5.7, role=dialog, aria-modal, data-direction"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "bottom": "Bottom — drawer mobile padrão",
         "right": "Right — painel lateral em desktop",
@@ -30,7 +29,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Drawer (Root)</strong> — provider que controla estado aberto/fechado via estado controlado + callback de mudança ou valor inicial.",
       "item2": "<strong>DrawerTrigger</strong> — botão ou elemento que abre o painel; componha com elemento filho para herdar seus estilos.",
       "item3": "<strong>DrawerContent</strong> — painel deslizante com gestos; renderiza em portal com overlay e focus trap.",
@@ -50,7 +48,6 @@
       "item9": "<strong>DrawerClose</strong> — botão para fechar; componha com Button como elemento filho."
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use Drawer em mobile na direção de baixo: entrar pela borda inferior é o que se espera ali.",
@@ -141,7 +138,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Drawer com DrawerTitle visível ou sr-only para aria-labelledby.",
         "dont": "Drawer sem DrawerTitle — leitor de tela não anuncia o painel."
@@ -151,11 +147,8 @@
         "dont": "Drawer aninhado dentro de outro Drawer — quebra focus trap."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "bottom": "Bottom",
         "top": "Top",
@@ -173,7 +166,6 @@
         "left": "Painel lateral à esquerda: 75% da largura no mobile e teto de 24rem a partir de 40rem de viewport, pelos tokens de largura; cantos arredondados à direita.",
         "right": "Painel lateral à direita (a alternativa de desktop para edição e filtros): mesma régua de largura da esquerda, com os cantos arredondados à esquerda."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "withForm": {
           "name": "Com formulário",
@@ -188,7 +180,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Fechado",
         "trigger": "defaultOpen=false",
@@ -211,7 +202,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -265,7 +255,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -309,7 +298,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA — critérios 1.3.1 (estrutura semântica via dialog/aria-modal), 2.1.1 (operável por teclado: ESC fecha, Tab focus trap), 2.4.3 (ordem de foco), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>DrawerTitle</code> obrigatório — vincula <code>aria-labelledby</code> ao Content automaticamente.",
@@ -341,7 +329,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "sheet": {
           "name": "Sheet",
@@ -362,7 +349,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Gesto de arrastar</strong>: arrastar o painel na direção de entrada o dispensa; soltar antes de 25% do tamanho do painel (e devagar) o traz de volta. É um extra de ponteiro, nunca o único caminho — Escape, clique no véu e o botão de fechar do rodapé cobrem o mesmo objetivo sem trajeto (WCAG 2.5.7). O gesto não redimensiona nem para no meio, e é por isso que nenhuma capacidade dele fica sem alternativa.",
       "item2": "<strong>Aninhamento</strong>: nunca aninhe Drawers — quebra o focus trap e o gesto. Para fluxos multi-step, use Stepper dentro do Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> é o padrão; outros valores funcionam mas são exceções para casos específicos.",
@@ -370,11 +356,9 @@
       "item5": "<strong>contain: layout</strong>: em previews de Storybook, aplicar <code>contain: layout</code> no wrapper para confinar o portal (ver PATCHES.md#sidebar)."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do Drawer: <code>drawer_open</code> e <code>drawer_close</code>. Payload obrigatório: <code>component='drawer'</code>, <code>location</code> (contexto da página), <code>trigger_id</code> (o id estável do gatilho — nos exemplos, a direção do painel: <code>bottom</code>, <code>right</code>, <code>left</code> ou <code>top</code> —, nunca o título traduzido, que partiria a série por idioma). O <code>drawer_close</code> leva ainda <code>reason</code>, com o vocabulário do design system: <code>escape</code>, <code>overlay</code>, <code>close-button</code> ou <code>api</code>. Disparar via callback de mudança no componente consumidor."
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação.",
@@ -476,7 +460,6 @@
       "aiEntities": "Drawer, sliding panel, drag to dismiss, focus trap, scrollable body, WCAG 2.2, WCAG 2.5.7, role=dialog, aria-modal, data-direction"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "bottom": "Bottom — default mobile drawer",
         "right": "Right — desktop side panel",
@@ -495,7 +478,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Drawer (Root)</strong> — provider that controls open/closed state via a controlled state + change callback or initial value.",
       "item2": "<strong>DrawerTrigger</strong> — button or element that opens the panel; compose with a child element to inherit its styles.",
       "item3": "<strong>DrawerContent</strong> — sliding panel with gestures; renders in a portal with overlay and focus trap.",
@@ -515,7 +497,6 @@
       "item9": "<strong>DrawerClose</strong> — close button; compose with Button as a child element."
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
         "item1": "Use Drawer on mobile in the bottom direction: entering from the bottom edge is what people expect there.",
@@ -606,7 +587,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Drawer with visible or sr-only DrawerTitle for aria-labelledby.",
         "dont": "Drawer without DrawerTitle — screen reader doesn't announce the panel."
@@ -616,11 +596,8 @@
         "dont": "Drawer nested inside another Drawer — breaks focus trap."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "bottom": "Bottom",
         "top": "Top",
@@ -638,7 +615,6 @@
         "left": "Side panel on the left: 75% of the width on mobile and a 24rem cap from a 40rem viewport up, through the width tokens; rounded corners on the right.",
         "right": "Side panel on the right (the desktop alternative for editing and filters): the same width ruler as the left, with rounded corners on the left."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "withForm": {
           "name": "With form",
@@ -653,7 +629,6 @@
       }
     },
     "states": {
-      "title": "States",
       "closed": {
         "label": "Closed",
         "trigger": "defaultOpen=false",
@@ -676,7 +651,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -730,7 +704,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -774,7 +747,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA — criteria 1.3.1 (semantic structure via dialog/aria-modal), 2.1.1 (keyboard operable: ESC closes, Tab focus trap), 2.4.3 (focus order), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>DrawerTitle</code> required — automatically links <code>aria-labelledby</code> to Content.",
@@ -806,7 +778,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "sheet": {
           "name": "Sheet",
@@ -827,7 +798,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Drag gesture</strong>: dragging the panel toward its entry edge dismisses it; releasing before a quarter of the panel size (and slowly) brings it back. It is a pointer extra, never the only path — Escape, an overlay click, and the footer close button cover the same goal with no path (WCAG 2.5.7). The gesture neither resizes nor rests midway, which is why none of its capabilities is left without an alternative.",
       "item2": "<strong>Nesting</strong>: never nest Drawers — it breaks the focus trap and the gesture. For multi-step flows, use Stepper inside Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> is the default; other values work but are exceptions for specific cases.",
@@ -835,11 +805,9 @@
       "item5": "<strong>contain: layout</strong>: in Storybook previews, apply <code>contain: layout</code> on the wrapper to confine the portal (see PATCHES.md#sidebar)."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant Drawer events: <code>drawer_open</code> and <code>drawer_close</code>. Required payload: <code>component='drawer'</code>, <code>location</code> (page context), <code>trigger_id</code> (the stable id of the trigger — in the examples, the panel direction: <code>bottom</code>, <code>right</code>, <code>left</code> or <code>top</code> —, never the translated title, which would split the series by language). <code>drawer_close</code> also carries <code>reason</code>, in the design system vocabulary: <code>escape</code>, <code>overlay</code>, <code>close-button</code> or <code>api</code>. Fire it from the consuming component change callback."
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each interaction.",
@@ -941,7 +909,6 @@
       "aiEntities": "Drawer, panel deslizante, arrastre para descartar, foco atrapado, cuerpo desplazable, WCAG 2.2, WCAG 2.5.7, role=dialog, aria-modal, data-direction"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "bottom": "Bottom — drawer mobile predeterminado",
         "right": "Right — panel lateral en desktop",
@@ -960,7 +927,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Drawer (Root)</strong> — provider que controla el estado abierto/cerrado vía estado controlado + callback de cambio o valor inicial.",
       "item2": "<strong>DrawerTrigger</strong> — botón o elemento que abre el panel; compón con un elemento hijo para heredar sus estilos.",
       "item3": "<strong>DrawerContent</strong> — panel deslizante con gestos; renderiza en portal con overlay y focus trap.",
@@ -980,7 +946,6 @@
       "item9": "<strong>DrawerClose</strong> — botón para cerrar; compón con Button como elemento hijo."
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa Drawer en mobile en la dirección de abajo: entrar por el borde inferior es lo que se espera ahí.",
@@ -1071,7 +1036,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Drawer con DrawerTitle visible o sr-only para aria-labelledby.",
         "dont": "Drawer sin DrawerTitle — el lector de pantalla no anuncia el panel."
@@ -1081,11 +1045,8 @@
         "dont": "Drawer anidado dentro de otro Drawer — rompe el focus trap."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "bottom": "Bottom",
         "top": "Top",
@@ -1103,7 +1064,6 @@
         "left": "Panel lateral a la izquierda: 75% del ancho en mobile y techo de 24rem a partir de 40rem de viewport, por los tokens de ancho; esquinas redondeadas a la derecha.",
         "right": "Panel lateral a la derecha (la alternativa de escritorio para edición y filtros): la misma regla de ancho que la izquierda, con las esquinas redondeadas a la izquierda."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "withForm": {
           "name": "Con formulario",
@@ -1118,7 +1078,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Cerrado",
         "trigger": "defaultOpen=false",
@@ -1141,7 +1100,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1195,7 +1153,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1239,7 +1196,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA — criterios 1.3.1 (estructura semántica vía dialog/aria-modal), 2.1.1 (operable por teclado: ESC cierra, Tab focus trap), 2.4.3 (orden de foco), 4.1.2 (name/role/value).",
       "items": {
         "item1": "<code>DrawerTitle</code> obligatorio — vincula <code>aria-labelledby</code> al Content automáticamente.",
@@ -1271,7 +1227,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "sheet": {
           "name": "Sheet",
@@ -1292,7 +1247,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Gesto de arrastre</strong>: arrastrar el panel hacia su borde de entrada lo descarta; soltar antes del 25% del tamaño del panel (y despacio) lo devuelve. Es un extra de puntero, nunca el único camino — Escape, clic en el overlay y el botón de cerrar del pie cubren el mismo objetivo sin trayecto (WCAG 2.5.7). El gesto no redimensiona ni se detiene a mitad de camino, y por eso ninguna de sus capacidades queda sin alternativa.",
       "item2": "<strong>Anidamiento</strong>: nunca anides Drawers — rompe el focus trap y el gesto. Para flujos multi-step, usa Stepper dentro del Drawer.",
       "item3": "<strong>Mobile-first</strong>: <code>direction=bottom</code> es el predeterminado; otros valores funcionan pero son excepciones para casos específicos.",
@@ -1300,11 +1254,9 @@
       "item5": "<strong>contain: layout</strong>: en previews de Storybook, aplica <code>contain: layout</code> en el wrapper para confinar el portal (ver PATCHES.md#sidebar)."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del Drawer: <code>drawer_open</code> y <code>drawer_close</code>. Payload obligatorio: <code>component='drawer'</code>, <code>location</code> (contexto de página), <code>trigger_id</code> (el id estable del disparador — en los ejemplos, la dirección del panel: <code>bottom</code>, <code>right</code>, <code>left</code> o <code>top</code> —, nunca el título traducido, que partiría la serie por idioma). <code>drawer_close</code> lleva además <code>reason</code>, con el vocabulario del design system: <code>escape</code>, <code>overlay</code>, <code>close-button</code> o <code>api</code>. Dispararlo desde el callback de cambio del componente consumidor."
     },
     "testes": {
-      "title": "Criterios de Test",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción.",

@@ -4756,6 +4756,127 @@ function auditRotuloDeNav() {
 }
 
 /**
+ * O `h2` da seção e o item de menu que salta para ela são a MESMA frase.
+ *
+ * Isto é continuação direta de `auditRotuloDeNav`, e a razão de serem duas
+ * regras é que o defeito tinha duas metades. A primeira era o menu ter duas
+ * casas; a segunda é o título ter uma casa DIFERENTE da do menu — o leitor
+ * clicava em "Estados" e chegava num cabeçalho escrito "Configurações", com o
+ * âncora funcionando e a página renderizando certo.
+ *
+ * Medido em 2026-09-12: **900 dos 3375 títulos de seção** diziam palavra
+ * diferente da do menu, nos três idiomas. A maior parte era deriva de escrita
+ * ("Design Tokens" contra "Tokens", "Critérios de Teste" contra "Testes",
+ * "Quando e Como Usar" contra "Quando Usar"), e 65 eram renomeação por
+ * componente ("Tipos de Gráfico" no lugar de "Variantes").
+ *
+ * A correção não foi sincronizar as duas listas — foi **tirar a segunda**. O
+ * container de seção deriva o título do `id` que ele já declara, pelo mapa de
+ * `docs-page-landmarks.ts`, e a docs page não passa mais título nenhum. Nas
+ * cinco stacks o type-checker cobra a prop que sumiu; o que ele NÃO alcança é o
+ * conteúdo compartilhado, que é JSON, e é isso que esta regra guarda.
+ *
+ * Os dois ramos:
+ *
+ *  1. conteúdo declarando `<secao>.title` de primeiro nível — chave morta que a
+ *     próxima docs page copiaria, e a segunda casa de volta;
+ *  2. docs page ainda pedindo `'<secao>.title'` ao tradutor do CONTEÚDO — aqui
+ *     o silêncio é o perigo: chave ausente volta como a própria string, então a
+ *     página mostraria "states.title" na tela sem erro de tipo nem de runtime.
+ *
+ * Sub-título continua sendo do componente e não entra: `props.extensibilityTitle`,
+ * `tokens.customizationTitle`, `usage.guidelines.title`, `testes.functional.title`
+ * e os `title` de item de lista são h3 e rótulo interno.
+ */
+function auditTituloDeSecao() {
+  const violations = [];
+  const SECOES = [
+    'demonstration', 'anatomy', 'usage', 'doDont', 'import', 'variants',
+    'compositions', 'states', 'props', 'tokens', 'accessibility', 'related',
+    'notes', 'analytics', 'testes',
+  ];
+
+  // 1 · conteúdo compartilhado
+  const raiz = join(ROOT, 'docs', 'shared', 'content');
+  if (existsSync(raiz)) {
+    for (const slug of readdirSync(raiz)) {
+      const arq = join(raiz, slug, 'translations.json');
+      if (!existsSync(arq)) continue;
+      let json;
+      try { json = JSON.parse(readFile(arq) || '{}'); } catch { continue; }
+      const achadas = new Set();
+      for (const loc of Object.keys(json)) {
+        for (const sec of SECOES) {
+          if (typeof json[loc]?.[sec]?.title === 'string') achadas.add(`${sec}.title`);
+        }
+        // Composições e Tamanhos são seções, e o h2 delas morava fora do padrão
+        for (const fora of ['compositionsTitle', 'sizesTitle', 'visualTitle']) {
+          if (typeof json[loc]?.variants?.[fora] === 'string') achadas.add(`variants.${fora}`);
+        }
+      }
+      if (achadas.size === 0) continue;
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, arq), rule: 'titulo_de_secao_no_conteudo',
+        message: `\`${slug}\` declara ${[...achadas].sort().join(', ')} — o \`h2\` da seção nasce do id dela, pelo mapa de \`docs-page-landmarks.ts\`, para ser a mesma frase do item de menu; título no conteúdo é a segunda casa que fez 900 cabeçalhos discordarem do menu que salta para eles`,
+      });
+    }
+  }
+
+  // 2 · docs page ainda pedindo o título ao tradutor do conteúdo
+  const PEDE_TITULO = new RegExp(`['"\`](?:${SECOES.join('|')})\\.title['"\`]|['"\`]variants\\.(?:compositions|sizes|visual)Title['"\`]`);
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    if (!existsSync(dir)) continue;
+    for (const nome of readdirSync(dir)) {
+      if (!/Docs\.(tsx|vue|svelte|ts)$/.test(nome)) continue;
+      const src = readFile(join(dir, nome));
+      if (!src) continue;
+      const linhas = stripComments(src).split('\n');
+      const achados = [];
+      linhas.forEach((l, i) => { if (PEDE_TITULO.test(l)) achados.push(i + 1); });
+      if (achados.length === 0) continue;
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, join(dir, nome)), rule: 'titulo_de_secao_pedido_ao_conteudo',
+        message: `pede título de seção ao conteúdo na(s) linha(s) ${achados.join(', ')} — a chave não existe mais, e tradutor sem chave devolve a PRÓPRIA STRING: a página mostraria "states.title" na tela, sem erro de tipo nem de runtime`,
+      });
+    }
+  }
+
+  // 3 · docs page ainda PASSANDO título a um container de seção
+  //
+  // Nas quatro stacks de TypeScript o type-checker cobra a prop que sumiu, e
+  // esta varredura é redundante. No **Angular não é**: medido em 2026-09-12,
+  // replantando `[title]="t('anatomy.title')"` num container, o `ngc` fechou
+  // **exit 0** — `title` é atributo global do HTML, então o binding é aceito
+  // como propriedade do DOM em vez de reprovado como input desconhecido. O
+  // resíduo viraria tooltip silencioso no cabeçalho, não erro de compilação.
+  const TAG_DE_SECAO = /<(?:nds-docs-[a-z-]+|Docs[A-Z][A-Za-z]*)\b[^>]*?\s(?:\[title\]|:title|title)=/;
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components', 'docs');
+    if (!existsSync(dir)) continue;
+    for (const nome of readdirSync(dir)) {
+      if (!/Docs\.(tsx|vue|svelte|ts)$/.test(nome)) continue;
+      const src = readFile(join(dir, nome));
+      if (!src) continue;
+      // `DocsHeader` é o `<h1>` com o nome do componente, não seção
+      const texto = stripComments(src).replace(/<(?:nds-docs-header|DocsHeader)\b[\s\S]*?>/g, '');
+      const achados = [];
+      texto.split('\n').forEach((l, i) => { if (TAG_DE_SECAO.test(l)) achados.push(i + 1); });
+      if (achados.length === 0) continue;
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack,
+        file: relative(ROOT, join(dir, nome)), rule: 'titulo_passado_ao_container',
+        message: `passa título a um container de seção na(s) linha(s) ${achados.join(', ')} — o \`h2\` nasce do id da seção; no Angular um \`[title]\` esquecido NÃO reprova no \`ngc\` (é atributo global do HTML) e viraria tooltip silencioso`,
+      });
+    }
+  }
+
+  return violations;
+}
+
+/**
  * A pasta `tokens/figma/<Coleção>/<modo>.json` defasada do `figma-variables.json`.
  *
  * Os dois saem do MESMO gerador, mas de invocações diferentes: o arquivo único
@@ -6893,6 +7014,11 @@ function auditTaxonomy(slug) {
   // `names` é da mesma espécie do `panelLabels`: um texto por variante, para os
   // cards cuja entrada em `items` é só a descrição (string) — o ContextMenu
   // mostrava a chave crua ("default", "label") como título até 2026-09-11.
+  // `title`, `compositionsTitle`, `visualTitle` e `sizesTitle` são títulos de
+  // SEÇÃO, e desde 2026-09-12 o conteúdo não os declara mais — o `h2` nasce do
+  // id da seção, pelo `ui.json`. Continuam nomeados aqui de propósito: se um
+  // deles voltar, quem reprova é `titulo_de_secao_no_conteudo`, e esta lista
+  // impede que o mesmo defeito saia contado duas vezes, com dois nomes.
   const HEADERS = new Set(['title', 'cols', 'note', 'items', 'styles', 'sizes',
     'compositions', 'compositionsTitle', 'visualTitle', 'description',
     'stylesTitle', 'sizesTitle', 'panelLabels', 'names']);
@@ -11225,7 +11351,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

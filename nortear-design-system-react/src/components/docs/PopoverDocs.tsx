@@ -330,7 +330,7 @@ interface PopoverContentProps {
           componente, não o catálogo. Os três gatilhos que viviam aqui eram as
           variantes `default`, `withTitle` e `form`, que têm seção própria
           adiante — repetidos aqui, a página dizia a mesma coisa duas vezes. */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-cluster" data-justify="center" data-spacing="sm">
           <Popover onOpenChange={rastrearPopover("docs_demo", "demo")}>
             <PopoverTrigger asChild>
@@ -371,7 +371,6 @@ interface PopoverContentProps {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -386,7 +385,6 @@ interface PopoverContentProps {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -463,7 +461,6 @@ interface PopoverContentProps {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -553,11 +550,10 @@ interface PopoverContentProps {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="popover"
         items={[
           {
@@ -650,7 +646,6 @@ interface PopoverContentProps {
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="popover"
         items={[
@@ -939,7 +934,6 @@ interface PopoverContentProps {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -981,7 +975,6 @@ interface PopoverContentProps {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -1051,7 +1044,6 @@ interface PopoverContentProps {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1097,7 +1089,6 @@ interface PopoverContentProps {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           // Os itens da lista mais o bloco `aria`: o container tem uma lista
@@ -1128,7 +1119,6 @@ interface PopoverContentProps {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="popover"
         items={[
           {
@@ -1156,7 +1146,6 @@ interface PopoverContentProps {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="popover"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -1168,7 +1157,6 @@ interface PopoverContentProps {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
           {
@@ -1186,7 +1174,6 @@ interface PopoverContentProps {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

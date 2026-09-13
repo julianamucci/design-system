@@ -19,6 +19,7 @@
   import { mountDocsTracking } from '@/lib/docs-tracking';
   import DOMPurify from 'dompurify';
   import iconsTranslations from '@shared/content/icons/translations.json';
+  import uiTranslations from '@/i18n/ui.json';
 
   // ─── Catálogo de ícones ────────────────────────────────────────────────────
 
@@ -39,6 +40,7 @@
   // ─── i18n ──────────────────────────────────────────────────────────────────
 
   const { tStore } = useTranslation(iconsTranslations);
+  const { tStore: tNavStore } = useTranslation(uiTranslations);
 
   // ─── Estado ───────────────────────────────────────────────────────────────
 
@@ -200,7 +202,7 @@ nds-icon-lg   // 20px — destaque em headers`}</code></pre>
 
     <!-- ── Acessibilidade ──────────────────────────────────────────────── -->
     <section class="nds-stack nds-docs-section-divider" data-spacing="md">
-      <h2 class="nds-text-h2 nds-text-foreground">{$tStore('accessibility.title')}</h2>
+      <h2 class="nds-text-h2 nds-text-foreground">{$tNavStore('nav.accessibility')}</h2>
       <div class="nds-grid" data-spacing="sm" data-cols="2">
         <div class="nds-stack" data-spacing="sm">
           <p class="nds-text-body nds-font-medium">

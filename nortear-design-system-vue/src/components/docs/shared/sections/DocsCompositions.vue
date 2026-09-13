@@ -25,7 +25,6 @@ interface DocsCompositionItem {
  * padrão do DocsVariants).
  */
 const props = withDefaults(defineProps<{
-  title: string;
   items: DocsCompositionItem[];
   /** Label da linha "Quando usar:" (i18n, ex: tNav('common.useWhen')). */
   useWhenLabel?: string;
@@ -62,7 +61,6 @@ const slots = useSlots();
 <template>
   <DocsVariants
     :id="props.id"
-    :title="props.title"
     :note="props.note"
     :items="variantItems"
     :component-slug="props.componentSlug"

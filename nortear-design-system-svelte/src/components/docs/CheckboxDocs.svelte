@@ -266,7 +266,7 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="checkbox">
+  <DocsDemonstration componentSlug="checkbox">
     <div class="nds-stack" data-spacing="sm">
       <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="demo-1" bind:checked={demoChecked1} onCheckedChange={(v: boolean) => track('field_change', { component: 'checkbox', field_name: 'acceptTerms', value: String(v), location: 'docs_demo' })} data-track="demo" data-track-id="checkbox:demo:acceptTerms" />
@@ -289,7 +289,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -302,7 +301,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Quando Usar ───────────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -349,7 +347,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Do & Don't ───────────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -413,7 +410,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.svelte')}
     code={codeImport}
     componentSlug="checkbox"
@@ -421,7 +417,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     componentSlug="checkbox"
     items={[
       {
@@ -471,7 +466,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Composições ──────────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="checkbox"
     items={[
@@ -572,7 +566,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -589,7 +582,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Propriedades ─────────────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'Checkbox',
@@ -617,7 +609,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Tokens ────────────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -641,7 +632,6 @@ import { Label } from "@/components/ui/label";`;
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -660,7 +650,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Switch',      description: toPlainText($tStore('related.switch')),      path: '?path=/docs/components-form-switch--docs' },
       { name: 'RadioGroup',  description: toPlainText($tStore('related.radioGroup')),  path: '?path=/docs/components-form-radiogroup--docs' },
@@ -671,7 +660,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -682,7 +670,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Analytics ────────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -698,7 +685,6 @@ import { Label } from "@/components/ui/label";`;
 
   <!-- ── Testes ────────────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

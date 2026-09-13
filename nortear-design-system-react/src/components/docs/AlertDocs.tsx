@@ -233,7 +233,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
       }
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
-          <DocsDemonstration title={tContent("demonstration.title")}>
+          <DocsDemonstration >
             {/* Cada alert da demo mostra uma capacidade diferente: sem título,
                 com título, dismissible e com ação. */}
             <div className="nds-w-full nds-stack" data-spacing="sm">
@@ -282,7 +282,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Anatomia ──────────────────────────────────────────────── */}
           <DocsAnatomy
-            title={tContent("anatomy.title")}
             items={[
               tContent("anatomy.item1"),
               tContent("anatomy.item2"),
@@ -295,7 +294,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Quando Usar ───────────────────────────────────────────── */}
           <DocsWhenToUse
-            title={tContent("usage.title")}
             guidelines={{
               title: tContent("usage.guidelines.title"),
               items: [
@@ -375,7 +373,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Do & Don't ────────────────────────────────────────────── */}
           <DocsDoDont
-            title={tContent("doDont.title")}
             pairs={[
               {
                 doLabel: tNav("common.do"),
@@ -419,7 +416,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Importação ────────────────────────────────────────────── */}
           <DocsImport
-            title={tContent("import.title")}
             description={tContent("import.basic")}
             code={codeImportBasic}
             secondaryDescription={tContent("import.withIcon")}
@@ -429,7 +425,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
           {/* ── Variantes ─────────────────────────────────────────────── */}
           <DocsCompositions
             id="variantes"
-            title={tContent("variants.title")}
             useWhenLabel={tNav("common.useWhen")}
             componentSlug="alert"
             items={[
@@ -534,7 +529,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Composições ───────────────────────────────────────────── */}
           <DocsCompositions
-            title={tContent("variants.compositionsTitle")}
             useWhenLabel={tNav("common.useWhen")}
             componentSlug="alert"
             items={[
@@ -577,7 +571,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Configurações (States) ────────────────────────────────── */}
           <DocsStates
-            title={tContent("states.title")}
             cols={{
               state: tContent("states.cols.state"),
               trigger: toPlainText(tContent("states.cols.trigger")),
@@ -614,7 +607,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Propriedades ──────────────────────────────────────────── */}
           <DocsProps
-            title={tContent("props.title")}
             tables={[
               {
                 title: tContent("props.alertTitle"),
@@ -744,7 +736,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Tokens ────────────────────────────────────────────────── */}
           <DocsTokens
-            title={tContent("tokens.title")}
             cols={{
               token: tContent("tokens.table.token"),
               value: tContent("tokens.table.class"),
@@ -776,7 +767,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
           <DocsAccessibility
             screenReaderTitle={tNav("common.screenReader")}
             screenReaderItems={screenReaderItems}
-            title={tContent("accessibility.title")}
             summary={tContent("accessibility.summary")}
             items={[
               tContent("accessibility.item1"),
@@ -795,7 +785,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Relacionados ──────────────────────────────────────────── */}
           <DocsRelated
-            title={tContent("related.title")}
             items={[
               {
                 name: "Sonner",
@@ -822,7 +811,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Notas ─────────────────────────────────────────────────── */}
           <DocsNotes
-            title={tContent("notes.title")}
             items={[
               { title: "", content: tContent("notes.tip1") },
               { title: "", content: tContent("notes.tip2") },
@@ -832,7 +820,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Analytics ─────────────────────────────────────────────── */}
           <DocsAnalytics
-            title={tContent("analytics.title")}
             cols={{
               event: tContent("analytics.table.event"),
               trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -864,7 +851,6 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
 
           {/* ── Testes ────────────────────────────────────────────────── */}
           <DocsTestes
-            title={tContent("testes.title")}
             functional={{
               title: tContent("testes.functional.title"),
               cols: {

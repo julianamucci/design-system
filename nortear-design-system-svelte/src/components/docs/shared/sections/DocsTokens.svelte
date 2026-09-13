@@ -2,6 +2,7 @@
   import { Card } from '@/components/ui/card';
   import { CodeBlock } from '@/components/ui/code-block';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface DocsTokenItem { token: string; value: string; description: string }
 
@@ -16,8 +17,7 @@
    * portão reclamaria. Corrigido o conteúdo (`f5f2ef555`), o contrato volta ao
    * que as demais páginas já praticam.
    */
-  const { title, cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: {
-    title: string;
+  const { cols, items, customizationTitle, customizationCode, language = 'css', copyLabel, copiedLabel }: {
     cols: { token: string; value: string; description: string };
     items: DocsTokenItem[];
     customizationTitle?: string;
@@ -26,6 +26,8 @@
     copyLabel?: string;
     copiedLabel?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao('tokens', $rotulosDeSecao));
 </script>
 
 <section id="tokens">

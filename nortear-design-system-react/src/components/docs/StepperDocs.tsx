@@ -351,7 +351,7 @@ interface StepperItemProps {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-stack nds-w-full" data-spacing="lg">
           <Stepper
             value={demoStep}
@@ -403,7 +403,6 @@ interface StepperItemProps {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[1, 2, 3, 4, 5, 6, 7].map((i) => tContent(`anatomy.item${i}`))}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -411,7 +410,6 @@ interface StepperItemProps {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -456,7 +454,6 @@ interface StepperItemProps {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -503,14 +500,12 @@ interface StepperItemProps {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         code={codeImport}
         componentSlug={SLUG}
       />
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug={SLUG}
         items={[
@@ -556,7 +551,6 @@ interface StepperItemProps {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -571,7 +565,6 @@ interface StepperItemProps {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: "Stepper",
@@ -615,7 +608,6 @@ interface StepperItemProps {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -632,7 +624,6 @@ interface StepperItemProps {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5, 6, 7].map((i) =>
           tContent(`accessibility.items.item${i}`),
@@ -653,7 +644,6 @@ interface StepperItemProps {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug={SLUG}
         items={[
           {
@@ -683,7 +673,6 @@ interface StepperItemProps {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug={SLUG}
         items={[1, 2, 3, 4, 5].map((i) => ({
           title: "",
@@ -693,7 +682,6 @@ interface StepperItemProps {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -722,7 +710,6 @@ interface StepperItemProps {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

@@ -512,7 +512,6 @@ function onDemoInit(payload: any) {
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration
-      :title="tContent('demonstration.title')"
       component-slug="carousel"
     >
       <div
@@ -522,7 +521,7 @@ function onDemoInit(payload: any) {
       >
         <Carousel
           class="nds-w-full nds-max-w-sm"
-          :aria-label="tContent('demonstration.title')"
+          :aria-label="tNav('nav.demonstration')"
           @init-api="onDemoInit"
           @pointerdown.capture="onDemoNavIntent"
           @keydown.capture="onDemoNavIntent"
@@ -549,7 +548,6 @@ function onDemoInit(payload: any) {
 
     <!-- ── Anatomia ───────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -557,7 +555,6 @@ function onDemoInit(payload: any) {
 
     <!-- ── Quando Usar ────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="{
         title: tContent('usage.guidelines.title'),
         items: [
@@ -603,7 +600,6 @@ function onDemoInit(payload: any) {
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
@@ -724,7 +720,6 @@ function onDemoInit(payload: any) {
 
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="codeImportBasic"
       :secondary-description="tContent('import.withPlugin')"
@@ -734,7 +729,6 @@ function onDemoInit(payload: any) {
     <!-- ── Variantes ──────────────────────────────────────────────── -->
     <DocsCompositions
       id="variantes"
-      :title="tContent('variants.title')"
       :use-when-label="tNav('common.useWhen')"
       :items="variantItems"
       component-slug="carousel"
@@ -892,7 +886,6 @@ function onDemoInit(payload: any) {
 
     <!-- ── Composições ────────────────────────────────────────────── -->
     <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="carousel"
       :items="compositionItems"
@@ -996,14 +989,12 @@ function onDemoInit(payload: any) {
 
     <!-- ── Configurações (States) ──────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior'))}"
       :items="stateItems"
     />
 
     <!-- ── Propriedades ───────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.carouselTitle'), cols: propCols, items: carouselPropItems },
         { title: tContent('props.contentTitle'), cols: propCols, items: contentItemPropItems },
@@ -1017,7 +1008,6 @@ function onDemoInit(payload: any) {
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
@@ -1028,7 +1018,6 @@ function onDemoInit(payload: any) {
     <DocsAccessibility
       :screen-reader-title="tNav('common.screenReader')"
       :screen-reader-items="screenReaderItems"
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
@@ -1037,28 +1026,24 @@ function onDemoInit(payload: any) {
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
       component-slug="carousel"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
       component-slug="carousel"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 
     <!-- ── Testes ─────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },

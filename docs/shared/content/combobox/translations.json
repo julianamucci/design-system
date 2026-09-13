@@ -11,7 +11,6 @@
       "aiEntities": "Combobox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA 1.2, role combobox, aria-activedescendant, chips, múltipla seleção, busca"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "countryLabel": "País",
         "countryPlaceholder": "Buscar país",
@@ -45,7 +44,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Raiz</strong> — dona do estado: o valor escolhido, o texto digitado e a lista aberta ou fechada. Não desenha nada por conta própria.",
       "item2": "<strong>Rótulo</strong> — nome acessível do campo, amarrado ao campo de texto. <code>data-slot=\"combobox-label\"</code>",
       "item3": "<strong>Caixa do campo</strong> — o que o leitor enxerga como campo: guarda os chips e o texto, e é nela que moram a borda e o anel de foco. <code>data-slot=\"combobox-input-wrapper\"</code>",
@@ -66,7 +64,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Escolha o Combobox quando digitar chega mais rápido que rolar — na prática, a partir de umas dez opções.",
@@ -164,7 +161,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Dar a cada botão de remover o nome do que ele remove: \"Remover Brasil\".",
         "dont": "Repetir \"Remover\" em todos os chips: quem navega por teclado ouve cinco botões idênticos."
@@ -174,11 +170,8 @@
         "dont": "Exigir o mouse para desfazer uma escolha: sem o Backspace, o teclado não desfaz."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "single": "Escolha única",
         "multiple": "Múltipla com chips",
@@ -189,7 +182,6 @@
         "multiple": "Vários valores ao mesmo tempo — cada escolhido vira um chip dentro do campo, com botão de remover próprio.",
         "grouped": "Opções organizadas por categoria, com cabeçalho de grupo e divisor entre os blocos."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "inForm": {
           "name": "Em formulário",
@@ -199,7 +191,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando ocorre",
@@ -247,7 +238,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -337,7 +327,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -417,7 +406,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> no próprio campo de texto, e <code>role=\"listbox\"</code> na lista de opções",
@@ -460,7 +448,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "select": {
           "name": "Select",
@@ -481,7 +468,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>O campo é a caixa, não o texto</strong> — a borda e o anel de foco moram no contêiner que envolve chips e texto. Estilizar só o campo de texto daria duas caixas assim que aparecesse o primeiro chip.",
       "item2": "<strong>O foco não sai do texto</strong> — navegar pela lista troca a opção ativa por <code>aria-activedescendant</code>; nenhuma opção recebe foco do navegador, então digitar continua funcionando durante a navegação.",
       "item3": "<strong>Contraste do chip</strong> — o chip pinta sobre a superfície do campo, então o contraste dele é medido contra essa superfície, e não contra o fundo da página.",
@@ -490,7 +476,6 @@
       "item6": "<strong>Filtro trocável</strong> — o filtro padrão compara o rótulo ignorando acentos e caixa. Para casar por sinônimo, código interno ou busca no servidor, troque a função de filtro."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -507,7 +492,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -605,7 +589,6 @@
       "aiEntities": "Combobox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA 1.2, role combobox, aria-activedescendant, chips, multiple selection, search"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "countryLabel": "Country",
         "countryPlaceholder": "Search country",
@@ -639,7 +622,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Root</strong> — owns the state: the chosen value, the typed text and whether the list is open. It draws nothing of its own.",
       "item2": "<strong>Label</strong> — accessible name of the field, tied to the text field. <code>data-slot=\"combobox-label\"</code>",
       "item3": "<strong>Field box</strong> — what the reader sees as the field: it holds the chips and the text, and it carries the border and the focus ring. <code>data-slot=\"combobox-input-wrapper\"</code>",
@@ -660,7 +642,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Mandatory Guidelines",
         "item1": "Choose Combobox when typing gets there faster than scrolling — in practice, from about ten options onwards.",
@@ -758,7 +739,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Give each remove button the name of what it removes: \"Remove Brazil\".",
         "dont": "Repeat \"Remove\" on every chip: keyboard users hear five identical buttons."
@@ -768,11 +748,8 @@
         "dont": "Require the mouse to undo a choice: without Backspace, the keyboard cannot undo."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "single": "Single choice",
         "multiple": "Multiple with chips",
@@ -783,7 +760,6 @@
         "multiple": "Several values at once — each chosen value becomes a chip inside the field, with a remove button of its own.",
         "grouped": "Options organised by category, with a group heading and a divider between blocks."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "inForm": {
           "name": "In a form",
@@ -793,7 +769,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -841,7 +816,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -931,7 +905,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -1011,7 +984,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> on the text field itself, and <code>role=\"listbox\"</code> on the option list",
@@ -1054,7 +1026,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "select": {
           "name": "Select",
@@ -1075,7 +1046,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>The field is the box, not the text</strong> — the border and the focus ring live on the container that wraps chips and text. Styling the text field alone would give two boxes as soon as the first chip appeared.",
       "item2": "<strong>Focus never leaves the text</strong> — navigating the list swaps the active option through <code>aria-activedescendant</code>; no option takes browser focus, so typing keeps working while navigating.",
       "item3": "<strong>Chip contrast</strong> — the chip paints over the field surface, so its contrast is measured against that surface, not against the page background.",
@@ -1084,7 +1054,6 @@
       "item6": "<strong>Swappable filter</strong> — the default filter compares the label ignoring accents and case. To match by synonym, internal code or a server search, swap the filter function."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant events of the component.",
       "table": {
         "event": "Event",
@@ -1101,7 +1070,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behaviour",
         "description": "What should happen in response to each interaction.",
@@ -1199,7 +1167,6 @@
       "aiEntities": "Combobox, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA 1.2, role combobox, aria-activedescendant, chips, selección múltiple, búsqueda"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "countryLabel": "País",
         "countryPlaceholder": "Buscar país",
@@ -1233,7 +1200,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Raíz</strong> — dueña del estado: el valor elegido, el texto escrito y si la lista está abierta. No dibuja nada por su cuenta.",
       "item2": "<strong>Etiqueta</strong> — nombre accesible del campo, atado al campo de texto. <code>data-slot=\"combobox-label\"</code>",
       "item3": "<strong>Caja del campo</strong> — lo que el lector ve como campo: contiene los chips y el texto, y es la que lleva el borde y el anillo de foco. <code>data-slot=\"combobox-input-wrapper\"</code>",
@@ -1254,7 +1220,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Elige Combobox cuando escribir llegue antes que desplazarse — en la práctica, a partir de unas diez opciones.",
@@ -1352,7 +1317,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Dar a cada botón de quitar el nombre de lo que quita: \"Quitar Brasil\".",
         "dont": "Repetir \"Quitar\" en todos los chips: quien navega por teclado oye cinco botones idénticos."
@@ -1362,11 +1326,8 @@
         "dont": "Exigir el ratón para deshacer una elección: sin Retroceso, el teclado no deshace."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "single": "Elección única",
         "multiple": "Múltiple con chips",
@@ -1377,7 +1338,6 @@
         "multiple": "Varios valores a la vez — cada elegido se convierte en un chip dentro del campo, con su propio botón de quitar.",
         "grouped": "Opciones organizadas por categoría, con encabezado de grupo y divisor entre bloques."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "inForm": {
           "name": "En formulario",
@@ -1387,7 +1347,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1435,7 +1394,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1525,7 +1483,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1605,7 +1562,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"combobox\"</code> en el propio campo de texto, y <code>role=\"listbox\"</code> en la lista de opciones",
@@ -1648,7 +1604,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "select": {
           "name": "Select",
@@ -1669,7 +1624,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>El campo es la caja, no el texto</strong> — el borde y el anillo de foco viven en el contenedor que envuelve chips y texto. Estilizar solo el campo de texto daría dos cajas en cuanto apareciera el primer chip.",
       "item2": "<strong>El foco no sale del texto</strong> — navegar por la lista cambia la opción activa mediante <code>aria-activedescendant</code>; ninguna opción recibe foco del navegador, así que escribir sigue funcionando durante la navegación.",
       "item3": "<strong>Contraste del chip</strong> — el chip pinta sobre la superficie del campo, así que su contraste se mide contra esa superficie, no contra el fondo de la página.",
@@ -1678,7 +1632,6 @@
       "item6": "<strong>Filtro intercambiable</strong> — el filtro predeterminado compara la etiqueta ignorando acentos y mayúsculas. Para coincidir por sinónimo, código interno o búsqueda en el servidor, cambia la función de filtro."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1695,7 +1648,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Qué debe ocurrir en respuesta a cada interacción.",

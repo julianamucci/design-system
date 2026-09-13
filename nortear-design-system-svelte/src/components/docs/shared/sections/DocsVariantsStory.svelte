@@ -10,8 +10,7 @@
    * O snippet é declarado aqui e referenciado dentro do item, que é o que faz o
    * preview andar JUNTO do dado em vez de depender de um índice, como no Vue.
    */
-  let { title, note = '', id = 'variantes', componentSlug = '', apenasUm = false }: {
-    title: string;
+  let { note = '', id = 'variantes', componentSlug = '', apenasUm = false }: {
     note?: string;
     id?: string;
     componentSlug?: string;
@@ -25,7 +24,6 @@
 {#snippet editar()}<Button variant="ghost">Editar</Button>{/snippet}
 
 <DocsVariants
-  {title}
   {note}
   {id}
   {componentSlug}

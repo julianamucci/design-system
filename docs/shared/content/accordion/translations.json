@@ -11,7 +11,6 @@
       "aiEntities": "Accordion, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-expanded, disclosure pattern"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "q1": "Como faço para redefinir minha senha?",
         "a1": "Acesse a tela de login e clique em \"Esqueci minha senha\". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.",
@@ -24,7 +23,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Accordion</strong> — container raiz. Suporta modo único (apenas um item aberto) ou múltiplo (vários simultaneamente).",
       "item2": "<strong>AccordionItem</strong> — representa um item com <code>value</code> único obrigatório. Renderiza <code>&lt;div&gt;</code> com borda inferior (token <code>--border</code>).",
       "item3": "<strong>AccordionTrigger</strong> — botão de ação. Inclui <code>aria-expanded</code> automático e chevron rotativo.",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use o modo único para FAQ — apenas um item aberto por vez, e clicar de novo no item aberto o fecha.",
@@ -124,13 +121,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "single": "import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from \"@/components/ui/accordion\"",
       "note": "Quatro subcomponentes exportados. Todos necessários para o uso básico."
     },
     "variants": {
-      "title": "Variantes",
-      "compositionsTitle": "Composições",
       "compositions": {
         "iconTrigger": {
           "name": "Com ícone no trigger",
@@ -173,7 +167,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Fechado (padrão)",
         "trigger": "Estado inicial, ou clique no item já aberto",
@@ -201,7 +194,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "accordion": {
         "title": "Accordion (raiz)",
         "type": "Tipo",
@@ -322,7 +314,6 @@
       "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code>. Use tokens semânticos para customização — nunca cores hardcoded."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Aplicação no tema",
@@ -378,11 +369,9 @@
       "pair2": {
         "do": "Use o modo múltiplo quando o usuário precisa comparar seções abertas simultaneamente.",
         "dont": "Não use Accordion para uma única seção expansível — use Collapsible."
-      },
-      "title": "Boas práticas"
+      }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O Accordion usa o padrão de disclosure do WAI-ARIA. ARIA e roles são aplicados automaticamente pela biblioteca — não reimplementar.",
       "keyboard": {
         "tab": "Move o foco para o próximo AccordionTrigger.",
@@ -409,7 +398,6 @@
       "keyboardTitle": "Navegação por Teclado"
     },
     "related": {
-      "title": "Componentes Relacionados",
       "collapsible": {
         "name": "Collapsible",
         "description": "Use para uma única seção expansível isolada.",
@@ -427,7 +415,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "O chevron rotaciona automaticamente via CSS quando o item abre — não aplicar a rotação manualmente. O seletor cobre as convenções das libs (<code>data-state</code>, <code>aria-expanded</code>, <code>data-panel-open</code>).",
       "item2": "A abertura e o fechamento animam <code>grid-template-rows</code> junto com a opacidade, via keyframes <code>nds-accordion-expand</code> e <code>nds-accordion-collapse</code> no CSS standalone. A altura vem do próprio conteúdo — não use as custom properties de altura das libs, que não incluem o padding e cortam o texto.",
       "item3": "Para modo controlado, use <code>value</code> + callback de mudança. O formato do valor pode variar conforme o modo (único = string; múltiplo = array) — consulte a tabela de propriedades.",
@@ -435,7 +422,6 @@
       "item5": "No modo múltiplo todos os itens são individualmente fecháveis. No modo único, clicar de novo no item aberto também o fecha — o comportamento é fixo, e não há configuração que o desligue."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastreie interações do usuário com o Accordion para entender quais seções são mais acessadas.",
       "events": {
         "expand": {
@@ -457,7 +443,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o Accordion.",
@@ -570,7 +555,6 @@
       "aiEntities": "Accordion, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-expanded, disclosure pattern"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "q1": "How do I reset my password?",
         "a1": "Go to the login screen and click \"Forgot my password\". You'll receive a reset link at your registered email, valid for 24 hours.",
@@ -583,7 +567,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Accordion</strong> — root container. Supports single mode (only one item open) or multiple (several simultaneously).",
       "item2": "<strong>AccordionItem</strong> — represents an item with a required unique <code>value</code>. Renders <code>&lt;div&gt;</code> with bottom border (token <code>--border</code>).",
       "item3": "<strong>AccordionTrigger</strong> — action button. Includes automatic <code>aria-expanded</code> and rotating chevron.",
@@ -598,7 +581,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use single mode for FAQ — only one item open at a time, and clicking the open item again closes it.",
@@ -683,13 +665,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "single": "import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from \"@/components/ui/accordion\"",
       "note": "Four exported subcomponents. All required for basic use."
     },
     "variants": {
-      "title": "Variants",
-      "compositionsTitle": "Compositions",
       "compositions": {
         "iconTrigger": {
           "name": "With icon in trigger",
@@ -732,7 +711,6 @@
       }
     },
     "states": {
-      "title": "States",
       "closed": {
         "label": "Closed (default)",
         "trigger": "Initial state, or click on the already-open item",
@@ -760,7 +738,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "accordion": {
         "title": "Accordion (root)",
         "type": "Type",
@@ -881,7 +858,6 @@
       "extensibility": "<code>className</code> — all subcomponents accept <code>className</code>. Use semantic tokens for customization — never hardcoded colors."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Theme application",
@@ -937,11 +913,9 @@
       "pair2": {
         "do": "Use the multiple mode when users need to compare open sections simultaneously.",
         "dont": "Don't use Accordion for a single expandable section — use Collapsible."
-      },
-      "title": "Best practices"
+      }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Accordion uses the WAI-ARIA disclosure pattern. ARIA and roles are applied automatically by the library — don't reimplement.",
       "keyboard": {
         "tab": "Moves focus to the next AccordionTrigger.",
@@ -968,7 +942,6 @@
       "keyboardTitle": "Keyboard Navigation"
     },
     "related": {
-      "title": "Related Components",
       "collapsible": {
         "name": "Collapsible",
         "description": "Use for a single isolated expandable section.",
@@ -986,7 +959,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "The chevron rotates automatically via CSS when the item opens — do not apply the rotation manually. The selector covers each library convention (<code>data-state</code>, <code>aria-expanded</code>, <code>data-panel-open</code>).",
       "item2": "Opening and closing animate <code>grid-template-rows</code> together with opacity, via the <code>nds-accordion-expand</code> and <code>nds-accordion-collapse</code> keyframes in the standalone CSS. Height comes from the content itself — do not use the libraries’ height custom properties, which exclude the padding and clip the text.",
       "item3": "For controlled mode, use <code>value</code> + change callback. The value format may vary with the mode (single = string; multiple = array) — see the properties table.",
@@ -994,7 +966,6 @@
       "item5": "In multiple mode every item is individually closable. In single mode, clicking the open item again also closes it — the behaviour is fixed, and there is no setting that turns it off."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Track user interactions with the Accordion to understand which sections are most accessed.",
       "events": {
         "expand": {
@@ -1016,7 +987,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen on each Accordion interaction.",
@@ -1129,7 +1099,6 @@
       "aiEntities": "Accordion, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-expanded, disclosure pattern"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "q1": "¿Cómo restablezco mi contraseña?",
         "a1": "Accede a la pantalla de inicio de sesión y haz clic en \"Olvidé mi contraseña\". Recibirás un enlace de restablecimiento en el correo registrado, válido por 24 horas.",
@@ -1142,7 +1111,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Accordion</strong> — contenedor raíz. Soporta modo único (solo un ítem abierto) o múltiple (varios simultáneamente).",
       "item2": "<strong>AccordionItem</strong> — representa un ítem con <code>value</code> único obligatorio. Renderiza <code>&lt;div&gt;</code> con borde inferior (token <code>--border</code>).",
       "item3": "<strong>AccordionTrigger</strong> — botón de acción. Incluye <code>aria-expanded</code> automático y chevron rotativo.",
@@ -1157,7 +1125,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Usa el modo único para FAQ — solo un ítem abierto a la vez, y volver a hacer clic en el ítem abierto lo cierra.",
@@ -1242,13 +1209,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "single": "import {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from \"@/components/ui/accordion\"",
       "note": "Cuatro subcomponentes exportados. Todos necesarios para el uso básico."
     },
     "variants": {
-      "title": "Variantes",
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "iconTrigger": {
           "name": "Con ícono en el trigger",
@@ -1291,7 +1255,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Cerrado (predeterminado)",
         "trigger": "Estado inicial, o clic en el ítem ya abierto",
@@ -1319,7 +1282,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "accordion": {
         "title": "Accordion (raíz)",
         "type": "Tipo",
@@ -1440,7 +1402,6 @@
       "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code>. Usa tokens semánticos para personalización — nunca colores codificados."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Aplicación en el tema",
@@ -1496,11 +1457,9 @@
       "pair2": {
         "do": "Usa el modo múltiple cuando el usuario necesita comparar secciones abiertas simultáneamente.",
         "dont": "No uses Accordion para una única sección expandible — usa Collapsible."
-      },
-      "title": "Buenas prácticas"
+      }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Accordion usa el patrón de disclosure de WAI-ARIA. ARIA y roles son aplicados automáticamente por la librería — no reimplementar.",
       "keyboard": {
         "tab": "Mueve el foco al siguiente AccordionTrigger.",
@@ -1527,7 +1486,6 @@
       "keyboardTitle": "Navegación por Teclado"
     },
     "related": {
-      "title": "Componentes Relacionados",
       "collapsible": {
         "name": "Collapsible",
         "description": "Usa para una única sección expandible aislada.",
@@ -1545,7 +1503,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "El chevron rota automáticamente vía CSS cuando el ítem abre — no apliques la rotación manualmente. El selector cubre las convenciones de las librerías (<code>data-state</code>, <code>aria-expanded</code>, <code>data-panel-open</code>).",
       "item2": "La apertura y el cierre animan <code>grid-template-rows</code> junto con la opacidad, vía los keyframes <code>nds-accordion-expand</code> y <code>nds-accordion-collapse</code> en el CSS standalone. La altura viene del propio contenido — no uses las custom properties de altura de las librerías, que no incluyen el padding y cortan el texto.",
       "item3": "Para modo controlado, usa <code>value</code> + callback de cambio. El formato del valor puede variar según el modo (único = string; múltiple = array) — consulta la tabla de propiedades.",
@@ -1553,7 +1510,6 @@
       "item5": "En modo múltiple todos los ítems son individualmente cerrables. En modo único, volver a hacer clic en el ítem abierto también lo cierra — el comportamiento es fijo, y no hay ajuste que lo desactive."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastrea las interacciones del usuario con el Accordion para entender qué secciones se acceden más.",
       "events": {
         "expand": {
@@ -1575,7 +1531,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en cada interacción con el Accordion.",

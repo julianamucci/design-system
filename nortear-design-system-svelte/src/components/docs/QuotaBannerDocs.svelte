@@ -191,7 +191,6 @@ export interface QuotaBannerLabels {
     nasce com um botão, quando o botão é de quem a monta.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="quota-banner"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -250,7 +249,6 @@ export interface QuotaBannerLabels {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5, 6].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -259,7 +257,6 @@ export interface QuotaBannerLabels {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -331,7 +328,6 @@ export interface QuotaBannerLabels {
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -354,7 +350,6 @@ export interface QuotaBannerLabels {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -369,7 +364,6 @@ export interface QuotaBannerLabels {
     que não renova.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -384,7 +378,6 @@ export interface QuotaBannerLabels {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'QuotaBanner',
@@ -449,7 +442,6 @@ export interface QuotaBannerLabels {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -476,7 +468,6 @@ export interface QuotaBannerLabels {
     aí que o teclado tem o que fazer.
   -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5, 6, 7].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -490,7 +481,6 @@ export interface QuotaBannerLabels {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
       { name: $tStore('related.items.costMeter.name'),      description: toPlainText($tStore('related.items.costMeter.description')),      path: '?path=/docs/components-conversational-costmeter--docs'      },
@@ -501,14 +491,12 @@ export interface QuotaBannerLabels {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="quota-banner"
     items={[1, 2, 3, 4, 5, 6, 7].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -523,7 +511,6 @@ export interface QuotaBannerLabels {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

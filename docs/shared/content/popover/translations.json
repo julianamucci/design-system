@@ -11,7 +11,6 @@
       "aiEntities": "Popover, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "trigger": "Abrir popover",
         "title": "Configurações de exibição",
@@ -27,7 +26,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Popover</strong> — root que controla o estado open/closed.",
       "item2": "<strong>PopoverTrigger</strong> — elemento que abre o popover ao ser clicado. Permite compor com elemento filho para envolver um Button.",
       "item3": "<strong>PopoverContent</strong> — container do conteúdo, posicionado via <code>side</code> e <code>align</code> com auto-flip.",
@@ -44,7 +42,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para conteúdo contextual interativo — formulários curtos, filtros, seleção de cor.",
@@ -133,7 +130,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O painel sempre tem nome acessível: título visível, ou aria-label quando o conteúdo é livre.",
         "dont": "Não deixe o painel sem nome — o leitor de tela anuncia só o rótulo do gatilho.",
@@ -145,11 +141,8 @@
         "dontTrigger": "Clique aqui"
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withTitle": "Com título",
@@ -160,7 +153,6 @@
         "withTitle": "<code>PopoverHeader</code> com <code>PopoverTitle</code> e <code>PopoverDescription</code>.",
         "form": "Formulário inline — Inputs e botões dentro do <code>PopoverContent</code>."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "editProfile": {
           "name": "Editar perfil",
@@ -208,7 +200,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Closed",
         "trigger": "estado inicial",
@@ -246,7 +237,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -306,7 +296,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -342,7 +331,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> aplicado automaticamente ao <code>PopoverContent</code>",
@@ -378,7 +366,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "tooltip": {
           "name": "Tooltip",
@@ -399,14 +386,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a abertura e o fechamento, o retorno do foco ao gatilho, o descarte por Escape e por clique fora e o posicionamento com desvio por colisão vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-popover-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Auto-flip</strong> — quando não há espaço no <code>side</code> preferido, o popover automaticamente reposiciona em outro lado para evitar overflow.",
       "item3": "<strong>Portal</strong> — o <code>PopoverContent</code> é renderizado em portal no <code>document.body</code> para evitar problemas de <code>z-index</code> e <code>overflow</code>.",
       "item4": "<strong>Não-modal por padrão</strong> — o foco entra no painel ao abrir, mas o Tab sai dele e segue a ordem da página, e o painel não se anuncia como modal. No modo modal as três coisas mudam juntas: o foco fica preso no painel, a rolagem da página trava e o painel passa a se anunciar como diálogo modal. Elas andam juntas de propósito — anunciar que o resto da página está inerte sem prender o foco engana quem navega por leitor de tela."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -423,7 +408,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -492,7 +476,6 @@
       "aiEntities": "Popover, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "trigger": "Open popover",
         "title": "Display settings",
@@ -508,7 +491,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Popover</strong> — root that controls the open/closed state.",
       "item2": "<strong>PopoverTrigger</strong> — element that opens the popover when clicked. Compose with a child element to wrap a Button.",
       "item3": "<strong>PopoverContent</strong> — content container, positioned via <code>side</code> and <code>align</code> with auto-flip.",
@@ -525,7 +507,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for contextual interactive content — short forms, filters, color picker.",
@@ -614,7 +595,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The panel always has an accessible name: a visible title, or aria-label when the content is free-form.",
         "dont": "Do not leave the panel unnamed — a screen reader announces only the trigger label.",
@@ -626,11 +606,8 @@
         "dontTrigger": "Click here"
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "withTitle": "With title",
@@ -641,7 +618,6 @@
         "withTitle": "<code>PopoverHeader</code> with <code>PopoverTitle</code> and <code>PopoverDescription</code>.",
         "form": "Inline form — Inputs and buttons inside <code>PopoverContent</code>."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "editProfile": {
           "name": "Edit profile",
@@ -689,7 +665,6 @@
       }
     },
     "states": {
-      "title": "States",
       "closed": {
         "label": "Closed",
         "trigger": "initial state",
@@ -727,7 +702,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -787,7 +761,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -823,7 +796,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> applied automatically to the <code>PopoverContent</code>",
@@ -859,7 +831,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "tooltip": {
           "name": "Tooltip",
@@ -880,14 +851,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — opening and closing, returning focus to the trigger, dismissal by Escape and by outside click, and positioning with collision shifting come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-popover-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Auto-flip</strong> — when there isn't enough space on the preferred <code>side</code>, the popover automatically repositions to avoid overflow.",
       "item3": "<strong>Portal</strong> — <code>PopoverContent</code> renders in a portal on <code>document.body</code> to avoid <code>z-index</code> and <code>overflow</code> issues.",
       "item4": "<strong>Non-modal by default</strong> — focus moves into the panel on open, but Tab leaves it and follows the page order, and the panel does not announce itself as modal. In modal mode all three change together: focus stays trapped in the panel, page scrolling locks, and the panel announces itself as a modal dialog. They go together on purpose — announcing that the rest of the page is inert without trapping focus misleads anyone navigating with a screen reader."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -904,7 +873,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -973,7 +941,6 @@
       "aiEntities": "Popover, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "trigger": "Abrir popover",
         "title": "Configuración de visualización",
@@ -989,7 +956,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Popover</strong> — root que controla el estado open/closed.",
       "item2": "<strong>PopoverTrigger</strong> — elemento que abre el popover al hacer clic. Compón con elemento hijo para envolver un Button.",
       "item3": "<strong>PopoverContent</strong> — contenedor del contenido, posicionado vía <code>side</code> y <code>align</code> con auto-flip.",
@@ -1006,7 +972,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para contenido contextual interactivo — formularios cortos, filtros, selector de color.",
@@ -1095,7 +1060,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El panel siempre tiene nombre accesible: título visible, o aria-label cuando el contenido es libre.",
         "dont": "No dejes el panel sin nombre — el lector de pantalla anuncia solo la etiqueta del disparador.",
@@ -1107,11 +1071,8 @@
         "dontTrigger": "Haz clic aquí"
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withTitle": "Con título",
@@ -1122,7 +1083,6 @@
         "withTitle": "<code>PopoverHeader</code> con <code>PopoverTitle</code> y <code>PopoverDescription</code>.",
         "form": "Formulario inline — Inputs y botones dentro de <code>PopoverContent</code>."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "editProfile": {
           "name": "Editar perfil",
@@ -1170,7 +1130,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Closed",
         "trigger": "estado inicial",
@@ -1208,7 +1167,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1268,7 +1226,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1304,7 +1261,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"dialog\"</code> aplicado automáticamente al <code>PopoverContent</code>",
@@ -1340,7 +1296,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "tooltip": {
           "name": "Tooltip",
@@ -1361,14 +1316,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la apertura y el cierre, el retorno del foco al disparador, el descarte por Escape y por clic fuera y el posicionamiento con desvío por colisión vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-popover-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Auto-flip</strong> — cuando no hay espacio en el <code>side</code> preferido, el popover se reposiciona automáticamente para evitar overflow.",
       "item3": "<strong>Portal</strong> — el <code>PopoverContent</code> se renderiza en portal en <code>document.body</code> para evitar problemas de <code>z-index</code> y <code>overflow</code>.",
       "item4": "<strong>No-modal por defecto</strong> — el foco entra en el panel al abrir, pero el Tab sale de él y sigue el orden de la página, y el panel no se anuncia como modal. En modo modal las tres cosas cambian juntas: el foco queda atrapado en el panel, el desplazamiento de la página se bloquea y el panel se anuncia como diálogo modal. Van juntas a propósito — anunciar que el resto de la página está inerte sin atrapar el foco engaña a quien navega con lector de pantalla."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1385,7 +1338,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

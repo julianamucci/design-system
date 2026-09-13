@@ -20,7 +20,6 @@
       "unbounded": "Sem teto conhecido"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "ring": "Em anel, num trilho estreito",
         "bar": "Em barra, num painel",
@@ -29,7 +28,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O nome da medida abre o bloco e não aparece na tela: quem vê já sabe do que se trata pelo lugar em que a peça está, e quem ouve não sabe.",
       "item2": "O medidor vem depois e é só desenho — ele não carrega o valor, não tem papel de controle e fica fora do que é lido em voz.",
@@ -41,7 +39,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para dizer quanto da janela de contexto já foi gasto, perto de onde a conversa acontece.",
@@ -132,7 +129,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "A palavra do nível está na linha, e a cor apenas reforça.",
         "dont": "Só a cor do medidor separa a folga do aperto, e cor não chega a quem ouve a tela."
@@ -143,7 +139,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: labels,\n});",
@@ -158,8 +153,6 @@
       }
     },
     "variants": {
-      "title": "Formas",
-      "visualTitle": "Exemplos visuais",
       "note": "As três dizem o mesmo número, e a escolha é de espaço: o anel cabe num trilho estreito ao lado de outros controles, a barra toma a linha inteira de um painel, e o texto sozinho serve a um rodapé. Trocar de forma não muda o que é lido em voz.",
       "items": {
         "ring": {
@@ -195,7 +188,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -228,7 +220,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -299,7 +290,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -366,7 +356,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O número é texto e o medidor é desenho: nada aqui se anuncia, o nível chega em palavra, e a medida tem nome mesmo sem título visível.",
       "items": {
         "item1": "A palavra do nível está sempre na linha quando há teto: a cor do medidor não descreve nível sozinha.",
@@ -393,7 +382,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado da execução",
@@ -414,7 +402,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O número é texto e o medidor é desenho. Um contador que se reanuncia torna a tela impossível de ouvir, e é por isso que não há região viva nem valor acessível aqui.",
       "item2": "Sem teto não há fração, só contagem. O teto é opcional porque nem sempre se sabe qual é, e quem não sabe não ganha medidor: um anel vazio lê como zero por cento.",
       "item3": "O limiar de aviso é decisão do primitivo compartilhado, e não de cada tela. Três quartos avisam, nove décimos apertam, e a comparação é exata — frouxa, duas peças discordariam sobre o mesmo número.",
@@ -423,7 +410,6 @@
       "item6": "As três formas dizem o mesmo. Trocar de forma é escolha de espaço, e não de informação — nada muda no que é lido em voz."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a medição em si não instrumenta nada, porque não há interação nela.",
       "table": {
         "event": "Evento",
@@ -441,7 +427,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -547,7 +532,6 @@
       "unbounded": "Ceiling unknown"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "ring": "As a ring, in a narrow rail",
         "bar": "As a bar, in a panel",
@@ -556,7 +540,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The name of the measurement opens the block and stays off screen: people who see it already know what it is from where it sits, and people who hear it do not.",
       "item2": "The meter comes next and is drawing only — it carries no value, has no control role, and stays out of what is read aloud.",
@@ -568,7 +551,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it to say how much of the context window has been spent, near where the conversation happens.",
@@ -659,7 +641,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The level word is on the line, and colour only reinforces it.",
         "dont": "Only the meter colour separates room to spare from the limit, and colour does not reach someone listening to the screen."
@@ -670,7 +651,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: labels,\n});",
@@ -685,8 +665,6 @@
       }
     },
     "variants": {
-      "title": "Forms",
-      "visualTitle": "Visual examples",
       "note": "All three say the same number, and the choice is about space: the ring fits a narrow rail beside other controls, the bar takes the whole line of a panel, and text alone suits a footer. Changing form does not change what is read aloud.",
       "items": {
         "ring": {
@@ -722,7 +700,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -755,7 +732,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -826,7 +802,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -893,7 +868,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The number is text and the meter is drawing: nothing here announces itself, the level arrives as a word, and the measurement has a name even with no visible title.",
       "items": {
         "item1": "The level word is always on the line when there is a ceiling: the meter colour does not describe the level on its own.",
@@ -920,7 +894,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "agentStatus": {
           "name": "Run status",
@@ -941,7 +914,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The number is text and the meter is drawing. A counter that re-announces itself makes the screen impossible to listen to, which is why there is no live region and no accessible value here.",
       "item2": "With no ceiling there is no fraction, only a count. The ceiling is optional because it is not always known, and whoever does not know it gets no meter: an empty ring reads as zero per cent.",
       "item3": "The warning threshold is a decision of the shared primitive, not of each screen. Three quarters warns, nine tenths tightens, and the comparison is exact — a loose one would have two pieces disagreeing about the same number.",
@@ -950,7 +922,6 @@
       "item6": "All three forms say the same thing. Changing form is a choice about space, not about information — nothing changes in what is read aloud."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the measurement itself instruments nothing, because there is no interaction in it.",
       "table": {
         "event": "Event",
@@ -968,7 +939,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1074,7 +1044,6 @@
       "unbounded": "Sin techo conocido"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "ring": "En anillo, en un carril estrecho",
         "bar": "En barra, en un panel",
@@ -1083,7 +1052,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El nombre de la medida abre el bloque y no aparece en pantalla: quien lo ve ya sabe de qué se trata por el lugar donde está la pieza, y quien lo oye no.",
       "item2": "El medidor viene después y es solo dibujo: no lleva el valor, no tiene papel de control y queda fuera de lo que se lee en voz alta.",
@@ -1095,7 +1063,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para decir cuánto de la ventana de contexto ya se gastó, cerca de donde ocurre la conversación.",
@@ -1186,7 +1153,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "La palabra del nivel está en la línea, y el color solo refuerza.",
         "dont": "Solo el color del medidor separa la holgura del apuro, y el color no llega a quien escucha la pantalla."
@@ -1197,7 +1163,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createContextDisplay } from '@/components/ui/context-display';\n\ncreateContextDisplay({\n  usage: { input: 18000, output: 7000, limit: 32000 },\n  form: 'ring',\n  labels: labels,\n});",
@@ -1212,8 +1177,6 @@
       }
     },
     "variants": {
-      "title": "Formas",
-      "visualTitle": "Ejemplos visuales",
       "note": "Las tres dicen el mismo número, y la elección es de espacio: el anillo cabe en un carril estrecho junto a otros controles, la barra toma la línea entera de un panel, y el texto solo sirve a un pie. Cambiar de forma no cambia lo que se lee en voz alta.",
       "items": {
         "ring": {
@@ -1249,7 +1212,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1282,7 +1244,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1353,7 +1314,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1420,7 +1380,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El número es texto y el medidor es dibujo: nada aquí se anuncia, el nivel llega en palabra, y la medida tiene nombre aun sin título visible.",
       "items": {
         "item1": "La palabra del nivel está siempre en la línea cuando hay techo: el color del medidor no describe el nivel por sí solo.",
@@ -1447,7 +1406,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado de la ejecución",
@@ -1468,7 +1426,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El número es texto y el medidor es dibujo. Un contador que se reanuncia hace la pantalla imposible de escuchar, y por eso aquí no hay región viva ni valor accesible.",
       "item2": "Sin techo no hay fracción, solo recuento. El techo es opcional porque no siempre se conoce, y quien no lo conoce no recibe medidor: un anillo vacío se lee como cero por ciento.",
       "item3": "El umbral de aviso es decisión del primitivo compartido, y no de cada pantalla. Tres cuartos avisan, nueve décimos aprietan, y la comparación es exacta — floja, dos piezas discreparían sobre el mismo número.",
@@ -1477,7 +1434,6 @@
       "item6": "Las tres formas dicen lo mismo. Cambiar de forma es elección de espacio, y no de información — nada cambia en lo que se lee en voz alta."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la medición en sí no instrumenta nada, porque no hay interacción en ella.",
       "table": {
         "event": "Evento",
@@ -1495,7 +1451,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

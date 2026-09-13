@@ -250,7 +250,7 @@ export function CheckboxDocs() {
       }
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
-          <DocsDemonstration title={tContent("demonstration.title")}>
+          <DocsDemonstration >
             <div className="nds-stack" data-spacing="sm">
               <div className="nds-cluster" data-spacing="xs">
                 <Checkbox
@@ -316,7 +316,6 @@ export function CheckboxDocs() {
 
           {/* ── Anatomia ──────────────────────────────────────────────── */}
           <DocsAnatomy
-            title={tContent("anatomy.title")}
             items={[
               tContent("anatomy.item1"),
               tContent("anatomy.item2"),
@@ -329,7 +328,6 @@ export function CheckboxDocs() {
 
           {/* ── Quando Usar ───────────────────────────────────────────── */}
           <DocsWhenToUse
-            title={tContent("usage.title")}
             guidelines={{
               title: tContent("usage.guidelines.title"),
               items: [
@@ -376,7 +374,6 @@ export function CheckboxDocs() {
 
           {/* ── Do & Don't ────────────────────────────────────────────── */}
           <DocsDoDont
-            title={tContent("doDont.title")}
             pairs={[
               {
                 doLabel: tNav("common.do"),
@@ -442,14 +439,12 @@ export function CheckboxDocs() {
 
           {/* ── Importação ────────────────────────────────────────────── */}
           <DocsImport
-            title={tContent("import.title")}
             description={tContent("import.react")}
             code={codeImportBasic}
           />
 
           {/* ── Variantes ─────────────────────────────────────────────── */}
           <DocsVariants
-            title={tContent("variants.title")}
             items={[
               {
                 name: "default",
@@ -506,7 +501,6 @@ export function CheckboxDocs() {
 
           {/* ── Composições ───────────────────────────────────────────── */}
           <DocsCompositions
-            title={tContent("variants.compositionsTitle")}
             useWhenLabel={tNav("common.useWhen")}
             componentSlug="checkbox"
             items={[
@@ -632,7 +626,6 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
           {/* ── Estados ───────────────────────────────────────────────── */}
           <DocsStates
-            title={tContent("states.title")}
             cols={{
               state: tContent("states.cols.state"),
               trigger: toPlainText(tContent("states.cols.trigger")),
@@ -669,7 +662,6 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
           {/* ── Propriedades ──────────────────────────────────────────── */}
           <DocsProps
-            title={tContent("props.title")}
             tables={[
               {
                 // Título da tabela é o nome do primitivo, não o da stack: a
@@ -754,7 +746,6 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
           {/* ── Tokens ────────────────────────────────────────────────── */}
           <DocsTokens
-            title={tContent("tokens.title")}
             cols={{
               token: tContent("tokens.table.token"),
               value: tContent("tokens.table.class"),
@@ -778,7 +769,6 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
           <DocsAccessibility
             screenReaderTitle={tNav("common.screenReader")}
             screenReaderItems={screenReaderItems}
-            title={tContent("accessibility.title")}
             summary={tContent("accessibility.summary")}
             items={[
               tContent("accessibility.item1"),
@@ -787,7 +777,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
               tContent("accessibility.item4"),
               tContent("accessibility.item5"),
             ]}
-            keyboardTitle={tContent("accessibility.title")}
+            keyboardTitle={tNav("nav.accessibility")}
             keyboardItems={[
               { key: "Tab",       description: tContent("accessibility.keyboard.tab") },
               { key: "Space",     description: tContent("accessibility.keyboard.space") },
@@ -798,7 +788,6 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
           {/* ── Relacionados ──────────────────────────────────────────── */}
           <DocsRelated
-            title={tContent("related.title")}
             items={[
               {
                 name: "Switch",
@@ -825,7 +814,6 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
           {/* ── Notas ─────────────────────────────────────────────────── */}
           <DocsNotes
-            title={tContent("notes.title")}
             items={[
               { title: "", content: tContent("notes.tip1") },
               { title: "", content: tContent("notes.tip2") },
@@ -836,7 +824,6 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
           {/* ── Analytics ─────────────────────────────────────────────── */}
           <DocsAnalytics
-            title={tContent("analytics.title")}
             cols={{
               event: tContent("analytics.table.event"),
               trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -868,7 +855,6 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
           {/* ── Testes ────────────────────────────────────────────────── */}
           <DocsTestes
-            title={tContent("testes.title")}
             functional={{
               title: tContent("testes.functional.title"),
               cols: {

@@ -212,7 +212,6 @@ export function ComposerQuoteDocs() {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration
-        title={tContent("demonstration.title")}
         componentSlug="composer-quote"
       >
         <div className="nds-stack nds-w-full" data-spacing="lg">
@@ -227,7 +226,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`anatomy.item${i}`))}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -236,7 +234,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -281,7 +278,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -331,7 +327,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.fromThread")}
@@ -340,7 +335,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: tContent("states.cols.trigger"),
@@ -355,7 +349,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: "Composer",
@@ -400,7 +393,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.value"),
@@ -420,7 +412,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`accessibility.items.item${i}`))}
         keyboardTitle={tContent("accessibility.keyboard.title")}
@@ -435,7 +426,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           { name: tContent("related.items.composer.name"),    description: toPlainText(tContent("related.items.composer.description")),    path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.chatThread.name"),  description: toPlainText(tContent("related.items.chatThread.description")),  path: "?path=/docs/components-conversational-chatthread--docs" },
@@ -446,14 +436,12 @@ export function ComposerQuoteDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="composer-quote"
         items={[1, 2, 3, 4, 5].map((i) => ({ title: "", content: tContent(`notes.item${i}`) }))}
       />
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: tContent("analytics.table.trigger"),
@@ -468,7 +456,6 @@ export function ComposerQuoteDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

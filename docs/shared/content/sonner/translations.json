@@ -11,7 +11,6 @@
       "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-live"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "default": "Código copiado.",
         "success": "Alterações salvas.",
@@ -40,7 +39,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Toaster</strong> — componente de configuração global. Adicionado uma vez no root da aplicação.",
       "item2": "<strong>Toast item</strong> — notificação individual renderizada pelo Sonner automaticamente.",
       "item3": "<strong>Ícone</strong> — definido pelo projeto via prop <code>icons</code> do Toaster; <code>aria-hidden</code> implícito.",
@@ -58,7 +56,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use apenas para confirmações temporárias — o toast desaparece automaticamente sem exigir ação.",
@@ -148,7 +145,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "toast.success com título breve no passado. Confirma o que aconteceu sem excesso.",
         "dont": "Toast para erro que bloqueia o fluxo. Use Alert para mensagens persistentes."
@@ -158,11 +154,8 @@
         "dont": "Toast para erros de formulário. Use FormMessage para manter o contexto inline."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Tipos de Toast",
       "items": {
         "default": "Toast neutro sem tipo semântico. Usa as CSS variables <code>--normal-bg</code> e <code>--normal-text</code> do tema.",
         "success": "Confirmação de ação bem-sucedida. Ícone e cor verde aplicados automaticamente com <code>richColors</code>.",
@@ -172,7 +165,6 @@
       }
     },
     "states": {
-      "title": "Composições",
       "cols": {
         "state": "Composição",
         "trigger": "Chamada",
@@ -198,7 +190,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "toasterTitle": "Toaster",
       "table": {
         "prop": "Propriedade",
@@ -216,7 +207,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Variable",
         "value": "Valor padrão do projeto",
@@ -229,7 +219,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Sonner usa <code>aria-live=\"polite\"</code> internamente — os toasts são anunciados ao leitor de tela sem interromper o fluxo. Cumpre WCAG 2.2 AA: 4.1.3 (mensagens de status). Toasts com ação são focáveis por teclado.",
       "item1": "<strong>aria-live polite</strong> — o Sonner gerencia <code>aria-live=\"polite\"</code> internamente. Toasts são anunciados sem interromper a leitura em curso.",
@@ -255,7 +244,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "alert": "Para mensagens persistentes que exigem atenção ou ação enquanto o usuário permanece na página.",
@@ -264,7 +252,6 @@
       "progress": "Para comunicar progresso mensurável de operações assíncronas em andamento."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "O <code>&lt;Toaster /&gt;</code> deve ser adicionado uma única vez no root da aplicação (ex: <code>App.tsx</code>). Sem ele, nenhum <code>toast()</code> será exibido.",
       "item2": "Defina <code>position=\"top-right\"</code> explicitamente no <code>&lt;Toaster /&gt;</code> — o padrão do Sonner é <code>bottom-right</code>, diferente do padrão do projeto.",
       "item3": "Use <code>toast.promise()</code> para operações assíncronas. Evita estados manuais de loading e garante transição automática entre os estados da promise.",
@@ -272,7 +259,6 @@
       "item5": "<code>duration: Infinity</code> só deve ser usado para erros críticos que exigem ação explícita do usuário — sempre com <code>dismissible: true</code>."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "O toast em si não dispara evento — o evento é da ação que o originou. Rastreie apenas o clique no botão de ação interno.",
       "table": {
         "event": "Evento",
@@ -293,7 +279,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada tipo e composição de toast.",
@@ -391,7 +376,6 @@
       "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-live"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "default": "Code copied.",
         "success": "Changes saved.",
@@ -420,7 +404,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Toaster</strong> — global configuration component. Added once at the application root.",
       "item2": "<strong>Toast item</strong> — individual notification rendered by Sonner automatically.",
       "item3": "<strong>Icon</strong> — defined by the project via the Toaster's <code>icons</code> prop; implicitly <code>aria-hidden</code>.",
@@ -438,7 +421,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use only for temporary confirmations — the toast disappears automatically without requiring action.",
@@ -528,7 +510,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "toast.success with a brief past-tense title. Confirms what happened without excess.",
         "dont": "Toast for a flow-blocking error. Use Alert for persistent messages."
@@ -538,11 +519,8 @@
         "dont": "Toast for form errors. Use FormMessage to keep context inline."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Toast Types",
       "items": {
         "default": "Neutral toast without semantic type. Uses <code>--normal-bg</code> and <code>--normal-text</code> CSS variables from the theme.",
         "success": "Successful action confirmation. Green icon and color applied automatically with <code>richColors</code>.",
@@ -552,7 +530,6 @@
       }
     },
     "states": {
-      "title": "Compositions",
       "cols": {
         "state": "Composition",
         "trigger": "Call",
@@ -578,7 +555,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "toasterTitle": "Toaster",
       "table": {
         "prop": "Property",
@@ -596,7 +572,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Variable",
         "value": "Project default value",
@@ -609,7 +584,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Sonner uses <code>aria-live=\"polite\"</code> internally — toasts are announced to screen readers without interrupting the flow. Meets WCAG 2.2 AA: 4.1.3 (status messages). Toasts with actions are keyboard focusable.",
       "item1": "<strong>Polite aria-live</strong> — Sonner manages <code>aria-live=\"polite\"</code> internally. Toasts are announced without interrupting ongoing reading.",
@@ -635,7 +609,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "alert": "For persistent messages that require attention or action while the user remains on the page.",
@@ -644,7 +617,6 @@
       "progress": "For communicating measurable progress of ongoing async operations."
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<code>&lt;Toaster /&gt;</code> must be added once at the application root (e.g., <code>App.tsx</code>). Without it, no <code>toast()</code> will be displayed.",
       "item2": "Set <code>position=\"top-right\"</code> explicitly on <code>&lt;Toaster /&gt;</code> — Sonner's default is <code>bottom-right</code>, different from the project's default.",
       "item3": "Use <code>toast.promise()</code> for async operations. Avoids manual loading state and guarantees automatic transitions based on promise resolution.",
@@ -652,7 +624,6 @@
       "item5": "<code>duration: Infinity</code> should only be used for critical errors requiring explicit user action — always with <code>dismissible: true</code>."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The toast itself does not fire an event — the event belongs to the action that triggered it. Track only the click on the internal action button.",
       "table": {
         "event": "Event",
@@ -673,7 +644,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each toast type and composition.",
@@ -771,7 +741,6 @@
       "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-live"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "default": "Código copiado.",
         "success": "Cambios guardados.",
@@ -800,7 +769,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Toaster</strong> — componente de configuración global. Se agrega una vez en el root de la aplicación.",
       "item2": "<strong>Toast item</strong> — notificación individual renderizada automáticamente por Sonner.",
       "item3": "<strong>Ícono</strong> — definido por el proyecto vía la prop <code>icons</code> del Toaster; implícitamente <code>aria-hidden</code>.",
@@ -818,7 +786,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Úsalo solo para confirmaciones temporales — el toast desaparece automáticamente sin exigir acción.",
@@ -908,7 +875,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "toast.success con título breve en pasado. Confirma lo que ocurrió sin exceso.",
         "dont": "Toast para error que bloquea el flujo. Usa Alert para mensajes persistentes."
@@ -918,11 +884,8 @@
         "dont": "Toast para errores de formulario. Usa FormMessage para mantener el contexto inline."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Tipos de Toast",
       "items": {
         "default": "Toast neutro sin tipo semántico. Usa las variables CSS <code>--normal-bg</code> y <code>--normal-text</code> del tema.",
         "success": "Confirmación de acción exitosa. Ícono y color verde aplicados automáticamente con <code>richColors</code>.",
@@ -932,7 +895,6 @@
       }
     },
     "states": {
-      "title": "Composiciones",
       "cols": {
         "state": "Composición",
         "trigger": "Llamada",
@@ -958,7 +920,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "toasterTitle": "Toaster",
       "table": {
         "prop": "Propiedad",
@@ -976,7 +937,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Variable CSS",
         "value": "Valor por defecto del proyecto",
@@ -989,7 +949,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Sonner usa <code>aria-live=\"polite\"</code> internamente — los toasts son anunciados al lector de pantalla sin interrumpir el flujo. Cumple WCAG 2.2 AA: 4.1.3 (mensajes de estado). Los toasts con acciones son accesibles por teclado.",
       "item1": "<strong>aria-live polite</strong> — Sonner gestiona <code>aria-live=\"polite\"</code> internamente. Los toasts se anuncian sin interrumpir la lectura en curso.",
@@ -1015,7 +974,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "alert": "Para mensajes persistentes que requieren atención o acción mientras el usuario permanece en la página.",
@@ -1024,7 +982,6 @@
       "progress": "Para comunicar el progreso mensurable de operaciones asíncronas en curso."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<code>&lt;Toaster /&gt;</code> debe agregarse una sola vez en el root de la aplicación (ej: <code>App.tsx</code>). Sin él, ningún <code>toast()</code> se mostrará.",
       "item2": "Define <code>position=\"top-right\"</code> explícitamente en <code>&lt;Toaster /&gt;</code> — el valor por defecto de Sonner es <code>bottom-right</code>, distinto al padrón del proyecto.",
       "item3": "Usa <code>toast.promise()</code> para operaciones asíncronas. Evita estados manuales de loading y garantiza transiciones automáticas según la resolución de la promise.",
@@ -1032,7 +989,6 @@
       "item5": "<code>duration: Infinity</code> solo debe usarse para errores críticos que requieren acción explícita del usuario — siempre con <code>dismissible: true</code>."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "El toast en sí no dispara evento — el evento pertenece a la acción que lo originó. Rastrea solo el clic en el botón de acción interno.",
       "table": {
         "event": "Evento",
@@ -1053,7 +1009,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada tipo y composición de toast.",

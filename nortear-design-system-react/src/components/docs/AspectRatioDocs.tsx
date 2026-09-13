@@ -240,7 +240,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-grid nds-w-full" style={{ gap: "var(--spacing-6)" }}>
           <div className="nds-stack" data-spacing="xs">
             <p className="nds-text-caption nds-text-muted-foreground">
@@ -275,7 +275,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -286,7 +285,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -334,7 +332,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -401,14 +398,12 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         code={codeImportBasic}
         secondaryCode={codeImportWithFallback}
       />
 
       {/* ── Variantes (Ratios Canônicos) ──────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         items={[
           {
             name: "16 / 9",
@@ -465,7 +460,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: locale === "en" ? "State" : locale === "es" ? "Estado" : "Estado",
           trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
@@ -492,7 +486,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -541,7 +534,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -560,7 +552,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.aria.item1"),
@@ -578,7 +569,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: "Card",
@@ -600,7 +590,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },
@@ -611,7 +600,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -628,7 +616,6 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

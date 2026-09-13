@@ -214,7 +214,7 @@ toast.promise(promise, {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div style="contain: layout" class="nds-cluster" data-spacing="md">
       <Button variant="outline" onclick={fireDefault}
         data-track="demo"
@@ -271,7 +271,6 @@ toast.promise(promise, {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -287,7 +286,6 @@ toast.promise(promise, {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -349,7 +347,6 @@ toast.promise(promise, {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -404,7 +401,6 @@ toast.promise(promise, {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImport}
     secondaryDescription={undefined}
     secondaryCode={codeSetup}
@@ -412,7 +408,6 @@ toast.promise(promise, {
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { name: 'default', description: stripHtml($tStore('variants.items.default')), code: codeDefault, preview: variantDefault },
       { name: 'success', description: stripHtml($tStore('variants.items.success')), code: codeSuccess, preview: variantSuccess },
@@ -450,7 +445,6 @@ toast.promise(promise, {
 
   <!-- ── Composições ───────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -466,7 +460,6 @@ toast.promise(promise, {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.toasterTitle'),
@@ -493,7 +486,6 @@ toast.promise(promise, {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -513,7 +505,6 @@ toast.promise(promise, {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -533,7 +524,6 @@ toast.promise(promise, {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Alert',        description: $tStore('related.alert'),        path: '?path=/docs/components-feedback-alert--docs'        },
       { name: 'AlertDialog',  description: $tStore('related.alertDialog'),  path: '?path=/docs/components-overlay-alertdialog--docs'  },
@@ -544,7 +534,6 @@ toast.promise(promise, {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -556,7 +545,6 @@ toast.promise(promise, {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -572,7 +560,6 @@ toast.promise(promise, {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

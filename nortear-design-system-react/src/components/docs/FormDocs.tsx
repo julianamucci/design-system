@@ -238,7 +238,7 @@ export function FormDocs() {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")} componentSlug="form">
+      <DocsDemonstration componentSlug="form">
         <div className="nds-stack nds-w-full nds-max-w-sm">
           <FormField
             label={tContent("demonstration.labels.nameLabel")}
@@ -293,7 +293,6 @@ export function FormDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`anatomy.item${i}`))}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -301,7 +300,6 @@ export function FormDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -331,7 +329,6 @@ export function FormDocs() {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -416,7 +413,6 @@ export function FormDocs() {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={IMPORT_CODE}
         componentSlug="form"
@@ -428,7 +424,6 @@ export function FormDocs() {
           "quando usar" em cada item, e só este renderiza essa linha. */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         note={tContent("variants.note")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="form"
@@ -462,7 +457,6 @@ export function FormDocs() {
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="form"
         items={[
@@ -479,7 +473,6 @@ export function FormDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -494,7 +487,6 @@ export function FormDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.fieldTitle"),
@@ -524,7 +516,6 @@ export function FormDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -550,7 +541,6 @@ export function FormDocs() {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`accessibility.item${i}`))}
         keyboardTitle={tNav("common.keyboard")}
@@ -564,7 +554,6 @@ export function FormDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="form"
         items={[
           { name: "Input",    description: toPlainText(tContent("related.input")),    path: "?path=/docs/components-form-input--docs" },
@@ -577,14 +566,12 @@ export function FormDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="form"
         items={[1, 2, 3, 4, 5].map((i) => ({ title: "", content: tContent(`notes.tip${i}`) }))}
       />
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: tContent("analytics.table.trigger"),
@@ -599,7 +586,6 @@ export function FormDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

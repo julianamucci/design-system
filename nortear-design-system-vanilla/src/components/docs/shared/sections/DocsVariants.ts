@@ -1,3 +1,4 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 import { createButton } from '@/components/ui/button';
@@ -17,7 +18,6 @@ export interface DocsVariantItem {
 }
 
 export interface DocsVariantsProps {
-  title: string;
   /** Nota introdutória da seção (HTML inline permitido). Nome canônico
    *  cross-stack; consome a chave `variants.note` do translations.json. */
   note?: string;
@@ -46,7 +46,7 @@ export function createDocsVariants(props: DocsVariantsProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao(section.id);
   section.appendChild(h2);
 
   const sectionNote = props.note ?? props.description;

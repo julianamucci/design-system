@@ -239,13 +239,13 @@
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="media-player">
+  <DocsDemonstration componentSlug="media-player">
     <div class="nds-stack nds-w-full" data-spacing="md">
       <div
         class="nds-cluster"
         data-spacing="sm"
         role="group"
-        aria-label={$tStore('demonstration.title')}
+        aria-label={$tNavStore('nav.demonstration')}
       >
         {#each SOURCE_KEYS as key (key)}
           <Button
@@ -271,7 +271,6 @@
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5, 6, 7].map((n) => $tStore(`anatomy.item${n}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -280,7 +279,6 @@
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map((n) => $tStore(`usage.guidelines.item${n}`)),
@@ -310,7 +308,6 @@
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -374,7 +371,6 @@
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withProvider')}
@@ -386,7 +382,6 @@
 
   <!-- ── Fontes ─────────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     componentSlug="media-player"
     copyLabel={$tNavStore('common.copy')}
@@ -449,7 +444,6 @@
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -464,7 +458,6 @@
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -493,7 +486,6 @@
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -512,7 +504,6 @@
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5, 6, 7, 8].map((n) => $tStore(`accessibility.item${n}`))}
     keyboardTitle={$tStore('accessibility.keyboardTitle')}
@@ -524,7 +515,6 @@
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     componentSlug="media-player"
     items={[
       { name: 'AspectRatio', description: $tStore('related.aspectRatio'), path: '?path=/docs/components-layout-aspectratio--docs' },
@@ -536,14 +526,12 @@
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="media-player"
     items={[1, 2, 3, 4, 5, 6].map((n) => ({ title: '', content: $tStore(`notes.tip${n}`) }))}
   />
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -558,7 +546,6 @@
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

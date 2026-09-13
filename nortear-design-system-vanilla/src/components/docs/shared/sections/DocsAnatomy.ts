@@ -1,9 +1,9 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import DOMPurify from 'dompurify';
 import { createComponentDemo } from '@/components/ComponentDemo';
 import { createCodeBlock } from '@/components/ui/code-block';
 
 export interface DocsAnatomyProps {
-  title: string;
   items: string[];
   structureCode: string;
   structureLabel?: string;
@@ -21,7 +21,7 @@ export function createDocsAnatomy(props: DocsAnatomyProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('anatomia');
 
   const inner = document.createElement('div');
   inner.className = 'nds-stack nds-w-full';

@@ -140,7 +140,6 @@ export function createFormDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack nds-w-full nds-max-w-sm';
@@ -204,7 +203,6 @@ export function createFormDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -218,7 +216,6 @@ export function createFormDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -263,7 +260,6 @@ export function createFormDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -347,7 +343,6 @@ export function createFormDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createFormField, createFieldset } from '@/components/ui/form';`,
         });
@@ -368,7 +363,6 @@ export function createFormDocs(): HTMLElement {
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'form',
           items: [
@@ -431,7 +425,6 @@ export function createFormDocs(): HTMLElement {
           `});`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'form',
           items: [
@@ -455,7 +448,6 @@ export function createFormDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -494,7 +486,6 @@ export type FieldsetOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.fieldTitle'),
@@ -535,7 +526,6 @@ export type FieldsetOptions = {
 }`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -557,7 +547,6 @@ export type FieldsetOptions = {
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -577,7 +566,6 @@ export type FieldsetOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Input',    description: toPlainText(t('related.input')),    path: '?path=/docs/components-form-input--docs' },
             { name: 'Textarea', description: toPlainText(t('related.textarea')), path: '?path=/docs/components-form-textarea--docs' },
@@ -589,7 +577,6 @@ export type FieldsetOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -601,7 +588,6 @@ export type FieldsetOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -619,7 +605,6 @@ export type FieldsetOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

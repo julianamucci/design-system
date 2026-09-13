@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DOMPurify from 'dompurify';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 interface DocsNoteItem { title: string; content: string }
 
@@ -14,10 +15,11 @@ interface DocsNoteItem { title: string; content: string }
  * capturar clicks em qualquer link descendente.
  */
 const props = defineProps<{
-  title: string;
   items: DocsNoteItem[];
   componentSlug?: string;
 }>();
+
+const title = useTituloDeSecao('notas');
 
 function trackId(i: number): string | undefined {
   return props.componentSlug ? `${props.componentSlug}:link:notes-${i + 1}` : undefined;

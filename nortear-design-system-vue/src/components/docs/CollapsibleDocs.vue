@@ -451,7 +451,7 @@ const visualTestItems = computed(() => [
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration :title="tContent('demonstration.title')">
+    <DocsDemonstration>
       <div
         class="nds-w-full nds-max-w-sm nds-stack"
         data-spacing="lg"
@@ -572,7 +572,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Anatomia ───────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -580,7 +579,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Quando Usar ────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="{
         title: tContent('usage.guidelines.title'),
         items: [
@@ -612,7 +610,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
@@ -743,7 +740,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="codeImportBasic"
       :secondary-description="tContent('import.withButton')"
@@ -753,7 +749,6 @@ const visualTestItems = computed(() => [
     <!-- ── Variantes (Modos) ──────────────────────────────────────── -->
     <DocsCompositions
       id="variantes"
-      :title="tContent('variants.title')"
       :use-when-label="tNav('common.useWhen')"
       :items="variantItems"
       component-slug="collapsible"
@@ -827,7 +822,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Composições ────────────────────────────────────────────── -->
     <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="collapsible"
       :items="compositionItems"
@@ -942,7 +936,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
         trigger: toPlainText(tContent('states.cols.trigger')),
@@ -953,7 +946,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Propriedades ───────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.collapsibleTitle'), cols: propCols, items: collapsiblePropItems },
         { title: tContent('props.triggerTitle'), cols: propCols, items: triggerPropItems },
@@ -966,7 +958,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{
         token: tContent('tokens.table.token'),
         value: tContent('tokens.table.class'),
@@ -981,7 +972,6 @@ const visualTestItems = computed(() => [
     <DocsAccessibility
       :screen-reader-title="tNav('common.screenReader')"
       :screen-reader-items="screenReaderItems"
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
@@ -990,19 +980,16 @@ const visualTestItems = computed(() => [
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
         trigger: toPlainText(tContent('analytics.table.trigger')),
@@ -1013,7 +1000,6 @@ const visualTestItems = computed(() => [
 
     <!-- ── Testes ─────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },

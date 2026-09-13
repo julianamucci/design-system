@@ -170,7 +170,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
     elas.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="agent-status"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -212,7 +211,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -221,7 +219,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -296,7 +293,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -319,7 +315,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -332,7 +327,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
     lista, e nenhuma das duas fica para trás quando o tipo cresce.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -347,7 +341,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'AgentStatus',
@@ -392,7 +385,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -414,7 +406,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -429,7 +420,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
       { name: $tStore('related.items.composer.name'),   description: toPlainText($tStore('related.items.composer.description')),   path: '?path=/docs/components-conversational-composer--docs'   },
@@ -440,14 +430,12 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="agent-status"
     items={[1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -462,7 +450,6 @@ export type AgentStatusIntent = 'stop' | 'start';`;
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

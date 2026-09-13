@@ -258,7 +258,7 @@ const CODE_STATUS = `<span ndsAvatar>
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-cluster nds-w-full" data-spacing="xl">
             <div class="nds-stack" data-spacing="xs">
               <span ndsAvatar size="lg">
@@ -328,7 +328,6 @@ const CODE_STATUS = `<span ndsAvatar>
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -336,7 +335,6 @@ const CODE_STATUS = `<span ndsAvatar>
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -344,10 +342,9 @@ const CODE_STATUS = `<span ndsAvatar>
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="importCode"
           [secondaryDescription]="t('import.withIcon')"
@@ -357,7 +354,6 @@ const CODE_STATUS = `<span ndsAvatar>
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="variantsNote()"
           [items]="variantItems()"
           componentSlug="avatar"
@@ -366,13 +362,11 @@ const CODE_STATUS = `<span ndsAvatar>
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -380,7 +374,6 @@ const CODE_STATUS = `<span ndsAvatar>
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -388,7 +381,6 @@ const CODE_STATUS = `<span ndsAvatar>
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -396,21 +388,18 @@ const CODE_STATUS = `<span ndsAvatar>
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="avatar"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="avatar" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="avatar" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

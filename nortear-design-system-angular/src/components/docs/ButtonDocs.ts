@@ -247,7 +247,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
       <ng-container docsMain>
         <!-- 1. Demonstração -->
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <div class="nds-cluster" data-spacing="md">
             @for (v of demoVariants(); track v.variant) {
               <button
@@ -274,7 +274,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 2. Anatomia -->
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -283,7 +282,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 3. Quando usar -->
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -292,11 +290,10 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
         />
 
         <!-- 4. Do / Don't -->
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <!-- 5. Importação -->
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="t('import.basic')"
           [secondaryCode]="t('import.withIcon')"
           componentSlug="button"
@@ -305,7 +302,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 6. Variantes -->
         <nds-docs-variants
-          [title]="t('variants.title')"
           [items]="variantItems()"
           componentSlug="button"
           id="variantes"
@@ -313,7 +309,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 7. Tamanhos -->
         <nds-docs-variants
-          [title]="t('variants.sizesTitle')"
           [items]="sizeItems()"
           componentSlug="button"
           id="tamanhos"
@@ -321,7 +316,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 8. Composições -->
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="button"
@@ -329,14 +323,12 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 9. Estados -->
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <!-- 10. Propriedades -->
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [extensibilityTitle]="t('props.extensibilityTitle')"
           [extensibilityNotes]="t('props.extensibility')"
@@ -344,7 +336,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 11. Tokens -->
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -352,7 +343,6 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 12. Acessibilidade -->
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboardTitle')"
@@ -362,28 +352,24 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 
         <!-- 13. Relacionados -->
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="button"
         />
 
         <!-- 14. Notas -->
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="button"
         />
 
         <!-- 15. Analytics -->
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <!-- 16. Testes -->
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

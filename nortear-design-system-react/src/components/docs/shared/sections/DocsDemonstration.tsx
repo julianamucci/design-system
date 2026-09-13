@@ -1,8 +1,8 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import React from 'react';
 import { ComponentDemo } from '@/components/ComponentDemo';
 
 export interface DocsDemonstrationProps {
-  title: string;
   children: React.ReactNode;
   /**
    * Slug do componente para tracking GA4 (ex.: "alert", "button"). Informativo —
@@ -23,7 +23,8 @@ export interface DocsDemonstrationProps {
   componentSlug?: string;
 }
 
-export function DocsDemonstration({ title, children }: DocsDemonstrationProps) {
+export function DocsDemonstration({ children }: DocsDemonstrationProps) {
+  const title = useTituloDeSecao('demonstracao');
   return (
     <section
       id="demonstracao"

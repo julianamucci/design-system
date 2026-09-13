@@ -565,7 +565,6 @@ export function createDropdownMenuDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
@@ -623,7 +622,6 @@ export function createDropdownMenuDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -631,7 +629,6 @@ export function createDropdownMenuDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -676,7 +673,6 @@ export function createDropdownMenuDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -734,7 +730,6 @@ export function createDropdownMenuDocs(): HTMLElement {
       // explica é a tabela de Propriedades, nos três idiomas.
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createDropdownMenu } from '@/components/ui/dropdown-menu';
 import { createButton } from '@/components/ui/button';`,
           secondaryDescription: t('import.factoryOptions'),
@@ -762,7 +757,6 @@ menu.setOpen(false);`,
       case 'variantes':
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'dropdown-menu',
           items: [
@@ -817,7 +811,6 @@ menu.setOpen(false);`,
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -893,7 +886,6 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
           `${toPlainText(t(shared))} ${toPlainText(t(factory))}`;
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createDropdownMenu(options)',
@@ -921,7 +913,6 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -944,7 +935,6 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -960,7 +950,6 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.contextMenu.name'), description: toPlainText(t('related.items.contextMenu.description')), path: '?path=/docs/components-overlay-contextmenu--docs' },
             { name: t('related.items.menubar.name'),     description: toPlainText(t('related.items.menubar.description')),     path: '?path=/docs/components-navigation-menubar--docs'     },
@@ -972,7 +961,6 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
@@ -982,7 +970,6 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       // conteúdo já tinham mudado.
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -1002,7 +989,6 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
       // cravada em oito e escondia os seis critérios novos da família (F9–F14).
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

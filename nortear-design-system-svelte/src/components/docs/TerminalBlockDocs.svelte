@@ -191,7 +191,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
     saída já existe.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="terminal-block"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -261,7 +260,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -270,7 +268,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -418,7 +415,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -441,7 +437,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -454,7 +449,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
     lista, e nenhuma das duas fica para trás quando o tipo cresce.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -469,7 +463,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'TerminalBlock',
@@ -514,7 +507,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -536,7 +528,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5, 6, 7, 8].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -551,7 +542,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.codeBlock.name'),   description: toPlainText($tStore('related.items.codeBlock.description')),   path: '?path=/docs/components-display-codeblock--docs'           },
       { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
@@ -562,14 +552,12 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="terminal-block"
     items={[1, 2, 3, 4, 5, 6, 7].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -584,7 +572,6 @@ declare function isRunFinished(status: RunStatus): boolean;`;
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

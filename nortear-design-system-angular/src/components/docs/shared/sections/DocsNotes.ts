@@ -6,6 +6,8 @@ import {
 } from '@angular/core';
 import DOMPurify from 'dompurify';
 
+import { tituloDeSecao } from './titulo-de-secao';
+
 export interface DocsNoteItem { title: string; content: string }
 
 @Component({
@@ -50,7 +52,7 @@ export interface DocsNoteItem { title: string; content: string }
   `,
 })
 export class NdsDocsNotes {
-  readonly title = input.required<string>();
+  protected readonly title = tituloDeSecao('notas');
   readonly items = input.required<DocsNoteItem[]>();
   readonly componentSlug = input<string | undefined>(undefined);
 

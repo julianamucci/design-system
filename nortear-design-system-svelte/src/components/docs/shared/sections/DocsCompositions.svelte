@@ -20,14 +20,12 @@
    * Por baixo usa DocsVariants — layout idêntico ao de Variantes/Tamanhos.
    */
   const {
-    title,
     items,
     useWhenLabel = 'Quando usar:',
     componentSlug,
     id = 'composicoes',
     note,
   }: {
-    title: string;
     items: DocsCompositionItem[];
     useWhenLabel?: string;
     componentSlug?: string;
@@ -49,4 +47,4 @@
   );
 </script>
 
-<DocsVariants {id} {title} {note} items={variantItems} {componentSlug} />
+<DocsVariants {id} {note} items={variantItems} {componentSlug} />

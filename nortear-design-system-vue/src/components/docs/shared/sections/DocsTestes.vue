@@ -10,13 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import { Kbd } from '@/components/ui/kbd';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { prioridadeVariant } from '@shared/primitives/badge-priority';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 interface DocsTestItem { action: string; result: string; priority: string }
 interface DocsA11yTestItem { criterion: string; level: string; how: string }
 interface DocsVisualTestItem { story: string; priority: string }
 
 defineProps<{
-  title: string;
   functional: {
     title: string;
     description?: string;
@@ -36,6 +36,8 @@ defineProps<{
     items: DocsVisualTestItem[];
   };
 }>();
+
+const title = useTituloDeSecao('testes');
 
 // A prioridade escolhe uma VARIANTE do badge — alta é destructive, média é
 // warning, baixa é info. O mapa antigo listava só português e inglês, então em

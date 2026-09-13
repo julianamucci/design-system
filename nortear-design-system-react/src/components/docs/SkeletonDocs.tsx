@@ -170,7 +170,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg" style={{ '--grid-min': '16rem' } as React.CSSProperties}>
           {/* Card de perfil */}
           <div className="nds-stack" data-spacing="sm">
@@ -255,7 +255,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -267,7 +266,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -350,7 +348,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -411,11 +408,10 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="skeleton"
         items={[
           {
@@ -463,7 +459,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -485,7 +480,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -548,7 +542,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -567,7 +560,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -585,7 +577,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="skeleton"
         items={[
           {
@@ -608,7 +599,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="skeleton"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -621,7 +611,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
           {
@@ -634,7 +623,6 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

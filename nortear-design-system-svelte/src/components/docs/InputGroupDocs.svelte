@@ -402,7 +402,7 @@ interface InputGroupButtonProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug={SLUG}>
+  <DocsDemonstration componentSlug={SLUG}>
     <div class="nds-stack nds-w-full" data-spacing="sm">
       <label class="nds-label" for={DEMO_PASSWORD_ID}>{labels.password}</label>
       <InputGroup aria-label={labels.password}>
@@ -429,7 +429,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5, 6].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -437,7 +436,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => stripHtml($tStore(`usage.guidelines.item${i}`))),
@@ -482,7 +480,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -617,7 +614,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={stripHtml($tStore('description'))}
     code={codeImport}
     componentSlug={SLUG}
@@ -626,7 +622,6 @@ interface InputGroupButtonProps {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
     id="variantes"
-    title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     componentSlug={SLUG}
     items={[
@@ -702,7 +697,6 @@ interface InputGroupButtonProps {
   <!-- ── Composições ────────────────────────────────────────────── -->
   <DocsCompositions
     id="composicoes"
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug={SLUG}
     items={[
@@ -804,7 +798,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -819,7 +812,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       { title: 'InputGroup',       cols: propsTableCols, items: groupPropItems  },
       { title: 'InputGroupAddon',  cols: propsTableCols, items: addonPropItems  },
@@ -833,7 +825,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -847,7 +838,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -863,7 +853,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     componentSlug={SLUG}
     items={[
       { name: $tStore('related.items.input.name'),    description: toPlainText($tStore('related.items.input.description')),    path: '?path=/docs/components-form-input--docs'    },
@@ -875,14 +864,12 @@ interface InputGroupButtonProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug={SLUG}
     items={noteItems}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -896,7 +883,6 @@ interface InputGroupButtonProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

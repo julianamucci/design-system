@@ -11,7 +11,6 @@
       "aiEntities": "InputGroup, addon, prefixo, sufixo, campo de formulário, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-invalid, role group, design system"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "searchGroup": "Buscar componentes",
         "searchField": "Buscar",
@@ -30,7 +29,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Grupo</strong> — a moldura. É dele a borda, o arredondamento e o anel de foco; ele reage ao estado do campo que está dentro.",
       "item2": "<strong>Addon</strong> — o compartimento do acompanhamento. Tem quatro posições: antes do campo, depois dele, acima ou abaixo. Nas duas últimas o grupo passa a empilhar.",
       "item3": "<strong>Texto</strong> — palavra ou ícone dentro do addon, em cor de apoio. É decoração e não recebe foco.",
@@ -47,7 +45,6 @@
       }
     },
     "usage": {
-      "title": "Quando Usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando o acompanhamento pertence ao campo — uma unidade, um domínio, um atalho, um botão que age sobre o que foi digitado. Se ele age sobre outra coisa, o lugar dele é fora da moldura.",
@@ -133,7 +130,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O acompanhamento que age é um botão: recebe foco, responde ao teclado e tem nome.",
         "dont": "Um bloco clicável no lugar do botão não recebe foco e some para quem navega por teclado."
@@ -147,11 +143,8 @@
         "dont": "O prefixo fazendo as vezes de rótulo deixa o campo sem nome para o leitor de tela."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "note": "A variação é a POSIÇÃO do acompanhamento. As duas posições em bloco fazem o grupo passar de linha para coluna, e é a folha compartilhada que decide isso sozinha.",
       "items": {
         "inlineStart": {
@@ -171,7 +164,6 @@
           "description": "Mesma largura inteira, embaixo. É onde cabe o contador de caracteres e o botão de envio de uma área de texto."
         }
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "search": {
           "name": "Campo de busca",
@@ -196,7 +188,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando ocorre",
@@ -224,7 +215,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -278,7 +268,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -366,7 +355,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A moldura agrupa; ela não nomeia. Quem tem nome é o campo, pelo rótulo, e o grupo só ganha nome quando guarda mais de um controle. Acompanhamento decorativo fica fora do foco e fora da leitura; acompanhamento que age é um botão de verdade.",
       "items": {
         "item1": "A raiz declara papel de grupo. O papel aceita nome acessível — e é por isso que ele está declarado aqui, e não deixado implícito: um contêiner sem papel descarta o nome em silêncio.",
@@ -402,7 +390,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "input": {
           "name": "Input",
@@ -423,7 +410,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>A moldura é do grupo, e o campo fica nu.</strong> O campo interno zera a própria borda e o próprio anel — se ele desenhasse os dois, apareceriam duas molduras concêntricas na hora do foco.",
       "item2": "<strong>O grupo empilha sozinho.</strong> Basta um addon em bloco, ou uma área de texto dentro, para a folha compartilhada trocar linha por coluna. Não há opção de direção para passar.",
       "item3": "<strong>O realce de erro sobrevive à perda de foco</strong>, e com foco os dois convivem: o de erro por dentro, o de foco por fora. Sem isso, focar um campo inválido não mudaria nada na tela.",
@@ -431,7 +417,6 @@
       "item5": "<strong>O campo é achado pela classe do controle</strong>, e não pelo elemento: assim o atalho do addon alcança tanto o campo de uma linha quanto a área de texto."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos disparados pelas páginas de documentação que usam o componente.",
       "table": {
         "event": "Evento",
@@ -448,7 +433,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada composição da moldura.",
@@ -524,7 +508,6 @@
       "aiEntities": "InputGroup, addon, prefix, suffix, form field, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-invalid, role group, design system"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "searchGroup": "Search components",
         "searchField": "Search",
@@ -543,7 +526,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Group</strong> — the frame. The border, the corner radius and the focus ring belong to it, and it reacts to the state of the field inside.",
       "item2": "<strong>Addon</strong> — the compartment for the companion. It has four positions: before the field, after it, above or below. In the last two the group starts stacking.",
       "item3": "<strong>Text</strong> — a word or icon inside the addon, in a supporting colour. It is decoration and takes no focus.",
@@ -560,7 +542,6 @@
       }
     },
     "usage": {
-      "title": "When To Use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when the companion belongs to the field — a unit, a domain, a shortcut, a button acting on what was typed. If it acts on something else, it belongs outside the frame.",
@@ -646,7 +627,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "A companion that acts is a button: it takes focus, answers the keyboard and has a name.",
         "dont": "A clickable block in place of the button takes no focus and vanishes for keyboard users."
@@ -660,11 +640,8 @@
         "dont": "A prefix standing in for the label leaves the field unnamed for the screen reader."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "note": "The variation is the POSITION of the companion. The two block positions turn the group from a row into a column, and the shared stylesheet decides that on its own.",
       "items": {
         "inlineStart": {
@@ -684,7 +661,6 @@
           "description": "Same full width, underneath. This is where a character counter and a send button for a text area fit."
         }
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "search": {
           "name": "Search field",
@@ -709,7 +685,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -737,7 +712,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -791,7 +765,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -879,7 +852,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The frame groups; it does not name. What has a name is the field, through its label, and the group only takes a name when it holds more than one control. A decorative companion stays out of focus and out of the reading; a companion that acts is a real button.",
       "items": {
         "item1": "The root declares a group role. The role accepts an accessible name — which is why it is declared here rather than left implicit: a container with no role discards the name silently.",
@@ -915,7 +887,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "input": {
           "name": "Input",
@@ -936,7 +907,6 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>The frame belongs to the group, and the field goes bare.</strong> The inner field zeroes its own border and its own ring — if it drew both, two concentric frames would appear on focus.",
       "item2": "<strong>The group stacks on its own.</strong> One block addon, or a text area inside, is enough for the shared stylesheet to swap a row for a column. There is no direction option to pass.",
       "item3": "<strong>The error highlight survives losing focus</strong>, and under focus the two coexist: the error one inside, the focus one outside. Without that, focusing an invalid field would change nothing on screen.",
@@ -944,7 +914,6 @@
       "item5": "<strong>The field is found by the control class</strong>, not by the element: that way the addon shortcut reaches both the single-line field and the text area."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Events fired by the documentation pages that use the component.",
       "table": {
         "event": "Event",
@@ -961,7 +930,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behaviour",
         "description": "What must happen in each composition of the frame.",
@@ -1037,7 +1005,6 @@
       "aiEntities": "InputGroup, complemento, prefijo, sufijo, campo de formulario, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-invalid, role group, design system"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "searchGroup": "Buscar componentes",
         "searchField": "Buscar",
@@ -1056,7 +1023,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Grupo</strong> — el marco. Suyos son el borde, el redondeo y el anillo de foco; reacciona al estado del campo que hay dentro.",
       "item2": "<strong>Complemento</strong> — el compartimento de lo que acompaña. Tiene cuatro posiciones: antes del campo, después, encima o debajo. En las dos últimas el grupo pasa a apilar.",
       "item3": "<strong>Texto</strong> — palabra o icono dentro del complemento, en color de apoyo. Es decoración y no recibe foco.",
@@ -1073,7 +1039,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo Usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo cuando el complemento pertenece al campo — una unidad, un dominio, un atajo, un botón que actúa sobre lo escrito. Si actúa sobre otra cosa, su sitio está fuera del marco.",
@@ -1159,7 +1124,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El complemento que actúa es un botón: recibe foco, responde al teclado y tiene nombre.",
         "dont": "Un bloque pulsable en lugar del botón no recibe foco y desaparece para quien navega con teclado."
@@ -1173,11 +1137,8 @@
         "dont": "El prefijo haciendo de etiqueta deja el campo sin nombre para el lector de pantalla."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "note": "La variación es la POSICIÓN del complemento. Las dos posiciones en bloque hacen que el grupo pase de fila a columna, y lo decide sola la hoja compartida.",
       "items": {
         "inlineStart": {
@@ -1197,7 +1158,6 @@
           "description": "El mismo ancho completo, abajo. Ahí caben el contador de caracteres y el botón de envío de un área de texto."
         }
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "search": {
           "name": "Campo de búsqueda",
@@ -1222,7 +1182,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1250,7 +1209,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1304,7 +1262,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1392,7 +1349,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "El marco agrupa; no nombra. Quien tiene nombre es el campo, por su etiqueta, y el grupo solo recibe nombre cuando guarda más de un control. El complemento decorativo queda fuera del foco y fuera de la lectura; el complemento que actúa es un botón de verdad.",
       "items": {
         "item1": "La raíz declara papel de grupo. El papel acepta nombre accesible — y por eso está declarado aquí y no dejado implícito: un contenedor sin papel descarta el nombre en silencio.",
@@ -1428,7 +1384,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "input": {
           "name": "Input",
@@ -1449,7 +1404,6 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>El marco es del grupo, y el campo queda desnudo.</strong> El campo interno pone a cero su propio borde y su propio anillo — si dibujara los dos, aparecerían dos marcos concéntricos al recibir foco.",
       "item2": "<strong>El grupo apila solo.</strong> Basta un complemento en bloque, o un área de texto dentro, para que la hoja compartida cambie fila por columna. No hay opción de dirección que pasar.",
       "item3": "<strong>El realce de error sobrevive a la pérdida de foco</strong>, y con foco ambos conviven: el de error por dentro, el de foco por fuera. Sin eso, poner el foco en un campo no válido no cambiaría nada en pantalla.",
@@ -1457,7 +1411,6 @@
       "item5": "<strong>El campo se encuentra por la clase del control</strong>, y no por el elemento: así el atajo del complemento alcanza tanto el campo de una línea como el área de texto."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos disparados por las páginas de documentación que usan el componente.",
       "table": {
         "event": "Evento",
@@ -1474,7 +1427,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Qué debe ocurrir en cada composición del marco.",

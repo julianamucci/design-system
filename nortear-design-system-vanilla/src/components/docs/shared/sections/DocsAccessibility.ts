@@ -1,9 +1,9 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 
 export interface DocsKeyboardItem { key: string; description: string }
 export interface DocsAccessibilityProps {
-  title: string;
   summary: string;
   items: string[];
   keyboardTitle: string;
@@ -25,7 +25,7 @@ export function createDocsAccessibility(props: DocsAccessibilityProps): HTMLElem
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('acessibilidade');
   section.appendChild(h2);
 
   const container = createCard({ className: 'nds-p-4 nds-stack' });

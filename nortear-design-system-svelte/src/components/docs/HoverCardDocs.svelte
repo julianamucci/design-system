@@ -224,7 +224,7 @@ interface HoverCardContentProps {
     O cerco de texto não é enfeite: é ele que dispensa o alvo em linha do mínimo
     de 24px da WCAG 2.5.8. Um link solto de 20px de altura seria violação.
   -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="hover-card">
+  <DocsDemonstration componentSlug="hover-card">
     <!-- A frase inteira vem do conteúdo compartilhado (`sentenceBefore` +
          `mention` + `sentenceAfter`), que é a mesma frase que o Playground
          renderiza. Literal em português aqui reapareceria no `en` e no `es`.
@@ -257,7 +257,6 @@ interface HoverCardContentProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -269,7 +268,6 @@ interface HoverCardContentProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -331,7 +329,6 @@ interface HoverCardContentProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -450,7 +447,6 @@ interface HoverCardContentProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportUsage}
   />
@@ -458,7 +454,6 @@ interface HoverCardContentProps {
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="hover-card"
     items={[
@@ -730,7 +725,6 @@ interface HoverCardContentProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -745,7 +739,6 @@ interface HoverCardContentProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: propsTableCols,
@@ -767,7 +760,6 @@ interface HoverCardContentProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -794,7 +786,6 @@ interface HoverCardContentProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -815,7 +806,6 @@ interface HoverCardContentProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.tooltip.name'),      description: $tStore('related.items.tooltip.description'),      path: '?path=/docs/components-overlay-tooltip--docs'      },
       { name: $tStore('related.items.popover.name'),      description: $tStore('related.items.popover.description'),      path: '?path=/docs/components-overlay-popover--docs'      },
@@ -826,7 +816,6 @@ interface HoverCardContentProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -838,7 +827,6 @@ interface HoverCardContentProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: 'Evento',
       trigger: 'Trigger',
@@ -853,7 +841,6 @@ interface HoverCardContentProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

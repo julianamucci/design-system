@@ -238,7 +238,7 @@ import { Label } from "@/components/ui/label";`;
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-stack" data-spacing="sm">
           <div className="nds-cluster" data-spacing="sm">
             <Switch
@@ -299,7 +299,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -311,7 +310,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -387,7 +385,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -433,14 +430,12 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         code={codeImportBasic}
         secondaryCode={codeImportWithLabel}
       />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         items={[
           {
             trackId: "default",
@@ -490,7 +485,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="switch"
         items={[
@@ -597,7 +591,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -639,7 +632,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -709,7 +701,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -730,7 +721,6 @@ import { Label } from "@/components/ui/label";`;
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -750,7 +740,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: tContent("related.items.checkbox.name"),
@@ -777,7 +766,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },
@@ -788,7 +776,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -815,7 +802,6 @@ import { Label } from "@/components/ui/label";`;
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

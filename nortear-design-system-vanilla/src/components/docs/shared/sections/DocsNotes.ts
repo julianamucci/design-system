@@ -1,9 +1,9 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import DOMPurify from 'dompurify';
 import { createAlert, createAlertTitle, createAlertDescription } from '@/components/ui/alert';
 
 export interface DocsNoteItem { title: string; content: string }
 export interface DocsNotesProps {
-  title: string;
   items: DocsNoteItem[];
   /**
    * Slug do componente para tracking GA4 (ex.: "alert"). Quando presente, cada
@@ -22,7 +22,7 @@ export function createDocsNotes(props: DocsNotesProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('notas');
   section.appendChild(h2);
 
   const container = document.createElement('div');

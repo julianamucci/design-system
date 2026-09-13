@@ -312,7 +312,7 @@ interface TableRowProps {
   {/snippet}
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
-      <DocsDemonstration title={$tStore('demonstration.title')}>
+      <DocsDemonstration>
         <Table>
           <TableCaption>{$tStore('demonstration.labels.caption')}</TableCaption>
           <TableHeader>
@@ -344,7 +344,6 @@ interface TableRowProps {
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->
       <DocsAnatomy
-        title={$tStore('anatomy.title')}
         items={[
           $tStore('anatomy.item1'),
           $tStore('anatomy.item2'),
@@ -361,7 +360,6 @@ interface TableRowProps {
 
       <!-- ── Quando Usar ────────────────────────────────────────────── -->
       <DocsWhenToUse
-        title={$tStore('usage.title')}
         guidelines={{
           title: $tStore('usage.guidelines.title'),
           items: [
@@ -423,7 +421,6 @@ interface TableRowProps {
 
       <!-- ── Do & Don't ─────────────────────────────────────────────── -->
       <DocsDoDont
-        title={$tStore('doDont.title')}
         pairs={[
           {
             doLabel: $tNavStore('common.do'),
@@ -512,13 +509,11 @@ interface TableRowProps {
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
       <DocsImport
-        title={$tStore('import.title')}
         code={codeImport}
       />
 
       <!-- ── Variantes ──────────────────────────────────────────────── -->
       <DocsVariants
-        title={$tStore('variants.title')}
         items={[
           { trackId: 'basic', name: $tStore('variants.items.basic.label'),            description: stripHtml($tStore('variants.items.basic.description')),            code: codeBasic,          preview: variantBasic          },
           { trackId: 'withFooter', name: $tStore('variants.items.withFooter.label'),       description: stripHtml($tStore('variants.items.withFooter.description')),       code: codeWithFooter,     preview: variantWithFooter     },
@@ -662,7 +657,6 @@ interface TableRowProps {
 
       <!-- ── Composições ──────────────────────────────────────────────── -->
       <DocsCompositions
-        title={$tStore('variants.compositionsTitle')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="table"
         items={[
@@ -909,7 +903,6 @@ interface TableRowProps {
 
       <!-- ── Estados ────────────────────────────────────────────────── -->
       <DocsStates
-        title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
           trigger: toPlainText($tStore('states.cols.trigger')),
@@ -924,7 +917,6 @@ interface TableRowProps {
 
       <!-- ── Propriedades ───────────────────────────────────────────── -->
       <DocsProps
-        title={$tStore('props.title')}
         tables={[
           {
             title: $tStore('props.tableTitle'),
@@ -1008,7 +1000,6 @@ interface TableRowProps {
 
       <!-- ── Tokens ─────────────────────────────────────────────────── -->
       <DocsTokens
-        title={$tStore('tokens.title')}
         cols={{
           token: $tStore('tokens.table.token'),
           value: $tStore('tokens.table.part'),
@@ -1032,7 +1023,6 @@ interface TableRowProps {
       <DocsAccessibility
         screenReaderTitle={$tNavStore('common.screenReader')}
         screenReaderItems={screenReaderItems}
-        title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
           $tStore('accessibility.aria.scope'),
@@ -1052,7 +1042,6 @@ interface TableRowProps {
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
       <DocsRelated
-        title={$tStore('related.title')}
         items={[
           { name: 'Avatar',        description: $tStore('related.avatar'),       path: '?path=/docs/components-display-avatar--docs'       },
           { name: 'Badge',         description: $tStore('related.badge'),        path: '?path=/docs/components-feedback-badge--docs'        },
@@ -1064,7 +1053,6 @@ interface TableRowProps {
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
       <DocsNotes
-        title={$tStore('notes.title')}
         items={[
           { title: '', content: $tStore('notes.tip1') },
           { title: '', content: $tStore('notes.tip2') },
@@ -1076,7 +1064,6 @@ interface TableRowProps {
 
       <!-- ── Analytics ─────────────────────────────────────────────── -->
       <DocsAnalytics
-        title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
           trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -1091,7 +1078,6 @@ interface TableRowProps {
 
       <!-- ── Testes ─────────────────────────────────────────────────── -->
       <DocsTestes
-        title={$tStore('testes.title')}
         functional={{
           title: $tStore('testes.functional.title'),
           cols: {

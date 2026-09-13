@@ -583,7 +583,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration
-      :title="tContent('demonstration.title')"
       :component-slug="SLUG"
     >
       <div
@@ -621,7 +620,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Anatomia ───────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -629,7 +627,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Quando Usar ────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="guidelines"
       :scenarios="scenarios"
       :ux-writing="uxWriting"
@@ -639,7 +636,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="doDontPairs"
     >
       <!-- Par 1 — o acompanhamento que age é um botão de verdade -->
@@ -765,7 +761,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="stripHtml(tContent('description'))"
       :code="codeImport"
       :component-slug="SLUG"
@@ -773,7 +768,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
     <DocsVariants
-      :title="tContent('variants.title')"
       :note="tContent('variants.note')"
       :component-slug="SLUG"
       :items="alignmentItems"
@@ -823,7 +817,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Composições ────────────────────────────────────────────── -->
     <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
       :use-when-label="tNav('common.useWhen')"
       :component-slug="SLUG"
       :items="compositionItems"
@@ -913,14 +906,12 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="stateCols"
       :items="stateItems"
     />
 
     <!-- ── Propriedades ───────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: 'InputGroup', cols: propCols, items: groupPropItems },
         { title: 'InputGroupAddon', cols: propCols, items: addonPropItems },
@@ -934,7 +925,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
@@ -944,7 +934,6 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboard.title')"
@@ -955,28 +944,24 @@ const visualTestItems = computed(() => [1, 2, 3, 4].map(i => ({
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
       :component-slug="SLUG"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
       :component-slug="SLUG"
     />
 
     <!-- ── Analytics ──────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 
     <!-- ── Testes ─────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         description: tContent('testes.functional.description'),

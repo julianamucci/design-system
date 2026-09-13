@@ -180,7 +180,6 @@ export function createMarkdownDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'markdown',
           demoFactory: () => {
             const stack = document.createElement('div');
@@ -198,7 +197,6 @@ export function createMarkdownDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'),
             t('anatomy.item4'), t('anatomy.item5'),
@@ -210,7 +208,6 @@ export function createMarkdownDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -255,7 +252,6 @@ export function createMarkdownDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -291,7 +287,6 @@ export function createMarkdownDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withStreaming'),
@@ -300,7 +295,6 @@ export function createMarkdownDocs(): HTMLElement {
 
       case 'variantes':
         return createDocsVariants({
-          title: t('variants.title'),
           note: stripHtml(t('variants.note')),
           componentSlug: 'markdown',
           items: [
@@ -333,7 +327,6 @@ export function createMarkdownDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: t('states.cols.trigger'),
@@ -366,7 +359,6 @@ export interface MarkdownOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createMarkdown',
@@ -390,7 +382,6 @@ export interface MarkdownOptions {
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.value'),
@@ -411,7 +402,6 @@ export interface MarkdownOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5].map(i => t(`accessibility.items.item${i}`)),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -426,7 +416,6 @@ export interface MarkdownOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.codeBlock.name'), description: toPlainText(t('related.items.codeBlock.description')), path: '?path=/docs/components-display-codeblock--docs' },
             { name: t('related.items.editor.name'),    description: toPlainText(t('related.items.editor.description')),    path: '?path=/docs/components-form-editor--docs' },
@@ -437,14 +426,12 @@ export interface MarkdownOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           componentSlug: 'markdown',
           items: [1, 2, 3, 4].map(i => ({ title: '', content: t(`notes.item${i}`) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: t('analytics.table.trigger'),
@@ -459,7 +446,6 @@ export interface MarkdownOptions {
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             description: t('testes.functional.description'),

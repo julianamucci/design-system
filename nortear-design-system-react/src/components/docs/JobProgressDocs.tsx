@@ -285,7 +285,6 @@ export function JobProgressDocs() {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration
-        title={tContent("demonstration.title")}
         componentSlug="job-progress"
       >
         <div className="nds-stack nds-w-full" data-spacing="lg">
@@ -300,7 +299,6 @@ export function JobProgressDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`anatomy.item${i}`))}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -309,7 +307,6 @@ export function JobProgressDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -354,7 +351,6 @@ export function JobProgressDocs() {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -383,7 +379,6 @@ export function JobProgressDocs() {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withLabels")}
@@ -392,7 +387,6 @@ export function JobProgressDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: tContent("states.cols.trigger"),
@@ -409,7 +403,6 @@ export function JobProgressDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: "JobProgress",
@@ -447,7 +440,6 @@ export function JobProgressDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.value"),
@@ -469,7 +461,6 @@ export function JobProgressDocs() {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5, 6, 7].map((i) => tContent(`accessibility.items.item${i}`))}
         keyboardTitle={tContent("accessibility.keyboard.title")}
@@ -484,7 +475,6 @@ export function JobProgressDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           { name: tContent("related.items.agentStatus.name"),     description: toPlainText(tContent("related.items.agentStatus.description")),     path: "?path=/docs/components-conversational-agentstatus--docs"     },
           { name: tContent("related.items.agentPlan.name"),       description: toPlainText(tContent("related.items.agentPlan.description")),       path: "?path=/docs/components-conversational-agentplan--docs"       },
@@ -495,14 +485,12 @@ export function JobProgressDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="job-progress"
         items={[1, 2, 3, 4, 5, 6, 7].map((i) => ({ title: "", content: tContent(`notes.item${i}`) }))}
       />
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: tContent("analytics.table.trigger"),
@@ -517,7 +505,6 @@ export function JobProgressDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

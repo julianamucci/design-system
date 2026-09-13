@@ -513,7 +513,7 @@ interface ComboboxChipProps {
   {/snippet}
 
   <!-- ── Demonstração ─────────────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="combobox">
+  <DocsDemonstration componentSlug="combobox">
     <div class="nds-grid nds-w-full" data-cols="2" data-spacing="xl">
       <div style="contain: layout">
         {@render comboboxField('demoSingle', countryItems, {
@@ -544,7 +544,6 @@ interface ComboboxChipProps {
 
   <!-- ── Anatomia ──────────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -563,7 +562,6 @@ interface ComboboxChipProps {
 
   <!-- ── Quando Usar ───────────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -649,7 +647,6 @@ interface ComboboxChipProps {
 
   <!-- ── Do & Don't ───────────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -797,14 +794,12 @@ interface ComboboxChipProps {
 
   <!-- ── Importação ────────────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImport}
     componentSlug="combobox"
   />
 
   <!-- ── Variantes ─────────────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     componentSlug="combobox"
     items={[
       {
@@ -862,7 +857,6 @@ interface ComboboxChipProps {
 
   <!-- ── Composições ──────────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="combobox"
     items={[
@@ -922,7 +916,6 @@ interface ComboboxChipProps {
 
   <!-- ── Estados ──────────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -942,7 +935,6 @@ interface ComboboxChipProps {
 
   <!-- ── Propriedades ─────────────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -975,7 +967,6 @@ interface ComboboxChipProps {
 
   <!-- ── Tokens ────────────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -1006,7 +997,6 @@ interface ComboboxChipProps {
 
   <!-- ── Acessibilidade ───────────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -1033,7 +1023,6 @@ interface ComboboxChipProps {
 
   <!-- ── Relacionados ──────────────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.select.name'),  description: $tStore('related.items.select.description'),  path: '?path=/docs/components-form-select--docs' },
       { name: $tStore('related.items.command.name'), description: $tStore('related.items.command.description'), path: '?path=/docs/components-overlay-command--docs' },
@@ -1044,7 +1033,6 @@ interface ComboboxChipProps {
 
   <!-- ── Notas ─────────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="combobox"
     items={[
       { title: '', content: $tStore('notes.item1') },
@@ -1058,7 +1046,6 @@ interface ComboboxChipProps {
 
   <!-- ── Analytics ────────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -1080,7 +1067,6 @@ interface ComboboxChipProps {
 
   <!-- ── Testes ────────────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

@@ -20,7 +20,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "conversation": "Conversa",
         "tools": "Com raciocínio e ferramenta",
@@ -29,7 +28,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A área que rola, e é dela que sai a medida de onde a conversa está.",
       "item2": "A lista de mensagens, com o papel de cada uma no próprio item.",
@@ -41,7 +39,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Dê uma altura ao componente. Sem limite não há transbordo, e sem transbordo a ancoragem no fim — que é a razão dele existir — não acontece.",
@@ -132,7 +129,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "A rolagem só acompanha o fim se já estava no fim, e o botão diz quantas mensagens chegaram.",
         "dont": "Arrastar para o fim a cada mensagem tira do lugar quem está lendo uma resposta antiga."
@@ -143,7 +139,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "A thread recebe as mensagens e os rótulos da interface. Nada precisa ser sanitizado antes: o conteúdo passa pelo Markdown, que não interpreta HTML.",
       "basicCode": {
         "react": "import { ChatThread } from \"@/components/ui/chat-thread\";\n\n<ChatThread messages={messages} labels={labels} />",
@@ -162,8 +157,6 @@
       }
     },
     "variants": {
-      "title": "Papéis",
-      "visualTitle": "Exemplos visuais",
       "note": "O papel decide a forma, e a assimetria é deliberada: quem escreve ganha bolha e vai para a direita; quem responde ocupa a coluna inteira, porque é dele a maior parte do texto.",
       "items": {
         "user": {
@@ -181,7 +174,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -219,7 +211,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -315,7 +306,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Seletor",
@@ -357,7 +347,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Três decisões governam este componente, e todas vêm de defeitos medidos: a conversa não é região viva, conteúdo que chega não rouba o foco, e ação que só aparece no ponteiro não existe para o teclado.",
       "items": {
         "item1": "A área da conversa NÃO é região viva. Texto em streaming numa região viva é anunciado a cada trecho, e a leitura fica impossível.",
@@ -390,7 +379,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "markdown": {
           "name": "Markdown",
@@ -411,7 +399,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A decisão de rolagem vive num módulo compartilhado pelas cinco stacks, e é testada sem navegador. Sem isso, cada stack escreveria o próprio limiar e a divergência só apareceria com a conversa em movimento.",
       "item2": "A folga para considerar que a rolagem está no fim não é zero: rolagem por roda para em número fracionário, e um pixel de margem no último item bastaria para o fim nunca ser alcançado.",
       "item3": "Os colapsáveis são elementos nativos de divulgação, e não o Collapsible do sistema: o conteúdo continua encontrável pela busca do navegador com a caixa fechada, e uma conversa longa não paga um controle com script por mensagem.",
@@ -419,7 +406,6 @@
       "item5": "A autorização de ferramenta é um ESPAÇO aqui, não uma política: o componente desenha os controles que recebe e não decide o que aprovar significa. O que acontece ao recusar, se há motivo e se a escolha vale para as próximas são decisões de produto, e produto envelhece em outro ritmo que o sistema."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página de documentação dispara os três eventos padrão. O componente em si não instrumenta nada: quem sabe o que uma conversa significa é quem a consome.",
       "table": {
         "event": "Evento",
@@ -437,7 +423,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que cada story verifica.",
@@ -558,7 +543,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "conversation": "Conversation",
         "tools": "With reasoning and a tool",
@@ -567,7 +551,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The area that scrolls, and the source of the measurement of where the conversation is.",
       "item2": "The list of messages, with each one’s role on the item itself.",
@@ -579,7 +562,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Give the component a height. Without a limit there is no overflow, and without overflow the anchoring at the end — its reason to exist — never happens.",
@@ -670,7 +652,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The scroll follows the end only if it was already at the end, and the button says how many messages arrived.",
         "dont": "Dragging to the end on every message displaces whoever is reading an older answer."
@@ -681,7 +662,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "The thread takes the messages and the interface labels. Nothing needs sanitising first: the content goes through Markdown, which does not interpret HTML.",
       "basicCode": {
         "react": "import { ChatThread } from \"@/components/ui/chat-thread\";\n\n<ChatThread messages={messages} labels={labels} />",
@@ -700,8 +680,6 @@
       }
     },
     "variants": {
-      "title": "Roles",
-      "visualTitle": "Visual examples",
       "note": "The role decides the shape, and the asymmetry is deliberate: whoever writes gets a bubble on the right; whoever answers takes the whole column, because most of the text is theirs.",
       "items": {
         "user": {
@@ -719,7 +697,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to trigger",
@@ -757,7 +734,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -853,7 +829,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Selector",
@@ -895,7 +870,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Three decisions govern this component, and all come from measured defects: the conversation is not a live region, arriving content does not steal focus, and an action that appears only on pointer does not exist for the keyboard.",
       "items": {
         "item1": "The conversation area is NOT a live region. Streaming text in a live region is announced with each chunk, and reading becomes impossible.",
@@ -928,7 +902,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "markdown": {
           "name": "Markdown",
@@ -949,7 +922,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The scroll decision lives in a module shared by the five stacks, and is tested without a browser. Without that, each stack would write its own threshold and the divergence would only show with the conversation in motion.",
       "item2": "The tolerance for considering the scroll at the end is not zero: wheel scrolling stops at fractional numbers, and one pixel of margin on the last item would be enough for the end never to be reached.",
       "item3": "The disclosures are native elements, not the system’s Collapsible: the content stays findable by the browser’s search with the box closed, and a long conversation does not pay for a scripted control per message.",
@@ -957,7 +929,6 @@
       "item5": "Tool authorisation is a SLOT here, not a policy: the component draws the controls it receives and does not decide what approving means. What happens on refusal, whether there is a reason and whether the choice holds for the next ones are product decisions, and product ages at a different pace from the system."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The documentation page fires the three standard events. The component itself instruments nothing: whoever consumes a conversation is who knows what it means.",
       "table": {
         "event": "Event",
@@ -975,7 +946,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What each story verifies.",
@@ -1096,7 +1066,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "conversation": "Conversación",
         "tools": "Con razonamiento y herramienta",
@@ -1105,7 +1074,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El área que se desplaza, y de donde sale la medida de dónde está la conversación.",
       "item2": "La lista de mensajes, con el rol de cada uno en el propio ítem.",
@@ -1117,7 +1085,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Dale una altura al componente. Sin límite no hay desbordamiento, y sin desbordamiento el anclaje al final — su razón de existir — no ocurre.",
@@ -1208,7 +1175,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El desplazamiento sigue el final solo si ya estaba en el final, y el botón dice cuántos mensajes llegaron.",
         "dont": "Arrastrar al final con cada mensaje desplaza a quien está leyendo una respuesta antigua."
@@ -1219,7 +1185,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "El hilo recibe los mensajes y las etiquetas de la interfaz. Nada necesita saneamiento previo: el contenido pasa por Markdown, que no interpreta HTML.",
       "basicCode": {
         "react": "import { ChatThread } from \"@/components/ui/chat-thread\";\n\n<ChatThread messages={messages} labels={labels} />",
@@ -1238,8 +1203,6 @@
       }
     },
     "variants": {
-      "title": "Roles",
-      "visualTitle": "Ejemplos visuales",
       "note": "El rol decide la forma, y la asimetría es deliberada: quien escribe recibe burbuja y va a la derecha; quien responde ocupa la columna entera, porque suyo es la mayor parte del texto.",
       "items": {
         "user": {
@@ -1257,7 +1220,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1295,7 +1257,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1391,7 +1352,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Selector",
@@ -1433,7 +1393,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Tres decisiones gobiernan este componente, y todas vienen de defectos medidos: la conversación no es una región viva, el contenido que llega no roba el foco, y una acción que solo aparece con el puntero no existe para el teclado.",
       "items": {
         "item1": "El área de la conversación NO es una región viva. El texto en streaming en una región viva se anuncia con cada fragmento, y leer se vuelve imposible.",
@@ -1466,7 +1425,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "markdown": {
           "name": "Markdown",
@@ -1487,7 +1445,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La decisión de desplazamiento vive en un módulo compartido por las cinco stacks, y se prueba sin navegador. Sin eso, cada stack escribiría su propio umbral y la divergencia solo aparecería con la conversación en movimiento.",
       "item2": "La tolerancia para considerar que el desplazamiento está en el final no es cero: el desplazamiento por rueda se detiene en números fraccionarios, y un píxel de margen en el último ítem bastaría para que el final nunca se alcance.",
       "item3": "Los colapsables son elementos nativos, y no el Collapsible del sistema: el contenido sigue siendo encontrable por la búsqueda del navegador con la caja cerrada, y una conversación larga no paga un control con script por mensaje.",
@@ -1495,7 +1452,6 @@
       "item5": "La autorización de herramienta es un ESPACIO aquí, no una política: el componente dibuja los controles que recibe y no decide qué significa aprobar. Qué ocurre al rechazar, si hay motivo y si la elección vale para las próximas son decisiones de producto, y el producto envejece a otro ritmo que el sistema."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página de documentación dispara los tres eventos estándar. El componente en sí no instrumenta nada: quien consume una conversación es quien sabe lo que significa.",
       "table": {
         "event": "Evento",
@@ -1513,7 +1469,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que verifica cada story.",

@@ -370,18 +370,31 @@ Ordem: folha → primitivo → stories → docs page.
 | desenho e anotações | Figma, página `HoverCard` (componente `674:3`) |
 | portões determinísticos | `node scripts/audit.mjs hover-card --json` |
 | rótulo do menu lateral da docs page | `nortear-design-system-<stack>/src/i18n/ui.json` — nunca o conteúdo; ver `08-docs-pages-foundations.md` |
+| título (`h2`) de cada seção | o mesmo rótulo do menu, derivado do id da seção — ver `docs-page-landmarks.ts` |
 
 **As 57 chaves `nav` saíram do conteúdo em 2026-09-12.** As páginas do vue e do
 svelte liam o conteúdo: "When to Use" contra "Usage", e "Tests" contra
 "Pruebas". O menu passa a ser o mesmo nas cinco.
 
 O menu da docs page é cromo: as mesmas quinze seções, na mesma ordem, em toda
-página das cinco stacks, lidas de relance e comparando páginas. A palavra própria
-do componente vive no TÍTULO da seção. Portões: `rotulo_de_nav_no_conteudo`,
+página das cinco stacks, lidas de relance e comparando páginas — e desde a mesma
+data o TÍTULO da seção é a mesma frase, derivada do mesmo lugar. A linha abaixo
+registra por quê. Portões: `rotulo_de_nav_no_conteudo`,
 `rotulo_de_nav_do_conteudo` e `vocabulario_de_nav_divergente`, este último
 porque `en.nav.anatomy` do vue dizia "Anatomity" — palavra inexistente, no menu
 das 82 docs pages daquela stack, e indistinguível de decisão enquanto ninguém
 comparava as cinco cópias.
+
+**As 42 chaves de título de seção saíram do conteúdo em 2026-09-12**, e
+**15 delas diziam palavra diferente da do item de menu que salta para a
+seção** — "Quando e Como Usar" contra "Quando Usar", "Design Tokens" contra
+"Tokens", "Componentes Relacionados" contra "Relacionados". O `h2` agora
+nasce do id que a própria seção declara, então divergir deixou de ser possível
+em vez de passar a ser proibido. Portões: `titulo_de_secao_no_conteudo`,
+`titulo_de_secao_pedido_ao_conteudo` e `titulo_passado_ao_container` — o
+terceiro existe porque no Angular um `[title]` esquecido **não** reprova no
+`ngc` (é atributo global do HTML) e viraria tooltip silencioso no cabeçalho.
+
 
 
 > **FECHADA · 2026-09-09** — a pendência de 2026-09-08 (os três arquivos de

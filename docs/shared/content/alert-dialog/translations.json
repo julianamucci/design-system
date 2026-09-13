@@ -11,7 +11,6 @@
       "aiEntities": "AlertDialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alertdialog, focus trap"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "triggerLabel": "Excluir conta",
         "title": "Excluir conta",
@@ -25,7 +24,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>AlertDialog</strong> — container raiz que gerencia o estado de abertura e o foco.",
       "item2": "<strong>AlertDialogTrigger</strong> — elemento que dispara a abertura. Compõe com <code>Button</code> via composição, delegando a renderização ao filho.",
       "item3": "<strong>AlertDialogContent</strong> — painel modal com <code>role=\"alertdialog\"</code>, focus trap e Portal automáticos.",
@@ -46,7 +44,6 @@
       "item10": "<strong>AlertDialogMedia</strong> — bloco opcional de ícone no topo do header. Acompanha o alinhamento do header: centralizado em telas estreitas, à esquerda a partir de 40rem."
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Reserve para ações destrutivas ou irreversíveis — exclusão, cancelamento, encerramento.",
@@ -137,7 +134,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Título nomeia a ação, descrição explica a consequência, botão repete o verbo.",
         "dont": "Título em forma de pergunta (\"Tem certeza?\") e botões genéricos (\"OK\", \"Sim\").",
@@ -154,12 +150,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withTrigger": "Com Button como trigger:"
     },
     "variants": {
-      "title": "Variantes",
       "note": "AlertDialog não tem variantes próprias. A severidade visual é definida pela variante do <code>Button</code> usado no <code>AlertDialogTrigger</code> e no <code>AlertDialogAction</code>.",
       "items": {
         "destructive": "Trigger e action com variante <code>destructive</code>. Para exclusão, cancelamento, remoção permanente.",
@@ -167,7 +161,6 @@
       }
     },
     "states": {
-      "title": "Configurações",
       "cols": {
         "state": "Configuração",
         "trigger": "Como ativar",
@@ -200,7 +193,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "rootTitle": "AlertDialog",
       "triggerTitle": "AlertDialogTrigger",
       "contentTitle": "AlertDialogContent",
@@ -225,7 +217,6 @@
       "extensibility": "Todos os subcomponentes aceitam classes adicionais e props HTML nativas. A severidade da ação vem da <strong>variante do Button</strong> repassada ao <code>AlertDialogAction</code>, não de classe utilitária de cor — o design system não expõe nenhuma. O bloco de mídia é opcional e entra como primeiro filho do header."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicação no tema",
@@ -248,7 +239,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "AlertDialog usa <code>role=\"alertdialog\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.2 AA: 2.1.2 (sem armadilhas de teclado com escape), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
       "item1": "<strong>role=\"alertdialog\"</strong> — diferencia de <code>dialog</code> comum e sinaliza ao leitor que é uma decisão obrigatória.",
@@ -277,7 +267,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "dialog": "Para formulários, edição ou workflows que não são decisões binárias.",
@@ -286,14 +275,12 @@
       "button": "Obrigatório no trigger e usado como base visual do Action e Cancel."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O foco inicial vai ao Cancelar, e não à ação — escolha explícita, não herdada da ordem dos botões, para evitar a confirmação acidental de quem aperta Enter por reflexo.",
       "tip2": "A ação e o Cancelar já são botões do design system: para mudar a severidade, troque a variante do botão (destrutiva ou padrão) — o diálogo não tem eixo de tom próprio.",
       "tip3": "A ação fecha o diálogo ao ser acionada. Para operação assíncrona, rode-a depois do fechamento e comunique o resultado fora do diálogo — com um toast, por exemplo.",
       "tip4": "Evite aninhar AlertDialog dentro de DropdownMenu ou outro Portal — pode causar focus trap conflitante. Prefira fechar o menu antes de abrir o diálogo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "AlertDialog rastreia abertura, confirmação e cancelamento para medir taxa de desistência em ações críticas.",
       "table": {
         "event": "Evento",
@@ -320,7 +307,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em cada interação com o AlertDialog.",
@@ -452,7 +438,6 @@
       "aiEntities": "AlertDialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alertdialog, focus trap"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "triggerLabel": "Delete account",
         "title": "Delete account",
@@ -466,7 +451,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>AlertDialog</strong> — root container managing open state and focus.",
       "item2": "<strong>AlertDialogTrigger</strong> — element that opens the dialog. Composes with <code>Button</code> by delegating rendering to the child element.",
       "item3": "<strong>AlertDialogContent</strong> — modal panel with automatic <code>role=\"alertdialog\"</code>, focus trap, and Portal.",
@@ -487,7 +471,6 @@
       "item10": "<strong>AlertDialogMedia</strong> — optional icon block at the top of the header. It follows the header alignment: centered on narrow screens, left-aligned from 40rem up."
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Reserve for destructive or irreversible actions — deletion, cancellation, termination.",
@@ -578,7 +561,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Title names the action, description explains the consequence, button repeats the verb.",
         "dont": "Title as a question (\"Are you sure?\") and generic buttons (\"OK\", \"Yes\").",
@@ -595,12 +577,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withTrigger": "With Button as trigger:"
     },
     "variants": {
-      "title": "Variants",
       "note": "AlertDialog has no variants of its own. Visual severity is set by the <code>Button</code> variant used in <code>AlertDialogTrigger</code> and <code>AlertDialogAction</code>.",
       "items": {
         "destructive": "Trigger and action with <code>destructive</code> variant. For deletion, cancellation, permanent removal.",
@@ -608,7 +588,6 @@
       }
     },
     "states": {
-      "title": "Configurations",
       "cols": {
         "state": "Configuration",
         "trigger": "How to activate",
@@ -641,7 +620,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "rootTitle": "AlertDialog",
       "triggerTitle": "AlertDialogTrigger",
       "contentTitle": "AlertDialogContent",
@@ -666,7 +644,6 @@
       "extensibility": "All subcomponents accept extra classes and native HTML props. The action severity comes from the <strong>Button variant</strong> forwarded to <code>AlertDialogAction</code>, not from a color utility class — the design system exposes none. The media block is optional and goes in as the header first child."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": "Theme application",
@@ -689,7 +666,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "AlertDialog uses <code>role=\"alertdialog\"</code> with automatic focus trap and focus return to the trigger. Meets WCAG 2.2 AA: 2.1.2 (no keyboard trap without escape), 2.4.3 (focus order), 4.1.2 (name, role, value).",
       "item1": "<strong>role=\"alertdialog\"</strong> — differentiates from plain <code>dialog</code> and signals to the reader that a mandatory decision is required.",
@@ -718,7 +694,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "dialog": "For forms, editing, or workflows that are not binary decisions.",
@@ -727,14 +702,12 @@
       "button": "Required in trigger and used as visual base for Action and Cancel."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "Initial focus goes to Cancel, not to the action — an explicit choice, not inherited from the button order, to prevent accidental confirmation by someone pressing Enter out of habit.",
       "tip2": "The action and Cancel are already design system buttons: to change severity, switch the button variant (destructive or default) — the dialog has no tone axis of its own.",
       "tip3": "The action closes the dialog when triggered. For an async operation, run it after the dialog closes and report the result outside it — with a toast, for instance.",
       "tip4": "Avoid nesting AlertDialog inside DropdownMenu or another Portal — it may cause focus trap conflicts. Close the menu before opening the dialog."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "AlertDialog tracks open, confirm, and cancel to measure drop-off rate on critical actions.",
       "table": {
         "event": "Event",
@@ -761,7 +734,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each AlertDialog interaction.",
@@ -893,7 +865,6 @@
       "aiEntities": "AlertDialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alertdialog, focus trap"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "triggerLabel": "Eliminar cuenta",
         "title": "Eliminar cuenta",
@@ -907,7 +878,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>AlertDialog</strong> — contenedor raíz que gestiona el estado de apertura y el foco.",
       "item2": "<strong>AlertDialogTrigger</strong> — elemento que dispara la apertura. Compone con <code>Button</code> delegando la renderización al hijo.",
       "item3": "<strong>AlertDialogContent</strong> — panel modal con <code>role=\"alertdialog\"</code>, focus trap y Portal automáticos.",
@@ -928,7 +898,6 @@
       "item10": "<strong>AlertDialogMedia</strong> — bloque opcional de icono al inicio del header. Sigue la alineación del header: centrado en pantallas estrechas, a la izquierda desde 40rem."
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Reserva para acciones destructivas o irreversibles — eliminación, cancelación, finalización.",
@@ -1019,7 +988,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Título nombra la acción, descripción explica la consecuencia, botón repite el verbo.",
         "dont": "Título en forma de pregunta (\"¿Estás seguro?\") y botones genéricos (\"OK\", \"Sí\").",
@@ -1036,12 +1004,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withTrigger": "Con Button como trigger:"
     },
     "variants": {
-      "title": "Variantes",
       "note": "AlertDialog no tiene variantes propias. La severidad visual la define la variante del <code>Button</code> usado en <code>AlertDialogTrigger</code> y en <code>AlertDialogAction</code>.",
       "items": {
         "destructive": "Trigger y action con variante <code>destructive</code>. Para eliminación, cancelación, remoción permanente.",
@@ -1049,7 +1015,6 @@
       }
     },
     "states": {
-      "title": "Configuraciones",
       "cols": {
         "state": "Configuración",
         "trigger": "Cómo activar",
@@ -1082,7 +1047,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "rootTitle": "AlertDialog",
       "triggerTitle": "AlertDialogTrigger",
       "contentTitle": "AlertDialogContent",
@@ -1107,7 +1071,6 @@
       "extensibility": "Todos los subcomponentes aceptan clases adicionales y props HTML nativas. La severidad de la acción viene de la <strong>variante del Button</strong> que se pasa a <code>AlertDialogAction</code>, no de una clase utilitaria de color — el design system no expone ninguna. El bloque de medios es opcional y entra como primer hijo del header."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicación en el tema",
@@ -1130,7 +1093,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "AlertDialog usa <code>role=\"alertdialog\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.2 AA: 2.1.2 (sin trampas de teclado con escape), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
       "item1": "<strong>role=\"alertdialog\"</strong> — se diferencia del <code>dialog</code> común y señala al lector que es una decisión obligatoria.",
@@ -1159,7 +1121,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "dialog": "Para formularios, edición o flujos que no son decisiones binarias.",
@@ -1168,14 +1129,12 @@
       "button": "Obligatorio en el trigger y usado como base visual de Action y Cancel."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El foco inicial va al Cancelar, y no a la acción — una elección explícita, no heredada del orden de los botones, para evitar la confirmación accidental de quien pulsa Enter por reflejo.",
       "tip2": "La acción y el Cancelar ya son botones del design system: para cambiar la severidad, cambia la variante del botón (destructiva o predeterminada) — el diálogo no tiene eje de tono propio.",
       "tip3": "La acción cierra el diálogo al accionarse. Para una operación asíncrona, ejecútala después del cierre y comunica el resultado fuera del diálogo — con un toast, por ejemplo.",
       "tip4": "Evita anidar AlertDialog dentro de DropdownMenu u otro Portal — puede causar conflicto de focus trap. Cierra el menú antes de abrir el diálogo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "AlertDialog rastrea apertura, confirmación y cancelación para medir la tasa de abandono en acciones críticas.",
       "table": {
         "event": "Evento",
@@ -1202,7 +1161,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada interacción del AlertDialog.",

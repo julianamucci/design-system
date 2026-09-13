@@ -626,7 +626,7 @@ function buildCompositionCode(): Record<
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma
                fonte, dois lugares. A barra de três ações que morava aqui virou
                a composição actionBar, que é o que ela sempre foi. Sem crase
@@ -657,7 +657,6 @@ function buildCompositionCode(): Record<
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -665,7 +664,6 @@ function buildCompositionCode(): Record<
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -673,10 +671,9 @@ function buildCompositionCode(): Record<
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           [secondaryCode]="importCodeButton"
           componentSlug="tooltip"
@@ -689,7 +686,6 @@ function buildCompositionCode(): Record<
              compartilhado. Com o container de Variantes a página montava a
              mesma linha na mão, com marcação escrita à unha. -->
         <nds-docs-compositions
-          [title]="t('variants.title')"
           [items]="variantItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="tooltip"
@@ -697,20 +693,17 @@ function buildCompositionCode(): Record<
         />
 
         <nds-docs-compositions
-          [title]="t('variants.compositionsTitle')"
           [items]="compositionItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="tooltip"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -720,7 +713,6 @@ function buildCompositionCode(): Record<
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -728,7 +720,6 @@ function buildCompositionCode(): Record<
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -738,25 +729,21 @@ function buildCompositionCode(): Record<
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="tooltip"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="tooltip"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

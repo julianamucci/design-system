@@ -22,10 +22,6 @@ const meta: Meta = {
     docs: { description: { component: "Tabelas de propriedades, uma por grupo, mais a interface em código e o bloco de extensibilidade. A descrição é neutra de API de propósito: o mesmo texto serve às cinco stacks, e o nome da prop é que muda." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     tables: {
       control: "object",
       description: "Uma tabela por grupo de propriedades."
@@ -44,7 +40,6 @@ const meta: Meta = {
     }
   },
   args: {
-    title: "Propriedades",
     tables: [
       {
         title: "",
@@ -87,7 +82,6 @@ const meta: Meta = {
   render: (args) => ({
     props: args,
     template: `<nds-docs-props
-      [title]="title"
       [tables]="tables"
       [interfaceCode]="interfaceCode"
       [extensibilityTitle]="extensibilityTitle"

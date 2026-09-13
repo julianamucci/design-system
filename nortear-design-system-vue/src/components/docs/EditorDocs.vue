@@ -396,7 +396,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Demonstração ─────────────────────────────────────────────── -->
     <DocsDemonstration
-      :title="tContent('demonstration.title')"
       component-slug="editor"
     >
       <div
@@ -407,7 +406,7 @@ const visualTestItems = computed(() =>
           class="nds-cluster"
           data-spacing="sm"
           role="group"
-          :aria-label="tContent('demonstration.title')"
+          :aria-label="tNav('nav.demonstration')"
         >
           <!-- O observer resolve por `.closest('[data-track]')`, e a terceira
                parte do id estruturado vira `element_id`. -->
@@ -437,7 +436,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Anatomia ─────────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -446,7 +444,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Quando Usar ──────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="{ title: tContent('usage.guidelines.title'), items: guidelineItems }"
       :scenarios="{
         title: tContent('usage.scenarios.title'),
@@ -479,7 +476,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Do & Don't ───────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         {
           doLabel: tNav('common.do'),
@@ -532,7 +528,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Importação ───────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withStorage')"
@@ -542,7 +537,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Variantes ────────────────────────────────────────────────── -->
     <DocsVariants
-      :title="tContent('variants.title')"
       :note="tContent('variants.note')"
       :items="variantItems"
       component-slug="editor"
@@ -565,7 +559,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Estados ──────────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
         trigger: tContent('states.cols.trigger'),
@@ -576,7 +569,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Propriedades ─────────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         {
           title: 'Editor',
@@ -599,7 +591,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Tokens ───────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{
         token: tContent('tokens.table.token'),
         value: tContent('tokens.table.value'),
@@ -612,7 +603,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Acessibilidade ───────────────────────────────────────────── -->
     <DocsAccessibility
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
@@ -621,21 +611,18 @@ const visualTestItems = computed(() =>
 
     <!-- ── Relacionados ─────────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
       component-slug="editor"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
       component-slug="editor"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
         trigger: toPlainText(tContent('analytics.table.trigger')),
@@ -646,7 +633,6 @@ const visualTestItems = computed(() =>
 
     <!-- ── Testes ───────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         description: tContent('testes.functional.description'),

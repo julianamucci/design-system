@@ -313,7 +313,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
       }
     >
       {/* ── Demonstração ────────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-w-full nds-max-w-sm nds-stack" data-spacing="md">
           <div className="nds-stack" data-spacing="xs">
             <label htmlFor="demo-nome" className="nds-text-body nds-font-medium">
@@ -397,7 +397,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Anatomia ────────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -410,7 +409,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Quando Usar ─────────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -458,7 +456,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Do & Don't ──────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -520,7 +517,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Importação ──────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withGroup")}
@@ -529,7 +525,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Variantes ───────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         items={[
           {
             name: "text",
@@ -645,7 +640,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Composições ─────────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="input"
         items={[
@@ -724,7 +718,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Estados ─────────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -761,7 +754,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Propriedades ────────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.inputTitle"),
@@ -844,7 +836,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Tokens ──────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -863,7 +854,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -872,7 +862,7 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           tContent("accessibility.item4"),
           tContent("accessibility.item5"),
         ]}
-        keyboardTitle={tContent("accessibility.title")}
+        keyboardTitle={tNav("nav.accessibility")}
         keyboardItems={[
           { key: "Tab",        description: tContent("accessibility.keyboard.tab") },
           { key: "Shift+Tab",  description: tContent("accessibility.keyboard.shiftTab") },
@@ -883,7 +873,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Relacionados ────────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: "Textarea",
@@ -915,7 +904,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Notas ───────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -927,7 +915,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Analytics ───────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -969,7 +956,6 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
 
       {/* ── Testes ──────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

@@ -803,7 +803,7 @@ export function MenubarDocs() {
           um menu cada, todas abertas ao carregar: o que se via era um
           DropdownMenu repetido, e justamente o que faz um menubar — a seta que
           passa de um menu ao vizinho — não existia na página. */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-cluster nds-p-8" data-align="center" data-justify="center">
           <BarPreview preview="demo" location="docs_demo" menus={barDemo(tContent)} />
         </div>
@@ -811,7 +811,6 @@ export function MenubarDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={stringsFromDict(tContent, "anatomy")}
         structureCode={tContent("anatomy.structureCode")}
         structureLabel={tContent("anatomy.structureLabel")}
@@ -819,7 +818,6 @@ export function MenubarDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: stringsFromDict(tContent, "usage.guidelines"),
@@ -884,7 +882,6 @@ export function MenubarDocs() {
           lia via a frase, nunca o defeito. O submenu dentro de submenu do par 2
           abre de verdade: é abrindo que se sente o custo. */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -906,7 +903,7 @@ export function MenubarDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       {/* Seis barras vivas, e o código de cada card sai da lista que monta a
@@ -915,7 +912,6 @@ export function MenubarDocs() {
           português. */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="menubar"
         items={[
@@ -964,7 +960,6 @@ export function MenubarDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -996,7 +991,6 @@ export function MenubarDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -1059,7 +1053,6 @@ export function MenubarDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1130,7 +1123,6 @@ export function MenubarDocs() {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={stringsFromDict(tContent, "accessibility.items")}
         keyboardTitle={tContent("accessibility.keyboard.title")}
@@ -1147,7 +1139,6 @@ export function MenubarDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="menubar"
         items={[
           {
@@ -1175,7 +1166,6 @@ export function MenubarDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="menubar"
         items={stringsFromDict(tContent, "notes").map((content) => ({ title: "", content }))}
       />
@@ -1186,7 +1176,6 @@ export function MenubarDocs() {
           `menubar_shortcut_invoke`, que nunca existiram no tipo — e o atalho
           exibido é só texto, não gera evento. */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1228,7 +1217,6 @@ export function MenubarDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

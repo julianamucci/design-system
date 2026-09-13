@@ -467,14 +467,12 @@ export function createCommandDocs(): HTMLElement {
       // ─── 1. Demonstração ───────────────────────────────────────────────
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => buildDemo((open) => { openDemoPalette = open; }),
         });
 
       // ─── 2. Anatomia ───────────────────────────────────────────────────
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -483,7 +481,6 @@ export function createCommandDocs(): HTMLElement {
       // ─── 3. Quando Usar ────────────────────────────────────────────────
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -514,7 +511,6 @@ export function createCommandDocs(): HTMLElement {
       // ─── 4. Do & Don't ─────────────────────────────────────────────────
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -559,7 +555,6 @@ export function createCommandDocs(): HTMLElement {
       // ─── 5. Importação ─────────────────────────────────────────────────
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createCommand } from '@/components/ui/command';`,
           secondaryDescription: t('import.withDialog'),
@@ -655,7 +650,6 @@ wrap.appendChild(
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           note: t('variants.note'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'command',
@@ -736,7 +730,6 @@ wrap.appendChild(
       // ─── 7. Estados ────────────────────────────────────────────────────
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state:    t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -823,7 +816,6 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
         const no = tNav('common.no');
 
         return createDocsProps({
-          title: t('props.title'),
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes: t('props.extensibility'),
@@ -861,7 +853,6 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
       // ─── 9. Tokens ─────────────────────────────────────────────────────
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token:       t('tokens.table.token'),
             value:       t('tokens.table.class'),
@@ -893,7 +884,6 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3].map(i => t(`accessibility.item${i}`)),
           keyboardTitle: tNav('common.keyboardNav'),
@@ -910,7 +900,6 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
       // ─── 11. Relacionados ──────────────────────────────────────────────
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Select',       description: toPlainText(t('related.select')),       path: '?path=/docs/components-form-select--docs'        },
             { name: 'DropdownMenu', description: toPlainText(t('related.dropdownMenu')), path: '?path=/docs/components-overlay-dropdownmenu--docs'  },
@@ -921,7 +910,6 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
       // ─── 12. Notas ─────────────────────────────────────────────────────
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -932,7 +920,6 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
       // ─── 13. Analytics ─────────────────────────────────────────────────
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -970,7 +957,6 @@ export type CommandElement = HTMLElement & { reset: () => void };`;
       // ─── 14. Testes ────────────────────────────────────────────────────
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             description: t('testes.functional.description'),

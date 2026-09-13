@@ -746,7 +746,7 @@ const variantLayout     = ref(LAYOUT_INITIAL);
       escreve nele um `aria-labelledby` para um id que não existe. O Vanilla,
       que é a referência, só abre grupo onde há rótulo.
     -->
-    <DocsDemonstration :title="tContent('demonstration.title')">
+    <DocsDemonstration>
       <div
         class="nds-cluster nds-w-full nds-p-8"
         data-align="center"
@@ -794,7 +794,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Anatomia ─────────────────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -802,7 +801,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Quando Usar ──────────────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="usageGuidelines"
       :scenarios="usageScenarios"
       :do="usageDo"
@@ -811,7 +809,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Do & Don't ───────────────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
@@ -992,7 +989,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Importação ───────────────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="codeImportBasic"
       :secondary-description="tContent('import.withCheckbox')"
@@ -1002,7 +998,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
     <!-- ── Variantes ────────────────────────────────────────────────────────── -->
     <DocsCompositions
       id="variantes"
-      :title="tContent('variants.title')"
       :note="tContent('variants.note')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="context-menu"
@@ -1227,7 +1222,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Estados ──────────────────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
         trigger: toPlainText(tContent('states.cols.trigger')),
@@ -1238,7 +1232,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Propriedades ─────────────────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: tContent('props.rootTitle'), cols: propCols, items: rootPropItems },
         { title: tContent('props.contentTitle'), cols: propCols, items: contentPropItems },
@@ -1255,7 +1248,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Tokens ───────────────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{
         token: tContent('tokens.table.token'),
         value: tContent('tokens.table.class'),
@@ -1270,7 +1262,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
     <DocsAccessibility
       :screen-reader-title="tNav('common.screenReader')"
       :screen-reader-items="screenReaderItems"
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboardTitle')"
@@ -1279,19 +1270,16 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Relacionados ─────────────────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
     />
 
     <!-- ── Notas ────────────────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
     />
 
     <!-- ── Analytics ────────────────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
         trigger: toPlainText(tContent('analytics.table.trigger')),
@@ -1302,7 +1290,6 @@ const variantLayout     = ref(LAYOUT_INITIAL);
 
     <!-- ── Testes ────────────────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         cols: {

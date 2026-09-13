@@ -11,7 +11,6 @@
       "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "bold": "Negrito",
         "italic": "Itálico",
@@ -22,7 +21,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Toggle</strong> — botão único com <code>aria-pressed=\"true|false\"</code>, que é o contrato de estado do componente.",
       "item2": "<strong>Ícone interno</strong> (opcional) — <code>&lt;svg&gt;</code> de 16px com <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>aria-label</strong> — OBRIGATÓRIO em toggles icon-only.",
@@ -36,7 +34,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para formatação visual (negrito, itálico), filtros e modos de exibição.",
@@ -120,7 +117,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Toggle icon-only com aria-label descritivo da função.",
         "dont": "Não use aria-label genérico como \"Botão\" ou nome da letra."
@@ -130,11 +126,8 @@
         "dont": "Não use vários Toggle soltos quando representam uma escolha conjunta."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "outline": "Outline",
@@ -150,7 +143,6 @@
         "outline": "<code>variant=\"outline\"</code> — borda <code>input</code> e sombra de elevação, mesma lógica de estado ativo.",
         "withLabel": "Ícone + texto visível — útil para filtros (\"Mostrar ocultos\")."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "toolbar": {
           "name": "Toolbar de formatação",
@@ -165,7 +157,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "off": {
         "label": "Off",
         "trigger": "—",
@@ -203,7 +194,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -263,7 +253,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -307,7 +296,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-pressed</code> reflete o estado on/off automaticamente",
@@ -338,7 +326,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "toggleGroup": {
           "name": "ToggleGroup",
@@ -359,14 +346,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o estado <code>aria-pressed</code>, a alternância por ponteiro e por teclado e o bloqueio da interação quando desabilitado vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-toggle</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (botão de alternância), que é o contrato de estado; Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>. O atributo de estado no DOM varia com a lib headless (<code>data-state=\"on|off\"</code> ou <code>data-pressed</code>), e a folha de estilo aceita as duas formas.",
       "item3": "<strong>Token de raio</strong> — o raio sai de <code>--radius-button</code>, o mesmo do Button, e acompanha a identidade de forma do tema.",
       "item4": "<strong>Para conjunto</strong> — use <code>ToggleGroup</code> em vez de múltiplos Toggle soltos quando representam escolha conjunta."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -379,7 +364,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -448,7 +432,6 @@
       "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "bold": "Bold",
         "italic": "Italic",
@@ -459,7 +442,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Toggle</strong> — single button with <code>aria-pressed=\"true|false\"</code>, the component's state contract.",
       "item2": "<strong>Internal icon</strong> (optional) — 16px <code>&lt;svg&gt;</code> with <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>aria-label</strong> — REQUIRED on icon-only toggles.",
@@ -473,7 +455,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for visual formatting (bold, italic), filters and view modes.",
@@ -557,7 +538,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Icon-only Toggle with descriptive aria-label for the function.",
         "dont": "Don't use generic aria-label like \"Button\" or the letter name."
@@ -567,11 +547,8 @@
         "dont": "Don't use multiple loose Toggles when they represent a joint choice."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "outline": "Outline",
@@ -587,7 +564,6 @@
         "outline": "<code>variant=\"outline\"</code> — <code>input</code> border and elevation shadow, same active-state logic.",
         "withLabel": "Icon + visible text — useful for filters (\"Show hidden\")."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "toolbar": {
           "name": "Formatting toolbar",
@@ -602,7 +578,6 @@
       }
     },
     "states": {
-      "title": "States",
       "off": {
         "label": "Off",
         "trigger": "—",
@@ -640,7 +615,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -700,7 +674,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -744,7 +717,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-pressed</code> reflects on/off state automatically",
@@ -775,7 +747,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "toggleGroup": {
           "name": "ToggleGroup",
@@ -796,14 +767,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the <code>aria-pressed</code> state, toggling by pointer and by keyboard, and blocking interaction when disabled come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-toggle</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle uses <code>aria-pressed</code> (toggle button), which is the state contract; Switch uses <code>role=\"switch\"</code> + <code>aria-checked</code>. The DOM state attribute varies with the headless lib (<code>data-state=\"on|off\"</code> or <code>data-pressed</code>), and the stylesheet accepts both forms.",
       "item3": "<strong>Radius token</strong> — the radius comes from <code>--radius-button</code>, the same as Button, and follows the theme shape identity.",
       "item4": "<strong>For sets</strong> — use <code>ToggleGroup</code> instead of multiple loose Toggles when they represent a joint choice."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -816,7 +785,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -885,7 +853,6 @@
       "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "bold": "Negrita",
         "italic": "Itálica",
@@ -896,7 +863,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Toggle</strong> — botón único con <code>aria-pressed=\"true|false\"</code>, que es el contrato de estado del componente.",
       "item2": "<strong>Icono interno</strong> (opcional) — <code>&lt;svg&gt;</code> de 16px con <code>aria-hidden=\"true\"</code>.",
       "item3": "<strong>aria-label</strong> — OBLIGATORIO en toggles icon-only.",
@@ -910,7 +876,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para formato visual (negrita, itálica), filtros y modos de vista.",
@@ -994,7 +959,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Toggle icon-only con aria-label descriptivo de la función.",
         "dont": "No uses aria-label genérico como \"Botón\" o el nombre de la letra."
@@ -1004,11 +968,8 @@
         "dont": "No uses varios Toggle sueltos cuando representan una elección conjunta."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "outline": "Outline",
@@ -1024,7 +985,6 @@
         "outline": "<code>variant=\"outline\"</code> — borde <code>input</code> y sombra de elevación, misma lógica de estado activo.",
         "withLabel": "Icono + texto visible — útil para filtros (\"Mostrar ocultos\")."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "toolbar": {
           "name": "Toolbar de formato",
@@ -1039,7 +999,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "off": {
         "label": "Off",
         "trigger": "—",
@@ -1077,7 +1036,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1137,7 +1095,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1181,7 +1138,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>aria-pressed</code> refleja el estado on/off automáticamente",
@@ -1212,7 +1168,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "toggleGroup": {
           "name": "ToggleGroup",
@@ -1233,14 +1188,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el estado <code>aria-pressed</code>, la alternancia por puntero y por teclado y el bloqueo de la interacción cuando está deshabilitado vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-toggle</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (botón de alternancia), que es el contrato de estado; Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>. El atributo de estado en el DOM varía con la lib headless (<code>data-state=\"on|off\"</code> o <code>data-pressed</code>), y la hoja de estilo acepta las dos formas.",
       "item3": "<strong>Token de radio</strong> — el radio sale de <code>--radius-button</code>, el mismo del Button, y acompaña la identidad de forma del tema.",
       "item4": "<strong>Para conjunto</strong> — usa <code>ToggleGroup</code> en vez de múltiples Toggle sueltos cuando representan una elección conjunta."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1253,7 +1206,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

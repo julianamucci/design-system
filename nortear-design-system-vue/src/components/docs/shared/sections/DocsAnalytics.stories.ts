@@ -26,10 +26,6 @@ const meta: Meta<typeof DocsAnalytics> = {
     docs: { description: { component: "Eventos que o componente dispara, o gatilho de cada um e o payload. O payload carrega valor estável — slug, variante, lado —, nunca texto traduzido, que partiria um evento em três no GA4." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     cols: {
       control: "object",
       description: "Cabeçalho das três colunas."
@@ -40,7 +36,6 @@ const meta: Meta<typeof DocsAnalytics> = {
     }
   },
   args: {
-    title: "Analytics",
     cols: {
       event: "Evento",
       trigger: "Gatilho",

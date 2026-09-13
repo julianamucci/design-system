@@ -192,7 +192,7 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
   {/snippet}
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
-      <DocsDemonstration title={$tStore('demonstration.title')}>
+      <DocsDemonstration>
         <!-- .nds-cluster já traz flex-wrap: wrap; o style inline era inerte. -->
         <div class="nds-cluster" data-spacing="md">
           <Button onclick={() => handleDemoClick('default')}>{$tStore('demonstration.labels.primary')}</Button>
@@ -213,7 +213,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->
       <DocsAnatomy
-        title={$tStore('anatomy.title')}
         items={[
           $tStore('anatomy.item1'),
           $tStore('anatomy.item2'),
@@ -226,7 +225,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Quando Usar ────────────────────────────────────────────── -->
       <DocsWhenToUse
-        title={$tStore('usage.title')}
         guidelines={{
           title: $tStore('usage.guidelines.title'),
           items: [
@@ -288,7 +286,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Do & Don't ─────────────────────────────────────────────── -->
       <DocsDoDont
-        title={$tStore('doDont.title')}
         pairs={[
           {
             doLabel: $tNavStore('common.do'),
@@ -330,7 +327,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
       <DocsImport
-        title={$tStore('import.title')}
         description={$tStore('import.basic')}
         code={codeImportBasic}
         secondaryDescription={$tStore('import.withIcon')}
@@ -340,7 +336,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       <!-- ── Variantes ──────────────────────────────────────────────── -->
       <DocsCompositions
         id="variantes"
-        title={$tStore('variants.title')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="button"
         items={[
@@ -384,7 +379,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       <!-- ── Tamanhos ───────────────────────────────────────────────── -->
       <DocsVariants
         id="tamanhos"
-        title={$tStore('variants.sizesTitle')}
         items={[
           { name: 'default', description: stripHtml($tStore('variants.sizes.default')), code: codeSizeDefault, preview: sizeDefault },
           { name: 'xs',      description: stripHtml($tStore('variants.sizes.xs')),      code: codeSizeXs,      preview: sizeXs      },
@@ -432,7 +426,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Composições ──────────────────────────────────────────────── -->
       <DocsCompositions
-        title={$tStore('variants.compositionsTitle')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="button"
         items={[
@@ -498,7 +491,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Estados ────────────────────────────────────────────────── -->
       <DocsStates
-        title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
           trigger: toPlainText($tStore('states.cols.trigger')),
@@ -516,7 +508,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Propriedades ───────────────────────────────────────────── -->
       <DocsProps
-        title={$tStore('props.title')}
         tables={[
           {
             title: $tStore('props.buttonTitle'),
@@ -545,7 +536,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Tokens ─────────────────────────────────────────────────── -->
       <DocsTokens
-        title={$tStore('tokens.title')}
         cols={{
           token: $tStore('tokens.table.token'),
           value: $tStore('tokens.table.class'),
@@ -573,7 +563,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
       <DocsAccessibility
         screenReaderTitle={$tNavStore('common.screenReader')}
         screenReaderItems={screenReaderItems}
-        title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
           $tStore('accessibility.item1'),
@@ -593,7 +582,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
       <DocsRelated
-        title={$tStore('related.title')}
         items={[
           { name: 'Toggle',      description: toPlainText($tStore('related.toggle')),     path: '?path=/docs/components-form-toggle--docs' },
           { name: 'Switch',      description: $tStore('related.switch'),                path: '?path=/docs/components-form-switch--docs' },
@@ -605,7 +593,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
       <DocsNotes
-        title={$tStore('notes.title')}
         items={[
           { title: '', content: $tStore('notes.tip1') },
           { title: '', content: $tStore('notes.tip2') },
@@ -615,7 +602,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Analytics ─────────────────────────────────────────────── -->
       <DocsAnalytics
-        title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
           trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -631,7 +617,6 @@ export type ButtonProps = WithElementRef<HTMLButtonAttributes> &
 
       <!-- ── Testes ─────────────────────────────────────────────────── -->
       <DocsTestes
-        title={$tStore('testes.title')}
         functional={{
           title: $tStore('testes.functional.title'),
           cols: {

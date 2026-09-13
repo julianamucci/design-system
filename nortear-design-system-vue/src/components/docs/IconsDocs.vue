@@ -10,6 +10,7 @@ import { track } from '@/lib/analytics';
 import { mountDocsTracking } from '@/lib/docs-tracking';
 import DOMPurify from 'dompurify';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 import { CATALOGO_LUCIDE, ICON_NAMES } from '@shared/primitives/lucide-catalog';
 
 // ─── Catálogo de ícones ──────────────────────────────────────────────────────
@@ -28,6 +29,7 @@ const CATALOGO = CATALOGO_LUCIDE;
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t, locale } = useTranslation(iconsTranslations);
+const { t: tNav } = useTranslation(uiTranslations);
 const store = useI18nStore();
 
 // ─── SEO ──────────────────────────────────────────────────────────────────────
@@ -237,7 +239,7 @@ nds-icon-lg   // 20px — destaque em headers</code></pre>
         data-spacing="md"
       >
         <h2 class="nds-text-h2 nds-text-foreground">
-          {{ t('accessibility.title') }}
+          {{ tNav('nav.accessibility') }}
         </h2>
         <div
           class="nds-grid"

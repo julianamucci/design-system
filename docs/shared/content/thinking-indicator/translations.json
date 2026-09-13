@@ -14,7 +14,6 @@
       "reveal": "Fazer o texto chegar"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "waiting": "Enquanto a resposta não chega",
         "arrived": "Depois que o texto chegou",
@@ -22,7 +21,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A raiz é uma região de estado: ela anuncia uma vez que a resposta começou a vir, e é a única peça desta família que se anuncia.",
       "item2": "Os três pontos são desenho, e ficam fora do que é lido em voz — animação não se lê.",
@@ -34,7 +32,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Ponha o indicador no lugar em que a resposta vai aparecer, e só enquanto ela não chegou.",
@@ -125,7 +122,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "A frase diz o que está acontecendo, e é ela que chega a quem ouve a tela.",
         "dont": "Só os pontos se movendo: para quem ouve a tela, isso é silêncio."
@@ -136,7 +132,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createThinkingIndicator } from '@/components/ui/thinking-indicator';\n\nconst indicator = createThinkingIndicator({ label: 'Gerando resposta' });\ndocument.querySelector('#answer')?.append(indicator);",
@@ -155,7 +150,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -178,7 +172,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -207,7 +200,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -249,7 +241,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "É a exceção da família: aqui existe região viva, porque o indicador anuncia UMA vez que a resposta começou a vir e depois sai de cena. Avisar que algo começou não é narrar cada passo.",
       "items": {
         "item1": "A raiz é uma região de estado. Ela anuncia uma vez, sem interromper o que estiver sendo lido, e não volta a falar.",
@@ -272,7 +263,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado da execução",
@@ -293,7 +283,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "Não é a mesma peça que o estado da execução, ainda que as duas falem de espera. Aquela é uma linha de informação com ação, e mora fora da resposta; esta é o lugar da resposta enquanto ela não chegou, e mora onde o texto vai aparecer. Quem escolhe entre as duas escolhe pelo lugar.",
       "item2": "A região viva aqui é exceção, e a exceção tem motivo. A regra desta família proíbe região viva porque um número que se reanuncia torna a tela impossível de ouvir; o indicador anuncia uma vez que a resposta começou a vir e depois sai de cena. É a diferença entre avisar que algo começou e narrar cada passo.",
       "item3": "Os pontos são decorativos e a frase é lida em voz. A animação é a parte que não se lê, e por isso a frase não é um enfeite do desenho: ela é a informação inteira para quem ouve.",
@@ -301,7 +290,6 @@
       "item5": "São três pontos, e o número não é opção. O atraso escalonado que faz três pontos parecerem uma onda — em vez de três pontos piscando juntos — está escrito para três; um quarto ponto pulsaria junto com o primeiro."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação. O indicador não instrumenta nada: ele não tem interação para medir.",
       "table": {
         "event": "Evento",
@@ -319,7 +307,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -404,7 +391,6 @@
       "reveal": "Let the text arrive"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "waiting": "While the answer has not arrived",
         "arrived": "After the text arrived",
@@ -412,7 +398,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The root is a status region: it announces once that the answer has started coming, and it is the only piece of this family that announces anything.",
       "item2": "The three dots are drawing, and stay out of what is read aloud — animation cannot be read.",
@@ -424,7 +409,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Put the indicator where the answer will appear, and only while it has not arrived.",
@@ -515,7 +499,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The phrase says what is happening, and it is what reaches whoever is listening to the screen.",
         "dont": "Only the dots moving: for whoever is listening to the screen, that is silence."
@@ -526,7 +509,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createThinkingIndicator } from '@/components/ui/thinking-indicator';\n\nconst indicator = createThinkingIndicator({ label: 'Generating answer' });\ndocument.querySelector('#answer')?.append(indicator);",
@@ -545,7 +527,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -568,7 +549,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -597,7 +577,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -639,7 +618,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "This is the family's exception: a live region exists here, because the indicator announces ONCE that the answer has started coming and then leaves. Warning that something started is not narrating every step.",
       "items": {
         "item1": "The root is a status region. It announces once, without cutting into whatever is being read, and it does not speak again.",
@@ -662,7 +640,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "agentStatus": {
           "name": "Run status",
@@ -683,7 +660,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "It is not the same piece as the run status, even though both speak of waiting. That one is an information line with an action, and lives outside the answer; this one is the answer's place while it has not arrived, and lives where the text will appear. Whoever chooses between them chooses by place.",
       "item2": "The live region here is an exception, and the exception has a reason. This family's rule forbids live regions because a number that re-announces itself makes the screen impossible to listen to; the indicator announces once that the answer has started coming and then leaves. That is the difference between warning that something started and narrating every step.",
       "item3": "The dots are decorative and the phrase is read aloud. The animation is the part that cannot be read, which is why the phrase is not an ornament of the drawing: it is the whole information for whoever is listening.",
@@ -691,7 +667,6 @@
       "item5": "There are three dots, and the number is not an option. The staggered delay that makes three dots look like a wave — instead of three dots blinking together — is written for three; a fourth dot would pulse along with the first."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events. The indicator instruments nothing: it has no interaction to measure.",
       "table": {
         "event": "Event",
@@ -709,7 +684,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -794,7 +768,6 @@
       "reveal": "Hacer que llegue el texto"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "waiting": "Mientras la respuesta no llega",
         "arrived": "Después de que llegó el texto",
@@ -802,7 +775,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La raíz es una región de estado: anuncia una vez que la respuesta empezó a llegar, y es la única pieza de esta familia que se anuncia.",
       "item2": "Los tres puntos son dibujo, y quedan fuera de lo que se lee en voz — la animación no se lee.",
@@ -814,7 +786,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Pon el indicador en el lugar donde aparecerá la respuesta, y solo mientras no ha llegado.",
@@ -905,7 +876,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "La frase dice qué está pasando, y es ella la que llega a quien escucha la pantalla.",
         "dont": "Solo los puntos moviéndose: para quien escucha la pantalla, eso es silencio."
@@ -916,7 +886,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createThinkingIndicator } from '@/components/ui/thinking-indicator';\n\nconst indicator = createThinkingIndicator({ label: 'Generando respuesta' });\ndocument.querySelector('#answer')?.append(indicator);",
@@ -935,7 +904,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -958,7 +926,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -987,7 +954,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1029,7 +995,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Es la excepción de la familia: aquí existe región viva, porque el indicador anuncia UNA vez que la respuesta empezó a llegar y después se retira. Avisar que algo empezó no es narrar cada paso.",
       "items": {
         "item1": "La raíz es una región de estado. Anuncia una vez, sin cortar lo que se esté leyendo, y no vuelve a hablar.",
@@ -1052,7 +1017,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado de la ejecución",
@@ -1073,7 +1037,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "No es la misma pieza que el estado de la ejecución, aunque las dos hablen de espera. Aquella es una línea de información con acción, y vive fuera de la respuesta; esta es el lugar de la respuesta mientras no llega, y vive donde aparecerá el texto. Quien elige entre las dos elige por el lugar.",
       "item2": "La región viva aquí es excepción, y la excepción tiene motivo. La regla de esta familia prohíbe región viva porque un número que se reanuncia hace la pantalla imposible de escuchar; el indicador anuncia una vez que la respuesta empezó a llegar y después se retira. Es la diferencia entre avisar que algo empezó y narrar cada paso.",
       "item3": "Los puntos son decorativos y la frase se lee en voz. La animación es la parte que no se lee, y por eso la frase no es un adorno del dibujo: es la información entera para quien escucha.",
@@ -1081,7 +1044,6 @@
       "item5": "Son tres puntos, y el número no es opción. El retraso escalonado que hace que tres puntos parezcan una onda — en vez de tres puntos parpadeando juntos — está escrito para tres; un cuarto punto latiría junto con el primero."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación. El indicador no instrumenta nada: no tiene interacción que medir.",
       "table": {
         "event": "Evento",
@@ -1099,7 +1061,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

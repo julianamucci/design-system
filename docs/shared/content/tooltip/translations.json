@@ -11,7 +11,6 @@
       "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role tooltip"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "save": "Salvar (Ctrl+S)",
         "delete": "Excluir item",
@@ -35,7 +34,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>TooltipProvider</strong> — wrapper global no root da app que configura <code>delay</code> compartilhado entre todos os tooltips.",
       "item2": "<strong>Tooltip</strong> — root individual que controla open/closed por instância.",
       "item3": "<strong>TooltipTrigger</strong> — elemento que ativa o tooltip ao hover ou foco. Permite compor com elemento filho para envolver um Button.",
@@ -50,7 +48,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use APENAS para informação complementar — nunca para conteúdo obrigatório.",
@@ -134,7 +131,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Tooltip como complemento ao aria-label do botão.",
         "dont": "Não substitua o aria-label pelo Tooltip — mobile sem hover quebra."
@@ -144,11 +140,8 @@
         "dont": "Não use Tooltip para conteúdo longo ou interativo."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withShortcut": "Com atalho",
@@ -164,7 +157,6 @@
         "withShortcut": "Texto + atalho (ex: \"Salvar (Ctrl+S)\") — útil para botões com hotkeys.",
         "longText": "Texto que ocupa até o limite de largura do balão — quebra natural sem ser parágrafo."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "iconButtonWithShortcut": {
           "name": "Icon-button com atalho",
@@ -189,7 +181,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Closed",
         "trigger": "estado inicial",
@@ -222,7 +213,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -288,7 +278,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -324,7 +313,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.4.13 (Content on Hover or Focus), 2.1.1, 2.4.7, 4.1.2, 4.1.3.",
       "items": {
         "item1": "Abre por hover OU foco (WCAG 1.4.13) — não apenas hover",
@@ -353,7 +341,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "popover": {
           "name": "Popover",
@@ -370,14 +357,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o atraso de abertura, a exibição por foco além do ponteiro, o descarte por Escape, o posicionamento ancorado e a ligação por <code>aria-describedby</code> vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-tooltip-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Provedor no root</strong> — uma única vez, no root da aplicação. Ele governa o atraso de abertura e a espera compartilhada: enquanto o grupo está quente, o balão vizinho abre na hora. Onde a camada de comportamento trabalha por contexto, o provedor é obrigatório e sem ele o balão não aparece; onde não trabalha, ele é opcional e o que se perde é só a espera compartilhada.",
       "item3": "<strong>Não-interativo</strong> — Tooltip é texto descritivo apenas. Para conteúdo clicável use Popover ou HoverCard.",
       "item4": "<strong>Mobile</strong> — sem hover, o tooltip não aparece em touch. Botão icon-only deve ter <code>aria-label</code> próprio."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Tooltip é passivo — geralmente não dispara eventos.",
       "table": {
         "event": "Evento",
@@ -390,7 +375,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -459,7 +443,6 @@
       "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role tooltip"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "save": "Save (Ctrl+S)",
         "delete": "Delete item",
@@ -483,7 +466,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>TooltipProvider</strong> — global wrapper at app root configuring shared <code>delay</code> across all tooltips.",
       "item2": "<strong>Tooltip</strong> — individual root controlling open/closed per instance.",
       "item3": "<strong>TooltipTrigger</strong> — element that activates the tooltip on hover or focus. Compose with a child element to wrap a Button.",
@@ -498,7 +480,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use ONLY for supplementary information — never for required content.",
@@ -582,7 +563,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Tooltip as supplement to the button's aria-label.",
         "dont": "Don't replace the aria-label with the Tooltip — mobile without hover breaks."
@@ -592,11 +572,8 @@
         "dont": "Don't use Tooltip for long or interactive content."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "withShortcut": "With shortcut",
@@ -612,7 +589,6 @@
         "withShortcut": "Text + shortcut (e.g. \"Save (Ctrl+S)\") — useful for buttons with hotkeys.",
         "longText": "Text up to the bubble's width limit — natural wrap without being a paragraph."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "iconButtonWithShortcut": {
           "name": "Icon-button with shortcut",
@@ -637,7 +613,6 @@
       }
     },
     "states": {
-      "title": "States",
       "closed": {
         "label": "Closed",
         "trigger": "initial state",
@@ -670,7 +645,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -736,7 +710,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -772,7 +745,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.4.13 (Content on Hover or Focus), 2.1.1, 2.4.7, 4.1.2, 4.1.3.",
       "items": {
         "item1": "Opens on hover OR focus (WCAG 1.4.13) — not only hover",
@@ -801,7 +773,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "popover": {
           "name": "Popover",
@@ -818,14 +789,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the open delay, showing on focus as well as on pointer, dismissal by Escape, anchored positioning and the <code>aria-describedby</code> link come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-tooltip-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Provider at the root</strong> — once, at the app root. It governs the opening delay and the shared wait: while the group is warm, a neighbouring tooltip opens instantly. Where the behaviour layer works by context the provider is required and without it the tooltip never appears; where it does not, the provider is optional and all that is lost is the shared wait.",
       "item3": "<strong>Non-interactive</strong> — Tooltip is descriptive text only. For clickable content use Popover or HoverCard.",
       "item4": "<strong>Mobile</strong> — without hover, tooltip doesn't appear on touch. Icon-only button must have its own <code>aria-label</code>."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Tooltip is passive — usually doesn't fire events.",
       "table": {
         "event": "Event",
@@ -838,7 +807,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -907,7 +875,6 @@
       "aiEntities": "Tooltip, TooltipProvider, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role tooltip"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "save": "Guardar (Ctrl+S)",
         "delete": "Eliminar ítem",
@@ -931,7 +898,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>TooltipProvider</strong> — wrapper global en el root de la app que configura <code>delay</code> compartido entre todos los tooltips.",
       "item2": "<strong>Tooltip</strong> — root individual que controla open/closed por instancia.",
       "item3": "<strong>TooltipTrigger</strong> — elemento que activa el tooltip al hover o foco. Compón con elemento hijo para envolver un Button.",
@@ -946,7 +912,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa SOLO para información complementaria — nunca para contenido obligatorio.",
@@ -1030,7 +995,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Tooltip como complemento al aria-label del botón.",
         "dont": "No sustituyas el aria-label por el Tooltip — móvil sin hover rompe."
@@ -1040,11 +1004,8 @@
         "dont": "No uses Tooltip para contenido largo o interactivo."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "withShortcut": "Con atajo",
@@ -1060,7 +1021,6 @@
         "withShortcut": "Texto + atajo (ej. \"Guardar (Ctrl+S)\") — útil para botones con hotkeys.",
         "longText": "Texto que ocupa hasta el límite de ancho del globo — quiebre natural sin ser párrafo."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "iconButtonWithShortcut": {
           "name": "Icon-button con atajo",
@@ -1085,7 +1045,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "closed": {
         "label": "Closed",
         "trigger": "estado inicial",
@@ -1118,7 +1077,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1184,7 +1142,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1220,7 +1177,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.4.13 (Content on Hover or Focus), 2.1.1, 2.4.7, 4.1.2, 4.1.3.",
       "items": {
         "item1": "Abre al hover O al foco (WCAG 1.4.13) — no solo al hover",
@@ -1249,7 +1205,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "popover": {
           "name": "Popover",
@@ -1266,14 +1221,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el retraso de apertura, la aparición por foco además del puntero, el descarte por Escape, el posicionamiento anclado y el vínculo por <code>aria-describedby</code> vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-tooltip-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Proveedor en el root</strong> — una sola vez, en el root de la aplicación. Gobierna el retraso de apertura y la espera compartida: mientras el grupo está caliente, el globo vecino abre al instante. Donde la capa de comportamiento trabaja por contexto el proveedor es obligatorio y sin él el globo no aparece; donde no, es opcional y lo único que se pierde es la espera compartida.",
       "item3": "<strong>No interactivo</strong> — el Tooltip es solo texto descriptivo. Para contenido clicable usa Popover o HoverCard.",
       "item4": "<strong>Móvil</strong> — sin hover, el tooltip no aparece en touch. El botón icon-only debe tener su propio <code>aria-label</code>."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "El Tooltip es pasivo — normalmente no dispara eventos.",
       "table": {
         "event": "Evento",
@@ -1286,7 +1239,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

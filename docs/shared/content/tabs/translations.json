@@ -11,7 +11,6 @@
       "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role tablist"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "overview": "Visão geral",
         "properties": "Propriedades",
@@ -28,7 +27,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Tabs</strong> — root que controla a tab ativa e a orientação.",
       "item2": "<strong>TabsList</strong> — container <code>role=\"tablist\"</code> que agrupa os triggers; aceita variante <code>default</code> ou <code>line</code>.",
       "item3": "<strong>TabsTrigger</strong> — botão <code>role=\"tab\"</code> que ativa o painel correspondente via <code>value</code>.",
@@ -43,7 +41,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para até 6 views paralelas do mesmo nível — para mais, considere <code>Accordion</code> ou sidebar.",
@@ -127,7 +124,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Use labels curtos e descritivos: \"Visão geral\", \"Propriedades\".",
         "dont": "Não use \"Aba 1\", \"Aba 2\" — labels genéricos perdem contexto."
@@ -137,11 +133,8 @@
         "dont": "Não omita o aria-label — leitores de tela ficam sem contexto."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "line": "Line",
@@ -152,7 +145,6 @@
         "line": "Visual minimalista — <code>variant=\"line\"</code>, sem fundo, linha inferior na aba ativa.",
         "vertical": "Orientação vertical — <code>orientation=\"vertical\"</code>, lista lateral e conteúdo à direita."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "iconTrigger": {
           "name": "Com ícones no trigger",
@@ -167,7 +159,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -200,7 +191,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -260,7 +250,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -300,7 +289,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"tablist\"</code> no <code>TabsList</code>",
@@ -338,7 +326,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "stepper": {
           "name": "Stepper",
@@ -359,14 +346,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o roving tabindex, a navegação por setas e Home/End, os papéis ARIA e a amarração entre aba e painel vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-tabs-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (padrão) ativa ao mover setas; <code>manual</code> exige Enter/Space para ativar.",
       "item3": "<strong>Roving tabindex</strong> — só a tab ativa é focável via Tab; setas movem entre tabs do grupo, inclusive as desabilitadas.",
       "item4": "<strong>Variant line</strong> — visual minimalista com linha inferior; útil para sub-navegação dentro de páginas."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -379,7 +364,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -454,7 +438,6 @@
       "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role tablist"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "overview": "Overview",
         "properties": "Properties",
@@ -471,7 +454,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Tabs</strong> — root that controls the active tab and orientation.",
       "item2": "<strong>TabsList</strong> — <code>role=\"tablist\"</code> container grouping triggers; accepts <code>default</code> or <code>line</code> variant.",
       "item3": "<strong>TabsTrigger</strong> — <code>role=\"tab\"</code> button that activates the corresponding panel via <code>value</code>.",
@@ -486,7 +468,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for up to 6 parallel views at the same level — for more, consider <code>Accordion</code> or sidebar.",
@@ -570,7 +551,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Use short descriptive labels: \"Overview\", \"Properties\".",
         "dont": "Don't use \"Tab 1\", \"Tab 2\" — generic labels lose context."
@@ -580,11 +560,8 @@
         "dont": "Don't omit aria-label — screen readers lose context."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "default": "Default",
         "line": "Line",
@@ -595,7 +572,6 @@
         "line": "Minimalist look — <code>variant=\"line\"</code>, no background, bottom line on active tab.",
         "vertical": "Vertical orientation — <code>orientation=\"vertical\"</code>, side list and content on right."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "iconTrigger": {
           "name": "With icons in trigger",
@@ -610,7 +586,6 @@
       }
     },
     "states": {
-      "title": "States",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -643,7 +618,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -703,7 +677,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -743,7 +716,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"tablist\"</code> on <code>TabsList</code>",
@@ -781,7 +753,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "stepper": {
           "name": "Stepper",
@@ -802,14 +773,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — roving tabindex, arrow and Home/End navigation, the ARIA roles and the tab-to-panel wiring come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-tabs-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (default) activates on arrow move; <code>manual</code> requires Enter/Space.",
       "item3": "<strong>Roving tabindex</strong> — only the active tab is Tab-focusable; arrows move between tabs, disabled ones included.",
       "item4": "<strong>Line variant</strong> — minimalist look with bottom line; useful for sub-navigation within pages."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -822,7 +791,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -897,7 +865,6 @@
       "aiEntities": "Tabs, TabsList, TabsTrigger, TabsContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role tablist"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "overview": "Visión general",
         "properties": "Propiedades",
@@ -914,7 +881,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Tabs</strong> — root que controla la tab activa y la orientación.",
       "item2": "<strong>TabsList</strong> — contenedor <code>role=\"tablist\"</code> que agrupa los triggers; acepta variante <code>default</code> o <code>line</code>.",
       "item3": "<strong>TabsTrigger</strong> — botón <code>role=\"tab\"</code> que activa el panel correspondiente vía <code>value</code>.",
@@ -929,7 +895,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para hasta 6 vistas paralelas en el mismo nivel — para más, considera <code>Accordion</code> o sidebar.",
@@ -1013,7 +978,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Usa labels cortos y descriptivos: \"Visión general\", \"Propiedades\".",
         "dont": "No uses \"Pestaña 1\", \"Pestaña 2\" — labels genéricos pierden contexto."
@@ -1023,11 +987,8 @@
         "dont": "No omitas el aria-label — los lectores de pantalla pierden contexto."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "default": "Default",
         "line": "Line",
@@ -1038,7 +999,6 @@
         "line": "Estilo minimalista — <code>variant=\"line\"</code>, sin fondo, línea inferior en la tab activa.",
         "vertical": "Orientación vertical — <code>orientation=\"vertical\"</code>, lista lateral y contenido a la derecha."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "iconTrigger": {
           "name": "Con íconos en el trigger",
@@ -1053,7 +1013,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -1086,7 +1045,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1146,7 +1104,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1186,7 +1143,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 4.1.2.",
       "items": {
         "item1": "<code>role=\"tablist\"</code> en <code>TabsList</code>",
@@ -1224,7 +1180,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "stepper": {
           "name": "Stepper",
@@ -1245,14 +1200,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el roving tabindex, la navegación por flechas y Home/End, los roles ARIA y el vínculo entre tab y panel vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-tabs-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (por defecto) activa al mover flechas; <code>manual</code> requiere Enter/Space para activar.",
       "item3": "<strong>Roving tabindex</strong> — solo la tab activa es focalizable vía Tab; las flechas mueven entre tabs del grupo, incluidas las deshabilitadas.",
       "item4": "<strong>Variant line</strong> — estilo minimalista con línea inferior; útil para sub-navegación dentro de páginas."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1265,7 +1218,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

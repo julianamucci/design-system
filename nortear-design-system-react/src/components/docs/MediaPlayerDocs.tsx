@@ -380,13 +380,13 @@ export function MediaPlayerDocs() {
       }
     >
       {/* ── Demonstração ────────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")} componentSlug="media-player">
+      <DocsDemonstration componentSlug="media-player">
         <div className="nds-stack nds-w-full" data-spacing="md">
           <div
             className="nds-cluster"
             data-spacing="sm"
             role="group"
-            aria-label={tContent("demonstration.title")}
+            aria-label={tNav("nav.demonstration")}
           >
             {SOURCE_KEYS.map((key) =>
               demoControl(key, tContent(`demonstration.labels.${key}`)),
@@ -400,7 +400,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Anatomia ────────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[1, 2, 3, 4, 5, 6, 7].map((i) => tContent(`anatomy.item${i}`))}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -408,7 +407,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Quando Usar ─────────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -438,7 +436,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Do & Don't ──────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -482,7 +479,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Importação ──────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         componentSlug="media-player"
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
@@ -492,7 +488,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Variantes ───────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         note={tContent("variants.note")}
         componentSlug="media-player"
         items={SOURCE_KEYS.map((key) => ({
@@ -509,7 +504,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Estados ─────────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: tContent("states.cols.trigger"),
@@ -524,7 +518,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Propriedades ────────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -551,7 +544,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Tokens ──────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.value"),
@@ -568,7 +560,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Acessibilidade ──────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5, 6, 7, 8].map((i) => tContent(`accessibility.item${i}`))}
         keyboardTitle={tContent("accessibility.keyboardTitle")}
@@ -580,7 +571,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Relacionados ────────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="media-player"
         items={[
           {
@@ -608,7 +598,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Notas ───────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="media-player"
         items={[1, 2, 3, 4, 5, 6].map((i) => ({
           title: "",
@@ -618,7 +607,6 @@ export function MediaPlayerDocs() {
 
       {/* ── Analytics ───────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -637,7 +625,6 @@ export function MediaPlayerDocs() {
           visual foram desenhados para outra: aqui cada campo entra no lugar que
           o preserva, sem descartar texto. */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

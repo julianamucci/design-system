@@ -6,6 +6,7 @@ import { createLanguageSwitcher } from '@/components/product/LanguageSwitcher';
 import { createBadge } from '@/components/ui/badge';
 import { DOCS_PAGE_TITLE_ID } from '@/components/docs/shared/sections/DocsHeader';
 import iconsTranslations from '@shared/content/icons/translations.json';
+import uiTranslations from '@/i18n/ui.json';
 import { CATALOGO_LUCIDE, ICON_NAMES, iconMountSvg } from '@shared/primitives/lucide-catalog';
 import DOMPurify from 'dompurify';
 
@@ -30,6 +31,7 @@ for (const name of ALL_ICON_NAMES) {
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t, subscribe } = createTranslation(iconsTranslations as Record<string, unknown>);
+const { t: tNav } = createTranslation(uiTranslations as Record<string, unknown>);
 
 // ─── Componente principal ────────────────────────────────────────────────────
 
@@ -365,7 +367,7 @@ export function createIconsDocs(): HTMLElement {
     howToUseTitle.textContent = t('howToUse.title');
     individualTitle.textContent = t('howToUse.individual.title');
     sizesTitle.textContent = t('howToUse.sizes.title');
-    a11yTitle.textContent = t('accessibility.title');
+    a11yTitle.textContent = tNav('nav.accessibility');
     decorativeTitle.textContent = t('accessibility.decorative.title');
     functionalTitle.textContent = t('accessibility.functional.title');
     a11yRules.forEach((el, i) => { el.innerHTML = DOMPurify.sanitize(t(`accessibility.rule${i + 1}`)); });

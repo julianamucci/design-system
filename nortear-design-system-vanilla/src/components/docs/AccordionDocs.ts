@@ -214,13 +214,11 @@ export function createAccordionDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: buildDemoAccordion,
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -228,7 +226,6 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -273,7 +270,6 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -311,7 +307,6 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.note'),
           code: `import { createAccordion } from '@/components/ui/accordion';`,
         });
@@ -323,7 +318,6 @@ export function createAccordionDocs(): HTMLElement {
 
         return createDocsVariants({
           id: 'variantes',
-          title: t('variants.title'),
           items: [
             {
               trackId: 'single',
@@ -491,7 +485,6 @@ export function createAccordionDocs(): HTMLElement {
           `}));`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'accordion',
           items: [
@@ -624,7 +617,6 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -656,7 +648,6 @@ export function createAccordionDocs(): HTMLElement {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             { title: t('props.accordion.title'), cols: propsCols, items: getPropItems('accordion') },
             { title: t('props.item.title'),      cols: propsCols, items: getPropItems('item')      },
@@ -672,7 +663,6 @@ export function createAccordionDocs(): HTMLElement {
       case 'tokens': {
         const customizationCode = t('tokens.customizationCode');
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -686,7 +676,6 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.aria.ariaExpanded'),
@@ -712,7 +701,6 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.collapsible.name'), description: toPlainText(t('related.collapsible.description')), path: `?path=/docs/${t('related.collapsible.href')}` },
             { name: t('related.tabs.name'),        description: toPlainText(t('related.tabs.description')),        path: `?path=/docs/${t('related.tabs.href')}`        },
@@ -722,13 +710,11 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: t(`notes.item${i}`) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -742,7 +728,6 @@ export function createAccordionDocs(): HTMLElement {
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

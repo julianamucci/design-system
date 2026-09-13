@@ -32,7 +32,6 @@ export interface DocsCompositionItem extends DocsVariantItem {
   template: `
     <nds-docs-variants
       [id]="id()"
-      [title]="title()"
       [note]="note()"
       [componentSlug]="componentSlug()"
       [items]="mergedItems()"
@@ -40,7 +39,6 @@ export interface DocsCompositionItem extends DocsVariantItem {
   `,
 })
 export class NdsDocsCompositions {
-  readonly title = input.required<string>();
   readonly items = input.required<DocsCompositionItem[]>();
   readonly note = input<string>('');
   /** Label da linha "Quando usar:" (i18n, ex: tNav('common.useWhen')). */

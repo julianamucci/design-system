@@ -477,7 +477,6 @@ const visualTests = computed(() => ({
       diferença entre elas.
     -->
     <DocsDemonstration
-      :title="tContent('demonstration.title')"
       component-slug="activity-graph"
     >
       <div
@@ -568,7 +567,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Anatomia ───────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -577,7 +575,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Quando Usar ────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="guidelines"
       :scenarios="scenarios"
       :ux-writing="uxWriting"
@@ -587,7 +584,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Do &amp; Don't ─────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="doDontPairs"
     >
       <template #do-preview-0>
@@ -847,7 +843,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :description="tContent('import.basic')"
       :code="tContent('import.basicCode')"
       :secondary-description="tContent('import.withLabels')"
@@ -856,7 +851,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="{
         state: tContent('states.cols.state'),
         trigger: tContent('states.cols.trigger'),
@@ -867,7 +861,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Propriedades ───────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="propsTables"
       :interface-code="interfaceCode"
       :extensibility-title="tContent('props.extensibilityTitle')"
@@ -877,7 +870,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{
         token: tContent('tokens.table.token'),
         value: tContent('tokens.table.value'),
@@ -891,7 +883,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboard.title')"
@@ -902,20 +893,17 @@ const visualTests = computed(() => ({
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
       component-slug="activity-graph"
     />
 
     <!-- ── Analytics ──────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{
         event: tContent('analytics.table.event'),
         trigger: tContent('analytics.table.trigger'),
@@ -926,7 +914,6 @@ const visualTests = computed(() => ({
 
     <!-- ── Testes ─────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="functionalTests"
       :accessibility="accessibilityTests"
       :visual="visualTests"

@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { Card } from '@/components/ui/card';
 import {
   Table,
@@ -28,12 +29,12 @@ export interface DocsStateItem {
  * as 66 páginas já praticam.
  */
 export interface DocsStatesProps {
-  title: string;
   cols: { state: string; trigger: string; behavior: string };
   items: DocsStateItem[];
 }
 
-export function DocsStates({ title, cols, items }: DocsStatesProps) {
+export function DocsStates({ cols, items }: DocsStatesProps) {
+  const title = useTituloDeSecao('estados');
   return (
     <section id="estados">
       <h2 className="nds-section-title">{title}</h2>

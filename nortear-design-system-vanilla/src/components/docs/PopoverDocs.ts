@@ -389,7 +389,6 @@ export function createPopoverDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           // A demonstração é UM exemplo, o canônico: gatilho `outline`, painel
           // fechado, cabeçalho com título e descrição, rodapé com Cancelar e
           // Salvar. As três variações que moravam aqui não sumiram da página —
@@ -406,7 +405,6 @@ export function createPopoverDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -414,7 +412,6 @@ export function createPopoverDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -459,7 +456,6 @@ export function createPopoverDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -501,7 +497,6 @@ export function createPopoverDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import {
   createPopover,
   createPopoverHeader,
@@ -572,7 +567,6 @@ form.append(cancel, createButton({ variant: 'default', size: 'sm', label: 'Atual
 createPopover({ trigger, content: form });`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               trackId: 'default',
@@ -968,7 +962,6 @@ createPopover({ trigger, content });`;
         }
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'popover',
           items: [
@@ -1010,7 +1003,6 @@ createPopover({ trigger, content });`;
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -1083,7 +1075,6 @@ cancelar.dataset.slot = 'popover-close';`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createPopover(options)',
@@ -1120,7 +1111,6 @@ cancelar.dataset.slot = 'popover-close';`;
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -1142,7 +1132,6 @@ cancelar.dataset.slot = 'popover-close';`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           // Os itens da lista mais o bloco `aria`: o container tem uma lista só,
           // e deixar os quatro atributos de fora perde a metade verificável.
@@ -1164,7 +1153,6 @@ cancelar.dataset.slot = 'popover-close';`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.tooltip.name'),      description: toPlainText(t('related.items.tooltip.description')),      path: '?path=/docs/components-overlay-tooltip--docs'      },
             { name: t('related.items.dropdownMenu.name'), description: toPlainText(t('related.items.dropdownMenu.description')), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
@@ -1175,13 +1163,11 @@ cancelar.dataset.slot = 'popover-close';`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: tNav('common.event'),
             trigger: tNav('common.eventTrigger'),
@@ -1203,7 +1189,6 @@ cancelar.dataset.slot = 'popover-close';`;
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

@@ -1,6 +1,7 @@
 <script lang="ts">
   import DOMPurify from 'dompurify';
   import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface DocsNoteItem { title: string; content: string }
 
@@ -13,11 +14,12 @@
    * cada `<a>` individualmente — o observer global usa
    * `.closest('[data-track]')` para capturar clicks em qualquer link descendente.
    */
-  const { title, items, componentSlug }: {
-    title: string;
+  const { items, componentSlug }: {
     items: DocsNoteItem[];
     componentSlug?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao('notas', $rotulosDeSecao));
 
   function trackId(i: number): string | undefined {
     return componentSlug ? `${componentSlug}:link:notes-${i + 1}` : undefined;

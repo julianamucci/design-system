@@ -219,7 +219,7 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-cluster nds-w-full" data-justify="center" data-spacing="md">
       <AlertDialogDemo {...destructiveLabels} location="docs_demo" triggerVariant="destructive" tone="destructive" />
       <AlertDialogDemo {...neutralLabels} location="docs_demo" triggerVariant="outline" tone="default" />
@@ -228,7 +228,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -247,7 +246,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -310,7 +308,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -334,7 +331,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withTrigger')}
@@ -343,7 +339,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     note={stripHtml($tStore('variants.note'))}
     items={[
       { name: 'destructive', description: stripHtml($tStore('variants.items.destructive')), code: codeDestructive, preview: variantDestructive },
@@ -354,7 +349,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Configurações (States) ─────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -371,7 +365,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.rootTitle'),
@@ -430,7 +423,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -461,7 +453,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={stripHtml($tStore('accessibility.summary'))}
     items={[
       $tStore('accessibility.item1'),
@@ -483,7 +474,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Dialog', description: $tStore('related.dialog'), path: '?path=/docs/components-overlay-dialog--docs' },
       { name: 'Sonner', description: $tStore('related.sonner'), path: '?path=/docs/components-feedback-sonner--docs' },
@@ -494,7 +484,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -505,7 +494,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -523,7 +511,6 @@ interface CancelProps  { variant?: ButtonVariant /* = "outline" */; size?: Butto
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

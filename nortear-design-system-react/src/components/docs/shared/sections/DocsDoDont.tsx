@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import React from 'react';
 import { Card } from '@/components/ui/card';
 
@@ -11,11 +12,11 @@ export interface DocsDoDontPair {
 }
 
 export interface DocsDoDontProps {
-  title: string;
   pairs: DocsDoDontPair[];
 }
 
-export function DocsDoDont({ title, pairs }: DocsDoDontProps) {
+export function DocsDoDont({ pairs }: DocsDoDontProps) {
+  const title = useTituloDeSecao('do-dont');
   return (
     <section id="do-dont">
       <h2 className="nds-section-title">{title}</h2>

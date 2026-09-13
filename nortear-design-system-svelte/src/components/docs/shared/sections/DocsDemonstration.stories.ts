@@ -24,7 +24,6 @@ import DocsDemonstrationStory from './DocsDemonstrationStory.svelte';
  */
 
 type DocsDemonstrationArgs = {
-  title: string;
   componentSlug: string;
   rastreado: boolean;
 };
@@ -43,7 +42,6 @@ const meta: Meta<DocsDemonstrationArgs> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     componentSlug: {
       control: 'text',
       description: 'Informativo. Não injeta rastreio — quem o faz é o gatilho dentro do slot.',
@@ -54,7 +52,6 @@ const meta: Meta<DocsDemonstrationArgs> = {
     },
   },
   args: {
-    title: 'Demonstração',
     componentSlug: 'button',
     rastreado: false,
   },

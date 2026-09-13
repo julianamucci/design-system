@@ -11,7 +11,6 @@
       "aiEntities": "Card, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "productTitle": "Cadeira Gamer Pro",
         "productDescription": "Estrutura ergonômica com ajuste de altura e apoio lombar.",
@@ -29,7 +28,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Card</strong> — container <code>&lt;div data-slot=\"card\"&gt;</code> com borda, radius e fundo do tema.",
       "item2": "<strong>CardHeader</strong> — grid opcional com título, descrição e ação; usa o radius do tema (<code>--radius-card</code>).",
       "item3": "<strong>CardTitle</strong> — heading visual do card. Tamanho base no size padrão; reduzido no size <code>sm</code>.",
@@ -47,7 +45,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para agrupar informações que formam <strong>uma unidade semântica</strong> — produto, perfil, métrica, artigo.",
@@ -143,7 +140,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Card com CardTitle, CardDescription e ações no CardFooter. Unidade semântica clara.",
         "dont": "Card usado apenas como divisor visual sem título ou conteúdo semântico."
@@ -154,13 +150,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "full": "Com todos os subcomponentes:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Tamanhos e Composições",
       "note": "O Card não tem variantes <code>cva()</code>. O que varia é o <strong>tamanho</strong> (prop <code>size=\"default\"|\"sm\"</code>) e a <strong>composição</strong> de subcomponentes (header, content, footer são opcionais).",
       "items": {
         "default": "<code>size=\"default\"</code> — padding interno padrão e título em tamanho base. Padrão para a maioria dos casos.",
@@ -171,7 +164,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -194,7 +186,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "cardTitle": "Card",
       "headerTitle": "CardHeader",
@@ -217,7 +208,6 @@
       "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props nativas de <code>&lt;div&gt;</code>. Para Card clicável, envolva em <code>&lt;a&gt;</code> ou <code>&lt;button&gt;</code> com <code>aria-label</code> descritivo — não adicione <code>onClick</code> no Card raiz sem semântica."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicação no tema",
@@ -239,7 +229,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O Card é um container semântico — a interatividade vive no conteúdo interno. Cumpre WCAG 2.2 AA: 1.3.1 (info e relações) via <code>CardTitle</code> semântico, 2.4.6 (títulos e labels) via composição com <code>aria-labelledby</code>, 4.1.2 (nome, função, valor) nos botões internos.",
       "item1": "<strong>Container passivo</strong> — o Card em si não recebe foco nem evento de teclado. Todos os controles (Button, Link, Badge interativo) herdam acessibilidade própria.",
@@ -265,7 +254,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "separator": "Para dividir seções sem criar container visual completo.",
@@ -276,14 +264,12 @@
       "avatar": "Em cards de perfil ou autor; fica à esquerda do <code>CardHeader</code>."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O Card detecta <code>CardFooter</code> via seletor CSS de filho — ao adicionar o footer, o padding inferior é removido automaticamente para alinhar a borda.",
       "tip2": "Imagens como primeiro/último filho recebem <code>rounded-t/b-(--radius-card)</code> por CSS; não precisa passar classe manualmente.",
       "tip3": "A prop <code>size</code> propaga via <code>data-size</code> e <code>group-data-[size=sm]/card</code> — os subcomponentes ajustam padding e fonte sem passar a prop explícita.",
       "tip4": "Para Card clicável, prefira compor com elemento filho (envolver em <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) em vez de <code>onClick</code> no container — garante semântica e navegação por teclado."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Card é container estrutural — rastreie apenas os controles interativos dentro dele (botões, links, triggers). Para Card clicável envolvendo toda a unidade, emita <code>card_click</code>.",
       "table": {
         "event": "Evento",
@@ -307,7 +293,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Card.",
@@ -414,7 +399,6 @@
       "aiEntities": "Card, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "productTitle": "Pro Gaming Chair",
         "productDescription": "Ergonomic frame with height adjustment and lumbar support.",
@@ -432,7 +416,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Card</strong> — <code>&lt;div data-slot=\"card\"&gt;</code> container with theme border, radius and background.",
       "item2": "<strong>CardHeader</strong> — optional grid with title, description and action; uses the theme radius (<code>--radius-card</code>).",
       "item3": "<strong>CardTitle</strong> — visual heading. Base size in the default size; reduced in <code>sm</code> size.",
@@ -450,7 +433,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use to group information that forms <strong>one semantic unit</strong> — product, profile, metric, article.",
@@ -546,7 +528,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Card with CardTitle, CardDescription and actions in CardFooter. Clear semantic unit.",
         "dont": "Card used only as a visual divider with no title or semantic content."
@@ -557,13 +538,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "full": "With all subcomponents:"
     },
     "variants": {
-      "title": "Variants",
-      "visualTitle": "Sizes and Compositions",
       "note": "Card has no <code>cva()</code> variants. What varies is the <strong>size</strong> (prop <code>size=\"default\"|\"sm\"</code>) and the <strong>composition</strong> of subcomponents (header, content, footer are optional).",
       "items": {
         "default": "<code>size=\"default\"</code> — default inner padding and base-size title. Default for most cases.",
@@ -574,7 +552,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -597,7 +574,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "cardTitle": "Card",
       "headerTitle": "CardHeader",
@@ -620,7 +596,6 @@
       "extensibility": "All subcomponents accept <code>className</code> and native <code>&lt;div&gt;</code> props. For a clickable Card, wrap in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with a descriptive <code>aria-label</code> — don't add <code>onClick</code> on the Card root without semantics."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": "Theme application",
@@ -642,7 +617,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "Card is a semantic container — interactivity lives in the internal content. Meets WCAG 2.2 AA: 1.3.1 (info and relations) via semantic <code>CardTitle</code>, 2.4.6 (headings and labels) via <code>aria-labelledby</code> composition, 4.1.2 (name, role, value) in internal buttons.",
       "item1": "<strong>Passive container</strong> — Card itself doesn't receive focus or keyboard events. All controls (Button, Link, interactive Badge) bring their own accessibility.",
@@ -668,7 +642,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "separator": "To divide sections without creating a full visual container.",
@@ -679,14 +652,12 @@
       "avatar": "In profile or author cards; sits to the left of <code>CardHeader</code>."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "Card detects <code>CardFooter</code> via a CSS child selector — adding the footer removes bottom padding automatically to align the border.",
       "tip2": "Images as first/last child get <code>rounded-t/b-(--radius-card)</code> via CSS; you don't need to pass a class manually.",
       "tip3": "The <code>size</code> prop propagates via <code>data-size</code> and <code>group-data-[size=sm]/card</code> — subcomponents adjust padding and font without receiving the prop explicitly.",
       "tip4": "For a clickable Card, prefer composing with a child element (wrap in <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) instead of <code>onClick</code> on the container — ensures semantics and keyboard navigation."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Card is a structural container — track only the interactive controls inside it (buttons, links, triggers). For a clickable Card wrapping the whole unit, emit <code>card_click</code>.",
       "table": {
         "event": "Event",
@@ -710,7 +681,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Card configuration.",
@@ -817,7 +787,6 @@
       "aiEntities": "Card, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "productTitle": "Silla Gamer Pro",
         "productDescription": "Estructura ergonómica con ajuste de altura y apoyo lumbar.",
@@ -835,7 +804,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Card</strong> — contenedor <code>&lt;div data-slot=\"card\"&gt;</code> con borde, radius y fondo del tema.",
       "item2": "<strong>CardHeader</strong> — grid opcional con título, descripción y acción; usa el radius del tema (<code>--radius-card</code>).",
       "item3": "<strong>CardTitle</strong> — heading visual del card. Tamaño base en el size predeterminado; reducido en size <code>sm</code>.",
@@ -853,7 +821,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Úsalo para agrupar información que forma <strong>una unidad semántica</strong> — producto, perfil, métrica, artículo.",
@@ -949,7 +916,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Card con CardTitle, CardDescription y acciones en CardFooter. Unidad semántica clara.",
         "dont": "Card usado solo como divisor visual sin título ni contenido semántico."
@@ -960,13 +926,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "full": "Con todos los subcomponentes:"
     },
     "variants": {
-      "title": "Variantes",
-      "visualTitle": "Tamaños y Composiciones",
       "note": "Card no tiene variantes <code>cva()</code>. Lo que varía es el <strong>tamaño</strong> (prop <code>size=\"default\"|\"sm\"</code>) y la <strong>composición</strong> de subcomponentes (header, content, footer son opcionales).",
       "items": {
         "default": "<code>size=\"default\"</code> — padding interno por defecto y título en tamaño base. Predeterminado para la mayoría de los casos.",
@@ -977,7 +940,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1000,7 +962,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "cardTitle": "Card",
       "headerTitle": "CardHeader",
@@ -1023,7 +984,6 @@
       "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props nativas de <code>&lt;div&gt;</code>. Para Card clicable, envuelve en <code>&lt;a&gt;</code> o <code>&lt;button&gt;</code> con <code>aria-label</code> descriptivo — no agregues <code>onClick</code> en el Card raíz sin semántica."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Aplicación en el tema",
@@ -1045,7 +1005,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "Card es un contenedor semántico — la interactividad vive en el contenido interno. Cumple WCAG 2.2 AA: 1.3.1 (info y relaciones) vía <code>CardTitle</code> semántico, 2.4.6 (títulos y labels) vía composición con <code>aria-labelledby</code>, 4.1.2 (nombre, rol, valor) en los botones internos.",
       "item1": "<strong>Contenedor pasivo</strong> — el Card en sí no recibe foco ni eventos de teclado. Todos los controles (Button, Link, Badge interactivo) traen su propia accesibilidad.",
@@ -1071,7 +1030,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Se usa frecuentemente con",
       "separator": "Para dividir secciones sin crear un contenedor visual completo.",
@@ -1082,14 +1040,12 @@
       "avatar": "En cards de perfil o autor; a la izquierda del <code>CardHeader</code>."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El Card detecta <code>CardFooter</code> vía un selector CSS de hijo — al agregar el footer, se elimina el padding inferior automáticamente para alinear el borde.",
       "tip2": "Las imágenes como primer/último hijo reciben <code>rounded-t/b-(--radius-card)</code> vía CSS; no necesitas pasar una clase manualmente.",
       "tip3": "La prop <code>size</code> se propaga vía <code>data-size</code> y <code>group-data-[size=sm]/card</code> — los subcomponentes ajustan padding y fuente sin recibir la prop explícita.",
       "tip4": "Para Card clicable, prefiere componer con elemento hijo (envolver en <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code>) en lugar de <code>onClick</code> en el contenedor — asegura semántica y navegación por teclado."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Card es un contenedor estructural — rastrea solo los controles interactivos dentro (botones, links, triggers). Para un Card clicable envolviendo toda la unidad, emite <code>card_click</code>.",
       "table": {
         "event": "Evento",
@@ -1113,7 +1069,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Card.",

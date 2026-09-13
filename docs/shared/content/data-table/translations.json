@@ -11,7 +11,6 @@
       "aiEntities": "DataTable, React, Vue, Svelte, Vanilla, Angular, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "search": "Buscar fatura, cliente, método...",
         "columns": "Colunas",
@@ -34,7 +33,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Toolbar</strong> — barra superior com filtro global (busca livre) e menu de visibilidade/fixação de colunas.",
       "item2": "<strong>Container de tabela</strong> — wrapper rolável que delimita a área de scroll. Recebe altura máxima quando virtualizado.",
       "item3": "<strong>Cabeçalho</strong> — célula clicável para ordenar, com handle de drag para reordenar e divisor lateral para redimensionar.",
@@ -51,7 +49,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Defina <code>columns</code> uma única vez por escopo estável (módulo ou <code>useMemo</code>) — recriar a cada render zera o estado da tabela.",
@@ -147,7 +144,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Filtro global com placeholder específico ao escopo da tabela.",
         "dont": "Filtro global com placeholder genérico <code>\"Buscar...\"</code> que não orienta o usuário."
@@ -158,13 +154,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:",
       "withMeta": "Com metadados de coluna (filtro e edição):"
     },
     "variants": {
-      "title": "Recursos",
-      "visualTitle": "Recursos Disponíveis",
       "note": "O DataTable não tem variantes <code>cva</code>. Cada recurso é uma flag opcional na API. Combine livremente conforme a necessidade — paginação e virtualização são mutuamente exclusivas; as demais coexistem.",
       "items": {
         "globalFilter": "Filtro de busca livre que casa em todas as colunas. Sempre ativo por padrão; desligue com <code>enableGlobalFilter={false}</code>.",
@@ -190,7 +183,6 @@
           "use": "Tabelas largas com muitas métricas onde o usuário precisa de uma referência visual constante (linha de produto, conta, pessoa) durante o scroll horizontal."
         }
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "selectionWithActions": {
           "name": "Seleção em lote com ações",
@@ -200,7 +192,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -243,7 +234,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "containerTitle": "DataTable",
       "tooltipTitle": "Coluna (meta)",
@@ -284,7 +274,6 @@
       "extensibility": "Para recursos não cobertos pela API (agrupamento, expansão, sub-linhas, dados no servidor), cada stack expõe o acesso à própria instância de tabela, e o que estiver além pode ser configurado por fora. O componente é uma camada visual sobre a máquina de estado — qualquer configuração que ela suporte pode ser combinada."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Uso no componente",
@@ -306,7 +295,6 @@
       "note": "O DataTable usa os mesmos tokens do <code>Table</code> primitivo. Para personalizar, sobrescreva os tokens em <code>themes/*.css</code>; mudanças refletem em todos os recursos do componente."
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
       "summary": "O DataTable atende WCAG 2.2 AA via tabela semântica do <code>Table</code> primitivo, <code>aria-label</code> em todos os botões interativos (ordenação, filtro, paginação, resize), tri-state no checkbox de cabeçalho e foco visível em todas as ações.",
       "item1": "<strong>Tabela semântica</strong> — usa <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code> e <code>&lt;td&gt;</code> do primitivo Table. Cabeçalhos têm <code>scope=\"col\"</code> implícito quando renderizados.",
@@ -338,7 +326,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Costuma ser usado com",
       "table": "Camada visual semântica usada internamente — escolha o Table quando a interação não é necessária.",
@@ -349,7 +336,6 @@
       "dropdownMenu": "Usado internamente para o menu de colunas; pode hospedar ações em massa adicionais."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "<strong>Comportamento e visual em camadas separadas</strong> — a ordenação, a filtragem, a paginação, a seleção e a virtualização vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-data-table-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "tip2": "<strong>Headless</strong>: a engine não renderiza nada — apenas calcula estado de ordenação, filtro, seleção e paginação. O DataTable injeta isso no <code>Table</code> primitivo do design system, mantendo tokens e a11y.",
       "tip3": "<strong>Estado interno</strong>: ordenação, filtros, seleção, visibilidade, ordem, pinning e tamanho de colunas vivem no componente. Para persistir entre montagens, use <code>onTableReady</code> e copie o estado para fora.",
@@ -358,7 +344,6 @@
       "tip6": "<strong>Performance</strong>: ative <code>table-fixed</code> ao usar resize, reorder ou virtualização — força layout O(1) por coluna. Sem isso, datasets grandes podem travar o browser."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "O DataTable é uma camada de UI — não dispara eventos de produto por padrão. Acompanhe interações específicas (ordenação, exportação, edição confirmada) via <code>onTableReady</code> ou wrappers no caller.",
       "table": {
         "event": "Evento",
@@ -376,7 +361,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada interação do DataTable.",
@@ -502,7 +486,6 @@
       "aiEntities": "DataTable, React, Vue, Svelte, Vanilla, Angular, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "search": "Search invoice, customer, method...",
         "columns": "Columns",
@@ -525,7 +508,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Toolbar</strong> — top bar with global filter (free text search) and column visibility/pin menu.",
       "item2": "<strong>Table container</strong> — scrollable wrapper that delimits the scroll area. Receives max height when virtualized.",
       "item3": "<strong>Header</strong> — clickable cell for sorting, with drag handle for reordering and side divider for resizing.",
@@ -542,7 +524,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Define <code>columns</code> once in a stable scope (module or <code>useMemo</code>) — recreating on each render resets table state.",
@@ -638,7 +619,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Global filter with a placeholder specific to the table scope.",
         "dont": "Global filter with generic placeholder <code>\"Search...\"</code> that gives no orientation."
@@ -649,13 +629,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:",
       "withMeta": "With column metadata (filter and edit):"
     },
     "variants": {
-      "title": "Features",
-      "visualTitle": "Available Features",
       "note": "DataTable has no <code>cva</code> variants. Each feature is an optional flag on the API. Combine freely as needed — pagination and virtualization are mutually exclusive; the others coexist.",
       "items": {
         "globalFilter": "Free-text filter that matches across all columns. On by default; disable with <code>enableGlobalFilter={false}</code>.",
@@ -681,7 +658,6 @@
           "use": "Wide tables with many metrics where the user needs a constant visual reference (product line, account, person) during horizontal scroll."
         }
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "selectionWithActions": {
           "name": "Bulk selection with actions",
@@ -691,7 +667,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -734,7 +709,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript interface",
       "containerTitle": "DataTable",
       "tooltipTitle": "Column (meta)",
@@ -775,7 +749,6 @@
       "extensibility": "For features not covered by the API (grouping, expansion, sub-rows, server-side data), each stack exposes access to its own table instance, and anything beyond that can be configured externally. The component is a visual layer over the state machine — any configuration it supports can be combined."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": "Use in the component",
@@ -797,7 +770,6 @@
       "note": "DataTable uses the same tokens as the <code>Table</code> primitive. To customize, override the tokens in <code>themes/*.css</code>; changes reflect across every feature of the component."
     },
     "accessibility": {
-      "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
       "summary": "DataTable meets WCAG 2.2 AA via the semantic table from the <code>Table</code> primitive, <code>aria-label</code> on every interactive button (sort, filter, pagination, resize), checkbox tri-state on the header, and visible focus on all actions.",
       "item1": "<strong>Semantic table</strong> — uses <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code>, and <code>&lt;td&gt;</code> from the primitive Table. Headers have implicit <code>scope=\"col\"</code> when rendered.",
@@ -829,7 +801,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "alternatives": "Alternatives",
       "usedWith": "Often used with",
       "table": "Visual semantic layer used internally — pick Table when no interaction is needed.",
@@ -840,7 +811,6 @@
       "dropdownMenu": "Used internally for the columns menu; can host additional bulk actions."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "<strong>Behaviour and looks in separate layers</strong> — sorting, filtering, pagination, selection and virtualisation come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-data-table-*</code> classes. Swapping the behaviour layer does not change the design.",
       "tip2": "<strong>Headless</strong>: the engine does not render anything — it only computes sort, filter, selection, and pagination state. DataTable injects that into the design-system <code>Table</code> primitive, preserving tokens and a11y.",
       "tip3": "<strong>Internal state</strong>: sort, filters, selection, visibility, order, pinning, and column sizing live inside the component. To persist across mounts, use <code>onTableReady</code> and copy state out.",
@@ -849,7 +819,6 @@
       "tip6": "<strong>Performance</strong>: enable <code>table-fixed</code> when using resize, reorder, or virtualization — it forces O(1) per-column layout. Without it, large datasets can freeze the browser."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "DataTable is a UI layer — it does not emit product events by default. Track specific interactions (sort, export, confirmed edit) via <code>onTableReady</code> or wrappers in the caller.",
       "table": {
         "event": "Event",
@@ -867,7 +836,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each DataTable interaction.",
@@ -993,7 +961,6 @@
       "aiEntities": "DataTable, React, Vue, Svelte, Vanilla, Angular, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "search": "Buscar factura, cliente, método...",
         "columns": "Columnas",
@@ -1016,7 +983,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Toolbar</strong> — barra superior con filtro global (búsqueda libre) y menú de visibilidad/pin de columnas.",
       "item2": "<strong>Container de tabla</strong> — wrapper desplazable que delimita el área de scroll. Recibe altura máxima cuando está virtualizado.",
       "item3": "<strong>Cabecera</strong> — celda clicable para ordenar, con handle de drag para reordenar y divisor lateral para redimensionar.",
@@ -1033,7 +999,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Define <code>columns</code> una sola vez en un scope estable (módulo o <code>useMemo</code>) — recrearlo en cada render reinicia el estado de la tabla.",
@@ -1129,7 +1094,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Filtro global con placeholder específico al alcance de la tabla.",
         "dont": "Filtro global con placeholder genérico <code>\"Buscar...\"</code> que no orienta al usuario."
@@ -1140,13 +1104,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:",
       "withMeta": "Con metadatos de columna (filtro y edición):"
     },
     "variants": {
-      "title": "Recursos",
-      "visualTitle": "Recursos Disponibles",
       "note": "DataTable no tiene variantes <code>cva</code>. Cada recurso es una flag opcional en la API. Combínalas libremente según la necesidad — paginación y virtualización son mutuamente excluyentes; las demás coexisten.",
       "items": {
         "globalFilter": "Filtro de búsqueda libre que coincide en todas las columnas. Activo por defecto; desactiva con <code>enableGlobalFilter={false}</code>.",
@@ -1172,7 +1133,6 @@
           "use": "Tablas anchas con muchas métricas donde el usuario necesita una referencia visual constante (línea de producto, cuenta, persona) durante el scroll horizontal."
         }
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "selectionWithActions": {
           "name": "Selección en lote con acciones",
@@ -1182,7 +1142,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -1225,7 +1184,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interface TypeScript",
       "containerTitle": "DataTable",
       "tooltipTitle": "Columna (meta)",
@@ -1266,7 +1224,6 @@
       "extensibility": "Para recursos no cubiertos por la API (agrupamiento, expansión, sub-filas, datos en el servidor), cada stack expone el acceso a su propia instancia de tabla, y lo que quede más allá puede configurarse por fuera. El componente es una capa visual sobre la máquina de estado — cualquier configuración que ella soporte puede combinarse."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Uso en el componente",
@@ -1288,7 +1245,6 @@
       "note": "DataTable usa los mismos tokens que el primitivo <code>Table</code>. Para personalizar, sobrescribe los tokens en <code>themes/*.css</code>; los cambios se reflejan en todos los recursos del componente."
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
       "summary": "DataTable cumple WCAG 2.2 AA gracias a la tabla semántica del primitivo <code>Table</code>, <code>aria-label</code> en todos los botones interactivos (orden, filtro, paginación, resize), tri-state en el checkbox de cabecera y foco visible en todas las acciones.",
       "item1": "<strong>Tabla semántica</strong> — usa <code>&lt;table&gt;</code>, <code>&lt;thead&gt;</code>, <code>&lt;tbody&gt;</code>, <code>&lt;th&gt;</code> y <code>&lt;td&gt;</code> del primitivo Table. Las cabeceras tienen <code>scope=\"col\"</code> implícito cuando se renderizan.",
@@ -1320,7 +1276,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "alternatives": "Alternativas",
       "usedWith": "Suele usarse con",
       "table": "Capa visual semántica usada internamente — elige Table cuando no necesitas interacción.",
@@ -1331,7 +1286,6 @@
       "dropdownMenu": "Usado internamente para el menú de columnas; puede alojar acciones en masa adicionales."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "<strong>Comportamiento y visual en capas separadas</strong> — el ordenamiento, el filtrado, la paginación, la selección y la virtualización vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-data-table-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "tip2": "<strong>Headless</strong>: la engine no renderiza nada — solo calcula estado de orden, filtro, selección y paginación. DataTable lo inyecta en el primitivo <code>Table</code> del design system, manteniendo tokens y a11y.",
       "tip3": "<strong>Estado interno</strong>: orden, filtros, selección, visibilidad, orden, pinning y tamaño de columnas viven en el componente. Para persistir entre montajes, usa <code>onTableReady</code> y copia el estado hacia fuera.",
@@ -1340,7 +1294,6 @@
       "tip6": "<strong>Performance</strong>: activa <code>table-fixed</code> al usar resize, reorder o virtualización — fuerza layout O(1) por columna. Sin eso, datasets grandes pueden bloquear el browser."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "DataTable es una capa de UI — no emite eventos de producto por defecto. Rastrea interacciones específicas (orden, exportación, edición confirmada) vía <code>onTableReady</code> o wrappers en el caller.",
       "table": {
         "event": "Evento",
@@ -1358,7 +1311,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Qué debe ocurrir para cada interacción de DataTable.",

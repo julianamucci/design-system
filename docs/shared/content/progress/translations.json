@@ -11,7 +11,6 @@
       "aiEntities": "Progress, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role progressbar"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "upload": "Enviando arquivo",
         "loading": "Carregando dados",
@@ -21,7 +20,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Progress</strong> — root com <code>role=\"progressbar\"</code> que recebe o valor.",
       "item2": "<strong>ProgressTrack</strong> — trilha de fundo onde o indicador se move.",
       "item3": "<strong>ProgressIndicator</strong> — barra preenchida que reflete o valor atual.",
@@ -37,7 +35,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para operações com 3+ segundos onde o progresso é mensurável.",
@@ -121,7 +118,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Forneça aria-label descrevendo a operação medida.",
         "dont": "Não use aria-label genérico como \"Barra\" ou \"Progress\"."
@@ -131,11 +127,8 @@
         "dont": "Não anuncie cada incremento de 1% — atualize a cada 5 ou 10%."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "determinate": "Determinate",
         "withLabel": "With label",
@@ -148,7 +141,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "value=0",
@@ -176,7 +168,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -230,7 +221,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -282,7 +272,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
       "items": {
         "item1": "<code>role=\"progressbar\"</code> aplicado automaticamente",
@@ -312,7 +301,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "skeleton": {
           "name": "Skeleton",
@@ -329,14 +317,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o papel <code>progressbar</code>, os valores mínimo, máximo e atual anunciados ao leitor de tela e a conversão do valor em proporção preenchida vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-progress-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Indeterminate</strong> — sem valor, a raiz perde <code>aria-valuenow</code> e ganha <code>data-indeterminate</code>. É desse atributo que o CSS compartilhado tira a largura do traço e a animação; não há classe de animação para aplicar.",
       "item3": "<strong>Cor da barra</strong> — <code>data-variant=\"success\"</code> e <code>data-variant=\"destructive\"</code> são as variantes medidas. Para outra cor, defina <code>--nds-progress-color</code> na instância e confira o contraste de 3:1 contra a trilha.",
       "item4": "<strong>Não interativo</strong> — Progress é passivo. Para rastrear conclusão, dispare evento no callback da operação, não no componente."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes (disparados pela aplicação, não pelo Progress).",
       "table": {
         "event": "Evento",
@@ -353,7 +339,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada mudança de valor.",
@@ -422,7 +407,6 @@
       "aiEntities": "Progress, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role progressbar"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "upload": "Uploading file",
         "loading": "Loading data",
@@ -432,7 +416,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Progress</strong> — root with <code>role=\"progressbar\"</code> that receives the value.",
       "item2": "<strong>ProgressTrack</strong> — background track where the indicator moves.",
       "item3": "<strong>ProgressIndicator</strong> — filled bar reflecting the current value.",
@@ -448,7 +431,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for operations of 3+ seconds where progress is measurable.",
@@ -532,7 +514,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Provide aria-label describing the measured operation.",
         "dont": "Don't use generic aria-label like \"Bar\" or \"Progress\"."
@@ -542,11 +523,8 @@
         "dont": "Don't announce every 1% increment — update every 5 or 10%."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "determinate": "Determinate",
         "withLabel": "With label",
@@ -559,7 +537,6 @@
       }
     },
     "states": {
-      "title": "States",
       "default": {
         "label": "Default",
         "trigger": "value=0",
@@ -587,7 +564,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -641,7 +617,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -693,7 +668,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
       "items": {
         "item1": "<code>role=\"progressbar\"</code> applied automatically",
@@ -723,7 +697,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "skeleton": {
           "name": "Skeleton",
@@ -740,14 +713,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the <code>progressbar</code> role, the min, max and current values announced to the screen reader, and turning the value into a filled proportion come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-progress-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Indeterminate</strong> — with no value the root loses <code>aria-valuenow</code> and gains <code>data-indeterminate</code>. The shared CSS derives the sweep width and the animation from that attribute; there is no animation class to apply.",
       "item3": "<strong>Bar colour</strong> — <code>data-variant=\"success\"</code> and <code>data-variant=\"destructive\"</code> are the measured variants. For any other colour, set <code>--nds-progress-color</code> on the instance and check the 3:1 contrast against the track.",
       "item4": "<strong>Non-interactive</strong> — Progress is passive. To track completion, fire the event on the operation callback, not on the component."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant events (fired by the application, not by Progress).",
       "table": {
         "event": "Event",
@@ -764,7 +735,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each value change.",
@@ -833,7 +803,6 @@
       "aiEntities": "Progress, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role progressbar"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "upload": "Subiendo archivo",
         "loading": "Cargando datos",
@@ -843,7 +812,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Progress</strong> — root con <code>role=\"progressbar\"</code> que recibe el valor.",
       "item2": "<strong>ProgressTrack</strong> — pista de fondo donde el indicador se mueve.",
       "item3": "<strong>ProgressIndicator</strong> — barra llena que refleja el valor actual.",
@@ -859,7 +827,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para operaciones de 3+ segundos donde el progreso es medible.",
@@ -943,7 +910,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Provee aria-label describiendo la operación medida.",
         "dont": "No uses aria-label genérico como \"Barra\" o \"Progress\"."
@@ -953,11 +919,8 @@
         "dont": "No anuncies cada incremento de 1% — actualiza cada 5 o 10%."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "determinate": "Determinate",
         "withLabel": "With label",
@@ -970,7 +933,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "value=0",
@@ -998,7 +960,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1052,7 +1013,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1104,7 +1064,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
       "items": {
         "item1": "<code>role=\"progressbar\"</code> aplicado automáticamente",
@@ -1134,7 +1093,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "skeleton": {
           "name": "Skeleton",
@@ -1151,14 +1109,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el rol <code>progressbar</code>, los valores mínimo, máximo y actual anunciados al lector de pantalla y la conversión del valor en proporción llenada vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-progress-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Indeterminate</strong> — sin valor, la raíz pierde <code>aria-valuenow</code> y gana <code>data-indeterminate</code>. De ese atributo el CSS compartido saca el ancho del trazo y la animación; no hay clase de animación que aplicar.",
       "item3": "<strong>Color de la barra</strong> — <code>data-variant=\"success\"</code> y <code>data-variant=\"destructive\"</code> son las variantes medidas. Para otro color, define <code>--nds-progress-color</code> en la instancia y verifica el contraste de 3:1 contra la pista.",
       "item4": "<strong>No interactivo</strong> — Progress es pasivo. Para rastrear finalización, dispara el evento en el callback de la operación, no en el componente."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes (disparados por la aplicación, no por Progress).",
       "table": {
         "event": "Evento",
@@ -1175,7 +1131,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada cambio de valor.",

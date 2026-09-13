@@ -233,7 +233,6 @@ export function createDataTableDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'data-table',
           demoFactory: () => createDataTable<Invoice>({
             columns: demoColumns(),
@@ -258,7 +257,6 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'),
             t('anatomy.item4'), t('anatomy.item5'), t('anatomy.item6'),
@@ -269,7 +267,6 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5, 6].map(i => t(`usage.guidelines.item${i}`)),
@@ -314,7 +311,6 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -365,7 +361,6 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createDataTable, type DataTableColumn } from '@/components/ui/data-table';`,
           secondaryDescription: t('import.withMeta'),
@@ -386,7 +381,6 @@ export function createDataTableDocs(): HTMLElement {
       case 'variantes':
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'data-table',
           items: [
@@ -438,7 +432,6 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'data-table',
           items: ['selectionWithActions'].map((key) => ({
@@ -462,7 +455,6 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -515,7 +507,6 @@ export function createDataTableDocs(): HTMLElement {
         const YES = getLocale() === 'pt-BR' ? 'Sim' : (getLocale() === 'es' ? 'Sí' : 'Yes');
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.containerTitle'),
@@ -575,7 +566,6 @@ export function createDataTableDocs(): HTMLElement {
   --ring: 222 47% 11%;
 }`;
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -598,7 +588,6 @@ export function createDataTableDocs(): HTMLElement {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5, 6].map(i => stripHtml(t(`accessibility.item${i}`))),
           keyboardTitle: t('accessibility.keyboardTitle'),
@@ -613,7 +602,6 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Table',        description: toPlainText(t('related.table')),        path: '?path=/docs/components-tables-table--docs' },
             { name: 'Chart',        description: toPlainText(t('related.chart')),        path: '?path=/docs/components-display-chart--docs' },
@@ -626,13 +614,11 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: t(`notes.tip${i}`) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -647,7 +633,6 @@ export function createDataTableDocs(): HTMLElement {
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

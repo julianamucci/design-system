@@ -179,7 +179,6 @@ export function createNavigationMenuDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.style.contain = 'layout';
@@ -187,14 +186,13 @@ export function createNavigationMenuDocs(): HTMLElement {
             wrap.dataset.align = 'start';
             wrap.dataset.justify = 'center';
             wrap.style.minHeight = '220px';
-            wrap.appendChild(buildDemoNav(t('demonstration.title')));
+            wrap.appendChild(buildDemoNav(tNav('nav.demonstration')));
             return wrap;
           },
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -202,7 +200,6 @@ export function createNavigationMenuDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -247,7 +244,6 @@ export function createNavigationMenuDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -333,7 +329,6 @@ export function createNavigationMenuDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createNavigationMenu } from '@/components/ui/navigation-menu';`,
           secondaryDescription: 'Espera do ponteiro, painel controlado e página atual:',
           secondaryCode: `let aberto = '';
@@ -582,7 +577,6 @@ content.insertBefore(card, content.firstChild);`;
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'navigation-menu',
           items: [
@@ -666,7 +660,6 @@ content.insertBefore(card, content.firstChild);`;
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -725,7 +718,6 @@ export function createNavigationMenu(
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createNavigationMenu(items, options?)',
@@ -754,7 +746,6 @@ export function createNavigationMenu(
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -780,7 +771,6 @@ export function createNavigationMenu(
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -795,7 +785,6 @@ export function createNavigationMenu(
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.menubar.name'),    description: toPlainText(t('related.items.menubar.description')),    path: '?path=/docs/components-navigation-menubar--docs'    },
             { name: t('related.items.sidebar.name'),    description: toPlainText(t('related.items.sidebar.description')),    path: '?path=/docs/components-layout-sidebar--docs'    },
@@ -806,13 +795,11 @@ export function createNavigationMenu(
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: tNav('common.event'),
             trigger: tNav('common.eventTrigger'),
@@ -839,7 +826,6 @@ export function createNavigationMenu(
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

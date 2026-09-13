@@ -21,10 +21,6 @@ const meta = {
     docs: { description: { component: "Tabela dos tokens que o componente lê, com o valor e a parte que cada um pinta. É a ponte entre a folha `.nds-*` e o tema — quem troca um token aqui sabe o que muda na tela." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     cols: {
       control: "object",
       description: "Cabeçalho das três colunas."
@@ -43,7 +39,6 @@ const meta = {
     }
   },
   args: {
-    title: "Tokens",
     cols: {
       token: "Token",
       value: "Valor",

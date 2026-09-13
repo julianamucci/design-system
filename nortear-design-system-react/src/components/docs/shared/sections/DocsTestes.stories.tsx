@@ -21,10 +21,6 @@ const meta = {
     docs: { description: { component: "O plano de teste em três tabelas: funcional, acessibilidade e visual. A coluna de prioridade é o que separa o que trava a entrega do que pode esperar." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     functional: {
       control: "object",
       description: "Tabela funcional: ação, resultado e prioridade."
@@ -39,7 +35,6 @@ const meta = {
     }
   },
   args: {
-    title: "Testes",
     functional: {
       title: "Funcional",
       description: "",

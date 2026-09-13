@@ -193,7 +193,7 @@ interface TextareaProps extends HTMLTextareaAttributes {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
       <div class="nds-stack" data-spacing="sm">
         <Label for="demo-descricao">{$tStore('demonstration.labels.descriptionLabel')}</Label>
@@ -244,7 +244,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -257,7 +256,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -304,7 +302,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -356,13 +353,11 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     componentSlug="textarea"
     items={[
       { trackId: 'default', name: $tStore('variants.items.default'),     description: $tStore('variants.styles.default'),     code: codeDefault,     preview: variantDefault     },
@@ -395,7 +390,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="textarea"
     items={[
@@ -494,7 +488,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -512,7 +505,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -540,7 +532,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -567,7 +558,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.items.item1'),
@@ -589,7 +579,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.input.name'),    description: $tStore('related.items.input.description'),    path: '?path=/docs/components-form-input--docs'    },
       { name: $tStore('related.items.label.name'),    description: $tStore('related.items.label.description'),    path: '?path=/docs/components-form-label--docs'    },
@@ -600,7 +589,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -611,7 +599,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -626,7 +613,6 @@ interface TextareaProps extends HTMLTextareaAttributes {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

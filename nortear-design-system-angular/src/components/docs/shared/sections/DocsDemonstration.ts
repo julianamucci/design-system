@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { NdsComponentDemo } from '@/components/ComponentDemo';
+
+import { tituloDeSecao } from './titulo-de-secao';
 
 /**
  * Seção "Demonstração" — moldura para o preview vivo do componente.
@@ -31,5 +33,5 @@ import { NdsComponentDemo } from '@/components/ComponentDemo';
   `,
 })
 export class NdsDocsDemonstration {
-  readonly title = input.required<string>();
+  protected readonly title = tituloDeSecao('demonstracao');
 }

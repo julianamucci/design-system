@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 import { NdsCodeBlock } from '@/components/ui/code-block';
 
+import { tituloDeSecao } from './titulo-de-secao';
+
 @Component({
   selector: 'nds-docs-import',
   standalone: true,
@@ -69,7 +71,7 @@ import { NdsCodeBlock } from '@/components/ui/code-block';
   `,
 })
 export class NdsDocsImport {
-  readonly title = input.required<string>();
+  protected readonly title = tituloDeSecao('importacao');
   readonly code = input.required<string>();
   readonly description = input<string>('');
   readonly secondaryCode = input<string>('');

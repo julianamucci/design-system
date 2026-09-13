@@ -141,7 +141,6 @@ export const Demonstracao: Story = {
 export const DoEDont: Story = {
   render: () =>
     createDocsDoDont({
-      title: 'Certo e errado',
       pairs: [
         {
           doLabel: 'Faça isso',

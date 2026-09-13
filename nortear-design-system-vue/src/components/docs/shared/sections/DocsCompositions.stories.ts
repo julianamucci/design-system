@@ -58,14 +58,12 @@ const meta: Meta<typeof DocsCompositions> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     note: { control: 'text', description: 'Opcional. Nota acima da lista.' },
     useWhenLabel: { control: 'text', description: 'Rótulo da linha de "quando usar". Vem da i18n da página.' },
     id: { control: 'text', description: 'Âncora da seção. Padrão `composicoes`.' },
     componentSlug: { control: 'text', description: 'Opcional. Slug para o `data-track-id` do toggle de código.' },
   },
   args: {
-    title: 'Composições',
     note: '',
     useWhenLabel: 'Quando usar:',
     id: 'composicoes',

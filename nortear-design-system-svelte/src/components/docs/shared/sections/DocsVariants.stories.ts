@@ -26,7 +26,6 @@ import DocsVariantsStory from './DocsVariantsStory.svelte';
  */
 
 type DocsVariantsArgs = {
-  title: string;
   note: string;
   id: string;
   componentSlug: string;
@@ -47,7 +46,6 @@ const meta: Meta<DocsVariantsArgs> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     note: { control: 'text', description: 'Opcional. Nota acima da lista.' },
     id: { control: 'text', description: 'Âncora da seção. Padrão `variantes`.' },
     componentSlug: { control: 'text', description: 'Opcional. Slug para o `data-track-id` do toggle de código.' },
@@ -57,7 +55,6 @@ const meta: Meta<DocsVariantsArgs> = {
     },
   },
   args: {
-    title: 'Variantes',
     note: '',
     id: 'variantes',
     componentSlug: 'button',

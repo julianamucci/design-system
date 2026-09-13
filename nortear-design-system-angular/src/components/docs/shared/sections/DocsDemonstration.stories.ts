@@ -23,11 +23,7 @@ import { NdsButton } from '@/components/ui/button';
  * `closest('[data-track]')`.
  */
 
-type DocsDemonstrationArgs = {
-  title: string;
-};
-
-const meta: Meta<DocsDemonstrationArgs> = {
+const meta: Meta = {
   title: 'Doc Components/DocsDemonstration',
   tags: ['autodocs'],
   decorators: [moduleMetadata({ imports: [NdsDocsDemonstration, NdsButton] })],
@@ -41,22 +37,16 @@ const meta: Meta<DocsDemonstrationArgs> = {
       },
     },
   },
-  argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
-  },
-  args: {
-    title: 'Demonstração',
-  },
   render: (args) => ({
     props: args,
-    template: `<nds-docs-demonstration [title]="title">
+    template: `<nds-docs-demonstration>
       <button ndsButton>Salvar</button>
     </nds-docs-demonstration>`,
   }),
 };
 
 export default meta;
-type Story = StoryObj<DocsDemonstrationArgs>;
+type Story = StoryObj;
 
 export const Playground: Story = {};
 
@@ -68,7 +58,7 @@ export const WithTrackedTrigger: Story = {
   parameters: { controls: { disable: true } },
   render: (args) => ({
     props: args,
-    template: `<nds-docs-demonstration [title]="title">
+    template: `<nds-docs-demonstration>
       <button ndsButton data-track="demo" data-track-id="button:demo:salvar">
         Salvar
       </button>

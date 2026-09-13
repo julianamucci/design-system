@@ -456,7 +456,6 @@ const previewLabels = computed(() => ({
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration
-      :title="tContent('demonstration.title')"
       component-slug="stepper"
     >
       <div
@@ -506,7 +505,6 @@ const previewLabels = computed(() => ({
 
     <!-- ── Anatomia ───────────────────────────────────────────────── -->
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
@@ -514,7 +512,6 @@ const previewLabels = computed(() => ({
 
     <!-- ── Quando Usar ────────────────────────────────────────────── -->
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="guidelines"
       :scenarios="scenarios"
       :ux-writing="uxWriting"
@@ -524,7 +521,6 @@ const previewLabels = computed(() => ({
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="doDontPairs"
     >
       <!-- Par 1 — estado por forma e palavra, não só por cor -->
@@ -665,14 +661,12 @@ const previewLabels = computed(() => ({
 
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
-      :title="tContent('import.title')"
       :code="codeImport"
       component-slug="stepper"
     />
 
     <!-- ── Composições ────────────────────────────────────────────── -->
     <DocsCompositions
-      :title="tContent('variants.title')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="stepper"
       :items="compositionItems"
@@ -756,14 +750,12 @@ const previewLabels = computed(() => ({
 
     <!-- ── Estados ────────────────────────────────────────────────── -->
     <DocsStates
-      :title="tContent('states.title')"
       :cols="stateCols"
       :items="stateItems"
     />
 
     <!-- ── Propriedades ───────────────────────────────────────────── -->
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: 'Stepper', cols: propCols, items: rootPropItems },
         { title: 'StepperItem', cols: propCols, items: itemPropItems },
@@ -776,7 +768,6 @@ const previewLabels = computed(() => ({
 
     <!-- ── Tokens ─────────────────────────────────────────────────── -->
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
@@ -786,7 +777,6 @@ const previewLabels = computed(() => ({
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->
     <DocsAccessibility
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-title="tContent('accessibility.keyboard.title')"
@@ -797,28 +787,24 @@ const previewLabels = computed(() => ({
 
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
       component-slug="stepper"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
       component-slug="stepper"
     />
 
     <!-- ── Analytics ──────────────────────────────────────────────── -->
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 
     <!-- ── Testes ─────────────────────────────────────────────────── -->
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         description: tContent('testes.functional.description'),

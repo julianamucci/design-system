@@ -38,7 +38,6 @@ const meta = {
     },
   },
   argTypes: {
-    title: { control: "text", description: "Título da seção." },
     note: { control: "text", description: "Opcional. Nota acima da lista." },
     useWhenLabel: { control: "text", description: 'Rótulo da linha de "quando usar". Vem da i18n da página.' },
     items: { control: false, description: "Uma entrada por composição. O preview é um nó React." },
@@ -46,7 +45,6 @@ const meta = {
     componentSlug: { control: "text", description: "Opcional. Slug para o `data-track-id` do toggle de código." },
   },
   args: {
-    title: "Composições",
     note: "",
     useWhenLabel: "Quando usar:",
     id: "composicoes",

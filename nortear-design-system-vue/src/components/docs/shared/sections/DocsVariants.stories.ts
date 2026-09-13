@@ -63,13 +63,11 @@ const meta: Meta<typeof DocsVariants> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     note: { control: 'text', description: 'Opcional. Nota acima da lista.' },
     id: { control: 'text', description: 'Âncora da seção. Padrão `variantes`.' },
     componentSlug: { control: 'text', description: 'Opcional. Slug para o `data-track-id` do toggle de código.' },
   },
   args: {
-    title: 'Variantes',
     note: '',
     id: 'variantes',
     componentSlug: 'button',

@@ -20,10 +20,6 @@ const meta: Meta<DocsRelatedProps> = {
     docs: { description: { component: "Componentes vizinhos, com uma linha dizendo quando escolher cada um. O `path` aponta para a docs page do irmão, e é por ele que a pessoa troca de decisão sem voltar ao menu." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     items: {
       control: "object",
       description: "Nome, descrição e caminho de cada vizinho."
@@ -34,7 +30,6 @@ const meta: Meta<DocsRelatedProps> = {
     }
   },
   args: {
-    title: "Relacionados",
     items: [
       {
         name: "Switch",

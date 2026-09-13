@@ -192,7 +192,6 @@ export function createCalendarDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster nds-w-full';
@@ -220,7 +219,6 @@ export function createCalendarDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -235,7 +233,6 @@ export function createCalendarDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map((i) => t(`usage.guidelines.item${i}`)),
@@ -280,7 +277,6 @@ export function createCalendarDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -313,7 +309,6 @@ export function createCalendarDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createCalendar } from '@/components/ui/calendar';`,
           secondaryDescription: t('import.withLocale'),
@@ -368,7 +363,6 @@ const el = createCalendar({
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.visualTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'calendar',
           items: [
@@ -479,7 +473,6 @@ const el = createCalendar({
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -529,7 +522,6 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.calendarTitle'),
@@ -577,7 +569,6 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -602,7 +593,6 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -624,7 +614,6 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Popover', description: toPlainText(t('related.popover')), path: '?path=/docs/components-overlay-popover--docs' },
             { name: 'Form', description: toPlainText(t('related.form')), path: '?path=/docs/components-form-form--docs' },
@@ -634,7 +623,6 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -645,7 +633,6 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -682,7 +669,6 @@ export function createCalendar(options?: CalendarOptions): HTMLElement;`;
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

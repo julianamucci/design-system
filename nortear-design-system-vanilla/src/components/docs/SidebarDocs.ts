@@ -320,7 +320,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => buildMiniSidebar({ withGroups: true }),
         });
 
@@ -328,7 +327,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16].map(i =>
             DOMPurify.sanitize(t(`anatomy.item${i}`)),
           ),
@@ -340,7 +338,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -372,7 +369,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel:       tNav('common.do'),
@@ -474,7 +470,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createSidebar, createSidebarProvider } from '@/components/ui/sidebar';`,
           secondaryDescription: t('import.withSubcomponents'),
@@ -723,7 +718,6 @@ export function createSidebarDocs(): HTMLElement {
 
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'sidebar',
           items: [
@@ -941,7 +935,6 @@ export function createSidebarDocs(): HTMLElement {
         ].join('\n');
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'sidebar',
           items: [
@@ -969,7 +962,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state:    t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -1038,7 +1030,6 @@ export function createSidebarDocs(): HTMLElement {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.providerTitle'),
@@ -1101,7 +1092,6 @@ export function createSidebarDocs(): HTMLElement {
         ].join('\n');
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token:       t('tokens.table.token'),
             value:       t('tokens.table.class'),
@@ -1130,7 +1120,6 @@ export function createSidebarDocs(): HTMLElement {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: DOMPurify.sanitize(t('accessibility.summary')),
           items: [1, 2, 3, 4, 5, 6, 7].map(i => DOMPurify.sanitize(t(`accessibility.item${i}`))),
           keyboardTitle: 'Atalhos de teclado',
@@ -1148,7 +1137,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
             { name: 'Tabs',           description: toPlainText(t('related.tabs')),           path: '?path=/docs/components-navigation-tabs--docs'           },
@@ -1163,7 +1151,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.tip${i}`)) })),
         });
 
@@ -1171,7 +1158,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -1190,7 +1176,6 @@ export function createSidebarDocs(): HTMLElement {
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

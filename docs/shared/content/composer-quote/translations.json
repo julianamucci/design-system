@@ -13,7 +13,6 @@
       "describes": "Respondendo a {author}"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "short": "Trecho curto",
         "long": "Trecho longo, cortado por linha",
@@ -22,7 +21,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A citação fica no topo da moldura, antes dos anexos e do campo: contexto vem antes do que ele contextualiza.",
       "item2": "Ela descreve o campo, e vem primeiro na descrição — saber a quem se responde muda o que se escreve; a dica de teclado só muda como se envia.",
@@ -34,7 +32,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando a resposta se refere a uma mensagem específica, e não à conversa toda.",
@@ -125,7 +122,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O trecho inteiro vai ao documento, e o corte é do desenho.",
         "dont": "Cortado em código, o resto do texto some para quem lê por audição e para a busca do navegador."
@@ -136,7 +132,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  quoteLabels,\n  quote: { id: 'm-7', author: 'Ana Souza', excerpt: texto },\n  onDismissQuote: () => responder(null),\n});",
@@ -151,7 +146,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -174,7 +168,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -238,7 +231,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -280,7 +272,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A citação descreve o campo, e chega antes da dica: saber a quem se responde muda o que se escreve.",
       "items": {
         "item1": "A citação entra na descrição do campo, e vem primeiro — antes da dica de teclado.",
@@ -309,7 +300,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -330,7 +320,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "O corte do trecho é por linha, em CSS, e nunca por caractere em código. Quem lê por audição não tem linhas — tem o texto —, e o que foi cortado em código também sai da busca do navegador.",
       "item2": "A citação vem antes da dica na descrição do campo porque as duas informam coisas de peso diferente: a citação muda o que se escreve, e a dica muda como se envia.",
       "item3": "O prefixo audível existe porque um nome solto no começo da descrição não diz que se está respondendo a alguém — diz só que há um nome ali.",
@@ -338,7 +327,6 @@
       "item5": "Uma citação por vez. Duas no mesmo campo não diriam a qual delas a resposta responde, e o endereço que vai junto ficaria ambíguo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a citação em si não instrumenta o dispensar, que é do produto.",
       "table": {
         "event": "Evento",
@@ -356,7 +344,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -436,7 +423,6 @@
       "describes": "Replying to {author}"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "short": "Short excerpt",
         "long": "Long excerpt, clamped by line",
@@ -445,7 +431,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The quote sits at the top of the frame, before the attachments and the field: context comes before what it contextualises.",
       "item2": "It describes the field, and comes first in the description — knowing who you reply to changes what you write; the keyboard hint only changes how you send.",
@@ -457,7 +442,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when the reply refers to a specific message, not to the whole conversation.",
@@ -548,7 +532,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The whole excerpt goes to the document, and clamping belongs to the design.",
         "dont": "Cut in code, the rest of the text disappears for listeners and for the browser search."
@@ -559,7 +542,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  quoteLabels,\n  quote: { id: 'm-7', author: 'Ana Souza', excerpt: texto },\n  onDismissQuote: () => responder(null),\n});",
@@ -574,7 +556,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -597,7 +578,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -661,7 +641,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -703,7 +682,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The quote describes the field, and arrives before the hint: knowing who you reply to changes what you write.",
       "items": {
         "item1": "The quote enters the field description, and comes first — before the keyboard hint.",
@@ -732,7 +710,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "composer": {
           "name": "Composer",
@@ -753,7 +730,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The excerpt is clamped by line, in CSS, and never by character in code. Whoever reads by ear has no lines — they have the text — and what is cut in code also leaves the browser search.",
       "item2": "The quote comes before the hint in the field description because the two inform things of different weight: the quote changes what is written, and the hint changes how it is sent.",
       "item3": "The audible prefix exists because a bare name at the start of the description does not say you are replying to someone — it only says there is a name there.",
@@ -761,7 +737,6 @@
       "item5": "One quote at a time. Two in the same field would not say which one the reply answers, and the address that goes along would be ambiguous."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the quote itself does not instrument dismissal, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -779,7 +754,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -859,7 +833,6 @@
       "describes": "Respondiendo a {author}"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "short": "Fragmento corto",
         "long": "Fragmento largo, recortado por línea",
@@ -868,7 +841,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La cita está en la parte superior del marco, antes de los adjuntos y del campo: el contexto viene antes de lo que contextualiza.",
       "item2": "Describe el campo, y va primero en la descripción — saber a quién se responde cambia lo que se escribe; la pista de teclado solo cambia cómo se envía.",
@@ -880,7 +852,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala cuando la respuesta se refiere a un mensaje específico, no a toda la conversación.",
@@ -971,7 +942,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El fragmento entero va al documento, y el recorte es del diseño.",
         "dont": "Cortado en código, el resto del texto desaparece para quien escucha y para la búsqueda del navegador."
@@ -982,7 +952,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createComposer } from '@/components/ui/composer';\n\ncreateComposer({\n  labels,\n  quoteLabels,\n  quote: { id: 'm-7', author: 'Ana Souza', excerpt: texto },\n  onDismissQuote: () => responder(null),\n});",
@@ -997,7 +966,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1020,7 +988,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1084,7 +1051,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1126,7 +1092,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La cita describe el campo, y llega antes de la pista: saber a quién se responde cambia lo que se escribe.",
       "items": {
         "item1": "La cita entra en la descripción del campo, y va primero — antes de la pista de teclado.",
@@ -1155,7 +1120,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "composer": {
           "name": "Composer",
@@ -1176,7 +1140,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "El fragmento se recorta por línea, en CSS, y nunca por carácter en código. Quien lee de oído no tiene líneas — tiene el texto — y lo cortado en código también sale de la búsqueda del navegador.",
       "item2": "La cita va antes de la pista en la descripción del campo porque ambas informan cosas de peso distinto: la cita cambia lo que se escribe, y la pista cambia cómo se envía.",
       "item3": "El prefijo audible existe porque un nombre suelto al inicio de la descripción no dice que se está respondiendo a alguien — solo dice que hay un nombre ahí.",
@@ -1184,7 +1147,6 @@
       "item5": "Una cita a la vez. Dos en el mismo campo no dirían a cuál responde la respuesta, y la dirección que va con ella quedaría ambigua."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la cita en sí no instrumenta el descarte, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1202,7 +1164,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

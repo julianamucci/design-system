@@ -205,7 +205,7 @@ interface InputProps extends HTMLInputAttributes {
   {/snippet}
 
       <!-- ── Demonstração ───────────────────────────────────────────── -->
-      <DocsDemonstration title={$tStore('demonstration.title')}>
+      <DocsDemonstration>
         <div class="nds-w-full nds-max-w-sm nds-stack" data-spacing="md">
           <div class="nds-stack" data-spacing="xs">
             <Label for="demo-nome">{$tStore('demonstration.labels.defaultLabel')}</Label>
@@ -243,7 +243,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Anatomia ───────────────────────────────────────────────── -->
       <DocsAnatomy
-        title={$tStore('anatomy.title')}
         items={[
           $tStore('anatomy.item1'),
           $tStore('anatomy.item2'),
@@ -267,7 +266,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Quando Usar ────────────────────────────────────────────── -->
       <DocsWhenToUse
-        title={$tStore('usage.title')}
         guidelines={{
           title: $tStore('usage.guidelines.title'),
           items: [
@@ -315,7 +313,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Do & Don't ─────────────────────────────────────────────── -->
       <DocsDoDont
-        title={$tStore('doDont.title')}
         pairs={[
           {
             doLabel: $tNavStore('common.do'),
@@ -384,7 +381,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Importação ─────────────────────────────────────────────── -->
       <DocsImport
-        title={$tStore('import.title')}
         description={$tStore('import.basic')}
         code={codeImportBasic}
         secondaryDescription={$tStore('import.withGroup')}
@@ -393,7 +389,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Variantes (Tipos) ─────────────────────────────────────── -->
       <DocsVariants
-        title={$tStore('variants.title')}
         componentSlug="input"
         items={[
           { name: 'text',     description: $tStore('variants.items.types.text'),     code: codeDefault,   preview: variantText     },
@@ -445,7 +440,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Composições ──────────────────────────────────────────────── -->
       <DocsCompositions
-        title={$tStore('variants.compositionsTitle')}
         useWhenLabel={$tNavStore('common.useWhen')}
         componentSlug="input"
         items={[
@@ -521,7 +515,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Estados ────────────────────────────────────────────────── -->
       <DocsStates
-        title={$tStore('states.title')}
         cols={{
           state: $tStore('states.cols.state'),
           trigger: toPlainText($tStore('states.cols.trigger')),
@@ -538,7 +531,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Propriedades ───────────────────────────────────────────── -->
       <DocsProps
-        title={$tStore('props.title')}
         tables={[
           {
             title: $tStore('props.inputTitle'),
@@ -566,7 +558,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Tokens ─────────────────────────────────────────────────── -->
       <DocsTokens
-        title={$tStore('tokens.title')}
         cols={{
           token: $tStore('tokens.table.token'),
           value: $tStore('tokens.table.class'),
@@ -585,7 +576,6 @@ interface InputProps extends HTMLInputAttributes {
       <DocsAccessibility
         screenReaderTitle={$tNavStore('common.screenReader')}
         screenReaderItems={screenReaderItems}
-        title={$tStore('accessibility.title')}
         summary={$tStore('accessibility.summary')}
         items={[
           $tStore('accessibility.item1'),
@@ -605,7 +595,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Relacionados ───────────────────────────────────────────── -->
       <DocsRelated
-        title={$tStore('related.title')}
         items={[
           { name: 'Textarea',  description: $tStore('related.textarea'),  path: '?path=/docs/components-form-textarea--docs'  },
           { name: 'InputOTP',  description: $tStore('related.inputOTP'),  path: '?path=/docs/components-form-inputotp--docs'  },
@@ -617,7 +606,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Notas ──────────────────────────────────────────────────── -->
       <DocsNotes
-        title={$tStore('notes.title')}
         items={[
           { title: '', content: $tStore('notes.tip1') },
           { title: '', content: $tStore('notes.tip2') },
@@ -629,7 +617,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Analytics ─────────────────────────────────────────────── -->
       <DocsAnalytics
-        title={$tStore('analytics.title')}
         cols={{
           event: $tStore('analytics.table.event'),
           trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -647,7 +634,6 @@ interface InputProps extends HTMLInputAttributes {
 
       <!-- ── Testes ─────────────────────────────────────────────────── -->
       <DocsTestes
-        title={$tStore('testes.title')}
         functional={{
           title: $tStore('testes.functional.title'),
           cols: {

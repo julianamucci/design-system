@@ -2,9 +2,9 @@
   import DOMPurify from 'dompurify';
   import ComponentDemo from '@/components/ComponentDemo.svelte';
   import { CodeBlock } from '@/components/ui/code-block';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
-  const { title, items, structureCode, structureLabel, language = 'svelte', copyLabel, copiedLabel }: {
-    title: string;
+  const { items, structureCode, structureLabel, language = 'svelte', copyLabel, copiedLabel }: {
     items: string[];
     structureCode: string;
     structureLabel?: string;
@@ -12,6 +12,8 @@
     copyLabel?: string;
     copiedLabel?: string;
   } = $props();
+
+  const title = $derived(tituloDeSecao('anatomia', $rotulosDeSecao));
 </script>
 
 <section id="anatomia">

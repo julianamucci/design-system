@@ -209,7 +209,6 @@ export function createCheckboxDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack';
@@ -247,7 +246,6 @@ export function createCheckboxDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -260,7 +258,6 @@ export function createCheckboxDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -331,7 +328,6 @@ export function createCheckboxDocs(): HTMLElement {
         };
 
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -367,7 +363,6 @@ export function createCheckboxDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.vanilla'),
           code: `import { createCheckbox, type CheckboxOptions } from '@/components/ui/checkbox';`,
           secondaryDescription: 'Uso básico:',
@@ -381,7 +376,6 @@ label.textContent = 'Aceito os termos e condições';`,
         const note = t('variants.note');
         return createDocsVariants({
           id: 'variantes',
-          title: t('variants.title'),
           description: DOMPurify.sanitize(note),
           items: [
             {
@@ -435,7 +429,6 @@ label.textContent = 'Aceito os termos e condições';`,
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'checkbox',
           items: [
@@ -664,7 +657,6 @@ label.textContent = 'Aceito os termos e condições';`,
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -701,7 +693,6 @@ export type CheckboxOptions = {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createCheckbox',
@@ -741,7 +732,6 @@ export type CheckboxOptions = {
 }`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -766,7 +756,6 @@ export type CheckboxOptions = {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: stripHtml(t('accessibility.summary')),
           items: [
             t('accessibility.item1'),
@@ -786,7 +775,6 @@ export type CheckboxOptions = {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Switch',     description: toPlainText(t('related.switch')),     path: '?path=/docs/components-form-switch--docs'      },
             { name: 'RadioGroup', description: toPlainText(t('related.radioGroup')), path: '?path=/docs/components-form-radiogroup--docs'  },
@@ -797,7 +785,6 @@ export type CheckboxOptions = {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -808,7 +795,6 @@ export type CheckboxOptions = {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -824,7 +810,6 @@ export type CheckboxOptions = {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

@@ -20,10 +20,6 @@ const meta: Meta<DocsStatesProps> = {
     docs: { description: { component: "Tabela de estados do componente: o que dispara cada um e como ele responde. Uma linha por estado, e a coluna de comportamento é onde o token aparece." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     cols: {
       control: "object",
       description: "Cabeçalho das três colunas."
@@ -34,7 +30,6 @@ const meta: Meta<DocsStatesProps> = {
     }
   },
   args: {
-    title: "Estados",
     cols: {
       state: "Estado",
       trigger: "Gatilho",

@@ -205,7 +205,6 @@ export function createAlertDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-w-full nds-stack';
@@ -234,7 +233,6 @@ export function createAlertDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -242,7 +240,6 @@ export function createAlertDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -301,7 +298,6 @@ export function createAlertDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -345,7 +341,6 @@ export function createAlertDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from '@/components/ui/alert';`,
           secondaryDescription: t('import.withIcon'),
@@ -362,7 +357,6 @@ export function createAlertDocs(): HTMLElement {
         const codeDismissible = `const alert = createAlert({\n  variant: 'default',\n  dismissible: true,\n  dismissLabel: 'Fechar alerta',\n  onDismiss: () => console.log('fechado'),\n});\nalert.appendChild(createAlertIcon('info'));\nalert.appendChild(createAlertTitle({ text: 'Atenção' }));\nalert.appendChild(createAlertDescription({ text: 'Suas alterações serão aplicadas na próxima sessão.' }));`;
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'alert',
           items: [
@@ -434,7 +428,6 @@ export function createAlertDocs(): HTMLElement {
 
       case 'composicoes':
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'alert',
           items: [
@@ -483,7 +476,6 @@ export function createAlertDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -525,7 +517,6 @@ export interface AlertTitleOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.alertTitle'),
@@ -565,7 +556,6 @@ export interface AlertTitleOptions {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -598,7 +588,6 @@ export interface AlertTitleOptions {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -617,7 +606,6 @@ export interface AlertTitleOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Sonner',      description: toPlainText(t('related.sonner')),      path: '?path=/docs/components-feedback-sonner--docs' },
             { name: 'AlertDialog', description: toPlainText(t('related.alertDialog')), path: '?path=/docs/components-overlay-alertdialog--docs' },
@@ -628,7 +616,6 @@ export interface AlertTitleOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -638,7 +625,6 @@ export interface AlertTitleOptions {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -654,7 +640,6 @@ export interface AlertTitleOptions {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

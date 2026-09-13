@@ -275,10 +275,10 @@ interface BreadcrumbEllipsisProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-w-full">
       <!-- aria-label por instância: a página monta vários <nav> de breadcrumb; sem rótulo distinto o axe acusa landmark-unique -->
-      <Breadcrumb aria-label={$tStore('demonstration.title')}>
+      <Breadcrumb aria-label={$tNavStore('nav.demonstration')}>
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="#" onclick={() => track('navigation_click', { component: 'breadcrumb', label: 'home', destination: '#', location: 'docs_demo' })}>{$tStore('demonstration.labels.home')}</BreadcrumbLink>
@@ -302,7 +302,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -318,7 +317,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -380,7 +378,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -488,7 +485,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withEllipsis')}
@@ -497,7 +493,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Variantes (Configurações Disponíveis) ──────────────────── -->
   <DocsVariants
-    title={$tStore('variants.visualTitle')}
     items={[
       { name: 'default',         description: stripHtml($tStore('variants.items.default')),         code: codeDefault,         preview: variantDefault         },
       { name: 'withEllipsis',    description: stripHtml($tStore('variants.items.withEllipsis')),    code: codeWithEllipsis,    preview: variantWithEllipsis    },
@@ -597,7 +592,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Configurações (States) ─────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -611,7 +605,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.breadcrumbTitle'),
@@ -720,7 +713,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -743,7 +735,6 @@ interface BreadcrumbEllipsisProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -762,7 +753,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'NavigationMenu', description: $tStore('related.navigationMenu'), path: '?path=/docs/components-navigation-navigationmenu--docs' },
       { name: 'Stepper',        description: $tStore('related.stepper'),        path: '?path=/docs/components-navigation-stepper--docs'        },
@@ -773,7 +763,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -784,7 +773,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -801,7 +789,6 @@ interface BreadcrumbEllipsisProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

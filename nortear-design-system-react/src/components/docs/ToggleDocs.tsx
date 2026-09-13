@@ -212,7 +212,7 @@ import { Bold } from "lucide-react";`;
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="md" style={{ alignItems: "flex-start" }}>
           <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-1" data-spacing="xs">
             <Toggle
@@ -278,7 +278,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -290,7 +289,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -366,7 +364,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -421,7 +418,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         code={codeImportBasic}
         secondaryCode={codeImportWithIcon}
       />
@@ -429,7 +425,6 @@ import { Bold } from "lucide-react";`;
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="toggle"
         items={[
@@ -502,7 +497,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Composições ───────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="toggle"
         items={[
@@ -575,7 +569,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -617,7 +610,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -687,7 +679,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -718,7 +709,6 @@ import { Bold } from "lucide-react";`;
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -738,7 +728,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: tContent("related.items.toggleGroup.name"),
@@ -765,7 +754,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },
@@ -776,7 +764,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -803,7 +790,6 @@ import { Bold } from "lucide-react";`;
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

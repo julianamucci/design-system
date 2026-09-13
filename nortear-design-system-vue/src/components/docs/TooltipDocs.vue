@@ -478,7 +478,7 @@ const a11yCritCols = computed(() => ({
       </template>
 
       <!-- ── Demonstração ─────────────────────────────────────────── -->
-      <DocsDemonstration :title="tContent('demonstration.title')">
+      <DocsDemonstration>
         <!-- O MESMO exemplo do Playground da story — guideline 08 §15. Uma
              fonte, dois lugares. A barra de três ações que morava aqui virou a
              composição `actionBar`, que é o que ela sempre foi. -->
@@ -509,7 +509,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Anatomia ─────────────────────────────────────────────── -->
       <DocsAnatomy
-        :title="tContent('anatomy.title')"
         :items="anatomyItems"
         :structure-label="tContent('anatomy.structureLabel')"
         :structure-code="anatomyStructure"
@@ -517,7 +516,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Quando Usar ──────────────────────────────────────────── -->
       <DocsWhenToUse
-        :title="tContent('usage.title')"
         :guidelines="{
           title: tContent('usage.guidelines.title'),
           items: [
@@ -580,7 +578,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Do & Don't ───────────────────────────────────────────── -->
       <DocsDoDont
-        :title="tContent('doDont.title')"
         :pairs="[
           { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
           { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
@@ -684,7 +681,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Importação ───────────────────────────────────────────── -->
       <DocsImport
-        :title="tContent('import.title')"
         :code="codeImportBasic"
         :secondary-code="codeImportProvider"
         component-slug="tooltip"
@@ -693,7 +689,6 @@ const a11yCritCols = computed(() => ({
       <!-- ── Variantes ────────────────────────────────────────────── -->
       <DocsCompositions
         id="variantes"
-        :title="tContent('variants.title')"
         :use-when-label="tNav('common.useWhen')"
         component-slug="tooltip"
         :items="variantItems"
@@ -823,7 +818,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Composições ─────────────────────────────────────────── -->
       <DocsCompositions
-        :title="tContent('variants.compositionsTitle')"
         :use-when-label="tNav('common.useWhen')"
         component-slug="tooltip"
         :items="compositionItems"
@@ -978,7 +972,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Estados ──────────────────────────────────────────────── -->
       <DocsStates
-        :title="tContent('states.title')"
         :cols="{
           state: tContent('states.cols.state'),
           trigger: toPlainText(tContent('states.cols.trigger')),
@@ -989,7 +982,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Propriedades ─────────────────────────────────────────── -->
       <DocsProps
-        :title="tContent('props.title')"
         :tables="[
           { title: 'Tooltip / TooltipProvider / TooltipContent', cols: propCols, items: tooltipPropItems },
         ]"
@@ -1000,7 +992,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Tokens ───────────────────────────────────────────────── -->
       <DocsTokens
-        :title="tContent('tokens.title')"
         :cols="{
           token: tContent('tokens.table.token'),
           value: tContent('tokens.table.class'),
@@ -1015,7 +1006,6 @@ const a11yCritCols = computed(() => ({
       <DocsAccessibility
         :screen-reader-title="tNav('common.screenReader')"
         :screen-reader-items="screenReaderItems"
-        :title="tContent('accessibility.title')"
         :summary="tContent('accessibility.summary')"
         :items="accessibilityItems"
         :keyboard-title="tContent('accessibility.keyboard.title')"
@@ -1024,21 +1014,18 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Relacionados ─────────────────────────────────────────── -->
       <DocsRelated
-        :title="tContent('related.title')"
         :items="relatedItems"
         component-slug="tooltip"
       />
 
       <!-- ── Notas ────────────────────────────────────────────────── -->
       <DocsNotes
-        :title="tContent('notes.title')"
         :items="noteItems"
         component-slug="tooltip"
       />
 
       <!-- ── Analytics ────────────────────────────────────────────── -->
       <DocsAnalytics
-        :title="tContent('analytics.title')"
         :cols="{
           event: tContent('analytics.table.event'),
           trigger: toPlainText(tContent('analytics.table.trigger')),
@@ -1049,7 +1036,6 @@ const a11yCritCols = computed(() => ({
 
       <!-- ── Testes ───────────────────────────────────────────────── -->
       <DocsTestes
-        :title="tContent('testes.title')"
         :functional="{
           title: tContent('testes.functional.title'),
           cols: { action: tNav('common.userAction'), result: tNav('common.expectedResult'), priority: tNav('common.priority') },

@@ -45,7 +45,6 @@ const GRUPOS: DocsNavGroup[] = [
 ];
 
 const ESTADOS = {
-  title: 'Estados',
   cols: { state: 'Estado', trigger: 'Gatilho', behavior: 'Comportamento' },
   items: [
     { label: 'Padrão', trigger: 'Nenhum', behavior: 'Fundo --primary.' },
@@ -93,7 +92,7 @@ const meta: Meta<typeof DocsPageLayout> = {
           type="Primitivo"
         />
       </template>
-      <DocsStates :title="estados.title" :cols="estados.cols" :items="estados.items" />
+      <DocsStates :cols="estados.cols" :items="estados.items" />
     </DocsPageLayout>`,
   }),
 };

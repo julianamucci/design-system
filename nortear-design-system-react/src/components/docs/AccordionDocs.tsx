@@ -275,7 +275,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
       }
     >
           {/* ── Demonstração ──────────────────────────────────────────── */}
-          <DocsDemonstration title={tContent("demonstration.title")}>
+          <DocsDemonstration >
             <Accordion defaultValue={["item-1"]} className="nds-max-w-lg">
               {([1, 2, 3, 4] as const).map((i) => {
                 const label = tContent(`demonstration.labels.q${i}`);
@@ -297,7 +297,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Anatomia ──────────────────────────────────────────────── */}
           <DocsAnatomy
-            title={tContent("anatomy.title")}
             items={[
               tContent("anatomy.item1"),
               tContent("anatomy.item2"),
@@ -310,7 +309,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Quando Usar ───────────────────────────────────────────── */}
           <DocsWhenToUse
-            title={tContent("usage.title")}
             guidelines={{
               title: tContent("usage.guidelines.title"),
               items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -369,7 +367,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Do & Don't ────────────────────────────────────────────── */}
           <DocsDoDont
-            title={tContent("doDont.title") || "Do & Don't"}
             pairs={[
               {
                 doLabel: tNav("common.do"),
@@ -424,7 +421,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Importação ────────────────────────────────────────────── */}
           <DocsImport
-            title={tContent("import.title")}
             description={tContent("import.note")}
             code={codeImport}
           />
@@ -432,7 +428,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
           {/* ── Modos de Operação ─────────────────────────────────────── */}
           <DocsVariants
             id="variantes"
-            title={tContent("variants.title")}
             items={[
               {
                 trackId: "single",
@@ -509,7 +504,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Composições ───────────────────────────────────────────── */}
           <DocsCompositions
-            title={tContent("variants.compositionsTitle")}
             useWhenLabel={tNav("common.useWhen")}
             componentSlug="accordion"
             items={[
@@ -750,7 +744,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Estados ───────────────────────────────────────────────── */}
           <DocsStates
-            title={tContent("states.title")}
             cols={{
               state: tContent("states.cols.state"),
               trigger: toPlainText(tContent("states.cols.trigger")),
@@ -782,7 +775,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Propriedades ──────────────────────────────────────────── */}
           <DocsProps
-            title={tContent("props.title")}
             tables={[
               {
                 title: tContent("props.accordion.title"),
@@ -848,7 +840,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Tokens ────────────────────────────────────────────────── */}
           <DocsTokens
-            title={tContent("tokens.title")}
             cols={{
               token: tContent("tokens.table.token"),
               value: tContent("tokens.table.class"),
@@ -867,7 +858,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Acessibilidade ────────────────────────────────────────── */}
           <DocsAccessibility
-            title={tContent("accessibility.title")}
             summary={tContent("accessibility.summary")}
             items={[
               tContent("accessibility.aria.ariaExpanded"),
@@ -893,7 +883,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Relacionados ──────────────────────────────────────────── */}
           <DocsRelated
-            title={tContent("related.title")}
             items={[
               {
                 name: tContent("related.collapsible.name"),
@@ -915,7 +904,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Notas ─────────────────────────────────────────────────── */}
           <DocsNotes
-            title={tContent("notes.title")}
             items={[
               { title: "", content: tContent("notes.item1") },
               { title: "", content: tContent("notes.item2") },
@@ -927,7 +915,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Analytics ─────────────────────────────────────────────── */}
           <DocsAnalytics
-            title={tContent("analytics.title")}
             cols={{
               event: tContent("analytics.table.event"),
               trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -949,7 +936,6 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
           {/* ── Testes ────────────────────────────────────────────────── */}
           <DocsTestes
-            title={tContent("testes.title")}
             functional={{
               title: tContent("testes.functional.title"),
               cols: {

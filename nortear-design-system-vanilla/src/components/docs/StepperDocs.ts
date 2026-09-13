@@ -370,14 +370,12 @@ export function createStepperDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'stepper',
           demoFactory: () => buildFlow('docs_demo'),
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7].map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -385,7 +383,6 @@ export function createStepperDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -436,7 +433,6 @@ export function createStepperDocs(): HTMLElement {
         const withHints = flowSteps(true);
 
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -522,7 +518,6 @@ export function createStepperDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: stripHtml(t('description')),
           componentSlug: 'stepper',
           code: `import {
@@ -541,7 +536,6 @@ export function createStepperDocs(): HTMLElement {
         const withHints = flowSteps(true);
 
         return createDocsCompositions({
-          title: t('variants.title'),
           componentSlug: 'stepper',
           useWhenLabel: tNav('common.useWhen'),
           items: [
@@ -586,7 +580,6 @@ export function createStepperDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -641,7 +634,6 @@ export function getStepperValue(root: HTMLElement): number;`;
           ' setStepperValue(root, value) depois que todas as etapas existem.)';
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createStepper(options)',
@@ -706,7 +698,6 @@ export function getStepperValue(root: HTMLElement): number;`;
         ];
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -724,7 +715,6 @@ export function getStepperValue(root: HTMLElement): number;`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6, 7].map(i => stripHtml(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -740,7 +730,6 @@ export function getStepperValue(root: HTMLElement): number;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           componentSlug: 'stepper',
           items: [
             { name: t('related.items.tabs.name'),       description: toPlainText(t('related.items.tabs.description')),       path: '?path=/docs/components-navigation-tabs--docs' },
@@ -752,7 +741,6 @@ export function getStepperValue(root: HTMLElement): number;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           componentSlug: 'stepper',
           items: [
             ...[1, 2, 3, 4, 5].map(i => ({ title: '', content: t(`notes.item${i}`) })),
@@ -768,7 +756,6 @@ export function getStepperValue(root: HTMLElement): number;`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -783,7 +770,6 @@ export function getStepperValue(root: HTMLElement): number;`;
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             description: t('testes.functional.description'),

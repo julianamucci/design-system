@@ -201,7 +201,7 @@ interface CollapsibleContentProps {
   {/snippet}
 
   <!-- ── Demonstração ─────────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-w-full nds-stack" data-spacing="xl">
       <!-- Demo 1: Não-controlado (padrão) -->
       <div class="nds-stack" data-spacing="sm">
@@ -279,7 +279,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Anatomia ──────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -291,7 +290,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Quando Usar ───────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -338,7 +336,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Do & Don't ────────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -411,7 +408,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Importação ────────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withButton')}
@@ -421,7 +417,6 @@ interface CollapsibleContentProps {
   <!-- ── Variantes ─────────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="collapsible"
     items={[
@@ -518,7 +513,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
   <DocsCompositions
-    title={$tStore('variants.compositionsTitle')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="collapsible"
     items={[
@@ -644,7 +638,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Estados ───────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -676,7 +669,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Propriedades ──────────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.collapsibleTitle'),
@@ -732,7 +724,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Tokens ────────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -754,7 +745,6 @@ interface CollapsibleContentProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -774,7 +764,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Relacionados ──────────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/components-disclosure-accordion--docs' },
       { name: 'Sheet',     description: $tStore('related.sheet'),     path: '?path=/docs/components-overlay-sheet--docs'     },
@@ -785,7 +774,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Notas ─────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -795,7 +783,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -811,7 +798,6 @@ interface CollapsibleContentProps {
 
   <!-- ── Testes ────────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

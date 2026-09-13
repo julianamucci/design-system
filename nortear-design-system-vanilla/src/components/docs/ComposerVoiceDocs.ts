@@ -179,7 +179,6 @@ export function createComposerVoiceDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           componentSlug: 'composer-voice',
           demoFactory: () => {
             const stack = document.createElement('div');
@@ -202,7 +201,6 @@ export function createComposerVoiceDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5].map(i => t(`anatomy.item${i}`)),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -211,7 +209,6 @@ export function createComposerVoiceDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => t(`usage.guidelines.item${i}`)),
@@ -256,7 +253,6 @@ export function createComposerVoiceDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -300,7 +296,6 @@ export function createComposerVoiceDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: t('import.basicCode'),
           secondaryDescription: t('import.withLevel'),
@@ -309,7 +304,6 @@ export function createComposerVoiceDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: t('states.cols.trigger'),
@@ -345,7 +339,6 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createComposerVoice',
@@ -379,7 +372,6 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.value'),
@@ -400,7 +392,6 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5].map(i => t(`accessibility.items.item${i}`)),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -415,7 +406,6 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.composer.name'),            description: toPlainText(t('related.items.composer.description')),            path: '?path=/docs/components-conversational-composer--docs' },
             { name: t('related.items.composerAttachments.name'), description: toPlainText(t('related.items.composerAttachments.description')), path: '?path=/docs/components-conversational-composerattachments--docs' },
@@ -426,14 +416,12 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           componentSlug: 'composer-voice',
           items: [1, 2, 3, 4, 5].map(i => ({ title: '', content: t(`notes.item${i}`) })),
         });
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: t('analytics.table.trigger'),
@@ -448,7 +436,6 @@ export type ComposerVoiceIntent = 'start' | 'stop';`;
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             description: t('testes.functional.description'),

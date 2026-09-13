@@ -223,7 +223,6 @@ export function DraftRestoreDocs() {
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
       <DocsDemonstration
-        title={tContent("demonstration.title")}
         componentSlug="draft-restore"
       >
         <div className="nds-stack nds-w-full" data-spacing="lg">
@@ -238,7 +237,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`anatomy.item${i}`))}
         structureLabel={tContent("anatomy.structureLabel")}
         structureCode={tContent("anatomy.structureCode")}
@@ -247,7 +245,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [1, 2, 3, 4, 5].map((i) => tContent(`usage.guidelines.item${i}`)),
@@ -292,7 +289,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Do e Dont ─────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -320,7 +316,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={tContent("import.basicCode")}
         secondaryDescription={tContent("import.withTimestamp")}
@@ -329,7 +324,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: tContent("states.cols.trigger"),
@@ -344,7 +338,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: "DraftRestore",
@@ -389,7 +382,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.value"),
@@ -410,7 +402,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Acessibilidade ────────────────────────────────────────── */}
       <DocsAccessibility
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[1, 2, 3, 4, 5].map((i) => tContent(`accessibility.items.item${i}`))}
         keyboardTitle={tContent("accessibility.keyboard.title")}
@@ -425,7 +416,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           { name: tContent("related.items.composer.name"),    description: toPlainText(tContent("related.items.composer.description")),    path: "?path=/docs/components-conversational-composer--docs" },
           { name: tContent("related.items.alert.name"),       description: toPlainText(tContent("related.items.alert.description")),       path: "?path=/docs/components-feedback-alert--docs" },
@@ -436,14 +426,12 @@ export function DraftRestoreDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="draft-restore"
         items={[1, 2, 3, 4, 5, 6].map((i) => ({ title: "", content: tContent(`notes.item${i}`) }))}
       />
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: tContent("analytics.table.trigger"),
@@ -458,7 +446,6 @@ export function DraftRestoreDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

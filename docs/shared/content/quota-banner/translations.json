@@ -23,7 +23,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "normal": "Com folga na cota",
         "threshold": "Na borda do aviso",
@@ -32,7 +31,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "A manchete abre com o que AINDA RESTA, e não com o que já foi — é esse número que decide o que a pessoa faz a seguir.",
       "item2": "O horizonte diz quando a cota renova, e chega escrito de quem mede. Cota que não renova simplesmente não traz a linha.",
@@ -45,7 +43,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use quando o que resta de uma cota muda o que a pessoa faz a seguir — economizar, esperar a renovação, ou trocar de plano.",
@@ -136,7 +133,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "O horizonte chega junto, e quem lê sabe se vale a pena esperar em vez de trocar de plano.",
         "dont": "A cota renova, mas o horizonte não é passado — a faixa só sabe dizer que está no fim, e esperar vira aposta."
@@ -147,7 +143,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizonte,\n  actions: [botao],\n  labels: rotulos,\n});",
@@ -162,7 +157,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -195,7 +189,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -301,7 +294,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customização",
       "customizationCode": {
         "web": ".nds-quota-banner {\n  max-inline-size: 28rem;\n}\n\n/* A cor é REFORÇO, e não a pista: a palavra do nível e a razão do rodapé são o\n   que descreve. Mexer na cor não muda o que chega a quem ouve. */\n.nds-quota-banner[data-level=\"warning\"] {\n  --nds-quota-banner-color: var(--chart-4);\n}"
@@ -378,7 +370,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Os números são texto e o medidor é desenho: nada aqui se anuncia, o nível chega em palavra, a cota esgotada é dita em palavra, e os controles são os últimos tanto para o olho quanto para o foco.",
       "items": {
         "item1": "A palavra do nível está sempre na faixa: a cor da moldura e do medidor não descreve folga sozinha.",
@@ -408,7 +399,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "contextDisplay": {
           "name": "Uso do contexto",
@@ -429,7 +419,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "A pergunta é o RESTO, e é ela que separa esta peça das medições irmãs. As outras medem o que já foi; esta mede o que ainda há, e virar a medição do avesso muda a decisão de quem lê: uma se confere, a outra se gasta.",
       "item2": "Não há caso sem teto, e essa é a divergência em relação às irmãs. Ali o teto é opcional porque o que se mede existe sem ele; aqui o teto é o assunto, e uma faixa de cota sem cota não é medição pela metade, é a ausência da pergunta. Quem não tem teto não monta a faixa.",
       "item3": "O resto nunca é negativo. Quem passou do teto não tem menos que nada de cota, tem cota nenhuma — e a subtração mora no primitivo compartilhado justamente porque parece dispensar uma função.",
@@ -439,7 +428,6 @@
       "item7": "Os controles são espaço, e não política. O que muda de plano faz, se há um segundo botão, se a cota pode ser comprada avulsa — nada disso está aqui, e nada disso vai estar."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a faixa em si não instrumenta nada, porque os controles são de quem os passa.",
       "table": {
         "event": "Evento",
@@ -457,7 +445,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -571,7 +558,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "normal": "With room to spare",
         "threshold": "At the warning edge",
@@ -580,7 +566,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The headline opens with what IS LEFT, not with what was spent — that is the number that decides what the person does next.",
       "item2": "The horizon says when the allowance renews, and it arrives written from whoever measured. An allowance that does not renew simply omits the line.",
@@ -593,7 +578,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it when what is left of an allowance changes what the person does next — spend less, wait for the renewal, or change plans.",
@@ -684,7 +668,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "The horizon arrives with the measurement, and the reader knows whether waiting beats changing plans.",
         "dont": "The allowance does renew, but the horizon is not passed — the banner can only say it is near the end, and waiting becomes a bet."
@@ -695,7 +678,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic usage",
       "basicCode": {
         "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizon,\n  actions: [button],\n  labels: labels,\n});",
@@ -710,7 +692,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -743,7 +724,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -849,7 +829,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Customisation",
       "customizationCode": {
         "web": ".nds-quota-banner {\n  max-inline-size: 28rem;\n}\n\n/* Colour is REINFORCEMENT, not the cue: the level word and the footer ratio are\n   what describe. Changing the colour does not change what reaches a listener. */\n.nds-quota-banner[data-level=\"warning\"] {\n  --nds-quota-banner-color: var(--chart-4);\n}"
@@ -926,7 +905,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The numbers are text and the meter is drawing: nothing here announces itself, the level arrives as a word, a used-up quota is said in words, and the controls are last both for the eye and for the focus.",
       "items": {
         "item1": "The level word is always in the banner: the colour of the frame and the meter does not describe the room left on its own.",
@@ -956,7 +934,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "contextDisplay": {
           "name": "Context usage",
@@ -977,7 +954,6 @@
       }
     },
     "notes": {
-      "title": "Notes",
       "item1": "The question is the REMAINDER, and that is what separates this piece from the sibling measurements. The others measure what has gone; this one measures what is still there, and turning the measurement inside out changes the reader's decision: one is checked, the other is spent.",
       "item2": "There is no ceiling-less case, and that is the divergence from the siblings. There the ceiling is optional because what is measured exists without it; here the ceiling is the subject, and a quota banner with no quota is not a half measurement, it is the missing question. Whoever has no ceiling does not mount the banner.",
       "item3": "The remainder is never negative. Whoever went past the ceiling does not have less than nothing of allowance, they have none — and the subtraction lives in the shared primitive precisely because it looks like it needs no function.",
@@ -987,7 +963,6 @@
       "item7": "The controls are space, not policy. What changing plans does, whether there is a second button, whether the allowance can be bought separately — none of that is here, and none of it will be."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the banner itself instruments nothing, because the controls belong to whoever passes them.",
       "table": {
         "event": "Event",
@@ -1005,7 +980,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1119,7 +1093,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "normal": "Con margen en la cuota",
         "threshold": "En el borde del aviso",
@@ -1128,7 +1101,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "El titular abre con lo que AÚN QUEDA, y no con lo ya gastado — ese es el número que decide qué hace la persona a continuación.",
       "item2": "El horizonte dice cuándo se renueva la cuota, y llega escrito de quien mide. Una cuota que no se renueva simplemente no trae la línea.",
@@ -1141,7 +1113,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsala cuando lo que queda de una cuota cambia lo que la persona hace después — gastar menos, esperar la renovación o cambiar de plan.",
@@ -1232,7 +1203,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "El horizonte llega junto con la medición, y quien lee sabe si merece la pena esperar en vez de cambiar de plan.",
         "dont": "La cuota sí se renueva, pero el horizonte no se pasa — la franja solo sabe decir que está por acabarse, y esperar se vuelve una apuesta."
@@ -1243,7 +1213,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createQuotaBanner } from '@/components/ui/quota-banner';\n\ncreateQuotaBanner({\n  quota: { used: 168, limit: 200 },\n  renewsIn: horizonte,\n  actions: [boton],\n  labels: rotulos,\n});",
@@ -1258,7 +1227,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1291,7 +1259,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1397,7 +1364,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "customizationTitle": "Personalización",
       "customizationCode": {
         "web": ".nds-quota-banner {\n  max-inline-size: 28rem;\n}\n\n/* El color es REFUERZO, y no la pista: la palabra del nivel y la razón del pie\n   son lo que describe. Cambiar el color no cambia lo que llega a quien escucha. */\n.nds-quota-banner[data-level=\"warning\"] {\n  --nds-quota-banner-color: var(--chart-4);\n}"
@@ -1474,7 +1440,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Los números son texto y el medidor es dibujo: nada aquí se anuncia, el nivel llega en palabra, la cuota agotada se dice en palabra, y los controles son los últimos tanto para el ojo como para el foco.",
       "items": {
         "item1": "La palabra del nivel está siempre en la franja: el color del marco y del medidor no describe el margen por sí solo.",
@@ -1504,7 +1469,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "contextDisplay": {
           "name": "Uso del contexto",
@@ -1525,7 +1489,6 @@
       }
     },
     "notes": {
-      "title": "Notas",
       "item1": "La pregunta es el RESTO, y es ella la que separa esta pieza de las mediciones hermanas. Las otras miden lo ya gastado; esta mide lo que aún hay, y darle la vuelta a la medición cambia la decisión de quien lee: una se comprueba, la otra se gasta.",
       "item2": "No hay caso sin techo, y esa es la divergencia respecto a las hermanas. Allí el techo es opcional porque lo medido existe sin él; aquí el techo es el asunto, y una franja de cuota sin cuota no es una medición a medias, es la ausencia de la pregunta. Quien no tiene techo no monta la franja.",
       "item3": "El resto nunca es negativo. Quien pasó del techo no tiene menos que nada de cuota, no tiene ninguna — y la resta vive en el primitivo compartido justamente porque parece no necesitar una función.",
@@ -1535,7 +1498,6 @@
       "item7": "Los controles son espacio, y no política. Qué hace cambiar de plan, si hay un segundo botón, si la cuota se puede comprar aparte — nada de eso está aquí, y nada de eso va a estar."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la franja en sí no instrumenta nada, porque los controles son de quien los pasa.",
       "table": {
         "event": "Evento",
@@ -1553,7 +1515,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

@@ -614,13 +614,11 @@ export function createMenubarDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => frame(buildBar('demo', demoMenus(), 'docs_demo'), 'nds-min-h-50'),
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => DOMPurify.sanitize(t(`anatomy.item${i}`))),
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -628,7 +626,6 @@ export function createMenubarDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map(i => DOMPurify.sanitize(t(`usage.guidelines.item${i}`))),
@@ -678,7 +675,6 @@ export function createMenubarDocs(): HTMLElement {
       // legenda condena: dois níveis de submenu até chegar ao PDF.
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -736,7 +732,6 @@ export function createMenubarDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           code: `import { createMenubar } from '@/components/ui/menubar';`,
         });
 
@@ -746,7 +741,6 @@ export function createMenubarDocs(): HTMLElement {
       case 'variantes':
         return createDocsCompositions({
           id: 'variantes',
-          title: t('variants.title'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'menubar',
           items: [
@@ -801,7 +795,6 @@ export function createMenubarDocs(): HTMLElement {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -883,7 +876,6 @@ export function createMenubar(
         const no = tNav('common.no');
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createMenubar(menus, options?)',
@@ -909,7 +901,6 @@ export function createMenubar(
 
       case 'tokens':
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -936,7 +927,6 @@ export function createMenubar(
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [1, 2, 3, 4, 5, 6].map(i => DOMPurify.sanitize(t(`accessibility.items.item${i}`))),
           keyboardTitle: t('accessibility.keyboard.title'),
@@ -953,7 +943,6 @@ export function createMenubar(
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.navigationMenu.name'), description: toPlainText(t('related.items.navigationMenu.description')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
             { name: t('related.items.dropdownMenu.name'),   description: toPlainText(t('related.items.dropdownMenu.description')),   path: '?path=/docs/components-overlay-dropdownmenu--docs'   },
@@ -964,7 +953,6 @@ export function createMenubar(
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: DOMPurify.sanitize(t(`notes.item${i}`)) })),
         });
 
@@ -973,7 +961,6 @@ export function createMenubar(
       // nunca teve e que nenhuma prévia disparava.
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event:   t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -991,7 +978,6 @@ export function createMenubar(
 
       case 'testes':
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

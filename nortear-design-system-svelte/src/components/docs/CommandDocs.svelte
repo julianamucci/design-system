@@ -357,7 +357,7 @@ interface CommandLoadingProps {
   <!-- Duas montagens e nada além: a inline e a paleta de verdade num Dialog.
        Todo rótulo sai de `demonstration.labels`; os atalhos dos comandos da
        paleta são teclas, iguais nos três idiomas. -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="command">
+  <DocsDemonstration componentSlug="command">
     <div class="nds-w-full nds-stack" data-spacing="xl" data-align="center">
 
       <!-- Demo 1: Inline -->
@@ -449,7 +449,6 @@ interface CommandLoadingProps {
 
   <!-- ── Anatomia ─────────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -469,7 +468,6 @@ interface CommandLoadingProps {
 
   <!-- ── Quando Usar ──────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -515,7 +513,6 @@ interface CommandLoadingProps {
 
   <!-- ── Do & Don't ───────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -579,7 +576,6 @@ interface CommandLoadingProps {
 
   <!-- ── Importação ───────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.withDialog')}
@@ -589,7 +585,6 @@ interface CommandLoadingProps {
   <!-- ── Variantes ────────────────────────────────────────────────── -->
   <DocsCompositions
     id="variantes"
-    title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     useWhenLabel={$tNavStore('common.useWhen')}
     componentSlug="command"
@@ -677,7 +672,6 @@ interface CommandLoadingProps {
 
   <!-- ── Estados ──────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -695,7 +689,6 @@ interface CommandLoadingProps {
 
   <!-- ── Propriedades ─────────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.commandTitle'),
@@ -779,7 +772,6 @@ interface CommandLoadingProps {
        (`docs/shared/styles/nds/command.css`). O raio do item é o aninhado
        (`--radius-sm`), não o da paleta. -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -805,7 +797,6 @@ interface CommandLoadingProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -825,7 +816,6 @@ interface CommandLoadingProps {
 
   <!-- ── Relacionados ─────────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Select',        description: $tStore('related.select'),       path: '?path=/docs/components-form-select--docs'       },
       { name: 'DropdownMenu',  description: $tStore('related.dropdownMenu'), path: '?path=/docs/components-overlay-dropdownmenu--docs' },
@@ -835,7 +825,6 @@ interface CommandLoadingProps {
 
   <!-- ── Notas ────────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -845,7 +834,6 @@ interface CommandLoadingProps {
 
   <!-- ── Analytics ────────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -862,7 +850,6 @@ interface CommandLoadingProps {
 
   <!-- ── Testes ───────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

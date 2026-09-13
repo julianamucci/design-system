@@ -172,7 +172,7 @@ const COMMENT_TRIMMED = 'Concordo com o **ponto principal**.';
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')" componentSlug="markdown">
+        <nds-docs-demonstration componentSlug="markdown">
           <div class="nds-stack nds-w-full" data-spacing="lg">
             <!-- A legenda diz QUAL documento está sendo desenhado. Sem ela,
                  quatro documentos empilhados viram um só texto comprido — e o
@@ -187,14 +187,12 @@ const COMMENT_TRIMMED = 'Concordo com o **ponto principal**.';
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureCode]="t('anatomy.structureCode')"
           language="html"
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -202,10 +200,9 @@ const COMMENT_TRIMMED = 'Concordo com o **ponto principal**.';
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="t('import.basicCode')"
           [secondaryDescription]="t('import.withStreaming')"
@@ -215,7 +212,6 @@ const COMMENT_TRIMMED = 'Concordo com o **ponto principal**.';
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="markdown"
@@ -224,13 +220,11 @@ const COMMENT_TRIMMED = 'Concordo com o **ponto principal**.';
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -239,7 +233,6 @@ const COMMENT_TRIMMED = 'Concordo com o **ponto principal**.';
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -248,7 +241,6 @@ const COMMENT_TRIMMED = 'Concordo com o **ponto principal**.';
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -258,21 +250,18 @@ const COMMENT_TRIMMED = 'Concordo com o **ponto principal**.';
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="markdown"
         />
 
-        <nds-docs-notes [title]="t('notes.title')" [items]="noteItems()" componentSlug="markdown" />
+        <nds-docs-notes [items]="noteItems()" componentSlug="markdown" />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

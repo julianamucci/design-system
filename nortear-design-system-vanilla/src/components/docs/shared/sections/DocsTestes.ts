@@ -1,3 +1,4 @@
+import { tituloDeSecao } from './tituloDeSecao';
 /*
  * audit-ignore: card-nested — os três cartões desta seção são IRMÃOS, não
  * aninhados: quem os agrupa é um `div` de layout, sem raio e sem padding. Não
@@ -15,7 +16,6 @@ export interface DocsA11yTestItem { criterion: string; level: string; how: strin
 export interface DocsVisualTestItem { story: string; priority: string }
 
 export interface DocsTestesProps {
-  title: string;
   /** `description` é opcional em cada sub-seção; quando presente é renderizada
    *  logo abaixo do `<h3>` correspondente. */
   functional: { title: string; description?: string; cols: { action: string; result: string; priority: string }; items: DocsTestItem[] };
@@ -41,7 +41,7 @@ export function createDocsTestes(props: DocsTestesProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('testes');
   section.appendChild(h2);
 
   const container = document.createElement('div');

@@ -351,7 +351,7 @@ interface CardProps extends React.ComponentProps<"div"> {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-w-full nds-grid" data-cols="2" data-spacing="md" style={{ '--grid-min': '18rem' } as React.CSSProperties}>
           {previewProductCard}
           {previewMetricCard}
@@ -361,7 +361,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -377,7 +376,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -461,7 +459,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -543,7 +540,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.full")}
@@ -552,7 +548,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Variantes (Tamanhos e Composições) ────────────────────── */}
       <DocsVariants
-        title={tContent("variants.visualTitle")}
         items={[
           {
             name: "default",
@@ -665,7 +660,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -692,7 +686,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Propriedades (7 tabelas) ──────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.cardTitle"),
@@ -801,7 +794,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -827,7 +819,6 @@ interface CardProps extends React.ComponentProps<"div"> {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -846,7 +837,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           { name: "Separator", description: toPlainText(tContent("related.separator")),            path: "?path=/docs/components-layout-separator--docs" },
           { name: "Accordion", description: toPlainText(tContent("related.accordion")),            path: "?path=/docs/components-disclosure-accordion--docs" },
@@ -859,7 +849,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -870,7 +859,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -907,7 +895,6 @@ interface CardProps extends React.ComponentProps<"div"> {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

@@ -580,7 +580,7 @@ const visualTestItems = computed(() => [
       />
     </template>
 
-    <DocsDemonstration :title="tContent('demonstration.title')">
+    <DocsDemonstration>
       <div
         class="nds-w-full nds-stack"
         data-spacing="xl"
@@ -710,14 +710,12 @@ const visualTestItems = computed(() => [
     </DocsDemonstration>
 
     <DocsAnatomy
-      :title="tContent('anatomy.title')"
       :items="anatomyItems"
       :structure-label="tContent('anatomy.structureLabel')"
       :structure-code="tContent('anatomy.structureCode')"
     />
 
     <DocsWhenToUse
-      :title="tContent('usage.title')"
       :guidelines="{
         title: tContent('usage.guidelines.title'),
         items: [
@@ -782,7 +780,6 @@ const visualTestItems = computed(() => [
     />
 
     <DocsDoDont
-      :title="tContent('doDont.title')"
       :pairs="[
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair1.do')), dontCaption: toPlainText(tContent('doDont.pair1.dont')) },
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
@@ -983,7 +980,6 @@ const visualTestItems = computed(() => [
     </DocsDoDont>
 
     <DocsImport
-      :title="tContent('import.title')"
       :code="codeImport"
     />
 
@@ -995,7 +991,6 @@ const visualTestItems = computed(() => [
       campo inteiro: rótulo, texto e gatilho.
     -->
     <DocsVariants
-      :title="tContent('variants.title')"
       :items="variantItems"
       component-slug="combobox"
     >
@@ -1127,7 +1122,6 @@ const visualTestItems = computed(() => [
       continua `variant-preview-N` também aqui.
     -->
     <DocsCompositions
-      :title="tContent('variants.compositionsTitle')"
       :use-when-label="tNav('common.useWhen')"
       component-slug="combobox"
       :items="compositionItems"
@@ -1174,13 +1168,11 @@ const visualTestItems = computed(() => [
     </DocsCompositions>
 
     <DocsStates
-      :title="tContent('states.title')"
       :cols="{ state: tContent('states.cols.state'), trigger: toPlainText(tContent('states.cols.trigger')), behavior: toPlainText(tContent('states.cols.behavior')) }"
       :items="stateItems"
     />
 
     <DocsProps
-      :title="tContent('props.title')"
       :tables="[
         { title: 'Combobox', cols: propCols, items: rootPropItems },
         { title: 'ComboboxInput', cols: propCols, items: inputPropItems },
@@ -1191,7 +1183,6 @@ const visualTestItems = computed(() => [
     />
 
     <DocsTokens
-      :title="tContent('tokens.title')"
       :cols="{ token: tContent('tokens.table.token'), value: tContent('tokens.table.class'), description: tContent('tokens.table.part') }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
@@ -1202,33 +1193,28 @@ const visualTestItems = computed(() => [
     <DocsAccessibility
       :screen-reader-title="tNav('common.screenReader')"
       :screen-reader-items="screenReaderItems"
-      :title="tContent('accessibility.title')"
       :summary="tContent('accessibility.summary')"
       :items="accessibilityItems"
       :keyboard-items="keyboardItems"
     />
 
     <DocsRelated
-      :title="tContent('related.title')"
       :items="relatedItems"
       component-slug="combobox"
     />
 
     <DocsNotes
-      :title="tContent('notes.title')"
       :items="noteItems"
       component-slug="combobox"
     />
 
     <DocsAnalytics
-      :title="tContent('analytics.title')"
       :description="tContent('analytics.description')"
       :cols="{ event: tContent('analytics.table.event'), trigger: toPlainText(tContent('analytics.table.trigger')), payload: tContent('analytics.table.payload') }"
       :items="analyticsItems"
     />
 
     <DocsTestes
-      :title="tContent('testes.title')"
       :functional="{
         title: tContent('testes.functional.title'),
         description: tContent('testes.functional.description'),

@@ -2,6 +2,7 @@
   import DOMPurify from 'dompurify';
   import { Card } from '@/components/ui/card';
   import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+  import { rotulosDeSecao, tituloDeSecao } from './tituloDeSecao';
 
   interface Scenario { s: string; u: string; a: string }
   interface UXRow { element: string; do: string; dont: string; rules?: string }
@@ -22,14 +23,15 @@
    * `uxWriting` continua opcional, e sempre foi: é seção que só alguns
    * componentes têm.
    */
-  const { title, guidelines, scenarios, uxWriting, do: doBlock, dont: dontBlock }: {
-    title: string;
+  const { guidelines, scenarios, uxWriting, do: doBlock, dont: dontBlock }: {
     guidelines: { title: string; items: string[] };
     scenarios: { title?: string; cols: { scenario: string; use: string; alternative: string }; items: Scenario[] };
     uxWriting?: { title: string; cols: { element: string; do: string; dont: string; rules?: string }; items: UXRow[] };
     do: { title: string; items: string[] };
     dont: { title: string; items: string[] };
   } = $props();
+
+  const title = $derived(tituloDeSecao('quando-usar', $rotulosDeSecao));
 </script>
 
 <section id="quando-usar">

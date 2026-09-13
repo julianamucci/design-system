@@ -21,7 +21,7 @@ import { NdsDocsDoDontStory } from './DocsDoDontStory';
  * mão no lugar dela perderia change detection e os inputs dos botões mostrados.
  */
 
-type DocsDoDontArgs = { title: string; umParSo: boolean };
+type DocsDoDontArgs = { umParSo: boolean };
 
 const meta: Meta<DocsDoDontArgs> = {
   title: 'Doc Components/DocsDoDont',
@@ -38,16 +38,15 @@ const meta: Meta<DocsDoDontArgs> = {
     },
   },
   argTypes: {
-    title: { control: 'text', description: 'Título da seção.' },
     umParSo: {
       control: 'boolean',
       description: 'Só da story: reduz a um par, para mostrar que a forma da seção não muda.',
     },
   },
-  args: { title: 'Boas práticas', umParSo: false },
+  args: { umParSo: false },
   render: (args) => ({
     props: args,
-    template: `<nds-docs-do-dont-story [title]="title" [umParSo]="umParSo" />`,
+    template: `<nds-docs-do-dont-story [umParSo]="umParSo" />`,
   }),
 };
 

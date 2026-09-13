@@ -100,7 +100,6 @@ const meta: Meta<DocsPageLayoutArgs> = {
       />
       <nds-docs-states
         docsMain
-        title="Estados"
         [cols]="estados.cols"
         [items]="estados.items"
       />

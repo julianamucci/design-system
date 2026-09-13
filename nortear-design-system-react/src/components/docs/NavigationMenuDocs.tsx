@@ -231,14 +231,14 @@ interface NavigationMenuLinkProps
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
           {/* Demo 1: simple link */}
           <div className="nds-stack" data-spacing="sm" style={wrapperStyle}>
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.simpleLink"))}
             </p>
-            <NavigationMenu aria-label={`${tContent("demonstration.title")} — ${stripHtml(tContent("demonstration.labels.simpleLink"))}`}>
+            <NavigationMenu aria-label={`${tNav("nav.demonstration")} — ${stripHtml(tContent("demonstration.labels.simpleLink"))}`}>
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuLink href="#">Início</NavigationMenuLink>
@@ -258,7 +258,7 @@ interface NavigationMenuLinkProps
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withDropdown"))}
             </p>
-            <NavigationMenu aria-label={`${tContent("demonstration.title")} — ${stripHtml(tContent("demonstration.labels.withDropdown"))}`} defaultValue="produtos">
+            <NavigationMenu aria-label={`${tNav("nav.demonstration")} — ${stripHtml(tContent("demonstration.labels.withDropdown"))}`} defaultValue="produtos">
               <NavigationMenuList>
                 <NavigationMenuItem value="produtos">
                   <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
@@ -291,7 +291,7 @@ interface NavigationMenuLinkProps
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withGrid"))}
             </p>
-            <NavigationMenu aria-label={`${tContent("demonstration.title")} — ${stripHtml(tContent("demonstration.labels.withGrid"))}`} defaultValue="solucoes">
+            <NavigationMenu aria-label={`${tNav("nav.demonstration")} — ${stripHtml(tContent("demonstration.labels.withGrid"))}`} defaultValue="solucoes">
               <NavigationMenuList>
                 <NavigationMenuItem value="solucoes">
                   <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
@@ -349,7 +349,7 @@ interface NavigationMenuLinkProps
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.withFeatured"))}
             </p>
-            <NavigationMenu aria-label={`${tContent("demonstration.title")} — ${stripHtml(tContent("demonstration.labels.withFeatured"))}`} defaultValue="recursos">
+            <NavigationMenu aria-label={`${tNav("nav.demonstration")} — ${stripHtml(tContent("demonstration.labels.withFeatured"))}`} defaultValue="recursos">
               <NavigationMenuList>
                 <NavigationMenuItem value="recursos">
                   <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
@@ -394,7 +394,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -411,7 +410,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -494,7 +492,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -532,12 +529,11 @@ interface NavigationMenuLinkProps
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="navigation-menu"
         items={[
@@ -788,7 +784,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -815,7 +810,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -878,7 +872,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -934,7 +927,6 @@ interface NavigationMenuLinkProps
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -956,7 +948,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="navigation-menu"
         items={[
           {
@@ -984,7 +975,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="navigation-menu"
         items={[
           { title: "", content: tContent("notes.item1") },
@@ -998,7 +988,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={analyticsCols}
         items={[
           {
@@ -1011,7 +1000,6 @@ interface NavigationMenuLinkProps
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

@@ -171,7 +171,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
     elas.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="context-display"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -213,7 +212,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -222,7 +220,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -301,7 +298,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -324,7 +320,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -349,7 +344,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
   {/snippet}
 
   <DocsVariants
-    title={$tStore('variants.title')}
     note={stripHtml($tStore('variants.note'))}
     componentSlug="context-display"
     items={CONTEXT_DISPLAY_FORMS.map(form => ({
@@ -366,7 +360,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
     o nível não modela — passar do teto e não ter teto.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -381,7 +374,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'ContextDisplay',
@@ -428,7 +420,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -455,7 +446,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
     ausências.
   -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -468,7 +458,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.agentStatus.name'), description: toPlainText($tStore('related.items.agentStatus.description')), path: '?path=/docs/components-conversational-agentstatus--docs' },
       { name: $tStore('related.items.chatThread.name'),  description: toPlainText($tStore('related.items.chatThread.description')),  path: '?path=/docs/components-conversational-chatthread--docs'  },
@@ -479,14 +468,12 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="context-display"
     items={[1, 2, 3, 4, 5, 6].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -501,7 +488,6 @@ export type ContextDisplayForm = 'ring' | 'bar' | 'text';`;
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

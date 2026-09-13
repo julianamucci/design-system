@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DOMPurify from 'dompurify';
 import { Card } from '@/components/ui/card';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 interface DocsKeyboardItem { key: string; description: string }
 
@@ -8,7 +9,6 @@ interface DocsKeyboardItem { key: string; description: string }
 // (`closed/open/disabled`, `onOpen/onClose`, …), então o container recebe só os
 // valores — quem chama passa `Object.values(...)`.
 withDefaults(defineProps<{
-  title: string;
   summary: string;
   items?: string[];
   keyboardTitle?: string;
@@ -23,6 +23,8 @@ withDefaults(defineProps<{
   screenReaderItems: () => [],
   contrast: '',
 });
+
+const title = useTituloDeSecao('acessibilidade');
 </script>
 
 <template>

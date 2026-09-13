@@ -185,7 +185,7 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
       </div>
 
       <ng-container docsMain>
-        <nds-docs-demonstration [title]="t('demonstration.title')" componentSlug="chat-thread">
+        <nds-docs-demonstration componentSlug="chat-thread">
           <div class="nds-stack nds-w-full" data-spacing="lg">
             <!-- A legenda diz QUAL exemplo está desenhado — sem ela, quatro
                  conversas empilhadas viram uma só, e o assunto da demonstração é
@@ -210,7 +210,6 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="t('anatomy.structureCode')"
@@ -218,7 +217,6 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -226,10 +224,9 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [description]="t('import.basic')"
           [code]="t('import.basicCode')"
           [secondaryDescription]="t('import.withStreaming')"
@@ -239,7 +236,6 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
         />
 
         <nds-docs-variants
-          [title]="t('variants.title')"
           [note]="t('variants.note')"
           [items]="variantItems()"
           componentSlug="chat-thread"
@@ -248,13 +244,11 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -263,7 +257,6 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -272,7 +265,6 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -282,25 +274,21 @@ const EMPTY_TOOL_STATE = { pending: '', running: '', done: '', failed: '' };
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="chat-thread"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="chat-thread"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"

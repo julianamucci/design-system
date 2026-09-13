@@ -667,7 +667,7 @@ export function DropdownMenuDocs() {
       {/* Quatro menus, um por célula; a legenda diz a composição e o gatilho diz
           o que o menu é. O `menu` de cada um é o id da demonstração seguido do
           gatilho — com `demo` para os quatro, os eventos não os distinguiriam. */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-grid nds-w-full" data-spacing="md" style={{ "--grid-min": "9rem" } as CSSProperties}>
           <DemoCell caption={tContent("demonstration.labels.basic")}>
             <MenuPreview
@@ -706,7 +706,6 @@ export function DropdownMenuDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={stringsFromDict(tContent, "anatomy")}
         structureCode={tContent("anatomy.structureCode")}
         structureLabel={tContent("anatomy.structureLabel")}
@@ -714,7 +713,6 @@ export function DropdownMenuDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: stringsFromDict(tContent, "usage.guidelines"),
@@ -783,7 +781,6 @@ export function DropdownMenuDocs() {
         a variante destrutiva — é exatamente o que a legenda cobra.
       */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -829,7 +826,7 @@ export function DropdownMenuDocs() {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport title={tContent("import.title")} code={codeImport} />
+      <DocsImport code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       {/* Os seis cards são menus VIVOS, e o código de cada um sai da lista que
@@ -838,7 +835,6 @@ export function DropdownMenuDocs() {
           item. */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="dropdown-menu"
         items={[
@@ -895,7 +891,6 @@ export function DropdownMenuDocs() {
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -927,7 +922,6 @@ export function DropdownMenuDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -990,7 +984,6 @@ export function DropdownMenuDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -1041,7 +1034,6 @@ export function DropdownMenuDocs() {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={stringsFromDict(tContent, "accessibility.items")}
         keyboardTitle={tContent("accessibility.keyboard.title")}
@@ -1057,7 +1049,6 @@ export function DropdownMenuDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="dropdown-menu"
         items={[
           {
@@ -1090,7 +1081,6 @@ export function DropdownMenuDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug="dropdown-menu"
         items={stringsFromDict(tContent, "notes").map((content) => ({ title: "", content }))}
       />
@@ -1100,7 +1090,6 @@ export function DropdownMenuDocs() {
           as linhas cravadas aqui descreviam o payload antigo, com o menu no
           `label`, e ficaram velhas no mesmo dia em que o tipo mudou. */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -1142,7 +1131,6 @@ export function DropdownMenuDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

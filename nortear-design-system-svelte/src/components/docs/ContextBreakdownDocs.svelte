@@ -168,7 +168,6 @@ interface ContextSlice {
     viram um só, e o assunto da demonstração é justamente a diferença entre eles.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="context-breakdown"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -210,7 +209,6 @@ interface ContextSlice {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -219,7 +217,6 @@ interface ContextSlice {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -281,7 +278,6 @@ interface ContextSlice {
   {/snippet}
 
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -304,7 +300,6 @@ interface ContextSlice {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -317,7 +312,6 @@ interface ContextSlice {
     desenho sozinho falharia, e o texto responde.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -332,7 +326,6 @@ interface ContextSlice {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'ContextBreakdown',
@@ -377,7 +370,6 @@ interface ContextSlice {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -404,7 +396,6 @@ interface ContextSlice {
     ausências.
   -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -417,7 +408,6 @@ interface ContextSlice {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.contextDisplay.name'), description: toPlainText($tStore('related.items.contextDisplay.description')), path: '?path=/docs/components-conversational-contextdisplay--docs' },
       { name: $tStore('related.items.chatThread.name'),     description: toPlainText($tStore('related.items.chatThread.description')),     path: '?path=/docs/components-conversational-chatthread--docs'     },
@@ -428,14 +418,12 @@ interface ContextSlice {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="context-breakdown"
     items={[1, 2, 3, 4, 5, 6, 7].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -450,7 +438,6 @@ interface ContextSlice {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

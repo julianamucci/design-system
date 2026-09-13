@@ -11,7 +11,6 @@
       "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role slider"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "volume": "Volume",
         "brightness": "Brilho",
@@ -22,7 +21,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>Raiz</strong> — agrupa as partes e guarda os valores, a faixa e a orientação.",
       "item2": "<strong>Área de interação</strong> — captura arrasto e teclado sobre toda a extensão do trilho, e não só sobre a alça.",
       "item3": "<strong>Trilho</strong> — a barra de fundo sobre a qual o preenchimento corre.",
@@ -38,7 +36,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para valores numéricos contínuos onde a granularidade exata não importa.",
@@ -122,7 +119,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Exiba o valor numérico ao lado do slider.",
         "dont": "Não deixe o valor invisível — usuário não sabe onde está."
@@ -132,11 +128,8 @@
         "dont": "Não use aria-label genérico como \"Slider\"."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "single": "Single",
         "range": "Range",
@@ -152,7 +145,6 @@
         "range": "Duas alças — controlam o início e o fim de um intervalo.",
         "vertical": "Orientação vertical — <code>orientation=\"vertical\"</code> + altura definida no pai."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "volume": {
           "name": "Controle de volume",
@@ -167,7 +159,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -200,7 +191,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -272,7 +262,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -312,7 +301,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
       "items": {
         "item1": "<code>role=\"slider\"</code> em cada alça",
@@ -351,7 +339,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "input": {
           "name": "Input",
@@ -372,14 +359,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Duas anatomias para a alça</strong> — ora ela envolve um <code>&lt;input type=\"range\"&gt;</code>, que já traz papel e limites do navegador, ora ela mesma é o elemento focável, com os limites escritos em ARIA. As duas anunciam a mesma coisa ao leitor de tela; asserção que exige uma delas reprova a outra sem que nada esteja quebrado.",
       "item2": "<strong>Uma alça ou duas</strong> — o que separa os dois modos é a forma do valor entregue ao componente. Cada alça é um controle de verdade: parada de tabulação própria, nome acessível próprio, e os extremos não se cruzam.",
       "item3": "<strong>Mudança contínua vs valor confirmado</strong> — o callback de mudança dispara durante arrasto; use o callback de commit (ao soltar) para analytics e submit, evitando spam.",
       "item4": "<strong>Vertical</strong> — o componente já tem altura mínima própria em pé; defina a altura no container quando quiser um trilho mais longo."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -392,7 +377,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -461,7 +445,6 @@
       "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role slider"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "volume": "Volume",
         "brightness": "Brightness",
@@ -472,7 +455,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>Root</strong> — groups the parts and holds the values, the range and the orientation.",
       "item2": "<strong>Interaction area</strong> — captures drag and keyboard along the whole track, not only over the thumb.",
       "item3": "<strong>Track</strong> — the background bar over which the fill runs.",
@@ -488,7 +470,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for continuous numeric values where exact granularity doesn't matter.",
@@ -572,7 +553,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Display the numeric value next to the slider.",
         "dont": "Don't leave the value invisible — user doesn't know where they are."
@@ -582,11 +562,8 @@
         "dont": "Don't use generic aria-label like \"Slider\"."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "single": "Single",
         "range": "Range",
@@ -602,7 +579,6 @@
         "range": "Two thumbs — control the start and the end of a range.",
         "vertical": "Vertical orientation — <code>orientation=\"vertical\"</code> + height defined on parent."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "volume": {
           "name": "Volume control",
@@ -617,7 +593,6 @@
       }
     },
     "states": {
-      "title": "States",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -650,7 +625,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -722,7 +696,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -762,7 +735,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
       "items": {
         "item1": "<code>role=\"slider\"</code> on each thumb",
@@ -801,7 +773,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "input": {
           "name": "Input",
@@ -822,14 +793,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Two anatomies for the thumb</strong> — sometimes it wraps an <code>&lt;input type=\"range\"&gt;</code>, which already brings role and bounds from the browser; sometimes the thumb itself is the focusable element, with the bounds written in ARIA. Both announce the same thing to a screen reader; an assertion that demands one of them fails the other with nothing broken.",
       "item2": "<strong>One thumb or two</strong> — what separates the two modes is the shape of the value handed to the component. Each thumb is a real control: its own tab stop, its own accessible name, and the ends never cross.",
       "item3": "<strong>Continuous change vs committed value</strong> — the change callback fires during drag; use the commit callback (on release) for analytics and submit to avoid spam.",
       "item4": "<strong>Vertical</strong> — the component already has its own minimum height when upright; set the height on the container when you want a longer track."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -842,7 +811,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -911,7 +879,6 @@
       "aiEntities": "Slider, Range Slider, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role slider"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "volume": "Volumen",
         "brightness": "Brillo",
@@ -922,7 +889,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>Raíz</strong> — agrupa las partes y guarda los valores, el rango y la orientación.",
       "item2": "<strong>Área de interacción</strong> — captura arrastre y teclado en toda la extensión de la pista, no solo sobre el thumb.",
       "item3": "<strong>Pista</strong> — la barra de fondo sobre la que corre el relleno.",
@@ -938,7 +904,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para valores numéricos continuos donde la granularidad exacta no importa.",
@@ -1022,7 +987,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Muestra el valor numérico al lado del slider.",
         "dont": "No dejes el valor invisible — el usuario no sabe dónde está."
@@ -1032,11 +996,8 @@
         "dont": "No uses aria-label genérico como \"Slider\"."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "single": "Single",
         "range": "Range",
@@ -1052,7 +1013,6 @@
         "range": "Dos controles — manejan el inicio y el fin de un intervalo.",
         "vertical": "Orientación vertical — <code>orientation=\"vertical\"</code> + altura definida en el padre."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "volume": {
           "name": "Control de volumen",
@@ -1067,7 +1027,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -1100,7 +1059,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1172,7 +1130,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1212,7 +1169,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.7, 2.5.7 (Dragging Movements), 4.1.2.",
       "items": {
         "item1": "<code>role=\"slider\"</code> en cada thumb",
@@ -1251,7 +1207,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "input": {
           "name": "Input",
@@ -1272,14 +1227,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Dos anatomías para el thumb</strong> — a veces envuelve un <code>&lt;input type=\"range\"&gt;</code>, que ya trae rol y límites del navegador; a veces el propio thumb es el elemento enfocable, con los límites escritos en ARIA. Ambas anuncian lo mismo al lector de pantalla; una aserción que exija una de ellas reprueba la otra sin que nada esté roto.",
       "item2": "<strong>Un control o dos</strong> — lo que separa los dos modos es la forma del valor entregado al componente. Cada control es real: parada de tabulación propia, nombre accesible propio, y los extremos no se cruzan.",
       "item3": "<strong>Cambio continuo vs valor confirmado</strong> — el callback de cambio dispara durante el arrastre; usa el callback de commit (al soltar) para analytics y submit, evitando spam.",
       "item4": "<strong>Vertical</strong> — el componente ya tiene altura mínima propia cuando está de pie; define la altura en el contenedor cuando quieras una pista más larga."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1292,7 +1245,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

@@ -244,7 +244,7 @@ function Textarea({
       }
     >
       {/* ── Demonstração ────────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
           {/* Default */}
           <div className="nds-stack" data-spacing="sm">
@@ -332,7 +332,6 @@ function Textarea({
 
       {/* ── Anatomia ────────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -345,7 +344,6 @@ function Textarea({
 
       {/* ── Quando Usar ─────────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -421,7 +419,6 @@ function Textarea({
 
       {/* ── Do & Don't ──────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -490,13 +487,11 @@ function Textarea({
 
       {/* ── Importação ──────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         code={codeImportBasic}
       />
 
       {/* ── Variantes ───────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         items={[
           {
             trackId: "default",
@@ -559,7 +554,6 @@ function Textarea({
 
       {/* ── Composições ─────────────────────────────────────────────── */}
       <DocsCompositions
-        title={tContent("variants.compositionsTitle")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug="textarea"
         items={[
@@ -735,7 +729,6 @@ function Textarea({
 
       {/* ── Estados ─────────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -753,7 +746,6 @@ function Textarea({
 
       {/* ── Propriedades ────────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -786,7 +778,6 @@ function Textarea({
 
       {/* ── Tokens ──────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -813,7 +804,6 @@ function Textarea({
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.items.item1"),
@@ -835,7 +825,6 @@ function Textarea({
 
       {/* ── Relacionados ────────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           {
             name: tContent("related.items.input.name"),
@@ -862,7 +851,6 @@ function Textarea({
 
       {/* ── Notas ───────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.item1") },
           { title: "", content: tContent("notes.item2") },
@@ -873,7 +861,6 @@ function Textarea({
 
       {/* ── Analytics ───────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -900,7 +887,6 @@ function Textarea({
 
       {/* ── Testes ──────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

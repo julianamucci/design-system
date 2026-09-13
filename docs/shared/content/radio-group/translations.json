@@ -11,7 +11,6 @@
       "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "groupLabel": "Forma de pagamento",
         "card": "Cartão de crédito",
@@ -24,7 +23,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>RadioGroup</strong> — container <code>role=\"radiogroup\"</code> que agrupa os itens e controla a seleção.",
       "item2": "<strong>RadioGroupItem</strong> — botão de rádio individual com <code>role=\"radio\"</code> e <code>value</code> único.",
       "item3": "<strong>RadioGroupIndicator</strong> — bolinha interna, visível apenas no item selecionado.",
@@ -39,7 +37,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para 2–7 opções com seleção única. Para on/off, use <code>Switch</code>; para múltipla, use <code>Checkbox</code>.",
@@ -123,7 +120,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Sempre vincule o Label ao item pelo atributo for, apontando para o id correspondente.",
         "dont": "Não use texto solto ao lado do radio — leitores de tela não associam."
@@ -133,11 +129,8 @@
         "dont": "Não pré-selecione opções sem justificativa de negócio."
       }
     },
-    "import": {
-      "title": "Importação"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "vertical": "Vertical",
         "horizontal": "Horizontal",
@@ -148,7 +141,6 @@
         "horizontal": "Em linha — para 2–3 opções curtas. Marque o grupo com <code>aria-orientation=\"horizontal\"</code>: o mesmo atributo que anuncia a direção das setas dispõe as opções lado a lado.",
         "withDescription": "Cada item com descrição auxiliar abaixo do Label."
       },
-      "compositionsTitle": "Composições",
       "compositions": {
         "inForm": {
           "name": "Em formulário",
@@ -158,7 +150,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -196,7 +187,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -256,7 +246,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Classe",
@@ -288,7 +277,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"radiogroup\"</code> no container e <code>role=\"radio\"</code> em cada item",
@@ -322,7 +310,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "checkbox": {
           "name": "Checkbox",
@@ -343,14 +330,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o roving tabindex, a navegação por setas com seleção em movimento, a exclusividade da escolha dentro do grupo e os papéis ARIA vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-radio-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Seleção automática ao focar</strong> — comportamento padrão em desktop: navegar com setas já seleciona. Em mobile, requer toque.",
       "item3": "<strong>Não pré-selecione</strong> sem motivo de negócio — força o usuário a confirmar a escolha e evita erros silenciosos.",
       "item4": "<strong>Sem layout próprio</strong> — o componente apenas agrupa; use <code>flex</code>/<code>grid</code> em volta de cada par item+label."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes do componente.",
       "table": {
         "event": "Evento",
@@ -363,7 +348,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer em resposta a cada interação.",
@@ -432,7 +416,6 @@
       "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "groupLabel": "Payment method",
         "card": "Credit card",
@@ -445,7 +428,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>RadioGroup</strong> — <code>role=\"radiogroup\"</code> container that groups items and controls selection.",
       "item2": "<strong>RadioGroupItem</strong> — individual radio button with <code>role=\"radio\"</code> and unique <code>value</code>.",
       "item3": "<strong>RadioGroupIndicator</strong> — inner dot, visible only on the selected item.",
@@ -460,7 +442,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for 2–7 options with single selection. For on/off, use <code>Switch</code>; for multiple, use <code>Checkbox</code>.",
@@ -544,7 +525,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Always link the Label to the item through the for attribute, pointing at the matching id.",
         "dont": "Don't use loose text next to the radio — screen readers won't associate."
@@ -554,11 +534,8 @@
         "dont": "Don't pre-select options without business justification."
       }
     },
-    "import": {
-      "title": "Import"
-    },
+    "import": {},
     "variants": {
-      "title": "Variants",
       "items": {
         "vertical": "Vertical",
         "horizontal": "Horizontal",
@@ -569,7 +546,6 @@
         "horizontal": "Inline — for 2–3 short options. Mark the group with <code>aria-orientation=\"horizontal\"</code>: the same attribute that announces the arrow direction lays the options out side by side.",
         "withDescription": "Each item with helper description below the Label."
       },
-      "compositionsTitle": "Compositions",
       "compositions": {
         "inForm": {
           "name": "In a form",
@@ -579,7 +555,6 @@
       }
     },
     "states": {
-      "title": "States",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -617,7 +592,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Prop",
         "type": "Type",
@@ -677,7 +651,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Class",
@@ -709,7 +682,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"radiogroup\"</code> on the container and <code>role=\"radio\"</code> on each item",
@@ -743,7 +715,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "items": {
         "checkbox": {
           "name": "Checkbox",
@@ -764,14 +735,12 @@
       }
     },
     "notes": {
-      "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — the roving tabindex, arrow navigation with selection on move, the single-choice rule within the group, and the ARIA roles come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-radio-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Auto-select on focus</strong> — default behavior on desktop: arrow navigation selects on move. On mobile, requires tap.",
       "item3": "<strong>Don't pre-select</strong> without business reason — forces user to confirm the choice and avoids silent errors.",
       "item4": "<strong>No own layout</strong> — the component only groups; use <code>flex</code>/<code>grid</code> around each item+label pair."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Relevant component events.",
       "table": {
         "event": "Event",
@@ -784,7 +753,6 @@
       }
     },
     "testes": {
-      "title": "Testing Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen in response to each interaction.",
@@ -853,7 +821,6 @@
       "aiEntities": "RadioGroup, Radio, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role radiogroup"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "groupLabel": "Forma de pago",
         "card": "Tarjeta de crédito",
@@ -866,7 +833,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>RadioGroup</strong> — contenedor <code>role=\"radiogroup\"</code> que agrupa los ítems y controla la selección.",
       "item2": "<strong>RadioGroupItem</strong> — botón de radio individual con <code>role=\"radio\"</code> y <code>value</code> único.",
       "item3": "<strong>RadioGroupIndicator</strong> — punto interno, visible solo en el ítem seleccionado.",
@@ -881,7 +847,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para 2–7 opciones con selección única. Para on/off, usa <code>Switch</code>; para múltiple, usa <code>Checkbox</code>.",
@@ -965,7 +930,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Vincula siempre el Label al ítem por el atributo for, apuntando al id correspondiente.",
         "dont": "No uses texto suelto al lado del radio — los lectores de pantalla no asocian."
@@ -975,11 +939,8 @@
         "dont": "No preseleccione opciones sin justificación de negocio."
       }
     },
-    "import": {
-      "title": "Importación"
-    },
+    "import": {},
     "variants": {
-      "title": "Variantes",
       "items": {
         "vertical": "Vertical",
         "horizontal": "Horizontal",
@@ -990,7 +951,6 @@
         "horizontal": "En línea — para 2–3 opciones cortas. Marca el grupo con <code>aria-orientation=\"horizontal\"</code>: el mismo atributo que anuncia la dirección de las flechas coloca las opciones una al lado de la otra.",
         "withDescription": "Cada ítem con descripción auxiliar bajo el Label."
       },
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "inForm": {
           "name": "En formulario",
@@ -1000,7 +960,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "default": {
         "label": "Default",
         "trigger": "—",
@@ -1038,7 +997,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Prop",
         "type": "Tipo",
@@ -1098,7 +1056,6 @@
       }
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token",
         "class": "Clase",
@@ -1130,7 +1087,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 2.1.1, 2.4.3, 2.4.7, 3.3.2, 4.1.2.",
       "items": {
         "item1": "<code>role=\"radiogroup\"</code> en el contenedor y <code>role=\"radio\"</code> en cada ítem",
@@ -1164,7 +1120,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "items": {
         "checkbox": {
           "name": "Checkbox",
@@ -1185,14 +1140,12 @@
       }
     },
     "notes": {
-      "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el roving tabindex, la navegación por flechas con selección en movimiento, la exclusividad de la elección dentro del grupo y los roles ARIA vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-radio-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Selección automática al enfocar</strong> — comportamiento por defecto en desktop: navegar con flechas ya selecciona. En móvil requiere toque.",
       "item3": "<strong>No preseleccione</strong> sin razón de negocio — fuerza al usuario a confirmar la elección y evita errores silenciosos.",
       "item4": "<strong>Sin layout propio</strong> — el componente solo agrupa; usa <code>flex</code>/<code>grid</code> alrededor de cada par ítem+label."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Eventos relevantes del componente.",
       "table": {
         "event": "Evento",
@@ -1205,7 +1158,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir en respuesta a cada interacción.",

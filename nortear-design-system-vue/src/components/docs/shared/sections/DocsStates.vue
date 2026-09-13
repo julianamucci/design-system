@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 interface DocsStateItem { label: string; trigger: string; behavior: string }
 
@@ -18,10 +19,11 @@ interface DocsStateItem { label: string; trigger: string; behavior: string }
  * praticam.
  */
 defineProps<{
-  title: string;
   cols: { state: string; trigger: string; behavior: string };
   items: DocsStateItem[];
 }>();
+
+const title = useTituloDeSecao('estados');
 </script>
 
 <template>

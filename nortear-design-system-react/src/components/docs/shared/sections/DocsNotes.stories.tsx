@@ -21,10 +21,6 @@ const meta = {
     docs: { description: { component: "Notas de implementação: decisões que o código carrega e que não se leem no uso. É onde mora o porquê, e é o que evita que a próxima pessoa \"conserte\" o que estava certo." } },
   },
   argTypes: {
-    title: {
-      control: "text",
-      description: "Título da seção."
-    },
     items: {
       control: "object",
       description: "Título e conteúdo de cada nota."
@@ -35,7 +31,6 @@ const meta = {
     }
   },
   args: {
-    title: "Notas de implementação",
     items: [
       {
         title: "Altura é resultado, não medida",

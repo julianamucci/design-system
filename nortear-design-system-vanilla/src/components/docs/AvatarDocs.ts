@@ -242,7 +242,6 @@ export function createAvatarDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-cluster';
@@ -276,7 +275,6 @@ export function createAvatarDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -290,7 +288,6 @@ export function createAvatarDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [
@@ -349,7 +346,6 @@ export function createAvatarDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -382,7 +378,6 @@ export function createAvatarDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import { createAvatar, createAvatarRoot, createAvatarImage, createAvatarFallback } from '@/components/ui/avatar';`,
           secondaryDescription: t('import.withIcon'),
@@ -422,7 +417,6 @@ group.appendChild(createAvatarGroupCount({ text: '+3' }));`;
 avatar.appendChild(createAvatarBadge({ 'aria-label': 'Online' }));`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               name: 'com imagem',
@@ -460,7 +454,6 @@ avatar.appendChild(createAvatarBadge({ 'aria-label': 'Online' }));`;
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -510,7 +503,6 @@ export interface AvatarFallbackOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.avatarTitle'),
@@ -546,7 +538,6 @@ export interface AvatarFallbackOptions {
 
       case 'tokens': {
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -569,7 +560,6 @@ export interface AvatarFallbackOptions {
 
       case 'acessibilidade':
         return createDocsAccessibility({
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -588,7 +578,6 @@ export interface AvatarFallbackOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'Badge',       description: toPlainText(t('related.badge')),       path: '?path=/docs/components-feedback-badge--docs' },
             { name: 'AspectRatio', description: toPlainText(t('related.aspectRatio')), path: '?path=/docs/components-layout-aspectratio--docs' },
@@ -599,7 +588,6 @@ export interface AvatarFallbackOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -609,7 +597,6 @@ export interface AvatarFallbackOptions {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -625,7 +612,6 @@ export interface AvatarFallbackOptions {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

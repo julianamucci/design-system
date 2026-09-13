@@ -159,7 +159,7 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-stack nds-w-full">
           <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
             <Label htmlFor="demo-default">
@@ -190,7 +190,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Anatomia ──────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -202,7 +201,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Quando Usar ───────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -246,7 +244,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Do & Don't ────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -289,13 +286,11 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Importação ────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         code={codeImportBasic}
       />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
-        title={tContent("variants.title")}
         componentSlug="label"
         items={[
           {
@@ -317,7 +312,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Estados ───────────────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -344,7 +338,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -388,7 +381,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Tokens ────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -409,7 +401,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -426,7 +417,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Relacionados ──────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug="label"
         items={[
           {
@@ -454,7 +444,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Notas ─────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -464,7 +453,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: "Evento",
           trigger: "Gatilho",
@@ -481,7 +469,6 @@ interface LabelProps extends React.ComponentProps<"label"> {}`;
 
       {/* ── Testes ────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

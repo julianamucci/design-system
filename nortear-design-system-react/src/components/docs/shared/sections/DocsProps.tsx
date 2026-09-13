@@ -1,3 +1,4 @@
+import { useTituloDeSecao } from './useTituloDeSecao';
 import { Card } from '@/components/ui/card';
 import { CodeBlock } from '@/components/ui/code-block';
 import {
@@ -25,7 +26,6 @@ export interface DocsPropsTableDef {
 }
 
 export interface DocsPropsProps {
-  title: string;
   tables: DocsPropsTableDef[];
   interfaceCode?: string;
   extensibilityTitle?: string;
@@ -72,7 +72,8 @@ function PropsTable({ def }: { def: DocsPropsTableDef }) {
   );
 }
 
-export function DocsProps({ title, tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode, language = 'tsx', copyLabel, copiedLabel }: DocsPropsProps) {
+export function DocsProps({ tables, interfaceCode, extensibilityTitle, extensibilityNotes, extensibilityCode, language = 'tsx', copyLabel, copiedLabel }: DocsPropsProps) {
+  const title = useTituloDeSecao('propriedades');
   return (
     <section id="propriedades">
       <h2 className="nds-section-title">{title}</h2>

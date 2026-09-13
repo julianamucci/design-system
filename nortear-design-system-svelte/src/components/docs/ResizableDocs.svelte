@@ -205,7 +205,7 @@ interface HandleProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-stack nds-w-full" data-spacing="lg">
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.horizontal')}</p>
@@ -264,7 +264,6 @@ interface HandleProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -276,7 +275,6 @@ interface HandleProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -337,7 +335,6 @@ interface HandleProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -413,14 +410,12 @@ interface HandleProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     code={codeImportBasic}
     secondaryCode={codeImportAliased}
   />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     items={[
       { trackId: 'horizontal', name: $tStore('variants.items.horizontal'), description: stripHtml($tStore('variants.styles.horizontal')), code: horizontalCode, preview: variantHorizontal },
       { trackId: 'vertical', name: $tStore('variants.items.vertical'),   description: stripHtml($tStore('variants.styles.vertical')),   code: verticalCode,   preview: variantVertical   },
@@ -478,7 +473,6 @@ interface HandleProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -495,7 +489,6 @@ interface HandleProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'PaneGroup',
@@ -553,7 +546,6 @@ interface HandleProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -577,7 +569,6 @@ interface HandleProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       stripHtml($tStore('accessibility.items.item1')),
@@ -602,7 +593,6 @@ interface HandleProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.scrollArea.name'),  description: $tStore('related.items.scrollArea.description'),  path: '?path=/docs/components-layout-scrollarea--docs'   },
       { name: $tStore('related.items.sheet.name'),       description: $tStore('related.items.sheet.description'),       path: '?path=/docs/components-overlay-sheet--docs'        },
@@ -613,7 +603,6 @@ interface HandleProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: stripHtml($tStore('notes.item1')) },
       { title: '', content: stripHtml($tStore('notes.item2')) },
@@ -624,7 +613,6 @@ interface HandleProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -637,7 +625,6 @@ interface HandleProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

@@ -1,3 +1,4 @@
+import { tituloDeSecao } from './tituloDeSecao';
 import DOMPurify from 'dompurify';
 import { createCard } from '@/components/ui/card';
 
@@ -11,7 +12,6 @@ export interface DocsDoDontPair {
 }
 
 export interface DocsDoDontProps {
-  title: string;
   pairs: DocsDoDontPair[];
 }
 
@@ -21,7 +21,7 @@ export function createDocsDoDont(props: DocsDoDontProps): HTMLElement {
 
   const h2 = document.createElement('h2');
   h2.className = 'nds-section-title';
-  h2.textContent = props.title;
+  h2.textContent = tituloDeSecao('do-dont');
 
   const card = createCard({ className: 'nds-cluster nds-p-4 nds-mt-2' });
 

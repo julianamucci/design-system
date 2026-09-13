@@ -26,7 +26,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "running": "Enquanto corre, e se sabe de quantas",
         "unknownTotal": "Enquanto corre, sem saber de quantas",
@@ -35,7 +34,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "structureLabel": "Estrutura",
       "item1": "O rótulo abre a peça e diz o que está sendo feito. É também o nome pelo qual a barra é anunciada.",
       "item2": "A conta fica à direita do rótulo, já escrita no idioma de quem lê, e fica fora do que é anunciado.",
@@ -47,7 +45,6 @@
       }
     },
     "usage": {
-      "title": "Quando usar",
       "guidelines": {
         "title": "Diretrizes",
         "item1": "Use para uma tarefa que continua correndo depois de a resposta terminar, e que se mede em unidades feitas.",
@@ -144,7 +141,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Sem total conhecido, a barra diz que não há estimativa.",
         "dont": "O total desconhecido chega como zero, e a trilha vazia lê como um trabalho que acabou de começar."
@@ -155,7 +151,6 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: labels,\n  onAction: (intent) => aplicar(intent),\n});",
@@ -170,7 +165,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Quando acontece",
@@ -203,7 +197,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -281,7 +274,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Onde é lido",
@@ -343,7 +335,6 @@
       }
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "A palavra descreve o estado e é a única parte que não sai do que é lido em voz; a conta fica fora, a barra mantém o papel e o nome, e nada aqui é região viva — o que diz que a tela ainda se escreve é a peça se declarar ocupada.",
       "items": {
         "item1": "A palavra do estado está sempre presente: a barra não descreve estado sozinha, e dois dos cinco estados desenham igual.",
@@ -374,7 +365,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado da execução",
@@ -401,11 +391,9 @@
       "item4": "O traço que percorre o trilho vale só enquanto o trabalho corre. Parado sem total, ele diria que ainda anda, que é pior que não dizer nada.",
       "item5": "O arredondamento da fração é para baixo. Ao mais próximo, faltando uma unidade de cinco mil a barra encheria, e barra cheia ao lado da palavra é a peça discordando de si.",
       "item6": "A conta e a barra dizem a mesma coisa, e a que sai do que é lido em voz é a que se reescreve. A barra entrega o número a quem perguntar; ela não o empurra a quem está lendo outra coisa.",
-      "item7": "A peça não executa nada. Ela não dispara, não conta, não para e não retoma: desenha o andamento que recebe e avisa que alguém pediu a ação.",
-      "title": "Notas"
+      "item7": "A peça não executa nada. Ela não dispara, não conta, não para e não retoma: desenha o andamento que recebe e avisa que alguém pediu a ação."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "A página dispara os eventos de documentação; a peça em si não instrumenta a ação, que é do produto.",
       "table": {
         "event": "Evento",
@@ -423,7 +411,6 @@
       }
     },
     "testes": {
-      "title": "Testes",
       "functional": {
         "title": "Funcionais",
         "description": "O que a play function verifica em cada story.",
@@ -563,7 +550,6 @@
       }
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "running": "While it runs, and how many there are is known",
         "unknownTotal": "While it runs, with no idea how many there are",
@@ -572,7 +558,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "structureLabel": "Structure",
       "item1": "The label opens the piece and says what is being done. It is also the name the bar is announced by.",
       "item2": "The tally sits to the right of the label, already written in the reader's language, and stays out of what is announced.",
@@ -584,7 +569,6 @@
       }
     },
     "usage": {
-      "title": "When to use",
       "guidelines": {
         "title": "Guidelines",
         "item1": "Use it for a task that keeps running after the answer is finished, and that is measured in units done.",
@@ -681,7 +665,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "With no known total, the bar says there is no estimate.",
         "dont": "The unknown total arrives as zero, and the empty track reads as a job that has just started."
@@ -692,7 +675,6 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic use",
       "basicCode": {
         "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: labels,\n  onAction: (intent) => aplicar(intent),\n});",
@@ -707,7 +689,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "When it happens",
@@ -740,7 +721,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -818,7 +798,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Where it is read",
@@ -880,7 +859,6 @@
       }
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "The word describes the state and is the only part that does not leave what is read aloud; the tally stays out, the bar keeps its role and its name, and nothing here is a live region — what says the screen is still being written is the piece declaring itself busy.",
       "items": {
         "item1": "The word of the state is always present: the bar does not describe a state on its own, and two of the five states draw the same.",
@@ -911,7 +889,6 @@
       }
     },
     "related": {
-      "title": "Related",
       "items": {
         "agentStatus": {
           "name": "Run status",
@@ -938,11 +915,9 @@
       "item4": "The stripe running across the track only holds while the job runs. Stopped with no total, it would say it is still moving, which is worse than saying nothing.",
       "item5": "The fraction rounds down. Rounding to the nearest, one unit short of five thousand would fill the bar, and a full bar next to the word is the piece disagreeing with itself.",
       "item6": "The tally and the bar say the same thing, and the one that leaves what is read aloud is the one that rewrites itself. The bar hands the number to whoever asks; it does not push it at whoever is reading something else.",
-      "item7": "The piece runs nothing. It does not start, does not count, does not stop and does not resume: it draws the progress it receives and reports that someone asked for the action.",
-      "title": "Notes"
+      "item7": "The piece runs nothing. It does not start, does not count, does not stop and does not resume: it draws the progress it receives and reports that someone asked for the action."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "The page fires the documentation events; the piece itself does not instrument the action, which belongs to the product.",
       "table": {
         "event": "Event",
@@ -960,7 +935,6 @@
       }
     },
     "testes": {
-      "title": "Tests",
       "functional": {
         "title": "Functional",
         "description": "What the play function checks in each story.",
@@ -1100,7 +1074,6 @@
       }
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "running": "Mientras corre, y se sabe de cuántas",
         "unknownTotal": "Mientras corre, sin saber de cuántas",
@@ -1109,7 +1082,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "structureLabel": "Estructura",
       "item1": "La etiqueta abre la pieza y dice qué se está haciendo. Es también el nombre con el que se anuncia la barra.",
       "item2": "La cuenta va a la derecha de la etiqueta, ya escrita en el idioma de quien lee, y queda fuera de lo que se anuncia.",
@@ -1121,7 +1093,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo usar",
       "guidelines": {
         "title": "Directrices",
         "item1": "Úsalo para una tarea que sigue corriendo después de que la respuesta termina, y que se mide en unidades hechas.",
@@ -1218,7 +1189,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Sin total conocido, la barra dice que no hay estimación.",
         "dont": "El total desconocido llega como cero, y el riel vacío se lee como un trabajo que acaba de empezar."
@@ -1229,7 +1199,6 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Uso básico",
       "basicCode": {
         "vanilla": "import { createJobProgress } from '@/components/ui/job-progress';\n\ncreateJobProgress({\n  label: 'Indexando o repositório',\n  status: 'running',\n  count: { done: 1240, total: 5000 },\n  labels: labels,\n  onAction: (intent) => aplicar(intent),\n});",
@@ -1244,7 +1213,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cuándo ocurre",
@@ -1277,7 +1245,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",
@@ -1355,7 +1322,6 @@
       }
     },
     "tokens": {
-      "title": "Tokens",
       "table": {
         "token": "Token",
         "value": "Dónde se lee",
@@ -1417,7 +1383,6 @@
       }
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "La palabra describe el estado y es la única parte que no sale de lo que se lee en voz; la cuenta queda fuera, la barra conserva el rol y el nombre, y nada aquí es región viva — lo que dice que la pantalla todavía se escribe es que la pieza se declara ocupada.",
       "items": {
         "item1": "La palabra del estado está siempre presente: la barra no describe un estado por sí sola, y dos de los cinco estados se dibujan igual.",
@@ -1448,7 +1413,6 @@
       }
     },
     "related": {
-      "title": "Relacionados",
       "items": {
         "agentStatus": {
           "name": "Estado de la ejecución",
@@ -1475,11 +1439,9 @@
       "item4": "El trazo que recorre el riel vale solo mientras el trabajo corre. Detenido sin total, diría que todavía avanza, que es peor que no decir nada.",
       "item5": "El redondeo de la fracción es hacia abajo. Al más cercano, faltando una unidad de cinco mil la barra se llenaría, y una barra llena junto a la palabra es la pieza contradiciéndose.",
       "item6": "La cuenta y la barra dicen lo mismo, y la que sale de lo que se lee en voz es la que se reescribe. La barra entrega el número a quien pregunta; no lo empuja a quien está leyendo otra cosa.",
-      "item7": "La pieza no ejecuta nada. No lanza, no cuenta, no detiene y no reanuda: dibuja el avance que recibe y avisa que alguien pidió la acción.",
-      "title": "Notas"
+      "item7": "La pieza no ejecuta nada. No lanza, no cuenta, no detiene y no reanuda: dibuja el avance que recibe y avisa que alguien pidió la acción."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "La página dispara los eventos de documentación; la pieza en sí no instrumenta la acción, que es del producto.",
       "table": {
         "event": "Evento",
@@ -1497,7 +1459,6 @@
       }
     },
     "testes": {
-      "title": "Pruebas",
       "functional": {
         "title": "Funcionales",
         "description": "Lo que la play function verifica en cada story.",

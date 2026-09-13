@@ -11,7 +11,6 @@
       "aiEntities": "Form, React, Vue, Svelte, Vanilla, Angular, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
-      "title": "Demonstração",
       "labels": {
         "nameLabel": "Nome completo",
         "namePlaceholder": "ex: João da Silva",
@@ -38,7 +37,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomia",
       "item1": "<strong>FormField</strong> — <code>&lt;div&gt;</code> com <code>data-slot=\"field\"</code> em coluna, agrupando label + controle + descrição + erro.",
       "item2": "<strong>Label</strong> — <code>&lt;label&gt;</code> associado ao controle via <code>htmlFor</code>/<code>id</code> gerado automaticamente quando ausente.",
       "item3": "<strong>Descrição</strong> — parágrafo opcional abaixo do controle com texto de apoio em cor <code>--muted-foreground</code>.",
@@ -54,7 +52,6 @@
       }
     },
     "usage": {
-      "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Toda entrada de dado em formulário deve ser envolvida em <code>FormField</code> para garantir associação label-controle.",
@@ -116,7 +113,6 @@
       }
     },
     "doDont": {
-      "title": "Boas práticas",
       "pair1": {
         "do": "Label visível + descrição abaixo do controle quando o formato exige explicação.",
         "dont": "Apenas placeholder como rótulo — desaparece ao digitar e quebra acessibilidade."
@@ -131,13 +127,10 @@
       }
     },
     "import": {
-      "title": "Importação",
       "basic": "Import básico:"
     },
     "variants": {
-      "title": "Variantes",
       "note": "O Form não tem variantes via prop. Sua aparência depende dos elementos opcionais (description, error) e do controle envolvido.",
-      "compositionsTitle": "Composições",
       "compositions": {
         "fieldset": {
           "name": "Fieldset com legend",
@@ -159,7 +152,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Como ativar",
@@ -182,7 +174,6 @@
       }
     },
     "props": {
-      "title": "Propriedades",
       "interface": "Interface TypeScript",
       "fieldTitle": "createFormField",
       "fieldsetTitle": "createFieldset",
@@ -204,7 +195,6 @@
       "extensibility": "O campo aceita qualquer controle como conteúdo — campo de texto, área de texto, seleção, marcação e composições. A classe do elemento continua disponível para customizações pontuais com tokens do projeto."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Classe",
@@ -220,7 +210,6 @@
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
-      "title": "Acessibilidade",
       "summary": "O Form usa <code>&lt;label&gt;</code> + <code>htmlFor</code> nativos para associar rótulo e controle, e <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para agrupamento semântico. Cumpre WCAG 2.2 AA: 1.3.1 (informação e relações), 3.3.1 (identificação de erro), 3.3.2 (rótulos ou instruções), 4.1.3 (mensagens de status).",
       "item1": "<strong>Associação automática</strong> — quando o controle não tem <code>id</code>, é gerado automaticamente e o label recebe o <code>htmlFor</code> correspondente.",
       "item2": "<strong>Erro com aria-live</strong> — o parágrafo de erro tem <code>aria-live=\"polite\"</code>, sendo anunciado pelo leitor de tela quando aparece.",
@@ -235,7 +224,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "input": "Campo de texto de linha única usado dentro do FormField.",
       "textarea": "Campo de texto de múltiplas linhas usado dentro do FormField.",
       "select": "Seleção em lista fixa, comum em FormField.",
@@ -243,7 +231,6 @@
       "label": "Rótulo acessível — usado internamente pelo FormField."
     },
     "notes": {
-      "title": "Notas de Implementação",
       "tip1": "O <code>FormField</code> gera um <code>id</code> automático no controle quando ausente, garantindo a associação label-controle.",
       "tip2": "Para validação visual, aplique <code>aria-invalid=\"true\"</code> no controle e passe a mensagem na prop <code>error</code> — o estilo do controle reage via seletor de atributo.",
       "tip3": "Use o <code>Fieldset</code> mesmo para grupos pequenos (2 campos) quando o rótulo de grupo agrega contexto (ex.: 'Endereço de cobrança').",
@@ -251,7 +238,6 @@
       "tip5": "Para descrição com formatação rica (links, código), sanitize o HTML com <code>DOMPurify.sanitize()</code> no próprio ponto de inserção."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastreie eventos de formulário apenas em funis críticos. Nunca envie valores de campos sensíveis (senha, documento, cartão).",
       "table": {
         "event": "Evento",
@@ -278,7 +264,6 @@
       }
     },
     "testes": {
-      "title": "Critérios de Teste",
       "functional": {
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Form.",
@@ -370,7 +355,6 @@
       "aiEntities": "Form, React, Vue, Svelte, Vanilla, Angular, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
-      "title": "Demonstration",
       "labels": {
         "nameLabel": "Full name",
         "namePlaceholder": "e.g. John Smith",
@@ -397,7 +381,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomy",
       "item1": "<strong>FormField</strong> — <code>&lt;div&gt;</code> with <code>data-slot=\"field\"</code> in a column, grouping label + control + description + error.",
       "item2": "<strong>Label</strong> — <code>&lt;label&gt;</code> associated with the control via <code>htmlFor</code>/<code>id</code> auto-generated when missing.",
       "item3": "<strong>Description</strong> — optional paragraph below the control with helper text in <code>--muted-foreground</code> color.",
@@ -413,7 +396,6 @@
       }
     },
     "usage": {
-      "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Every form data entry should be wrapped in <code>FormField</code> to ensure label-control association.",
@@ -475,7 +457,6 @@
       }
     },
     "doDont": {
-      "title": "Best practices",
       "pair1": {
         "do": "Visible label + description below the control when the format needs explanation.",
         "dont": "Placeholder only as a label — it disappears when typing and breaks accessibility."
@@ -490,13 +471,10 @@
       }
     },
     "import": {
-      "title": "Import",
       "basic": "Basic import:"
     },
     "variants": {
-      "title": "Variants",
       "note": "Form has no variants via prop. Its appearance depends on optional elements (description, error) and the wrapped control.",
-      "compositionsTitle": "Compositions",
       "compositions": {
         "fieldset": {
           "name": "Fieldset with legend",
@@ -518,7 +496,6 @@
       }
     },
     "states": {
-      "title": "States",
       "cols": {
         "state": "State",
         "trigger": "How to activate",
@@ -541,7 +518,6 @@
       }
     },
     "props": {
-      "title": "Properties",
       "interface": "TypeScript Interface",
       "fieldTitle": "createFormField",
       "fieldsetTitle": "createFieldset",
@@ -563,7 +539,6 @@
       "extensibility": "The field accepts any control as its content — text field, text area, select, checkbox and compositions. The element's class stays available for targeted styling with project tokens."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "CSS Token",
         "class": "Class",
@@ -579,7 +554,6 @@
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
-      "title": "Accessibility",
       "summary": "Form uses native <code>&lt;label&gt;</code> + <code>htmlFor</code> to associate label and control, and <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> for semantic grouping. Meets WCAG 2.2 AA: 1.3.1 (info and relationships), 3.3.1 (error identification), 3.3.2 (labels or instructions), 4.1.3 (status messages).",
       "item1": "<strong>Automatic association</strong> — when the control has no <code>id</code>, one is generated and the label receives the matching <code>htmlFor</code>.",
       "item2": "<strong>Error with aria-live</strong> — the error paragraph has <code>aria-live=\"polite\"</code> and is announced by screen readers when it appears.",
@@ -594,7 +568,6 @@
       }
     },
     "related": {
-      "title": "Related Components",
       "input": "Single-line text field used inside FormField.",
       "textarea": "Multi-line text field used inside FormField.",
       "select": "Selection from a fixed list, common in FormField.",
@@ -602,7 +575,6 @@
       "label": "Accessible label — used internally by FormField."
     },
     "notes": {
-      "title": "Implementation Notes",
       "tip1": "<code>FormField</code> auto-generates an <code>id</code> on the control when missing, ensuring label-control association.",
       "tip2": "For visual validation, apply <code>aria-invalid=\"true\"</code> on the control and pass the message to the <code>error</code> prop — the control style reacts via attribute selector.",
       "tip3": "Use <code>Fieldset</code> even for small groups (2 fields) when the group label adds context (e.g., 'Billing address').",
@@ -610,7 +582,6 @@
       "tip5": "For rich-formatted description (links, code), sanitize the HTML with <code>DOMPurify.sanitize()</code> at the insertion point itself."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Track form events only in critical funnels. Never send values of sensitive fields (password, SSN, credit card).",
       "table": {
         "event": "Event",
@@ -637,7 +608,6 @@
       }
     },
     "testes": {
-      "title": "Test Criteria",
       "functional": {
         "title": "Functional Behavior",
         "description": "What should happen for each Form configuration.",
@@ -729,7 +699,6 @@
       "aiEntities": "Form, React, Vue, Svelte, Vanilla, Angular, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
-      "title": "Demostración",
       "labels": {
         "nameLabel": "Nombre completo",
         "namePlaceholder": "ej: Juan García",
@@ -756,7 +725,6 @@
       }
     },
     "anatomy": {
-      "title": "Anatomía",
       "item1": "<strong>FormField</strong> — <code>&lt;div&gt;</code> con <code>data-slot=\"field\"</code> en columna, agrupando label + control + descripción + error.",
       "item2": "<strong>Label</strong> — <code>&lt;label&gt;</code> asociado al control vía <code>htmlFor</code>/<code>id</code> generado automáticamente cuando falta.",
       "item3": "<strong>Descripción</strong> — párrafo opcional debajo del control con texto de apoyo en color <code>--muted-foreground</code>.",
@@ -772,7 +740,6 @@
       }
     },
     "usage": {
-      "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Toda entrada de dato en un formulario debe envolverse en <code>FormField</code> para garantizar la asociación label-control.",
@@ -834,7 +801,6 @@
       }
     },
     "doDont": {
-      "title": "Buenas prácticas",
       "pair1": {
         "do": "Label visible + descripción debajo del control cuando el formato necesita explicación.",
         "dont": "Solo placeholder como rótulo — desaparece al escribir y rompe la accesibilidad."
@@ -849,13 +815,10 @@
       }
     },
     "import": {
-      "title": "Importación",
       "basic": "Import básico:"
     },
     "variants": {
-      "title": "Variantes",
       "note": "El Form no tiene variantes vía prop. Su apariencia depende de los elementos opcionales (description, error) y del control envuelto.",
-      "compositionsTitle": "Composiciones",
       "compositions": {
         "fieldset": {
           "name": "Fieldset con legend",
@@ -877,7 +840,6 @@
       }
     },
     "states": {
-      "title": "Estados",
       "cols": {
         "state": "Estado",
         "trigger": "Cómo activar",
@@ -900,7 +862,6 @@
       }
     },
     "props": {
-      "title": "Propiedades",
       "interface": "Interfaz TypeScript",
       "fieldTitle": "createFormField",
       "fieldsetTitle": "createFieldset",
@@ -922,7 +883,6 @@
       "extensibility": "El campo acepta cualquier control como contenido — campo de texto, área de texto, selección, casilla y composiciones. La clase del elemento sigue disponible para personalización puntual con tokens del proyecto."
     },
     "tokens": {
-      "title": "Design Tokens",
       "table": {
         "token": "Token CSS",
         "class": "Clase",
@@ -938,7 +898,6 @@
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
-      "title": "Accesibilidad",
       "summary": "Form usa <code>&lt;label&gt;</code> + <code>htmlFor</code> nativos para asociar rótulo y control, y <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> para agrupamiento semántico. Cumple WCAG 2.2 AA: 1.3.1 (información y relaciones), 3.3.1 (identificación de error), 3.3.2 (etiquetas o instrucciones), 4.1.3 (mensajes de estado).",
       "item1": "<strong>Asociación automática</strong> — cuando el control no tiene <code>id</code>, se genera uno y el label recibe el <code>htmlFor</code> correspondiente.",
       "item2": "<strong>Error con aria-live</strong> — el párrafo de error tiene <code>aria-live=\"polite\"</code> y es anunciado por el lector de pantalla al aparecer.",
@@ -953,7 +912,6 @@
       }
     },
     "related": {
-      "title": "Componentes Relacionados",
       "input": "Campo de texto de una sola línea usado dentro del FormField.",
       "textarea": "Campo de texto de múltiples líneas usado dentro del FormField.",
       "select": "Selección de lista fija, común en FormField.",
@@ -961,7 +919,6 @@
       "label": "Rótulo accesible — usado internamente por FormField."
     },
     "notes": {
-      "title": "Notas de Implementación",
       "tip1": "El <code>FormField</code> genera un <code>id</code> automático en el control cuando falta, garantizando la asociación label-control.",
       "tip2": "Para validación visual, aplica <code>aria-invalid=\"true\"</code> en el control y pasa el mensaje a la prop <code>error</code> — el estilo del control reacciona vía selector de atributo.",
       "tip3": "Usa el <code>Fieldset</code> incluso para grupos pequeños (2 campos) cuando el rótulo de grupo aporta contexto (ej.: 'Dirección de facturación').",
@@ -969,7 +926,6 @@
       "tip5": "Para descripción con formato rico (enlaces, código), sanitiza el HTML con <code>DOMPurify.sanitize()</code> en el propio punto de inserción."
     },
     "analytics": {
-      "title": "Analytics",
       "description": "Rastrea eventos de formulario solo en funnels críticos. Nunca envíes valores de campos sensibles (contraseña, documento, tarjeta).",
       "table": {
         "event": "Evento",
@@ -996,7 +952,6 @@
       }
     },
     "testes": {
-      "title": "Criterios de Prueba",
       "functional": {
         "title": "Comportamiento Funcional",
         "description": "Qué debe ocurrir para cada configuración del Form.",

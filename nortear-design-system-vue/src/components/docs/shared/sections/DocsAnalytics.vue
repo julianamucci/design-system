@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { Card } from '@/components/ui/card';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { useTituloDeSecao } from './useTituloDeSecao';
 
 interface DocsAnalyticsEventItem { event: string; trigger: string; payload: string }
 
 defineProps<{
-  title: string;
   cols: { event: string; trigger: string; payload: string };
   items: DocsAnalyticsEventItem[];
 }>();
+
+const title = useTituloDeSecao('analytics');
 </script>
 
 <template>

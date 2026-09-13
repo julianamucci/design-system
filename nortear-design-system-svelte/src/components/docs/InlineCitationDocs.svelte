@@ -243,7 +243,6 @@ interface InlineCitationCommands {
     seguinte.
   -->
   <DocsDemonstration
-    title={$tStore('demonstration.title')}
     componentSlug="inline-citation"
   >
     <div class="nds-stack nds-w-full" data-spacing="lg">
@@ -295,7 +294,6 @@ interface InlineCitationCommands {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[1, 2, 3, 4, 5].map(i => $tStore(`anatomy.item${i}`))}
     structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
@@ -304,7 +302,6 @@ interface InlineCitationCommands {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5, 6].map(i => $tStore(`usage.guidelines.item${i}`)),
@@ -349,7 +346,6 @@ interface InlineCitationCommands {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -372,7 +368,6 @@ interface InlineCitationCommands {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withLabels')}
@@ -385,7 +380,6 @@ interface InlineCitationCommands {
     Os outros dois são o que a mesma prévia faz conforme o que a citação trouxe.
   -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -400,7 +394,6 @@ interface InlineCitationCommands {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: 'InlineCitation',
@@ -479,7 +472,6 @@ interface InlineCitationCommands {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -501,7 +493,6 @@ interface InlineCitationCommands {
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[1, 2, 3, 4, 5, 6, 7, 8].map(i => $tStore(`accessibility.items.item${i}`))}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
@@ -516,7 +507,6 @@ interface InlineCitationCommands {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: $tStore('related.items.chatThread.name'), description: toPlainText($tStore('related.items.chatThread.description')), path: '?path=/docs/components-conversational-chatthread--docs' },
       { name: $tStore('related.items.hoverCard.name'),  description: toPlainText($tStore('related.items.hoverCard.description')),  path: '?path=/docs/components-overlay-hovercard--docs'        },
@@ -527,14 +517,12 @@ interface InlineCitationCommands {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="inline-citation"
     items={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({ title: '', content: $tStore(`notes.item${i}`) }))}
   />
 
   <!-- ── Analytics ──────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -549,7 +537,6 @@ interface InlineCitationCommands {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

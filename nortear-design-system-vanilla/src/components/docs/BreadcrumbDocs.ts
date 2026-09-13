@@ -315,16 +315,15 @@ export function createBreadcrumbDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
             wrap.className = 'nds-stack nds-w-full';
             // Três instâncias no mesmo bloco: o título da seção sozinho não
             // desambigua — sufixo com o nome visível da variante equivalente.
             wrap.append(
-              buildDefaultBreadcrumb(`${t('demonstration.title')} — default`),
-              buildWithEllipsisBreadcrumb(`${t('demonstration.title')} — withEllipsis`),
-              buildCustomSeparatorBreadcrumb(`${t('demonstration.title')} — customSeparator`),
+              buildDefaultBreadcrumb(`${tNav('nav.demonstration')} — default`),
+              buildWithEllipsisBreadcrumb(`${tNav('nav.demonstration')} — withEllipsis`),
+              buildCustomSeparatorBreadcrumb(`${tNav('nav.demonstration')} — customSeparator`),
             );
             return wrap;
           },
@@ -332,7 +331,6 @@ export function createBreadcrumbDocs(): HTMLElement {
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [
             t('anatomy.item1'),
             t('anatomy.item2'),
@@ -348,7 +346,6 @@ export function createBreadcrumbDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4, 5].map((i) => t(`usage.guidelines.item${i}`)),
@@ -393,7 +390,6 @@ export function createBreadcrumbDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -437,7 +433,6 @@ export function createBreadcrumbDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: t('import.basic'),
           code: `import {
   createBreadcrumb,
@@ -499,7 +494,6 @@ ellipsisItem.appendChild(createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas
 // attach DropdownMenu trigger behavior here`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           items: [
             {
               name: 'default',
@@ -531,7 +525,6 @@ ellipsisItem.appendChild(createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -592,7 +585,6 @@ export interface BreadcrumbEllipsisOptions {
         };
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: t('props.breadcrumbTitle'),
@@ -670,7 +662,6 @@ export interface BreadcrumbEllipsisOptions {
 }`;
 
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -694,7 +685,6 @@ export interface BreadcrumbEllipsisOptions {
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             t('accessibility.item1'),
@@ -713,7 +703,6 @@ export interface BreadcrumbEllipsisOptions {
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: 'NavigationMenu', description: toPlainText(t('related.navigationMenu')), path: '?path=/docs/components-navigation-navigationmenu--docs' },
             { name: 'Stepper', description: toPlainText(t('related.stepper')), path: '?path=/docs/components-navigation-stepper--docs' },
@@ -724,7 +713,6 @@ export interface BreadcrumbEllipsisOptions {
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.tip1') },
             { title: '', content: t('notes.tip2') },
@@ -735,7 +723,6 @@ export interface BreadcrumbEllipsisOptions {
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -772,7 +759,6 @@ export interface BreadcrumbEllipsisOptions {
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

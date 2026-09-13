@@ -220,7 +220,7 @@ interface CardPartProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')}>
+  <DocsDemonstration>
     <div class="nds-grid nds-w-full" data-cols="2" data-spacing="md" style="align-items: start">
       <Card>
         <img src={productImage} alt={$tStore('demonstration.labels.productTitle')} class="nds-w-full" style="aspect-ratio: 4 / 3; object-fit: cover" />
@@ -276,7 +276,6 @@ interface CardPartProps {
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -292,7 +291,6 @@ interface CardPartProps {
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [
@@ -356,7 +354,6 @@ interface CardPartProps {
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -427,7 +424,6 @@ interface CardPartProps {
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={codeImportBasic}
     secondaryDescription={$tStore('import.full')}
@@ -436,7 +432,6 @@ interface CardPartProps {
 
   <!-- ── Tamanhos e Composições ─────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.visualTitle')}
     items={[
       { name: 'default',    description: stripHtml($tStore('variants.items.default')),    code: codeDefault,    preview: variantDefault    },
       { name: 'sm',         description: stripHtml($tStore('variants.items.sm')),         code: codeSm,         preview: variantSm         },
@@ -514,7 +509,6 @@ interface CardPartProps {
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: toPlainText($tStore('states.cols.trigger')),
@@ -529,7 +523,6 @@ interface CardPartProps {
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         title: $tStore('props.cardTitle'),
@@ -638,7 +631,6 @@ interface CardPartProps {
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.class'),
@@ -664,7 +656,6 @@ interface CardPartProps {
   <DocsAccessibility
     screenReaderTitle={$tNavStore('common.screenReader')}
     screenReaderItems={screenReaderItems}
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -683,7 +674,6 @@ interface CardPartProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     items={[
       { name: 'Separator', description: $tStore('related.separator'), path: '?path=/docs/components-layout-separator--docs' },
       { name: 'Accordion', description: $tStore('related.accordion'), path: '?path=/docs/components-disclosure-accordion--docs' },
@@ -696,7 +686,6 @@ interface CardPartProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     items={[
       { title: '', content: $tStore('notes.tip1') },
       { title: '', content: $tStore('notes.tip2') },
@@ -707,7 +696,6 @@ interface CardPartProps {
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: toPlainText($tStore('analytics.table.trigger')),
@@ -724,7 +712,6 @@ interface CardPartProps {
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       cols: {

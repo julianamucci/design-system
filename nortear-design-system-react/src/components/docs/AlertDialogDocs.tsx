@@ -359,7 +359,7 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
         />
       }
     >
-      <DocsDemonstration title={tContent("demonstration.title")}>
+      <DocsDemonstration >
         <div className="nds-cluster" data-spacing="md" data-justify="center">
           <AlertDialogDemo
             triggerId="destructive"
@@ -378,7 +378,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       </DocsDemonstration>
 
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -396,7 +395,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -478,7 +476,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -498,11 +495,11 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
             dontPreview: (
               <AlertDialogDemo
                 triggerId="pair1-dont"
+                title={tContent("doDont.pair1.dontExample.title")}
                 location="docs_do_dont"
                 triggerVariant="destructive"
                 actionVariant="destructive"
                 triggerLabel={destructiveLabels.triggerLabel}
-                title={tContent("doDont.pair1.dontExample.title")}
                 description={tContent("doDont.pair1.dontExample.description")}
                 cancel={tContent("doDont.pair1.dontExample.cancel")}
                 action={tContent("doDont.pair1.dontExample.action")}
@@ -540,7 +537,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withTrigger")}
@@ -548,7 +544,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsVariants
-        title={tContent("variants.title")}
         note={tContent("variants.note")}
         items={[
           {
@@ -582,7 +577,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -598,7 +592,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             title: tContent("props.rootTitle"),
@@ -682,7 +675,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.class"),
@@ -713,7 +705,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -734,7 +725,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsRelated
-        title={tContent("related.title")}
         items={[
           { name: "Dialog",  description: toPlainText(tContent("related.dialog")),  path: "?path=/docs/components-overlay-dialog--docs" },
           { name: "Sonner",  description: toPlainText(tContent("related.sonner")),  path: "?path=/docs/components-feedback-sonner--docs" },
@@ -744,7 +734,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsNotes
-        title={tContent("notes.title")}
         items={[
           { title: "", content: tContent("notes.tip1") },
           { title: "", content: tContent("notes.tip2") },
@@ -754,7 +743,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event:   tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -771,7 +759,6 @@ interface AlertDialogCancelProps extends React.ButtonHTMLAttributes<HTMLButtonEl
       />
 
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           cols: {

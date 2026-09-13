@@ -192,9 +192,9 @@
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration title={$tStore('demonstration.title')} componentSlug="editor">
+  <DocsDemonstration componentSlug="editor">
     <div class="nds-stack nds-w-full" data-spacing="md">
-      <div class="nds-cluster" data-spacing="sm" role="group" aria-label={$tStore('demonstration.title')}>
+      <div class="nds-cluster" data-spacing="sm" role="group" aria-label={$tNavStore('nav.demonstration')}>
         {#each demoControls as control (control.key)}
           <Button
             variant="outline"
@@ -221,7 +221,6 @@
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
-    title={$tStore('anatomy.title')}
     items={[
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
@@ -238,7 +237,6 @@
 
   <!-- ── Quando Usar ────────────────────────────────────────────── -->
   <DocsWhenToUse
-    title={$tStore('usage.title')}
     guidelines={{
       title: $tStore('usage.guidelines.title'),
       items: [1, 2, 3, 4, 5].map((n) => $tStore(`usage.guidelines.item${n}`)),
@@ -278,7 +276,6 @@
 
   <!-- ── Do & Don't ─────────────────────────────────────────────── -->
   <DocsDoDont
-    title={$tStore('doDont.title')}
     pairs={[
       {
         doLabel: $tNavStore('common.do'),
@@ -325,7 +322,6 @@
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
   <DocsImport
-    title={$tStore('import.title')}
     description={$tStore('import.basic')}
     code={$tStore('import.basicCode')}
     secondaryDescription={$tStore('import.withStorage')}
@@ -337,7 +333,6 @@
 
   <!-- ── Conjuntos ──────────────────────────────────────────────── -->
   <DocsVariants
-    title={$tStore('variants.title')}
     note={$tStore('variants.note')}
     componentSlug="editor"
     copyLabel={$tNavStore('common.copy')}
@@ -372,7 +367,6 @@
 
   <!-- ── Estados ────────────────────────────────────────────────── -->
   <DocsStates
-    title={$tStore('states.title')}
     cols={{
       state: $tStore('states.cols.state'),
       trigger: $tStore('states.cols.trigger'),
@@ -387,7 +381,6 @@
 
   <!-- ── Propriedades ───────────────────────────────────────────── -->
   <DocsProps
-    title={$tStore('props.title')}
     tables={[
       {
         cols: {
@@ -419,7 +412,6 @@
 
   <!-- ── Tokens ─────────────────────────────────────────────────── -->
   <DocsTokens
-    title={$tStore('tokens.title')}
     cols={{
       token: $tStore('tokens.table.token'),
       value: $tStore('tokens.table.value'),
@@ -438,7 +430,6 @@
 
   <!-- ── Acessibilidade ─────────────────────────────────────────── -->
   <DocsAccessibility
-    title={$tStore('accessibility.title')}
     summary={$tStore('accessibility.summary')}
     items={[
       $tStore('accessibility.item1'),
@@ -461,7 +452,6 @@
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
-    title={$tStore('related.title')}
     componentSlug="editor"
     items={[
       { name: 'Textarea',    description: $tStore('related.textarea'),    path: '?path=/docs/components-form-textarea--docs'    },
@@ -473,7 +463,6 @@
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
-    title={$tStore('notes.title')}
     componentSlug="editor"
     items={[
       { title: '', content: $tStore('notes.tip1') },
@@ -487,7 +476,6 @@
 
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
-    title={$tStore('analytics.title')}
     cols={{
       event: $tStore('analytics.table.event'),
       trigger: $tStore('analytics.table.trigger'),
@@ -502,7 +490,6 @@
 
   <!-- ── Testes ─────────────────────────────────────────────────── -->
   <DocsTestes
-    title={$tStore('testes.title')}
     functional={{
       title: $tStore('testes.functional.title'),
       description: $tStore('testes.functional.description'),

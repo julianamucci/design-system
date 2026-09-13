@@ -231,7 +231,7 @@ export function CodeBlockDocs() {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────────── */}
-      <DocsDemonstration title={tContent("demonstration.title")} componentSlug={SLUG}>
+      <DocsDemonstration componentSlug={SLUG}>
         <div className="nds-w-full nds-stack" data-spacing="md">
           <CodeBlock
             className="nds-w-full"
@@ -293,7 +293,6 @@ export function CodeBlockDocs() {
 
       {/* ── Anatomia ──────────────────────────────────────────────────── */}
       <DocsAnatomy
-        title={tContent("anatomy.title")}
         items={[
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
@@ -310,7 +309,6 @@ export function CodeBlockDocs() {
 
       {/* ── Quando Usar ───────────────────────────────────────────────── */}
       <DocsWhenToUse
-        title={tContent("usage.title")}
         guidelines={{
           title: tContent("usage.guidelines.title"),
           items: [
@@ -390,7 +388,6 @@ export function CodeBlockDocs() {
 
       {/* ── Do & Don't ────────────────────────────────────────────────── */}
       <DocsDoDont
-        title={tContent("doDont.title")}
         pairs={[
           {
             doLabel: tNav("common.do"),
@@ -400,7 +397,6 @@ export function CodeBlockDocs() {
                 className="nds-w-full"
                 code={compositionCode}
                 language="ts"
-                title="lista.ts"
                 highlightLines={[2]}
                 copyLabel={copyLabel}
                 copiedLabel={copiedLabel}
@@ -459,7 +455,6 @@ export function CodeBlockDocs() {
 
       {/* ── Importação ────────────────────────────────────────────────── */}
       <DocsImport
-        title={tContent("import.title")}
         description={tContent("import.basic")}
         code={codeImportBasic}
         secondaryDescription={tContent("import.withFooter")}
@@ -470,7 +465,6 @@ export function CodeBlockDocs() {
       {/* ── Variantes (linguagens suportadas) ─────────────────────────── */}
       <DocsCompositions
         id="variantes"
-        title={tContent("variants.title")}
         note={tContent("variants.note")}
         useWhenLabel={tNav("common.useWhen")}
         componentSlug={SLUG}
@@ -584,7 +578,7 @@ export function CodeBlockDocs() {
             name: tContent("variants.items.withTitle.name"),
             description: tContent("variants.items.withTitle.description"),
             useWhen: tContent("variants.items.withTitle.use"),
-            code: `<CodeBlock\n  code={source}\n  language="ts"\n  title="lista.ts"\n/>`,
+            code: `<CodeBlock\n  code={source}\n  language="ts"\n  \n/>`,
             preview: (
               <CodeBlock
                 className="nds-w-full"
@@ -660,7 +654,6 @@ export function CodeBlockDocs() {
 
       {/* ── Configurações (States) ────────────────────────────────────── */}
       <DocsStates
-        title={tContent("states.title")}
         cols={{
           state: tContent("states.cols.state"),
           trigger: toPlainText(tContent("states.cols.trigger")),
@@ -678,7 +671,6 @@ export function CodeBlockDocs() {
 
       {/* ── Propriedades ──────────────────────────────────────────────── */}
       <DocsProps
-        title={tContent("props.title")}
         tables={[
           {
             cols: {
@@ -720,7 +712,6 @@ export function CodeBlockDocs() {
 
       {/* ── Tokens ────────────────────────────────────────────────────── */}
       <DocsTokens
-        title={tContent("tokens.title")}
         cols={{
           token: tContent("tokens.table.token"),
           value: tContent("tokens.table.group"),
@@ -757,7 +748,6 @@ export function CodeBlockDocs() {
       <DocsAccessibility
         screenReaderTitle={tNav("common.screenReader")}
         screenReaderItems={screenReaderItems}
-        title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
         items={[
           tContent("accessibility.item1"),
@@ -779,7 +769,6 @@ export function CodeBlockDocs() {
 
       {/* ── Relacionados ──────────────────────────────────────────────── */}
       <DocsRelated
-        title={tContent("related.title")}
         componentSlug={SLUG}
         items={[
           { name: "Table", description: toPlainText(tContent("related.table")), path: "?path=/docs/components-tables-table--docs" },
@@ -791,7 +780,6 @@ export function CodeBlockDocs() {
 
       {/* ── Notas ─────────────────────────────────────────────────────── */}
       <DocsNotes
-        title={tContent("notes.title")}
         componentSlug={SLUG}
         items={[
           { title: "", content: tContent("notes.tip1") },
@@ -804,7 +792,6 @@ export function CodeBlockDocs() {
 
       {/* ── Analytics ─────────────────────────────────────────────────── */}
       <DocsAnalytics
-        title={tContent("analytics.title")}
         cols={{
           event: tContent("analytics.table.event"),
           trigger: toPlainText(tContent("analytics.table.trigger")),
@@ -820,7 +807,6 @@ export function CodeBlockDocs() {
 
       {/* ── Testes ────────────────────────────────────────────────────── */}
       <DocsTestes
-        title={tContent("testes.title")}
         functional={{
           title: tContent("testes.functional.title"),
           description: tContent("testes.functional.description"),

@@ -131,7 +131,7 @@ function buildDemoTabs(): HTMLElement {
     items,
     class: 'nds-w-full',
     // ARIA: nome da lista de abas, OBRIGATÓRIO.
-    'aria-label': t('demonstration.title'),
+    'aria-label': tNav('nav.demonstration'),
     onValueChange: (value) => {
       const idx = items.findIndex((i) => i.value === value);
       track('tab_change', {
@@ -248,13 +248,11 @@ export function createTabsDocs(): HTMLElement {
     switch (id) {
       case 'demonstracao':
         return createDocsDemonstration({
-          title: t('demonstration.title'),
           demoFactory: buildDemoTabs,
         });
 
       case 'anatomia':
         return createDocsAnatomy({
-          title: t('anatomy.title'),
           items: [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -262,7 +260,6 @@ export function createTabsDocs(): HTMLElement {
 
       case 'quando-usar':
         return createDocsWhenToUse({
-          title: t('usage.title'),
           guidelines: {
             title: t('usage.guidelines.title'),
             items: [1, 2, 3, 4].map(i => t(`usage.guidelines.item${i}`)),
@@ -307,7 +304,6 @@ export function createTabsDocs(): HTMLElement {
 
       case 'do-dont':
         return createDocsDoDont({
-          title: t('doDont.title'),
           pairs: [
             {
               doLabel: tNav('common.do'),
@@ -375,7 +371,6 @@ export function createTabsDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          title: t('import.title'),
           description: stripHtml(t('description')),
           code: `import { createTabs, type TabsItemDef } from '@/components/ui/tabs';`,
         });
@@ -404,7 +399,6 @@ export function createTabsDocs(): HTMLElement {
 });`;
 
         return createDocsVariants({
-          title: t('variants.title'),
           componentSlug: 'tabs',
           items: [
             {
@@ -416,7 +410,7 @@ export function createTabsDocs(): HTMLElement {
                 const r = createTabs({
                   defaultValue: 'overview',
                   class: 'nds-w-full nds-max-w-md',
-                  'aria-label': t('demonstration.title'),
+                  'aria-label': tNav('nav.demonstration'),
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
@@ -436,7 +430,7 @@ export function createTabsDocs(): HTMLElement {
                   defaultValue: 'overview',
                   variant: 'line',
                   class: 'nds-w-full nds-max-w-md',
-                  'aria-label': t('demonstration.title'),
+                  'aria-label': tNav('nav.demonstration'),
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
@@ -456,7 +450,7 @@ export function createTabsDocs(): HTMLElement {
                   defaultValue: 'overview',
                   orientation: 'vertical',
                   class: 'nds-w-full nds-max-w-md',
-                  'aria-label': t('demonstration.title'),
+                  'aria-label': tNav('nav.demonstration'),
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
@@ -527,7 +521,6 @@ Object.entries(badgeMap).forEach(([value, cfg]) => {
 });`;
 
         return createDocsCompositions({
-          title: t('variants.compositionsTitle'),
           useWhenLabel: tNav('common.useWhen'),
           componentSlug: 'tabs',
           items: [
@@ -617,7 +610,6 @@ Object.entries(badgeMap).forEach(([value, cfg]) => {
 
       case 'estados':
         return createDocsStates({
-          title: t('states.title'),
           cols: {
             state: t('states.cols.state'),
             trigger: toPlainText(t('states.cols.trigger')),
@@ -667,7 +659,6 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
         const DIVERGENCE = ' (Nortear: a factory é sempre não-controlada — use defaultValue e onValueChange)';
 
         return createDocsProps({
-          title: t('props.title'),
           tables: [
             {
               title: 'createTabs(options)',
@@ -704,7 +695,6 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
       case 'tokens': {
         const customizationCode = t('tokens.customizationCode');
         return createDocsTokens({
-          title: t('tokens.title'),
           cols: {
             token: t('tokens.table.token'),
             value: t('tokens.table.class'),
@@ -728,7 +718,6 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
         return createDocsAccessibility({
           screenReaderTitle: tNav('common.screenReader'),
           screenReaderItems: screenReaderItems(),
-          title: t('accessibility.title'),
           summary: t('accessibility.summary'),
           items: [
             stripHtml(t('accessibility.items.item1')),
@@ -755,7 +744,6 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
 
       case 'relacionados':
         return createDocsRelated({
-          title: t('related.title'),
           items: [
             { name: t('related.items.stepper.name'),     description: toPlainText(t('related.items.stepper.description')),     path: '?path=/docs/components-navigation-stepper--docs' },
             { name: t('related.items.accordion.name'),   description: toPlainText(t('related.items.accordion.description')),   path: '?path=/docs/components-disclosure-accordion--docs' },
@@ -766,7 +754,6 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
 
       case 'notas':
         return createDocsNotes({
-          title: t('notes.title'),
           items: [
             { title: '', content: t('notes.item1') },
             { title: '', content: t('notes.item2') },
@@ -779,7 +766,6 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
 
       case 'analytics':
         return createDocsAnalytics({
-          title: t('analytics.title'),
           cols: {
             event: t('analytics.table.event'),
             trigger: toPlainText(t('analytics.table.trigger')),
@@ -794,7 +780,6 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
 
       case 'testes': {
         return createDocsTestes({
-          title: t('testes.title'),
           functional: {
             title: t('testes.functional.title'),
             cols: {

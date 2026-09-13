@@ -544,7 +544,7 @@ const VARIANT_CODE = {
              de link, de definição e de métrica, e cada uma já tem preview vivo
              na seção Variantes — repeti-los aqui fazia a página abrir ensinando
              quatro coisas e a story exercitar uma. -->
-        <nds-docs-demonstration [title]="t('demonstration.title')">
+        <nds-docs-demonstration>
           <p
             class="nds-text-body nds-max-w-sm nds-min-h-50"
             style="contain: layout; position: relative"
@@ -561,7 +561,6 @@ const VARIANT_CODE = {
         </nds-docs-demonstration>
 
         <nds-docs-anatomy
-          [title]="t('anatomy.title')"
           [items]="anatomyItems()"
           [structureLabel]="t('anatomy.structureLabel')"
           [structureCode]="anatomyCode"
@@ -569,7 +568,6 @@ const VARIANT_CODE = {
         />
 
         <nds-docs-when-to-use
-          [title]="t('usage.title')"
           [guidelines]="guidelines()"
           [scenarios]="scenarios()"
           [uxWriting]="uxWriting()"
@@ -577,10 +575,9 @@ const VARIANT_CODE = {
           [dont]="usageDont()"
         />
 
-        <nds-docs-do-dont [title]="t('doDont.title')" [pairs]="doDontPairs()" />
+        <nds-docs-do-dont [pairs]="doDontPairs()" />
 
         <nds-docs-import
-          [title]="t('import.title')"
           [code]="importCode"
           [secondaryCode]="importCodeAvatar"
           componentSlug="hover-card"
@@ -589,20 +586,17 @@ const VARIANT_CODE = {
 
         <nds-docs-compositions
           id="variantes"
-          [title]="t('variants.title')"
           [items]="variantItems()"
           [useWhenLabel]="tNav('common.useWhen')"
           componentSlug="hover-card"
         />
 
         <nds-docs-states
-          [title]="t('states.title')"
           [cols]="statesCols()"
           [items]="stateItems()"
         />
 
         <nds-docs-props
-          [title]="t('props.title')"
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
           [extensibilityTitle]="t('props.extensibilityTitle')"
@@ -611,7 +605,6 @@ const VARIANT_CODE = {
         />
 
         <nds-docs-tokens
-          [title]="t('tokens.title')"
           [cols]="tokensCols()"
           [items]="tokenItems()"
           [customizationTitle]="t('tokens.customizationTitle')"
@@ -619,7 +612,6 @@ const VARIANT_CODE = {
         />
 
         <nds-docs-accessibility
-          [title]="t('accessibility.title')"
           [summary]="t('accessibility.summary')"
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
@@ -629,25 +621,21 @@ const VARIANT_CODE = {
         />
 
         <nds-docs-related
-          [title]="t('related.title')"
           [items]="relatedItems()"
           componentSlug="hover-card"
         />
 
         <nds-docs-notes
-          [title]="t('notes.title')"
           [items]="noteItems()"
           componentSlug="hover-card"
         />
 
         <nds-docs-analytics
-          [title]="t('analytics.title')"
           [cols]="analyticsCols()"
           [items]="analyticsItems()"
         />
 
         <nds-docs-testes
-          [title]="t('testes.title')"
           [functional]="testesFunctional()"
           [accessibility]="testesAccessibility()"
           [visual]="testesVisual()"
