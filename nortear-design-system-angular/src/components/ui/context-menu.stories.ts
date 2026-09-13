@@ -10,6 +10,7 @@ import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wai
 import { pressTab } from '@/lib/press-tab';
 import { NdsButton } from './button';
 import { AREA_CLICK_DIREITO, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
+import { expectInvolucroComCaixa, waitForAncorado } from '@shared/testing/ancoragem';
 
 import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta<ContextMenuArgs> = {
@@ -55,7 +56,7 @@ export const Playground: Story = {
     covers: [
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'functional.item12', 'functional.item13', 'functional.item14', 'functional.item15',
-      // F16 nos três caminhos: o clique direito (foco no painel, e a seta chega
+      // F16 nos três caminhos: o clique direito (foco no panel, e a seta chega
       // ao primeiro item), a TECLA DE MENU de verdade (teclado real do
       // navegador) e o Shift+F10 (foco direto no primeiro item).
       'functional.item16',
@@ -133,6 +134,17 @@ export const Playground: Story = {
       await expect(Math.abs(boxMenu.top - center.y)).toBeLessThan(24);
       // Quem escuta a troca de estado fica sabendo da abertura.
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
+    });
+
+    await step('E o invólucro que a lib posiciona tem CAIXA', async () => {
+      // Aqui não há folga a cobrar: o menu nasce no ponto do ponteiro, não
+      // ancorado num gatilho. Mas o invólucro colapsado é o mesmo defeito —
+      // `position: absolute` na folha tira o painel do fluxo, o elemento que a
+      // lib posiciona vai a 0×0 e a detecção de colisão passa a medir contra uma
+      // caixa sem tamanho. Ver `ancoragem.ts`.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      expectInvolucroComCaixa(panel);
     });
 
     await step('Pelo clique direito o foco ENTRA no menu, e a seta alcança os itens dali', async () => {

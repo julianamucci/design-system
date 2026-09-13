@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { expectOndeDiz, waitForAncorado } from "@shared/testing/ancoragem";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -160,6 +161,16 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(menu.contains(document.activeElement)).toBe(true);
       });
+    });
+
+    await step("E o menu está ANCORADO no lado que publicou", async () => {
+      // `data-side` sozinho mede a AFIRMAÇÃO da lib, não o resultado dela: com o
+      // painel fora do fluxo pela folha, o invólucro que a lib posiciona colapsa
+      // para 0×0 e ela calcula tudo contra uma caixa sem tamanho — publicando o
+      // lado certo e pousando o menu do lado errado. Ver `ancoragem.ts`.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      expectOndeDiz(trigger, panel, 4);
     });
 
     await step("Enter escolhe o item, fecha o menu e devolve o foco ao gatilho", async () => {

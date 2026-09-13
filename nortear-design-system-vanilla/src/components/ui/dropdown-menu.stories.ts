@@ -8,6 +8,7 @@ import { createDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { pressTab } from '@/lib/press-tab';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -168,6 +169,20 @@ export const Playground: Story = {
       await expect(document.body.style.overflow).toBe(args.modal ? 'hidden' : '');
     });
 
+    await step('E o menu está ANCORADO no lado que publicou', async () => {
+      // `data-side` sozinho mede a AFIRMAÇÃO, não o resultado: o passo acima já
+      // o confere, e ele continuaria verde com o painel pousado do lado errado.
+      // Esta fábrica não depende de `position` vindo da folha — `positionFloating`
+      // escreve o `absolute` no painel antes de medir —, e é exatamente por isso
+      // que a asserção tem de existir aqui também: sem ela, a folha compartilhada
+      // volta a declarar o que derruba as outras quatro e esta stack não vê nada.
+      // O painel mora no `<body>`, então a checagem de invólucro é pulada de
+      // propósito dentro do auxiliar; a folga continua valendo.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      expectOndeDiz(trigger, panel, 4);
+    });
+
     await step('Enter escolhe o item, fecha o menu e devolve o foco ao gatilho', async () => {
       const menu = await body.findByRole('menu');
       const perfil = within(menu).getByRole('menuitem', { name: 'Perfil' });
@@ -204,7 +219,7 @@ export const Playground: Story = {
       await body.findByRole('menu');
       const selectsBefore = (args.onSelect as unknown as ReturnType<typeof fn>).mock.calls.length;
 
-      // Uma volta do laço antes do gesto: com `modal` desligado no painel, o
+      // Uma volta do laço antes do gesto: com `modal` desligado no panel, o
       // ouvinte de clique fora é registrado DEPOIS do clique que abriu — para ele
       // não fechar o menu no mesmo gesto —, e sem esta espera a play podia
       // chegar antes dele. Relógio, e não `waitFor`: não há mutação a observar.

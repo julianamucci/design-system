@@ -6,6 +6,7 @@ import ContextMenuDocs from '@/components/docs/ContextMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { gestoOpen, clickOutside, closeMenu } from '@shared/testing/context-menu-area';
+import { expectInvolucroComCaixa, waitForAncorado } from '@shared/testing/ancoragem';
 import { contextMenuSource } from './context-menu.source';
 
 import { figmaDesign } from '@shared/figma/design-links';
@@ -164,6 +165,17 @@ export const Playground: Story = {
       ).toBeLessThan(24);
       // A abertura chega a quem consome: é o aviso que a docs page mede.
       await expect(args.onOpenChange).toHaveBeenLastCalledWith(true);
+    });
+
+    await step('E o invólucro que a lib posiciona tem CAIXA', async () => {
+      // Este menu nasce no ponto do ponteiro, e não ancorado a um elemento: não
+      // há vão a cobrar. O que vale é a outra metade da asserção da família —
+      // com o painel fora do fluxo pela folha (a mesma `nds-dropdown-menu-content`
+      // dos três menus), o invólucro que a lib posiciona colapsa para 0×0 e ela
+      // passa a calcular colisão contra uma caixa sem tamanho. Ver `ancoragem.ts`.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      expectInvolucroComCaixa(panel);
     });
 
     await step('O foco entra no menu ao abrir, e a seta alcança os itens a partir dali', async () => {

@@ -21,7 +21,11 @@
 // que inclui este arquivo compartilhado: daqui o caminho de node_modules é o de
 // docs/shared, que não tem as libs de teste. Mesmo marcador do slider-probe. Se
 // algum dia resolver, ele passa a acusar sozinho.
-import { userEvent, waitFor, expect } from 'storybook/test';
+import { userEvent, waitFor } from 'storybook/test';
+import {
+  expectOndeDiz as expectOndeDizCompartilhado,
+  noLugarDeEspera,
+} from './ancoragem';
 
 export const SELECTOR_PANEL = '[data-slot="hover-card-content"]';
 
@@ -33,35 +37,6 @@ export function panelOpen(): HTMLElement | null {
 /** Todos os painéis abertos — para as stories que mostram vários cartões. */
 export function panelsAbertos(): HTMLElement[] {
   return [...document.body.querySelectorAll<HTMLElement>(SELECTOR_PANEL)];
-}
-
-/**
- * O painel está no LUGAR DE ESPERA da lib, antes da primeira medição?
- *
- * As libs de linhagem Radix (reka no vue, bits no svelte) estacionam o painel
- * fora da tela enquanto o floating-ui não devolveu a posição, com um
- * `transform: translate(0, -200%)` INLINE no invólucro — e o comentário delas
- * diz exatamente isso: "keep off page when measuring". Nesse intervalo o painel
- * já está no DOM, já está visível e já publica `data-side`: tudo que uma sonda
- * costuma checar responde "pronto", e a posição ainda vai mudar.
- *
- * Medido em 2026-09-13, num cartão do Svelte pedindo `side="top"`:
- *
- *   imediato    lado=top     folga 129,6   transform -161,28   ← lugar de espera
- *   após 100ms  lado=bottom  folga 4       transform 77        ← medido, com flip
- *
- * Os dois valores são do MESMO cartão, sem evento nenhum no meio. Quem afirmar
- * posição no primeiro quadro reprova um componente correto — foi o que a
- * primeira versão desta sonda fez nas duas stacks de uma vez.
- *
- * A leitura é do atributo `style` CRU e não do estilo computado, porque o
- * computado devolve a matriz já resolvida em pixels e o `-200%` some. Nas
- * stacks sem esse mecanismo (react, angular, vanilla) a checagem não encontra
- * nada e não custa nada.
- */
-function noLugarDeEspera(panel: HTMLElement): boolean {
-  const involucro = panel.parentElement;
-  return !!involucro?.getAttribute('style')?.includes('-200%');
 }
 
 /**
@@ -171,61 +146,26 @@ export async function panelEntrar(trigger: HTMLElement, panel: HTMLElement): Pro
 }
 
 /**
- * Vão padrão entre gatilho e painel. As cinco stacks declaram o mesmo número;
- * quem mudar um lado sem mudar o outro reprova aqui.
+ * Vão padrão entre gatilho e painel do CARTÃO. As cinco stacks declaram o mesmo
+ * número; quem mudar um lado sem mudar o outro reprova aqui.
  */
 export const SIDE_OFFSET_PADRAO = 4;
 
-export type Ancoragem = {
-  /** O lado que a stack PUBLICA — e que pode contradizer a coordenada. */
-  sidePublicado: string | null;
-  /** Vão medido em cada lado. Positivo = o painel está daquele lado do gatilho. */
-  folga: Record<'top' | 'bottom' | 'left' | 'right', number>;
-  /** Caixa do elemento que a lib posiciona — 0×0 denuncia painel fora do fluxo. */
-  involucro: { width: number; height: number } | null;
-};
-
 /**
- * Geometria do painel EM RELAÇÃO AO GATILHO.
- *
- * Existe porque a ausência dela é o que deixou um defeito atravessar duas
- * folhas. Em 2026-09-04 o tooltip tirou `position: absolute` da folha dele —
- * fora do fluxo, o invólucro que a lib posiciona colapsa para 0×0 e a lib passa
- * a calcular tudo contra uma caixa sem tamanho — e fechou sem asserção. A mesma
- * declaração seguiu em `hover-card.css` por nove dias, com as suítes verdes nas
- * cinco: o cartão APARECE, só aparece no lugar errado, e nem compilador, nem
- * axe, nem asserção de largura olham para onde ele está.
- *
- * `involucro` é o pai do painel. Nas stacks de lib é o elemento posicionado
- * (`.nds-hover-card-positioner` no react e no angular, um invólucro sem classe
- * no vue e no svelte); no vanilla é o `<body>`, porque lá quem se posiciona é o
- * próprio painel. Por isso a asserção de ancoragem NÃO olha para ele: o que vale
- * nas cinco é onde o painel ficou, não quem o pôs lá.
+ * A ancoragem em si mora em `ancoragem.ts`, e não aqui, porque o invariante não
+ * é do cartão: a mesma declaração de folha derrubou tooltip, hover-card e a
+ * família do dropdown-menu. Reexportado para que as stories das cinco stacks
+ * continuem importando de um lugar só.
  */
-export function medirAncoragem(trigger: HTMLElement, panel: HTMLElement): Ancoragem {
-  const g = trigger.getBoundingClientRect();
-  const p = panel.getBoundingClientRect();
-  const pai = panel.parentElement;
-  const c = pai && pai !== panel.ownerDocument.body ? pai.getBoundingClientRect() : null;
-  return {
-    sidePublicado: panel.getAttribute('data-side'),
-    folga: {
-      top: g.top - p.bottom,
-      bottom: p.top - g.bottom,
-      left: g.left - p.right,
-      right: p.left - g.right,
-    },
-    involucro: c ? { width: c.width, height: c.height } : null,
-  };
-}
+export { medirAncoragem, noLugarDeEspera, type Ancoragem } from './ancoragem';
 
 /**
  * O painel DAQUELE gatilho, pelo `aria-describedby`.
  *
  * A story dos lados abre quatro cartões ao mesmo tempo, e parear por ORDEM não
- * serve: a ordem no portal é de montagem, não a da tela, e varia entre as
- * libs. O `aria-describedby` é o vínculo que as cinco já mantêm — é ele que
- * aponta o gatilho para o painel enquanto o painel existe.
+ * serve: a ordem no portal é de montagem, não a da tela, e varia entre as libs.
+ * O `aria-describedby` é o vínculo que as cinco já mantêm — é ele que aponta o
+ * gatilho para o painel enquanto o painel existe.
  */
 export function painelDoGatilho(trigger: HTMLElement): HTMLElement | null {
   const id = trigger.getAttribute('aria-describedby');
@@ -237,8 +177,8 @@ export function painelDoGatilho(trigger: HTMLElement): HTMLElement | null {
  *
  * Pelo `data-slot`, e não pelo nome acessível: as cinco stacks rotulam os
  * gatilhos da story dos lados de jeitos diferentes — duas acrescentam
- * `aria-label` — e parear por nome faria a asserção divergir stack a stack,
- * que é exatamente o que uma asserção compartilhada existe para evitar.
+ * `aria-label` — e parear por nome faria a asserção divergir stack a stack, que
+ * é exatamente o que uma asserção compartilhada existe para evitar.
  */
 export function paresAbertos(canvasElement: HTMLElement): Array<[HTMLElement, HTMLElement]> {
   const gatilhos = [
@@ -250,46 +190,12 @@ export function paresAbertos(canvasElement: HTMLElement): Array<[HTMLElement, HT
     .map(([t, p]) => [t, p]);
 }
 
-/**
- * O painel está ONDE ELE DIZ QUE ESTÁ.
- *
- * Esta é a forma da asserção, e ela não é detalhe. A story `Sides` das cinco
- * stacks já lia `data-side` e conferia só o EIXO, com um comentário explicando
- * que afirmar o lado literal tornaria o tamanho da janela parte do contrato —
- * raciocínio correto, e mesmo assim a asserção media a AFIRMAÇÃO da lib em vez
- * do resultado dela. Com o painel fora do fluxo pela folha, as quatro stacks de
- * lib publicavam `top` e pousavam o cartão mais de 100px ABAIXO do gatilho; os
- * quatro `data-side` eram verdadeiros e o teste passava.
- *
- * Ela só vale depois de `waitForOpen`, que é quem garante que a lib já mediu —
- * ver `noLugarDeEspera`. Medir antes disso reprova componente correto.
- *
- * Cobrar coerência entre o atributo e a coordenada resolve os dois lados: é
- * estritamente mais forte que o eixo, e continua tolerante ao flip — o cartão
- * pode virar à vontade, desde que publique para onde virou.
- *
- * A tolerância é de 1px e não é conforto: o `sideOffset` é inteiro nas cinco, e
- * o meio pixel aparece só quando o gatilho em linha cai em coordenada
- * fracionária. Afrouxar devolveria o defeito — os painéis fora do fluxo erravam
- * por mais de 100px, mas um `shift` mal limitado erra por poucos.
- */
 export function expectOndeDiz(
   trigger: HTMLElement,
   panel: HTMLElement,
   sideOffset = SIDE_OFFSET_PADRAO,
 ): void {
-  const a = medirAncoragem(trigger, panel);
-  const diagnostico =
-    `publicou "${a.sidePublicado}" mas as folgas medidas são ` +
-    (['top', 'bottom', 'left', 'right'] as const)
-      .map((k) => `${k}=${a.folga[k].toFixed(1)}`)
-      .join(' ') +
-    ` · involucro=${a.involucro ? `${a.involucro.width}x${a.involucro.height}` : 'body'}`;
-
-  expect(['top', 'bottom', 'left', 'right'], diagnostico).toContain(a.sidePublicado);
-  const medida = a.folga[a.sidePublicado as 'top' | 'bottom' | 'left' | 'right'];
-  expect(medida, diagnostico).toBeGreaterThan(sideOffset - 1);
-  expect(medida, diagnostico).toBeLessThan(sideOffset + 1);
+  expectOndeDizCompartilhado(trigger, panel, sideOffset);
 }
 
 /** Contraste WCAG entre duas cores computadas (`rgb(...)` / `rgba(...)`). */

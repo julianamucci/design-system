@@ -12,6 +12,7 @@ import { createMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { pressTab } from '@/lib/press-tab';
 import { createButton } from './button';
+import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 
 // ─── Dados da barra ───────────────────────────────────────────────────────────
 //
@@ -211,6 +212,20 @@ export const Playground: Story = {
       });
       // O menu avisa que abriu — é o que alimenta o `menubar_open`.
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
+    });
+
+    await step('E o painel está ANCORADO no lado que publicou', async () => {
+      // O painel de TOPO desta stack é o caso especial da família: ele não vai a
+      // portal, fica aninhado no wrapper do gatilho e a posição sai da folha —
+      // `.nds-menubar-panel[data-side="bottom"]` com `top: 100%` mais
+      // `margin-top: var(--spacing-2)`, ou seja os mesmos 8px que as outras quatro
+      // declaram em `sideOffset`. Era 4 aqui e 8 nas quatro, e o vão é valor de
+      // design system, não API de framework. Por ser
+      // aninhado, é também o único dos três aqui em que a checagem de caixa do
+      // invólucro tem o que medir.
+      const panel = panelOpen(canvasElement)!;
+      await waitForAncorado(panel);
+      expectOndeDiz(arquivo, panel, 8);
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {

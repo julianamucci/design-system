@@ -3,6 +3,7 @@ import { fn, userEvent, within, expect, waitFor } from "storybook/test";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { ContextMenuDocs } from "@/components/docs/ContextMenuDocs";
 import { FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import { expectInvolucroComCaixa, waitForAncorado } from "@shared/testing/ancoragem";
 import {
   AREA_CLICK_DIREITO,
   gestoOpen,
@@ -231,6 +232,17 @@ export const Playground: Story = {
       await userEvent.keyboard("{ArrowDown}");
       const items = await menuItems();
       await waitFor(() => expect(items).toContain(document.activeElement));
+    });
+
+    await step("O invólucro que posiciona o menu tem caixa", async () => {
+      // O ContextMenu abre no PONTO do ponteiro, não ancorado a um elemento —
+      // então não há folga a cobrar. O que vale aqui é a outra metade do mesmo
+      // invariante: `position: absolute` na folha compartilhada tira o painel do
+      // fluxo e colapsa para 0×0 o elemento que a lib posiciona, e ela passa a
+      // medir colisão contra uma caixa sem tamanho. Ver `ancoragem.ts`.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      expectInvolucroComCaixa(panel);
     });
 
     await step("Os itens são itens de menu de verdade", async () => {

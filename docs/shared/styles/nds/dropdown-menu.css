@@ -29,8 +29,32 @@
  *         --muted, --muted-foreground, --border, --radius, --radius-sm
  */
 
+/*
+ * A folha NÃO posiciona o painel, e isso vale para os TRÊS membros da família —
+ * DropdownMenu, ContextMenu e Menubar dividem esta classe nas cinco stacks.
+ *
+ * `position: absolute` morava aqui, sem deslocamento nenhum, e é a mesma
+ * declaração que o `tooltip.css` removeu em 2026-09-04 e o `hover-card.css` em
+ * 2026-09-13, pelo mesmo defeito medido nos três: em toda stack de lib o painel
+ * vive em FLUXO dentro de um elemento que a lib posiciona, e tirá-lo do fluxo
+ * colapsa esse elemento para 0×0 — é contra uma caixa sem tamanho que a lib
+ * passa a calcular tudo, inclusive a colisão, que fica sem o que comparar.
+ *
+ * Quem posiciona, por stack:
+ *
+ *   react e angular  → o positioner da lib (`Menu.Positioner`, `RdxPopper`)
+ *   vue e svelte     → um invólucro sem classe, da própria lib
+ *   vanilla          → `positionFloating`, que escreve `position: absolute` no
+ *                      painel antes de medir (as três fábricas o chamam)
+ *
+ * A ÚNICA ancoragem por folha desta família é a do painel de topo do Menubar, e
+ * ela é legítima: `.nds-menubar-panel` declara `position` JUNTO com `top`/`left`
+ * por `data-side`, porque ali o painel não vai a portal — fica aninhado no
+ * wrapper do gatilho. Essa classe existe só na marcação do vanilla.
+ *
+ * Portão: `folha_tira_do_fluxo_sem_dizer_onde`.
+ */
 .nds-dropdown-menu-content {
-  position: absolute;
   z-index: var(--z-popover);
   min-width: 8rem;                                /* 128px */
 

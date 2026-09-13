@@ -166,10 +166,29 @@
   overflow: visible;
 }
 
-.nds-menubar-panel[data-side="bottom"] { top: 100%;    margin-top: var(--spacing-1); }
-.nds-menubar-panel[data-side="top"]    { bottom: 100%; margin-bottom: var(--spacing-1); }
-.nds-menubar-panel[data-side="right"]  { left: 100%;   margin-left: var(--spacing-1); }
-.nds-menubar-panel[data-side="left"]   { right: 100%;  margin-right: var(--spacing-1); }
+/*
+ * O vão é 8px, e não 4 — `--spacing-2`, não `--spacing-1`.
+ *
+ * Esta é a ancoragem por folha do painel de TOPO, que existe só na marcação do
+ * vanilla (o painel não vai a portal; fica aninhado no wrapper do gatilho). Ela
+ * é o equivalente do `sideOffset` das outras quatro stacks, e estava valendo 4
+ * contra os 8 que as quatro declaram — medido em 2026-09-13, quando a asserção
+ * de ancoragem foi escrita nas cinco e cada stack devolveu o próprio número:
+ *
+ *   react 8 · vue 8 · svelte 8 · angular 8 · vanilla 4
+ *
+ * Quatro contra uma, e o vão é valor de design system, não API de framework —
+ * então não há o que "registrar como divergência legítima". O Menubar abre de
+ * uma BARRA, e 8 é o degrau que os quatro escolheram; o DropdownMenu, que abre
+ * de um botão solto, segue em 4 nas cinco.
+ *
+ * A divergência era invisível porque nada media a folga: as stories afirmavam
+ * `data-side`, que é o lado e não a distância.
+ */
+.nds-menubar-panel[data-side="bottom"] { top: 100%;    margin-top: var(--spacing-2); }
+.nds-menubar-panel[data-side="top"]    { bottom: 100%; margin-bottom: var(--spacing-2); }
+.nds-menubar-panel[data-side="right"]  { left: 100%;   margin-left: var(--spacing-2); }
+.nds-menubar-panel[data-side="left"]   { right: 100%;  margin-right: var(--spacing-2); }
 
 /* Alinhamento no eixo PERPENDICULAR ao lado: horizontal para um painel que
  * nasce acima ou abaixo, vertical para um que nasce à esquerda ou à direita. */

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
+import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -80,7 +81,7 @@ const meta: Meta = {
  * Os três eventos são de propósito, como no `clickOutside` do menu de contexto
  * (`@shared/testing/context-menu-area`): a camada dispensável do bits ouve
  * `pointerdown` no documento, e o `userEvent` se recusa a clicar num elemento
- * com `pointer-events: none`. O ponto (0, 0) fica fora do painel, que é o que
+ * com `pointer-events: none`. O ponto (0, 0) fica fora do panel, que é o que
  * a lib confere (`isClickTrulyOutside`).
  */
 function clickOutside(): void {
@@ -131,6 +132,16 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(menu.contains(document.activeElement)).toBe(true);
       });
+    });
+
+    await step('E o menu está ANCORADO no lado que publicou', async () => {
+      // `data-side` sozinho mede a AFIRMAÇÃO da lib, não o resultado dela: com o
+      // painel fora do fluxo pela folha, o invólucro que a lib posiciona colapsa
+      // para 0×0 e ela calcula tudo contra uma caixa sem tamanho — publicando o
+      // lado certo e pousando o menu do lado errado. Ver `ancoragem.ts`.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      expectOndeDiz(trigger, panel, 4);
     });
 
     await step('Enter escolhe o item, fecha o menu e devolve o foco ao gatilho', async () => {

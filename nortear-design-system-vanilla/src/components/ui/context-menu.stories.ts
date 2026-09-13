@@ -17,6 +17,7 @@ import {
   closeMenu,
   menuOpen,
 } from '@shared/testing/context-menu-area';
+import { expectInvolucroComCaixa } from '@shared/testing/ancoragem';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -161,6 +162,16 @@ export const Playground: Story = {
         Math.abs(boxMenu.top - (boxArea.top + boxArea.height / 2)),
       ).toBeLessThan(24);
       await expect(args.onOpenChange).toHaveBeenCalled();
+    });
+
+    await step('E o elemento que POSICIONA o painel tem caixa', async () => {
+      // Aqui não há folga a cobrar: o menu nasce no PONTO do ponteiro, e não
+      // ancorado a um gatilho. O que resta do defeito é o invólucro colapsado —
+      // painel fora do fluxo pela folha compartilhada, que nas stacks de lib
+      // deixa o cálculo de colisão sem caixa para comparar. Nesta stack o pai é
+      // o `<body>` e o auxiliar pula a medida; ele fica para que as cinco
+      // afirmem a mesma coisa quando a folha voltar a errar.
+      expectInvolucroComCaixa(menuOpen()!);
     });
 
     await step('O foco ENTRA no menu aberto, e as setas andam a partir dali', async () => {

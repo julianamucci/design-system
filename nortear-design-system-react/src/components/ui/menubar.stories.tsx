@@ -5,6 +5,7 @@ import {
   waitForPortalGone,
   FOCUS_RULE_GUARDA,
 } from "@/lib/wait-for-portal"
+import { expectOndeDiz, waitForAncorado } from "@shared/testing/ancoragem"
 import {
   Menubar,
   MenubarContent,
@@ -230,6 +231,17 @@ export const Playground: Story = {
       await expect(menu.closest("[data-side]")?.getAttribute("data-side")).toBe(
         args.side
       )
+
+      // E o painel está ONDE ele diz que está. O `data-side` acima mede a
+      // AFIRMAÇÃO do posicionador; com o painel fora do fluxo pela folha, o
+      // invólucro que a lib posiciona colapsa para 0×0 e ela passa a calcular a
+      // colisão contra uma caixa sem tamanho, publicando o lado certo. Medido
+      // no Svelte com a declaração replantada: invólucro de 128×97 para 0×0.
+      // O vão é 8 e não 4: o Menubar abre de uma BARRA, e as cinco stacks
+      // declaram 8 aqui contra os 4 do DropdownMenu.
+      const panel = document.querySelector<HTMLElement>(".nds-dropdown-menu-content")!
+      await waitForAncorado(panel)
+      expectOndeDiz(arquivo, panel, 8)
     })
 
     await step("Dentro do menu, a seta vertical anda entre os itens", async () => {

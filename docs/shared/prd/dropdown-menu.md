@@ -260,7 +260,7 @@ ela declara exatamente três classes — nenhuma delas de miolo:
 |---|---|
 | `.nds-menubar` | a barra: `flex`, `gap` de 4px, `min-height` (nunca `height`), padding, superfície `--background`, borda, raio e relevo `xs` |
 | `.nds-menubar-trigger` | o gatilho da barra: padding, raio aninhado, tipografia, o realce a 10% (D4) e o anel de foco (D2) |
-| `.nds-menubar-panel` | só POSIÇÃO: `position: absolute`, camada, `overflow: visible` e a ancoragem do painel de topo por `[data-side]` × `[data-align]` |
+| `.nds-menubar-panel` | só POSIÇÃO: `position: absolute`, camada, `overflow: visible` e a ancoragem do painel de topo por `[data-side]` × `[data-align]`, com vão de 8px — ver D12 |
 
 **O miolo do painel continua vindo de `dropdown-menu.css`**, e isso é decisão
 escrita na própria folha (`menubar.css:21-30`): item, rótulo, separador, atalho,
@@ -313,6 +313,44 @@ uma família com duas folhas.
 > **Fecha quando**: as quatro stacks escreverem a classe no painel de topo
 > (`grep -r "nds-menubar-panel" nortear-design-system-*/src` devolvendo as cinco),
 > ou a folha declarar a exceção medida com um menu longo.
+
+### D12 · A folha NÃO posiciona o painel, e o vão do Menubar é 8
+
+**Fixada em** 2026-09-13.
+**Medição**: `.nds-dropdown-menu-content` declarava `position: absolute` sem
+deslocamento nenhum — e essa classe veste os TRÊS membros da família nas cinco
+stacks. Em toda stack de lib o painel vive em FLUXO dentro de um elemento que a
+lib posiciona; fora do fluxo esse elemento colapsa. Medido no Svelte, replantando
+a declaração: o invólucro vai de **128×97 para 0×0**.
+
+**O que torna este caso instrutivo**: a posição VISÍVEL continuava certa. Com
+`side="bottom"` e `align="start"` a posição estática do painel coincide com a
+correta, e a folga medida seguia em 4,2px nos dois estados. O que se perde é a
+detecção de colisão — `flip` e `shift` passam a medir transbordo contra uma caixa
+sem tamanho. Por isso a asserção cobra as DUAS coisas: a folga e a caixa do
+invólucro. Uma asserção que medisse só a folga passaria com o defeito de pé, que
+é como ele sobreviveu até aqui.
+
+**Quem posiciona, por stack**: react e angular pelo positioner da lib; vue e
+svelte por um invólucro sem classe da própria lib; vanilla por `positionFloating`,
+que escreve `position: absolute` no painel antes de medir. A única ancoragem por
+FOLHA que sobra é a do painel de topo do Menubar (`.nds-menubar-panel`, com
+`position` junto de `top`/`left`), e ela é legítima: ali o painel não vai a portal.
+
+**O vão do Menubar é 8, e o do DropdownMenu é 4.** Medido ao escrever a asserção,
+com cada stack devolvendo o próprio número: react 8, vue 8, svelte 8, angular 8 e
+**vanilla 4** — a ancoragem por folha usava `--spacing-1`. Quatro contra uma, e
+vão é valor de design system, não API de framework: o vanilla foi para
+`--spacing-2`. O Menubar abre de uma BARRA e pede mais respiro que o menu de um
+botão solto.
+
+**Instrumento**: `docs/shared/testing/ancoragem.ts` (`expectOndeDiz`,
+`expectInvolucroComCaixa`, `waitForAncorado`), ligado nas quinze implementações.
+**Portão da folha**: `folha_tira_do_fluxo_sem_dizer_onde`.
+**Exceção declarada**: no vanilla o painel do ContextMenu é filho do `<body>`,
+então `expectInvolucroComCaixa` retorna cedo e é inerte ali. Ela entrou mesmo
+assim, para as cinco afirmarem a mesma coisa, e passa a ter dentes se o painel
+deixar de ser filho do `<body>`.
 
 ### D10 · O payload de analytics não leva texto localizado
 

@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import MenubarDocs from '@/components/docs/MenubarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 import { menubarSource } from './menubar.source';
 
 // ─── Dados da barra ───────────────────────────────────────────────────────────
@@ -220,6 +221,18 @@ export const Playground: Story = {
       // espaço para o lado pedido, então a asserção é contra o ARGUMENTO.
       const menu = await waitForPortal('menu');
       await expect(menu.closest('[data-side]')?.getAttribute('data-side')).toBe(args.side);
+    });
+
+    await step('E o painel está ANCORADO no lado que publicou', async () => {
+      // O passo acima mede a AFIRMAÇÃO da lib (`data-side`), e ela continua certa
+      // mesmo com o painel fora do fluxo pela folha: o invólucro que a lib
+      // posiciona colapsa para 0×0 e ela calcula tudo contra uma caixa sem
+      // tamanho — publicando o lado certo e pousando o painel do lado errado.
+      // A folga cobrada é 8, que é o `sideOffset` que `MenubarContent` declara.
+      // Ver `ancoragem.ts`.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      expectOndeDiz(arquivo, panel, 8);
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
@@ -457,7 +470,7 @@ export const TabLeavesMenubar: Story = {
 
     await step('Shift+Tab sai para o ponto ANTERIOR à barra', async () => {
       // Sem o ouvinte, Shift+Tab caía no botão DEPOIS da barra: a ordem de
-      // tabulação partia do painel, que vive no fim do documento.
+      // tabulação partia do panel, que vive no fim do documento.
       await openWithItemFocused();
       pressTab(true);
       await waitForPortalGone('menu');

@@ -10,6 +10,7 @@ import {
   closeMenu,
   menuOpen,
 } from '@shared/testing/context-menu-area';
+import { expectInvolucroComCaixa } from '@shared/testing/ancoragem';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -210,6 +211,17 @@ export const Playground: Story = {
       // seguinte andaria na página, e o menu à vista seria inalcançável pelo
       // teclado de quem abriu com o mouse.
       await waitFor(() => expect(menu.contains(document.activeElement)).toBe(true));
+    });
+
+    await step('E o invólucro que a lib posiciona tem CAIXA', async () => {
+      // Aqui não há folga a cobrar: o menu nasce no ponto do ponteiro, e não
+      // ancorado num elemento. O que vale é a outra metade da ancoragem — com o
+      // painel fora do fluxo pela folha, o invólucro que a lib posiciona colapsa
+      // para 0×0 e ela passa a calcular colisão contra uma caixa sem tamanho.
+      // O defeito é silencioso até o TAMANHO do painel entrar na conta. Ver
+      // `ancoragem.ts`.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      expectInvolucroComCaixa(panel);
     });
 
     await step('Os itens são itens de menu de verdade', async () => {

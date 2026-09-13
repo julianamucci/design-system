@@ -7,6 +7,7 @@ import { NdsButton } from './button';
 import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { pressTab } from '@/lib/press-tab';
 import { clickOutside } from '@shared/testing/context-menu-area';
+import { expectOndeDiz, waitForAncorado } from '@shared/testing/ancoragem';
 import { NdsDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -128,6 +129,17 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(document.activeElement).toBe(items[0]);
       });
+    });
+
+    await step('E o menu está ANCORADO no lado que publicou', async () => {
+      // `data-side` sozinho mede a AFIRMAÇÃO da lib, não o resultado dela: com o
+      // painel fora do fluxo pela folha, o invólucro que a lib posiciona colapsa
+      // para 0×0 e ela calcula tudo contra uma caixa sem tamanho — publicando o
+      // lado certo e pousando o menu do lado errado. Ver `ancoragem.ts`.
+      const panel = document.querySelector<HTMLElement>('.nds-dropdown-menu-content')!;
+      await waitForAncorado(panel);
+      // 4 é o vão que esta stack declara para o painel raiz (o submenu usa 0).
+      expectOndeDiz(trigger, panel, 4);
     });
 
     await step('Enter escolhe o item, fecha o menu e devolve o foco ao gatilho', async () => {
