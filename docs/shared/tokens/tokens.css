@@ -54,7 +54,21 @@
   --text-control-sm: calc(var(--type-base) * 0.75);   /* 12px */
   --text-control:    calc(var(--type-base) * 0.875);  /* 14px — o padrão */
   --text-control-lg: calc(var(--type-base) * 1);      /* 16px */
-  --text-control-xl: calc(var(--type-base) * 1.125);  /* 18px — título de overlay */
+  --text-control-xl: calc(var(--type-base) * 1.125);  /* 18px — ver a nota */
+
+  /* O `xl` NÃO é "o título de overlay", e dizia isso até 2026-09-13.
+     Medido naquele dia: três folhas o leem, e a família de overlay se divide.
+       .nds-alert-dialog-title   18px  xl
+       .nds-sheet-title          18px  xl   (o drawer usa esta mesma classe)
+       .nds-avatar-group-count   18px  xl   só no tamanho 2xl
+       .nds-dialog-title         16px  lg
+       .nds-popover-title        16px  lg   (não declarava tamanho nenhum)
+     O que o degrau de fato marca é o título dos painéis GRANDES — os que tomam
+     a tela ou uma borda inteira. Dialog e popover ficam um degrau abaixo, e
+     isso é escolha, não resíduo.
+     Rótulo de token que promete mais do que entrega é caro do mesmo jeito que
+     comentário errado em folha: ninguém o relê, e quem chega escolhe o degrau
+     pela descrição em vez de pelo que a família faz. */
 
   /* Typography — font family
      --font-family-active é trocado pelas classes .fonte-* no <html>.
