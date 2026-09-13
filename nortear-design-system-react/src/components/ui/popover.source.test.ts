@@ -194,8 +194,12 @@ describe('a lição do rodapé', () => {
   });
 
   it('as outras composições com rodapé seguem a mesma forma', () => {
+    // O modal saiu desta lista em 2026-09-13: ele deixou de ter rodapé de ações.
+    // Os dois botões que havia ali não fechavam nem faziam nada — existiam só
+    // para haver dois focáveis —, e viraram caixas de marcação. O que o snippet
+    // do modal precisa provar agora está no caso dele, em "composições e
+    // estados".
     for (const [fn, primary] of [
-      [popoverModalSource, '<Button size="sm">OK</Button>'],
       [popoverEditarPerfilSource, '<Button type="submit" size="sm">Atualizar</Button>'],
       [popoverFilterSource, 'onClick={() => { aplicar(); setOpen(false); }}>Aplicar</Button>'],
     ] as const) {
@@ -233,9 +237,16 @@ describe('a lição do controle de fechar', () => {
     [popoverEditarPerfilSource, ['Cancelar'], [], ['Atualizar'], []],
     // "Limpar" devolve a escolha a quem ainda está decidindo.
     [popoverFilterSource, [], ['Aplicar'], [], ['Limpar']],
-    // A ausência é o assunto da story modal: sem controle de fechar registrado,
-    // quem prende o foco é o laço do PopoverContent, e não a lib.
-    [popoverModalSource, [], [], [], ['Cancelar', 'OK']],
+    // O MODAL NÃO ENTRA AQUI, e a exclusão se declara em vez de acontecer por
+    // omissão. Ele não tem mais ação nenhuma: os rótulos que a entrada listava
+    // como "não fecham" — Cancelar e OK — deixaram de existir em 2026-09-13, e
+    // uma entrada apontando para rótulo ausente PASSA calada (todas as sondas
+    // abaixo devolvem `false` quando não acham o rótulo), que é portão sem
+    // dentes. O invariante que sobrou é a AUSÊNCIA de controle de fechar, e ele
+    // é cobrado com `not.toContain('PopoverClose')` no caso do modal, em
+    // "composições e estados". A peneira de cobertura abaixo continua valendo:
+    // se o modal voltar a ter rodapé de ações ou submit, ele volta a ser
+    // exigido aqui.
   ];
 
   /** O bloco `<PopoverClose …>…</PopoverClose>` que envolve um rótulo, se houver. */
@@ -372,7 +383,34 @@ describe('composições e estados', () => {
   });
 
   it('o modal declara os dois: a prisão de foco e a trava de rolagem vêm juntas', () => {
-    expect(popoverModalSource()).toContain('<Popover defaultOpen modal>');
+    const output = popoverModalSource();
+    expect(output).toContain('<Popover defaultOpen modal>');
+
+    // A AUSÊNCIA de controle de fechar é o assunto deste snippet, e é o que
+    // sustenta a story ao lado: o gerenciador de foco da lib só trapeia com um
+    // controle de fechar REGISTRADO no painel, então é a ausência que faz a
+    // prisão vir do laço do `PopoverContent`. Com um `PopoverClose` aqui, o
+    // exemplo ensinaria um painel cuja prisão vem da lib.
+    expect(output).not.toContain('PopoverClose');
+
+    // Os DOIS focáveis, e o motivo de serem dois: com um só, "o Tab do último
+    // volta ao primeiro" seria verdade sem laço nenhum. São caixas de marcação
+    // porque nada aqui pode fechar o painel — o par Cancelar/OK que este
+    // snippet imprimiu até 2026-09-13 prometia ação que nenhum dos dois
+    // entregava.
+    expect(output.match(/<Checkbox /g)).toHaveLength(2);
+    expect(output).toContain('Lembrar minha escolha');
+    expect(output).toContain('Receber aviso por e-mail');
+    expect(output).toContain('import { Checkbox } from "@/components/ui/checkbox";');
+    expect(output).not.toContain('Cancelar');
+    expect(output).not.toContain('>OK<');
+
+    // Rótulo ligado por `htmlFor`/`id`, que é o par obrigatório do checkbox:
+    // caixa sem rótulo associado é controle sem nome acessível.
+    for (const id of ['lembrar-escolha', 'aviso-email']) {
+      expect(output).toContain(`<Checkbox id="${id}" />`);
+      expect(output).toContain(`<label htmlFor="${id}" className="nds-label">`);
+    }
   });
 
   it('o aberto por estado inicial não escreve modal junto', () => {

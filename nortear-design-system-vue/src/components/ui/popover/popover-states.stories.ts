@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { panel } from './popover.fixtures';
 import {
@@ -52,6 +53,7 @@ const sharedComponents = {
   PopoverTitle,
   PopoverTrigger,
   Button,
+  Checkbox,
 };
 
 const SIMPLE_PANEL = `
@@ -62,12 +64,52 @@ const SIMPLE_PANEL = `
             </PopoverHeader>
             <!-- Cancelar é a PEÇA de fechar (motivo close-button); Salvar fecha
                  por CÓDIGO, com o "close" do slot da raiz (motivo api). Por
-                 isso toda raiz deste arquivo declara v-slot="{ close }". -->
+                 isso toda raiz que usa ESTE painel declara v-slot="{ close }".
+                 A Modal não o usa — ver MODAL_PANEL. -->
             <div class="nds-cluster" data-justify="end" data-spacing="sm">
               <PopoverClose as-child>
                 <Button variant="ghost" size="sm">Cancelar</Button>
               </PopoverClose>
               <Button size="sm" @click="close()">Salvar</Button>
+            </div>
+          </PopoverContent>`;
+
+/**
+ * O painel da Modal, e só dela.
+ *
+ * São DOIS focáveis porque o laço de tabulação não se prova com um: "o Tab do
+ * último volta ao primeiro" seria verdade sem laço nenhum se o painel tivesse
+ * um controle só.
+ *
+ * E são CHECKBOX, não o rodapé de ações das outras stories, por dois motivos
+ * que andam juntos:
+ *
+ *   · não há controle de FECHAR aqui de propósito. O gerenciador de foco da lib
+ *     só trapeia quando um `PopoverClose` está registrado no painel, e é esse
+ *     buraco que o laço próprio do painel tapa — com um `PopoverClose` ali, a
+ *     story mediria a lib, e não o nosso laço;
+ *   · sem o `PopoverClose` o "Cancelar" não cancelaria nada e o "Salvar" não
+ *     salvaria nada. Checkbox é um controle que se BASTA: marcar já é o efeito,
+ *     e ele não promete ação que a story não faz.
+ *
+ * Quem vier "consertar" isto de volta para o par Cancelar/Salvar tira os dentes
+ * dos dois últimos passos da play.
+ */
+const MODAL_PANEL = `
+          <PopoverContent side="bottom">
+            <PopoverHeader>
+              <PopoverTitle>Configurações de exibição</PopoverTitle>
+              <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
+            </PopoverHeader>
+            <div class="nds-stack" data-spacing="sm">
+              <div class="nds-cluster" data-spacing="sm">
+                <Checkbox id="popover-modal-remember" />
+                <label for="popover-modal-remember" class="nds-label">Lembrar minha escolha</label>
+              </div>
+              <div class="nds-cluster" data-spacing="sm">
+                <Checkbox id="popover-modal-email" />
+                <label for="popover-modal-email" class="nds-label">Receber aviso por e-mail</label>
+              </div>
             </div>
           </PopoverContent>`;
 
@@ -240,11 +282,11 @@ export const Modal: Story = {
     components: sharedComponents,
     template: `
       <div class="nds-min-h-70" style="contain: layout">
-        <Popover v-slot="{ close }" :default-open="true" :modal="true">
+        <Popover :default-open="true" :modal="true">
           <PopoverTrigger as-child>
             <Button variant="outline">Abrir modal</Button>
           </PopoverTrigger>
-          ${SIMPLE_PANEL}
+          ${MODAL_PANEL}
         </Popover>
       </div>
     `,
@@ -276,29 +318,29 @@ export const Modal: Story = {
       // modal, ele volta ao primeiro.
       const dialog = panel()!;
       const inside = within(dialog);
-      const cancel = inside.getByRole('button', { name: /Cancelar/i });
-      const save = inside.getByRole('button', { name: /Salvar/i });
+      const firstBox = inside.getByRole('checkbox', { name: /Lembrar minha escolha/i });
+      const lastBox = inside.getByRole('checkbox', { name: /Receber aviso por e-mail/i });
 
-      save.focus();
-      await expect(save).toHaveFocus();
+      lastBox.focus();
+      await expect(lastBox).toHaveFocus();
 
       await userEvent.tab();
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
-      await expect(cancel).toHaveFocus();
+      await expect(firstBox).toHaveFocus();
     });
 
     await step('E Shift+Tab a partir do primeiro volta ao último', async () => {
       const dialog = panel()!;
       const inside = within(dialog);
-      const cancel = inside.getByRole('button', { name: /Cancelar/i });
-      const save = inside.getByRole('button', { name: /Salvar/i });
+      const firstBox = inside.getByRole('checkbox', { name: /Lembrar minha escolha/i });
+      const lastBox = inside.getByRole('checkbox', { name: /Receber aviso por e-mail/i });
 
-      cancel.focus();
+      firstBox.focus();
       await userEvent.tab({ shift: true });
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
-      await expect(save).toHaveFocus();
+      await expect(lastBox).toHaveFocus();
     });
   },
 };

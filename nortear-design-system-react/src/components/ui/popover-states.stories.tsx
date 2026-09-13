@@ -12,6 +12,7 @@ import {
 } from "./popover";
 import { popoverCloseReason } from "./popover-close-reason";
 import { Button } from "./button";
+import { Checkbox } from "./checkbox";
 import {
   popoverCloseSource,
   popoverOpenSource,
@@ -359,22 +360,37 @@ export const Modal: Story = {
               O foco fica preso no painel enquanto ele está aberto.
             </PopoverDescription>
           </PopoverHeader>
-          {/* O rodapé NÃO usa `PopoverClose`, e a ausência é o assunto: o
-              gerenciador de foco do Base UI só trapeia com `modal !== false &&
-              hasClosePart`, e `hasClosePart` conta os controles de fechar
-              registrados dentro do painel. Com um deles aqui, quem prenderia o
-              foco seria a lib, e esta story mediria a lib — não o laço de
-              tabulação do `PopoverContent`, que é o que sustenta o contrato de
-              `modal` quando a composição não tem botão de fechar.
+          {/* A lista de opções NÃO usa `PopoverClose`, e a ausência é o
+              assunto: o gerenciador de foco do Base UI só trapeia com
+              `modal !== false && hasClosePart`, e `hasClosePart` conta os
+              controles de fechar registrados dentro do painel. Com um deles
+              aqui, quem prenderia o foco seria a lib, e esta story mediria a
+              lib — não o laço de tabulação do `PopoverContent`, que é o que
+              sustenta o contrato de `modal` quando a composição não tem botão
+              de fechar.
+
+              CAIXAS DE MARCAÇÃO, e não um par Cancelar/OK: até 2026-09-13 esta
+              story publicava um rodapé com dois botões que não faziam nada —
+              eles não podiam fechar (seria a lib trapeando o foco) e assim
+              prometiam na tela uma ação que nenhum dos dois entregava. A caixa
+              é o controle que se basta: marcar JÁ é o efeito.
 
               DOIS focáveis de propósito: com um só, "o Tab do último volta ao
               primeiro" seria verdade sem laço nenhum, porque primeiro e último
               seriam o mesmo elemento. */}
-          <div className="nds-cluster nds-pt-1" data-justify="end">
-            <Button variant="ghost" size="sm">
-              Cancelar
-            </Button>
-            <Button size="sm">OK</Button>
+          <div className="nds-stack nds-pt-1" data-spacing="sm">
+            <div className="nds-cluster" data-spacing="sm">
+              <Checkbox id="popover-modal-remember" />
+              <label htmlFor="popover-modal-remember" className="nds-label">
+                Lembrar minha escolha
+              </label>
+            </div>
+            <div className="nds-cluster" data-spacing="sm">
+              <Checkbox id="popover-modal-email-notice" />
+              <label htmlFor="popover-modal-email-notice" className="nds-label">
+                Receber aviso por e-mail
+              </label>
+            </div>
           </div>
         </PopoverContent>
       </Popover>
@@ -408,28 +424,36 @@ export const Modal: Story = {
       // modal, ele volta ao primeiro. É a mesma tecla que separa os dois modos,
       // e por isso a asserção mede o modo e não o contrato comum.
       const dialog = screen.getByRole("dialog");
-      const cancelar = within(dialog).getByRole("button", { name: /Cancelar/i });
-      const ok = within(dialog).getByRole("button", { name: /^OK$/i });
+      const remember = within(dialog).getByRole("checkbox", {
+        name: /Lembrar minha escolha/i,
+      });
+      const emailNotice = within(dialog).getByRole("checkbox", {
+        name: /Receber aviso por e-mail/i,
+      });
 
-      ok.focus();
-      await expect(ok).toHaveFocus();
+      emailNotice.focus();
+      await expect(emailNotice).toHaveFocus();
 
       await userEvent.tab();
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
-      await expect(cancelar).toHaveFocus();
+      await expect(remember).toHaveFocus();
     });
 
     await step("E Shift+Tab a partir do primeiro volta ao último", async () => {
       const dialog = screen.getByRole("dialog");
-      const cancelar = within(dialog).getByRole("button", { name: /Cancelar/i });
-      const ok = within(dialog).getByRole("button", { name: /^OK$/i });
+      const remember = within(dialog).getByRole("checkbox", {
+        name: /Lembrar minha escolha/i,
+      });
+      const emailNotice = within(dialog).getByRole("checkbox", {
+        name: /Receber aviso por e-mail/i,
+      });
 
-      cancelar.focus();
+      remember.focus();
       await userEvent.tab({ shift: true });
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
-      await expect(ok).toHaveFocus();
+      await expect(emailNotice).toHaveFocus();
     });
   },
 };

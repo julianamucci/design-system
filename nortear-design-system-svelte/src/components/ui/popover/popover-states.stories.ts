@@ -208,15 +208,20 @@ export const Modal: Story = {
   args: {
     defaultOpen: true,
     modal: true,
-    // `withTitle` traz DOIS focáveis no painel. Com um só, "o Tab do último
+    // `options` traz DOIS focáveis no painel. Com um só, "o Tab do último
     // volta ao primeiro" seria verdade sem laço nenhum — primeiro e último
     // seriam o mesmo elemento, e a asserção nasceria sem dentes.
-    variant: 'withTitle',
+    //
+    // São DUAS CAIXAS, e não o rodapé de Cancelar/Salvar da `withTitle`:
+    // aqueles dois botões não executavam ação nenhuma aqui, e não podiam
+    // passar a executar — com um `PopoverClose` registrado no painel, o
+    // gerenciador de foco da lib trapeia sozinho e a story mediria a lib em
+    // vez do laço. Checkbox é controle que se basta. O porquê de a variante
+    // ser nova está no comentário dela, no `PopoverStory.svelte`.
+    variant: 'options',
     triggerLabel: 'Abrir modal',
     title: 'Popover modal',
     description: 'O foco fica preso no painel enquanto ele está aberto.',
-    saveLabel: 'Salvar',
-    cancelLabel: 'Cancelar',
   },
   play: async ({ step }) => {
     await step('O painel abre em modo modal', async () => {
@@ -247,32 +252,37 @@ export const Modal: Story = {
       // por que `userEvent.tab()` e `userEvent.keyboard('{Tab}')` não podem medir
       // um laço de tabulação. Esta story nasceu com `tab()` e nunca tinha sido
       // executada, então o instrumento errado nunca tinha aparecido.
+      //
+      // Os dois focáveis são CAIXAS, e a consulta é por `role: 'checkbox'` com
+      // o rótulo associado: o `Label` é quem nomeia o controle, então um
+      // rótulo que se solte da caixa derruba a consulta em vez de passar
+      // medindo um elemento sem nome.
       const dialog = panel()!;
       const inside = within(dialog);
-      const cancel = inside.getByRole('button', { name: /Cancelar/i });
-      const save = inside.getByRole('button', { name: /Salvar/i });
+      const remember = inside.getByRole('checkbox', { name: /Lembrar minha escolha/i });
+      const emailNotice = inside.getByRole('checkbox', { name: /Receber aviso por e-mail/i });
 
-      save.focus();
-      await expect(save).toHaveFocus();
+      emailNotice.focus();
+      await expect(emailNotice).toHaveFocus();
 
       pressTab();
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
-      await expect(cancel).toHaveFocus();
+      await expect(remember).toHaveFocus();
     });
 
     await step('E Shift+Tab a partir do primeiro volta ao último', async () => {
       const dialog = panel()!;
       const inside = within(dialog);
-      const cancel = inside.getByRole('button', { name: /Cancelar/i });
-      const save = inside.getByRole('button', { name: /Salvar/i });
+      const remember = inside.getByRole('checkbox', { name: /Lembrar minha escolha/i });
+      const emailNotice = inside.getByRole('checkbox', { name: /Receber aviso por e-mail/i });
 
-      cancel.focus();
+      remember.focus();
       // Mesmo instrumento e mesmo motivo do passo anterior.
       pressTab(true);
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
-      await expect(save).toHaveFocus();
+      await expect(emailNotice).toHaveFocus();
     });
   },
 };

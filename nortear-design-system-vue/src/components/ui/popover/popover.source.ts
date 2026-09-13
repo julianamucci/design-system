@@ -362,14 +362,46 @@ ${configPanel(4)}
  *
  * Não é o contrato de Dialog: o painel continua sem `aria-modal`, porque um
  * popover é conteúdo AO LADO, não no lugar do resto da página.
+ *
+ * O painel é o único do arquivo SEM rodapé de ações, e a ausência é o assunto:
+ * o gerenciador de foco da lib só trapeia quando há um `PopoverClose`
+ * registrado no painel, então é justamente o painel sem ele que exercita o
+ * laço de tabulação próprio. Os dois checkboxes são os dois focáveis que o laço
+ * precisa — com um só, "o Tab do último volta ao primeiro" seria verdade sem
+ * laço nenhum — e são checkbox, e não um par Cancelar/Salvar, porque sem a peça
+ * de fechar aquele par não fecharia nada.
  */
 export function popoverModalSource(): string {
   return vueSnippet(
-    IMPORT_ACOES,
+    `${importa(
+      'Popover',
+      'PopoverContent',
+      'PopoverDescription',
+      'PopoverHeader',
+      'PopoverTitle',
+      'PopoverTrigger',
+    )}
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'`,
     popover({
       root: ':default-open="true" :modal="true"',
       label: 'Abrir modal',
-      panel: configPanel(),
+      panel: `  <PopoverContent>
+    <PopoverHeader>
+      <PopoverTitle>Configurações de exibição</PopoverTitle>
+      <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
+    </PopoverHeader>
+    <div class="nds-stack" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="sm">
+        <Checkbox id="popover-modal-remember" />
+        <label for="popover-modal-remember" class="nds-label">Lembrar minha escolha</label>
+      </div>
+      <div class="nds-cluster" data-spacing="sm">
+        <Checkbox id="popover-modal-email" />
+        <label for="popover-modal-email" class="nds-label">Receber aviso por e-mail</label>
+      </div>
+    </div>
+  </PopoverContent>`,
     }),
   );
 }

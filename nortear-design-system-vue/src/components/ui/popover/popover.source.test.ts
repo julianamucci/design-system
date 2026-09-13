@@ -167,9 +167,37 @@ describe('transforms das stories de estado', () => {
 
   it('o modo modal é prop da RAIZ, ao lado da abertura', () => {
     const output = popoverModalSource();
-    expect(output).toContain('<Popover :default-open="true" :modal="true" v-slot="{ close }">');
+    expect(output).toContain('<Popover :default-open="true" :modal="true">');
     // `aria-modal` é contrato de Dialog: um popover é conteúdo AO LADO.
     expect(output).not.toContain('aria-modal');
+  });
+
+  it('o painel da modal traz DOIS checkboxes rotulados, e nenhum controle de fechar', () => {
+    // Um focável só faria "o Tab do último volta ao primeiro" ser verdade sem
+    // laço nenhum, e um `PopoverClose` faria o gerenciador de foco da lib
+    // trapear no lugar do laço próprio do painel — a story mediria a lib.
+    // Checkbox porque, sem a peça de fechar, um par Cancelar/Salvar não fecharia
+    // coisa alguma: a caixa se basta, e não promete ação que não acontece.
+    const output = popoverModalSource();
+    expect(output).toContain(`import { Checkbox } from '@/components/ui/checkbox'`);
+    expect(output).toContain('<Checkbox id="popover-modal-remember" />');
+    expect(output).toContain('<Checkbox id="popover-modal-email" />');
+    expect(output).toContain(
+      '<label for="popover-modal-remember" class="nds-label">Lembrar minha escolha</label>',
+    );
+    expect(output).toContain(
+      '<label for="popover-modal-email" class="nds-label">Receber aviso por e-mail</label>',
+    );
+    // Rótulo associado por `for`/`id`: sem o par casado a caixa fica muda para
+    // quem navega por leitor de tela, e a consulta da play por nome falharia.
+    expect([...output.matchAll(/<Checkbox id="([^"]+)"/g)].map((m) => m[1])).toEqual([
+      'popover-modal-remember',
+      'popover-modal-email',
+    ]);
+    expect(output).not.toContain('PopoverClose');
+    expect(output).not.toContain('Cancelar');
+    expect(output).not.toContain('Salvar');
+    expect(output).not.toContain('close()');
   });
 });
 
@@ -206,7 +234,6 @@ describe('transforms das stories de composição', () => {
       [popoverWithTitleSource, 'Salvar'],
       [popoverClosedSource, 'Salvar'],
       [popoverOpenSource, 'Salvar'],
-      [popoverModalSource, 'Salvar'],
       [popoverControlledSource, 'Salvar'],
       [popoverFilterSource, 'Aplicar'],
     ];
@@ -249,7 +276,12 @@ describe('transforms das stories de composição', () => {
 
   it('quem não tem rodapé de ações não importa a peça de fechar', () => {
     // O import que não se usa é ruído que o leitor copia junto.
-    for (const fn of [popoverAboveSource, popoverFormSource, popoverContentLivreSource]) {
+    for (const fn of [
+      popoverAboveSource,
+      popoverFormSource,
+      popoverContentLivreSource,
+      popoverModalSource,
+    ]) {
       expect(fn()).not.toContain('PopoverClose');
     }
   });

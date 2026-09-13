@@ -139,6 +139,23 @@ describe('popoverSource', () => {
     expect(saida.match(/aria-label="/g)).toHaveLength(6);
   });
 
+  it('o painel de opções traz duas caixas rotuladas e nenhum botão de ação', () => {
+    // É a composição da story do modo modal: os dois focáveis que o laço de
+    // tabulação precisa são CAIXAS, e não um rodapé de Cancelar/Salvar que não
+    // executaria ação nenhuma. Cada caixa vem ligada por `bind:checked` —
+    // caixa sem estado ensinaria um controle inerte.
+    const saida = popoverSource('', { args: { variant: 'options' } });
+    expect(saida).toContain('import { Checkbox } from "@/components/ui/checkbox";');
+    expect(saida).toContain('import { Label } from "@/components/ui/label";');
+    expect(saida).toContain('<Label for="popover-option-remember">Lembrar minha escolha</Label>');
+    expect(saida).toContain('<Label for="popover-option-email">Receber aviso por e-mail</Label>');
+    expect(saida).toContain('<Checkbox id="popover-option-remember" bind:checked={remember} />');
+    expect(saida).toContain('let emailNotice = $state(false);');
+    // Sem peça de fechar: com um `PopoverClose` registrado no painel, quem
+    // prende o foco passa a ser o gerenciador da lib.
+    expect(saida).not.toContain('PopoverClose');
+  });
+
   it('as preferências rápidas são independentes entre si', () => {
     const saida = popoverSource('', { args: { variant: 'quickSettings' } });
     expect(saida).toContain('<span>Notificações</span>');

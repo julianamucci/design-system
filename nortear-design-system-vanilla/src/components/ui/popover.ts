@@ -296,6 +296,18 @@ let _popoverCounter = 0;
  *
  * `[tabindex="-1"]` fica de fora de propósito: é o marcador de foco
  * programático, não de parada na ordem de tabulação — e o próprio painel o tem.
+ *
+ * **A regra vale para TODOS os seletores, e até 2026-09-13 só o último a
+ * cobrava.** `input[tabindex="-1"]` entrava pela porta do `input:not([disabled])`,
+ * e um elemento que o Tab nunca visita virava o "último focável": o ramo do laço
+ * deixava de disparar e o foco SAÍA do painel modal — justamente o contrato que
+ * o laço existe para sustentar quando a composição não tem botão de fechar.
+ *
+ * Aqui era latente, e no react não era: a base-ui renderiza, ao lado de cada
+ * `Checkbox`, um `<input type="checkbox" tabindex="-1" aria-hidden="true">`
+ * escondido. Bastou a story do modo modal passar a usar checkbox para o laço
+ * quebrar. Esta lista é a referência que as outras copiam; corrigi-la aqui é o
+ * que mantém a cópia honesta.
  */
 const FOCUSABLE = [
   'a[href]',
@@ -303,8 +315,10 @@ const FOCUSABLE = [
   'input:not([disabled])',
   'select:not([disabled])',
   'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
+  '[tabindex]',
+]
+  .map((selector) => `${selector}:not([tabindex="-1"])`)
+  .join(', ');
 
 function getFocusable(container: HTMLElement): HTMLElement[] {
   return Array.from(container.querySelectorAll<HTMLElement>(FOCUSABLE))

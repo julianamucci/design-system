@@ -42,6 +42,8 @@ const DISTANCIA_DEFAULT = 4;
 
 const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
+const IMPORT_CHECKBOX = 'import { Checkbox } from "@/components/ui/checkbox";';
+
 /**
  * O import do estado. Sai daqui e não de cada construtor porque agora são
  * CINCO os snippets que fecham por código, e um `useState` sem import chega a
@@ -397,12 +399,28 @@ const [aberto, setAberto] = useState(false);`,
  * `modal === true` sozinho. O laço de tabulação está no `PopoverContent` de
  * `popover.tsx`, na mesma forma do Vanilla, que é a referência.
  *
- * Por isso este é o ÚNICO rodapé sem `PopoverClose` — e a ausência é o assunto:
+ * Por isso este é o ÚNICO painel sem `PopoverClose` — e a ausência é o assunto:
  * é ela que deixa o painel modal depender do nosso laço, que é o caso que o
  * contrato precisa cobrir. Com um controle de fechar aqui, quem trapearia seria
  * a lib, e a story mediria a lib.
+ *
+ * E por isso o conteúdo é uma LISTA DE OPÇÕES, não um rodapé de ações. Até
+ * 2026-09-13 este snippet imprimia um par Cancelar/OK que existia só para haver
+ * dois focáveis — nenhum dos dois podia fechar, porque um controle de fechar
+ * registrado entregaria a prisão de foco à lib. Botão que promete ação e não
+ * entrega é defeito, e um exemplo publicado o ensina. A caixa de marcação se
+ * basta: marcar JÁ é o efeito, e ela continua sendo o segundo focável que prova
+ * o laço — com um só, "o Tab do último volta ao primeiro" seria verdade sem laço
+ * nenhum, porque primeiro e último seriam o mesmo elemento.
  */
 export function popoverModalSource(): string {
+  const option = (id: string, label: string) => `      <div className="nds-cluster" data-spacing="sm">
+        <Checkbox id="${id}" />
+        <label htmlFor="${id}" className="nds-label">
+          ${label}
+        </label>
+      </div>`;
+
   return jsxSnippet(
     `${importingPopover(
       'Popover',
@@ -412,15 +430,16 @@ export function popoverModalSource(): string {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BUTTON}`,
+${IMPORT_BUTTON}
+${IMPORT_CHECKBOX}`,
     popover(
       ' defaultOpen modal',
       'Abrir modal',
       '',
       `${header('Popover modal', 'O foco fica preso no painel enquanto ele está aberto.')}
-    <div className="nds-cluster" data-justify="end" data-spacing="sm">
-      <Button variant="ghost" size="sm">Cancelar</Button>
-      <Button size="sm">OK</Button>
+    <div className="nds-stack nds-pt-1" data-spacing="sm">
+${option('lembrar-escolha', 'Lembrar minha escolha')}
+${option('aviso-email', 'Receber aviso por e-mail')}
     </div>`,
     ),
   );

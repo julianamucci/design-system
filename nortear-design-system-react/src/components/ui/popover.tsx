@@ -158,6 +158,15 @@ function nomearPanel(el: HTMLElement | null): void {
  * `[tabindex="-1"]` fica de fora de propósito: é o marcador de foco
  * programático, não de parada na ordem de tabulação — e o próprio painel o tem.
  * Mesma lista do `popover.ts` do Vanilla, que é a referência.
+ *
+ * A EXCLUSÃO VALE PARA OS CINCO SELETORES, e não só para o genérico — medido em
+ * 2026-09-13, quando a story Modal passou a montar dois `Checkbox` do design
+ * system. Ao lado de cada caixa, o Base UI renderiza um
+ * `<input type="checkbox" tabindex="-1" aria-hidden="true">` escondido, que o
+ * navegador NUNCA visita no Tab; `input:not([disabled])` o alcançava assim
+ * mesmo, então `last` virava um elemento inalcançável, o ramo do laço nunca
+ * disparava e o foco SAÍA do painel modal. A regra sempre foi a do docblock
+ * acima; o que faltava era aplicá-la ao elemento nativo que carrega o atributo.
  */
 const FOCUSABLE = [
   "a[href]",
@@ -165,8 +174,10 @@ const FOCUSABLE = [
   "input:not([disabled])",
   "select:not([disabled])",
   "textarea:not([disabled])",
-  '[tabindex]:not([tabindex="-1"])',
-].join(", ")
+]
+  .map((selector) => `${selector}:not([tabindex="-1"])`)
+  .concat('[tabindex]:not([tabindex="-1"])')
+  .join(", ")
 
 function PopoverContent({
   className,

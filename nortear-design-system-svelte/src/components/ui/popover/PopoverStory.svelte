@@ -8,6 +8,7 @@
     PopoverDescription,
     PopoverClose, type PopoverCloseReason } from './index';
   import { Button } from '@/components/ui/button';
+  import { Checkbox } from '@/components/ui/checkbox';
   import { Input } from '@/components/ui/input';
   import { Label } from '@/components/ui/label';
 
@@ -19,7 +20,8 @@
     | 'form'
     | 'tableFilter'
     | 'colorPicker'
-    | 'quickSettings';
+    | 'quickSettings'
+    | 'options';
 
   interface Props {
     side?: Side;
@@ -122,6 +124,17 @@
     { name: 'Modo escuro', marcada: false },
     { name: 'Modo compacto', marcada: false },
   ];
+
+  /**
+   * Os dois focáveis da variante `options` — ver o comentário dela no markup.
+   *
+   * `$state` porque cada caixa é ligada por `bind:checked`: sem estado, marcar
+   * uma delas não mudaria nada e a story ensinaria um controle inerte.
+   */
+  const MODAL_OPTIONS = $state([
+    { id: 'popover-option-remember', label: 'Lembrar minha escolha', checked: true },
+    { id: 'popover-option-email', label: 'Receber aviso por e-mail', checked: false },
+  ]);
 </script>
 
 <div class="nds-stack" data-align="center" data-spacing="md" style="contain: layout">
@@ -200,6 +213,38 @@
                 {/snippet}
               </PopoverClose>
               <Button size="sm" onclick={confirmAndClose}>{saveLabel}</Button>
+            </div>
+          {:else if variant === 'options'}
+            <!-- ─── Variante PRÓPRIA, e o porquê de não reaproveitar a
+                 `withTitle` ───────────────────────────────────────────────
+
+                 Quem consome esta variante é só a story `Modal`, que precisa
+                 de DOIS focáveis no painel: com um só, "o Tab do último volta
+                 ao primeiro" seria verdade sem laço nenhum — primeiro e
+                 último seriam o mesmo elemento.
+
+                 Os dois focáveis não podem ser Cancelar/Confirmar. Ali eles
+                 não executavam ação nenhuma, e botão que promete o que não
+                 faz é defeito de exemplo; virar botão de verdade também não
+                 serve, porque um `PopoverClose` REGISTRADO no painel faz o
+                 gerenciador de foco da lib trapear sozinho — a story passaria
+                 a medir a lib, não o laço. Checkbox é controle que se basta:
+                 marcar já É o efeito, sem prometer nada além.
+
+                 E vai numa variante nova em vez de alterar a `withTitle`
+                 porque este componente é compartilhado com as outras stories
+                 do arquivo, que seguem medindo o rodapé de Cancelar/Salvar. -->
+            <PopoverHeader>
+              <PopoverTitle>{title}</PopoverTitle>
+              <PopoverDescription>{description}</PopoverDescription>
+            </PopoverHeader>
+            <div class="nds-stack" data-spacing="sm">
+              {#each MODAL_OPTIONS as option (option.id)}
+                <div class="nds-cluster" data-spacing="sm">
+                  <Checkbox id={option.id} bind:checked={option.checked} />
+                  <Label for={option.id}>{option.label}</Label>
+                </div>
+              {/each}
             </div>
           {:else if variant === 'tableFilter'}
             <PopoverHeader>

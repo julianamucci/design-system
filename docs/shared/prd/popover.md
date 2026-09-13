@@ -82,6 +82,31 @@ prometeu e não cumpria. Nenhuma violação de axe nos dois estados.
 O laço à mão FICA, e não é redundância esquecida: ele é o único trap quando o
 painel modal não tem controle de fechar, e o contrato de `modal` não pode
 depender do conteúdo que alguém pôs dentro.
+
+**E ele contava como focável um elemento que o Tab nunca visita, até 2026-09-13.**
+A lista de seletores declarava no docblock que `[tabindex="-1"]` fica de fora —
+"é marcador de foco programático, não parada na ordem de tabulação" — e **só o
+último seletor cobrava isso**. `input[tabindex="-1"]` entrava pela porta do
+`input:not([disabled])`.
+
+Estava latente no vanilla e no angular, e não no react: a base-ui renderiza, ao
+lado de cada `Checkbox`, um `<input type="checkbox" tabindex="-1" aria-hidden>`
+escondido. Bastou a story do modo modal passar a usar checkbox para o elemento
+escondido virar o "último focável", o ramo do laço deixar de disparar e **o foco
+sair do painel** — exatamente o contrato que o laço existe para sustentar.
+Corrigido nas três stacks que têm a lista, aplicando o filtro a todos os
+seletores; vue e svelte não a têm, porque ali o trap é da lib.
+
+**O que a correção expôs, e é o que vale guardar**: no angular a story passava
+porque media o elemento errado. Com a lista honesta, o painel ficava sem
+nenhum focável e o Tab virava no-op — o foco não ia para lugar errado, não se
+movia. A causa é a ponte de foco do portal do `radix-ng`, que inertiza o
+conteúdo enquanto o foco está fora (`disableFocusInside`) e só o reabilita num
+`focusin` **com `relatedTarget`**. A play chamava `.focus()` direto, e foco
+programático não tem `relatedTarget`. Medido: entrando por Tab a partir do
+gatilho, a ponte devolve o tabindex e o laço fecha. Era o instrumento, não o
+componente — e a asserção nova de "o primeiro focável recebe o foco" virou, de
+graça, o portão dessa reabilitação.
 **Para revisitar**: separar os três em props independentes reabre o defeito de D1.
 
 ### D3 · O painel se nomeia por título OU por `aria-label`

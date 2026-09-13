@@ -4,6 +4,8 @@ import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
 import { open, panel } from './popover.fixtures';
 import { NdsButton } from './button';
+import { NdsCheckbox } from './checkbox';
+import { NdsLabel } from './label';
 
 import { figmaDesign } from '@shared/figma/design-links';
 // Os quatro estados que o conteúdo compartilhado descreve: fechado (painel fora
@@ -24,7 +26,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 const meta: Meta = {
   title: 'Components/Overlay/Popover/States',
   tags: ['overlay'],
-  decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton] })],
+  decorators: [moduleMetadata({ imports: [...NDS_POPOVER, NdsButton, NdsCheckbox, NdsLabel] })],
   parameters: {
     design: figmaDesign('popover'),
     layout: 'centered',
@@ -238,8 +240,8 @@ export const Modal: Story = {
     },
   },
   render: () => ({
-    // O painel NÃO traz botão de fechar de propósito. O primitivo desta stack só
-    // trapeia com `modal === true` quando existe um `ndsPopoverClose`
+    // O painel NÃO traz controle de fechar de propósito. O primitivo desta stack
+    // só trapeia com `modal === true` quando existe um `ndsPopoverClose`
     // registrado dentro dele (`hasPopupClose()`), e é exatamente esse buraco que
     // o laço de tabulação do `NdsPopover` fecha: sem ele, `modal` prometeria
     // prisão de foco e entregaria só a trava de rolagem. Com um botão de fechar
@@ -247,6 +249,15 @@ export const Modal: Story = {
     //
     // DOIS focáveis, também de propósito: com um só, "o Tab do último volta ao
     // primeiro" seria verdade sem laço nenhum.
+    //
+    // E são CHECKBOX, e não o rodapé de ações das outras stories, porque os dois
+    // motivos acima andam juntos: sem o `ndsPopoverClose`, um "Cancelar" não
+    // cancelaria nada e um "Confirmar" não confirmaria nada — seriam dois botões
+    // inertes só para encher a ordem de tabulação. Checkbox é um controle que se
+    // BASTA: marcar já é o efeito, e ele não promete ação que a story não faz.
+    //
+    // Quem vier "consertar" isto de volta para o par Cancelar/Confirmar tira os
+    // dentes dos dois últimos passos da play.
     template: `
       <div ndsPopover [defaultOpen]="true" [modal]="true">
         <button ndsPopoverTrigger ndsButton variant="outline">Abrir modal</button>
@@ -257,9 +268,15 @@ export const Modal: Story = {
             <p ndsPopoverDescription>O foco fica preso no painel enquanto ele está aberto.</p>
           </div>
 
-          <div class="nds-cluster" data-justify="end" data-spacing="sm">
-            <button ndsButton variant="ghost" size="sm">Cancelar</button>
-            <button ndsButton size="sm">Confirmar</button>
+          <div class="nds-stack" data-spacing="sm">
+            <div class="nds-cluster" data-spacing="sm">
+              <button ndsCheckbox id="popover-modal-remember"></button>
+              <label ndsLabel for="popover-modal-remember">Lembrar minha escolha</label>
+            </div>
+            <div class="nds-cluster" data-spacing="sm">
+              <button ndsCheckbox id="popover-modal-email"></button>
+              <label ndsLabel for="popover-modal-email">Receber aviso por e-mail</label>
+            </div>
           </div>
         </ng-template>
       </div>
@@ -288,29 +305,58 @@ export const Modal: Story = {
       // modal, ele volta ao primeiro.
       const dialog = panel()!;
       const inside = within(dialog);
-      const cancel = inside.getByRole('button', { name: /Cancelar/i });
-      const confirm = inside.getByRole('button', { name: /Confirmar/i });
+      const firstBox = inside.getByRole('checkbox', { name: /Lembrar minha escolha/i });
+      const lastBox = inside.getByRole('checkbox', { name: /Receber aviso por e-mail/i });
 
-      confirm.focus();
-      await expect(confirm).toHaveFocus();
+      // ─── E SE ENTRA NO PAINEL POR TAB, não por `focus()` ────────────────
+      //
+      // `lastBox.focus()` pelado NÃO serve aqui, e isto não é preferência de
+      // estilo: a ponte de foco do portal (`radix-ng-primitives-focus-scope`)
+      // chama `disableFocusInside()` enquanto o foco está FORA do painel —
+      // salva o tabindex original em `data-rdx-tabindex` e crava `-1` em todo
+      // o conteúdo, para o Tab não cair no portal pela ordem do DOM. Ela só
+      // desfaz isso num `focusin`, e o handler começa com
+      // `if (!event.relatedTarget || !isOutsideEvent(event, node)) return;`.
+      //
+      // Foco programático vindo do `body` não carrega `relatedTarget`: o
+      // retorno antecipado dispara e o conteúdo continua inerte. Medido em
+      // 2026-09-13 — os dois checkboxes com `tabindex="-1"` e o Tab virando
+      // NO-OP, porque a nossa lista de focáveis (que está certa) não conta
+      // elemento que o Tab não alcança, e o laço sai pelo ramo "sem nada
+      // focável dentro".
+      //
+      // Quem chega por Tab tem `relatedTarget`. Então entramos pelo gatilho,
+      // que é o caminho real; a primeira asserção abaixo já prova que a ponte
+      // reabilitou o conteúdo, e é ela que reprovaria se algum dia deixasse.
+      const trigger = screen.getByRole('button', { name: 'Abrir modal' });
+      trigger.focus();
 
+      await userEvent.tab();
+      await expect(firstBox).toHaveFocus();
+
+      await userEvent.tab();
+      await expect(lastBox).toHaveFocus();
+
+      // O Tab que importa: a partir do ÚLTIMO.
       await userEvent.tab();
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
-      await expect(cancel).toHaveFocus();
+      await expect(firstBox).toHaveFocus();
     });
 
     await step('E Shift+Tab a partir do primeiro volta ao último', async () => {
       const dialog = panel()!;
       const inside = within(dialog);
-      const cancel = inside.getByRole('button', { name: /Cancelar/i });
-      const confirm = inside.getByRole('button', { name: /Confirmar/i });
+      const firstBox = inside.getByRole('checkbox', { name: /Lembrar minha escolha/i });
+      const lastBox = inside.getByRole('checkbox', { name: /Receber aviso por e-mail/i });
 
-      cancel.focus();
+      // Aqui o `focus()` pode ser direto: o passo anterior deixou o foco DENTRO
+      // do painel, e a ponte só volta a inertizar o conteúdo quando ele sai.
+      firstBox.focus();
       await userEvent.tab({ shift: true });
 
       await expect(dialog.contains(document.activeElement)).toBe(true);
-      await expect(confirm).toHaveFocus();
+      await expect(lastBox).toHaveFocus();
     });
   },
 };

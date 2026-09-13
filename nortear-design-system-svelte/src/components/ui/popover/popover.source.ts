@@ -23,7 +23,14 @@ export type PopoverArgs = {
   nameLabel: string;
   emailLabel: string;
   submitLabel: string;
-  variant: 'default' | 'withTitle' | 'form' | 'tableFilter' | 'colorPicker' | 'quickSettings';
+  variant:
+    | 'default'
+    | 'withTitle'
+    | 'form'
+    | 'tableFilter'
+    | 'colorPicker'
+    | 'quickSettings'
+    | 'options';
   /**
    * Nome acessível declarado do painel, para a composição SEM título. Com
    * título quem nomeia é o `aria-labelledby`, e o rótulo não entra no snippet.
@@ -176,6 +183,35 @@ ${close(a.cancelLabel, '        ')}
       <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-bg-warning" aria-label="Atenção"></button>
       <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-bg-info" aria-label="Informação"></button>
       <button type="button" class="nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring nds-bg-destructive" aria-label="Destrutiva"></button>
+    </div>`,
+      fechaPorCodigo: false,
+    };
+  }
+
+  if (a.variant === 'options') {
+    // Painel de opções: só caixas, sem rodapé de ação. É a composição que a
+    // story do modo modal renderiza, e o que ela ensina é justamente que o
+    // painel não precisa de botão nenhum para ter o que tabular — cada caixa
+    // se basta, e marcar já é o efeito.
+    return {
+      names: HEADER,
+      externos: [
+        `import { Button } from "@/components/ui/button";`,
+        `import { Checkbox } from "@/components/ui/checkbox";`,
+        `import { Label } from "@/components/ui/label";`,
+      ],
+      state: `let remember = $state(true);
+let emailNotice = $state(false);`,
+      markup: `${head}
+    <div class="nds-stack" data-spacing="sm">
+      <div class="nds-cluster" data-spacing="sm">
+        <Checkbox id="popover-option-remember" bind:checked={remember} />
+        <Label for="popover-option-remember">Lembrar minha escolha</Label>
+      </div>
+      <div class="nds-cluster" data-spacing="sm">
+        <Checkbox id="popover-option-email" bind:checked={emailNotice} />
+        <Label for="popover-option-email">Receber aviso por e-mail</Label>
+      </div>
     </div>`,
       fechaPorCodigo: false,
     };

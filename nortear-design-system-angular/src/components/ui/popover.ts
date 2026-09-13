@@ -417,6 +417,18 @@ export class NdsPopover {
  *
  * `[tabindex="-1"]` fica de fora de propósito: é o marcador de foco
  * programático, não de parada na ordem de tabulação — e o próprio painel o tem.
+ *
+ * **A regra vale para TODOS os seletores, e até 2026-09-13 só o último a
+ * cobrava.** `input[tabindex="-1"]` entrava pela porta do `input:not([disabled])`,
+ * e um elemento que o Tab nunca visita virava o "último focável": o ramo do laço
+ * deixava de disparar e o foco SAÍA do painel modal — justamente o contrato que
+ * este laço existe para sustentar quando a composição não tem `ndsPopoverClose`.
+ *
+ * Aqui é latente, porque o `ndsCheckbox` desta stack é um `<button>`. No react
+ * não era: a base-ui renderiza um `<input tabindex="-1" aria-hidden>` escondido
+ * ao lado de cada Checkbox, e bastou a story do modo modal passar a usar
+ * checkbox para o laço quebrar. A lista é cópia da do vanilla, que é a
+ * referência; ela foi corrigida lá no mesmo dia.
  */
 const FOCAVEIS = [
   'a[href]',
@@ -424,8 +436,10 @@ const FOCAVEIS = [
   'input:not([disabled])',
   'select:not([disabled])',
   'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
+  '[tabindex]',
+]
+  .map((selector) => `${selector}:not([tabindex="-1"])`)
+  .join(', ');
 
 // ─── NdsPopoverTrigger ────────────────────────────────────────────────────────
 
