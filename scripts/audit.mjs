@@ -26,6 +26,7 @@
 import { readFileSync, existsSync, readdirSync, writeFileSync, statSync } from 'node:fs';
 import { join, relative, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { fontesDoRegistry } from './registry-fontes.mjs';
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..');
 const STACKS = ['react', 'vue', 'svelte', 'vanilla', 'angular'];
@@ -4838,6 +4839,90 @@ function auditTituloSemTamanho() {
         + 'o agente de usuário dá a `h*` um multiplicador relativo, então o tamanho passa a depender do nível que quem '
         + 'escreve escolheu, e a mesma peça sai em dois tamanhos na mesma página',
     });
+  }
+
+  return violations;
+}
+
+/**
+ * Manifesto do registry publicando fonte VELHA.
+ *
+ * O `registry/v1/*.json` inlina o conteúdo dos fontes — `tokens.css`, os seis
+ * temas, o `utils.ts` e o par `.ts`/`.css` de cada componente empacotado — e é
+ * o que outro projeto copia. Nada o vigiava: o gerador não tem `--check`, e
+ * editar um fonte sem rodá-lo publica a versão anterior, calado.
+ *
+ * Descoberto em 2026-09-13 por acaso, consertando o comentário do
+ * `--text-control-xl`: a frase errada estava publicada no `init.json` também.
+ * Naquele dia o resto estava em dia — mas por disciplina, não por portão, e é a
+ * diferença entre as duas que esta regra fecha.
+ *
+ * **A régua sai de `registry-fontes.mjs`, que é o MESMO mapa que o gerador usa.**
+ * Isso não é detalhe de organização: o manifesto guarda só o `name` do arquivo,
+ * sem o caminho de origem, então um portão com mapa próprio compararia contra
+ * um caminho que o gerador já teria deixado de usar — verde medindo a coisa
+ * errada, que é a forma de falha que esta casa mais paga.
+ */
+function auditRegistryDefasado() {
+  const violations = [];
+  const dir = join(ROOT, 'registry', 'v1');
+  if (!existsSync(dir)) return violations;
+
+  const porManifesto = new Map();
+  for (const f of fontesDoRegistry()) {
+    if (!porManifesto.has(f.manifesto)) porManifesto.set(f.manifesto, []);
+    porManifesto.get(f.manifesto).push(f);
+  }
+
+  for (const [manifesto, esperados] of porManifesto) {
+    const arq = join(dir, `${manifesto}.json`);
+    if (!existsSync(arq)) {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, arq), rule: 'registry_defasado',
+        message: `\`registry-fontes.mjs\` declara o manifesto \`${manifesto}\` e ele não existe — rode `
+          + '`node scripts/build-registry.mjs`',
+      });
+      continue;
+    }
+    let json;
+    try { json = JSON.parse(readFile(arq) || '{}'); } catch {
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, arq), rule: 'registry_defasado',
+        message: 'manifesto do registry não é JSON válido',
+      });
+      continue;
+    }
+    const publicado = new Map((json.files ?? []).map((f) => [f.name, f.content]));
+    for (const e of esperados) {
+      const fonte = join(ROOT, e.src);
+      if (!existsSync(fonte)) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+          file: 'scripts/registry-fontes.mjs', rule: 'registry_defasado',
+          message: `o mapa aponta \`${e.name}\` para \`${e.src}\`, que não existe — o fonte mudou de lugar e `
+            + 'o mapa ficou para trás; é exatamente o apodrecimento que ter UM mapa existe para tornar visível',
+        });
+        continue;
+      }
+      if (!publicado.has(e.name)) {
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+          file: relative(ROOT, arq), rule: 'registry_defasado',
+          message: `\`${e.name}\` está no mapa e NÃO no manifesto \`${manifesto}\` — rode `
+            + '`node scripts/build-registry.mjs`',
+        });
+        continue;
+      }
+      if (publicado.get(e.name) === readFile(fonte)) continue;
+      violations.push({
+        category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+        file: relative(ROOT, arq), rule: 'registry_defasado',
+        message: `\`${e.name}\` publica conteúdo diferente de \`${e.src}\` — o registry é o que OUTRO projeto `
+          + 'copia, e um fonte editado sem rodar `node scripts/build-registry.mjs` o deixa distribuindo a versão anterior',
+      });
+    }
   }
 
   return violations;
@@ -11516,7 +11601,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

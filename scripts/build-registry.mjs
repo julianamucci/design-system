@@ -14,42 +14,25 @@
  *   - O `type` de cada arquivo (component | style | lib | tokens | theme | vendor)
  *     define onde o CLI escreve (paths.<type> do nortear.json).
  *
- * Para incluir um componente novo: adicione o slug em COMPONENTS.
- * Para alterar a camada base: edite INIT_FILES + INIT_ENTRY_IMPORTS + INIT_DEPS.
+ * Para incluir um componente novo: adicione o slug em COMPONENTS, que mora em
+ * `registry-fontes.mjs` — o mesmo módulo que o portão `registry_defasado` lê.
+ * Para alterar a camada base: edite INIT_FILES lá, e INIT_ENTRY_IMPORTS +
+ * INIT_DEPS aqui.
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { COMPONENTS, INIT_FILES } from './registry-fontes.mjs';
 
 const ROOT       = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const NORTEAR    = path.join(ROOT, 'nortear-design-system-vanilla');
-const SHARED     = path.join(ROOT, 'docs', 'shared');
 const OUT_DIR    = path.join(ROOT, 'registry', 'v1');
 
-// ─── Componentes a empacotar ─────────────────────────────────────────────────
-// CSS dos componentes vive no shared (.nds-*), não mais em src/styles do stack.
-const COMPONENTS = [
-  { name: 'button', ts: 'src/components/ui/button.ts', css: 'styles/nds/button.css' },
-  { name: 'alert',  ts: 'src/components/ui/alert.ts',  css: 'styles/nds/alert.css'  },
-];
-
-// ─── Camada base (init) ──────────────────────────────────────────────────────
+// ─── O que empacotar ─────────────────────────────────────────────────────────
+// O mapa NÃO mora aqui: ele é declarado uma vez em `registry-fontes.mjs`, que
+// este gerador e o portão `registry_defasado` do `audit.mjs` leem juntos. Duas
+// cópias dele significariam um portão comparando contra um caminho que deixou
+// de ser a origem — verde medindo a coisa errada.
 // type ∈ paths.{lib|tokens|theme|vendor|styles}; o CLI compõe o destino final.
-const INIT_FILES = [
-  // lib
-  // sanitize-html.ts foi removido do projeto (sanitização via DOMPurify direto
-  // no call site — ver guideline 09); o init distribui apenas utils.ts.
-  { type: 'lib',    name: 'utils.ts',         src: path.join(NORTEAR, 'src/lib/utils.ts') },
-  // tokens
-  { type: 'tokens', name: 'tokens.css',       src: path.join(SHARED,  'tokens/tokens.css') },
-  // themes
-  { type: 'theme',  name: 'index.css',        src: path.join(SHARED,  'themes/index.css') },
-  { type: 'theme',  name: 'default.css',      src: path.join(SHARED,  'themes/default.css') },
-  { type: 'theme',  name: 'warm.css',         src: path.join(SHARED,  'themes/warm.css') },
-  { type: 'theme',  name: 'cold.css',         src: path.join(SHARED,  'themes/cold.css') },
-  { type: 'theme',  name: 'densities.css',    src: path.join(SHARED,  'themes/densities.css') },
-  { type: 'theme',  name: 'fonts.css',        src: path.join(SHARED,  'themes/fonts.css') },
-];
 
 // Referências por {type, name} — o CLI computa o path relativo ao entry CSS
 // usando os paths do nortear.json do consumidor (não hardcodamos diretórios).
@@ -71,7 +54,7 @@ const indexItems = [];
 {
   const files = [];
   for (const f of INIT_FILES) {
-    const content = await readFile(f.src, 'utf8');
+    const content = await readFile(path.join(ROOT, f.src), 'utf8');
     files.push({ type: f.type, name: f.name, content });
   }
   const manifest = {
@@ -90,8 +73,8 @@ const indexItems = [];
 
 // componentes
 for (const comp of COMPONENTS) {
-  const tsContent  = await readFile(path.join(NORTEAR, comp.ts),  'utf8');
-  const cssContent = comp.css ? await readFile(path.join(SHARED, comp.css), 'utf8') : null;
+  const tsContent  = await readFile(path.join(ROOT, comp.ts),  'utf8');
+  const cssContent = comp.css ? await readFile(path.join(ROOT, comp.css), 'utf8') : null;
 
   const { npmDeps, registryDeps } = detectDeps(tsContent);
 
