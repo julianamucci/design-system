@@ -29,6 +29,22 @@ Ao ser ligado pela primeira vez ele achou, em código que a suíte dava por verd
 
 `--noEmit` na LINHA DE COMANDO é seguro e é o uso correto; o que não pode é a flag dentro do `tsconfig.json` (§1 abaixo).
 
+**Leia o `ngc` pelo CÓDIGO DE SAÍDA, nunca por `grep "error TS"`.** Medido em
+2026-09-12: o `ngc` **colore a saída mesmo em pipe**, e o que sai no fluxo é
+`error␛[0m␛[90m TS2339`, com escapes ANSI entre a palavra e o código. Um
+`grep -cE "error TS"` devolve **zero com o build vermelho** — foi assim que uma
+rodada declarou a stack verde três vezes seguidas com um `TS2339` de pé
+(`Property 'tNav' does not exist on type 'NdsIconsDocs'`), e quem o encontrou foi
+outra sessão. A forma certa é `npm run build > /dev/null 2>&1; echo $?`; se
+precisar do texto, filtre por `TS[0-9]` ou passe `--no-color`. Vale para o
+`build-storybook` também.
+
+**Const de MÓDULO não existe para o template.** No mesmo dia, no mesmo arquivo: o
+tradutor do `ui.json` foi ligado como `const { t: tNav } = useTranslation(...)`
+no topo do módulo e chamado no template. O arquivo compila; o template não — e a
+mensagem fala de propriedade da CLASSE, não de variável fora dela. O padrão desta
+casa é reexpor: `protected readonly tNav = tNav;`, como o `t` irmão já fazia.
+
 **Classe de componente usada em template precisa ser `export`ada.** O compilador gera um arquivo `*.ngtypecheck.ts` que **importa** cada peça usada no template; símbolo não exportado quebra a geração com `NG3004` e o erro sai sem linha útil. Oito ícones e utilitários internos deste pacote estavam sem `export` — nenhum é API pública, e nenhum barril os reexporta.
 
 ---

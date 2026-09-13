@@ -282,6 +282,9 @@ const REGRAS_DE_ACESSIBILIDADE = [
 })
 export class NdsIconsDocs implements OnInit, OnDestroy {
   protected readonly t = t;
+  // Rótulo de seção vem do `ui.json`, e o template só alcança MEMBRO da classe:
+  // como const de módulo, `tNav` compilava no arquivo e reprovava no template.
+  protected readonly tNav = tNav;
   protected readonly idDoTitulo = DOCS_PAGE_TITLE_ID;
   // Módulo exposto ao template: a chamada precisa aparecer no próprio binding
   // [innerHTML] para o SAST reconhecer o sanitizador de taint (guideline 09).
