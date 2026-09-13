@@ -134,15 +134,47 @@
   margin-top: var(--stack-gap);
 }
 
-/* data-split="N" empurra o N-ésimo filho (1-indexed) para o final via auto.
- * Ex: footer no rodapé de um stack que ocupa altura total.
+/* data-split="last" empurra o ÚLTIMO filho para o final, via margem automática.
+ * Ex: rodapé no fim de um stack que ocupa altura total.
  *
- *   <div class="nds-stack" data-split="last" style="height: 100%">
+ *   <div class="nds-stack nds-min-h-100" data-split="last">
  *     <header>…</header>
  *     <main>…</main>
  *     <footer>…</footer>  ← empurrado para baixo
  *   </div>
- */
+ *
+ * ── Só `last`, e o nome dizia outra coisa ────────────────────────────────────
+ *
+ * Até 2026-09-13 este bloco documentava `data-split="N"`, "o N-ésimo filho
+ * (1-indexed)". Nunca existiu: a regra abaixo é uma só, e casa `last`. Quem
+ * escrevesse `data-split="2"` recebia silêncio.
+ *
+ * ── A precondição que não se vê no call site, e que derrubou 5 de 5 usos ──────
+ *
+ * `margin-top: auto` só empurra se o último filho GERAR CAIXA e se sobrar
+ * espaço. As duas condições são invisíveis de onde se escreve o atributo, e o
+ * resultado de quebrar qualquer uma é NADA — sem erro, sem aviso, sem diferença
+ * na tela que denuncie a causa.
+ *
+ * Medido em 2026-09-13, na story `SideTop` do popover: era o único consumidor do
+ * utilitário no repositório, nas cinco stacks, e era inerte em todas — por dois
+ * mecanismos diferentes:
+ *
+ *   - **vanilla**: a fábrica devolve um wrapper com `display: contents`. Ele não
+ *     gera caixa, então quem vira item do flex é o gatilho, um nível abaixo. A
+ *     sonda mostrou contêiner de 400px, `display: flex`, último filho com
+ *     `margin-top` computado em `auto` — e o gatilho em `top: 0`.
+ *   - **react**: a `@base-ui` deixa um nó DEPOIS do gatilho, então o
+ *     `:last-child` daquela árvore nunca foi ele.
+ *
+ * Nos dois casos o espaço que a story achava ter vinha de outra coisa — do
+ * `layout: 'centered'` do Storybook — e a asserção que dependia dele passava por
+ * acidente. Quem precisa de espaço previsível usa um IRMÃO com altura, que é o
+ * que as cinco stories fazem hoje.
+ *
+ * A regra FICA: o idioma é correto e a alternativa seria altura em `style`
+ * inline, que esta casa proíbe. O que mudou é o comentário parar de prometer o
+ * que não existe e passar a dizer de que depende. */
 .nds-stack[data-split="last"] > :last-child { margin-top: auto; }
 
 /* ── Alinhamento no eixo transversal ──────────────────────────────────────────

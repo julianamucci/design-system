@@ -100,7 +100,21 @@ janela.
 
 **Efeito colateral registrado**: depois desta rodada, `data-split` não tem mais
 NENHUM consumidor vivo nas cinco stacks — só menções em comentário, explicando
-por que ele saiu. A regra continua em `layout.css`.
+por que ele saiu. A `SideTop` era o único uso do utilitário no repositório
+inteiro, e era inerte nas cinco.
+
+**Por que ele não empurrava, medido com sonda em 2026-09-13**: `margin-top: auto`
+só empurra se o último filho GERAR CAIXA. No vanilla a fábrica devolve um
+wrapper com `display: contents`, que não gera — quem vira item do flex é o
+gatilho, um nível abaixo. A sonda leu contêiner de 400px, `display: flex`, último
+filho com `margin-top` computado em `auto`, e o gatilho em `top: 0`. No react o
+mecanismo é outro e o silêncio é o mesmo: a lib deixa um nó DEPOIS do gatilho,
+então o `:last-child` daquela árvore nunca foi ele.
+
+A regra fica em `layout.css` — o idioma é correto e a alternativa seria altura em
+`style` inline, que a casa proíbe —, com o comentário reescrito: ele prometia um
+`data-split="N"` que nunca existiu, e agora declara a precondição que não se vê
+do call site.
 
 ### D1 · Não-modal por padrão
 
