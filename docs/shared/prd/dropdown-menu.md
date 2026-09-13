@@ -310,9 +310,19 @@ uma família com duas folhas.
 > a condição exata do `scrollable-region-focusable` que a regra de
 > `menubar.css:146-167` existe para evitar. Posicionar é papel da lib nas quatro,
 > mas o `overflow` não.
-> **Fecha quando**: as quatro stacks escreverem a classe no painel de topo
-> (`grep -r "nds-menubar-panel" nortear-design-system-*/src` devolvendo as cinco),
-> ou a folha declarar a exceção medida com um menu longo.
+> **A primeira saída que esta pendência prescrevia FICOU ERRADA, e a D12 é o
+> motivo.** Ela dizia "as quatro stacks escreverem a classe no painel de topo".
+> Só que `.nds-menubar-panel` declara `position: absolute` JUNTO com a ancoragem
+> por `top`/`left`, e nas quatro quem posiciona é a lib: aplicar a classe lá
+> reintroduziria, ao contrário, o defeito que a D12 acabou de remover — uma folha
+> disputando posição com o posicionador da lib. Medido em 2026-09-13.
+>
+> **Fecha quando** as duas responsabilidades que hoje moram na mesma classe forem
+> separadas: o `overflow: visible`, que as cinco precisam, e a ancoragem por
+> folha, que é do painel aninhado do vanilla e só dele. Enquanto estiverem
+> juntas, não há como dar uma às quatro sem dar a outra. A alternativa é a folha
+> declarar a exceção medida com um menu longo — o que exige medir, não deduzir,
+> como o próprio bloco em `menubar.css` já exige.
 
 ### D12 · A folha NÃO posiciona o painel, e o vão do Menubar é 8
 
