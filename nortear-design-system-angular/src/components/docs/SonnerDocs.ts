@@ -85,6 +85,25 @@ const SECTION_IDS = [
   'acessibilidade', 'relacionados', 'notas', 'analytics', 'testes',
 ] as const;
 
+/**
+ * Os seis disparos por tipo, cada um com as DUAS chaves escritas por extenso —
+ * o rótulo do botão e o texto da notificação.
+ *
+ * Até 2026-09-14 as duas eram montadas por concatenação
+ * (`trigger${Tipo}` e `labels.${type}`), e as doze chaves ficavam invisíveis a
+ * quem lê chave por LITERAL: `demonstration_labels_divergent` acusava esta
+ * página de não usar `default`, `success`, `info`, `loading` e `triggerLoading`,
+ * que estavam na tela o tempo todo. Chave literal é a que se acha por busca.
+ */
+const TYPE_TRIGGERS = [
+  { type: 'default', labelKey: 'demonstration.labels.triggerDefault', textKey: 'demonstration.labels.default' },
+  { type: 'success', labelKey: 'demonstration.labels.triggerSuccess', textKey: 'demonstration.labels.success' },
+  { type: 'error', labelKey: 'demonstration.labels.triggerError', textKey: 'demonstration.labels.error' },
+  { type: 'warning', labelKey: 'demonstration.labels.triggerWarning', textKey: 'demonstration.labels.warning' },
+  { type: 'info', labelKey: 'demonstration.labels.triggerInfo', textKey: 'demonstration.labels.info' },
+  { type: 'loading', labelKey: 'demonstration.labels.triggerLoading', textKey: 'demonstration.labels.loading' },
+] as const;
+
 const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }[] }[] = [
   { labelKey: 'nav.overview', sections: [
     { id: 'demonstracao', labelKey: 'nav.demonstration' },
@@ -374,7 +393,6 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   protected readonly importCode = IMPORT_CODE;
 
   /** Os seis tipos, na ordem da documentação. */
-  protected readonly tiposDeToast = ['default', 'success', 'error', 'warning', 'info', 'loading'];
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -404,15 +422,13 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
    */
   protected readonly gatilhosDeTipo = computed(() => {
     dict();
-    return this.tiposDeToast.map((type) => ({
-      type,
-      label: t(`demonstration.labels.trigger${type.charAt(0).toUpperCase()}${type.slice(1)}`),
-    }));
+    return TYPE_TRIGGERS.map(({ type, labelKey }) => ({ type, label: t(labelKey) }));
   });
 
   protected dispararTipo(type: string): void {
     track('toast_demo_triggered', { toast_type: type, locale: getLocale() });
-    const text = t(`demonstration.labels.${type}`);
+    const trigger = TYPE_TRIGGERS.find((item) => item.type === type) ?? TYPE_TRIGGERS[0];
+    const text = t(trigger.textKey);
     switch (type) {
       case 'success': toast.success(text); break;
       case 'error':   toast.error(text);   break;
@@ -437,8 +453,10 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
         label: t('demonstration.labels.withActionLabel'),
         onClick: () =>
           track('toast_action_click', {
-            // Valor estável, e não o rótulo traduzido.
-            label: 'undo',
+            // Valor estável, e não o rótulo traduzido — e o MESMO das outras
+            // quatro stacks. Era `'undo'`: estável, mas único, e o mesmo clique
+            // chegava ao GA4 com dois valores conforme a stack (PRD §9.1).
+            label: 'with-action-label',
             component: 'sonner',
             location: 'docs_demo',
           }),

@@ -3,6 +3,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { toast, createSonnerToaster, type ToastOptions, type ToastPosition, type ToastType } from './sonner';
 import { sonnerSource } from './sonner.source';
 import { waitForToast, clearToasts, TEXTS } from './sonner.fixtures';
+import { expectAnuncioNaRegiao, expectNotificacaoForaDoTab } from '@shared/testing/anuncio';
 import { createButton } from './button';
 import { createSonnerDocs } from '@/components/docs/SonnerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -146,23 +147,31 @@ export const Playground: Story = {
       await expect(region).toHaveAttribute('data-position', 'top-right');
     });
 
-    await step('O `aria-live` mora na notificação, e a região NÃO o carrega', async () => {
-      // accessibility.item1 — `polite` é a escolha, não o default: `assertive`
-      // cortaria a leitura em curso para avisar que algo deu certo, o que é
-      // hostil justamente com quem depende do leitor de tela.
+    await step('O `aria-live` mora na REGIÃO, e a notificação não anuncia', async () => {
+      // accessibility.item1. Esta asserção está INVERTIDA em relação ao que ela
+      // afirmava até 2026-09-13, e a inversão é decisão da dona: uma região viva
+      // só é observada pela tecnologia assistiva se existir ANTES de o conteúdo
+      // mudar, e a notificação É o conteúdo — nasce já com o texto. Quem anuncia
+      // passou a ser a região persistente; a notificação perdeu `role="status"`
+      // e `aria-live`.
+      //
+      // As duas metades vêm do módulo compartilhado porque nenhum portão vê
+      // nenhuma delas — `aria-live` aninhado não é violação de axe, e região sem
+      // `aria-live` também não —, e asserção escrita cinco vezes é asserção que
+      // diverge na sexta. `role="status"` entra na conta: o papel JÁ IMPLICA
+      // `polite`, então mantê-lo traria o anúncio de volta pela porta implícita.
+      //
+      // `polite` continua sendo escolha e não default: a região é afirmada em
+      // `polite` exato, o que reprova um `assertive` que cortasse a leitura em
+      // curso para avisar que algo deu certo.
       const toastEl = await waitForToast({ type: 'success' });
-      await expect(toastEl).toHaveAttribute('role', 'status');
-      await expect(toastEl).toHaveAttribute('aria-live', 'polite');
-      await expect(toastEl.getAttribute('aria-live')).not.toBe('assertive');
-
-      // A OUTRA metade da decisão da dona (2026-09-13), e é ela que faltava: a
-      // região nasce SEM `aria-live`. Região viva dentro de região viva é
-      // anúncio duplicado ou anúncio nenhum, e nenhum portão vê o aninhamento —
-      // `aria-live` dentro de `aria-live` não é violação de axe. Sem estas duas
-      // linhas a regra depende de alguém reler o código.
       const region = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
       await expect(region.contains(toastEl)).toBe(true);
-      await expect(region).not.toHaveAttribute('aria-live');
+
+      expectAnuncioNaRegiao();
+      // E a notificação não é parada de teclado: torrada que some sozinha
+      // levaria o foco embora junto.
+      expectNotificacaoForaDoTab();
     });
 
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {

@@ -52,7 +52,7 @@ const meta = {
     },
   },
   render: () => (
-    <div style={{ contain: "layout", position: "relative", minHeight: 120 }}>
+    <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
       <Toaster position="top-right" richColors />
     </div>
   ),
@@ -248,7 +248,7 @@ export const Persistent: Story = {
   // Prazo default curtíssimo de propósito: é o que prova que o `Infinity` desta
   // notificação é dela, e não do relógio da página.
   render: () => (
-    <div style={{ contain: "layout", position: "relative", minHeight: 120 }}>
+    <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
       <Toaster position="top-right" richColors duration={300} closeButton />
     </div>
   ),

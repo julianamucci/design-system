@@ -48,7 +48,7 @@ const meta = {
     },
   },
   render: () => (
-    <div style={{ contain: "layout", position: "relative", minHeight: 120 }}>
+    <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
       <Toaster position="top-right" richColors />
     </div>
   ),

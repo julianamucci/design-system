@@ -84,7 +84,9 @@ describe('sonnerNoRegionSnippet', () => {
   it('dispara sem região montada — a fila cria a dela sob demanda', () => {
     const code = sonnerNoRegionSnippet({ type: 'success' });
     expect(code).toContain("import { toast } from '@/components/ui/sonner';");
-    expect(code).not.toContain('createSonnerToaster');
+    // A CHAMADA que monta a região, não o nome dela — mesma forma nas cinco
+    // stacks, depois que a asserção por palavra reprovou prosa no react.
+    expect(code).not.toMatch(/createSonnerToaster\s*\(/);
     expect(code).toContain('toast.success(');
   });
 });
@@ -120,19 +122,23 @@ describe('sonnerPromiseSnippet', () => {
 
 describe('sonnerSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
-    const padrão = sonnerSource('<div data-sonner-toast>', {});
+    const defaults = sonnerSource('<div data-sonner-toast>', {});
     const other = sonnerSource('<div data-sonner-toast>', {
       args: { type: 'error', title: 'Não foi possível salvar.', richColors: true },
     });
-    expect(padrão).not.toBe(other);
+    expect(defaults).not.toBe(other);
     expect(other).toContain('toast.error(');
     expect(other).toContain('richColors: true');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
-    expect(sonnerSource('<div data-sonner-toast role="status" aria-live="polite">', {})).not.toContain(
-      'aria-live',
-    );
+    // O `aria-live` mora na REGIÃO desde 2026-09-13, e é dela que o renderer
+    // parte — a notificação sai sem papel e sem anúncio. O que se prova aqui é
+    // que nada disso vaza para o painel: o leitor copia a chamada da API, não o
+    // markup que a fila desenhou.
+    const gerado = '<div data-sonner-toaster aria-live="polite"><div data-sonner-toast>';
+    expect(sonnerSource(gerado, {})).not.toContain('aria-live');
+    expect(sonnerSource(gerado, {})).not.toContain('data-sonner-toaster');
   });
 });
 

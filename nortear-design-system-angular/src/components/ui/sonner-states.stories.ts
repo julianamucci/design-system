@@ -10,6 +10,14 @@ import {
   TEXTS,
   toastsOnScreen,
 } from './sonner.fixtures';
+import {
+  sonnerAutoDismissSource,
+  sonnerPauseOnHoverSource,
+  sonnerStackSource,
+  sonnerPositionSource,
+  sonnerNoRegionSource,
+  sonnerDarkThemeSource,
+} from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -52,6 +60,10 @@ export const AutoDismiss: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      // O `[duration]="1200"` abaixo é da SUÍTE, e não do design system: sem
+      // transform, o painel ensinaria a montar uma aplicação cujas notificações
+      // somem em 1,2s.
+      source: { transform: sonnerAutoDismissSource },
       description: {
         story:
           'A notificação sai sozinha quando o prazo vence. É o que a separa do Alert: aqui a mensagem é passageira, e nada fica esperando uma decisão.',
@@ -91,6 +103,7 @@ export const AutoDismiss: Story = {
 export const PauseOnHover: Story = {
   parameters: {
     docs: {
+      source: { transform: sonnerPauseOnHoverSource },
       description: {
         story:
           'O relógio congela enquanto o ponteiro ou o foco estiverem dentro da região. Sem isso, o tempo de leitura seria o mesmo para todo mundo — e quem lê devagar perderia a mensagem (WCAG 2.2.1).',
@@ -126,6 +139,7 @@ export const PauseOnHover: Story = {
 export const Stacked: Story = {
   parameters: {
     docs: {
+      source: { transform: sonnerStackSource },
       description: {
         story:
           'Três notificações na fila. A pilha é uma coluna com espaço entre os itens: a nova entra ao lado, nunca por cima — mensagem ainda não lida não pode ser encoberta pela seguinte.',
@@ -168,6 +182,7 @@ export const PositionBottomCenter: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: sonnerPositionSource },
       description: {
         story:
           'A pilha no rodapé, centrada. A posição é escolha do projeto e vale para a aplicação inteira — misturar cantos faria a pessoa procurar a notificação a cada vez.',
@@ -204,6 +219,8 @@ export const WithoutToaster: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      // A story não monta região nenhuma, e o snippet também não: é a lição.
+      source: { transform: sonnerNoRegionSource },
       description: {
         story:
           'Sem Toaster montado no root, `toast()` não desenha nada — e também não quebra. A fila existe independentemente de quem a desenha, então uma tela que ainda não montou a região não derruba o fluxo que a chamou.',
@@ -243,6 +260,7 @@ export const DarkTheme: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: sonnerDarkThemeSource },
       description: {
         story:
           'Tema escuro, com os cinco tipos na tela. Quem recolore é a cascata: os tokens do toast são lidos do tema, então trocar a classe do documento basta.',

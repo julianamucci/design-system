@@ -128,7 +128,11 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
     actionBtn.textContent = opts.actionLabel;
     actionBtn.addEventListener('click', () => {
       track('toast_action_click', {
-        label: opts.actionLabel!,
+        // Valor ESTÁVEL, e não `opts.actionLabel` — que é o rótulo traduzido.
+        // Com o texto, o mesmo clique virava "Desfazer", "Undo" e "Deshacer" no
+        // GA4 e a série não juntava. O outro disparo desta página já usava o id;
+        // eram dois valores para um evento, no mesmo arquivo.
+        label: 'with-action-label',
         component: 'sonner',
         location: 'docs_demo',
       });
@@ -161,7 +165,15 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
  */
 function createDemoToastArea(btnConfigs: Array<{ id: string; label: string; fn: () => void }>): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.style.cssText = 'position: relative; contain: layout; min-height: 11.25rem; padding: var(--spacing-6);';
+  // A altura mínima é CLASSE, e o degrau é o mesmo das outras stacks
+  // (`nds-min-h-30`, 120px). Era `min-height: 11.25rem` cravado em `style`, que
+  // vence a folha e sai do tema, da densidade e da escala de tipo; 180px não é
+  // degrau da escada de `.nds-min-h-*` e não vai virar um — ela é de múltiplos
+  // de 8 por decisão escrita em `utilities.css`. O que sobra inline é mecânica
+  // pura: `contain: layout` é o que prende a região `position: fixed` ao quadro
+  // da demonstração, e o padding sai de token.
+  wrap.className = 'nds-min-h-30';
+  wrap.style.cssText = 'position: relative; contain: layout; padding: var(--spacing-6);';
 
   const btnsRow = document.createElement('div');
   btnsRow.className = 'nds-cluster';
@@ -401,13 +413,23 @@ export function createSonnerDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.style.cssText = 'display:flex; flex-direction:column; gap:0.5rem;';
+                // Coluna com 8px de respiro, que é o que `.nds-stack` com
+                // `data-spacing="sm"` já diz. Era `display:flex` mais
+                // `gap: 0.5rem` cravado em `style`, e valor de design inline
+                // vence a folha e sai do tema e da densidade.
+                wrap.className = 'nds-stack';
+                wrap.dataset.spacing = 'sm';
                 wrap.appendChild(buildLocalToast('success', 'Alterações salvas.'));
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.style.cssText = 'display:flex; flex-direction:column; gap:0.5rem;';
+                // Coluna com 8px de respiro, que é o que `.nds-stack` com
+                // `data-spacing="sm"` já diz. Era `display:flex` mais
+                // `gap: 0.5rem` cravado em `style`, e valor de design inline
+                // vence a folha e sai do tema e da densidade.
+                wrap.className = 'nds-stack';
+                wrap.dataset.spacing = 'sm';
                 wrap.appendChild(buildLocalToast('error', 'Erro crítico. O sistema está fora do ar.'));
                 return wrap;
               },
@@ -419,13 +441,23 @@ export function createSonnerDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.style.cssText = 'display:flex; flex-direction:column; gap:0.5rem;';
+                // Coluna com 8px de respiro, que é o que `.nds-stack` com
+                // `data-spacing="sm"` já diz. Era `display:flex` mais
+                // `gap: 0.5rem` cravado em `style`, e valor de design inline
+                // vence a folha e sai do tema e da densidade.
+                wrap.className = 'nds-stack';
+                wrap.dataset.spacing = 'sm';
                 wrap.appendChild(buildLocalToast('loading', 'Enviando arquivo...'));
                 return wrap;
               },
               dontPreviewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.style.cssText = 'display:flex; flex-direction:column; gap:0.5rem;';
+                // Coluna com 8px de respiro, que é o que `.nds-stack` com
+                // `data-spacing="sm"` já diz. Era `display:flex` mais
+                // `gap: 0.5rem` cravado em `style`, e valor de design inline
+                // vence a folha e sai do tema e da densidade.
+                wrap.className = 'nds-stack';
+                wrap.dataset.spacing = 'sm';
                 wrap.appendChild(buildLocalToast('error', 'Campo obrigatório não preenchido.'));
                 return wrap;
               },

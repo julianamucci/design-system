@@ -200,7 +200,12 @@ describe('transforms das stories de estado', () => {
 
   it('sem região montada, o snippet não monta região nenhuma', () => {
     const exit = sonnerNoRegionSource();
-    expect(exit).not.toContain('Toaster');
+    // O ELEMENTO e o import, não a palavra. `not.toContain('Toaster')` só passava
+    // aqui por acaso de redação: o mesmo caso no react reprovou porque o snippet
+    // de lá explica, num comentário, que "sem o Toaster montado" nada é desenhado.
+    // Mesma forma nas cinco stacks.
+    expect(exit).not.toMatch(/<Toaster\b/);
+    expect(exit).not.toMatch(/import\s*\{[^}]*\bToaster\b/);
     // A fila continua existindo: é essa a lição da story.
     expect(exit).toContain(`toast.success('Alterações salvas.')`);
   });

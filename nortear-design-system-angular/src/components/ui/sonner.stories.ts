@@ -7,6 +7,7 @@ import { NdsButton } from './button';
 import { NdsSonnerDocs } from '@/components/docs/SonnerDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sonnerPlaygroundSource, type SonnerArgs } from './sonner.source';
+import { expectAnuncioNaRegiao, expectNotificacaoForaDoTab } from '@shared/testing/anuncio';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -133,31 +134,35 @@ export const Playground: Story = {
       await expect(region).toHaveAttribute('data-position', 'top-right');
     });
 
-    await step('A notificação é mensagem de estado, anunciada sem interromper', async () => {
-      // accessibility.item1 — `polite` é a escolha, não o default: `assertive`
-      // cortaria a leitura em curso para avisar que algo deu certo, o que é
-      // hostil justamente com quem depende do leitor de tela.
+    await step('O `aria-live` mora na REGIÃO, e a notificação não anuncia', async () => {
+      // accessibility.item1. As duas asserções que viviam aqui afirmavam o
+      // CONTRÁRIO até 2026-09-13 — notificação com `role="status"` e
+      // `aria-live`, região sem —, e a inversão é decisão da dona: uma região
+      // viva só é observada pela tecnologia assistiva se existir ANTES de o
+      // conteúdo mudar, e a notificação É o conteúdo, porque nasce já com o
+      // texto. Quem anuncia passou a ser a região persistente.
+      //
+      // As duas metades vêm do módulo compartilhado, e as duas são necessárias:
+      // nenhum portão vê nenhuma delas — `aria-live` aninhado não é violação de
+      // axe, e região sem `aria-live` também não. `role="status"` entra na conta
+      // porque o papel JÁ IMPLICA `polite`: tirar o atributo e manter o papel
+      // traria o anúncio de volta pela porta implícita.
+      //
+      // `polite` continua sendo escolha e não default — a região é afirmada em
+      // `polite` exato, o que reprova um `assertive` que cortasse a leitura em
+      // curso para avisar que algo deu certo.
       const toastEl = await waitForToast({ type: 'success' });
-      await expect(toastEl).toHaveAttribute('role', 'status');
-      await expect(toastEl).toHaveAttribute('aria-live', 'polite');
-      await expect(toastEl.getAttribute('aria-live')).not.toBe('assertive');
-    });
-
-    await step('O `aria-live` mora na notificação, e a região NÃO o carrega', async () => {
-      // As DUAS metades, e a segunda é a que nenhum portão vê sozinha: região
-      // viva por fora mais notificação viva por dentro é `aria-live` aninhado,
-      // que o axe não reprova e que faz o leitor de tela anunciar duas vezes o
-      // mesmo texto. Afirmar só a presença na notificação passaria com a região
-      // também viva.
-      const toastEl = await waitForToast({ type: 'success' });
-      await expect(toastEl).toHaveAttribute('aria-live', 'polite');
-
       const region = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
       await expect(region.contains(toastEl)).toBe(true);
-      await expect(region).not.toHaveAttribute('aria-live');
-      // A região é marco de página nomeado, não região viva: quem anuncia é a
-      // notificação que acabou de entrar.
+      // A região continua sendo marco de página nomeado: o papel de `region` e o
+      // anúncio convivem no mesmo elemento, e é essa soma que faz a fila ser
+      // alcançável a qualquer momento E anunciada quando muda.
       await expect(region).toHaveAttribute('role', 'region');
+
+      expectAnuncioNaRegiao();
+      // E a notificação não é parada de teclado: torrada que some sozinha
+      // levaria o foco embora junto.
+      expectNotificacaoForaDoTab();
     });
 
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {

@@ -78,7 +78,7 @@ export const AutoDismiss: Story = {
     },
   },
   render: () => (
-    <div style={{ contain: "layout", position: "relative", minHeight: 120 }}>
+    <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
       <Toaster position="top-right" richColors duration={1200} />
     </div>
   ),
@@ -121,7 +121,7 @@ export const PauseOnHover: Story = {
     },
   },
   render: () => (
-    <div style={{ contain: "layout", position: "relative", minHeight: 120 }}>
+    <div className="nds-min-h-30" style={{ contain: "layout", position: "relative" }}>
       <Toaster position="top-right" richColors duration={1200} />
     </div>
   ),
@@ -160,7 +160,7 @@ export const Stacked: Story = {
     },
   },
   render: () => (
-    <div style={{ contain: "layout", position: "relative", minHeight: 240 }}>
+    <div className="nds-min-h-60" style={{ contain: "layout", position: "relative" }}>
       <Toaster position="top-right" richColors expand />
     </div>
   ),
@@ -211,7 +211,7 @@ export const PositionBottomCenter: Story = {
     },
   },
   render: () => (
-    <div style={{ contain: "layout", position: "relative", minHeight: 160 }}>
+    <div className="nds-min-h-40" style={{ contain: "layout", position: "relative" }}>
       <Toaster position="bottom-center" richColors />
     </div>
   ),
@@ -294,7 +294,7 @@ export const DarkTheme: Story = {
   },
   globals: { theme: "dark" },
   render: () => (
-    <div style={{ contain: "layout", position: "relative", minHeight: 320 }}>
+    <div className="nds-min-h-80" style={{ contain: "layout", position: "relative" }}>
       <Toaster position="top-right" richColors expand theme="dark" />
     </div>
   ),

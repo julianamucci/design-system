@@ -4,6 +4,7 @@ import { toast, type ExternalToast } from "sonner";
 import { Toaster, REGION_LABEL, DEFAULT_POSITION } from "./sonner";
 import { Button } from "./button";
 import { waitForToast, clearToasts, TEXTS, type ToastType } from "./sonner.fixtures";
+import { expectAnuncioNaRegiao, expectNotificacaoForaDoTab } from "@shared/testing/anuncio";
 import { sonnerSource } from "./sonner.source";
 import { SonnerDocs } from "@/components/docs/SonnerDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -102,7 +103,7 @@ export const Playground: Story = {
     };
 
     return (
-      <div className="nds-stack" data-spacing="md" style={{ contain: "layout", position: "relative", minHeight: 120 }}>
+      <div className="nds-stack nds-min-h-30" data-spacing="md" style={{ contain: "layout", position: "relative" }}>
         <Button variant="outline" onClick={fire}>
           Disparar notificação
         </Button>
@@ -139,29 +140,38 @@ export const Playground: Story = {
       // cortaria a leitura para avisar que algo deu certo, o que é hostil
       // justamente com quem depende do leitor de tela.
       //
-      // A REGRA DA CASA é que o `aria-live` mora na NOTIFICAÇÃO (decisão da dona
-      // em 2026-09-13, guideline 19): a região viva deve ser o elemento que
-      // anuncia o que chegou, e região viva dentro de região viva é anúncio
-      // duplicado. Nesta stack quem decide é a LIB, não o design system: o
-      // `sonner` 2.0.8 escreve `aria-live="polite"`, `aria-relevant="additions
-      // text"` e `aria-atomic="false"` no `<section>` que envolve a pilha, com
-      // valores cravados no código e sem prop que os alcance (só
-      // `containerAriaLabel` / `customAriaLabel` são configuráveis), e não põe
-      // papel nem `aria-live` no `<li>` de cada notificação. Alinhar exigiria
-      // patch de biblioteca, que é decisão própria e não desta rodada — o que a
-      // story faz é MEDIR a fiação real, para a divergência não voltar como
-      // achado novo.
+      // Quem carrega a região viva nesta stack é o `<section>` que envolve a
+      // pilha, e não o `<li>` de cada notificação: o `sonner` 2.0.8 escreve
+      // `aria-live="polite"`, `aria-relevant="additions text"` e
+      // `aria-atomic="false"` nele, com valores cravados no código e sem prop
+      // que os alcance (só `containerAriaLabel` / `customAriaLabel` são
+      // configuráveis). É o elemento persistente, que é onde a regra da casa
+      // manda o anúncio morar — ver o passo seguinte.
       const toastEl = await waitForToast({ type: "success" });
       const liveRegion = toastEl.closest<HTMLElement>("[aria-live]")!;
       await expect(liveRegion.tagName).toBe("SECTION");
-      await expect(liveRegion).toHaveAttribute("aria-live", "polite");
       await expect(liveRegion.getAttribute("aria-live")).not.toBe("assertive");
+    });
 
-      // A outra metade da fiação, afirmada pela AUSÊNCIA: a notificação não é
-      // região viva aqui. Se um dia a lib (ou um patch) passar a marcá-la, esta
-      // linha reprova e a divergência se fecha por medição, não por lembrança.
-      await expect(toastEl).not.toHaveAttribute("aria-live");
-      await expect(toastEl).not.toHaveAttribute("role");
+    await step("O anúncio mora na região persistente, e a notificação fica fora do Tab", async () => {
+      // A REGRA DA CASA, por decisão da dona em 2026-09-13: o `aria-live` mora
+      // na REGIÃO, nunca na notificação. Região viva só é observada pela
+      // tecnologia assistiva se existir ANTES de o conteúdo mudar, e a
+      // notificação É o conteúdo — marcá-la entrega ao leitor um elemento que
+      // ele não estava observando, e com a região viva por fora vira anúncio
+      // duplicado. Esta stack já nasce certa; o que faltava era a prova.
+      //
+      // As duas asserções moram em `@shared/testing/anuncio` porque as cinco
+      // stacks cobram o mesmo contrato, e asserção escrita cinco vezes é
+      // asserção que diverge na sexta.
+      //
+      // `tabIndex` negativo depende do `patches/sonner+2.0.8.patch`: a lib nasce
+      // com `tabIndex: 0` no `<li>`, e torrada que some sozinha leva o foco
+      // embora junto. Se esta linha reprovar, confira `npx patch-package` antes
+      // de procurar o defeito em outro lugar.
+      await waitForToast({ type: "success" });
+      expectAnuncioNaRegiao();
+      expectNotificacaoForaDoTab();
     });
 
     await step("A região tem nome acessível e é alcançável a qualquer momento", async () => {

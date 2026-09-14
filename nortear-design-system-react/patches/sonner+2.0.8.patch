@@ -1,0 +1,13 @@
+diff --git a/node_modules/sonner/dist/index.mjs b/node_modules/sonner/dist/index.mjs
+index c124f82..762bc93 100644
+--- a/node_modules/sonner/dist/index.mjs
++++ b/node_modules/sonner/dist/index.mjs
+@@ -704,7 +704,7 @@ const Toast = (props)=>{
+     const icon = toast.icon || (icons == null ? void 0 : icons[toastType]) || getAsset(toastType);
+     var _toast_richColors, _icons_close;
+     return /*#__PURE__*/ React.createElement("li", {
+-        tabIndex: 0,
++        tabIndex: -1,
+         ref: toastRef,
+         className: cn(className, toastClassname, classNames == null ? void 0 : classNames.toast, toast == null ? void 0 : (_toast_classNames = toast.classNames) == null ? void 0 : _toast_classNames.toast, classNames == null ? void 0 : classNames[toastTypeKey], toast == null ? void 0 : (_toast_classNames1 = toast.classNames) == null ? void 0 : _toast_classNames1[toastTypeKey]),
+         "data-sonner-toast": "",

@@ -435,8 +435,8 @@ define; a segunda é o que três das cinco stacks entregam.
 ### 4.1 O markup do design system — vanilla e angular
 
 ```
-toaster                          .nds-toaster · role="region" · aria-label · data-position
-└── toast                        .nds-sonner · role="status" · aria-live="polite" · data-type · data-visible
+toaster                          .nds-toaster · role="region" · aria-label · aria-live="polite" · data-position
+└── toast                        .nds-sonner · data-type · data-visible   (sem role e sem aria-live — §8.1)
     ├── toast-icon               span (ou svg no angular) · aria-hidden · ausente no tipo default
     ├── toast-content
     │   ├── toast-title          p · peso medium
@@ -764,15 +764,53 @@ as quatro chaves `tokens.*.normal*` não resolvem naquela stack.
 
 Medido em 2026-09-13 na fonte de cada lib e no código das duas stacks à mão:
 
+**ESTADO ATUAL — 2026-09-13, depois da rodada de `fix`.** As cinco linhas que
+importam são iguais, e cada uma tem asserção por stack
+(`docs/shared/testing/anuncio.ts`).
+
 | | react | vue | svelte | vanilla | angular |
 |---|---|---|---|---|---|
-| região é elemento persistente? | sim (`<section>`) | sim | sim | **não** quando criada sob demanda | sim, enquanto montada |
-| `aria-live` na região | `polite` | `polite` | `polite` | **ausente** | **ausente** |
+| região é elemento persistente? | sim (`<section>`) | sim | sim | **não** quando criada sob demanda (D8) | sim, enquanto montada |
+| `aria-live` na região | `polite` | `polite` | `polite` | `polite` | `polite` |
 | `aria-relevant` na região | `additions text` | `additions text` | `additions text` | — | — |
 | `aria-atomic` na região | `false` | `false` | `false` | — | — |
-| `role`/`aria-live` na notificação | **ausentes** | **ausentes** | só `polite`, sem `role` | `status` + `polite` | `status` + `polite` |
-| `aria-atomic` na notificação | — | — | `true` | **ausente** | **ausente** |
-| notificação na ordem de tabulação | **SIM** (`tabIndex: 0`, sem patch) | não (patch D11) | não (patch D11) | não | não |
+| `role`/`aria-live` na notificação | ausentes | ausentes | ausentes (patch) | ausentes | ausentes |
+| `aria-atomic` na notificação | — | — | — (patch) | — | — |
+| notificação na ordem de tabulação | não (patch) | não (patch D11) | não (patch D11) | não | não |
+
+**O estado ANTERIOR, e ele era três padrões para o mesmo componente:**
+
+| | o que estava | o que era |
+|---|---|---|
+| react, vue | região viva, notificação muda | certo |
+| svelte | região viva **e** notificação viva | regiões vivas ANINHADAS |
+| vanilla, angular | região sem `aria-live`, notificação viva | invertido |
+
+**A decisão foi INVERTIDA em 2026-09-13, e o motivo está duas linhas abaixo neste
+mesmo documento.** A versão anterior desta seção registrava "o `aria-live` mora na
+NOTIFICAÇÃO", por ser o que o vanilla e o angular já faziam — e a análise logo
+adiante media que esse é justamente o padrão MENOS confiável. Um documento que
+decide contra a própria medição não é contrato, é contradição; quem implementasse
+a decisão pioraria três stacks. A dona inverteu: o anúncio mora na REGIÃO
+persistente, que é o que a maioria (3 de 5) já fazia e o que o padrão exige.
+
+**`role="status"` conta como `aria-live`, e é a parte que engana**: o papel JÁ
+IMPLICA `polite`. Tirar o atributo da notificação e manter o papel não desfaz o
+aninhamento — traz o anúncio de volta pela porta implícita. Por isso as duas
+stacks à mão perderam os DOIS, e a asserção olha os dois.
+
+**O que mudou onde:**
+
+- **vanilla** (`toast-utils.ts`) e **angular** (`sonner.ts`) — código nosso, edição
+  direta: a região ganhou `aria-live`, a notificação perdeu papel e atributo;
+- **svelte** — `patches/svelte-sonner+1.2.1.patch` ganhou um segundo hunk que
+  remove `aria-live` e `aria-atomic` do `<li>`, desfazendo o aninhamento;
+- **react** — ganhou `patches/sonner+2.0.8.patch` (`tabIndex: 0` → `-1`), a mesma
+  correção de uma linha que vue e svelte já tinham. O PRD dizia que isso exigia
+  "criar a infraestrutura de patch", e a premissa era falsa: o react já tinha
+  `patch-package` como devDependency e `postinstall: patch-package`. Faltava só o
+  arquivo;
+- **vue** — nada a mudar; já estava nas duas metades.
 
 **Três linhas desta tabela estavam erradas, e a correção veio de reler a fonte
 INSTALADA de cada lib em 2026-09-13** — não a documentação delas, que é onde a
@@ -892,7 +930,12 @@ desta casa sem o campo, medido em 2026-09-13 nos cinco arquivos.
 
 ### 9.1 Três divergências de payload, e uma delas fere a regra da casa
 
-**1. O `label` do `toast_action_click` tem três valores.** Medido em 2026-09-13:
+**FECHADO em 2026-09-14 — o `label` é `'with-action-label'` nas cinco.** O vanilla
+trocou o texto traduzido do espécime estático pelo valor estável, e o angular
+trocou `'undo'` — estável, mas único, e o mesmo clique chegava ao GA4 com dois
+valores conforme a stack. A tabela abaixo é o estado de antes.
+
+**1. O `label` do `toast_action_click` tinha três valores.** Medido em 2026-09-13:
 
 | stack | valor |
 |---|---|
@@ -1077,23 +1120,29 @@ leem esta seção derivavam o nome do slug e não achavam nada — `prd_token_se
 saía pelo `existsSync` e `tabela-tokens.mjs sonner` imprimia "(nenhuma)". Portão
 que não acha o arquivo não reprova, e silêncio parecia aprovação.
 
-**DECIDIDO em 2026-09-13 — o `aria-live` mora na NOTIFICAÇÃO.** É o que o vanilla e
-o Angular já faziam, e as duas passaram a ter asserção nas duas metades: a
-notificação carrega `aria-live="polite"` e a região NÃO carrega.
+**DECIDIDO em 2026-09-13, e INVERTIDO no mesmo dia — o `aria-live` mora na
+REGIÃO.** A primeira versão da decisão dizia "na notificação", por ser o que o
+vanilla e o Angular já faziam. A §8.1 deste mesmo documento media o contrário:
+região viva só é observada se existir ANTES de o conteúdo mudar, e a notificação
+É o conteúdo. Implementar a decisão teria piorado as três stacks que já estavam
+certas. A dona inverteu; ver a §8.1 para o estado e para o que mudou onde.
 
-> **PENDÊNCIA · 2026-09-13** — no react a notificação está na ordem de tabulação
-> (`tabIndex: 0` no `<li>` da `sonner@2.0.8`), e é o mesmo defeito que o Vue e o
-> Svelte já corrigiram por `patch-package` (D11): torrada que desaparece sozinha
-> não deveria ser parada de teclado, porque quem chega nela pelo Tab perde o foco
-> quando ela sai. O react é a única stack sem diretório `patches/`, então fechar
-> isto é criar a infraestrutura de patch ali — decisão da dona.
-> **Fecha quando** a linha "notificação na ordem de tabulação" da tabela de §8.1
-> disser "não" nas cinco, com uma asserção por stack.
+**FECHADA em 2026-09-13** — ~~no react a notificação está na ordem de tabulação
+(`tabIndex: 0` no `<li>` da `sonner@2.0.8`)~~. Ganhou
+`patches/sonner+2.0.8.patch`, com a mesma troca de uma linha que vue e svelte já
+tinham (D11). **A premissa da pendência era falsa**: ela dizia que o react era "a
+única stack sem diretório `patches/`" e que fechar isto seria "criar a
+infraestrutura de patch — decisão da dona". O react já tinha `patch-package` como
+devDependency E `postinstall: patch-package`; faltava o ARQUIVO, que é operação
+de rotina e não decisão. Lição para a próxima pendência: ausência de diretório
+não é ausência de infraestrutura — confira o `package.json` antes de escalar para
+a dona.
 
-> **PENDÊNCIA · 2026-09-13** — as três stacks com lib ainda não cumprem a decisão,
-> porque o atributo é escrito pela biblioteca: no react ele fica na região; no vue
-> e no svelte, nos dois lugares, aninhado. Nenhum dos casos é visto por portão —
-> `aria-live` aninhado não é violação de axe. Vue e svelte têm infraestrutura de
-> `patch-package` (e patch de sonner já aplicado); o react não tem nenhuma.
-> **Fecha quando** as cinco linhas da tabela de §8.1 forem iguais e houver uma
-> asserção por stack cobrando o elemento que carrega o `aria-live`.
+**FECHADA em 2026-09-13** — ~~as três stacks com lib não cumprem a decisão~~. O
+react e o vue já cumpriam o contrato invertido; o svelte era o único com regiões
+vivas aninhadas e perdeu o `aria-live` da notificação por patch. As cinco linhas
+da §8.1 são iguais, e a asserção existe por stack em
+`docs/shared/testing/anuncio.ts` — `expectAnuncioNaRegiao` cobra as DUAS metades
+(região viva, notificação muda), porque uma sozinha não fecha: região viva sem a
+segunda metade convive com o aninhamento, e notificação muda sem a primeira
+convive com o silêncio.

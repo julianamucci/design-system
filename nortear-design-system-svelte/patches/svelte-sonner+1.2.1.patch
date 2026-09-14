@@ -1,5 +1,5 @@
 diff --git a/node_modules/svelte-sonner/dist/Toast.svelte b/node_modules/svelte-sonner/dist/Toast.svelte
-index a15126a..f8806a2 100644
+index a15126a..006952a 100644
 --- a/node_modules/svelte-sonner/dist/Toast.svelte
 +++ b/node_modules/svelte-sonner/dist/Toast.svelte
 @@ -519,7 +519,7 @@
@@ -11,3 +11,12 @@ index a15126a..f8806a2 100644
  	bind:this={toastRef}
  	class={cn(
  		restProps.class,
+@@ -529,8 +529,6 @@
+ 		classes?.[toastType],
+ 		toast?.classes?.[toastType]
+ 	)}
+-	aria-live={toast.important ? 'assertive' : 'polite'}
+-	aria-atomic="true"
+ 	data-sonner-toast=""
+ 	data-rich-colors={toast.richColors ?? defaultRichColors}
+ 	data-styled={!(toast.component || toast.unstyled || unstyled)}

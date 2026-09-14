@@ -9,6 +9,12 @@ import {
   PERSISTENT,
   TEXTS,
 } from './sonner.fixtures';
+import {
+  sonnerWithDescriptionSource,
+  sonnerWithActionSource,
+  sonnerPromiseSource,
+  sonnerPersistentSource,
+} from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -49,6 +55,9 @@ export const WithDescription: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // Sem isto o painel publica o `template` DA STORY — a região montada no
+      // canvas —, e o painel é a única parte da página feita para ser copiada.
+      source: { transform: sonnerWithDescriptionSource },
       description: {
         story:
           'Título mais descrição, para quando o título sozinho não orienta. A descrição é uma frase completa — se precisar de três linhas, o lugar da mensagem não é uma notificação.',
@@ -82,6 +91,7 @@ export const WithAction: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item2'],
     docs: {
+      source: { transform: sonnerWithActionSource },
       description: {
         story:
           'Ação embutida para operação reversível. O botão entra na sequência de foco enquanto a notificação está na tela, e some com ela — por isso desfazer também precisa existir fora daqui.',
@@ -147,6 +157,7 @@ export const PromiseResolved: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
     docs: {
+      source: { transform: sonnerPromiseSource },
       description: {
         story:
           'Uma notificação para a operação inteira: nasce em carregamento e vira êxito no mesmo lugar, sem piscar duas caixas.',
@@ -194,6 +205,8 @@ export const PromiseRejected: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
+      // O mesmo snippet do caso resolvido: é UMA chamada para os dois desfechos.
+      source: { transform: sonnerPromiseSource },
       description: {
         story:
           'O mesmo ciclo, com a operação falhando: o carregamento vira falha, com o texto que diz o caminho de saída.',
@@ -236,6 +249,8 @@ export const Persistent: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item2'],
     docs: {
+      // O `[duration]="300"` da região é da suíte; o snippet não o ensina.
+      source: { transform: sonnerPersistentSource },
       description: {
         story:
           'Prazo infinito, reservado a falha crítica que exige decisão. Sempre com botão de fechar: uma notificação que não sai sozinha e não pode ser fechada vira obstáculo.',

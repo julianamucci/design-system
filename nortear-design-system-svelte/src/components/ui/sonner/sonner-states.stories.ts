@@ -146,9 +146,9 @@ export const PauseOnHover: Story = {
       //
       // Os handlers ficam no <ol> da lista, não na torrada: é nele que a posição
       // é registrada e comparada. Medido em par na subida 1.2.0 → 1.2.1.
-      const lista = toastsOnScreen()[0].closest("ol")!;
-      lista.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, clientX: 10, clientY: 10 }));
-      lista.dispatchEvent(new MouseEvent("mouseleave", { clientX: 400, clientY: 400 }));
+      const list = toastsOnScreen()[0].closest("ol")!;
+      list.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, clientX: 10, clientY: 10 }));
+      list.dispatchEvent(new MouseEvent("mouseleave", { clientX: 400, clientY: 400 }));
       await waitForNoToasts();
       await expect(toastsOnScreen().length).toBe(0);
     });

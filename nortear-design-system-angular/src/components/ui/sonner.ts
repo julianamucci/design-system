@@ -343,9 +343,12 @@ export class NdsToastIcon {
  *
  * - O contêiner é `role="region"` com nome — um marco de página que o leitor de
  *   tela alcança a qualquer momento, e não só no instante do anúncio.
- * - Cada torrada é `role="status"` com `aria-live="polite"`. NUNCA `assertive`
- *   no caso comum: interromper a leitura em curso para avisar que algo deu certo
- *   é hostil, e o critério 4.1.3 pede mensagem de estado, não alerta.
+ * - O ANÚNCIO é do contêiner, e não da torrada: `aria-live="polite"` no host.
+ *   Região viva só é observada se existir ANTES de o conteúdo mudar, e a torrada
+ *   É o conteúdo. NUNCA `assertive` no caso comum: interromper a leitura em
+ *   curso para avisar que algo deu certo é hostil, e o critério 4.1.3 pede
+ *   mensagem de estado, não alerta. A torrada, por isso, sai sem `role="status"`
+ *   e sem `aria-live` — ver o bloco no template.
  * - O botão de ação é um `<button>` de verdade, dentro do fluxo de foco: com a
  *   torrada na tela, `Tab` chega nela (WCAG 2.1.1). Regra de projeto que o
  *   componente não consegue impor: a ação oferecida aqui precisa existir em
@@ -364,6 +367,11 @@ export class NdsToastIcon {
   host: {
     class: 'nds-toaster',
     role: 'region',
+    // O ANÚNCIO mora aqui, na região PERSISTENTE, e não na notificação: uma
+    // região viva só é observada se existir ANTES de o conteúdo mudar, e a
+    // notificação É o conteúdo — nasce já com o texto. Ver o bloco no `<div>` da
+    // torrada, abaixo, e a §8.1 do PRD.
+    'aria-live': 'polite',
     'data-sonner-toaster': '',
     '[attr.data-slot]': '"sonner-toaster"',
     '[attr.aria-label]': 'label()',
@@ -378,11 +386,15 @@ export class NdsToastIcon {
   },
   template: `
     @for (t of toastEls(); track t.id) {
+      <!-- SEM \`role="status"\` e SEM \`aria-live\`, e os dois saíram juntos em
+           2026-09-13. \`role="status"\` JÁ IMPLICA \`aria-live="polite"\`, então
+           mantê-lo com a região viva por fora daria duas regiões vivas
+           encaixadas — o caminho conhecido para o mesmo texto ser anunciado duas
+           vezes. Quem anuncia é a região (host, acima). Nenhum portão vê isto:
+           \`aria-live\` aninhado não é violação de axe. -->
       <div
         class="nds-sonner"
         data-sonner-toast
-        role="status"
-        aria-live="polite"
         [attr.data-type]="t.type"
         [attr.data-rich-colors]="richColors()"
         [attr.data-visible]="t.visible()"

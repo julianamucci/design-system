@@ -109,7 +109,12 @@ describe('transforms dos estados', () => {
 
   it('o caso sem região não monta Toaster nenhum', () => {
     const exit = sonnerNoRegionSource();
-    expect(exit).not.toContain('<Toaster');
+    // O ELEMENTO e o import, não a palavra — a mesma forma nas cinco stacks.
+    // Esta já media a tag (`<Toaster`), e por isso sobreviveu ao comentário do
+    // snippet ("Nenhum Toaster montado"); faltava o import, que é a outra porta
+    // por onde a região entraria.
+    expect(exit).not.toMatch(/<Toaster\b/);
+    expect(exit).not.toMatch(/import\s*\{[^}]*\bToaster\b/);
     expect(exit).toContain('toast.success(');
   });
 

@@ -189,6 +189,20 @@ function mountRegiao(options: ToasterOptions): HTMLElement {
   el.setAttribute('role', 'region');
   // `label` continua aceito como apelido do nome acessível; o canônico vence.
   el.setAttribute('aria-label', options['aria-label'] ?? options.label ?? REGION_LABEL);
+  // O ANÚNCIO mora aqui, na região PERSISTENTE, e não na notificação.
+  //
+  // Uma região viva só é observada pela tecnologia assistiva se existir ANTES de
+  // o conteúdo mudar. Notificação é o conteúdo: ela nasce já com o texto, e o
+  // leitor não tinha o que observar. Era assim nas duas stacks à mão até
+  // 2026-09-13, e o react e o vue sempre fizeram o contrário — foi essa maioria
+  // que passou a valer para as cinco.
+  //
+  // Ressalva declarada, e ela é da D8: quando a região é criada SOB DEMANDA (o
+  // `toast()` chamado antes de qualquer Toaster montado, que é o contrato desta
+  // stack e o que permite chamá-lo de um `catch`), ela ainda nasce junto do
+  // conteúdo. O caminho normal — quem consome monta a região uma vez no root —
+  // fica correto, e é o que a docs page e as stories exercitam.
+  el.setAttribute('aria-live', 'polite');
   el.setAttribute('data-sonner-toaster', '');
   el.dataset.slot = 'sonner-toaster';
   el.className = options.class ? `nds-toaster ${options.class}` : 'nds-toaster';
@@ -284,8 +298,16 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
 
   const toast = document.createElement('div');
   toast.setAttribute('data-sonner-toast', '');
-  toast.setAttribute('role', 'status');
-  toast.setAttribute('aria-live', 'polite');
+  // SEM `role="status"` e SEM `aria-live` — os dois saíram em 2026-09-13.
+  //
+  // Não é esquecimento nem economia: `role="status"` JÁ IMPLICA
+  // `aria-live="polite"`, então deixá-lo aqui com a região viva por fora produz
+  // duas regiões vivas encaixadas — o caminho conhecido para o mesmo texto ser
+  // anunciado duas vezes. Tirar só o `aria-live` e manter o papel não resolveria
+  // nada, porque o papel traz o anúncio de volta pela porta implícita.
+  //
+  // Quem anuncia é a região, acima. Nenhum portão vê isto: `aria-live` aninhado
+  // não é violação de axe, e por isso a asserção é por story, nas cinco stacks.
   toast.className = 'nds-sonner';
   toast.dataset.type = type;
   toast.dataset.richColors = String(richColors);

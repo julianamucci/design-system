@@ -216,8 +216,8 @@ interface ToasterProps {
         componentSlug="sonner"
       >
         <div
-          style={{ contain: "layout", minHeight: 80, position: "relative" }}
-          className="nds-w-full"
+          style={{ contain: "layout", position: "relative" }}
+          className="nds-w-full nds-min-h-20"
         >
           <div className="nds-cluster" data-spacing="sm">
             <Button
@@ -382,8 +382,8 @@ interface ToasterProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div
-                style={{ contain: "layout", minHeight: 80, position: "relative" }}
-                className="nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-w-full nds-min-h-20"
               >
                 <Button
                   size="sm"
@@ -396,8 +396,8 @@ interface ToasterProps {
             ),
             dontPreview: (
               <div
-                style={{ contain: "layout", minHeight: 80, position: "relative" }}
-                className="nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-w-full nds-min-h-20"
               >
                 <Button
                   size="sm"
@@ -416,8 +416,8 @@ interface ToasterProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div
-                style={{ contain: "layout", minHeight: 80, position: "relative" }}
-                className="nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-w-full nds-min-h-20"
               >
                 <Button
                   size="sm"
@@ -439,8 +439,8 @@ interface ToasterProps {
             ),
             dontPreview: (
               <div
-                style={{ contain: "layout", minHeight: 80, position: "relative" }}
-                className="nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-w-full nds-min-h-20"
               >
                 <Button
                   size="sm"
@@ -472,8 +472,8 @@ interface ToasterProps {
             code: codeDefault,
             preview: (
               <div
-                style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="nds-cluster nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-cluster nds-w-full nds-min-h-16"
                 data-justify="center"
               >
                 <Button
@@ -492,8 +492,8 @@ interface ToasterProps {
             code: codeSuccess,
             preview: (
               <div
-                style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="nds-cluster nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-cluster nds-w-full nds-min-h-16"
                 data-justify="center"
               >
                 <Button
@@ -512,8 +512,8 @@ interface ToasterProps {
             code: codeError,
             preview: (
               <div
-                style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="nds-cluster nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-cluster nds-w-full nds-min-h-16"
                 data-justify="center"
               >
                 <Button
@@ -532,8 +532,8 @@ interface ToasterProps {
             code: codeWarning,
             preview: (
               <div
-                style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="nds-cluster nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-cluster nds-w-full nds-min-h-16"
                 data-justify="center"
               >
                 <Button
@@ -552,8 +552,8 @@ interface ToasterProps {
             code: codeInfo,
             preview: (
               <div
-                style={{ contain: "layout", minHeight: 60, position: "relative" }}
-                className="nds-cluster nds-w-full"
+                style={{ contain: "layout", position: "relative" }}
+                className="nds-cluster nds-w-full nds-min-h-16"
                 data-justify="center"
               >
                 <Button
@@ -580,8 +580,8 @@ interface ToasterProps {
               {tContent("states.items.withDescription.description")}
             </p>
             <div
-              style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              className="nds-cluster"
+              style={{ contain: "layout", position: "relative" }}
+              className="nds-cluster nds-min-h-16"
               data-align="center"
             >
               <Button
@@ -608,8 +608,8 @@ interface ToasterProps {
               {toPlainText(tContent("states.items.withAction.description"))}
             </p>
             <div
-              style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              className="nds-cluster"
+              style={{ contain: "layout", position: "relative" }}
+              className="nds-cluster nds-min-h-16"
               data-align="center"
             >
               <Button
@@ -645,8 +645,8 @@ interface ToasterProps {
               {tContent("states.items.promise.description")}
             </p>
             <div
-              style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              className="nds-cluster"
+              style={{ contain: "layout", position: "relative" }}
+              className="nds-cluster nds-min-h-16"
               data-align="center"
             >
               <Button
@@ -678,8 +678,8 @@ interface ToasterProps {
               {toPlainText(tContent("states.items.persistent.description"))}
             </p>
             <div
-              style={{ contain: "layout", minHeight: 60, position: "relative" }}
-              className="nds-cluster"
+              style={{ contain: "layout", position: "relative" }}
+              className="nds-cluster nds-min-h-16"
               data-align="center"
             >
               <Button

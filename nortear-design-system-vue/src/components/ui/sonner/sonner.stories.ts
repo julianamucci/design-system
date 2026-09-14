@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
+import { expectAnuncioNaRegiao, expectNotificacaoForaDoTab } from '@shared/testing/anuncio';
 import { toast } from 'vue-sonner';
 import { Toaster, REGION_LABEL } from './index';
 import { Button } from '@/components/ui/button';
@@ -143,13 +144,10 @@ export const Playground: Story = {
       // aqui NÃO existe região viva aninhada — a duplicação que o PRD atribui a
       // esta stack não está nesta versão da lib.
       //
-      // A decisão da dona é que o `aria-live` more na NOTIFICAÇÃO, e esta stack
-      // ainda não cumpre isso: mover exige patch nos dois pontos de
-      // `lib/index.js` (tirar os três atributos do `<section>` da linha ~1150 e
-      // escrever `role="status" aria-live="polite" aria-atomic="true"` no `<li>`
-      // da linha ~646). Nenhum dos dois é prop nem slot da lib. Estes passos
-      // afirmam o que a lib faz HOJE, para que o patch mude asserção e não
-      // apenas comportamento.
+      // A decisão da dona, de 2026-09-13, é que o `aria-live` more na REGIÃO —
+      // e esta stack JÁ cumpre, sem patch nenhum. O passo seguinte cobra o
+      // contrato pelas duas metades; este descreve a árvore desta lib, que é o
+      // que faz o passo seguinte ser legível.
       const toastEl = await waitForToast({ type: 'success' });
       const liveRegion = toastEl.closest<HTMLElement>('[aria-live]')!;
       await expect(liveRegion.tagName).toBe('SECTION');
@@ -160,6 +158,27 @@ export const Playground: Story = {
       // primeira. Se um bump da lib passar a marcá-la, este passo reprova.
       await expect(toastEl).not.toHaveAttribute('aria-live');
       await expect(toastEl).not.toHaveAttribute('role');
+    });
+
+    await step('O anúncio mora na região persistente, e a notificação fica fora do Tab', async () => {
+      // A REGRA DA CASA, por decisão da dona em 2026-09-13: o `aria-live` mora
+      // na REGIÃO, nunca na notificação. Região viva só é observada pela
+      // tecnologia assistiva se existir ANTES de o conteúdo mudar, e a
+      // notificação É o conteúdo — marcá-la entrega ao leitor um elemento que
+      // ele não estava observando, e com a região viva por fora vira anúncio
+      // duplicado. Esta stack já nasce certa; o que faltava era a prova.
+      //
+      // As duas asserções moram em `@shared/testing/anuncio` porque as cinco
+      // stacks cobram o mesmo contrato, e asserção escrita cinco vezes é
+      // asserção que diverge na sexta.
+      //
+      // `tabIndex` negativo depende do `patches/vue-sonner+2.0.9.patch`: a lib
+      // nasce com `tabindex="0"` no `<li>`, e torrada que some sozinha leva o
+      // foco embora junto. Se esta linha reprovar, confira `npx patch-package`
+      // antes de procurar o defeito em outro lugar.
+      await waitForToast({ type: 'success' });
+      expectAnuncioNaRegiao();
+      expectNotificacaoForaDoTab();
     });
 
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {

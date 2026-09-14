@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent } from 'storybook/test';
+import { expectAnuncioNaRegiao, expectNotificacaoForaDoTab } from '@shared/testing/anuncio';
 import SonnerPlaygroundStory from './SonnerPlaygroundStory.svelte';
 import { REGION_LABEL } from './labels';
 import { waitForToast, clearToasts, TEXTS } from './sonner.fixtures';
@@ -94,27 +95,42 @@ export const Playground: Story = {
     });
 
     await step('A notificação é mensagem de estado, anunciada sem interromper', async () => {
-      // accessibility.item1 — quem carrega a região viva é a NOTIFICAÇÃO, e não a
-      // região que a contém. `polite` é a escolha, não o default: `assertive`
+      // accessibility.item1 — quem carrega a região viva é a REGIÃO persistente,
+      // e não a notificação. `polite` é a escolha, não o default: `assertive`
       // cortaria a leitura em curso para avisar que algo deu certo, o que é
       // hostil justamente com quem depende do leitor de tela.
-      const toastEl = await waitForToast({ type: 'success' });
-      await expect(toastEl).toHaveAttribute('aria-live', 'polite');
-      await expect(toastEl.getAttribute('aria-live')).not.toBe('assertive');
-    });
-
-    await step('A fiação viva de hoje é ANINHADA — registrado, pendente de patch', async () => {
-      // O `aria-live` mora na notificação; a `<section>` da lib o carrega TAMBÉM,
-      // e duas regiões vivas encaixadas são o caminho conhecido para o mesmo
-      // texto ser anunciado duas vezes. A lib escreve o atributo cravado em
+      //
+      // A lib escreve o atributo cravado no `<section>` de
       // `svelte-sonner/dist/Toaster.svelte` (`aria-live="polite"`, junto de
       // `aria-relevant` e `aria-atomic`), fora de qualquer prop e fora do spread
-      // — que só alcança o `<ol>` de dentro. Sair daqui exige patch, e enquanto
-      // ele não existe esta asserção descreve a fiação REAL: no dia em que o
-      // patch entrar, ela reprova e é o que manda atualizar a story.
+      // — que só alcança o `<ol>` de dentro.
       const toastEl = await waitForToast({ type: 'success' });
       const secao = toastEl.closest<HTMLElement>('section[aria-label]')!;
       await expect(secao).toHaveAttribute('aria-live', 'polite');
+      await expect(secao.getAttribute('aria-live')).not.toBe('assertive');
+    });
+
+    await step('O anúncio mora na região persistente, e a notificação fica fora do Tab', async () => {
+      // A REGRA DA CASA, por decisão da dona em 2026-09-13: o `aria-live` mora
+      // na REGIÃO, nunca na notificação. Região viva só é observada pela
+      // tecnologia assistiva se existir ANTES de o conteúdo mudar, e a
+      // notificação É o conteúdo — marcá-la entrega ao leitor um elemento que
+      // ele não estava observando, e com a região viva por fora vira anúncio
+      // duplicado. Esta stack era a ÚNICA das cinco com as duas regiões vivas
+      // encaixadas, e saiu disso por patch.
+      //
+      // As duas asserções moram em `@shared/testing/anuncio` porque as cinco
+      // stacks cobram o mesmo contrato, e asserção escrita cinco vezes é
+      // asserção que diverge na sexta.
+      //
+      // As duas dependem do `patches/svelte-sonner+1.2.1.patch`: ele troca o
+      // `tabindex={0}` do `<li>` por `{-1}` e remove dali o `aria-live` e o
+      // `aria-atomic`. Se qualquer uma reprovar, rode `npx patch-package` e
+      // confira o `svelte-sonner@1.2.1 ✔` antes de procurar o defeito em outro
+      // lugar.
+      await waitForToast({ type: 'success' });
+      expectAnuncioNaRegiao();
+      expectNotificacaoForaDoTab();
     });
 
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {
