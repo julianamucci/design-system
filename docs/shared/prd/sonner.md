@@ -720,7 +720,7 @@ notificação não existe, e a descrição sai do token. **Sem esse `false` a pr
 não tem dentes, e a primeira versão não tinha**: com `richColors` ligado a
 descrição herda a cor da ponte de tokens, que não depende do tema, e o passo
 passou com o tema plantado em `light`. O `next-themes` deixou de ser importado no
-react; a dependência continua no `package.json`.
+react e saiu do `package.json` no mesmo dia.
 
 ### 7.4 Peças, por stack
 
@@ -1043,9 +1043,10 @@ contrato inteiro.
 
 - **react (`sonner`)** — o `<li>` não é região viva; quem é é o `<section>` de
   cima, e é nele que a asserção de `polite` tem de ir. `toast` vem do PACOTE, não
-  do arquivo da casa. A prop `theme` sai do `next-themes` e não há provider: a
-  região segue o sistema operacional, não a barra de temas, e as stories passam
-  `theme` à mão para compensar.
+  do arquivo da casa. A prop `theme` vinha do `next-themes` sem provider, e a
+  região seguia o sistema operacional em vez da página; desde 2026-09-14 o
+  wrapper lê a classe `dark` do documento (§7.3), e só a story `DarkTheme` passa
+  `theme` à mão, para exercitar a sobreposição.
 - **vue (`vue-sonner`)** — a folha da lib NÃO é injetada em runtime: sem
   `import 'vue-sonner/style.css'` a região sai como um `<ol>` cru no meio da
   página, **e nada na tela diz que faltou alguma coisa**. O `<li>` precisa do

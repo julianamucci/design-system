@@ -42,7 +42,7 @@ import {
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 
 // Overrides de propriedade: o conteúdo compartilhado descreve a API da lib
-// externa `sonner` (`theme` do next-themes, `icons`, `toastOptions`). Aqui o
+// externa `sonner` (`theme`, `icons`, `toastOptions`). Aqui o
 // Toaster é um componente do próprio design system, com o conjunto de ícones
 // fixo e o tema vindo da cascata — então essas três linhas dão lugar às três
 // que existem de fato. Overrides são para nome e rótulo; nunca para snippet.
