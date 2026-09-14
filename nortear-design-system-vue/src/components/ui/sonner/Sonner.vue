@@ -10,7 +10,7 @@ import {
   XIcon,
 } from 'lucide-vue-next'
 import { Toaster as Sonner } from 'vue-sonner'
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 // A folha da lib NÃO é injetada em runtime nesta stack — o pacote a expõe como
 // `vue-sonner/style.css` e espera que quem consome a importe. Sem esta linha a
@@ -51,9 +51,55 @@ const position = computed<ToasterProps['position']>(() => props.position ?? 'top
 /**
  * Sem atalho por padrão: a lib concatena o atalho ao nome da região
  * ("Notificações altKey+T"), e o leitor de tela o anunciava. Com a lista vazia
- * o atalho não é registrado e o nome é só o rótulo — como nas outras stacks.
+ * o nome é só o rótulo — como nas outras stacks.
+ *
+ * A lista vazia DEPENDE DE PATCH, e sem ele é pior que o atalho: a lib testa o
+ * atalho com `hotkey.every(...)`, e `[].every(...)` é verdadeiro — TODA tecla
+ * contava como o atalho, a pilha expandia e roubava o foco, e o Enter no botão
+ * de ação deixava de dispará-la. Medido em 2026-09-14 pela story de ação, com
+ * prova pareada: atalho default passava, lista vazia falhava. O
+ * `vue-sonner+2.0.9.patch` acrescenta a guarda `length > 0`, que é o que a lib do
+ * sonner para react já faz. Não tire o patch mantendo a lista vazia.
  */
 const hotkey = computed<string[]>(() => props.hotkey ?? [])
+
+/**
+ * O tema da região acompanha a classe `dark` do DOCUMENTO.
+ *
+ * Este wrapper não passava tema nenhum, e a lib ficava no default `light` para
+ * sempre. Os tokens da casa — e a barra de temas do Storybook — vivem na classe
+ * `dark` do documento, e a folha da lib pinta a DESCRIÇÃO pelo tema DELA
+ * (`#3f3f3f` no claro, `#e8e8e8` no escuro) sempre que a notificação não usa
+ * `richColors`: com a página escura e o tema preso em `light`, a descrição saía
+ * `rgb(63, 63, 63)` sobre o fundo `rgb(36, 49, 56)` — medido em 2026-09-14 com a
+ * mesma folha, pelo lado do react. Nenhuma story via — o navegador de teste é
+ * claro, e a story de tema escuro passa `theme="dark"` à mão.
+ *
+ * O observador é solto no desmonte, e `theme` explícito de quem consome
+ * continua vencendo. Prova: `expectDescriptionReadable` em
+ * `docs/shared/testing/sonner-probe.ts`.
+ */
+const documentTheme = ref<'light' | 'dark'>('light')
+let themeObserver: MutationObserver | undefined
+
+function readDocumentTheme(): 'light' | 'dark' {
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+}
+
+onMounted(() => {
+  documentTheme.value = readDocumentTheme()
+  themeObserver = new MutationObserver(() => {
+    documentTheme.value = readDocumentTheme()
+  })
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+})
+
+onBeforeUnmount(() => {
+  themeObserver?.disconnect()
+  themeObserver = undefined
+})
+
+const theme = computed<ToasterProps['theme']>(() => props.theme ?? documentTheme.value)
 </script>
 
 <template>
@@ -70,6 +116,7 @@ const hotkey = computed<string[]>(() => props.hotkey ?? [])
       '--border-radius': 'var(--radius)',
     }"
     v-bind="props"
+    :theme="theme"
     :position="position"
     :hotkey="hotkey"
     :container-aria-label="containerAriaLabel"

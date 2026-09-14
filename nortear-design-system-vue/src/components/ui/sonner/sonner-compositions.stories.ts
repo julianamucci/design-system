@@ -9,6 +9,7 @@ import {
   PERSISTENT,
   TEXTS,
 } from './sonner.fixtures';
+import { expectActionGrowsWithFont, expectDescriptionReadable, withDarkDocument } from '@shared/testing/sonner-probe';
 import {
   sonnerWithActionSource,
   sonnerWithDescriptionSource,
@@ -94,6 +95,29 @@ export const WithDescription: Story = {
       const content = toastEl.querySelector<HTMLElement>('[data-content]')!;
       await expect(content.contains(title) && content.contains(description)).toBe(true);
     });
+
+    await step('No modo escuro do documento, a descrição continua legível', async () => {
+      // `richColors: false` de propósito, e é o que dá dentes a este passo. Com
+      // `richColors` ligado — o Toaster desta story liga —, a descrição HERDA a
+      // cor do texto da notificação, que vem da ponte de tokens e não depende do
+      // tema: o passo passava com o tema errado. Sem `richColors`, quem pinta a
+      // descrição é o tema da lib. Medido em 2026-09-14 com o documento escuro:
+      // tema da lib em `light` deu `rgb(63, 63, 63)` sobre `rgb(36, 49, 56)`; o
+      // tema do documento, `rgb(232, 232, 232)`. O navegador de teste é claro,
+      // então sem ligar o escuro aqui ninguém veria. Ver sonner-probe.ts.
+      await clearToasts();
+      await withDarkDocument(async () => {
+        toast(TEXTS.comDescricao, {
+          ...PERSISTENT,
+          description: TEXTS.comDescricaoDetalhe,
+          richColors: false,
+        });
+        const toastEl = await waitForToast({ type: 'default' });
+        const description = toastEl.querySelector<HTMLElement>('[data-description]')!;
+        expectDescriptionReadable(description, toastEl);
+      });
+      await clearToasts();
+    });
   },
 };
 
@@ -142,6 +166,23 @@ export const WithAction: Story = {
       await expect(undoSpy).toHaveBeenCalledTimes(1);
       await waitForNoToasts();
       await expect(document.querySelectorAll('[data-sonner-toast]').length).toBe(0);
+    });
+
+    await step('O rótulo da ação acompanha a fonte do navegador sem ser cortado', async () => {
+      // Passo PRÓPRIO, com notificação própria, e não no meio do fluxo de foco:
+      // dobrar e devolver a fonte da raiz faz a lib re-renderizar a lista, e o
+      // botão que um passo seguinte focasse deixaria de ser o da tela. Nas libs a
+      // folha delas crava `font-size: 12px` e `height: 24px`; a folha
+      // compartilhada as sobrepõe. Ver sonner-probe.ts.
+      await clearToasts();
+      toast(TEXTS.withAction, {
+        ...PERSISTENT,
+        action: { label: TEXTS.comAcaoRotulo, onClick: () => undefined },
+      });
+      const toastEl = await waitForToast({ type: 'default' });
+      const action = toastEl.querySelector<HTMLButtonElement>('[data-button]')!;
+      await expectActionGrowsWithFont(action);
+      await clearToasts();
     });
   },
 };

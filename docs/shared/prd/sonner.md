@@ -166,9 +166,21 @@ tela lia **"Notificações altKey+T"**, uma string técnica em inglês contra a 
 de wording em português comum. Os três wrappers passam agora `hotkey` vazio por
 padrão — `hotkey={[]}` no react, `:hotkey` com `props.hotkey ?? []` no vue,
 `hotkey = []` na desestruturação do svelte, antes do spread para quem consome
-poder religar. Com a lista vazia a lib não registra o atalho e o nome vira o
-rótulo seguido de um espaço, que o cálculo de nome acessível descarta. Vanilla e
-angular nunca tiveram atalho. A play do react ainda compara por prefixo
+poder religar. Com a lista vazia o nome vira o rótulo seguido de um espaço, que o
+cálculo de nome acessível descarta. Vanilla e angular nunca tiveram atalho.
+
+**A lista vazia só é segura com PATCH no vue e no svelte, e sem ele quebrava o
+teclado.** A frase que estava aqui — "com a lista vazia a lib não registra o
+atalho" — valia para o react e era falsa nas outras duas. O `sonner` testa o
+atalho com `hotkey.length > 0 && hotkey.every(...)`; o `vue-sonner` e o
+`svelte-sonner` testam só com `hotkey.every(...)`, e `[].every(...)` é
+verdadeiro. Resultado, medido em 2026-09-14: TODA tecla contava como o atalho, a
+pilha expandia e roubava o foco, e o Enter no botão de ação deixava de dispará-la
+— a story `WithAction` reprovava com o espião chamado 0 vezes, e passava com o
+atalho default da lib (prova pareada). A guarda `length > 0` entrou por patch nas
+duas libs; ver `PATCHES.md#vue-sonner-hotkey-vazio` e
+`#svelte-sonner-hotkey-vazio`. Tirar o patch mantendo a lista vazia devolve o
+defeito. A play do react ainda compara por prefixo
 (`toContain`), o que continua passando.
 
 ### D3 · `toastOptions` é MESCLADO, não substituído
@@ -307,16 +319,32 @@ e `[data-button]` tem `height: 24px` **fixo** — o primeiro abaixo do piso da
 WCAG 2.5.8, o segundo com altura fixa, que é justamente o que a regra da casa
 proíbe em interativo.
 
-**Fechado em 2026-09-14 para o piso**: `sonner.css:248-266` escreve
+**Fechado em 2026-09-14 para o piso**: `sonner.css` escreve
 `min-block-size`/`min-inline-size: var(--spacing-6)` sobre
 `[data-sonner-toast] [data-close-button]`, `[data-button]` e `[data-cancel]` — os
-mesmos atributos nas três libs instaladas. `min-height` vence `height` em qualquer
-ordem de cascata, então não há disputa de especificidade com a folha da lib.
+mesmos atributos nas três libs instaladas.
 
-**O que continua aberto**: a altura FIXA de 24px de `[data-button]` na folha da
-lib. O piso não a desfaz — `min-height` impede encolher, não impede cortar quando
-o rótulo cresce com a fonte do navegador (WCAG 1.4.4). Desfazê-la exige disputar
-a declaração da lib, e o resultado só se prova com sonda em navegador.
+**Fechado em 2026-09-14 também para a altura e a fonte**, e a frase que estava
+aqui ("`min-height` vence `height` em qualquer ordem de cascata, então não há
+disputa de especificidade") era verdadeira e não resolvia nada: com piso de 24px
+contra `height: 24px` cravado, o piso nunca levanta a caixa. E a mesma regra da
+lib crava `font-size: 12px` — em px o rótulo nem crescia com a preferência de
+fonte do navegador, então o corte que a versão anterior temia nem chegava a
+acontecer; o defeito real era o rótulo PARADO, contra o `.nds-sonner-action` do
+markup à mão, que usa `var(--text-control)` e cresce.
+
+A regra nova vence a da lib por especificidade — (0,4,0) contra (0,3,0) — e
+escreve `height: auto` e `font-size: var(--text-control)` em `[data-button]` e
+`[data-cancel]`. Não dá para empatar: em duas das três libs a folha é injetada em
+runtime DEPOIS da compartilhada. O botão de fechar fica de fora, porque é só
+ícone e medida fixa ali é permitida.
+
+**Prova, nas cinco**: `expectActionGrowsWithFont`
+(`docs/shared/testing/sonner-probe.ts`) dobra a fonte da raiz — que é o que a
+preferência do navegador faz — e cobra CRESCIMENTO do rótulo e ausência de corte,
+num passo próprio da story `WithAction`. Passo próprio porque, no meio do fluxo de
+foco, dobrar e devolver a fonte fazia vue e svelte re-renderizarem a lista, e o
+botão que o passo seguinte focava deixava de ser o da tela.
 
 A mesma folha acrescentou `:focus-visible` aos dois botões, com o motivo escrito
 (*"numa torrada isso é mais grave que de costume: ela precisa ser alcançável por
@@ -648,7 +676,7 @@ Forma de API não tem fonte de verdade — cada lib tem a sua.
 |---|---|
 | react | a região é `<Toaster>`; **`toast` vem do pacote `sonner`, não do design system** — o arquivo da casa exporta a REGIÃO, e nunca reexportou a função da fila. Rótulos por `containerAriaLabel` e `toastOptions.closeButtonAriaLabel`. Props extras da lib: `theme`, `icons`, `toastOptions`, `visibleToasts`, `hotkey`, `dismissible` |
 | vue | igual ao react em forma; `toast` vem de `vue-sonner`. Os ícones entram por SLOT e há um `#close-icon` que só esta stack passa. **A folha da lib é importada pelo wrapper** (`import 'vue-sonner/style.css'`), com o motivo escrito: o pacote não a injeta em runtime, e sem a linha a região saía sem posicionamento, sem fundo e sem sombra |
-| svelte | `toast` vem de `svelte-sonner`; os ícones entram por SNIPPET. O tema vem de `mode-watcher` (`mode.current`). Os rótulos moram num `.ts` à parte — ver D2 |
+| svelte | `toast` vem de `svelte-sonner`; os ícones entram por SNIPPET. Os rótulos moram num `.ts` à parte — ver D2 |
 | vanilla | fábrica: `createSonnerToaster(options)` devolve o `HTMLElement` **já registrado como a região em vigor**, e `toast` vem de `@/components/ui/sonner`. Opções extras: `class`, `'aria-label'`, `closeLabel`, e o apelido **depreciado** `label`. Por notificação há duas opções que ninguém mais tem: `richColors` e `position` |
 | angular | a região é `div[ndsToaster]` — seletor de ATRIBUTO em `div`, com o motivo escrito: o host é o elemento nativo, então o markup sai idêntico ao do vanilla e o CSS compartilhado casa sem wrapper. Rótulos por `input` (`label`, `closeLabel`). O ícone é um componente próprio, `svg[ndsToastIcon]`, com `kind` obrigatório |
 
@@ -658,17 +686,41 @@ canônico `'aria-label'` vence quando os dois vêm — com o motivo escrito,
 *"apagá-lo quebraria chamador em silêncio, e sem asserção a compatibilidade é
 promessa, não contrato"*.
 
-**O tema chega por três caminhos, e um deles não chega**:
+**O tema da região acompanha o DOCUMENTO nas cinco desde 2026-09-14.**
 
 | stack | de onde sai o tema da região |
 |---|---|
-| react | `useTheme()` do `next-themes` — **e não há `ThemeProvider` em nenhum lugar da stack**; medido em 2026-09-13, `next-themes` é importado em UM arquivo, `ui/sonner.tsx`. Sem provider o hook devolve o default `"system"`, que segue o sistema operacional e não a barra de temas do Storybook |
-| svelte | `mode.current` do `mode-watcher` |
-| vue | **nada** — o wrapper não passa `theme` |
+| react | a classe `dark` do documento, lida por `useSyncExternalStore` com um `MutationObserver` que é solto no desmonte |
+| vue | a classe `dark` do documento, pelo mesmo observador, solto no `onBeforeUnmount` |
+| svelte | a classe `dark` do documento, pelo mesmo observador, solto no retorno do `$effect`. Vinha de `mode.current`, do `mode-watcher`, que só muda por `setMode`: com a classe escrita direto no documento a descrição saiu `rgb(63, 63, 63)` sobre `rgb(36, 49, 56)`, 1.27:1 — medido em 2026-09-14 pela story de descrição |
 | vanilla, angular | não há prop: quem recolore é a cascata dos tokens, e trocar a classe do documento basta |
 
-A prova indireta está nas stories: a `DarkTheme` de react, vue e svelte passa
-`theme="dark"` **explicitamente**, e a do vanilla e do angular não passa nada.
+Nas três libs, `theme` explícito de quem consome continua vencendo — é o caso da
+story `DarkTheme`, que passa `theme="dark"` à mão justamente para exercitar a
+sobreposição.
+
+**Por que isto não era cosmético.** A ponte da §7.6 cobre `--normal-bg`,
+`--normal-text` e `--normal-border` por estilo inline, que vence qualquer seletor.
+Mas a folha da lib pinta a DESCRIÇÃO pelo tema DELA — `#3f3f3f` no claro,
+`#e8e8e8` no escuro —, e no react o tema vinha do `useTheme()` do `next-themes`
+sem `ThemeProvider` em lugar nenhum (o hook devolvia `"system"`, que segue o
+sistema operacional), e no vue não vinha de lugar nenhum (default `light` para
+sempre). Com página escura e notificação sem `richColors`, a descrição saía quase
+ilegível — medido em 2026-09-14 no react, com o tema da lib em `light`:
+`rgb(63, 63, 63)` sobre `rgb(36, 49, 56)`; com o tema do documento,
+`rgb(232, 232, 232)`. Com `richColors`, era o fundo da notificação tipada que
+trocava de paleta: `rgb(236, 253, 243)`, clara, contra `rgb(0, 31, 15)`, escura,
+numa página escura. Nenhuma story via: o navegador de teste é claro, e a
+`DarkTheme` passava o tema à mão.
+
+**Prova, nas cinco**: `expectDescriptionReadable` dentro de `withDarkDocument`
+(`docs/shared/testing/sonner-probe.ts`), num passo da story `WithDescription` que
+dispara a notificação com `richColors: false` — no angular a opção por
+notificação não existe, e a descrição sai do token. **Sem esse `false` a prova
+não tem dentes, e a primeira versão não tinha**: com `richColors` ligado a
+descrição herda a cor da ponte de tokens, que não depende do tema, e o passo
+passou com o tema plantado em `light`. O `next-themes` deixou de ser importado no
+react; a dependência continua no `package.json`.
 
 ### 7.4 Peças, por stack
 
@@ -938,12 +990,14 @@ textos e tipos diferentes das outras três (`toast.warning` no angular). O
 `label` do `toast_action_click` fechou antes, em 2026-09-14: era o texto
 traduzido no espécime do vanilla e `'undo'` no angular.
 
-**Uma divergência de ESTRUTURA continua, e é declarada**: a seção Estados do react
-desenha quatro cartões com botão vivo (`location: "docs_estados"`, os mesmos
-quatro `toast_type` das composições da demonstração), e as outras quatro stacks
-desenham a mesma seção como TABELA, sem gatilho. É forma de seção da docs page, não
-de rastreio — cada gatilho que existe está rastreado —, e alinhar pede escolher uma
-das duas formas para as cinco.
+**FECHADA em 2026-09-14 — a seção Estados é TABELA nas cinco.** O react desenhava
+quatro cartões com botão vivo (`location: "docs_estados"`) e as outras quatro a
+tabela do container `DocsStates`, com a CHAMADA que produz cada composição na
+coluna do meio. O react passou ao mesmo container, e nenhuma stack emite mais
+`docs_estados` — os disparos vivos continuam na Demonstração e em Variantes. As
+chamadas da coluna do meio estão escritas igual nas cinco, pela forma da
+referência (`msg`, `p`); o vue dizia `title` e o svelte e o vue diziam
+`promise`.
 
 **O `data-track-id` dos gatilhos da demonstração é `sonner:demo:<id>` nas cinco**,
 e é por ele que `docs_demo_click` sai pelo rastreador da docs page, com id estável.

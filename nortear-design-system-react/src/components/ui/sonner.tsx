@@ -1,4 +1,4 @@
-import { useTheme } from "next-themes"
+import { useSyncExternalStore } from "react"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
@@ -19,6 +19,40 @@ export const CLOSE_LABEL = "Fechar notificação"
 export const DEFAULT_POSITION: NonNullable<ToasterProps["position"]> = "top-right"
 
 /**
+ * O tema da região acompanha a classe `dark` do DOCUMENTO.
+ *
+ * Vinha do `useTheme()` do `next-themes`, e não há `ThemeProvider` em lugar
+ * nenhum desta stack: sem provider o hook devolve `"system"`, que segue o
+ * sistema operacional. Os tokens da casa — e a barra de temas do Storybook —
+ * vivem na classe `dark` do documento, e a folha da lib pinta a DESCRIÇÃO pelo
+ * tema DELA (`#3f3f3f` no claro, `#e8e8e8` no escuro) sempre que a notificação
+ * não usa `richColors`. Medido em 2026-09-14 com o documento escuro: tema da lib
+ * em `light` deu descrição `rgb(63, 63, 63)` sobre fundo `rgb(36, 49, 56)`, quase
+ * ilegível; com o tema do documento, `rgb(232, 232, 232)`. Com `richColors`, é o
+ * fundo da notificação tipada que troca de paleta — pastel claro numa página
+ * escura. Nenhuma story via: o navegador de teste é claro, e a story de tema
+ * escuro passa `theme="dark"` à mão.
+ *
+ * O observador é solto no desmonte — `useSyncExternalStore` chama o retorno de
+ * `subscribe` —, e `theme` explícito de quem consome continua vencendo, porque o
+ * spread de `props` vem depois. Prova: `expectDescriptionReadable` em
+ * `docs/shared/testing/sonner-probe.ts`.
+ */
+function subscribeToDocumentTheme(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange)
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
+  return () => observer.disconnect()
+}
+
+function readDocumentTheme(): "dark" | "light" {
+  return document.documentElement.classList.contains("dark") ? "dark" : "light"
+}
+
+function readServerTheme(): "light" {
+  return "light"
+}
+
+/**
  * A região que desenha a fila. Vai UMA VEZ no root da aplicação.
  *
  * `containerAriaLabel` e `toastOptions` entram DEPOIS do spread de `props`
@@ -36,11 +70,15 @@ const Toaster = ({
   position = DEFAULT_POSITION,
   ...props
 }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+  const documentTheme = useSyncExternalStore(
+    subscribeToDocumentTheme,
+    readDocumentTheme,
+    readServerTheme,
+  )
 
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme={documentTheme}
       position={position}
       icons={{
         success: (

@@ -20,3 +20,16 @@ index a15126a..006952a 100644
  	data-sonner-toast=""
  	data-rich-colors={toast.richColors ?? defaultRichColors}
  	data-styled={!(toast.component || toast.unstyled || unstyled)}
+diff --git a/node_modules/svelte-sonner/dist/Toaster.svelte b/node_modules/svelte-sonner/dist/Toaster.svelte
+index 51385c9..29987f0 100644
+--- a/node_modules/svelte-sonner/dist/Toaster.svelte
++++ b/node_modules/svelte-sonner/dist/Toaster.svelte
+@@ -243,7 +243,7 @@
+ 
+ 	onMount(() => {
+ 		const handleKeydown = (event: KeyboardEvent) => {
+-			const isHotkeyPressed = hotkey.every(
++			const isHotkeyPressed = hotkey.length > 0 && hotkey.every(
+ 				(key) =>
+ 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 					(event as any)[key] || event.code === key

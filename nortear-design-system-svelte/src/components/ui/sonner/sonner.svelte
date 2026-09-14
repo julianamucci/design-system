@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Toaster as Sonner, type ToasterProps as SonnerProps } from "svelte-sonner";
-	import { mode } from "mode-watcher";
 	import Loader2Icon from '@lucide/svelte/icons/loader-2';
 	import CircleCheckIcon from '@lucide/svelte/icons/circle-check';
 	import OctagonXIcon from '@lucide/svelte/icons/octagon-x';
@@ -17,7 +16,15 @@
 		position = 'top-right',
 		// Sem atalho por padrão: a lib concatena o atalho ao nome da região
 		// ("Notificações altKey+T"), e o leitor de tela o anunciava. Com a lista
-		// vazia o atalho não é registrado e o nome é só o rótulo.
+		// vazia o nome é só o rótulo.
+		//
+		// A lista vazia DEPENDE DE PATCH, e sem ele é pior que o atalho: a lib
+		// testa o atalho com `hotkey.every(...)`, e `[].every(...)` é verdadeiro —
+		// TODA tecla contava como o atalho, a pilha expandia e roubava o foco, e o
+		// Enter no botão de ação deixava de dispará-la. Medido em 2026-09-14 pela
+		// story de ação, com prova pareada. O `svelte-sonner+1.2.1.patch` acrescenta
+		// a guarda `length > 0`, que a lib do sonner para react já tem. Não tire o
+		// patch mantendo a lista vazia.
 		hotkey = [],
 		...restProps
 	}: SonnerProps = $props();
@@ -35,10 +42,37 @@
 		closeButtonAriaLabel: CLOSE_LABEL,
 		...(toastOptionsProp ?? {}),
 	});
+
+	// O tema da região acompanha a classe `dark` do DOCUMENTO.
+	//
+	// Vinha de `mode.current`, do `mode-watcher`, que só muda quando alguém chama
+	// `setMode` — a barra de temas do Storybook chama, mas quem escreve a classe
+	// por outro caminho não. A folha da lib pinta a DESCRIÇÃO pelo tema DELA
+	// (`#3f3f3f` no claro, `#e8e8e8` no escuro) sempre que a notificação não usa
+	// `richColors`. Medido em 2026-09-14 pela story de descrição, com a classe
+	// `dark` posta direto no documento: descrição `rgb(63, 63, 63)` sobre
+	// `rgb(36, 49, 56)`, 1.27:1. É o mesmo observador das outras stacks de lib.
+	//
+	// O observador é solto no desmonte (retorno do `$effect`), e `theme` explícito
+	// de quem consome continua vencendo, porque `{...restProps}` vem depois no
+	// markup. Prova: `expectDescriptionReadable` em
+	// `docs/shared/testing/sonner-probe.ts`.
+	let documentTheme = $state<'light' | 'dark'>('light');
+
+	$effect(() => {
+		const root = document.documentElement;
+		const read = () => (root.classList.contains('dark') ? 'dark' : 'light');
+		documentTheme = read();
+		const observer = new MutationObserver(() => {
+			documentTheme = read();
+		});
+		observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+		return () => observer.disconnect();
+	});
 </script>
 
 <Sonner
-	theme={mode.current}
+	theme={documentTheme}
 	style="--normal-bg: var(--color-popover); --normal-text: var(--color-popover-foreground); --normal-border: var(--color-border); --border-radius: var(--radius);"
 	{position}
 	{hotkey}

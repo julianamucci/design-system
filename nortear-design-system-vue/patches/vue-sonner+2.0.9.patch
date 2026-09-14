@@ -1,5 +1,5 @@
 diff --git a/node_modules/vue-sonner/lib/index.js b/node_modules/vue-sonner/lib/index.js
-index cd01bb1..2d527ba 100644
+index cd01bb1..01382bb 100644
 --- a/node_modules/vue-sonner/lib/index.js
 +++ b/node_modules/vue-sonner/lib/index.js
 @@ -645,7 +645,7 @@ var Toast_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defineCo
@@ -11,3 +11,12 @@ index cd01bb1..2d527ba 100644
  				ref_key: "toastRef",
  				ref: toastRef,
  				class: normalizeClass(unref(cn)(props.class, toastClass.value, _ctx.classes?.toast, _ctx.toast.classes?.toast, _ctx.classes?.[toastType.value], _ctx.toast?.classes?.[toastType.value])),
+@@ -1095,7 +1095,7 @@ var Toaster_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ define
+ 		});
+ 		watchEffect((onInvalidate) => {
+ 			function handleKeyDown(event) {
+-				const isHotkeyPressed = props.hotkey.every((key) => event[key] || event.code === key);
++				const isHotkeyPressed = props.hotkey.length > 0 && props.hotkey.every((key) => event[key] || event.code === key);
+ 				const listRefItem = Array.isArray(listRef.value) ? listRef.value[0] : listRef.value;
+ 				if (isHotkeyPressed) {
+ 					possiblePositions.value.forEach((pos) => {

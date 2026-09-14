@@ -466,7 +466,7 @@ toast.promise(promise, {
     items={[
       { label: $tStore('states.items.withDescription.label'), trigger: 'toast.success(msg, { description })', behavior: toPlainText($tStore('states.items.withDescription.description'))},
       { label: $tStore('states.items.withAction.label'),      trigger: 'toast(msg, { action: { label, onClick } })',   behavior: toPlainText($tStore('states.items.withAction.description'))      },
-      { label: $tStore('states.items.promise.label'),         trigger: 'toast.promise(promise, { loading, success, error })', behavior: toPlainText($tStore('states.items.promise.description'))         },
+      { label: $tStore('states.items.promise.label'),         trigger: 'toast.promise(p, { loading, success, error })', behavior: toPlainText($tStore('states.items.promise.description'))         },
       { label: $tStore('states.items.persistent.label'),      trigger: 'toast.error(msg, { duration: Infinity })',   behavior: toPlainText($tStore('states.items.persistent.description'))      },
     ]}
   />

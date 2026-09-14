@@ -1044,9 +1044,9 @@ nova. Issue de referência: [cmdk#226](https://github.com/pacocoursey/cmdk/issue
 A partir de 2026-06-06, patches diretamente em bibliotecas upstream `node_modules/` são versionados via [`patch-package`](https://github.com/ds300/patch-package) em cada stack. Postinstall aplica os patches automaticamente após `npm install`.
 
 **Localização**:
-- `nortear-design-system-react/patches/*.patch` (ex: `@base-ui+react+1.4.1.patch`)
+- `nortear-design-system-react/patches/*.patch` (ex: `@base-ui+react+1.4.1.patch`, `sonner+2.0.8.patch`)
 - `nortear-design-system-vue/patches/*.patch` (ex: `reka-ui+2.9.6.patch`, `vue-sonner+2.0.9.patch`)
-- `nortear-design-system-svelte/patches/*.patch` (ex: `bits-ui+2.18.0.patch`, `svelte-sonner+1.1.1.patch`)
+- `nortear-design-system-svelte/patches/*.patch` (ex: `bits-ui+2.18.0.patch`, `svelte-sonner+1.2.1.patch`)
 
 **Como atualizar**:
 ```bash
@@ -1058,59 +1058,86 @@ npx patch-package <pkg>       # regenera o .patch
 
 **Ao bumpar a dep**: confira se a versão do .patch (`@base-ui+react+1.4.1.patch`) ainda casa com a versão instalada. Se a dep mudou estrutura, `patch-package` reporta falha no install — re-aplique o patch manualmente.
 
-### vue/vue-sonner — Toast `<li>` tabindex 0 → -1 {#vue-sonner-toast-tabindex}
+> **Patch novo ou alterado só chega à suíte de navegador depois que o cache sai.**
+> O executor de teste do Storybook pré-empacota as dependências em
+> `node_modules/.cache/storybook/<versão>/<hash>/sb-vitest/deps/<pacote>.js`, e
+> patchar `node_modules` não invalida essa cópia: a suíte segue medindo a lib de
+> antes — vermelha contra uma lib já corrigida, ou, pior, VERDE contra uma lib
+> ainda quebrada. Depois de criar ou alterar qualquer patch abaixo, apague o
+> `sb-vitest` daquela stack antes de acreditar num resultado. Medido duas vezes em
+> 2026-09-14, nos patches do sonner. O `✔` do `patch-package` e o
+> `patches-aplicados.test.ts` provam `node_modules`, não o cache.
 
-- **Patch:** `nortear-design-system-vue/patches/vue-sonner+2.0.9.patch`
-- **Arquivos patcheados:** `node_modules/vue-sonner/lib/vue-sonner.js` (linha 326) + `vue-sonner.cjs`
+### react/sonner — Toast `<li>` tabIndex 0 → -1 {#react-sonner-toast-tabindex}
+
+- **Patch:** `nortear-design-system-react/patches/sonner+2.0.8.patch`
+- **Arquivo patcheado:** `node_modules/sonner/dist/index.mjs` — o `createElement("li", { tabIndex })` da notificação
+- **Versão upstream:** `sonner@2.0.8`
+- **Categoria:** a11y
+- **Data:** 2026-09-14
+
+**Antes → depois:** `tabIndex: 0` → `tabIndex: -1`, uma linha.
+
+**Motivo:** a notificação some sozinha. Quem chega nela pelo Tab perde o foco
+quando o prazo vence, e vai parar no início do documento. É a mesma correção que
+vue e svelte já tinham; o react era a única das três sem ela, e já tinha
+`patch-package` no `postinstall` — faltava só o arquivo.
+
+**Verificação após bump:** `expectNotificacaoForaDoTab`
+(`docs/shared/testing/anuncio.ts`) na story `Playground`; o hunk é conferido em
+`node_modules` por `src/lib/patches-aplicados.test.ts`.
+
+### vue/vue-sonner — Toast `<li>` fora do Tab, e a guarda do atalho vazio {#vue-sonner-toast-tabindex}
+
+- **Patch:** `nortear-design-system-vue/patches/vue-sonner+2.0.9.patch` — dois hunks
+- **Arquivo patcheado:** `node_modules/vue-sonner/lib/index.js`
 - **Versão upstream:** `vue-sonner@2.0.9`
 - **Categoria:** a11y
-- **Data:** 2026-06-06
-- **Upstream ref:** ainda aberto em [emilkowalski/sonner](https://github.com/emilkowalski/sonner)
+- **Upstream ref:** [emilkowalski/sonner](https://github.com/emilkowalski/sonner) — a lib para react já tem a guarda do hunk 2
 
-**Antes:**
-```js
-"aria-live": e.toast.important ? "assertive" : "polite",
-"aria-atomic": "true",
-role: "status",
-tabindex: "0",
-"data-sonner-toast": "true",
-```
+**Hunk 1 — `tabindex: "0"` → `tabindex: "-1"`** (2026-06-06). Mesmo motivo do
+react acima. Esta entrada dizia que o `<li>` carregava `aria-live`/`aria-atomic`
+e citava `lib/vue-sonner.js`: o `vue-sonner` 2.0.9 não escreve `aria-live` no
+`<li>` (quem anuncia é a `<section>` da região), e o arquivo patcheado é
+`lib/index.js`.
 
-**Depois:**
-```js
-"aria-live": e.toast.important ? "assertive" : "polite",
-"aria-atomic": "true",
-role: "status",
-tabindex: "-1",  // PATCH: a11y — toast item não-interativo não deve ser tab-stop
-"data-sonner-toast": "true",
-```
+**Hunk 2 — guarda do atalho vazio** (2026-09-14) {#vue-sonner-hotkey-vazio}:
+`props.hotkey.every(...)` → `props.hotkey.length > 0 && props.hotkey.every(...)`.
 
-**Motivo:** O `<li>` do toast tem `aria-live`/`aria-atomic` (canal AT correto). `tabindex=0` torna o `<li>` tab-stop sem ação — viola `nested-interactive` (botão close interativo dentro) e cria stop de Tab inútil.
+O wrapper passa `hotkey` vazio por padrão, porque a lib concatena o atalho ao
+nome acessível da região ("Notificações altKey+T"). Só que `[].every(...)` é
+verdadeiro: sem esta guarda, TODA tecla contava como o atalho, a pilha expandia e
+roubava o foco — e o Enter no botão de ação deixava de dispará-la. Prova pareada:
+com o atalho default da lib a story `WithAction` passava; com a lista vazia,
+`undoSpy` chamado 0 vezes.
 
-**Verificação após bump:** stories `ui-sonner-*` não devem reportar `nested-interactive`.
+**Verificação após bump:** a story `WithAction` (passo "Enter dispara a ação")
+reprova sem o hunk 2. Não remova o patch mantendo `hotkey` vazio no wrapper.
 
-### svelte/svelte-sonner — Toast `<li>` tabindex 0 → -1 {#svelte-sonner-toast-tabindex}
+### svelte/svelte-sonner — Toast `<li>` fora do Tab, sem região viva aninhada, e a guarda do atalho vazio {#svelte-sonner-toast-tabindex}
 
-- **Patch:** `nortear-design-system-svelte/patches/svelte-sonner+1.1.1.patch`
-- **Arquivos patcheados:** `node_modules/svelte-sonner/dist/Toast.svelte` (linha 334)
-- **Versão upstream:** `svelte-sonner@1.1.1`
+- **Patch:** `nortear-design-system-svelte/patches/svelte-sonner+1.2.1.patch` — três hunks
+- **Arquivos patcheados:** `node_modules/svelte-sonner/dist/Toast.svelte` e `dist/Toaster.svelte`
+- **Versão upstream:** `svelte-sonner@1.2.1`
 - **Categoria:** a11y
-- **Data:** 2026-06-06
-- **Upstream ref:** ainda aberto em [emilkowalski/sonner](https://github.com/emilkowalski/sonner)
 
-**Antes:**
-```svelte
-<li tabindex={0} bind:this={toastRef} ...>
-```
+**Hunk 1 — `tabindex={0}` → `tabindex={-1}`** no `<li>` (2026-06-06). Mesmo motivo
+do react acima. Esta entrada ainda citava `svelte-sonner+1.1.1.patch`.
 
-**Depois:**
-```svelte
-<li tabindex={-1} bind:this={toastRef} ...>
-```
+**Hunk 2 — sai `aria-live` e `aria-atomic` do `<li>`** (2026-09-13)
+{#svelte-sonner-sem-live-aninhado}. A `<section>` da região já é viva, e o
+`svelte-sonner` era a única das três libs com a notificação TAMBÉM viva — duas
+regiões vivas encaixadas, o caminho conhecido para o mesmo texto ser anunciado
+duas vezes. A decisão da casa é o anúncio na região persistente
+(`docs/shared/prd/sonner.md` §8.1). Prova: `expectAnuncioNaRegiao`
+(`docs/shared/testing/anuncio.ts`) na story `Playground`.
 
-**Motivo:** Mesma análise que `vue-sonner` — `<li>` carrega `aria-live`/`aria-atomic`, não precisa estar na tab order. Evita `nested-interactive` com o botão close dentro.
+**Hunk 3 — guarda do atalho vazio** (2026-09-14) {#svelte-sonner-hotkey-vazio}:
+`hotkey.every(` → `hotkey.length > 0 && hotkey.every(` em `Toaster.svelte`. Mesmo
+defeito e mesma prova do hunk 2 do `vue-sonner`, acima.
 
-**Verificação após bump:** stories `ui-sonner-*` não devem reportar `nested-interactive`.
+**Verificação após bump:** as stories `Playground` e `WithAction` reprovam sem os
+hunks 2 e 3.
 
 ---
 

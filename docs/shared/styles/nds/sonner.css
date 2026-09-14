@@ -254,13 +254,40 @@ svg.nds-sonner-icon {
  * instaladas (`sonner`, `vue-sonner`, `svelte-sonner`), que usam os mesmos
  * atributos.
  *
- * `min-*` e não `height`/`width`, pela mesma razão do piso de cima, e porque
- * `min-height` vence `height` em qualquer ordem de cascata: não é preciso
- * disputar especificidade com a folha da lib. Até 2026-09-14 o comentário do piso
- * dizia valer "nas cinco stacks", e alcançava duas. */
+ * `min-*` e não `height`/`width`, pela mesma razão do piso de cima. Até
+ * 2026-09-14 o comentário do piso dizia valer "nas cinco stacks", e alcançava
+ * duas. */
 [data-sonner-toast] [data-close-button],
 [data-sonner-toast] [data-button],
 [data-sonner-toast] [data-cancel] {
   min-block-size: var(--spacing-6);       /* 24px */
   min-inline-size: var(--spacing-6);
+}
+
+/*
+ * O piso sozinho NÃO bastava para o botão de ação e o de cancelar — e este
+ * comentário dizia o contrário.
+ *
+ * Ele afirmava que "`min-height` vence `height` em qualquer ordem de cascata",
+ * e é verdade, mas não resolvia nada: com piso de 24px contra `height: 24px`
+ * cravado pela lib, o piso nunca levanta a caixa. A mesma regra da lib crava
+ * `font-size: 12px`, e em px o rótulo não acompanha a preferência de tamanho de
+ * fonte do navegador. No markup à mão o botão é `.nds-sonner-action`, com
+ * `var(--text-control)` e altura como resultado: nas duas stacks sem lib o
+ * rótulo crescia, nas três com lib ficava parado. Divergência de acessibilidade
+ * (WCAG 1.4.4) e da regra da casa de nunca cravar altura em interativo.
+ *
+ * Especificidade (0,4,0) contra (0,3,0) da lib
+ * (`[data-sonner-toast][data-styled=true] [data-button]`). Não dá para empatar:
+ * em duas das três libs a folha é injetada em runtime DEPOIS desta, e empate
+ * perde por ordem. O botão de fechar fica de fora — é só ícone, e ali medida
+ * fixa é permitida; o piso de cima já o leva a 24×24.
+ *
+ * Prova: `expectActionGrowsWithFont` em `docs/shared/testing/sonner-probe.ts`,
+ * chamada na story de ação das cinco stacks.
+ */
+[data-sonner-toaster] [data-sonner-toast][data-styled] [data-button],
+[data-sonner-toaster] [data-sonner-toast][data-styled] [data-cancel] {
+  height: auto;
+  font-size: var(--text-control);
 }

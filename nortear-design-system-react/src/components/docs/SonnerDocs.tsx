@@ -18,6 +18,7 @@ import { DocsDoDont }        from "@/components/docs/shared/sections/DocsDoDont"
 import { DocsImport }        from "@/components/docs/shared/sections/DocsImport";
 import { DocsVariants }      from "@/components/docs/shared/sections/DocsVariants";
 import { DocsProps }         from "@/components/docs/shared/sections/DocsProps";
+import { DocsStates }        from "@/components/docs/shared/sections/DocsStates";
 import { DocsTokens }        from "@/components/docs/shared/sections/DocsTokens";
 import { DocsAccessibility } from "@/components/docs/shared/sections/DocsAccessibility";
 import { DocsRelated }       from "@/components/docs/shared/sections/DocsRelated";
@@ -216,28 +217,6 @@ toast("Código copiado.")`;
   const codeWarning = `toast.warning("Sua sessão expira em 5 minutos.")`;
 
   const codeInfo = `toast.info("Nova versão disponível.")`;
-
-  const codeWithDescription = `toast.success("Preferências atualizadas.", {
-  description: "Suas configurações foram salvas e entrarão em vigor na próxima sessão.",
-})`;
-
-  const codeWithAction = `toast("Item excluído.", {
-  action: {
-    label: "Desfazer",
-    onClick: () => restoreItem(),
-  },
-})`;
-
-  const codePromise = `toast.promise(uploadFile(), {
-  loading: "Enviando arquivo...",
-  success: "Arquivo enviado com sucesso.",
-  error: "Erro ao enviar. Tente novamente.",
-})`;
-
-  const codePersistent = `toast.error("Falha crítica no servidor.", {
-  duration: Infinity,
-  dismissible: true,
-})`;
 
   const codeTokens = `/* Personalize via CSS variables no seu tema */
 [data-sonner-toaster] {
@@ -583,106 +562,42 @@ interface ToasterProps {
       />
 
       {/* ── Estados (Composições) ─────────────────────────────────── */}
-      <section id="estados">
-        <h2 className="nds-section-title">{tNav("nav.states")}</h2>
-        <div className="nds-stack" data-spacing="md">
-          {/* WithDescription */}
-          <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
-            <p className="nds-text-body nds-font-semibold">{tContent("states.items.withDescription.label")}</p>
-            <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
-              {tContent("states.items.withDescription.description")}
-            </p>
-            <div
-              style={{ contain: "layout", position: "relative" }}
-              className="nds-cluster nds-min-h-16"
-              data-align="center"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => showToast("with-description", "docs_estados", "with-description")}
-              >
-                {tContent("demonstration.labels.triggerWithDescription")}
-              </Button>
-            </div>
-            <div className="nds-bg-muted nds-rounded nds-font-mono nds-text-caption nds-overflow-x" style={{ padding: "var(--spacing-3)" }}>
-              <code className="nds-whitespace-pre">{codeWithDescription}</code>
-            </div>
-          </div>
-
-          {/* WithAction */}
-          <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
-            <p className="nds-text-body nds-font-semibold">{tContent("states.items.withAction.label")}</p>
-            <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
-              {toPlainText(tContent("states.items.withAction.description"))}
-            </p>
-            <div
-              style={{ contain: "layout", position: "relative" }}
-              className="nds-cluster nds-min-h-16"
-              data-align="center"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => showToast("with-action", "docs_estados", "with-action")}
-              >
-                {tContent("demonstration.labels.triggerWithAction")}
-              </Button>
-            </div>
-            <div className="nds-bg-muted nds-rounded nds-font-mono nds-text-caption nds-overflow-x" style={{ padding: "var(--spacing-3)" }}>
-              <code className="nds-whitespace-pre">{codeWithAction}</code>
-            </div>
-          </div>
-
-          {/* Promise */}
-          <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
-            <p className="nds-text-body nds-font-semibold">{tContent("states.items.promise.label")}</p>
-            <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
-              {tContent("states.items.promise.description")}
-            </p>
-            <div
-              style={{ contain: "layout", position: "relative" }}
-              className="nds-cluster nds-min-h-16"
-              data-align="center"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => showToast("promise", "docs_estados", "promise")}
-              >
-                {tContent("demonstration.labels.triggerPromise")}
-              </Button>
-            </div>
-            <div className="nds-bg-muted nds-rounded nds-font-mono nds-text-caption nds-overflow-x" style={{ padding: "var(--spacing-3)" }}>
-              <code className="nds-whitespace-pre">{codePromise}</code>
-            </div>
-          </div>
-
-          {/* Persistent */}
-          <div className="nds-rounded-lg nds-border-default nds-p-4 nds-stack" data-spacing="sm">
-            <p className="nds-text-body nds-font-semibold">{tContent("states.items.persistent.label")}</p>
-            <p className="nds-text-caption nds-text-muted-foreground nds-leading-relaxed">
-              {toPlainText(tContent("states.items.persistent.description"))}
-            </p>
-            <div
-              style={{ contain: "layout", position: "relative" }}
-              className="nds-cluster nds-min-h-16"
-              data-align="center"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => showToast("persistent", "docs_estados", "persistent")}
-              >
-                {tContent("demonstration.labels.triggerPersistent")}
-              </Button>
-            </div>
-            <div className="nds-bg-muted nds-rounded nds-font-mono nds-text-caption nds-overflow-x" style={{ padding: "var(--spacing-3)" }}>
-              <code className="nds-whitespace-pre">{codePersistent}</code>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/*
+        A mesma TABELA das outras quatro stacks. Até 2026-09-14 esta página
+        desenhava quatro cartões com botão vivo e bloco de código, e as outras
+        quatro uma tabela — comparar as páginas deixava de responder alguma
+        coisa. Os disparos vivos continuam na Demonstração e em Variantes; aqui a
+        coluna do meio é a CHAMADA que produz cada composição, igual à referência.
+      */}
+      <DocsStates
+        cols={{
+          state: tContent("states.cols.state"),
+          trigger: tContent("states.cols.trigger"),
+          behavior: tContent("states.cols.behavior"),
+        }}
+        items={[
+          {
+            label: tContent("states.items.withDescription.label"),
+            trigger: "toast.success(msg, { description })",
+            behavior: toPlainText(tContent("states.items.withDescription.description")),
+          },
+          {
+            label: tContent("states.items.withAction.label"),
+            trigger: "toast(msg, { action: { label, onClick } })",
+            behavior: toPlainText(tContent("states.items.withAction.description")),
+          },
+          {
+            label: tContent("states.items.promise.label"),
+            trigger: "toast.promise(p, { loading, success, error })",
+            behavior: toPlainText(tContent("states.items.promise.description")),
+          },
+          {
+            label: tContent("states.items.persistent.label"),
+            trigger: "toast.error(msg, { duration: Infinity })",
+            behavior: toPlainText(tContent("states.items.persistent.description")),
+          },
+        ]}
+      />
 
       {/* ── Propriedades ──────────────────────────────────────────── */}
       <DocsProps

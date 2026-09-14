@@ -244,10 +244,6 @@ defeito de texto: os cinco PRDs já descrevem o que o código faz hoje.
 
 1. **O Angular anuncia `task_progress` e `task_complete` na tabela e não dispara
    nenhum dos dois.**
-2. **De onde vem o tema da torrada** diverge em três stacks: o react lê
-   `next-themes` sem provider nenhum na stack, o svelte usa `mode-watcher` e o vue
-   não passa tema. Mexer exige medição em navegador, porque a ponte de tokens
-   decide se a lib precisa saber do tema.
 
 ### O que a dona decidiu em 2026-09-13, e já está no código
 

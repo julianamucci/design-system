@@ -273,22 +273,22 @@ const variantItems = computed(() => [
 const stateItems = computed(() => [
   {
     label:    tContent('states.items.withDescription.label'),
-    trigger:  'toast.success(title, { description })',
+    trigger:  'toast.success(msg, { description })',
     behavior: toPlainText(tContent('states.items.withDescription.description')),
   },
   {
     label:    tContent('states.items.withAction.label'),
-    trigger:  'toast(title, { action: { label, onClick } })',
+    trigger:  'toast(msg, { action: { label, onClick } })',
     behavior: toPlainText(tContent('states.items.withAction.description')),
   },
   {
     label:    tContent('states.items.promise.label'),
-    trigger:  'toast.promise(promise, { loading, success, error })',
+    trigger:  'toast.promise(p, { loading, success, error })',
     behavior: toPlainText(tContent('states.items.promise.description')),
   },
   {
     label:    tContent('states.items.persistent.label'),
-    trigger:  'toast.error(title, { duration: Infinity })',
+    trigger:  'toast.error(msg, { duration: Infinity })',
     behavior: toPlainText(tContent('states.items.persistent.description')),
   },
 ]);
