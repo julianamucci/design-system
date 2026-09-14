@@ -7,6 +7,10 @@
 >
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
+>
+> **Revisado em 2026-09-14** pela passagem `/pipeline fix skeleton`: as 17
+> inconsistências da §7 e as cinco pendências do fim fecharam, e duas decisões
+> da dona entraram (D5 e D10).
 
 ## 1. Identidade
 
@@ -20,7 +24,7 @@ as duas são de acessibilidade, não de desenho:
 - **ele não fala** — sai `aria-hidden="true"` de fábrica nas cinco stacks;
 - **quem fala é a região que ESPERA o conteúdo**, com `role="status"`,
   `aria-busy` e nome. Desde 2026-09-13 essa região é PEÇA do design system
-  (`SkeletonRegion` e equivalentes — ver D9): até ali era do consumidor, e as cinco
+  (`SkeletonRegion` e equivalentes — ver D5): até ali era do consumidor, e as cinco
   superfícies desta casa a montavam à mão, em cinco formas diferentes.
 
 | vizinho | diferença que decide |
@@ -39,20 +43,19 @@ dispara evento. Cada uma dessas ausências é uma decisão, registrada na §3.
 | # | o contrato | portão |
 |---|---|---|
 | C1 | `aria-hidden="true"` sai de fábrica, nas cinco, e não é configurável | `testes.accessibility.item2` e `testes.functional.item3` — story `Playground` nas cinco |
-| C2 | Quem anuncia o carregamento é a REGIÃO que contém o esqueleto, com `role="status"` + `aria-busy` + nome acessível | `testes.functional.item4` e `testes.accessibility.item3` — `Playground` em quatro stacks, `BusyContainer` no angular |
+| C2 | Quem anuncia o carregamento é a REGIÃO que contém o esqueleto, com `role="status"` + `aria-busy` + nome acessível | `testes.functional.item4` e `testes.accessibility.item3` — `Playground` nas cinco, afirmando a PEÇA (`data-slot="skeleton-region"`); react, vue e svelte também afirmam que papel e estado não se sobrescrevem, e vanilla e angular o declaram em comentário, porque as duas peças não expõem como tentar |
 | C3 | O pulso EXISTE no estado normal e SOME sob movimento reduzido, e o esqueleto continua visível e ocupando a caixa | `testes.functional.item5` e `testes.accessibility.item4` — story `ReducedMotion` nas cinco |
 | C4 | A caixa desenhada sai de `data-shape` e `data-width`, e é conferida por MEDIDA do que foi renderizado — nunca pela classe | `testes.functional.item2` — `Playground` nas cinco, com `boxDesenhada` de `docs/shared/testing/skeleton-probe.ts` |
-| C5 | A forma de avatar sai quadrada (dentro de meio pixel) e com raio circular | `testes.visual.item2` — story `Circle` em quatro stacks, `Shapes` no angular |
-| C6 | Num bloco de texto as larguras declaradas DECRESCEM na ordem escrita | story `TextLine` e `Paragraph` em quatro stacks; no angular, `CustomDimension` |
-| C7 | O placeholder se distingue do fundo do container — razão de luminância acima de 1,05 | `testes.accessibility.item5` e `testes.functional.item1` — story `Pulsing` nas cinco |
-| C8 | O esqueleto NÃO recebe `height`: a altura de `text` e `heading` é resultado de `padding-block` sobre a escada de texto | a folha; nenhuma story mede a altura contra o token, só contra zero (ver pendência) |
+| C5 | A forma de avatar sai quadrada (dentro de meio pixel) e com raio circular | `testes.visual.item2` — story `Circle` nas cinco, que também afirma que `data-width` não tira o avatar do quadrado (`avatarIgnoresWidth`) |
+| C6 | Num bloco de texto as larguras declaradas DECRESCEM na ordem escrita | stories `TextLine` e `Paragraph` nas cinco |
+| C7 | O placeholder se distingue do fundo do container — razão de luminância acima de 1,05 | `testes.accessibility.item5` e `testes.functional.item1` — story `Pulsing` nas cinco, nos três temas e nos dois modos (`distinctionByTheme`) |
+| C8 | O esqueleto NÃO recebe `height`: a altura de `text` e `heading` é resultado de `padding-block` sobre a escada de texto | story `TextLine` nas cinco, com `heightAgainstToken`: a altura desenhada contra o token resolvido no contexto, dentro de meio pixel |
 | C9 | `data-shape="fill"` só preenche caixa que o CONTAINER já estabelece | `testes.visual.item1` e `visual.item5` — `Rectangle` e `ImageInAspectRatio` |
 | C10 | O componente não dispara evento nenhum | `analytics.description` do conteúdo compartilhado, e a §9 desta página |
 
-**C8 é o único contrato desta lista sem portão de verdade.** As stories medem
-`height > 0`, que pega o colapso para zero — o defeito histórico — e não pega
-altura cravada por fora nem desvio da escada de texto. Está registrado como
-pendência no fim do arquivo.
+**C8 ganhou portão em 2026-09-14.** Até ali as stories mediam `height > 0`,
+que pega o colapso para zero — o defeito histórico — e não pegava altura
+cravada por fora nem desvio da escada de texto.
 
 ## 3. Decisões fixadas
 
@@ -78,9 +81,10 @@ design em `style`, e o esqueleto é o componente em que a tentação é maior �
 quem consome quer "só esta altura aqui". Medido em 2026-09-13 nos cinco
 primitivos, nos 19 arquivos de story e nas cinco docs pages: **nenhum valor de design em
 `style`**. Os cinco `style` que existem carregam custom property de layout
-(`--grid-min` da grade da demonstração), que a regra não considera violação — e
-o vanilla não usa nem isso. Ver, porém, a inconsistência registrada em §7 sobre
-o comentário do primitivo do Angular e sobre `props.table.rest`.
+(`--grid-min` da grade da demonstração), que a regra não considera violação; o
+vanilla passou a usar a mesma custom property em 2026-09-14, no lugar do
+`dataset.min` inerte. O override da docs page do Angular que ensinava `style` como
+caminho de dimensão e o `props.table.rest` que sugeria `style` saíram na mesma data.
 
 ### D2 · A duração é o degrau `--duration-cycle`, e há DUAS portas parando o movimento
 
@@ -153,12 +157,10 @@ diferença de luminância, e a conta compõe o alfa contra o ancestral opaco —
 sem compor, a medida seria de uma cor que ninguém vê. A composição e a razão
 vêm reusadas do colhedor do Alert, não copiadas.
 
-**O que esta decisão NÃO cobre hoje**: a medição roda no tema e no modo em que a
-suíte abre — um só. O colhedor **reexporta `darkLigarTheme`** e nenhuma story de
-esqueleto o importa (medido em 2026-09-13 nos 19 arquivos de story das cinco
-stacks). Três temas × dois modos = seis combinações, e uma é
-medida. Registrado
-como pendência.
+**Coberto desde 2026-09-14**: até ali a medição rodava no tema e no modo em que a
+suíte abre — uma combinação em seis. A `Pulsing` das cinco passou a medir as
+seis com `distinctionByTheme`, que troca a classe de tema no contêiner da story
+e compõe o fundo contra `--background` resolvido ao lado do esqueleto.
 
 ### D4 · O raio é o da base do tema, e só o avatar troca
 
@@ -175,6 +177,10 @@ ela passa porque a suíte roda no tema padrão (raio de 14px) e nenhuma story de
 esqueleto troca de tema — a mesma lacuna da D3, com consequência oposta: lá
 falta medição, aqui há medição que reprovaria um tema legítimo.
 
+**Corrigida em 2026-09-14**: a asserção virou `radiusAgainstToken`, que compara
+o raio desenhado com o token resolvido no contexto — zero no `cold` passa, raio
+diferente do token reprova.
+
 ### D5 · O esqueleto é decoração; o anúncio é da REGIÃO que espera o conteúdo
 
 **Estado, nas cinco**: `aria-hidden="true"` escrito pelo primitivo, sem prop nem
@@ -184,13 +190,13 @@ input que permita desligar — no Angular é host binding de valor fixo, no vani
 **O que a região deveria carregar, e o código TEM opinião sobre isso** — está
 escrita em três lugares que concordam entre si: `anatomy.item3` e
 `accessibility.items.item2` do conteúdo compartilhado, o docblock de
-`skeleton.fixtures.ts` do vanilla, e o comentário repetido em cada `play` das
+`createSkeletonRegion` no `skeleton.ts` do vanilla, e o comentário repetido em cada `play` das
 cinco stacks. A opinião é o TRIO:
 
 - `role="status"`, porque `aria-busy` sozinho num `div` sem papel não é
   anunciado;
-- `aria-busy="true"`, que é o estado, e que ao virar `false` é o que dispara o
-  anúncio de "pronto";
+- `aria-busy="true"`, que é o estado enquanto a região existe — ela não vira
+  `false`: sai, e o conteúdo entra no lugar (decisão de 2026-09-14, abaixo);
 - `aria-label` descrevendo o que carrega, porque nome em elemento sem papel é
   atributo proibido — o leitor de tela o descarta, e o axe acusa
   `aria-prohibited-attr`.
@@ -215,6 +221,15 @@ O contrato, igual nas cinco:
 Em todas: `role="status"`, `aria-busy="true"`, `data-slot="skeleton-region"`, nome
 acessível obrigatório vindo de `label`, e **nenhuma CSS própria** — quem compõe põe
 `nds-stack` ou `nds-grid` nela, que é o que as cinco docs pages já faziam à mão.
+
+**Decisão da dona em 2026-09-14: a região SAI quando o conteúdo chega.**
+`aria-busy` fica fixo em `true`, e nem `role` nem `aria-busy` são
+sobrescrevíveis nas cinco — react e svelte espalhavam as props DEPOIS dos
+atributos fixos, e o vue deixava o atributo de passagem cair por cima, então
+nessas três quem consome podia trocar até o papel. O conteúdo compartilhado
+mandava "alternar `aria-busy` para `false`" em duas chaves, o que as peças do
+angular e do vanilla nunca permitiram; o texto passou a ensinar a troca da
+região pelo conteúdo, e o `structureCode` das cinco a mostra.
 
 ### D6 · Não existe prop de forma; existem atributos — e só o vanilla os tipifica
 
@@ -247,10 +262,9 @@ parecer parágrafo em vez de tabela.
 **A armadilha que isto cria, e ela está medida**: percentual só resolve contra
 container com largura definida. Num `nds-cluster` sem base de largura o bloco
 encolhe para o conteúdo, as linhas resolvem para zero e o esqueleto SOME sem
-nada ficar vermelho. O comentário de `nds-flex-1` aparece por escrito em duas
-stories do Angular ("não é enfeite… foi o que a medição de largura acusou aqui"),
-e o passo "Toda linha de texto tem largura desenhada" existe na `Shapes` do
-Angular por causa disso.
+nada ficar vermelho. Foi a medição de largura das stories do Angular que acusou isso em
+2026-09-13; em 2026-09-14 a docs page daquela stack ainda tinha dois `nds-stack`
+sem `nds-flex-1` dentro de cluster, corrigidos na mesma passagem.
 
 ### D8 · O avatar é a exceção de altura que a guideline 12 prevê
 
@@ -267,10 +281,12 @@ metade.
 
 ### D9 · A lista inteira é UMA região ocupada
 
-**Estado**: nas quatro stacks com story de composição, a lista de cinco itens
-tem `aria-busy` e nome na `<ul>`, e nenhum item carrega região própria.
+**Estado**: nas cinco stacks, a story `ListWithAvatar` põe a `<ul role="list">`
+de cinco itens DENTRO da peça de região — a `<ul>` não carrega estado nem nome, e
+nenhum item carrega região própria. Até 2026-09-14 eram quatro stacks, com
+`aria-busy` e nome na própria `<ul>`, sem papel.
 
-**Motivo, escrito no docblock de `skeleton.fixtures.ts` do vanilla**: uma região
+**Motivo, escrito no docblock de `createSkeletonRegion` do vanilla**: uma região
 por peça repetiria o mesmo aviso a cada linha — cinco itens de três peças são
 quinze avisos.
 
@@ -280,7 +296,7 @@ do vanilla põe `role="status"` só quando recebe nome, e cai em
 uma linha só, senão cada linha vira uma região viva repetindo o mesmo aviso").
 É a mesma decisão, tomada duas vezes, no mesmo sentido.
 
-### D10 · O esqueleto do Sidebar é peça PRÓPRIA, e uma das cinco não usa este componente
+### D10 · O esqueleto do Sidebar é peça PRÓPRIA
 
 **Estado**: `.nds-sidebar-menu-skeleton`, `-icon` e `-text` vivem em
 `sidebar.css`, com medidas próprias e uma variação de largura
@@ -288,12 +304,9 @@ uma linha só, senão cada linha vira uma região viva repetindo o mesmo aviso")
 COMPÕEM: o elemento de ícone e o de texto são `Skeleton` com a classe do
 sidebar por cima, então herdam fundo, raio e pulso desta folha.
 
-**O Angular não compõe** — `NdsSidebarMenuSkeleton` monta dois `<div>` com as
-classes do sidebar e nada mais, sem `.nds-skeleton`. Medido em 2026-09-13 em
-`nortear-design-system-angular/src/components/ui/sidebar.ts:633-635`. Sem a
-classe base não há fundo, não há raio e não há pulso: a linha de carregamento do
-menu ocupa espaço e fica invisível. Registrado como inconsistência de primeira
-linha na §7.
+**O Angular passou a compor** — medido em 2026-09-14 em
+`nortear-design-system-angular/src/components/ui/sidebar.ts:638,640`. Até
+2026-09-13 montava dois `<div>` sem `.nds-skeleton`: sem fundo, raio nem pulso.
 
 **E a largura é sorteada em três stacks**: react, vue e svelte calculam
 `Math.random()` entre 50% e 90% a cada render. O vanilla declara por escrito que
@@ -301,18 +314,24 @@ NÃO sorteia, e diz por quê — "as outras implementações sorteiam uma largur
 cada render, o que faz a captura de regressão visual divergir de si mesma". O
 Angular não oferece largura nenhuma.
 
+**Fica para a passagem do Sidebar, por decisão da dona em 2026-09-14**: o
+sorteio de largura das três, e o `NdsSidebarMenuSkeleton` do angular pôr
+`role="status"` sempre, com nome padrão em português, onde o vanilla só dá papel
+quando recebe nome. Registrado como pendência no fim.
+
 ## 4. Anatomia
 
 ```
-(região do consumidor)        role="status" · aria-busy · aria-label
-                              NÃO é peça do componente — ver D5
+skeleton-region               role="status" · aria-busy="true" · aria-label
+│                             peça desde 2026-09-13; fixos não sobrescrevíveis — D5
 └── skeleton [data-shape]     aria-hidden="true" · o bloco pulsante
-        [data-width]          fração da largura do container (D7)
+        [data-width]          fração da largura do container (D7) — não vale no avatar
         [data-size]           só com data-shape="avatar"
 ```
 
-O componente é **um elemento só**, sem filhos e sem sub-peças. O `data-slot` é
-`skeleton` nas cinco.
+São **duas peças**, cada uma um elemento só: a região
+(`data-slot="skeleton-region"`, sem CSS própria) e o esqueleto
+(`data-slot="skeleton"`), sem filhos.
 
 **Quatro formas, e uma delas não tem linha de variante**: `text`, `heading`,
 `avatar` e `fill` existem na folha e nos cinco `argTypes`; a seção de variantes
@@ -345,17 +364,16 @@ e cruzada com `node scripts/tabela-tokens.mjs skeleton`.
 | avatar (pequeno) | quadrado | `--size-sm` |
 | avatar (grande) | quadrado | `--size-lg` |
 | `fill` | 100% nos dois eixos | sem token — a caixa é do container |
-| larguras | 100%, 75%, 66%, 50%, 33% | percentual cravado, sem token — ver D7 |
+| larguras | 100%, 75%, 66%, 50%, 33%; não se aplicam ao avatar | percentual cravado, sem token — ver D7 |
 | movimento reduzido | animação desligada | sem token — bloco próprio no fim da folha, ver D2 |
 
 **Sem borda, sem sombra, sem camada**: o esqueleto não é superfície flutuante, e
 por isso não entra na tabela de elevação por tipo. Nada nesta folha lê sombra.
 
-**`--radius-full` era a única linha que a folha lê e nenhuma tabela de docs
-page lista** — apontado pelo instrumento em 2026-09-13. As cinco páginas
-descrevem o raio numa linha só ("cantos arredondados; a forma de avatar troca
-para o raio circular") e nomeiam apenas `--radius`, o que deixa o ponto de
-customização do círculo sem nome. É leitura de conteúdo, não defeito de código.
+**`--radius-full` e `--duration-cycle` entraram na tabela das cinco páginas em
+2026-09-14** (`tokens.table.roundedFull` e `tokens.table.duration`). Até ali o
+raio vinha numa linha só e nomeava apenas `--radius`, deixando o ponto de
+customização do círculo sem nome.
 
 **A escada global que esta folha lê e as tabelas não listam** —
 `--text-control`, `--text-h4`, `--size-sm`, `--size-lg` — fica de fora por ser
@@ -375,12 +393,10 @@ Não há `data-state`, não há estado de foco (o esqueleto não é focável), n
 estado de erro nem de concluído: o fim do carregamento não é um estado do
 esqueleto, é a sua remoção.
 
-**O terceiro estado que o sistema tem e o componente não**: `aria-busy="false"`
-na região. Ele muda o comportamento do leitor de tela — é o que dispara o
-anúncio de "pronto" — e está documentado em `notes.item5` e
-`accessibility.items.item4`, mas é estado da REGIÃO, e por isso não entra nesta
-tabela. Nenhuma story o exercita com uma troca ao vivo; o Playground o expõe
-como controle `loading`, que nasce `true`.
+**Nem a região tem um estado de "pronto"**: desde 2026-09-14, por decisão da
+dona (D5), ela não alterna `aria-busy` para `false` — sai, e o conteúdo real
+entra no lugar. Até ali `notes.item5` e `accessibility.items.item4` mandavam
+alternar, e o Playground expunha um controle `loading`; os dois saíram.
 
 ## 7. API
 
@@ -390,24 +406,29 @@ os três atributos, e a forma de escrevê-los muda por stack.
 | atributo | valores | padrão |
 |---|---|---|
 | `data-shape` | `text` · `heading` · `avatar` · `fill` | nenhum — sem ele o bloco não tem medida própria |
-| `data-width` | `full` · `3-4` · `2-3` · `1-2` · `1-3` | nenhum |
+| `data-width` | `full` · `3-4` · `2-3` · `1-2` · `1-3` | nenhum — a folha não o aplica ao avatar desde 2026-09-14 |
 | `data-size` | `sm` · `lg` | nenhum — só tem efeito com `data-shape="avatar"` |
 | classe | utilitárias `.nds-*` | — |
 | `aria-hidden` | fixo em `true` | não configurável (C1) |
 
 **O Playground das cinco declara os mesmos defaults** — `shape: 'text'`,
-`width: '3-4'`, `loading: true` — e eles são defaults DA STORY, não da folha: no
-componente, nenhum atributo é obrigatório e nenhum tem valor implícito.
+`width: '3-4'` — e eles são defaults DA STORY, não da folha: no componente,
+nenhum atributo é obrigatório e nenhum tem valor implícito. O controle `loading`
+saiu em 2026-09-14 (D5).
 
 ### Divergências de forma, registradas
 
 | stack | como difere |
 |---|---|
 | react | função `Skeleton`, `React.ComponentProps<'div'>`; forma e largura por spread de atributo |
-| vue | SFC `Skeleton.vue` com uma prop só (`class`); os atributos chegam por passagem de atributo, sem `inheritAttrs` declarado |
+| vue | SFC `Skeleton.vue` com uma prop só (`class`); com `inheritAttrs: false` desde 2026-09-14, nele e em `SkeletonRegion.vue`: os atributos chegam por `v-bind="$attrs"` ANTES dos fixos, que por isso não se sobrescrevem |
 | svelte | `skeleton.svelte` com `ref` bindável e tipo `WithoutChildren<WithElementRef<…>>` — a única stack que recusa filho na compilação; índice exporta `Root` e o apelido `Skeleton` |
 | vanilla | fábrica `createSkeleton(options)`, a ÚNICA com contrato de tipo para forma, largura e tamanho (`SkeletonShape`, `SkeletonWidth`, `SkeletonSize`) — ver D6 |
 | angular | diretiva `div[ndsSkeleton]`, sem input nenhum; `data-slot` e `aria-hidden` por host binding, forma e largura por atributo estático ou `[attr.*]` no template |
+
+**O título da tabela de props segue a peça de cada stack** (`Skeleton`,
+`NdsSkeleton`, `createSkeleton(options)`), ou fica sem título — cosmético, e
+declarado aqui para não voltar como achado.
 
 **No Angular o host binding não disputa com a forma, e vale dizer por quê**: as
 duas ligações do host são `data-slot` e `aria-hidden`, e `data-shape`/`data-width`
@@ -420,16 +441,18 @@ família.
 
 | stack | peças |
 |---|---|
-| react | `Skeleton` |
-| vue | `Skeleton` |
-| svelte | `Root`, `Skeleton` (o mesmo componente sob dois nomes) |
-| vanilla | `createSkeleton`, mais os tipos `SkeletonOptions`, `SkeletonShape`, `SkeletonWidth`, `SkeletonSize` |
-| angular | `NdsSkeleton` (seletor `div[ndsSkeleton]`) |
+| react | `Skeleton`, `SkeletonRegion` |
+| vue | `Skeleton`, `SkeletonRegion` |
+| svelte | `Root`, `Skeleton` (o mesmo componente sob dois nomes), `Region`, `SkeletonRegion` |
+| vanilla | `createSkeleton`, `createSkeletonRegion`, mais os tipos `SkeletonOptions`, `SkeletonRegionOptions`, `SkeletonShape`, `SkeletonWidth`, `SkeletonSize` |
+| angular | `NdsSkeleton` (`div[ndsSkeleton]`), `NdsSkeletonRegion` (`div[ndsSkeletonRegion]`) e `NDS_SKELETON`, com as duas |
 
-### Inconsistências entre stacks, medidas em 2026-09-13
+### Inconsistências entre stacks, medidas em 2026-09-13 — FECHADAS em 2026-09-14
 
-Estas linhas são o produto principal deste documento. Cada uma diz quem faz o
-quê e qual regra a MAIORIA já executa. Nenhuma foi corrigida por este PRD.
+As dezessete fecharam na passagem `/pipeline fix skeleton` de 2026-09-14, com a
+Fase B remedindo cada uma no HEAD antes da correção. A 1 já estava corrigida
+quando a passagem começou. O texto abaixo fica porque nomeia o que cada stack
+fazia, e é contra ele que uma regressão se reconhece.
 
 1. **O esqueleto de menu do Sidebar do Angular não usa este componente.**
    `nortear-design-system-angular/src/components/ui/sidebar.ts:633-635` monta
@@ -547,16 +570,17 @@ mais — sem papel, sem nome, sem estado.
 
 **Atributos, na região que espera o conteúdo** (D5): `role="status"` +
 `aria-busy="true"` + `aria-label`. Os três juntos, e a razão de cada um está na
-D5. Ao terminar o carregamento, `aria-busy` vira `false`, e é isso que faz o
-leitor anunciar o conteúdo novo.
+D5. Ao terminar o carregamento a região SAI e o conteúdo real entra no lugar —
+`aria-busy` nunca vira `false` (decisão de 2026-09-14).
 
 **Teclado**: nenhum. O esqueleto não é focável e não entra na ordem de
 tabulação; o foco fica onde estava até o conteúdo real chegar. Diferente do
 corpo rolável de um painel, aqui não há caixa que role, então não há parada de
 teclado a nomear.
 
-**Movimento reduzido**: WCAG 2.3.3. O pulso para, e quem o para é o bloco da
-própria folha, porque a duração é literal (D2). A guarda está no FIM do arquivo,
+**Movimento reduzido**: WCAG 2.3.3. O pulso para por duas portas: o bloco da
+própria folha e o degrau `--duration-cycle`, que o bloco de movimento reduzido
+de `motion.css` alcança (D2). A guarda está no FIM do arquivo,
 e essa posição é o conserto, não arrumação — guarda de movimento tem de vir
 depois do que ela desliga.
 
@@ -587,9 +611,11 @@ cinco páginas renderizam a seção com uma linha de travessões, sem evento.
 **O que dispara são os eventos da própria docs page**, e eles não são do
 esqueleto: `docs_page_view` e `docs_section_viewed`, nas cinco, com
 `component_name: 'skeleton'` e o locale. Os eventos de seção (`docs_*` de
-variante, relacionado, nota) saem dos containers compartilhados, e é aí que a
-inconsistência 15 da §7 morde: onde `componentSlug` não é passado, o evento da
-seção não sabe de que componente veio.
+variante, relacionado, nota) saem dos containers compartilhados, e desde
+2026-09-14 as cinco passam `componentSlug` a toda seção que o aceita — até ali
+faltava em três (inconsistência 15 da §7). A demonstração do angular não recebe o
+slug porque o container daquela stack não tem a entrada, o que está declarado em
+`DocsDemonstration.stories.ts`.
 
 **Onde o `trackId` da variante é estável**: `rectangle`, `circle`, `line` — as
 cinco páginas usam as mesmas três palavras, nunca o texto traduzido. Medido em
@@ -597,7 +623,7 @@ cinco páginas usam as mesmas três palavras, nunca o texto traduzido. Medido em
 
 ## 10. Reconstruir do zero
 
-Ordem: folha → primitivo → região do consumidor nas stories → docs page.
+Ordem: folha → primitivo e peça de região → stories → docs page.
 
 - **Comece pela folha, e escreva a guarda de movimento POR ÚLTIMO** (D2). Com
   especificidade igual quem vem depois vence, e uma guarda escrita antes da
@@ -605,13 +631,14 @@ Ordem: folha → primitivo → região do consumidor nas stories → docs page.
 - **O primitivo é um `div` e um atributo fixo.** `data-slot="skeleton"`,
   `aria-hidden="true"`, a classe base, e mais nada. Se o primitivo estiver
   ganhando prop de dimensão, a decisão D1 foi revertida sem querer.
-- **A região vem junto, sempre.** Ela não é peça do componente, mas toda
-  superfície precisa dela, e é o trio inteiro ou nada (D5). No vanilla isso mora
-  em `skeleton.fixtures.ts`, fora do arquivo de story — no CSF todo export
-  nomeado vira story.
+- **A região vem junto, sempre, e é PEÇA** (D5): toda superfície a usa, com os
+  fixos escritos DEPOIS de qualquer spread, para que ninguém troque papel ou
+  estado. Story nenhuma monta o trio à mão.
 - **`fill` sozinho nasce com altura zero.** Qualquer superfície que o mostre
   precisa de um container que estabeleça a caixa; é por isso que o Playground das
-  cinco troca para a classe de proporção de mídia quando a forma é `fill`.
+  cinco troca para a classe de proporção de mídia quando a forma é `fill`, e o
+  painel Code das cinco ensina o esqueleto dentro de `AspectRatio` — a classe é
+  da docs page, não da API.
 - **Percentual precisa de base de largura** (D7). Num cluster sem `nds-flex-1` as
   linhas resolvem para zero e o esqueleto desaparece — e a story renderiza,
   vazia.
@@ -658,23 +685,24 @@ contradizem o código: a do **vanilla**, que é a referência, não menciona o
 que `aria-hidden` é fixo, e o docblock do primitivo daquela stack ainda ensina
 `style` como caminho de dimensão, contra a regra da casa e contra o que as
 outras quatro dizem.
-slug — o que exige mover o catálogo para cá e deixar na guideline só regra de
-categoria.
 
-> **PENDÊNCIA · 2026-09-13** — o painel Code de duas stacks não ensina o que
+> **FECHADA · 2026-09-14** — o painel Code de duas stacks não ensina o que
 > quem lê deveria copiar: o **angular** tem um construtor de snippet só, e os
 > arquivos de variantes e de estados dele publicam o template da story; e nem
 > **angular** nem **react** têm `skeleton.source.test.ts`, que é o que prova que
 > o snippet bate com a story ao lado.
 > **Fecha quando**: `story_file_sem_transform` e `source_sem_teste` não
 > reportarem mais para este slug.
+> **Como fechou**: construtores por story e `skeleton.source.test.ts` no angular
+> e no react; `audit.mjs skeleton` deixou de reportar as duas regras.
 
-> **PENDÊNCIA · 2026-09-13** — o `seo.description` passa de 155 caracteres nos
+> **FECHADA · 2026-09-14** — o `seo.description` passa de 155 caracteres nos
 > três idiomas (186 · 177 · 179), então o trecho abaixo do link no resultado de
 > busca corta a frase no meio.
 > **Fecha quando**: `seo_description_longo` não reportar mais para este slug.
+> **Como fechou**: as três descrições passaram a 154 · 145 · 146 caracteres.
 
-> **PENDÊNCIA · 2026-09-13** — a medição de tema é de uma combinação em seis. O
+> **FECHADA · 2026-09-14** — a medição de tema é de uma combinação em seis. O
 > colhedor reexporta `darkLigarTheme` e nenhuma story de esqueleto o usa, então o
 > piso de luminância de C7 é medido só no tema e no modo em que a suíte abre. No
 > mesmo eixo, a story `Pulsing` das cinco afirma `borderRadius !== '0px'`, e essa
@@ -683,16 +711,18 @@ categoria.
 > **Fecha quando**: houver uma story que meça a distinção do fundo nos três
 > temas em ambos os modos, e a asserção de raio deixar de afirmar um valor que o
 > tema pode zerar.
+> **Como fechou**: `distinctionByTheme` e `radiusAgainstToken` na `Pulsing` das cinco.
 
-> **PENDÊNCIA · 2026-09-13** — C8 não tem portão. As cinco stacks medem
+> **FECHADA · 2026-09-14** — C8 não tem portão. As cinco stacks medem
 > `height > 0`, que pega o colapso histórico para zero e não pega altura cravada
 > por fora nem desvio da escada de texto — a altura de `text` deveria ser
 > exatamente a medida de texto de controle e a de `heading` a de `h4` (D8), e
 > nenhuma asserção compara com o token.
 > **Fecha quando**: houver story que compare a altura desenhada com o valor
 > calculado do token, nas cinco.
+> **Como fechou**: `heightAgainstToken` na `TextLine` das cinco.
 
-> **PENDÊNCIA · 2026-09-13** — `data-width` sobrescreve a medida do avatar
+> **FECHADA · 2026-09-14** — `data-width` sobrescreve a medida do avatar
 > quando não há `data-size`. Na folha, `[data-shape='avatar']` (0,2,0) vem ANTES
 > de `[data-width='…']` (0,2,0), e com especificidade igual quem vem depois
 > vence: um avatar com `data-width="1-2"` sai com metade da largura do container
@@ -703,3 +733,15 @@ categoria.
 > cinco vezes no consumidor em vez de uma na folha.
 > **Fecha quando**: a folha restringir `data-width` às formas de texto, ou uma
 > story afirmar que a combinação proibida não desenha retângulo.
+> **Como fechou**: as duas coisas — a folha passou a ler
+> `[data-width]:not([data-shape='avatar'])`, e a `Circle` das cinco afirma o
+> quadrado com `avatarIgnoresWidth`.
+
+> **PENDÊNCIA · 2026-09-14** — o esqueleto de menu do Sidebar diverge do vanilla
+> em duas coisas, e a dona decidiu tratá-las na passagem do Sidebar: react, vue e
+> svelte sorteiam a largura com `Math.random()` a cada render, o que faz a
+> captura visual divergir de si mesma, e o `NdsSidebarMenuSkeleton` do angular
+> põe `role="status"` sempre, com nome padrão `'Carregando menu'`, onde o vanilla
+> só dá papel quando recebe nome (D9, D10).
+> **Fecha quando**: as quatro alinharem ao vanilla — largura por opção com o
+> padrão da folha, e papel só com nome.

@@ -2,7 +2,7 @@
  * ─── nds-skeleton ────────────────────────────────────────────────────────────
  * Placeholder animado durante carregamento de dados.
  *
- *   <div class="nds-skeleton" data-shape="line" data-width="lg"></div>
+ *   <div class="nds-skeleton" data-shape="text" data-width="3-4"></div>
  *
  * O esqueleto imita a CAIXA do conteúdo que vai substituir, então forma e
  * largura são escolha de quem usa — mas por atributo, não por style inline.
@@ -12,7 +12,9 @@
  *
  * Pulsa via opacity, respeita prefers-reduced-motion.
  *
- * Tokens: --primary (cor de fundo soft), --radius
+ * Tokens: --primary (cor de fundo soft), --radius, --radius-full (avatar),
+ * --duration-cycle e --ease-standard (pulso), --text-control e --text-h4 (altura
+ * de text e heading), --size-default/-sm/-lg (avatar).
  */
 
 .nds-skeleton {
@@ -72,12 +74,19 @@
  * Percentual, não medida fixa: a linha de esqueleto imita um trecho de texto
  * que quebra junto com o container. Variar a largura entre linhas é o que faz
  * o bloco parecer parágrafo em vez de tabela.
+ *
+ * O `:not([data-shape='avatar'])` é o conserto, não enfeite. Sem ele a regra de
+ * largura (0,2,0) vinha DEPOIS da de avatar (0,2,0) e vencia: um avatar com
+ * `data-width="1-2"` saía com metade do container de largura e a altura da
+ * escada — retângulo, não círculo. Até 2026-09-14 a restrição era executada
+ * cinco vezes no consumidor (Playground, fábrica de snippet), e nenhuma vez
+ * aqui. O avatar tem medida própria; a fração não se aplica a ele.
  */
-.nds-skeleton[data-width='full']    { inline-size: 100%; }
-.nds-skeleton[data-width='3-4']     { inline-size: 75%;  }
-.nds-skeleton[data-width='2-3']     { inline-size: 66%;  }
-.nds-skeleton[data-width='1-2']     { inline-size: 50%;  }
-.nds-skeleton[data-width='1-3']     { inline-size: 33%;  }
+.nds-skeleton[data-width='full']:not([data-shape='avatar']) { inline-size: 100%; }
+.nds-skeleton[data-width='3-4']:not([data-shape='avatar'])  { inline-size: 75%;  }
+.nds-skeleton[data-width='2-3']:not([data-shape='avatar'])  { inline-size: 66%;  }
+.nds-skeleton[data-width='1-2']:not([data-shape='avatar'])  { inline-size: 50%;  }
+.nds-skeleton[data-width='1-3']:not([data-shape='avatar'])  { inline-size: 33%;  }
 
 @keyframes nds-skeleton-pulse {
   0%, 100% { opacity: 1;   }

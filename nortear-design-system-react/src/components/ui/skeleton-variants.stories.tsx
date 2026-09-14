@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
-import { Skeleton } from "./skeleton";
+import { Skeleton, SkeletonRegion } from "./skeleton";
 import {
   skeletonAvatarSource,
   midiaSkeletonBlockSource,
   skeletonParagrafoSource,
   skeletonSource,
 } from "./skeleton.source";
+import { avatarIgnoresWidth, boxDesenhada, heightAgainstToken } from "@shared/testing/skeleton-probe";
 
 const meta = {
   title: "Components/Feedback/Skeleton/Variants",
@@ -43,9 +44,9 @@ export const Rectangle: Story = {
     },
   },
   render: () => (
-    <div role="status" aria-busy="true" aria-label="Carregando bloco" className="nds-w-sm">
+    <SkeletonRegion label="Carregando bloco" className="nds-w-sm">
       <Skeleton data-shape="fill" className="nds-docs-skeleton-media" />
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
@@ -76,31 +77,33 @@ export const Circle: Story = {
     },
   },
   render: () => (
-    <div role="status" aria-busy="true" aria-label="Carregando avatar">
+    <SkeletonRegion label="Carregando avatar">
       <Skeleton data-shape="avatar" />
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
-    await step("Quadrado com medida vinda do tema", async () => {
+    await step("Quadrado com raio circular, medida vinda do tema", async () => {
       // Sem número mágico: a medida sai de `--size-*`, que muda por densidade.
       // Afirmar "40px" amarraria o teste ao tema padrão.
-      const box = sk.getBoundingClientRect();
+      const box = boxDesenhada(sk);
       await expect(box.width).toBeGreaterThan(0);
-      await expect(Math.round(box.width)).toBe(Math.round(box.height));
+      await expect(box.quadrado).toBe(true);
+      await expect(box.circular).toBe(true);
     });
 
-    await step("O raio é circular, não o raio padrão do sistema", async () => {
-      // Comportamento, não classe: o que importa é o círculo desenhado.
-      const raio = Number.parseFloat(getComputedStyle(sk).borderTopLeftRadius);
-      await expect(raio).toBeGreaterThanOrEqual(sk.getBoundingClientRect().width / 2 - 0.5);
+    await step("Uma fração de largura não deforma o avatar", async () => {
+      // A regra de largura vinha depois da de avatar, com a mesma
+      // especificidade, e o avatar saía retângulo.
+      await expect(avatarIgnoresWidth(sk).quadrado).toBe(true);
     });
   },
 };
 
 export const TextLine: Story = {
   parameters: {
+    covers: ["functional.item2"],
     docs: {
       // São TRÊS linhas de larguras diferentes, e a variação entre elas é o que
       // faz o bloco ser lido como texto — uma linha só não ensina isso.
@@ -112,24 +115,27 @@ export const TextLine: Story = {
     },
   },
   render: () => (
-    <div
-      role="status"
-      aria-busy="true"
-      aria-label="Carregando linhas de texto"
+    <SkeletonRegion
+      label="Carregando parágrafo"
       className="nds-stack nds-w-sm"
       data-spacing="sm"
     >
       <Skeleton data-shape="text" data-width="full" />
       <Skeleton data-shape="text" data-width="3-4" />
       <Skeleton data-shape="text" data-width="1-2" />
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
     const lines = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
-    await step("Três linhas, todas com altura desenhada", async () => {
+    await step("Três linhas com a altura do token de texto", async () => {
+      // `height > 0` pegava o colapso e deixava passar altura cravada por fora
+      // e desvio da escada: a medida tem de ser exatamente a do token.
       await expect(lines).toHaveLength(3);
-      for (const l of lines) await expect(l.getBoundingClientRect().height).toBeGreaterThan(0);
+      for (const l of lines) {
+        const { token, height, expected } = heightAgainstToken(l);
+        await expect(Math.abs(height - expected), `${token}: ${height} ≠ ${expected}`).toBeLessThanOrEqual(0.5);
+      }
     });
 
     await step("As larguras decrescem na ordem declarada", async () => {

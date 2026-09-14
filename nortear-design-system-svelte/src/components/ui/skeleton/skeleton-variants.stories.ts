@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect } from 'storybook/test';
 import SkeletonVarianteStory from './SkeletonVarianteStory.svelte';
-import { boxDesenhada } from '@shared/testing/skeleton-probe';
+import {
+  avatarIgnoresWidth,
+  boxDesenhada,
+  heightAgainstToken,
+} from '@shared/testing/skeleton-probe';
 import {
   skeletonCirculoSource,
   textSkeletonLinesSource,
@@ -87,12 +91,19 @@ export const Circle: Story = {
       // Comportamento, não classe: o que importa é o círculo desenhado.
       await expect(boxDesenhada(sk).circular).toBe(true);
     });
+
+    await step('Com data-width, o avatar continua quadrado', async () => {
+      // A fração de largura é das formas de texto; no avatar ela esticava o
+      // círculo num retângulo. A sonda põe o atributo e o devolve.
+      await expect(avatarIgnoresWidth(sk).quadrado).toBe(true);
+    });
   },
 };
 
 export const TextLine: Story = {
   args: { variant: 'textLine' },
   parameters: {
+    covers: ['functional.item2'],
     docs: {
       source: { transform: textSkeletonLinesSource },
       description: {
@@ -104,9 +115,15 @@ export const TextLine: Story = {
   play: async ({ canvasElement, step }) => {
     const lines = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
-    await step('Três linhas, todas com altura desenhada', async () => {
+    await step('Três linhas, cada uma com a altura do token de texto', async () => {
+      // `height > 0` pegava só o colapso; a altura tem de ser EXATAMENTE a
+      // medida da escada, senão altura cravada por fora passaria.
       await expect(lines).toHaveLength(3);
-      for (const l of lines) await expect(l.getBoundingClientRect().height).toBeGreaterThan(0);
+      for (const l of lines) {
+        const { token, height, expected } = heightAgainstToken(l);
+        await expect(expected, `${token} resolve para medida positiva`).toBeGreaterThan(0);
+        await expect(Math.abs(height - expected), `altura contra ${token}`).toBeLessThanOrEqual(0.5);
+      }
     });
 
     await step('As larguras decrescem na ordem declarada', async () => {

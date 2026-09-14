@@ -1,16 +1,19 @@
 <script lang="ts">
-  import { Skeleton } from './index';
+  import { Skeleton, SkeletonRegion } from './index';
 
   // A caixa do esqueleto vem de atributo, não de classe de dimensão nem de
   // altura cravada: `data-shape` escolhe a forma e `data-width` a fração da
   // largura do container (docs/shared/styles/nds/skeleton.css).
+  //
+  // Sem control de "carregando": a região não alterna `aria-busy`. Quando o
+  // conteúdo chega ela SAI, e o conteúdo entra no lugar (decisão da dona,
+  // 2026-09-14).
   interface Props {
     shape?: 'text' | 'heading' | 'avatar' | 'fill';
     width?: 'full' | '3-4' | '2-3' | '1-2' | '1-3';
-    loading?: boolean;
   }
 
-  let { shape = 'text', width = '3-4', loading = true }: Props = $props();
+  let { shape = 'text', width = '3-4' }: Props = $props();
 
   const widthAplicada = $derived(shape === 'text' || shape === 'heading' ? width : undefined);
   // `fill` preenche a caixa que o container estabelece; aqui quem estabelece é
@@ -19,6 +22,6 @@
   const classNameAplicada = $derived(shape === 'fill' ? 'nds-docs-skeleton-media' : undefined);
 </script>
 
-<div role="status" aria-busy={loading} aria-label="Carregando conteúdo">
+<SkeletonRegion label="Carregando conteúdo">
   <Skeleton data-shape={shape} data-width={widthAplicada} class={classNameAplicada} />
-</div>
+</SkeletonRegion>

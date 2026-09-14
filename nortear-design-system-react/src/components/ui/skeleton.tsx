@@ -5,15 +5,17 @@ import { cn } from "@/lib/utils"
 // resultado de padding + tipografia, para o bloco crescer junto quando a
 // pessoa aumenta a fonte do navegador (guideline 12, WCAG 1.4.4).
 //
-// `aria-hidden` sai marcado de fábrica — o placeholder é ruído para leitor de
-// tela, e quem anuncia o carregamento é a região que o contém.
+// `aria-hidden` sai marcado de fábrica e NÃO é sobrescrevível — o placeholder é
+// ruído para leitor de tela, e quem anuncia o carregamento é a região que o
+// contém. Por isso os atributos fixos vêm DEPOIS do espalhamento: em JSX quem
+// escreve por último vence.
 function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
+      {...props}
       data-slot="skeleton"
       aria-hidden="true"
       className={cn("nds-skeleton", className)}
-      {...props}
     />
   )
 }
@@ -29,10 +31,16 @@ function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
  * Os três atributos andam juntos, e cada um tem motivo próprio:
  * - `role="status"` — `aria-busy` sozinho num `div` sem papel não é anunciado, e
  *   nome acessível sem papel é atributo proibido;
- * - `aria-busy="true"` — é o estado, e é ao virar `false` que o leitor de tela lê
- *   o conteúdo que substituiu o esqueleto;
+ * - `aria-busy="true"` — é o estado, e é FIXO: a região não alterna para
+ *   `false`. Quando o conteúdo chega, ela SAI e o conteúdo entra no lugar dela
+ *   (decisão da dona, 2026-09-14). Região vazia deixada para trás continuaria
+ *   dizendo que algo carrega;
  * - `label` obrigatório — uma região `status` sem nome não é alcançável pela
  *   lista de regiões, e "carregando" sem dizer o quê não orienta.
+ *
+ * Papel, estado e nome NÃO são sobrescrevíveis: saem do tipo das props e são
+ * escritos depois do espalhamento, então nem um `role`/`aria-busy` passado por
+ * cast chega ao DOM.
  *
  * `status` já é região viva por definição, então NÃO se acrescenta `aria-live`
  * aqui, e nem uma segunda região dentro desta: uma região por BLOCO, nunca por
@@ -41,20 +49,20 @@ function Skeleton({ className, ...props }: React.ComponentProps<"div">) {
  * Não tem CSS próprio de propósito: o layout é de quem compõe, por `className`
  * (`nds-stack`, `nds-grid`, `nds-cluster`).
  */
-function SkeletonRegion({
-  label,
-  className,
-  children,
-  ...props
-}: React.ComponentProps<"div"> & { label: string }) {
+type SkeletonRegionProps = Omit<
+  React.ComponentProps<"div">,
+  "role" | "aria-busy" | "aria-label"
+> & { label: string }
+
+function SkeletonRegion({ label, className, children, ...props }: SkeletonRegionProps) {
   return (
     <div
+      {...props}
       data-slot="skeleton-region"
       role="status"
       aria-busy="true"
       aria-label={label}
       className={className}
-      {...props}
     >
       {children}
     </div>
@@ -62,3 +70,4 @@ function SkeletonRegion({
 }
 
 export { Skeleton, SkeletonRegion }
+export type { SkeletonRegionProps }

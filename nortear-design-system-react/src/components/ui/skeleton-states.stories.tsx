@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
-import { Skeleton } from "./skeleton";
-import { skeletonPulsandoSource, skeletonSource } from "./skeleton.source";
+import { Skeleton, SkeletonRegion } from "./skeleton";
+import { skeletonStatesSource, skeletonSource } from "./skeleton.source";
 import {
   animationAtiva,
-  backgroundDistincao,
+  distinctionByTheme,
   ligarMovimentoReduzido,
+  radiusAgainstToken,
 } from "@shared/testing/skeleton-probe";
 
 const meta = {
@@ -35,7 +36,7 @@ export const Pulsing: Story = {
     docs: {
       // Duas linhas empilhadas: o pulso só é lido como bloco carregando quando
       // há mais de uma barra, e o meta imprime a linha solta do Playground.
-      source: { transform: skeletonPulsandoSource },
+      source: { transform: skeletonStatesSource },
       description: {
         story:
           "Estado padrão: pulso por opacidade, cantos arredondados e fundo distinto do container.",
@@ -43,31 +44,34 @@ export const Pulsing: Story = {
     },
   },
   render: () => (
-    <div
-      role="status"
-      aria-busy="true"
-      aria-label="Carregando conteúdo"
+    <SkeletonRegion
+      label="Carregando conteúdo"
       className="nds-stack nds-w-sm"
       data-spacing="sm"
     >
       <Skeleton data-shape="text" data-width="full" />
       <Skeleton data-shape="text" data-width="3-4" />
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
-    await step("A classe base entrega pulso e raio", async () => {
+    await step("A classe base entrega pulso e o raio do token", async () => {
+      // `borderRadius !== '0px'` reprovaria o tema `cold`, que declara
+      // `--radius: 0` como identidade: o raio se mede contra o token.
       await expect(animationAtiva(sk)).toBe(true);
-      await expect(getComputedStyle(sk).borderRadius).not.toBe("0px");
+      const { radius, expected } = radiusAgainstToken(sk);
+      await expect(Math.abs(radius - expected)).toBeLessThanOrEqual(0.5);
     });
 
-    await step("O placeholder se distingue do fundo do container", async () => {
+    await step("Em cada tema e modo, o placeholder se distingue do fundo", async () => {
       // Não é critério de contraste — o esqueleto não transmite informação. O
-      // piso pega o caso degenerado: token trocado ou opacidade zerada fazem o
-      // placeholder sumir, e o carregamento deixa de ser visível.
-      const { ratio } = backgroundDistincao(sk);
-      await expect(ratio).toBeGreaterThan(1.05);
+      // piso pega o caso degenerado: token trocado, opacidade zerada ou tema em
+      // que a primária coincide com a superfície. Medido fora de `waitFor`: a
+      // sonda mexe no DOM.
+      for (const { theme, mode, ratio } of distinctionByTheme(canvasElement, sk)) {
+        await expect(ratio, `${theme}/${mode}`).toBeGreaterThan(1.05);
+      }
     });
   },
 };
@@ -76,6 +80,9 @@ export const ReducedMotion: Story = {
   parameters: {
     covers: ["functional.item5", "accessibility.item4"],
     docs: {
+      // A MESMA região de duas linhas do Pulsing: o que muda é a preferência do
+      // sistema, que prop nenhuma controla.
+      source: { transform: skeletonStatesSource },
       description: {
         story:
           "Com movimento reduzido o pulso para. O esqueleto continua visível — o que some é a animação, não o placeholder.",
@@ -83,15 +90,14 @@ export const ReducedMotion: Story = {
     },
   },
   render: () => (
-    <div
-      role="status"
-      aria-busy="true"
-      aria-label="Carregando conteúdo"
+    <SkeletonRegion
+      label="Carregando conteúdo"
       className="nds-stack nds-w-sm"
       data-spacing="sm"
     >
+      <Skeleton data-shape="text" data-width="full" />
       <Skeleton data-shape="text" data-width="3-4" />
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;

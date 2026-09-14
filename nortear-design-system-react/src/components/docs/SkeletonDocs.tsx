@@ -4,7 +4,6 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
 import { track } from "@/lib/analytics";
-import DOMPurify from 'dompurify';
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import skeletonTranslations from "@shared/content/skeleton/translations.json";
@@ -134,7 +133,9 @@ export function SkeletonDocs() {
 
   const codeImport = `import { Skeleton, SkeletonRegion } from "@/components/ui/skeleton";`;
 
-  const codeRectangle = `<Skeleton data-shape="fill" className="nds-docs-skeleton-media" />`;
+  // O snippet ensina o container de proporção: a classe de mídia do preview é da
+  // docs page, não da API, e `fill` sozinho nasce com altura zero.
+  const codeRectangle = `<AspectRatio ratio={16 / 9}>\n  <Skeleton data-shape="fill" />\n</AspectRatio>`;
   const codeCircle = `<Skeleton data-shape="avatar" />`;
   const codeLine = `<Skeleton data-shape="text" data-width="3-4" />`;
 
@@ -145,14 +146,23 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
   "data-shape"?: "text" | "heading" | "avatar" | "fill";
   "data-width"?: "full" | "3-4" | "2-3" | "1-2" | "1-3";
   "data-size"?: "sm" | "lg";
+}
+
+// A espera é anunciada pela REGIÃO, e ela é peça: role="status",
+// aria-busy="true" e nome acessível obrigatório, sem CSS própria. Papel,
+// estado e nome não são sobrescrevíveis — a região não alterna, ela sai
+// quando o conteúdo chega.
+interface SkeletonRegionProps
+  extends Omit<React.ComponentProps<"div">, "role" | "aria-busy" | "aria-label"> {
+  label: string;
 }`;
 
-  // ─── Locale-aware column labels ─────────────────────────────────────────────
+  // ─── Column labels ──────────────────────────────────────────────────────────
 
   const analyticsCols = {
-    event: locale === "en" ? "Event" : locale === "es" ? "Evento" : "Evento",
-    trigger: locale === "en" ? "Trigger" : locale === "es" ? "Disparo" : "Disparo",
-    payload: "Payload",
+    event: tNav("common.event"),
+    trigger: tNav("common.eventTrigger"),
+    payload: tNav("common.payload"),
   };
 
   return (
@@ -170,16 +180,16 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration >
+      <DocsDemonstration componentSlug="skeleton">
         <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg" style={{ '--grid-min': '16rem' } as React.CSSProperties}>
           {/* Card de perfil */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {DOMPurify.sanitize(tContent("demonstration.labels.card"))}
+              {tContent("demonstration.labels.card")}
             </p>
             <SkeletonRegion
-              label={DOMPurify.sanitize(tContent("demonstration.labels.card"))}
-              className="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
+              label={tContent("demonstration.regionLabels.card")}
+              className="nds-cluster"
               data-spacing="md"
               data-align="center"
             >
@@ -194,12 +204,12 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           {/* Lista */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {DOMPurify.sanitize(tContent("demonstration.labels.list"))}
+              {tContent("demonstration.labels.list")}
             </p>
             <SkeletonRegion
-              label={DOMPurify.sanitize(tContent("demonstration.labels.list"))}
-              className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
-              data-spacing="sm"
+              label={tContent("demonstration.regionLabels.list")}
+              className="nds-stack"
+              data-spacing="md"
             >
               {Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="nds-cluster" data-spacing="sm" data-align="center">
@@ -216,9 +226,9 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           {/* Imagem em AspectRatio */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {DOMPurify.sanitize(tContent("demonstration.labels.image"))}
+              {tContent("demonstration.labels.image")}
             </p>
-            <SkeletonRegion label={DOMPurify.sanitize(tContent("demonstration.labels.image"))}>
+            <SkeletonRegion label={tContent("demonstration.regionLabels.image")}>
               <AspectRatio ratio={16 / 9}>
                 <Skeleton data-shape="fill" />
               </AspectRatio>
@@ -228,11 +238,11 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           {/* Parágrafo */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
+              {tContent("demonstration.labels.paragraph")}
             </p>
             <SkeletonRegion
-              label={DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
-              className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+              label={tContent("demonstration.regionLabels.paragraph")}
+              className="nds-stack"
               data-spacing="sm"
             >
               <Skeleton data-shape="text" data-width="full" />
@@ -344,7 +354,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <SkeletonRegion
-                label="Carregando texto"
+                label={tContent("doDont.regionLabels.pair1")}
                 className="nds-w-full nds-stack"
                 data-spacing="sm"
               >
@@ -353,20 +363,26 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 <Skeleton data-shape="text" data-width="3-4" />
               </SkeletonRegion>
             ),
+            // O defeito deste par é a FORMA, não a região: o "não faça" também
+            // anuncia a espera, e só troca a caixa do conteúdo por um bloco único.
             dontPreview: (
-              <div className="nds-w-full">
+              <SkeletonRegion
+                label={tContent("doDont.regionLabels.pair1")}
+                className="nds-w-full nds-stack"
+                data-spacing="sm"
+              >
                 <Skeleton data-shape="text" data-width="1-3" />
-              </div>
+              </SkeletonRegion>
             ),
-            doCaption: DOMPurify.sanitize(tContent("doDont.pair1.do")),
-            dontCaption: DOMPurify.sanitize(tContent("doDont.pair1.dont")),
+            doCaption: toPlainText(tContent("doDont.pair1.do")),
+            dontCaption: toPlainText(tContent("doDont.pair1.dont")),
           },
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
               <SkeletonRegion
-                label="Carregando avatar e texto"
+                label={tContent("doDont.regionLabels.pair2")}
                 className="nds-cluster nds-w-full"
                 data-spacing="sm"
                 data-align="center"
@@ -378,6 +394,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 </div>
               </SkeletonRegion>
             ),
+            // O mesmo esqueleto do "faça", SEM a região: é justamente o que falta
+            // no "não faça" — o esqueleto solto não anuncia carregamento nenhum.
             dontPreview: (
               <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
                 <Skeleton data-shape="avatar" />
@@ -387,14 +405,14 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 </div>
               </div>
             ),
-            doCaption: DOMPurify.sanitize(tContent("doDont.pair2.do")),
-            dontCaption: DOMPurify.sanitize(tContent("doDont.pair2.dont")),
+            doCaption: toPlainText(tContent("doDont.pair2.do")),
+            dontCaption: toPlainText(tContent("doDont.pair2.dont")),
           },
         ]}
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport code={codeImport} componentSlug="skeleton" />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
@@ -406,7 +424,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.rectangle")),
             code: codeRectangle,
             preview: (
-              <SkeletonRegion label="Carregando bloco" className="nds-w-xs">
+              <SkeletonRegion label={tContent("demonstration.regionLabels.rectangle")} className="nds-w-full nds-max-w-sm">
                 <Skeleton data-shape="fill" className="nds-docs-skeleton-media" />
               </SkeletonRegion>
             ),
@@ -417,7 +435,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.circle")),
             code: codeCircle,
             preview: (
-              <SkeletonRegion label="Carregando avatar">
+              <SkeletonRegion label={tContent("demonstration.regionLabels.circle")} className="nds-w-full nds-max-w-sm">
                 <Skeleton data-shape="avatar" />
               </SkeletonRegion>
             ),
@@ -429,10 +447,11 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             code: codeLine,
             preview: (
               <SkeletonRegion
-                label="Carregando linha de texto"
-                className="nds-stack nds-w-xs"
-                data-spacing="xs"
+                label={tContent("demonstration.regionLabels.line")}
+                className="nds-stack nds-w-full nds-max-w-sm"
+                data-spacing="sm"
               >
+                <Skeleton data-shape="text" data-width="full" />
                 <Skeleton data-shape="text" data-width="3-4" />
                 <Skeleton data-shape="text" data-width="1-2" />
               </SkeletonRegion>
@@ -479,42 +498,42 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
-                description: DOMPurify.sanitize(tContent("props.table.className.description")),
+                description: tContent("props.table.className.description"),
               },
               {
                 name: "data-shape",
                 type: tContent("props.table.dataShape.type"),
                 defaultValue: tContent("props.table.dataShape.default"),
                 required: tContent("props.table.dataShape.required"),
-                description: DOMPurify.sanitize(tContent("props.table.dataShape.description")),
+                description: tContent("props.table.dataShape.description"),
               },
               {
                 name: "data-width",
                 type: tContent("props.table.dataWidth.type"),
                 defaultValue: tContent("props.table.dataWidth.default"),
                 required: tContent("props.table.dataWidth.required"),
-                description: DOMPurify.sanitize(tContent("props.table.dataWidth.description")),
+                description: tContent("props.table.dataWidth.description"),
               },
               {
                 name: "data-size",
                 type: tContent("props.table.dataSize.type"),
                 defaultValue: tContent("props.table.dataSize.default"),
                 required: tContent("props.table.dataSize.required"),
-                description: DOMPurify.sanitize(tContent("props.table.dataSize.description")),
+                description: tContent("props.table.dataSize.description"),
               },
               {
                 name: "aria-hidden",
                 type: tContent("props.table.ariaHidden.type"),
                 defaultValue: tContent("props.table.ariaHidden.default"),
                 required: tContent("props.table.ariaHidden.required"),
-                description: DOMPurify.sanitize(tContent("props.table.ariaHidden.description")),
+                description: tContent("props.table.ariaHidden.description"),
               },
               {
                 name: "...rest",
                 type: tContent("props.table.rest.type"),
                 defaultValue: tContent("props.table.rest.default"),
                 required: tContent("props.table.rest.required"),
-                description: DOMPurify.sanitize(tContent("props.table.rest.description")),
+                description: tContent("props.table.rest.description"),
               },
             ],
           },
@@ -531,7 +550,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
           value: tContent("tokens.table.class"),
           description: tContent("tokens.table.part"),
         }}
-        items={["background", "rounded", "animation", "size", "motionReduce"].map((k) => ({
+        items={["background", "rounded", "roundedFull", "animation", "duration", "motionReduce", "size"].map((k) => ({
           token: tContent(`tokens.table.${k}.token`),
           value: tContent(`tokens.table.${k}.class`),
           description: tContent(`tokens.table.${k}.part`),
@@ -554,8 +573,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
-          { key: "—", description: tContent("accessibility.keyboard.noKeyboard") },
-          { key: "Tab", description: tContent("accessibility.keyboard.description") },
+          { key: "—", description: tContent("accessibility.keyboard.description") },
+          { key: "Tab", description: tContent("accessibility.keyboard.noKeyboard") },
         ]}
       />
 
@@ -656,7 +675,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             { criterion: tContent("testes.accessibility.item4"), level: "2.3.3", how: "prefers-reduced-motion" },
             // Não é critério da WCAG: o esqueleto não transmite informação, então
             // 1.4.3 e 1.4.11 não se aplicam. O que se mede é luminância.
-            { criterion: tContent("testes.accessibility.item5"), level: "—", how: "Medição de luminância" },
+            { criterion: tContent("testes.accessibility.item5"), level: "—", how: tContent("testes.accessibility.luminanceHow") },
           ],
         }}
         visual={{

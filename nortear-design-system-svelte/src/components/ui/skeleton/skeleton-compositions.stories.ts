@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect } from 'storybook/test';
 import SkeletonComposicaoStory from './SkeletonComposicaoStory.svelte';
-import { boxDesenhada } from '@shared/testing/skeleton-probe';
+import { boxDesenhada, heightAgainstToken } from '@shared/testing/skeleton-probe';
 import {
   skeletonCardDePerfilSource,
   ratioSkeletonImageSource,
@@ -25,7 +25,7 @@ const meta: Meta = {
       source: { transform: skeletonSource },
       description: {
         component:
-          'Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma região de carregamento com `aria-busy`, e cada placeholder fica fora da árvore de acessibilidade.',
+          'Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma peça de região de carregamento, e cada placeholder fica fora da árvore de acessibilidade.',
       },
     },
   },
@@ -33,6 +33,16 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+/** A peça de região da story, com papel, estado fixo e nome. */
+async function expectRegion(canvasElement: HTMLElement): Promise<HTMLElement> {
+  const regiao = canvasElement.querySelector('[data-slot="skeleton-region"]') as HTMLElement;
+  await expect(regiao).not.toBeNull();
+  await expect(regiao).toHaveAttribute('role', 'status');
+  await expect(regiao).toHaveAttribute('aria-busy', 'true');
+  await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+  return regiao;
+}
 
 export const ProfileCard: Story = {
   args: { variant: 'cardDePerfil' },
@@ -46,12 +56,10 @@ export const ProfileCard: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
     const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('A região tem papel, estado e nome', async () => {
-      await expect(regiao).toHaveAttribute('aria-busy', 'true');
-      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+      await expectRegion(canvasElement);
     });
 
     await step('Avatar + duas linhas, todos fora da árvore de acessibilidade', async () => {
@@ -65,6 +73,7 @@ export const ProfileCard: Story = {
         parts[2].getBoundingClientRect().width,
       );
     });
+
   },
 };
 
@@ -80,13 +89,21 @@ export const ListWithAvatar: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const list = canvasElement.querySelector('ul') as HTMLElement;
     const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
-    await step('A lista inteira é uma região ocupada, com nome', async () => {
-      await expect(list).toHaveAttribute('aria-busy', 'true');
-      await expect(list.getAttribute('aria-label')).toBeTruthy();
+    await step('A lista inteira está dentro de UMA região ocupada, com nome', async () => {
+      const regiao = await expectRegion(canvasElement);
+      await expect(canvasElement.querySelectorAll('[data-slot="skeleton-region"]')).toHaveLength(1);
+      const list = regiao.querySelector('ul') as HTMLElement;
+      await expect(list).not.toBeNull();
+      await expect(list).toHaveAttribute('role', 'list');
       await expect(list.querySelectorAll('li')).toHaveLength(5);
+    });
+
+    await step('A lista não carrega estado nem nome — isso é da região', async () => {
+      const list = canvasElement.querySelector('ul') as HTMLElement;
+      await expect(list).not.toHaveAttribute('aria-busy');
+      await expect(list).not.toHaveAttribute('aria-label');
     });
 
     await step('Cinco itens de três peças, todas ocultas ao leitor', async () => {
@@ -120,10 +137,8 @@ export const ImageInAspectRatio: Story = {
     const box = canvasElement.querySelector('[data-slot="aspect-ratio"]') as HTMLElement;
     const sk = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
 
-    await step('A região de carregamento tem estado e nome', async () => {
-      const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
-      await expect(regiao).toHaveAttribute('aria-busy', 'true');
-      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+    await step('A região de carregamento tem papel, estado e nome', async () => {
+      await expectRegion(canvasElement);
     });
 
     await step('O placeholder preenche a caixa proporcional', async () => {
@@ -141,6 +156,7 @@ export const ImageInAspectRatio: Story = {
 export const Paragraph: Story = {
   args: { variant: 'paragrafo' },
   parameters: {
+    covers: ['functional.item2', 'functional.item3', 'functional.item4'],
     docs: {
       source: { transform: skeletonParagrafoSource },
       description: {
@@ -149,17 +165,30 @@ export const Paragraph: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
     const lines = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
-    await step('A região tem estado e nome', async () => {
-      await expect(regiao).toHaveAttribute('aria-busy', 'true');
-      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+    // functional.item4: a região expõe papel, estado e nome acessível.
+    let regiao!: HTMLElement;
+    await step('A região tem papel, estado e nome', async () => {
+      regiao = await expectRegion(canvasElement);
+      await expect(regiao).toHaveAccessibleName('Carregando parágrafo');
     });
 
-    await step('Três linhas, ocultas ao leitor de tela', async () => {
+    // functional.item3: dentro da região, cada placeholder sai da árvore.
+    await step('Três linhas dentro da região, ocultas ao leitor de tela', async () => {
       await expect(lines).toHaveLength(3);
-      for (const l of lines) await expect(l).toHaveAttribute('aria-hidden', 'true');
+      for (const l of lines) {
+        await expect(regiao.contains(l)).toBe(true);
+        await expect(l).toHaveAttribute('aria-hidden', 'true');
+      }
+    });
+
+    // functional.item2: a caixa sai do atributo — altura da escada e fração.
+    await step('Cada linha tem a altura do token de texto', async () => {
+      for (const l of lines) {
+        const { token, height, expected } = heightAgainstToken(l);
+        await expect(Math.abs(height - expected), `altura contra ${token}`).toBeLessThanOrEqual(0.5);
+      }
     });
 
     await step('As larguras decrescem — é o que faz o bloco parecer parágrafo', async () => {

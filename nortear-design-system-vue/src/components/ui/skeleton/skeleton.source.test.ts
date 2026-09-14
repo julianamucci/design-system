@@ -1,45 +1,41 @@
 import { describe, expect, it } from 'vitest';
 import {
-  skeletonCardPerfilSource,
-  skeletonCirculoSource,
+  skeletonCircleSource,
   skeletonImageRatioSource,
   skeletonLineTextSource,
   skeletonListSource,
-  skeletonMovimentoReduzidoSource,
-  skeletonParagrafoSource,
+  skeletonParagraphSource,
   skeletonPlaygroundSource,
-  skeletonPulsandoSource,
-  skeletonRetanguloSource,
+  skeletonProfileCardSource,
+  skeletonPulsingSource,
+  skeletonRectangleSource,
+  skeletonReducedMotionSource,
 } from './skeleton.source';
 
 const ALL = [
   skeletonPlaygroundSource,
-  skeletonRetanguloSource,
-  skeletonCirculoSource,
+  skeletonRectangleSource,
+  skeletonCircleSource,
   skeletonLineTextSource,
-  skeletonPulsandoSource,
-  skeletonMovimentoReduzidoSource,
-  skeletonCardPerfilSource,
+  skeletonPulsingSource,
+  skeletonReducedMotionSource,
+  skeletonProfileCardSource,
   skeletonListSource,
   skeletonImageRatioSource,
-  skeletonParagrafoSource,
+  skeletonParagraphSource,
 ];
 
 describe('skeletonPlaygroundSource', () => {
   it('sem args, entrega uma peça dentro da região que a anuncia', () => {
     expect(skeletonPlaygroundSource()).toBe(
       `<script setup lang="ts">
-import { Skeleton } from '@/components/ui/skeleton'
+import { Skeleton, SkeletonRegion } from '@/components/ui/skeleton'
 </script>
 
 <template>
-  <div
-    role="status"
-    aria-busy="true"
-    aria-label="Carregando conteúdo"
-  >
+  <SkeletonRegion label="Carregando conteúdo">
     <Skeleton data-shape="text" data-width="3-4" />
-  </div>
+  </SkeletonRegion>
 </template>`,
     );
   });
@@ -61,19 +57,13 @@ import { Skeleton } from '@/components/ui/skeleton'
     expect(avatar).not.toContain('data-width');
   });
 
-  it('fill não tem caixa própria — ela vem do container', () => {
+  it('fill não tem caixa própria — ela vem do AspectRatio, não de classe da docs page', () => {
     const saida = skeletonPlaygroundSource('', { args: { shape: 'fill', width: '1-3' } });
-    expect(saida).toContain('<Skeleton data-shape="fill" class="nds-docs-skeleton-media" />');
+    expect(saida).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
+    expect(saida).toContain('<AspectRatio :ratio="16 / 9">');
+    expect(saida).toContain('<Skeleton data-shape="fill" />');
+    expect(saida).not.toContain('nds-docs-skeleton-media');
     expect(saida).not.toContain('data-width');
-  });
-
-  it('aria-busy acompanha o control de carregamento', () => {
-    expect(skeletonPlaygroundSource('', { args: { loading: false } })).toContain(
-      'aria-busy="false"',
-    );
-    expect(skeletonPlaygroundSource('', { args: { loading: true } })).toContain(
-      'aria-busy="true"',
-    );
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
@@ -87,12 +77,23 @@ import { Skeleton } from '@/components/ui/skeleton'
 });
 
 describe('o placeholder nunca aparece sozinho', () => {
-  it('toda transform embrulha a peça numa região com papel, estado e nome', () => {
+  it('toda transform embrulha o bloco na PEÇA de região, com nome', () => {
     for (const fn of ALL) {
       const saida = fn();
-      expect(saida).toMatch(/role="(status|list)"/);
-      expect(saida).toContain('aria-busy=');
-      expect(saida).toContain('aria-label="Carregando');
+      expect(saida).toContain('import { Skeleton, SkeletonRegion }');
+      expect(saida).toMatch(/<SkeletonRegion[\s\S]*label="Carregando/);
+      expect(saida).toContain('</SkeletonRegion>');
+    }
+  });
+
+  it('nenhuma escreve papel de status nem estado à mão — vêm da peça', () => {
+    // A região não alterna `aria-busy`: ela SAI quando o conteúdo chega. Um
+    // snippet que ensina o atributo ensina a alternância.
+    for (const fn of ALL) {
+      const saida = fn();
+      expect(saida).not.toContain('role="status"');
+      expect(saida).not.toContain('aria-busy');
+      expect(saida).not.toContain('aria-label');
     }
   });
 
@@ -105,13 +106,18 @@ describe('o placeholder nunca aparece sozinho', () => {
 
 describe('transforms das stories de forma', () => {
   it('o retângulo preenche a caixa que o container estabelece', () => {
-    const saida = skeletonRetanguloSource();
+    const saida = skeletonRectangleSource();
+    expect(saida).toContain('label="Carregando bloco"');
     expect(saida).toContain('class="nds-w-sm"');
-    expect(saida).toContain('<Skeleton data-shape="fill" class="nds-docs-skeleton-media" />');
+    expect(saida).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
+    expect(saida).toContain('<AspectRatio :ratio="16 / 9">');
+    expect(saida).toContain('<Skeleton data-shape="fill" />');
+    // A classe de mídia é da docs page: no snippet ela ensinaria API que não existe.
+    expect(saida).not.toContain('nds-docs-skeleton-media');
   });
 
   it('o avatar traz medida própria e dispensa largura', () => {
-    const saida = skeletonCirculoSource();
+    const saida = skeletonCircleSource();
     expect(saida).toContain('<Skeleton data-shape="avatar" />');
     expect(saida).not.toContain('data-width');
   });
@@ -125,7 +131,7 @@ describe('transforms das stories de forma', () => {
 
 describe('transforms das stories de estado', () => {
   it('o pulso não tem prop: vem da classe base do componente', () => {
-    const saida = skeletonPulsandoSource();
+    const saida = skeletonPulsingSource();
     expect(saida).toContain('<Skeleton data-shape="text" data-width="full" />');
     // Nem prop, nem atributo, nem classe de animação escritos à mão.
     expect(saida).not.toContain('animate');
@@ -133,25 +139,29 @@ describe('transforms das stories de estado', () => {
   });
 
   it('movimento reduzido não acrescenta nada ao markup', () => {
-    const saida = skeletonMovimentoReduzidoSource();
+    const saida = skeletonReducedMotionSource();
     // A preferência é do sistema e quem responde é a folha compartilhada.
     expect(saida).not.toContain('reduced');
     expect(saida).not.toContain('motion');
-    expect(saida).toContain('<Skeleton data-shape="text" data-width="3-4" />');
+    // Mesmas duas linhas do pulso: o que muda é a preferência, não o markup.
+    expect([...saida.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual(['full', '3-4']);
+    expect(saida).toBe(skeletonPulsingSource());
   });
 });
 
 describe('transforms das stories de composição', () => {
   it('o card de perfil põe o avatar ao lado de duas linhas desiguais', () => {
-    const saida = skeletonCardPerfilSource();
+    const saida = skeletonProfileCardSource();
     expect(saida).toContain('<Skeleton data-shape="avatar" />');
+    expect(saida).toContain('data-align="center"');
     expect(saida).toContain('<div class="nds-stack nds-flex-1" data-spacing="sm">');
     expect([...saida.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual(['2-3', '1-2']);
   });
 
-  it('na lista, a região ocupada é a própria ul', () => {
+  it('na lista, a ul fica DENTRO da peça e não carrega estado nem nome', () => {
     const saida = skeletonListSource();
-    expect(saida).toContain('<ul\n    role="list"');
+    expect(saida.indexOf('<SkeletonRegion')).toBeLessThan(saida.indexOf('<ul'));
+    expect(saida).toContain('<ul role="list" class="nds-stack nds-list-none nds-p-0" data-spacing="md">');
     expect(saida).toContain('<li v-for="i in 5" :key="i"');
     // O avatar menor sai de `data-size`, não de uma medida escrita à mão.
     expect(saida).toContain('<Skeleton data-shape="avatar" data-size="sm" />');
@@ -167,7 +177,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o parágrafo é só linhas, e elas decrescem', () => {
-    const saida = skeletonParagrafoSource();
+    const saida = skeletonParagraphSource();
     expect([...saida.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1])).toEqual([
       'full',
       '3-4',

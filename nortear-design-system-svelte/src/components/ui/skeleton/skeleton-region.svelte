@@ -10,17 +10,23 @@
 	 * juntos:
 	 *
 	 * - `role="status"`, porque `aria-busy` sozinho num `div` sem papel não é
-	 *   anunciado;
-	 * - `aria-busy="true"`, que é o estado — ao virar `false` é o que diz ao
-	 *   leitor que o conteúdo chegou;
+	 *   anunciado, e nome acessível sem papel é atributo proibido;
+	 * - `aria-busy="true"`, que é o estado — e é FIXO: a região não alterna para
+	 *   `false`. Quando o conteúdo chega, ela SAI e o conteúdo entra no lugar dela
+	 *   (decisão da dona, 2026-09-14). Região vazia deixada para trás continuaria
+	 *   dizendo que algo carrega;
 	 * - `aria-label`, porque uma região viva sem nome anuncia "ocupado" sem dizer
 	 *   ocupado com o quê. Daí `label` ser obrigatória.
 	 *
+	 * Papel, estado e nome NÃO são sobrescrevíveis: saem do tipo das props e são
+	 * escritos DEPOIS do espalhamento, então nem um `role`/`aria-busy` passado por
+	 * cast chega ao DOM.
+	 *
 	 * Era peça de ninguém: as cinco docs pages montavam este contêiner à mão e
 	 * divergiram em cinco formas — a desta stack chegou a ficar sem
-	 * `role="status"`, que é o pior caso, porque nome em elemento sem papel é
-	 * atributo proibido e o axe o acusa (`aria-prohibited-attr`). Virou peça em
-	 * 2026-09-13, por decisão da dona, com o mesmo contrato nas cinco stacks.
+	 * `role="status"`, que é o pior caso, porque o axe acusa o nome em elemento
+	 * sem papel (`aria-prohibited-attr`). Virou peça em 2026-09-13, por decisão da
+	 * dona, com o mesmo contrato nas cinco stacks.
 	 *
 	 * UMA região por BLOCO, nunca por peça: uma lista de dez linhas é uma região
 	 * com dez esqueletos dentro, senão cada linha vira uma região viva repetindo o
@@ -35,17 +41,19 @@
 		label,
 		children,
 		...restProps
-	}: WithElementRef<HTMLAttributes<HTMLDivElement>> & { label: string } = $props();
+	}: Omit<WithElementRef<HTMLAttributes<HTMLDivElement>>, "role" | "aria-busy" | "aria-label"> & {
+		label: string;
+	} = $props();
 </script>
 
 <div
 	bind:this={ref}
+	{...restProps}
 	data-slot="skeleton-region"
 	role="status"
 	aria-busy="true"
 	aria-label={label}
 	class={className}
-	{...restProps}
 >
 	{@render children?.()}
 </div>

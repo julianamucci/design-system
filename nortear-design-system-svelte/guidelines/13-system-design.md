@@ -101,6 +101,8 @@ Não existe outra porta de entrada: um componente sem story é um componente ina
 
 ```svelte
 <script lang="ts">
+  import { Skeleton, SkeletonRegion } from '@/components/ui/skeleton';
+
   let DocsPage: any = $state(null);
   $effect(() => {
     import('./docs/ButtonDocs.svelte').then(m => { DocsPage = m.default; });
@@ -111,13 +113,15 @@ Não existe outra porta de entrada: um componente sem story é um componente ina
 {#if DocsPage}
   <svelte:component this={DocsPage} />
 {:else}
-  <div class="nds-stack" data-spacing="md" role="status" aria-busy="true" aria-label="Carregando...">
-    <div class="nds-skeleton" data-shape="heading" data-width="1-2"></div>
-    <div class="nds-skeleton" data-shape="text" data-width="full"></div>
-    <div class="nds-skeleton" data-shape="text" data-width="3-4"></div>
-  </div>
+  <SkeletonRegion label="Carregando documentação" class="nds-stack" data-spacing="md">
+    <Skeleton data-shape="heading" data-width="1-2" />
+    <Skeleton data-shape="text" data-width="full" />
+    <Skeleton data-shape="text" data-width="3-4" />
+  </SkeletonRegion>
 {/if}
 ```
+
+A espera usa a peça `SkeletonRegion` (`@/components/ui/skeleton`), que já escreve papel, estado ocupado e nome — nunca à mão. Quando a página chega, a região sai inteira.
 
 **Storybook**: code splitting gerenciado nativamente pelo Vite — não configurar manualmente.
 

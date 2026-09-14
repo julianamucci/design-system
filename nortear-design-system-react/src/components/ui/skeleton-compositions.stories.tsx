@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
-import { Skeleton } from "./skeleton";
+import { Skeleton, SkeletonRegion } from "./skeleton";
 import { AspectRatio } from "./aspect-ratio";
 import {
   skeletonCardDePerfilSource,
@@ -9,6 +9,7 @@ import {
   skeletonParagrafoSource,
   skeletonSource,
 } from "./skeleton.source";
+import { heightAgainstToken } from "@shared/testing/skeleton-probe";
 
 const meta = {
   title: "Components/Feedback/Skeleton/Compositions",
@@ -22,7 +23,7 @@ const meta = {
       source: { transform: skeletonSource },
       description: {
         component:
-          "Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma região `role=\"status\"` com `aria-busy`, e cada placeholder fica fora da árvore de acessibilidade.",
+          "Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco fica dentro da peça de região de carregamento, e cada placeholder fica fora da árvore de acessibilidade.",
       },
     },
   },
@@ -30,6 +31,14 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+/** Afirma papel, estado e nome da peça de região — as quatro composições repetem. */
+async function expectRegion(regiao: HTMLElement | null, label: string) {
+  await expect(regiao).not.toBeNull();
+  await expect(regiao).toHaveAttribute("role", "status");
+  await expect(regiao).toHaveAttribute("aria-busy", "true");
+  await expect(regiao).toHaveAccessibleName(label);
+}
 
 export const ProfileCard: Story = {
   parameters: {
@@ -44,10 +53,8 @@ export const ProfileCard: Story = {
     },
   },
   render: () => (
-    <div
-      role="status"
-      aria-busy="true"
-      aria-label="Carregando card de perfil"
+    <SkeletonRegion
+      label="Carregando card de perfil"
       className="nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm"
       data-align="center"
       data-spacing="md"
@@ -57,15 +64,14 @@ export const ProfileCard: Story = {
         <Skeleton data-shape="text" data-width="2-3" />
         <Skeleton data-shape="text" data-width="1-2" />
       </div>
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
-    const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+    const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton-region"]');
     const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step("A região tem papel, estado e nome", async () => {
-      await expect(regiao).toHaveAttribute("aria-busy", "true");
-      await expect(regiao.getAttribute("aria-label")).toBeTruthy();
+      await expectRegion(regiao, "Carregando card de perfil");
     });
 
     await step("Avatar + duas linhas, todos fora da árvore de acessibilidade", async () => {
@@ -87,8 +93,8 @@ export const ListWithAvatar: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
-      // Cinco itens numa lista, com a região ocupada na lista inteira — um aviso
-      // de carregamento por item seria ruído para quem ouve.
+      // Cinco itens numa lista, com UMA região em volta da lista inteira — um
+      // aviso de carregamento por item seria ruído para quem ouve.
       source: { transform: skeletonListSource },
       description: {
         story: "Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.",
@@ -96,32 +102,35 @@ export const ListWithAvatar: Story = {
     },
   },
   render: () => (
-    <ul
-      role="list"
-      aria-busy="true"
-      aria-label="Carregando lista de pedidos"
-      className="nds-stack nds-list-none nds-p-0 nds-w-md"
-      data-spacing="md"
-    >
-      {Array.from({ length: 5 }).map((_, i) => (
-        <li key={i} className="nds-cluster" data-align="center" data-spacing="sm">
-          <Skeleton data-shape="avatar" data-size="sm" />
-          <div className="nds-stack nds-flex-1" data-spacing="xs">
-            <Skeleton data-shape="text" data-width="2-3" />
-            <Skeleton data-shape="text" data-width="1-3" />
-          </div>
-        </li>
-      ))}
-    </ul>
+    <SkeletonRegion label="Carregando lista de pedidos" className="nds-w-md">
+      <ul role="list" className="nds-stack nds-list-none nds-p-0" data-spacing="md">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <li key={i} className="nds-cluster" data-align="center" data-spacing="sm">
+            <Skeleton data-shape="avatar" data-size="sm" />
+            <div className="nds-stack nds-flex-1" data-spacing="xs">
+              <Skeleton data-shape="text" data-width="2-3" />
+              <Skeleton data-shape="text" data-width="1-3" />
+            </div>
+          </li>
+        ))}
+      </ul>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
+    const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton-region"]');
     const list = canvasElement.querySelector<HTMLElement>("ul")!;
     const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
-    await step("A lista inteira é uma região ocupada, com nome", async () => {
-      await expect(list).toHaveAttribute("aria-busy", "true");
-      await expect(list.getAttribute("aria-label")).toBeTruthy();
+    await step("A lista inteira fica dentro de UMA região ocupada, com nome", async () => {
+      await expectRegion(regiao, "Carregando lista de pedidos");
+      await expect(regiao!.contains(list)).toBe(true);
       await expect(list.querySelectorAll("li")).toHaveLength(5);
+    });
+
+    await step("A ul carrega só a semântica de lista — estado e nome são da região", async () => {
+      await expect(list).toHaveAttribute("role", "list");
+      await expect(list).not.toHaveAttribute("aria-busy");
+      await expect(list).not.toHaveAttribute("aria-label");
     });
 
     await step("Cinco itens de três peças, todas ocultas ao leitor", async () => {
@@ -129,7 +138,7 @@ export const ListWithAvatar: Story = {
       for (const p of parts) await expect(p).toHaveAttribute("aria-hidden", "true");
     });
 
-    await step("O avatar pequeno é menor que o avatar padrão", async () => {
+    await step("O avatar pequeno continua quadrado", async () => {
       // `data-size="sm"` só entrega se a folha responder: sem isso o item da
       // lista sai com o mesmo bloco do card de perfil.
       const avatar = parts[0].getBoundingClientRect();
@@ -152,20 +161,21 @@ export const ImageInAspectRatio: Story = {
     },
   },
   render: () => (
-    <div role="status" aria-busy="true" aria-label="Carregando imagem" className="nds-w-sm">
+    <SkeletonRegion label="Carregando imagem" className="nds-w-sm">
       <AspectRatio ratio={16 / 9}>
         <Skeleton data-shape="fill" />
       </AspectRatio>
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
     const box = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
-    await step("A região de carregamento tem estado e nome", async () => {
-      const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-      await expect(regiao).toHaveAttribute("aria-busy", "true");
-      await expect(regiao.getAttribute("aria-label")).toBeTruthy();
+    await step("A região de carregamento tem papel, estado e nome", async () => {
+      await expectRegion(
+        canvasElement.querySelector<HTMLElement>('[data-slot="skeleton-region"]'),
+        "Carregando imagem",
+      );
     });
 
     await step("O placeholder preenche a caixa proporcional", async () => {
@@ -182,6 +192,7 @@ export const ImageInAspectRatio: Story = {
 
 export const Paragraph: Story = {
   parameters: {
+    covers: ["functional.item2", "functional.item3", "functional.item4"],
     docs: {
       // Três linhas de larguras decrescentes: é a variação entre elas que faz o
       // bloco parecer parágrafo.
@@ -192,30 +203,34 @@ export const Paragraph: Story = {
     },
   },
   render: () => (
-    <div
-      role="status"
-      aria-busy="true"
-      aria-label="Carregando parágrafo"
+    <SkeletonRegion
+      label="Carregando parágrafo"
       className="nds-stack nds-w-sm"
       data-spacing="sm"
     >
       <Skeleton data-shape="text" data-width="full" />
       <Skeleton data-shape="text" data-width="3-4" />
       <Skeleton data-shape="text" data-width="1-2" />
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step }) => {
-    const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+    const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton-region"]');
     const lines = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
-    await step("A região tem estado e nome", async () => {
-      await expect(regiao).toHaveAttribute("aria-busy", "true");
-      await expect(regiao.getAttribute("aria-label")).toBeTruthy();
+    await step("A região tem papel, estado e nome", async () => {
+      await expectRegion(regiao, "Carregando parágrafo");
     });
 
     await step("Três linhas, ocultas ao leitor de tela", async () => {
       await expect(lines).toHaveLength(3);
       for (const l of lines) await expect(l).toHaveAttribute("aria-hidden", "true");
+    });
+
+    await step("Cada linha tem a altura do token de texto", async () => {
+      for (const l of lines) {
+        const { token, height, expected } = heightAgainstToken(l);
+        await expect(Math.abs(height - expected), `${token}: ${height} ≠ ${expected}`).toBeLessThanOrEqual(0.5);
+      }
     });
 
     await step("As larguras decrescem — é o que faz o bloco parecer parágrafo", async () => {

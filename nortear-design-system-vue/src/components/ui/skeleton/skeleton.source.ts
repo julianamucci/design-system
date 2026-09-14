@@ -8,48 +8,39 @@
  * O componente não tem prop de variação: a caixa vem de `data-shape` e a
  * largura de `data-width`, e a folha compartilhada continua dona das medidas.
  * O snippet existe em boa parte para mostrar isso — e para mostrar que o
- * placeholder nunca aparece sozinho, e sim dentro da região que anuncia o
- * carregamento.
+ * placeholder nunca aparece sozinho, e sim dentro da PEÇA de região que anuncia
+ * o carregamento. Papel e estado nunca são escritos à mão: vêm da peça.
  */
 import { attrsMultilinha, indentar, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type SkeletonArgs = {
   shape: 'text' | 'heading' | 'avatar' | 'fill';
   width: 'full' | '3-4' | '2-3' | '1-2' | '1-3';
-  loading: boolean;
 };
 
-const IMPORT = `import { Skeleton } from '@/components/ui/skeleton'`;
+const IMPORT = `import { Skeleton, SkeletonRegion } from '@/components/ui/skeleton'`;
 
 /** Formas que respondem a `data-width`; nas outras o atributo não faz nada. */
 const HAS_WIDTH = new Set(['text', 'heading']);
 
 /**
- * A região que anuncia o carregamento.
- *
- * `aria-busy` sozinho numa `div` sem papel não é anunciado, e `aria-label` numa
- * `div` sem papel é violação de ARIA — é o par papel + nome que faz o leitor de
- * tela dizer "carregando". O placeholder dentro fica `aria-hidden` de fábrica.
+ * A peça de região: `role="status"`, `aria-busy="true"` e o nome acessível vêm
+ * dela. O que o snippet escreve é só o nome e o LAYOUT do bloco.
  */
-function regiao(options: {
+function region(options: {
   label: string;
-  ocupado?: boolean;
   className?: string;
-  espaco?: string;
-  miolo: string;
-  tag?: string;
-  papel?: string;
+  spacing?: string;
+  align?: string;
+  body: string;
 }): string {
-  const tag = options.tag ?? 'div';
-  const papel = options.papel ?? 'status';
-  const abertura = attrsMultilinha([
-    `role="${papel}"`,
-    `aria-busy="${options.ocupado === false ? 'false' : 'true'}"`,
-    `aria-label="${options.label}"`,
+  const opening = attrsMultilinha([
+    `label="${options.label}"`,
     options.className && `class="${options.className}"`,
-    options.espaco && `data-spacing="${options.espaco}"`,
+    options.spacing && `data-spacing="${options.spacing}"`,
+    options.align && `data-align="${options.align}"`,
   ]);
-  return `<${tag}${abertura}>\n${indentar(options.miolo)}\n</${tag}>`;
+  return `<SkeletonRegion${opening}>\n${indentar(options.body)}\n</SkeletonRegion>`;
 }
 
 /** Uma peça: a forma sempre aparece, a largura só onde a folha a lê. */
@@ -80,40 +71,42 @@ export const skeletonPlaygroundSource: SourceTransform<SkeletonArgs> = (_gerado,
   const shape = typeof args.shape === 'string' ? args.shape : 'text';
   const width = typeof args.width === 'string' ? args.width : '3-4';
   // `fill` não traz caixa própria: ele preenche a que o container estabelece, e
-  // sem container com medida o bloco nasce com altura zero.
-  const miolo =
-    shape === 'fill' ? part('fill', undefined, 'nds-docs-skeleton-media') : part(shape, width);
-  return vueSnippet(
-    IMPORT,
-    regiao({
-      label: 'Carregando conteúdo',
-      ocupado: args.loading !== false,
-      miolo,
-    }),
-  );
+  // sem container com medida o bloco nasce com altura zero. Quem dá a caixa no
+  // snippet é o `AspectRatio` — a classe de mídia da docs page não é API.
+  if (shape === 'fill') return ratioBlock('Carregando imagem');
+  return vueSnippet(IMPORT, region({ label: 'Carregando conteúdo', body: part(shape, width) }));
 };
 
-/** Bloco de mídia: quem dá a caixa é o container, na proporção que ele definir. */
-export function skeletonRetanguloSource(): string {
+/**
+ * Placeholder de mídia dentro de uma proporção — a forma de ensinar `fill`.
+ *
+ * Função interna com o nome como parâmetro: as exportadas são usadas direto como
+ * transform, e o primeiro argumento que recebem é o código gerado.
+ */
+function ratioBlock(label: string): string {
   return vueSnippet(
-    IMPORT,
-    regiao({
-      label: 'Carregando bloco',
+    `${IMPORT}\nimport { AspectRatio } from '@/components/ui/aspect-ratio'`,
+    region({
+      label,
       className: 'nds-w-sm',
-      miolo: part('fill', undefined, 'nds-docs-skeleton-media'),
+      body: `<AspectRatio :ratio="16 / 9">
+  ${part('fill')}
+</AspectRatio>`,
     }),
   );
+}
+
+/** Bloco de mídia: quem dá a caixa é o container, na proporção que ele definir. */
+export function skeletonRectangleSource(): string {
+  return ratioBlock('Carregando bloco');
 }
 
 /**
  * Avatar: a exceção prevista na guideline 12 — peça sem fluxo de texto tem
  * medida, e ela vem da escada `--size-*`, não de um número escrito à mão.
  */
-export function skeletonCirculoSource(): string {
-  return vueSnippet(
-    IMPORT,
-    regiao({ label: 'Carregando avatar', miolo: part('avatar') }),
-  );
+export function skeletonCircleSource(): string {
+  return vueSnippet(IMPORT, region({ label: 'Carregando avatar', body: part('avatar') }));
 }
 
 /**
@@ -124,24 +117,24 @@ export function skeletonCirculoSource(): string {
 export function skeletonLineTextSource(): string {
   return vueSnippet(
     IMPORT,
-    regiao({
+    region({
       label: 'Carregando linhas de texto',
       className: 'nds-stack nds-w-sm',
-      espaco: 'sm',
-      miolo: lines(['full', '3-4', '1-2']),
+      spacing: 'sm',
+      body: lines(['full', '3-4', '1-2']),
     }),
   );
 }
 
 /** Estado padrão: o pulso é da classe base, não de prop nem de atributo. */
-export function skeletonPulsandoSource(): string {
+export function skeletonPulsingSource(): string {
   return vueSnippet(
     IMPORT,
-    regiao({
+    region({
       label: 'Carregando conteúdo',
       className: 'nds-stack nds-w-sm',
-      espaco: 'sm',
-      miolo: lines(['full', '3-4']),
+      spacing: 'sm',
+      body: lines(['full', '3-4']),
     }),
   );
 }
@@ -151,29 +144,31 @@ export function skeletonPulsandoSource(): string {
  *
  * A preferência é do sistema operacional, e quem responde a ela é a folha
  * compartilhada. O que some é a animação — o placeholder continua visível, que
- * é justamente o ponto: desligar o pulso não pode apagar o carregamento.
+ * é justamente o ponto: desligar o pulso não pode apagar o carregamento. O
+ * markup é o MESMO do pulso: o que muda entre as duas stories é a preferência.
  */
-export function skeletonMovimentoReduzidoSource(): string {
+export function skeletonReducedMotionSource(): string {
   return vueSnippet(
     IMPORT,
-    regiao({
+    region({
       label: 'Carregando conteúdo',
       className: 'nds-stack nds-w-sm',
-      espaco: 'sm',
-      miolo: part('text', '3-4'),
+      spacing: 'sm',
+      body: lines(['full', '3-4']),
     }),
   );
 }
 
 /** Card de perfil: o avatar ao lado de duas linhas de larguras diferentes. */
-export function skeletonCardPerfilSource(): string {
+export function skeletonProfileCardSource(): string {
   return vueSnippet(
     IMPORT,
-    regiao({
+    region({
       label: 'Carregando card de perfil',
       className: 'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
-      espaco: 'md',
-      miolo: `${part('avatar')}
+      spacing: 'md',
+      align: 'center',
+      body: `${part('avatar')}
 <div class="nds-stack nds-flex-1" data-spacing="sm">
 ${indentar(lines(['2-3', '1-2']))}
 </div>`,
@@ -182,24 +177,23 @@ ${indentar(lines(['2-3', '1-2']))}
 }
 
 /**
- * Lista: a região ocupada é a própria `ul`, e não uma `div` em volta — assim o
- * leitor de tela recebe a contagem de itens junto com o estado de carregando.
+ * Lista: a `ul` fica DENTRO da peça. A região anuncia a espera; a lista mantém
+ * o papel de lista (e a contagem de itens) sem carregar estado nem nome.
  */
 export function skeletonListSource(): string {
   return vueSnippet(
     IMPORT,
-    regiao({
-      tag: 'ul',
-      papel: 'list',
+    region({
       label: 'Carregando lista de pedidos',
-      className: 'nds-stack nds-list-none nds-p-0 nds-w-md',
-      espaco: 'md',
-      miolo: `<li v-for="i in 5" :key="i" class="nds-cluster" data-align="center" data-spacing="sm">
-  <Skeleton data-shape="avatar" data-size="sm" />
-  <div class="nds-stack nds-flex-1" data-spacing="xs">
-${indentar(lines(['2-3', '1-3']), 4)}
-  </div>
-</li>`,
+      className: 'nds-w-md',
+      body: `<ul role="list" class="nds-stack nds-list-none nds-p-0" data-spacing="md">
+  <li v-for="i in 5" :key="i" class="nds-cluster" data-align="center" data-spacing="sm">
+    <Skeleton data-shape="avatar" data-size="sm" />
+    <div class="nds-stack nds-flex-1" data-spacing="xs">
+${indentar(lines(['2-3', '1-3']), 6)}
+    </div>
+  </li>
+</ul>`,
     }),
   );
 }
@@ -210,27 +204,18 @@ ${indentar(lines(['2-3', '1-3']), 4)}
  * o lugar da mídia sem cravar altura.
  */
 export function skeletonImageRatioSource(): string {
-  return vueSnippet(
-    `${IMPORT}\nimport { AspectRatio } from '@/components/ui/aspect-ratio'`,
-    regiao({
-      label: 'Carregando imagem',
-      className: 'nds-w-sm',
-      miolo: `<AspectRatio :ratio="16 / 9">
-  ${part('fill')}
-</AspectRatio>`,
-    }),
-  );
+  return ratioBlock('Carregando imagem');
 }
 
 /** Parágrafo: três linhas decrescentes, o desenho mais reconhecível do bloco. */
-export function skeletonParagrafoSource(): string {
+export function skeletonParagraphSource(): string {
   return vueSnippet(
     IMPORT,
-    regiao({
+    region({
       label: 'Carregando parágrafo',
       className: 'nds-stack nds-w-sm',
-      espaco: 'sm',
-      miolo: lines(['full', '3-4', '1-2']),
+      spacing: 'sm',
+      body: lines(['full', '3-4', '1-2']),
     }),
   );
 }

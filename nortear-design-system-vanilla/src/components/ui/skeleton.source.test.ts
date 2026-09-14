@@ -8,10 +8,21 @@ import {
   skeletonSourceWith,
 } from './skeleton.source';
 
+/** Todo snippet desta família: a região vem da peça, nunca montada à mão. */
+function expectRegionPiece(code: string, label: string) {
+  expect(code).toContain(
+    "import { createSkeleton, createSkeletonRegion } from '@/components/ui/skeleton';",
+  );
+  expect(code).toContain('createSkeletonRegion(');
+  expect(code).toContain(`label: '${label}'`);
+  expect(code).not.toContain("'status'");
+  expect(code).not.toContain('aria-busy');
+  expect(code).not.toContain('aria-label');
+}
+
 describe('skeletonSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
     const code = skeletonSnippet();
-    expect(code).toContain("import { createSkeleton } from '@/components/ui/skeleton';");
     expect(code).toContain('createSkeleton()');
     expect(code).not.toContain('data-slot=');
     expect(code).not.toContain('aria-hidden="true"');
@@ -22,6 +33,8 @@ describe('skeletonSnippet', () => {
     expect(code).not.toContain('shape:');
     expect(code).not.toContain('width:');
     expect(code).not.toContain('size:');
+    // A região não traz classe de fábrica: sem layout, a opção não aparece.
+    expect(code).not.toContain('class:');
   });
 
   it('mostra forma e fração de largura quando a story as usa', () => {
@@ -36,13 +49,11 @@ describe('skeletonSnippet', () => {
     expect(code).not.toContain('width:');
   });
 
-  it('monta a região que anuncia o carregamento — o esqueleto já nasce oculto', () => {
-    const code = skeletonSnippet({ regionLabel: 'Carregando pedidos', loading: true });
-    expect(code).toContain("regiao.setAttribute('role', 'status');");
-    expect(code).toContain("regiao.setAttribute('aria-busy', 'true');");
-    expect(code).toContain("regiao.setAttribute('aria-label', 'Carregando pedidos');");
+  it('a região que anuncia o carregamento é a peça — papel e estado não se escrevem à mão', () => {
+    const code = skeletonSnippet({ regionLabel: 'Carregando pedidos' });
+    expectRegionPiece(code, 'Carregando pedidos');
+    expect(code).not.toContain('setAttribute');
     expect(code).not.toContain('regiaoDeCarregamento');
-    expect(code).not.toContain('regiaoComLinhas');
   });
 
   it('empilha várias peças quando a story mostra um parágrafo', () => {
@@ -54,6 +65,7 @@ describe('skeletonSnippet', () => {
       ],
     });
     expect(code.match(/createSkeleton\(/g)).toHaveLength(3);
+    expect(code).toContain("class: 'nds-stack nds-w-sm'");
     expect(code).toContain("regiao.dataset.spacing = 'sm';");
   });
 
@@ -79,15 +91,9 @@ describe('skeletonSource', () => {
       'data-shape=',
     );
   });
-
-  it('leva o estado de carregamento da região para o snippet', () => {
-    expect(skeletonSource('', { args: { loading: false } })).toContain(
-      "regiao.setAttribute('aria-busy', 'false');",
-    );
-  });
 });
 
-describe('skeletonSourceCom', () => {
+describe('skeletonSourceWith', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
     const code = skeletonSourceWith({ shape: 'avatar' })('', { args: { shape: 'text' } });
     expect(code).toContain("shape: 'avatar'");
@@ -98,26 +104,28 @@ describe('skeletonSourceCom', () => {
 describe('skeletonPerfilSnippet', () => {
   it('põe a peça redonda ao lado das linhas, com larguras diferentes', () => {
     const code = skeletonPerfilSnippet();
+    expectRegionPiece(code, 'Carregando card de perfil');
     expect(code).toContain("createSkeleton({ shape: 'avatar' })");
     expect(code).toContain("createSkeleton({ shape: 'text', width: '2-3' })");
     expect(code).toContain("createSkeleton({ shape: 'text', width: '1-2' })");
-    expect(code).toContain("regiao.setAttribute('aria-label', 'Carregando card de perfil');");
+    expect(code).toContain("regiao.dataset.align = 'center';");
   });
 });
 
-describe('skeletonListaSnippet', () => {
-  it('faz da lista inteira UMA região ocupada', () => {
+describe('skeletonListSnippet', () => {
+  it('a lista inteira fica DENTRO de uma região só, e a lista não carrega estado', () => {
     const code = skeletonListSnippet();
-    expect(code).toContain("lista.setAttribute('aria-busy', 'true');");
-    expect(code).toContain("lista.setAttribute('aria-label', 'Carregando lista de pedidos');");
+    expectRegionPiece(code, 'Carregando lista de pedidos');
+    expect(code).toContain("lista.setAttribute('role', 'list');");
+    expect(code).toMatch(/children: lista/);
     expect(code).toContain("createSkeleton({ shape: 'avatar', size: 'sm' })");
-    expect(code).not.toContain("role', 'status");
   });
 });
 
-describe('skeletonEmProporcaoSnippet', () => {
+describe('ratioSkeletonSnippet', () => {
   it('deixa a caixa por conta do container da proporção', () => {
     const code = ratioSkeletonSnippet();
+    expectRegionPiece(code, 'Carregando imagem');
     expect(code).toContain("import { createAspectRatio } from '@/components/ui/aspect-ratio';");
     expect(code).toContain('ratio: 16 / 9');
     expect(code).toContain("content: createSkeleton({ shape: 'fill' })");

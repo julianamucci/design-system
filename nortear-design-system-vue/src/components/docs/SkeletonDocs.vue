@@ -129,9 +129,11 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 });
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
-const codeImportBasic = `import { Skeleton } from "@/components/ui/skeleton";`;
+const codeImportBasic = `import { Skeleton, SkeletonRegion } from "@/components/ui/skeleton";`;
 
-const codeRectangle = `<Skeleton data-shape="fill" class="nds-docs-skeleton-media" />`;
+// O snippet ensina o container de proporção: a classe de mídia do preview é da
+// docs page, não da API, e `fill` sozinho nasce com altura zero.
+const codeRectangle = `<AspectRatio :ratio="16 / 9">\n  <Skeleton data-shape="fill" />\n</AspectRatio>`;
 
 const codeCircle = `<Skeleton data-shape="avatar" />`;
 
@@ -139,11 +141,21 @@ const codeLine = `<Skeleton data-shape="text" data-width="3-4" />`;
 
 const interfaceCode = `// Skeleton — sem props próprias além de class.
 // A caixa vem de atributo, e a folha de estilo continua dona das medidas.
+// aria-hidden="true" vem fixo e não é sobrescrevível.
 interface SkeletonProps {
   class?: string;
   // data-shape: "text" | "heading" | "avatar" | "fill"
   // data-width: "full" | "3-4" | "2-3" | "1-2" | "1-3"
   // data-size:  "sm" | "lg"   (só na forma de avatar)
+}
+
+// SkeletonRegion — a espera é anunciada pela REGIÃO, e ela é peça:
+// role="status", aria-busy="true" e nome acessível obrigatório, sem CSS
+// própria. Papel e estado não são sobrescrevíveis; quando o conteúdo
+// chega, a região sai inteira.
+interface SkeletonRegionProps {
+  label: string;
+  class?: string;
 }`;
 
 const anatomyStructure = computed(() => tContent('anatomy.structureCode'));
@@ -185,7 +197,7 @@ const skeletonPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() =>
-  ['background', 'rounded', 'animation', 'size', 'motionReduce'].map((k) => ({
+  ['background', 'rounded', 'roundedFull', 'animation', 'duration', 'motionReduce', 'size'].map((k) => ({
     token: tContent(`tokens.table.${k}.token`),
     value: tContent(`tokens.table.${k}.class`),
     description: tContent(`tokens.table.${k}.part`),
@@ -201,8 +213,8 @@ const accessibilityItems = computed(() => [
 ]);
 
 const keyboardItems = computed(() => [
-  { key: '—', description: tContent('accessibility.keyboard.noKeyboard')  },
-  { key: '—', description: tContent('accessibility.keyboard.description') },
+  { key: '—',   description: tContent('accessibility.keyboard.description') },
+  { key: 'Tab', description: tContent('accessibility.keyboard.noKeyboard')  },
 ]);
 
 const relatedItems = computed(() => [
@@ -244,7 +256,7 @@ const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item4'), level: '2.3.3', how: 'prefers-reduced-motion' },
   // Não é critério da WCAG: o esqueleto não transmite informação, então 1.4.3 e
   // 1.4.11 não se aplicam. O que se mede é luminância.
-  { criterion: tContent('testes.accessibility.item5'), level: '—',     how: 'Medição de luminância' },
+  { criterion: tContent('testes.accessibility.item5'), level: '—',     how: tContent('testes.accessibility.luminanceHow') },
 ]);
 
 const visualTestItems = computed(() => [
@@ -272,7 +284,7 @@ const visualTestItems = computed(() => [
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration>
+    <DocsDemonstration component-slug="skeleton">
       <div
         class="nds-grid nds-w-full"
         data-cols="2"
@@ -288,24 +300,28 @@ const visualTestItems = computed(() => [
             {{ tContent('demonstration.labels.card') }}
           </p>
           <SkeletonRegion
-            :label="tContent('demonstration.labels.card')"
-            class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
-            data-spacing="md"
-            data-align="center"
+            :label="tContent('demonstration.regionLabels.card')"
+            class="nds-w-full nds-max-w-sm"
           >
-            <Skeleton data-shape="avatar" />
             <div
-              class="nds-stack nds-flex-1"
-              data-spacing="sm"
+              class="nds-cluster"
+              data-spacing="md"
+              data-align="center"
             >
-              <Skeleton
-                data-shape="text"
-                data-width="2-3"
-              />
-              <Skeleton
-                data-shape="text"
-                data-width="1-2"
-              />
+              <Skeleton data-shape="avatar" />
+              <div
+                class="nds-stack nds-flex-1"
+                data-spacing="sm"
+              >
+                <Skeleton
+                  data-shape="text"
+                  data-width="2-3"
+                />
+                <Skeleton
+                  data-shape="text"
+                  data-width="1-2"
+                />
+              </div>
             </div>
           </SkeletonRegion>
         </div>
@@ -319,9 +335,9 @@ const visualTestItems = computed(() => [
             {{ tContent('demonstration.labels.list') }}
           </p>
           <SkeletonRegion
-            :label="tContent('demonstration.labels.list')"
-            class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
-            data-spacing="sm"
+            :label="tContent('demonstration.regionLabels.list')"
+            class="nds-w-full nds-stack"
+            data-spacing="md"
           >
             <div
               v-for="i in 5"
@@ -359,7 +375,10 @@ const visualTestItems = computed(() => [
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.image') }}
           </p>
-          <SkeletonRegion :label="tContent('demonstration.labels.image')">
+          <SkeletonRegion
+            :label="tContent('demonstration.regionLabels.image')"
+            class="nds-w-full"
+          >
             <AspectRatio :ratio="16 / 9">
               <Skeleton data-shape="fill" />
             </AspectRatio>
@@ -375,8 +394,8 @@ const visualTestItems = computed(() => [
             {{ tContent('demonstration.labels.paragraph') }}
           </p>
           <SkeletonRegion
-            :label="tContent('demonstration.labels.paragraph')"
-            class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
+            :label="tContent('demonstration.regionLabels.paragraph')"
+            class="nds-w-full nds-stack"
             data-spacing="sm"
           >
             <Skeleton
@@ -448,6 +467,21 @@ const visualTestItems = computed(() => [
           tContent('usage.dont.item4'),
         ],
       }"
+      :ux-writing="{
+        title: tContent('usage.uxWriting.title'),
+        cols: {
+          element: tContent('usage.uxWriting.table.element'),
+          rules: tContent('usage.uxWriting.table.rules'),
+          do: tContent('usage.uxWriting.table.correct'),
+          dont: tContent('usage.uxWriting.table.avoid'),
+        },
+        items: ['ariaLabel', 'dimensions', 'shape', 'motionReduce'].map((k) => ({
+          element: tContent(`usage.uxWriting.table.${k}.name`),
+          rules: tContent(`usage.uxWriting.table.${k}.format`),
+          do: tContent(`usage.uxWriting.table.${k}.good`),
+          dont: tContent(`usage.uxWriting.table.${k}.bad`),
+        })),
+      }"
     />
 
     <!-- ── Do & Don't ─────────────────────────────────────────────── -->
@@ -459,7 +493,7 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <SkeletonRegion
-          label="Carregando texto"
+          :label="tContent('doDont.regionLabels.pair1')"
           class="nds-w-full nds-stack"
           data-spacing="sm"
         >
@@ -478,16 +512,22 @@ const visualTestItems = computed(() => [
         </SkeletonRegion>
       </template>
       <template #dont-preview-0>
-        <div class="nds-w-full">
+        <!-- Bloco único genérico: uma linha curta, DENTRO da peça — o defeito
+             é a forma, não a região. -->
+        <SkeletonRegion
+          :label="tContent('doDont.regionLabels.pair1')"
+          class="nds-w-full nds-stack"
+          data-spacing="sm"
+        >
           <Skeleton
             data-shape="text"
             data-width="1-3"
           />
-        </div>
+        </SkeletonRegion>
       </template>
       <template #do-preview-1>
         <SkeletonRegion
-          label="Carregando avatar e texto"
+          :label="tContent('doDont.regionLabels.pair2')"
           class="nds-cluster nds-w-full"
           data-spacing="sm"
           data-align="center"
@@ -535,16 +575,18 @@ const visualTestItems = computed(() => [
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
       :code="codeImportBasic"
+      component-slug="skeleton"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
     <DocsVariants
       :items="variantItems"
+      component-slug="skeleton"
     >
       <template #variant-preview-0>
         <SkeletonRegion
-          label="Carregando bloco"
-          class="nds-w-xs"
+          :label="tContent('demonstration.regionLabels.rectangle')"
+          class="nds-w-full nds-max-w-sm"
         >
           <Skeleton
             data-shape="fill"
@@ -553,16 +595,23 @@ const visualTestItems = computed(() => [
         </SkeletonRegion>
       </template>
       <template #variant-preview-1>
-        <SkeletonRegion label="Carregando avatar">
+        <SkeletonRegion
+          :label="tContent('demonstration.regionLabels.circle')"
+          class="nds-w-full nds-max-w-sm"
+        >
           <Skeleton data-shape="avatar" />
         </SkeletonRegion>
       </template>
       <template #variant-preview-2>
         <SkeletonRegion
-          label="Carregando linha de texto"
-          class="nds-stack nds-w-xs"
-          data-spacing="xs"
+          :label="tContent('demonstration.regionLabels.line')"
+          class="nds-w-full nds-max-w-sm nds-stack"
+          data-spacing="sm"
         >
+          <Skeleton
+            data-shape="text"
+            data-width="full"
+          />
           <Skeleton
             data-shape="text"
             data-width="3-4"
@@ -620,19 +669,21 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="skeleton"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="skeleton"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :cols="{
-        event: 'Evento',
-        trigger: 'Quando dispara',
-        payload: 'Payload',
+        event: tNav('common.event'),
+        trigger: tNav('common.eventTrigger'),
+        payload: tNav('common.payload'),
       }"
       :items="analyticsItems"
     />

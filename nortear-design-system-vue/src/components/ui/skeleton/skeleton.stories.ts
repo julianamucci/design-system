@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
-import { Skeleton } from './index';
+import { createApp } from 'vue';
+import { Skeleton, SkeletonRegion } from './index';
 import SkeletonDocs from '@/components/docs/SkeletonDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
@@ -10,10 +11,13 @@ import { skeletonPlaygroundSource } from './skeleton.source';
 // cravada: `data-shape` escolhe a forma e `data-width` a fração da largura do
 // container (docs/shared/styles/nds/skeleton.css). Altura é resultado de padding
 // + tipografia — guideline 12, WCAG 1.4.4.
+//
+// Sem control de "carregando": a região não alterna `aria-busy` — ela SAI
+// quando o conteúdo chega (decisão da dona, 2026-09-14). Um control que virasse
+// o estado para `false` ensinaria exatamente a alternância que a peça recusa.
 type PlaygroundArgs = {
   shape: 'text' | 'heading' | 'avatar' | 'fill';
   width: 'full' | '3-4' | '2-3' | '1-2' | '1-3';
-  loading: boolean;
 };
 
 const meta: Meta<PlaygroundArgs> = {
@@ -37,16 +41,10 @@ const meta: Meta<PlaygroundArgs> = {
       description: 'Fração da largura do container (data-width). Só se aplica às formas de texto.',
       table: { type: { summary: '"full" | "3-4" | "2-3" | "1-2" | "1-3"' }, defaultValue: { summary: '3-4' } },
     },
-    loading: {
-      control: 'boolean',
-      description: 'Estado de carregamento da região que contém o placeholder.',
-      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
-    },
   },
   args: {
     shape: 'text',
     width: '3-4',
-    loading: true,
   },
 };
 
@@ -65,7 +63,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    components: { Skeleton },
+    components: { Skeleton, SkeletonRegion },
     setup() {
       const widthAplicada = () =>
         args.shape === 'text' || args.shape === 'heading' ? args.width : null;
@@ -76,28 +74,63 @@ export const Playground: Story = {
     // senão o bloco nasce com altura zero e o Playground mostra um esqueleto
     // invisível. A classe entra literal para não virar expressão no atributo.
     template: `
-      <div role="status" :aria-busy="String(args.loading)" aria-label="Carregando conteúdo">
+      <SkeletonRegion label="Carregando conteúdo">
         <Skeleton v-if="args.shape === 'fill'" data-shape="fill" class="nds-docs-skeleton-media" />
         <Skeleton v-else :data-shape="args.shape" :data-width="widthAplicada()" />
-      </div>
+      </SkeletonRegion>
     `,
   }),
   play: async ({ canvasElement, step, args }) => {
     const sk = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
-    const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
+    const regiao = canvasElement.querySelector('[data-slot="skeleton-region"]') as HTMLElement;
 
     await step('O placeholder fica fora da árvore de acessibilidade', async () => {
       // Anunciar cada barrinha é ruído: o esqueleto não tem conteúdo.
       await expect(sk).toHaveAttribute('aria-hidden', 'true');
     });
 
-    await step('Quem anuncia o carregamento é a região', async () => {
+    await step('Quem anuncia o carregamento é a peça de região', async () => {
       // `aria-busy` sozinho num div sem role não é anunciado, e aria-label em
-      // div sem role é violação de ARIA — o par role+label é o que faz o leitor
-      // dizer "carregando conteúdo".
-      await expect(regiao).toHaveAttribute('aria-busy', String(args.loading));
-      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+      // div sem role é violação de ARIA — o trio é o que faz o leitor dizer
+      // "carregando conteúdo".
+      await expect(regiao).toHaveAttribute('role', 'status');
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao).toHaveAccessibleName('Carregando conteúdo');
       await expect(regiao.contains(sk)).toBe(true);
+    });
+
+    await step('Papel e estado não são sobrescrevíveis por atributo de passagem', async () => {
+      // Montagem à parte, fora do template da story: o painel Code e a foto
+      // não mostram a tentativa. Fora de `waitFor` — mexe no DOM.
+      const host = canvasElement.ownerDocument.createElement('div');
+      canvasElement.appendChild(host);
+      const app = createApp(SkeletonRegion, {
+        label: 'Tentativa de sobrescrita',
+        role: 'alert',
+        'aria-busy': 'false',
+      });
+      try {
+        app.mount(host);
+        const attempt = host.querySelector('[data-slot="skeleton-region"]') as HTMLElement;
+        await expect(attempt).toHaveAttribute('role', 'status');
+        await expect(attempt).toHaveAttribute('aria-busy', 'true');
+
+        const skApp = createApp(Skeleton, { 'aria-hidden': 'false', 'data-shape': 'text' });
+        const skHost = canvasElement.ownerDocument.createElement('div');
+        attempt.appendChild(skHost);
+        skApp.mount(skHost);
+        try {
+          await expect(skHost.querySelector('[data-slot="skeleton"]')).toHaveAttribute(
+            'aria-hidden',
+            'true',
+          );
+        } finally {
+          skApp.unmount();
+        }
+      } finally {
+        app.unmount();
+        host.remove();
+      }
     });
 
     await step('O atributo desenha a caixa — medida no que foi renderizado', async () => {

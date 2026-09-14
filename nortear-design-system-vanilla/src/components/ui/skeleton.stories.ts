@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
-import { createSkeleton, type SkeletonShape, type SkeletonWidth } from './skeleton';
+import {
+  createSkeleton,
+  createSkeletonRegion,
+  type SkeletonShape,
+  type SkeletonWidth,
+} from './skeleton';
 import { skeletonSource } from './skeleton.source';
 import { createSkeletonDocs } from '@/components/docs/SkeletonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -10,13 +15,17 @@ import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
 
 // A caixa do esqueleto vem de atributo, não de classe de dimensão nem de altura
 // cravada: `data-shape` escolhe a forma e `data-width` a fração da largura do
-// container (docs/shared/styles/nds/skeleton.css). A factory registra os dois na
-// raiz, então o painel Code acompanha os controls pelo `outerHTML`.
+// container (docs/shared/styles/nds/skeleton.css).
+//
+// Não há control de "carregando": a região não alterna `aria-busy` — quando o
+// conteúdo chega, ela SAI e o conteúdo entra no lugar dela (decisão da dona,
+// 2026-09-14).
 type SkeletonArgs = {
   shape: SkeletonShape;
   width: SkeletonWidth;
-  loading: boolean;
 };
+
+const REGION_LABEL = 'Carregando conteúdo';
 
 const meta: Meta<SkeletonArgs> = {
   title: 'Components/Feedback/Skeleton',
@@ -38,16 +47,10 @@ const meta: Meta<SkeletonArgs> = {
       description: 'Fração da largura do container (data-width). Só se aplica às formas de texto.',
       table: { type: { summary: '"full" | "3-4" | "2-3" | "1-2" | "1-3"' }, defaultValue: { summary: '3-4' } },
     },
-    loading: {
-      control: 'boolean',
-      description: 'Estado de carregamento da região que contém o placeholder.',
-      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
-    },
   },
   args: {
     shape: 'text',
     width: '3-4',
-    loading: true,
   },
 };
 
@@ -67,14 +70,10 @@ export const Playground: Story = {
       'accessibility.item3',
     ],
   },
-  render: ({ shape, width, loading }) => {
-    const regiao = document.createElement('div');
-    regiao.setAttribute('role', 'status');
-    regiao.setAttribute('aria-busy', String(loading));
-    regiao.setAttribute('aria-label', 'Carregando conteúdo');
-
-    regiao.appendChild(
-      createSkeleton({
+  render: ({ shape, width }) =>
+    createSkeletonRegion({
+      label: REGION_LABEL,
+      children: createSkeleton({
         shape,
         width: shape === 'text' || shape === 'heading' ? width : undefined,
         // `fill` preenche a caixa que o container estabelece; aqui quem
@@ -82,25 +81,28 @@ export const Playground: Story = {
         // zero e o Playground mostra um esqueleto invisível.
         className: shape === 'fill' ? 'nds-docs-skeleton-media' : undefined,
       }),
-    );
-
-    return regiao;
-  },
+    }),
   play: async ({ canvasElement, step, args }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
-    const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+    const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton-region"]')!;
 
     await step('O placeholder fica fora da árvore de acessibilidade', async () => {
       // Anunciar cada barrinha é ruído: o esqueleto não tem conteúdo.
       await expect(sk).toHaveAttribute('aria-hidden', 'true');
     });
 
-    await step('Quem anuncia o carregamento é a região', async () => {
+    await step('Quem anuncia o carregamento é a peça de região', async () => {
       // `aria-busy` sozinho num div sem role não é anunciado, e aria-label em
-      // div sem role é violação de ARIA — o par role+label é o que faz o leitor
-      // dizer "carregando conteúdo".
-      await expect(regiao).toHaveAttribute('aria-busy', String(args.loading));
-      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+      // div sem role é violação de ARIA — o trio vem da peça, não da story.
+      //
+      // Papel e estado NÃO são sobrescrevíveis, e nesta stack isso não tem
+      // asserção: `createSkeletonRegion` não expõe opção de `role` nem de
+      // `aria-busy`, então não há por onde passar valor diferente. Nas stacks
+      // que espalham props/atributos a story afirma que o valor passado perde.
+      await expect(regiao).not.toBeNull();
+      await expect(regiao).toHaveAttribute('role', 'status');
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao).toHaveAccessibleName(REGION_LABEL);
       await expect(regiao.contains(sk)).toBe(true);
     });
 

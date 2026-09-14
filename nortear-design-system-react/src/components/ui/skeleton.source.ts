@@ -6,11 +6,16 @@
  * guarda que elas têm: a saída do painel não chega ao DOM durante a `play`.
  *
  * O que as stories montam em volta e NÃO entra no snippet: nada, quase. É o
- * caso raro em que o entorno é o componente. A região `role="status"` com
- * `aria-busy` e nome não é andaime de Storybook: o placeholder sai
- * `aria-hidden` de fábrica, então quem anuncia o carregamento é ela. Um
- * snippet com o `<Skeleton>` solto ensinaria um carregamento que leitor de
- * tela nenhum percebe.
+ * caso raro em que o entorno é o componente. A região de carregamento não é
+ * andaime de Storybook: o placeholder sai `aria-hidden` de fábrica, então quem
+ * anuncia o carregamento é ela. Um snippet com o `<Skeleton>` solto ensinaria
+ * um carregamento que leitor de tela nenhum percebe.
+ *
+ * E a região é a PEÇA `SkeletonRegion`, nunca um `<div role="status">` escrito
+ * à mão: papel, estado e nome são dela e não se sobrescrevem, e o snippet que
+ * ensina a montá-los à mão ensina justamente a divergência que a peça fechou.
+ * Nenhum snippet escreve `aria-busy` — a região não alterna, ela SAI quando o
+ * conteúdo chega.
  *
  * A decisão de composição é a mesma em todas as funções: **a FORMA é o
  * assunto**. O esqueleto não imita conteúdo por prop de tamanho — imita pela
@@ -30,13 +35,12 @@ import { indentar, jsxSnippet, type SourceTransform } from '@/lib/story-source';
 export type SkeletonArgs = {
   shape: 'text' | 'heading' | 'avatar' | 'fill';
   width: 'full' | '3-4' | '2-3' | '1-2' | '1-3';
-  loading: boolean;
 };
 
 const FORMAS = ['text', 'heading', 'avatar', 'fill'] as const;
 const LARGURAS = ['full', '3-4', '2-3', '1-2', '1-3'] as const;
 
-const IMPORT = 'import { Skeleton } from "@/components/ui/skeleton";';
+const IMPORT = 'import { Skeleton, SkeletonRegion } from "@/components/ui/skeleton";';
 const IMPORT_RATIO = 'import { AspectRatio } from "@/components/ui/aspect-ratio";';
 
 /**
@@ -57,26 +61,34 @@ function width(value: unknown): (typeof LARGURAS)[number] {
 }
 
 /**
- * A região que anuncia. `role` + `aria-label` andam JUNTOS: `aria-busy` sozinho
- * num `<div>` sem papel não é anunciado, e `aria-label` em `<div>` sem papel é
- * violação de ARIA. As duas metades juntas são o que faz o leitor de tela
- * dizer "carregando conteúdo".
+ * A região que anuncia, pela peça. O que sobra para o snippet escrever é só o
+ * NOME e o layout — a classe de composição e os atributos que ela lê.
  */
-function regiao(label: string, content: string, className = 'nds-w-sm', ocupada = true): string {
-  const lineClassName = className ? `\n  className="${className}"` : '';
-  return `<div
-  role="status"
-  aria-busy="${ocupada}"
-  aria-label="${label}"${lineClassName}
->
+function regiao(
+  label: string,
+  content: string,
+  layout: { className?: string; attrs?: string[] } = {},
+): string {
+  const partes = [
+    `label="${label}"`,
+    layout.className ? `className="${layout.className}"` : '',
+    ...(layout.attrs ?? []),
+  ].filter(Boolean);
+  const abertura =
+    partes.length > 1 ? `\n${partes.map((p) => `  ${p}`).join('\n')}\n` : ` ${partes[0]}`;
+  return `<SkeletonRegion${abertura}>
 ${content}
-</div>`;
+</SkeletonRegion>`;
 }
 
 /** Linha de texto: a forma escolhe a altura, a fração escolhe a largura. */
 function line(fraction: (typeof LARGURAS)[number], type: 'text' | 'heading' = 'text'): string {
   return `  <Skeleton data-shape="${type}" data-width="${fraction}" />`;
 }
+
+const MIDIA = `  <AspectRatio ratio={16 / 9}>
+    <Skeleton data-shape="fill" />
+  </AspectRatio>`;
 
 /**
  * Transform do `meta` — vale para todas as stories dos quatro arquivos. Lê os
@@ -87,32 +99,21 @@ function line(fraction: (typeof LARGURAS)[number], type: 'text' | 'heading' = 't
 export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const box = forma(args.shape);
-  const ocupada = args.loading === false ? false : true;
 
   if (box === 'fill') {
     return jsxSnippet(
       `${IMPORT}\n${IMPORT_RATIO}`,
-      regiao(
-        'Carregando conteúdo',
-        `  <AspectRatio ratio={16 / 9}>
-    <Skeleton data-shape="fill" />
-  </AspectRatio>`,
-        'nds-w-sm',
-        ocupada,
-      ),
+      regiao('Carregando conteúdo', MIDIA, { className: 'nds-w-sm' }),
     );
   }
 
   if (box === 'avatar') {
-    return jsxSnippet(
-      IMPORT,
-      regiao('Carregando conteúdo', '  <Skeleton data-shape="avatar" />', '', ocupada),
-    );
+    return jsxSnippet(IMPORT, regiao('Carregando conteúdo', '  <Skeleton data-shape="avatar" />'));
   }
 
   return jsxSnippet(
     IMPORT,
-    regiao('Carregando conteúdo', line(width(args.width), box), 'nds-w-sm', ocupada),
+    regiao('Carregando conteúdo', line(width(args.width), box), { className: 'nds-w-sm' }),
   );
 };
 
@@ -124,12 +125,7 @@ export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
 export function midiaSkeletonBlockSource(): string {
   return jsxSnippet(
     `${IMPORT}\n${IMPORT_RATIO}`,
-    regiao(
-      'Carregando bloco',
-      `  <AspectRatio ratio={16 / 9}>
-    <Skeleton data-shape="fill" />
-  </AspectRatio>`,
-    ),
+    regiao('Carregando bloco', MIDIA, { className: 'nds-w-sm' }),
   );
 }
 
@@ -139,10 +135,7 @@ export function midiaSkeletonBlockSource(): string {
  * texto é a exceção que a guideline 12 prevê.
  */
 export function skeletonAvatarSource(): string {
-  return jsxSnippet(
-    IMPORT,
-    regiao('Carregando avatar', '  <Skeleton data-shape="avatar" />', ''),
-  );
+  return jsxSnippet(IMPORT, regiao('Carregando avatar', '  <Skeleton data-shape="avatar" />'));
 }
 
 /**
@@ -154,38 +147,27 @@ export function skeletonAvatarSource(): string {
 export function skeletonParagrafoSource(): string {
   return jsxSnippet(
     IMPORT,
-    `<div
-  role="status"
-  aria-busy="true"
-  aria-label="Carregando parágrafo"
-  className="nds-stack nds-w-sm"
-  data-spacing="sm"
->
-${line('full')}
-${line('3-4')}
-${line('1-2')}
-</div>`,
+    regiao('Carregando parágrafo', [line('full'), line('3-4'), line('1-2')].join('\n'), {
+      className: 'nds-stack nds-w-sm',
+      attrs: ['data-spacing="sm"'],
+    }),
   );
 }
 
 /**
  * Duas linhas, que é o mínimo para o pulso ser lido como bloco carregando e
- * não como um traço qualquer na tela. O pulso em si não aparece no snippet: ele
- * é da classe base, e desliga sozinho sob `prefers-reduced-motion`.
+ * não como um traço qualquer na tela. Serve às DUAS stories de estado — pulso
+ * e movimento reduzido montam a mesma região, e o que muda entre elas é a
+ * preferência do sistema. O pulso em si não aparece no snippet: ele é da classe
+ * base, e desliga sozinho sob `prefers-reduced-motion`.
  */
-export function skeletonPulsandoSource(): string {
+export function skeletonStatesSource(): string {
   return jsxSnippet(
     IMPORT,
-    `<div
-  role="status"
-  aria-busy="true"
-  aria-label="Carregando conteúdo"
-  className="nds-stack nds-w-sm"
-  data-spacing="sm"
->
-${line('full')}
-${line('3-4')}
-</div>`,
+    regiao('Carregando conteúdo', [line('full'), line('3-4')].join('\n'), {
+      className: 'nds-stack nds-w-sm',
+      attrs: ['data-spacing="sm"'],
+    }),
   );
 }
 
@@ -197,49 +179,47 @@ ${line('3-4')}
 export function skeletonCardDePerfilSource(): string {
   return jsxSnippet(
     IMPORT,
-    `<div
-  role="status"
-  aria-busy="true"
-  aria-label="Carregando card de perfil"
-  className="nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm"
-  data-align="center"
-  data-spacing="md"
->
-  <Skeleton data-shape="avatar" />
+    regiao(
+      'Carregando card de perfil',
+      `  <Skeleton data-shape="avatar" />
   <div className="nds-stack nds-flex-1" data-spacing="sm">
 ${indentar(line('2-3'))}
 ${indentar(line('1-2'))}
-  </div>
-</div>`,
+  </div>`,
+      {
+        className: 'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
+        attrs: ['data-align="center"', 'data-spacing="md"'],
+      },
+    ),
   );
 }
 
 /**
  * Lista. A região ocupada é a LISTA inteira, não cada item: cinco avisos de
  * carregamento para uma coisa só é ruído, e o leitor de tela anuncia o
- * conjunto. `data-size="sm"` encolhe o avatar — item de lista não usa o mesmo
- * bloco do card de perfil.
+ * conjunto. A `<ul>` fica DENTRO da peça e carrega só a semântica de lista —
+ * `role="list"` porque `list-style: none` tira o papel no Safari —, sem estado
+ * nem nome, que são da região. `data-size="sm"` encolhe o avatar: item de
+ * lista não usa o mesmo bloco do card de perfil.
  */
 export function skeletonListSource(): string {
   return jsxSnippet(
     IMPORT,
-    `<ul
-  role="list"
-  aria-busy="true"
-  aria-label="Carregando lista de pedidos"
-  className="nds-stack nds-list-none nds-p-0 nds-w-md"
-  data-spacing="md"
->
-  {[1, 2, 3, 4, 5].map((posicao) => (
-    <li key={posicao} className="nds-cluster" data-align="center" data-spacing="sm">
-      <Skeleton data-shape="avatar" data-size="sm" />
-      <div className="nds-stack nds-flex-1" data-spacing="xs">
-        <Skeleton data-shape="text" data-width="2-3" />
-        <Skeleton data-shape="text" data-width="1-3" />
-      </div>
-    </li>
-  ))}
-</ul>`,
+    regiao(
+      'Carregando lista de pedidos',
+      `  <ul role="list" className="nds-stack nds-list-none nds-p-0" data-spacing="md">
+    {[1, 2, 3, 4, 5].map((posicao) => (
+      <li key={posicao} className="nds-cluster" data-align="center" data-spacing="sm">
+        <Skeleton data-shape="avatar" data-size="sm" />
+        <div className="nds-stack nds-flex-1" data-spacing="xs">
+          <Skeleton data-shape="text" data-width="2-3" />
+          <Skeleton data-shape="text" data-width="1-3" />
+        </div>
+      </li>
+    ))}
+  </ul>`,
+      { className: 'nds-w-md' },
+    ),
   );
 }
 
@@ -251,11 +231,6 @@ export function skeletonListSource(): string {
 export function ratioSkeletonImageSource(): string {
   return jsxSnippet(
     `${IMPORT}\n${IMPORT_RATIO}`,
-    regiao(
-      'Carregando imagem',
-      `  <AspectRatio ratio={16 / 9}>
-    <Skeleton data-shape="fill" />
-  </AspectRatio>`,
-    ),
+    regiao('Carregando imagem', MIDIA, { className: 'nds-w-sm' }),
   );
 }

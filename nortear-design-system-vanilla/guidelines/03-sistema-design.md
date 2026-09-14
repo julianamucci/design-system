@@ -62,9 +62,10 @@ aplica a superfície correta; não há classe avulsa a acrescentar.
 | Página principal | `.nds-page` sobre o `<body>` do tema | `--background` / `--foreground` |
 
 Superfícies auxiliares seguem o mesmo desenho: o trilho de abas é
-`.nds-tabs-list`, o fallback de avatar é `.nds-avatar-fallback` e o placeholder
-de carregamento é `.nds-skeleton` — todos leem `--muted` / `--muted-foreground`
-por conta própria.
+`.nds-tabs-list` e o fallback de avatar é `.nds-avatar-fallback` — os dois leem
+`--muted` / `--muted-foreground` por conta própria. O placeholder de
+carregamento, `.nds-skeleton`, lê `--primary` a 10% sobre o container, e por
+isso muda com a marca.
 
 ## Tokens de cor de estado
 

@@ -1,113 +1,158 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
-import { NdsSkeleton } from './skeleton';
-import { NdsAspectRatio } from './aspect-ratio';
+import { NDS_SKELETON } from './skeleton';
+import {
+  skeletonCircleSource,
+  skeletonRectangleSource,
+  skeletonTextLineSource,
+} from './skeleton.source';
+import {
+  avatarIgnoresWidth,
+  boxDesenhada,
+  heightAgainstToken,
+} from '@shared/testing/skeleton-probe';
 
 const meta: Meta = {
   title: 'Components/Feedback/Skeleton/Variants',
   tags: ['feedback'],
-  decorators: [moduleMetadata({ imports: [NdsSkeleton, NdsAspectRatio] })],
-  parameters: { layout: 'padded', controls: { disable: true } },
+  decorators: [moduleMetadata({ imports: [...NDS_SKELETON] })],
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    docs: {
+      description: {
+        component:
+          'Formas do esqueleto. Não há variante por input: a forma vem de `data-shape` e a largura de `data-width`, e a folha de estilo continua dona das medidas.',
+      },
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
-export const Shapes: Story = {
-  // As cinco linhas de `testes.visual` numa story só: o que a regressão visual
-  // compara é o conjunto, e cada forma isolada viraria uma imagem que nunca se
-  // confronta com as outras.
+export const Rectangle: Story = {
   parameters: {
-    covers: ['visual.item1', 'visual.item2', 'visual.item3', 'visual.item4', 'visual.item5'],
+    covers: ['visual.item1'],
+    docs: {
+      // O snippet mostra quem dá a caixa ao `fill` no uso real — a proporção.
+      // A classe de mídia do preview é da docs page, não API do design system.
+      source: { transform: skeletonRectangleSource },
+      description: {
+        story:
+          '`data-shape="fill"` preenche a caixa que o container estabelece — aqui, uma proporção de mídia 16/9.',
+      },
+    },
   },
   render: () => ({
-    props: { lines: [1, 2, 3, 4, 5] },
     template: `
-      <div class="nds-grid nds-w-full" data-spacing="lg" style="--grid-min: 15rem">
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-text-muted-foreground">Retângulo</p>
-          <div role="status" aria-busy="true" aria-label="Carregando bloco">
-            <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
-          </div>
-        </div>
-
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-text-muted-foreground">Avatar circular</p>
-          <div role="status" aria-busy="true" aria-label="Carregando avatar">
-            <div ndsSkeleton data-shape="avatar"></div>
-          </div>
-        </div>
-
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-text-muted-foreground">Card de perfil</p>
-          <div role="status" aria-busy="true" aria-label="Carregando perfil" class="nds-cluster" data-align="center" data-spacing="sm">
-            <div ndsSkeleton data-shape="avatar"></div>
-            <!-- nds-flex-1 não é enfeite: sem base de largura o bloco encolhe
-                 para o conteúdo, as linhas em porcentagem resolvem para zero e
-                 o esqueleto some. -->
-            <div class="nds-stack nds-flex-1" data-spacing="xs">
-              <div ndsSkeleton data-shape="text" data-width="1-2"></div>
-              <div ndsSkeleton data-shape="text" data-width="1-3"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-text-muted-foreground">Lista</p>
-          <div role="status" aria-busy="true" aria-label="Carregando lista" class="nds-stack" data-spacing="sm">
-            @for (i of lines; track i) {
-              <div class="nds-cluster" data-spacing="sm">
-                <div ndsSkeleton data-shape="avatar" data-size="sm"></div>
-                <div ndsSkeleton data-shape="text" data-width="1-2"></div>
-              </div>
-            }
-          </div>
-        </div>
-
-        <div class="nds-stack" data-spacing="sm">
-          <p class="nds-text-caption nds-text-muted-foreground">Imagem 16:9</p>
-          <div role="status" aria-busy="true" aria-label="Carregando imagem">
-            <div ndsAspectRatio [ratio]="16 / 9">
-              <div ndsSkeleton data-shape="fill"></div>
-            </div>
-          </div>
-        </div>
+      <div ndsSkeletonRegion label="Carregando bloco" class="nds-w-sm">
+        <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Toda região de carregamento tem role e nome', async () => {
-      // O par role="status" + aria-label é o que faz o leitor anunciar; sem
-      // ele o aria-busy passa despercebido e o axe acusa aria-prohibited-attr.
-      const regioes = [...canvasElement.querySelectorAll<HTMLElement>('[aria-busy="true"]')];
-      await expect(regioes).toHaveLength(5);
-      for (const r of regioes) {
-        await expect(r.getAttribute('role')).toBe('status');
-        await expect(r.getAttribute('aria-label')).toBeTruthy();
+    const sk = canvasElement.querySelector<HTMLElement>('.nds-skeleton')!;
+
+    await step('Preenche a caixa do container na proporção de mídia', async () => {
+      const box = boxDesenhada(sk);
+      await expect(box.width).toBeGreaterThan(0);
+      await expect(Math.abs(box.width / box.height - 16 / 9)).toBeLessThan(0.05);
+    });
+
+    await step('Continua fora da árvore de acessibilidade', async () => {
+      await expect(sk).toHaveAttribute('aria-hidden', 'true');
+    });
+  },
+};
+
+export const Circle: Story = {
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      source: { transform: skeletonCircleSource },
+      description: {
+        story:
+          '`data-shape="avatar"` é a exceção que a guideline 12 prevê: peça sem fluxo de texto tem medida, e ela vem da escada `--size-*`.',
+      },
+    },
+  },
+  render: () => ({
+    template: `
+      <div ndsSkeletonRegion label="Carregando avatar">
+        <div ndsSkeleton data-shape="avatar"></div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const sk = canvasElement.querySelector<HTMLElement>('.nds-skeleton')!;
+
+    await step('Quadrado com medida vinda do tema', async () => {
+      // Sem número mágico: a medida sai de `--size-*`, que muda por densidade.
+      const box = boxDesenhada(sk);
+      await expect(box.width).toBeGreaterThan(0);
+      await expect(box.quadrado).toBe(true);
+    });
+
+    await step('O raio é circular, não o raio padrão do sistema', async () => {
+      await expect(boxDesenhada(sk).circular).toBe(true);
+    });
+
+    await step('Com fração de largura posta, o avatar continua quadrado', async () => {
+      // A folha restringe `data-width` às formas que não são avatar; antes a
+      // regra de largura vencia pela ordem e o avatar saía retângulo. A sonda
+      // põe o atributo e o devolve como estava — e mexe no DOM: fora de waitFor.
+      const box = avatarIgnoresWidth(sk);
+      await expect(box.quadrado, `avatar com data-width mediu ${box.width}×${box.height}`).toBe(true);
+    });
+  },
+};
+
+export const TextLine: Story = {
+  parameters: {
+    covers: ['functional.item2'],
+    docs: {
+      source: { transform: skeletonTextLineSource },
+      description: {
+        story:
+          'Altura derivada da escada de texto e largura em fração do container. Variar a largura entre linhas é o que faz o bloco parecer parágrafo.',
+      },
+    },
+  },
+  render: () => ({
+    template: `
+      <div ndsSkeletonRegion label="Carregando linhas de texto" class="nds-stack nds-w-sm" data-spacing="sm">
+        <div ndsSkeleton data-shape="text" data-width="full"></div>
+        <div ndsSkeleton data-shape="text" data-width="3-4"></div>
+        <div ndsSkeleton data-shape="text" data-width="1-2"></div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const lines = [...canvasElement.querySelectorAll<HTMLElement>('.nds-skeleton')];
+
+    await step('Três linhas, todas com altura desenhada', async () => {
+      await expect(lines).toHaveLength(3);
+      for (const l of lines) await expect(l.getBoundingClientRect().height).toBeGreaterThan(0);
+    });
+
+    await step('A altura é exatamente a do token da escada de texto', async () => {
+      // `height > 0` pega o colapso e deixa passar altura cravada por fora. A
+      // sonda mexe no DOM: fora de `waitFor`.
+      for (const l of lines) {
+        const { token, height, expected } = heightAgainstToken(l);
+        await expect(
+          Math.abs(height - expected),
+          `linha mediu ${height}px contra ${expected}px de ${token}`,
+        ).toBeLessThanOrEqual(0.5);
       }
     });
 
-    await step('Toda linha de texto tem largura desenhada', async () => {
-      // Percentual só resolve contra container com largura definida: uma pilha
-      // sem base de largura encolhe para o conteúdo e as linhas somem. Sem esta
-      // medição o defeito passa — a story renderiza, só que vazia.
-      const lines = [
-        ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"][data-shape="text"]'),
-      ];
-      await expect(lines.length).toBeGreaterThan(0);
-      for (const l of lines) await expect(l.getBoundingClientRect().width).toBeGreaterThan(0);
-    });
-
-    await step('O esqueleto dentro do AspectRatio preenche a caixa', async () => {
-      // É o caso que junta os dois componentes: se o filho perdesse o
-      // `position: absolute; inset: 0`, o esqueleto colapsaria e a caixa
-      // ficaria vazia mesmo com a proporção certa.
-      const box = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
-      const sk = box.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
-      const boxBox = box.getBoundingClientRect();
-      const skBox = sk.getBoundingClientRect();
-      await expect(Math.abs(skBox.height - boxBox.height)).toBeLessThan(2);
+    await step('As larguras decrescem na ordem declarada', async () => {
+      const widths = lines.map((l) => l.getBoundingClientRect().width);
+      await expect(widths[0]).toBeGreaterThan(widths[1]);
+      await expect(widths[1]).toBeGreaterThan(widths[2]);
     });
   },
 };

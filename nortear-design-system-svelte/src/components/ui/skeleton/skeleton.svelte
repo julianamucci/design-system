@@ -7,8 +7,10 @@
 	// resultado de padding + tipografia, para o bloco crescer junto quando a
 	// pessoa aumenta a fonte do navegador (guideline 12, WCAG 1.4.4).
 	//
-	// `aria-hidden` sai marcado de fábrica — o placeholder é ruído para leitor
-	// de tela, e quem anuncia o carregamento é a região que o contém.
+	// `aria-hidden` sai marcado de fábrica e NÃO é sobrescrevível — o placeholder
+	// é ruído para leitor de tela, e quem anuncia o carregamento é a região que o
+	// contém. Por isso os atributos fixos vêm DEPOIS do espalhamento: no Svelte,
+	// quem escreve por último vence.
 	let {
 		ref = $bindable(null),
 		class: className,
@@ -18,8 +20,8 @@
 
 <div
 	bind:this={ref}
+	{...restProps}
 	data-slot="skeleton"
 	aria-hidden="true"
 	class={cn("nds-skeleton", className)}
-	{...restProps}
 ></div>

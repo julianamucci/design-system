@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
+import { mount, unmount } from 'svelte';
 import { expect } from 'storybook/test';
 import SkeletonStory from './SkeletonStory.svelte';
+import SkeletonRegion from './skeleton-region.svelte';
+import Skeleton from './skeleton.svelte';
 import SkeletonDocs from '@/components/docs/SkeletonDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
@@ -34,16 +37,10 @@ const meta: Meta<SkeletonArgs> = {
       description: 'Fração da largura do container (data-width). Só se aplica às formas de texto.',
       table: { type: { summary: '"full" | "3-4" | "2-3" | "1-2" | "1-3"' }, defaultValue: { summary: '3-4' } },
     },
-    loading: {
-      control: 'boolean',
-      description: 'Estado de carregamento da região que contém o placeholder.',
-      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
-    },
   },
   args: {
     shape: 'text',
     width: '3-4',
-    loading: true,
   },
 };
 
@@ -63,20 +60,61 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const sk = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
-    const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
+    const regiao = canvasElement.querySelector('[data-slot="skeleton-region"]') as HTMLElement;
 
     await step('O placeholder fica fora da árvore de acessibilidade', async () => {
       // Anunciar cada barrinha é ruído: o esqueleto não tem conteúdo.
       await expect(sk).toHaveAttribute('aria-hidden', 'true');
     });
 
-    await step('Quem anuncia o carregamento é a região', async () => {
+    await step('Quem anuncia o carregamento é a peça de região', async () => {
       // `aria-busy` sozinho num div sem role não é anunciado, e aria-label em
-      // div sem role é violação de ARIA — o par role+label é o que faz o leitor
-      // dizer "carregando conteúdo".
-      await expect(regiao).toHaveAttribute('aria-busy', String(args.loading));
-      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
+      // div sem role é violação de ARIA — o trio é o que faz o leitor dizer
+      // "carregando conteúdo". O estado é FIXO: a região sai quando o conteúdo
+      // chega, em vez de alternar.
+      await expect(regiao).not.toBeNull();
+      await expect(regiao).toHaveAttribute('role', 'status');
+      await expect(regiao).toHaveAttribute('aria-busy', 'true');
+      await expect(regiao).toHaveAccessibleName('Carregando conteúdo');
       await expect(regiao.contains(sk)).toBe(true);
+    });
+
+    await step('Papel, estado e ocultação não são sobrescrevíveis', async () => {
+      // Montagem avulsa, fora da story: o Playground mostra o uso canônico e não
+      // pode ensinar a tentativa. Os atributos saem do tipo, por isso o cast —
+      // é exatamente o consumidor que força que a peça precisa ignorar.
+      const alvo = canvasElement.ownerDocument.createElement('div');
+      canvasElement.appendChild(alvo);
+      const instancia = mount(SkeletonRegion, {
+        target: alvo,
+        props: { label: 'Sonda', role: 'presentation', 'aria-busy': 'false' } as never,
+      });
+      try {
+        const sonda = alvo.querySelector('[data-slot="skeleton-region"]') as HTMLElement;
+        await expect(sonda).toHaveAttribute('role', 'status');
+        await expect(sonda).toHaveAttribute('aria-busy', 'true');
+
+        // O placeholder também não devolve a ocultação: `aria-hidden` forçado
+        // pelo consumidor continua `true`.
+        const skAlvo = canvasElement.ownerDocument.createElement('div');
+        sonda.appendChild(skAlvo);
+        const skInstancia = mount(Skeleton, {
+          target: skAlvo,
+          props: { 'aria-hidden': 'false', 'data-shape': 'text' } as never,
+        });
+        try {
+          await expect(skAlvo.querySelector('[data-slot="skeleton"]')).toHaveAttribute(
+            'aria-hidden',
+            'true',
+          );
+        } finally {
+          await unmount(skInstancia);
+          skAlvo.remove();
+        }
+      } finally {
+        await unmount(instancia);
+        alvo.remove();
+      }
     });
 
     await step('O atributo desenha a caixa — medida no que foi renderizado', async () => {

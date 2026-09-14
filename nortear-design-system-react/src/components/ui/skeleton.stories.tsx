@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
-import { Skeleton } from "./skeleton";
+import { Skeleton, SkeletonRegion, type SkeletonRegionProps } from "./skeleton";
 import { skeletonSource } from "./skeleton.source";
 import { SkeletonDocs } from "@/components/docs/SkeletonDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -10,11 +10,26 @@ import { WIDTH_FRACTION, boxDesenhada } from "@shared/testing/skeleton-probe";
 // altura cravada: `data-shape` escolhe a forma e `data-width` a fração da
 // largura do container (docs/shared/styles/nds/skeleton.css). Altura é
 // resultado de padding + tipografia — guideline 12, WCAG 1.4.4.
+//
+// Não há control de carregamento: a região não alterna `aria-busy`, ela SAI
+// quando o conteúdo chega (decisão da dona, 2026-09-14).
 type PlaygroundArgs = {
   shape: "text" | "heading" | "avatar" | "fill";
   width: "full" | "3-4" | "2-3" | "1-2" | "1-3";
-  loading: boolean;
 };
+
+const REGION_LABEL = "Carregando conteúdo";
+
+// O que um consumidor tentaria para "desligar" a região à mão. Fora do tipo das
+// props de propósito — daí o cast —, e a play prova que nada disso chega ao DOM.
+const OVERRIDE_ATTEMPT = {
+  role: "alert",
+  "aria-busy": false,
+} as unknown as Partial<SkeletonRegionProps>;
+
+// A mesma tentativa no placeholder: `aria-hidden` é da peça e sai marcado de
+// fábrica, então um `false` espalhado não pode devolvê-lo à árvore.
+const SKELETON_OVERRIDE_ATTEMPT = { "aria-hidden": false } as const;
 
 // Sem `component: Skeleton`: os controls do Playground são a FORMA e a LARGURA,
 // que o componente não recebe como prop — chegam como atributo. Declarar o
@@ -44,16 +59,10 @@ const meta = {
         "Fração da largura do container (data-width). Só se aplica às formas de texto.",
       table: { type: { summary: '"full" | "3-4" | "2-3" | "1-2" | "1-3"' }, defaultValue: { summary: "3-4" } },
     },
-    loading: {
-      control: "boolean",
-      description: "Estado de carregamento da região que contém o placeholder.",
-      table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
-    },
   },
   args: {
     shape: "text",
     width: "3-4",
-    loading: true,
   },
 } satisfies Meta<PlaygroundArgs>;
 
@@ -71,9 +80,10 @@ export const Playground: Story = {
       "accessibility.item3",
     ],
   },
-  render: ({ shape, width, loading }) => (
-    <div role="status" aria-busy={loading} aria-label="Carregando conteúdo">
+  render: ({ shape, width }) => (
+    <SkeletonRegion {...OVERRIDE_ATTEMPT} label={REGION_LABEL}>
       <Skeleton
+        {...SKELETON_OVERRIDE_ATTEMPT}
         data-shape={shape}
         data-width={shape === "text" || shape === "heading" ? width : undefined}
         // `fill` preenche a caixa que o container estabelece; aqui quem
@@ -81,11 +91,11 @@ export const Playground: Story = {
         // zero e o Playground mostra um esqueleto invisível.
         className={shape === "fill" ? "nds-docs-skeleton-media" : undefined}
       />
-    </div>
+    </SkeletonRegion>
   ),
   play: async ({ canvasElement, step, args }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
-    const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
+    const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton-region"]')!;
 
     await step("O placeholder fica fora da árvore de acessibilidade", async () => {
       // Anunciar cada barrinha é ruído: o esqueleto não tem conteúdo.
@@ -96,9 +106,21 @@ export const Playground: Story = {
       // `aria-busy` sozinho num div sem role não é anunciado, e aria-label em
       // div sem role é violação de ARIA — o par role+label é o que faz o
       // leitor dizer "carregando conteúdo".
-      await expect(regiao).toHaveAttribute("aria-busy", String(args.loading));
-      await expect(regiao.getAttribute("aria-label")).toBeTruthy();
+      await expect(regiao).toHaveAttribute("role", "status");
+      await expect(regiao).toHaveAttribute("aria-busy", "true");
+      await expect(regiao).toHaveAccessibleName(REGION_LABEL);
       await expect(regiao.contains(sk)).toBe(true);
+    });
+
+    await step("Papel, estado e ocultação passados às peças não sobrescrevem os delas", async () => {
+      // O render espalha `role="alert"` e `aria-busy={false}` na região: se o
+      // espalhamento viesse depois dos atributos fixos, a região deixaria de
+      // ser `status` e anunciaria que o carregamento terminou.
+      await expect(regiao).not.toHaveAttribute("role", "alert");
+      await expect(regiao).toHaveAttribute("role", "status");
+      await expect(regiao).toHaveAttribute("aria-busy", "true");
+      // O render também espalha `aria-hidden={false}` no placeholder.
+      await expect(sk).toHaveAttribute("aria-hidden", "true");
     });
 
     await step("O atributo desenha a caixa — medida no que foi renderizado", async () => {

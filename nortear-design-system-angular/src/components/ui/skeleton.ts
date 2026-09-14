@@ -40,6 +40,15 @@ export class NdsSkeleton {}
 //   atributo proibido — o leitor de tela o descarta e o axe acusa
 //   `aria-prohibited-attr`.
 //
+// `aria-busy` é FIXO em "true" e a peça não o alterna: quando o conteúdo chega,
+// a região SAI do template e o conteúdo real entra no lugar dela (decisão da
+// dona, 2026-09-14). Por isso não há input de estado.
+//
+// Papel e estado não são sobrescrevíveis, e aqui isso sai do próprio mecanismo:
+// a diretiva não expõe input de `role` nem de `aria-busy`, e host binding APAGA
+// o atributo estático que quem usa escrever no template — `role="region"` ao
+// lado de `ndsSkeletonRegion` renderiza `status`.
+//
 // `label` é obrigatório de propósito: região sem nome é o defeito que esta peça
 // existe para impedir, e um default genérico o esconderia.
 //

@@ -4,8 +4,9 @@ import { expect } from 'storybook/test';
 import SkeletonEstadoStory from './SkeletonEstadoStory.svelte';
 import {
   animationAtiva,
-  backgroundDistincao,
+  distinctionByTheme,
   ligarMovimentoReduzido,
+  radiusAgainstToken,
 } from '@shared/testing/skeleton-probe';
 import { skeletonStateSource } from './skeleton.source';
 
@@ -45,17 +46,23 @@ export const Pulsing: Story = {
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
 
-    await step('A classe base entrega pulso e raio', async () => {
+    await step('A classe base entrega pulso e o raio do token', async () => {
       await expect(animationAtiva(sk)).toBe(true);
-      await expect(getComputedStyle(sk).borderRadius).not.toBe('0px');
+      // Contra o token, e não `!== '0px'`: o tema `cold` declara `--radius: 0`
+      // como identidade, e a asserção antiga reprovaria um tema legítimo.
+      const { radius, expected } = radiusAgainstToken(sk);
+      await expect(Math.abs(radius - expected)).toBeLessThanOrEqual(0.5);
     });
 
-    await step('O placeholder se distingue do fundo do container', async () => {
+    await step('Em cada tema e modo, o placeholder se distingue do fundo', async () => {
       // Não é critério de contraste — o esqueleto não transmite informação. O
       // piso pega o caso degenerado: token trocado ou opacidade zerada fazem o
-      // placeholder sumir, e o carregamento deixa de ser visível.
-      const { ratio } = backgroundDistincao(sk);
-      await expect(ratio).toBeGreaterThan(1.05);
+      // placeholder sumir. A superfície é a primária a 10%, então ela muda com
+      // a marca: medir só o tema de abertura deixava cinco combinações de fora.
+      // A sonda mexe no DOM, por isso nada de `waitFor` aqui.
+      for (const { theme, mode, ratio } of distinctionByTheme(canvasElement, sk)) {
+        await expect(ratio, `${theme}/${mode}`).toBeGreaterThan(1.05);
+      }
     });
   },
 };

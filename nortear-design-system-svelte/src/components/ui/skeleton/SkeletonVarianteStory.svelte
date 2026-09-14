@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Skeleton } from './index';
+  import { Skeleton, SkeletonRegion } from './index';
 
   type Variant = 'rectangle' | 'circle' | 'textLine';
 
@@ -11,23 +11,17 @@
 </script>
 
 {#if variant === 'rectangle'}
-  <div role="status" aria-busy="true" aria-label="Carregando bloco" class="nds-w-sm">
+  <SkeletonRegion label="Carregando bloco" class="nds-w-sm">
     <Skeleton data-shape="fill" class="nds-docs-skeleton-media" />
-  </div>
+  </SkeletonRegion>
 {:else if variant === 'circle'}
-  <div role="status" aria-busy="true" aria-label="Carregando avatar">
+  <SkeletonRegion label="Carregando avatar">
     <Skeleton data-shape="avatar" />
-  </div>
+  </SkeletonRegion>
 {:else if variant === 'textLine'}
-  <div
-    role="status"
-    aria-busy="true"
-    aria-label="Carregando linhas de texto"
-    class="nds-stack nds-w-sm"
-    data-spacing="sm"
-  >
+  <SkeletonRegion label="Carregando linhas de texto" class="nds-stack nds-w-sm" data-spacing="sm">
     <Skeleton data-shape="text" data-width="full" />
     <Skeleton data-shape="text" data-width="3-4" />
     <Skeleton data-shape="text" data-width="1-2" />
-  </div>
+  </SkeletonRegion>
 {/if}

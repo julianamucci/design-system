@@ -52,8 +52,9 @@ export function createSkeleton(options: SkeletonOptions = {}): HTMLElement {
 //
 // O trio é indivisível e vem escrito de fábrica:
 //   · `role="status"` — `aria-busy` sozinho num `div` sem papel não é anunciado;
-//   · `aria-busy="true"` — é o estado, e virá-lo para `false` é o que dispara o
-//     anúncio de "pronto";
+//   · `aria-busy="true"` — é o estado, e ele NUNCA alterna: quando o conteúdo
+//     chega, a região SAI da árvore e o conteúdo entra no lugar dela (decisão
+//     da dona). Não existe `aria-busy="false"` para escrever;
 //   · `aria-label` — nome em elemento sem papel é atributo proibido, e o axe o
 //     acusa em `aria-prohibited-attr`.
 //

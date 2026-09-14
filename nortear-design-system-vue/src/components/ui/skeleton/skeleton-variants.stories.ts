@@ -1,11 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
-import { Skeleton } from './index';
-import { boxDesenhada } from '@shared/testing/skeleton-probe';
+import { Skeleton, SkeletonRegion } from './index';
 import {
-  skeletonCirculoSource,
+  avatarIgnoresWidth,
+  boxDesenhada,
+  heightAgainstToken,
+} from '@shared/testing/skeleton-probe';
+import {
+  skeletonCircleSource,
   skeletonLineTextSource,
-  skeletonRetanguloSource,
+  skeletonRectangleSource,
 } from './skeleton.source';
 
 const meta: Meta = {
@@ -17,7 +21,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: skeletonRetanguloSource },
+      source: { transform: skeletonRectangleSource },
       description: {
         component:
           'Formas do esqueleto. Não há variante via prop: a forma vem de `data-shape` e a largura de `data-width`, e a folha de estilo continua dona das medidas.',
@@ -33,6 +37,9 @@ export const Rectangle: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      // Transform próprio, e não o herdado do meta: a story diz o que publica
+      // mesmo se o meta passar a mostrar outra forma.
+      source: { transform: skeletonRectangleSource },
       description: {
         story:
           '`data-shape="fill"` preenche a caixa que o container estabelece — aqui, uma proporção de mídia 16/9.',
@@ -40,11 +47,11 @@ export const Rectangle: Story = {
     },
   },
   render: () => ({
-    components: { Skeleton },
+    components: { Skeleton, SkeletonRegion },
     template: `
-      <div role="status" aria-busy="true" aria-label="Carregando bloco" class="nds-w-sm">
+      <SkeletonRegion label="Carregando bloco" class="nds-w-sm">
         <Skeleton data-shape="fill" class="nds-docs-skeleton-media" />
-      </div>
+      </SkeletonRegion>
     `,
   }),
   play: async ({ canvasElement, step }) => {
@@ -68,7 +75,7 @@ export const Circle: Story = {
     docs: {
       // Outra forma e sem container de proporção: `avatar` traz medida própria,
       // ao contrário do `fill` que o meta mostra.
-      source: { transform: skeletonCirculoSource },
+      source: { transform: skeletonCircleSource },
       description: {
         story:
           '`data-shape="avatar"` é a exceção que a guideline 12 prevê: peça sem fluxo de texto tem medida, e ela vem da escada `--size-*`.',
@@ -76,11 +83,11 @@ export const Circle: Story = {
     },
   },
   render: () => ({
-    components: { Skeleton },
+    components: { Skeleton, SkeletonRegion },
     template: `
-      <div role="status" aria-busy="true" aria-label="Carregando avatar">
+      <SkeletonRegion label="Carregando avatar">
         <Skeleton data-shape="avatar" />
-      </div>
+      </SkeletonRegion>
     `,
   }),
   play: async ({ canvasElement, step }) => {
@@ -98,11 +105,18 @@ export const Circle: Story = {
       // Comportamento, não classe: o que importa é o círculo desenhado.
       await expect(boxDesenhada(sk).circular).toBe(true);
     });
+
+    await step('Com data-width, o avatar continua quadrado', async () => {
+      // A fração de largura é das formas de texto; antes da restrição na folha
+      // o avatar saía retângulo. Fora de `waitFor` — a sonda mexe no atributo.
+      await expect(avatarIgnoresWidth(sk).quadrado).toBe(true);
+    });
   },
 };
 
 export const TextLine: Story = {
   parameters: {
+    covers: ['functional.item2'],
     docs: {
       // São três peças com larguras diferentes: a lição é a variação entre as
       // linhas, e uma peça só não a mostra.
@@ -114,19 +128,13 @@ export const TextLine: Story = {
     },
   },
   render: () => ({
-    components: { Skeleton },
+    components: { Skeleton, SkeletonRegion },
     template: `
-      <div
-        role="status"
-        aria-busy="true"
-        aria-label="Carregando linhas de texto"
-        class="nds-stack nds-w-sm"
-        data-spacing="sm"
-      >
+      <SkeletonRegion label="Carregando linhas de texto" class="nds-stack nds-w-sm" data-spacing="sm">
         <Skeleton data-shape="text" data-width="full" />
         <Skeleton data-shape="text" data-width="3-4" />
         <Skeleton data-shape="text" data-width="1-2" />
-      </div>
+      </SkeletonRegion>
     `,
   }),
   play: async ({ canvasElement, step }) => {
@@ -134,9 +142,16 @@ export const TextLine: Story = {
       ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]'),
     ];
 
-    await step('Três linhas, todas com altura desenhada', async () => {
+    await step('Três linhas, com a altura do token de texto', async () => {
+      // `height > 0` pegava só o colapso; altura cravada por fora e desvio da
+      // escada passavam. Medida resolvida no contexto do elemento, fora de
+      // `waitFor` — a sonda pendura um nó.
       await expect(lines).toHaveLength(3);
-      for (const l of lines) await expect(l.getBoundingClientRect().height).toBeGreaterThan(0);
+      for (const l of lines) {
+        const { height, expected } = heightAgainstToken(l);
+        await expect(expected).toBeGreaterThan(0);
+        await expect(Math.abs(height - expected)).toBeLessThanOrEqual(0.5);
+      }
     });
 
     await step('As larguras decrescem na ordem declarada', async () => {

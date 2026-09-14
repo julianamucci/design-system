@@ -22,8 +22,6 @@ export type SkeletonPart = {
 export type SkeletonSnippetOptions = SkeletonPart & {
   /** Nome da região que anuncia o carregamento. */
   regionLabel?: string;
-  /** Estado da região. `false` mostra o carregamento já concluído. */
-  loading?: boolean;
   /** Várias peças empilhadas. Sem isto, a região leva uma só. */
   lines?: SkeletonPart[];
 };
@@ -43,20 +41,42 @@ function partCall(p: SkeletonPart): string {
   return pairs ? `createSkeleton({ ${pairs} })` : 'createSkeleton()';
 }
 
+/** Os dois imports que todo snippet desta família ensina. */
+const IMPORT_SKELETON = importing('skeleton', 'createSkeleton', 'createSkeletonRegion');
+
 /**
- * A região que anuncia o carregamento.
+ * A região que anuncia o carregamento — pela PEÇA, nunca à mão.
  *
  * Ela faz parte do uso, não do andaime: o esqueleto nasce `aria-hidden` de
- * fábrica — um bloco cinza pulsando não é conteúdo —, e quem diz que a tela está
- * carregando é a região que o contém. `aria-busy` sozinho num `div` sem papel
- * não é anunciado, e `aria-label` em `div` sem papel é atributo proibido: o par
- * papel + nome é o que faz o leitor dizer "carregando".
+ * fábrica, e quem diz que a tela está carregando é a região que o contém. Papel,
+ * estado e nome saem de `createSkeletonRegion`; o snippet não ensina
+ * `setAttribute('role')` porque montar o trio à mão é justamente como as docs
+ * pages divergiram em cinco formas. A região não alterna `aria-busy`: quando o
+ * conteúdo chega, ela sai e o conteúdo entra no lugar dela.
+ *
+ * `children` recebe expressões já escritas; uma só vai sem colchetes.
  */
-function regiao(o: SkeletonSnippetOptions, className?: string, spacing?: string): string {
-  return `const regiao = document.createElement('div');
-${className ? `regiao.className = ${text(className)};\n` : ''}${spacing ? `regiao.dataset.spacing = ${text(spacing)};\n` : ''}regiao.setAttribute('role', 'status');
-regiao.setAttribute('aria-busy', ${text(String(o.loading ?? true))});
-regiao.setAttribute('aria-label', ${text(o.regionLabel ?? 'Carregando conteúdo')});`;
+function regionBlock(
+  label: string,
+  children: string[],
+  layout: { class?: string; spacing?: string; align?: string } = {},
+): string {
+  const childrenValue =
+    children.length === 1
+      ? children[0]
+      : `[\n${children.map((c) => `    ${c},`).join('\n')}\n  ]`;
+  const call = callLine('createSkeletonRegion', options([
+    ['label', text(label)],
+    ['class', layout.class ? text(layout.class) : undefined],
+    ['children', childrenValue],
+  ]));
+  return [
+    `const regiao = ${call};`,
+    layout.spacing ? `regiao.dataset.spacing = ${text(layout.spacing)};` : '',
+    layout.align ? `regiao.dataset.align = ${text(layout.align)};` : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
 }
 
 /** A chamada real de `createSkeleton` dentro da região que a anuncia. */
@@ -79,11 +99,12 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
   const empilhado = parts.length > 1;
 
   return snippet(
-    importing('skeleton', 'createSkeleton'),
-    regiao(o, empilhado ? 'nds-stack nds-w-sm' : undefined, empilhado ? 'sm' : undefined),
-    parts.length === 1
-      ? `regiao.appendChild(${partCall(parts[0])});`
-      : `regiao.append(\n${parts.map((p) => `  ${partCall(p)},`).join('\n')}\n);`,
+    IMPORT_SKELETON,
+    regionBlock(
+      o.regionLabel ?? 'Carregando conteúdo',
+      parts.map(partCall),
+      empilhado ? { class: 'nds-stack nds-w-sm', spacing: 'sm' } : {},
+    ),
     appendLine('regiao'),
   );
 }
@@ -97,13 +118,7 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
  */
 export function skeletonPerfilSnippet(o: SkeletonSnippetOptions = {}): string {
   return snippet(
-    importing('skeleton', 'createSkeleton'),
-    regiao(
-      { ...o, regionLabel: o.regionLabel ?? 'Carregando card de perfil' },
-      'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
-      'md',
-    ),
-    `regiao.dataset.align = 'center';`,
+    IMPORT_SKELETON,
     `const linhas = document.createElement('div');
 linhas.className = 'nds-stack nds-flex-1';
 linhas.dataset.spacing = 'sm';
@@ -111,7 +126,15 @@ linhas.append(
   ${partCall({ shape: 'text', width: '2-3' })},
   ${partCall({ shape: 'text', width: '1-2' })},
 );`,
-    `regiao.append(${partCall({ shape: 'avatar' })}, linhas);`,
+    regionBlock(
+      o.regionLabel ?? 'Carregando card de perfil',
+      [partCall({ shape: 'avatar' }), 'linhas'],
+      {
+        class: 'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
+        spacing: 'md',
+        align: 'center',
+      },
+    ),
     appendLine('regiao'),
   );
 }
@@ -119,20 +142,19 @@ linhas.append(
 /**
  * Lista de itens carregando.
  *
- * Forma própria porque a região é a LISTA inteira: uma região viva por item
- * repetiria o mesmo aviso a cada linha.
+ * Forma própria porque a região embrulha a LISTA inteira: uma região viva por
+ * item repetiria o mesmo aviso a cada linha. A `<ul>` fica DENTRO da peça e não
+ * carrega estado nem nome — `role="list"` devolve a semântica de lista que
+ * `list-style: none` tira em alguns leitores de tela.
  */
 export function skeletonListSnippet(o: SkeletonSnippetOptions = {}): string {
   const total = o.lines?.length ?? 5;
   return snippet(
-    importing('skeleton', 'createSkeleton'),
+    IMPORT_SKELETON,
     `const lista = document.createElement('ul');
-lista.className = 'nds-stack nds-list-none nds-p-0 nds-w-md';
+lista.className = 'nds-stack nds-list-none nds-p-0';
 lista.dataset.spacing = 'md';
-// A lista inteira é UMA região ocupada: uma por item repetiria o aviso cinco
-// vezes para quem usa leitor de tela.
-lista.setAttribute('aria-busy', 'true');
-lista.setAttribute('aria-label', ${text(o.regionLabel ?? 'Carregando lista de pedidos')});`,
+lista.setAttribute('role', 'list');`,
     `for (let i = 0; i < ${total}; i++) {
   const item = document.createElement('li');
   item.className = 'nds-cluster';
@@ -150,7 +172,8 @@ lista.setAttribute('aria-label', ${text(o.regionLabel ?? 'Carregando lista de pe
   item.append(${partCall({ shape: 'avatar', size: 'sm' })}, linhas);
   lista.appendChild(item);
 }`,
-    appendLine('lista'),
+    regionBlock(o.regionLabel ?? 'Carregando lista de pedidos', ['lista'], { class: 'nds-w-md' }),
+    appendLine('regiao'),
   );
 }
 
@@ -163,14 +186,12 @@ lista.setAttribute('aria-label', ${text(o.regionLabel ?? 'Carregando lista de pe
  */
 export function ratioSkeletonSnippet(o: SkeletonSnippetOptions = {}): string {
   return snippet(
-    [importing('skeleton', 'createSkeleton'), importing('aspect-ratio', 'createAspectRatio')].join('\n'),
-    regiao({ ...o, regionLabel: o.regionLabel ?? 'Carregando imagem' }, 'nds-w-sm'),
-    `regiao.appendChild(
-  ${callLine('createAspectRatio', options([
-    ['ratio', '16 / 9'],
-    ['content', partCall({ shape: 'fill' })],
-  ]))},
-);`,
+    [IMPORT_SKELETON, importing('aspect-ratio', 'createAspectRatio')].join('\n'),
+    `const midia = ${callLine('createAspectRatio', options([
+      ['ratio', '16 / 9'],
+      ['content', partCall({ shape: 'fill' })],
+    ]))};`,
+    regionBlock(o.regionLabel ?? 'Carregando imagem', ['midia'], { class: 'nds-w-sm' }),
     appendLine('regiao'),
   );
 }

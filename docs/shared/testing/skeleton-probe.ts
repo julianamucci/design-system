@@ -24,6 +24,7 @@
  */
 
 import { contraste, backgroundEffective, darkLigarTheme } from './alert-probe';
+import { byTheme, MODOS, THEMES } from './cor';
 
 export { contraste, backgroundEffective, darkLigarTheme };
 
@@ -121,4 +122,123 @@ export function backgroundDistincao(el: HTMLElement): BackgroundDistincao {
   const placeholder = backgroundEffective(el);
   const container = el.parentElement ? backgroundEffective(el.parentElement) : placeholder;
   return { placeholder, container, ratio: contraste(placeholder, container) };
+}
+
+export interface ThemeDistinction extends BackgroundDistincao {
+  theme: (typeof THEMES)[number];
+  mode: (typeof MODOS)[number];
+}
+
+/**
+ * A distinção do fundo nos TRÊS temas e nos DOIS modos.
+ *
+ * Até 2026-09-14 o piso de 1,05 era medido numa combinação em seis — o tema e o
+ * modo em que a suíte abre. A superfície do esqueleto é a primária a 10%, então
+ * ela MUDA com a marca, e é justamente o tema que não é medido que pode fazê-la
+ * coincidir com o fundo.
+ *
+ * `root` recebe as classes de tema (ver `byTheme`), e precisa CONTER o
+ * esqueleto. O chão da composição não é o `<body>` — cuja pintura fica velha
+ * quando o tema troca por classe —, e sim `--background` resolvido por uma sonda
+ * montada ao lado do elemento medido, que herda o tema recém-posto.
+ */
+export function distinctionByTheme(root: HTMLElement, el: HTMLElement): ThemeDistinction[] {
+  return byTheme(root, (theme, mode) => ({ theme, mode, ...backgroundDistincao(el) }));
+}
+
+// ─── Medida contra o TOKEN ────────────────────────────────────────────────────
+
+/**
+ * Resolve um comprimento em px NO CONTEXTO do elemento — densidade, escala de
+ * tipo e tema herdados de onde ele está, não da raiz.
+ *
+ * A sonda é um `div` fora do fluxo, pendurado no pai do elemento e retirado em
+ * seguida. Mexe no DOM: NUNCA chame dentro de `waitFor` (ver a regra do
+ * `waitFor` que pendura, no CLAUDE.md).
+ */
+export function resolveLength(el: HTMLElement, value: string): number {
+  const host = el.parentElement ?? el;
+  const probe = el.ownerDocument.createElement('div');
+  probe.style.position = 'absolute';
+  probe.style.visibility = 'hidden';
+  // `setProperty`, e não a propriedade camelCase: valor com `var()` precisa
+  // chegar como declaração, e é esse o caminho que o CSSOM aceita sem parsear.
+  probe.style.setProperty('inline-size', value);
+  host.appendChild(probe);
+  try {
+    return probe.getBoundingClientRect().width;
+  } finally {
+    probe.remove();
+  }
+}
+
+/** Token de texto que dá a altura de cada forma sem medida própria (D8). */
+export const SHAPE_HEIGHT_TOKEN: Record<string, string> = {
+  text: '--text-control',
+  heading: '--text-h4',
+};
+
+export interface HeightAgainstToken {
+  token: string;
+  height: number;
+  expected: number;
+}
+
+/**
+ * A altura desenhada de `text` e `heading` contra o token da escada de texto.
+ *
+ * O esqueleto não tem conteúdo, e o `padding-block` é metade da medida nos dois
+ * lados: a altura tem de ser EXATAMENTE a medida. Asserção de `height > 0` pega
+ * o colapso para zero e deixa passar altura cravada por fora e desvio da
+ * escada — era o único contrato do PRD (C8) sem portão.
+ */
+export function heightAgainstToken(el: HTMLElement): HeightAgainstToken {
+  const shape = el.dataset.shape ?? '';
+  const token = SHAPE_HEIGHT_TOKEN[shape];
+  if (!token) throw new Error(`forma "${shape}" não tem altura derivada de token`);
+  return {
+    token,
+    height: el.getBoundingClientRect().height,
+    expected: resolveLength(el, `var(${token})`),
+  };
+}
+
+/**
+ * O raio desenhado contra o token que a folha diz ler: `--radius` na base,
+ * `--radius-full` (limitado pela metade do lado) no avatar.
+ *
+ * Substitui `borderRadius !== '0px'`, que era FALSO no tema `cold` — ele declara
+ * `--radius: 0` como identidade de forma, e a asserção reprovaria um tema
+ * legítimo no dia em que alguém o exercitasse.
+ */
+export function radiusAgainstToken(el: HTMLElement): { radius: number; expected: number } {
+  const radius = Number.parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
+  const token = el.dataset.shape === 'avatar' ? '--radius-full' : '--radius';
+  // O computado devolve o valor DECLARADO (9999px no avatar), não o desenhado;
+  // o limite de metade do lado menor é aplicado aos dois lados da comparação.
+  const box = el.getBoundingClientRect();
+  const half = Math.min(box.width, box.height) / 2;
+  return {
+    radius: Math.min(radius, half),
+    expected: Math.min(resolveLength(el, `var(${token})`), half),
+  };
+}
+
+/**
+ * Um avatar com `data-width` continua quadrado?
+ *
+ * A folha restringe a fração às formas que não são avatar desde 2026-09-14;
+ * antes a regra de largura vinha depois da de avatar, com a mesma
+ * especificidade, e o avatar saía retângulo. O atributo é posto e devolvido
+ * como estava, mesmo se a medida lançar.
+ */
+export function avatarIgnoresWidth(el: HTMLElement, width = '1-2'): BoxDesenhada {
+  const previous = el.getAttribute('data-width');
+  el.setAttribute('data-width', width);
+  try {
+    return boxDesenhada(el);
+  } finally {
+    if (previous === null) el.removeAttribute('data-width');
+    else el.setAttribute('data-width', previous);
+  }
 }

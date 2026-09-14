@@ -1,13 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
-import { createSkeleton } from './skeleton';
-import { regiaoDeCarregamento } from './skeleton.fixtures';
+import { createSkeleton, createSkeletonRegion } from './skeleton';
 import {
   skeletonSource,
   skeletonSourceWith,
   ratioSkeletonSource,
 } from './skeleton.source';
-import { boxDesenhada } from '@shared/testing/skeleton-probe';
+import {
+  avatarIgnoresWidth,
+  boxDesenhada,
+  heightAgainstToken,
+} from '@shared/testing/skeleton-probe';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -44,11 +47,12 @@ export const Rectangle: Story = {
       },
     },
   },
-  render: () => {
-    const wrap = regiaoDeCarregamento('Carregando bloco', 'nds-w-sm');
-    wrap.appendChild(createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' }));
-    return wrap;
-  },
+  render: () =>
+    createSkeletonRegion({
+      label: 'Carregando bloco',
+      class: 'nds-w-sm',
+      children: createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' }),
+    }),
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
@@ -77,11 +81,11 @@ export const Circle: Story = {
       },
     },
   },
-  render: () => {
-    const wrap = regiaoDeCarregamento('Carregando avatar');
-    wrap.appendChild(createSkeleton({ shape: 'avatar' }));
-    return wrap;
-  },
+  render: () =>
+    createSkeletonRegion({
+      label: 'Carregando avatar',
+      children: createSkeleton({ shape: 'avatar' }),
+    }),
   play: async ({ canvasElement, step }) => {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
@@ -97,11 +101,20 @@ export const Circle: Story = {
       // Comportamento, não classe: o que importa é o círculo desenhado.
       await expect(boxDesenhada(sk).circular).toBe(true);
     });
+
+    await step('Com fração de largura posta, o avatar continua quadrado', async () => {
+      // A folha restringe `data-width` às formas que não são avatar; antes a
+      // regra de largura vencia pela ordem e o avatar saía retângulo. A sonda
+      // põe o atributo e o devolve como estava.
+      const box = avatarIgnoresWidth(sk);
+      await expect(box.quadrado, `avatar com data-width mediu ${box.width}×${box.height}`).toBe(true);
+    });
   },
 };
 
 export const TextLine: Story = {
   parameters: {
+    covers: ['functional.item2'],
     docs: {
       // Três linhas de larguras diferentes: uma peça só não mostraria o que faz
       // o bloco parecer parágrafo.
@@ -122,12 +135,15 @@ export const TextLine: Story = {
     },
   },
   render: () => {
-    const wrap = regiaoDeCarregamento('Carregando linhas de texto', 'nds-stack nds-w-sm');
-    wrap.dataset.spacing = 'sm';
-    for (const width of ['full', '3-4', '1-2'] as const) {
-      wrap.appendChild(createSkeleton({ shape: 'text', width }));
-    }
-    return wrap;
+    const region = createSkeletonRegion({
+      label: 'Carregando linhas de texto',
+      class: 'nds-stack nds-w-sm',
+      children: (['full', '3-4', '1-2'] as const).map((width) =>
+        createSkeleton({ shape: 'text', width }),
+      ),
+    });
+    region.dataset.spacing = 'sm';
+    return region;
   },
   play: async ({ canvasElement, step }) => {
     const lines = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
@@ -135,6 +151,18 @@ export const TextLine: Story = {
     await step('Três linhas, todas com altura desenhada', async () => {
       await expect(lines).toHaveLength(3);
       for (const l of lines) await expect(l.getBoundingClientRect().height).toBeGreaterThan(0);
+    });
+
+    await step('A altura é exatamente a do token da escada de texto', async () => {
+      // `height > 0` pega o colapso e deixa passar altura cravada por fora. A
+      // sonda mexe no DOM: fora de `waitFor`.
+      for (const l of lines) {
+        const { token, height, expected } = heightAgainstToken(l);
+        await expect(
+          Math.abs(height - expected),
+          `linha mediu ${height}px contra ${expected}px de ${token}`,
+        ).toBeLessThanOrEqual(0.5);
+      }
     });
 
     await step('As larguras decrescem na ordem declarada', async () => {

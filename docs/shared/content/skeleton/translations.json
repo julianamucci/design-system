@@ -6,7 +6,7 @@
     "description": "Placeholder visual com animação pulsante que replica a estrutura do conteúdo enquanto ele carrega.",
     "seo": {
       "title": "Skeleton — Feedback",
-      "description": "Documentação do Skeleton: placeholder de carregamento com pulso por opacidade, forma e largura por atributo, decorativo via aria-hidden e com a animação desligada sob movimento reduzido.",
+      "description": "Skeleton: placeholder de carregamento que pulsa por opacidade, com forma e largura por atributo, oculto do leitor de tela e parado sob movimento reduzido.",
       "aiSummary": "O componente Skeleton renderiza um placeholder que imita a caixa do conteúdo que vai substituir. Forma e largura vêm dos atributos data-shape e data-width, o fundo é a cor primária a 10% sobre o container, e o pulso por opacidade é desligado pela própria folha de estilo sob prefers-reduced-motion. O placeholder é decorativo (aria-hidden): quem anuncia o carregamento é a região que o contém, com role status, aria-busy e nome acessível.",
       "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, placeholder de carregamento, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
@@ -16,19 +16,28 @@
         "list": "Lista — 5 ítens com avatar e texto",
         "image": "Imagem — placeholder em AspectRatio 16/9",
         "paragraph": "Parágrafo — 3 linhas de texto"
+      },
+      "regionLabels": {
+        "card": "Carregando card de perfil",
+        "list": "Carregando lista",
+        "image": "Carregando imagem",
+        "paragraph": "Carregando parágrafo",
+        "rectangle": "Carregando imagem",
+        "circle": "Carregando avatar",
+        "line": "Carregando texto"
       }
     },
     "anatomy": {
       "item1": "<strong>Raiz</strong> — <code>div</code> com a classe base do esqueleto: fundo suave, cantos arredondados e pulso por opacidade.",
       "item2": "<strong>Forma e largura</strong> — <code>data-shape</code> escolhe a forma (linha de texto, título, avatar ou preenchimento) e <code>data-width</code> escolhe a fração da largura do container. A folha de estilo continua dona das medidas.",
-      "item3": "<strong>Container</strong> — o wrapper externo recebe <code>role=\"status\"</code>, <code>aria-busy</code> e <code>aria-label</code>; o esqueleto recebe <code>aria-hidden</code>.",
+      "item3": "<strong>Região</strong> — a peça de região de carregamento embrulha o bloco e já escreve <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code> e o nome acessível, que é obrigatório; o esqueleto recebe <code>aria-hidden</code>. Quando o conteúdo chega, a região inteira sai e o conteúdo entra no lugar.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<div role=\"status\" aria-busy={isLoading} aria-label=\"Carregando lista\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "vue": "<div role=\"status\" :aria-busy=\"isLoading\" aria-label=\"Carregando lista\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "svelte": "<div role=\"status\" aria-busy={isLoading} aria-label=\"Carregando lista\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "vanilla": "const regiao = document.createElement('div');\nregiao.setAttribute('role', 'status');\nregiao.setAttribute('aria-busy', String(isLoading));\nregiao.setAttribute('aria-label', 'Carregando lista');\nregiao.append(\n  createSkeleton({ shape: 'avatar' }),\n  createSkeleton({ shape: 'text', width: '3-4' }),\n);",
-        "angular": "<div role=\"status\" [attr.aria-busy]=\"isLoading\" aria-label=\"Carregando lista\">\n  <div ndsSkeleton data-shape=\"avatar\"></div>\n  <div ndsSkeleton data-shape=\"text\" data-width=\"3-4\"></div>\n</div>"
+        "react": "{isLoading ? (\n  <SkeletonRegion label=\"Carregando lista\" className=\"nds-stack\">\n    <Skeleton data-shape=\"avatar\" />\n    <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n  </SkeletonRegion>\n) : (\n  <ul>{/* itens reais */}</ul>\n)}",
+        "vue": "<SkeletonRegion v-if=\"isLoading\" label=\"Carregando lista\" class=\"nds-stack\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</SkeletonRegion>\n<ul v-else><!-- itens reais --></ul>",
+        "svelte": "{#if isLoading}\n  <SkeletonRegion label=\"Carregando lista\" class=\"nds-stack\">\n    <Skeleton data-shape=\"avatar\" />\n    <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n  </SkeletonRegion>\n{:else}\n  <ul><!-- itens reais --></ul>\n{/if}",
+        "vanilla": "const region = createSkeletonRegion({\n  label: 'Carregando lista',\n  class: 'nds-stack',\n  children: [\n    createSkeleton({ shape: 'avatar' }),\n    createSkeleton({ shape: 'text', width: '3-4' }),\n  ],\n});\ncontainer.append(region);\n\n// Quando o conteúdo chega, a região inteira sai.\nregion.replaceWith(list);",
+        "angular": "@if (isLoading) {\n  <div ndsSkeletonRegion label=\"Carregando lista\" class=\"nds-stack\">\n    <div ndsSkeleton data-shape=\"avatar\"></div>\n    <div ndsSkeleton data-shape=\"text\" data-width=\"3-4\"></div>\n  </div>\n} @else {\n  <ul><!-- itens reais --></ul>\n}"
       }
     },
     "usage": {
@@ -36,7 +45,7 @@
         "title": "Guidelines Obrigatórias",
         "item1": "Use Skeleton quando o tempo de carregamento esperado é maior que 300ms e a estrutura final é conhecida.",
         "item2": "Replique a caixa do conteúdo final para evitar <code>layout shift</code> quando ele chegar.",
-        "item3": "Aplique <code>aria-hidden=\"true\"</code> no esqueleto e <code>role=\"status\"</code> com <code>aria-busy=\"true\"</code> no container.",
+        "item3": "Envolva o bloco na região de carregamento, que já escreve <code>role=\"status\"</code> e <code>aria-busy=\"true\"</code>; o esqueleto já sai com <code>aria-hidden=\"true\"</code>.",
         "item4": "Não recrie o controle de movimento: a folha de estilo já para o pulso quando o sistema pede <code>prefers-reduced-motion</code>, e forçar a animação por cima quebra WCAG 2.3.3.",
         "item5": "Para operações com progresso mensurável (upload, download), prefira <code>Progress</code>."
       },
@@ -81,7 +90,7 @@
           "correct": "Use",
           "avoid": "Evite",
           "ariaLabel": {
-            "name": "aria-label do container",
+            "name": "Nome da região",
             "format": "Descreva o conteúdo que está carregando",
             "good": "Carregando lista de pedidos",
             "bad": "Loading"
@@ -129,6 +138,10 @@
       "pair2": {
         "do": "Região de carregamento com papel e nome, e o placeholder oculto ao leitor de tela.",
         "dont": "Esqueleto solto, sem região que anuncie o carregamento — o leitor não sabe que algo está vindo."
+      },
+      "regionLabels": {
+        "pair1": "Carregando artigo",
+        "pair2": "Carregando perfil"
       }
     },
     "import": {},
@@ -181,10 +194,10 @@
           "description": "Já vem marcado — o placeholder é ruído para leitor de tela, e quem anuncia o carregamento é o container."
         },
         "rest": {
-          "type": "ComponentProps<'div'>",
+          "type": "atributos nativos de div",
           "default": "—",
           "required": "Não",
-          "description": "Aceita qualquer atributo nativo de div (id, data-*, style)."
+          "description": "Aceita atributos nativos de div (id, data-*). Medida não entra por style: forma e largura vêm dos atributos acima."
         },
         "dataShape": {
           "type": "\"text\" | \"heading\" | \"avatar\" | \"fill\"",
@@ -226,12 +239,12 @@
         },
         "rounded": {
           "class": ".nds-skeleton",
-          "part": "Cantos arredondados; a forma de avatar troca para o raio circular",
+          "part": "Cantos arredondados das formas de texto e preenchimento",
           "token": "--radius"
         },
         "animation": {
           "class": ".nds-skeleton",
-          "part": "Curva do pulso por opacidade, em ciclo de 1,5s",
+          "part": "Curva do pulso por opacidade",
           "token": "--ease-standard"
         },
         "motionReduce": {
@@ -243,20 +256,30 @@
           "token": "--size-default",
           "class": ".nds-skeleton",
           "part": "Medida do avatar, com variações pela escala de tamanhos"
+        },
+        "roundedFull": {
+          "class": ".nds-skeleton[data-shape='avatar']",
+          "part": "Raio circular da forma de avatar",
+          "token": "--radius-full"
+        },
+        "duration": {
+          "class": ".nds-skeleton",
+          "part": "Duração do ciclo do pulso (1,5s); o bloco de movimento reduzido da escada de movimento também a alcança",
+          "token": "--duration-cycle"
         }
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Cor do placeholder em um tema custom */\n.nds-skeleton {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Pulso mais curto */\n.nds-skeleton {\n  animation-duration: 1s;\n}"
+        "web": "/* Placeholder mais marcado — a superfície continua sendo a primária */\n.nds-skeleton {\n  background-color: hsl(var(--primary) / 0.2);\n}\n\n/* Pulso mais curto — pelo token, que o movimento reduzido continua alcançando */\n.nds-skeleton {\n  --duration-cycle: 1s;\n}"
       }
     },
     "accessibility": {
       "summary": "Atende WCAG 2.2 AA — 2.3.3 (Animation from Interactions), porque o pulso é desligado sob movimento reduzido, e 4.1.2 (Name, Role, Value), porque a região que carrega tem papel e nome enquanto o placeholder fica fora da árvore de acessibilidade.",
       "items": {
         "item1": "Skeleton recebe <code>aria-hidden=\"true\"</code> — leitor de tela ignora o placeholder.",
-        "item2": "O container recebe <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code> e <code>aria-label</code> descrevendo o que carrega.",
+        "item2": "A região de carregamento escreve <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code> e um nome acessível obrigatório, que descreve o que carrega.",
         "item3": "O pulso é desligado quando o sistema pede movimento reduzido — a regra vive na folha de estilo do componente, não no consumidor.",
-        "item4": "Após carregar, remova <code>aria-busy</code> do container — leitor anuncia que o conteúdo está pronto.",
+        "item4": "Quando o conteúdo chega, a região sai e o conteúdo real entra no lugar dela — a peça não alterna <code>aria-busy</code>, e papel e estado não são sobrescrevíveis.",
         "item5": "Não use Skeleton como único indicador de loading se a operação dura mais de 10s — adicione texto."
       },
       "keyboard": {
@@ -266,15 +289,15 @@
       },
       "aria": {
         "title": "Atributos ARIA",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> obrigatório no Skeleton (ou no container que o envolve).",
-        "ariaBusy": "<code>aria-busy=\"true\"</code> no container indica carregamento; ele precisa de <code>role</code> para ser anunciado.",
-        "ariaLabel": "<code>aria-label</code> no container descreve o conteúdo que carrega (ex: \"Carregando lista de pedidos\")."
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> vem fixo no Skeleton — nunca no container, que esconderia a região junto.",
+        "ariaBusy": "<code>aria-busy=\"true\"</code> vem fixo na região, junto com <code>role=\"status\"</code>, sem o qual o estado não seria anunciado.",
+        "ariaLabel": "O nome acessível da região é obrigatório e descreve o conteúdo que carrega (ex: \"Carregando lista de pedidos\")."
       },
       "screenReader": {
         "title": "Leitor de Tela",
-        "loading": "Anuncia o aria-label do container junto com \"busy\" ou \"loading\".",
+        "loading": "Anuncia o nome da região junto com o estado ocupado.",
         "ignored": "Não anuncia os Skeletons individualmente — apenas o estado do container.",
-        "ready": "Quando aria-busy passa a false, anuncia o conteúdo real recém-carregado."
+        "ready": "Quando a região sai, o conteúdo real que entrou no lugar dela é o que o leitor encontra."
       }
     },
     "related": {
@@ -298,7 +321,7 @@
       "item2": "<strong>Layout shift</strong>: dimensões do Skeleton devem aproximar do conteúdo final. Erro comum é Skeleton menor que conteúdo, causando shift ao carregar.",
       "item3": "<strong>Aninhamento</strong>: 2–3 elementos por bloco bastam. Evite reconstruir toda a estrutura final — gera ruído visual.",
       "item4": "<strong>Movimento reduzido</strong>: o pulso já é desligado pela folha de estilo sob <code>prefers-reduced-motion</code>. Não é opcional e não precisa ser repetido no consumidor — é WCAG 2.3.3.",
-      "item5": "<strong>Container aria-busy</strong>: alternar para <code>false</code> ao terminar é o que dispara o anúncio de \"pronto\" pelo leitor de tela."
+      "item5": "<strong>Fim do carregamento</strong>: a região não alterna para <code>false</code> — ela sai, e o conteúdo real entra no lugar. Região vazia deixada para trás continua dizendo que algo carrega."
     },
     "analytics": {
       "description": "Skeleton é um componente passivo — não dispara eventos. Para rastrear tempo de carregamento, instrumente o callback que substitui o Skeleton pelo conteúdo real (ex: <code>track('list_loaded', { duration_ms })</code>)."
@@ -340,7 +363,8 @@
         "item2": "Esqueleto com aria-hidden não aparece na árvore de acessibilidade",
         "item3": "Container de carregamento expõe role status com nome acessível (WCAG 4.1.2)",
         "item4": "Animação desligada quando prefers-reduced-motion está ativo (WCAG 2.3.3)",
-        "item5": "Placeholder distinguível do fundo do container — não é critério de contraste de texto, e sim diferença de luminância perceptível"
+        "item5": "Placeholder distinguível do fundo do container — não é critério de contraste de texto, e sim diferença de luminância perceptível",
+        "luminanceHow": "Medição de luminância"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -376,7 +400,7 @@
     "description": "Pulsating visual placeholder that mirrors the final content structure while it loads.",
     "seo": {
       "title": "Skeleton — Feedback",
-      "description": "Skeleton documentation: loading placeholder with an opacity pulse, shape and width set by attribute, decorative via aria-hidden, and animation switched off under reduced motion.",
+      "description": "Skeleton: loading placeholder with an opacity pulse, shape and width set by attribute, hidden from screen readers and still under reduced motion.",
       "aiSummary": "The Skeleton component renders a placeholder that mirrors the box of the content it will be replaced by. Shape and width come from the data-shape and data-width attributes, the background is the primary colour at 10% over the container, and the opacity pulse is switched off by the stylesheet itself under prefers-reduced-motion. The placeholder is decorative (aria-hidden): the loading state is announced by the region that contains it, with role status, aria-busy and an accessible name.",
       "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, loading placeholder, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
@@ -386,19 +410,28 @@
         "list": "List — 5 items with avatar and text",
         "image": "Image — placeholder in 16/9 AspectRatio",
         "paragraph": "Paragraph — 3 lines of text"
+      },
+      "regionLabels": {
+        "card": "Loading profile card",
+        "list": "Loading list",
+        "image": "Loading image",
+        "paragraph": "Loading paragraph",
+        "rectangle": "Loading image",
+        "circle": "Loading avatar",
+        "line": "Loading text"
       }
     },
     "anatomy": {
       "item1": "<strong>Root</strong> — <code>div</code> with the skeleton base class: soft background, rounded corners, and an opacity pulse.",
       "item2": "<strong>Shape and width</strong> — <code>data-shape</code> picks the shape (text line, heading, avatar, or fill) and <code>data-width</code> picks the fraction of the container width. The stylesheet stays the owner of the measurements.",
-      "item3": "<strong>Container</strong> — the outer wrapper holds <code>role=\"status\"</code>, <code>aria-busy</code>, and <code>aria-label</code>; the skeleton holds <code>aria-hidden</code>.",
+      "item3": "<strong>Region</strong> — the loading region piece wraps the block and already writes <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code> and the required accessible name; the skeleton gets <code>aria-hidden</code>. When the content arrives, the whole region leaves and the content takes its place.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<div role=\"status\" aria-busy={isLoading} aria-label=\"Loading list\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "vue": "<div role=\"status\" :aria-busy=\"isLoading\" aria-label=\"Loading list\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "svelte": "<div role=\"status\" aria-busy={isLoading} aria-label=\"Loading list\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "vanilla": "const regiao = document.createElement('div');\nregiao.setAttribute('role', 'status');\nregiao.setAttribute('aria-busy', String(isLoading));\nregiao.setAttribute('aria-label', 'Loading list');\nregiao.append(\n  createSkeleton({ shape: 'avatar' }),\n  createSkeleton({ shape: 'text', width: '3-4' }),\n);",
-        "angular": "<div role=\"status\" [attr.aria-busy]=\"isLoading\" aria-label=\"Loading list\">\n  <div ndsSkeleton data-shape=\"avatar\"></div>\n  <div ndsSkeleton data-shape=\"text\" data-width=\"3-4\"></div>\n</div>"
+        "react": "{isLoading ? (\n  <SkeletonRegion label=\"Loading list\" className=\"nds-stack\">\n    <Skeleton data-shape=\"avatar\" />\n    <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n  </SkeletonRegion>\n) : (\n  <ul>{/* real items */}</ul>\n)}",
+        "vue": "<SkeletonRegion v-if=\"isLoading\" label=\"Loading list\" class=\"nds-stack\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</SkeletonRegion>\n<ul v-else><!-- real items --></ul>",
+        "svelte": "{#if isLoading}\n  <SkeletonRegion label=\"Loading list\" class=\"nds-stack\">\n    <Skeleton data-shape=\"avatar\" />\n    <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n  </SkeletonRegion>\n{:else}\n  <ul><!-- real items --></ul>\n{/if}",
+        "vanilla": "const region = createSkeletonRegion({\n  label: 'Loading list',\n  class: 'nds-stack',\n  children: [\n    createSkeleton({ shape: 'avatar' }),\n    createSkeleton({ shape: 'text', width: '3-4' }),\n  ],\n});\ncontainer.append(region);\n\n// When the content arrives, the whole region leaves.\nregion.replaceWith(list);",
+        "angular": "@if (isLoading) {\n  <div ndsSkeletonRegion label=\"Loading list\" class=\"nds-stack\">\n    <div ndsSkeleton data-shape=\"avatar\"></div>\n    <div ndsSkeleton data-shape=\"text\" data-width=\"3-4\"></div>\n  </div>\n} @else {\n  <ul><!-- real items --></ul>\n}"
       }
     },
     "usage": {
@@ -406,7 +439,7 @@
         "title": "Mandatory Guidelines",
         "item1": "Use Skeleton when expected loading time exceeds 300ms and the final structure is known.",
         "item2": "Mirror the box of the final content to avoid <code>layout shift</code> when it arrives.",
-        "item3": "Apply <code>aria-hidden=\"true\"</code> on the skeleton and <code>role=\"status\"</code> with <code>aria-busy=\"true\"</code> on the container.",
+        "item3": "Wrap the block in the loading region, which already writes <code>role=\"status\"</code> and <code>aria-busy=\"true\"</code>; the skeleton already ships with <code>aria-hidden=\"true\"</code>.",
         "item4": "Do not rebuild the motion control: the stylesheet already stops the pulse when the system asks for <code>prefers-reduced-motion</code>, and forcing the animation back on breaks WCAG 2.3.3.",
         "item5": "For operations with measurable progress (upload, download), prefer <code>Progress</code>."
       },
@@ -451,7 +484,7 @@
           "correct": "Use",
           "avoid": "Avoid",
           "ariaLabel": {
-            "name": "Container aria-label",
+            "name": "Region name",
             "format": "Describe what is loading",
             "good": "Loading order list",
             "bad": "Loading"
@@ -499,6 +532,10 @@
       "pair2": {
         "do": "Loading region with a role and a name, and the placeholder hidden from the screen reader.",
         "dont": "Loose skeleton, with no region announcing the load — the screen reader has no idea something is coming."
+      },
+      "regionLabels": {
+        "pair1": "Loading article",
+        "pair2": "Loading profile"
       }
     },
     "import": {},
@@ -551,10 +588,10 @@
           "description": "Already set — the placeholder is noise for screen readers, and the loading state is announced by the container."
         },
         "rest": {
-          "type": "ComponentProps<'div'>",
+          "type": "native div attributes",
           "default": "—",
           "required": "No",
-          "description": "Accepts any native div attribute (id, data-*, style)."
+          "description": "Accepts native div attributes (id, data-*). Measurements never go through style: shape and width come from the attributes above."
         },
         "dataShape": {
           "type": "\"text\" | \"heading\" | \"avatar\" | \"fill\"",
@@ -596,12 +633,12 @@
         },
         "rounded": {
           "class": ".nds-skeleton",
-          "part": "Default rounded corners; the avatar shape switches to the round radius",
+          "part": "Rounded corners of the text and fill shapes",
           "token": "--radius"
         },
         "animation": {
           "class": ".nds-skeleton",
-          "part": "Easing of the opacity pulse, on a 1.5s cycle",
+          "part": "Opacity pulse curve",
           "token": "--ease-standard"
         },
         "motionReduce": {
@@ -613,20 +650,30 @@
           "token": "--size-default",
           "class": ".nds-skeleton",
           "part": "Avatar measurement, with variations from the size scale"
+        },
+        "roundedFull": {
+          "class": ".nds-skeleton[data-shape='avatar']",
+          "part": "Circular radius of the avatar shape",
+          "token": "--radius-full"
+        },
+        "duration": {
+          "class": ".nds-skeleton",
+          "part": "Pulse cycle duration (1.5s); the reduced-motion block of the motion scale reaches it too",
+          "token": "--duration-cycle"
         }
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Placeholder colour for a custom theme */\n.nds-skeleton {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Shorter pulse */\n.nds-skeleton {\n  animation-duration: 1s;\n}"
+        "web": "/* Stronger placeholder — the surface is still the primary color */\n.nds-skeleton {\n  background-color: hsl(var(--primary) / 0.2);\n}\n\n/* Shorter pulse — through the token, which reduced motion still reaches */\n.nds-skeleton {\n  --duration-cycle: 1s;\n}"
       }
     },
     "accessibility": {
       "summary": "Meets WCAG 2.2 AA — 2.3.3 (Animation from Interactions), because the pulse is switched off under reduced motion, and 4.1.2 (Name, Role, Value), because the loading region has a role and a name while the placeholder stays out of the accessibility tree.",
       "items": {
         "item1": "Skeleton gets <code>aria-hidden=\"true\"</code> — screen reader ignores the placeholder.",
-        "item2": "The container gets <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code>, and <code>aria-label</code> describing what is loading.",
+        "item2": "The loading region writes <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code> and a required accessible name describing what is loading.",
         "item3": "The pulse is switched off when the system asks for reduced motion — the rule lives in the component stylesheet, not in the consumer.",
-        "item4": "After loading, remove <code>aria-busy</code> from the container — screen reader announces content is ready.",
+        "item4": "When the content arrives, the region leaves and the real content takes its place — the piece does not toggle <code>aria-busy</code>, and role and state cannot be overridden.",
         "item5": "Do not use Skeleton as the sole loading indicator if the operation lasts longer than 10s — add text."
       },
       "keyboard": {
@@ -636,15 +683,15 @@
       },
       "aria": {
         "title": "ARIA Attributes",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> required on the Skeleton (or the wrapping container).",
-        "ariaBusy": "<code>aria-busy=\"true\"</code> on the container marks loading; it needs a <code>role</code> to be announced.",
-        "ariaLabel": "<code>aria-label</code> on the container describes loading content (e.g., \"Loading order list\")."
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> is fixed on the Skeleton — never on the container, which would hide the region too.",
+        "ariaBusy": "<code>aria-busy=\"true\"</code> is fixed on the region, together with <code>role=\"status\"</code>, without which the state would not be announced.",
+        "ariaLabel": "The region's accessible name is required and describes the loading content (e.g., \"Loading order list\")."
       },
       "screenReader": {
         "title": "Screen Reader",
-        "loading": "Announces the container's aria-label along with \"busy\" or \"loading\".",
+        "loading": "Announces the region's name along with the busy state.",
         "ignored": "Does not announce individual Skeletons — only the container state.",
-        "ready": "When aria-busy switches to false, announces the freshly loaded real content."
+        "ready": "When the region leaves, the real content that took its place is what the reader finds."
       }
     },
     "related": {
@@ -668,7 +715,7 @@
       "item2": "<strong>Layout shift</strong>: Skeleton dimensions must approximate the final content. Common error is Skeleton smaller than content, shifting layout on load.",
       "item3": "<strong>Nesting</strong>: 2–3 elements per block is enough. Avoid rebuilding the full final structure — visual noise.",
       "item4": "<strong>Reduced motion</strong>: the pulse is already switched off by the stylesheet under <code>prefers-reduced-motion</code>. It is not optional and does not need to be repeated in the consumer — it is WCAG 2.3.3.",
-      "item5": "<strong>Container aria-busy</strong>: switching to <code>false</code> on completion is what triggers the \"ready\" announcement by the screen reader."
+      "item5": "<strong>End of loading</strong>: the region does not toggle to <code>false</code> — it leaves, and the real content takes its place. An empty region left behind keeps saying something is loading."
     },
     "analytics": {
       "description": "Skeleton is a passive component — does not dispatch events. To track loading time, instrument the callback that replaces the Skeleton with real content (e.g., <code>track('list_loaded', { duration_ms })</code>)."
@@ -710,7 +757,8 @@
         "item2": "Skeleton with aria-hidden does not appear in the accessibility tree",
         "item3": "Loading container exposes role status with an accessible name (WCAG 4.1.2)",
         "item4": "Animation switched off when prefers-reduced-motion is active (WCAG 2.3.3)",
-        "item5": "Placeholder distinguishable from the container background — not a text contrast criterion, but a perceptible luminance difference"
+        "item5": "Placeholder distinguishable from the container background — not a text contrast criterion, but a perceptible luminance difference",
+        "luminanceHow": "Luminance measurement"
       },
       "visual": {
         "title": "Visual Regression",
@@ -746,7 +794,7 @@
     "description": "Placeholder visual con animación pulsante que replica la estructura del contenido mientras se carga.",
     "seo": {
       "title": "Skeleton — Feedback",
-      "description": "Documentación de Skeleton: placeholder de carga con pulso por opacidad, forma y ancho por atributo, decorativo vía aria-hidden y con la animación apagada bajo movimiento reducido.",
+      "description": "Skeleton: placeholder de carga con pulso por opacidad, forma y ancho por atributo, oculto al lector de pantalla y quieto bajo movimiento reducido.",
       "aiSummary": "El componente Skeleton renderiza un placeholder que imita la caja del contenido que va a sustituir. La forma y el ancho vienen de los atributos data-shape y data-width, el fondo es el color primario al 10% sobre el container, y el pulso por opacidad lo apaga la propia hoja de estilo bajo prefers-reduced-motion. El placeholder es decorativo (aria-hidden): quien anuncia la carga es la región que lo contiene, con role status, aria-busy y nombre accesible.",
       "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, placeholder de carga, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
@@ -756,19 +804,28 @@
         "list": "Lista — 5 ítems con avatar y texto",
         "image": "Imagen — placeholder en AspectRatio 16/9",
         "paragraph": "Párrafo — 3 líneas de texto"
+      },
+      "regionLabels": {
+        "card": "Cargando tarjeta de perfil",
+        "list": "Cargando lista",
+        "image": "Cargando imagen",
+        "paragraph": "Cargando párrafo",
+        "rectangle": "Cargando imagen",
+        "circle": "Cargando avatar",
+        "line": "Cargando texto"
       }
     },
     "anatomy": {
       "item1": "<strong>Raíz</strong> — <code>div</code> con la clase base del esqueleto: fondo suave, esquinas redondeadas y pulso por opacidad.",
       "item2": "<strong>Forma y ancho</strong> — <code>data-shape</code> elige la forma (línea de texto, título, avatar o relleno) y <code>data-width</code> elige la fracción del ancho del container. La hoja de estilo sigue siendo dueña de las medidas.",
-      "item3": "<strong>Container</strong> — el wrapper externo recibe <code>role=\"status\"</code>, <code>aria-busy</code> y <code>aria-label</code>; el esqueleto recibe <code>aria-hidden</code>.",
+      "item3": "<strong>Región</strong> — la pieza de región de carga envuelve el bloque y ya escribe <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code> y el nombre accesible, que es obligatorio; el esqueleto recibe <code>aria-hidden</code>. Cuando llega el contenido, la región entera sale y el contenido ocupa su lugar.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<div role=\"status\" aria-busy={isLoading} aria-label=\"Cargando lista\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "vue": "<div role=\"status\" :aria-busy=\"isLoading\" aria-label=\"Cargando lista\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "svelte": "<div role=\"status\" aria-busy={isLoading} aria-label=\"Cargando lista\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</div>",
-        "vanilla": "const regiao = document.createElement('div');\nregiao.setAttribute('role', 'status');\nregiao.setAttribute('aria-busy', String(isLoading));\nregiao.setAttribute('aria-label', 'Cargando lista');\nregiao.append(\n  createSkeleton({ shape: 'avatar' }),\n  createSkeleton({ shape: 'text', width: '3-4' }),\n);",
-        "angular": "<div role=\"status\" [attr.aria-busy]=\"isLoading\" aria-label=\"Cargando lista\">\n  <div ndsSkeleton data-shape=\"avatar\"></div>\n  <div ndsSkeleton data-shape=\"text\" data-width=\"3-4\"></div>\n</div>"
+        "react": "{isLoading ? (\n  <SkeletonRegion label=\"Cargando lista\" className=\"nds-stack\">\n    <Skeleton data-shape=\"avatar\" />\n    <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n  </SkeletonRegion>\n) : (\n  <ul>{/* elementos reales */}</ul>\n)}",
+        "vue": "<SkeletonRegion v-if=\"isLoading\" label=\"Cargando lista\" class=\"nds-stack\">\n  <Skeleton data-shape=\"avatar\" />\n  <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n</SkeletonRegion>\n<ul v-else><!-- elementos reales --></ul>",
+        "svelte": "{#if isLoading}\n  <SkeletonRegion label=\"Cargando lista\" class=\"nds-stack\">\n    <Skeleton data-shape=\"avatar\" />\n    <Skeleton data-shape=\"text\" data-width=\"3-4\" />\n  </SkeletonRegion>\n{:else}\n  <ul><!-- elementos reales --></ul>\n{/if}",
+        "vanilla": "const region = createSkeletonRegion({\n  label: 'Cargando lista',\n  class: 'nds-stack',\n  children: [\n    createSkeleton({ shape: 'avatar' }),\n    createSkeleton({ shape: 'text', width: '3-4' }),\n  ],\n});\ncontainer.append(region);\n\n// Cuando llega el contenido, la región entera sale.\nregion.replaceWith(list);",
+        "angular": "@if (isLoading) {\n  <div ndsSkeletonRegion label=\"Cargando lista\" class=\"nds-stack\">\n    <div ndsSkeleton data-shape=\"avatar\"></div>\n    <div ndsSkeleton data-shape=\"text\" data-width=\"3-4\"></div>\n  </div>\n} @else {\n  <ul><!-- elementos reales --></ul>\n}"
       }
     },
     "usage": {
@@ -776,7 +833,7 @@
         "title": "Guidelines Obligatorias",
         "item1": "Usa Skeleton cuando el tiempo de carga supere 300ms y la estructura final sea conocida.",
         "item2": "Replica la caja del contenido final para evitar <code>layout shift</code> cuando llegue.",
-        "item3": "Aplica <code>aria-hidden=\"true\"</code> en el esqueleto y <code>role=\"status\"</code> con <code>aria-busy=\"true\"</code> en el container.",
+        "item3": "Envuelva el bloque en la región de carga, que ya escribe <code>role=\"status\"</code> y <code>aria-busy=\"true\"</code>; el esqueleto ya sale con <code>aria-hidden=\"true\"</code>.",
         "item4": "No rehagas el control de movimiento: la hoja de estilo ya detiene el pulso cuando el sistema pide <code>prefers-reduced-motion</code>, y forzar la animación por encima rompe WCAG 2.3.3.",
         "item5": "Para operaciones con progreso medible (upload, download), prefiere <code>Progress</code>."
       },
@@ -821,7 +878,7 @@
           "correct": "Usa",
           "avoid": "Evita",
           "ariaLabel": {
-            "name": "aria-label del container",
+            "name": "Nombre de la región",
             "format": "Describe lo que está cargando",
             "good": "Cargando lista de pedidos",
             "bad": "Loading"
@@ -869,6 +926,10 @@
       "pair2": {
         "do": "Región de carga con rol y nombre, y el placeholder oculto al lector de pantalla.",
         "dont": "Esqueleto suelto, sin región que anuncie la carga — el lector no sabe que algo viene."
+      },
+      "regionLabels": {
+        "pair1": "Cargando artículo",
+        "pair2": "Cargando perfil"
       }
     },
     "import": {},
@@ -921,10 +982,10 @@
           "description": "Ya viene marcado — el placeholder es ruido para el lector de pantalla, y quien anuncia la carga es el container."
         },
         "rest": {
-          "type": "ComponentProps<'div'>",
+          "type": "atributos nativos de div",
           "default": "—",
           "required": "No",
-          "description": "Acepta cualquier atributo nativo de div (id, data-*, style)."
+          "description": "Acepta atributos nativos de div (id, data-*). La medida no entra por style: forma y ancho vienen de los atributos de arriba."
         },
         "dataShape": {
           "type": "\"text\" | \"heading\" | \"avatar\" | \"fill\"",
@@ -966,12 +1027,12 @@
         },
         "rounded": {
           "class": ".nds-skeleton",
-          "part": "Esquinas redondeadas; la forma de avatar cambia al radio circular",
+          "part": "Esquinas redondeadas de las formas de texto y relleno",
           "token": "--radius"
         },
         "animation": {
           "class": ".nds-skeleton",
-          "part": "Curva del pulso por opacidad, en ciclo de 1,5s",
+          "part": "Curva del pulso por opacidad",
           "token": "--ease-standard"
         },
         "motionReduce": {
@@ -983,20 +1044,30 @@
           "token": "--size-default",
           "class": ".nds-skeleton",
           "part": "Medida del avatar, con variaciones por la escala de tamaños"
+        },
+        "roundedFull": {
+          "class": ".nds-skeleton[data-shape='avatar']",
+          "part": "Radio circular de la forma de avatar",
+          "token": "--radius-full"
+        },
+        "duration": {
+          "class": ".nds-skeleton",
+          "part": "Duración del ciclo del pulso (1,5s); el bloque de movimiento reducido de la escala de movimiento también la alcanza",
+          "token": "--duration-cycle"
         }
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Color del placeholder para un tema custom */\n.nds-skeleton {\n  background-color: hsl(var(--muted) / 0.6);\n}\n\n/* Pulso más corto */\n.nds-skeleton {\n  animation-duration: 1s;\n}"
+        "web": "/* Placeholder más marcado — la superficie sigue siendo el primario */\n.nds-skeleton {\n  background-color: hsl(var(--primary) / 0.2);\n}\n\n/* Pulso más corto — por el token, que el movimiento reducido sigue alcanzando */\n.nds-skeleton {\n  --duration-cycle: 1s;\n}"
       }
     },
     "accessibility": {
       "summary": "Cumple WCAG 2.2 AA — 2.3.3 (Animation from Interactions), porque el pulso se apaga bajo movimiento reducido, y 4.1.2 (Name, Role, Value), porque la región que carga tiene rol y nombre mientras el placeholder queda fuera del árbol de accesibilidad.",
       "items": {
         "item1": "Skeleton recibe <code>aria-hidden=\"true\"</code> — el lector de pantalla ignora el placeholder.",
-        "item2": "El container recibe <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code> y <code>aria-label</code> describiendo lo que carga.",
+        "item2": "La región de carga escribe <code>role=\"status\"</code>, <code>aria-busy=\"true\"</code> y un nombre accesible obligatorio que describe lo que se carga.",
         "item3": "El pulso se apaga cuando el sistema pide movimiento reducido — la regla vive en la hoja de estilo del componente, no en el consumidor.",
-        "item4": "Tras cargar, remueve <code>aria-busy</code> del container — el lector anuncia que el contenido está listo.",
+        "item4": "Cuando llega el contenido, la región sale y el contenido real ocupa su lugar — la pieza no alterna <code>aria-busy</code>, y el rol y el estado no se pueden sobrescribir.",
         "item5": "No uses Skeleton como único indicador de loading si la operación dura más de 10s — añade texto."
       },
       "keyboard": {
@@ -1006,15 +1077,15 @@
       },
       "aria": {
         "title": "Atributos ARIA",
-        "ariaHidden": "<code>aria-hidden=\"true\"</code> obligatorio en el Skeleton (o en el container que lo envuelve).",
-        "ariaBusy": "<code>aria-busy=\"true\"</code> en el container indica carga; necesita <code>role</code> para ser anunciado.",
-        "ariaLabel": "<code>aria-label</code> en el container describe el contenido que carga (ej.: \"Cargando lista de pedidos\")."
+        "ariaHidden": "<code>aria-hidden=\"true\"</code> viene fijo en el Skeleton — nunca en el contenedor, que ocultaría la región también.",
+        "ariaBusy": "<code>aria-busy=\"true\"</code> viene fijo en la región, junto con <code>role=\"status\"</code>, sin el cual el estado no se anunciaría.",
+        "ariaLabel": "El nombre accesible de la región es obligatorio y describe el contenido que se carga (ej: \"Cargando lista de pedidos\")."
       },
       "screenReader": {
         "title": "Lector de Pantalla",
-        "loading": "Anuncia el aria-label del container junto con \"busy\" o \"loading\".",
+        "loading": "Anuncia el nombre de la región junto con el estado ocupado.",
         "ignored": "No anuncia los Skeletons individualmente — solo el estado del container.",
-        "ready": "Cuando aria-busy pasa a false, anuncia el contenido real recién cargado."
+        "ready": "Cuando la región sale, el contenido real que ocupó su lugar es lo que encuentra el lector."
       }
     },
     "related": {
@@ -1038,7 +1109,7 @@
       "item2": "<strong>Layout shift</strong>: las dimensiones del Skeleton deben aproximarse al contenido final. Error común es Skeleton menor que el contenido, causando shift al cargar.",
       "item3": "<strong>Anidamiento</strong>: 2–3 elementos por bloque bastan. Evita reconstruir toda la estructura final — genera ruido visual.",
       "item4": "<strong>Movimiento reducido</strong>: la hoja de estilo ya apaga el pulso bajo <code>prefers-reduced-motion</code>. No es opcional y no hace falta repetirlo en el consumidor — es WCAG 2.3.3.",
-      "item5": "<strong>Container aria-busy</strong>: cambiarlo a <code>false</code> al terminar es lo que dispara el anuncio de \"listo\" del lector de pantalla."
+      "item5": "<strong>Fin de la carga</strong>: la región no alterna a <code>false</code> — sale, y el contenido real ocupa su lugar. Una región vacía dejada atrás sigue diciendo que algo se carga."
     },
     "analytics": {
       "description": "Skeleton es un componente pasivo — no dispara eventos. Para rastrear tiempo de carga, instrumenta el callback que reemplaza el Skeleton por el contenido real (ej.: <code>track('list_loaded', { duration_ms })</code>)."
@@ -1080,7 +1151,8 @@
         "item2": "Esqueleto con aria-hidden no aparece en el árbol de accesibilidad",
         "item3": "Container de carga expone role status con nombre accesible (WCAG 4.1.2)",
         "item4": "Animación apagada cuando prefers-reduced-motion está activo (WCAG 2.3.3)",
-        "item5": "Placeholder distinguible del fondo del container — no es criterio de contraste de texto, sino diferencia de luminancia perceptible"
+        "item5": "Placeholder distinguible del fondo del container — no es criterio de contraste de texto, sino diferencia de luminancia perceptible",
+        "luminanceHow": "Medición de luminancia"
       },
       "visual": {
         "title": "Regresión Visual",

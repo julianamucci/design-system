@@ -1,143 +1,103 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
-import { NdsSkeleton } from './skeleton';
+import { NDS_SKELETON } from './skeleton';
+import { skeletonStatesSource } from './skeleton.source';
 import {
   animationAtiva,
-  boxDesenhada,
-  backgroundDistincao,
+  distinctionByTheme,
   ligarMovimentoReduzido,
+  radiusAgainstToken,
 } from '@shared/testing/skeleton-probe';
+
+// As duas stories montam a MESMA região de duas linhas: o que muda entre elas é
+// a preferência do sistema, que input nenhum da diretiva controla.
+const TWO_LINES = `
+  <div ndsSkeletonRegion label="Carregando conteúdo" class="nds-stack nds-w-sm" data-spacing="sm">
+    <div ndsSkeleton data-shape="text" data-width="full"></div>
+    <div ndsSkeleton data-shape="text" data-width="3-4"></div>
+  </div>
+`;
 
 const meta: Meta = {
   title: 'Components/Feedback/Skeleton/States',
   tags: ['feedback'],
-  decorators: [moduleMetadata({ imports: [NdsSkeleton] })],
-  parameters: { layout: 'padded', controls: { disable: true } },
+  decorators: [moduleMetadata({ imports: [...NDS_SKELETON] })],
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    docs: {
+      source: { transform: skeletonStatesSource },
+      description: {
+        component:
+          'Os dois estados que o conteúdo compartilhado documenta: o pulso padrão enquanto o conteúdo carrega, e o pulso desligado quando o sistema pede movimento reduzido.',
+      },
+    },
+  },
 };
 
 export default meta;
 type Story = StoryObj;
 
 export const Pulsing: Story = {
-  parameters: { covers: ['functional.item1', 'accessibility.item5'] },
-  render: () => ({
-    template: `
-      <div role="status" aria-busy="true" aria-label="Carregando conteúdo" class="nds-stack nds-w-sm" data-spacing="sm">
-        <div ndsSkeleton data-shape="text" data-width="full"></div>
-        <div ndsSkeleton data-shape="text" data-width="3-4"></div>
-      </div>
-    `,
-  }),
+  parameters: {
+    covers: ['functional.item1', 'accessibility.item5'],
+    docs: {
+      source: { transform: skeletonStatesSource },
+      description: {
+        story:
+          'Estado padrão: pulso por opacidade, cantos arredondados e fundo distinto do container.',
+      },
+    },
+  },
+  render: () => ({ template: TWO_LINES }),
   play: async ({ canvasElement, step }) => {
-    const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+    const sk = canvasElement.querySelector<HTMLElement>('.nds-skeleton')!;
 
-    await step('A classe base entrega pulso e raio', async () => {
+    await step('A classe base entrega pulso e o raio do token', async () => {
       await expect(animationAtiva(sk)).toBe(true);
-      await expect(getComputedStyle(sk).borderRadius).not.toBe('0px');
+      // Contra o token, e não `!== '0px'`: o tema `cold` declara `--radius: 0`
+      // como identidade, e a asserção antiga reprovaria um tema legítimo.
+      const { radius, expected } = radiusAgainstToken(sk);
+      await expect(
+        Math.abs(radius - expected),
+        `raio ${radius}px contra ${expected}px do token`,
+      ).toBeLessThanOrEqual(0.5);
     });
 
-    await step('O placeholder se distingue do fundo do container', async () => {
-      // Não é critério de contraste — o esqueleto não transmite informação. O
-      // piso pega o caso degenerado: token trocado ou opacidade zerada fazem o
-      // placeholder sumir, e o carregamento deixa de ser visível.
-      const { ratio } = backgroundDistincao(sk);
-      await expect(ratio).toBeGreaterThan(1.05);
-    });
-  },
-};
-
-export const CustomDimension: Story = {
-  parameters: { covers: ['functional.item2', 'functional.item3'] },
-  render: () => ({
-    template: `
-      <div role="status" aria-busy="true" aria-label="Carregando perfil" class="nds-cluster nds-w-sm" data-align="center" data-spacing="sm">
-        <div ndsSkeleton data-shape="avatar"></div>
-        <!-- nds-flex-1 não é enfeite: sem base de largura o bloco encolhe para
-             o conteúdo, as linhas em porcentagem resolvem para zero e o
-             esqueleto some. Foi o que a medição de largura acusou aqui. -->
-        <div class="nds-stack nds-flex-1" data-spacing="xs">
-          <div ndsSkeleton data-shape="text" data-width="2-3"></div>
-          <div ndsSkeleton data-shape="text" data-width="1-2"></div>
-        </div>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
-
-    await step('O avatar é um quadrado com medida do tema', async () => {
-      // A medida vem de `data-shape=avatar` -> escada --size-*, que responde à
-      // densidade. Se o atributo sumir, o esqueleto colapsa para zero e só a
-      // medição acusa.
-      const box = boxDesenhada(parts[0]);
-      await expect(box.quadrado).toBe(true);
-      // Sem número mágico: a medida vem da escada --size-*, que muda por
-      // densidade. Afirmar '40px' amarraria o teste ao tema padrão.
-      await expect(box.width).toBeGreaterThan(0);
-    });
-
-    await step('As duas linhas seguem a fração de largura declarada', async () => {
-      await expect(parts[1].getBoundingClientRect().width).toBeGreaterThan(
-        parts[2].getBoundingClientRect().width,
-      );
-    });
-
-    await step('Todos os esqueletos ficam fora da árvore de acessibilidade', async () => {
-      await expect(parts).toHaveLength(3);
-      for (const sk of parts) await expect(sk).toHaveAttribute('aria-hidden', 'true');
-    });
-  },
-};
-
-export const BusyContainer: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item3'] },
-  render: () => ({
-    template: `
-      <div role="status" aria-busy="true" aria-label="Carregando resultados" class="nds-stack" data-spacing="sm">
-        <div ndsSkeleton data-shape="text" data-width="full"></div>
-        <div ndsSkeleton data-shape="text" data-width="3-4"></div>
-      </div>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    await step('O container é uma região anunciável com nome', async () => {
-      // `aria-busy` sozinho num <div> sem role não é anunciado, e `aria-label`
-      // em div sem role é violação de ARIA — o par role+label é o que faz o
-      // leitor dizer "carregando resultados".
-      const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-      await expect(regiao).toHaveAttribute('aria-busy', 'true');
-      await expect(regiao.getAttribute('aria-label')).toBeTruthy();
-    });
-
-    await step('Os esqueletos são filhos da região ocupada', async () => {
-      const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-      await expect(regiao.querySelectorAll('[data-slot="skeleton"]')).toHaveLength(2);
+    await step('Em cada tema e modo, o placeholder se distingue do fundo', async () => {
+      // A superfície é a primária a 10%, então muda com a marca: é o tema que
+      // não se mede que pode fazê-la coincidir com o fundo. A sonda troca
+      // classe e lê cor — fora de `waitFor`.
+      for (const d of distinctionByTheme(canvasElement, sk)) {
+        await expect(
+          d.ratio,
+          `${d.theme}/${d.mode}: placeholder ${d.placeholder} sobre ${d.container}`,
+        ).toBeGreaterThan(1.05);
+      }
     });
   },
 };
 
 export const ReducedMotion: Story = {
-  parameters: { covers: ['functional.item5', 'accessibility.item4'] },
-  render: () => ({
-    template: `
-      <div role="status" aria-busy="true" aria-label="Carregando" class="nds-stack nds-w-sm" data-spacing="sm">
-        <div ndsSkeleton data-shape="text" data-width="3-4"></div>
-      </div>
-    `,
-  }),
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item4'],
+    docs: {
+      source: { transform: skeletonStatesSource },
+      description: {
+        story:
+          'Com movimento reduzido o pulso para. O esqueleto continua visível — o que some é a animação, não o placeholder.',
+      },
+    },
+  },
+  render: () => ({ template: TWO_LINES }),
   play: async ({ canvasElement, step }) => {
-    const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+    const sk = canvasElement.querySelector<HTMLElement>('.nds-skeleton')!;
     // Cada passo estabelece a própria precondição: o desfazer roda no finally
     // para a story seguinte (e a foto do Chromatic) não herdarem a marca.
-    const desfazer = ligarMovimentoReduzido(canvasElement.ownerDocument);
+    const undo = ligarMovimentoReduzido(canvasElement.ownerDocument);
     try {
       await step('Com movimento reduzido, o pulso é desligado', async () => {
-        // O toolbar "Motion" escreve `data-reduced-motion` no <html> e o
-        // motion.css zera as durações. Medir aqui prova que o .nds-skeleton
-        // participa desse override — o pulso infinito é justamente o tipo de
-        // animação que incomoda quem pediu movimento reduzido (WCAG 2.3.3).
-        //
         // Asserção pelo PAR, não pelo nome da animação: o nome muda por stack e
         // por versão, e `animationName !== 'none'` passava com duração zerada.
         await expect(animationAtiva(sk)).toBe(false);
@@ -148,7 +108,7 @@ export const ReducedMotion: Story = {
         await expect(getComputedStyle(sk).opacity).toBe('1');
       });
     } finally {
-      desfazer();
+      undo();
     }
 
     await step('Sem a preferência, o pulso volta', async () => {

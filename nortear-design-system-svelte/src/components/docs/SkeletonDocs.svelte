@@ -47,7 +47,7 @@
     track('docs_page_view', {
       component_name: 'skeleton',
       locale: l,
-      page_title: t('title'),
+      page_title: `${t('title')} · Design System`,
     });
     return cleanup;
   });
@@ -95,32 +95,42 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
+  // Ordem da tabela de tokens, a mesma nas cinco stacks. Lista de chaves, e não
+  // linha por extenso: o nome do token mora no conteúdo compartilhado.
+  const TOKEN_KEYS = ['background', 'rounded', 'roundedFull', 'animation', 'duration', 'motionReduce', 'size'] as const;
+
+  const UX_WRITING_KEYS = ['ariaLabel', 'dimensions', 'shape', 'motionReduce'] as const;
+
   // ─── Code strings ────────────────────────────────────────────────────────────
 
-  const codeImportBasic = `import { Skeleton } from "@/components/ui/skeleton";`;
+  const codeImportBasic = `import { Skeleton, SkeletonRegion } from "@/components/ui/skeleton";`;
 
-  const codeImportUsage = `import { Skeleton } from "@/components/ui/skeleton";
-
-<div role="status" aria-busy={isLoading} aria-label="Carregando perfil">
-  <Skeleton data-shape="avatar" />
-  <Skeleton data-shape="text" data-width="3-4" />
-</div>`;
-
-  const codeRectangle = `<Skeleton data-shape="fill" class="nds-docs-skeleton-media" />`;
+  // O snippet ensina o container de proporção: a classe de mídia do preview é da
+  // docs page, não da API, e `fill` sozinho nasce com altura zero.
+  const codeRectangle = `<AspectRatio ratio={16 / 9}>\n  <Skeleton data-shape="fill" />\n</AspectRatio>`;
   const codeCircle = `<Skeleton data-shape="avatar" />`;
   const codeLine = `<Skeleton data-shape="text" data-width="3-4" />`;
 
   // Sem props próprias além de class: a caixa vem de atributo, e a folha de
-  // estilo continua dona das medidas.
+  // estilo continua dona das medidas. A região é peça à parte, sem tabela
+  // própria: papel e estado não são sobrescrevíveis, e o nome é obrigatório.
   const interfaceCode = `interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   class?: string;
   // data-shape: "text" | "heading" | "avatar" | "fill"
   // data-width: "full" | "3-4" | "2-3" | "1-2" | "1-3"
   // data-size:  "sm" | "lg"   (só na forma de avatar)
+}
+
+// A espera é anunciada pela REGIÃO: role="status", aria-busy="true" e nome
+// acessível, escritos pela peça. Quando o conteúdo chega, ela sai.
+interface SkeletonRegionProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, "role" | "aria-busy" | "aria-label"> {
+  label: string;
+  class?: string;
 }`;
 </script>
 
-<DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
+<DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="skeleton">
   {#snippet header()}
     <DocsHeader
       title={$tStore('title')}
@@ -131,14 +141,14 @@
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration>
+  <DocsDemonstration componentSlug="skeleton">
     <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg" style="--grid-min: 16rem">
       <!-- Card de perfil -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.card')}</p>
         <SkeletonRegion
-          label={$tStore('demonstration.labels.card')}
-          class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
+          label={$tStore('demonstration.regionLabels.card')}
+          class="nds-cluster"
           data-spacing="md"
           data-align="center"
         >
@@ -153,28 +163,25 @@
       <!-- Lista -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.list')}</p>
-        <!-- A lista continua `<ul>`/`<li>`, e a REGIÃO é a peça em volta: a lista
-             tinha `aria-busy` e nome sem papel nenhum, que é nome de região viva
-             que o leitor não anuncia. A peça traz o `role="status"` junto. -->
-        <SkeletonRegion label={$tStore('demonstration.labels.list')}>
-          <ul class="nds-stack nds-list-none nds-p-0" data-spacing="sm">
-            {#each Array.from({ length: 5 }) as _, i (i)}
-              <li class="nds-cluster nds-p-2 nds-border-default nds-rounded-md" data-spacing="sm" data-align="center">
-                <Skeleton data-shape="avatar" data-size="sm" />
-                <div class="nds-stack nds-flex-1" data-spacing="xs">
-                  <Skeleton data-shape="text" data-width="2-3" />
-                  <Skeleton data-shape="text" data-width="1-3" />
-                </div>
-              </li>
-            {/each}
-          </ul>
+        <!-- Uma região para a lista INTEIRA: região por item repetiria o mesmo
+             aviso a cada linha — cinco itens de três peças seriam quinze avisos. -->
+        <SkeletonRegion label={$tStore('demonstration.regionLabels.list')} class="nds-stack" data-spacing="md">
+          {#each Array.from({ length: 5 }) as _, i (i)}
+            <div class="nds-cluster" data-spacing="sm" data-align="center">
+              <Skeleton data-shape="avatar" data-size="sm" />
+              <div class="nds-stack nds-flex-1" data-spacing="xs">
+                <Skeleton data-shape="text" data-width="2-3" />
+                <Skeleton data-shape="text" data-width="1-3" />
+              </div>
+            </div>
+          {/each}
         </SkeletonRegion>
       </div>
 
       <!-- Imagem AspectRatio -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.image')}</p>
-        <SkeletonRegion label={$tStore('demonstration.labels.image')}>
+        <SkeletonRegion label={$tStore('demonstration.regionLabels.image')}>
           <AspectRatio ratio={16 / 9}>
             <Skeleton data-shape="fill" />
           </AspectRatio>
@@ -184,7 +191,7 @@
       <!-- Parágrafo -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.paragraph')}</p>
-        <SkeletonRegion label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
+        <SkeletonRegion label={$tStore('demonstration.regionLabels.paragraph')} class="nds-stack" data-spacing="sm">
           <Skeleton data-shape="text" data-width="full" />
           <Skeleton data-shape="text" data-width="3-4" />
           <Skeleton data-shape="text" data-width="1-2" />
@@ -200,6 +207,7 @@
       $tStore('anatomy.item2'),
       $tStore('anatomy.item3'),
     ]}
+    structureLabel={$tStore('anatomy.structureLabel')}
     structureCode={$tStore('anatomy.structureCode')}
   />
 
@@ -229,6 +237,21 @@
         { s: $tStore('usage.scenarios.item4.s'), u: $tStore('usage.scenarios.item4.u'), a: toPlainText($tStore('usage.scenarios.item4.a')) },
         { s: $tStore('usage.scenarios.item5.s'), u: $tStore('usage.scenarios.item5.u'), a: toPlainText($tStore('usage.scenarios.item5.a')) },
       ],
+    }}
+    uxWriting={{
+      title: $tStore('usage.uxWriting.title'),
+      cols: {
+        element: $tStore('usage.uxWriting.table.element'),
+        rules: $tStore('usage.uxWriting.table.rules'),
+        do: $tStore('usage.uxWriting.table.correct'),
+        dont: $tStore('usage.uxWriting.table.avoid'),
+      },
+      items: UX_WRITING_KEYS.map((k) => ({
+        element: $tStore(`usage.uxWriting.table.${k}.name`),
+        rules: $tStore(`usage.uxWriting.table.${k}.format`),
+        do: $tStore(`usage.uxWriting.table.${k}.good`),
+        dont: $tStore(`usage.uxWriting.table.${k}.bad`),
+      })),
     }}
     do={{
       title: $tStore('usage.do.title'),
@@ -273,19 +296,21 @@
   />
 
   {#snippet doPair1()}
-    <SkeletonRegion label="Carregando card" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+    <SkeletonRegion label={$tStore('doDont.regionLabels.pair1')} class="nds-w-full nds-max-w-sm nds-stack" data-spacing="sm">
       <Skeleton data-shape="heading" data-width="1-2" />
       <Skeleton data-shape="text" data-width="full" />
       <Skeleton data-shape="text" data-width="3-4" />
     </SkeletonRegion>
   {/snippet}
   {#snippet dontPair1()}
-    <SkeletonRegion label="Carregando" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md">
+    <!-- O defeito deste par é a CAIXA, não a acessibilidade: a região continua
+         certa, e o que falta é imitar o conteúdo — uma linha genérica só. -->
+    <SkeletonRegion label={$tStore('doDont.regionLabels.pair1')} class="nds-w-full nds-max-w-sm nds-stack" data-spacing="sm">
       <Skeleton data-shape="text" data-width="1-3" />
     </SkeletonRegion>
   {/snippet}
   {#snippet doPair2()}
-    <SkeletonRegion label="Carregando avatar" class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+    <SkeletonRegion label={$tStore('doDont.regionLabels.pair2')} class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
       <Skeleton data-shape="avatar" />
       <div class="nds-stack nds-flex-1" data-spacing="xs">
         <Skeleton data-shape="text" data-width="1-2" />
@@ -294,6 +319,8 @@
     </SkeletonRegion>
   {/snippet}
   {#snippet dontPair2()}
+    <!-- Sem região: é justamente o que falta no "não faça" — o esqueleto solto
+         não anuncia carregamento nenhum. -->
     <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
       <Skeleton data-shape="avatar" />
       <div class="nds-stack nds-flex-1" data-spacing="xs">
@@ -304,32 +331,31 @@
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport
-    code={codeImportBasic}
-    secondaryCode={codeImportUsage}
-  />
+  <DocsImport code={codeImportBasic} componentSlug="skeleton" />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
+    componentSlug="skeleton"
     items={[
       { trackId: 'rectangle', name: $tStore('variants.items.rectangle'), description: stripHtml($tStore('variants.styles.rectangle')), code: codeRectangle, preview: variantRectangle },
-      { trackId: 'circle', name: $tStore('variants.items.circle'),    description: stripHtml($tStore('variants.styles.circle')),    code: codeCircle,    preview: variantCircle    },
-      { trackId: 'line', name: $tStore('variants.items.line'),      description: stripHtml($tStore('variants.styles.line')),      code: codeLine,      preview: variantLine      },
+      { trackId: 'circle',    name: $tStore('variants.items.circle'),    description: stripHtml($tStore('variants.styles.circle')),    code: codeCircle,    preview: variantCircle    },
+      { trackId: 'line',      name: $tStore('variants.items.line'),      description: stripHtml($tStore('variants.styles.line')),      code: codeLine,      preview: variantLine      },
     ]}
   />
 
   {#snippet variantRectangle()}
-    <SkeletonRegion label="Carregando bloco" class="nds-w-xs">
+    <SkeletonRegion label={$tStore('demonstration.regionLabels.rectangle')} class="nds-w-full nds-max-w-sm">
       <Skeleton data-shape="fill" class="nds-docs-skeleton-media" />
     </SkeletonRegion>
   {/snippet}
   {#snippet variantCircle()}
-    <SkeletonRegion label="Carregando avatar">
+    <SkeletonRegion label={$tStore('demonstration.regionLabels.circle')}>
       <Skeleton data-shape="avatar" />
     </SkeletonRegion>
   {/snippet}
   {#snippet variantLine()}
-    <SkeletonRegion label="Carregando texto" class="nds-stack nds-w-xs" data-spacing="xs">
+    <SkeletonRegion label={$tStore('demonstration.regionLabels.line')} class="nds-w-full nds-max-w-sm nds-stack" data-spacing="sm">
+      <Skeleton data-shape="text" data-width="full" />
       <Skeleton data-shape="text" data-width="3-4" />
       <Skeleton data-shape="text" data-width="1-2" />
     </SkeletonRegion>
@@ -381,13 +407,11 @@
       value: $tStore('tokens.table.class'),
       description: $tStore('tokens.table.part'),
     }}
-    items={[
-      { token: $tStore('tokens.table.background.token'),   value: $tStore('tokens.table.background.class'),   description: $tStore('tokens.table.background.part')   },
-      { token: $tStore('tokens.table.rounded.token'),      value: $tStore('tokens.table.rounded.class'),      description: $tStore('tokens.table.rounded.part')      },
-      { token: $tStore('tokens.table.animation.token'),    value: $tStore('tokens.table.animation.class'),    description: $tStore('tokens.table.animation.part')    },
-      { token: $tStore('tokens.table.size.token'),         value: $tStore('tokens.table.size.class'),         description: $tStore('tokens.table.size.part')         },
-      { token: $tStore('tokens.table.motionReduce.token'), value: $tStore('tokens.table.motionReduce.class'), description: $tStore('tokens.table.motionReduce.part') },
-    ]}
+    items={TOKEN_KEYS.map((k) => ({
+      token: $tStore(`tokens.table.${k}.token`),
+      value: $tStore(`tokens.table.${k}.class`),
+      description: $tStore(`tokens.table.${k}.part`),
+    }))}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}
   />
@@ -406,12 +430,14 @@
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
-      { key: '—', description: $tStore('accessibility.keyboard.noKeyboard') },
+      { key: '—',   description: $tStore('accessibility.keyboard.description') },
+      { key: 'Tab', description: $tStore('accessibility.keyboard.noKeyboard') },
     ]}
   />
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
+    componentSlug="skeleton"
     items={[
       { name: $tStore('related.items.progress.name'),    description: $tStore('related.items.progress.description'),    path: '?path=/docs/components-feedback-progress--docs'    },
       { name: $tStore('related.items.aspectRatio.name'), description: $tStore('related.items.aspectRatio.description'), path: '?path=/docs/components-layout-aspectratio--docs' },
@@ -421,6 +447,7 @@
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
+    componentSlug="skeleton"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -433,9 +460,9 @@
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
     cols={{
-      event: 'Evento',
-      trigger: 'Trigger',
-      payload: 'Payload',
+      event: $tNavStore('common.event'),
+      trigger: $tNavStore('common.eventTrigger'),
+      payload: $tNavStore('common.payload'),
     }}
     items={[
       { event: '—', trigger: stripHtml($tStore('analytics.description')), payload: '—' },
@@ -473,7 +500,7 @@
         { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '2.3.3', how: 'prefers-reduced-motion' },
         // Não é critério da WCAG: o esqueleto não transmite informação, então
         // 1.4.3 e 1.4.11 não se aplicam. O que se mede é luminância.
-        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '—', how: 'Medição de luminância' },
+        { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '—', how: $tStore('testes.accessibility.luminanceHow') },
       ],
     }}
     visual={{

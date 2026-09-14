@@ -107,7 +107,7 @@ function buildCardDemo(label: string): HTMLElement {
   lines.appendChild(line('1-2'));
   row.appendChild(lines);
 
-  const inner = loadingRegion('Carregando card de perfil', [row], { class: 'nds-max-w-sm' });
+  const inner = loadingRegion(t('demonstration.regionLabels.card'), [row], { class: 'nds-max-w-sm' });
 
   wrap.append(caption, inner);
   return wrap;
@@ -138,7 +138,7 @@ function buildListDemo(label: string): HTMLElement {
     row.appendChild(text);
     return row;
   });
-  const list = loadingRegion('Carregando lista', rows, { class: 'nds-stack', spacing: 'md' });
+  const list = loadingRegion(t('demonstration.regionLabels.list'), rows, { class: 'nds-stack', spacing: 'md' });
 
   wrap.append(caption, list);
   return wrap;
@@ -153,7 +153,7 @@ function buildImageDemo(label: string): HTMLElement {
   caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
-  const inner = loadingRegion('Carregando imagem', [
+  const inner = loadingRegion(t('demonstration.regionLabels.image'), [
     createAspectRatio({ ratio: 16 / 9, content: createSkeleton({ shape: 'fill' }) }),
   ]);
 
@@ -171,7 +171,7 @@ function buildParagraphDemo(label: string): HTMLElement {
   caption.textContent = label;
 
   const inner = loadingRegion(
-    'Carregando parágrafo',
+    t('demonstration.regionLabels.paragraph'),
     (['full', '3-4', '1-2'] as const).map((w) => line(w)),
     { class: 'nds-stack', spacing: 'sm' },
   );
@@ -182,21 +182,21 @@ function buildParagraphDemo(label: string): HTMLElement {
 
 function buildRectangleVariant(): HTMLElement {
   return loadingRegion(
-    'Carregando bloco',
+    t('demonstration.regionLabels.rectangle'),
     [createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' })],
     { class: 'nds-max-w-sm' },
   );
 }
 
 function buildCircleVariant(): HTMLElement {
-  return loadingRegion('Carregando avatar', [createSkeleton({ shape: 'avatar' })], {
+  return loadingRegion(t('demonstration.regionLabels.circle'), [createSkeleton({ shape: 'avatar' })], {
     class: 'nds-max-w-sm',
   });
 }
 
 function buildLineVariant(): HTMLElement {
   return loadingRegion(
-    'Carregando linhas',
+    t('demonstration.regionLabels.line'),
     (['full', '3-4', '1-2'] as const).map((w) => line(w)),
     { class: 'nds-max-w-sm nds-stack', spacing: 'sm' },
   );
@@ -258,7 +258,7 @@ export function createSkeletonDocs(): HTMLElement {
     }));
   }
 
-  const pageLayout = createDocsPageLayout({ navGroups: buildNavGroups() });
+  const pageLayout = createDocsPageLayout({ navGroups: buildNavGroups(), componentSlug: 'skeleton' });
   const root = pageLayout.root;
   const headerSlot = pageLayout.headerSlot;
   const main = pageLayout.main;
@@ -297,12 +297,16 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'demonstracao':
         return createDocsDemonstration({
+          componentSlug: 'skeleton',
           demoFactory: () => {
             const grid = document.createElement('div');
             grid.className = 'nds-grid nds-w-full';
             grid.dataset.cols = '2';
             grid.dataset.spacing = 'lg';
-            grid.dataset.min = '16rem';
+            // A largura mínima é CUSTOM PROPERTY: `data-min` não é lido por regra
+            // nenhuma da folha e renderizava com o padrão (ver `nds-grid` em
+            // layout.css).
+            grid.style.setProperty('--grid-min', '16rem');
             grid.append(
               buildCardDemo(t('demonstration.labels.card')),
               buildListDemo(t('demonstration.labels.list')),
@@ -349,6 +353,21 @@ export function createSkeletonDocs(): HTMLElement {
               a: t(`usage.scenarios.item${i}.a`),
             })),
           },
+          uxWriting: {
+            title: t('usage.uxWriting.title'),
+            cols: {
+              element: t('usage.uxWriting.table.element'),
+              rules: t('usage.uxWriting.table.rules'),
+              do: t('usage.uxWriting.table.correct'),
+              dont: t('usage.uxWriting.table.avoid'),
+            },
+            items: ['ariaLabel', 'dimensions', 'shape', 'motionReduce'].map((key) => ({
+              element: t(`usage.uxWriting.table.${key}.name`),
+              rules: t(`usage.uxWriting.table.${key}.format`),
+              do: t(`usage.uxWriting.table.${key}.good`),
+              dont: t(`usage.uxWriting.table.${key}.bad`),
+            })),
+          },
           do: {
             title: t('usage.do.title'),
             items: [
@@ -379,12 +398,14 @@ export function createSkeletonDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
                 loadingRegion(
-                  'Carregando artigo',
+                  t('doDont.regionLabels.pair1'),
                   [createSkeleton({ shape: 'heading', width: '1-2' }), line('full'), line('3-4')],
                   { class: 'nds-max-w-sm nds-stack', spacing: 'sm' },
                 ),
+              // O "não faça" deste par é de FORMA, não de região: o bloco único
+              // genérico continua anunciado pela mesma peça, com o mesmo nome.
               dontPreviewFactory: () =>
-                loadingRegion('Carregando', [line('1-3')], {
+                loadingRegion(t('doDont.regionLabels.pair1'), [line('1-3')], {
                   class: 'nds-max-w-sm nds-stack',
                   spacing: 'sm',
                 }),
@@ -401,7 +422,7 @@ export function createSkeletonDocs(): HTMLElement {
                 lines.appendChild(line('1-2'));
                 lines.appendChild(line('1-3'));
                 return loadingRegion(
-                  'Carregando perfil',
+                  t('doDont.regionLabels.pair2'),
                   [createSkeleton({ shape: 'avatar' }), lines],
                   { class: 'nds-max-w-sm nds-cluster', spacing: 'sm', align: 'center' },
                 );
@@ -428,15 +449,19 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
+          componentSlug: 'skeleton',
           code: `import { createSkeleton, createSkeletonRegion } from '@/components/ui/skeleton';`,
         });
 
       case 'variantes': {
-        const codeRect = `const bloco = createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' });`;
+        // O snippet ensina o container de proporção: a classe de mídia do preview
+        // é da docs page, não da API, e `fill` sozinho nasce com altura zero.
+        const codeRect = `const midia = createAspectRatio({\n  ratio: 16 / 9,\n  content: createSkeleton({ shape: 'fill' }),\n});`;
         const codeCircle = `const avatar = createSkeleton({ shape: 'avatar' });`;
         const codeLine = `const linha = createSkeleton({ shape: 'text', width: '3-4' });`;
 
         return createDocsVariants({
+          componentSlug: 'skeleton',
           items: [
             {
               trackId: 'rectangle',
@@ -511,14 +536,19 @@ export function createSkeletonRegion(options: SkeletonRegionOptions): HTMLElemen
             {
               title: 'createSkeleton(options)',
               cols: propsCols,
+              // Nomes de opção da fábrica (D6). `aria-hidden` não é opção — sai
+              // marcado de fábrica —, e `rest` aqui é o elemento devolvido, que
+              // aceita atributos nativos depois de criado.
               items: [
-                { name: 'className', key: 'className' },
-                { name: 'shape',     key: 'dataShape' },
-                { name: 'width',     key: 'dataWidth' },
-                { name: 'size',      key: 'dataSize'  },
-              ].map(({ name, key }) => ({
+                { name: 'className',   key: 'className' },
+                { name: 'shape',       key: 'dataShape' },
+                { name: 'width',       key: 'dataWidth' },
+                { name: 'size',        key: 'dataSize'  },
+                { name: 'aria-hidden', key: 'ariaHidden' },
+                { name: 'HTMLElement', key: 'rest', type: 'HTMLElement' },
+              ].map(({ name, key, type }) => ({
                 name,
-                type: t(`props.table.${key}.type`),
+                type: type ?? t(`props.table.${key}.type`),
                 defaultValue: t(`props.table.${key}.default`),
                 required: t(`props.table.${key}.required`),
                 description: t(`props.table.${key}.description`),
@@ -538,7 +568,7 @@ export function createSkeletonRegion(options: SkeletonRegionOptions): HTMLElemen
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
-          items: ['background', 'rounded', 'animation', 'size', 'motionReduce'].map((k) => ({
+          items: ['background', 'rounded', 'roundedFull', 'animation', 'duration', 'motionReduce', 'size'].map((k) => ({
             token: t(`tokens.table.${k}.token`),
             value: t(`tokens.table.${k}.class`),
             description: t(`tokens.table.${k}.part`),
@@ -569,6 +599,7 @@ export function createSkeletonRegion(options: SkeletonRegionOptions): HTMLElemen
 
       case 'relacionados':
         return createDocsRelated({
+          componentSlug: 'skeleton',
           items: [
             { name: t('related.items.progress.name'),    description: toPlainText(t('related.items.progress.description')),    path: '?path=/docs/components-feedback-progress--docs' },
             { name: t('related.items.aspectRatio.name'), description: toPlainText(t('related.items.aspectRatio.description')), path: '?path=/docs/components-layout-aspectratio--docs' },
@@ -578,6 +609,7 @@ export function createSkeletonRegion(options: SkeletonRegionOptions): HTMLElemen
 
       case 'notas':
         return createDocsNotes({
+          componentSlug: 'skeleton',
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
@@ -633,7 +665,7 @@ export function createSkeletonRegion(options: SkeletonRegionOptions): HTMLElemen
               { level: '4.1.2', how: 'DevTools a11y tree' },
               { level: '4.1.2', how: 'DevTools a11y tree' },
               { level: '2.3.3', how: 'prefers-reduced-motion' },
-              { level: '—',     how: 'Medição de luminância' },
+              { level: '—',     how: t('testes.accessibility.luminanceHow') },
             ].map(({ level, how }, idx) => ({
               criterion: t(`testes.accessibility.item${idx + 1}`),
               level,
