@@ -37,6 +37,16 @@ const toastOptions = computed(() => ({
 }))
 
 const containerAriaLabel = computed(() => props.containerAriaLabel ?? REGION_LABEL)
+
+/**
+ * A posição padrão do projeto é `top-right` — decisão da dona, 2026-09-13.
+ *
+ * A lib nasce em `bottom-right`, e até aqui o padrão só existia como literal em
+ * cada story e na docs page: quem montasse `<Toaster />` nu recebia o canto de
+ * baixo. O padrão é DO COMPONENTE, então mora aqui, uma vez, e é o que faz a
+ * ponte para a lib sem que quem consome precise declará-lo.
+ */
+const position = computed<ToasterProps['position']>(() => props.position ?? 'top-right')
 </script>
 
 <template>
@@ -48,28 +58,29 @@ const containerAriaLabel = computed(() => props.containerAriaLabel ?? REGION_LAB
       '--border-radius': 'var(--radius)',
     }"
     v-bind="props"
+    :position="position"
     :container-aria-label="containerAriaLabel"
     :toast-options="toastOptions"
   >
     <template #success-icon>
-      <CircleCheckIcon class="nds-toast-icon" />
+      <CircleCheckIcon class="nds-sonner-icon" />
     </template>
     <template #info-icon>
-      <InfoIcon class="nds-toast-icon" />
+      <InfoIcon class="nds-sonner-icon" />
     </template>
     <template #warning-icon>
-      <TriangleAlertIcon class="nds-toast-icon" />
+      <TriangleAlertIcon class="nds-sonner-icon" />
     </template>
     <template #error-icon>
-      <OctagonXIcon class="nds-toast-icon" />
+      <OctagonXIcon class="nds-sonner-icon" />
     </template>
     <template #loading-icon>
       <div>
-        <Loader2Icon class="nds-toast-icon nds-toast-icon-spin" />
+        <Loader2Icon class="nds-sonner-icon nds-sonner-icon-spin" />
       </div>
     </template>
     <template #close-icon>
-      <XIcon class="nds-toast-icon" />
+      <XIcon class="nds-sonner-icon" />
     </template>
   </Sonner>
 </template>

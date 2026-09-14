@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, userEvent } from "storybook/test";
 import { toast, type ExternalToast } from "sonner";
-import { Toaster, REGION_LABEL } from "./sonner";
+import { Toaster, REGION_LABEL, DEFAULT_POSITION } from "./sonner";
 import { Button } from "./button";
 import { waitForToast, clearToasts, TEXTS, type ToastType } from "./sonner.fixtures";
 import { sonnerSource } from "./sonner.source";
@@ -58,6 +58,10 @@ const meta = {
       control: "select",
       options: ["top-right", "top-center", "top-left", "bottom-right", "bottom-center", "bottom-left"],
       description: "Canto da tela onde a pilha nasce.",
+      // O padrão é do design system, e não da lib: `top-right`, por decisão da
+      // dona em 2026-09-13. Lido do componente — a tabela publica o canto que o
+      // `Toaster` realmente usa quando ninguém passa a prop.
+      table: { defaultValue: { summary: DEFAULT_POSITION } },
     },
     richColors: { control: "boolean", description: "Aplica a cor semântica do tema a cada tipo." },
     closeButton: { control: "boolean", description: "Mostra o botão de fechar em todas as notificações." },
@@ -72,7 +76,7 @@ const meta = {
     title: TEXTS.sucesso,
     description: "",
     actionLabel: "",
-    position: "top-right",
+    position: DEFAULT_POSITION,
     richColors: true,
     closeButton: false,
     duration: 4000,
@@ -131,15 +135,33 @@ export const Playground: Story = {
     });
 
     await step("A notificação é anunciada sem interromper a leitura em curso", async () => {
-      // accessibility.item1 — nesta stack a lib põe UMA região viva em volta da
-      // pilha inteira (`<section aria-live="polite">`), em vez de marcar cada
-      // notificação. `polite` é a escolha, não o default: `assertive` cortaria a
-      // leitura para avisar que algo deu certo, o que é hostil justamente com
-      // quem depende do leitor de tela.
+      // accessibility.item1 — `polite` é a escolha, não o default: `assertive`
+      // cortaria a leitura para avisar que algo deu certo, o que é hostil
+      // justamente com quem depende do leitor de tela.
+      //
+      // A REGRA DA CASA é que o `aria-live` mora na NOTIFICAÇÃO (decisão da dona
+      // em 2026-09-13, guideline 19): a região viva deve ser o elemento que
+      // anuncia o que chegou, e região viva dentro de região viva é anúncio
+      // duplicado. Nesta stack quem decide é a LIB, não o design system: o
+      // `sonner` 2.0.8 escreve `aria-live="polite"`, `aria-relevant="additions
+      // text"` e `aria-atomic="false"` no `<section>` que envolve a pilha, com
+      // valores cravados no código e sem prop que os alcance (só
+      // `containerAriaLabel` / `customAriaLabel` são configuráveis), e não põe
+      // papel nem `aria-live` no `<li>` de cada notificação. Alinhar exigiria
+      // patch de biblioteca, que é decisão própria e não desta rodada — o que a
+      // story faz é MEDIR a fiação real, para a divergência não voltar como
+      // achado novo.
       const toastEl = await waitForToast({ type: "success" });
       const liveRegion = toastEl.closest<HTMLElement>("[aria-live]")!;
+      await expect(liveRegion.tagName).toBe("SECTION");
       await expect(liveRegion).toHaveAttribute("aria-live", "polite");
       await expect(liveRegion.getAttribute("aria-live")).not.toBe("assertive");
+
+      // A outra metade da fiação, afirmada pela AUSÊNCIA: a notificação não é
+      // região viva aqui. Se um dia a lib (ou um patch) passar a marcá-la, esta
+      // linha reprova e a divergência se fecha por medição, não por lembrança.
+      await expect(toastEl).not.toHaveAttribute("aria-live");
+      await expect(toastEl).not.toHaveAttribute("role");
     });
 
     await step("A região tem nome acessível e é alcançável a qualquer momento", async () => {

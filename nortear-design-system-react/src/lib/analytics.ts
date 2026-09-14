@@ -329,10 +329,18 @@ interface AnalyticsEvents {
     locale: Locale;
   };
 
-  /** Disparado quando o usuário clica no botão de ação interno de um toast (ex: "Desfazer"). */
+  /**
+   * Disparado quando o usuário clica no botão de ação interno de uma notificação
+   * (ex: "Desfazer").
+   *
+   * `component` é `"sonner"`, o slug, desde 2026-09-13: o payload dizia `"toast"`
+   * e era o único componente desta casa cujo `component` não era o próprio slug
+   * — resíduo de quando o componente tinha três nomes. O nome do EVENTO segue
+   * `toast_*` porque a série no GA4 não se renomeia sem partir o histórico.
+   */
   toast_action_click: {
     label: string;
-    component: "toast";
+    component: "sonner";
     location: string;
   };
 

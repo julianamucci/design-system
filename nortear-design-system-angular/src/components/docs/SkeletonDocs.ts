@@ -15,7 +15,7 @@ import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
-import { NdsSkeleton } from '@/components/ui/skeleton';
+import { NDS_SKELETON } from '@/components/ui/skeleton';
 import { NDS_CARD } from '@/components/ui/card';
 import uiTranslations from '@/i18n/ui.json';
 import skeletonTranslations from '@shared/content/skeleton/translations.json';
@@ -104,9 +104,26 @@ const INTERFACE_CODE = `// <div ndsSkeleton> — diretiva de atributo, sem input
 })
 export class NdsSkeleton {}
 
+// A região que espera o conteúdo é peça, e o esqueleto vai DENTRO dela:
+// o bloco é aria-hidden, então quem anuncia o carregamento é a região.
+@Directive({
+  selector: 'div[ndsSkeletonRegion]',
+  host: {
+    '[attr.data-slot]': '"skeleton-region"',
+    '[attr.role]': '"status"',
+    '[attr.aria-busy]': '"true"',
+    '[attr.aria-label]': 'label()',
+  },
+})
+export class NdsSkeletonRegion {
+  readonly label = input.required<string>();
+}
+
 // Forma e dimensão vêm de atributo, e a folha de estilo continua dona
 // das medidas:
-// <div ndsSkeleton data-shape="text" data-width="3-4"></div>`;
+// <div ndsSkeletonRegion label="Carregando artigo" class="nds-stack">
+//   <div ndsSkeleton data-shape="text" data-width="3-4"></div>
+// </div>`;
 
 const CODE_LINHA = `<div ndsSkeleton data-shape="text" data-width="3-4"></div>`;
 const CODE_CIRCULO = `<div ndsSkeleton data-shape="avatar"></div>`;
@@ -118,7 +135,7 @@ const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skele
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    NdsSkeleton, ...NDS_CARD,
+    ...NDS_SKELETON, ...NDS_CARD,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
@@ -126,7 +143,7 @@ const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skele
   ],
   template: `
     <ng-template #tplDoDont1Do>
-      <div class="nds-stack nds-w-full" data-spacing="sm" role="status" aria-busy="true" aria-label="Carregando artigo">
+      <div class="nds-stack nds-w-full" data-spacing="sm" ndsSkeletonRegion label="Carregando artigo">
         <div ndsSkeleton data-shape="heading" data-width="1-2"></div>
         <div ndsSkeleton data-shape="text" data-width="full"></div>
         <div ndsSkeleton data-shape="text" data-width="3-4"></div>
@@ -138,7 +155,7 @@ const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skele
       </div>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <div class="nds-cluster nds-w-full" data-spacing="sm" role="status" aria-busy="true" aria-label="Carregando perfil">
+      <div class="nds-cluster nds-w-full" data-spacing="sm" ndsSkeletonRegion label="Carregando perfil">
         <div ndsSkeleton data-shape="avatar"></div>
         <div class="nds-stack" data-spacing="xs">
           <div ndsSkeleton data-shape="text" data-width="1-2"></div>
@@ -190,8 +207,11 @@ const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skele
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.card') }}
               </p>
-              <div ndsCard class="nds-p-4" role="status" aria-busy="true" aria-label="Carregando cartão">
-                <div class="nds-stack" data-spacing="sm">
+              <!-- A região vai no bloco de dentro, e não no ndsCard: duas
+                   diretivas no mesmo host disputariam o data-slot, e quem
+                   escreve por último vence. -->
+              <div ndsCard class="nds-p-4">
+                <div class="nds-stack" data-spacing="sm" ndsSkeletonRegion label="Carregando cartão">
                   <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
                   <div ndsSkeleton data-shape="heading" data-width="2-3"></div>
                   <div ndsSkeleton data-shape="text" data-width="1-3"></div>
@@ -203,7 +223,7 @@ const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skele
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.list') }}
               </p>
-              <div class="nds-stack" data-spacing="sm" role="status" aria-busy="true" aria-label="Carregando lista">
+              <div class="nds-stack" data-spacing="sm" ndsSkeletonRegion label="Carregando lista">
                 @for (i of [1, 2, 3]; track i) {
                   <div class="nds-cluster" data-spacing="sm">
                     <div ndsSkeleton data-shape="avatar" data-size="sm"></div>
@@ -217,7 +237,7 @@ const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skele
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.image') }}
               </p>
-              <div role="status" aria-busy="true" aria-label="Carregando imagem">
+              <div ndsSkeletonRegion label="Carregando imagem">
                 <div ndsSkeleton data-shape="fill" class="nds-docs-skeleton-media"></div>
               </div>
             </div>
@@ -226,7 +246,7 @@ const CODE_RETANGULO = `<div ndsSkeleton data-shape="fill" class="nds-docs-skele
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.paragraph') }}
               </p>
-              <div class="nds-stack" data-spacing="xs" role="status" aria-busy="true" aria-label="Carregando texto">
+              <div class="nds-stack" data-spacing="xs" ndsSkeletonRegion label="Carregando texto">
                 <div ndsSkeleton data-shape="text" data-width="full"></div>
                 <div ndsSkeleton data-shape="text" data-width="full"></div>
                 <div ndsSkeleton data-shape="text" data-width="2-3"></div>
@@ -318,7 +338,8 @@ export class NdsSkeletonDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly importCode = `import { NdsSkeleton } from '@/components/ui/skeleton';`;
+  protected readonly importCode =
+    `import { NdsSkeleton, NdsSkeletonRegion } from '@/components/ui/skeleton';`;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 

@@ -108,7 +108,10 @@
    * propriedade que a pinte. Não reintroduzir. */
 
   /* Animations dos componentes */
-  --animate-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;
+  /* Duração de animação CONTÍNUA sai do degrau de ciclo, nunca de literal:
+   * `--duration-cycle` é 1500ms e zera sob `prefers-reduced-motion`, o que o
+   * `1.5s` cravado aqui não fazia. */
+  --animate-indeterminate: progress-indeterminate var(--duration-cycle) ease-in-out infinite;
 
 }
 

@@ -61,15 +61,15 @@ export const Default: Story = {
 
       // Sem tipo semântico não há o que ilustrar: um ícone genérico só ocuparia
       // a coluna e sugeriria uma severidade que a mensagem não tem.
-      await expect(toastEl.querySelector('.nds-toast-icon')).toBeNull();
-      await expect(toastEl.querySelector('.nds-toast-title')).toHaveTextContent(TEXTS.padrao);
+      await expect(toastEl.querySelector('.nds-sonner-icon')).toBeNull();
+      await expect(toastEl.querySelector('.nds-sonner-title')).toHaveTextContent(TEXTS.padrao);
       await expect(toastEl).toHaveAttribute('data-type', 'default');
     });
 
     await step('A pilha nasce no canto pedido', async () => {
       const region = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
       await expect(region).toHaveAttribute('data-position', 'top-right');
-      await expect(region.querySelectorAll('.nds-toast').length).toBe(1);
+      await expect(region.querySelectorAll('.nds-sonner').length).toBe(1);
     });
   },
 };
@@ -97,7 +97,7 @@ export const Success: Story = {
       const toastEl = await waitForToast({ type: 'success' });
       await expect(toastEl).toHaveAttribute('data-type', 'success');
       await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
-      await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+      await expect(toastEl.querySelector('.nds-sonner-icon > svg')).not.toBeNull();
 
       const region = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
       await expect(region).toHaveAttribute('data-position', 'top-right');
@@ -108,8 +108,8 @@ export const Success: Story = {
       // título curto podem carregar a cor (3:1), texto corrido não — ele fica em
       // `--foreground` para alcançar 4.5:1 em qualquer variante.
       const toastEl = await waitForToast({ type: 'success' });
-      const icon = toastEl.querySelector<HTMLElement>('.nds-toast-icon')!;
-      const title = toastEl.querySelector<HTMLElement>('.nds-toast-title')!;
+      const icon = toastEl.querySelector<HTMLElement>('.nds-sonner-icon')!;
+      const title = toastEl.querySelector<HTMLElement>('.nds-sonner-title')!;
       await expect(getComputedStyle(icon).color).not.toBe(getComputedStyle(title).color);
     });
   },
@@ -134,7 +134,7 @@ export const Error: Story = {
       await expect(toastEl).toHaveAttribute('data-type', 'error');
       // WCAG 1.4.1: quem não distingue vermelho de verde precisa da frase.
       await expect(toastEl).toHaveTextContent(TEXTS.error);
-      await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+      await expect(toastEl.querySelector('.nds-sonner-icon > svg')).not.toBeNull();
     });
   },
 };
@@ -179,7 +179,7 @@ export const Info: Story = {
       const toastEl = await waitForToast({ type: 'info' });
       await expect(toastEl).toHaveAttribute('data-type', 'info');
       await expect(toastEl).toHaveTextContent(TEXTS.info);
-      await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+      await expect(toastEl.querySelector('.nds-sonner-icon > svg')).not.toBeNull();
     });
   },
 };
@@ -203,8 +203,8 @@ export const Loading: Story = {
       const toastEl = await waitForToast({ type: 'loading' });
       await expect(toastEl).toHaveAttribute('data-type', 'loading');
 
-      const icon = toastEl.querySelector<HTMLElement>('.nds-toast-icon')!;
-      await expect(icon).toHaveClass('nds-toast-icon-spin');
+      const icon = toastEl.querySelector<HTMLElement>('.nds-sonner-icon')!;
+      await expect(icon).toHaveClass('nds-sonner-icon-spin');
       await expect(toastEl).toHaveTextContent(TEXTS.loading);
     });
   },

@@ -36,6 +36,22 @@
   --duration-slow:     500ms;    /* layout changes, large transforms */
   --duration-stately:  800ms;    /* mudanças de página, full-screen reveal */
 
+  /* ── Ciclo contínuo — animação de ESPERA, que não termina ─────────────────
+   *
+   * Nasceram em 2026-09-13, por decisão da dona, e existem porque a escada
+   * acima não servia: os degraus de cima descrevem uma transição que começa e
+   * acaba, e espera é loop. Sem degrau, as três animações contínuas da casa
+   * tinham duração LITERAL na folha — e literal escapa desta camada, que é
+   * quem para o movimento sob a preferência do sistema. A rede `!important` no
+   * fim deste arquivo só alcança o override do Storybook, não quem liga a flag
+   * no sistema operacional.
+   *
+   * Medido naquele dia: pulso do esqueleto 1,5s, pulso utilitário 2s e giro 1s
+   * em três folhas (`button.css`, `utilities.css`, `toast.css`). */
+  --duration-cycle-fast: 1000ms;   /* giro de spinner */
+  --duration-cycle:      1500ms;   /* pulso de espera (skeleton) */
+  --duration-cycle-slow: 2000ms;   /* pulso utilitário (.nds-animate-pulse) */
+
   /* ── Easings ──────────────────────────────────────────────────────────────
    * Nomes semânticos. Quando precisar de spring (não cabe em cubic-bezier),
    * use o helper de stack — ele expõe presets `springSnappy`, `springGentle`.
@@ -103,6 +119,12 @@
     --duration-stately:  0ms;
     --duration-panel:    0ms;
     --duration-spring:   0ms;
+    /* Os três de ciclo contínuo entram aqui pelo mesmo motivo dos outros — e é
+     * este bloco que faz a camada de token alcançar o pulso do esqueleto, que
+     * até 2026-09-13 dependia só da guarda da própria folha. */
+    --duration-cycle-fast: 0ms;
+    --duration-cycle:      0ms;
+    --duration-cycle-slow: 0ms;
   }
 }
 

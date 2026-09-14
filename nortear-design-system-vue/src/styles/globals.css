@@ -105,7 +105,13 @@
    * propriedade que a pinte. Não reintroduzir. */
 
   /* Animations dos componentes */
-  --animate-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;
+  /* A duração é o degrau de ciclo contínuo (`--duration-cycle`, 1500ms), e não o
+   * `1.5s` literal que estava aqui: o degrau é zerado sob
+   * `prefers-reduced-motion` pela camada de token, e o literal não era alcançado
+   * por nada. Medido em 2026-09-13: esta declaração não tem consumidor nesta
+   * stack — a barra indeterminada é desenhada por
+   * `docs/shared/styles/nds/progress.css`, que usa `--duration-stately`. */
+  --animate-indeterminate: progress-indeterminate var(--duration-cycle) ease-in-out infinite;
 
 }
 

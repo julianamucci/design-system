@@ -253,7 +253,7 @@
     },
     "notes": {
       "item1": "O <code>&lt;Toaster /&gt;</code> deve ser adicionado uma única vez no root da aplicação (ex: <code>App.tsx</code>). Sem ele, nenhum <code>toast()</code> será exibido.",
-      "item2": "Defina <code>position=\"top-right\"</code> explicitamente no <code>&lt;Toaster /&gt;</code> — o padrão do Sonner é <code>bottom-right</code>, diferente do padrão do projeto.",
+      "item2": "A posição padrão é <code>\"top-right\"</code>, e ela vem do componente: não é preciso declará-la. O padrão da biblioteca de origem é <code>bottom-right</code>, e é o wrapper de cada stack que faz essa ponte — por isso trocar de biblioteca não muda onde o aviso aparece.",
       "item3": "Use <code>toast.promise()</code> para operações assíncronas. Evita estados manuais de loading e garante transição automática entre os estados da promise.",
       "item4": "Nunca use toast para erros de validação de formulário. O <code>FormMessage</code> do projeto já gerencia <code>aria-invalid</code> e <code>aria-describedby</code> corretamente.",
       "item5": "<code>duration: Infinity</code> só deve ser usado para erros críticos que exigem ação explícita do usuário — sempre com <code>dismissible: true</code>."
@@ -266,7 +266,7 @@
         "payload": "Payload Adicional",
         "actionClick": "toast_action_click",
         "actionClickTrigger": "Clique no botão de ação do toast (ex: Desfazer)",
-        "actionClickPayload": "{ label: string, component: \"toast\", location: string }",
+        "actionClickPayload": "{ label: string, component: \"sonner\", location: string }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -618,7 +618,7 @@
     },
     "notes": {
       "item1": "<code>&lt;Toaster /&gt;</code> must be added once at the application root (e.g., <code>App.tsx</code>). Without it, no <code>toast()</code> will be displayed.",
-      "item2": "Set <code>position=\"top-right\"</code> explicitly on <code>&lt;Toaster /&gt;</code> — Sonner's default is <code>bottom-right</code>, different from the project's default.",
+      "item2": "The default position is <code>\"top-right\"</code>, and it comes from the component: there is no need to declare it. The upstream library defaults to <code>bottom-right</code>, and each stack wrapper bridges that — which is why swapping the library does not move where the notification shows up.",
       "item3": "Use <code>toast.promise()</code> for async operations. Avoids manual loading state and guarantees automatic transitions based on promise resolution.",
       "item4": "Never use toast for form validation errors. The project's <code>FormMessage</code> already manages <code>aria-invalid</code> and <code>aria-describedby</code> correctly.",
       "item5": "<code>duration: Infinity</code> should only be used for critical errors requiring explicit user action — always with <code>dismissible: true</code>."
@@ -631,7 +631,7 @@
         "payload": "Additional Payload",
         "actionClick": "toast_action_click",
         "actionClickTrigger": "Click on the toast action button (e.g., Undo)",
-        "actionClickPayload": "{ label: string, component: \"toast\", location: string }",
+        "actionClickPayload": "{ label: string, component: \"sonner\", location: string }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "On docs page open or language switch",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -983,7 +983,7 @@
     },
     "notes": {
       "item1": "<code>&lt;Toaster /&gt;</code> debe agregarse una sola vez en el root de la aplicación (ej: <code>App.tsx</code>). Sin él, ningún <code>toast()</code> se mostrará.",
-      "item2": "Define <code>position=\"top-right\"</code> explícitamente en <code>&lt;Toaster /&gt;</code> — el valor por defecto de Sonner es <code>bottom-right</code>, distinto al padrón del proyecto.",
+      "item2": "La posición por defecto es <code>\"top-right\"</code>, y viene del componente: no hace falta declararla. La biblioteca de origen usa <code>bottom-right</code>, y es el wrapper de cada stack el que hace ese puente — por eso cambiar de biblioteca no mueve dónde aparece el aviso.",
       "item3": "Usa <code>toast.promise()</code> para operaciones asíncronas. Evita estados manuales de loading y garantiza transiciones automáticas según la resolución de la promise.",
       "item4": "Nunca uses toast para errores de validación de formulario. El <code>FormMessage</code> del proyecto ya gestiona <code>aria-invalid</code> y <code>aria-describedby</code> correctamente.",
       "item5": "<code>duration: Infinity</code> solo debe usarse para errores críticos que requieren acción explícita del usuario — siempre con <code>dismissible: true</code>."
@@ -996,7 +996,7 @@
         "payload": "Payload Adicional",
         "actionClick": "toast_action_click",
         "actionClickTrigger": "Clic en el botón de acción del toast (ej: Deshacer)",
-        "actionClickPayload": "{ label: string, component: \"toast\", location: string }",
+        "actionClickPayload": "{ label: string, component: \"sonner\", location: string }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",

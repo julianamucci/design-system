@@ -126,7 +126,7 @@
     toast($tStore('demonstration.labels.withAction'), {
       action: {
         label: $tStore('demonstration.labels.withActionLabel'),
-        onClick: () => track('toast_action_click', { label: 'with-action-label', component: 'toast', location: 'docs_demo' }),
+        onClick: () => track('toast_action_click', { label: 'with-action-label', component: 'sonner', location: 'docs_demo' }),
       },
     });
   }
@@ -471,7 +471,7 @@ toast.promise(promise, {
           description: $tStore('props.table.description'),
         },
         items: [
-          { name: 'position',     type: '"top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center"', defaultValue: '"bottom-right"', required: 'Não', description: toPlainText($tStore('props.table.position'))     },
+          { name: 'position',     type: '"top-right" | "top-left" | "top-center" | "bottom-right" | "bottom-left" | "bottom-center"', defaultValue: '"top-right"',   required: 'Não', description: toPlainText($tStore('props.table.position'))     },
           { name: 'richColors',   type: 'boolean',                                                                                    defaultValue: 'false',         required: 'Não', description: toPlainText($tStore('props.table.richColors'))   },
           { name: 'expand',       type: 'boolean',                                                                                    defaultValue: 'false',         required: 'Não', description: toPlainText($tStore('props.table.expand'))       },
           { name: 'duration',     type: 'number',                                                                                     defaultValue: '4000',          required: 'Não', description: toPlainText($tStore('props.table.duration'))     },

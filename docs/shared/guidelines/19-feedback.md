@@ -109,7 +109,7 @@ nenhum.
 | Alert | a raiz é a própria região viva, pelo papel: `role` configurável com `alert`, `status` ou `note`, default `alert` | quem compõe, pelo `role` |
 | Progress | `role="progressbar"` com `aria-valuemin` e `aria-valuemax` sempre presentes, e `aria-valuenow` **omitido** no indeterminado (padrão APG) | o componente |
 | Skeleton | `aria-hidden="true"` fixo, não configurável — o esqueleto é decoração | o componente |
-| Sonner | `polite`, nunca `assertive`: as cinco plays afirmam a AUSÊNCIA de `assertive` | a lib, nas três que têm lib |
+| Sonner | `polite`, nunca `assertive`: as cinco plays afirmam a AUSÊNCIA de `assertive`. O atributo mora na NOTIFICAÇÃO, não na região — decisão da dona em 2026-09-13 | o design system nas duas sem lib; a lib nas outras três |
 | Badge | não anuncia nada: não é interativo, não tem papel e não recebe foco | — |
 
 - **Alert que já está na tela quando a página carrega usa `note`.** Estático não
@@ -119,11 +119,15 @@ nenhum.
   renderiza `role="alert"` dentro de um `aria-live="polite"`, e o conteúdo
   compartilhado ensina isso em três chaves — texto anterior ao `role`
   configurável.
-- **A espera do Skeleton é anunciada por QUEM COMPÕE**, não pelo esqueleto: a
-  região que vai receber o conteúdo leva `role="status"`, `aria-busy` e nome
-  acessível. As cinco docs pages montam isso à mão, e é exatamente aí que
-  divergiram em cinco formas (uma delas sem papel nenhum) — ver a §"O que está
-  aberto".
+- **A espera do Skeleton é anunciada pela REGIÃO, e a região é peça** desde
+  2026-09-13, por decisão da dona: `SkeletonRegion` nas quatro stacks de
+  framework, `createSkeletonRegion` no vanilla e `div[ndsSkeletonRegion]` no
+  Angular, sempre com `role="status"`, `aria-busy="true"`, nome acessível
+  obrigatório e `data-slot="skeleton-region"`. Ela não tem CSS próprio: quem
+  compõe põe `nds-stack` ou `nds-grid` nela.
+  **Até ali as cinco docs pages a montavam à mão**, e tinham divergido em cinco
+  formas — no Svelte, a lista da demonstração ficou sem `role="status"`. Regra que
+  cada consumidor executa por conta é regra que se perde no quinto consumidor.
 - **Erro nunca é `assertive` por reflexo.** Interromper a leitura se justifica
   quando a pessoa perde algo por não ouvir agora; na torrada isso não acontece,
   porque o registro do erro tem de estar também em lugar permanente.
@@ -140,14 +144,22 @@ Medido em 2026-09-13, nas duas folhas desta categoria que animam:
 | folha | o que anima | duração | guarda |
 |---|---|---|---|
 | `progress.css` | o indeterminado | por token | própria, (0,2,0) e no fim do arquivo — vence |
-| `skeleton.css` | o pulso | **literal, 1,5s** | própria, e vence porque nenhuma regra de atributo declara `animation` |
+| `skeleton.css` | o pulso | por token, `--duration-cycle` | própria, e vence porque nenhuma regra de atributo declara `animation` |
 | `toast.css` e a folha da lib | entrada e saída | por token nas duas à mão | duas guardas diferentes, as duas vencendo |
 
-**O pulso do esqueleto é o caso que a camada de token não alcança**, e é
-deliberado: não existe degrau de `--duration-*` para ciclo contínuo. Enquanto não
-existir, a guarda da folha é a única coisa que para o pulso — e a suíte mede por
-outra porta, o `data-reduced-motion` com `!important` de `motion.css`. Está na
-§"O que está aberto".
+**A escada ganhou três degraus de CICLO CONTÍNUO em 2026-09-13**, por decisão da
+dona: `--duration-cycle-fast` (1000ms, giro), `--duration-cycle` (1500ms, pulso de
+espera) e `--duration-cycle-slow` (2000ms, pulso utilitário). Eles existem porque
+os degraus de cima descrevem transição que começa e acaba, e espera é loop — sem
+degrau, as três animações contínuas da casa tinham duração LITERAL, e literal
+escapa da camada que para o movimento. A rede `!important` do fim da `motion.css`
+alcança só o override do Storybook, não quem liga a preferência no sistema.
+
+Os três estão no bloco de `prefers-reduced-motion` da `motion.css`, e é isso que
+faz a camada de token alcançar o pulso do esqueleto, o giro do spinner
+(`button.css`, `utilities.css`, `sonner.css`) e o pulso utilitário. As guardas das
+folhas ficam: duas portas para o mesmo movimento é redundância deliberada, e a
+mais barata de furar é a do token.
 
 ## Elevação
 
@@ -220,28 +232,29 @@ evitar.
 Cada item aqui tem medição no PRD do componente e espera decisão. Nenhum é
 defeito de texto: os cinco PRDs já descrevem o que o código faz hoje.
 
-1. **A região de espera do Skeleton não é peça do design system.** As cinco docs
-   pages a montam à mão, e divergiram em cinco formas — uma delas, no Svelte, sem
-   `role="status"`. Ou ela vira peça, ou a guideline passa a ditar a forma.
-2. **O pulso do esqueleto tem duração literal** porque não há degrau de token para
-   ciclo contínuo. Criar o degrau resolve as três animações contínuas da casa
-   (pulso, `animate-pulse`, `animate-spin`) de uma vez.
-3. **`badge_click` é tipado nas cinco e disparado por uma.** Ou as outras quatro
+1. **`badge_click` é tipado nas cinco e disparado por uma.** Ou as outras quatro
    passam a disparar, ou o evento sai da tabela e do tipo.
-4. **`toast_demo_triggered` foge do vocabulário**: leva `locale` e não leva
+2. **`toast_demo_triggered` foge do vocabulário**: leva `locale` e não leva
    `component` nem `location`.
-5. **`toast_action_click` manda três valores de `label`**, e um deles é o rótulo
+3. **`toast_action_click` manda três valores de `label`**, e um deles é o rótulo
    traduzido da ação — exatamente o que a regra do payload proíbe.
-6. **A posição padrão da torrada está escrita duas vezes de formas opostas**:
-   `bottom-right` no código das cinco, `top-right` em toda story, docs page e na
-   guideline que chamava isso de "padrão do projeto".
-7. **O nome do componente tem três formas** — `Sonner` (slug, título das stories,
-   nome da lib de uma stack), `Toast` (folha, classes `.nds-*`, e a palavra em
-   português) e `Toaster` (a região). O payload manda `component: "toast"` com
-   slug `sonner`.
-8. **`aria-live` da torrada mora em três lugares diferentes** entre as cinco, e
-   em duas stacks aparece aninhado.
-9. **Progresso fora da faixa não é limitado em duas stacks**, e ali a barra
+4. **Progresso fora da faixa não é limitado em duas stacks**, e ali a barra
    renderiza vazia anunciando o número fora da faixa.
-10. **O Angular anuncia `task_progress` e `task_complete` na tabela e não dispara
-    nenhum dos dois.**
+5. **O desenho do Progress tem três técnicas** (`--value`, `transform` inline,
+   `width` da lib), e a referência usa a primeira.
+6. **O Angular anuncia `task_progress` e `task_complete` na tabela e não dispara
+   nenhum dos dois.**
+7. **O `aria-live` da torrada nas TRÊS stacks com lib** continua onde a lib o põe:
+   no react, na região; no vue e no svelte, nos dois lugares. A regra da casa é na
+   notificação (decidida em 2026-09-13), e nas duas stacks sem lib ela já vale —
+   mudar as outras três exige patch de biblioteca, que é decisão própria.
+
+### O que a dona decidiu em 2026-09-13, e já está no código
+
+| decisão | o que era | o que é |
+|---|---|---|
+| Nome do componente | três formas: `Sonner`, `Toast`, `Toaster`, mais `component: "toast"` no payload | **Sonner** em tudo — folha `sonner.css`, classes `.nds-sonner*`, payload `component: "sonner"`. A REGIÃO continua `Toaster`, porque é o nome dela |
+| Posição padrão da torrada | `bottom-right` no código, `top-right` em toda story e docs page | **`top-right`**, e agora o código diz o mesmo que a página |
+| Onde mora o `aria-live` da torrada | três padrões entre as cinco | **na notificação** — o que as duas stacks sem lib já faziam; as três com lib ficam registradas acima |
+| A região de espera do Skeleton | montada à mão nas cinco docs pages, em cinco formas | **peça do design system**, com papel, `aria-busy` e nome obrigatório |
+| Duração de animação contínua | literal nas folhas (1,5s · 2s · 1s) | **três degraus de token**, alcançados pela camada que para o movimento |

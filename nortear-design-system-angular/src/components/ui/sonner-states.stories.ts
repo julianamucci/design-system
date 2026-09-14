@@ -78,7 +78,7 @@ export const AutoDismiss: Story = {
       const toastEl = await waitForToast({ type: 'error' });
       await expect(toastEl).toHaveAttribute('data-type', 'error');
       await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
-      await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+      await expect(toastEl.querySelector('.nds-sonner-icon > svg')).not.toBeNull();
     });
 
     await step('E sai sozinha quando o prazo vence, sem ninguém fechar', async () => {
@@ -116,7 +116,7 @@ export const PauseOnHover: Story = {
     });
 
     await step('Ao sair o ponteiro, o restante do prazo volta a correr', async () => {
-      await userEvent.unhover(document.querySelector<HTMLElement>('.nds-toast')!);
+      await userEvent.unhover(document.querySelector<HTMLElement>('.nds-sonner')!);
       await waitForNoToasts();
       await expect(toastsOnScreen().length).toBe(0);
     });
@@ -192,7 +192,7 @@ export const PositionBottomCenter: Story = {
     await step('E a notificação chega mesmo no rodapé, centrada', async () => {
       // A posição é atributo + CSS: afirmar só o atributo passaria com a regra
       // de posicionamento apagada.
-      const box = document.querySelector<HTMLElement>('.nds-toast')!.getBoundingClientRect();
+      const box = document.querySelector<HTMLElement>('.nds-sonner')!.getBoundingClientRect();
       const screenCenter = window.innerWidth / 2;
       await expect(Math.abs((box.left + box.right) / 2 - screenCenter)).toBeLessThan(4);
       await expect(window.innerHeight - box.bottom).toBeLessThan(64);
@@ -271,7 +271,7 @@ export const DarkTheme: Story = {
     });
 
     await step('Trocar o tema recolore os mesmos nós, sem remontar', async () => {
-      const toastEl = document.querySelector<HTMLElement>('.nds-toast[data-type="success"]')!;
+      const toastEl = document.querySelector<HTMLElement>('.nds-sonner[data-type="success"]')!;
       const html = document.documentElement;
       const wasDark = html.classList.contains('dark');
 
@@ -282,7 +282,7 @@ export const DarkTheme: Story = {
 
       await expect(dark).not.toBe(light);
       // Mesmo nó: nada foi recriado, só a cascata resolveu outro token.
-      await expect(document.querySelector('.nds-toast[data-type="success"]')).toBe(toastEl);
+      await expect(document.querySelector('.nds-sonner[data-type="success"]')).toBe(toastEl);
 
       if (!wasDark) html.classList.remove('dark');
     });

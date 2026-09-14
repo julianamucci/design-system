@@ -47,6 +47,8 @@ const meta: Meta = {
       control: 'select',
       options: ['top-right', 'top-center', 'top-left', 'bottom-right', 'bottom-center', 'bottom-left'],
       description: 'Canto da tela onde a pilha nasce.',
+      // O default do design system é `top-right`, e não o `bottom-right` da lib.
+      table: { defaultValue: { summary: 'top-right' } },
     },
     richColors: { control: 'boolean', description: 'Aplica a cor semântica do tema a cada tipo.' },
     closeButton: { control: 'boolean', description: 'Mostra o botão de fechar em todas as notificações.' },
@@ -92,13 +94,27 @@ export const Playground: Story = {
     });
 
     await step('A notificação é mensagem de estado, anunciada sem interromper', async () => {
-      // accessibility.item1 — aqui a lib marca CADA notificação com `aria-live`,
-      // além da região viva em volta da pilha. `polite` é a escolha, não o
-      // default: `assertive` cortaria a leitura em curso para avisar que algo
-      // deu certo, o que é hostil justamente com quem depende do leitor de tela.
+      // accessibility.item1 — quem carrega a região viva é a NOTIFICAÇÃO, e não a
+      // região que a contém. `polite` é a escolha, não o default: `assertive`
+      // cortaria a leitura em curso para avisar que algo deu certo, o que é
+      // hostil justamente com quem depende do leitor de tela.
       const toastEl = await waitForToast({ type: 'success' });
       await expect(toastEl).toHaveAttribute('aria-live', 'polite');
       await expect(toastEl.getAttribute('aria-live')).not.toBe('assertive');
+    });
+
+    await step('A fiação viva de hoje é ANINHADA — registrado, pendente de patch', async () => {
+      // O `aria-live` mora na notificação; a `<section>` da lib o carrega TAMBÉM,
+      // e duas regiões vivas encaixadas são o caminho conhecido para o mesmo
+      // texto ser anunciado duas vezes. A lib escreve o atributo cravado em
+      // `svelte-sonner/dist/Toaster.svelte` (`aria-live="polite"`, junto de
+      // `aria-relevant` e `aria-atomic`), fora de qualquer prop e fora do spread
+      // — que só alcança o `<ol>` de dentro. Sair daqui exige patch, e enquanto
+      // ele não existe esta asserção descreve a fiação REAL: no dia em que o
+      // patch entrar, ela reprova e é o que manda atualizar a story.
+      const toastEl = await waitForToast({ type: 'success' });
+      const secao = toastEl.closest<HTMLElement>('section[aria-label]')!;
+      await expect(secao).toHaveAttribute('aria-live', 'polite');
     });
 
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {

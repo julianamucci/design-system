@@ -4785,7 +4785,11 @@ const ELEVACAO_POR_TIPO = {
   // O toast entra em `xl` por decisão da dona (2026-09-10), e o motivo é de
   // CAMADA: `--z-toast` é 1080, acima de `--z-modal` (1050) — ele aparece por
   // cima de um diálogo aberto, então é a superfície mais alta da pilha.
-  xl: { tipo: 'modal, drawer e toast', folhas: ['dialog', 'alert-dialog', 'sheet', 'drawer', 'toast'] },
+  // `sonner` e não `toast`: a folha foi renomeada em 2026-09-13, quando a dona
+  // fixou que o componente se chama Sonner. Enquanto o mapa manteve o nome
+  // antigo, a regra reprovava DUAS vezes — a folha nova como não classificada e
+  // a antiga como ausente —, que é o custo de mapa que envelhece em silêncio.
+  xl: { tipo: 'modal, drawer e toast', folhas: ['dialog', 'alert-dialog', 'sheet', 'drawer', 'sonner'] },
 };
 
 /** Folhas que leem elevação por outro motivo, com o motivo. */

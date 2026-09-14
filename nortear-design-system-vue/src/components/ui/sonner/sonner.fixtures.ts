@@ -31,7 +31,7 @@ export const PERSISTENT = { duration: Number.POSITIVE_INFINITY } as const;
  *    toda play começa por `clearToasts()`.
  *
  * O markup é o da lib (`[data-sonner-toast]`, `[data-title]`, `[data-button]`),
- * e não o `.nds-toast` que Vanilla e Angular montam à mão. É divergência de
+ * e não o `.nds-sonner` que Vanilla e Angular montam à mão. É divergência de
  * implementação registrada, não desalinhamento a corrigir: a lib desenha a
  * própria árvore e o contrato compartilhado aqui é o COMPORTAMENTO.
  */

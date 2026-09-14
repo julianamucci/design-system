@@ -1,6 +1,6 @@
 // Fila de notificações do Vanilla — sem dependência de framework.
 //
-// É a implementação de referência do `.nds-toast`: o que está aqui é o que o
+// É a implementação de referência do `.nds-sonner`: o que está aqui é o que o
 // design system define, e as outras stacks embrulham uma lib que injeta o
 // próprio markup.
 
@@ -59,13 +59,22 @@ interface ToastEntry {
 /** Padrão do projeto, e o mesmo que o conteúdo compartilhado documenta. */
 const DURATION_DEFAULT = 4000;
 
-/** Espelha a transição de saída de `.nds-toast` — encurtar aqui corta o fade. */
+/** Espelha a transição de saída de `.nds-sonner` — encurtar aqui corta o fade. */
 const DURATION_OUTPUT = 200;
+
+/**
+ * Canto padrão do projeto, por decisão da dona em 2026-09-13.
+ *
+ * A fábrica declarava `bottom-right` enquanto TODA story e a docs page montavam
+ * a região em `top-right` — o default do código era o canto que ninguém usava, e
+ * quem lia a tabela de props lia o canto errado.
+ */
+const POSITION_DEFAULT: ToastPosition = 'top-right';
 
 let toastId = 0;
 const activeToasts: ToastEntry[] = [];
 let containerEl: HTMLElement | null = null;
-let currentPosition: ToastPosition = 'bottom-right';
+let currentPosition: ToastPosition = POSITION_DEFAULT;
 
 /** Região montada por quem consome (vive além da fila) × criada sob demanda. */
 let regiaoDoConsumidor = false;
@@ -98,7 +107,7 @@ const ICONS: Record<ToastType, string> = {
   error: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
   warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
   info: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
-  // A rotação vive em `.nds-toast-icon-spin`, no wrapper — não numa classe no
+  // A rotação vive em `.nds-sonner-icon-spin`, no wrapper — não numa classe no
   // próprio SVG. A antiga `ds-toast-spin` tinha prefixo de antes da migração
   // `.nds-*` e não existia em CSS nenhum: o ícone nunca girou.
   loading: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
@@ -172,7 +181,7 @@ export function createSonnerToaster(options: ToasterOptions = {}): HTMLElement {
 }
 
 function mountRegiao(options: ToasterOptions): HTMLElement {
-  const { position = 'bottom-right', richColors = false, expand = false } = options;
+  const { position = POSITION_DEFAULT, richColors = false, expand = false } = options;
 
   if (containerEl) containerEl.remove();
 
@@ -198,7 +207,7 @@ function mountRegiao(options: ToasterOptions): HTMLElement {
   // sair "pelo lado" (Tab até o fim) deixaria a notificação ocupando a tela.
   el.addEventListener('keydown', (evento) => {
     if ((evento as KeyboardEvent).key !== 'Escape') return;
-    const target = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-toast');
+    const target = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-sonner');
     if (!target) return;
     const entry = activeToasts.find((t) => t.el === target);
     if (entry) removeToast(entry.id);
@@ -225,7 +234,7 @@ function ensureContainer(position: ToastPosition | undefined): HTMLElement {
     return containerEl;
   }
 
-  const el = mountRegiao({ position: position ?? 'bottom-right', richColors: defaults.richColors });
+  const el = mountRegiao({ position: position ?? POSITION_DEFAULT, richColors: defaults.richColors });
   document.body.appendChild(el);
   return el;
 }
@@ -256,8 +265,8 @@ function removeToast(id: number): void {
 function mountIcon(type: ToastType): HTMLElement | null {
   if (!ICONS[type]) return null;
   const iconWrap = document.createElement('span');
-  iconWrap.className = 'nds-toast-icon';
-  if (type === 'loading') iconWrap.classList.add('nds-toast-icon-spin');
+  iconWrap.className = 'nds-sonner-icon';
+  if (type === 'loading') iconWrap.classList.add('nds-sonner-icon-spin');
   // O ícone repete o que o tipo e o título já dizem. Anunciá-lo faria o leitor
   // de tela ler "imagem" antes de cada notificação.
   iconWrap.setAttribute('aria-hidden', 'true');
@@ -277,7 +286,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
   toast.setAttribute('data-sonner-toast', '');
   toast.setAttribute('role', 'status');
   toast.setAttribute('aria-live', 'polite');
-  toast.className = 'nds-toast';
+  toast.className = 'nds-sonner';
   toast.dataset.type = type;
   toast.dataset.richColors = String(richColors);
   toast.dataset.visible = 'false';
@@ -286,16 +295,16 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
   if (iconWrap) toast.appendChild(iconWrap);
 
   const content = document.createElement('div');
-  content.className = 'nds-toast-content';
+  content.className = 'nds-sonner-content';
 
   const title = document.createElement('p');
-  title.className = 'nds-toast-title';
+  title.className = 'nds-sonner-title';
   title.textContent = message;
   content.appendChild(title);
 
   if (opts.description) {
     const desc = document.createElement('p');
-    desc.className = 'nds-toast-description';
+    desc.className = 'nds-sonner-description';
     desc.textContent = opts.description;
     content.appendChild(desc);
   }
@@ -303,7 +312,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
   if (opts.action) {
     const actionBtn = document.createElement('button');
     actionBtn.type = 'button';
-    actionBtn.className = 'nds-toast-action';
+    actionBtn.className = 'nds-sonner-action';
     actionBtn.textContent = opts.action.label;
     actionBtn.addEventListener('click', () => {
       opts.action!.onClick();
@@ -321,7 +330,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
     closeBtn.type = 'button';
     closeBtn.setAttribute('data-close-button', '');
     closeBtn.setAttribute('aria-label', defaults.closeLabel);
-    closeBtn.className = 'nds-toast-close';
+    closeBtn.className = 'nds-sonner-close';
     closeBtn.innerHTML = DOMPurify.sanitize(CLOSE_SVG);
     closeBtn.addEventListener('click', () => removeToast(id));
     toast.appendChild(closeBtn);
@@ -421,7 +430,7 @@ export const toast = Object.assign(
 
 /**
  * No-op mantido por compatibilidade de API com as outras stacks.
- * Os estilos vivem em `@shared/styles/nds/toast.css`, sem injeção dinâmica.
+ * Os estilos vivem em `@shared/styles/nds/sonner.css`, sem injeção dinâmica.
  */
 export function injectToastStyles(): void {
   // intencionalmente vazio — o CSS é importado pelo globals.css

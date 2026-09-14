@@ -129,7 +129,7 @@ const INTERFACE_CODE = `// Seletor de atributo: o host é o <div> nativo, então
 // das outras stacks e o CSS \`.nds-toaster\` casa sem wrapper.
 @Component({ selector: 'div[ndsToaster]' })
 export class NdsToaster {
-  readonly position = input<ToastPosition>('bottom-right');
+  readonly position = input<ToastPosition>('top-right');
   readonly richColors = input(false, { transform: booleanAttribute });
   readonly expand = input(false, { transform: booleanAttribute });
   readonly duration = input(4000, { transform: numberAttribute });
@@ -439,7 +439,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
           track('toast_action_click', {
             // Valor estável, e não o rótulo traduzido.
             label: 'undo',
-            component: 'toast',
+            component: 'sonner',
             location: 'docs_demo',
           }),
       },
@@ -636,7 +636,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
         title: t('props.toasterTitle'),
         cols,
         items: [
-          line('position', 'position', 'ToastPosition', `'bottom-right'`),
+          line('position', 'position', 'ToastPosition', `'top-right'`),
           line('richColors', 'richColors', 'boolean', 'false'),
           line('expand', 'expand', 'boolean', 'false'),
           line('duration', 'duration', 'number', '4000'),

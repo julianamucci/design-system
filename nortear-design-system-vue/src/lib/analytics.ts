@@ -408,7 +408,7 @@ interface AnalyticsEvents {
   /** Clique no botão de ação interno do toast (ex: Desfazer). */
   toast_action_click: {
     label: string;
-    component: 'toast';
+    component: 'sonner';
     location: string;
   };
 

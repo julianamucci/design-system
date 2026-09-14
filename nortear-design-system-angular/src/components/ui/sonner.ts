@@ -81,7 +81,7 @@ interface Toast {
 /** Padrão do projeto, e o mesmo que o conteúdo compartilhado documenta. */
 const DEFAULT_DURATION = 4000;
 
-/** Espelha a transição de saída de `.nds-toast` — remover antes cortaria o fade. */
+/** Espelha a transição de saída de `.nds-sonner` — remover antes cortaria o fade. */
 const EXIT_DURATION = 200;
 
 const queue = signal<Toast[]>([]);
@@ -284,8 +284,8 @@ const TOAST_ICON_MAP: Record<ToastIconKind, LucideIconNode[]> = {
 /**
  * SVG do ícone da torrada.
  *
- * Seletor no próprio `<svg>`: o CSS dimensiona `.nds-toast-icon > svg` e
- * `.nds-toast-close > svg`, então um wrapper a mais quebraria as duas regras.
+ * Seletor no próprio `<svg>`: o CSS dimensiona `.nds-sonner-icon > svg` e
+ * `.nds-sonner-close > svg`, então um wrapper a mais quebraria as duas regras.
  *
  * Os filhos entram por `createElementNS` num `effect`, e não pelo template,
  * porque cada ícone do lucide é uma lista `[tag, attrs]` com tag variável
@@ -379,7 +379,7 @@ export class NdsToastIcon {
   template: `
     @for (t of toastEls(); track t.id) {
       <div
-        class="nds-toast"
+        class="nds-sonner"
         data-sonner-toast
         role="status"
         aria-live="polite"
@@ -388,20 +388,20 @@ export class NdsToastIcon {
         [attr.data-visible]="t.visible()"
       >
         @if (t.type !== 'default') {
-          <span class="nds-toast-icon" [class.nds-toast-icon-spin]="t.type === 'loading'">
+          <span class="nds-sonner-icon" [class.nds-sonner-icon-spin]="t.type === 'loading'">
             <svg ndsToastIcon [kind]="t.type"></svg>
           </span>
         }
 
-        <div class="nds-toast-content">
-          <p class="nds-toast-title">{{ t.title }}</p>
+        <div class="nds-sonner-content">
+          <p class="nds-sonner-title">{{ t.title }}</p>
 
           @if (t.description) {
-            <p class="nds-toast-description">{{ t.description }}</p>
+            <p class="nds-sonner-description">{{ t.description }}</p>
           }
 
           @if (t.action; as action) {
-            <button type="button" class="nds-toast-action" (click)="acionar(t.id, action)">
+            <button type="button" class="nds-sonner-action" (click)="acionar(t.id, action)">
               {{ action.label }}
             </button>
           }
@@ -410,7 +410,7 @@ export class NdsToastIcon {
         @if (t.closeButton ?? closeButton()) {
           <button
             type="button"
-            class="nds-toast-close"
+            class="nds-sonner-close"
             data-close-button
             [attr.aria-label]="closeLabel()"
             (click)="close(t.id)"
@@ -423,8 +423,15 @@ export class NdsToastIcon {
   `,
 })
 export class NdsToaster implements OnDestroy {
-  /** Canto da tela onde a pilha nasce. */
-  readonly position = input<ToastPosition>('bottom-right');
+  /**
+   * Canto da tela onde a pilha nasce.
+   *
+   * `top-right` é o padrão do projeto, e não o da lib de origem das outras
+   * stacks: enquanto este input declarava `bottom-right`, toda story e a docs
+   * page já montavam o Toaster com `top-right` — o default era um canto que
+   * nenhuma superfície exercia.
+   */
+  readonly position = input<ToastPosition>('top-right');
 
   /** Aplica a cor semântica do tema a cada tipo. */
   readonly richColors = input(false, { transform: booleanAttribute });
@@ -490,7 +497,7 @@ export class NdsToaster implements OnDestroy {
    * espelha a fila item a item, inclusive as que estão saindo.
    */
   protected aoEscape(evento: Event): void {
-    const target = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-toast');
+    const target = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-sonner');
     if (!target) return;
     const index = Array.prototype.indexOf.call(this.hostRef.nativeElement.children, target);
     const enter = this.toastEls()[index];

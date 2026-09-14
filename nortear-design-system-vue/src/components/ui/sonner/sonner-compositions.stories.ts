@@ -253,7 +253,7 @@ export const Persistent: Story = {
   render: () => ({
     components: { Toaster },
     template: `
-      <div style="contain: layout; position: relative; min-height: 120px;">
+      <div class="nds-min-h-30" style="contain: layout; position: relative;">
         <Toaster position="top-right" rich-colors close-button :duration="300" />
       </div>
     `,

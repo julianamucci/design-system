@@ -36,6 +36,9 @@ export type SonnerSnippetOptions = {
 /** Padrão do design system, e o que a região assume quando ninguém diz outro. */
 const DEFAULT_DURATION = 4000;
 
+/** Canto padrão desde 2026-09-13 — repeti-lo no snippet não ensina nada. */
+const DEFAULT_POSITION: ToastPosition = 'top-right';
+
 const DEFAULT_TITLE: Record<ToastType, string> = {
   default: 'Código copiado.',
   success: 'Alterações salvas.',
@@ -48,12 +51,12 @@ const DEFAULT_TITLE: Record<ToastType, string> = {
 /**
  * A região. Vai UMA VEZ, no root da aplicação.
  *
- * Só o que difere do padrão entra: o canto é `bottom-right`, as cores
+ * Só o que difere do padrão entra: o canto é `top-right`, as cores
  * semânticas vêm desligadas e o prazo é de 4000ms.
  */
 function regionBlock(o: SonnerSnippetOptions): string {
   const lines = options([
-    ['position', o.position && o.position !== 'bottom-right' ? text(o.position) : undefined],
+    ['position', o.position && o.position !== DEFAULT_POSITION ? text(o.position) : undefined],
     ['richColors', o.richColors ? 'true' : undefined],
     ['closeButton', o.closeButton && !o.persistente ? 'true' : undefined],
     [

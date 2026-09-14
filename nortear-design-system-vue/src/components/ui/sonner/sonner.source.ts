@@ -134,7 +134,10 @@ export const sonnerPlaygroundSource: SourceTransform<SonnerArgs> = (_gerado, ctx
   return page({
     script,
     extras: attrs(
-      attr('position', args.position, 'bottom-right'),
+      // O padrão do projeto é `top-right`, e ele mora no wrapper: repetir o que
+      // o componente já faz ensina ruído, então a posição só entra no snippet
+      // quando difere dele.
+      attr('position', args.position, 'top-right'),
       attrBool('rich-colors', args.richColors, false),
       attrBool('close-button', args.closeButton, false),
       attrNum('duration', args.duration, 4000),

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton, SkeletonRegion } from "@/components/ui/skeleton";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -132,7 +132,7 @@ export function SkeletonDocs() {
 
   // ─── Code strings ───────────────────────────────────────────────────────────
 
-  const codeImport = `import { Skeleton } from "@/components/ui/skeleton";`;
+  const codeImport = `import { Skeleton, SkeletonRegion } from "@/components/ui/skeleton";`;
 
   const codeRectangle = `<Skeleton data-shape="fill" className="nds-docs-skeleton-media" />`;
   const codeCircle = `<Skeleton data-shape="avatar" />`;
@@ -177,10 +177,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.card"))}
             </p>
-            <div
-              role="status"
-              aria-busy="true"
-              aria-label={DOMPurify.sanitize(tContent("demonstration.labels.card"))}
+            <SkeletonRegion
+              label={DOMPurify.sanitize(tContent("demonstration.labels.card"))}
               className="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
               data-spacing="md"
               data-align="center"
@@ -190,7 +188,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                 <Skeleton data-shape="text" data-width="2-3" />
                 <Skeleton data-shape="text" data-width="1-2" />
               </div>
-            </div>
+            </SkeletonRegion>
           </div>
 
           {/* Lista */}
@@ -198,10 +196,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.list"))}
             </p>
-            <div
-              role="status"
-              aria-busy="true"
-              aria-label={DOMPurify.sanitize(tContent("demonstration.labels.list"))}
+            <SkeletonRegion
+              label={DOMPurify.sanitize(tContent("demonstration.labels.list"))}
               className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
               data-spacing="sm"
             >
@@ -214,7 +210,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                   </div>
                 </div>
               ))}
-            </div>
+            </SkeletonRegion>
           </div>
 
           {/* Imagem em AspectRatio */}
@@ -222,15 +218,11 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.image"))}
             </p>
-            <div
-              role="status"
-              aria-busy="true"
-              aria-label={DOMPurify.sanitize(tContent("demonstration.labels.image"))}
-            >
+            <SkeletonRegion label={DOMPurify.sanitize(tContent("demonstration.labels.image"))}>
               <AspectRatio ratio={16 / 9}>
                 <Skeleton data-shape="fill" />
               </AspectRatio>
-            </div>
+            </SkeletonRegion>
           </div>
 
           {/* Parágrafo */}
@@ -238,17 +230,15 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
             </p>
-            <div
-              role="status"
-              aria-busy="true"
-              aria-label={DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
+            <SkeletonRegion
+              label={DOMPurify.sanitize(tContent("demonstration.labels.paragraph"))}
               className="nds-stack nds-p-4 nds-border-default nds-rounded-md"
               data-spacing="sm"
             >
               <Skeleton data-shape="text" data-width="full" />
               <Skeleton data-shape="text" data-width="3-4" />
               <Skeleton data-shape="text" data-width="1-2" />
-            </div>
+            </SkeletonRegion>
           </div>
         </div>
       </DocsDemonstration>
@@ -353,17 +343,15 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div
-                role="status"
-                aria-busy="true"
-                aria-label="Carregando texto"
+              <SkeletonRegion
+                label="Carregando texto"
                 className="nds-w-full nds-stack"
                 data-spacing="sm"
               >
                 <Skeleton data-shape="heading" data-width="1-2" />
                 <Skeleton data-shape="text" data-width="full" />
                 <Skeleton data-shape="text" data-width="3-4" />
-              </div>
+              </SkeletonRegion>
             ),
             dontPreview: (
               <div className="nds-w-full">
@@ -377,10 +365,8 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div
-                role="status"
-                aria-busy="true"
-                aria-label="Carregando avatar e texto"
+              <SkeletonRegion
+                label="Carregando avatar e texto"
                 className="nds-cluster nds-w-full"
                 data-spacing="sm"
                 data-align="center"
@@ -390,7 +376,7 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
                   <Skeleton data-shape="text" data-width="1-2" />
                   <Skeleton data-shape="text" data-width="1-3" />
                 </div>
-              </div>
+              </SkeletonRegion>
             ),
             dontPreview: (
               <div className="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
@@ -420,9 +406,9 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.rectangle")),
             code: codeRectangle,
             preview: (
-              <div role="status" aria-busy="true" aria-label="Carregando bloco" className="nds-w-xs">
+              <SkeletonRegion label="Carregando bloco" className="nds-w-xs">
                 <Skeleton data-shape="fill" className="nds-docs-skeleton-media" />
-              </div>
+              </SkeletonRegion>
             ),
           },
           {
@@ -431,9 +417,9 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.circle")),
             code: codeCircle,
             preview: (
-              <div role="status" aria-busy="true" aria-label="Carregando avatar">
+              <SkeletonRegion label="Carregando avatar">
                 <Skeleton data-shape="avatar" />
-              </div>
+              </SkeletonRegion>
             ),
           },
           {
@@ -442,16 +428,14 @@ interface SkeletonProps extends React.ComponentProps<"div"> {
             description: stripHtml(tContent("variants.styles.line")),
             code: codeLine,
             preview: (
-              <div
-                role="status"
-                aria-busy="true"
-                aria-label="Carregando linha de texto"
+              <SkeletonRegion
+                label="Carregando linha de texto"
                 className="nds-stack nds-w-xs"
                 data-spacing="xs"
               >
                 <Skeleton data-shape="text" data-width="3-4" />
                 <Skeleton data-shape="text" data-width="1-2" />
-              </div>
+              </SkeletonRegion>
             ),
           },
         ]}

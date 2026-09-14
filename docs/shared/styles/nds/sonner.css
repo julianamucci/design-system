@@ -1,16 +1,24 @@
 /*
- * ─── nds-toast / nds-toaster ────────────────────────────────────────────────
- * Notificação flutuante temporária. Compartilhado entre Sonner e Toast factories.
+ * ─── nds-sonner / nds-toaster ────────────────────────────────────────────────
+ * Notificação flutuante temporária, desenhada pelas duas stacks que não usam lib
+ * de toast — vanilla e angular. As outras três recebem o markup da lib.
  *
- *   <div class="nds-toaster" data-position="bottom-right">
- *     <div class="nds-toast" role="status" data-type="success">
- *       <span class="nds-toast-icon"><svg>…</svg></span>
- *       <div class="nds-toast-content">
- *         <p class="nds-toast-title">Salvo</p>
- *         <p class="nds-toast-description">Alterações aplicadas.</p>
- *         <button class="nds-toast-action">Desfazer</button>
+ * O COMPONENTE se chama Sonner, e a folha e as classes seguem esse nome desde
+ * 2026-09-13, por decisão da dona: até ali ele tinha três nomes no repositório —
+ * `Sonner` no slug e nas stories, `Toast` na folha e nas classes, `Toaster` na
+ * região —, e o payload de analytics mandava um quarto (`component: "toast"`).
+ * A REGIÃO continua `.nds-toaster`, porque Toaster é o nome dela: é a caixa fixa
+ * que escolhe o canto e empilha as notificações, e não o aviso.
+ *
+ *   <div class="nds-toaster" data-position="top-right">
+ *     <div class="nds-sonner" role="status" data-type="success">
+ *       <span class="nds-sonner-icon"><svg>…</svg></span>
+ *       <div class="nds-sonner-content">
+ *         <p class="nds-sonner-title">Salvo</p>
+ *         <p class="nds-sonner-description">Alterações aplicadas.</p>
+ *         <button class="nds-sonner-action">Desfazer</button>
  *       </div>
- *       <button class="nds-toast-close" aria-label="Fechar notificação">…</button>
+ *       <button class="nds-sonner-close" aria-label="Fechar notificação">…</button>
  *     </div>
  *   </div>
  *
@@ -41,7 +49,7 @@
 .nds-toaster[data-position="bottom-center"]{ bottom: var(--spacing-4); left: 50%; transform: translateX(-50%); align-items: center; }
 
 /* ── Toast (notificação individual) ──────────────────────────────────────── */
-.nds-toast {
+.nds-sonner {
   display: flex;
   align-items: flex-start;
   gap: var(--spacing-3);                 /* 12px */
@@ -61,7 +69,7 @@
   transition: opacity var(--duration-base), transform var(--duration-base);
 }
 
-.nds-toast[data-visible="true"] {
+.nds-sonner[data-visible="true"] {
   opacity: 1;
   transform: translateY(0);
 }
@@ -72,70 +80,70 @@
  * contêiner colorido) e pinta portanto a mesma cor de antes. Escrever o token em
  * vez de `--foreground` é o ponto de extensão: um projeto derivado redefine
  * `--success-foreground` no tema e o toast acompanha. Ver tokens.css. */
-.nds-toast[data-rich-colors="true"][data-type="success"] {
+.nds-sonner[data-rich-colors="true"][data-type="success"] {
   background-color: hsl(var(--success) / 0.1);
   color: hsl(var(--success-foreground));
   border-color: hsl(var(--success) / 0.3);
 }
-.nds-toast[data-rich-colors="true"][data-type="success"] .nds-toast-icon { color: hsl(var(--success)); }
+.nds-sonner[data-rich-colors="true"][data-type="success"] .nds-sonner-icon { color: hsl(var(--success)); }
 
 /* `error` é o nome do tipo no toast; a cor dele é `destructive`. */
-.nds-toast[data-rich-colors="true"][data-type="error"] {
+.nds-sonner[data-rich-colors="true"][data-type="error"] {
   background-color: hsl(var(--destructive) / 0.1);
   color: hsl(var(--destructive-foreground));
   border-color: hsl(var(--destructive) / 0.3);
 }
-.nds-toast[data-rich-colors="true"][data-type="error"] .nds-toast-icon { color: hsl(var(--destructive)); }
+.nds-sonner[data-rich-colors="true"][data-type="error"] .nds-sonner-icon { color: hsl(var(--destructive)); }
 
-.nds-toast[data-rich-colors="true"][data-type="warning"] {
+.nds-sonner[data-rich-colors="true"][data-type="warning"] {
   background-color: hsl(var(--warning) / 0.1);
   color: hsl(var(--warning-foreground));
   border-color: hsl(var(--warning) / 0.3);
 }
-.nds-toast[data-rich-colors="true"][data-type="warning"] .nds-toast-icon { color: hsl(var(--warning)); }
+.nds-sonner[data-rich-colors="true"][data-type="warning"] .nds-sonner-icon { color: hsl(var(--warning)); }
 
-.nds-toast[data-rich-colors="true"][data-type="info"] {
+.nds-sonner[data-rich-colors="true"][data-type="info"] {
   background-color: hsl(var(--info) / 0.1);
   color: hsl(var(--info-foreground));
   border-color: hsl(var(--info) / 0.3);
 }
-.nds-toast[data-rich-colors="true"][data-type="info"] .nds-toast-icon { color: hsl(var(--info)); }
+.nds-sonner[data-rich-colors="true"][data-type="info"] .nds-sonner-icon { color: hsl(var(--info)); }
 
 /* ── Icon ────────────────────────────────────────────────────────────────── */
-.nds-toast-icon {
+.nds-sonner-icon {
   flex-shrink: 0;
   margin-top: var(--spacing-0-5);                 /* 2px — alinha com 1ª linha */
 }
 
-.nds-toast-icon > svg,
-svg.nds-toast-icon {
+.nds-sonner-icon > svg,
+svg.nds-sonner-icon {
   width: var(--spacing-4);
   height: var(--spacing-4);
 }
 
 /* Spinner para tipo loading */
-.nds-toast-icon-spin {
-  animation: nds-toast-spin 1s linear infinite;
+.nds-sonner-icon-spin {
+  animation: nds-sonner-spin var(--duration-cycle-fast) linear infinite;
 }
 
-@keyframes nds-toast-spin {
+@keyframes nds-sonner-spin {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
 
 /* ── Content ─────────────────────────────────────────────────────────────── */
-.nds-toast-content {
+.nds-sonner-content {
   flex: 1;
   min-width: 0;
 }
 
-.nds-toast-title {
+.nds-sonner-title {
   margin: 0;
   font-size: var(--text-control);
   font-weight: var(--font-weight-medium, 500);
 }
 
-.nds-toast-description {
+.nds-sonner-description {
   margin: var(--spacing-1) 0 0;
   font-size: var(--text-control);
   color: hsl(var(--muted-foreground));
@@ -156,7 +164,7 @@ svg.nds-toast-icon {
  * navegador (guideline 12, WCAG 1.4.4), e o mínimo horizontal só age em rótulo
  * curto ("OK"), sem deslocar o alinhamento com a descrição acima.
  */
-.nds-toast-action {
+.nds-sonner-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -178,7 +186,7 @@ svg.nds-toast-icon {
   text-underline-offset: 4px;
 }
 
-.nds-toast-action:hover {
+.nds-sonner-action:hover {
   text-decoration: underline;
 }
 
@@ -189,12 +197,12 @@ svg.nds-toast-icon {
  * (WCAG 2.2.1), e um anel que não se distingue do fundo escuro do tema faz a
  * pessoa perder o alvo antes de o cronômetro acabar.
  */
-.nds-toast-action:focus-visible {
+.nds-sonner-action:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--popover)), 0 0 0 5px hsl(var(--ring));
 }
 
 /* ── Close button ────────────────────────────────────────────────────────── */
-.nds-toast-close {
+.nds-sonner-close {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -215,23 +223,23 @@ svg.nds-toast-icon {
   transition: color var(--duration-fast), box-shadow var(--duration-fast);
 }
 
-.nds-toast-close:hover {
+.nds-sonner-close:hover {
   color: hsl(var(--foreground));
 }
 
-.nds-toast-close:focus-visible {
+.nds-sonner-close:focus-visible {
   box-shadow: 0 0 0 2px hsl(var(--popover)), 0 0 0 5px hsl(var(--ring));
 }
 
-.nds-toast-close > svg {
+.nds-sonner-close > svg {
   width: 0.875rem;
   height: 0.875rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nds-toast,
-  .nds-toast-close,
-  .nds-toast-icon-spin {
+  .nds-sonner,
+  .nds-sonner-close,
+  .nds-sonner-icon-spin {
     transition: none;
     animation: none;
   }

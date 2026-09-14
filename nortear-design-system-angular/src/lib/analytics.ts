@@ -52,7 +52,7 @@ interface AnalyticsEvents {
   /** Disparado ao clicar no botão de ação interno de um toast (ex: Desfazer). */
   toast_action_click: {
     label: string;
-    component: 'toast';
+    component: 'sonner';
     location: string;
   };
   accordion_expand: {

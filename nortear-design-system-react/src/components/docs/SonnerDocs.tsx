@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster, DEFAULT_POSITION } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -622,7 +622,7 @@ interface ToasterProps {
                       onClick: () => {
                         track("toast_action_click", {
                           label: "with-action-label",
-                          component: "toast",
+                          component: "sonner",
                           location: "docs_demo",
                         });
                       },
@@ -718,7 +718,10 @@ interface ToasterProps {
               {
                 name: "position",
                 type: "ToastPosition",
-                defaultValue: '"bottom-right"',
+                // Padrão do design system, e não o da lib — decisão da dona em
+                // 2026-09-13. Lido do componente para a página não poder voltar
+                // a publicar um canto que o código não usa.
+                defaultValue: `"${DEFAULT_POSITION}"`,
                 required: "Não",
                 description: toPlainText(tContent("props.table.position")),
               },

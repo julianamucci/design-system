@@ -4,7 +4,7 @@ import { useTranslation } from '@/lib/i18n';
 import { useSeoEffect } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useActiveSection } from '@/lib/use-active-section';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton, SkeletonRegion } from '@/components/ui/skeleton';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import DocsPageLayout from '@/components/docs/shared/sections/DocsPageLayout.vue';
 import uiTranslations from '@/i18n/ui.json';
@@ -287,10 +287,8 @@ const visualTestItems = computed(() => [
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.card') }}
           </p>
-          <div
-            role="status"
-            aria-busy="true"
-            :aria-label="tContent('demonstration.labels.card')"
+          <SkeletonRegion
+            :label="tContent('demonstration.labels.card')"
             class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
             data-spacing="md"
             data-align="center"
@@ -309,7 +307,7 @@ const visualTestItems = computed(() => [
                 data-width="1-2"
               />
             </div>
-          </div>
+          </SkeletonRegion>
         </div>
 
         <!-- Lista -->
@@ -320,10 +318,8 @@ const visualTestItems = computed(() => [
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.list') }}
           </p>
-          <div
-            role="status"
-            aria-busy="true"
-            :aria-label="tContent('demonstration.labels.list')"
+          <SkeletonRegion
+            :label="tContent('demonstration.labels.list')"
             class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
             data-spacing="sm"
           >
@@ -352,7 +348,7 @@ const visualTestItems = computed(() => [
                 />
               </div>
             </div>
-          </div>
+          </SkeletonRegion>
         </div>
 
         <!-- Imagem em AspectRatio -->
@@ -363,15 +359,11 @@ const visualTestItems = computed(() => [
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.image') }}
           </p>
-          <div
-            role="status"
-            aria-busy="true"
-            :aria-label="tContent('demonstration.labels.image')"
-          >
+          <SkeletonRegion :label="tContent('demonstration.labels.image')">
             <AspectRatio :ratio="16 / 9">
               <Skeleton data-shape="fill" />
             </AspectRatio>
-          </div>
+          </SkeletonRegion>
         </div>
 
         <!-- Parágrafo -->
@@ -382,10 +374,8 @@ const visualTestItems = computed(() => [
           <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.paragraph') }}
           </p>
-          <div
-            role="status"
-            aria-busy="true"
-            :aria-label="tContent('demonstration.labels.paragraph')"
+          <SkeletonRegion
+            :label="tContent('demonstration.labels.paragraph')"
             class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
             data-spacing="sm"
           >
@@ -401,7 +391,7 @@ const visualTestItems = computed(() => [
               data-shape="text"
               data-width="1-2"
             />
-          </div>
+          </SkeletonRegion>
         </div>
       </div>
     </DocsDemonstration>
@@ -468,10 +458,8 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div
-          role="status"
-          aria-busy="true"
-          aria-label="Carregando texto"
+        <SkeletonRegion
+          label="Carregando texto"
           class="nds-w-full nds-stack"
           data-spacing="sm"
         >
@@ -487,7 +475,7 @@ const visualTestItems = computed(() => [
             data-shape="text"
             data-width="3-4"
           />
-        </div>
+        </SkeletonRegion>
       </template>
       <template #dont-preview-0>
         <div class="nds-w-full">
@@ -498,10 +486,8 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #do-preview-1>
-        <div
-          role="status"
-          aria-busy="true"
-          aria-label="Carregando avatar e texto"
+        <SkeletonRegion
+          label="Carregando avatar e texto"
           class="nds-cluster nds-w-full"
           data-spacing="sm"
           data-align="center"
@@ -520,7 +506,7 @@ const visualTestItems = computed(() => [
               data-width="1-3"
             />
           </div>
-        </div>
+        </SkeletonRegion>
       </template>
       <template #dont-preview-1>
         <div
@@ -556,32 +542,24 @@ const visualTestItems = computed(() => [
       :items="variantItems"
     >
       <template #variant-preview-0>
-        <div
-          role="status"
-          aria-busy="true"
-          aria-label="Carregando bloco"
+        <SkeletonRegion
+          label="Carregando bloco"
           class="nds-w-xs"
         >
           <Skeleton
             data-shape="fill"
             class="nds-docs-skeleton-media"
           />
-        </div>
+        </SkeletonRegion>
       </template>
       <template #variant-preview-1>
-        <div
-          role="status"
-          aria-busy="true"
-          aria-label="Carregando avatar"
-        >
+        <SkeletonRegion label="Carregando avatar">
           <Skeleton data-shape="avatar" />
-        </div>
+        </SkeletonRegion>
       </template>
       <template #variant-preview-2>
-        <div
-          role="status"
-          aria-busy="true"
-          aria-label="Carregando linha de texto"
+        <SkeletonRegion
+          label="Carregando linha de texto"
           class="nds-stack nds-w-xs"
           data-spacing="xs"
         >
@@ -593,7 +571,7 @@ const visualTestItems = computed(() => [
             data-shape="text"
             data-width="1-2"
           />
-        </div>
+        </SkeletonRegion>
       </template>
     </DocsVariants>
 

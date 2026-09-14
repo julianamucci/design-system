@@ -17,7 +17,7 @@ describe('sonnerSnippet', () => {
     expect(code).toContain('createSonnerToaster(');
     expect(code).toContain('toast.success(');
     expect(code).not.toContain('data-sonner-toast');
-    expect(code).not.toContain('nds-toast-title');
+    expect(code).not.toContain('nds-sonner-title');
   });
 
   it('monta a região uma vez e dispara a notificação depois', () => {
@@ -29,6 +29,10 @@ describe('sonnerSnippet', () => {
   it('omite o que já é padrão do design system', () => {
     const code = sonnerSnippet();
     expect(code).not.toContain('position');
+    // `top-right` é o canto padrão desde 2026-09-13: escrevê-lo no snippet
+    // ensinaria a repetir o default. Antes o omitido era `bottom-right`, e o
+    // canto que toda story usa aparecia como se fosse escolha.
+    expect(sonnerSnippet({ position: 'top-right' })).not.toContain('position');
     expect(code).not.toContain('richColors');
     expect(code).not.toContain('closeButton');
     // 4000ms é o prazo padrão: repeti-lo não ensina nada.
@@ -93,11 +97,13 @@ describe('sonnerStackSnippet', () => {
         { type: 'warning', title: 'Sua sessão expira em 5 minutos.' },
         { type: 'info', title: 'Nova versão disponível.' },
       ],
-      { position: 'top-right', richColors: true },
+      // Canto DIFERENTE do padrão: é o que prova que a opção escolhida pela
+      // story chega ao snippet.
+      { position: 'bottom-right', richColors: true },
     );
     expect(code.match(/toast\./g)).toHaveLength(3);
     expect(code.indexOf('toast.success')).toBeLessThan(code.indexOf('toast.warning'));
-    expect(code).toContain("position: 'top-right'");
+    expect(code).toContain("position: 'bottom-right'");
   });
 });
 

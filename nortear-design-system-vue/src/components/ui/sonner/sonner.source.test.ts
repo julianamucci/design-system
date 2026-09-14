@@ -60,10 +60,13 @@ function notificar() {
     );
   });
 
+  // `bottom-right` é o padrão da LIB e deixou de ser o do projeto em
+  // 2026-09-13: por isso ele agora é um canto que o snippet escreve, e não um
+  // valor implícito.
   it('com os args da story, a região declara o canto e as cores do tema', () => {
-    expect(sonnerPlaygroundSource('', { args: { position: 'top-right', richColors: true } })).toContain(
-      '<Toaster position="top-right" rich-colors />',
-    );
+    expect(
+      sonnerPlaygroundSource('', { args: { position: 'bottom-right', richColors: true } }),
+    ).toContain('<Toaster position="bottom-right" rich-colors />');
   });
 
   it('o tipo é o método da fila, e a neutra é a função direta', () => {
@@ -89,8 +92,10 @@ function notificar() {
   });
 
   it('não escreve os padrões do componente — repetir padrão ensina ruído', () => {
+    // `top-right` é o padrão do projeto, declarado no wrapper: quem consome
+    // recebe esse canto sem escrever nada.
     const exit = sonnerPlaygroundSource('', {
-      args: { position: 'bottom-right', richColors: false, closeButton: false, duration: 4000 },
+      args: { position: 'top-right', richColors: false, closeButton: false, duration: 4000 },
     });
     expect(exit).toContain('<Toaster />');
     expect(exit).not.toContain('position=');

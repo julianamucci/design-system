@@ -129,15 +129,37 @@ export const Playground: Story = {
     });
 
     await step('A notificação é anunciada sem interromper a leitura em curso', async () => {
-      // accessibility.item1 — nesta stack a lib põe UMA região viva em volta da
-      // pilha inteira (`<section aria-live="polite">`), em vez de marcar cada
-      // notificação. `polite` é a escolha, não o default: `assertive` cortaria a
-      // leitura para avisar que algo deu certo, o que é hostil justamente com
-      // quem depende do leitor de tela.
+      // accessibility.item1 — `polite` é a escolha, não o default: `assertive`
+      // cortaria a leitura para avisar que algo deu certo, o que é hostil
+      // justamente com quem depende do leitor de tela.
+      //
+      // A FIAÇÃO REAL desta stack, medida em 2026-09-13 no `vue-sonner@2.0.9`
+      // instalado (`lib/index.js`, que é o que o pacote exporta): a única região
+      // viva é o `<section>` que embrulha a pilha —
+      // `aria-live="polite" aria-relevant="additions text" aria-atomic="false"`,
+      // nas linhas 1150-1156. O `<li>` de cada notificação NÃO recebe
+      // `aria-live`, `role` nem `aria-atomic`: o que ele recebe é `tabindex`
+      // (`-1` por patch, ver PATCHES.md#vue-sonner-toast-tabindex). Ou seja,
+      // aqui NÃO existe região viva aninhada — a duplicação que o PRD atribui a
+      // esta stack não está nesta versão da lib.
+      //
+      // A decisão da dona é que o `aria-live` more na NOTIFICAÇÃO, e esta stack
+      // ainda não cumpre isso: mover exige patch nos dois pontos de
+      // `lib/index.js` (tirar os três atributos do `<section>` da linha ~1150 e
+      // escrever `role="status" aria-live="polite" aria-atomic="true"` no `<li>`
+      // da linha ~646). Nenhum dos dois é prop nem slot da lib. Estes passos
+      // afirmam o que a lib faz HOJE, para que o patch mude asserção e não
+      // apenas comportamento.
       const toastEl = await waitForToast({ type: 'success' });
       const liveRegion = toastEl.closest<HTMLElement>('[aria-live]')!;
+      await expect(liveRegion.tagName).toBe('SECTION');
+      await expect(liveRegion.contains(toastEl)).toBe(true);
       await expect(liveRegion).toHaveAttribute('aria-live', 'polite');
       await expect(liveRegion.getAttribute('aria-live')).not.toBe('assertive');
+      // Sem aninhamento: a notificação não é uma segunda região viva dentro da
+      // primeira. Se um bump da lib passar a marcá-la, este passo reprova.
+      await expect(toastEl).not.toHaveAttribute('aria-live');
+      await expect(toastEl).not.toHaveAttribute('role');
     });
 
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {

@@ -65,14 +65,14 @@ export const WithDescription: Story = {
       });
       const toastEl = await waitForToast({ type: 'success' });
 
-      const title = toastEl.querySelector<HTMLElement>('.nds-toast-title')!;
-      const description = toastEl.querySelector<HTMLElement>('.nds-toast-description')!;
+      const title = toastEl.querySelector<HTMLElement>('.nds-sonner-title')!;
+      const description = toastEl.querySelector<HTMLElement>('.nds-sonner-description')!;
       await expect(title).toHaveTextContent(TEXTS.comDescricao);
       await expect(description).toHaveTextContent(TEXTS.comDescricaoDetalhe);
 
-      // Os dois dentro do mesmo `.nds-toast-content`: é isso que faz o leitor de
+      // Os dois dentro do mesmo `.nds-sonner-content`: é isso que faz o leitor de
       // tela anunciar a notificação como uma coisa só, e não como dois avisos.
-      const content = toastEl.querySelector<HTMLElement>('.nds-toast-content')!;
+      const content = toastEl.querySelector<HTMLElement>('.nds-sonner-content')!;
       await expect(content.contains(title) && content.contains(description)).toBe(true);
     });
   },
@@ -103,7 +103,7 @@ export const WithAction: Story = {
         action: { label: TEXTS.comAcaoRotulo, onClick: () => undoSpy() },
       });
       const toastEl = await waitForToast({ type: 'default' });
-      const action = toastEl.querySelector<HTMLButtonElement>('.nds-toast-action')!;
+      const action = toastEl.querySelector<HTMLButtonElement>('.nds-sonner-action')!;
 
       await expect(action.tagName).toBe('BUTTON');
       await expect(action).toHaveTextContent(TEXTS.comAcaoRotulo);
@@ -138,7 +138,7 @@ export const WithAction: Story = {
 
       await expect(undoSpy).toHaveBeenCalledTimes(1);
       await waitForNoToasts();
-      await expect(document.querySelectorAll('.nds-toast').length).toBe(0);
+      await expect(document.querySelectorAll('.nds-sonner').length).toBe(0);
     });
   },
 };
@@ -185,7 +185,7 @@ export const PromiseResolved: Story = {
       // Mesmo elemento: trocar o nó faria o leitor de tela anunciar duas
       // notificações para um evento só.
       await expect(resolved).toBe(loading);
-      await expect(document.querySelectorAll('.nds-toast').length).toBe(1);
+      await expect(document.querySelectorAll('.nds-sonner').length).toBe(1);
     });
   },
 };
@@ -262,11 +262,11 @@ export const Persistent: Story = {
     });
 
     await step('Fechar manualmente é o único caminho de saída', async () => {
-      const close = document.querySelector<HTMLButtonElement>('.nds-toast-close')!;
+      const close = document.querySelector<HTMLButtonElement>('.nds-sonner-close')!;
       await expect(close).toHaveAttribute('aria-label', 'Fechar notificação');
       await userEvent.click(close);
       await waitForNoToasts();
-      await expect(document.querySelectorAll('.nds-toast').length).toBe(0);
+      await expect(document.querySelectorAll('.nds-sonner').length).toBe(0);
     });
   },
 };

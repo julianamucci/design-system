@@ -116,7 +116,7 @@ docblock, de comentário de folha, de `PATCHES.md` ou medidas no código em
 alternativa era não ter o componente.
 
 **A consequência é o eixo desta página inteira**: a folha compartilhada
-`docs/shared/styles/nds/toast.css` desenha `.nds-toast`, e **só vanilla e
+`docs/shared/styles/nds/sonner.css` desenha `.nds-sonner`, e **só vanilla e
 angular produzem esse markup**. Nas três stacks de lib o markup é da lib
 (`[data-sonner-toast]`, `[data-title]`, `[data-button]`, `[data-close-button]`) e
 quem desenha é a folha da lib. Isto está escrito no docblock de
@@ -125,9 +125,9 @@ corrigir — e está certo, porque é forma de lib. O que não está registrado 
 lugar nenhum é o **tamanho** da consequência, medido abaixo em D10, em §5 e em §8.
 
 **O único pedaço da folha compartilhada que atravessa as cinco** é a regra
-`svg.nds-toast-icon` / `.nds-toast-icon > svg` (16×16) e a animação
-`.nds-toast-icon-spin`: os três wrappers passam essas classes para os ícones que
-injetam na lib. Nada mais de `toast.css` alcança react, vue e svelte.
+`svg.nds-sonner-icon` / `.nds-sonner-icon > svg` (16×16) e a animação
+`.nds-sonner-icon-spin`: os três wrappers passam essas classes para os ícones que
+injetam na lib. Nada mais de `sonner.css` alcança react, vue e svelte.
 
 ### D2 · Os rótulos são pt-BR, e sobrepõem os da lib
 
@@ -227,7 +227,7 @@ DIFERENTES**, medido em 2026-09-13:
 
 | markup | `data-visible` significa |
 |---|---|
-| `.nds-toast` (vanilla, angular) | terminou a transição de entrada |
+| `.nds-sonner` (vanilla, angular) | terminou a transição de entrada |
 | `[data-sonner-toast]` (libs) | está dentro da janela de 3 visíveis (`index + 1 <= visibleToasts`) |
 
 Duas semânticas com um nome só, nos mesmos cinco arquivos de story. Nenhum
@@ -261,7 +261,7 @@ região viva nasce no mesmo instante do conteúdo dela. Ver §8.
 ### D9 · A elevação é `xl`, e o motivo é de camada
 
 **Fixada em** 2026-09-10, em `04-padroes-design-sistema.md` §Qual degrau, por
-decisão da dona. `box-shadow: var(--elevation-xl)` em `toast.css:56`.
+decisão da dona. `box-shadow: var(--elevation-xl)` em `sonner.css:56`.
 
 **O motivo escrito**: pela interação o toast não caberia com clareza em nenhum dos
 dois degraus flutuantes — não prende foco, mas carrega ação. O que decide é a
@@ -275,7 +275,7 @@ nenhum do design system.
 ### D10 · 24×24 é PISO, e o piso alcança duas stacks
 
 **Fixada** na folha compartilhada, sem data no arquivo; a medição está escrita por
-extenso em `toast.css:144-158`. Os dois botões da notificação tinham
+extenso em `sonner.css:144-158`. Os dois botões da notificação tinham
 `padding: 0`: o de ação ficava com ≈21px de altura e o de fechar com 14×14 —
 abaixo dos 24×24 da WCAG 2.5.8. O comentário registra por que este é o pior lugar
 possível para um alvo pequeno: *"a notificação some sozinha, então quem erra o
@@ -378,7 +378,7 @@ tag estática; construir nós também é imune a XSS, porque não há `innerHTML
 caminho.
 
 **Um detalhe de histórico que a folha guarda**: o comentário de `toast-utils.ts`
-registra que a rotação vive em `.nds-toast-icon-spin`, no wrapper, e que a antiga
+registra que a rotação vive em `.nds-sonner-icon-spin`, no wrapper, e que a antiga
 classe `ds-toast-spin` tinha prefixo de antes da migração `.nds-*` e não existia
 em CSS nenhum — **o ícone nunca girou**.
 
@@ -436,7 +436,7 @@ define; a segunda é o que três das cinco stacks entregam.
 
 ```
 toaster                          .nds-toaster · role="region" · aria-label · data-position
-└── toast                        .nds-toast · role="status" · aria-live="polite" · data-type · data-visible
+└── toast                        .nds-sonner · role="status" · aria-live="polite" · data-type · data-visible
     ├── toast-icon               span (ou svg no angular) · aria-hidden · ausente no tipo default
     ├── toast-content
     │   ├── toast-title          p · peso medium
@@ -445,8 +445,8 @@ toaster                          .nds-toaster · role="region" · aria-label · 
     └── toast-close              button · aria-label · só com closeButton
 ```
 
-**O que é obrigatório**: a região e `.nds-toast` com `.nds-toast-content` e
-`.nds-toast-title`. Ícone, descrição, ação e fechar são opcionais, nessa ordem de
+**O que é obrigatório**: a região e `.nds-sonner` com `.nds-sonner-content` e
+`.nds-sonner-title`. Ícone, descrição, ação e fechar são opcionais, nessa ordem de
 frequência.
 
 **O botão de fechar fica FORA de `toast-content`**, irmão do ícone — os dois são
@@ -463,7 +463,7 @@ lib e permitir uma consulta única nas cinco.
 section                          aria-live="polite" · aria-label="<rótulo> altKey+T" · tabindex="-1"
 └── ol                           [data-sonner-toaster] · data-x-position · data-y-position · data-sonner-theme
     └── li                       [data-sonner-toast] · data-mounted · data-visible · data-type (ausente em default)
-        ├── [data-icon]          > svg.nds-toast-icon        ← o único ponto em que a folha compartilhada alcança
+        ├── [data-icon]          > svg.nds-sonner-icon        ← o único ponto em que a folha compartilhada alcança
         ├── [data-content]
         │   ├── [data-title]
         │   └── [data-description]
@@ -484,7 +484,7 @@ section                          aria-live="polite" · aria-label="<rótulo> alt
 
 ## 5. Geometria e tokens
 
-Fonte: `docs/shared/styles/nds/toast.css`. **Válido em vanilla e angular** — ver
+Fonte: `docs/shared/styles/nds/sonner.css`. **Válido em vanilla e angular** — ver
 D1.
 
 | propriedade | valor | token |
@@ -540,85 +540,12 @@ Medido em 2026-09-13:
 |---|---|---|
 | `data-expand` na região | vanilla e angular escrevem | **nenhuma folha** — não há seletor `[data-expand]` em CSS nenhum do repositório |
 | `data-rich-colors` na REGIÃO | vanilla e angular escrevem | **ninguém** — a folha só lê o atributo na notificação |
-| `injectToastStyles()` | o snippet de importação do vanilla ensina a chamar | **no-op declarado**, com o motivo no docblock: os estilos vivem em `toast.css` |
+| `injectToastStyles()` | o snippet de importação do vanilla ensina a chamar | **no-op declarado**, com o motivo no docblock: os estilos vivem em `sonner.css` |
 
 A primeira é a que mais custa: `expand` é um `input`/opção pública nas duas
 stacks, documentado na tabela de props do angular como "mantém a pilha expandida
 em vez de empilhada", e é **inerte**. Nas três de lib ele funciona, porque a folha
 da lib lê `[data-expanded]`.
-
-### 5.2 O que a lib usa no lugar de cada token
-
-| assunto | folha compartilhada | folha da lib |
-|---|---|---|
-| largura | 420px máx, 100% | `TOAST_WIDTH = 356` |
-| distância da borda | 16px (`--spacing-4`) | `VIEWPORT_OFFSET = 24px` (16px no mobile) |
-| gap entre notificações | 8px (`--spacing-2`) | `GAP = 14` |
-| raio | `--radius` | `--border-radius: 8px`, sobreposto por react e vue · **não** pelo svelte |
-| superfície, texto, borda | `--background`/`--foreground`/`--border` | `--normal-bg`/`--normal-text`/`--normal-border` |
-| sombra | `--elevation-xl` | a da lib |
-| visíveis ao mesmo tempo | **sem limite** | `VISIBLE_TOASTS_AMOUNT = 3` |
-| prazo default | 4000ms | `TOAST_LIFETIME = 4000` |
-| tempo até desmontar | 200ms (`DURATION_OUTPUT`/`EXIT_DURATION`) | `TIME_BEFORE_UNMOUNT = 200` |
-
-**Os dois números que já batem são os que importam para o comportamento** — 4000
-e 200 — e batem porque as duas implementações à mão os escolheram para casar. O
-comentário de `EXIT_DURATION` no angular diz isso: *"espelha a transição de saída
-de `.nds-toast` — remover antes cortaria o fade"*.
-
-### 5.3 A ponte de tokens para a lib, e por que ela diverge em duas pontas
-
-Os três wrappers passam custom properties por `style` inline na região. Medido em
-2026-09-13 com `node scripts/tabela-tokens.mjs sonner`:
-
-| custom property | react | vue | svelte |
-|---|---|---|---|
-| `--normal-bg` | `var(--popover)` | `var(--popover)` | `var(--color-popover)` |
-| `--normal-text` | `var(--popover-foreground)` | `var(--popover-foreground)` | `var(--color-popover-foreground)` |
-| `--normal-border` | `var(--border)` | `var(--border)` | `var(--color-border)` |
-| `--border-radius` | `var(--radius)` | `var(--radius)` | **ausente** |
-
-**Os dois prefixos não são estilo, são camadas diferentes.** Nesta casa
-`--popover` é um TRIPLETO HSL (`24 100% 99.5%` no tema default), e só vira cor
-dentro de `hsl()`. Quem embrulha é o alias do `@theme`:
-`--color-popover: hsl(var(--popover))`, em `globals.css` do svelte. A folha da lib
-faz `background: var(--normal-bg)` **direto**, sem `hsl()`.
-
-Ou seja: o svelte entrega uma cor e as outras duas entregam um tripleto para uma
-propriedade que espera cor. É o mesmo defeito de forma que a folha compartilhada
-evita escrevendo `hsl(var(--background))` em toda parte.
-
-**Está na lista de inconsistências e não afirmo aqui o efeito na tela**, porque
-isso precisa de sonda em navegador — o que se mede sem navegador é que a forma do
-valor não casa com o que a propriedade aceita, em duas das três stacks, e que a
-story que teria visto (`DarkTheme`, com a asserção `backgroundColor !== rgba(0,0,0,0)`)
-lê a notificação de índice 0, que é a mais nova, que é `info`, que tem cor
-semântica própria por `richColors`. A asserção passa sem tocar no tipo `default`.
-
-**E o `--border-radius` que falta no svelte é comparável e certo**: sem ele a
-notificação do svelte fica com o raio 8px da lib, enquanto react e vue seguem
-`--radius` — que vale 14px no tema default, 24px no warm e **0** no cold.
-
-### 5.4 Os dois instrumentos de token são CEGOS para este slug
-
-Medido em 2026-09-13, e é o achado mais silencioso desta página:
-
-| instrumento | o que procura | o que existe |
-|---|---|---|
-| `prd_token_sem_lastro` em `scripts/audit.mjs` | `docs/shared/styles/nds/<slug>.css` | `toast.css` — **não existe `sonner.css`** |
-| `node scripts/tabela-tokens.mjs sonner` | seletores `.nds-sonner*` | `.nds-toast*` |
-
-O segundo diz isso na primeira linha da saída: `folha(s) com seletor .nds-sonner:
-(nenhuma)`. O primeiro não diz nada: a condição `existsSync(folhaFile)` é falsa e
-a regra sai pela porta do `if`.
-
-**Consequência**: a tabela da §5 acima é a única parte deste documento sem portão
-nenhum. Ela pode envelhecer em silêncio, que é exatamente o defeito que este
-diretório existe para não ter. Está registrado como pendência no fim.
-
-O que `tabela-tokens.mjs` **conseguiu** medir foi a §5.3, porque ali ele lê as
-tabelas de token das docs pages: 16 linhas, 4 por stack, e **zero no angular** —
-as quatro chaves `tokens.*.normal*` não resolvem naquela stack.
 
 ## 6. Estados
 
@@ -633,7 +560,7 @@ as quatro chaves `tokens.*.normal*` não resolvem naquela stack.
 | recolorida | `richColors` ativo e tipo ≠ `default` | fundo, borda e ícone pelo par de tokens semânticos — §5 |
 
 **Não há estado de foco na notificação.** O `<li>` sai da ordem de tabulação por
-patch (D11) e o `.nds-toast` nunca teve `tabindex`. Quem recebe foco são os dois
+patch (D11) e o `.nds-sonner` nunca teve `tabindex`. Quem recebe foco são os dois
 botões, e só.
 
 ## 7. API
@@ -658,7 +585,7 @@ Opções da região, e o padrão declarado:
 
 | opção | tipo | padrão declarado |
 |---|---|---|
-| `position` | um dos seis cantos | `bottom-right` |
+| `position` | um dos seis cantos | `top-right` |
 | `richColors` | boolean | `false` |
 | `expand` | boolean | `false` — **inerte em vanilla e angular**, ver §5.1 |
 | `duration` | number | `4000` |
@@ -669,6 +596,14 @@ Opções da região, e o padrão declarado:
 **Os seis cantos são os mesmos nas cinco**, na mesma ordem nos cinco `argTypes`:
 `top-right`, `top-center`, `top-left`, `bottom-right`, `bottom-center`,
 `bottom-left`.
+
+**O padrão passou a `top-right` em 2026-09-13, por decisão da dona.** Até ali as
+cinco stacks DECLARAVAM `bottom-right` — que é o padrão da biblioteca de origem —
+enquanto toda story, toda docs page e a guideline do react chamavam `top-right` de
+"padrão do projeto", e o conteúdo compartilhado mandava declarar a posição
+explicitamente "porque o padrão da lib é outro". Duas verdades escritas ao mesmo
+tempo, e a que o código executava era a que ninguém documentava. Agora o wrapper
+de cada stack faz a ponte: trocar a biblioteca não muda onde o aviso aparece.
 
 ### 7.2 O conjunto de tipos — e ele É o mesmo, contra a expectativa
 
@@ -742,6 +677,87 @@ page, nenhum índice. O contrato deles divergiu:
 - botão de fechar **sempre** presente, sem opção;
 - nenhum cronômetro pausável, nenhuma fila, nenhum `promise`.
 
+
+> **Por que estas três subseções moram aqui e não na §5**: elas nomeiam custom
+> properties e constantes DA LIB, que `sonner.css` não tem por que ler. Ficaram
+> na §5 até 2026-09-13, e no dia em que a folha foi renomeada para o nome do
+> componente o portão `prd_token_sem_lastro` deixou de ser inerte e acusou oito
+> nomes de uma vez — corretamente. Token da folha fica na §5; parafuso de lib,
+> aqui.
+
+### 7.5 O que a lib usa no lugar de cada token
+
+| assunto | folha compartilhada | folha da lib |
+|---|---|---|
+| largura | 420px máx, 100% | `TOAST_WIDTH = 356` |
+| distância da borda | 16px (`--spacing-4`) | `VIEWPORT_OFFSET = 24px` (16px no mobile) |
+| gap entre notificações | 8px (`--spacing-2`) | `GAP = 14` |
+| raio | `--radius` | `--border-radius: 8px`, sobreposto por react e vue · **não** pelo svelte |
+| superfície, texto, borda | `--background`/`--foreground`/`--border` | `--normal-bg`/`--normal-text`/`--normal-border` |
+| sombra | `--elevation-xl` | a da lib |
+| visíveis ao mesmo tempo | **sem limite** | `VISIBLE_TOASTS_AMOUNT = 3` |
+| prazo default | 4000ms | `TOAST_LIFETIME = 4000` |
+| tempo até desmontar | 200ms (`DURATION_OUTPUT`/`EXIT_DURATION`) | `TIME_BEFORE_UNMOUNT = 200` |
+
+**Os dois números que já batem são os que importam para o comportamento** — 4000
+e 200 — e batem porque as duas implementações à mão os escolheram para casar. O
+comentário de `EXIT_DURATION` no angular diz isso: *"espelha a transição de saída
+de `.nds-sonner` — remover antes cortaria o fade"*.
+
+### 7.6 A ponte de tokens para a lib, e por que ela diverge em duas pontas
+
+Os três wrappers passam custom properties por `style` inline na região. Medido em
+2026-09-13 com `node scripts/tabela-tokens.mjs sonner`:
+
+| custom property | react | vue | svelte |
+|---|---|---|---|
+| `--normal-bg` | `var(--popover)` | `var(--popover)` | `var(--color-popover)` |
+| `--normal-text` | `var(--popover-foreground)` | `var(--popover-foreground)` | `var(--color-popover-foreground)` |
+| `--normal-border` | `var(--border)` | `var(--border)` | `var(--color-border)` |
+| `--border-radius` | `var(--radius)` | `var(--radius)` | **ausente** |
+
+**Os dois prefixos não são estilo, são camadas diferentes.** Nesta casa
+`--popover` é um TRIPLETO HSL (`24 100% 99.5%` no tema default), e só vira cor
+dentro de `hsl()`. Quem embrulha é o alias do `@theme`:
+`--color-popover: hsl(var(--popover))`, em `globals.css` do svelte. A folha da lib
+faz `background: var(--normal-bg)` **direto**, sem `hsl()`.
+
+Ou seja: o svelte entrega uma cor e as outras duas entregam um tripleto para uma
+propriedade que espera cor. É o mesmo defeito de forma que a folha compartilhada
+evita escrevendo `hsl(var(--background))` em toda parte.
+
+**Está na lista de inconsistências e não afirmo aqui o efeito na tela**, porque
+isso precisa de sonda em navegador — o que se mede sem navegador é que a forma do
+valor não casa com o que a propriedade aceita, em duas das três stacks, e que a
+story que teria visto (`DarkTheme`, com a asserção `backgroundColor !== rgba(0,0,0,0)`)
+lê a notificação de índice 0, que é a mais nova, que é `info`, que tem cor
+semântica própria por `richColors`. A asserção passa sem tocar no tipo `default`.
+
+**E o `--border-radius` que falta no svelte é comparável e certo**: sem ele a
+notificação do svelte fica com o raio 8px da lib, enquanto react e vue seguem
+`--radius` — que vale 14px no tema default, 24px no warm e **0** no cold.
+
+### 7.7 Os dois instrumentos de token são CEGOS para este slug
+
+Medido em 2026-09-13, e é o achado mais silencioso desta página:
+
+| instrumento | o que procura | o que existe |
+|---|---|---|
+| `prd_token_sem_lastro` em `scripts/audit.mjs` | `docs/shared/styles/nds/<slug>.css` | `sonner.css` — **não existe `sonner.css`** |
+| `node scripts/tabela-tokens.mjs sonner` | seletores `.nds-sonner*` | `.nds-sonner*` |
+
+O segundo diz isso na primeira linha da saída: `folha(s) com seletor .nds-sonner:
+(nenhuma)`. O primeiro não diz nada: a condição `existsSync(folhaFile)` é falsa e
+a regra sai pela porta do `if`.
+
+**Consequência**: a tabela da §5 acima é a única parte deste documento sem portão
+nenhum. Ela pode envelhecer em silêncio, que é exatamente o defeito que este
+diretório existe para não ter. Está registrado como pendência no fim.
+
+O que `tabela-tokens.mjs` **conseguiu** medir foi a §5.3, porque ali ele lê as
+tabelas de token das docs pages: 16 linhas, 4 por stack, e **zero no angular** —
+as quatro chaves `tokens.*.normal*` não resolvem naquela stack.
+
 ## 8. Acessibilidade
 
 ### 8.1 A fiação viva, que é o ponto mais divergente do componente
@@ -752,14 +768,30 @@ Medido em 2026-09-13 na fonte de cada lib e no código das duas stacks à mão:
 |---|---|---|---|---|---|
 | região é elemento persistente? | sim (`<section>`) | sim | sim | **não** quando criada sob demanda | sim, enquanto montada |
 | `aria-live` na região | `polite` | `polite` | `polite` | **ausente** | **ausente** |
-| `aria-relevant` na região | `additions text` | — | — | — | — |
-| `aria-atomic` na região | `false` | — | — | — | — |
-| `role`/`aria-live` na notificação | **ausentes** | `status` + `polite` | `status` + `polite` | `status` + `polite` | `status` + `polite` |
-| `aria-atomic` na notificação | — | `true` | `true` | **ausente** | **ausente** |
-| notificação na ordem de tabulação | não | não (patch D11) | não (patch D11) | não | não |
+| `aria-relevant` na região | `additions text` | `additions text` | `additions text` | — | — |
+| `aria-atomic` na região | `false` | `false` | `false` | — | — |
+| `role`/`aria-live` na notificação | **ausentes** | **ausentes** | só `polite`, sem `role` | `status` + `polite` | `status` + `polite` |
+| `aria-atomic` na notificação | — | — | `true` | **ausente** | **ausente** |
+| notificação na ordem de tabulação | **SIM** (`tabIndex: 0`, sem patch) | não (patch D11) | não (patch D11) | não | não |
 
-**Três padrões, e o do meio é um aninhamento.** Vue e svelte têm `aria-live` na
-região E na notificação dentro dela — duas regiões vivas encaixadas, que é o
+**Três linhas desta tabela estavam erradas, e a correção veio de reler a fonte
+INSTALADA de cada lib em 2026-09-13** — não a documentação delas, que é onde a
+versão anterior se apoiou:
+
+- **vue-sonner 2.0.9 não escreve `aria-live` nem `role` na notificação.** A tabela
+  dizia `status` + `polite` + `aria-atomic="true"`, e o `<li>` sai só com
+  `tabindex` (do patch) e cerca de vinte `data-*`. Não há aninhamento no Vue.
+- **svelte-sonner 1.2.1 não escreve `role` em lugar nenhum** — a notificação leva
+  só `aria-live`, e é a ÚNICA das três libs em que a região e a notificação são
+  as duas regiões vivas.
+- **No react a notificação ESTÁ na ordem de tabulação**: `tabIndex: 0` no `<li>`
+  (`sonner/dist/index.mjs`, no `createElement("li", …)`), sem patch. É exatamente
+  o defeito que o Vue e o Svelte corrigiram com patch (D11) — torrada que some
+  sozinha não deveria ser parada de teclado —, e a linha antiga afirmava o
+  contrário para as cinco.
+
+**Dois padrões de anúncio, e um aninhamento.** No react e no vue o `aria-live`
+está só na região; no svelte ele está na região E na notificação dentro dela — duas regiões vivas encaixadas, que é o
 caminho conhecido para o mesmo texto ser anunciado duas vezes. Nenhum documento
 desta casa registra isso, e nenhum portão o vê: `aria-live` aninhado não é
 violação de axe.
@@ -820,7 +852,7 @@ Vanilla e angular não têm equivalente.
 
 | markup | quem para | como |
 |---|---|---|
-| `.nds-toast` | `toast.css:231-238` | `transition: none; animation: none` em `.nds-toast`, `.nds-toast-close` e `.nds-toast-icon-spin` |
+| `.nds-sonner` | `sonner.css:231-238` | `transition: none; animation: none` em `.nds-sonner`, `.nds-sonner-close` e `.nds-sonner-icon-spin` |
 | `[data-sonner-toast]` | a folha da lib | `transition: none !important; animation: none !important` em `[data-sonner-toast]`, `[data-sonner-toast] > *` e `.sonner-loading-bar` |
 
 **A guarda da folha compartilhada vence por ORDEM, não por especificidade** — os
@@ -925,7 +957,7 @@ Ordem: folha → fila e região da stack → ícones → rótulos pt-BR → stor
 docs page.
 
 **A folha primeiro, e ela só serve a duas stacks.** Se a stack nova tem lib, o que
-se escreve é a PONTE de tokens (§5.3) e não a folha; se não tem, `toast.css` é o
+se escreve é a PONTE de tokens (§5.3) e não a folha; se não tem, `sonner.css` é o
 contrato inteiro.
 
 **Armadilha de cada stack**, todas medidas:
@@ -974,7 +1006,7 @@ era de ~200ms e a story reprovava sozinha sob carga; 1200ms é o valor que fecha
 
 | assunto | arquivo |
 |---|---|
-| geometria, tokens, cores semânticas, movimento reduzido | `docs/shared/styles/nds/toast.css` — **e ela é lida por vanilla e angular** |
+| geometria, tokens, cores semânticas, movimento reduzido | `docs/shared/styles/nds/sonner.css` — **e ela é lida por vanilla e angular** |
 | a fila de referência, com o motivo de cada escolha | `nortear-design-system-vanilla/src/components/ui/toast-utils.ts` |
 | a mesma fila, em Angular, com os motivos de framework | `nortear-design-system-angular/src/components/ui/sonner.ts` |
 | a ponte de tokens para a lib | `ui/sonner.tsx` (react), `ui/sonner/Sonner.vue` (vue), `ui/sonner/sonner.svelte` (svelte) |
@@ -991,13 +1023,23 @@ catálogo do componente é este arquivo.
 
 ---
 
-> **PENDÊNCIA · 2026-09-13** — o nome do componente tem três formas nas cinco
-> guidelines (`Sonner`, `Sonner (Toast)`, `Toast`, `Toaster`), e o payload de
-> analytics usa uma quarta (`component: "toast"`) enquanto o slug é `sonner`.
-> O título da story e o `title` do conteúdo já dizem "Sonner" nas cinco.
-> **Decisão da dona**, com as opções em §1.1.
-> **Fecha quando** os cinco cabeçalhos `## …` de `07-feedback-components.md`
-> disserem a mesma palavra e o `component` do payload for coerente com ela.
+**DECIDIDO em 2026-09-13 — o componente é Sonner, e a região é Toaster.** O nome
+tinha três formas nas cinco guidelines (`Sonner`, `Sonner (Toast)`, `Toast`,
+`Toaster`) e o payload usava uma quarta (`component: "toast"`) contra o slug
+`sonner`. Pela decisão da dona:
+
+| o que | passou a ser |
+|---|---|
+| folha compartilhada | `docs/shared/styles/nds/sonner.css` (era `sonner.css`) |
+| classes do componente | `.nds-sonner`, `-title`, `-description`, `-content`, `-action`, `-close`, `-icon`, `-icon-spin`; keyframe `nds-sonner-spin` |
+| classe da REGIÃO | `.nds-toaster`, mantida: Toaster é o nome da caixa fixa que escolhe o canto e empilha, não do aviso |
+| payload | `component: "sonner"` no tipo e nos call sites das cinco |
+| cabeçalho das guidelines | não existe mais seção de catálogo: a regra da categoria está em `19-feedback.md` e o catálogo aqui |
+
+**O que isso fechou de graça**: `prd_token_sem_lastro` derivava o nome da folha do
+slug e saía pelo `existsSync` sem reportar nada, e `tabela-tokens.mjs sonner`
+imprimia "nenhuma" ao procurar `.nds-sonner*`. Com os três nomes iguais, os dois
+instrumentos passam a medir a §5 deste arquivo.
 
 > **PENDÊNCIA · 2026-09-13** — `node scripts/audit.mjs sonner --json` devolve
 > **16 achados**, medidos neste dia e todos anteriores a este PRD: 1
@@ -1028,22 +1070,29 @@ de inconsistências.
 `catalogo_duplicado_com_prd` **e** as cinco seções guardarem só regra de
 categoria.
 
-> **PENDÊNCIA · 2026-09-13** — a §5 é a única seção deste PRD sem portão nenhum:
-> `prd_token_sem_lastro` procura `docs/shared/styles/nds/sonner.css` e a folha
-> chama-se `toast.css`, então a regra sai pelo `existsSync` sem reportar nada, e
-> `tabela-tokens.mjs sonner` procura `.nds-sonner*` e imprime `folha(s) com
-> seletor .nds-sonner: (nenhuma)`. Os dois instrumentos derivam o nome do arquivo
-> e do seletor a partir do slug, e este é o componente em que slug, folha e classe
-> têm nomes diferentes.
-> **Fecha quando** `node scripts/tabela-tokens.mjs sonner` nomear
-> `docs/shared/styles/nds/toast.css` na primeira linha da saída — é a mesma
-> premissa que `prd_token_sem_lastro` precisa para deixar de ser inerte.
+**A §5 ficou sob portão em 2026-09-13**, pela renomeação acima: enquanto a folha
+se chamava `sonner.css` e as classes eram `.nds-sonner*`, os dois instrumentos que
+leem esta seção derivavam o nome do slug e não achavam nada — `prd_token_sem_lastro`
+saía pelo `existsSync` e `tabela-tokens.mjs sonner` imprimia "(nenhuma)". Portão
+que não acha o arquivo não reprova, e silêncio parecia aprovação.
 
-> **PENDÊNCIA · 2026-09-13** — a fiação de região viva tem três padrões (§8.1), e
-> nas duas stacks que o design system controla inteiramente o `aria-live` está na
-> notificação e não no elemento persistente. No vue e no svelte ele está nos dois,
-> aninhado. Nenhum dos três casos é visto por portão: `aria-live` aninhado e
-> região viva criada junto do conteúdo não são violação de axe.
-> **Decisão da dona** sobre qual padrão vale nas cinco.
+**DECIDIDO em 2026-09-13 — o `aria-live` mora na NOTIFICAÇÃO.** É o que o vanilla e
+o Angular já faziam, e as duas passaram a ter asserção nas duas metades: a
+notificação carrega `aria-live="polite"` e a região NÃO carrega.
+
+> **PENDÊNCIA · 2026-09-13** — no react a notificação está na ordem de tabulação
+> (`tabIndex: 0` no `<li>` da `sonner@2.0.8`), e é o mesmo defeito que o Vue e o
+> Svelte já corrigiram por `patch-package` (D11): torrada que desaparece sozinha
+> não deveria ser parada de teclado, porque quem chega nela pelo Tab perde o foco
+> quando ela sai. O react é a única stack sem diretório `patches/`, então fechar
+> isto é criar a infraestrutura de patch ali — decisão da dona.
+> **Fecha quando** a linha "notificação na ordem de tabulação" da tabela de §8.1
+> disser "não" nas cinco, com uma asserção por stack.
+
+> **PENDÊNCIA · 2026-09-13** — as três stacks com lib ainda não cumprem a decisão,
+> porque o atributo é escrito pela biblioteca: no react ele fica na região; no vue
+> e no svelte, nos dois lugares, aninhado. Nenhum dos casos é visto por portão —
+> `aria-live` aninhado não é violação de axe. Vue e svelte têm infraestrutura de
+> `patch-package` (e patch de sonner já aplicado); o react não tem nenhuma.
 > **Fecha quando** as cinco linhas da tabela de §8.1 forem iguais e houver uma
 > asserção por stack cobrando o elemento que carrega o `aria-live`.

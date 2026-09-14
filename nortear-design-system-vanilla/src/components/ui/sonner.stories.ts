@@ -57,7 +57,7 @@ const meta: Meta<SonnerArgs> = {
         'bottom-right', 'bottom-center', 'bottom-left',
       ],
       description: 'Canto da tela onde a pilha nasce.',
-      table: { type: { summary: 'ToastPosition' }, defaultValue: { summary: 'bottom-right' } },
+      table: { type: { summary: 'ToastPosition' }, defaultValue: { summary: 'top-right' } },
     },
     richColors: {
       control: 'boolean',
@@ -146,7 +146,7 @@ export const Playground: Story = {
       await expect(region).toHaveAttribute('data-position', 'top-right');
     });
 
-    await step('A notificação é mensagem de estado, anunciada sem interromper', async () => {
+    await step('O `aria-live` mora na notificação, e a região NÃO o carrega', async () => {
       // accessibility.item1 — `polite` é a escolha, não o default: `assertive`
       // cortaria a leitura em curso para avisar que algo deu certo, o que é
       // hostil justamente com quem depende do leitor de tela.
@@ -154,6 +154,15 @@ export const Playground: Story = {
       await expect(toastEl).toHaveAttribute('role', 'status');
       await expect(toastEl).toHaveAttribute('aria-live', 'polite');
       await expect(toastEl.getAttribute('aria-live')).not.toBe('assertive');
+
+      // A OUTRA metade da decisão da dona (2026-09-13), e é ela que faltava: a
+      // região nasce SEM `aria-live`. Região viva dentro de região viva é
+      // anúncio duplicado ou anúncio nenhum, e nenhum portão vê o aninhamento —
+      // `aria-live` dentro de `aria-live` não é violação de axe. Sem estas duas
+      // linhas a regra depende de alguém reler o código.
+      const region = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(region.contains(toastEl)).toBe(true);
+      await expect(region).not.toHaveAttribute('aria-live');
     });
 
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {
@@ -167,7 +176,7 @@ export const Playground: Story = {
       // accessibility.item3 — o tipo e o título dizem tudo; anunciar o ícone
       // faria o leitor ler "imagem" antes de cada notificação.
       const toastEl = await waitForToast({ type: 'success' });
-      const icon = toastEl.querySelector<HTMLElement>('.nds-toast-icon')!;
+      const icon = toastEl.querySelector<HTMLElement>('.nds-sonner-icon')!;
       await expect(icon).toHaveAttribute('aria-hidden', 'true');
       await expect(icon.querySelector('svg')).not.toBeNull();
     });

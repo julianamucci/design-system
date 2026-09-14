@@ -156,7 +156,7 @@ function fireWithAction() {
       onClick: () => {
         track('toast_action_click', {
           label: 'with-action-label',
-          component: 'toast',
+          component: 'sonner',
           location: 'docs_demo',
         });
       },
@@ -289,7 +289,7 @@ const propCols = computed(() => ({
 }));
 
 const toasterPropItems = computed(() => [
-  { name: 'position',     type: 'string',    defaultValue: '"bottom-right"', required: 'Não', description: toPlainText(tContent('props.table.position'))     },
+  { name: 'position',     type: 'string',    defaultValue: '"top-right"',    required: 'Não', description: toPlainText(tContent('props.table.position'))     },
   { name: 'richColors',   type: 'boolean',   defaultValue: 'false',          required: 'Não', description: tContent('props.table.richColors')              },
   { name: 'expand',       type: 'boolean',   defaultValue: 'false',          required: 'Não', description: tContent('props.table.expand')                  },
   { name: 'duration',     type: 'number',    defaultValue: '4000',           required: 'Não', description: tContent('props.table.duration')                },
@@ -389,7 +389,10 @@ const visualTestItems = computed(() => [
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
     <DocsDemonstration>
-      <div style="contain: layout; position: relative; min-height: 120px;">
+      <div
+        class="nds-min-h-30"
+        style="contain: layout; position: relative"
+      >
         <div
           class="nds-cluster"
           data-spacing="sm"

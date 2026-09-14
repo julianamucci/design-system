@@ -43,16 +43,22 @@ interface AnalyticsEvents {
     locale: Locale;
     page_title: string;
   };
-  /** Disparado quando o usuário dispara um toast na demonstração do Sonner. */
+  /** Disparado quando o usuário dispara uma notificação na demonstração do Sonner. */
   toast_demo_triggered: {
     toast_type: string;
     locale: Locale;
   };
 
-  /** Disparado ao clicar no botão de ação interno de um toast (ex: Desfazer). */
+  /**
+   * Disparado ao clicar no botão de ação interno da notificação (ex: Desfazer).
+   *
+   * `component` é `'sonner'` desde 2026-09-13: o componente se chama Sonner nas
+   * cinco stacks, e é o valor que o conteúdo compartilhado já publica na tabela
+   * de analytics. O NOME do evento fica — renomeá-lo partiria a série do GA4.
+   */
   toast_action_click: {
     label: string;
-    component: 'toast';
+    component: 'sonner';
     location: string;
   };
   accordion_expand: {

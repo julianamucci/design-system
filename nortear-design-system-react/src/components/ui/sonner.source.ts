@@ -63,8 +63,15 @@ const POSITIONS = [
   'bottom-left',
 ] as const;
 
-/** Canto e prazo que a lib já usa sozinha — repeti-los ensinaria ruído. */
-const DEFAULT_POSITION = 'bottom-right';
+/**
+ * Canto e prazo que a região já usa sozinha — repeti-los ensinaria ruído.
+ *
+ * O canto espelha o `DEFAULT_POSITION` de `ui/sonner.tsx` (decisão da dona em
+ * 2026-09-13, `top-right`) e é literal aqui de propósito: este módulo é TS puro
+ * para rodar no projeto `unit` do vitest, e importar valor do `.tsx` o
+ * arrastaria para dentro do React.
+ */
+const DEFAULT_POSITION = 'top-right';
 const DEFAULT_DURATION = 4000;
 
 const IMPORT_TOAST = 'import { toast } from "sonner";';

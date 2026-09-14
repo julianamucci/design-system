@@ -25,6 +25,7 @@ import {
   NdsSheetTitle,
   NdsSheetDescription,
 } from './sheet';
+import { NdsSkeleton } from './skeleton';
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 //
@@ -619,6 +620,7 @@ export class NdsSidebarMenuSubButton {
 @Component({
   selector: 'div[ndsSidebarMenuSkeleton]',
   standalone: true,
+  imports: [NdsSkeleton],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   host: {
@@ -628,11 +630,14 @@ export class NdsSidebarMenuSubButton {
     '[attr.data-slot]': '"sidebar-menu-skeleton"',
     '[attr.aria-label]': 'loadingLabel()',
   },
+  // As duas peças COMPÕEM o Skeleton, como nas outras quatro stacks: as classes
+  // `-icon` e `-text` só dão medida, e sem `.nds-skeleton` por baixo os dois
+  // blocos saíam sem fundo, sem raio e sem pulso — ocupando espaço e invisíveis.
   template: `
     @if (showIcon()) {
-      <div class="nds-sidebar-menu-skeleton-icon" data-sidebar="menu-skeleton-icon"></div>
+      <div ndsSkeleton class="nds-sidebar-menu-skeleton-icon" data-sidebar="menu-skeleton-icon"></div>
     }
-    <div class="nds-sidebar-menu-skeleton-text" data-sidebar="menu-skeleton-text"></div>
+    <div ndsSkeleton class="nds-sidebar-menu-skeleton-text" data-sidebar="menu-skeleton-text"></div>
   `,
 })
 export class NdsSidebarMenuSkeleton {

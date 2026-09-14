@@ -244,7 +244,7 @@ export const Loading: Story = {
       await expect(toastEl).toHaveAttribute('data-type', 'loading');
 
       const icon = toastEl.querySelector<SVGSVGElement>('[data-icon] svg')!;
-      await expect(icon).toHaveClass('nds-toast-icon-spin');
+      await expect(icon).toHaveClass('nds-sonner-icon-spin');
       await expect(toastEl).toHaveTextContent(TEXTS.loading);
     });
   },

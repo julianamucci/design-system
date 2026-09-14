@@ -65,7 +65,7 @@ function priorityLabel(raw: string): string {
 // isso o nó é construído aqui em vez de sair de `toast()` — a fila real é
 // portalizada e posicionada na tela inteira, e não caberia num quadro.
 //
-// O markup é o MESMO que `toast-utils.ts` monta: `.nds-toast` e filhos. A versão
+// O markup é o MESMO que `toast-utils.ts` monta: `.nds-sonner` e filhos. A versão
 // anterior desenhava classes de uma era anterior à migração (`bg-green-50`,
 // `text-green-800`) que não existem em CSS nenhum, então o espécime mostrava um
 // retângulo branco — a documentação divergia do componente sem ninguém ver.
@@ -88,7 +88,7 @@ interface LocalToastOpts {
 function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {}): HTMLElement {
   const toastEl = document.createElement('div');
   toastEl.setAttribute('data-sonner-toast', '');
-  toastEl.className = 'nds-toast';
+  toastEl.className = 'nds-sonner';
   toastEl.dataset.type = type;
   toastEl.dataset.richColors = 'true';
   // Espécime: já nasce assentado, sem a transição de entrada que a fila usa.
@@ -100,23 +100,23 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
   const icon = TOAST_ICONS[type];
   if (icon) {
     const iconWrap = document.createElement('span');
-    iconWrap.className = type === 'loading' ? 'nds-toast-icon nds-toast-icon-spin' : 'nds-toast-icon';
+    iconWrap.className = type === 'loading' ? 'nds-sonner-icon nds-sonner-icon-spin' : 'nds-sonner-icon';
     iconWrap.setAttribute('aria-hidden', 'true');
     iconWrap.innerHTML = DOMPurify.sanitize(icon);
     toastEl.appendChild(iconWrap);
   }
 
   const contentEl = document.createElement('div');
-  contentEl.className = 'nds-toast-content';
+  contentEl.className = 'nds-sonner-content';
 
   const titleEl = document.createElement('p');
-  titleEl.className = 'nds-toast-title';
+  titleEl.className = 'nds-sonner-title';
   titleEl.textContent = message;
   contentEl.appendChild(titleEl);
 
   if (opts.description) {
     const descEl = document.createElement('p');
-    descEl.className = 'nds-toast-description';
+    descEl.className = 'nds-sonner-description';
     descEl.textContent = opts.description;
     contentEl.appendChild(descEl);
   }
@@ -124,12 +124,12 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
   if (opts.actionLabel && opts.onAction) {
     const actionBtn = document.createElement('button');
     actionBtn.type = 'button';
-    actionBtn.className = 'nds-toast-action';
+    actionBtn.className = 'nds-sonner-action';
     actionBtn.textContent = opts.actionLabel;
     actionBtn.addEventListener('click', () => {
       track('toast_action_click', {
         label: opts.actionLabel!,
-        component: 'toast',
+        component: 'sonner',
         location: 'docs_demo',
       });
       opts.onAction!();
@@ -143,7 +143,7 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
   closeBtn.type = 'button';
   closeBtn.setAttribute('data-close-button', '');
   closeBtn.setAttribute('aria-label', CLOSE_LABEL);
-  closeBtn.className = 'nds-toast-close';
+  closeBtn.className = 'nds-sonner-close';
   closeBtn.innerHTML = DOMPurify.sanitize('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>');
   closeBtn.addEventListener('click', () => toastEl.remove());
   toastEl.appendChild(closeBtn);
@@ -310,7 +310,7 @@ export function createSonnerDocs(): HTMLElement {
                 label: t('demonstration.labels.withActionLabel'),
                 onClick: () => track('toast_action_click', {
                   label: 'with-action-label',
-                  component: 'toast',
+                  component: 'sonner',
                   location: 'docs_demo',
                 }),
               },
@@ -547,7 +547,7 @@ export interface ToastOptions {
               title: t('props.toasterTitle'),
               cols: propsCols,
               items: [
-                { name: 'position',     type: 'ToastPosition',  defaultValue: '"bottom-right"', required: 'Não', description: toPlainText(t('props.table.position'))     },
+                { name: 'position',     type: 'ToastPosition',  defaultValue: '"top-right"', required: 'Não', description: toPlainText(t('props.table.position'))     },
                 { name: 'richColors',   type: 'boolean',         defaultValue: 'false',          required: 'Não', description: t('props.table.richColors')              },
                 { name: 'expand',       type: 'boolean',         defaultValue: 'false',          required: 'Não', description: t('props.table.expand')                  },
                 { name: 'duration',     type: 'number',          defaultValue: '4000',           required: 'Não', description: t('props.table.duration')                },
@@ -563,7 +563,7 @@ export interface ToastOptions {
                 { name: 'action',      type: '{ label: string; onClick: fn }',    defaultValue: '—',        required: 'Não', description: 'Botão de ação inline no toast.'         },
                 { name: 'closeButton', type: 'boolean',                           defaultValue: 'false',    required: 'Não', description: 'Exibe botão de fechar.'                },
                 { name: 'richColors',  type: 'boolean',                           defaultValue: 'false',    required: 'Não', description: 'Cores semânticas por tipo.'             },
-                { name: 'position',    type: 'ToastPosition',                     defaultValue: '"bottom-right"', required: 'Não', description: 'Posição individual do toast.'    },
+                { name: 'position',    type: 'ToastPosition',                     defaultValue: '"top-right"', required: 'Não', description: 'Posição individual do toast.'    },
               ],
             },
           ],

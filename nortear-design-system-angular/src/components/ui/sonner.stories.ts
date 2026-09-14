@@ -49,7 +49,7 @@ const meta: Meta<SonnerArgs> = {
         'bottom-right', 'bottom-center', 'bottom-left',
       ],
       description: 'Canto da tela onde a pilha nasce.',
-      table: { type: { summary: 'ToastPosition' }, defaultValue: { summary: 'bottom-right' } },
+      table: { type: { summary: 'ToastPosition' }, defaultValue: { summary: 'top-right' } },
     },
     richColors: {
       control: 'boolean',
@@ -143,6 +143,23 @@ export const Playground: Story = {
       await expect(toastEl.getAttribute('aria-live')).not.toBe('assertive');
     });
 
+    await step('O `aria-live` mora na notificação, e a região NÃO o carrega', async () => {
+      // As DUAS metades, e a segunda é a que nenhum portão vê sozinha: região
+      // viva por fora mais notificação viva por dentro é `aria-live` aninhado,
+      // que o axe não reprova e que faz o leitor de tela anunciar duas vezes o
+      // mesmo texto. Afirmar só a presença na notificação passaria com a região
+      // também viva.
+      const toastEl = await waitForToast({ type: 'success' });
+      await expect(toastEl).toHaveAttribute('aria-live', 'polite');
+
+      const region = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(region.contains(toastEl)).toBe(true);
+      await expect(region).not.toHaveAttribute('aria-live');
+      // A região é marco de página nomeado, não região viva: quem anuncia é a
+      // notificação que acabou de entrar.
+      await expect(region).toHaveAttribute('role', 'region');
+    });
+
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {
       // Um marco de página nomeado: o leitor de tela chega até as notificações
       // pela lista de regiões, e não só no instante em que elas são anunciadas.
@@ -154,7 +171,7 @@ export const Playground: Story = {
       // accessibility.item3 — o tipo e o título dizem tudo; anunciar o ícone
       // faria o leitor ler "imagem" antes de cada notificação.
       const toastEl = await waitForToast({ type: 'success' });
-      const icon = toastEl.querySelector<SVGSVGElement>('.nds-toast-icon > svg')!;
+      const icon = toastEl.querySelector<SVGSVGElement>('.nds-sonner-icon > svg')!;
       await expect(icon).toHaveAttribute('aria-hidden', 'true');
       await expect(icon.childElementCount).toBeGreaterThan(0);
     });

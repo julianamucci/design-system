@@ -306,7 +306,7 @@
 }
 
 .nds-animate-spin {
-  animation: nds-spin 1s linear infinite;
+  animation: nds-spin var(--duration-cycle-fast) linear infinite;
 }
 
 /* ── Alinhamento de texto ─────────────────────────────────────────────────── */
@@ -532,7 +532,7 @@
 
 /* ── pulse (skeleton) ────────────────────────────────────────────────────── */
 @keyframes nds-pulse { 50% { opacity: 0.5; } }
-.nds-animate-pulse { animation: nds-pulse 2s cubic-bezier(0.4,0,0.6,1) infinite; }
+.nds-animate-pulse { animation: nds-pulse var(--duration-cycle-slow) cubic-bezier(0.4,0,0.6,1) infinite; }
 
 /* ── tipografia extra ────────────────────────────────────────────────────── */
 .nds-text-3xl { font-size: 1.875rem; line-height: 2.25rem; }  /* 30px */
@@ -649,7 +649,7 @@
  * e `.nds-animate-pulse` cravam `1s` e `2s` porque nenhum degrau da escada
  * serve a um ciclo contínuo. Na mesma medição elas foram as duas ÚNICAS que
  * continuavam animando: as gêmeas `.nds-spin` (button.css),
- * `.nds-toast-icon-spin`, `.nds-skeleton` e `.nds-input-otp-caret` já paravam,
+ * `.nds-sonner-icon-spin`, `.nds-skeleton` e `.nds-input-otp-caret` já paravam,
  * cada uma pelo bloco da própria folha.
  *
  * ESTE BLOCO MORA NO FIM DO ARQUIVO, E ISSO É O CONSERTO, NÃO ARRUMAÇÃO.

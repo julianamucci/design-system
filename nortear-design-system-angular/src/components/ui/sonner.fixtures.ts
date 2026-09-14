@@ -32,13 +32,13 @@ export const PERSISTENT: ToastOptions = { duration: Number.POSITIVE_INFINITY };
 
 /** Todas as torradas presentes no documento, na ordem da pilha. */
 export function toastsOnScreen(): HTMLElement[] {
-  return Array.from(document.querySelectorAll<HTMLElement>('.nds-toast'));
+  return Array.from(document.querySelectorAll<HTMLElement>('.nds-sonner'));
 }
 
 /**
  * Espera a torrada aparecer E assentar.
  *
- * A busca é pela classe `.nds-toast`, não por `data-slot`: quando duas
+ * A busca é pela classe `.nds-sonner`, não por `data-slot`: quando duas
  * diretivas dividem um host o `data-slot` é disputado, e a classe é o que o CSS
  * e as cinco stacks realmente compartilham.
  */

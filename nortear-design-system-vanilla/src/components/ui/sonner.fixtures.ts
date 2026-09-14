@@ -40,7 +40,7 @@ export function mountToaster(options: SonnerToasterOptions = {}): HTMLElement {
 
 /** Todas as notificações presentes no documento, na ordem da pilha. */
 export function toastsOnScreen(): HTMLElement[] {
-  return Array.from(document.querySelectorAll<HTMLElement>('.nds-toast'));
+  return Array.from(document.querySelectorAll<HTMLElement>('.nds-sonner'));
 }
 
 /** Espera a notificação aparecer E assentar. */

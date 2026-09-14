@@ -1,6 +1,6 @@
 <script lang="ts">
   import { untrack } from 'svelte';
-  import { Skeleton } from '@/components/ui/skeleton';
+  import { Skeleton, SkeletonRegion } from '@/components/ui/skeleton';
   import { AspectRatio } from '@/components/ui/aspect-ratio';
   import { locale, useTranslation } from '@/lib/i18n';
   import { applySeo } from '@/lib/use-seo';
@@ -136,10 +136,8 @@
       <!-- Card de perfil -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.card')}</p>
-        <div
-          role="status"
-          aria-busy="true"
-          aria-label={$tStore('demonstration.labels.card')}
+        <SkeletonRegion
+          label={$tStore('demonstration.labels.card')}
           class="nds-cluster nds-p-4 nds-border-default nds-rounded-md"
           data-spacing="md"
           data-align="center"
@@ -149,43 +147,48 @@
             <Skeleton data-shape="text" data-width="2-3" />
             <Skeleton data-shape="text" data-width="1-2" />
           </div>
-        </div>
+        </SkeletonRegion>
       </div>
 
       <!-- Lista -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.list')}</p>
-        <ul aria-busy="true" aria-label={$tStore('demonstration.labels.list')} class="nds-stack nds-list-none nds-p-0" data-spacing="sm">
-          {#each Array.from({ length: 5 }) as _, i (i)}
-            <li class="nds-cluster nds-p-2 nds-border-default nds-rounded-md" data-spacing="sm" data-align="center">
-              <Skeleton data-shape="avatar" data-size="sm" />
-              <div class="nds-stack nds-flex-1" data-spacing="xs">
-                <Skeleton data-shape="text" data-width="2-3" />
-                <Skeleton data-shape="text" data-width="1-3" />
-              </div>
-            </li>
-          {/each}
-        </ul>
+        <!-- A lista continua `<ul>`/`<li>`, e a REGIÃO é a peça em volta: a lista
+             tinha `aria-busy` e nome sem papel nenhum, que é nome de região viva
+             que o leitor não anuncia. A peça traz o `role="status"` junto. -->
+        <SkeletonRegion label={$tStore('demonstration.labels.list')}>
+          <ul class="nds-stack nds-list-none nds-p-0" data-spacing="sm">
+            {#each Array.from({ length: 5 }) as _, i (i)}
+              <li class="nds-cluster nds-p-2 nds-border-default nds-rounded-md" data-spacing="sm" data-align="center">
+                <Skeleton data-shape="avatar" data-size="sm" />
+                <div class="nds-stack nds-flex-1" data-spacing="xs">
+                  <Skeleton data-shape="text" data-width="2-3" />
+                  <Skeleton data-shape="text" data-width="1-3" />
+                </div>
+              </li>
+            {/each}
+          </ul>
+        </SkeletonRegion>
       </div>
 
       <!-- Imagem AspectRatio -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.image')}</p>
-        <div role="status" aria-busy="true" aria-label={$tStore('demonstration.labels.image')}>
+        <SkeletonRegion label={$tStore('demonstration.labels.image')}>
           <AspectRatio ratio={16 / 9}>
             <Skeleton data-shape="fill" />
           </AspectRatio>
-        </div>
+        </SkeletonRegion>
       </div>
 
       <!-- Parágrafo -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.paragraph')}</p>
-        <div role="status" aria-busy="true" aria-label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
+        <SkeletonRegion label={$tStore('demonstration.labels.paragraph')} class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
           <Skeleton data-shape="text" data-width="full" />
           <Skeleton data-shape="text" data-width="3-4" />
           <Skeleton data-shape="text" data-width="1-2" />
-        </div>
+        </SkeletonRegion>
       </div>
     </div>
   </DocsDemonstration>
@@ -270,25 +273,25 @@
   />
 
   {#snippet doPair1()}
-    <div role="status" aria-busy="true" aria-label="Carregando card" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
+    <SkeletonRegion label="Carregando card" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md nds-stack" data-spacing="sm">
       <Skeleton data-shape="heading" data-width="1-2" />
       <Skeleton data-shape="text" data-width="full" />
       <Skeleton data-shape="text" data-width="3-4" />
-    </div>
+    </SkeletonRegion>
   {/snippet}
   {#snippet dontPair1()}
-    <div role="status" aria-busy="true" aria-label="Carregando" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md">
+    <SkeletonRegion label="Carregando" class="nds-w-full nds-max-w-xs nds-p-4 nds-border-default nds-rounded-md">
       <Skeleton data-shape="text" data-width="1-3" />
-    </div>
+    </SkeletonRegion>
   {/snippet}
   {#snippet doPair2()}
-    <div role="status" aria-busy="true" aria-label="Carregando avatar" class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
+    <SkeletonRegion label="Carregando avatar" class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
       <Skeleton data-shape="avatar" />
       <div class="nds-stack nds-flex-1" data-spacing="xs">
         <Skeleton data-shape="text" data-width="1-2" />
         <Skeleton data-shape="text" data-width="1-3" />
       </div>
-    </div>
+    </SkeletonRegion>
   {/snippet}
   {#snippet dontPair2()}
     <div class="nds-cluster nds-w-full" data-spacing="sm" data-align="center">
@@ -316,20 +319,20 @@
   />
 
   {#snippet variantRectangle()}
-    <div role="status" aria-busy="true" aria-label="Carregando bloco" class="nds-w-xs">
+    <SkeletonRegion label="Carregando bloco" class="nds-w-xs">
       <Skeleton data-shape="fill" class="nds-docs-skeleton-media" />
-    </div>
+    </SkeletonRegion>
   {/snippet}
   {#snippet variantCircle()}
-    <div role="status" aria-busy="true" aria-label="Carregando avatar">
+    <SkeletonRegion label="Carregando avatar">
       <Skeleton data-shape="avatar" />
-    </div>
+    </SkeletonRegion>
   {/snippet}
   {#snippet variantLine()}
-    <div role="status" aria-busy="true" aria-label="Carregando texto" class="nds-stack nds-w-xs" data-spacing="xs">
+    <SkeletonRegion label="Carregando texto" class="nds-stack nds-w-xs" data-spacing="xs">
       <Skeleton data-shape="text" data-width="3-4" />
       <Skeleton data-shape="text" data-width="1-2" />
-    </div>
+    </SkeletonRegion>
   {/snippet}
 
   <!-- ── Estados ────────────────────────────────────────────────── -->

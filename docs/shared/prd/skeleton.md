@@ -19,8 +19,9 @@ as duas são de acessibilidade, não de desenho:
 
 - **ele não fala** — sai `aria-hidden="true"` de fábrica nas cinco stacks;
 - **quem fala é a região que ESPERA o conteúdo**, com `role="status"`,
-  `aria-busy` e nome. Essa região não é parte do componente: é do consumidor, e
-  todas as superfícies desta casa a montam à mão.
+  `aria-busy` e nome. Desde 2026-09-13 essa região é PEÇA do design system
+  (`SkeletonRegion` e equivalentes — ver D9): até ali era do consumidor, e as cinco
+  superfícies desta casa a montavam à mão, em cinco formas diferentes.
 
 | vizinho | diferença que decide |
 |---|---|
@@ -81,9 +82,21 @@ primitivos, nos 19 arquivos de story e nas cinco docs pages: **nenhum valor de d
 o vanilla não usa nem isso. Ver, porém, a inconsistência registrada em §7 sobre
 o comentário do primitivo do Angular e sobre `props.table.rest`.
 
-### D2 · A duração é LITERAL, e quem para o movimento é o bloco DA PRÓPRIA FOLHA
+### D2 · A duração é o degrau `--duration-cycle`, e há DUAS portas parando o movimento
 
-**Estado**: `animation: nds-skeleton-pulse 1.5s var(--ease-standard) infinite`,
+**REVISADA em 2026-09-13, por decisão da dona**: a escada de `--duration-*` ganhou
+três degraus de CICLO CONTÍNUO — `--duration-cycle-fast` (1000ms, giro),
+`--duration-cycle` (1500ms, este pulso) e `--duration-cycle-slow` (2000ms, o pulso
+utilitário) — e os três entram no bloco de `prefers-reduced-motion` da
+`motion.css`. Com isso a camada de token passa a alcançar o pulso, e a guarda da
+própria folha continua onde está: duas portas para o mesmo movimento é redundância
+deliberada, e a mais barata de furar é a do token. O pulso mede os mesmos 1,5s de
+antes; o que mudou é de onde o número vem.
+
+O texto abaixo é o estado anterior, e fica porque é a medição que justificou o
+degrau novo.
+
+**Estado até 2026-09-13**: `animation: nds-skeleton-pulse 1.5s var(--ease-standard) infinite`,
 com a curva em token e a duração cravada. No fim de `skeleton.css` há
 `@media (prefers-reduced-motion: reduce) { .nds-skeleton { animation: none } }`.
 
@@ -182,10 +195,26 @@ cinco stacks. A opinião é o TRIO:
   atributo proibido — o leitor de tela o descarta, e o axe acusa
   `aria-prohibited-attr`.
 
-**Uma região por BLOCO, não por peça** (D9), e a região é do consumidor: nenhuma
-das cinco stacks entrega um componente de região. Toda superfície desta casa —
-46 stories em 19 arquivos, 5 docs pages — a monta à mão, e é por isso que ela divergiu em
-cinco formas diferentes (§7).
+**Uma região por BLOCO, não por peça** (D9).
+
+**E a região passou a ser PEÇA em 2026-09-13, por decisão da dona.** Até ali ela
+era do consumidor: nenhuma das cinco stacks entregava um componente de região, e
+toda superfície desta casa — 46 stories em 19 arquivos, 5 docs pages — a montava à
+mão. Foi assim que ela divergiu em cinco formas, e no Svelte a lista da
+demonstração ficou sem `role="status"` nenhum. Regra que cada consumidor executa
+por conta é regra que se perde no quinto consumidor.
+
+O contrato, igual nas cinco:
+
+| stack | peça | forma |
+|---|---|---|
+| react, vue, svelte | `SkeletonRegion` | componente com `label` obrigatório |
+| vanilla | `createSkeletonRegion({ label, children, class? })` | subfábrica, no padrão da stack |
+| angular | `div[ndsSkeletonRegion]` | diretiva de atributo, com `input` `label` |
+
+Em todas: `role="status"`, `aria-busy="true"`, `data-slot="skeleton-region"`, nome
+acessível obrigatório vindo de `label`, e **nenhuma CSS própria** — quem compõe põe
+`nds-stack` ou `nds-grid` nela, que é o que as cinco docs pages já faziam à mão.
 
 ### D6 · Não existe prop de forma; existem atributos — e só o vanilla os tipifica
 
@@ -308,7 +337,7 @@ e cruzada com `node scripts/tabela-tokens.mjs skeleton`.
 | raio (base) | o da base do tema | `--radius` — ver D4 |
 | raio (avatar) | círculo | `--radius-full` |
 | curva do pulso | — | `--ease-standard` |
-| duração do pulso | 1,5s, ciclo infinito | **literal**, sem token — ver D2 |
+| duração do pulso | 1500ms, ciclo infinito | `--duration-cycle` — degrau de ciclo contínuo, nascido em 2026-09-13 (D2) |
 | ciclo do pulso | opacidade 1 → 0,5 → 1 | sem token (quadros de `nds-skeleton-pulse`) |
 | altura de `text` | `padding-block` de metade da medida, nos dois lados | `--text-control` — ver D8 |
 | altura de `heading` | `padding-block` de metade da medida, nos dois lados | `--text-h4` |

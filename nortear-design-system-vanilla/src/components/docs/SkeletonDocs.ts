@@ -3,7 +3,7 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createSkeleton, type SkeletonWidth } from '@/components/ui/skeleton';
+import { createSkeleton, createSkeletonRegion, type SkeletonWidth } from '@/components/ui/skeleton';
 import { createAspectRatio } from '@/components/ui/aspect-ratio';
 import uiTranslations from '@/i18n/ui.json';
 import skeletonTranslations from '@shared/content/skeleton/translations.json';
@@ -58,17 +58,26 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-function loadingWrap(label: string, extraClass = '', stackSpacing?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = `nds-w-full ${extraClass}`.trim();
-  if (stackSpacing) {
-    wrap.classList.add('nds-stack');
-    wrap.dataset.spacing = stackSpacing;
-  }
-  wrap.setAttribute('role', 'status');
-  wrap.setAttribute('aria-busy', 'true');
-  wrap.setAttribute('aria-label', label);
-  return wrap;
+/**
+ * Região de espera desta página.
+ *
+ * O papel, o estado e o nome acessível vêm de `createSkeletonRegion` — a página
+ * não os escreve mais à mão. O que sobra aqui é só LAYOUT: a classe de
+ * composição e os atributos que ela lê.
+ */
+function loadingRegion(
+  label: string,
+  children: HTMLElement[],
+  layout: { class?: string; spacing?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'; align?: 'center' } = {},
+): HTMLElement {
+  const region = createSkeletonRegion({
+    label,
+    children,
+    class: ['nds-w-full', layout.class].filter(Boolean).join(' '),
+  });
+  if (layout.spacing) region.dataset.spacing = layout.spacing;
+  if (layout.align) region.dataset.align = layout.align;
+  return region;
 }
 
 /** Linha de texto na fração pedida do container. */
@@ -85,7 +94,6 @@ function buildCardDemo(label: string): HTMLElement {
   caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
-  const inner = loadingWrap('Carregando card de perfil', 'nds-max-w-sm');
   const row = document.createElement('div');
   row.className = 'nds-cluster';
   row.dataset.spacing = 'md';
@@ -98,7 +106,8 @@ function buildCardDemo(label: string): HTMLElement {
   lines.appendChild(line('2-3'));
   lines.appendChild(line('1-2'));
   row.appendChild(lines);
-  inner.appendChild(row);
+
+  const inner = loadingRegion('Carregando card de perfil', [row], { class: 'nds-max-w-sm' });
 
   wrap.append(caption, inner);
   return wrap;
@@ -113,8 +122,9 @@ function buildListDemo(label: string): HTMLElement {
   caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
-  const list = loadingWrap('Carregando lista', '', 'md');
-  for (let i = 0; i < 5; i++) {
+  // Uma região para a lista INTEIRA: região por item repetiria o mesmo aviso a
+  // cada linha — cinco itens de três peças seriam quinze avisos.
+  const rows = Array.from({ length: 5 }, () => {
     const row = document.createElement('div');
     row.className = 'nds-cluster';
     row.dataset.spacing = 'sm';
@@ -126,8 +136,9 @@ function buildListDemo(label: string): HTMLElement {
     text.appendChild(line('2-3'));
     text.appendChild(line('1-3'));
     row.appendChild(text);
-    list.appendChild(row);
-  }
+    return row;
+  });
+  const list = loadingRegion('Carregando lista', rows, { class: 'nds-stack', spacing: 'md' });
 
   wrap.append(caption, list);
   return wrap;
@@ -142,10 +153,9 @@ function buildImageDemo(label: string): HTMLElement {
   caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
-  const inner = loadingWrap('Carregando imagem');
-  inner.appendChild(
+  const inner = loadingRegion('Carregando imagem', [
     createAspectRatio({ ratio: 16 / 9, content: createSkeleton({ shape: 'fill' }) }),
-  );
+  ]);
 
   wrap.append(caption, inner);
   return wrap;
@@ -160,29 +170,36 @@ function buildParagraphDemo(label: string): HTMLElement {
   caption.className = 'nds-text-caption nds-text-muted-foreground';
   caption.textContent = label;
 
-  const inner = loadingWrap('Carregando parágrafo', '', 'sm');
-  (['full', '3-4', '1-2'] as const).forEach((w) => inner.appendChild(line(w)));
+  const inner = loadingRegion(
+    'Carregando parágrafo',
+    (['full', '3-4', '1-2'] as const).map((w) => line(w)),
+    { class: 'nds-stack', spacing: 'sm' },
+  );
 
   wrap.append(caption, inner);
   return wrap;
 }
 
 function buildRectangleVariant(): HTMLElement {
-  const wrap = loadingWrap('Carregando bloco', 'nds-max-w-sm');
-  wrap.appendChild(createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' }));
-  return wrap;
+  return loadingRegion(
+    'Carregando bloco',
+    [createSkeleton({ shape: 'fill', className: 'nds-docs-skeleton-media' })],
+    { class: 'nds-max-w-sm' },
+  );
 }
 
 function buildCircleVariant(): HTMLElement {
-  const wrap = loadingWrap('Carregando avatar', 'nds-max-w-sm');
-  wrap.appendChild(createSkeleton({ shape: 'avatar' }));
-  return wrap;
+  return loadingRegion('Carregando avatar', [createSkeleton({ shape: 'avatar' })], {
+    class: 'nds-max-w-sm',
+  });
 }
 
 function buildLineVariant(): HTMLElement {
-  const wrap = loadingWrap('Carregando linhas', 'nds-max-w-sm', 'sm');
-  (['full', '3-4', '1-2'] as const).forEach((w) => wrap.appendChild(line(w)));
-  return wrap;
+  return loadingRegion(
+    'Carregando linhas',
+    (['full', '3-4', '1-2'] as const).map((w) => line(w)),
+    { class: 'nds-max-w-sm nds-stack', spacing: 'sm' },
+  );
 }
 
 // ─── createSkeletonDocs ───────────────────────────────────────────────────────
@@ -360,18 +377,17 @@ export function createSkeletonDocs(): HTMLElement {
               dontLabel: tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = loadingWrap('Carregando artigo', 'nds-max-w-sm', 'sm');
-                wrap.appendChild(createSkeleton({ shape: 'heading', width: '1-2' }));
-                wrap.appendChild(line('full'));
-                wrap.appendChild(line('3-4'));
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = loadingWrap('Carregando', 'nds-max-w-sm', 'sm');
-                wrap.appendChild(line('1-3'));
-                return wrap;
-              },
+              doPreviewFactory: () =>
+                loadingRegion(
+                  'Carregando artigo',
+                  [createSkeleton({ shape: 'heading', width: '1-2' }), line('full'), line('3-4')],
+                  { class: 'nds-max-w-sm nds-stack', spacing: 'sm' },
+                ),
+              dontPreviewFactory: () =>
+                loadingRegion('Carregando', [line('1-3')], {
+                  class: 'nds-max-w-sm nds-stack',
+                  spacing: 'sm',
+                }),
             },
             {
               doLabel: tNav('common.do'),
@@ -379,18 +395,16 @@ export function createSkeletonDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => {
-                const wrap = loadingWrap('Carregando perfil', 'nds-max-w-sm');
-                wrap.classList.add('nds-cluster');
-                wrap.dataset.spacing = 'sm';
-                wrap.dataset.align = 'center';
-                wrap.appendChild(createSkeleton({ shape: 'avatar' }));
                 const lines = document.createElement('div');
                 lines.className = 'nds-stack nds-flex-1';
                 lines.dataset.spacing = 'xs';
                 lines.appendChild(line('1-2'));
                 lines.appendChild(line('1-3'));
-                wrap.appendChild(lines);
-                return wrap;
+                return loadingRegion(
+                  'Carregando perfil',
+                  [createSkeleton({ shape: 'avatar' }), lines],
+                  { class: 'nds-max-w-sm nds-cluster', spacing: 'sm', align: 'center' },
+                );
               },
               // Sem `role="status"`/`aria-busy`: é justamente o que falta no
               // "não faça" — o esqueleto solto não anuncia carregamento nenhum.
@@ -414,7 +428,7 @@ export function createSkeletonDocs(): HTMLElement {
 
       case 'importacao':
         return createDocsImport({
-          code: `import { createSkeleton } from '@/components/ui/skeleton';`,
+          code: `import { createSkeleton, createSkeletonRegion } from '@/components/ui/skeleton';`,
         });
 
       case 'variantes': {
@@ -472,7 +486,17 @@ export interface SkeletonOptions {
   size?: 'sm' | 'lg';
 }
 
-export function createSkeleton(options?: SkeletonOptions): HTMLElement;`;
+export function createSkeleton(options?: SkeletonOptions): HTMLElement;
+
+// A espera é anunciada pela REGIÃO, e ela é peça: role="status",
+// aria-busy="true" e nome acessível obrigatório, sem CSS própria.
+export interface SkeletonRegionOptions {
+  label: string;
+  children?: HTMLElement | HTMLElement[];
+  class?: string;
+}
+
+export function createSkeletonRegion(options: SkeletonRegionOptions): HTMLElement;`;
 
         const propsCols = {
           prop: t('props.table.prop'),
