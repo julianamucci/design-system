@@ -134,10 +134,11 @@ todo elemento. As duas portas chegam ao mesmo lugar; a asserção é pelo PAR
 (nome da animação **e** duração maior que zero), nunca por
 `animationName !== 'none'`, que passava com duração zerada.
 
-**Para revisitar**: tokenizar a duração exigiria um degrau novo na escada de
-movimento para ciclo contínuo, e ele valeria para as três animações de pulso do
-sistema — este, o `.nds-animate-pulse` e o `.nds-animate-spin` — não só para
-esta folha. Decisão de fundação, não de componente.
+**Era "para revisitar", e foi feito em 2026-09-13**: tokenizar a duração exigia
+um degrau novo na escada de movimento para ciclo contínuo, valendo para as três
+animações de pulso do sistema — este, o `.nds-animate-pulse` e o
+`.nds-animate-spin`. É a revisão do topo desta decisão: `--duration-cycle`,
+`-fast` e `-slow`.
 
 ### D3 · A superfície é a cor PRIMÁRIA a 10%, não uma cor neutra
 
@@ -502,6 +503,8 @@ fazia, e é contra ele que uma regressão se reconhece.
    inverte e é consistente — as quatro stacks com composição usam a `<ul>` como
    região ocupada, sem `role="status"`, e duas delas acrescentam `role="list"`
    (react, vue) enquanto duas não (svelte, vanilla).
+   **Como fechou**: a lista da demonstração usa a peça de região nas cinco, e a
+   `<ul role="list">` da `ListWithAvatar` fica DENTRO da peça, nas cinco (D9).
 8. **A linha de teclado da seção de acessibilidade tem quatro formas.** Vanilla
    e Angular: duas linhas, `—` com a descrição e `Tab` com "sem interação por
    teclado". React: as mesmas duas linhas com os textos TROCADOS de lugar. Vue:
@@ -534,6 +537,11 @@ fazia, e é contra ele que uma regressão se reconhece.
     React, Vue e Angular não. O assunto daquele par é a FORMA da caixa, não a
     região — a região só é o assunto do segundo par, e lá as cinco concordam em
     omiti-la de propósito. Maioria (3): sem região.
+    **Como fechou — CONTRA a maioria, pela referência**: os dois lados do par 1
+    ficam DENTRO da peça de região nas cinco, com o mesmo nome
+    (`doDont.regionLabels.pair1`), porque o defeito ensinado ali é a forma, e um
+    "não faça" sem região ensinaria dois defeitos de uma vez. O vanilla já fazia
+    assim. Só o "não faça" do par 2 fica sem região, nas cinco.
 14. **O que o "não faça" do primeiro par desenha muda por stack.** React, Vue e
     Svelte: uma linha de texto curta. Vanilla: uma linha de texto curta. Angular:
     um bloco de mídia. E o "não faça" do segundo par do Angular mistura texto
@@ -659,13 +667,12 @@ Ordem: folha → primitivo e peça de região → stories → docs page.
 | portões determinísticos | `node scripts/audit.mjs skeleton --json` |
 | tabela de tokens cruzada com as cinco páginas | `node scripts/tabela-tokens.mjs skeleton` |
 
-**As guidelines de stack ainda têm seção de catálogo deste componente**, e por
-isso o portão `catalogo_duplicado_com_prd` passa a reportar a partir da criação
-deste arquivo — seis ocorrências, uma em `07-feedback-components.md` de cada
-stack mais o ponteiro em `08-display-components.md` do vanilla. A migração é
-deste PRD para lá, e não foi feita nesta rodada porque este documento nasceu com
-escopo de um arquivo só. As três contradições que a leitura daquelas seções
-encontrou estão na pendência abaixo.
+**As guidelines de stack tinham seção de catálogo deste componente** quando este
+arquivo nasceu, e o portão `catalogo_duplicado_com_prd` reportou seis ocorrências
+— uma em `07-feedback-components.md` de cada stack mais o ponteiro em
+`08-display-components.md` do vanilla. A migração fechou no mesmo dia (abaixo);
+hoje só resta o ponteiro do vanilla, `## Skeleton — componente de Feedback`, que
+aponta para cá em vez de repetir o catálogo.
 
 ---
 

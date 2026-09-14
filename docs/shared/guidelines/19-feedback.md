@@ -235,7 +235,7 @@ evitar.
 | Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `location_fora_do_vocabulario` · `campo_de_payload_morto` | evento anunciado em tabela e não disparado, ou disparado por uma stack só: nada vê. É o caso de `badge_click` e dos dois eventos de tarefa no Angular |
 | Nenhuma altura fixa em peça interativa | `CLAUDE.md` §Conventions | nenhum — é conferido por story, nas cinco | — |
 | Nenhum valor de design em `style` inline | `12-tokenizacao-dimensoes.md` | `inline_style_design_value` | — |
-| Tabela de tokens da docs page bate com a folha | `14-taxonomia-secoes.md` | `scripts/tabela-tokens.mjs` (instrumento, não portão) | ele lê por regex: o Skeleton do Svelte renderiza as cinco linhas numa forma que o script não casa, e o resultado sai como "svelte: 0" — "não sei ler" saindo como "não tem" |
+| Tabela de tokens da docs page bate com a folha | `14-taxonomia-secoes.md` | `scripts/tabela-tokens.mjs` (instrumento, não portão) | ele lê por regex: página que escreve as linhas numa forma que nenhuma regex casa sai como "stack: 0" — "não sei ler" saindo como "não tem". Foi o caso do Skeleton do Svelte até 2026-09-14; hoje o script lê 6 linhas nas cinco |
 
 ### O que está aberto
 
