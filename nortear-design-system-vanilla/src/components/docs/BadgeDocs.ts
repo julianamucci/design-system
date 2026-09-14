@@ -571,7 +571,6 @@ export interface BadgeOptions {
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: t('analytics.table.click'),         trigger: toPlainText(t('analytics.table.clickTrigger')),         payload: t('analytics.table.clickPayload')         },
             { event: t('analytics.table.pageView'),      trigger: toPlainText(t('analytics.table.pageViewTrigger')),      payload: t('analytics.table.pageViewPayload')      },
             { event: t('analytics.table.sectionViewed'), trigger: toPlainText(t('analytics.table.sectionViewedTrigger')), payload: t('analytics.table.sectionViewedPayload') },
             { event: t('analytics.table.langSwitch'),    trigger: toPlainText(t('analytics.table.langSwitchTrigger')),    payload: t('analytics.table.langSwitchPayload')    },

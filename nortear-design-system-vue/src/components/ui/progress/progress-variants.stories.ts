@@ -56,6 +56,15 @@ export const Determinate: Story = {
       });
     });
 
+    await step('O desenho sai de --value, e não de transform inline', async () => {
+      // Estilo inline vence qualquer especificidade: escrever `transform` aqui
+      // sobrescreveria a regra da folha compartilhada em vez de alimentá-la, e
+      // levaria embora a transição junto.
+      const indicador = indicadorDoProgresso(canvasElement);
+      await expect(indicador.style.getPropertyValue('--value')).toBe('42');
+      await expect(indicador.style.transform).toBe('');
+    });
+
     await step('Indicador e trilha se distinguem com pelo menos 3:1', async () => {
       // WCAG 1.4.11: a barra só informa se for possível ver onde ela termina.
       await expect(contrastBarTrack(canvasElement)).toBeGreaterThanOrEqual(3);
@@ -88,10 +97,13 @@ export const Indeterminate: Story = {
       await expect(bar).toHaveAttribute('data-indeterminate', '');
     });
 
-    await step('Sem valor não há transform inline para posicionar a barra', async () => {
-      // O desenho passa a ser da animação, não de uma posição calculada.
+    await step('Sem valor nenhuma property de posição é escrita', async () => {
+      // O desenho passa a ser da animação, não de uma posição calculada. Se
+      // `--value` sobrasse escrita, a folha manteria o indicador parado numa
+      // posição fixa por baixo do ciclo.
       const indicador = indicadorDoProgresso(canvasElement);
-      await expect(indicador.getAttribute('style') ?? '').not.toContain('translateX');
+      await expect(indicador.style.getPropertyValue('--value')).toBe('');
+      await expect(indicador.getAttribute('style') ?? '').toBe('');
     });
   },
 };

@@ -15,7 +15,6 @@
     "angular/TextareaDocs.ts": "textarea",
     "react/AccordionDocs.tsx": "accordion",
     "react/AlertDocs.tsx": "alert",
-    "react/BadgeDocs.tsx": "badge",
     "react/BreadcrumbDocs.tsx": "breadcrumb",
     "react/CalendarDocs.tsx": "calendar",
     "react/CardDocs.tsx": "card",

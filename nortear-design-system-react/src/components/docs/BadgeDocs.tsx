@@ -389,14 +389,6 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
                 aria-label="Filtrar por React"
                 className="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent"
                 style={{ padding: 0, border: 0 }}
-                onClick={() =>
-                  track("badge_click", {
-                    component: "badge",
-                    label: "React",
-                    variant: "info",
-                    location: "docs_demo",
-                  })
-                }
               >
                 <Badge variant="info">React</Badge>
               </button>
@@ -547,11 +539,6 @@ interface BadgeCounterProps extends React.HTMLAttributes<HTMLSpanElement> {}`;
           payload: tContent("analytics.table.payload"),
         }}
         items={[
-          {
-            event: tContent("analytics.table.click"),
-            trigger: toPlainText(tContent("analytics.table.clickTrigger")),
-            payload: tContent("analytics.table.clickPayload"),
-          },
           {
             event: tContent("analytics.table.pageView"),
             trigger: toPlainText(tContent("analytics.table.pageViewTrigger")),

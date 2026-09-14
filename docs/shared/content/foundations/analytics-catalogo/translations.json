@@ -174,12 +174,6 @@
           "when": "No clique do botão.",
           "extras": "<code>label</code>, <code>variant</code>"
         },
-        "badgeClick": {
-          "event": "badge_click",
-          "component": "Badge",
-          "when": "Badge clicável acionado como filtro ou atalho.",
-          "extras": "<code>label</code>, <code>variant</code>"
-        },
         "cardClick": {
           "event": "card_click",
           "component": "Card",
@@ -605,12 +599,6 @@
           "when": "On button click.",
           "extras": "<code>label</code>, <code>variant</code>"
         },
-        "badgeClick": {
-          "event": "badge_click",
-          "component": "Badge",
-          "when": "Clickable badge used as filter or shortcut.",
-          "extras": "<code>label</code>, <code>variant</code>"
-        },
         "cardClick": {
           "event": "card_click",
           "component": "Card",
@@ -1034,12 +1022,6 @@
           "event": "button_click",
           "component": "Button",
           "when": "Al hacer clic en el botón.",
-          "extras": "<code>label</code>, <code>variant</code>"
-        },
-        "badgeClick": {
-          "event": "badge_click",
-          "component": "Badge",
-          "when": "Badge clicable accionado como filtro o atajo.",
           "extras": "<code>label</code>, <code>variant</code>"
         },
         "cardClick": {

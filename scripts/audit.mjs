@@ -10265,6 +10265,69 @@ const DESTAQUE_SEM_HOVER_EXCECOES = {
   },
 };
 
+/**
+ * Progresso desenhado por estilo INLINE em vez de alimentar `--value`.
+ *
+ * A folha compartilhada desenha a barra com
+ * `transform: translateX(calc((var(--value, 0) - 100) * 1%))` em
+ * `.nds-progress-indicator`, e transiciona `transform`. Quem escreve o
+ * deslocamento inline no elemento **sobrescreve** essa regra em vez de
+ * alimentá-la — estilo inline vence qualquer especificidade —, e o preço não
+ * aparece na tela de hoje: aparece quando a folha muda (curva, origem, direção
+ * de leitura) e a mudança não alcança aquela stack.
+ *
+ * Medido em 2026-09-13: vue e svelte escreviam `transform: translateX(...)` no
+ * indicador, e a docs page do vanilla fazia o mesmo na demonstração animada —
+ * contra a própria story `Animated` dela, que escrevia `--value` com o motivo no
+ * comentário. As três foram corrigidas por decisão da dona, e este portão existe
+ * porque nenhum compilador, folha ou suíte reprovava a forma antiga: a barra
+ * desenhava certo, e só o acoplamento estava errado.
+ *
+ * O react NÃO precisa de exceção: quem escreve `width` inline lá é a
+ * `@base-ui/react`, dentro de `node_modules`, que esta varredura não abre. Se
+ * algum dia um arquivo NOSSO do react escrever, é defeito igual.
+ *
+ * Linha com `expect(` fica de fora: as asserções que cobram a AUSÊNCIA do estilo
+ * inline nomeiam as mesmas propriedades, e reprová-las seria reprovar o portão.
+ */
+function auditProgressoFonteDoDesenho() {
+  const violations = [];
+  const ESCRITA = [
+    /\.style\.transform\s*=/,
+    /\.style\.width\s*=/,
+    /\.style\.setProperty\(\s*['"](?:transform|width)['"]/,
+    /transform:\s*[`'"]translateX/,
+    /style\s*=\s*["']transform:/,
+    /style:transform/,
+    /\{\s*transform:\s*[`'"]?translateX/,
+  ];
+
+  for (const stack of STACKS) {
+    const dir = join(ROOT, stackDir(stack), 'src', 'components');
+    if (!existsSync(dir)) continue;
+    for (const file of walkDir(dir, ['.ts', '.tsx', '.vue', '.svelte'])) {
+      const rel = relative(ROOT, file);
+      if (!/progress/i.test(rel)) continue;
+      const bruto = readFile(file);
+      if (!bruto) continue;
+      const conteudo = stripComments(bruto);
+      conteudo.split('\n').forEach((linha, i) => {
+        if (/expect\(/.test(linha)) return;
+        if (!ESCRITA.some((rx) => rx.test(linha))) return;
+        violations.push({
+          category: 'quality', severity: 'high', slug: 'progress', stack,
+          file: rel, line: i + 1, rule: 'progresso_desenhado_fora_do_value',
+          message: 'o deslocamento da barra está sendo escrito em estilo INLINE — isto sobrescreve '
+            + '`.nds-progress-indicator` da folha compartilhada em vez de alimentá-la. Alimente '
+            + '`--value` (0–100) e deixe a folha desenhar; a transição e a origem vivem lá',
+        });
+      });
+    }
+  }
+
+  return violations;
+}
+
 function auditDestaqueSemHover() {
   const violations = [];
   const dir = join(ROOT, 'docs', 'shared', 'styles', 'nds');
@@ -11942,7 +12005,7 @@ if (!category || category === 'seo') {
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 if (!category || category === 'quality') {
-  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado()];
+  const infra = [...auditDeadLibInfra(), ...auditCssTokenUsage(), ...auditOrphanTokens(), ...auditTypeRamp(), ...auditDocumentLang(), ...auditDocsSmokeCobertura(), ...auditPatchGate(), ...auditStorybookInfra(), ...auditStoryCategoryTag(), ...auditCardNestedRadius(), ...auditTemasCompletos(), ...auditGuidelineCode(), ...auditGuidelinesDeStack(), ...auditGuidelineRepeteCategoria(), ...auditFoundationLabels(), ...auditTranslateComposto(), ...auditFocusRingSobrescrito(), ...auditFocusRingTranslucido(), ...auditAnelDeFocoAusente(), ...auditContratoDeFamilia(), ...auditReasonEntreStacks(), ...auditReasonDaMesmaFamilia(), ...auditMotivoSintetizadoNaDocsPage(), ...auditCliqueSemMontagem(), ...auditGatilhoEscondido(), ...auditHasSobreOrdem(), ...auditAtrasoDeTooltip(), ...auditAtrasoEmDocsPage(), ...auditTagAngularInexistente(), ...auditDesmonteNaoFecha(), ...auditDestaqueSemHover(), ...auditProgressoFonteDoDesenho(), ...auditKeyframesDuplicado(), ...auditRelatedDeadLink(), ...auditCadeiaTransformOrigin(), ...auditFolhaQuePosiciona(), ...auditInvariantesOverlayCss(), ...auditSeletorEmDuasFolhas(), ...auditNivelDeTituloPadrao(), ...auditModalidadeNaoModal(), ...auditElevacaoPorTipo(), ...auditSombraCravada(), ...auditEscadaCravada(), ...auditInlineStyleFundamento(), ...auditRotuloDeNav(), ...auditTituloDeSecao(), ...auditTituloSemTamanho(), ...auditProvaDeSoltura(), ...auditRegistryDefasado(), ...auditFigmaSplitDefasado()];
   if (infra.length > 0) allViolations['_infra'] = [...(allViolations['_infra'] ?? []), ...infra];
 }
 

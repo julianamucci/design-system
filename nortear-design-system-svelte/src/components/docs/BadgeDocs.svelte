@@ -458,7 +458,6 @@ interface BadgeCounterProps extends HTMLAttributes<HTMLSpanElement> {
       { event: $tStore('analytics.table.pageView'),      trigger: toPlainText($tStore('analytics.table.pageViewTrigger')),      payload: $tStore('analytics.table.pageViewPayload')      },
       { event: $tStore('analytics.table.sectionViewed'), trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')), payload: $tStore('analytics.table.sectionViewedPayload') },
       { event: $tStore('analytics.table.langSwitch'),    trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),    payload: $tStore('analytics.table.langSwitchPayload')    },
-      { event: $tStore('analytics.table.click'),         trigger: toPlainText($tStore('analytics.table.clickTrigger')),         payload: $tStore('analytics.table.clickPayload')         },
     ]}
   />
 

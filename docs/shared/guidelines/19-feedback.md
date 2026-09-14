@@ -36,8 +36,11 @@ overlay divergiam antes da unificação de 2026-09-10. Medido naquele dia:
 - a do **vanilla** dizia que o Alert tem "padding fixo em `--spacing-4`" e gap de
   `--spacing-1`; a folha declara `padding-block: --spacing-2` e
   `row-gap: --spacing-0-5`;
-- três cópias fechavam a seção Badge mandando disparar `button_click`; o evento
-  tipado nas cinco é `badge_click`;
+- três cópias fechavam a seção Badge mandando disparar `button_click`, contra o
+  `badge_click` que estava tipado nas cinco stacks — e a ironia é que elas estavam
+  CERTAS pelo motivo errado: em 2026-09-13 a dona removeu o `badge_click`
+  justamente porque o clique é do botão. Nenhuma das três dizia por quê, e por isso
+  a divergência passava por descuido;
 - a do **vanilla** e a do **Angular** mandavam usar Skeleton ou spinner "para
   progresso indeterminado", modo que o Progress entrega nas cinco, com story,
   conteúdo e animação próprios;
@@ -179,20 +182,23 @@ eventos, e está em [`07-analytics.md`](07-analytics.md). O que é desta categor
 | evento | quem dispara | payload |
 |---|---|---|
 | `alert_dismiss` | quem compõe, ao fechar o alerta | `component`, `label` (id estável), `location` |
-| `badge_click` | quem envolve a etiqueta num botão | `component`, `label`, `variant?`, `location?` |
 | `toast_action_click` | a ação interna da torrada | `component: 'toast'`, `label`, `location` |
 | `toast_demo_triggered` | a demonstração da docs page | `toast_type`, `locale` |
 | `task_progress` · `task_complete` | quem controla a tarefa que a barra mostra | ver a §9 de [`progress.md`](../prd/progress.md) |
 
-- **Componente passivo não dispara nada.** Skeleton não tem evento próprio, e o
-  Progress só é medido por quem CONTROLA a tarefa — a barra não sabe o que está
-  progredindo.
-- **Quatro divergências estão medidas e abertas**, todas na §"O que está aberto":
-  `badge_click` existe nas cinco e é disparado por uma; `toast_action_click`
-  manda três valores diferentes de `label`, um deles texto traduzido;
-  `toast_demo_triggered` é o único evento da casa com `locale` no lugar de
-  `component` e `location`; e `task_progress`/`task_complete` são anunciados pelo
-  Angular sem serem disparados por ele.
+- **Componente passivo não dispara nada.** Skeleton e Badge não têm evento
+  próprio, e o Progress só é medido por quem CONTROLA a tarefa — a barra não sabe
+  o que está progredindo. No Badge, o clique é do `<button>` que envolve a
+  etiqueta, com o `button_click` dele: o `badge_click` saiu em 2026-09-13, por
+  decisão da dona, depois de medido que estava tipado nas cinco stacks, anunciado
+  nas cinco tabelas e disparado por uma. **Evento anunciado e não disparado não é
+  visto por portão nenhum** — não é erro de tipo nem violação de axe —, e é essa a
+  forma de defeito que a remoção fecha.
+- **Três divergências seguem medidas e abertas**, na §"O que está aberto":
+  `toast_action_click` manda três valores diferentes de `label`, um deles texto
+  traduzido; `toast_demo_triggered` é o único evento da casa com `locale` no lugar
+  de `component` e `location`; e `task_progress`/`task_complete` são anunciados
+  pelo Angular sem serem disparados por ele.
 
 ## Tom de voz
 
@@ -232,19 +238,13 @@ evitar.
 Cada item aqui tem medição no PRD do componente e espera decisão. Nenhum é
 defeito de texto: os cinco PRDs já descrevem o que o código faz hoje.
 
-1. **`badge_click` é tipado nas cinco e disparado por uma.** Ou as outras quatro
-   passam a disparar, ou o evento sai da tabela e do tipo.
-2. **`toast_demo_triggered` foge do vocabulário**: leva `locale` e não leva
+1. **`toast_demo_triggered` foge do vocabulário**: leva `locale` e não leva
    `component` nem `location`.
-3. **`toast_action_click` manda três valores de `label`**, e um deles é o rótulo
+2. **`toast_action_click` manda três valores de `label`**, e um deles é o rótulo
    traduzido da ação — exatamente o que a regra do payload proíbe.
-4. **Progresso fora da faixa não é limitado em duas stacks**, e ali a barra
-   renderiza vazia anunciando o número fora da faixa.
-5. **O desenho do Progress tem três técnicas** (`--value`, `transform` inline,
-   `width` da lib), e a referência usa a primeira.
-6. **O Angular anuncia `task_progress` e `task_complete` na tabela e não dispara
+3. **O Angular anuncia `task_progress` e `task_complete` na tabela e não dispara
    nenhum dos dois.**
-7. **O `aria-live` da torrada nas TRÊS stacks com lib** continua onde a lib o põe:
+4. **O `aria-live` da torrada nas TRÊS stacks com lib** continua onde a lib o põe:
    no react, na região; no vue e no svelte, nos dois lugares. A regra da casa é na
    notificação (decidida em 2026-09-13), e nas duas stacks sem lib ela já vale —
    mudar as outras três exige patch de biblioteca, que é decisão própria.
@@ -258,3 +258,6 @@ defeito de texto: os cinco PRDs já descrevem o que o código faz hoje.
 | Onde mora o `aria-live` da torrada | três padrões entre as cinco | **na notificação** — o que as duas stacks sem lib já faziam; as três com lib ficam registradas acima |
 | A região de espera do Skeleton | montada à mão nas cinco docs pages, em cinco formas | **peça do design system**, com papel, `aria-busy` e nome obrigatório |
 | Duração de animação contínua | literal nas folhas (1,5s · 2s · 1s) | **três degraus de token**, alcançados pela camada que para o movimento |
+| Valor fora da faixa no Progress | limitado em três stacks; nas outras duas a barra renderizava VAZIA anunciando o número | **limitado nas cinco**, antes de anunciar e antes de desenhar (C12) |
+| Técnica de desenho do Progress | três: `--value`, `transform` inline, `width` da lib | **`--value` onde dá** — o react fica com `width` por imposição da lib, registrado |
+| `badge_click` | tipado nas cinco, anunciado nas cinco tabelas, disparado por uma | **removido**: o clique é do `<button>` que envolve a etiqueta, pelo `button_click` dele |

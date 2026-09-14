@@ -407,7 +407,6 @@ durações inteiras sob a preferência.
 
 | evento | quem dispara hoje | payload |
 |---|---|---|
-| `badge_click` | **só a docs page do react** | `{ component: "badge", label, variant, location }` |
 | `docs_page_view` | as cinco docs pages | `{ component_name: "badge", locale, page_title }` |
 | `docs_section_viewed` | as cinco docs pages | `{ section_id, component_name: "badge", locale }` |
 | `language_switched` | o seletor de idioma das cinco | `{ previous_language, new_language }` |
@@ -416,8 +415,18 @@ durações inteiras sob a preferência.
 `track`; o evento é do gatilho que ENVOLVE a etiqueta, e por isso só existe onde
 alguém montou esse gatilho.
 
-**`badge_click` está tipado nas cinco `analytics.ts` e disparado em uma.** Medido
-em 2026-09-13: a única ocorrência fora das declarações está em
+**`badge_click` SAIU em 2026-09-13, por decisão da dona** — do tipo das cinco
+`analytics.ts`, do call site do react, das cinco tabelas de analytics e das chaves
+do conteúdo compartilhado. O que fica é o `button_click` do `<button>` que envolve
+a etiqueta: é ele que recebe o clique, e a etiqueta é aparência. Um evento a menos
+é uma coisa a menos para manter coerente em cinco stacks.
+
+O parágrafo abaixo é a medição que levou à decisão, e fica porque descreve a forma
+de defeito: **evento anunciado e não disparado não é visto por portão nenhum** —
+não é erro de tipo, não é violação de axe, e some entre os que "existem".
+
+**Estado até 2026-09-13: tipado nas cinco `analytics.ts` e disparado em uma.**
+Medido naquele dia: a única ocorrência fora das declarações estava em
 `BadgeDocs.tsx`, no `onClick` do `<button>` da composição de gatilho. As outras
 quatro páginas publicam a MESMA composição — com preview vivo em vue, svelte e
 vanilla — e nenhuma delas chama `track`. As cinco tabelas de analytics anunciam a
@@ -518,11 +527,10 @@ devolvido pela fábrica.
 > literal em vez de ler a chave publicada (V9, V10).
 > **Fecha quando**: `demonstration_labels_divergent` não reportar badge.
 
-> **PENDÊNCIA · 2026-09-13** — `badge_click` está tipado nas cinco `analytics.ts`
-> e é disparado só pela docs page do react, embora as cinco anunciem o evento na
-> tabela de analytics e quatro montem o mesmo gatilho (§9). Decisão da dona:
-> disparar nas cinco, ou tirar o evento da tabela e do tipo onde ele não existe.
-> **Fecha quando**: a dona decidir entre as duas, e a escolha valer nas cinco.
+**FECHADA em 2026-09-13**: a dona decidiu REMOVER o `badge_click` em vez de
+disparar nas cinco. Saiu do tipo das cinco stacks, do call site do react, das cinco
+tabelas de analytics e do conteúdo compartilhado, com a descrição da seção
+reescrita nos três idiomas para dizer que o clique é do botão. Ver §9.
 
 > **PENDÊNCIA · 2026-09-13** — sem variante explícita o Vue não emite
 > `data-variant`, e as outras quatro emitem `default` (V1). Há duas instâncias

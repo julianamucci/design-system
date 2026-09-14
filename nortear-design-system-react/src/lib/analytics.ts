@@ -75,14 +75,6 @@ interface AnalyticsEvents {
     location?: string;
   };
 
-  /** Disparado quando o usuário aciona um Badge clicável (filtro ou atalho). */
-  badge_click: {
-    component: string;
-    label: string;
-    variant?: string;
-    location?: string;
-  };
-
   /** Disparado quando o usuário clica em um Avatar para abrir um perfil.
    *  Nunca envie identificadores reais — use ids anônimos/hashed. */
   profile_click: {

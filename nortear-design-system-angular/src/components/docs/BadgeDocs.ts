@@ -565,7 +565,12 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
 
   protected readonly analyticsItems = computed(() => {
     dict();
-    return ['click', 'pageView', 'sectionViewed', 'langSwitch'].map((k) => ({
+    // A lista de chaves é literal aqui, não derivada do dicionário: tirar
+    // `analytics.table.click*` do conteúdo compartilhado NÃO apaga a linha —
+    // renderizaria o caminho da chave. `badge_click` saiu (a etiqueta não é o
+    // elemento interativo; o clique é do botão que a envolve, já coberto por
+    // `button_click`), então a chave sai daqui também.
+    return ['pageView', 'sectionViewed', 'langSwitch'].map((k) => ({
       event: t(`analytics.table.${k}`),
       trigger: toPlainText(t(`analytics.table.${k}Trigger`)),
       payload: toPlainText(t(`analytics.table.${k}Payload`)),

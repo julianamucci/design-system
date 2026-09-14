@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor, within } from 'storybook/test';
+import { createApp } from 'vue';
 import { Progress } from './index';
 import {
   indicadorAnimation,
@@ -93,6 +94,14 @@ export const Loading: Story = {
       });
     });
 
+    await step('A metade sai de --value, e não de posição escrita à mão', async () => {
+      // A folha é que calcula o deslocamento a partir de `--value`; escrever
+      // `transform` inline venceria a regra dela e levaria a transição junto.
+      const indicador = indicadorDoProgresso(canvasElement);
+      await expect(indicador.style.getPropertyValue('--value')).toBe('50');
+      await expect(indicador.style.transform).toBe('');
+    });
+
     await step('O texto ao lado repete o mesmo número', async () => {
       const bar = canvas.getByRole('progressbar');
       const live = canvasElement.querySelector('[aria-live="polite"]');
@@ -130,6 +139,24 @@ export const Complete: Story = {
       await waitFor(async () => {
         await expect(Math.abs(percentualDesenhado(canvasElement) - 100)).toBeLessThan(2);
       });
+    });
+
+    await step('O valor é limitado pela escala, nos dois sentidos', async () => {
+      // C12: um `value` acima do máximo anunciaria um número que a barra não
+      // desenha, e um negativo empurraria o indicador para fora da trilha —
+      // as duas telas eram a mesma barra VAZIA com o número errado no leitor.
+      // A barra vive num nó solto porque aqui a pergunta é de valor, não de
+      // pixel: o limite tem de valer antes de anunciar e antes de desenhar.
+      for (const [pedido, limitado] of [[140, '100'], [-20, '0']] as const) {
+        const solto = document.createElement('div');
+        const app = createApp(Progress, { modelValue: pedido, 'aria-label': 'Fora da faixa' });
+        app.mount(solto);
+        const bar = solto.querySelector<HTMLElement>('[role="progressbar"]');
+        const indicador = solto.querySelector<HTMLElement>('[data-slot="progress-indicator"]');
+        await expect(bar?.getAttribute('aria-valuenow')).toBe(limitado);
+        await expect(indicador?.style.getPropertyValue('--value')).toBe(limitado);
+        app.unmount();
+      }
     });
 
     await step('A conclusão é um estado próprio no DOM', async () => {

@@ -270,7 +270,9 @@ export function createProgressDocs(): HTMLElement {
               if (pct > 100) pct = 0;
               if (valueSpan) valueSpan.textContent = `${pct}%`;
               if (bar) bar.setAttribute('aria-valuenow', String(pct));
-              if (indicator) indicator.style.transform = `translateX(-${100 - pct}%)`;
+              // Mesma custom property que a factory alimenta — escrever `width` ou
+              // `transform` aqui sobrescreveria a regra da folha em vez de alimentá-la.
+              if (indicator) indicator.style.setProperty('--value', String(pct));
               if (!firstCycleDone && (pct === 25 || pct === 50 || pct === 75 || pct === 100)) {
                 track('task_progress', { component: 'progress', task: 'upload', percent: pct, location: 'docs_demo' });
                 if (pct === 100) {

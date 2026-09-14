@@ -240,9 +240,12 @@ export const IndeterminateProcessing: Story = {
       await expect(bar).toHaveAttribute('data-indeterminate', '');
     });
 
-    await step('Sem inline style transform no indicator', async () => {
+    await step('Sem valor o indicador não recebe style inline nenhum', async () => {
+      // Nem `--value`, nem `transform`: com qualquer um dos dois escrito o traço
+      // correria por baixo de uma posição fixa.
       const indicador = indicadorDoProgresso(canvasElement);
-      await expect(indicador.getAttribute('style') ?? '').not.toContain('translateX');
+      await expect(indicador.style.getPropertyValue('--value')).toBe('');
+      await expect(indicador.getAttribute('style') ?? '').toBe('');
     });
 
     await step('O traço ocupa parte da trilha, não a trilha toda', async () => {

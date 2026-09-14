@@ -250,14 +250,11 @@
       "tip3": "Para Badge interativo, prefira compor com <code>&lt;button&gt;</code> externo em vez de adicionar <code>onClick</code> no <code>&lt;div&gt;</code> — preserva semântica e acessibilidade de teclado."
     },
     "analytics": {
-      "description": "Badge raramente emite eventos. Rastreie apenas quando funciona como trigger clicável (ex: filtro ou navegação).",
+      "description": "O Badge não emite evento próprio: ele é aparência, e quem recebe o clique é o <code>&lt;button&gt;</code> que o envolve — com o <code>button_click</code> daquele botão. Até 2026-09-13 esta página anunciava um <code>badge_click</code> que quatro das cinco stacks não disparavam.",
       "table": {
         "event": "Evento",
         "trigger": "Gatilho",
         "payload": "Payload Adicional",
-        "click": "badge_click",
-        "clickTrigger": "Badge clicável é acionado como filtro ou atalho",
-        "clickPayload": "{ label: string, variant: string }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Ao abrir a docs page ou trocar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -614,14 +611,11 @@
       "tip3": "For an interactive Badge, prefer composing with an outer <code>&lt;button&gt;</code> rather than attaching <code>onClick</code> to the <code>&lt;div&gt;</code> — it preserves semantics and keyboard accessibility."
     },
     "analytics": {
-      "description": "Badge rarely emits events. Track only when it acts as a clickable trigger (e.g., filter or navigation).",
+      "description": "Badge fires no event of its own: it is appearance, and the click belongs to the <code>&lt;button&gt;</code> around it — through that button's <code>button_click</code>. Until 2026-09-13 this page announced a <code>badge_click</code> that four of the five stacks never fired.",
       "table": {
         "event": "Event",
         "trigger": "Trigger",
         "payload": "Additional Payload",
-        "click": "badge_click",
-        "clickTrigger": "Clickable Badge is activated as a filter or shortcut",
-        "clickPayload": "{ label: string, variant: string }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "On docs page open or language switch",
         "pageViewPayload": "{ component_name, locale, page_title }",
@@ -978,14 +972,11 @@
       "tip3": "Para un Badge interactivo, prefiere componer con un <code>&lt;button&gt;</code> externo en lugar de agregar <code>onClick</code> al <code>&lt;div&gt;</code> — preserva semántica y accesibilidad de teclado."
     },
     "analytics": {
-      "description": "Badge raramente emite eventos. Rastrea solo cuando funciona como trigger clicable (ej: filtro o navegación).",
+      "description": "El Badge no emite evento propio: es apariencia, y quien recibe el clic es el <code>&lt;button&gt;</code> que lo envuelve — con el <code>button_click</code> de ese botón. Hasta 2026-09-13 esta página anunciaba un <code>badge_click</code> que cuatro de las cinco stacks no disparaban.",
       "table": {
         "event": "Evento",
         "trigger": "Disparador",
         "payload": "Payload Adicional",
-        "click": "badge_click",
-        "clickTrigger": "Badge clicable se activa como filtro o atajo",
-        "clickPayload": "{ label: string, variant: string }",
         "pageView": "docs_page_view",
         "pageViewTrigger": "Al abrir la docs page o cambiar idioma",
         "pageViewPayload": "{ component_name, locale, page_title }",

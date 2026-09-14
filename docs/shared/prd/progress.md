@@ -105,10 +105,26 @@ custom property.
 
 **A referência é o `--value`**, e é o que o docblock do primitivo do angular
 defende por extenso: escrever `width` ou `transform` inline "sobrescreveria a
-regra do design system em vez de alimentá-la". Vue e svelte sobrescrevem; e a
-docs page do vanilla, na demonstração animada, escreve `indicator.style.transform`
-direto — contra a sua própria story `Animated`, que ao lado escreve `--value` com
-o comentário dizendo por quê.
+regra do design system em vez de alimentá-la".
+
+**DECIDIDO em 2026-09-13, pela dona: `--value` é a técnica única onde dá.** O vue e
+o svelte passaram a alimentar a custom property em vez de escrever `transform`
+inline, e a demonstração animada da docs page do vanilla parou de escrever
+`indicator.style.transform` — ela contradizia a própria story `Animated` do lado,
+que já escrevia `--value` com o comentário dizendo por quê.
+
+**O react fica com `width`, e isso se REGISTRA em vez de alinhar**: a
+`@base-ui/react` calcula a largura dentro do `ProgressIndicator` e a escreve
+inline, sem oferecer caminho para alimentar custom property. É divergência de
+framework, e a folha mantém a segunda regra (`.nds-progress-bar`) por causa dela.
+
+**Por que a técnica importa, e não é preciosismo**: estilo inline vence qualquer
+especificidade, então quem escreve o `transform` no elemento passa a decidir
+sozinho — e toda mudança futura da folha (curva da transição, origem, direção para
+leitura da direita para a esquerda) deixa de alcançar aquela stack. Até 2026-09-13
+o indeterminado das duas só funcionava porque elas SOLTAVAM o `style` com valor
+nulo; se o inline ficasse escrito, o traço correria por baixo de uma transformação
+fixa.
 
 **O que salva o indeterminado nas duas stacks que escrevem transform**: as duas
 soltam o `style` quando o valor é nulo, e aí o `transform: none` da folha volta a
@@ -142,9 +158,20 @@ variante mais clara — `warning` a 2,66:1 no tema claro padrão.
 **Regra que fica**: o contraste não pode depender de qual variante alguém
 escolheu.
 
-### D5 · Valor fora da faixa é limitado — em três das cinco
+### D5 · Valor fora da faixa é limitado — nas cinco desde 2026-09-13
 
-**Estado medido na fonte de cada lib e em cada wrapper, 2026-09-13:**
+**DECIDIDO em 2026-09-13, pela dona**: o vue e o svelte passaram a limitar o valor
+à faixa antes de anunciar e antes de desenhar, alinhando-se às outras três e à
+referência. Com isso o C12 deixa de ser falso em duas stacks. `null` e `undefined`
+continuam significando indeterminado nas cinco — limitar não é o mesmo que
+substituir por zero, e confundir os dois anunciaria "0%" onde a verdade é "não sei
+quanto falta" (D1).
+
+A tabela abaixo é o estado ANTERIOR, e fica porque é a medição que sustentou a
+decisão — e porque o modo de falha vale de lição: o resultado não era um erro
+visível, era uma barra vazia anunciando um número.
+
+**Estado medido na fonte de cada lib e em cada wrapper, até 2026-09-13:**
 
 | stack | acima do máximo | negativo | não numérico / ausente |
 |---|---|---|---|

@@ -87,9 +87,13 @@ export const Indeterminate: Story = {
       await expect(bar).toHaveAttribute('data-indeterminate', '');
     });
 
-    await step('Sem valor não há transform inline para posicionar a barra', async () => {
+    await step('Sem valor, --value não é escrita no indicador', async () => {
+      // O desenho sai de `--value`, e uma custom property em 0 esconderia a
+      // barra fora da vista — o estado indeterminado não teria o que animar.
+      // Esta é a metade que sobrou de quando a stack escrevia `transform`
+      // inline: o que não pode existir mudou de nome, não de motivo.
       const indicador = indicadorDoProgresso(canvasElement);
-      await expect(indicador.getAttribute('style') ?? '').not.toContain('translateX');
+      await expect(indicador.style.getPropertyValue('--value')).toBe('');
     });
   },
 };
