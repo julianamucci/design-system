@@ -1084,17 +1084,17 @@ slug e saía pelo `existsSync` sem reportar nada, e `tabela-tokens.mjs sonner`
 imprimia "nenhuma" ao procurar `.nds-sonner*`. Com os três nomes iguais, os dois
 instrumentos passam a medir a §5 deste arquivo.
 
-> **PENDÊNCIA · 2026-09-13** — `node scripts/audit.mjs sonner --json` devolve
-> **14 achados** (eram 16 quando este PRD nasceu; a rodada de decisões da dona
-> consertou os dois `inline_style_design_value` do vue de passagem): 1
-> `demonstration_labels_divergent` (angular, faltam `default`, `info`, `loading`,
-> `success`, `triggerLoading`), 2 `source_sem_teste` (react e angular), 3
-> `story_file_sem_transform` (os três arquivos de story do angular, 17 stories
-> publicando o template da story no painel Code), 8 `inline_style_design_value`
-> (react ×5, vanilla ×1 — todos `min-height` de quadro de story), 1
-> `identificador_pt` (vanilla) e 1 `identificador_pt_novo` (svelte).
-> **Fecha quando** `node scripts/audit.mjs sonner --json` devolver
-> `{"sonner": []}` com exit 0.
+**FECHADA em 2026-09-14** — ~~`node scripts/audit.mjs sonner --json` devolve 14
+achados~~. Medido depois da rodada de `fix`: devolve exatamente `{"sonner": []}`,
+com **exit 0**. O que eram os 14: 1 `demonstration_labels_divergent` (angular),
+2 `source_sem_teste` (react e angular), 3 `story_file_sem_transform` (os três
+arquivos de story do angular, 17 stories publicando o template no painel Code),
+6 `inline_style_design_value` (react ×5, vanilla ×1, todos `min-height` de
+quadro), 1 `identificador_pt` (vanilla) e 1 `identificador_pt_novo` (svelte). No
+meio do caminho o angular produziu mais cinco — quatro construtores de snippet
+criados antes de ligados às stories e um identificador em português —, e os
+cinco também fecharam. A contagem "8 `inline_style_design_value`" que estava
+aqui somava errado: eram seis.
 
 **FECHADA em 2026-09-13**, no mesmo dia: a regra da categoria virou
 [`19-feedback.md`](../guidelines/19-feedback.md), o catálogo do Sonner ficou aqui, e
