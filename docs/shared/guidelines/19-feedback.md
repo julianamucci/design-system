@@ -184,7 +184,7 @@ eventos, e está em [`07-analytics.md`](07-analytics.md). O que é desta categor
 |---|---|---|
 | `alert_dismiss` | quem compõe, ao fechar o alerta | `component`, `label` (id estável), `location` |
 | `toast_action_click` | a ação interna da torrada | `component: 'sonner'`, `label` (`with-action-label` nas cinco), `location` |
-| `toast_demo_triggered` | TODA torrada disparada na docs page — demonstração e Do/Don't, o mesmo conjunto nas cinco | `component: 'sonner'`, `toast_type`, `location` (`docs_demo` ou `docs_do_dont`) |
+| `toast_demo_triggered` | TODA torrada disparada na docs page — demonstração, Do/Don't e Variantes, o mesmo conjunto nas cinco | `component: 'sonner'`, `toast_type`, `location` (`docs_demo`, `docs_do_dont` ou `docs_variantes`) |
 | `task_progress` · `task_complete` | quem controla a tarefa que a barra mostra | ver a §9 de [`progress.md`](../prd/progress.md) |
 
 - **Componente passivo não dispara nada.** Skeleton e Badge não têm evento
@@ -253,7 +253,7 @@ defeito de texto: os cinco PRDs já descrevem o que o código faz hoje.
 | Posição padrão da torrada | `bottom-right` no código, `top-right` em toda story e docs page | **`top-right`**, e agora o código diz o mesmo que a página |
 | Onde mora o `aria-live` da torrada | três padrões entre as cinco | **na região**, nas cinco. Decidido primeiro "na notificação" e INVERTIDO no mesmo dia pela dona: região viva só é observada se existir antes de o conteúdo mudar, e a notificação é o conteúdo |
 | Payload do `toast_demo_triggered` | `{ toast_type, locale }`, único evento de componente com `locale` | **`{ component: 'sonner', toast_type, location }`** (2026-09-14) |
-| O que a docs page do Sonner rastreia | 6, 10 ou 12 gatilhos conforme a stack; o Do/Don't rastreado só em duas | **toda torrada disparada na página**, com o mesmo conjunto nas cinco — 10 na demonstração e 4 no Do/Don't (2026-09-14) |
+| O que a docs page do Sonner rastreia | 6, 10 ou 12 gatilhos conforme a stack; o Do/Don't rastreado só em duas | **toda torrada disparada na página**, com o mesmo conjunto nas cinco — 10 na demonstração, 4 no Do/Don't e 5 nas Variantes (2026-09-14) |
 | `label` do `toast_action_click` | três valores, um deles texto traduzido | **`with-action-label`** nas cinco |
 | A região de espera do Skeleton | montada à mão nas cinco docs pages, em cinco formas | **peça do design system**, com papel, `aria-busy` e nome obrigatório |
 | Duração de animação contínua | literal nas folhas (1,5s · 2s · 1s) | **três degraus de token**, alcançados pela camada que para o movimento |

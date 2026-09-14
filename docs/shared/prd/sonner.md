@@ -61,7 +61,7 @@ O que JÁ é igual nas cinco é o que o leitor vê no Storybook: o título da st
 `"Sonner"`. "Sonner" é o nome da lib do React, não uma palavra do design system —
 e no vanilla e no angular não há lib nenhuma para dar nome.
 
-Isto é decisão da dona e está registrado como pendência no fim deste arquivo.
+**DECIDIDO em 2026-09-13**: o componente é Sonner e a região é Toaster — ver o fim deste arquivo. A tabela acima é o estado de antes; as seções de catálogo das guidelines já não existem.
 
 ## 2. Contrato de comportamento
 
@@ -88,6 +88,8 @@ valer — e `—` é dívida declarada, não ausência de risco.
 | C16 | O movimento para sob `prefers-reduced-motion` | — duas guardas diferentes, nenhum portão; ver §8 |
 | C17 | `Escape` fecha a notificação que está com o foco dentro | — **só vale no vanilla e no angular**; ver D11 |
 | C18 | No máximo três na tela; a quarta tira de vista a MAIS ANTIGA, que volta quando abre vaga | story `DarkTheme` no vanilla e no angular (tipos visíveis `error`/`warning`/`info`); nas três de lib é `VISIBLE_TOASTS_AMOUNT` da lib, sem asserção própria |
+| C19 | O rótulo do botão de ação cresce com a preferência de fonte do navegador e não é cortado | `expectActionGrowsWithFont` (`docs/shared/testing/sonner-probe.ts`), passo próprio da story `WithAction`, nas cinco — ver D10 |
+| C20 | Com o DOCUMENTO em modo escuro, a descrição da notificação tem contraste de texto corrido (4.5:1) | `expectDescriptionReadable` dentro de `withDarkDocument`, passo da story `WithDescription`, nas cinco — com `richColors: false` onde a opção existe; ver §7.3 |
 
 **C15 é o único contrato com exceção declarada**, e ela está no lugar certo:
 `sonner-states.stories.ts` do vanilla usa `coversNotApplicable` com o motivo
@@ -352,14 +354,14 @@ teclado enquanto está na tela"*) — e o anel também chega em duas das cinco.
 
 ### D11 · O `<li>` da lib sai da ordem de tabulação (patch)
 
-**Fixada em** 2026-06-06 no vue e no svelte, e estendida ao react em 2026-09-13.
-Três patches, um por stack de lib:
+**Fixada em** 2026-06-06 no vue e no svelte, e estendida ao react em 2026-09-14
+(commit `84018092f`). Três patches, um por stack de lib:
 
 | arquivo | o que muda |
 |---|---|
 | `nortear-design-system-react/patches/sonner+2.0.8.patch` | `tabIndex: 0` → `-1` no `<li>` |
-| `nortear-design-system-vue/patches/vue-sonner+2.0.9.patch` | `tabindex: "0"` → `"-1"` no `<li>` do toast |
-| `nortear-design-system-svelte/patches/svelte-sonner+1.2.1.patch` | `tabindex={0}` → `{-1}` no `<li>` — e um segundo hunk que tira `aria-live`/`aria-atomic` do `<li>` (§8.1) |
+| `nortear-design-system-vue/patches/vue-sonner+2.0.9.patch` | `tabindex: "0"` → `"-1"` no `<li>` do toast — e um segundo hunk, a guarda `hotkey.length > 0` (D2) |
+| `nortear-design-system-svelte/patches/svelte-sonner+1.2.1.patch` | `tabindex={0}` → `{-1}` no `<li>` — um segundo hunk que tira `aria-live`/`aria-atomic` do `<li>` (§8.1) e um terceiro, a guarda `hotkey.length > 0` em `Toaster.svelte` (D2) |
 
 **Motivo**: o canal para a tecnologia assistiva é a REGIÃO (§8.1), então
 `tabindex=0` torna o `<li>` uma parada de Tab sem ação nenhuma, e cria
@@ -792,10 +794,12 @@ com os 8px da lib enquanto as outras seguiam `--radius` (14px no default, 24px n
 warm, **0** no cold). O snippet e a tabela de tokens da docs page do react
 mudaram junto.
 
-**O efeito na tela não está medido aqui**, e a story que o veria não o vê: a
-`DarkTheme` das três libs afirma `backgroundColor !== rgba(0,0,0,0)` na notificação
-de índice 0, que é a mais nova, que é `info`, que tem cor própria por
-`richColors` — a asserção passa sem tocar no tipo `default`.
+**O efeito na tela passou a ter prova em 2026-09-14**, e não pela `DarkTheme`: essa
+story afirma `backgroundColor !== rgba(0,0,0,0)` na notificação de índice 0, que é
+`info`, com cor própria por `richColors`, e passa sem tocar no tipo `default`. Quem
+mede é o C20 — `expectDescriptionReadable` lê o fundo EFETIVO da notificação sem
+`richColors`, que é o `--normal-bg` da ponte, contra a cor da descrição, com o
+documento escuro.
 
 ### 7.7 Os dois instrumentos de token eram cegos para este slug
 
@@ -1036,7 +1040,7 @@ Ordem: folha → fila e região da stack → ícones → rótulos pt-BR → stor
 docs page.
 
 **A folha primeiro, e ela só serve a duas stacks.** Se a stack nova tem lib, o que
-se escreve é a PONTE de tokens (§7.6) e não a folha — mais o piso de 24×24, que a folha já escreve sobre os atributos da lib; se não tem, `sonner.css` é o
+se escreve é a PONTE de tokens (§7.6) e não a folha — mais o piso de 24×24 e a sobreposição de `height`/`font-size` do botão de ação (D10), que a folha já escreve sobre os atributos da lib; se não tem, `sonner.css` é o
 contrato inteiro.
 
 **Armadilha de cada stack**, todas medidas:
@@ -1051,11 +1055,17 @@ contrato inteiro.
   `import 'vue-sonner/style.css'` a região sai como um `<ol>` cru no meio da
   página, **e nada na tela diz que faltou alguma coisa**. O `<li>` precisa do
   patch de `tabindex` (D11), e o `toastOptions` mesclado precisa vir DEPOIS do
-  spread de props.
+  spread de props. `hotkey` vazio SÓ com o hunk da guarda `length > 0`: sem ele
+  `[].every(...)` é verdadeiro, toda tecla vira o atalho e o Enter no botão de ação
+  para de funcionar (D2). O tema não vem da lib: o wrapper observa a classe `dark`
+  do documento (§7.3).
 - **svelte (`svelte-sonner`)** — o patch de `tabindex` também, e o pino da versão
   é EXATO (`1.2.1`, sem `^`) porque o nome do arquivo de patch carrega a versão.
   Os tokens entram pelo alias `--color-*`, que já traz o `hsl()`; os rótulos vão
   num `.ts` à parte para as stories poderem importá-los sem arrastar o runtime.
+  Mesma armadilha do vue com `hotkey` vazio (terceiro hunk do patch), e o tema
+  sai do observador da classe `dark`, não do `mode.current` do `mode-watcher`, que
+  só muda por `setMode` (§7.3).
 - **angular** — sem lib: a fila inteira é de escrita própria. Três coisas que
   custaram e estão escritas no arquivo: ler `this.duration()` no construtor
   devolve o default declarado e não o do consumidor (vai num `effect`); o ícone
@@ -1091,7 +1101,8 @@ era de ~200ms e a story reprovava sozinha sob carga; 1200ms é o valor que fecha
 | a fila de referência, com o motivo de cada escolha | `nortear-design-system-vanilla/src/components/ui/toast-utils.ts` |
 | a mesma fila, em Angular, com os motivos de framework | `nortear-design-system-angular/src/components/ui/sonner.ts` |
 | a ponte de tokens para a lib | `ui/sonner.tsx` (react), `ui/sonner/Sonner.vue` (vue), `ui/sonner/sonner.svelte` (svelte) |
-| divergências intencionais sobre as libs | `PATCHES.md#sonner-rich-colors-contrast`, `#vue-sonner-toast-tabindex`, `#svelte-sonner-toast-tabindex` |
+| divergências intencionais sobre as libs | `PATCHES.md#sonner-rich-colors-contrast`, `#react-sonner-toast-tabindex`, `#vue-sonner-toast-tabindex`, `#vue-sonner-hotkey-vazio`, `#svelte-sonner-toast-tabindex`, `#svelte-sonner-sem-live-aninhado`, `#svelte-sonner-hotkey-vazio` |
+| as duas provas de navegador que nenhum compilador alcança (C19, C20) | `docs/shared/testing/sonner-probe.ts` |
 | texto das docs pages, props, critérios de teste | `docs/shared/content/sonner/translations.json` |
 | degrau de elevação e o motivo | `docs/shared/guidelines/04-padroes-design-sistema.md` §Qual degrau |
 | portões determinísticos | `node scripts/audit.mjs sonner --json` |
@@ -1165,7 +1176,7 @@ região viva só é observada se existir ANTES de o conteúdo mudar, e a notific
 É o conteúdo. Implementar a decisão teria piorado as três stacks que já estavam
 certas. A dona inverteu; ver a §8.1 para o estado e para o que mudou onde.
 
-**FECHADA em 2026-09-13** — ~~no react a notificação está na ordem de tabulação
+**FECHADA em 2026-09-14** — ~~no react a notificação está na ordem de tabulação
 (`tabIndex: 0` no `<li>` da `sonner@2.0.8`)~~. Ganhou
 `patches/sonner+2.0.8.patch`, com a mesma troca de uma linha que vue e svelte já
 tinham (D11). **A premissa da pendência era falsa**: ela dizia que o react era "a
