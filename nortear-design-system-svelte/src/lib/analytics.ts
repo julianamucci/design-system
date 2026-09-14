@@ -411,10 +411,18 @@ interface AnalyticsEvents {
     location?: string;
   };
 
-  /** Disparado quando o usuário dispara um toast na demonstração do Sonner. */
+  /**
+   * Disparado por todo gatilho de notificação da docs page do Sonner — o mesmo
+   * conjunto nas cinco stacks. `location` é a seção (guideline 07). Sem `locale`:
+   * nenhum outro evento de componente da casa o manda.
+   */
   toast_demo_triggered: {
-    toast_type: string;
-    locale: Locale;
+    component: 'sonner';
+    toast_type:
+      | 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading'
+      | 'with-description' | 'with-action' | 'promise' | 'persistent'
+      | 'blocking-error' | 'form-error';
+    location: 'docs_demo' | 'docs_do_dont' | 'docs_variantes';
   };
 
   /** Disparado ao clicar no botão de ação interno de um toast (ex: Desfazer). */

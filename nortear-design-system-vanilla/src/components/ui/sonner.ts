@@ -14,6 +14,5 @@ export type {
 export {
   toast,
   createSonnerToaster,
-  injectToastStyles,
   CLOSE_LABEL,
 } from './toast-utils';

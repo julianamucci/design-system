@@ -45,7 +45,7 @@
       "item4": "<strong>Título</strong> — primeira string passada para <code>toast()</code>. Máximo 1 frase.",
       "item5": "<strong>Descrição</strong> — string passada via <code>{ description }</code>. Complemento opcional ao título.",
       "item6": "<strong>Botão de ação</strong> — configurado via <code>{ action: { label, onClick } }</code>. Focável por teclado.",
-      "item7": "<strong>Botão de fechar</strong> — exibido automaticamente; remove o toast imediatamente ao clicar.",
+      "item7": "<strong>Botão de fechar</strong> — desligado por padrão; quando ativado, remove o aviso imediatamente ao clicar.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "// Setup no root (uma vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (em qualquer lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalhes\" })\ntoast(\"Título\", { action: { label: \"Desfazer\", onClick: fn } })\ntoast.promise(promessa, { loading: \"...\", success: \"...\", error: \"...\" })",
@@ -201,7 +201,7 @@
         "richColors": "Aplica cores semânticas do tema para cada tipo de toast. Recomendado.",
         "expand": "Exibe todos os toasts empilhados ao invés de condensados em pilha.",
         "duration": "Duração em ms antes do toast fechar automaticamente. Padrão: 4000ms.",
-        "theme": "Tema visual. O componente lê o tema do <code>next-themes</code> automaticamente.",
+        "theme": "Tema visual, claro ou escuro. A superfície da notificação acompanha os tokens do tema da página.",
         "icons": "Substitui os ícones padrão de cada tipo de toast por ícones customizados.",
         "toastOptions": "Opções aplicadas a todos os toasts, como <code>classNames</code> para classes CSS."
       }
@@ -229,7 +229,7 @@
       "keyboard": {
         "tab": "Move o foco para o botão de ação do toast visível, se houver.",
         "enter": "Aciona o botão de ação em foco.",
-        "escape": "Fecha o toast com foco ativo (comportamento nativo do Sonner).",
+        "escape": "Com o foco dentro da notificação, dispensa o aviso ou recolhe a pilha expandida, conforme a implementação. O foco nunca é levado para fora da página.",
         "noKeyboard": "O toast em si não é interativo — apenas o botão de ação recebe foco."
       },
       "aria": {
@@ -252,11 +252,11 @@
       "progress": "Para comunicar progresso mensurável de operações assíncronas em andamento."
     },
     "notes": {
-      "item1": "O <code>&lt;Toaster /&gt;</code> deve ser adicionado uma única vez no root da aplicação (ex: <code>App.tsx</code>). Sem ele, nenhum <code>toast()</code> será exibido.",
+      "item1": "A região (<code>&lt;Toaster /&gt;</code>) deve ser montada uma única vez, no ponto mais alto da aplicação. Sem ela, nenhum <code>toast()</code> é exibido.",
       "item2": "A posição padrão é <code>\"top-right\"</code>, e ela vem do componente: não é preciso declará-la. O padrão da biblioteca de origem é <code>bottom-right</code>, e é o wrapper de cada stack que faz essa ponte — por isso trocar de biblioteca não muda onde o aviso aparece.",
       "item3": "Use <code>toast.promise()</code> para operações assíncronas. Evita estados manuais de loading e garante transição automática entre os estados da promise.",
       "item4": "Nunca use toast para erros de validação de formulário. O <code>FormMessage</code> do projeto já gerencia <code>aria-invalid</code> e <code>aria-describedby</code> corretamente.",
-      "item5": "<code>duration: Infinity</code> só deve ser usado para erros críticos que exigem ação explícita do usuário — sempre com <code>dismissible: true</code>."
+      "item5": "<code>duration: Infinity</code> só deve ser usado para erros críticos que exigem ação explícita do usuário — sempre com o botão de fechar visível."
     },
     "analytics": {
       "description": "O toast em si não dispara evento — o evento é da ação que o originou. Rastreie apenas o clique no botão de ação interno.",
@@ -410,7 +410,7 @@
       "item4": "<strong>Title</strong> — first string passed to <code>toast()</code>. Maximum 1 sentence.",
       "item5": "<strong>Description</strong> — string passed via <code>{ description }</code>. Optional complement to the title.",
       "item6": "<strong>Action button</strong> — configured via <code>{ action: { label, onClick } }</code>. Keyboard focusable.",
-      "item7": "<strong>Close button</strong> — shown automatically; removes the toast immediately on click.",
+      "item7": "<strong>Close button</strong> — off by default; when enabled, removes the toast immediately on click.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "// Setup at root (once)\n<Toaster position=\"top-right\" richColors />\n\n// Toast dispatch (anywhere)\ntoast.success(\"Title\")\ntoast.success(\"Title\", { description: \"Details\" })\ntoast(\"Title\", { action: { label: \"Undo\", onClick: fn } })\ntoast.promise(promise, { loading: \"...\", success: \"...\", error: \"...\" })",
@@ -566,7 +566,7 @@
         "richColors": "Applies semantic theme colors to each toast type. Recommended.",
         "expand": "Shows all toasts stacked instead of condensed in a stack.",
         "duration": "Duration in ms before the toast closes automatically. Default: 4000ms.",
-        "theme": "Visual theme. The component reads the theme from <code>next-themes</code> automatically.",
+        "theme": "Visual theme, light or dark. The notification surface follows the page theme tokens.",
         "icons": "Replaces the default icons for each toast type with custom icons.",
         "toastOptions": "Options applied to all toasts, such as <code>classNames</code> for CSS classes."
       }
@@ -594,7 +594,7 @@
       "keyboard": {
         "tab": "Moves focus to the action button of the visible toast, if any.",
         "enter": "Activates the focused action button.",
-        "escape": "Closes the focused toast (native Sonner behavior).",
+        "escape": "With focus inside the notification, dismisses it or collapses the expanded stack, depending on the implementation. Focus is never moved out of the page.",
         "noKeyboard": "The toast itself is not interactive — only the action button receives focus."
       },
       "aria": {
@@ -617,11 +617,11 @@
       "progress": "For communicating measurable progress of ongoing async operations."
     },
     "notes": {
-      "item1": "<code>&lt;Toaster /&gt;</code> must be added once at the application root (e.g., <code>App.tsx</code>). Without it, no <code>toast()</code> will be displayed.",
+      "item1": "The region (<code>&lt;Toaster /&gt;</code>) must be mounted once, at the top of the application. Without it, no <code>toast()</code> is displayed.",
       "item2": "The default position is <code>\"top-right\"</code>, and it comes from the component: there is no need to declare it. The upstream library defaults to <code>bottom-right</code>, and each stack wrapper bridges that — which is why swapping the library does not move where the notification shows up.",
       "item3": "Use <code>toast.promise()</code> for async operations. Avoids manual loading state and guarantees automatic transitions based on promise resolution.",
       "item4": "Never use toast for form validation errors. The project's <code>FormMessage</code> already manages <code>aria-invalid</code> and <code>aria-describedby</code> correctly.",
-      "item5": "<code>duration: Infinity</code> should only be used for critical errors requiring explicit user action — always with <code>dismissible: true</code>."
+      "item5": "<code>duration: Infinity</code> should only be used for critical errors requiring explicit user action — always with the close button visible."
     },
     "analytics": {
       "description": "The toast itself does not fire an event — the event belongs to the action that triggered it. Track only the click on the internal action button.",
@@ -775,7 +775,7 @@
       "item4": "<strong>Título</strong> — primera string pasada a <code>toast()</code>. Máximo 1 frase.",
       "item5": "<strong>Descripción</strong> — string pasada vía <code>{ description }</code>. Complemento opcional al título.",
       "item6": "<strong>Botón de acción</strong> — configurado vía <code>{ action: { label, onClick } }</code>. Accesible por teclado.",
-      "item7": "<strong>Botón de cerrar</strong> — se muestra automáticamente; elimina el toast inmediatamente al hacer clic.",
+      "item7": "<strong>Botón de cerrar</strong> — desactivado por defecto; cuando se activa, elimina el toast inmediatamente al hacer clic.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "// Setup en el root (una vez)\n<Toaster position=\"top-right\" richColors />\n\n// Disparo de toast (en cualquier lugar)\ntoast.success(\"Título\")\ntoast.success(\"Título\", { description: \"Detalles\" })\ntoast(\"Título\", { action: { label: \"Deshacer\", onClick: fn } })\ntoast.promise(promesa, { loading: \"...\", success: \"...\", error: \"...\" })",
@@ -931,7 +931,7 @@
         "richColors": "Aplica colores semánticos del tema para cada tipo de toast. Recomendado.",
         "expand": "Muestra todos los toasts apilados en lugar de condensados.",
         "duration": "Duración en ms antes de que el toast se cierre automáticamente. Por defecto: 4000ms.",
-        "theme": "Tema visual. El componente lee el tema de <code>next-themes</code> automáticamente.",
+        "theme": "Tema visual, claro u oscuro. La superficie de la notificación sigue los tokens del tema de la página.",
         "icons": "Reemplaza los íconos predeterminados de cada tipo de toast por íconos personalizados.",
         "toastOptions": "Opciones aplicadas a todos los toasts, como <code>classNames</code> para clases CSS."
       }
@@ -959,7 +959,7 @@
       "keyboard": {
         "tab": "Mueve el foco al botón de acción del toast visible, si lo hay.",
         "enter": "Activa el botón de acción en foco.",
-        "escape": "Cierra el toast con foco activo (comportamiento nativo de Sonner).",
+        "escape": "Con el foco dentro de la notificación, la descarta o repliega la pila expandida, según la implementación. El foco nunca sale de la página.",
         "noKeyboard": "El toast en sí no es interactivo — solo el botón de acción recibe foco."
       },
       "aria": {
@@ -982,11 +982,11 @@
       "progress": "Para comunicar el progreso mensurable de operaciones asíncronas en curso."
     },
     "notes": {
-      "item1": "<code>&lt;Toaster /&gt;</code> debe agregarse una sola vez en el root de la aplicación (ej: <code>App.tsx</code>). Sin él, ningún <code>toast()</code> se mostrará.",
+      "item1": "La región (<code>&lt;Toaster /&gt;</code>) debe montarse una sola vez, en el punto más alto de la aplicación. Sin ella, ningún <code>toast()</code> se muestra.",
       "item2": "La posición por defecto es <code>\"top-right\"</code>, y viene del componente: no hace falta declararla. La biblioteca de origen usa <code>bottom-right</code>, y es el wrapper de cada stack el que hace ese puente — por eso cambiar de biblioteca no mueve dónde aparece el aviso.",
       "item3": "Usa <code>toast.promise()</code> para operaciones asíncronas. Evita estados manuales de loading y garantiza transiciones automáticas según la resolución de la promise.",
       "item4": "Nunca uses toast para errores de validación de formulario. El <code>FormMessage</code> del proyecto ya gestiona <code>aria-invalid</code> y <code>aria-describedby</code> correctamente.",
-      "item5": "<code>duration: Infinity</code> solo debe usarse para errores críticos que requieren acción explícita del usuario — siempre con <code>dismissible: true</code>."
+      "item5": "<code>duration: Infinity</code> solo debe usarse para errores críticos que requieren acción explícita del usuario — siempre con el botón de cerrar visible."
     },
     "analytics": {
       "description": "El toast en sí no dispara evento — el evento pertenece a la acción que lo originó. Rastrea solo el clic en el botón de acción interno.",

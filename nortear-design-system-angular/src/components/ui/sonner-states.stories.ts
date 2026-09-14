@@ -263,7 +263,7 @@ export const DarkTheme: Story = {
       source: { transform: sonnerDarkThemeSource },
       description: {
         story:
-          'Tema escuro, com os cinco tipos na tela. Quem recolore é a cascata: os tokens do toast são lidos do tema, então trocar a classe do documento basta.',
+          'Tema escuro, com os cinco tipos disparados e as três notificações mais novas na tela — o teto da pilha. Quem recolore é a cascata: os tokens do toast são lidos do tema, então trocar a classe do documento basta.',
       },
     },
   },
@@ -274,9 +274,11 @@ export const DarkTheme: Story = {
   play: async ({ step }) => {
     await clearToasts();
 
-    await step('Os cinco tipos são desenhados com os tokens do tema em vigor', async () => {
-      // visual.item4 fala em "todos os tipos com richColors": com uma só na
-      // tela, a foto do Chromatic cobriria um quinto do que o item promete.
+    await step('Cinco disparos, e só as três mais novas ficam na tela', async () => {
+      // O teto é 3, como nas outras stacks. A lista de TIPOS, e não só a
+      // contagem, é o que separa as duas formas possíveis de limitar: enfileirar
+      // a quarta deixaria default/success/error na tela; a forma certa tira de
+      // vista as MAIS ANTIGAS e mostra error/warning/info.
       toast(TEXTS.padrao, PERSISTENT);
       toast.success(TEXTS.success, PERSISTENT);
       toast.error(TEXTS.error, PERSISTENT);
@@ -284,12 +286,14 @@ export const DarkTheme: Story = {
       toast.info(TEXTS.info, PERSISTENT);
 
       await waitForToast({ type: 'info' });
-      await expect(toastsOnScreen().length).toBe(5);
+      await expect(toastsOnScreen().map((el) => el.getAttribute('data-type'))).toEqual([
+        'error', 'warning', 'info',
+      ]);
       await expect(toastsOnScreen().every((el) => el.dataset.richColors === 'true')).toBe(true);
     });
 
     await step('Trocar o tema recolore os mesmos nós, sem remontar', async () => {
-      const toastEl = document.querySelector<HTMLElement>('.nds-sonner[data-type="success"]')!;
+      const toastEl = document.querySelector<HTMLElement>('.nds-sonner[data-type="error"]')!;
       const html = document.documentElement;
       const wasDark = html.classList.contains('dark');
 
@@ -300,7 +304,7 @@ export const DarkTheme: Story = {
 
       await expect(dark).not.toBe(light);
       // Mesmo nó: nada foi recriado, só a cascata resolveu outro token.
-      await expect(document.querySelector('.nds-sonner[data-type="success"]')).toBe(toastEl);
+      await expect(document.querySelector('.nds-sonner[data-type="error"]')).toBe(toastEl);
 
       if (!wasDark) html.classList.remove('dark');
     });

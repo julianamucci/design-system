@@ -5,6 +5,7 @@ import {
   OnDestroy,
   ViewEncapsulation,
   booleanAttribute,
+  computed,
   effect,
   inject,
   input,
@@ -83,6 +84,15 @@ const DEFAULT_DURATION = 4000;
 
 /** Espelha a transição de saída de `.nds-sonner` — remover antes cortaria o fade. */
 const EXIT_DURATION = 200;
+
+/**
+ * Quantas notificações ficam na tela ao mesmo tempo — o `VISIBLE_TOASTS_AMOUNT`
+ * da lib das outras stacks, e com a MESMA forma: a quarta não espera numa fila,
+ * ela entra, e quem sai de vista é a MAIS ANTIGA. A escondida continua na fila
+ * com o cronômetro correndo, e volta a ser desenhada se uma das três mais novas
+ * sair antes de o prazo dela vencer.
+ */
+const VISIBLE_TOASTS_AMOUNT = 3;
 
 const queue = signal<Toast[]>([]);
 
@@ -357,6 +367,8 @@ export class NdsToastIcon {
  *   leitura não ser o mesmo para todo mundo (WCAG 2.2.1).
  * - A pilha é uma coluna com `gap`: torrada nova não cobre torrada ainda não
  *   lida — cada uma ocupa o próprio espaço até vencer o prazo.
+ * - No máximo três na tela (`VISIBLE_TOASTS_AMOUNT`): a quarta tira de vista a
+ *   mais antiga, como nas outras stacks.
  */
 @Component({
   selector: 'div[ndsToaster]',
@@ -376,8 +388,8 @@ export class NdsToastIcon {
     '[attr.data-slot]': '"sonner-toaster"',
     '[attr.aria-label]': 'label()',
     '[attr.data-position]': 'position()',
-    '[attr.data-rich-colors]': 'richColors()',
-    '[attr.data-expand]': 'expand()',
+    // Sem `data-rich-colors` aqui: a folha só lê o atributo na NOTIFICAÇÃO
+    // (abaixo), e na região ele era escrito sem ninguém ler.
     '(mouseenter)': 'pause()',
     '(mouseleave)': 'retomar()',
     '(focusin)': 'pause()',
@@ -448,9 +460,6 @@ export class NdsToaster implements OnDestroy {
   /** Aplica a cor semântica do tema a cada tipo. */
   readonly richColors = input(false, { transform: booleanAttribute });
 
-  /** Mostra a pilha aberta em vez de condensada. */
-  readonly expand = input(false, { transform: booleanAttribute });
-
   /** Prazo default das torradas disparadas enquanto este Toaster está montado. */
   readonly duration = input(DEFAULT_DURATION, { transform: numberAttribute });
 
@@ -463,7 +472,14 @@ export class NdsToaster implements OnDestroy {
   /** Rótulo do botão de fechar — só ícone, então o nome vem daqui. */
   readonly closeLabel = input('Fechar notificação');
 
-  protected readonly toastEls = queue.asReadonly();
+  /**
+   * As `VISIBLE_TOASTS_AMOUNT` mais novas — a fila guarda a ordem de chegada,
+   * então são as do FIM. Fora do DOM, e não com opacidade 0 como na lib: aqui a
+   * pilha é uma coluna com `gap`, e uma escondida no fluxo ainda ocuparia a
+   * altura dela. `aoEscape` indexa esta MESMA lista, e é por isso que a janela
+   * mora num `computed` só.
+   */
+  protected readonly toastEls = computed(() => queue().slice(-VISIBLE_TOASTS_AMOUNT));
 
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 

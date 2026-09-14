@@ -1,7 +1,8 @@
 # Feedback — as regras da categoria
 
 Vale para os cinco componentes de feedback, nas cinco stacks: **Alert, Badge,
-Progress, Skeleton** e **Sonner** (a torrada, que a folha chama de `toast`).
+Progress, Skeleton** e **Sonner** (a torrada; a folha, as classes e o payload usam
+esse nome desde 2026-09-13, e só a região se chama `Toaster`).
 
 Este arquivo guarda o que ATRAVESSA os componentes. O que cada um É — contrato,
 decisões com data e medição, tokens, peças das cinco stacks — está no PRD dele:
@@ -112,7 +113,7 @@ nenhum.
 | Alert | a raiz é a própria região viva, pelo papel: `role` configurável com `alert`, `status` ou `note`, default `alert` | quem compõe, pelo `role` |
 | Progress | `role="progressbar"` com `aria-valuemin` e `aria-valuemax` sempre presentes, e `aria-valuenow` **omitido** no indeterminado (padrão APG) | o componente |
 | Skeleton | `aria-hidden="true"` fixo, não configurável — o esqueleto é decoração | o componente |
-| Sonner | `polite`, nunca `assertive`: as cinco plays afirmam a AUSÊNCIA de `assertive`. O atributo mora na NOTIFICAÇÃO, não na região — decisão da dona em 2026-09-13 | o design system nas duas sem lib; a lib nas outras três |
+| Sonner | `polite`, nunca `assertive`: as cinco plays afirmam a AUSÊNCIA de `assertive`. O atributo mora na REGIÃO, e a notificação não carrega `role` nem `aria-live` — região viva só é observada se já existir ANTES de o conteúdo mudar, e a notificação É o conteúdo | o design system nas duas sem lib; a lib nas três com lib, com patch no svelte para desfazer o aninhamento |
 | Badge | não anuncia nada: não é interativo, não tem papel e não recebe foco | — |
 
 - **Alert que já está na tela quando a página carrega usa `note`.** Estático não
@@ -148,7 +149,7 @@ Medido em 2026-09-13, nas duas folhas desta categoria que animam:
 |---|---|---|---|
 | `progress.css` | o indeterminado | por token | própria, (0,2,0) e no fim do arquivo — vence |
 | `skeleton.css` | o pulso | por token, `--duration-cycle` | própria, e vence porque nenhuma regra de atributo declara `animation` |
-| `toast.css` e a folha da lib | entrada e saída | por token nas duas à mão | duas guardas diferentes, as duas vencendo |
+| `sonner.css` e a folha da lib | entrada e saída | por token nas duas à mão | duas guardas diferentes, as duas vencendo |
 
 **A escada ganhou três degraus de CICLO CONTÍNUO em 2026-09-13**, por decisão da
 dona: `--duration-cycle-fast` (1000ms, giro), `--duration-cycle` (1500ms, pulso de
@@ -182,8 +183,8 @@ eventos, e está em [`07-analytics.md`](07-analytics.md). O que é desta categor
 | evento | quem dispara | payload |
 |---|---|---|
 | `alert_dismiss` | quem compõe, ao fechar o alerta | `component`, `label` (id estável), `location` |
-| `toast_action_click` | a ação interna da torrada | `component: 'toast'`, `label`, `location` |
-| `toast_demo_triggered` | a demonstração da docs page | `toast_type`, `locale` |
+| `toast_action_click` | a ação interna da torrada | `component: 'sonner'`, `label` (`with-action-label` nas cinco), `location` |
+| `toast_demo_triggered` | TODA torrada disparada na docs page — demonstração e Do/Don't, o mesmo conjunto nas cinco | `component: 'sonner'`, `toast_type`, `location` (`docs_demo` ou `docs_do_dont`) |
 | `task_progress` · `task_complete` | quem controla a tarefa que a barra mostra | ver a §9 de [`progress.md`](../prd/progress.md) |
 
 - **Componente passivo não dispara nada.** Skeleton e Badge não têm evento
@@ -194,11 +195,14 @@ eventos, e está em [`07-analytics.md`](07-analytics.md). O que é desta categor
   nas cinco tabelas e disparado por uma. **Evento anunciado e não disparado não é
   visto por portão nenhum** — não é erro de tipo nem violação de axe —, e é essa a
   forma de defeito que a remoção fecha.
-- **Três divergências seguem medidas e abertas**, na §"O que está aberto":
-  `toast_action_click` manda três valores diferentes de `label`, um deles texto
-  traduzido; `toast_demo_triggered` é o único evento da casa com `locale` no lugar
-  de `component` e `location`; e `task_progress`/`task_complete` são anunciados
-  pelo Angular sem serem disparados por ele.
+- **`locale` não é campo de evento de componente.** Medido em 2026-09-14 nos tipos
+  das cinco `analytics.ts`: só os três eventos de PÁGINA o levam (`page_view`,
+  `docs_page_view`, `docs_section_viewed`), e os outros 51 não. O
+  `toast_demo_triggered` era a exceção, e por decisão da dona passou ao
+  vocabulário de todos: `component`, `toast_type` e `location`.
+- **Uma divergência segue medida e aberta**, na §"O que está aberto":
+  `task_progress`/`task_complete` são anunciados pelo Angular sem serem
+  disparados por ele.
 
 ## Tom de voz
 
@@ -238,16 +242,12 @@ evitar.
 Cada item aqui tem medição no PRD do componente e espera decisão. Nenhum é
 defeito de texto: os cinco PRDs já descrevem o que o código faz hoje.
 
-1. **`toast_demo_triggered` foge do vocabulário**: leva `locale` e não leva
-   `component` nem `location`.
-2. **`toast_action_click` manda três valores de `label`**, e um deles é o rótulo
-   traduzido da ação — exatamente o que a regra do payload proíbe.
-3. **O Angular anuncia `task_progress` e `task_complete` na tabela e não dispara
+1. **O Angular anuncia `task_progress` e `task_complete` na tabela e não dispara
    nenhum dos dois.**
-4. **O `aria-live` da torrada nas TRÊS stacks com lib** continua onde a lib o põe:
-   no react, na região; no vue e no svelte, nos dois lugares. A regra da casa é na
-   notificação (decidida em 2026-09-13), e nas duas stacks sem lib ela já vale —
-   mudar as outras três exige patch de biblioteca, que é decisão própria.
+2. **De onde vem o tema da torrada** diverge em três stacks: o react lê
+   `next-themes` sem provider nenhum na stack, o svelte usa `mode-watcher` e o vue
+   não passa tema. Mexer exige medição em navegador, porque a ponte de tokens
+   decide se a lib precisa saber do tema.
 
 ### O que a dona decidiu em 2026-09-13, e já está no código
 
@@ -255,7 +255,10 @@ defeito de texto: os cinco PRDs já descrevem o que o código faz hoje.
 |---|---|---|
 | Nome do componente | três formas: `Sonner`, `Toast`, `Toaster`, mais `component: "toast"` no payload | **Sonner** em tudo — folha `sonner.css`, classes `.nds-sonner*`, payload `component: "sonner"`. A REGIÃO continua `Toaster`, porque é o nome dela |
 | Posição padrão da torrada | `bottom-right` no código, `top-right` em toda story e docs page | **`top-right`**, e agora o código diz o mesmo que a página |
-| Onde mora o `aria-live` da torrada | três padrões entre as cinco | **na notificação** — o que as duas stacks sem lib já faziam; as três com lib ficam registradas acima |
+| Onde mora o `aria-live` da torrada | três padrões entre as cinco | **na região**, nas cinco. Decidido primeiro "na notificação" e INVERTIDO no mesmo dia pela dona: região viva só é observada se existir antes de o conteúdo mudar, e a notificação é o conteúdo |
+| Payload do `toast_demo_triggered` | `{ toast_type, locale }`, único evento de componente com `locale` | **`{ component: 'sonner', toast_type, location }`** (2026-09-14) |
+| O que a docs page do Sonner rastreia | 6, 10 ou 12 gatilhos conforme a stack; o Do/Don't rastreado só em duas | **toda torrada disparada na página**, com o mesmo conjunto nas cinco — 10 na demonstração e 4 no Do/Don't (2026-09-14) |
+| `label` do `toast_action_click` | três valores, um deles texto traduzido | **`with-action-label`** nas cinco |
 | A região de espera do Skeleton | montada à mão nas cinco docs pages, em cinco formas | **peça do design system**, com papel, `aria-busy` e nome obrigatório |
 | Duração de animação contínua | literal nas folhas (1,5s · 2s · 1s) | **três degraus de token**, alcançados pela camada que para o movimento |
 | Valor fora da faixa no Progress | limitado em três stacks; nas outras duas a barra renderizava VAZIA anunciando o número | **limitado nas cinco**, antes de anunciar e antes de desenhar (C12) |

@@ -129,6 +129,9 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
+/** Seção da docs page onde o gatilho mora — a `location` do `toast_demo_triggered`. */
+type DemoLocation = 'docs_demo' | 'docs_do_dont' | 'docs_variantes';
+
 const IMPORT_CODE = `import { NdsToaster, toast } from '@/components/ui/sonner';`;
 
 // Escrito à mão, e não vindo de `anatomy.structureCode`: o snippet local traz os
@@ -150,7 +153,6 @@ const INTERFACE_CODE = `// Seletor de atributo: o host é o <div> nativo, então
 export class NdsToaster {
   readonly position = input<ToastPosition>('top-right');
   readonly richColors = input(false, { transform: booleanAttribute });
-  readonly expand = input(false, { transform: booleanAttribute });
   readonly duration = input(4000, { transform: numberAttribute });
   readonly closeButton = input(false, { transform: booleanAttribute });
   readonly label = input('Notificações');
@@ -203,7 +205,7 @@ const TYPE_CODE: Record<string, string> = {
     ></div>
 
     <ng-template #tplDoDont1Do>
-      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('success')">
+      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('success', 'docs_do_dont')">
         {{ t('demonstration.labels.triggerSuccess') }}
       </button>
     </ng-template>
@@ -214,7 +216,7 @@ const TYPE_CODE: Record<string, string> = {
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <button ndsButton variant="outline" size="sm" (click)="dispararPromessa()">
+      <button ndsButton variant="outline" size="sm" (click)="dispararPromessa('docs_do_dont')">
         {{ t('demonstration.labels.triggerPromise') }}
       </button>
     </ng-template>
@@ -224,28 +226,30 @@ const TYPE_CODE: Record<string, string> = {
       </button>
     </ng-template>
 
+    <!-- Prévias da seção Variantes (\`nds-docs-variants\`), e não da
+         demonstração: rastreadas com a location da própria seção. -->
     <ng-template #tplVarDefault>
-      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('default')">
+      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('default', 'docs_variantes')">
         {{ t('demonstration.labels.triggerDefault') }}
       </button>
     </ng-template>
     <ng-template #tplVarSuccess>
-      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('success')">
+      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('success', 'docs_variantes')">
         {{ t('demonstration.labels.triggerSuccess') }}
       </button>
     </ng-template>
     <ng-template #tplVarError>
-      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('error')">
+      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('error', 'docs_variantes')">
         {{ t('demonstration.labels.triggerError') }}
       </button>
     </ng-template>
     <ng-template #tplVarWarning>
-      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('warning')">
+      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('warning', 'docs_variantes')">
         {{ t('demonstration.labels.triggerWarning') }}
       </button>
     </ng-template>
     <ng-template #tplVarInfo>
-      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('info')">
+      <button ndsButton variant="outline" size="sm" (click)="dispararTipo('info', 'docs_variantes')">
         {{ t('demonstration.labels.triggerInfo') }}
       </button>
     </ng-template>
@@ -425,8 +429,8 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
     return TYPE_TRIGGERS.map(({ type, labelKey }) => ({ type, label: t(labelKey) }));
   });
 
-  protected dispararTipo(type: string): void {
-    track('toast_demo_triggered', { toast_type: type, locale: getLocale() });
+  protected dispararTipo(type: string, location: DemoLocation = 'docs_demo'): void {
+    track('toast_demo_triggered', { component: 'sonner', toast_type: type, location });
     const trigger = TYPE_TRIGGERS.find((item) => item.type === type) ?? TYPE_TRIGGERS[0];
     const text = t(trigger.textKey);
     switch (type) {
@@ -440,14 +444,14 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   }
 
   protected dispararComDescricao(): void {
-    track('toast_demo_triggered', { toast_type: 'with-description', locale: getLocale() });
+    track('toast_demo_triggered', { component: 'sonner', toast_type: 'with-description', location: 'docs_demo' });
     toast.success(t('demonstration.labels.withDescription'), {
       description: t('demonstration.labels.withDescriptionDesc'),
     });
   }
 
   protected dispararComAcao(): void {
-    track('toast_demo_triggered', { toast_type: 'with-action', locale: getLocale() });
+    track('toast_demo_triggered', { component: 'sonner', toast_type: 'with-action', location: 'docs_demo' });
     toast(t('demonstration.labels.withAction'), {
       action: {
         label: t('demonstration.labels.withActionLabel'),
@@ -464,8 +468,8 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
     });
   }
 
-  protected dispararPromessa(): void {
-    track('toast_demo_triggered', { toast_type: 'promise', locale: getLocale() });
+  protected dispararPromessa(location: DemoLocation = 'docs_demo'): void {
+    track('toast_demo_triggered', { component: 'sonner', toast_type: 'promise', location });
     const operation = new Promise<void>((resolve) => setTimeout(resolve, 1800));
     toast.promise(operation, {
       loading: t('demonstration.labels.promiseLoading'),
@@ -475,7 +479,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   }
 
   protected dispararPersistente(): void {
-    track('toast_demo_triggered', { toast_type: 'persistent', locale: getLocale() });
+    track('toast_demo_triggered', { component: 'sonner', toast_type: 'persistent', location: 'docs_demo' });
     toast.error(t('demonstration.labels.persistent'), {
       duration: Number.POSITIVE_INFINITY,
       closeButton: true,
@@ -484,14 +488,14 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
 
   /** Contraexemplo do par 1: erro que bloqueia o fluxo — lugar do Alert. */
   protected dispararBloqueante(): void {
-    track('toast_demo_triggered', { toast_type: 'blocking-error', locale: getLocale() });
+    track('toast_demo_triggered', { component: 'sonner', toast_type: 'blocking-error', location: 'docs_do_dont' });
     toast.error(t('demonstration.labels.error'));
   }
 
   /** Contraexemplo do par 2: erro de campo — lugar do FormMessage. */
   protected dispararDeFormulario(): void {
-    track('toast_demo_triggered', { toast_type: 'form-error', locale: getLocale() });
-    toast.warning(t('demonstration.labels.warning'));
+    track('toast_demo_triggered', { component: 'sonner', toast_type: 'form-error', location: 'docs_do_dont' });
+    toast.error(t('demonstration.labels.error'));
   }
 
   // ─── Conteúdo ───────────────────────────────────────────────────────────────
@@ -656,7 +660,6 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
         items: [
           line('position', 'position', 'ToastPosition', `'top-right'`),
           line('richColors', 'richColors', 'boolean', 'false'),
-          line('expand', 'expand', 'boolean', 'false'),
           line('duration', 'duration', 'number', '4000'),
           line('closeButton', 'closeButton', 'boolean', 'false'),
           line('label', 'label', 'string', `'Notificações'`),

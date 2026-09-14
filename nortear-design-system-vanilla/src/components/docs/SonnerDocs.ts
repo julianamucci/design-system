@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { toast, createSonnerToaster, CLOSE_LABEL } from '@/components/ui/sonner';
+import { toast, createSonnerToaster } from '@/components/ui/sonner';
 import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import sonnerTranslations from '@shared/content/sonner/translations.json';
@@ -58,103 +58,6 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-// ─── Espécime estático da notificação ────────────────────────────────────────
-//
-// Os previews de Do/Don't e de Tipos mostram a notificação PARADA, e não um
-// botão que a dispara: é uma foto do componente dentro do quadro da seção. Por
-// isso o nó é construído aqui em vez de sair de `toast()` — a fila real é
-// portalizada e posicionada na tela inteira, e não caberia num quadro.
-//
-// O markup é o MESMO que `toast-utils.ts` monta: `.nds-sonner` e filhos. A versão
-// anterior desenhava classes de uma era anterior à migração (`bg-green-50`,
-// `text-green-800`) que não existem em CSS nenhum, então o espécime mostrava um
-// retângulo branco — a documentação divergia do componente sem ninguém ver.
-
-const TOAST_ICONS: Record<string, string> = {
-  default: '',
-  success: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
-  error:   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
-  warning: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
-  info:    '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>',
-  loading: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
-};
-
-interface LocalToastOpts {
-  description?: string;
-  actionLabel?: string;
-  onAction?: () => void;
-}
-
-function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {}): HTMLElement {
-  const toastEl = document.createElement('div');
-  toastEl.setAttribute('data-sonner-toast', '');
-  toastEl.className = 'nds-sonner';
-  toastEl.dataset.type = type;
-  toastEl.dataset.richColors = 'true';
-  // Espécime: já nasce assentado, sem a transição de entrada que a fila usa.
-  toastEl.dataset.visible = 'true';
-  // Sem `role="status"` nem `aria-live`: isto é uma ilustração dentro da página,
-  // não uma notificação que acabou de acontecer. Anunciá-la faria o leitor de
-  // tela ler quatro avisos ao abrir a documentação.
-
-  const icon = TOAST_ICONS[type];
-  if (icon) {
-    const iconWrap = document.createElement('span');
-    iconWrap.className = type === 'loading' ? 'nds-sonner-icon nds-sonner-icon-spin' : 'nds-sonner-icon';
-    iconWrap.setAttribute('aria-hidden', 'true');
-    iconWrap.innerHTML = DOMPurify.sanitize(icon);
-    toastEl.appendChild(iconWrap);
-  }
-
-  const contentEl = document.createElement('div');
-  contentEl.className = 'nds-sonner-content';
-
-  const titleEl = document.createElement('p');
-  titleEl.className = 'nds-sonner-title';
-  titleEl.textContent = message;
-  contentEl.appendChild(titleEl);
-
-  if (opts.description) {
-    const descEl = document.createElement('p');
-    descEl.className = 'nds-sonner-description';
-    descEl.textContent = opts.description;
-    contentEl.appendChild(descEl);
-  }
-
-  if (opts.actionLabel && opts.onAction) {
-    const actionBtn = document.createElement('button');
-    actionBtn.type = 'button';
-    actionBtn.className = 'nds-sonner-action';
-    actionBtn.textContent = opts.actionLabel;
-    actionBtn.addEventListener('click', () => {
-      track('toast_action_click', {
-        // Valor ESTÁVEL, e não `opts.actionLabel` — que é o rótulo traduzido.
-        // Com o texto, o mesmo clique virava "Desfazer", "Undo" e "Deshacer" no
-        // GA4 e a série não juntava. O outro disparo desta página já usava o id;
-        // eram dois valores para um evento, no mesmo arquivo.
-        label: 'with-action-label',
-        component: 'sonner',
-        location: 'docs_demo',
-      });
-      opts.onAction!();
-    });
-    contentEl.appendChild(actionBtn);
-  }
-
-  toastEl.appendChild(contentEl);
-
-  const closeBtn = document.createElement('button');
-  closeBtn.type = 'button';
-  closeBtn.setAttribute('data-close-button', '');
-  closeBtn.setAttribute('aria-label', CLOSE_LABEL);
-  closeBtn.className = 'nds-sonner-close';
-  closeBtn.innerHTML = DOMPurify.sanitize('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>');
-  closeBtn.addEventListener('click', () => toastEl.remove());
-  toastEl.appendChild(closeBtn);
-
-  return toastEl;
-}
-
 /**
  * Área de demonstração: botões de disparo mais a REGIÃO de verdade.
  *
@@ -188,7 +91,7 @@ function createDemoToastArea(btnConfigs: Array<{ id: string; label: string; fn: 
         // `toast_type` é o id ESTÁVEL do tipo, igual nas cinco stacks. Era o
         // `label` — o texto traduzido do botão —, e o mesmo disparo virava um
         // valor por idioma no GA4, justo na stack de referência.
-        track('toast_demo_triggered', { toast_type: id, locale: getLocale() });
+        track('toast_demo_triggered', { component: 'sonner', toast_type: id, location: 'docs_demo' });
         fn();
       },
     });
@@ -204,6 +107,37 @@ function createDemoToastArea(btnConfigs: Array<{ id: string; label: string; fn: 
   wrap.appendChild(btnsRow);
   wrap.appendChild(
     createSonnerToaster({ position: 'top-right', richColors: true, closeButton: true }),
+  );
+  return wrap;
+}
+
+/**
+ * Prévia viva do Do/Don't e das Variantes: um botão que dispara a notificação do
+ * exemplo na região ÚNICA da página — a mesma da demonstração.
+ *
+ * Eram fotos paradas (um espécime montado à mão) enquanto as outras quatro stacks
+ * disparavam a torrada de verdade; o gatilho entra no mesmo evento, com a
+ * `location` da seção e o `toast_type` do contrato.
+ */
+function createPreviewTrigger(
+  toastType: string,
+  location: 'docs_do_dont' | 'docs_variantes',
+  label: string,
+  fire: () => void,
+): HTMLElement {
+  const wrap = document.createElement('div');
+  wrap.className = 'nds-stack';
+  wrap.dataset.spacing = 'sm';
+  wrap.appendChild(
+    createButton({
+      variant: 'outline',
+      size: 'sm',
+      label,
+      onClick: () => {
+        track('toast_demo_triggered', { component: 'sonner', toast_type: toastType, location });
+        fire();
+      },
+    }),
   );
   return wrap;
 }
@@ -411,63 +345,54 @@ export function createSonnerDocs(): HTMLElement {
               dontLabel:  tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                // Coluna com 8px de respiro, que é o que `.nds-stack` com
-                // `data-spacing="sm"` já diz. Era `display:flex` mais
-                // `gap: 0.5rem` cravado em `style`, e valor de design inline
-                // vence a folha e sai do tema e da densidade.
-                wrap.className = 'nds-stack';
-                wrap.dataset.spacing = 'sm';
-                wrap.appendChild(buildLocalToast('success', 'Alterações salvas.'));
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                // Coluna com 8px de respiro, que é o que `.nds-stack` com
-                // `data-spacing="sm"` já diz. Era `display:flex` mais
-                // `gap: 0.5rem` cravado em `style`, e valor de design inline
-                // vence a folha e sai do tema e da densidade.
-                wrap.className = 'nds-stack';
-                wrap.dataset.spacing = 'sm';
-                wrap.appendChild(buildLocalToast('error', 'Erro crítico. O sistema está fora do ar.'));
-                return wrap;
-              },
+              // Faça: confirmação breve de sucesso.
+              doPreviewFactory: () => createPreviewTrigger(
+                'success',
+                'docs_do_dont',
+                t('demonstration.labels.triggerSuccess'),
+                () => toast.success(t('demonstration.labels.success')),
+              ),
+              // Não faça: erro que bloqueia o fluxo — lugar do Alert.
+              dontPreviewFactory: () => createPreviewTrigger(
+                'blocking-error',
+                'docs_do_dont',
+                t('demonstration.labels.triggerError'),
+                () => toast.error(t('demonstration.labels.error')),
+              ),
             },
             {
               doLabel:    tNav('common.do'),
               dontLabel:  tNav('common.dont'),
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
-              doPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                // Coluna com 8px de respiro, que é o que `.nds-stack` com
-                // `data-spacing="sm"` já diz. Era `display:flex` mais
-                // `gap: 0.5rem` cravado em `style`, e valor de design inline
-                // vence a folha e sai do tema e da densidade.
-                wrap.className = 'nds-stack';
-                wrap.dataset.spacing = 'sm';
-                wrap.appendChild(buildLocalToast('loading', 'Enviando arquivo...'));
-                return wrap;
-              },
-              dontPreviewFactory: () => {
-                const wrap = document.createElement('div');
-                // Coluna com 8px de respiro, que é o que `.nds-stack` com
-                // `data-spacing="sm"` já diz. Era `display:flex` mais
-                // `gap: 0.5rem` cravado em `style`, e valor de design inline
-                // vence a folha e sai do tema e da densidade.
-                wrap.className = 'nds-stack';
-                wrap.dataset.spacing = 'sm';
-                wrap.appendChild(buildLocalToast('error', 'Campo obrigatório não preenchido.'));
-                return wrap;
-              },
+              // Faça: operação assíncrona acompanhada do começo ao fim.
+              doPreviewFactory: () => createPreviewTrigger(
+                'promise',
+                'docs_do_dont',
+                t('demonstration.labels.triggerPromise'),
+                () => toast.promise(
+                  new Promise<void>((resolve) => setTimeout(resolve, 2000)),
+                  {
+                    loading: t('demonstration.labels.promiseLoading'),
+                    success: t('demonstration.labels.promise'),
+                    error:   t('demonstration.labels.promiseError'),
+                  },
+                ),
+              ),
+              // Não faça: erro de campo — lugar da mensagem do formulário.
+              dontPreviewFactory: () => createPreviewTrigger(
+                'form-error',
+                'docs_do_dont',
+                t('demonstration.labels.triggerError'),
+                () => toast.error(t('demonstration.labels.error')),
+              ),
             },
           ],
         });
 
       case 'importacao':
         return createDocsImport({
-          code: `import { toast, injectToastStyles, createSonnerToaster } from '@/components/ui/sonner';\n\n// Setup (uma vez no root da aplicação)\ninjectToastStyles();\ndocument.body.appendChild(\n  createSonnerToaster({ position: 'top-right', richColors: true })\n);\n\n// Disparar toasts\ntoast('Código copiado.');\ntoast.success('Alterações salvas.');\ntoast.error('Não foi possível salvar.');\ntoast.promise(asyncFn(), {\n  loading: 'Enviando arquivo...',\n  success: 'Arquivo enviado com sucesso.',\n  error: 'Erro ao enviar. Tente novamente.',\n});`,
+          code: `import { toast, createSonnerToaster } from '@/components/ui/sonner';\n\n// Setup (uma vez no root da aplicação)\ndocument.body.appendChild(\n  createSonnerToaster({ position: 'top-right', richColors: true })\n);\n\n// Disparar toasts\ntoast('Código copiado.');\ntoast.success('Alterações salvas.');\ntoast.error('Não foi possível salvar.');\ntoast.promise(asyncFn(), {\n  loading: 'Enviando arquivo...',\n  success: 'Arquivo enviado com sucesso.',\n  error: 'Erro ao enviar. Tente novamente.',\n});`,
         });
 
       case 'variantes': {
@@ -487,12 +412,12 @@ export function createSonnerDocs(): HTMLElement {
           info:    `toast.info('Nova versão disponível.');`,
         };
 
-        const msgMap: Record<string, string> = {
-          default: t('demonstration.labels.default'),
-          success: t('demonstration.labels.success'),
-          error:   t('demonstration.labels.error'),
-          warning: t('demonstration.labels.warning'),
-          info:    t('demonstration.labels.info'),
+        const fireMap: Record<string, { labelKey: string; fire: () => void }> = {
+          default: { labelKey: 'demonstration.labels.triggerDefault', fire: () => toast(t('demonstration.labels.default')) },
+          success: { labelKey: 'demonstration.labels.triggerSuccess', fire: () => toast.success(t('demonstration.labels.success')) },
+          error:   { labelKey: 'demonstration.labels.triggerError',   fire: () => toast.error(t('demonstration.labels.error')) },
+          warning: { labelKey: 'demonstration.labels.triggerWarning', fire: () => toast.warning(t('demonstration.labels.warning')) },
+          info:    { labelKey: 'demonstration.labels.triggerInfo',    fire: () => toast.info(t('demonstration.labels.info')) },
         };
 
         return createDocsVariants({
@@ -500,7 +425,7 @@ export function createSonnerDocs(): HTMLElement {
             name: type,
             description: stripHtml(t(descKey)),
             code: codeMap[type],
-            previewFactory: () => buildLocalToast(type, msgMap[type]),
+            previewFactory: () => createPreviewTrigger(type, 'docs_variantes', t(fireMap[type].labelKey), fireMap[type].fire),
           })),
         });
       }
@@ -540,7 +465,6 @@ export function createSonnerDocs(): HTMLElement {
 export type SonnerToasterOptions = {
   position?: 'top-right' | 'top-center' | 'top-left' | 'bottom-right' | 'bottom-center' | 'bottom-left';
   richColors?: boolean;
-  expand?: boolean;
   duration?: number;
   class?: string;
 };
@@ -581,7 +505,6 @@ export interface ToastOptions {
               items: [
                 { name: 'position',     type: 'ToastPosition',  defaultValue: '"top-right"', required: 'Não', description: toPlainText(t('props.table.position'))     },
                 { name: 'richColors',   type: 'boolean',         defaultValue: 'false',          required: 'Não', description: t('props.table.richColors')              },
-                { name: 'expand',       type: 'boolean',         defaultValue: 'false',          required: 'Não', description: t('props.table.expand')                  },
                 { name: 'duration',     type: 'number',          defaultValue: '4000',           required: 'Não', description: t('props.table.duration')                },
                 { name: 'class',        type: 'string',          defaultValue: '—',             required: 'Não', description: 'CSS class adicional no container.'       },
               ],

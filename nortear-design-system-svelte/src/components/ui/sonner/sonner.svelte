@@ -15,6 +15,10 @@
 		containerAriaLabel,
 		toastOptions: toastOptionsProp,
 		position = 'top-right',
+		// Sem atalho por padrão: a lib concatena o atalho ao nome da região
+		// ("Notificações altKey+T"), e o leitor de tela o anunciava. Com a lista
+		// vazia o atalho não é registrado e o nome é só o rótulo.
+		hotkey = [],
 		...restProps
 	}: SonnerProps = $props();
 
@@ -35,8 +39,9 @@
 
 <Sonner
 	theme={mode.current}
-	style="--normal-bg: var(--color-popover); --normal-text: var(--color-popover-foreground); --normal-border: var(--color-border);"
+	style="--normal-bg: var(--color-popover); --normal-text: var(--color-popover-foreground); --normal-border: var(--color-border); --border-radius: var(--radius);"
 	{position}
+	{hotkey}
 	{...restProps}
 	containerAriaLabel={containerAriaLabel ?? REGION_LABEL}
 	{toastOptions}

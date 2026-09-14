@@ -43,10 +43,11 @@ interface AnalyticsEvents {
     locale: Locale;
     page_title: string;
   };
-  /** Disparado quando o usuário dispara um toast na demonstração do Sonner. */
+  /** Disparado quando o usuário dispara uma notificação na docs page do Sonner. */
   toast_demo_triggered: {
+    component: 'sonner';
     toast_type: string;
-    locale: Locale;
+    location: 'docs_demo' | 'docs_do_dont' | 'docs_variantes';
   };
 
   /** Disparado ao clicar no botão de ação interno de um toast (ex: Desfazer). */

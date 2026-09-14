@@ -59,11 +59,18 @@ const Toaster = ({
           <Loader2Icon className="nds-sonner-icon nds-sonner-icon-spin" />
         ),
       }}
+      // Sem atalho: a lib concatena o atalho ao nome da região ("Notificações
+      // altKey+T"), e o leitor de tela o anunciava. Com a lista vazia o atalho
+      // não é registrado e o nome é só o rótulo (a lib deixa um espaço ao fim,
+      // que o cálculo de nome acessível descarta).
+      hotkey={[]}
+      // Os tokens da casa são TRIPLETOS HSL, que só viram cor dentro de
+      // `hsl()`; a folha da lib lê `var(--normal-bg)` direto como cor.
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
+          "--normal-bg": "hsl(var(--popover))",
+          "--normal-text": "hsl(var(--popover-foreground))",
+          "--normal-border": "hsl(var(--border))",
           "--border-radius": "var(--radius)",
         } as React.CSSProperties
       }

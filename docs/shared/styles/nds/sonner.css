@@ -10,8 +10,8 @@
  * A REGIÃO continua `.nds-toaster`, porque Toaster é o nome dela: é a caixa fixa
  * que escolhe o canto e empilha as notificações, e não o aviso.
  *
- *   <div class="nds-toaster" data-position="top-right">
- *     <div class="nds-sonner" role="status" data-type="success">
+ *   <div class="nds-toaster" data-position="top-right" aria-live="polite">
+ *     <div class="nds-sonner" data-type="success">
  *       <span class="nds-sonner-icon"><svg>…</svg></span>
  *       <div class="nds-sonner-content">
  *         <p class="nds-sonner-title">Salvo</p>
@@ -243,4 +243,24 @@ svg.nds-sonner-icon {
     transition: none;
     animation: none;
   }
+}
+
+/* ── Piso de 24×24 também no markup das libs ────────────────────────────── *
+ *
+ * O piso acima alcança só `.nds-sonner-*`, que é o markup das duas stacks sem
+ * lib. Nas outras três quem desenha os botões é a folha da lib, e ela crava o
+ * botão de fechar em 20×20 — abaixo dos 24×24 da WCAG 2.5.8 —, e o de ação e o de
+ * cancelar em 24px de ALTURA fixa. Medido em 2026-09-14 nas três folhas
+ * instaladas (`sonner`, `vue-sonner`, `svelte-sonner`), que usam os mesmos
+ * atributos.
+ *
+ * `min-*` e não `height`/`width`, pela mesma razão do piso de cima, e porque
+ * `min-height` vence `height` em qualquer ordem de cascata: não é preciso
+ * disputar especificidade com a folha da lib. Até 2026-09-14 o comentário do piso
+ * dizia valer "nas cinco stacks", e alcançava duas. */
+[data-sonner-toast] [data-close-button],
+[data-sonner-toast] [data-button],
+[data-sonner-toast] [data-cancel] {
+  min-block-size: var(--spacing-6);       /* 24px */
+  min-inline-size: var(--spacing-6);
 }

@@ -47,18 +47,31 @@ const containerAriaLabel = computed(() => props.containerAriaLabel ?? REGION_LAB
  * ponte para a lib sem que quem consome precise declará-lo.
  */
 const position = computed<ToasterProps['position']>(() => props.position ?? 'top-right')
+
+/**
+ * Sem atalho por padrão: a lib concatena o atalho ao nome da região
+ * ("Notificações altKey+T"), e o leitor de tela o anunciava. Com a lista vazia
+ * o atalho não é registrado e o nome é só o rótulo — como nas outras stacks.
+ */
+const hotkey = computed<string[]>(() => props.hotkey ?? [])
 </script>
 
 <template>
+  <!--
+    Os tokens de cor da casa são TRIPLETOS HSL e só viram cor dentro de `hsl()`;
+    a folha da lib usa `--normal-*` direto como cor. Passar `var(--popover)` cru
+    entregava um valor inválido e a notificação caía no fundo padrão da lib.
+  -->
   <Sonner
     :style="{
-      '--normal-bg': 'var(--popover)',
-      '--normal-text': 'var(--popover-foreground)',
-      '--normal-border': 'var(--border)',
+      '--normal-bg': 'hsl(var(--popover))',
+      '--normal-text': 'hsl(var(--popover-foreground))',
+      '--normal-border': 'hsl(var(--border))',
       '--border-radius': 'var(--radius)',
     }"
     v-bind="props"
     :position="position"
+    :hotkey="hotkey"
     :container-aria-label="containerAriaLabel"
     :toast-options="toastOptions"
   >

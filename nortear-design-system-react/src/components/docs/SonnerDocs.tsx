@@ -34,6 +34,24 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
+type ToastKind =
+  | "default" | "success" | "error" | "warning" | "info" | "loading"
+  | "with-description" | "with-action" | "promise" | "persistent";
+
+/** Os dez gatilhos da demonstração — o mesmo conjunto nas cinco stacks. */
+const DEMO_TRIGGERS: ReadonlyArray<{ kind: ToastKind; labelKey: string }> = [
+  { kind: "default",          labelKey: "demonstration.labels.triggerDefault" },
+  { kind: "success",          labelKey: "demonstration.labels.triggerSuccess" },
+  { kind: "error",            labelKey: "demonstration.labels.triggerError" },
+  { kind: "warning",          labelKey: "demonstration.labels.triggerWarning" },
+  { kind: "info",             labelKey: "demonstration.labels.triggerInfo" },
+  { kind: "loading",          labelKey: "demonstration.labels.triggerLoading" },
+  { kind: "with-description", labelKey: "demonstration.labels.triggerWithDescription" },
+  { kind: "with-action",      labelKey: "demonstration.labels.triggerWithAction" },
+  { kind: "promise",          labelKey: "demonstration.labels.triggerPromise" },
+  { kind: "persistent",       labelKey: "demonstration.labels.triggerPersistent" },
+];
+
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -116,10 +134,56 @@ export function SonnerDocs() {
     });
   }, [locale, tContent]);
 
-  const trackToastDemo = useCallback(
-    (toastType: string) => track("toast_demo_triggered", { toast_type: toastType, locale }),
-    [locale]
-  );
+  // Toda notificação disparada na página é rastreada, com o mesmo conjunto de
+  // gatilhos nas cinco stacks. `kind` é o que a notificação mostra; `toastType`
+  // é o gatilho — no Do/Don't os dois se separam (`blocking-error` mostra um erro).
+  const showToast = useMemo(() => {
+    const byKind = (location: string): Record<ToastKind, () => void> => ({
+      default: () => { toast(tContent("demonstration.labels.default")); },
+      success: () => { toast.success(tContent("demonstration.labels.success")); },
+      error: () => { toast.error(tContent("demonstration.labels.error")); },
+      warning: () => { toast.warning(tContent("demonstration.labels.warning")); },
+      info: () => { toast.info(tContent("demonstration.labels.info")); },
+      loading: () => { toast.loading(tContent("demonstration.labels.loading")); },
+      "with-description": () => {
+        toast.success(tContent("demonstration.labels.withDescription"), {
+          description: tContent("demonstration.labels.withDescriptionDesc"),
+        });
+      },
+      "with-action": () => {
+        toast(tContent("demonstration.labels.withAction"), {
+          action: {
+            label: tContent("demonstration.labels.withActionLabel"),
+            onClick: () => {
+              track("toast_action_click", {
+                label: "with-action-label",
+                component: "sonner",
+                location,
+              });
+            },
+          },
+        });
+      },
+      promise: () => {
+        const p = new Promise<void>((resolve) => setTimeout(resolve, 2000));
+        toast.promise(p, {
+          loading: tContent("demonstration.labels.promiseLoading"),
+          success: tContent("demonstration.labels.promise"),
+          error: tContent("demonstration.labels.promiseError"),
+        });
+      },
+      persistent: () => {
+        toast.error(tContent("demonstration.labels.persistent"), {
+          duration: Infinity,
+          dismissible: true,
+        });
+      },
+    });
+    return (toastType: string, location: string, kind: ToastKind) => {
+      track("toast_demo_triggered", { component: "sonner", toast_type: toastType, location });
+      byKind(location)[kind]();
+    };
+  }, [tContent]);
 
   const handleSectionChange = useCallback(
     (id: string) => {
@@ -177,9 +241,9 @@ toast("Código copiado.")`;
 
   const codeTokens = `/* Personalize via CSS variables no seu tema */
 [data-sonner-toaster] {
-  --normal-bg: var(--popover);
-  --normal-text: var(--popover-foreground);
-  --normal-border: var(--border);
+  --normal-bg: hsl(var(--popover));
+  --normal-text: hsl(var(--popover-foreground));
+  --normal-border: hsl(var(--border));
   --border-radius: var(--radius);
 }`;
 
@@ -220,60 +284,18 @@ interface ToasterProps {
           className="nds-w-full nds-min-h-20"
         >
           <div className="nds-cluster" data-spacing="sm">
-            <Button
-              variant="outline"
-              size="sm"
-              data-track="demo"
-              data-track-id="sonner:demo:default"
-              onClick={() => { trackToastDemo("default"); toast(tContent("demonstration.labels.default")); }}
-            >
-              {tContent("demonstration.labels.triggerDefault")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              data-track="demo"
-              data-track-id="sonner:demo:success"
-              onClick={() => { trackToastDemo("success"); toast.success(tContent("demonstration.labels.success")); }}
-            >
-              {tContent("demonstration.labels.triggerSuccess")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              data-track="demo"
-              data-track-id="sonner:demo:error"
-              onClick={() => { trackToastDemo("error"); toast.error(tContent("demonstration.labels.error")); }}
-            >
-              {tContent("demonstration.labels.triggerError")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              data-track="demo"
-              data-track-id="sonner:demo:warning"
-              onClick={() => { trackToastDemo("warning"); toast.warning(tContent("demonstration.labels.warning")); }}
-            >
-              {tContent("demonstration.labels.triggerWarning")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              data-track="demo"
-              data-track-id="sonner:demo:info"
-              onClick={() => { trackToastDemo("info"); toast.info(tContent("demonstration.labels.info")); }}
-            >
-              {tContent("demonstration.labels.triggerInfo")}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              data-track="demo"
-              data-track-id="sonner:demo:loading"
-              onClick={() => { trackToastDemo("loading"); toast.loading(tContent("demonstration.labels.loading")); }}
-            >
-              {tContent("demonstration.labels.triggerLoading")}
-            </Button>
+            {DEMO_TRIGGERS.map(({ kind, labelKey }) => (
+              <Button
+                key={kind}
+                variant="outline"
+                size="sm"
+                data-track="demo"
+                data-track-id={`sonner:demo:${kind}`}
+                onClick={() => showToast(kind, "docs_demo", kind)}
+              >
+                {tContent(labelKey)}
+              </Button>
+            ))}
           </div>
         </div>
       </DocsDemonstration>
@@ -388,9 +410,9 @@ interface ToasterProps {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => toast.success("Alterações salvas.")}
+                  onClick={() => showToast("success", "docs_do_dont", "success")}
                 >
-                  toast.success
+                  {tContent("demonstration.labels.triggerSuccess")}
                 </Button>
               </div>
             ),
@@ -402,9 +424,9 @@ interface ToasterProps {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => toast.error("Erro crítico — tudo perdido!")}
+                  onClick={() => showToast("blocking-error", "docs_do_dont", "error")}
                 >
-                  toast.error (crítico)
+                  {tContent("demonstration.labels.triggerError")}
                 </Button>
               </div>
             ),
@@ -422,18 +444,9 @@ interface ToasterProps {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => {
-                    const p = new Promise<void>((resolve) =>
-                      setTimeout(resolve, 1500)
-                    );
-                    toast.promise(p, {
-                      loading: "Salvando...",
-                      success: "Salvo.",
-                      error: "Erro.",
-                    });
-                  }}
+                  onClick={() => showToast("promise", "docs_do_dont", "promise")}
                 >
-                  toast.promise
+                  {tContent("demonstration.labels.triggerPromise")}
                 </Button>
               </div>
             ),
@@ -445,9 +458,9 @@ interface ToasterProps {
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => toast.error("Campo obrigatório não preenchido.")}
+                  onClick={() => showToast("form-error", "docs_do_dont", "error")}
                 >
-                  toast.error (formulário)
+                  {tContent("demonstration.labels.triggerError")}
                 </Button>
               </div>
             ),
@@ -479,9 +492,9 @@ interface ToasterProps {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => toast("Código copiado.")}
+                  onClick={() => showToast("default", "docs_variantes", "default")}
                 >
-                  Default
+                  {tContent("demonstration.labels.triggerDefault")}
                 </Button>
               </div>
             ),
@@ -499,9 +512,9 @@ interface ToasterProps {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => toast.success("Alterações salvas.")}
+                  onClick={() => showToast("success", "docs_variantes", "success")}
                 >
-                  Success
+                  {tContent("demonstration.labels.triggerSuccess")}
                 </Button>
               </div>
             ),
@@ -519,9 +532,9 @@ interface ToasterProps {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => toast.error("Não foi possível salvar. Tente novamente.")}
+                  onClick={() => showToast("error", "docs_variantes", "error")}
                 >
-                  Error
+                  {tContent("demonstration.labels.triggerError")}
                 </Button>
               </div>
             ),
@@ -539,9 +552,9 @@ interface ToasterProps {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => toast.warning("Sua sessão expira em 5 minutos.")}
+                  onClick={() => showToast("warning", "docs_variantes", "warning")}
                 >
-                  Warning
+                  {tContent("demonstration.labels.triggerWarning")}
                 </Button>
               </div>
             ),
@@ -559,9 +572,9 @@ interface ToasterProps {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => toast.info("Nova versão disponível.")}
+                  onClick={() => showToast("info", "docs_variantes", "info")}
                 >
-                  Info
+                  {tContent("demonstration.labels.triggerInfo")}
                 </Button>
               </div>
             ),
@@ -587,11 +600,7 @@ interface ToasterProps {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  toast.success(tContent("demonstration.labels.withDescription"), {
-                    description: tContent("demonstration.labels.withDescriptionDesc"),
-                  })
-                }
+                onClick={() => showToast("with-description", "docs_estados", "with-description")}
               >
                 {tContent("demonstration.labels.triggerWithDescription")}
               </Button>
@@ -615,20 +624,7 @@ interface ToasterProps {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  toast(tContent("demonstration.labels.withAction"), {
-                    action: {
-                      label: tContent("demonstration.labels.withActionLabel"),
-                      onClick: () => {
-                        track("toast_action_click", {
-                          label: "with-action-label",
-                          component: "sonner",
-                          location: "docs_demo",
-                        });
-                      },
-                    },
-                  })
-                }
+                onClick={() => showToast("with-action", "docs_estados", "with-action")}
               >
                 {tContent("demonstration.labels.triggerWithAction")}
               </Button>
@@ -652,16 +648,7 @@ interface ToasterProps {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => {
-                  const p = new Promise<void>((resolve) =>
-                    setTimeout(resolve, 2000)
-                  );
-                  toast.promise(p, {
-                    loading: tContent("demonstration.labels.promiseLoading"),
-                    success: tContent("demonstration.labels.promise"),
-                    error: tContent("demonstration.labels.promiseError"),
-                  });
-                }}
+                onClick={() => showToast("promise", "docs_estados", "promise")}
               >
                 {tContent("demonstration.labels.triggerPromise")}
               </Button>
@@ -685,12 +672,7 @@ interface ToasterProps {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() =>
-                  toast.error(tContent("demonstration.labels.persistent"), {
-                    duration: Infinity,
-                    dismissible: true,
-                  })
-                }
+                onClick={() => showToast("persistent", "docs_estados", "persistent")}
               >
                 {tContent("demonstration.labels.triggerPersistent")}
               </Button>
@@ -781,9 +763,9 @@ interface ToasterProps {
           description: tContent("tokens.table.description"),
         }}
         items={[
-          { token: "--normal-bg",     value: "var(--popover)",            description: tContent("tokens.table.normalBg") },
-          { token: "--normal-text",   value: "var(--popover-foreground)", description: tContent("tokens.table.normalText") },
-          { token: "--normal-border", value: "var(--border)",             description: tContent("tokens.table.normalBorder") },
+          { token: "--normal-bg",     value: "hsl(var(--popover))",            description: tContent("tokens.table.normalBg") },
+          { token: "--normal-text",   value: "hsl(var(--popover-foreground))", description: tContent("tokens.table.normalText") },
+          { token: "--normal-border", value: "hsl(var(--border))",             description: tContent("tokens.table.normalBorder") },
           { token: "--border-radius", value: "var(--radius)",             description: tContent("tokens.table.borderRadius") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}

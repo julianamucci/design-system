@@ -38,11 +38,12 @@ vem da própria lib. Aqui é escrito à mão em `ui/toast-utils.ts`, e é por is
 esta stack é a única — com o Angular — em que **`Escape` fecha a notificação**.
 A divergência está medida em `docs/shared/prd/sonner.md` §7.
 
-## Dois arquivos órfãos, declarados
+## Dois arquivos órfãos, removidos
 
-`ui/toast.ts` e `ui/toaster.ts` não são importados por ninguém e divergiram do
-contrato que `toast-utils.ts` implementa — rótulos em inglês, `variant`
-`destructive`, `aria-live` na região E na notificação, sem cronômetro, fila ou
-`promise`. Estão registrados na §7 de
-[`docs/shared/prd/sonner.md`](../../docs/shared/prd/sonner.md); enquanto existirem, quem
-procurar "toast" nesta stack acha primeiro o arquivo que ninguém usa.
+`ui/toast.ts` e `ui/toaster.ts` não eram importados por ninguém e tinham
+divergido do contrato que `toast-utils.ts` implementa — rótulos em inglês,
+`variant` `destructive`, `aria-live` na região E na notificação, sem cronômetro,
+fila ou `promise`. Saíram em 2026-09-14, como registra a §7 de
+[`docs/shared/prd/sonner.md`](../../docs/shared/prd/sonner.md): quem procurava
+"toast" nesta stack achava primeiro o arquivo que ninguém usava. A torrada da
+stack é só `toast-utils.ts`, reexportado por `ui/sonner.ts`.

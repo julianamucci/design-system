@@ -103,8 +103,24 @@
 
   // ─── Toast triggers ───────────────────────────────────────────────────────────
 
-  function trackToastDemo(toastType: string) {
-    track('toast_demo_triggered', { toast_type: toastType, locale: $locale });
+  type ToastType =
+    | 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading'
+    | 'with-description' | 'with-action' | 'promise' | 'persistent'
+    | 'blocking-error' | 'form-error';
+  type ToastLocation = 'docs_demo' | 'docs_do_dont' | 'docs_variantes';
+
+  function trackToastDemo(toastType: ToastType, location: ToastLocation = 'docs_demo') {
+    track('toast_demo_triggered', { component: 'sonner', toast_type: toastType, location });
+  }
+
+  function fireDoDontPromise() {
+    trackToastDemo('promise', 'docs_do_dont');
+    const p = new Promise<void>((r) => setTimeout(r, 1500));
+    toast.promise(p, {
+      loading: $tStore('demonstration.labels.promiseLoading'),
+      success: $tStore('demonstration.labels.promise'),
+      error: $tStore('demonstration.labels.promiseError'),
+    });
   }
 
   function fireDefault() { trackToastDemo('default'); toast($tStore('demonstration.labels.default')); }
@@ -369,32 +385,29 @@ toast.promise(promise, {
 
   {#snippet doPair1()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => toast.success('Alterações salvas.')}>
-        toast.success
+      <Button variant="outline" onclick={() => { trackToastDemo('success', 'docs_do_dont'); toast.success($tStore('demonstration.labels.success')); }}>
+        {$tStore('demonstration.labels.triggerSuccess')}
       </Button>
     </div>
   {/snippet}
   {#snippet dontPair1()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => toast.error('Erro crítico! O sistema falhou completamente.')}>
-        toast.error (erro crítico)
+      <Button variant="outline" onclick={() => { trackToastDemo('blocking-error', 'docs_do_dont'); toast.error($tStore('demonstration.labels.error')); }}>
+        {$tStore('demonstration.labels.triggerError')}
       </Button>
     </div>
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => {
-        const p = new Promise<void>((r) => setTimeout(r, 1500));
-        toast.promise(p, { loading: 'Salvando...', success: 'Salvo.', error: 'Erro.' });
-      }}>
-        toast.promise
+      <Button variant="outline" onclick={fireDoDontPromise}>
+        {$tStore('demonstration.labels.triggerPromise')}
       </Button>
     </div>
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => toast.error('Campo obrigatório não preenchido.')}>
-        toast (erro de campo)
+      <Button variant="outline" onclick={() => { trackToastDemo('form-error', 'docs_do_dont'); toast.error($tStore('demonstration.labels.error')); }}>
+        {$tStore('demonstration.labels.triggerError')}
       </Button>
     </div>
   {/snippet}
@@ -419,27 +432,27 @@ toast.promise(promise, {
 
   {#snippet variantDefault()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => toast('Código copiado.')}>Disparar</Button>
+      <Button variant="outline" onclick={() => { trackToastDemo('default', 'docs_variantes'); toast($tStore('demonstration.labels.default')); }}>{$tStore('demonstration.labels.triggerDefault')}</Button>
     </div>
   {/snippet}
   {#snippet variantSuccess()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => toast.success('Alterações salvas.')}>Disparar</Button>
+      <Button variant="outline" onclick={() => { trackToastDemo('success', 'docs_variantes'); toast.success($tStore('demonstration.labels.success')); }}>{$tStore('demonstration.labels.triggerSuccess')}</Button>
     </div>
   {/snippet}
   {#snippet variantError()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => toast.error('Não foi possível salvar. Tente novamente.')}>Disparar</Button>
+      <Button variant="outline" onclick={() => { trackToastDemo('error', 'docs_variantes'); toast.error($tStore('demonstration.labels.error')); }}>{$tStore('demonstration.labels.triggerError')}</Button>
     </div>
   {/snippet}
   {#snippet variantWarning()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => toast.warning('Sua sessão expira em 5 minutos.')}>Disparar</Button>
+      <Button variant="outline" onclick={() => { trackToastDemo('warning', 'docs_variantes'); toast.warning($tStore('demonstration.labels.warning')); }}>{$tStore('demonstration.labels.triggerWarning')}</Button>
     </div>
   {/snippet}
   {#snippet variantInfo()}
     <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
-      <Button variant="outline" onclick={() => toast.info('Nova versão disponível.')}>Disparar</Button>
+      <Button variant="outline" onclick={() => { trackToastDemo('info', 'docs_variantes'); toast.info($tStore('demonstration.labels.info')); }}>{$tStore('demonstration.labels.triggerInfo')}</Button>
     </div>
   {/snippet}
 

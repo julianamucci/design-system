@@ -300,17 +300,34 @@ export const DarkTheme: Story = {
   render: () => mountToaster(),
   play: async ({ step }) => {
     await clearToasts();
+    let infoId = 0;
 
-    await step('Os cinco tipos são desenhados com os tokens do tema em vigor', async () => {
+    await step('Cinco disparos, e só as três mais recentes na tela', async () => {
       toast(TEXTS.padrao, PERSISTENT);
       toast.success(TEXTS.sucesso, PERSISTENT);
       toast.error(TEXTS.error, PERSISTENT);
       toast.warning(TEXTS.aviso, PERSISTENT);
-      toast.info(TEXTS.info, PERSISTENT);
+      infoId = toast.info(TEXTS.info, PERSISTENT);
 
       await waitForToast({ type: 'info' });
+      // O teto é o das três libs (3). As duas mais antigas não saíram da fila:
+      // esperam fora da tela e voltam quando abrir vaga.
+      const visible = toastsOnScreen().filter((el) => !el.hidden);
       await expect(toastsOnScreen().length).toBe(5);
-      await expect(toastsOnScreen().every((el) => el.dataset.richColors === 'true')).toBe(true);
+      await expect(visible.map((el) => el.dataset.type)).toEqual(['error', 'warning', 'info']);
+      await expect(
+        toastsOnScreen().filter((el) => el.hidden).every((el) => getComputedStyle(el).display === 'none'),
+      ).toBe(true);
+      await expect(visible.every((el) => el.dataset.richColors === 'true')).toBe(true);
+    });
+
+    await step('Fechar uma visível devolve à tela a mais recente das que esperavam', async () => {
+      toast.dismiss(infoId);
+      await waitFor(() => {
+        const visible = toastsOnScreen().filter((el) => !el.hidden && el.dataset.visible === 'true');
+        if (visible.length !== 3) throw new Error('a vaga ainda não foi ocupada');
+      });
+      await expect(document.querySelector<HTMLElement>('.nds-sonner[data-type="success"]')!.hidden).toBe(false);
     });
 
     await step('Trocar o tema recolore os mesmos nós, sem remontar', async () => {

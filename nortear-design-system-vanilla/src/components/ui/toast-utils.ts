@@ -14,8 +14,6 @@ export interface ToasterOptions {
   position?: ToastPosition;
   /** Aplica a cor semântica do tema a cada tipo. */
   richColors?: boolean;
-  /** Mostra a pilha aberta em vez de condensada. */
-  expand?: boolean;
   /** Prazo default das notificações disparadas enquanto esta região existe. */
   duration?: number;
   /** Botão de fechar em todas as notificações. Cada `toast()` pode sobrepor. */
@@ -55,6 +53,13 @@ interface ToastEntry {
   retomadoEm: number;
   timer?: ReturnType<typeof setTimeout>;
 }
+
+/**
+ * Teto de notificações na tela ao mesmo tempo — o `VISIBLE_TOASTS_AMOUNT` das
+ * três libs (sonner, vue-sonner, svelte-sonner), que valem 3. Até 2026-09-14
+ * esta stack não tinha teto, e a story de tema escuro afirmava cinco na tela.
+ */
+const VISIBLE_TOASTS_AMOUNT = 3;
 
 /** Padrão do projeto, e o mesmo que o conteúdo compartilhado documenta. */
 const DURATION_DEFAULT = 4000;
@@ -181,7 +186,7 @@ export function createSonnerToaster(options: ToasterOptions = {}): HTMLElement {
 }
 
 function mountRegiao(options: ToasterOptions): HTMLElement {
-  const { position = POSITION_DEFAULT, richColors = false, expand = false } = options;
+  const { position = POSITION_DEFAULT } = options;
 
   if (containerEl) containerEl.remove();
 
@@ -207,8 +212,10 @@ function mountRegiao(options: ToasterOptions): HTMLElement {
   el.dataset.slot = 'sonner-toaster';
   el.className = options.class ? `nds-toaster ${options.class}` : 'nds-toaster';
   el.dataset.position = position;
-  el.dataset.richColors = String(richColors);
-  el.dataset.expand = String(expand);
+  // Sem `data-rich-colors` e sem `data-expand` aqui, desde 2026-09-14: nenhuma
+  // folha lia um nem outro na REGIÃO — a cor semântica é lida na notificação, e
+  // a opção `expand` não tinha efeito nenhum. Atributo escrito que ninguém lê
+  // ensina um contrato que o componente não cumpre.
 
   // Ponteiro ou foco dentro da região congela todos os cronômetros.
   el.addEventListener('mouseenter', pauseCronometros);
@@ -248,7 +255,7 @@ function ensureContainer(position: ToastPosition | undefined): HTMLElement {
     return containerEl;
   }
 
-  const el = mountRegiao({ position: position ?? POSITION_DEFAULT, richColors: defaults.richColors });
+  const el = mountRegiao({ position: position ?? POSITION_DEFAULT });
   document.body.appendChild(el);
   return el;
 }
@@ -260,6 +267,8 @@ function removeToast(id: number): void {
   stopCronometro(entry);
   activeToasts.splice(idx, 1);
   entry.el.dataset.visible = 'false';
+  // Abriu uma vaga: a mais recente das que esperavam volta à tela.
+  syncVisibleToasts();
 
   setTimeout(() => {
     entry.el.remove();
@@ -272,6 +281,27 @@ function removeToast(id: number): void {
       defaults = sistemaDefaults();
     }
   }, DURATION_OUTPUT);
+}
+
+/**
+ * Mostra só as `VISIBLE_TOASTS_AMOUNT` mais recentes; as mais antigas ESPERAM.
+ *
+ * É a forma das libs: a 4ª notificação não descarta a 1ª — tira-a da tela, com
+ * o cronômetro correndo, e ela volta quando uma das visíveis sai. Descartar
+ * perderia uma persistente (`duration: Infinity`) sem ninguém tê-la fechado.
+ *
+ * O `display` inline é mecânico, e é o único jeito daqui: `.nds-sonner` declara
+ * `display: flex` na folha, que vence a regra `[hidden]` do navegador — só o
+ * atributo deixaria um espaço vazio na pilha. O `hidden` fica junto porque é o
+ * estado que quem lê o DOM (e a story) consulta.
+ */
+function syncVisibleToasts(): void {
+  const firstVisible = activeToasts.length - VISIBLE_TOASTS_AMOUNT;
+  activeToasts.forEach((entry, index) => {
+    const waiting = index < firstVisible;
+    entry.el.hidden = waiting;
+    entry.el.style.display = waiting ? 'none' : '';
+  });
 }
 
 // ─── Criação ──────────────────────────────────────────────────────────────────
@@ -377,6 +407,7 @@ function createToast(type: ToastType, message: string, opts: ToastOptions = {}):
     retomadoEm: performance.now(),
   };
   activeToasts.push(entry);
+  syncVisibleToasts();
   startCronometro(entry);
 
   return id;
@@ -449,11 +480,3 @@ export const toast = Object.assign(
     },
   },
 );
-
-/**
- * No-op mantido por compatibilidade de API com as outras stacks.
- * Os estilos vivem em `@shared/styles/nds/sonner.css`, sem injeção dinâmica.
- */
-export function injectToastStyles(): void {
-  // intencionalmente vazio — o CSS é importado pelo globals.css
-}

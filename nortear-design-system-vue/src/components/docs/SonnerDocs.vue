@@ -130,26 +130,39 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
 });
 // ─── Toast actions (demonstração) ─────────────────────────────────────────────
 
-function trackToastDemo(toastType: string) {
-  track('toast_demo_triggered', { toast_type: toastType, locale: locale.value });
+/**
+ * Toda notificação que a página faz aparecer é rastreada, e `location` diz de
+ * qual seção veio. O `toast_type` descreve o GATILHO, não a variante visual: o
+ * "não faça" do Do/Don't mostra a mesma notificação de erro da demonstração,
+ * mas é `blocking-error` / `form-error` — senão os dois contraexemplos se
+ * confundiriam com o erro legítimo no GA4.
+ */
+type ToastLocation = 'docs_demo' | 'docs_do_dont' | 'docs_variantes';
+type ToastType =
+  | 'default' | 'success' | 'error' | 'warning' | 'info' | 'loading'
+  | 'with-description' | 'with-action' | 'promise' | 'persistent'
+  | 'blocking-error' | 'form-error';
+
+function trackToastDemo(toastType: ToastType, location: ToastLocation) {
+  track('toast_demo_triggered', { component: 'sonner', toast_type: toastType, location });
 }
 
-function fireDefault()  { trackToastDemo('default'); toast(tContent('demonstration.labels.default')); }
-function fireSuccess()  { trackToastDemo('success'); toast.success(tContent('demonstration.labels.success')); }
-function fireError()    { trackToastDemo('error'); toast.error(tContent('demonstration.labels.error')); }
-function fireWarning()  { trackToastDemo('warning'); toast.warning(tContent('demonstration.labels.warning')); }
-function fireInfo()     { trackToastDemo('info'); toast.info(tContent('demonstration.labels.info')); }
-function fireLoading()  { trackToastDemo('loading'); toast.loading(tContent('demonstration.labels.loading')); }
+function fireDefault(location: ToastLocation) { trackToastDemo('default', location); toast(tContent('demonstration.labels.default')); }
+function fireSuccess(location: ToastLocation) { trackToastDemo('success', location); toast.success(tContent('demonstration.labels.success')); }
+function fireError(location: ToastLocation, toastType: ToastType = 'error') { trackToastDemo(toastType, location); toast.error(tContent('demonstration.labels.error')); }
+function fireWarning(location: ToastLocation) { trackToastDemo('warning', location); toast.warning(tContent('demonstration.labels.warning')); }
+function fireInfo(location: ToastLocation) { trackToastDemo('info', location); toast.info(tContent('demonstration.labels.info')); }
+function fireLoading(location: ToastLocation) { trackToastDemo('loading', location); toast.loading(tContent('demonstration.labels.loading')); }
 
-function fireWithDescription() {
-  trackToastDemo('with-description');
+function fireWithDescription(location: ToastLocation) {
+  trackToastDemo('with-description', location);
   toast.success(tContent('demonstration.labels.withDescription'), {
     description: tContent('demonstration.labels.withDescriptionDesc'),
   });
 }
 
-function fireWithAction() {
-  trackToastDemo('with-action');
+function fireWithAction(location: ToastLocation) {
+  trackToastDemo('with-action', location);
   toast(tContent('demonstration.labels.withAction'), {
     action: {
       label: tContent('demonstration.labels.withActionLabel'),
@@ -164,8 +177,8 @@ function fireWithAction() {
   });
 }
 
-function firePromise() {
-  trackToastDemo('promise');
+function firePromise(location: ToastLocation) {
+  trackToastDemo('promise', location);
   const promise = new Promise<void>((resolve) => setTimeout(resolve, 2000));
   toast.promise(promise, {
     loading: tContent('demonstration.labels.promiseLoading'),
@@ -174,8 +187,8 @@ function firePromise() {
   });
 }
 
-function firePersistent() {
-  trackToastDemo('persistent');
+function firePersistent(location: ToastLocation) {
+  trackToastDemo('persistent', location);
   toast.error(tContent('demonstration.labels.persistent'), {
     duration: Infinity,
     dismissible: true,
@@ -403,7 +416,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:default"
-            @click="fireDefault"
+            @click="fireDefault('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerDefault') }}
           </Button>
@@ -412,7 +425,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:success"
-            @click="fireSuccess"
+            @click="fireSuccess('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerSuccess') }}
           </Button>
@@ -421,7 +434,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:error"
-            @click="fireError"
+            @click="fireError('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerError') }}
           </Button>
@@ -430,7 +443,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:warning"
-            @click="fireWarning"
+            @click="fireWarning('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerWarning') }}
           </Button>
@@ -439,7 +452,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:info"
-            @click="fireInfo"
+            @click="fireInfo('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerInfo') }}
           </Button>
@@ -448,7 +461,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:loading"
-            @click="fireLoading"
+            @click="fireLoading('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerLoading') }}
           </Button>
@@ -457,7 +470,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:with-description"
-            @click="fireWithDescription"
+            @click="fireWithDescription('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerWithDescription') }}
           </Button>
@@ -466,7 +479,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:with-action"
-            @click="fireWithAction"
+            @click="fireWithAction('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerWithAction') }}
           </Button>
@@ -475,7 +488,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:promise"
-            @click="firePromise"
+            @click="firePromise('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerPromise') }}
           </Button>
@@ -484,7 +497,7 @@ const visualTestItems = computed(() => [
             size="sm"
             data-track="demo"
             data-track-id="sonner:demo:persistent"
-            @click="firePersistent"
+            @click="firePersistent('docs_demo')"
           >
             {{ tContent('demonstration.labels.triggerPersistent') }}
           </Button>
@@ -560,7 +573,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="fireSuccess"
+            @click="fireSuccess('docs_do_dont')"
           >
             {{ tContent('demonstration.labels.triggerSuccess') }}
           </Button>
@@ -574,7 +587,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="fireError"
+            @click="fireError('docs_do_dont', 'blocking-error')"
           >
             {{ tContent('demonstration.labels.triggerError') }}
           </Button>
@@ -588,7 +601,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="firePromise"
+            @click="firePromise('docs_do_dont')"
           >
             {{ tContent('demonstration.labels.triggerPromise') }}
           </Button>
@@ -602,7 +615,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="fireError"
+            @click="fireError('docs_do_dont', 'form-error')"
           >
             {{ tContent('demonstration.labels.triggerError') }}
           </Button>
@@ -628,7 +641,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="fireDefault"
+            @click="fireDefault('docs_variantes')"
           >
             {{ tContent('demonstration.labels.triggerDefault') }}
           </Button>
@@ -642,7 +655,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="fireSuccess"
+            @click="fireSuccess('docs_variantes')"
           >
             {{ tContent('demonstration.labels.triggerSuccess') }}
           </Button>
@@ -656,7 +669,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="fireError"
+            @click="fireError('docs_variantes')"
           >
             {{ tContent('demonstration.labels.triggerError') }}
           </Button>
@@ -670,7 +683,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="fireWarning"
+            @click="fireWarning('docs_variantes')"
           >
             {{ tContent('demonstration.labels.triggerWarning') }}
           </Button>
@@ -684,7 +697,7 @@ const visualTestItems = computed(() => [
           <Button
             variant="outline"
             size="sm"
-            @click="fireInfo"
+            @click="fireInfo('docs_variantes')"
           >
             {{ tContent('demonstration.labels.triggerInfo') }}
           </Button>
