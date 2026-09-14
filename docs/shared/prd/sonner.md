@@ -1042,12 +1042,13 @@ imprimia "nenhuma" ao procurar `.nds-sonner*`. Com os três nomes iguais, os doi
 instrumentos passam a medir a §5 deste arquivo.
 
 > **PENDÊNCIA · 2026-09-13** — `node scripts/audit.mjs sonner --json` devolve
-> **16 achados**, medidos neste dia e todos anteriores a este PRD: 1
+> **14 achados** (eram 16 quando este PRD nasceu; a rodada de decisões da dona
+> consertou os dois `inline_style_design_value` do vue de passagem): 1
 > `demonstration_labels_divergent` (angular, faltam `default`, `info`, `loading`,
 > `success`, `triggerLoading`), 2 `source_sem_teste` (react e angular), 3
 > `story_file_sem_transform` (os três arquivos de story do angular, 17 stories
 > publicando o template da story no painel Code), 8 `inline_style_design_value`
-> (react ×5, vue ×2, vanilla ×1 — quase todos `min-height` de quadro de story), 1
+> (react ×5, vanilla ×1 — todos `min-height` de quadro de story), 1
 > `identificador_pt` (vanilla) e 1 `identificador_pt_novo` (svelte).
 > **Fecha quando** `node scripts/audit.mjs sonner --json` devolver
 > `{"sonner": []}` com exit 0.
