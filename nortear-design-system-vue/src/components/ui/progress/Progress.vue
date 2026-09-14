@@ -1,87 +1,121 @@
 <script setup lang="ts">
+/**
+ * Progress — barra passiva com `role="progressbar"` sobre o `ProgressRoot` da reka-ui.
+ *
+ * A regra do valor é a compartilhada (`@shared/primitives/progress-value`), a
+ * mesma nas cinco stacks:
+ *
+ *  - **Omitir o valor é indeterminado.** Ausente, `null` e não finito (`NaN`)
+ *    dão o modo sem estimativa, igual ao `<progress>` nativo. Até 2026-09-14 o
+ *    padrão aqui era ZERO: uma barra vazia e parada que parecia travada, onde
+ *    duas outras stacks mostravam o traço correndo.
+ *  - **`min` é respeitado** no limite, no percentual (`--value`) e em
+ *    `aria-valuemin`. Máximo menor ou igual ao mínimo vira mínimo + 100.
+ *  - **`aria-valuetext` sempre**: o percentual arredondado ("42%"), ou
+ *    "Em andamento" sem valor. Quem passa `getValueText` vence o padrão, com a
+ *    assinatura da lib — `(value, max)`, o valor já limitado à faixa.
+ *
+ * ─── O que a lib não sabe fazer, e como se contorna ─────────────────────────
+ *
+ * A reka-ui crava `aria-valuemin="0"`, e troca por `null` (com `console.error`)
+ * qualquer valor abaixo de zero ou acima do máximo. Por isso a lib recebe a
+ * faixa DESLOCADA — `valor − min` sobre `max − min`, que é sempre válida — e os
+ * atributos que ela escreve com esses números (`aria-valuemin/now/max`,
+ * `data-value`, `data-max`, na raiz e no indicador) são reescritos aqui com os
+ * valores reais. O
+ * `data-state` sai certo sem ajuste: `valor − min === max − min` só quando o
+ * valor é o máximo. Atributo passado ao `ProgressRoot` que não é prop dele cai
+ * por cima do que ele renderiza (fallthrough), e é isso que faz a troca valer.
+ *
+ * `getValueLabel` fica fixo em `undefined`. O padrão da lib escrevia o
+ * percentual em `aria-label` — um NOME fabricado ("42%") que escondia do axe a
+ * barra sem nome de verdade (D9). O nome é de quem compõe, por `aria-label`.
+ */
 import type { ProgressRootProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { reactiveOmit } from '@vueuse/core'
 import { computed } from 'vue'
 import {
   ProgressIndicator,
   ProgressRoot,
 } from 'reka-ui'
+import {
+  progressPercent,
+  progressValueText,
+  resolveProgressRange,
+  resolveProgressValue,
+} from '@shared/primitives/progress-value'
 import { cn } from '@/lib/utils'
 
 const props = withDefaults(
-  defineProps<ProgressRootProps & { class?: HTMLAttributes['class'] }>(),
+  defineProps<Omit<ProgressRootProps, 'getValueLabel'> & {
+    /** Valor mínimo da escala. Padrão 0. */
+    min?: number
+    class?: HTMLAttributes['class']
+  }>(),
   {
-    modelValue: 0,
+    modelValue: null,
+    min: 0,
+    max: 100,
+    getValueText: undefined,
   },
 )
 
-// `modelValue` sai da delegação porque o que chega à lib é o valor LIMITADO, e
-// não o pedido: o `v-bind` repassaria o número cru e a raiz anunciaria um
-// `aria-valuenow` que a barra não desenha.
-const delegatedProps = reactiveOmit(props, 'class', 'modelValue')
+/** Faixa usável — máximo ≤ mínimo é corrigido pela regra compartilhada. */
+const range = computed(() => resolveProgressRange(props.min, props.max))
 
-/** A escala da barra — a lib assume 100 quando ninguém pede outra. */
-const scale = computed(() => props.max ?? 100)
+/** Valor limitado à faixa, ou `null` no indeterminado. */
+const value = computed(() => resolveProgressValue(props.modelValue, range.value))
 
-// Valor limitado à faixa [0, max] ANTES de desenhar e antes de anunciar.
-//
-// Sem o limite, valor acima do máximo e valor negativo davam a MESMA tela — uma
-// barra vazia — com o número fora da faixa sendo anunciado ao leitor de tela, e
-// nada ficava vermelho: o recorte da trilha escondia o resto.
-//
-// `null`/`undefined` continuam sendo o modo sem estimativa, que é outra coisa de
-// zero: zero mentiria, diria "0%" quando a verdade é "não sei quanto falta".
-// Número não finito cai no indeterminado pelo mesmo motivo — não há porcentagem
-// que `NaN` possa anunciar.
-const clampedValue = computed(() => {
-  const requested = props.modelValue
-  if (requested == null || !Number.isFinite(requested)) return null
-  return Math.min(Math.max(requested, 0), scale.value)
+// A lib trabalha na faixa deslocada para zero — ver o docblock.
+const libValue = computed(() => (value.value === null ? null : value.value - range.value.min))
+const libMax = computed(() => range.value.max - range.value.min)
+
+/** Nenhum nome fabricado a partir do valor (D9). */
+const noValueLabel = () => undefined
+
+const valueText = computed(() => {
+  if (props.getValueText) return props.getValueText(value.value, range.value.max)
+  return progressValueText(value.value, range.value)
 })
 
-// A lib publica o estado em `data-state="indeterminate"`; as outras stacks
-// publicam `data-indeterminate`. O CSS compartilhado se apoia no segundo, que é
-// o vocabulário de markup que a auditoria cross-stack compara — então a
-// tradução acontece aqui, e não com um seletor extra na folha compartilhada.
-// `undefined` remove o atributo: presença é o que o seletor testa, e
-// `data-indeterminate="false"` casaria `[data-indeterminate]` do mesmo jeito.
-const indeterminado = computed(() =>
-  clampedValue.value == null ? '' : undefined,
-)
+// A lib publica `data-state="indeterminate"`; o CSS compartilhado lê
+// `data-indeterminate`, que é o vocabulário que a auditoria cross-stack
+// compara. `undefined` remove o atributo — `data-indeterminate="false"`
+// casaria `[data-indeterminate]` do mesmo jeito.
+const indeterminate = computed(() => (value.value === null ? '' : undefined))
 
 // O desenho sai da custom property, nunca de `transform` inline: estilo inline
-// vence qualquer especificidade, então escrever a posição aqui SOBRESCREVERIA a
-// regra do design system em vez de alimentá-la — e com ela iria embora a
-// transição de `transform` que a folha declara. Quem desenha é
-// `translateX(calc((var(--value, 0) - 100) * 1%))` em `.nds-progress-indicator`;
-// aqui só se calcula a PORCENTAGEM, que é onde `max` entra.
-//
-// `null` é o indeterminado, e aí NENHUMA property de valor é escrita: é o que
-// devolve o `transform: none` da folha e deixa o traço correr.
-const drawnPercent = computed(() => {
-  if (clampedValue.value == null) return null
-  return scale.value > 0 ? (clampedValue.value / scale.value) * 100 : 0
+// vence a folha e levaria embora a transição que ela declara. `--value` é o
+// PERCENTUAL (0–100), nunca o número cru. String, porque o valor de uma custom
+// property é texto.
+const indicatorStyle = computed(() => {
+  const percent = progressPercent(value.value, range.value)
+  return percent === null ? undefined : { '--value': String(percent) }
 })
-
-// String e não número, como no angular: o valor de uma custom property é texto,
-// e passar número deixa a conversão na mão do runtime.
-const indicatorStyle = computed(() =>
-  drawnPercent.value == null ? undefined : { '--value': String(drawnPercent.value) },
-)
 </script>
 
 <template>
   <ProgressRoot
     data-slot="progress"
-    v-bind="delegatedProps"
-    :model-value="clampedValue"
-    :data-indeterminate="indeterminado"
-    :class="cn( 'nds-progress', props.class, )"
+    :model-value="libValue"
+    :max="libMax"
+    :get-value-label="noValueLabel"
+    :as="props.as"
+    :as-child="props.asChild"
+    :aria-valuemin="range.min"
+    :aria-valuemax="range.max"
+    :aria-valuenow="value ?? undefined"
+    :aria-valuetext="valueText"
+    :data-value="value ?? undefined"
+    :data-max="range.max"
+    :data-indeterminate="indeterminate"
+    :class="cn('nds-progress', props.class)"
   >
     <ProgressIndicator
       data-slot="progress-indicator"
       class="nds-progress-indicator"
+      :data-value="value ?? undefined"
+      :data-max="range.max"
       :style="indicatorStyle"
     />
   </ProgressRoot>

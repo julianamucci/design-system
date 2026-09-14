@@ -3,6 +3,7 @@ import { expect, waitFor, within } from 'storybook/test';
 import { createProgress, type ProgressVariant } from './progress';
 import {
   progressSource,
+  progressSourceCustomText,
   progressSourceLista,
   progressSourceOcupado,
   progressSourceLabel,
@@ -80,6 +81,8 @@ export const FileUpload: Story = {
       source: {
         transform: progressSourceLabel({
           value: 48,
+          title: 'documento-final.pdf',
+          meta: '2.4 MB de 5.0 MB',
           label: 'Enviando arquivo',
           'aria-label': 'Progresso do upload de documento-final.pdf',
         }),
@@ -204,10 +207,10 @@ export const MultipleUploads: Story = {
     docs: {
       source: {
         transform: progressSourceLista([
-          { value: 100, 'aria-label': 'Upload de foto-1.jpg concluído' },
-          { value: 74, 'aria-label': 'Progresso do upload de foto-2.jpg' },
-          { value: 32, 'aria-label': 'Progresso do upload de foto-3.jpg' },
-          { value: 0, 'aria-label': 'Upload de foto-4.jpg aguardando' },
+          { value: 100, label: 'foto-1.jpg', 'aria-label': 'Upload de foto-1.jpg concluído' },
+          { value: 74, label: 'foto-2.jpg', 'aria-label': 'Progresso do upload de foto-2.jpg' },
+          { value: 32, label: 'foto-3.jpg', 'aria-label': 'Progresso do upload de foto-3.jpg' },
+          { value: 0, label: 'foto-4.jpg', 'aria-label': 'Upload de foto-4.jpg aguardando' },
         ]),
       },
     },
@@ -262,11 +265,17 @@ export const CustomColor: Story = {
     docs: {
       source: {
         transform: progressSourceLista([
-          { value: 100, variant: 'success', 'aria-label': 'Sincronização concluída' },
-          { value: 72, 'aria-label': 'Progresso do backup' },
+          {
+            value: 100,
+            variant: 'success',
+            label: 'Sincronização',
+            'aria-label': 'Sincronização concluída',
+          },
+          { value: 72, label: 'Backup', 'aria-label': 'Progresso do backup' },
           {
             value: 92,
             variant: 'destructive',
+            label: 'Espaço usado',
             'aria-label': 'Espaço de armazenamento quase esgotado',
           },
         ]),
@@ -338,7 +347,9 @@ export const AriaBusyContainer: Story = {
       source: {
         transform: progressSourceOcupado({
           value: 35,
-          label: 'Processando relatório',
+          title: 'Processando relatório',
+          description: 'Isso pode levar alguns minutos.',
+          label: 'Analisando dados',
           'aria-label': 'Progresso da análise de dados',
         }),
       },
@@ -386,6 +397,52 @@ export const AriaBusyContainer: Story = {
     await step('A barra vive dentro do contêiner ocupado', async () => {
       const status = canvas.getByRole('status');
       await expect(status.contains(canvas.getByRole('progressbar'))).toBe(true);
+    });
+  },
+};
+
+// ─── Texto anunciado próprio ─────────────────────────────────────────────────
+
+export const CustomValueText: Story = {
+  parameters: {
+    covers: ['accessibility.item6'],
+    docs: {
+      description: {
+        story:
+          '`aria-valuetext` substitui a leitura do número. Quem conta arquivos passa a própria ' +
+          'função e o leitor de tela ouve "42 de 100 arquivos" em vez de "42%".',
+      },
+      source: { transform: progressSourceCustomText({ value: 42 }) },
+    },
+  },
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'nds-w-md';
+    wrap.appendChild(
+      createProgress({
+        value: 42,
+        'aria-label': 'Processamento de arquivos',
+        getAriaValueText: (value, _min, max) =>
+          value === null ? 'Contando arquivos' : `${value} de ${max} arquivos`,
+      }),
+    );
+    return wrap;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('A função de quem compõe vence o percentual padrão', async () => {
+      const bar = canvas.getByRole('progressbar', { name: 'Processamento de arquivos' });
+      await expect(bar).toHaveAttribute('aria-valuetext', '42 de 100 arquivos');
+    });
+
+    await step('O número continua anunciado e desenhado', async () => {
+      // Trocar o texto não pode custar o valor: `aria-valuenow` e o desenho
+      // seguem a escala.
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '42');
+      await waitFor(async () => {
+        await expect(Math.abs(percentualDesenhado(canvasElement) - 42)).toBeLessThan(2);
+      });
     });
   },
 };

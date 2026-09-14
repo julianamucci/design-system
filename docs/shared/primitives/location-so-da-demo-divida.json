@@ -9,6 +9,7 @@
     "angular/CarouselDocs.ts": "carousel",
     "angular/CollapsibleDocs.ts": "collapsible",
     "angular/PaginationDocs.ts": "pagination",
+    "angular/ProgressDocs.ts": "progress",
     "angular/ResizableDocs.ts": "resizable",
     "angular/SwitchDocs.ts": "switch",
     "angular/TextareaDocs.ts": "textarea",

@@ -1,25 +1,21 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useEffect, useState } from "react";
 import { within, expect, waitFor } from "storybook/test";
-import {
-  Progress,
-  ProgressLabel,
-  ProgressTrack,
-  ProgressIndicator,
-  ProgressValue,
-} from "./progress";
+import { Progress } from "./progress";
 import {
   barrasDeProgresso,
   contrastBarTrack,
+  indicadorDoProgresso,
   accessibleName,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
 import {
-  progressWithAriaLiveSource,
-  progressColorsSource,
-  progressLabelEValorSource,
+  progressAriaBusySource,
+  progressCustomColorSource,
+  progressCustomValueTextSource,
+  progressFileUploadSource,
+  progressMultipleUploadsSource,
   progressSource,
-  progressMultipleLevelsSource,
+  progressWizardStepsSource,
 } from "./progress.source";
 
 const meta = {
@@ -32,7 +28,7 @@ const meta = {
       source: { transform: progressSource },
       description: {
         component:
-          "Composicoes do Progress: várias barras lado a lado, cores semânticas numa lista, rótulo com valor formatado e texto aria-live anunciando o progresso.",
+          "Composições do Progress em contextos reais de aplicação: upload num cartão, etapas de um cadastro, vários uploads, cores por significado, contêiner ocupado e texto anunciado próprio.",
       },
     },
     controls: { disable: true },
@@ -43,45 +39,166 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof Progress>;
 
-export const MultipleLevels: Story = {
+type Variant = "success" | "destructive";
+
+/**
+ * Rótulo e valor VISÍVEIS acima da barra. O nome acessível fica no `aria-label`
+ * — ele diz de quê, o rótulo só diz o quê — e o valor mora numa região polite.
+ */
+function LabeledBar({
+  value,
+  label,
+  ariaLabel,
+  variant,
+}: {
+  value: number;
+  label: string;
+  ariaLabel: string;
+  variant?: Variant;
+}) {
+  return (
+    <div className="nds-stack nds-w-full" data-spacing="xs">
+      <div className="nds-cluster nds-text-body" data-justify="between">
+        <span className="nds-text-foreground">{label}</span>
+        <span
+          className="nds-text-muted-foreground nds-tabular-nums"
+          aria-live="polite"
+        >
+          {value}%
+        </span>
+      </div>
+      <Progress value={value} data-variant={variant} aria-label={ariaLabel} />
+    </div>
+  );
+}
+
+const CARD =
+  "nds-stack nds-w-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground";
+
+export const FileUpload: Story = {
   parameters: {
     docs: {
-      // Três barras irmãs, cada uma com o próprio nome — o meta imprime uma.
-      source: { transform: progressMultipleLevelsSource },
+      // Rótulo e valor visíveis pedem outra FORMA de snippet.
+      source: { transform: progressFileUploadSource },
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-sm" data-spacing="md">
-      <Progress value={0} aria-label="Etapa 1" />
-      <Progress value={50} aria-label="Etapa 2" />
-      <Progress value={100} aria-label="Etapa 3" />
+    <div className={CARD} data-spacing="sm">
+      <div className="nds-text-body nds-font-medium">documento-final.pdf</div>
+      <div className="nds-text-caption nds-text-muted-foreground">2.4 MB de 5.0 MB</div>
+      <LabeledBar
+        value={48}
+        label="Enviando arquivo"
+        ariaLabel="Progresso do upload de documento-final.pdf"
+      />
     </div>
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("3 progressbars no DOM", async () => {
-      await expect(canvas.getAllByRole("progressbar")).toHaveLength(3);
+    await step("A barra nomeia o arquivo, não o componente", async () => {
+      const bar = await canvas.findByRole("progressbar");
+      await expect(bar).toHaveAttribute("aria-label", "Progresso do upload de documento-final.pdf");
+      await expect(bar).toHaveAttribute("aria-valuenow", "48");
     });
 
-    await step("Cada barra anuncia o próprio valor", async () => {
+    await step("O desenho corresponde ao valor anunciado", async () => {
+      await waitFor(async () => {
+        await expect(Math.abs(percentualDesenhado(canvasElement) - 48)).toBeLessThan(2);
+      });
+    });
+
+    await step("A barra herda a cor do cartão sem perder contraste", async () => {
+      // A trilha é semitransparente: sobre o fundo do cartão ela compõe uma cor
+      // diferente da que compõe sobre a página. O limite de 3:1 vale nos dois.
+      await expect(contrastBarTrack(canvasElement)).toBeGreaterThanOrEqual(3);
+    });
+  },
+};
+
+export const WizardSteps: Story = {
+  parameters: {
+    docs: {
+      // Aqui a região `polite` anuncia o nome da etapa, e não a porcentagem.
+      source: { transform: progressWizardStepsSource },
+    },
+  },
+  render: () => (
+    <div className="nds-stack nds-w-md" data-spacing="sm">
+      <div className="nds-cluster nds-text-body" data-justify="between">
+        <span className="nds-text-foreground nds-font-medium">Etapa 3 de 5</span>
+        <span className="nds-text-muted-foreground" aria-live="polite">
+          Endereço
+        </span>
+      </div>
+      <Progress value={60} aria-label="Progresso do cadastro: etapa 3 de 5" />
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("O nome acessível conta a etapa, que o número sozinho não conta", async () => {
+      const bar = canvas.getByRole("progressbar");
+      await expect(accessibleName(bar)).toBe("Progresso do cadastro: etapa 3 de 5");
+    });
+
+    await step("Etapa 3 de 5 desenha 60% da trilha", async () => {
+      // O valor tem que casar com o texto: uma barra em 50% ao lado de "etapa 3
+      // de 5" seria a informação certa com o desenho errado.
+      await expect(canvas.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "60");
+      await waitFor(async () => {
+        await expect(Math.abs(percentualDesenhado(canvasElement) - 60)).toBeLessThan(2);
+      });
+    });
+
+    await step("O nome da etapa é anunciado em região polite", async () => {
+      const live = canvasElement.querySelector("[aria-live]");
+      await expect(live).toHaveAttribute("aria-live", "polite");
+      await expect(live?.textContent).toBe("Endereço");
+    });
+  },
+};
+
+export const MultipleUploads: Story = {
+  parameters: {
+    docs: {
+      // Quatro barras, e o assunto é cada uma ter nome acessível próprio.
+      source: { transform: progressMultipleUploadsSource },
+    },
+  },
+  render: () => (
+    <div className="nds-stack nds-w-md" data-spacing="md">
+      <LabeledBar value={100} label="foto-1.jpg" ariaLabel="Upload de foto-1.jpg concluído" />
+      <LabeledBar value={74} label="foto-2.jpg" ariaLabel="Progresso do upload de foto-2.jpg" />
+      <LabeledBar value={32} label="foto-3.jpg" ariaLabel="Progresso do upload de foto-3.jpg" />
+      <LabeledBar value={0} label="foto-4.jpg" ariaLabel="Upload de foto-4.jpg aguardando" />
+    </div>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step("4 progressbars, cada uma com o próprio valor", async () => {
       const values = canvas
         .getAllByRole("progressbar")
         .map((b) => b.getAttribute("aria-valuenow"));
-      await expect(values).toEqual(["0", "50", "100"]);
+      await expect(values).toEqual(["100", "74", "32", "0"]);
     });
 
     await step("Cada barra desenha o próprio valor", async () => {
-      // Três barras com o mesmo desenho e atributos diferentes é o defeito que
-      // a lista existe para pegar.
-      const barras = canvas.getAllByRole("progressbar");
+      // Quatro barras com o mesmo desenho e atributos diferentes é o defeito
+      // que a lista existe para pegar.
+      const bars = canvas.getAllByRole("progressbar");
       await waitFor(async () => {
-        for (const [i, esperado] of [0, 50, 100].entries()) {
-          await expect(
-            Math.abs(percentualDesenhado(barras[i]) - esperado),
-          ).toBeLessThan(2);
+        for (const [i, expected] of [100, 74, 32, 0].entries()) {
+          await expect(Math.abs(percentualDesenhado(bars[i]) - expected)).toBeLessThan(2);
         }
       });
+    });
+
+    await step("Nomes acessíveis distintos — a lista não confunde os arquivos", async () => {
+      const names = barrasDeProgresso(canvasElement).map(accessibleName);
+      await expect(names.every((n) => n !== "")).toBe(true);
+      await expect(new Set(names).size).toBe(4);
     });
   },
 };
@@ -90,24 +207,23 @@ export const CustomColor: Story = {
   parameters: {
     docs: {
       // A lista com `data-variant` não sai de control nenhum neste arquivo.
-      source: { transform: progressColorsSource },
+      source: { transform: progressCustomColorSource },
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-sm" data-spacing="md">
-      <Progress
+    <div className="nds-stack nds-w-md" data-spacing="md">
+      <LabeledBar
         value={100}
-        data-variant="success"
-        aria-label="Sincronização concluída"
+        label="Sincronização"
+        ariaLabel="Sincronização concluída"
+        variant="success"
       />
-      <Progress
-        value={72}
-        aria-label="Progresso do backup"
-      />
-      <Progress
+      <LabeledBar value={72} label="Backup" ariaLabel="Progresso do backup" />
+      <LabeledBar
         value={92}
-        data-variant="destructive"
-        aria-label="Espaço de armazenamento quase esgotado"
+        label="Espaço usado"
+        ariaLabel="Espaço de armazenamento quase esgotado"
+        variant="destructive"
       />
     </div>
   ),
@@ -121,12 +237,7 @@ export const CustomColor: Story = {
     await step("As três cores são realmente distintas", async () => {
       const colors = canvas
         .getAllByRole("progressbar")
-        .map(
-          (root) =>
-            getComputedStyle(
-              root.querySelector<HTMLElement>("[data-slot='progress-indicator']")!,
-            ).backgroundColor,
-        );
+        .map((root) => getComputedStyle(indicadorDoProgresso(root)).backgroundColor);
       await expect(new Set(colors).size).toBe(3);
     });
 
@@ -144,107 +255,81 @@ export const CustomColor: Story = {
   },
 };
 
-export const WithLabelAndValue: Story = {
+export const AriaBusyContainer: Story = {
   parameters: {
     docs: {
-      // Composição de quatro peças mais o valor vivo, que só existe no `render`.
-      source: { transform: progressLabelEValorSource },
+      // O assunto é o contêiner que se declara ocupado ao redor da barra.
+      source: { transform: progressAriaBusySource },
     },
   },
-  render: function WithLabelEValorRender() {
-    const [value, setValue] = useState<number>(0);
-
-    useEffect(() => {
-      const id = setInterval(() => {
-        setValue((v) => (v >= 100 ? 0 : v + 5));
-      }, 350);
-      return () => clearInterval(id);
-    }, []);
-
-    return (
-      <div className="nds-w-sm">
-        <Progress value={value}>
-          <ProgressLabel>Enviando arquivo</ProgressLabel>
-          <ProgressValue />
-          <ProgressTrack>
-            <ProgressIndicator />
-          </ProgressTrack>
-        </Progress>
+  render: () => (
+    <div role="status" aria-busy="true" className={CARD} data-spacing="sm">
+      <div className="nds-text-body nds-font-medium">Processando relatório</div>
+      <div className="nds-text-caption nds-text-muted-foreground">
+        Isso pode levar alguns minutos.
       </div>
-    );
-  },
+      <LabeledBar
+        value={35}
+        label="Analisando dados"
+        ariaLabel="Progresso da análise de dados"
+      />
+    </div>
+  ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Rótulo visível e nome acessível são o mesmo texto", async () => {
-      await expect(canvas.getByText("Enviando arquivo")).toBeVisible();
-      await expect(
-        canvas.getByRole("progressbar", { name: "Enviando arquivo" }),
-      ).toBeInTheDocument();
+    await step("O contêiner declara que está ocupado", async () => {
+      await expect(canvas.getByRole("status")).toHaveAttribute("aria-busy", "true");
     });
 
-    await step("O valor formatado é escrito pelo componente", async () => {
-      const value = canvasElement.querySelector<HTMLElement>(
-        "[data-slot='progress-value']",
-      )!;
-      await expect(value.textContent?.trim()).toMatch(/^\d+%$/);
+    await step("aria-busy acompanha o estado real — a barra não terminou", async () => {
+      // `aria-busy="true"` sobre uma barra em 100% seria contradição: o leitor
+      // continuaria anunciando "ocupado" numa operação encerrada.
+      const now = Number(canvas.getByRole("progressbar").getAttribute("aria-valuenow"));
+      await expect(now).toBeLessThan(100);
     });
 
-    await step("A composição rende uma trilha só", async () => {
-      await expect(
-        canvasElement.querySelectorAll("[data-slot='progress-track']"),
-      ).toHaveLength(1);
+    await step("A barra vive dentro do contêiner ocupado", async () => {
+      const status = canvas.getByRole("status");
+      await expect(status.contains(canvas.getByRole("progressbar"))).toBe(true);
     });
   },
 };
 
-export const WithAriaLive: Story = {
+export const CustomValueText: Story = {
   parameters: {
+    covers: ["accessibility.item6"],
     docs: {
-      // A região `aria-live` ao lado da barra é a composição que a story ensina.
-      source: { transform: progressWithAriaLiveSource },
+      // A função de texto só existe no `render`.
+      source: { transform: progressCustomValueTextSource },
     },
   },
-  render: function WithAriaLiveRender() {
-    const [value, setValue] = useState<number>(0);
-
-    useEffect(() => {
-      const id = setInterval(() => {
-        setValue((v) => (v >= 100 ? 0 : v + 10));
-      }, 600);
-      return () => clearInterval(id);
-    }, []);
-
-    return (
-      <div className="nds-stack nds-w-sm" data-spacing="sm">
-        <p className="nds-text-body" aria-live="polite">
-          {value}% concluído
-        </p>
-        <Progress value={value} aria-label="Progresso do upload" />
-      </div>
-    );
-  },
+  render: () => (
+    <div className="nds-w-md">
+      <Progress
+        value={42}
+        aria-label="Processamento de arquivos"
+        getAriaValueText={(_formatted, current) =>
+          current === null ? "Contando arquivos" : `${current} de 100 arquivos`
+        }
+      />
+    </div>
+  ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("O texto vive numa região polite, não assertive", async () => {
-      // `assertive` interrompe o leitor a cada ponto percentual — é a razão de
-      // o par Do & Don't desta página existir.
-      const live = canvasElement.querySelector("[aria-live]")!;
-      await expect(live).toHaveAttribute("aria-live", "polite");
+    await step("A função de quem compõe vence o texto padrão", async () => {
+      const bar = canvas.getByRole("progressbar", { name: "Processamento de arquivos" });
+      await expect(bar).toHaveAttribute("aria-valuetext", "42 de 100 arquivos");
     });
 
-    await step("O texto anunciado acompanha o valor da barra", async () => {
-      const bar = canvas.getByRole("progressbar");
-      const live = canvasElement.querySelector("[aria-live='polite']")!;
-      const ofText = Number(live.textContent?.match(/\d+/)?.[0]);
-      await expect(String(ofText)).toBe(bar.getAttribute("aria-valuenow"));
-    });
-
-    await step("A barra continua com nome próprio", async () => {
-      await expect(
-        canvas.getByRole("progressbar", { name: "Progresso do upload" }),
-      ).toBeInTheDocument();
+    await step("O número continua anunciado e desenhado", async () => {
+      // Trocar o texto não pode custar o valor: `aria-valuenow` e o desenho
+      // seguem a escala.
+      await expect(canvas.getByRole("progressbar")).toHaveAttribute("aria-valuenow", "42");
+      await waitFor(async () => {
+        await expect(Math.abs(percentualDesenhado(canvasElement) - 42)).toBeLessThan(2);
+      });
     });
   },
 };

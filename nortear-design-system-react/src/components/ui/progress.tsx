@@ -1,16 +1,59 @@
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress"
+import {
+  progressValueText,
+  resolveProgressRange,
+  resolveProgressValue,
+} from "@shared/primitives/progress-value"
 
 import { cn } from "@/lib/utils"
+
+/**
+ * Props da raiz. `value` é OPCIONAL, ao contrário da lib: omitir o valor é o
+ * modo indeterminado nas cinco stacks (igual ao `<progress>` nativo), e a lib
+ * exigia escrever `null` para dizer a mesma coisa.
+ *
+ * `getAriaValueText(formatado, valor)` mantém a assinatura da lib, mas `valor`
+ * chega LIMITADO à faixa (o mesmo de `aria-valuenow`) — a lib entregaria o cru,
+ * e 140 de 100 viraria "140 de 100 arquivos". Indeterminado continua `null`.
+ */
+type ProgressProps = Omit<ProgressPrimitive.Root.Props, "value"> & {
+  value?: number | null
+}
 
 function Progress({
   className,
   children,
   value,
+  min,
+  max,
+  getAriaValueText,
   ...props
-}: ProgressPrimitive.Root.Props) {
+}: ProgressProps) {
+  // A faixa sai da regra compartilhada, e é ELA que chega à lib. A lib limita o
+  // valor e decide o indeterminado sozinha, e isso bate com a regra — menos num
+  // ponto: máximo menor ou igual ao mínimo. Ali a lib divide por zero e a regra
+  // corrige para mínimo + 100. Entregando a faixa já resolvida, as duas contas
+  // são a mesma.
+  const range = resolveProgressRange(min, max)
+
   return (
     <ProgressPrimitive.Root
-      value={value}
+      value={value ?? null}
+      min={range.min}
+      max={range.max}
+      // Sem função do consumidor, a lib anunciaria a frase de indeterminado em
+      // inglês. O texto padrão é o da regra: "42%", ou "Em andamento". A lib
+      // passa o valor CRU no segundo argumento (não o limitado), por isso ele
+      // é resolvido antes nos DOIS caminhos — 140 de 100 anuncia "100%", nunca
+      // "140%", e a função de quem compõe recebe o mesmo valor limitado que
+      // `aria-valuenow` mostra. A assinatura dela não muda.
+      getAriaValueText={
+        getAriaValueText
+          ? (formattedValue, raw) =>
+              getAriaValueText(formattedValue, resolveProgressValue(raw, range))
+          : (_formattedValue, raw) =>
+              progressValueText(resolveProgressValue(raw, range), range)
+      }
       data-slot="progress"
       className={cn("nds-progress-root", className)}
       {...props}
@@ -79,3 +122,4 @@ export {
   ProgressLabel,
   ProgressValue,
 }
+export type { ProgressProps }

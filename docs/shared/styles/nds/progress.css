@@ -31,8 +31,11 @@
 
 /*
  * ─── nds-progress composite ─────────────────────────────────────────────────
- * Variante composta para libs headless que controlam a largura do indicador
- * via style inline (width %), com label e valor opcionais.
+ * Raiz composta — a caixa de rótulo, valor e trilha — para as libs que oferecem
+ * essas peças. A `.nds-progress-bar` é uma segunda técnica de desenho, e só para
+ * a lib que calcula a largura do indicador e a escreve inline (`width %`), sem
+ * caminho para alimentar `--value`. Quem pode escrever `--value` usa
+ * `.nds-progress-indicator`, inclusive dentro da raiz composta.
  *
  *   <div class="nds-progress-root">
  *     <span class="nds-progress-label">Enviando…</span>

@@ -107,6 +107,39 @@ function useAnimatedProgress(intervalMs: number = 500, step: number = 5) {
   return value;
 }
 
+/**
+ * Linha da demonstração: rótulo visível e percentual numa região polite acima
+ * da barra, que carrega o próprio nome. Sem valor, a linha mostra só o rótulo
+ * e a barra fica indeterminada. O sufixo `%` é literal — não é texto traduzível.
+ */
+function DemoRow({
+  label,
+  value,
+  ariaLabel,
+  live = "polite",
+}: {
+  label: string;
+  value?: number;
+  /** Nome da barra quando ele difere do rótulo visível (par 2 do Do/Don't). */
+  ariaLabel?: string;
+  /** Só o Don't do par 2 passa `assertive` — é o erro que ele mostra. */
+  live?: "polite" | "assertive";
+}) {
+  return (
+    <div className="nds-stack nds-w-full" data-spacing="xs">
+      <div className="nds-cluster nds-text-body" data-align="center" data-justify="between">
+        <span className="nds-text-foreground">{label}</span>
+        {value === undefined ? null : (
+          <span className="nds-text-muted-foreground nds-tabular-nums" aria-live={live}>
+            {value}%
+          </span>
+        )}
+      </div>
+      <Progress value={value} aria-label={ariaLabel ?? label} />
+    </div>
+  );
+}
+
 // ─── Componente principal ────────────────────────────────────────────────────
 
 export function ProgressDocs() {
@@ -170,9 +203,8 @@ export function ProgressDocs() {
 
   const activeId = useActiveSection(allIds, handleSectionChange);
 
-  // Animated values for demonstration
+  // Valor animado da demonstração: de 5 em 5 a cada 400ms, como nas cinco stacks.
   const uploadValue = useAnimatedProgress(400, 5);
-  const loadingValue = useAnimatedProgress(700, 10);
 
   // Marcos de task_progress/task_complete apenas no primeiro ciclo da
   // animação — a demo reinicia em loop e re-emitir marcos geraria spam.
@@ -208,8 +240,8 @@ export function ProgressDocs() {
 
   const codeDeterminate = `<Progress value={42} aria-label="Progresso do upload" />`;
 
-  const codeWithLabel = `<Progress value={42} aria-label="Enviando arquivo">
-  <ProgressLabel>Enviando arquivo</ProgressLabel>
+  const codeWithLabel = `<Progress value={42}>
+  <ProgressLabel>${tContent("demonstration.labels.upload")}</ProgressLabel>
   <ProgressValue />
   <ProgressTrack>
     <ProgressIndicator />
@@ -217,17 +249,19 @@ export function ProgressDocs() {
 </Progress>`;
 
   const codeSemantic = `<Progress value={100} data-variant="success" aria-label="Sincronização concluída" />
-<Progress value={92} data-variant="destructive" aria-label="Espaço quase esgotado" />`;
+<Progress value={92} data-variant="destructive" aria-label="Espaço de armazenamento quase esgotado" />`;
 
   const interfaceCode = `// Progress (root)
-interface ProgressProps extends Progress.Root.Props {
+interface ProgressProps {
+  /** Ausente ou null: modo indeterminado. Fora da faixa: limitado. */
   value?: number | null;
-  max?: number;
   min?: number;
-  getAriaValueText?: (value: number) => string;
+  max?: number;
   "data-variant"?: "success" | "destructive";
+  /** Obrigatório quando não há ProgressLabel associado. */
+  "aria-label"?: string;
+  getAriaValueText?: (formattedValue: string, value: number | null) => string;
   className?: string;
-  "aria-label": string;
 }`;
 
   // ─── Render ───────────────────────────────────────────────────────────────
@@ -247,68 +281,14 @@ interface ProgressProps extends Progress.Root.Props {
       }
     >
       {/* ── Demonstração ──────────────────────────────────────────── */}
-      <DocsDemonstration >
-        <div className="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
-          {/* Upload animado com label e valor */}
-          <div className="nds-stack" data-spacing="sm">
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {tContent("demonstration.labels.upload")}
-            </p>
-            <div className="nds-p-4 nds-border-default nds-rounded-md">
-              <Progress
-                value={uploadValue}
-                aria-label={tContent("demonstration.labels.upload")}
-              >
-                <ProgressLabel>
-                  {tContent("demonstration.labels.upload")}
-                </ProgressLabel>
-                <ProgressValue />
-                <ProgressTrack>
-                  <ProgressIndicator />
-                </ProgressTrack>
-              </Progress>
-            </div>
-          </div>
-
-          {/* Loading animado simples */}
-          <div className="nds-stack" data-spacing="sm">
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {tContent("demonstration.labels.loading")}
-            </p>
-            <div className="nds-p-4 nds-border-default nds-rounded-md">
-              <Progress
-                value={loadingValue}
-                aria-label={tContent("demonstration.labels.loading")}
-              />
-            </div>
-          </div>
-
-          {/* Completo */}
-          <div className="nds-stack" data-spacing="sm">
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {tContent("demonstration.labels.complete")}
-            </p>
-            <div className="nds-p-4 nds-border-default nds-rounded-md">
-              <Progress
-                value={100}
-                aria-label={tContent("demonstration.labels.complete")}
-                data-variant="success"
-              />
-            </div>
-          </div>
-
-          {/* Indeterminate */}
-          <div className="nds-stack" data-spacing="sm">
-            <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {tContent("demonstration.labels.indeterminate")}
-            </p>
-            <div className="nds-p-4 nds-border-default nds-rounded-md">
-              <Progress
-                value={null}
-                aria-label={tContent("demonstration.labels.indeterminate")}
-              />
-            </div>
-          </div>
+      <DocsDemonstration componentSlug="progress">
+        {/* Pilha de quatro linhas, na ordem da referência: upload animado, 50,
+            100 e indeterminado. */}
+        <div className="nds-stack nds-w-full" data-spacing="lg">
+          <DemoRow label={tContent("demonstration.labels.upload")} value={uploadValue} />
+          <DemoRow label={tContent("demonstration.labels.loading")} value={50} />
+          <DemoRow label={tContent("demonstration.labels.complete")} value={100} />
+          <DemoRow label={tContent("demonstration.labels.indeterminate")} />
         </div>
       </DocsDemonstration>
 
@@ -422,21 +402,22 @@ interface ProgressProps extends Progress.Root.Props {
           {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
+            // A mesma linha rótulo + valor da demonstração; o Don't é a região
+            // `assertive`, que interrompe o leitor a cada avanço.
             doPreview: (
-              <div className="nds-stack nds-w-full" data-spacing="xs">
-                <p className="nds-text-body" aria-live="polite">
-                  50%
-                </p>
-                <Progress value={50} aria-label="Progresso do upload" />
-              </div>
+              <DemoRow
+                label={tContent("demonstration.labels.upload")}
+                value={50}
+                ariaLabel="Progresso do upload"
+              />
             ),
             dontPreview: (
-              <div className="nds-stack nds-w-full" data-spacing="xs">
-                <p className="nds-text-body" aria-live="assertive">
-                  51%
-                </p>
-                <Progress value={51} aria-label="Progresso do upload" />
-              </div>
+              <DemoRow
+                label={tContent("demonstration.labels.upload")}
+                value={47}
+                ariaLabel="Progresso do upload"
+                live="assertive"
+              />
             ),
             doCaption: toPlainText(tContent("doDont.pair2.do")),
             dontCaption: toPlainText(tContent("doDont.pair2.dont")),
@@ -445,7 +426,7 @@ interface ProgressProps extends Progress.Root.Props {
       />
 
       {/* ── Importação ────────────────────────────────────────────── */}
-      <DocsImport code={codeImport} />
+      <DocsImport componentSlug="progress" code={codeImport} />
 
       {/* ── Variantes ─────────────────────────────────────────────── */}
       <DocsVariants
@@ -469,8 +450,8 @@ interface ProgressProps extends Progress.Root.Props {
             code: codeWithLabel,
             preview: (
               <div className="nds-w-full">
-                <Progress value={42} aria-label="Enviando arquivo">
-                  <ProgressLabel>Enviando arquivo</ProgressLabel>
+                <Progress value={42}>
+                  <ProgressLabel>{tContent("demonstration.labels.upload")}</ProgressLabel>
                   <ProgressValue />
                   <ProgressTrack>
                     <ProgressIndicator />
@@ -553,13 +534,6 @@ interface ProgressProps extends Progress.Root.Props {
                 description: toPlainText(tContent("props.table.value.description")),
               },
               {
-                name: "max",
-                type: tContent("props.table.max.type"),
-                defaultValue: tContent("props.table.max.default"),
-                required: tContent("props.table.max.required"),
-                description: tContent("props.table.max.description"),
-              },
-              {
                 name: "min",
                 type: tContent("props.table.min.type"),
                 defaultValue: tContent("props.table.min.default"),
@@ -567,11 +541,11 @@ interface ProgressProps extends Progress.Root.Props {
                 description: tContent("props.table.min.description"),
               },
               {
-                name: "getAriaValueText",
-                type: tContent("props.table.getAriaValueText.type"),
-                defaultValue: tContent("props.table.getAriaValueText.default"),
-                required: tContent("props.table.getAriaValueText.required"),
-                description: tContent("props.table.getAriaValueText.description"),
+                name: "max",
+                type: tContent("props.table.max.type"),
+                defaultValue: tContent("props.table.max.default"),
+                required: tContent("props.table.max.required"),
+                description: tContent("props.table.max.description"),
               },
               {
                 name: "data-variant",
@@ -581,23 +555,27 @@ interface ProgressProps extends Progress.Root.Props {
                 description: toPlainText(tContent("props.table.variant.description")),
               },
               {
+                name: "aria-label",
+                type: tContent("props.table.ariaLabel.type"),
+                defaultValue: tContent("props.table.ariaLabel.default"),
+                required: tContent("props.table.ariaLabel.required"),
+                description: tContent("props.table.ariaLabel.description"),
+              },
+              {
+                // Nome e assinatura são os da lib desta stack; o conteúdo
+                // compartilhado descreve só o que a função faz.
+                name: "getAriaValueText",
+                type: "(formattedValue: string, value: number | null) => string",
+                defaultValue: tContent("props.table.getAriaValueText.default"),
+                required: tContent("props.table.getAriaValueText.required"),
+                description: tContent("props.table.getAriaValueText.description"),
+              },
+              {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
                 required: tContent("props.table.className.required"),
                 description: toPlainText(tContent("props.table.className.description")),
-              },
-              {
-                name: "aria-label",
-                type: "string",
-                defaultValue: "—",
-                required: "Sim",
-                description:
-                  locale === "en"
-                    ? "Required. Describes what is being measured for screen readers."
-                    : locale === "es"
-                    ? "Obligatorio. Describe lo que se está midiendo para lectores de pantalla."
-                    : "Obrigatório. Descreve o que está sendo medido para leitores de tela.",
               },
             ],
           },
@@ -635,6 +613,7 @@ interface ProgressProps extends Progress.Root.Props {
           tContent("accessibility.items.item4"),
           tContent("accessibility.items.item5"),
           tContent("accessibility.items.item6"),
+          tContent("accessibility.aria.valuetext"),
         ]}
         keyboardTitle={tContent("accessibility.keyboard.title")}
         keyboardItems={[
@@ -679,9 +658,9 @@ interface ProgressProps extends Progress.Root.Props {
       {/* ── Analytics ─────────────────────────────────────────────── */}
       <DocsAnalytics
         cols={{
-          event: tContent("analytics.table.event"),
-          trigger: toPlainText(tContent("analytics.table.trigger")),
-          payload: tContent("analytics.table.payload"),
+          event: tNav("common.event"),
+          trigger: tNav("common.eventTrigger"),
+          payload: tNav("common.payload"),
         }}
         items={[
           {
@@ -701,51 +680,39 @@ interface ProgressProps extends Progress.Root.Props {
       <DocsTestes
         functional={{
           title: tContent("testes.functional.title"),
+          description: tContent("testes.functional.description"),
           cols: {
             action: tNav("common.userAction"),
             result: tNav("common.expectedResult"),
             priority: tNav("common.priority"),
           },
-          items: [
-            {
-              action: tContent("testes.functional.item1.action"),
-              result: tContent("testes.functional.item1.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item1.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item2.action"),
-              result: tContent("testes.functional.item2.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item2.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item3.action"),
-              result: tContent("testes.functional.item3.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item3.priority")] ?? "common.high"),
-            },
-            {
-              action: tContent("testes.functional.item4.action"),
-              result: tContent("testes.functional.item4.result"),
-              priority: tNav(priorityKeyMap[tContent("testes.functional.item4.priority")] ?? "common.medium"),
-            },
-          ],
+          // Os sete itens do conteúdo, todos: lista mais curta que o conteúdo
+          // esconde de quem lê justamente os contratos mais novos.
+          items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
+            action: tContent(`testes.functional.item${i}.action`),
+            result: tContent(`testes.functional.item${i}.result`),
+            priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),
+          })),
         }}
         accessibility={{
           title: tContent("testes.accessibility.title"),
+          description: tContent("testes.accessibility.description"),
           cols: {
             criterion: tNav("common.criterion"),
             level: "WCAG",
             how: tNav("common.howToVerify"),
           },
-          items: [
-            { criterion: tContent("testes.accessibility.item1"), level: "AA", how: "axe-core" },
-            { criterion: tContent("testes.accessibility.item2"), level: "1.4.11", how: "Contrast checker" },
-            { criterion: tContent("testes.accessibility.item3"), level: "4.1.2", how: "DevTools a11y tree" },
-            { criterion: tContent("testes.accessibility.item4"), level: "4.1.2", how: "DevTools a11y tree" },
-            { criterion: tContent("testes.accessibility.item5"), level: "4.1.2", how: "DevTools a11y tree" },
-          ],
+          // A coluna é o NÍVEL de conformidade, não o critério — este já está no
+          // texto do item. "AA" em todos, como nas outras stacks.
+          items: [1, 2, 3, 4, 5, 6].map((i) => ({
+            criterion: tContent(`testes.accessibility.item${i}`),
+            level: "AA",
+            how: tContent(`testes.accessibility.how.item${i}`),
+          })),
         }}
         visual={{
           title: tContent("testes.visual.title"),
+          description: tContent("testes.visual.description"),
           cols: {
             story: tNav("common.storyState"),
             priority: tNav("common.priority"),

@@ -16,7 +16,13 @@
   import { stripHtml, toPlainText } from '@/lib/strip-html';
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
-  const { tStore } = useTranslation(progressTranslations);
+  // O conteúdo compartilhado descreve a função de texto de forma neutra; o tipo
+  // é o da assinatura desta stack.
+  const { tStore } = useTranslation(progressTranslations, {
+    '*': {
+      'props.table.getAriaValueText.type': '(value: number | null, min: number, max: number) => string',
+    },
+  });
 
   // As chaves de `accessibility.screenReader` variam por componente, então só os
   // valores chegam ao container — o `t()` exige nome de chave e não serviria. O
@@ -103,40 +109,30 @@
 
   // ─── Animated values for demonstration ───────────────────────────────────────
 
+  // A mesma demonstração da referência: uma linha de upload animada, duas
+  // estáticas (carregando e concluído) e uma indeterminada.
   let uploadValue = $state(0);
-  let loadingValue = $state(0);
 
   // Marcos de task_progress/task_complete: apenas no primeiro ciclo da animação,
   // para não inundar o GA4 com o loop infinito da demo.
-  const uploadStart = Date.now();
-  // Array simples em vez de Set: guard não-reativo, e o lint do Svelte exige
-  // SvelteSet para qualquer Set mutável dentro de componente.
-  const uploadMilestonesFired: number[] = [];
-  let uploadCompleted = false;
-
   $effect(() => {
+    const uploadStart = Date.now();
+    let firstCycleDone = false;
     const id = setInterval(() => {
       uploadValue = uploadValue >= 100 ? 0 : uploadValue + 5;
-      if (!uploadCompleted) {
-        for (const milestone of [25, 50, 75, 100]) {
-          if (uploadValue >= milestone && !uploadMilestonesFired.includes(milestone)) {
-            uploadMilestonesFired.push(milestone);
-            track('task_progress', { component: 'progress', task: 'upload', percent: milestone, location: 'docs_demo' });
-          }
-        }
-        if (uploadValue >= 100) {
-          uploadCompleted = true;
-          track('task_complete', { component: 'progress', task: 'upload', duration_ms: Date.now() - uploadStart, location: 'docs_demo' });
+      if (!firstCycleDone && uploadValue % 25 === 0 && uploadValue > 0) {
+        track('task_progress', { component: 'progress', task: 'upload', percent: uploadValue, location: 'docs_demo' });
+        if (uploadValue === 100) {
+          track('task_complete', {
+            component: 'progress',
+            task: 'upload',
+            duration_ms: Date.now() - uploadStart,
+            location: 'docs_demo',
+          });
+          firstCycleDone = true;
         }
       }
     }, 400);
-    return () => clearInterval(id);
-  });
-
-  $effect(() => {
-    const id = setInterval(() => {
-      loadingValue = loadingValue >= 100 ? 0 : loadingValue + 10;
-    }, 700);
     return () => clearInterval(id);
   });
 
@@ -149,18 +145,21 @@
   const codeWithLabel = `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster nds-text-body" data-justify="between">
     <span class="nds-text-foreground">Enviando arquivo</span>
-    <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">42%</span>
+    <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">42%</span>
   </div>
   <Progress value={42} aria-label="Enviando arquivo" />
 </div>`;
 
   const codeSemantic = `<Progress value={100} data-variant="success" aria-label="Sincronização concluída" />
-<Progress value={92} data-variant="destructive" aria-label="Espaço quase esgotado" />`;
+<Progress value={92} data-variant="destructive" aria-label="Espaço de armazenamento quase esgotado" />`;
 
   const interfaceCode = `// Progress (root, bits-ui)
 interface ProgressProps {
+  /** Omitido ou null: indeterminado. Limitado ao mínimo e ao máximo. */
   value?: number | null;
+  min?: number;
   max?: number;
+  getAriaValueText?: (value: number | null, min: number, max: number) => string;
   'data-variant'?: 'success' | 'destructive';
   class?: string;
   'aria-label': string;
@@ -184,7 +183,7 @@ interface ProgressProps {
   ] as const;
 </script>
 
-<DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
+<DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value} componentSlug="progress">
   {#snippet header()}
     <DocsHeader
       title={$tStore('title')}
@@ -195,52 +194,31 @@ interface ProgressProps {
   {/snippet}
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
-  <DocsDemonstration>
-    <div class="nds-grid nds-w-full" data-cols="2" data-spacing="lg">
-      <!-- Upload animado com label e valor -->
-      <div class="nds-stack" data-spacing="sm">
-        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.upload')}</p>
-        <div class="nds-stack nds-p-4 nds-border-default nds-rounded-md" data-spacing="sm">
-          <div class="nds-cluster nds-text-body" data-justify="between">
-            <span class="nds-font-medium nds-text-foreground">{$tStore('demonstration.labels.upload')}</span>
-            <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">{uploadValue}%</span>
-          </div>
-          <Progress value={uploadValue} aria-label={$tStore('demonstration.labels.upload')} />
-        </div>
-      </div>
+  <DocsDemonstration componentSlug="progress">
+    <div class="nds-stack nds-w-full" data-spacing="lg">
+      {@render labeledBar(uploadValue, $tStore('demonstration.labels.upload'))}
+      {@render labeledBar(50, $tStore('demonstration.labels.loading'))}
+      {@render labeledBar(100, $tStore('demonstration.labels.complete'))}
 
-      <!-- Loading animado simples -->
-      <div class="nds-stack" data-spacing="sm">
-        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.loading')}</p>
-        <div class="nds-p-4 nds-border-default nds-rounded-md">
-          <Progress value={loadingValue} aria-label={$tStore('demonstration.labels.loading')} />
+      <!-- Indeterminado: só o rótulo, porque não há percentual para mostrar. -->
+      <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+          <span class="nds-text-foreground">{$tStore('demonstration.labels.indeterminate')}</span>
         </div>
-      </div>
-
-      <!-- Completo -->
-      <div class="nds-stack" data-spacing="sm">
-        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.complete')}</p>
-        <div class="nds-p-4 nds-border-default nds-rounded-md">
-          <Progress
-            value={100}
-            aria-label={$tStore('demonstration.labels.complete')}
-            data-variant="success"
-          />
-        </div>
-      </div>
-
-      <!-- Indeterminate -->
-      <div class="nds-stack" data-spacing="sm">
-        <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.indeterminate')}</p>
-        <div class="nds-p-4 nds-border-default nds-rounded-md">
-          <Progress
-            value={null}
-            aria-label={$tStore('demonstration.labels.indeterminate')}
-          />
-        </div>
+        <Progress value={null} aria-label={$tStore('demonstration.labels.indeterminate')} />
       </div>
     </div>
   </DocsDemonstration>
+
+  {#snippet labeledBar(value: number, label: string)}
+    <div class="nds-stack nds-w-full" data-spacing="xs">
+      <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+        <span class="nds-text-foreground">{label}</span>
+        <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">{value}%</span>
+      </div>
+      <Progress {value} aria-label={label} />
+    </div>
+  {/snippet}
 
   <!-- ── Anatomia ───────────────────────────────────────────────── -->
   <DocsAnatomy
@@ -349,22 +327,30 @@ interface ProgressProps {
   {/snippet}
   {#snippet doPair2()}
     <div class="nds-stack nds-w-full" data-spacing="xs">
-      <p class="nds-text-body" aria-live="polite">50%</p>
+      <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+        <span class="nds-text-foreground">{$tStore('demonstration.labels.upload')}</span>
+        <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">50%</span>
+      </div>
       <Progress value={50} aria-label="Progresso do upload" />
     </div>
   {/snippet}
+  <!-- O Don't é a região `assertive`: interrompe o leitor a cada avanço. -->
   {#snippet dontPair2()}
     <div class="nds-stack nds-w-full" data-spacing="xs">
-      <p class="nds-text-body" aria-live="assertive">51%</p>
-      <Progress value={51} aria-label="Progresso do upload" />
+      <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+        <span class="nds-text-foreground">{$tStore('demonstration.labels.upload')}</span>
+        <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="assertive">47%</span>
+      </div>
+      <Progress value={47} aria-label="Progresso do upload" />
     </div>
   {/snippet}
 
   <!-- ── Importação ─────────────────────────────────────────────── -->
-  <DocsImport code={codeImport} />
+  <DocsImport code={codeImport} componentSlug="progress" />
 
   <!-- ── Variantes ──────────────────────────────────────────────── -->
   <DocsVariants
+    componentSlug="progress"
     items={[
       { trackId: 'determinate', name: $tStore('variants.items.determinate'),   description: stripHtml($tStore('variants.styles.determinate')),   code: codeDeterminate,   preview: variantDeterminate   },
       { trackId: 'withLabel', name: $tStore('variants.items.withLabel'),     description: stripHtml($tStore('variants.styles.withLabel')),     code: codeWithLabel,     preview: variantWithLabel     },
@@ -380,10 +366,10 @@ interface ProgressProps {
   {#snippet variantWithLabel()}
     <div class="nds-stack nds-w-full" data-spacing="xs">
       <div class="nds-cluster nds-text-body" data-justify="between">
-        <span class="nds-font-medium nds-text-foreground">Enviando arquivo</span>
-        <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;" aria-live="polite">42%</span>
+        <span class="nds-text-foreground">{$tStore('demonstration.labels.upload')}</span>
+        <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">42%</span>
       </div>
-      <Progress value={42} aria-label="Enviando arquivo" />
+      <Progress value={42} aria-label={$tStore('demonstration.labels.upload')} />
     </div>
   {/snippet}
   {#snippet variantSemantic()}
@@ -421,12 +407,12 @@ interface ProgressProps {
         },
         items: [
           { name: 'value',            type: $tStore('props.table.value.type'),            defaultValue: $tStore('props.table.value.default'),            required: $tStore('props.table.value.required'),            description: toPlainText($tStore('props.table.value.description'))            },
-          { name: 'max',              type: $tStore('props.table.max.type'),              defaultValue: $tStore('props.table.max.default'),              required: $tStore('props.table.max.required'),              description: $tStore('props.table.max.description')                          },
           { name: 'min',              type: $tStore('props.table.min.type'),              defaultValue: $tStore('props.table.min.default'),              required: $tStore('props.table.min.required'),              description: $tStore('props.table.min.description')                          },
-          { name: 'getAriaValueText', type: $tStore('props.table.getAriaValueText.type'), defaultValue: $tStore('props.table.getAriaValueText.default'), required: $tStore('props.table.getAriaValueText.required'), description: $tStore('props.table.getAriaValueText.description')            },
+          { name: 'max',              type: $tStore('props.table.max.type'),              defaultValue: $tStore('props.table.max.default'),              required: $tStore('props.table.max.required'),              description: $tStore('props.table.max.description')                          },
           { name: 'data-variant',     type: $tStore('props.table.variant.type'),          defaultValue: $tStore('props.table.variant.default'),          required: $tStore('props.table.variant.required'),          description: toPlainText($tStore('props.table.variant.description'))          },
+          { name: 'aria-label',       type: $tStore('props.table.ariaLabel.type'),        defaultValue: $tStore('props.table.ariaLabel.default'),        required: $tStore('props.table.ariaLabel.required'),        description: $tStore('props.table.ariaLabel.description')                    },
+          { name: 'getAriaValueText', type: $tStore('props.table.getAriaValueText.type'), defaultValue: $tStore('props.table.getAriaValueText.default'), required: $tStore('props.table.getAriaValueText.required'), description: $tStore('props.table.getAriaValueText.description')            },
           { name: 'class',            type: $tStore('props.table.className.type'),        defaultValue: $tStore('props.table.className.default'),        required: $tStore('props.table.className.required'),        description: toPlainText($tStore('props.table.className.description'))        },
-          { name: 'aria-label',       type: 'string',                                     defaultValue: '—',                                             required: 'Sim',                                            description: 'Obrigatório. Descreve o que está sendo medido para leitores de tela.' },
         ],
       },
     ]}
@@ -463,6 +449,7 @@ interface ProgressProps {
       $tStore('accessibility.items.item4'),
       $tStore('accessibility.items.item5'),
       $tStore('accessibility.items.item6'),
+      $tStore('accessibility.aria.valuetext'),
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
@@ -473,6 +460,7 @@ interface ProgressProps {
 
   <!-- ── Relacionados ───────────────────────────────────────────── -->
   <DocsRelated
+    componentSlug="progress"
     items={[
       { name: $tStore('related.items.skeleton.name'), description: $tStore('related.items.skeleton.description'), path: '?path=/docs/components-feedback-skeleton--docs' },
       { name: $tStore('related.items.alert.name'),    description: $tStore('related.items.alert.description'),    path: '?path=/docs/components-feedback-alert--docs'    },
@@ -482,6 +470,7 @@ interface ProgressProps {
 
   <!-- ── Notas ──────────────────────────────────────────────────── -->
   <DocsNotes
+    componentSlug="progress"
     items={[
       { title: '', content: $tStore('notes.item1') },
       { title: '', content: $tStore('notes.item2') },
@@ -493,9 +482,9 @@ interface ProgressProps {
   <!-- ── Analytics ─────────────────────────────────────────────── -->
   <DocsAnalytics
     cols={{
-      event: $tStore('analytics.table.event'),
-      trigger: toPlainText($tStore('analytics.table.trigger')),
-      payload: $tStore('analytics.table.payload'),
+      event: $tNavStore('common.event'),
+      trigger: $tNavStore('common.eventTrigger'),
+      payload: $tNavStore('common.payload'),
     }}
     items={[
       { event: 'task_progress', trigger: toPlainText($tStore('analytics.table.task_progress.trigger')), payload: $tStore('analytics.table.task_progress.payload') },
@@ -517,6 +506,9 @@ interface ProgressProps {
         { action: $tStore('testes.functional.item2.action'), result: $tStore('testes.functional.item2.result'), priority: localPriority($tStore('testes.functional.item2.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item3.action'), result: $tStore('testes.functional.item3.result'), priority: localPriority($tStore('testes.functional.item3.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item4.action'), result: $tStore('testes.functional.item4.result'), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -527,11 +519,12 @@ interface ProgressProps {
         how: $tNavStore('common.howToVerify'),
       },
       items: [
-        { criterion: $tStore('testes.accessibility.item1'), level: 'AA',     how: 'axe-core'           },
-        { criterion: $tStore('testes.accessibility.item2'), level: '1.4.11', how: 'Contrast checker'   },
-        { criterion: $tStore('testes.accessibility.item3'), level: '4.1.2',  how: 'DevTools a11y tree' },
-        { criterion: $tStore('testes.accessibility.item4'), level: '4.1.2',  how: 'DevTools a11y tree' },
-        { criterion: $tStore('testes.accessibility.item5'), level: '4.1.2',  how: 'DevTools a11y tree' },
+        { criterion: $tStore('testes.accessibility.item1'), level: 'AA',     how: $tStore('testes.accessibility.how.item1') },
+        { criterion: $tStore('testes.accessibility.item2'), level: 'AA',     how: $tStore('testes.accessibility.how.item2') },
+        { criterion: $tStore('testes.accessibility.item3'), level: 'AA',     how: $tStore('testes.accessibility.how.item3') },
+        { criterion: $tStore('testes.accessibility.item4'), level: 'AA',     how: $tStore('testes.accessibility.how.item4') },
+        { criterion: $tStore('testes.accessibility.item5'), level: 'AA',     how: $tStore('testes.accessibility.how.item5') },
+        { criterion: $tStore('testes.accessibility.item6'), level: 'AA',     how: $tStore('testes.accessibility.how.item6') },
       ],
     }}
     visual={{

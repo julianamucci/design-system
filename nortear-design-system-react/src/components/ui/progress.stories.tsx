@@ -1,18 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useEffect, useState } from "react";
 import { within, expect, waitFor } from "storybook/test";
 import { Progress } from "./progress";
 import { ProgressDocs } from "@/components/docs/ProgressDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
-import { progressAnimadoSource, progressSource } from "./progress.source";
+import { progressSource, type ProgressArgs } from "./progress.source";
+import { percentualDesenhado } from "@shared/testing/progress-probe";
 import {
-  percentualDesenhado,
-  indicadorDoProgresso,
-} from "@shared/testing/progress-probe";
+  progressValueText,
+  resolveProgressRange,
+  resolveProgressValue,
+} from "@shared/primitives/progress-value";
 
-const meta = {
+const meta: Meta<ProgressArgs> = {
   title: "Components/Feedback/Progress",
-  component: Progress,
   tags: ["autodocs", "feedback"],
   parameters: {
     layout: "padded",
@@ -23,20 +23,27 @@ const meta = {
   },
   argTypes: {
     value: {
-      control: { type: "number", min: 0, max: 100, step: 1 },
+      control: { type: "number", step: 1 },
       description:
-        "Valor atual de 0 a 100. Use null para modo indeterminate.",
-      table: { type: { summary: "number | null" }, defaultValue: { summary: "—" } },
+        "Valor atual, limitado à faixa. Vazio ativa o modo indeterminado.",
+      table: { type: { summary: "number | null" }, defaultValue: { summary: "null" } },
+    },
+    min: {
+      control: { type: "number", step: 1 },
+      description: "Valor mínimo da escala.",
+      table: { type: { summary: "number" }, defaultValue: { summary: "0" } },
     },
     max: {
-      control: { type: "number", min: 1, step: 1 },
+      control: { type: "number", step: 1 },
       description: "Valor máximo da escala.",
       table: { type: { summary: "number" }, defaultValue: { summary: "100" } },
     },
-    min: {
-      control: { type: "number", min: 0, step: 1 },
-      description: "Valor mínimo da escala.",
-      table: { type: { summary: "number" }, defaultValue: { summary: "0" } },
+    variant: {
+      control: { type: "select" },
+      options: ["", "success", "destructive"],
+      description:
+        "Cor semântica da barra, escrita em data-variant. Vazio, a barra usa o primário.",
+      table: { type: { summary: "'success' | 'destructive'" }, defaultValue: { summary: "—" } },
     },
     "aria-label": {
       control: { type: "text" },
@@ -44,36 +51,40 @@ const meta = {
         "Nome acessível — descreve a operação medida, não o componente.",
       table: { type: { summary: "string" }, defaultValue: { summary: "—" } },
     },
-    className: {
-      control: { type: "text" },
-      description:
-        "Classes utilitárias .nds-* adicionais. A cor da barra não se troca por classe — use data-variant.",
-      table: { type: { summary: "string" }, defaultValue: { summary: "—" } },
-    },
   },
   args: {
     value: 42,
-    max: 100,
     min: 0,
-    className: "",
+    max: 100,
+    variant: "",
     "aria-label": "Progresso do upload",
   },
-} satisfies Meta<typeof Progress>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ProgressArgs>;
 
 export const Playground: Story = {
   parameters: {
     covers: ["accessibility.item1", "accessibility.item3", "accessibility.item4"],
   },
   render: (args) => (
-    <div className="nds-w-sm">
-      <Progress {...args} />
+    <div className="nds-w-md">
+      <Progress
+        value={args.value}
+        min={args.min}
+        max={args.max}
+        data-variant={args.variant || undefined}
+        aria-label={args["aria-label"]}
+      />
     </div>
   ),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    // A expectativa sai da MESMA regra que as cinco stacks usam — o control pode
+    // levar o valor para fora da faixa ou esvaziá-lo, e a asserção acompanha.
+    const range = resolveProgressRange(args.min, args.max);
+    const value = resolveProgressValue(args.value, range);
 
     await step("A raiz é anunciada como barra de progresso, com nome próprio", async () => {
       const bar = canvas.getByRole("progressbar", { name: args["aria-label"] });
@@ -82,29 +93,36 @@ export const Playground: Story = {
 
     await step("A escala inteira chega ao leitor de tela", async () => {
       const bar = canvas.getByRole("progressbar");
-      await expect(bar).toHaveAttribute("aria-valuenow", String(args.value));
-      await expect(bar).toHaveAttribute("aria-valuemin", String(args.min));
-      await expect(bar).toHaveAttribute("aria-valuemax", String(args.max));
+      await expect(bar).toHaveAttribute("aria-valuemin", String(range.min));
+      await expect(bar).toHaveAttribute("aria-valuemax", String(range.max));
+      if (value === null) {
+        await expect(bar).not.toHaveAttribute("aria-valuenow");
+      } else {
+        await expect(bar).toHaveAttribute("aria-valuenow", String(value));
+      }
     });
 
-    await step("Trilha e indicador existem como partes distintas", async () => {
-      await expect(
-        canvasElement.querySelector("[data-slot='progress-track']"),
-      ).not.toBeNull();
-      await expect(
-        canvasElement.querySelector("[data-slot='progress-indicator']"),
-      ).not.toBeNull();
+    await step("O texto anunciado é o da regra compartilhada", async () => {
+      // Sem a regra, a lib anunciava a frase de indeterminado em inglês.
+      await expect(canvas.getByRole("progressbar")).toHaveAttribute(
+        "aria-valuetext",
+        progressValueText(value, range),
+      );
     });
 
-    await step("A barra desenhada corresponde ao valor pedido", async () => {
+    await step("A barra não entra na ordem do Tab", async () => {
+      // É indicador passivo: foco nela seria uma parada sem ação.
+      await expect(canvas.getByRole("progressbar")).not.toHaveAttribute("tabindex");
+    });
+
+    await step("A barra desenhada corresponde ao valor anunciado", async () => {
       // Atributo certo com desenho errado já passou por aqui: medir é o único
       // jeito de saber que o valor virou pixel.
-      const min = args.min ?? 0;
-      const max = args.max ?? 100;
-      const esperado = (((args.value ?? 0) - min) / (max - min)) * 100;
+      if (value === null) return;
+      const expected = ((value - range.min) / (range.max - range.min)) * 100;
       await waitFor(async () => {
         await expect(
-          Math.abs(percentualDesenhado(canvasElement) - esperado),
+          Math.abs(percentualDesenhado(canvasElement) - expected),
         ).toBeLessThan(2);
       });
     });
@@ -114,63 +132,6 @@ export const Playground: Story = {
       await expect(
         canvasElement.querySelectorAll("[data-slot='progress-track']"),
       ).toHaveLength(1);
-    });
-  },
-};
-
-export const Animated: Story = {
-  args: {
-    value: 0,
-    "aria-label": "Carregando dados",
-  },
-  parameters: {
-    controls: { disable: true },
-    docs: {
-      // O valor que anda sozinho vive no `render`: nenhum control o descreve.
-      source: { transform: progressAnimadoSource },
-    },
-  },
-  render: function AnimatedRender(args) {
-    const [value, setValue] = useState<number>(0);
-
-    useEffect(() => {
-      const id = setInterval(() => {
-        setValue((v) => (v >= 100 ? 0 : v + 5));
-      }, 400);
-      return () => clearInterval(id);
-    }, []);
-
-    return (
-      <div className="nds-w-sm">
-        <Progress {...args} value={value} />
-      </div>
-    );
-  },
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step("Progressbar animado presente e nomeado", async () => {
-      const bar = canvas.getByRole("progressbar", { name: "Carregando dados" });
-      await expect(bar).toHaveAttribute("aria-valuemin", "0");
-      await expect(bar).toHaveAttribute("aria-valuemax", "100");
-    });
-
-    await step("O valor anunciado fica dentro da escala em toda rodada", async () => {
-      // O valor muda a cada 400ms; afirmar um número seria racy. O que vale em
-      // qualquer instante é o intervalo — e um valor fora dele seria defeito.
-      const bar = canvas.getByRole("progressbar");
-      const agora = Number(bar.getAttribute("aria-valuenow"));
-      await expect(Number.isFinite(agora)).toBe(true);
-      await expect(agora >= 0 && agora <= 100).toBe(true);
-    });
-
-    await step("O indicador transiciona em vez de saltar", async () => {
-      // A suavidade é do design system, não da story: sem a transição o valor
-      // pularia de 5 em 5 e a barra pareceria travada.
-      const transicao = getComputedStyle(
-        indicadorDoProgresso(canvasElement),
-      ).transitionProperty;
-      await expect(transicao).toContain("width");
     });
   },
 };

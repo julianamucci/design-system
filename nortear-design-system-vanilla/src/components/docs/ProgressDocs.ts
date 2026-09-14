@@ -4,6 +4,12 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createProgress, type ProgressVariant } from '@/components/ui/progress';
+import {
+  progressComRotuloSnippet,
+  progressListaSnippet,
+  progressSnippet,
+} from '@/components/ui/progress.source';
+import { progressValueText, resolveProgressRange } from '@shared/primitives/progress-value';
 import uiTranslations from '@/i18n/ui.json';
 import progressTranslations from '@shared/content/progress/translations.json';
 
@@ -114,6 +120,8 @@ function buildLabeled(opts: {
   value: number;
   labelText: string;
   'aria-label': string;
+  /** Só o Don't do par 2 passa `assertive` — é o erro que ele mostra. */
+  live?: 'polite' | 'assertive';
 }): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-stack nds-w-full';
@@ -129,14 +137,13 @@ function buildLabeled(opts: {
   label.textContent = opts.labelText;
 
   const value = document.createElement('span');
-  value.className = 'nds-text-muted-foreground';
-  value.style.fontVariantNumeric = 'tabular-nums';
-  value.setAttribute('aria-live', 'polite');
+  value.className = 'nds-text-muted-foreground nds-tabular-nums';
+  value.setAttribute('aria-live', opts.live ?? 'polite');
   value.textContent = `${opts.value}%`;
 
   row.append(label, value);
 
-  const bar = buildProgress({ value: opts.value, 'aria-label': opts['aria-label'] });
+  const bar = createProgress({ value: opts.value, 'aria-label': opts['aria-label'] });
 
   wrap.append(row, bar);
   return wrap;
@@ -262,6 +269,9 @@ export function createProgressDocs(): HTMLElement {
             // Rastreia marcos apenas no primeiro ciclo da animação — a demo
             // reinicia em loop e re-emitir marcos a cada ciclo geraria spam.
             let firstCycleDone = false;
+            // `task_complete` leva a duração: o conteúdo promete `duration_ms`.
+            const startedAt = performance.now();
+            const demoRange = resolveProgressRange();
             const valueSpan = animated.querySelector('span[aria-live]') as HTMLElement | null;
             const bar = animated.querySelector('[role="progressbar"]') as HTMLElement | null;
             const indicator = bar?.firstElementChild as HTMLElement | null;
@@ -269,14 +279,23 @@ export function createProgressDocs(): HTMLElement {
               pct = (pct + 5) % 105;
               if (pct > 100) pct = 0;
               if (valueSpan) valueSpan.textContent = `${pct}%`;
-              if (bar) bar.setAttribute('aria-valuenow', String(pct));
+              if (bar) {
+                bar.setAttribute('aria-valuenow', String(pct));
+                // O texto anunciado anda junto, senão diria "0%" o tempo todo.
+                bar.setAttribute('aria-valuetext', progressValueText(pct, demoRange));
+              }
               // Mesma custom property que a factory alimenta — escrever `width` ou
               // `transform` aqui sobrescreveria a regra da folha em vez de alimentá-la.
               if (indicator) indicator.style.setProperty('--value', String(pct));
               if (!firstCycleDone && (pct === 25 || pct === 50 || pct === 75 || pct === 100)) {
                 track('task_progress', { component: 'progress', task: 'upload', percent: pct, location: 'docs_demo' });
                 if (pct === 100) {
-                  track('task_complete', { component: 'progress', task: 'upload', location: 'docs_demo' });
+                  track('task_complete', {
+                    component: 'progress',
+                    task: 'upload',
+                    duration_ms: Math.round(performance.now() - startedAt),
+                    location: 'docs_demo',
+                  });
                   firstCycleDone = true;
                 }
               }
@@ -406,9 +425,10 @@ export function createProgressDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () =>
-                buildLabeled({ value: 50, labelText: 'Enviando arquivo', 'aria-label': 'Progresso do upload' }),
+                buildLabeled({ value: 50, labelText: t('demonstration.labels.upload'), 'aria-label': 'Progresso do upload' }),
+              // O Don't é a região `assertive`: interrompe o leitor a cada avanço.
               dontPreviewFactory: () =>
-                buildLabeled({ value: 47, labelText: 'Enviando arquivo', 'aria-label': 'Progresso do upload' }),
+                buildLabeled({ value: 47, labelText: t('demonstration.labels.upload'), 'aria-label': 'Progresso do upload', live: 'assertive' }),
             },
           ],
         });
@@ -419,29 +439,20 @@ export function createProgressDocs(): HTMLElement {
         });
 
       case 'variantes': {
-        const codeDeterminate =
-          `const bar = createProgress({\n` +
-          `  value: 42,\n` +
-          `  'aria-label': 'Progresso do upload',\n` +
-          `});`;
-        const codeWithLabel =
-          `// DIVERGÊNCIA Nortear: factory não expõe ProgressLabel/ProgressValue.\n` +
-          `// Componha manualmente com DOM nativo acima da barra.\n` +
-          `const wrap = document.createElement('div');\n` +
-          `const row = document.createElement('div');\n` +
-          `// ... label + value ...\n` +
-          `wrap.append(row, createProgress({ value: 42 }));`;
-        const codeSemantic =
-          `const ok = createProgress({\n` +
-          `  value: 100,\n` +
-          `  variant: 'success',\n` +
-          `  'aria-label': 'Sincronização concluída',\n` +
-          `});\n\n` +
-          `const cheio = createProgress({\n` +
-          `  value: 92,\n` +
-          `  variant: 'destructive',\n` +
-          `  'aria-label': 'Espaço quase esgotado',\n` +
-          `});`;
+        // Os snippets saem dos MESMOS construtores do painel Code das stories:
+        // o código do cartão e a prévia ao lado não podem divergir, e o de
+        // rótulo deixa de ser um esqueleto com "..." e sem nome acessível.
+        const uploadLabel = t('demonstration.labels.upload');
+        const codeDeterminate = progressSnippet({ value: 42, 'aria-label': 'Progresso do upload' });
+        const codeWithLabel = progressComRotuloSnippet({
+          value: 42,
+          label: uploadLabel,
+          'aria-label': uploadLabel,
+        });
+        const codeSemantic = progressListaSnippet([
+          { value: 100, variant: 'success', 'aria-label': 'Sincronização concluída' },
+          { value: 92, variant: 'destructive', 'aria-label': 'Espaço de armazenamento quase esgotado' },
+        ]);
 
         return createDocsVariants({
           items: [
@@ -458,7 +469,7 @@ export function createProgressDocs(): HTMLElement {
               description: DOMPurify.sanitize(t('variants.styles.withLabel')),
               code: codeWithLabel,
               previewFactory: () =>
-                buildLabeled({ value: 42, labelText: t('demonstration.labels.upload'), 'aria-label': t('demonstration.labels.upload') }),
+                buildLabeled({ value: 42, labelText: uploadLabel, 'aria-label': uploadLabel }),
             },
             {
               trackId: 'semantic',
@@ -497,15 +508,21 @@ export function createProgressDocs(): HTMLElement {
 
       case 'propriedades': {
         const interfaceCode = `// createProgress(options)
+export type ProgressValueTextFn = (value: number | null, min: number, max: number) => string;
+
 export interface ProgressOptions {
-  /** Current progress value (0 – max). \`null\` = indeterminate. */
+  /** Current value (min – max). Omitted, \`null\` or not finite = indeterminate; out of range = clamped. */
   value?: number | null;
-  /** Maximum value (default: 100). */
+  /** Minimum value (default: 0). */
+  min?: number;
+  /** Maximum value (default: 100). At or below \`min\` becomes \`min + 100\`. */
   max?: number;
   /** Semantic colour of the bar. */
   variant?: 'success' | 'destructive';
   /** Accessible name — REQUIRED, describes what is being measured. */
   'aria-label'?: string;
+  /** Text for \`aria-valuetext\`. Default: rounded percentage, or the indeterminate phrase. */
+  getAriaValueText?: ProgressValueTextFn;
   /** Additional CSS classes to append to the root element. */
   className?: string;
 }
@@ -525,43 +542,26 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             {
               title: 'createProgress(options)',
               cols: propsCols,
+              // Nome e tipo são API desta stack (a opção da fábrica); o resto
+              // vem do conteúdo compartilhado.
               items: [
-                {
-                  name: 'value',
-                  type: t('props.table.value.type'),
-                  defaultValue: '0',
-                  required: 'Não',
-                  description: toPlainText(t('props.table.value.description')),
-                },
-                {
-                  name: 'max',
-                  type: 'number',
-                  defaultValue: '100',
-                  required: 'Não',
-                  description: t('props.table.max.description'),
-                },
-                {
-                  name: 'variant',
-                  type: t('props.table.variant.type'),
-                  defaultValue: t('props.table.variant.default'),
-                  required: t('props.table.variant.required'),
-                  description: toPlainText(t('props.table.variant.description')),
-                },
-                {
-                  name: 'className',
-                  type: 'string',
-                  defaultValue: '—',
-                  required: 'Não',
-                  description: DOMPurify.sanitize(t('props.table.className.description')),
-                },
-                {
-                  name: 'aria-label',
-                  type: 'string',
-                  defaultValue: '—',
-                  required: 'Sim',
-                  description: 'Obrigatório — nome do que está sendo medido. A barra sem nome é anunciada só como percentual.',
-                },
-              ],
+                ['value', 'value'],
+                ['min', 'min'],
+                ['max', 'max'],
+                ['variant', 'variant'],
+                ['aria-label', 'ariaLabel'],
+                ['getAriaValueText', 'getAriaValueText'],
+                ['className', 'className'],
+              ].map(([name, key]) => ({
+                name,
+                type:
+                  key === 'getAriaValueText'
+                    ? '(value: number | null, min: number, max: number) => string'
+                    : t(`props.table.${key}.type`),
+                defaultValue: t(`props.table.${key}.default`),
+                required: t(`props.table.${key}.required`),
+                description: toPlainText(t(`props.table.${key}.description`)),
+              })),
             },
           ],
           interfaceCode,
@@ -599,6 +599,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             DOMPurify.sanitize(t('accessibility.items.item4')),
             DOMPurify.sanitize(t('accessibility.items.item5')),
             DOMPurify.sanitize(t('accessibility.items.item6')),
+            DOMPurify.sanitize(t('accessibility.aria.valuetext')),
           ],
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
@@ -623,18 +624,15 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             { title: '', content: DOMPurify.sanitize(t('notes.item2')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
-            // Divergências desta stack — API, não comportamento.
-            { title: '', content: 'A factory não expõe os subcomponentes <code>ProgressLabel</code>, <code>ProgressValue</code> e <code>ProgressTrack</code>: o rótulo e o valor são compostos com DOM nativo acima da barra.' },
-            { title: '', content: 'A factory não aceita <code>min</code> nem <code>getAriaValueText</code>.' },
           ],
         });
 
       case 'analytics':
         return createDocsAnalytics({
           cols: {
-            event: t('analytics.table.event'),
-            trigger: toPlainText(t('analytics.table.trigger')),
-            payload: t('analytics.table.payload'),
+            event: tNav('common.event'),
+            trigger: tNav('common.eventTrigger'),
+            payload: tNav('common.payload'),
           },
           items: [
             { event: 'task_progress', trigger: toPlainText(t('analytics.table.task_progress.trigger')), payload: t('analytics.table.task_progress.payload') },
@@ -651,7 +649,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
               action: t(`testes.functional.item${i}.action`),
               result: t(`testes.functional.item${i}.result`),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -664,10 +662,10 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               criterion: t(`testes.accessibility.item${i}`),
               level: 'AA',
-              how: '—',
+              how: t(`testes.accessibility.how.item${i}`),
             })),
           },
           visual: {

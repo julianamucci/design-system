@@ -6,8 +6,8 @@
     "description": "Indicador visual de progresso de operações com duração mensurável, com suporte a modos determinado e indeterminate.",
     "seo": {
       "title": "Progress — Feedback",
-      "description": "Documentação do Progress: track, indicator, label e value, com role=\"progressbar\" automático e suporte WCAG 2.2 AA.",
-      "aiSummary": "Componente Progress com Track, Indicator, Label e Value, role=\"progressbar\" automático, suporte a modo determinado (0-100) e indeterminate.",
+      "description": "Progress: barra com role=\"progressbar\", modos determinado e indeterminado, valor limitado à faixa, texto anunciado e contraste 3:1 contra a trilha.",
+      "aiSummary": "Componente Progress: barra passiva com role=\"progressbar\", aria-valuemin e aria-valuemax sempre presentes, aria-valuenow só com valor e aria-valuetext com o percentual ou \"Em andamento\". Valor ausente ou null ativa o modo indeterminado; fora da faixa, é limitado. Variantes success e destructive trocam só a cor da barra.",
       "aiEntities": "Progress, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role progressbar"
     },
     "demonstration": {
@@ -15,16 +15,15 @@
         "upload": "Enviando arquivo",
         "loading": "Carregando dados",
         "complete": "Concluído",
-        "percent": "%",
         "indeterminate": "Processando…"
       }
     },
     "anatomy": {
-      "item1": "<strong>Progress</strong> — root com <code>role=\"progressbar\"</code> que recebe o valor.",
-      "item2": "<strong>ProgressTrack</strong> — trilha de fundo onde o indicador se move.",
-      "item3": "<strong>ProgressIndicator</strong> — barra preenchida que reflete o valor atual.",
-      "item4": "<strong>ProgressLabel</strong> — rótulo textual opcional descrevendo a operação.",
-      "item5": "<strong>ProgressValue</strong> — valor numérico opcional (ex: 42%), alinhado à direita.",
+      "item1": "<strong>Raiz</strong> — <code>role=\"progressbar\"</code> com a família <code>aria-value*</code>, que recebe o valor.",
+      "item2": "<strong>Trilha</strong> — a caixa por onde o indicador corre. Quando a raiz é a própria trilha, não há peça separada.",
+      "item3": "<strong>Indicador</strong> — a parte cheia, que reflete o valor atual.",
+      "item4": "<strong>Rótulo</strong> — opcional. Onde a biblioteca oferece a peça, ele nomeia a barra; senão é texto ao lado, e o nome vai em <code>aria-label</code>.",
+      "item5": "<strong>Valor</strong> — número opcional (ex: 42%), alinhado à direita e oculto do leitor de tela, que já ouve o valor pela raiz.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Enviando arquivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
@@ -38,8 +37,8 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use para operações com 3+ segundos onde o progresso é mensurável.",
-        "item2": "Para duração desconhecida, omita <code>value</code> ou passe <code>null</code> — modo indeterminate.",
-        "item3": "Sempre forneça <code>aria-label</code> descrevendo o que está sendo medido.",
+        "item2": "Para duração desconhecida, passe <code>null</code> ou omita o valor — as duas formas dão o modo indeterminado.",
+        "item3": "Sempre dê nome acessível à barra, descrevendo o que está sendo medido: <code>aria-label</code>, ou o rótulo associado onde a biblioteca oferece a peça.",
         "item4": "Anuncie a porcentagem via <code>aria-live=\"polite\"</code> no texto adjacente."
       },
       "scenarios": {
@@ -67,7 +66,7 @@
         "item4": {
           "s": "Processamento sem progresso mensurável",
           "u": "Sim, indeterminate",
-          "a": "Spinner"
+          "a": "Skeleton, se a estrutura do conteúdo for conhecida"
         },
         "item5": {
           "s": "Notificação de tarefa concluída",
@@ -83,19 +82,19 @@
           "correct": "Correto",
           "avoid": "Evitar",
           "label": {
-            "name": "ProgressLabel",
+            "name": "Rótulo",
             "format": "Gerúndio + objeto · sem ponto · máx. 5 palavras",
             "good": "\"Enviando arquivo\", \"Carregando dados\"",
             "bad": "\"Aguarde…\", \"Carregando\""
           },
           "value": {
-            "name": "ProgressValue",
+            "name": "Valor",
             "format": "Número + unidade · sem espaço antes de %",
             "good": "\"42%\", \"3/10\"",
             "bad": "\"42 %\", \"quase lá\""
           },
           "ariaLabel": {
-            "name": "aria-label",
+            "name": "Nome acessível",
             "format": "Substantivo + complemento · descreve a operação",
             "good": "\"Progresso do upload\"",
             "bad": "\"Progress\", \"Barra\""
@@ -113,7 +112,7 @@
         "title": "Não use quando",
         "item1": "O loading é instantâneo (<300ms) — não exiba nada",
         "item2": "A estrutura do conteúdo é conhecida — use <code>Skeleton</code>",
-        "item3": "Não é possível medir o progresso — use Spinner",
+        "item3": "Não é possível medir o progresso — use o modo indeterminado, nunca um valor inventado",
         "item4": "É apenas uma notificação de fim — use <code>Sonner</code> ou <code>Alert</code>"
       }
     },
@@ -124,7 +123,7 @@
       },
       "pair2": {
         "do": "Combine porcentagem visível com aria-live polite no texto.",
-        "dont": "Não anuncie cada incremento de 1% — atualize a cada 5 ou 10%."
+        "dont": "Não use aria-live assertive no valor — ele interrompe o leitor a cada atualização."
       }
     },
     "import": {},
@@ -136,30 +135,30 @@
       },
       "styles": {
         "determinate": "Valor numérico 0–100 — barra preenchida proporcionalmente.",
-        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> acima da trilha.",
+        "withLabel": "Rótulo e valor acima da trilha — peças próprias onde a biblioteca as oferece, texto ao lado quando não.",
         "semantic": "<code>data-variant</code> troca a cor da barra por <code>success</code> ou <code>destructive</code>; a trilha continua neutra para o contraste não depender da escolha."
       }
     },
     "states": {
       "default": {
         "label": "Default",
-        "trigger": "value=0",
-        "behavior": "Estado inicial — <code>value=0</code>, indicador em <code>0%</code>."
+        "trigger": "value = mínimo",
+        "behavior": "Estado inicial — valor no mínimo, indicador vazio e o zero ANUNCIADO, que é o que o separa do indeterminado."
       },
       "loading": {
         "label": "Loading",
-        "trigger": "value entre 0 e 100",
-        "behavior": "Em progresso — <code>value</code> entre 0 e 100 (exclusivo), indicador preenchido proporcionalmente."
+        "trigger": "value entre o mínimo e o máximo",
+        "behavior": "Em progresso — indicador preenchido na proporção do valor dentro da faixa."
       },
       "complete": {
         "label": "Complete",
-        "trigger": "value=100",
-        "behavior": "Finalizado — <code>value=100</code>, barra cheia. Considere remover ou trocar por mensagem de sucesso."
+        "trigger": "value = máximo",
+        "behavior": "Finalizado — valor igual ao máximo, barra cheia. Considere remover ou trocar por mensagem de sucesso."
       },
       "indeterminate": {
         "label": "Indeterminate",
-        "trigger": "value=null",
-        "behavior": "Sem valor definido — <code>aria-valuenow</code> ausente e um traço curto percorrendo a trilha em ciclo."
+        "trigger": "value null ou ausente",
+        "behavior": "Sem valor — <code>aria-valuenow</code> ausente, texto anunciado \"Em andamento\" e um traço curto percorrendo a trilha em ciclo."
       },
       "cols": {
         "state": "Estado",
@@ -176,9 +175,9 @@
         "description": "Descrição",
         "value": {
           "type": "number | null",
-          "default": "—",
+          "default": "indeterminado",
           "required": "Não",
-          "description": "Valor atual de 0 a 100. <code>null</code> ativa modo indeterminate."
+          "description": "Valor atual, entre o mínimo e o máximo. <code>null</code> ou ausente ativa o modo indeterminado; fora da faixa, é limitado antes de anunciar e de desenhar."
         },
         "max": {
           "type": "number",
@@ -193,10 +192,10 @@
           "description": "Valor mínimo da escala."
         },
         "getAriaValueText": {
-          "type": "(value: number) => string",
+          "type": "função",
           "default": "—",
           "required": "Não",
-          "description": "Função que retorna o texto anunciado pelo leitor de tela."
+          "description": "Texto anunciado no lugar do número. Por padrão, o percentual — ou \"Em andamento\" sem valor."
         },
         "className": {
           "type": "string",
@@ -209,15 +208,21 @@
           "default": "—",
           "required": "Não",
           "description": "Cor semântica da barra. Ausente, a barra usa o primário."
+        },
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "Sim, sem rótulo associado",
+          "description": "Nome acessível da barra — descreve a operação medida."
         }
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Cor semântica da barra\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronização\" />\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>",
-        "vue": "<!-- Cor semântica da barra -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sincronização\" />\n\n<!-- Texto acessível customizado -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} de 100 arquivos processados`\"\n/>",
-        "svelte": "<!-- Cor semântica da barra -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronização\" />",
-        "vanilla": "// Cor semântica da barra\nconst bar = createProgress({\n  value: progresso,\n  variant: 'success',\n  'aria-label': 'Sincronização',\n});",
-        "angular": "<!-- Cor semântica da barra -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sincronização\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
+        "react": "// Cor semântica da barra\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronização\" />\n\n// Texto anunciado no lugar do percentual\n<Progress\n  value={42}\n  aria-label=\"Processamento de arquivos\"\n  getAriaValueText={(_formatted, value) =>\n    value === null ? 'Contando arquivos' : `${value} de 100 arquivos`}\n/>",
+        "vue": "<!-- Cor semântica da barra -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sincronização\" />\n\n<!-- Texto anunciado no lugar do percentual -->\n<Progress\n  :model-value=\"42\"\n  aria-label=\"Processamento de arquivos\"\n  :get-value-text=\"(value, max) => value === null ? 'Contando arquivos' : `${value} de ${max} arquivos`\"\n/>",
+        "svelte": "<!-- Cor semântica da barra -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronização\" />\n\n<!-- Texto anunciado no lugar do percentual -->\n<Progress\n  value={42}\n  aria-label=\"Processamento de arquivos\"\n  getAriaValueText={(value, min, max) =>\n    value === null ? 'Contando arquivos' : `${value} de ${max} arquivos`}\n/>",
+        "vanilla": "// Cor semântica da barra\nconst bar = createProgress({\n  value: progress,\n  variant: 'success',\n  'aria-label': 'Sincronização',\n});\n\n// Texto anunciado no lugar do percentual\nconst files = createProgress({\n  value: 42,\n  'aria-label': 'Processamento de arquivos',\n  getAriaValueText: (value, min, max) =>\n    value === null ? 'Contando arquivos' : `${value} de ${max} arquivos`,\n});",
+        "angular": "<!-- Cor semântica da barra -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sincronização\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>\n\n<!-- Texto anunciado no lugar do percentual -->\n<div ndsProgress [value]=\"42\" aria-label=\"Processamento de arquivos\" [getAriaValueText]=\"filesText\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>\n\n// no componente\nfilesText = (value: number | null, min: number, max: number) =>\n  value === null ? 'Contando arquivos' : `${value} de ${max} arquivos`;"
       }
     },
     "tokens": {
@@ -275,8 +280,8 @@
       "summary": "Atende WCAG 2.2 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
       "items": {
         "item1": "<code>role=\"progressbar\"</code> aplicado automaticamente",
-        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derivados de <code>value</code>",
-        "item3": "<code>aria-label</code> obrigatório — descreve o que está sendo medido",
+        "item2": "<code>aria-valuemin</code> e <code>aria-valuemax</code> sempre presentes; <code>aria-valuenow</code> só com valor, já limitado à faixa",
+        "item3": "Nome acessível obrigatório — <code>aria-label</code>, ou o rótulo associado quando existe",
         "item4": "<code>aria-live=\"polite\"</code> no texto adjacente anuncia mudanças sem interromper",
         "item5": "<code>aria-busy=\"true\"</code> no container durante carregamento",
         "item6": "Contraste mínimo 3:1 entre indicador e trilha"
@@ -289,15 +294,16 @@
       "aria": {
         "title": "Atributos ARIA",
         "role": "<code>role=\"progressbar\"</code> aplicado pelo primitivo",
-        "valuenow": "<code>aria-valuenow</code> espelha <code>value</code>",
-        "label": "<code>aria-label</code> obrigatório (passado pela aplicação)",
-        "busy": "<code>aria-busy=\"true\"</code> no container do conteúdo carregado"
+        "valuenow": "<code>aria-valuenow</code> espelha o valor já limitado à faixa, e some no modo indeterminado",
+        "label": "Nome acessível obrigatório — <code>aria-label</code> ou rótulo associado",
+        "busy": "<code>aria-busy=\"true\"</code> no container do conteúdo carregado",
+        "valuetext": "<code>aria-valuetext</code> anuncia o percentual (\"42%\"), ou \"Em andamento\" sem valor"
       },
       "screenReader": {
         "title": "Leitor de Tela",
-        "announce": "Anuncia \"X por cento, [aria-label]\" ao receber foco",
+        "announce": "Anuncia o nome e o percentual quando o leitor chega à barra",
         "update": "Atualizações via aria-live são lidas conforme o progresso",
-        "complete": "Anuncia \"100 por cento\" quando concluído"
+        "complete": "Anuncia \"100%\" quando concluído"
       }
     },
     "related": {
@@ -361,6 +367,21 @@
           "action": "Passar value=null",
           "result": "Modo indeterminate — aria-valuenow ausente e traço em animação infinita",
           "priority": "medium"
+        },
+        "item5": {
+          "action": "Passar valor fora da faixa",
+          "result": "O valor é limitado ao mínimo ou ao máximo antes de ser anunciado e desenhado",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Omitir o valor",
+          "result": "Modo indeterminado, igual a passar null",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Ativar movimento reduzido",
+          "result": "O traço indeterminado para no início da trilha",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -369,8 +390,17 @@
         "item1": "Sem violações reportadas pelo axe-core",
         "item2": "Contraste mínimo 3:1 entre indicador e trilha",
         "item3": "role=\"progressbar\" presente",
-        "item4": "aria-valuenow, aria-valuemin, aria-valuemax presentes quando value é definido",
-        "item5": "Nome acessível em todo exemplo — aria-label, ou o rótulo associado quando existe"
+        "item4": "aria-valuemin e aria-valuemax sempre presentes; aria-valuenow só com valor",
+        "item5": "Nome acessível em todo exemplo — aria-label, ou o rótulo associado quando existe",
+        "item6": "aria-valuetext anuncia o percentual, ou \"Em andamento\" sem valor",
+        "how": {
+          "item1": "axe-core (addon de acessibilidade)",
+          "item2": "Sonda de contraste nas stories",
+          "item3": "Asserção de papel na play",
+          "item4": "Asserção de atributos na play",
+          "item5": "Sonda de nome acessível",
+          "item6": "Asserção de atributo na play"
+        }
       },
       "visual": {
         "title": "Regressão Visual",
@@ -402,8 +432,8 @@
     "description": "Visual indicator of progress for measurable operations, with support for determinate and indeterminate modes.",
     "seo": {
       "title": "Progress — Feedback",
-      "description": "Progress documentation: track, indicator, label and value, with automatic role=\"progressbar\" and WCAG 2.2 AA support.",
-      "aiSummary": "Progress component with Track, Indicator, Label and Value, automatic role=\"progressbar\", support for determinate (0-100) and indeterminate modes.",
+      "description": "Progress: bar with role=\"progressbar\", determinate and indeterminate modes, value clamped to range, announced text and 3:1 contrast against the track.",
+      "aiSummary": "Progress component: passive bar with role=\"progressbar\", aria-valuemin and aria-valuemax always present, aria-valuenow only with a value and aria-valuetext with the percentage or \"Em andamento\". A missing or null value turns on indeterminate mode; out of range, it is clamped. Success and destructive variants change only the bar colour.",
       "aiEntities": "Progress, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role progressbar"
     },
     "demonstration": {
@@ -411,16 +441,15 @@
         "upload": "Uploading file",
         "loading": "Loading data",
         "complete": "Complete",
-        "percent": "%",
         "indeterminate": "Processing…"
       }
     },
     "anatomy": {
-      "item1": "<strong>Progress</strong> — root with <code>role=\"progressbar\"</code> that receives the value.",
-      "item2": "<strong>ProgressTrack</strong> — background track where the indicator moves.",
-      "item3": "<strong>ProgressIndicator</strong> — filled bar reflecting the current value.",
-      "item4": "<strong>ProgressLabel</strong> — optional text label describing the operation.",
-      "item5": "<strong>ProgressValue</strong> — optional numeric value (e.g. 42%), aligned to the right.",
+      "item1": "<strong>Root</strong> — <code>role=\"progressbar\"</code> with the <code>aria-value*</code> family, receiving the value.",
+      "item2": "<strong>Track</strong> — the box the indicator runs along. When the root is the track itself, there is no separate piece.",
+      "item3": "<strong>Indicator</strong> — the filled part, reflecting the current value.",
+      "item4": "<strong>Label</strong> — optional. Where the library provides the piece, it names the bar; otherwise it is text beside it, and the name goes in <code>aria-label</code>.",
+      "item5": "<strong>Value</strong> — optional number (e.g. 42%), right-aligned and hidden from screen readers, which already hear the value from the root.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Uploading file</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
@@ -434,8 +463,8 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use for operations of 3+ seconds where progress is measurable.",
-        "item2": "For unknown duration, omit <code>value</code> or pass <code>null</code> — indeterminate mode.",
-        "item3": "Always provide <code>aria-label</code> describing what is being measured.",
+        "item2": "For unknown duration, pass <code>null</code> or omit the value — both give indeterminate mode.",
+        "item3": "Always give the bar an accessible name describing what is being measured: <code>aria-label</code>, or the associated label where the library provides the piece.",
         "item4": "Announce percentage via <code>aria-live=\"polite\"</code> on adjacent text."
       },
       "scenarios": {
@@ -463,7 +492,7 @@
         "item4": {
           "s": "Processing with no measurable progress",
           "u": "Yes, indeterminate",
-          "a": "Spinner"
+          "a": "Skeleton, if the content structure is known"
         },
         "item5": {
           "s": "Notification of completed task",
@@ -479,19 +508,19 @@
           "correct": "Correct",
           "avoid": "Avoid",
           "label": {
-            "name": "ProgressLabel",
+            "name": "Label",
             "format": "Gerund + object · no period · max 5 words",
             "good": "\"Uploading file\", \"Loading data\"",
             "bad": "\"Please wait…\", \"Loading\""
           },
           "value": {
-            "name": "ProgressValue",
+            "name": "Value",
             "format": "Number + unit · no space before %",
             "good": "\"42%\", \"3/10\"",
             "bad": "\"42 %\", \"almost there\""
           },
           "ariaLabel": {
-            "name": "aria-label",
+            "name": "Accessible name",
             "format": "Noun + complement · describes the operation",
             "good": "\"Upload progress\"",
             "bad": "\"Progress\", \"Bar\""
@@ -509,7 +538,7 @@
         "title": "Do not use when",
         "item1": "Loading is instant (<300ms) — show nothing",
         "item2": "Content structure is known — use <code>Skeleton</code>",
-        "item3": "Progress can't be measured — use Spinner",
+        "item3": "Progress cannot be measured — use indeterminate mode, never an invented value",
         "item4": "It's just an end notification — use <code>Sonner</code> or <code>Alert</code>"
       }
     },
@@ -520,7 +549,7 @@
       },
       "pair2": {
         "do": "Combine visible percentage with aria-live polite on the text.",
-        "dont": "Don't announce every 1% increment — update every 5 or 10%."
+        "dont": "Do not use aria-live assertive on the value — it interrupts the reader on every update."
       }
     },
     "import": {},
@@ -532,30 +561,30 @@
       },
       "styles": {
         "determinate": "Numeric value 0–100 — bar filled proportionally.",
-        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> above the track.",
+        "withLabel": "Label and value above the track — their own pieces where the library provides them, text beside it when not.",
         "semantic": "<code>data-variant</code> switches the bar colour to <code>success</code> or <code>destructive</code>; the track stays neutral so contrast never depends on the choice."
       }
     },
     "states": {
       "default": {
         "label": "Default",
-        "trigger": "value=0",
-        "behavior": "Initial state — <code>value=0</code>, indicator at <code>0%</code>."
+        "trigger": "value = minimum",
+        "behavior": "Initial state — value at the minimum, empty indicator and the zero ANNOUNCED, which is what separates it from indeterminate."
       },
       "loading": {
         "label": "Loading",
-        "trigger": "value between 0 and 100",
-        "behavior": "In progress — <code>value</code> between 0 and 100 (exclusive), indicator filled proportionally."
+        "trigger": "value between minimum and maximum",
+        "behavior": "In progress — indicator filled in proportion to the value within the range."
       },
       "complete": {
         "label": "Complete",
-        "trigger": "value=100",
-        "behavior": "Finished — <code>value=100</code>, full bar. Consider removing or swapping for success message."
+        "trigger": "value = maximum",
+        "behavior": "Finished — value equal to the maximum, full bar. Consider removing it or replacing it with a success message."
       },
       "indeterminate": {
         "label": "Indeterminate",
-        "trigger": "value=null",
-        "behavior": "No defined value — <code>aria-valuenow</code> absent and a short sweep running the track in a loop."
+        "trigger": "value null or missing",
+        "behavior": "No value — <code>aria-valuenow</code> absent, announced text \"Em andamento\" and a short dash running along the track in a loop."
       },
       "cols": {
         "state": "State",
@@ -572,9 +601,9 @@
         "description": "Description",
         "value": {
           "type": "number | null",
-          "default": "—",
+          "default": "indeterminate",
           "required": "No",
-          "description": "Current value 0 to 100. <code>null</code> activates indeterminate mode."
+          "description": "Current value, between minimum and maximum. <code>null</code> or missing turns on indeterminate mode; out of range, it is clamped before being announced and drawn."
         },
         "max": {
           "type": "number",
@@ -589,10 +618,10 @@
           "description": "Minimum value of the scale."
         },
         "getAriaValueText": {
-          "type": "(value: number) => string",
+          "type": "function",
           "default": "—",
           "required": "No",
-          "description": "Function returning the text announced by the screen reader."
+          "description": "Text announced instead of the number. By default, the percentage — or \"Em andamento\" without a value."
         },
         "className": {
           "type": "string",
@@ -605,15 +634,21 @@
           "default": "—",
           "required": "No",
           "description": "Semantic colour of the bar. When absent, the bar uses the primary colour."
+        },
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "Yes, without an associated label",
+          "description": "Accessible name of the bar — describes the measured operation."
         }
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Semantic bar colour\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sync\" />\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>",
-        "vue": "<!-- Semantic bar colour -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sync\" />\n\n<!-- Custom accessible text -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} of 100 files processed`\"\n/>",
-        "svelte": "<!-- Semantic bar colour -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sync\" />",
-        "vanilla": "// Semantic bar colour\nconst bar = createProgress({\n  value: progress,\n  variant: 'success',\n  'aria-label': 'Sync',\n});",
-        "angular": "<!-- Semantic bar colour -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sync\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
+        "react": "// Semantic bar colour\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sync\" />\n\n// Text announced instead of the percentage\n<Progress\n  value={42}\n  aria-label=\"File processing\"\n  getAriaValueText={(_formatted, value) =>\n    value === null ? 'Counting files' : `${value} of 100 files`}\n/>",
+        "vue": "<!-- Semantic bar colour -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sync\" />\n\n<!-- Text announced instead of the percentage -->\n<Progress\n  :model-value=\"42\"\n  aria-label=\"File processing\"\n  :get-value-text=\"(value, max) => value === null ? 'Counting files' : `${value} of ${max} files`\"\n/>",
+        "svelte": "<!-- Semantic bar colour -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sync\" />\n\n<!-- Text announced instead of the percentage -->\n<Progress\n  value={42}\n  aria-label=\"File processing\"\n  getAriaValueText={(value, min, max) =>\n    value === null ? 'Counting files' : `${value} of ${max} files`}\n/>",
+        "vanilla": "// Semantic bar colour\nconst bar = createProgress({\n  value: progress,\n  variant: 'success',\n  'aria-label': 'Sync',\n});\n\n// Text announced instead of the percentage\nconst files = createProgress({\n  value: 42,\n  'aria-label': 'File processing',\n  getAriaValueText: (value, min, max) =>\n    value === null ? 'Counting files' : `${value} of ${max} files`,\n});",
+        "angular": "<!-- Semantic bar colour -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sync\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>\n\n<!-- Text announced instead of the percentage -->\n<div ndsProgress [value]=\"42\" aria-label=\"File processing\" [getAriaValueText]=\"filesText\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>\n\n// in the component\nfilesText = (value: number | null, min: number, max: number) =>\n  value === null ? 'Counting files' : `${value} of ${max} files`;"
       }
     },
     "tokens": {
@@ -671,8 +706,8 @@
       "summary": "Meets WCAG 2.2 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
       "items": {
         "item1": "<code>role=\"progressbar\"</code> applied automatically",
-        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derived from <code>value</code>",
-        "item3": "<code>aria-label</code> required — describes what's being measured",
+        "item2": "<code>aria-valuemin</code> and <code>aria-valuemax</code> always present; <code>aria-valuenow</code> only with a value, already clamped to the range",
+        "item3": "Accessible name required — <code>aria-label</code>, or the associated label when there is one",
         "item4": "<code>aria-live=\"polite\"</code> on adjacent text announces changes without interrupting",
         "item5": "<code>aria-busy=\"true\"</code> on container during loading",
         "item6": "Minimum 3:1 contrast between indicator and track"
@@ -685,15 +720,16 @@
       "aria": {
         "title": "ARIA Attributes",
         "role": "<code>role=\"progressbar\"</code> applied by the primitive",
-        "valuenow": "<code>aria-valuenow</code> mirrors <code>value</code>",
-        "label": "<code>aria-label</code> required (passed by the application)",
-        "busy": "<code>aria-busy=\"true\"</code> on the loaded content container"
+        "valuenow": "<code>aria-valuenow</code> mirrors the value already clamped to the range, and disappears in indeterminate mode",
+        "label": "Accessible name required — <code>aria-label</code> or associated label",
+        "busy": "<code>aria-busy=\"true\"</code> on the loaded content container",
+        "valuetext": "<code>aria-valuetext</code> announces the percentage (\"42%\"), or \"Em andamento\" without a value"
       },
       "screenReader": {
         "title": "Screen Reader",
-        "announce": "Announces \"X percent, [aria-label]\" on focus",
+        "announce": "Announces the name and the percentage when the reader reaches the bar",
         "update": "aria-live updates are read as progress changes",
-        "complete": "Announces \"100 percent\" when complete"
+        "complete": "Announces \"100%\" when complete"
       }
     },
     "related": {
@@ -757,6 +793,21 @@
           "action": "Pass value=null",
           "result": "Indeterminate mode — aria-valuenow absent and sweep animating without end",
           "priority": "medium"
+        },
+        "item5": {
+          "action": "Pass a value out of range",
+          "result": "The value is clamped to the minimum or maximum before being announced and drawn",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Omit the value",
+          "result": "Indeterminate mode, same as passing null",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Turn on reduced motion",
+          "result": "The indeterminate dash stops at the start of the track",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -765,8 +816,17 @@
         "item1": "No violations reported by axe-core",
         "item2": "Minimum 3:1 contrast between indicator and track",
         "item3": "role=\"progressbar\" present",
-        "item4": "aria-valuenow, aria-valuemin, aria-valuemax present when value is defined",
-        "item5": "Accessible name on every example — aria-label, or the associated label when there is one"
+        "item4": "aria-valuemin and aria-valuemax always present; aria-valuenow only with a value",
+        "item5": "Accessible name on every example — aria-label, or the associated label when there is one",
+        "item6": "aria-valuetext announces the percentage, or \"Em andamento\" without a value",
+        "how": {
+          "item1": "axe-core (accessibility addon)",
+          "item2": "Contrast probe in the stories",
+          "item3": "Role assertion in the play",
+          "item4": "Attribute assertion in the play",
+          "item5": "Accessible name probe",
+          "item6": "Attribute assertion in the play"
+        }
       },
       "visual": {
         "title": "Visual Regression",
@@ -798,8 +858,8 @@
     "description": "Indicador visual de progreso de operaciones con duración medible, con soporte para modos determinado e indeterminate.",
     "seo": {
       "title": "Progress — Feedback",
-      "description": "Documentación de Progress: track, indicator, label y value, con role=\"progressbar\" automático y soporte WCAG 2.2 AA.",
-      "aiSummary": "Componente Progress con Track, Indicator, Label y Value, role=\"progressbar\" automático, soporte para modo determinado (0-100) e indeterminate.",
+      "description": "Progress: barra con role=\"progressbar\", modos determinado e indeterminado, valor limitado al rango, texto anunciado y contraste 3:1 contra la pista.",
+      "aiSummary": "Componente Progress: barra pasiva con role=\"progressbar\", aria-valuemin y aria-valuemax siempre presentes, aria-valuenow solo con valor y aria-valuetext con el porcentaje o \"Em andamento\". Un valor ausente o null activa el modo indeterminado; fuera de rango, se limita. Las variantes success y destructive cambian solo el color de la barra.",
       "aiEntities": "Progress, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role progressbar"
     },
     "demonstration": {
@@ -807,20 +867,19 @@
         "upload": "Subiendo archivo",
         "loading": "Cargando datos",
         "complete": "Completo",
-        "percent": "%",
         "indeterminate": "Procesando…"
       }
     },
     "anatomy": {
-      "item1": "<strong>Progress</strong> — root con <code>role=\"progressbar\"</code> que recibe el valor.",
-      "item2": "<strong>ProgressTrack</strong> — pista de fondo donde el indicador se mueve.",
-      "item3": "<strong>ProgressIndicator</strong> — barra llena que refleja el valor actual.",
-      "item4": "<strong>ProgressLabel</strong> — etiqueta de texto opcional describiendo la operación.",
-      "item5": "<strong>ProgressValue</strong> — valor numérico opcional (ej. 42%), alineado a la derecha.",
+      "item1": "<strong>Raíz</strong> — <code>role=\"progressbar\"</code> con la familia <code>aria-value*</code>, que recibe el valor.",
+      "item2": "<strong>Pista</strong> — la caja por donde corre el indicador. Cuando la raíz es la propia pista, no hay pieza separada.",
+      "item3": "<strong>Indicador</strong> — la parte llena, que refleja el valor actual.",
+      "item4": "<strong>Etiqueta</strong> — opcional. Donde la biblioteca ofrece la pieza, nombra la barra; si no, es texto al lado, y el nombre va en <code>aria-label</code>.",
+      "item5": "<strong>Valor</strong> — número opcional (ej: 42%), alineado a la derecha y oculto al lector de pantalla, que ya oye el valor por la raíz.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Subiendo archivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
-        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando archivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>",
+        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Subiendo archivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>",
         "vue": "<!-- Raíz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  :model-value=\"42\"              <!-- null activa el modo indeterminado -->\n  :max=\"100\"\n  aria-label=\"Subiendo archivo\"  <!-- el nombre viene de aquí: no hay slot de etiqueta -->\n/>",
         "svelte": "<!-- Raíz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  value={42}                     <!-- null activa el modo indeterminado -->\n  max={100}\n  aria-label=\"Subiendo archivo\"  <!-- el nombre viene de aquí: no hay slot de etiqueta -->\n/>",
         "vanilla": "// Raíz + indicador: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst bar = createProgress({\n  value: 42,          // null activa el modo indeterminado\n  max: 100,\n  variant: 'success', // ausente, la bar usa el primario\n  // Obligatorio: sin nombre, la bar se anuncia solo como porcentaje.\n  'aria-label': 'Subiendo archivo',\n});"
@@ -830,8 +889,8 @@
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Usa para operaciones de 3+ segundos donde el progreso es medible.",
-        "item2": "Para duración desconocida, omite <code>value</code> o pasa <code>null</code> — modo indeterminate.",
-        "item3": "Provee siempre <code>aria-label</code> describiendo lo que se mide.",
+        "item2": "Para duración desconocida, pase <code>null</code> u omita el valor — las dos formas dan el modo indeterminado.",
+        "item3": "Dé siempre nombre accesible a la barra, describiendo lo que se mide: <code>aria-label</code>, o la etiqueta asociada donde la biblioteca ofrece la pieza.",
         "item4": "Anuncia el porcentaje vía <code>aria-live=\"polite\"</code> en el texto adyacente."
       },
       "scenarios": {
@@ -859,7 +918,7 @@
         "item4": {
           "s": "Procesamiento sin progreso medible",
           "u": "Sí, indeterminate",
-          "a": "Spinner"
+          "a": "Skeleton, si la estructura del contenido es conocida"
         },
         "item5": {
           "s": "Notificación de tarea completada",
@@ -875,19 +934,19 @@
           "correct": "Correcto",
           "avoid": "Evitar",
           "label": {
-            "name": "ProgressLabel",
+            "name": "Etiqueta",
             "format": "Gerundio + objeto · sin punto · máx. 5 palabras",
             "good": "\"Subiendo archivo\", \"Cargando datos\"",
             "bad": "\"Espera…\", \"Cargando\""
           },
           "value": {
-            "name": "ProgressValue",
+            "name": "Valor",
             "format": "Número + unidad · sin espacio antes de %",
             "good": "\"42%\", \"3/10\"",
             "bad": "\"42 %\", \"casi listo\""
           },
           "ariaLabel": {
-            "name": "aria-label",
+            "name": "Nombre accesible",
             "format": "Sustantivo + complemento · describe la operación",
             "good": "\"Progreso de subida\"",
             "bad": "\"Progress\", \"Barra\""
@@ -905,7 +964,7 @@
         "title": "No uses cuando",
         "item1": "La carga es instantánea (<300ms) — no muestres nada",
         "item2": "La estructura del contenido es conocida — usa <code>Skeleton</code>",
-        "item3": "No es posible medir el progreso — usa Spinner",
+        "item3": "No es posible medir el progreso — use el modo indeterminado, nunca un valor inventado",
         "item4": "Es solo una notificación de fin — usa <code>Sonner</code> o <code>Alert</code>"
       }
     },
@@ -916,7 +975,7 @@
       },
       "pair2": {
         "do": "Combina porcentaje visible con aria-live polite en el texto.",
-        "dont": "No anuncies cada incremento de 1% — actualiza cada 5 o 10%."
+        "dont": "No use aria-live assertive en el valor — interrumpe al lector en cada actualización."
       }
     },
     "import": {},
@@ -928,30 +987,30 @@
       },
       "styles": {
         "determinate": "Valor numérico 0–100 — barra llena proporcionalmente.",
-        "withLabel": "<code>ProgressLabel</code> + <code>ProgressValue</code> sobre la pista.",
+        "withLabel": "Etiqueta y valor sobre la pista — piezas propias donde la biblioteca las ofrece, texto al lado cuando no.",
         "semantic": "<code>data-variant</code> cambia el color de la barra a <code>success</code> o <code>destructive</code>; la pista sigue neutra para que el contraste no dependa de la elección."
       }
     },
     "states": {
       "default": {
         "label": "Default",
-        "trigger": "value=0",
-        "behavior": "Estado inicial — <code>value=0</code>, indicador en <code>0%</code>."
+        "trigger": "value = mínimo",
+        "behavior": "Estado inicial — valor en el mínimo, indicador vacío y el cero ANUNCIADO, que es lo que lo separa del indeterminado."
       },
       "loading": {
         "label": "Loading",
-        "trigger": "value entre 0 y 100",
-        "behavior": "En progreso — <code>value</code> entre 0 y 100 (exclusivo), indicador rellenado proporcionalmente."
+        "trigger": "value entre el mínimo y el máximo",
+        "behavior": "En progreso — indicador lleno en proporción al valor dentro del rango."
       },
       "complete": {
         "label": "Complete",
-        "trigger": "value=100",
-        "behavior": "Finalizado — <code>value=100</code>, barra llena. Considera retirar o cambiar por mensaje de éxito."
+        "trigger": "value = máximo",
+        "behavior": "Finalizado — valor igual al máximo, barra llena. Considere quitarla o cambiarla por un mensaje de éxito."
       },
       "indeterminate": {
         "label": "Indeterminate",
-        "trigger": "value=null",
-        "behavior": "Sin valor definido — <code>aria-valuenow</code> ausente y un trazo corto recorriendo la pista en ciclo."
+        "trigger": "value null o ausente",
+        "behavior": "Sin valor — <code>aria-valuenow</code> ausente, texto anunciado \"Em andamento\" y un trazo corto recorriendo la pista en ciclo."
       },
       "cols": {
         "state": "Estado",
@@ -968,9 +1027,9 @@
         "description": "Descripción",
         "value": {
           "type": "number | null",
-          "default": "—",
+          "default": "indeterminado",
           "required": "No",
-          "description": "Valor actual de 0 a 100. <code>null</code> activa el modo indeterminate."
+          "description": "Valor actual, entre el mínimo y el máximo. <code>null</code> o ausente activa el modo indeterminado; fuera de rango, se limita antes de anunciar y de dibujar."
         },
         "max": {
           "type": "number",
@@ -985,10 +1044,10 @@
           "description": "Valor mínimo de la escala."
         },
         "getAriaValueText": {
-          "type": "(value: number) => string",
+          "type": "función",
           "default": "—",
           "required": "No",
-          "description": "Función que devuelve el texto anunciado por el lector de pantalla."
+          "description": "Texto anunciado en lugar del número. Por defecto, el porcentaje — o \"Em andamento\" sin valor."
         },
         "className": {
           "type": "string",
@@ -1001,15 +1060,21 @@
           "default": "—",
           "required": "No",
           "description": "Color semántico de la barra. Ausente, la barra usa el primario."
+        },
+        "ariaLabel": {
+          "type": "string",
+          "default": "—",
+          "required": "Sí, sin etiqueta asociada",
+          "description": "Nombre accesible de la barra — describe la operación medida."
         }
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Color semántico de la barra\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronización\" />\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>",
-        "vue": "<!-- Color semántico de la barra -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sincronización\" />\n\n<!-- Texto accesible personalizado -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} de 100 archivos procesados`\"\n/>",
-        "svelte": "<!-- Color semántico de la barra -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronización\" />",
-        "vanilla": "// Color semántico de la barra\nconst bar = createProgress({\n  value: progreso,\n  variant: 'success',\n  'aria-label': 'Sincronización',\n});",
-        "angular": "<!-- Color semántico de la barra -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sincronización\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
+        "react": "// Color semántico de la barra\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronización\" />\n\n// Texto anunciado en lugar del porcentaje\n<Progress\n  value={42}\n  aria-label=\"Procesamiento de archivos\"\n  getAriaValueText={(_formatted, value) =>\n    value === null ? 'Contando archivos' : `${value} de 100 archivos`}\n/>",
+        "vue": "<!-- Color semántico de la barra -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sincronización\" />\n\n<!-- Texto anunciado en lugar del porcentaje -->\n<Progress\n  :model-value=\"42\"\n  aria-label=\"Procesamiento de archivos\"\n  :get-value-text=\"(value, max) => value === null ? 'Contando archivos' : `${value} de ${max} archivos`\"\n/>",
+        "svelte": "<!-- Color semántico de la barra -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronización\" />\n\n<!-- Texto anunciado en lugar del porcentaje -->\n<Progress\n  value={42}\n  aria-label=\"Procesamiento de archivos\"\n  getAriaValueText={(value, min, max) =>\n    value === null ? 'Contando archivos' : `${value} de ${max} archivos`}\n/>",
+        "vanilla": "// Color semántico de la barra\nconst bar = createProgress({\n  value: progress,\n  variant: 'success',\n  'aria-label': 'Sincronización',\n});\n\n// Texto anunciado en lugar del porcentaje\nconst files = createProgress({\n  value: 42,\n  'aria-label': 'Procesamiento de archivos',\n  getAriaValueText: (value, min, max) =>\n    value === null ? 'Contando archivos' : `${value} de ${max} archivos`,\n});",
+        "angular": "<!-- Color semántico de la barra -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sincronización\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>\n\n<!-- Texto anunciado en lugar del porcentaje -->\n<div ndsProgress [value]=\"42\" aria-label=\"Procesamiento de archivos\" [getAriaValueText]=\"filesText\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>\n\n// en el componente\nfilesText = (value: number | null, min: number, max: number) =>\n  value === null ? 'Contando archivos' : `${value} de ${max} archivos`;"
       }
     },
     "tokens": {
@@ -1067,8 +1132,8 @@
       "summary": "Cumple WCAG 2.2 AA: 1.3.1, 1.4.11, 4.1.2, 4.1.3.",
       "items": {
         "item1": "<code>role=\"progressbar\"</code> aplicado automáticamente",
-        "item2": "<code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> derivados de <code>value</code>",
-        "item3": "<code>aria-label</code> obligatorio — describe lo que se mide",
+        "item2": "<code>aria-valuemin</code> y <code>aria-valuemax</code> siempre presentes; <code>aria-valuenow</code> solo con valor, ya limitado al rango",
+        "item3": "Nombre accesible obligatorio — <code>aria-label</code>, o la etiqueta asociada cuando existe",
         "item4": "<code>aria-live=\"polite\"</code> en el texto adyacente anuncia cambios sin interrumpir",
         "item5": "<code>aria-busy=\"true\"</code> en el contenedor durante la carga",
         "item6": "Contraste mínimo 3:1 entre indicador y pista"
@@ -1081,15 +1146,16 @@
       "aria": {
         "title": "Atributos ARIA",
         "role": "<code>role=\"progressbar\"</code> aplicado por el primitivo",
-        "valuenow": "<code>aria-valuenow</code> refleja <code>value</code>",
-        "label": "<code>aria-label</code> obligatorio (pasado por la aplicación)",
-        "busy": "<code>aria-busy=\"true\"</code> en el contenedor del contenido cargado"
+        "valuenow": "<code>aria-valuenow</code> refleja el valor ya limitado al rango, y desaparece en el modo indeterminado",
+        "label": "Nombre accesible obligatorio — <code>aria-label</code> o etiqueta asociada",
+        "busy": "<code>aria-busy=\"true\"</code> en el contenedor del contenido cargado",
+        "valuetext": "<code>aria-valuetext</code> anuncia el porcentaje (\"42%\"), o \"Em andamento\" sin valor"
       },
       "screenReader": {
         "title": "Lector de Pantalla",
-        "announce": "Anuncia \"X por ciento, [aria-label]\" al recibir foco",
+        "announce": "Anuncia el nombre y el porcentaje cuando el lector llega a la barra",
         "update": "Las actualizaciones vía aria-live se leen conforme el progreso",
-        "complete": "Anuncia \"100 por ciento\" al completar"
+        "complete": "Anuncia \"100%\" al concluir"
       }
     },
     "related": {
@@ -1153,6 +1219,21 @@
           "action": "Pasar value=null",
           "result": "Modo indeterminate — aria-valuenow ausente y trazo en animación infinita",
           "priority": "medium"
+        },
+        "item5": {
+          "action": "Pasar un valor fuera de rango",
+          "result": "El valor se limita al mínimo o al máximo antes de anunciarse y dibujarse",
+          "priority": "high"
+        },
+        "item6": {
+          "action": "Omitir el valor",
+          "result": "Modo indeterminado, igual que pasar null",
+          "priority": "high"
+        },
+        "item7": {
+          "action": "Activar movimiento reducido",
+          "result": "El trazo indeterminado se detiene al inicio de la pista",
+          "priority": "medium"
         }
       },
       "accessibility": {
@@ -1161,8 +1242,17 @@
         "item1": "Sin violaciones reportadas por axe-core",
         "item2": "Contraste mínimo 3:1 entre indicador y pista",
         "item3": "role=\"progressbar\" presente",
-        "item4": "aria-valuenow, aria-valuemin, aria-valuemax presentes cuando value está definido",
-        "item5": "Nombre accesible en cada ejemplo — aria-label, o la etiqueta asociada cuando existe"
+        "item4": "aria-valuemin y aria-valuemax siempre presentes; aria-valuenow solo con valor",
+        "item5": "Nombre accesible en cada ejemplo — aria-label, o la etiqueta asociada cuando existe",
+        "item6": "aria-valuetext anuncia el porcentaje, o \"Em andamento\" sin valor",
+        "how": {
+          "item1": "axe-core (addon de accesibilidad)",
+          "item2": "Sonda de contraste en las stories",
+          "item3": "Aserción de rol en la play",
+          "item4": "Aserción de atributos en la play",
+          "item5": "Sonda de nombre accesible",
+          "item6": "Aserción de atributo en la play"
+        }
       },
       "visual": {
         "title": "Regresión Visual",

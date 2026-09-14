@@ -3,10 +3,17 @@ import { within, expect, waitFor } from 'storybook/test';
 import { createProgress } from './progress';
 import { progressSource, progressSourceAnimado, progressSourceWith } from './progress.source';
 import {
+  isAnimationRunning,
   indicadorAnimation,
   indicadorDoProgresso,
+  enableReducedMotion,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
+import {
+  PROGRESS_INDETERMINATE_TEXT,
+  progressValueText,
+  resolveProgressRange,
+} from '@shared/primitives/progress-value';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -19,8 +26,9 @@ const meta: Meta = {
       source: { transform: progressSource },
       description: {
         component:
-          'Estados derivados do valor: default (0), loading (parcial), complete (100) e ' +
-          'indeterminate (`value: null`, sem aria-valuenow e com o traço em ciclo).',
+          'Estados derivados do valor: default (mínimo), loading (parcial), complete (máximo, ' +
+          'com o valor fora da faixa limitado) e indeterminate (`value: null`, sem aria-valuenow ' +
+          'e com o traço em ciclo — que para com movimento reduzido).',
       },
     },
   },
@@ -50,6 +58,8 @@ export const Default: Story = {
 
     await step('value=0 anuncia zero e não desenha preenchimento', async () => {
       await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '0');
+      // Zero é valor conhecido: o texto anunciado diz "0%", nunca "Em andamento".
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuetext', '0%');
       await waitFor(async () => {
         await expect(percentualDesenhado(canvasElement)).toBeLessThan(1);
       });
@@ -84,6 +94,8 @@ export const Loading: Story = {
 
     await step('value=50 preenche metade da trilha', async () => {
       await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '50');
+      // O texto substitui a leitura do número: é ELE que o leitor de tela diz.
+      await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuetext', '50%');
       await waitFor(async () => {
         await expect(Math.abs(percentualDesenhado(canvasElement) - 50)).toBeLessThan(2);
       });
@@ -101,7 +113,7 @@ export const Loading: Story = {
 
 export const Complete: Story = {
   parameters: {
-    covers: ['functional.item3', 'visual.item3'],
+    covers: ['functional.item3', 'functional.item5', 'visual.item3'],
     docs: { source: { transform: progressSourceWith({ value: 100, 'aria-label': 'Concluído' }) } },
   },
   render: () => {
@@ -121,11 +133,28 @@ export const Complete: Story = {
       });
     });
 
-    await step('O valor é limitado pela escala, não pelo desenho', async () => {
-      // A factory faz clamp em `max`: um `value` acima do máximo anunciaria um
-      // número que a barra não desenha.
-      const above = createProgress({ value: 140 });
-      await expect(above.getAttribute('aria-valuenow')).toBe('100');
+    await step('Fora da faixa, o valor é limitado antes de anunciar e de desenhar', async () => {
+      // Nas DUAS pontas, e medido na tela: um número anunciado que a barra não
+      // desenha é o defeito silencioso. As barras entram no canvas só durante o
+      // passo, e saem no `finally` para não mudarem a foto do Chromatic.
+      const wrap = canvasElement.querySelector<HTMLElement>('.nds-w-md');
+      if (!wrap) throw new Error('Complete: contêiner da barra não encontrado');
+      const above = createProgress({ value: 140, 'aria-label': 'Acima do máximo' });
+      const below = createProgress({ value: -20, 'aria-label': 'Abaixo do mínimo' });
+      wrap.append(above, below);
+      try {
+        await expect(above).toHaveAttribute('aria-valuenow', '100');
+        await expect(above).toHaveAttribute('aria-valuetext', '100%');
+        await expect(below).toHaveAttribute('aria-valuenow', '0');
+        await expect(below).toHaveAttribute('aria-valuetext', '0%');
+        await waitFor(async () => {
+          await expect(Math.abs(percentualDesenhado(above) - 100)).toBeLessThan(2);
+          await expect(percentualDesenhado(below)).toBeLessThan(1);
+        });
+      } finally {
+        above.remove();
+        below.remove();
+      }
     });
   },
 };
@@ -155,6 +184,15 @@ export const Indeterminate: Story = {
       const bar = canvas.getByRole('progressbar', { name: 'Processando…' });
       await expect(bar).not.toHaveAttribute('aria-valuenow');
       await expect(bar).toHaveAttribute('data-indeterminate', '');
+    });
+
+    await step('Sem valor, a escala sobrevive e o texto diz que está em andamento', async () => {
+      // A metade em risco do contrato: `aria-valuemin`/`aria-valuemax` não
+      // podem sair junto com o `aria-valuenow`.
+      const bar = canvas.getByRole('progressbar');
+      await expect(bar).toHaveAttribute('aria-valuemin', '0');
+      await expect(bar).toHaveAttribute('aria-valuemax', '100');
+      await expect(bar).toHaveAttribute('aria-valuetext', PROGRESS_INDETERMINATE_TEXT);
     });
 
     await step('O traço corre de verdade', async () => {
@@ -215,6 +253,7 @@ export const Animated: Story = {
 
     const bar = createProgress({ value: 0, 'aria-label': 'Progresso do upload' });
     const indicator = bar.firstElementChild as HTMLElement | null;
+    const range = resolveProgressRange();
 
     wrap.append(row, bar);
 
@@ -223,6 +262,9 @@ export const Animated: Story = {
       pct = pct >= 100 ? 0 : pct + 5;
       value.textContent = `${pct}%`;
       bar.setAttribute('aria-valuenow', String(pct));
+      // O texto anunciado anda junto — ele substitui a leitura do número, e
+      // parado diria "0%" o tempo todo.
+      bar.setAttribute('aria-valuetext', progressValueText(pct, range));
       // Mesma custom property que a factory alimenta — escrever `width` ou
       // `transform` aqui sobrescreveria a regra do design system.
       if (indicator) indicator.style.setProperty('--value', String(pct));
@@ -257,11 +299,76 @@ export const Animated: Story = {
       await expect(agora >= 0 && agora <= 100).toBe(true);
     });
 
+    await step('O texto anunciado acompanha o número', async () => {
+      // Os dois são escritos na mesma volta do intervalo: lidos juntos, batem.
+      const bar = canvas.getByRole('progressbar');
+      await expect(bar.getAttribute('aria-valuetext')).toBe(
+        `${bar.getAttribute('aria-valuenow')}%`,
+      );
+    });
+
     await step('O texto da porcentagem usa aria-live=polite', async () => {
       // `assertive` interromperia o leitor a cada 5% — é o par Do & Don't desta
       // página.
       const live = canvasElement.querySelector('[aria-live]');
       await expect(live).toHaveAttribute('aria-live', 'polite');
     });
+  },
+};
+
+// ─── Movimento reduzido ──────────────────────────────────────────────────────
+
+export const ReducedMotion: Story = {
+  parameters: {
+    covers: ['functional.item7'],
+    docs: {
+      description: {
+        story:
+          'Com movimento reduzido o traço indeterminado para no início da trilha. A barra ' +
+          'continua visível — o que some é o ciclo, não a indicação de que algo está em andamento.',
+      },
+      source: {
+        transform: progressSourceWith({ value: null, 'aria-label': 'Processando dados' }),
+      },
+    },
+  },
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'nds-w-md';
+    const bar = createProgress({ value: null, 'aria-label': 'Processando dados' });
+    wrap.appendChild(bar);
+    return wrap;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByRole('progressbar', { name: 'Processando dados' });
+    const indicador = indicadorDoProgresso(canvasElement);
+
+    await step('Sem a preferência, o traço corre', async () => {
+      // Sem este passo, a asserção de baixo passaria numa barra que nunca
+      // animou — e movimento reduzido "funcionaria" por não haver o que parar.
+      await waitFor(async () => {
+        await expect(isAnimationRunning(indicador)).toBe(true);
+      });
+    });
+
+    // O desfazer roda no `finally`: deixar a marca posta envenena a story
+    // seguinte e a foto do Chromatic.
+    const desfazer = enableReducedMotion(canvasElement.ownerDocument);
+    try {
+      await step('Com movimento reduzido, o ciclo é desligado', async () => {
+        // Pelo PAR nome + duração: o nome continua lá depois que a duração é
+        // zerada, e `animationName !== 'none'` passaria.
+        await waitFor(async () => {
+          await expect(isAnimationRunning(indicador)).toBe(false);
+        });
+      });
+
+      await step('O traço continua visível na trilha', async () => {
+        await expect(indicador.getBoundingClientRect().width).toBeGreaterThan(0);
+      });
+    } finally {
+      desfazer();
+    }
   },
 };

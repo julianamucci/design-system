@@ -14,10 +14,11 @@ import {
   accessibleName,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
+import { PROGRESS_INDETERMINATE_TEXT } from "@shared/primitives/progress-value";
 import {
   progressWithLabelSource,
-  progressColorSemanticaSource,
-  progressIndeterminadoSource,
+  progressSemanticColorSource,
+  progressOmittedValueSource,
   progressSource,
 } from "./progress.source";
 
@@ -31,7 +32,7 @@ const meta = {
       source: { transform: progressSource },
       description: {
         component:
-          "As formas de uso: valor conhecido, valor com rótulo e cor semântica. Rótulo e valor formatado são partes do próprio componente — não texto solto ao lado.",
+          "As formas de uso: valor conhecido, valor desconhecido, valor com rótulo e cor semântica. Rótulo e valor formatado são partes do próprio componente — não texto solto ao lado.",
       },
     },
     controls: { disable: true },
@@ -45,7 +46,7 @@ type Story = StoryObj<typeof Progress>;
 export const Determinate: Story = {
   parameters: { covers: ["accessibility.item2"] },
   render: () => (
-    <div className="nds-w-sm">
+    <div className="nds-w-md">
       <Progress value={42} aria-label="Progresso do upload" />
     </div>
   ),
@@ -73,23 +74,32 @@ export const Determinate: Story = {
 
 export const Indeterminate: Story = {
   parameters: {
+    covers: ["functional.item6"],
     docs: {
-      // `value={null}` é o assunto e não sai de nenhum control deste arquivo.
-      source: { transform: progressIndeterminadoSource },
+      // A AUSÊNCIA de `value` é o assunto e não sai de nenhum control deste arquivo.
+      source: { transform: progressOmittedValueSource },
     },
   },
   render: () => (
-    <div className="nds-w-sm">
-      <Progress value={null} aria-label="Processando dados" />
+    <div className="nds-w-md">
+      <Progress aria-label="Processando…" />
     </div>
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step("Valor desconhecido não vira valor zero", async () => {
-      const bar = canvas.getByRole("progressbar", { name: "Processando dados" });
+    await step("Omitir o valor não vira valor zero", async () => {
+      // Igual ao `<progress>` nativo: sem valor, não há número a anunciar.
+      const bar = canvas.getByRole("progressbar", { name: "Processando…" });
       await expect(bar).not.toHaveAttribute("aria-valuenow");
       await expect(bar).toHaveAttribute("data-indeterminate", "");
+    });
+
+    await step("A escala continua anunciada, e o texto diz que está em andamento", async () => {
+      const bar = canvas.getByRole("progressbar");
+      await expect(bar).toHaveAttribute("aria-valuemin", "0");
+      await expect(bar).toHaveAttribute("aria-valuemax", "100");
+      await expect(bar).toHaveAttribute("aria-valuetext", PROGRESS_INDETERMINATE_TEXT);
     });
 
     await step("O estado chega à trilha, que é quem o CSS consulta", async () => {
@@ -111,7 +121,7 @@ export const WithLabel: Story = {
     },
   },
   render: () => (
-    <div className="nds-w-sm">
+    <div className="nds-w-md">
       <Progress value={42}>
         <ProgressLabel>Enviando arquivo</ProgressLabel>
         <ProgressValue />
@@ -132,6 +142,7 @@ export const WithLabel: Story = {
         "[data-slot='progress-label']",
       )!;
       await expect(bar.getAttribute("aria-labelledby")).toBe(label.id);
+      await expect(bar).not.toHaveAttribute("aria-label");
     });
 
     await step("Toda barra da tela tem nome acessível", async () => {
@@ -154,11 +165,11 @@ export const SemanticColor: Story = {
   parameters: {
     docs: {
       // Duas barras com `data-variant` — a cor só se lê em comparação.
-      source: { transform: progressColorSemanticaSource },
+      source: { transform: progressSemanticColorSource },
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-sm" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <Progress
         value={100}
         data-variant="success"
@@ -175,10 +186,10 @@ export const SemanticColor: Story = {
     const canvas = within(canvasElement);
 
     await step("Cada variante pinta a barra de uma cor diferente", async () => {
-      const [ok, critico] = canvas.getAllByRole("progressbar");
+      const [ok, critical] = canvas.getAllByRole("progressbar");
       const colorOf = (root: HTMLElement) =>
         getComputedStyle(indicadorDoProgresso(root)).backgroundColor;
-      await expect(colorOf(ok)).not.toBe(colorOf(critico));
+      await expect(colorOf(ok)).not.toBe(colorOf(critical));
     });
 
     await step("As duas variantes mantêm 3:1 contra a trilha", async () => {

@@ -8,6 +8,11 @@
 >
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
+>
+> **Revisado em 2026-09-14** pela passagem `/pipeline fix progress`, com três
+> decisões da dona: as cinco anunciam `aria-valuetext` (D10), omitir o valor é
+> indeterminado (D12) e `min` existe nas cinco (§7). A regra que as três
+> decisões produzem mora em `docs/shared/primitives/progress-value.ts`.
 
 ## 1. Identidade
 
@@ -39,19 +44,21 @@ valer — e `—` é dívida declarada, não ausência de risco.
 | # | o contrato | portão |
 |---|---|---|
 | C1 | A raiz é anunciada como `role="progressbar"`, nas cinco | `testes.accessibility.item3` + play do `Playground` nas cinco |
-| C2 | `aria-valuemin` e `aria-valuemax` estão SEMPRE presentes, inclusive sem valor | o `Playground` das cinco afirma os dois com valor; **só a `Indeterminate` do angular afirma que eles SOBREVIVEM sem valor**, que é a metade em risco |
-| C3 | `aria-valuenow` existe com valor e DESAPARECE no indeterminado | `testes.functional.item4` + `Indeterminate` nas cinco |
+| C2 | `aria-valuemin` e `aria-valuemax` estão SEMPRE presentes, inclusive sem valor | o `Playground` das cinco afirma os dois com valor, e as duas `Indeterminate` (estados e variantes) afirmam que eles SOBREVIVEM sem valor |
+| C3 | `aria-valuenow` existe com valor e DESAPARECE no indeterminado — com `null`, com valor ausente e com valor não finito (D12) | `testes.functional.item4` + `Indeterminate` de estados (`null`); `testes.functional.item6` + `Indeterminate` de variantes (valor omitido) |
 | C4 | `value: 0` desenha zero e **não** é indeterminado | `testes.functional.item1` — a `Default` das cinco tem o passo "zero não é o mesmo que indeterminate" |
 | C5 | Metade do valor é metade DESENHADA, medida em pixel | `testes.functional.item2`, pela sonda `percentualDesenhado` |
 | C6 | `value` no máximo preenche a trilha inteira | `testes.functional.item3` |
 | C7 | `data-indeterminate` vai no elemento que carrega `.nds-progress` — é o único gancho do desenho sem valor | `Indeterminate` nas cinco; no angular ela cobra as TRÊS partes |
 | C8 | O traço em ciclo é a animação `nds-progress-indeterminate` do design system, e ela desloca a margem deixando `transform` em `none` | `Indeterminate` nas cinco, em dois passos — o segundo é o discriminador do homônimo já morto |
 | C9 | TODA barra na tela tem nome acessível — `aria-labelledby` quando há rótulo associado, `aria-label` quando não | `testes.accessibility.item5` + `WithLabel` nas cinco, pela sonda `accessibleName` |
-| C10 | A trilha não acompanha a variante, e a barra mantém 3:1 contra ela | `SemanticColor` de react, vue, vanilla e angular — **no svelte a story tem uma barra só** |
-| C11 | Não é parada de teclado: nada de `tabindex`, nada de foco | — (nenhuma story afirma a ausência; a folha não dá `tabindex` a peça nenhuma) |
-| C12 | Valor fora da faixa é limitado antes de ser anunciado e antes de ser desenhado | `Complete` do vanilla, no passo "o valor é limitado pela escala" — **e só ela**; ver D5 |
-| C13 | Sob `prefers-reduced-motion` o traço PARA e fica no início do trilho | — (nenhum; a folha tem a guarda e nada a exercita) |
+| C10 | A trilha não acompanha a variante, e a barra mantém 3:1 contra ela | `SemanticColor` nas cinco, com duas barras |
+| C11 | Não é parada de teclado: nada de `tabindex`, nada de foco | o `Playground` das cinco afirma a ausência de `tabindex` |
+| C12 | Valor fora da faixa é limitado antes de ser anunciado e antes de ser desenhado | `testes.functional.item5` + `Complete` nas cinco, nas duas pontas (140→100 e −20→0) |
+| C13 | Sob `prefers-reduced-motion` o traço PARA e fica no início do trilho | `testes.functional.item7` + `ReducedMotion` nas cinco, pelo gancho `data-reduced-motion` do preview |
 | C14 | O número visível não é lido duas vezes: ou nasce `aria-hidden`, ou é região viva FORA da barra | `WithLabel` do angular (`aria-hidden`); os passos de `aria-live` em vue, svelte e vanilla |
+| C15 | `aria-valuetext` anuncia o percentual arredondado, ou "Em andamento" sem valor — e a função de quem compõe o substitui | `testes.accessibility.item6` + `Loading` ("50%"), `Indeterminate` ("Em andamento") e `CustomValueText` nas cinco |
+| C16 | `min` é respeitado no anúncio, no clamp e no desenho | `Playground` nas cinco, com o controle de mínimo |
 
 ## 3. Decisões fixadas
 
@@ -92,8 +99,8 @@ significa. Hoje não há resposta.
 |---|---|---|---|
 | vanilla | a fábrica | `--value` (0–100) | `.nds-progress-indicator` |
 | angular | host binding da diretiva | `--value`, string e nunca número | `.nds-progress-indicator` |
-| vue | o wrapper da stack | `transform: translateX(-X%)` inline | `.nds-progress-indicator` |
-| svelte | o wrapper da stack | `transform: translateX(-X%)` inline | `.nds-progress-indicator` |
+| vue | o wrapper da stack | `--value` (desde 2026-09-13; era `transform` inline) | `.nds-progress-indicator` |
+| svelte | o wrapper da stack | `--value` (desde 2026-09-13; era `transform` inline) | `.nds-progress-indicator` |
 | react | a LIB | `width: X%` inline (mais `inset-inline-start` e `height: inherit`) | `.nds-progress-bar` |
 
 A folha declara as duas: `.nds-progress-indicator` tem
@@ -126,12 +133,9 @@ o indeterminado das duas só funcionava porque elas SOLTAVAM o `style` com valor
 nulo; se o inline ficasse escrito, o traço correria por baixo de uma transformação
 fixa.
 
-**O que salva o indeterminado nas duas stacks que escrevem transform**: as duas
-soltam o `style` quando o valor é nulo, e aí o `transform: none` da folha volta a
-valer. Estilo inline vence qualquer especificidade — se o transform ficasse
-escrito com valor nulo, o traço correria por baixo de uma transformação fixa. A
-`Indeterminate` do svelte é a única que afirma isso ("sem valor não há transform
-inline").
+**`--value` é o PERCENTUAL, não o número cru** (2026-09-14): com `min` nas cinco,
+o número e a proporção deixaram de coincidir, e a stack escreve o que
+`progressPercent` devolve.
 
 ### D3 · Não existe variante `warning`, e a decisão é de contraste
 
@@ -162,7 +166,9 @@ escolheu.
 
 **DECIDIDO em 2026-09-13, pela dona**: o vue e o svelte passaram a limitar o valor
 à faixa antes de anunciar e antes de desenhar, alinhando-se às outras três e à
-referência. Com isso o C12 deixa de ser falso em duas stacks. `null` e `undefined`
+referência. Com isso o C12 deixa de ser falso em duas stacks. Desde 2026-09-14 a
+conta é UMA, `resolveProgressValue` da regra compartilhada, e ganhou a guarda de
+valor não finito que o vanilla e o svelte não tinham — `NaN` saía anunciado. `null` e `undefined`
 continuam significando indeterminado nas cinco — limitar não é o mesmo que
 substituir por zero, e confundir os dois anunciaria "0%" onde a verdade é "não sei
 quanto falta" (D1).
@@ -221,8 +227,9 @@ mira a classe nua (0,1,0) contra uma declaração também de classe nua, e tamb�
 vence por ordem. Não há aqui o defeito conhecido de guarda (0,1,0) perdendo para
 declaração em atributo (0,2,0).
 
-**O que a guarda NÃO tem é portão.** Nenhuma story das cinco liga a preferência
-para ver o traço parar (C13).
+**O portão da guarda é a `ReducedMotion` das cinco** (C13), pelo gancho
+`data-reduced-motion` do preview: `motion.css` força uma iteração de duração zero,
+e o traço termina no início do trilho.
 
 ### D7 · A altura é 8px fixa, e isso é legítimo
 
@@ -248,7 +255,8 @@ não em `aria-label`, e por isso a sonda compartilhada percorre
 `aria-labelledby` antes de `aria-label`.
 
 **Cuidado ao revisitar**: no react e no angular o `WithLabel` afirma que o nome
-sai do `aria-labelledby` e que não há `aria-label` duplicando a frase. Passar a
+sai do `aria-labelledby`, e o do react afirma também que não há `aria-label`
+duplicando a frase. Passar a
 escrever os dois é ambiguidade, não redundância.
 
 ### D9 · A `reka-ui` fabrica um nome quando não há, e o nome é a PORCENTAGEM
@@ -262,12 +270,11 @@ anunciada como **"42%"** — e "Progress" e "Barra" são justamente os exemplos 
 Nas outras quatro, barra sem nome fica sem nome — o que é pior de ver e melhor de
 pegar, porque o axe tem regra para isso e não tem regra para nome inútil.
 
-**O que segura hoje**: toda story de vue passa `aria-label` explícito, e o
-atributo de quem compõe vence o da lib (atributo de passagem sobrepõe a
-propriedade ligada, nos dois níveis de wrapper). O risco é para quem consome sem
-nomear.
+**Corrigido em 2026-09-14**: o `Progress.vue` passa `getValueLabel` devolvendo
+`undefined`, e barra de vue sem nome volta a ficar sem nome — o que o axe pega,
+como nas outras quatro.
 
-### D10 · `aria-valuetext` existe em duas das cinco
+### D10 · `aria-valuetext` nas cinco — até 2026-09-14 existia em duas
 
 **Estado medido**: react e angular anunciam sempre — a porcentagem formatada com
 valor, e a frase `indeterminate progress` sem valor (o docblock do `@radix-ng`
@@ -278,6 +285,26 @@ função de texto, e nada no repositório passa. Svelte e vanilla nunca anunciam
 número. Onde ele existe, quem ouve recebe "quarenta e dois por cento"; onde não,
 recebe o número cru contra a escala. É a linha de `props.table.getAriaValueText`
 do conteúdo compartilhado — uma prop publicada como se fosse das cinco.
+
+**DECIDIDO em 2026-09-14, pela dona: as cinco anunciam.** O texto padrão é
+`progressValueText` — o percentual arredondado, ou "Em andamento" sem valor, que
+também substitui a frase em inglês que a `@base-ui/react` e o `@radix-ng`
+escreviam. Quem compõe passa a própria função, com o nome e a assinatura da lib
+onde a lib tem: `getAriaValueText(formattedValue, value)` no react,
+`getValueText(value, max)` no vue, e `getAriaValueText(value, min, max)` no
+svelte, no vanilla e no angular — as duas primeiras ganharam a opção, e a diretiva
+do angular passou a escrever o atributo ela mesma, depois do render, porque a
+função do `@radix-ng` não é chamada sem valor (as asserções de lá esperam com
+`waitFor`). A função de quem compõe recebe o valor JÁ limitado nas cinco.
+
+**O texto é português nas três línguas da página**, como os rótulos de componente
+desta casa — o Sonner faz o mesmo com o nome da região: o componente não conhece
+o idioma da docs page. O conteúdo em inglês e espanhol cita "Em andamento" entre
+aspas, porque é o que o leitor de tela ouve.
+
+**A função do react não recebe o máximo** — a assinatura é da `@base-ui/react` —,
+e por isso o exemplo de lá crava "de 100 arquivos". E o `Complete` do angular
+muda o valor da mesma barra por sinal, onde as outras montam duas barras extras.
 
 ### D11 · Três vocabulários para o mesmo estado, e só o indeterminado é comum
 
@@ -296,7 +323,7 @@ no vanilla**, que é a referência e não escreve nenhum dos dois. A folha não 
 nenhum deles: o único atributo com consequência visual é
 `data-indeterminate`, e é o único que as cinco dizem igual.
 
-### D12 · Omitir `value` NÃO é o caminho portável do indeterminado
+### D12 · Omitir `value` é indeterminado nas cinco — até 2026-09-14 não era portável
 
 **Medido nos cinco pontos de entrada, 2026-09-13:**
 
@@ -312,9 +339,18 @@ nenhum deles: o único atributo com consequência visual é
 zero, e são duas telas idênticas com significados opostos — que é exatamente o
 defeito contra o qual cada `Default` tem um passo dedicado.
 
-**E o conteúdo compartilhado ensina o caminho que não funciona**:
-`usage.guidelines.item2` diz "omita `value` ou passe `null`". A primeira metade é
-falsa em três stacks. As guidelines de react e de vue repetem a mesma coisa.
+**E o conteúdo compartilhado ensinava o caminho que não funcionava**:
+`usage.guidelines.item2` dizia "omita `value` ou passe `null`", e a primeira
+metade era falsa em três stacks.
+
+**DECIDIDO em 2026-09-14, pela dona: omitir é indeterminado nas cinco.** A régua é
+o HTML nativo — `<progress>` sem `value` é indeterminado — e o ARIA, que diz o
+mesmo pela ausência de `aria-valuenow`. Tratar ausência como zero anunciava "0%"
+quando a verdade era "não sei quanto falta", o que a D1 proíbe, e desenhava uma
+barra vazia com cara de travada. Vue, svelte e vanilla mudaram o padrão; nenhum
+consumidor do repositório dependia dele — o job-progress, as docs pages e as
+stories passavam o valor sempre. Com isso a frase do conteúdo voltou a ser
+verdade, e a tabela acima é o estado ANTERIOR.
 
 ### D13 · Duas anatomias convivem, e a sonda compartilhada aceita as duas
 
@@ -427,19 +463,18 @@ Props compartilhadas, com o padrão que cada stack de fato entrega:
 
 | prop | tipo | padrão | onde existe |
 |---|---|---|---|
-| `value` | `number \| null` | varia — ver D12 | nas cinco (no vue chama-se `modelValue`) |
+| `value` | `number \| null` | `null` nas cinco desde 2026-09-14 — ver D12 | nas cinco (no vue chama-se `modelValue`) |
 | `max` | number | `100` | nas cinco |
-| `min` | number | `0` | react e angular explicitamente; svelte por PASSAGEM (o wrapper não a declara, o tipo da lib a inclui e o resto é repassado) — **não existe em vue nem em vanilla**, e nas duas o mínimo anunciado é zero cravado |
+| `min` | number | `0` | nas cinco desde 2026-09-14, por decisão da dona — até ali não existia em vue nem em vanilla, e o svelte a repassava à lib sem usá-la no clamp nem no desenho |
 | variante de cor | `success \| destructive` | — | nas cinco, mas por caminhos diferentes: opção de fábrica no vanilla, atributo `data-variant` nas outras quatro |
-| nome acessível | string | — | nas cinco: opção da fábrica no vanilla, `input` no angular, atributo nas outras três |
-| texto do valor | função | — | react (`getAriaValueText`) e angular (mesmo nome, apelido de `valueLabel`); vue tem outro nome (`getValueText`); **não existe em svelte nem em vanilla** — ver D10 |
+| nome acessível | string | — | nas cinco: opção da fábrica no vanilla, atributo nas outras quatro |
+| texto do valor | função | o percentual, ou "Em andamento" | nas cinco desde 2026-09-14, com o nome e a assinatura da lib — ver D10 |
 | classe extra | string | — | nas cinco (`className`, `class`) |
 
-**A tabela de props do conteúdo compartilhado publica `min` e `getAriaValueText`
-como se fossem das cinco.** São de três e de duas, respectivamente. E o auditor
-já vê metade disso: `snippet_sem_lastro` reprova o
-`props.extensibilityCode` do react e do vue por ensinar uma função de texto que
-nenhuma story daquelas stacks exercita.
+**A tabela de props do conteúdo compartilhado publicava `min` e `getAriaValueText`
+como se fossem das cinco**, quando eram de três e de duas. Desde 2026-09-14 as
+duas linhas são verdade nas cinco, e a story `CustomValueText` exercita a função
+em cada stack — que é o que fecha o `snippet_sem_lastro`.
 
 ### Divergências de forma, registradas e não "alinhadas"
 
@@ -447,11 +482,11 @@ Forma de API não tem fonte de verdade — cada lib tem a sua.
 
 | stack | como difere |
 |---|---|
-| vanilla | fábrica `createProgress({ value, max, variant, 'aria-label', className })` devolvendo o elemento pronto; não há atualização por API — quem faz a barra andar reescreve `--value` e `aria-valuenow` por fora, e a story `Animated` é o modelo disso |
-| vue | o valor é `modelValue` (v-model), e a lib valida a faixa reclamando no console em vez de limitar (D5) |
-| svelte | o wrapper aceita `ref` bindável e repassa o resto; o valor não é limitado (D5) |
+| vanilla | fábrica `createProgress({ value, min, max, variant, 'aria-label', getAriaValueText, className })` devolvendo o elemento pronto; não há atualização por API — quem faz a barra andar reescreve `--value`, `aria-valuenow` e `aria-valuetext` por fora, e a story `Animated` é o modelo disso |
+| vue | o valor é `modelValue` (v-model); o wrapper limita pela regra compartilhada (D5) e entrega à lib a faixa DESLOCADA para começar em zero — a `reka-ui` crava `aria-valuemin="0"` e anula valor fora de 0–máximo —, reescrevendo depois os `aria-value*` e `data-*` reais na raiz; a função de texto é `getValueText(value, max)`, sem mínimo |
+| svelte | o wrapper aceita `ref` bindável, limita pela regra compartilhada (D5) e escreve `aria-valuetext`, que a `bits-ui` não oferece |
 | react | a raiz monta trilha e indicador sozinha na ausência de conteúdo (D14), e a lib insere um `span` de apresentação escondido dentro da raiz |
-| angular | tudo é diretiva de ATRIBUTO em elemento nativo, para o markup bater com o do vanilla; o nome acessível entra por `input` |
+| angular | tudo é diretiva de ATRIBUTO em elemento nativo, para o markup bater com o do vanilla; o nome acessível é atributo simples. O `valueLabel` do `@radix-ng` só é chamado COM valor e, sem valor, a lib escreve `"indeterminate progress"` fixo — por isso a diretiva escreve `aria-valuetext` ela mesma, depois do render, e expõe `getAriaValueText(value, min, max)` como as outras. **`Infinity` é a única divergência da regra**: a lib o limita ao máximo, a regra o trata como indeterminado, e a entrada do valor é da lib |
 
 ### Peças, por stack
 
@@ -475,23 +510,16 @@ snippet ("o nome vem daqui: não há slot de rótulo"), mas a lista de itens aci
 deles descreve as cinco peças sem ressalva, e é ela que as cinco páginas
 mostram.
 
-### Controles do Playground, e nenhum par bate
+### Controles do Playground
 
-| stack | controles |
-|---|---|
-| react | valor, máximo, mínimo, nome acessível, classe |
-| vue | valor, máximo |
-| svelte | valor, máximo, variante, classe |
-| vanilla | valor, máximo, variante, nome acessível |
-| angular | valor, mínimo, máximo, nome acessível |
-
-Só valor e máximo estão nos cinco. A variante — que é a única decisão VISUAL do
-componente — é manipulável em dois.
+**Iguais nas cinco desde 2026-09-14**: valor, mínimo, máximo, variante e nome
+acessível. Até ali só valor e máximo eram comuns, e a variante — a única decisão
+VISUAL do componente — era manipulável em duas.
 
 ## 8. Acessibilidade
 
 **Atributos.** Raiz: `role="progressbar"`, `aria-valuemin` e `aria-valuemax`
-sempre, `aria-valuenow` só com valor (D1), `aria-valuetext` em duas stacks (D10),
+sempre, `aria-valuenow` só com valor (D1), `aria-valuetext` nas cinco (D10),
 e nome por `aria-labelledby` ou `aria-label` (D8). O valor visível, onde é peça
 da lib, nasce `aria-hidden` — o mesmo número já vai na raiz, e repeti-lo faria o
 leitor ler duas vezes.
@@ -515,8 +543,8 @@ precisar manter alguma transição mínima — re-declare local e comente o moti
 **Duas afirmações do conteúdo que o componente não cumpre, e são de escopo**:
 `accessibility.items.item4` (região viva no texto adjacente) e `item5`
 (`aria-busy="true"` no container) descrevem coisas que quem COMPÕE faz, não o
-componente. A região viva aparece em stories de quatro stacks; o `aria-busy`
-existe numa única story do repositório — `AriaBusyContainer`, no vanilla.
+componente. As duas aparecem em stories das cinco stacks desde 2026-09-14 — a
+região viva em `Animated` e em `WithLabel`, o `aria-busy` em `AriaBusyContainer`.
 
 ## 9. Analytics
 
@@ -529,7 +557,12 @@ Os dois estão tipados em `AnalyticsEvents` nas cinco stacks, e os dois são
 disparados pela APLICAÇÃO, não pelo componente — `notes.item4` diz isso, e é
 coerente com o componente ser passivo.
 
-**Quem dispara de fato, medido em 2026-09-13 nas cinco docs pages:**
+**Desde 2026-09-14 as cinco disparam os dois, e `task_complete` leva `duration_ms`
+nas cinco** — o conteúdo compartilhado o promete no payload. O tipo em
+`AnalyticsEvents` continua opcional, para a aplicação que não mede a duração. A tabela abaixo é o
+estado anterior.
+
+**Quem disparava, medido em 2026-09-13 nas cinco docs pages:**
 
 | stack | dispara | `duration_ms` |
 |---|---|---|
@@ -544,11 +577,11 @@ animada: os valores dela são estáticos. Ou seja, a página ENSINA um evento qu
 ela própria não emite — a mesma forma de defeito que o popover pagou quando
 declarava no tipo uma palavra que não tinha como produzir.
 
-**As quatro que disparam só contam o PRIMEIRO ciclo**, com a mesma justificativa
-escrita nas quatro: a demo reinicia em laço e re-emitir marcos inundaria o
+**As cinco só contam o PRIMEIRO ciclo**, com a mesma justificativa escrita nas
+cinco: a demo reinicia em laço e re-emitir marcos inundaria o
 relatório.
 
-**`task` é id estável** (`"upload"` nas quatro), nunca texto traduzido, e
+**`task` é id estável** (`"upload"` nas cinco), nunca texto traduzido, e
 `location` é `docs_demo`.
 
 ## 10. Reconstruir do zero
@@ -569,21 +602,24 @@ afirmar, e muda qual das duas classes de indicador a stack usa.
   qualquer contagem de filhos.
 - **vue (`reka-ui`)** — dois passos que nenhuma outra stack tem: traduzir
   `data-state="indeterminate"` para o `data-indeterminate` da casa, e saber que a
-  lib fabrica `aria-label` com a porcentagem se ninguém nomear (D9). E a
-  validação de faixa dela não conserta nada por aqui (D5).
+  lib fabrica `aria-label` com a porcentagem se ninguém nomear (D9) — o wrapper
+  passa `getValueLabel` devolvendo `undefined`. E a validação de faixa dela não
+  conserta nada por aqui: quem limita é a regra compartilhada (D5).
 - **svelte (`bits-ui`)** — a raiz publica um atributo `value` no `div`, que é
-  ruído de markup; o valor não é limitado; e o padrão da lib faz `value` ausente
-  virar zero, não indeterminado (D12).
+  ruído de markup; o padrão da lib faz `value` ausente virar zero, e o wrapper
+  precisa desfazer isso (D12); e a lib não tem `aria-valuetext`, que o wrapper
+  escreve (D10).
 - **angular (`radix-ng`)** — a custom property tem de ir como STRING, senão
   algumas versões anexam `px`; host binding de diretiva apaga atributo estático
   do template, então `data-slot` se resolve na diretiva; e o `ngc` é o único
   portão que type-checa a expressão do template.
 - **vanilla** — sem lib: o clamp, o `role`, os três `aria-value*` e o
   `data-indeterminate` são responsabilidade da fábrica, e a barra não anda
-  sozinha — quem a anima reescreve `--value` e `aria-valuenow` por fora.
+  sozinha — quem a anima reescreve `--value`, `aria-valuenow` e `aria-valuetext` por
+  fora.
 
-**E antes de dar por pronto, ligue a preferência de movimento reduzido**: é o
-único comportamento da folha sem portão nenhum (C13).
+**E antes de dar por pronto, ligue a preferência de movimento reduzido** — a
+`ReducedMotion` das cinco faz isso pelo gancho do preview (C13).
 
 ## 11. Onde está a verdade
 
@@ -596,9 +632,10 @@ afirmar, e muda qual das duas classes de indicador a stack usa.
 | contrato de valor e de indeterminado (bloco canônico) | `nortear-design-system-vanilla/src/components/ui/progress.ts`, cabeçalho |
 | as duas anatomias, e como medir o que está na TELA | `docs/shared/testing/progress-probe.ts` |
 | texto das docs pages, props, critérios de teste | `docs/shared/content/progress/translations.json` |
+| omitir, limitar, percentual e texto anunciado | `docs/shared/primitives/progress-value.ts`, testado em `nortear-design-system-vanilla/src/components/ui/progress-value.test.ts` |
 | portões determinísticos | `node scripts/audit.mjs progress --json` |
 
-> **PENDÊNCIA · 2026-09-13** — `node scripts/audit.mjs progress --json` devolve
+> **FECHADA · 2026-09-14** — `node scripts/audit.mjs progress --json` devolvia
 > **19 violações**: as **14** desta linha, que já estavam de pé antes deste
 > arquivo existir, e as 5 da pendência seguinte, que ele criou. Este PRD nasce
 > com as 14 porque foi escrito antes da revisão serial e sem autorização para
@@ -616,8 +653,17 @@ afirmar, e muda qual das duas classes de indicador a stack usa.
 > `dodont_preview_sem_componente`, `source_sem_teste`,
 > `story_file_sem_transform`, `snippet_sem_lastro` e
 > `inline_style_design_value` não reportar mais para este slug.
+> **Como fechou**: a passagem `/pipeline fix progress` de 2026-09-14 alinhou as
+> cinco ao conjunto de stories do vanilla (a `Animated` em estados, compositions
+> criado no angular), deu construtor e teste de snippet por story ao react e ao
+> angular, trocou as larguras inline do vue por `nds-w-md`, tirou o rótulo
+> `percent` da demonstração, e a story `CustomValueText` passou a exercitar a
+> função de texto nas cinco.
 
-**FECHADA em 2026-09-13**, no mesmo dia: a regra da categoria virou
+> **FECHADA · 2026-09-13** — a migração do catálogo das guidelines de stack para
+> este PRD (`catalogo_duplicado_com_prd`).
+
+No mesmo dia a regra da categoria virou
 [`19-feedback.md`](../guidelines/19-feedback.md), o catálogo do Progress ficou
 aqui, e as cópias de react, vue e svelte deixaram de existir — nada nelas era
 daquela stack. O vanilla e o Angular mantêm um arquivo curto com a mecânica
@@ -636,4 +682,3 @@ aposentada, em vez do atributo de variante; e a do svelte tem quatro linhas
 contra as trinta da do react. O que FICA nas guidelines é a regra da
 categoria (quando não mostrar indicador nenhum, `polite` contra `assertive`);
 o catálogo vem para cá.
-slug.

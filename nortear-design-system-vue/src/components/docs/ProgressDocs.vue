@@ -83,8 +83,6 @@ watch(locale, (newLocale) => {
   });
 }, { immediate: true });
 
-// ─── Analytics — section view ─────────────────────────────────────────────────
-
 // ─── Navigation groups ────────────────────────────────────────────────────────
 
 const navGroups = computed(() => [
@@ -134,55 +132,68 @@ const { activeId: activeSection } = useActiveSection(allSectionIds, (id) => {
   });
 });
 
-// ─── Demo animation (uploading file) ──────────────────────────────────────────
+// ─── Demonstração — upload animado ────────────────────────────────────────────
 
 const demoValue = ref(0);
-let demoTimer: ReturnType<typeof setInterval> | null = null;
-// Rastreia marcos apenas no primeiro ciclo da animação — a demo reinicia em
-// loop e re-emitir marcos a cada ciclo geraria spam (mesmo exemplo da Vanilla).
+let demoTimer: ReturnType<typeof setInterval> | undefined;
+// Marcos só no primeiro ciclo: a demo reinicia em loop, e re-emitir a cada
+// ciclo geraria spam no GA4.
 let demoFirstCycleDone = false;
+let demoStartedAt = 0;
 
 onMounted(() => {
+  demoStartedAt = Date.now();
   demoTimer = setInterval(() => {
     demoValue.value = demoValue.value >= 100 ? 0 : demoValue.value + 5;
     const pct = demoValue.value;
     if (!demoFirstCycleDone && (pct === 25 || pct === 50 || pct === 75 || pct === 100)) {
       track('task_progress', { component: 'progress', task: 'upload', percent: pct, location: 'docs_demo' });
       if (pct === 100) {
-        track('task_complete', { component: 'progress', task: 'upload', location: 'docs_demo' });
+        // O conteúdo promete `duration_ms` no payload: o tempo do ciclo inteiro.
+        track('task_complete', {
+          component: 'progress',
+          task: 'upload',
+          duration_ms: Date.now() - demoStartedAt,
+          location: 'docs_demo',
+        });
         demoFirstCycleDone = true;
       }
     }
   }, 400);
 });
 
-onUnmounted(() => {
-  if (demoTimer) { clearInterval(demoTimer); demoTimer = null; }
-});
+onUnmounted(() => clearInterval(demoTimer));
+
+/** Linhas estáticas da demonstração — rótulo, valor e barra, como na referência. */
+const demoStaticRows = computed(() => [
+  { key: 'loading', value: 50, label: tContent('demonstration.labels.loading') },
+  { key: 'complete', value: 100, label: tContent('demonstration.labels.complete') },
+]);
 
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
 const codeImportBasic = `import { Progress } from "@/components/ui/progress";`;
 
-const codeDeterminate = `<Progress :model-value="50" aria-label="Progresso do upload" />`;
+const codeDeterminate = `<Progress :model-value="42" aria-label="Progresso do upload" />`;
 
 const codeWithLabel = `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster nds-text-body" data-justify="between">
     <span class="nds-text-foreground">Enviando arquivo</span>
-    <span class="nds-text-muted-foreground" style="font-variant-numeric: tabular-nums;">42%</span>
+    <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">42%</span>
   </div>
-  <Progress :model-value="42" aria-label="Progresso do upload" />
+  <Progress :model-value="42" aria-label="Enviando arquivo" />
 </div>`;
 
 const codeSemantic = `<Progress :model-value="100" data-variant="success" aria-label="Sincronização concluída" />
-<Progress :model-value="92" data-variant="destructive" aria-label="Espaço quase esgotado" />`;
+<Progress :model-value="92" data-variant="destructive" aria-label="Espaço de armazenamento quase esgotado" />`;
 
-const interfaceCode = `// Progress (Vue)
+const interfaceCode = `// Progress
 interface ProgressProps {
-  modelValue?: number | null;  // 0–100; null = indeterminate
-  max?: number;                // default 100
-  getValueLabel?: (value: number | null | undefined, max: number) => string | undefined;
-  getValueText?:  (value: number | null | undefined, max: number) => string | undefined;
+  modelValue?: number | null;  // omitido ou null = indeterminado
+  min?: number;                // padrão 0
+  max?: number;                // padrão 100
+  getValueText?: (value: number | null | undefined, max: number) => string | undefined;
+  'aria-label'?: string;
   'data-variant'?: 'success' | 'destructive';
   class?: string;
 }`;
@@ -214,9 +225,9 @@ const anatomyItems = computed(() => [
 ]);
 
 const variantItems = computed(() => [
-  { trackId: 'determinate', name: tContent('variants.items.determinate'),   description: stripHtml(tContent('variants.styles.determinate')),   code: codeDeterminate   },
-  { trackId: 'withLabel', name: tContent('variants.items.withLabel'),     description: stripHtml(tContent('variants.styles.withLabel')),     code: codeWithLabel     },
-  { trackId: 'semantic', name: tContent('variants.items.semantic'),      description: stripHtml(tContent('variants.styles.semantic')),      code: codeSemantic      },
+  { trackId: 'determinate', name: tContent('variants.items.determinate'), description: stripHtml(tContent('variants.styles.determinate')), code: codeDeterminate },
+  { trackId: 'withLabel',   name: tContent('variants.items.withLabel'),   description: stripHtml(tContent('variants.styles.withLabel')),   code: codeWithLabel   },
+  { trackId: 'semantic',    name: tContent('variants.items.semantic'),    description: stripHtml(tContent('variants.styles.semantic')),    code: codeSemantic    },
 ]);
 
 const stateItems = computed(() => [
@@ -234,13 +245,26 @@ const propCols = computed(() => ({
   description: tContent('props.table.description'),
 }));
 
+/** Uma linha da tabela a partir de `props.table.<key>`, com o nome da API desta stack. */
+function propRow(name: string, key: string, type?: string) {
+  return {
+    name,
+    type: type ?? tContent(`props.table.${key}.type`),
+    defaultValue: tContent(`props.table.${key}.default`),
+    required: tContent(`props.table.${key}.required`),
+    description: toPlainText(tContent(`props.table.${key}.description`)),
+  };
+}
+
 const progressPropItems = computed(() => [
-  { name: 'modelValue',       type: tContent('props.table.value.type'),            defaultValue: tContent('props.table.value.default'),            required: tContent('props.table.value.required'),            description: toPlainText(tContent('props.table.value.description')) },
-  { name: 'max',              type: tContent('props.table.max.type'),              defaultValue: tContent('props.table.max.default'),              required: tContent('props.table.max.required'),              description: toPlainText(tContent('props.table.max.description')) },
-  { name: 'getValueLabel',    type: '(value, max) => string | undefined',          defaultValue: '—',                                              required: tContent('props.table.getAriaValueText.required'),    description: toPlainText(tContent('props.table.getAriaValueText.description')) },
-  { name: 'data-variant',     type: tContent('props.table.variant.type'),          defaultValue: tContent('props.table.variant.default'),          required: tContent('props.table.variant.required'),          description: toPlainText(tContent('props.table.variant.description')) },
-  { name: 'class',            type: tContent('props.table.className.type'),        defaultValue: tContent('props.table.className.default'),        required: tContent('props.table.className.required'),        description: toPlainText(tContent('props.table.className.description')) },
-  { name: 'aria-label',       type: 'string',                                       defaultValue: '—',                                              required: 'Sim',                                                 description: stripHtml(tContent('accessibility.aria.label')) },
+  propRow('modelValue', 'value'),
+  propRow('min', 'min'),
+  propRow('max', 'max'),
+  propRow('data-variant', 'variant'),
+  propRow('aria-label', 'ariaLabel'),
+  // Nome e assinatura da lib desta stack; a descrição é a compartilhada.
+  propRow('getValueText', 'getAriaValueText', '(value: number | null | undefined, max: number) => string | undefined'),
+  propRow('class', 'className'),
 ]);
 
 const tokenRows = computed(() =>
@@ -258,11 +282,12 @@ const accessibilityItems = computed(() => [
   tContent('accessibility.items.item4'),
   tContent('accessibility.items.item5'),
   tContent('accessibility.items.item6'),
+  tContent('accessibility.aria.valuetext'),
 ]);
 
 const keyboardItems = computed(() => [
-  { key: '—', description: tContent('accessibility.keyboard.noInteraction') },
-  { key: '—', description: tContent('accessibility.keyboard.container')     },
+  { key: '—',   description: tContent('accessibility.keyboard.noInteraction') },
+  { key: 'Tab', description: tContent('accessibility.keyboard.container')     },
 ]);
 
 const relatedItems = computed(() => [
@@ -289,27 +314,28 @@ const a11yCritCols = computed(() => ({
   how: tNav('common.howToVerify'),
 }));
 
-const functionalTestItems = computed(() => [
-  { action: tContent('testes.functional.item1.action'), result: tContent('testes.functional.item1.result'), priority: localPriority(tContent('testes.functional.item1.priority')) },
-  { action: tContent('testes.functional.item2.action'), result: tContent('testes.functional.item2.result'), priority: localPriority(tContent('testes.functional.item2.priority')) },
-  { action: tContent('testes.functional.item3.action'), result: tContent('testes.functional.item3.result'), priority: localPriority(tContent('testes.functional.item3.priority')) },
-  { action: tContent('testes.functional.item4.action'), result: tContent('testes.functional.item4.result'), priority: localPriority(tContent('testes.functional.item4.priority')) },
-]);
+const functionalTestItems = computed(() =>
+  [1, 2, 3, 4, 5, 6, 7].map((i) => ({
+    action: tContent(`testes.functional.item${i}.action`),
+    result: tContent(`testes.functional.item${i}.result`),
+    priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
+  })),
+);
 
-const a11yTestItems = computed(() => [
-  { criterion: tContent('testes.accessibility.item1'), level: 'AA', how: tContent('testes.accessibility.item1') },
-  { criterion: tContent('testes.accessibility.item2'), level: 'AA', how: tContent('testes.accessibility.item2') },
-  { criterion: tContent('testes.accessibility.item3'), level: 'AA', how: tContent('testes.accessibility.item3') },
-  { criterion: tContent('testes.accessibility.item4'), level: 'AA', how: tContent('testes.accessibility.item4') },
-  { criterion: tContent('testes.accessibility.item5'), level: 'AA', how: tContent('testes.accessibility.item5') },
-]);
+const a11yTestItems = computed(() =>
+  [1, 2, 3, 4, 5, 6].map((i) => ({
+    criterion: tContent(`testes.accessibility.item${i}`),
+    level: 'AA',
+    how: tContent(`testes.accessibility.how.item${i}`),
+  })),
+);
 
-const visualTestItems = computed(() => [
-  { story: tContent('testes.visual.item1.story'), priority: localPriority(tContent('testes.visual.item1.priority')) },
-  { story: tContent('testes.visual.item2.story'), priority: localPriority(tContent('testes.visual.item2.priority')) },
-  { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
-  { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
-]);
+const visualTestItems = computed(() =>
+  [1, 2, 3, 4].map((i) => ({
+    story: tContent(`testes.visual.item${i}.story`),
+    priority: localPriority(tContent(`testes.visual.item${i}.priority`)),
+  })),
+);
 </script>
 
 <template>
@@ -328,27 +354,26 @@ const visualTestItems = computed(() => [
     </template>
 
     <!-- ── Demonstração ───────────────────────────────────────────── -->
-    <DocsDemonstration>
+    <DocsDemonstration component-slug="progress">
       <div
-        class="nds-grid nds-w-full"
-        data-cols="2"
+        class="nds-stack nds-w-full"
         data-spacing="lg"
       >
         <!-- Upload animado -->
         <div
-          class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
-          data-spacing="sm"
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
         >
           <div
             class="nds-cluster nds-text-body"
+            data-align="center"
             data-justify="between"
           >
             <span class="nds-text-foreground">{{ tContent('demonstration.labels.upload') }}</span>
             <span
-              class="nds-text-muted-foreground"
-              style="font-variant-numeric: tabular-nums;"
+              class="nds-text-muted-foreground nds-tabular-nums"
               aria-live="polite"
-            >{{ demoValue }}{{ tContent('demonstration.labels.percent') }}</span>
+            >{{ demoValue }}%</span>
           </div>
           <Progress
             :model-value="demoValue"
@@ -356,83 +381,43 @@ const visualTestItems = computed(() => [
           />
         </div>
 
-        <!-- Estados estáticos -->
+        <!-- Carregando e concluído -->
         <div
-          class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
-          style="--stack-gap: var(--spacing-3);"
-        >
-          <div
-            class="nds-stack"
-            data-spacing="xs"
-          >
-            <div class="nds-text-body nds-text-muted-foreground">
-              value=0
-            </div>
-            <Progress
-              :model-value="0"
-              :aria-label="tContent('demonstration.labels.loading')"
-            />
-          </div>
-          <div
-            class="nds-stack"
-            data-spacing="xs"
-          >
-            <div class="nds-text-body nds-text-muted-foreground">
-              value=50
-            </div>
-            <Progress
-              :model-value="50"
-              :aria-label="tContent('demonstration.labels.loading')"
-            />
-          </div>
-          <div
-            class="nds-stack"
-            data-spacing="xs"
-          >
-            <div class="nds-text-body nds-text-muted-foreground">
-              value=100
-            </div>
-            <Progress
-              :model-value="100"
-              :aria-label="tContent('demonstration.labels.complete')"
-            />
-          </div>
-        </div>
-
-        <!-- Indeterminate -->
-        <div
-          class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
-          data-spacing="sm"
-        >
-          <div class="nds-text-body">
-            {{ tContent('demonstration.labels.indeterminate') }}
-          </div>
-          <Progress
-            :model-value="null"
-            :aria-label="tContent('demonstration.labels.indeterminate')"
-          />
-        </div>
-
-        <!-- Cor customizada -->
-        <div
-          class="nds-stack nds-p-4 nds-border-default nds-rounded-md"
-          data-spacing="sm"
+          v-for="row in demoStaticRows"
+          :key="row.key"
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
         >
           <div
             class="nds-cluster nds-text-body"
+            data-align="center"
             data-justify="between"
           >
-            <span class="nds-text-foreground">{{ tContent('demonstration.labels.upload') }}</span>
+            <span class="nds-text-foreground">{{ row.label }}</span>
             <span
-              class="nds-text-muted-foreground"
-              style="font-variant-numeric: tabular-nums;"
-            >75%</span>
+              class="nds-text-muted-foreground nds-tabular-nums"
+              aria-live="polite"
+            >{{ row.value }}%</span>
           </div>
           <Progress
-            :model-value="75"
-            data-variant="success"
-            :aria-label="tContent('demonstration.labels.upload')"
+            :model-value="row.value"
+            :aria-label="row.label"
           />
+        </div>
+
+        <!-- Indeterminado -->
+        <div
+          class="nds-stack nds-w-full"
+          data-spacing="xs"
+        >
+          <div
+            class="nds-cluster nds-text-body"
+            data-align="center"
+            data-justify="between"
+          >
+            <span class="nds-text-foreground">{{ tContent('demonstration.labels.indeterminate') }}</span>
+          </div>
+          <Progress :aria-label="tContent('demonstration.labels.indeterminate')" />
         </div>
       </div>
     </DocsDemonstration>
@@ -511,21 +496,9 @@ const visualTestItems = computed(() => [
         { doLabel: tNav('common.do'), dontLabel: tNav('common.dont'), doCaption: toPlainText(tContent('doDont.pair2.do')), dontCaption: toPlainText(tContent('doDont.pair2.dont')) },
       ]"
     >
+      <!-- Par 1: nome que descreve a operação × nome genérico. -->
       <template #do-preview-0>
-        <div
-          class="nds-stack nds-w-full"
-          data-spacing="xs"
-        >
-          <div
-            class="nds-cluster nds-text-body"
-            data-justify="between"
-          >
-            <span class="nds-text-foreground">Enviando arquivo</span>
-            <span
-              class="nds-text-muted-foreground"
-              style="font-variant-numeric: tabular-nums;"
-            >42%</span>
-          </div>
+        <div class="nds-w-full">
           <Progress
             :model-value="42"
             aria-label="Progresso do upload"
@@ -540,6 +513,7 @@ const visualTestItems = computed(() => [
           />
         </div>
       </template>
+      <!-- Par 2: região polite × assertive, que interrompe a cada avanço. -->
       <template #do-preview-1>
         <div
           class="nds-stack nds-w-full"
@@ -547,12 +521,12 @@ const visualTestItems = computed(() => [
         >
           <div
             class="nds-cluster nds-text-body"
+            data-align="center"
             data-justify="between"
           >
-            <span class="nds-text-foreground">Enviando</span>
+            <span class="nds-text-foreground">{{ tContent('demonstration.labels.upload') }}</span>
             <span
-              class="nds-text-muted-foreground"
-              style="font-variant-numeric: tabular-nums;"
+              class="nds-text-muted-foreground nds-tabular-nums"
               aria-live="polite"
             >50%</span>
           </div>
@@ -569,17 +543,17 @@ const visualTestItems = computed(() => [
         >
           <div
             class="nds-cluster nds-text-body"
+            data-align="center"
             data-justify="between"
           >
-            <span class="nds-text-foreground">Enviando</span>
+            <span class="nds-text-foreground">{{ tContent('demonstration.labels.upload') }}</span>
             <span
-              class="nds-text-muted-foreground"
-              style="font-variant-numeric: tabular-nums;"
+              class="nds-text-muted-foreground nds-tabular-nums"
               aria-live="assertive"
-            >51%</span>
+            >47%</span>
           </div>
           <Progress
-            :model-value="51"
+            :model-value="47"
             aria-label="Progresso do upload"
           />
         </div>
@@ -589,17 +563,19 @@ const visualTestItems = computed(() => [
     <!-- ── Importação ─────────────────────────────────────────────── -->
     <DocsImport
       :code="codeImportBasic"
+      component-slug="progress"
     />
 
     <!-- ── Variantes ──────────────────────────────────────────────── -->
     <DocsVariants
       :items="variantItems"
+      component-slug="progress"
     >
       <template #variant-preview-0>
         <div class="nds-w-full">
           <Progress
-            :model-value="50"
-            aria-label="Progresso de exemplo"
+            :model-value="42"
+            aria-label="Progresso do upload"
           />
         </div>
       </template>
@@ -610,17 +586,18 @@ const visualTestItems = computed(() => [
         >
           <div
             class="nds-cluster nds-text-body"
+            data-align="center"
             data-justify="between"
           >
-            <span class="nds-text-foreground">Enviando arquivo</span>
+            <span class="nds-text-foreground">{{ tContent('demonstration.labels.upload') }}</span>
             <span
-              class="nds-text-muted-foreground"
-              style="font-variant-numeric: tabular-nums;"
+              class="nds-text-muted-foreground nds-tabular-nums"
+              aria-live="polite"
             >42%</span>
           </div>
           <Progress
             :model-value="42"
-            aria-label="Progresso do upload"
+            :aria-label="tContent('demonstration.labels.upload')"
           />
         </div>
       </template>
@@ -688,19 +665,21 @@ const visualTestItems = computed(() => [
     <!-- ── Relacionados ───────────────────────────────────────────── -->
     <DocsRelated
       :items="relatedItems"
+      component-slug="progress"
     />
 
     <!-- ── Notas ──────────────────────────────────────────────────── -->
     <DocsNotes
       :items="noteItems"
+      component-slug="progress"
     />
 
     <!-- ── Analytics ─────────────────────────────────────────────── -->
     <DocsAnalytics
       :cols="{
-        event: tContent('analytics.table.event'),
-        trigger: toPlainText(tContent('analytics.table.trigger')),
-        payload: tContent('analytics.table.payload'),
+        event: tNav('common.event'),
+        trigger: tNav('common.eventTrigger'),
+        payload: tNav('common.payload'),
       }"
       :items="analyticsItems"
     />

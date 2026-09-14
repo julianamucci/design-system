@@ -3,17 +3,23 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_PROGRESS } from './progress';
 import {
+  progressDeterminateSource,
+  progressIndeterminateSource,
+  progressSemanticColorSource,
+  progressWithLabelSource,
+} from './progress.source';
+import {
   barrasDeProgresso,
   contrastBarTrack,
   indicadorDoProgresso,
   accessibleName,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
+import { PROGRESS_INDETERMINATE_TEXT } from '@shared/primitives/progress-value';
 
 // O contraste entre indicador e trilha é medido, não presumido: a trilha é o
 // primário a 20% de opacidade, então o valor real depende do que está ATRÁS
-// dela. A composição, a conta e a busca pelo primeiro ancestral opaco moram no
-// colhedor compartilhado — as cinco stacks medem com o mesmo código.
+// dela. A composição e a conta moram no colhedor compartilhado.
 
 const meta: Meta = {
   title: 'Components/Feedback/Progress/Variants',
@@ -25,7 +31,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'As formas de uso: valor conhecido, valor com rótulo e cor semântica. ' +
+          'As formas de uso: valor conhecido, valor desconhecido, valor com rótulo e cor semântica. ' +
           'Rótulo e valor formatado são partes do próprio componente — não texto solto ao lado.',
       },
     },
@@ -36,7 +42,10 @@ export default meta;
 type Story = StoryObj;
 
 export const Determinate: Story = {
-  parameters: { covers: ['accessibility.item2'] },
+  parameters: {
+    covers: ['accessibility.item2'],
+    docs: { source: { transform: progressDeterminateSource } },
+  },
   render: () => ({
     template: `
       <div class="nds-w-md">
@@ -52,7 +61,9 @@ export const Determinate: Story = {
     const canvas = within(canvasElement);
 
     await step('O valor conhecido é anunciado e desenhado', async () => {
-      await expect(canvas.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '42');
+      const bar = canvas.getByRole('progressbar');
+      await expect(bar).toHaveAttribute('aria-valuenow', '42');
+      await waitFor(() => expect(bar.getAttribute('aria-valuetext')).toBe('42%'));
       const indicador = indicadorDoProgresso(canvasElement);
       await expect(indicador.style.getPropertyValue('--value')).toBe('42');
       await waitFor(async () => {
@@ -69,12 +80,13 @@ export const Determinate: Story = {
 
 export const Indeterminate: Story = {
   parameters: {
+    covers: ['functional.item6'],
     docs: {
+      source: { transform: progressIndeterminateSource },
       description: {
         story:
-          'Sem `value`, o primitivo remove `aria-valuenow` e marca `data-indeterminate`. ' +
-          'O `aria-valuetext` de fallback vem da lib em inglês ("indeterminate progress") e ' +
-          'não é traduzível — anuncie a operação no nome acessível, que é seu.',
+          'Sem valor — o valor OMITIDO, como no `<progress>` nativo — a barra é indeterminada: ' +
+          '`aria-valuenow` some, a escala continua anunciada e o texto é "Em andamento".',
       },
     },
   },
@@ -92,10 +104,24 @@ export const Indeterminate: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Valor desconhecido não vira valor zero', async () => {
+    await step('Valor omitido não vira valor zero', async () => {
       const bar = canvas.getByRole('progressbar', { name: 'Processando…' });
       await expect(bar).not.toHaveAttribute('aria-valuenow');
       await expect(bar).toHaveAttribute('data-indeterminate', '');
+    });
+
+    await step('A escala sobrevive sem o valor', async () => {
+      const bar = canvas.getByRole('progressbar');
+      await expect(bar).toHaveAttribute('aria-valuemin', '0');
+      await expect(bar).toHaveAttribute('aria-valuemax', '100');
+    });
+
+    await step('O texto anunciado é o do design system, não a frase da lib', async () => {
+      // A lib escreve "indeterminate progress", em inglês e fixo.
+      const bar = canvas.getByRole('progressbar');
+      await waitFor(() =>
+        expect(bar.getAttribute('aria-valuetext')).toBe(PROGRESS_INDETERMINATE_TEXT),
+      );
     });
 
     await step('Sem valor não há --value para o CSS consumir', async () => {
@@ -106,7 +132,10 @@ export const Indeterminate: Story = {
 };
 
 export const WithLabel: Story = {
-  parameters: { covers: ['accessibility.item5'] },
+  parameters: {
+    covers: ['accessibility.item5'],
+    docs: { source: { transform: progressWithLabelSource } },
+  },
   render: () => ({
     template: `
       <div class="nds-w-md">
@@ -124,11 +153,10 @@ export const WithLabel: Story = {
     const canvas = within(canvasElement);
 
     await step('O rótulo visível vira o nome acessível da barra', async () => {
-      // Com rótulo presente, o nome sai de `aria-labelledby` — não é preciso
-      // repetir a frase num `aria-label`, que só duplicaria a manutenção. É por
-      // isso que o critério fala em NOME ACESSÍVEL, e não em `aria-label`.
+      // Com rótulo presente, o nome sai de `aria-labelledby` — por isso o
+      // critério fala em NOME ACESSÍVEL, e não em `aria-label`.
       const bar = canvas.getByRole('progressbar', { name: 'Enviando arquivo' });
-      const label = canvasElement.querySelector<HTMLElement>('[data-slot="progress-label"]')!;
+      const label = canvasElement.querySelector<HTMLElement>('.nds-progress-label')!;
       await expect(bar.getAttribute('aria-labelledby')).toBe(label.id);
     });
 
@@ -138,15 +166,15 @@ export const WithLabel: Story = {
       }
     });
 
-    await step('O valor formatado é escrito pelo componente, não pela aplicação', async () => {
-      const value = canvasElement.querySelector<HTMLElement>('[data-slot="progress-value"]')!;
-      await expect(value.textContent?.trim()).toBe('42%');
+    await step('O valor visível é o mesmo texto que a raiz anuncia', async () => {
+      const bar = canvas.getByRole('progressbar');
+      const value = canvasElement.querySelector<HTMLElement>('.nds-progress-value')!;
+      await waitFor(() => expect(value.textContent?.trim()).toBe('42%'));
+      await expect(bar.getAttribute('aria-valuetext')).toBe('42%');
     });
 
     await step('O valor visível não é lido duas vezes', async () => {
-      // A raiz já anuncia 42 em aria-valuenow; o texto ao lado é redundância
-      // visual, e o primitivo o esconde do leitor de propósito.
-      const value = canvasElement.querySelector<HTMLElement>('[data-slot="progress-value"]')!;
+      const value = canvasElement.querySelector<HTMLElement>('.nds-progress-value')!;
       await expect(value).toHaveAttribute('aria-hidden', 'true');
     });
   },
@@ -155,6 +183,7 @@ export const WithLabel: Story = {
 export const SemanticColor: Story = {
   parameters: {
     docs: {
+      source: { transform: progressSemanticColorSource },
       description: {
         story:
           '`data-variant` troca a cor da barra; a trilha continua neutra, para o contraste ' +

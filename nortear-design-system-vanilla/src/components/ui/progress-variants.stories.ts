@@ -14,6 +14,7 @@ import {
   accessibleName,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
+import { PROGRESS_INDETERMINATE_TEXT } from '@shared/primitives/progress-value';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -70,28 +71,39 @@ export const Determinate: Story = {
 
 export const Indeterminate: Story = {
   parameters: {
-    // Override de story: `value: null` é o assunto, e o snippet do meta parte
+    covers: ['functional.item6'],
+    // Override de story: o valor OMITIDO é o assunto, e o snippet do meta parte
     // de um valor conhecido.
     docs: {
       source: {
-        transform: progressSourceWith({ value: null, 'aria-label': 'Processando…' }),
+        transform: progressSourceWith({ valueOmitted: true, 'aria-label': 'Processando…' }),
       },
     },
   },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-md';
-    const bar = createProgress({ value: null, 'aria-label': 'Processando…' });
+    // Sem `value`, de propósito: omitir é indeterminado, igual ao `<progress>`
+    // nativo. Até 2026-09-14 esta fábrica dava zero — uma barra vazia que
+    // parece travada.
+    const bar = createProgress({ 'aria-label': 'Processando…' });
     wrap.appendChild(bar);
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await step('Valor desconhecido não vira valor zero', async () => {
+    await step('Valor omitido não vira valor zero', async () => {
       const bar = canvas.getByRole('progressbar', { name: 'Processando…' });
       await expect(bar).not.toHaveAttribute('aria-valuenow');
       await expect(bar).toHaveAttribute('data-indeterminate', '');
+    });
+
+    await step('A escala sobrevive sem valor, e o texto diz que está em andamento', async () => {
+      const bar = canvas.getByRole('progressbar');
+      await expect(bar).toHaveAttribute('aria-valuemin', '0');
+      await expect(bar).toHaveAttribute('aria-valuemax', '100');
+      await expect(bar).toHaveAttribute('aria-valuetext', PROGRESS_INDETERMINATE_TEXT);
     });
 
     await step('Sem valor, --value não é escrita no indicador', async () => {
@@ -182,7 +194,7 @@ export const SemanticColor: Story = {
             variant: 'destructive',
             'aria-label': 'Espaço de armazenamento quase esgotado',
           },
-        ]),
+        ], 'sm'),
       },
     },
   },

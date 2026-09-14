@@ -5,7 +5,13 @@ import { NDS_PROGRESS } from './progress';
 import { progressPlaygroundSource, type ProgressArgs } from './progress.source';
 import { NdsProgressDocs } from '@/components/docs/ProgressDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { percentualDesenhado } from '@shared/testing/progress-probe';
+import { indicadorDoProgresso, percentualDesenhado } from '@shared/testing/progress-probe';
+import {
+  progressPercent,
+  progressValueText,
+  resolveProgressRange,
+  resolveProgressValue,
+} from '@shared/primitives/progress-value';
 
 const meta: Meta<ProgressArgs> = {
   title: 'Components/Feedback/Progress',
@@ -17,23 +23,28 @@ const meta: Meta<ProgressArgs> = {
   },
   argTypes: {
     value: {
-      control: { type: 'number', min: 0, max: 100, step: 1 },
-      description: 'Valor atual da escala. Omitido (ou nulo) ativa o modo indeterminate.',
+      control: { type: 'number', step: 1 },
+      description: 'Valor atual da escala. Omitido (ou nulo) ativa o modo indeterminado; fora da faixa, é limitado.',
     },
     min: {
-      control: { type: 'number', min: 0, step: 1 },
+      control: { type: 'number', step: 1 },
       description: 'Valor mínimo da escala.',
     },
     max: {
-      control: { type: 'number', min: 1, step: 1 },
+      control: { type: 'number', step: 1 },
       description: 'Valor máximo da escala.',
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['', 'success', 'destructive'],
+      description: 'Cor semântica da barra (`data-variant`). Vazio, a barra usa o primário.',
     },
     ariaLabel: {
       control: 'text',
       description: 'Nome acessível — descreve a operação medida, não o componente.',
     },
   },
-  args: { value: 42, min: 0, max: 100, ariaLabel: 'Progresso do upload' },
+  args: { value: 42, min: 0, max: 100, variant: '', ariaLabel: 'Progresso do upload' },
 };
 
 export default meta;
@@ -42,10 +53,9 @@ type Story = StoryObj<ProgressArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: progressPlaygroundSource } },
-    // `accessibility.item5` saiu daqui: ele fala de nome acessível em TODO
-    // exemplo, e o exemplo que exercita o caminho difícil — nome vindo do
-    // rótulo, via `aria-labelledby`, sem `aria-label` nenhum — é o WithLabel.
-    // Declarado no Playground, o item passava por um único `aria-label`.
+    // `accessibility.item5` mora no WithLabel: ele fala de nome acessível em
+    // TODO exemplo, e o caminho difícil — nome vindo do rótulo, via
+    // `aria-labelledby` — é o de lá.
     covers: ['accessibility.item1', 'accessibility.item3', 'accessibility.item4'],
   },
   render: (args) => ({
@@ -57,6 +67,7 @@ export const Playground: Story = {
           [value]="value"
           [min]="min"
           [max]="max"
+          [attr.data-variant]="variant || null"
           [attr.aria-label]="ariaLabel"
         >
           <div ndsProgressTrack>
@@ -68,45 +79,61 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
+    // O esperado sai da regra compartilhada, e não de uma conta refeita aqui:
+    // é ela que as cinco stacks prometem seguir.
+    const range = resolveProgressRange(args.min, args.max);
+    const value = resolveProgressValue(args.value, range);
+    const percent = progressPercent(value, range);
 
     await step('A raiz é anunciada como barra de progresso, com nome próprio', async () => {
-      // `role` e o nome vêm de lados diferentes: o papel é do primitivo, o nome
-      // é de quem usa. As duas metades juntas é que fazem o anúncio útil.
       const bar = canvas.getByRole('progressbar', { name: args.ariaLabel });
       await expect(bar.getAttribute('data-slot')).toBe('progress');
     });
 
     await step('A escala inteira chega ao leitor de tela', async () => {
       const bar = canvas.getByRole('progressbar');
-      await expect(bar).toHaveAttribute('aria-valuenow', String(args.value));
-      await expect(bar).toHaveAttribute('aria-valuemin', String(args.min));
-      await expect(bar).toHaveAttribute('aria-valuemax', String(args.max));
+      await expect(bar).toHaveAttribute('aria-valuemin', String(range.min));
+      await expect(bar).toHaveAttribute('aria-valuemax', String(range.max));
+      if (value === null) {
+        await expect(bar).not.toHaveAttribute('aria-valuenow');
+      } else {
+        await expect(bar).toHaveAttribute('aria-valuenow', String(value));
+      }
     });
 
-    await step('Trilha e indicador existem como partes distintas', async () => {
-      await expect(canvasElement.querySelector('[data-slot="progress-track"]')).not.toBeNull();
-      await expect(canvasElement.querySelector('[data-slot="progress-indicator"]')).not.toBeNull();
+    await step('O texto anunciado é o da regra compartilhada', async () => {
+      // A lib escreve o próprio texto — em inglês no indeterminado. O que vale
+      // é o do componente, que escreve depois dela.
+      const bar = canvas.getByRole('progressbar');
+      await waitFor(() =>
+        expect(bar.getAttribute('aria-valuetext')).toBe(progressValueText(value, range)),
+      );
+    });
+
+    await step('A barra é passiva: não entra na ordem do Tab', async () => {
+      await expect(canvas.getByRole('progressbar')).not.toHaveAttribute('tabindex');
     });
 
     await step('O percentual vira a custom property que o CSS lê', async () => {
-      // O primitivo do Radix NG não escreve largura nem transform: publica
-      // `data-percent` e deixa o desenho para o CSS, que lê `--value`. Se este
-      // componente escrevesse `width` inline, sobrescreveria a regra do design
-      // system em vez de alimentá-la — e as outras stacks divergiriam.
-      const indicador = canvasElement.querySelector<HTMLElement>(
-        '[data-slot="progress-indicator"]',
-      )!;
-      const esperado = ((args.value - args.min) / (args.max - args.min)) * 100;
-      await expect(Number(indicador.style.getPropertyValue('--value'))).toBeCloseTo(esperado, 3);
+      // O primitivo não escreve largura nem transform: o CSS lê `--value`, que
+      // é PERCENTUAL, e não o número cru — com mínimo diferente de zero, os
+      // dois divergem.
+      const indicador = indicadorDoProgresso(canvasElement);
+      const written = indicador.style.getPropertyValue('--value');
+      if (percent === null) {
+        await expect(written).toBe('');
+      } else {
+        await expect(Number(written)).toBeCloseTo(percent, 3);
+      }
     });
 
-    await step('A barra desenhada corresponde ao percentual pedido', async () => {
-      // Medir é o único jeito de saber que a custom property foi CONSUMIDA:
-      // `--value` correto com o CSS ausente passaria no passo anterior.
-      const esperado = ((args.value - args.min) / (args.max - args.min)) * 100;
-      await waitFor(async () => {
-        await expect(Math.abs(percentualDesenhado(canvasElement) - esperado)).toBeLessThan(2);
+    if (percent !== null) {
+      await step('A barra desenhada corresponde ao percentual', async () => {
+        // Medir é o único jeito de saber que a custom property foi CONSUMIDA.
+        await waitFor(async () => {
+          await expect(Math.abs(percentualDesenhado(canvasElement) - percent)).toBeLessThan(2);
+        });
       });
-    });
+    }
   },
 };

@@ -53,34 +53,28 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 // cinco stacks —, e o override saiu junto: override que repete a fonte só
 // duplica manutenção.
 //
-// `props.table.getAriaValueText` descreve a assinatura de uma prop de outra
-// forma de API: aqui o formatador recebe também `min` e `max`, e o texto que
-// ele devolve alimenta tanto o anúncio quanto o valor visível.
+// `props.table.getAriaValueText.type` é a assinatura DESTA stack: o formatador
+// recebe o valor já limitado (ou `null` no indeterminado), o mínimo e o máximo.
+// Tipo não se traduz, então vale para os três idiomas.
 const { t, dict } = useTranslation(progressTranslations as Record<string, unknown>, {
+  '*': {
+    'props.table.getAriaValueText.type': '(value: number | null, min: number, max: number) => string',
+  },
   'pt-BR': {
     'notes.item1':
-      '<strong>Primitivo</strong>: <code>@radix-ng/primitives/progress</code> — entrega <code>role</code>, a família <code>aria-value*</code>, o vínculo com o rótulo e o texto formatado do valor.',
-    'props.table.getAriaValueText.type': '(value, min, max) => string',
-    'props.table.getAriaValueText.description':
-      'Formata o valor. O texto devolvido vai para o anúncio do leitor de tela e para a parte de valor visível.',
+      '<strong>Primitivo</strong>: <code>@radix-ng/primitives/progress</code> — entrega <code>role</code>, a família <code>aria-value*</code>, o vínculo com o rótulo e o clamp do valor. O texto anunciado é do design system.',
     'props.table.className.description':
       'Classes extras vão no atributo class do próprio elemento — o framework as mescla com as do componente.',
   },
   en: {
     'notes.item1':
-      '<strong>Primitive</strong>: <code>@radix-ng/primitives/progress</code> — provides <code>role</code>, the <code>aria-value*</code> family, the link to the label and the formatted value text.',
-    'props.table.getAriaValueText.type': '(value, min, max) => string',
-    'props.table.getAriaValueText.description':
-      'Formats the value. The returned text feeds both the screen reader announcement and the visible value part.',
+      '<strong>Primitive</strong>: <code>@radix-ng/primitives/progress</code> — provides <code>role</code>, the <code>aria-value*</code> family, the link to the label and the value clamp. The announced text comes from the design system.',
     'props.table.className.description':
       'Extra classes go on the class attribute of the element itself — the framework merges them with the component ones.',
   },
   es: {
     'notes.item1':
-      '<strong>Primitivo</strong>: <code>@radix-ng/primitives/progress</code> — aporta <code>role</code>, la familia <code>aria-value*</code>, el vínculo con la etiqueta y el texto formateado del valor.',
-    'props.table.getAriaValueText.type': '(value, min, max) => string',
-    'props.table.getAriaValueText.description':
-      'Formatea el valor. El texto devuelto alimenta tanto el anuncio del lector de pantalla como la parte de valor visible.',
+      '<strong>Primitivo</strong>: <code>@radix-ng/primitives/progress</code> — aporta <code>role</code>, la familia <code>aria-value*</code>, el vínculo con la etiqueta y el límite del valor. El texto anunciado es del design system.',
     'props.table.className.description':
       'Las clases extra van en el atributo class del propio elemento — el framework las combina con las del componente.',
   },
@@ -118,15 +112,18 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 ];
 
 const INTERFACE_CODE = `// Cinco diretivas de atributo em elementos nativos
+export type ProgressValueTextFormatter =
+  (value: number | null, min: number, max: number) => string;
+
 @Directive({
   selector: 'div[ndsProgress]',
-  hostDirectives: [
-    { directive: RdxProgressRootDirective,
-      inputs: ['value', 'min', 'max', 'valueLabel: getAriaValueText'] },
-  ],
+  hostDirectives: [{ directive: RdxProgressRootDirective, inputs: ['value', 'min', 'max'] }],
   host: { class: 'nds-progress-root', '[attr.data-slot]': '"progress"' },
 })
-export class NdsProgress {}
+export class NdsProgress {
+  // Ausente, o texto anunciado é o percentual — ou "Em andamento" sem valor.
+  readonly getAriaValueText = input<ProgressValueTextFormatter | undefined>();
+}
 
 // A posição da barra sai da custom property que o CSS compartilhado lê:
 //   host: { '[style.--value]': 'valueCss()' }   // 0–100, do primitivo
@@ -161,9 +158,16 @@ const TOKEN_ROWS = [
   { token: '--duration-stately',  k: 'motionIndeterminate' },
 ] as const;
 
-const CODE_SEMANTIC = `<div ndsProgress [value]="100" data-variant="success" aria-label="Sincronização concluída">
-  <div ndsProgressTrack>
-    <div ndsProgressIndicator></div>
+const CODE_SEMANTIC = `<div class="nds-stack nds-w-full" data-spacing="sm">
+  <div ndsProgress [value]="100" data-variant="success" aria-label="Sincronização concluída">
+    <div ndsProgressTrack>
+      <div ndsProgressIndicator></div>
+    </div>
+  </div>
+  <div ndsProgress [value]="92" data-variant="destructive" aria-label="Espaço de armazenamento quase esgotado">
+    <div ndsProgressTrack>
+      <div ndsProgressIndicator></div>
+    </div>
   </div>
 </div>`;
 
@@ -190,7 +194,7 @@ const CODE_WITH_LABEL = `<div ndsProgress [value]="42">
   template: `
     <ng-template #tplDoDont1Do>
       <div class="nds-w-full">
-        <div ndsProgress [value]="72" [attr.aria-label]="t('demonstration.labels.upload')">
+        <div ndsProgress [value]="42" aria-label="Progresso do upload">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
           </div>
@@ -199,18 +203,22 @@ const CODE_WITH_LABEL = `<div ndsProgress [value]="42">
     </ng-template>
     <ng-template #tplDoDont1Dont>
       <div class="nds-w-full">
-        <div ndsProgress [value]="72" aria-label="Progress">
+        <div ndsProgress [value]="42" aria-label="Barra">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
           </div>
         </div>
       </div>
     </ng-template>
+    <!-- O par 2 é o mesmo bloco com UMA diferença: a região que anuncia o valor.
+         polite espera o leitor terminar; assertive o interrompe a cada avanço. -->
     <ng-template #tplDoDont2Do>
-      <div class="nds-w-full">
-        <div ndsProgress [value]="70">
-          <span ndsProgressLabel>{{ t('demonstration.labels.upload') }}</span>
-          <span ndsProgressValue></span>
+      <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+          <span class="nds-text-foreground">{{ t('demonstration.labels.upload') }}</span>
+          <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">50%</span>
+        </div>
+        <div ndsProgress [value]="50" aria-label="Progresso do upload">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
           </div>
@@ -218,15 +226,16 @@ const CODE_WITH_LABEL = `<div ndsProgress [value]="42">
       </div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <div class="nds-w-full">
-        <div ndsProgress [value]="71" [attr.aria-label]="t('demonstration.labels.upload')">
+      <div class="nds-stack nds-w-full" data-spacing="xs">
+        <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+          <span class="nds-text-foreground">{{ t('demonstration.labels.upload') }}</span>
+          <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="assertive">47%</span>
+        </div>
+        <div ndsProgress [value]="47" aria-label="Progresso do upload">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
           </div>
         </div>
-        <p class="nds-text-caption nds-text-muted-foreground" aria-live="assertive">
-          71{{ t('demonstration.labels.percent') }}
-        </p>
       </div>
     </ng-template>
 
@@ -287,31 +296,42 @@ const CODE_WITH_LABEL = `<div ndsProgress [value]="42">
       <ng-container docsMain>
         <nds-docs-demonstration>
           <div class="nds-stack nds-w-full" data-spacing="lg">
-            <div ndsProgress [value]="72">
-              <span ndsProgressLabel>{{ t('demonstration.labels.upload') }}</span>
-              <span ndsProgressValue></span>
-              <div ndsProgressTrack>
-                <div ndsProgressIndicator></div>
+            <!-- A linha que avança: o valor anda a cada 400ms e o texto ao lado
+                 anuncia em região polite. -->
+            <div class="nds-stack nds-w-full" data-spacing="xs">
+              <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+                <span class="nds-text-foreground">{{ t('demonstration.labels.upload') }}</span>
+                <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">{{ demoPercent() }}%</span>
+              </div>
+              <div ndsProgress [value]="demoPercent()" [attr.aria-label]="t('demonstration.labels.upload')">
+                <div ndsProgressTrack>
+                  <div ndsProgressIndicator></div>
+                </div>
               </div>
             </div>
 
-            <div ndsProgress [value]="35" [attr.aria-label]="t('demonstration.labels.loading')">
-              <div ndsProgressTrack>
-                <div ndsProgressIndicator></div>
+            @for (row of demoRows(); track row.value) {
+              <div class="nds-stack nds-w-full" data-spacing="xs">
+                <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+                  <span class="nds-text-foreground">{{ row.label }}</span>
+                  <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">{{ row.value }}%</span>
+                </div>
+                <div ndsProgress [value]="row.value" [attr.aria-label]="row.label">
+                  <div ndsProgressTrack>
+                    <div ndsProgressIndicator></div>
+                  </div>
+                </div>
               </div>
-            </div>
+            }
 
-            <div ndsProgress [value]="100">
-              <span ndsProgressLabel>{{ t('demonstration.labels.complete') }}</span>
-              <span ndsProgressValue></span>
-              <div ndsProgressTrack>
-                <div ndsProgressIndicator></div>
+            <div class="nds-stack nds-w-full" data-spacing="xs">
+              <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
+                <span class="nds-text-foreground">{{ t('demonstration.labels.indeterminate') }}</span>
               </div>
-            </div>
-
-            <div ndsProgress [attr.aria-label]="t('demonstration.labels.indeterminate')">
-              <div ndsProgressTrack>
-                <div ndsProgressIndicator></div>
+              <div ndsProgress [value]="null" [attr.aria-label]="t('demonstration.labels.indeterminate')">
+                <div ndsProgressTrack>
+                  <div ndsProgressIndicator></div>
+                </div>
               </div>
             </div>
           </div>
@@ -355,6 +375,8 @@ const CODE_WITH_LABEL = `<div ndsProgress [value]="42">
         <nds-docs-props
           [tables]="propTables()"
           [interfaceCode]="interfaceCode"
+          [extensibilityTitle]="t('props.extensibilityTitle')"
+          [extensibilityCode]="t('props.extensibilityCode')"
         />
 
         <nds-docs-tokens
@@ -369,7 +391,7 @@ const CODE_WITH_LABEL = `<div ndsProgress [value]="42">
           [items]="a11yItems()"
           [keyboardTitle]="t('accessibility.keyboard.title')"
           [keyboardItems]="keyboardItems()"
-          [screenReaderTitle]="t('accessibility.screenReader.title')"
+          [screenReaderTitle]="tNav('common.screenReader')"
           [screenReaderItems]="screenReaderItems()"
         />
 
@@ -401,6 +423,19 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
   protected readonly importCode = `import { NDS_PROGRESS } from '@/components/ui/progress';`;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
+
+  /** O valor da linha que avança na demonstração. */
+  protected readonly demoPercent = signal(0);
+
+  protected readonly demoRows = computed(() => {
+    dict();
+    return [
+      { value: 50, label: t('demonstration.labels.loading') },
+      { value: 100, label: t('demonstration.labels.complete') },
+    ];
+  });
+
+  private demoTimer: ReturnType<typeof setInterval> | undefined;
 
   private readonly tplDoDont1Do = viewChild.required<TemplateRef<unknown>>('tplDoDont1Do');
   private readonly tplDoDont1Dont = viewChild.required<TemplateRef<unknown>>('tplDoDont1Dont');
@@ -454,14 +489,10 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
         do: t('usage.uxWriting.table.correct'),
         dont: t('usage.uxWriting.table.avoid'),
       },
-      // Os nomes de parte vêm do conteúdo compartilhado em forma neutra
-      // (ProgressLabel/ProgressValue); aqui as partes são diretivas.
-      items: [
-        { key: 'label', name: 'ndsProgressLabel' },
-        { key: 'value', name: 'ndsProgressValue' },
-        { key: 'ariaLabel', name: 'aria-label' },
-      ].map(({ key, name }) => ({
-        element: name,
+      // O elemento é o nome em palavras do conteúdo compartilhado: a tabela fala
+      // de texto que alguém escreve, não da peça que o recebe.
+      items: ['label', 'value', 'ariaLabel'].map((key) => ({
+        element: t(`usage.uxWriting.table.${key}.name`),
         rules: t(`usage.uxWriting.table.${key}.format`),
         do: t(`usage.uxWriting.table.${key}.good`),
         dont: t(`usage.uxWriting.table.${key}.bad`),
@@ -559,8 +590,9 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
           { key: 'value', name: 'value' },
           { key: 'min', name: 'min' },
           { key: 'max', name: 'max' },
-          { key: 'getAriaValueText', name: 'getAriaValueText' },
           { key: 'variant', name: 'data-variant' },
+          { key: 'ariaLabel', name: 'aria-label' },
+          { key: 'getAriaValueText', name: 'getAriaValueText' },
           { key: 'className', name: 'class' },
         ].map(({ key, name }) => ({
           name: name,
@@ -596,7 +628,12 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
 
   protected readonly a11yItems = computed(() => {
     dict();
-    return [1, 2, 3, 4, 5, 6].map((i) => t(`accessibility.items.item${i}`));
+    // `aria.valuetext` entra junto: é o atributo que as cinco stacks passaram a
+    // escrever, e a lista de itens não o nomeia.
+    return [
+      ...[1, 2, 3, 4, 5, 6].map((i) => t(`accessibility.items.item${i}`)),
+      t('accessibility.aria.valuetext'),
+    ];
   });
 
   protected readonly keyboardItems = computed(() => {
@@ -641,9 +678,9 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
   protected readonly analyticsCols = computed(() => {
     dict();
     return {
-      event: t('analytics.table.event'),
-      trigger: t('analytics.table.trigger'),
-      payload: t('analytics.table.payload'),
+      event: tNav('common.event'),
+      trigger: tNav('common.eventTrigger'),
+      payload: tNav('common.payload'),
     };
   });
 
@@ -677,17 +714,19 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly testesAccessibility = computed(() => {
-    dict();
-    // Critério como frase única, não {criterion, level, how} — mesma forma do
-    // skeleton e do label.
+    const d = dict();
+    // Critério como frase única; o "como verificar" vem do conteúdo, item a
+    // item. A contagem sai do dicionário, e não de uma lista fixa: a fixa
+    // escondia o sexto item.
+    const count = Object.keys(d).filter((k) => /^testes\.accessibility\.item\d+$/.test(k)).length;
     return {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: [1, 2, 3, 4, 5].map((i) => ({
-        criterion: toPlainText(t(`testes.accessibility.item${i}`)),
-        level: '—',
-        how: 'axe + play',
+      items: Array.from({ length: count }, (_, i) => ({
+        criterion: toPlainText(t(`testes.accessibility.item${i + 1}`)),
+        level: 'AA',
+        how: toPlainText(t(`testes.accessibility.how.item${i + 1}`)),
       })),
     };
   });
@@ -716,6 +755,13 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
         description: t('seo.description'),
         locale,
         componentSlug: 'progress',
+        aiSummary: t('seo.aiSummary'),
+        aiEntities: t('seo.aiEntities'),
+        breadcrumb: [
+          { name: 'Components', item: '/components' },
+          { name: t('category'), item: '/components/feedback' },
+          { name: t('title') },
+        ],
       });
       track('docs_page_view', {
         component_name: 'progress',
@@ -727,6 +773,7 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.startDemo();
     this.observer = createActiveSectionObserver(
       [...SECTION_IDS],
       (id) => document.getElementById(id),
@@ -742,6 +789,32 @@ export class NdsProgressDocs implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
+    clearInterval(this.demoTimer);
+  }
+
+  /**
+   * A linha que avança. Os marcos (25, 50, 75, 100) viram `task_progress` e o
+   * fim vira `task_complete` com a duração — só no PRIMEIRO ciclo: a demo
+   * reinicia em laço, e reemitir a cada volta seria ruído no GA4.
+   */
+  private startDemo(): void {
+    const startedAt = performance.now();
+    let firstCycleDone = false;
+    this.demoTimer = setInterval(() => {
+      const percent = this.demoPercent() >= 100 ? 0 : this.demoPercent() + 5;
+      this.demoPercent.set(percent);
+      if (firstCycleDone || percent === 0 || percent % 25 !== 0) return;
+      track('task_progress', { component: 'progress', task: 'upload', percent, location: 'docs_demo' });
+      if (percent === 100) {
+        track('task_complete', {
+          component: 'progress',
+          task: 'upload',
+          duration_ms: Math.round(performance.now() - startedAt),
+          location: 'docs_demo',
+        });
+        firstCycleDone = true;
+      }
+    }, 400);
   }
 }
 

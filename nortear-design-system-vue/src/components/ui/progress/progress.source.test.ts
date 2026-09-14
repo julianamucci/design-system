@@ -1,213 +1,188 @@
 import { describe, expect, it } from 'vitest';
 import {
-  progressLoadingSource,
-  progressWithLabelSource,
-  progressConcluidoSource,
-  progressColorSemanticaSource,
-  listProgressColorsSource,
-  progressDeterminadoSource,
-  progressIndeterminadoSource,
-  progressListSource,
-  progressProcessandoServidorSource,
-  progressProcessandoSource,
+  progressAnimatedSource,
+  progressAriaBusyContainerSource,
+  progressBarSnippet,
+  progressCustomColorSource,
+  progressCustomValueTextSource,
+  progressFileUploadSource,
+  progressMultipleUploadsSource,
+  progressSemanticColorSource,
   progressSource,
-  progressUploadAnimadoSource,
-  progressZeroSource,
+  progressWithLabelSource,
+  progressWizardStepsSource,
 } from './progress.source';
 
-describe('progressSource', () => {
-  it('sem args, entrega a barra com rótulo, porcentagem e nome próprio', () => {
+const IMPORT = `import { Progress } from '@/components/ui/progress'`;
+
+describe('progressSource (Playground)', () => {
+  it('sem args, entrega a barra nua com valor e nome próprio', () => {
     expect(progressSource()).toBe(
       `<script setup lang="ts">
-import { Progress } from '@/components/ui/progress'
+${IMPORT}
 </script>
 
 <template>
-  <div class="nds-stack" data-spacing="xs">
-    <div class="nds-cluster nds-text-body" data-align="center" data-justify="between">
-      <span class="nds-text-foreground">Enviando arquivo</span>
-      <span class="nds-text-muted-foreground nds-tabular-nums" aria-live="polite">0%</span>
-    </div>
-    <Progress :model-value="0" aria-label="Progresso do upload" />
-  </div>
+  <Progress :model-value="42" aria-label="Progresso do upload" />
 </template>`,
     );
   });
 
-  it('o valor do control chega junto à barra e ao número ao lado', () => {
-    // Dois números calculados à parte divergem; aqui os dois saem do mesmo arg.
-    const saida = progressSource('', { args: { modelValue: 42 } });
-    expect(saida).toContain(':model-value="42"');
-    expect(saida).toContain('>42%</span>');
+  it('omitir o valor é o indeterminado: null não escreve atributo de valor', () => {
+    const saida = progressSource('', { args: { modelValue: null } });
+    expect(saida).not.toContain(':model-value');
+    expect(saida).toContain('<Progress aria-label="Progresso do upload" />');
   });
 
-  it('o valor sai escrito mesmo batendo com o padrão — ele é a API inteira', () => {
-    // `0` e `null` desenham telas quase idênticas, e só uma delas informa o
-    // progresso ao leitor de tela. Omitir o zero deixaria as duas
-    // indistinguíveis justamente onde a diferença importa.
+  it('o zero sai escrito — é o que o separa do indeterminado', () => {
     expect(progressSource('', { args: { modelValue: 0 } })).toContain(':model-value="0"');
-    expect(progressSource('', { args: { modelValue: null } })).toContain(':model-value="null"');
   });
 
-  it('a escala máxima, essa sim, some quando é a de fábrica', () => {
-    expect(progressSource('', { args: { max: 100 } })).not.toContain(':max=');
-    expect(progressSource('', { args: { max: 60 } })).toContain(':max="60"');
+  it('min e max só aparecem quando diferem do padrão', () => {
+    expect(progressSource('', { args: { min: 0, max: 100 } })).not.toMatch(/:min=|:max=/);
+    const saida = progressSource('', { args: { min: 20, max: 60 } });
+    expect(saida).toContain(':min="20"');
+    expect(saida).toContain(':max="60"');
   });
 
-  it('ignora control que não é número — o espião de ação vira ruído no painel', () => {
+  it('a variante vira data-variant, e o vazio do control não escreve nada', () => {
+    expect(progressSource('', { args: { variant: 'success' } })).toContain('data-variant="success"');
+    expect(progressSource('', { args: { variant: '' } })).not.toContain('data-variant');
+  });
+
+  it('o nome acessível do control chega ao snippet', () => {
+    expect(progressSource('', { args: { ariaLabel: 'Progresso da exportação' } })).toContain(
+      'aria-label="Progresso da exportação"',
+    );
+  });
+
+  it('ignora control que não é número nem string — o espião vira ruído', () => {
     const saida = progressSource('', {
-      args: { modelValue: (() => {}) as never, max: (() => {}) as never },
+      args: { modelValue: (() => {}) as never, max: (() => {}) as never, ariaLabel: (() => {}) as never },
     });
-    expect(saida).not.toContain('function');
+    expect(saida).not.toContain('=>');
     expect(saida).not.toContain('NaN');
     expect(saida).not.toContain(':max=');
-    expect(saida).toContain(':model-value="0"');
+    expect(saida).toContain('aria-label="Progresso do upload"');
   });
 });
 
-describe('transforms das stories de variante', () => {
-  it('o valor conhecido é a barra sozinha, sem medida de largura cravada', () => {
-    const saida = progressDeterminadoSource();
-    expect(saida).toContain('<Progress :model-value="42" aria-label="Progresso do upload" />');
-    // A barra ocupa a largura de quem a contém: não há prop de largura, e a
-    // medida cravada da story existe só para a foto sair sempre igual.
-    expect(saida).not.toContain('width');
+describe('barra sozinha — variantes e estados', () => {
+  it('bate com a story Determinate', () => {
+    expect(progressBarSnippet({ value: 42, label: 'Progresso do upload' })).toContain(
+      '<Progress :model-value="42" aria-label="Progresso do upload" />',
+    );
   });
 
-  it('o indeterminado é `null`, e não um número pequeno', () => {
-    const saida = progressIndeterminadoSource();
-    expect(saida).toContain(':model-value="null"');
-    // `aria-valuenow` some sozinho quando não há valor: escrevê-lo à mão daria
-    // "zero por cento" onde a verdade é "não sei quanto falta".
+  it('o indeterminado não escreve valor nem aria-valuenow', () => {
+    const saida = progressBarSnippet({ label: 'Processando…' });
+    expect(saida).toContain('<Progress aria-label="Processando…" />');
     expect(saida).not.toContain('aria-valuenow');
   });
 
-  it('a barra com rótulo repete o valor para quem enxerga a tela', () => {
+  it('Default, Loading e Complete batem com as stories', () => {
+    expect(progressBarSnippet({ value: 0, label: 'Progresso do upload' })).toContain(':model-value="0"');
+    expect(progressBarSnippet({ value: 50, label: 'Carregando dados' })).toContain(
+      '<Progress :model-value="50" aria-label="Carregando dados" />',
+    );
+    // `data-state="complete"` é derivado: escrevê-lo ensinaria a duplicar.
+    expect(progressBarSnippet({ value: 100, label: 'Concluído' })).not.toContain('data-state');
+  });
+});
+
+describe('formas com texto em volta', () => {
+  it('com rótulo, o número repete o valor em região polite e tabular', () => {
     const saida = progressWithLabelSource();
     expect(saida).toContain('>42%</span>');
     expect(saida).toContain('aria-live="polite"');
-    // `assertive` interromperia o leitor de tela a cada avanço.
     expect(saida).not.toContain('assertive');
-    // Sem `nds-tabular-nums` o número dança de largura e empurra o rótulo.
     expect(saida).toContain('nds-tabular-nums');
   });
 
-  it('a cor semântica sai de atributo, e a trilha continua neutra', () => {
-    const saida = progressColorSemanticaSource();
+  it('a cor semântica sai de atributo', () => {
+    const saida = progressSemanticColorSource();
     expect(saida).toContain('data-variant="success"');
     expect(saida).toContain('data-variant="destructive"');
-    // Classe montada em runtime não é auditável, e o contraste de 3:1 não pode
-    // depender de qual variante alguém escolheu.
     expect(saida).not.toContain(':class=');
   });
-});
 
-describe('transforms das stories de estado', () => {
-  it('o zero é escrito: é o que o separa do indeterminado', () => {
-    const saida = progressZeroSource();
-    expect(saida).toContain('<Progress :model-value="0" aria-label="Progresso do upload" />');
-    expect(saida).not.toContain('null');
-  });
-
-  it('no meio do caminho o número ao lado bate com o valor da barra', () => {
-    const saida = progressLoadingSource();
-    expect(saida).toContain(':model-value="50"');
-    expect(saida).toContain('>50%</span>');
-  });
-
-  it('concluído não põe região viva num número que não muda mais', () => {
-    const saida = progressConcluidoSource();
-    expect(saida).toContain(':model-value="100"');
-    expect(saida).toContain('>100%</span>');
-    expect(saida).not.toContain('aria-live');
-    // `data-state="complete"` é DERIVADO pelo componente: escrevê-lo à mão
-    // ensinaria a duplicar o que ele já calcula.
-    expect(saida).not.toContain('data-state');
-  });
-
-  it('sem valor o rótulo diz o que acontece, já que não há porcentagem', () => {
-    const saida = progressProcessandoSource();
-    expect(saida).toContain('<div class="nds-text-body">Processando…</div>');
-    expect(saida).toContain(':model-value="null"');
-    expect(saida).not.toContain('%');
+  it('a barra que avança desliga o relógio no desmonte', () => {
+    const saida = progressAnimatedSource();
+    expect(saida).toContain('const value = ref(0)');
+    expect(saida).toContain(':model-value="value"');
+    expect(saida).toContain('{{ value }}%');
+    expect(saida).toContain('onUnmounted(() => clearInterval(timer))');
   });
 });
 
-describe('transforms das stories de composição', () => {
-  it('o upload animado desliga o relógio no desmonte', () => {
-    const saida = progressUploadAnimadoSource();
-    expect(saida).toContain('const valor = ref(0)');
-    expect(saida).toContain(':model-value="valor"');
-    expect(saida).toContain('{{ valor }}%');
-    // Um `setInterval` sobrevivente continua escrevendo num componente que já
-    // saiu da tela.
-    expect(saida).toContain('onUnmounted');
-    expect(saida).toContain('clearInterval(relogio)');
+describe('composições — o conjunto da referência', () => {
+  it('o upload nomeia o arquivo', () => {
+    expect(progressFileUploadSource()).toContain('aria-label="Progresso do upload de documento-final.pdf"');
   });
 
-  it('na lista o nome acessível sai do DADO, um por arquivo', () => {
-    const saida = progressListSource();
-    expect(saida).toContain(':aria-label="`Progresso do upload de ${item.nome}`"');
-    // Repetir o mesmo rótulo nas três equivale a não nomear nenhuma: quem ouve
-    // não saberia qual arquivo está a 92%.
-    expect(saida).not.toContain('aria-label="Progresso do upload"');
-    expect(saida).toContain('nds-list-none');
+  it('as etapas anunciam o nome da etapa', () => {
+    const saida = progressWizardStepsSource();
+    expect(saida).toContain('aria-live="polite">Endereço</span>');
+    expect(saida).toContain(':model-value="60"');
+  });
+
+  it('cada upload tem nome acessível próprio', () => {
+    const nomes = progressMultipleUploadsSource().match(/aria-label="[^"]+"/g) ?? [];
+    expect(nomes).toHaveLength(4);
+    expect(new Set(nomes).size).toBe(4);
   });
 
   it('das três medidas, só as semânticas levam variante', () => {
-    const saida = listProgressColorsSource();
+    const saida = progressCustomColorSource();
     expect(saida.match(/data-variant=/g)).toHaveLength(2);
-    // "Em andamento" não é semântico: a barra do meio fica sem variante.
     expect(saida).toContain('<Progress :model-value="72" aria-label="Progresso do backup" />');
   });
 
-  it('o processamento no servidor não tem valor nem relógio', () => {
-    const saida = progressProcessandoServidorSource();
-    expect(saida).toContain(':model-value="null"');
-    expect(saida).toContain('aria-label="Processando dados do servidor"');
-    expect(saida).not.toContain('setInterval');
+  it('o contêiner ocupado declara aria-busy', () => {
+    expect(progressAriaBusyContainerSource()).toContain('role="status" aria-busy="true"');
+  });
+
+  it('o texto anunciado próprio usa get-value-text com a assinatura da lib', () => {
+    const saida = progressCustomValueTextSource();
+    expect(saida).toContain(':get-value-text="filesText"');
+    expect(saida).toContain('const filesText = (value: number | null | undefined, max: number) =>');
+    expect(saida).toContain('aria-label="Processamento de arquivos"');
   });
 });
 
 describe('o snippet ensina o design system, não o andaime da story', () => {
   const all = [
-    progressSource,
-    progressDeterminadoSource,
-    progressIndeterminadoSource,
+    () => progressSource(),
+    () => progressBarSnippet(),
     progressWithLabelSource,
-    progressColorSemanticaSource,
-    progressZeroSource,
-    progressLoadingSource,
-    progressConcluidoSource,
-    progressProcessandoSource,
-    progressUploadAnimadoSource,
-    progressListSource,
-    listProgressColorsSource,
-    progressProcessandoServidorSource,
+    progressSemanticColorSource,
+    progressAnimatedSource,
+    progressFileUploadSource,
+    progressWizardStepsSource,
+    progressMultipleUploadsSource,
+    progressCustomColorSource,
+    progressAriaBusyContainerSource,
+    progressCustomValueTextSource,
   ];
 
-  it('nenhuma crava medida de desenho em style inline', () => {
-    // As stories fixam 360px para a foto do Chromatic sair sempre do mesmo
-    // tamanho. Copiado para o snippet, o valor sai do alcance do tema, da
-    // densidade e da escala tipográfica — e o snippet é o markup que alguém
-    // COPIA.
+  it('nenhuma crava medida em style inline', () => {
     for (const fn of all) {
       const saida = fn();
       expect(saida).not.toContain('style=');
-      expect(saida).not.toContain('360px');
-      expect(saida).not.toContain('400px');
+      expect(saida).not.toMatch(/\d+px/);
     }
   });
 
-  it('toda barra tem nome acessível — o papel sozinho não diz de quê', () => {
+  it('toda barra tem nome acessível', () => {
     for (const fn of all) {
-      expect(fn()).toMatch(/<Progress[\s\S]*?:?aria-label="/);
+      const saida = fn();
+      const barras = saida.match(/<Progress\b[^>]*>/g) ?? [];
+      expect(barras.length).toBeGreaterThan(0);
+      for (const barra of barras) expect(barra).toContain('aria-label="');
     }
   });
 
-  it('todas importam do design system, nunca de um caminho interno', () => {
-    for (const fn of all) {
-      expect(fn()).toContain(`import { Progress } from '@/components/ui/progress'`);
-    }
+  it('todas importam do design system', () => {
+    for (const fn of all) expect(fn()).toContain(IMPORT);
   });
 });
