@@ -434,8 +434,9 @@ por tipo de superfície não a alcança.
 **Dois tokens que a folha lê e nenhuma tabela de docs page lista**:
 `--nds-progress-color` e `--value`. O primeiro está documentado como ponto de
 customização em `tokens.customizationCode` e em `notes.item3`, o segundo não
-aparece em lugar nenhum voltado a quem consome — é mecanismo interno em duas
-stacks e nem existe nas outras três (D2).
+aparece em lugar nenhum voltado a quem consome — é mecanismo interno: quatro
+stacks o escrevem (vanilla, angular, vue e svelte, com o percentual da regra
+compartilhada), e o react não, porque a lib escreve `width` (D2).
 
 **A animação desloca `margin-inline-start`**, não `transform`. Não foi escolha de
 performance: é o discriminador que separa a animação do design system de um
@@ -504,11 +505,11 @@ No Angular o SELETOR carrega o elemento, e isso é contrato: trocar a tag muda a
 semântica, não só o estilo.
 
 **A anatomia publicada no conteúdo compartilhado tem cinco peças** — raiz,
-trilha, indicador, rótulo e valor —, e três stacks têm uma. Os
-`anatomy.structureCode` de vue, svelte e vanilla já dizem isso no próprio
-snippet ("o nome vem daqui: não há slot de rótulo"), mas a lista de itens acima
-deles descreve as cinco peças sem ressalva, e é ela que as cinco páginas
-mostram.
+trilha, indicador, rótulo e valor —, e três stacks têm uma. Desde 2026-09-14 a
+lista de itens diz isso: `anatomy.item2` avisa que a raiz pode ser a própria
+trilha, e `anatomy.item4` que, onde a biblioteca não oferece o rótulo, ele é texto
+ao lado e o nome vai em `aria-label`. Até ali só os `anatomy.structureCode` de
+vue, svelte e vanilla faziam a ressalva.
 
 ### Controles do Playground
 
@@ -679,11 +680,11 @@ daquela stack. O vanilla e o Angular mantêm um arquivo curto com a mecânica
 própria. O texto abaixo fica porque nomeia o que cada cópia afirmava de errado,
 que é a razão de cinco cópias não sobreviverem.
 
-O que a migração encontrou, medido em 2026-09-13: as cinco guidelines de stack ainda têm a seção de
+O que a migração encontrou, medido em 2026-09-13: as cinco guidelines de stack tinham a seção de
 catálogo `## Progress` em `07-feedback-components.md`, e o nascimento deste
-arquivo faz `catalogo_duplicado_com_prd` reprovar as cinco. A migração não
-caberia nesta rodada, e vale registrar o que ela vai encontrar: **duas das
-cinco cópias contradizem o código** — a do vanilla e a do angular mandam usar
+arquivo fez `catalogo_duplicado_com_prd` reprovar as cinco. O que a leitura
+daquelas cópias encontrou: **duas das
+cinco cópias contradiziam o código** — a do vanilla e a do angular mandam usar
 Skeleton ou indicador de carregamento "para progresso indeterminado", que é um
 modo que este componente entrega nas cinco, com story, conteúdo e animação
 próprios; a do vue ensina a trocar a cor da barra por uma classe de biblioteca

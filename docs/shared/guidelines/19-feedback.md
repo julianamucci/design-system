@@ -200,9 +200,9 @@ eventos, e está em [`07-analytics.md`](07-analytics.md). O que é desta categor
   `docs_page_view`, `docs_section_viewed`), e os outros 51 não. O
   `toast_demo_triggered` era a exceção, e por decisão da dona passou ao
   vocabulário de todos: `component`, `toast_type` e `location`.
-- **Uma divergência segue medida e aberta**, na §"O que está aberto":
-  `task_progress`/`task_complete` são anunciados pelo Angular sem serem
-  disparados por ele.
+- **`task_progress` e `task_complete` são disparados nas cinco** desde
+  2026-09-14, pela demonstração animada e com `duration_ms`. Até ali o Angular os
+  anunciava na tabela sem dispará-los; ver a §9 de [`progress.md`](../prd/progress.md).
 
 ## Tom de voz
 
@@ -232,7 +232,7 @@ evitar.
 | A regra de categoria não volta a ser copiada por stack | aqui | `guideline_de_stack_repete_categoria` | compara títulos de seção; cópia sem o título escapa |
 | Movimento para sob `prefers-reduced-motion` | aqui, §Movimento | `movimento_sem_guarda_eficaz` | duração por token fica de fora de propósito — a camada de token a alcança. E a guarda do pulso do esqueleto é literal: ela é conferida por story, não por portão |
 | Elevação por tipo de superfície | `04-padroes-design-sistema.md` | `elevacao_fora_do_mapa` · `prd_token_sem_lastro` confere cada PRD contra a folha | folha que não LÊ `var(--elevation-*)` não é classificada — foi assim que a sombra cravada da barra do Menubar passou calada até 2026-09-12 |
-| Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `location_fora_do_vocabulario` · `campo_de_payload_morto` | evento anunciado em tabela e não disparado, ou disparado por uma stack só: nada vê. É o caso de `badge_click` e dos dois eventos de tarefa no Angular |
+| Vocabulário do payload | `07-analytics.md` | `i18n_text_in_payload` · `component_nao_kebab` · `location_fora_do_vocabulario` · `campo_de_payload_morto` | evento anunciado em tabela e não disparado, ou disparado por uma stack só: nada vê. Foi o caso de `badge_click` (removido em 2026-09-13) e dos dois eventos de tarefa no Angular (disparados desde 2026-09-14) — os dois achados por leitura |
 | Nenhuma altura fixa em peça interativa | `CLAUDE.md` §Conventions | nenhum — é conferido por story, nas cinco | — |
 | Nenhum valor de design em `style` inline | `12-tokenizacao-dimensoes.md` | `inline_style_design_value` | — |
 | Tabela de tokens da docs page bate com a folha | `14-taxonomia-secoes.md` | `scripts/tabela-tokens.mjs` (instrumento, não portão) | ele lê por regex: página que escreve as linhas numa forma que nenhuma regex casa sai como "stack: 0" — "não sei ler" saindo como "não tem". Foi o caso do Skeleton do Svelte até 2026-09-14; hoje o script lê 6 linhas nas cinco |
@@ -242,8 +242,10 @@ evitar.
 Cada item aqui tem medição no PRD do componente e espera decisão. Nenhum é
 defeito de texto: os cinco PRDs já descrevem o que o código faz hoje.
 
-1. **O Angular anuncia `task_progress` e `task_complete` na tabela e não dispara
-   nenhum dos dois.**
+Nenhum, desde 2026-09-14. O último — o Angular anunciava `task_progress` e
+`task_complete` na tabela sem disparar nenhum dos dois — fechou na passagem do
+Progress. O que ficou para depois por decisão da dona está no PRD do componente,
+como pendência: o esqueleto de menu do Sidebar (`skeleton.md`).
 
 ### O que a dona decidiu em 2026-09-13, e já está no código
 

@@ -24,7 +24,7 @@ consequências valem para a categoria inteira:
 | regra | por quê |
 |---|---|
 | Nunca pendurar ouvinte no elemento DEVOLVIDO pela fábrica | o ouvinte fica fora do que a fábrica sabe desmontar, e sobrevive ao elemento — foi assim que o gatilho escondido nasceu em três componentes |
-| Nome acessível é **opção da fábrica**, não retoque no elemento retornado | `createProgress({ ariaLabel })` e os irmãos: quem escreve o atributo depois perde na próxima chamada que reconstrói a peça |
+| Nome acessível é **opção da fábrica**, não retoque no elemento retornado | `createProgress({ 'aria-label': … })` e os irmãos: quem escreve o atributo depois perde na próxima chamada que reconstrói a peça |
 | Subpeça é subfábrica | `createAlertTitle`, `createBadgeCounter`: o elemento devolvido entra na lista `children` da fábrica de cima, em vez de a fábrica de cima ganhar um ramo novo |
 
 **Interatividade vem de fora.** O Badge não é o elemento interativo: etiqueta

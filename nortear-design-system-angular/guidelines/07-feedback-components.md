@@ -28,9 +28,12 @@ Três consequências que só existem aqui:
   degrau sob seções e reprovaria `heading-order` no axe. As outras quatro têm prop
   ou opção, com um default — a divergência está registrada na §7 de
   [`docs/shared/prd/alert.md`](../../docs/shared/prd/alert.md).
-- **Valor, mínimo, máximo e o texto acessível do Progress vêm do host do raiz**, por
-  host binding, e não de atributo escrito no template: no Angular o atributo
-  estático perde para o host binding da diretiva, e quem escreve por último vence.
+- **Valor, mínimo e máximo do Progress entram pelo host do raiz** (`hostDirectives`
+  com as entradas da lib), e não por atributo escrito no template: no Angular o
+  atributo estático perde para o host binding da diretiva. **O texto acessível é a
+  exceção**: a lib liga o MESMO `aria-valuetext`, e host binding só reescreve
+  quando o próprio valor muda — então a diretiva o escreve depois do render, com
+  `afterRenderEffect`, e o texto de quem compõe não perde para o da lib.
 - **Fechar o Alert não remove o nó.** A diretiva escreve `hidden` no host e emite o
   `output`; tirar o elemento da árvore é de quem consome, porque o nó é do template
   dele. Nas outras quatro o wrapper desmonta a peça.
