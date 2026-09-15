@@ -7,6 +7,10 @@
 >
 > Este documento descreve o que o código FAZ hoje. Se ele divergir do código, o
 > defeito é dele — corrija aqui, nunca o código para bater com o texto.
+>
+> **Revisado contra o código em 2026-09-15**, depois da passagem de `fix`
+> (`117260014`) — base para a próxima revisão de código: a §7 registra o que
+> sobrou de inconsistência entre stacks medida nesta data.
 
 ## 1. Identidade
 
@@ -315,7 +319,8 @@ tela anunciava "Fechar alerta" antes da mensagem.
 
 Fonte: `docs/shared/styles/nds/alert.css`. As 16 linhas da tabela de tokens das
 cinco docs pages fecham com a folha (`node scripts/tabela-tokens.mjs alert`,
-2026-09-13: zero linhas que não fecham, zero divergência entre stacks).
+reconferido em 2026-09-15: 16 linhas por stack, zero que não fecham, zero
+divergência entre stacks).
 
 | propriedade | valor | token |
 |---|---|---|
@@ -502,6 +507,38 @@ remoção do nó no vanilla, evento que o componente de story escuta no svelte, 
 o estado só se reinicia de dentro do componente. É divergência de API, não de
 contrato: as cinco afirmam as mesmas três coisas depois do reinício.
 
+**O painel Code das STORIES não ensina o `as`, nas cinco**: os construtores de
+snippet escrevem o título no default (`<AlertTitle>` em react, vue e svelte,
+`createAlertTitle({ text })` no vanilla, `<h5 ndsAlertTitle>` no angular),
+enquanto os snippets das docs pages mostram `h4` (D4). Não é divergência entre
+stacks — as cinco fazem igual —, é a decisão da D4 alcançando uma superfície e não
+a outra. Nenhum `alert.source.test.ts` cobra o nível.
+
+### Inconsistências entre stacks, medidas em 2026-09-15
+
+Medido depois da passagem de `fix`, contra os cinco primitivos, `alert.css`, os
+quatro arquivos de story e os construtores de snippet de cada stack, as cinco
+docs pages e os cinco `analytics.ts`. **O que conferiu igual nas cinco**: `role`
+com default `alert` e os três valores; as cinco variantes no mapa; `dismissLabel`
+`'Fechar alerta'`; `as` tipado `h1..h6` com default `h5` (o angular pelo
+elemento); descrição `<section>`; a guarda de `event.target` e o timeout nas
+duas fases; a entrada animada só no `dismissible`; as dezenove stories com os
+mesmos nomes e `covers`; as asserções citadas no contrato (`lastElementChild`,
+`AnimationEvent` plantado, segundo acionamento com `toHaveBeenCalledTimes(1)`,
+ausência de `tabindex`, `measureActionDismiss`, `themeContrast`, e o `hidden`
+do angular); `alert_dismiss` com `component: 'alert'`, `label`
+`demonstration`/`dismissible` e `location` `docs_demo`/`docs_variantes` nas
+cinco páginas, e o mesmo tipo nos cinco `analytics.ts`; `role="note"` e título
+`h3` no `DocsNotes` das cinco; título `h3` na demonstração e no Do & Don't e
+`h4` nos cards. `audit.mjs alert` devolve zero achados.
+
+1. **O snippet da composição "Com ícone" sai numa linha só na docs page do
+   svelte.** `AlertDocs.svelte:489` publica
+   `<Alert><Info …/><AlertTitle as="h4">…</AlertTitle><AlertDescription>…</AlertDescription></Alert>`
+   sem quebra; react (`AlertDocs.tsx:557`) e vue (`AlertDocs.vue:257`) publicam o
+   mesmo exemplo indentado, e vanilla e angular o geram por construtor em
+   `alert.source.ts`, também indentado. Maioria (4): indentado.
+
 ## 8. Acessibilidade
 
 **Atributos.** Raiz: `role` com um dos três valores (D1) e nada mais — nenhuma das
@@ -606,7 +643,7 @@ impedir.
 | geometria, variantes, alfas, gradiente | `docs/shared/styles/nds/alert.css` |
 | entrada e saída (classes compartilhadas) | `docs/shared/styles/nds/utilities.css` |
 | texto das docs pages, props, critérios de teste | `docs/shared/content/alert/translations.json` |
-| sonda de contraste e de semântica, nos três temas × dois modos | `docs/shared/testing/alert-probe.ts` |
+| sonda de contraste nos três temas × dois modos (`themeContrast`, `themeReprovas`) e da geometria ação + fechar (`measureActionDismiss`) | `docs/shared/testing/alert-probe.ts` |
 | divergências intencionais sobre libs e patches de API | `PATCHES.md` — `#alert-five-variants`, `#alert-title-desc-semantics`, `#alert-dismissible`, `#alert-role` |
 | desenho e anotações de Dev Mode | Figma: conjunto `194-16`, docs `196-85`, spec do gradiente `197-85` |
 | portões determinísticos | `node scripts/audit.mjs alert --json` |
@@ -666,3 +703,22 @@ próprio primitivo escreve que não remove.
 > nome em português saíram também (`alertSucessoSource` → `alertSuccessSource`,
 > `AlertDismissivelStory` → `AlertDismissibleStory` e afins), embora nenhum
 > portão os cobrasse.
+
+> **PENDÊNCIA · 2026-09-15** — seis exportações de `docs/shared/testing/alert-probe.ts`
+> não são usadas em lugar nenhum do repositório: `measureAlert`, `measureAlertIn`,
+> `contrastNosDoisThemes`, `backgroundCamadas`, `themeResumir` e
+> `measureSemantica`. As stories do Alert importam só `themeContrast`,
+> `themeReprovas` e `measureActionDismiss`; as outras seis sondas que leem o
+> arquivo usam `contraste`, `backgroundEffective`, `darkLigarTheme`,
+> `describeFailures`, `documentByTheme` e `superficieDoApp`. A "semântica"
+> que a sonda anunciava não é medida por ela: quem cobre papel e estrutura são as
+> plays (`WithoutAnnouncement`, `DynamicInsertion`, `Playground`).
+> **Fecha quando**: as seis saem do arquivo, ou uma story das cinco stacks passa a
+> usá-las.
+
+> **PENDÊNCIA · 2026-09-15** — o painel Code das stories mostra o título no nível
+> default nas cinco stacks, e o snippet "Com ícone" da docs page do svelte sai numa
+> linha só (§7, inconsistência 1).
+> **Fecha quando**: os construtores de snippet das cinco escrevem o nível do título
+> como as docs pages (`as="h4"`, `as: 'h4'` ou `<h4 ndsAlertTitle>`) com asserção
+> no `alert.source.test.ts`, e `AlertDocs.svelte` publica o snippet indentado.
